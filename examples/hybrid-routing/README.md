@@ -1,6 +1,6 @@
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -30,7 +30,7 @@ module.exports = {
 
 # aEntry.js
 
-``` javascript
+```javascript
 // Just show the page "a"
 var render = require("./render");
 render(require("./aPage"));
@@ -40,7 +40,7 @@ render(require("./aPage"));
 
 # aPage.js
 
-``` javascript
+```javascript
 module.exports = function() {
 	return "This is page A.";
 };
@@ -50,7 +50,7 @@ module.exports = function() {
 
 # router.js
 
-``` javascript
+```javascript
 var render = require("./render");
 
 // Event when another page should be opened
@@ -73,7 +73,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 
 # pageA.html
 
-``` html
+```html
 <html>
 	<head></head>
 	<body>
@@ -86,7 +86,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 
 # dist/pageA~pageB.chunk.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],[
 /* 0 */
 /*!*******************!*\
@@ -150,16 +150,16 @@ var map = {
 	]
 };
 function webpackAsyncContext(req) {
-	var ids = map[req];
-	if(!ids) {
+	if(!__webpack_require__.o(map, req)) {
 		return Promise.resolve().then(function() {
 			var e = new Error("Cannot find module '" + req + "'");
 			e.code = 'MODULE_NOT_FOUND';
 			throw e;
 		});
 	}
+
+	var ids = map[req], id = ids[0];
 	return __webpack_require__.e(ids[1]).then(function() {
-		var id = ids[0];
 		return __webpack_require__.t(id, 7);
 	});
 }
@@ -177,7 +177,7 @@ module.exports = webpackAsyncContext;
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -190,7 +190,7 @@ module.exports = webpackAsyncContext;
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -226,6 +226,7 @@ module.exports = webpackAsyncContext;
 /******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
 /******/ 			}
 /******/ 		}
+/******/
 /******/ 		return result;
 /******/ 	}
 /******/
@@ -302,6 +303,8 @@ module.exports = webpackAsyncContext;
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -311,7 +314,8 @@ module.exports = webpackAsyncContext;
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
@@ -402,7 +406,7 @@ module.exports = webpackAsyncContext;
 
 </details>
 
-``` javascript
+```javascript
 /******/ ({
 
 /***/ 4:
@@ -436,7 +440,7 @@ render(__webpack_require__(/*! ./aPage */ 1));
 
 # dist/aPage.chunk.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
 /* 0 */,
 /* 1 */
@@ -460,13 +464,13 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
                Asset       Size  Chunks             Chunk Names
       aPage.chunk.js  297 bytes       0  [emitted]  aPage
       bPage.chunk.js  291 bytes       1  [emitted]  bPage
-     pageA.bundle.js   9.42 KiB       3  [emitted]  pageA
-pageA~pageB.chunk.js   2.02 KiB       2  [emitted]  pageA~pageB
-     pageB.bundle.js   9.42 KiB       4  [emitted]  pageB
+     pageA.bundle.js   9.65 KiB       3  [emitted]  pageA
+pageA~pageB.chunk.js   2.04 KiB       2  [emitted]  pageA~pageB
+     pageB.bundle.js   9.65 KiB       4  [emitted]  pageB
 Entrypoint pageA = pageA~pageB.chunk.js aPage.chunk.js pageA.bundle.js
 Entrypoint pageB = pageA~pageB.chunk.js bPage.chunk.js pageB.bundle.js
 chunk    {0} aPage.chunk.js (aPage) 59 bytes <{1}> <{2}> <{4}> ={2}= ={3}= >{1}< [initial] [rendered] reused as split chunk (cache group: default)
@@ -513,13 +517,13 @@ chunk    {4} pageB.bundle.js (pageB) 127 bytes ={1}= ={2}= >{0}< [entry] [render
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
                Asset       Size  Chunks             Chunk Names
       aPage.chunk.js  122 bytes       0  [emitted]  aPage
       bPage.chunk.js  123 bytes       1  [emitted]  bPage
-     pageA.bundle.js   2.22 KiB       3  [emitted]  pageA
-pageA~pageB.chunk.js  545 bytes       2  [emitted]  pageA~pageB
-     pageB.bundle.js   2.22 KiB       4  [emitted]  pageB
+     pageA.bundle.js    2.3 KiB       3  [emitted]  pageA
+pageA~pageB.chunk.js  559 bytes       2  [emitted]  pageA~pageB
+     pageB.bundle.js    2.3 KiB       4  [emitted]  pageB
 Entrypoint pageA = pageA~pageB.chunk.js aPage.chunk.js pageA.bundle.js
 Entrypoint pageB = pageA~pageB.chunk.js bPage.chunk.js pageB.bundle.js
 chunk    {0} aPage.chunk.js (aPage) 59 bytes <{1}> <{2}> <{4}> ={2}= ={3}= >{1}< [initial] [rendered] reused as split chunk (cache group: default)

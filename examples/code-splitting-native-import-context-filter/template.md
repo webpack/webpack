@@ -1,31 +1,31 @@
 # example.js
 
-This example illustrates how to filter the ContextModule results of `import()` statements. only `.js` files that don't 
+This example illustrates how to filter the ContextModule results of `import()` statements. only `.js` files that don't
 end in `.noimport.js` within the `templates` folder will be bundled.
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # templates/
 
-* foo.js
-* foo.noimport.js
-* baz.js
-* foo.noimport.js
-* bar.js
-* foo.noimport.js
+- foo.js
+- foo.noimport.js
+- baz.js
+- foo.noimport.js
+- bar.js
+- foo.noimport.js
 
 All templates are of this pattern:
 
-``` javascript
-{{templates/foo.js}}
+```javascript
+_{{templates/foo.js}}_
 ```
 
 # dist/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
 # Info
@@ -33,11 +33,11 @@ All templates are of this pattern:
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

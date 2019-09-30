@@ -8,26 +8,26 @@ A manifest is created which includes mappings from module names to internal ids.
 
 ### webpack.config.js
 
-``` javascript
-{{webpack.config.js}}
+```javascript
+_{{webpack.config.js}}_
 ```
 
 # example-vendor
 
-``` javascript
-{{../node_modules/example-vendor.js}}
+```javascript
+_{{../node_modules/example-vendor.js}}_
 ```
 
 # dist/vendor.js
 
-``` javascript
-{{dist/vendor.js}}
+```javascript
+_{{dist/vendor.js}}_
 ```
 
 # dist/vendor-manifest.json
 
-``` javascript
-{{dist/vendor-manifest.json}}
+```javascript
+_{{dist/vendor-manifest.json}}_
 ```
 
 # Info
@@ -35,12 +35,11 @@ A manifest is created which includes mappings from module names to internal ids.
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```
-

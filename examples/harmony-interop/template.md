@@ -1,38 +1,37 @@
-
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # fs.js
 
-``` javascript
-{{fs.js}}
+```javascript
+_{{fs.js}}_
 ```
 
 # reexport-commonjs.js
 
-``` javascript
-{{reexport-commonjs.js}}
+```javascript
+_{{reexport-commonjs.js}}_
 ```
 
 # example2.js
 
-``` javascript
-{{example2.js}}
+```javascript
+_{{example2.js}}_
 ```
 
 # harmony.js
 
-``` javascript
-{{harmony.js}}
+```javascript
+_{{harmony.js}}_
 ```
 
 # dist/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
 # Info
@@ -40,11 +39,11 @@
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

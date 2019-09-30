@@ -1,4 +1,4 @@
-const Compiler = require('../../../../lib/Compiler');
+const Compiler = require("../../../../lib/Compiler");
 
 module.exports = {
 	optimization: {
@@ -7,12 +7,12 @@ module.exports = {
 			{
 				apply(compiler) {
 					expect(compiler).toBeInstanceOf(Compiler);
-				},
+				}
 			},
 			function(compiler) {
 				expect(compiler).toBe(this);
 				expect(compiler).toBeInstanceOf(Compiler);
 			}
-		],
-	},
+		]
+	}
 };

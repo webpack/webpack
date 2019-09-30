@@ -1,22 +1,8 @@
-
-let oldNonce;
-let oldPublicPath;
-
-beforeEach(done => {
-	oldNonce = __webpack_nonce__;
-	oldPublicPath = __webpack_public_path__;
-	done();
-});
-
-afterEach(done => {
-	__webpack_nonce__ = oldNonce;
-	__webpack_public_path__ = oldPublicPath;
-	done();
-});
+// This config need to be set on initial evaluation to be effective
+__webpack_nonce__ = "nonce";
+__webpack_public_path__ = "https://example.com/public/path/";
 
 it("should prefetch and preload child chunks on chunk load", () => {
-	__webpack_nonce__ = "nonce";
-	__webpack_public_path__ = "https://example.com/public/path/";
 
 	let link, script;
 
@@ -26,7 +12,7 @@ it("should prefetch and preload child chunks on chunk load", () => {
 	link = document.head._children[0];
 	expect(link._type).toBe("link");
 	expect(link.rel).toBe("prefetch");
-	expect(link.href).toMatch(/chunk1\.js$/);
+	expect(link.href).toBe("https://example.com/public/path/chunk1.js");
 
 	const promise = import(/* webpackChunkName: "chunk1", webpackPrefetch: true */ "./chunk1");
 
@@ -35,7 +21,7 @@ it("should prefetch and preload child chunks on chunk load", () => {
 	// Test normal script loading
 	script = document.head._children[1];
 	expect(script._type).toBe("script");
-	expect(script.src).toMatch(/chunk1\.js$/);
+	expect(script.src).toBe("https://example.com/public/path/chunk1.js");
 	expect(script.getAttribute("nonce")).toBe("nonce")
 	expect(script.crossOrigin).toBe("anonymous");
 	expect(script.onload).toBeTypeOf("function");
@@ -45,7 +31,7 @@ it("should prefetch and preload child chunks on chunk load", () => {
 	expect(link._type).toBe("link");
 	expect(link.rel).toBe("preload");
 	expect(link.as).toBe("script");
-	expect(link.href).toMatch(/chunk1-b\.js$/);
+	expect(link.href).toBe("https://example.com/public/path/chunk1-b.js");
 	expect(link.charset).toBe("utf-8");
 	expect(link.getAttribute("nonce")).toBe("nonce");
 	expect(link.crossOrigin).toBe("anonymous");
@@ -62,13 +48,13 @@ it("should prefetch and preload child chunks on chunk load", () => {
 		link = document.head._children[3];
 		expect(link._type).toBe("link");
 		expect(link.rel).toBe("prefetch");
-		expect(link.href).toMatch(/chunk1-c\.js$/);
+		expect(link.href).toBe("https://example.com/public/path/chunk1-c.js");
 		expect(link.crossOrigin).toBe("anonymous");
 
 		link = document.head._children[4];
 		expect(link._type).toBe("link");
 		expect(link.rel).toBe("prefetch");
-		expect(link.href).toMatch(/chunk1-a\.js$/);
+		expect(link.href).toBe("https://example.com/public/path/chunk1-a.js");
 		expect(link.crossOrigin).toBe("anonymous");
 
 		const promise2 = import(/* webpackChunkName: "chunk1", webpackPrefetch: true */ "./chunk1");
@@ -83,7 +69,7 @@ it("should prefetch and preload child chunks on chunk load", () => {
 		// Test normal script loading
 		script = document.head._children[5];
 		expect(script._type).toBe("script");
-		expect(script.src).toMatch(/chunk2\.js$/);
+		expect(script.src).toBe("https://example.com/public/path/chunk2.js");
 		expect(script.getAttribute("nonce")).toBe("nonce")
 		expect(script.crossOrigin).toBe("anonymous");
 		expect(script.onload).toBeTypeOf("function");

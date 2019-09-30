@@ -29,6 +29,15 @@ it("should answer typeof require.ensure correctly", function() {
 it("should answer typeof require.resolve correctly", function() {
 	expect((typeof require.resolve)).toBe("function");
 });
+it("should answer typeof __non_webpack_require__ correctly", function() {
+	var oldValue;
+	eval("oldValue = require;");
+	expect((typeof __non_webpack_require__)).toBe("function");
+	eval("require = undefined;");
+	expect((typeof __non_webpack_require__)).toBe("undefined");
+	eval("require = oldValue;");
+	expect((typeof __non_webpack_require__)).toBe("function");
+});
 
 it("should not parse filtered stuff", function() {
 	if(typeof require != "function") require("fail");

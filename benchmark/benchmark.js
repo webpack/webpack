@@ -206,8 +206,8 @@ const tests = {
 const suite = new Benchmark.Suite();
 
 Object.keys(tests)
-	.filter(
-		name => (process.argv.length > 2 ? name.includes(process.argv[2]) : true)
+	.filter(name =>
+		process.argv.length > 2 ? name.includes(process.argv[2]) : true
 	)
 	.forEach(name => {
 		const test = tests[name];

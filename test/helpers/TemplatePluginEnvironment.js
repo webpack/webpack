@@ -1,4 +1,4 @@
-var PluginEnvironment = require('./PluginEnvironment');
+var PluginEnvironment = require("./PluginEnvironment");
 
 module.exports = function TemplatePluginEnvironment() {
 	var events = [];

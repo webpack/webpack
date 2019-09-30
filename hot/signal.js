@@ -37,7 +37,7 @@ if (module.hot) {
 				var status = module.hot.status();
 				if (["abort", "fail"].indexOf(status) >= 0) {
 					log("warning", "[HMR] Cannot apply update.");
-					log("warning", "[HMR] " + (err.stack || err.message));
+					log("warning", "[HMR] " + log.formatError(err));
 					log("warning", "[HMR] You need to restart the application!");
 				} else {
 					log("warning", "[HMR] Update failed: " + (err.stack || err.message));

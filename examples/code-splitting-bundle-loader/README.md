@@ -4,7 +4,7 @@ The bundle loader is used to create a wrapper module for `file.js` that loads th
 
 # example.js
 
-``` javascript
+```javascript
 require("bundle-loader!./file.js")(function(fileJsExports) {
 	console.log(fileJsExports);
 });
@@ -12,16 +12,15 @@ require("bundle-loader!./file.js")(function(fileJsExports) {
 
 # file.js
 
-``` javascript
+```javascript
 module.exports = "It works";
 ```
-
 
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -34,7 +33,7 @@ module.exports = "It works";
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -126,6 +125,8 @@ module.exports = "It works";
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -135,7 +136,8 @@ module.exports = "It works";
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
@@ -224,7 +226,7 @@ module.exports = "It works";
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -267,7 +269,7 @@ __webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 
 # dist/1.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
 
 /***/ 2:
@@ -290,15 +292,15 @@ module.exports = "It works";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 1.output.js  257 bytes       1  [emitted]  
-  output.js   8.78 KiB       0  [emitted]  main
+  output.js      9 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 375 bytes >{1}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 94 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {0} [built]
      cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
 chunk    {1} 1.output.js 28 bytes <{0}> [rendered]
@@ -311,15 +313,15 @@ chunk    {1} 1.output.js 28 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
       Asset      Size  Chunks             Chunk Names
 1.output.js  98 bytes       1  [emitted]  
-  output.js  2.16 KiB       0  [emitted]  main
+  output.js  2.24 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 375 bytes >{1}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 94 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {0} [built]
      cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
 chunk    {1} 1.output.js 28 bytes <{0}> [rendered]

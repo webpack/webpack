@@ -59,7 +59,7 @@ declare module "neo-async" {
 	}
 
 	export type AsyncAutoTasks<R extends Dictionary<any>, E> = {
-		[K in keyof R]: AsyncAutoTask<R[K], R, E>
+		[K in keyof R]: AsyncAutoTask<R[K], R, E>;
 	};
 	export type AsyncAutoTask<R1, R extends Dictionary<any>, E> =
 		| AsyncAutoTaskFunctionWithoutDependencies<R1, E>
@@ -73,6 +73,13 @@ declare module "neo-async" {
 
 	export function each<T, E>(
 		arr: IterableCollection<T>,
+		iterator: AsyncIterator<T, E>,
+		callback?: ErrorCallback<E>
+	): void;
+
+	export function eachLimit<T, E>(
+		arr: IterableCollection<T>,
+		limit: number,
 		iterator: AsyncIterator<T, E>,
 		callback?: ErrorCallback<E>
 	): void;
@@ -98,6 +105,7 @@ declare module "neo-async" {
 	): void;
 
 	export const forEach: typeof each;
+	export const forEachLimit: typeof eachLimit;
 }
 
 // There are no typings for @webassemblyjs/ast
@@ -184,7 +192,7 @@ declare module "@webassemblyjs/ast" {
 	export function global(globalType: string, nodes: Node[]): Global;
 	export function identifier(indentifier: string): Identifier;
 	export function funcParam(valType: string, id: Identifier): FuncParam;
-	export function instruction(inst: string, args: Node[]): Instruction;
+	export function instruction(inst: string, args?: Node[]): Instruction;
 	export function callInstruction(funcIndex: Index): CallInstruction;
 	export function objectInstruction(
 		kind: string,
@@ -226,8 +234,8 @@ interface RuleSetConditionsRecursive
 	extends Array<import("./declarations/WebpackOptions").RuleSetCondition> {}
 interface RuleSetConditionsAbsoluteRecursive
 	extends Array<
-			import("./declarations/WebpackOptions").RuleSetConditionAbsolute
-		> {}
+		import("./declarations/WebpackOptions").RuleSetConditionAbsolute
+	> {}
 
 /**
  * Global variable declarations
@@ -247,7 +255,7 @@ declare const hotAddUpdateChunk;
 declare const parentHotUpdateCallback;
 declare const $hotChunkFilename$;
 declare const $hotMainFilename$;
-declare const WebAssembly;
+declare namespace WebAssembly {}
 declare const importScripts;
 declare const $crossOriginLoading$;
 declare const chunkId;

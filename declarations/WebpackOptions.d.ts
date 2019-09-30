@@ -15,13 +15,15 @@ export type Entry = EntryDynamic | EntryStatic;
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "EntryDynamic".
  */
-export type EntryDynamic = (() => EntryStatic | Promise<EntryStatic>);
+export type EntryDynamic = () => EntryStatic | Promise<EntryStatic>;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "EntryStatic".
  */
 export type EntryStatic = EntryObject | EntryItem;
 /**
+ * A non-empty array of non-empty strings
+ *
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "NonEmptyArrayOfUniqueStringValues".
  */
@@ -73,6 +75,16 @@ export type ExternalItem =
  * via the `definition` "ArrayOfStringValues".
  */
 export type ArrayOfStringValues = string[];
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "FilterTypes".
+ */
+export type FilterTypes = FilterItemTypes | FilterItemTypes[];
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "FilterItemTypes".
+ */
+export type FilterItemTypes = RegExp | string | ((value: string) => boolean);
 /**
  * One or multiple rule conditions
  *
@@ -233,24 +245,16 @@ export type WebpackPluginFunction = (
  * via the `definition` "RuleSetRules".
  */
 export type RuleSetRules = RuleSetRule[];
-/**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "FilterTypes".
- */
-export type FilterTypes = FilterItemTypes | FilterItemTypes[];
-/**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "FilterItemTypes".
- */
-export type FilterItemTypes = RegExp | string | Function;
 
 export interface WebpackOptions {
 	/**
-	 * Set the value of `require.amd` and `define.amd`.
+	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: {
-		[k: string]: any;
-	};
+	amd?:
+		| false
+		| {
+				[k: string]: any;
+		  };
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
 	 */
@@ -289,6 +293,19 @@ export interface WebpackOptions {
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
 	externals?: Externals;
+	/**
+	 * Options for infrastructure level logging
+	 */
+	infrastructureLogging?: {
+		/**
+		 * Enable debug logging for specific loggers
+		 */
+		debug?: FilterTypes | boolean;
+		/**
+		 * Log level
+		 */
+		level?: "none" | "error" | "warn" | "info" | "log" | "verbose";
+	};
 	/**
 	 * Custom values available in the loader context.
 	 */
@@ -405,7 +422,14 @@ export interface WebpackOptions {
 	stats?:
 		| StatsOptions
 		| boolean
-		| ("none" | "errors-only" | "minimal" | "normal" | "detailed" | "verbose");
+		| (
+				| "none"
+				| "errors-only"
+				| "minimal"
+				| "normal"
+				| "detailed"
+				| "verbose"
+				| "errors-warnings");
 	/**
 	 * Environment to build for
 	 */
@@ -417,7 +441,8 @@ export interface WebpackOptions {
 				| "async-node"
 				| "node-webkit"
 				| "electron-main"
-				| "electron-renderer")
+				| "electron-renderer"
+				| "electron-preload")
 		| ((compiler: import("../lib/Compiler")) => void);
 	/**
 	 * Enter watch mode, which rebuilds on file change.
@@ -584,6 +609,10 @@ export interface RuleSetRule {
 	 * Shortcut for use.query
 	 */
 	query?: RuleSetQuery;
+	/**
+	 * Match rules with custom resource name
+	 */
+	realResource?: RuleSetConditionOrConditionsAbsolute;
 	/**
 	 * Options for the resolver
 	 */
@@ -897,6 +926,10 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	automaticNameDelimiter?: string;
 	/**
+	 * Sets the max length for the name of a created chunk
+	 */
+	automaticNameMaxLength?: number;
+	/**
 	 * Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)
 	 */
 	cacheGroups?: {
@@ -913,6 +946,10 @@ export interface OptimizationSplitChunksOptions {
 					 * Sets the name delimiter for created chunks
 					 */
 					automaticNameDelimiter?: string;
+					/**
+					 * Sets the max length for the name of a created chunk
+					 */
+					automaticNameMaxLength?: number;
 					/**
 					 * Sets the name prefix for created chunks
 					 */
@@ -1090,6 +1127,10 @@ export interface OutputOptions {
 	 */
 	filename?: string | Function;
 	/**
+	 * Use the future version of asset emitting logic, which allows freeing memory of assets after emitting. It could break plugins which assume that assets are still readable after emitting. Will be the new default in the next major version.
+	 */
+	futureEmitAssets?: boolean;
+	/**
 	 * An expression which is used to address the global object/scope in runtime code
 	 */
 	globalObject?: string;
@@ -1104,7 +1145,7 @@ export interface OutputOptions {
 	/**
 	 * Algorithm used for generation the hash (see node.js crypto package)
 	 */
-	hashFunction?: string | (new () => import("../lib/util/createHash").Hash);
+	hashFunction?: string | import("../lib/util/createHash").HashConstructor;
 	/**
 	 * Any string which is added to the hash to salt it
 	 */
@@ -1154,7 +1195,8 @@ export interface OutputOptions {
 		| "amd-require"
 		| "umd"
 		| "umd2"
-		| "jsonp";
+		| "jsonp"
+		| "system";
 	/**
 	 * The output directory as **absolute path** (required).
 	 */
@@ -1352,6 +1394,18 @@ export interface StatsOptions {
 	 * add the hash of the compilation
 	 */
 	hash?: boolean;
+	/**
+	 * add logging output
+	 */
+	logging?: boolean | ("none" | "error" | "warn" | "info" | "log" | "verbose");
+	/**
+	 * Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions
+	 */
+	loggingDebug?: FilterTypes | boolean;
+	/**
+	 * add stack traces to logging output
+	 */
+	loggingTrace?: boolean;
 	/**
 	 * Set the maximum number of modules to be shown
 	 */

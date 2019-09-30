@@ -72,7 +72,7 @@ module.exports = (env, globalTimeout = 2000, nameSuffix = "") => {
 			fn = createOnceFn(fn);
 			numberOfTests++;
 			let spec;
-			if(fn) {
+			if (fn) {
 				spec = env.fit(title, fn, timeout);
 			} else {
 				spec = env.fit(title, () => {});

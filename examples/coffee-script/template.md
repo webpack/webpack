@@ -1,26 +1,25 @@
-
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # cup1.coffee
 
-``` coffee-script
-{{cup1.coffee}}
+```coffee-script
+_{{cup1.coffee}}_
 ```
 
 # cup2.coffee
 
-``` coffee-script
-{{cup2.coffee}}
+```coffee-script
+_{{cup2.coffee}}_
 ```
 
 # dist/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
 # Info
@@ -28,11 +27,11 @@
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

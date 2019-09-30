@@ -2,39 +2,38 @@ This example shows automatically created async commons chunks.
 
 The example entry references two chunks:
 
-* entry chunk
-  * async require -> chunk X
-  * async require -> chunk Y
-* chunk X
-  * module `a`
-  * module `b`
-  * module `c`
-* chunk Y
-  * module `a`
-  * module `b`
-  * module `d`
+- entry chunk
+  - async require -> chunk X
+  - async require -> chunk Y
+- chunk X
+  - module `a`
+  - module `b`
+  - module `c`
+- chunk Y
+  - module `a`
+  - module `b`
+  - module `d`
 
 These chunks share modules `a` and `b`. The optimization extract these into chunk Z:
 
 Note: Actually the optimization compare size of chunk Z to some minimum value, but this is disabled from this example. In practice there is no configuration needed for this.
 
-* entry chunk
-  * async require -> chunk X & Z
-  * async require -> chunk Y & Z
-* chunk X
-  * module `c`
-* chunk Y
-  * module `d`
-* chunk Z
-  * module `a`
-  * module `b`
+- entry chunk
+  - async require -> chunk X & Z
+  - async require -> chunk Y & Z
+- chunk X
+  - module `c`
+- chunk Y
+  - module `d`
+- chunk Z
+  - module `a`
+  - module `b`
 
 Pretty useful for a router in a SPA.
 
-
 # example.js
 
-``` javascript
+```javascript
 // a chunks with a, b, c
 require(["./a", "./b", "./c"]);
 
@@ -49,7 +48,7 @@ require.ensure(["./a"], function(require) {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -62,7 +61,7 @@ require.ensure(["./a"], function(require) {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -154,6 +153,8 @@ require.ensure(["./a"], function(require) {
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -163,7 +164,8 @@ require.ensure(["./a"], function(require) {
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
@@ -252,7 +254,7 @@ require.ensure(["./a"], function(require) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ({
 
 /***/ 2:
@@ -279,7 +281,7 @@ Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.
 
 # dist/0.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
 /* 0 */
 /*!**************!*\
@@ -306,7 +308,7 @@ module.exports = "b";
 
 # dist/2.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
 /***/ 3:
@@ -325,7 +327,7 @@ module.exports = "c";
 
 # dist/3.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
 
 /***/ 4:
@@ -348,12 +350,12 @@ module.exports = "d";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  405 bytes       0  [emitted]  
 2.output.js  241 bytes       2  [emitted]  
 3.output.js  241 bytes       3  [emitted]  
-  output.js   8.54 KiB       1  [emitted]  main
+  output.js   8.76 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes <{1}> ={2}= ={3}= [rendered] split chunk (cache group: default)
     > ./a ./b ./c [2] ./example.js 2:0-30
@@ -365,9 +367,9 @@ chunk    {0} 0.output.js 42 bytes <{1}> ={2}= ={3}= [rendered] split chunk (cach
      amd require ./b [2] ./example.js 2:0-30
      cjs require ./b [2] ./example.js 6:1-15
 chunk    {1} output.js (main) 164 bytes >{0}< >{2}< >{3}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [2] ./example.js 164 bytes {1} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
 chunk    {2} 2.output.js 21 bytes <{1}> ={0}= [rendered]
     > ./a ./b ./c [2] ./example.js 2:0-30
  [3] ./c.js 21 bytes {2} [built]
@@ -382,12 +384,12 @@ chunk    {3} 3.output.js 21 bytes <{1}> ={0}= [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  118 bytes       0  [emitted]  
 2.output.js   91 bytes       2  [emitted]  
 3.output.js   91 bytes       3  [emitted]  
-  output.js    2.1 KiB       1  [emitted]  main
+  output.js   2.18 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes <{1}> ={2}= ={3}= [rendered] split chunk (cache group: default)
     > ./a ./b ./c [2] ./example.js 2:0-30
@@ -399,9 +401,9 @@ chunk    {0} 0.output.js 42 bytes <{1}> ={2}= ={3}= [rendered] split chunk (cach
      amd require ./b [2] ./example.js 2:0-30
      cjs require ./b [2] ./example.js 6:1-15
 chunk    {1} output.js (main) 164 bytes >{0}< >{2}< >{3}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [2] ./example.js 164 bytes {1} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
 chunk    {2} 2.output.js 21 bytes <{1}> ={0}= [rendered]
     > ./a ./b ./c [2] ./example.js 2:0-30
  [3] ./c.js 21 bytes {2} [built]

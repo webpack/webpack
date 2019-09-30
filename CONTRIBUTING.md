@@ -49,7 +49,8 @@ Something that will increase the chance that your pull request is accepted:
 
 webpack is insanely feature rich and documentation is a huge time sink. We
 greatly appreciate any time spent fixing typos or clarifying sections in the
-documentation. [See a list of issues with the documentation tag.](https://github.com/webpack/webpack/labels/documentation)
+documentation. [See a list of issues with the documentation tag](https://github.com/webpack/webpack/labels/documentation),
+or [check out the issues on the documentation website's repository](https://github.com/webpack/webpack.js.org/issues).
 
 ## Discussions
 

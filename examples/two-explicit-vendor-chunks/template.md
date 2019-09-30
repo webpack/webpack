@@ -1,25 +1,25 @@
 # webpack.config.js
 
-``` javascript
-{{webpack.config.js}}
+```javascript
+_{{webpack.config.js}}_
 ```
 
 # dist/vendor1.js
 
-``` javascript
-{{dist/vendor1.js}}
+```javascript
+_{{dist/vendor1.js}}_
 ```
 
 # dist/vendor2.js
 
-``` javascript
-{{dist/vendor2.js}}
+```javascript
+_{{dist/vendor2.js}}_
 ```
 
 # dist/pageA.js
 
-``` javascript
-{{dist/pageA.js}}
+```javascript
+_{{dist/pageA.js}}_
 ```
 
 # Info
@@ -27,11 +27,11 @@
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

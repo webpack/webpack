@@ -24,17 +24,16 @@ from the corresponding modules `a.js`, `b.js` and `cjs.js`. None of the other mo
 Also see [tree shaking](https://github.com/webpack/webpack/tree/master/examples/harmony-unused)
 and [scope hoisting example](https://github.com/webpack/webpack/tree/master/examples/scope-hoisting).
 
-
 # example.js
 
-``` javascript
+```javascript
 export { a, b } from "./a";
 export { c } from "./cjs";
 ```
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../");
 
@@ -63,7 +62,7 @@ module.exports = {
 
 # dist/dll.js
 
-``` javascript
+```javascript
 var dll_3eea518f6d09aac41ec7 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
@@ -194,6 +193,7 @@ exports.c = "c";
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./b.js
 // module b
@@ -223,7 +223,7 @@ var cjs = __webpack_require__(1);
 
 # dist/dll-manifest.json
 
-``` javascript
+```javascript
 {"name":"dll_3eea518f6d09aac41ec7","content":{"./example.js":{"id":2,"buildMeta":{"exportsType":"namespace","providedExports":["a","b","c"]}}}}
 ```
 
@@ -233,9 +233,9 @@ var cjs = __webpack_require__(1);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
  Asset      Size  Chunks             Chunk Names
-dll.js  4.98 KiB       0  [emitted]  dll
+dll.js  5.03 KiB       0  [emitted]  dll
 Entrypoint dll = dll.js
 chunk    {0} dll.js (dll) 216 bytes [entry] [rendered]
     > dll
@@ -265,7 +265,7 @@ chunk    {0} dll.js (dll) 216 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
  Asset      Size  Chunks             Chunk Names
 dll.js  1.15 KiB       0  [emitted]  dll
 Entrypoint dll = dll.js

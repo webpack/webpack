@@ -1,5 +1,8 @@
+const LogTestPlugin = require("../../helpers/LogTestPlugin");
+
 module.exports = {
 	mode: "production",
 	entry: "./index",
-	stats: false
+	stats: false,
+	plugins: [new LogTestPlugin()]
 };

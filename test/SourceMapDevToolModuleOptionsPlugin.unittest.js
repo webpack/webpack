@@ -58,14 +58,16 @@ describe("SourceMapDevToolModuleOptionsPlugin", () => {
 		});
 
 		describe("with line-to-line true", () => {
-			beforeEach(() =>
-				(eventBindings = applyPluginWithOptions(
-					SourceMapDevToolModuleOptionsPlugin,
-					{
-						module: false,
-						lineToLine: true
-					}
-				)));
+			beforeEach(
+				() =>
+					(eventBindings = applyPluginWithOptions(
+						SourceMapDevToolModuleOptionsPlugin,
+						{
+							module: false,
+							lineToLine: true
+						}
+					))
+			);
 
 			it("binds one event handler", () => {
 				expect(eventBindings.length).toBe(1);

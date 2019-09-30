@@ -93,3 +93,10 @@ it("should provide a zlib shim", function () {
 it("should provide a shim for a path in a build-in module", function () {
 	expect(require("process/in.js")).toBe("in process");
 });
+
+it("should allow to load a chunk", () => {
+	__webpack_public_path__ = "./";
+	return import("./module").then(module => {
+		expect(module.default).toBe("ok");
+	});
+});

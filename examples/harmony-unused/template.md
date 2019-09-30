@@ -1,4 +1,4 @@
-This example demonstrates how webpack tracks the using of ES6 imports and exports. Only used exports are emitted to the resulting bundle. The minimizing step then removes the declarations because they are unused. 
+This example demonstrates how webpack tracks the using of ES6 imports and exports. Only used exports are emitted to the resulting bundle. The minimizing step then removes the declarations because they are unused.
 
 Excluding unused exports from bundles is known as "[tree-shaking](http://www.2ality.com/2015/12/webpack-tree-shaking.html)".
 
@@ -8,32 +8,32 @@ In addition to that, `library.js` simulates an entry point to a big library. `li
 
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # math.js
 
-``` javascript
-{{math.js}}
+```javascript
+_{{math.js}}_
 ```
 
 # library.js
 
-``` javascript
-{{library.js}}
+```javascript
+_{{library.js}}_
 ```
 
 # dist/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
 # dist/output.js
 
-``` javascript
-{{production:dist/output.js}}
+```javascript
+_{{production:dist/output.js}}_
 ```
 
 # Info
@@ -41,11 +41,11 @@ In addition to that, `library.js` simulates an entry point to a big library. `li
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

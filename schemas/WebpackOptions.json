@@ -166,7 +166,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((value: string) => boolean)"
         }
       ]
     },
@@ -385,6 +385,7 @@
       }
     },
     "NonEmptyArrayOfUniqueStringValues": {
+      "description": "A non-empty array of non-empty strings",
       "type": "array",
       "items": {
         "description": "A non-empty string",
@@ -552,6 +553,11 @@
           "type": "string",
           "minLength": 1
         },
+        "automaticNameMaxLength": {
+          "description": "Sets the max length for the name of a created chunk",
+          "type": "number",
+          "minimum": 1
+        },
         "cacheGroups": {
           "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
           "type": "object",
@@ -580,6 +586,11 @@
                     "description": "Sets the name delimiter for created chunks",
                     "type": "string",
                     "minLength": 1
+                  },
+                  "automaticNameMaxLength": {
+                    "description": "Sets the max length for the name of a created chunk",
+                    "type": "number",
+                    "minimum": 1
                   },
                   "automaticNamePrefix": {
                     "description": "Sets the name prefix for created chunks",
@@ -673,6 +684,30 @@
                 }
               }
             ]
+          },
+          "not": {
+            "description": "Using the cacheGroup shorthand syntax with a cache group named 'test' is a potential config error\nDid you intent to define a cache group with a test instead?\ncacheGroups: {\n  <name>: {\n    test: ...\n  }\n}",
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "test": {
+                "description": "The test property is a cache group name, but using the test option of the cache group could be intended instead",
+                "anyOf": [
+                  {
+                    "instanceof": "Function",
+                    "tsType": "Function"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
+                  }
+                ]
+              }
+            },
+            "required": ["test"]
           }
         },
         "chunks": {
@@ -867,6 +902,10 @@
             }
           ]
         },
+        "futureEmitAssets": {
+          "description": "Use the future version of asset emitting logic, which allows freeing memory of assets after emitting. It could break plugins which assume that assets are still readable after emitting. Will be the new default in the next major version.",
+          "type": "boolean"
+        },
         "globalObject": {
           "description": "An expression which is used to address the global object/scope in runtime code",
           "type": "string",
@@ -890,7 +929,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "(new () => import('../lib/util/createHash').Hash)"
+              "tsType": "import('../lib/util/createHash').HashConstructor"
             }
           ]
         },
@@ -982,7 +1021,8 @@
             "amd-require",
             "umd",
             "umd2",
-            "jsonp"
+            "jsonp",
+            "system"
           ]
         },
         "path": {
@@ -1505,6 +1545,14 @@
             }
           ]
         },
+        "realResource": {
+          "description": "Match rules with custom resource name",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
+            }
+          ]
+        },
         "resolve": {
           "description": "Options for the resolver",
           "type": "object",
@@ -1798,6 +1846,35 @@
           "description": "add the hash of the compilation",
           "type": "boolean"
         },
+        "logging": {
+          "description": "add logging output",
+          "anyOf": [
+            {
+              "description": "enable/disable logging output (true: shows normal logging output, loglevel: log)",
+              "type": "boolean"
+            },
+            {
+              "description": "specify log level of logging output",
+              "enum": ["none", "error", "warn", "info", "log", "verbose"]
+            }
+          ]
+        },
+        "loggingDebug": {
+          "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FilterTypes"
+            },
+            {
+              "description": "Enable/Disable debug logging for all loggers",
+              "type": "boolean"
+            }
+          ]
+        },
+        "loggingTrace": {
+          "description": "add stack traces to logging output",
+          "type": "boolean"
+        },
         "maxModules": {
           "description": "Set the maximum number of modules to be shown",
           "type": "number"
@@ -1899,7 +1976,17 @@
   "additionalProperties": false,
   "properties": {
     "amd": {
-      "description": "Set the value of `require.amd` and `define.amd`."
+      "description": "Set the value of `require.amd` and `define.amd`. Or disable AMD support.",
+      "anyOf": [
+        {
+          "description": "You can pass `false` to disable AMD support.",
+          "enum": [false]
+        },
+        {
+          "description": "You can pass an object to set the value of `require.amd` and `define.amd`.",
+          "type": "object"
+        }
+      ]
     },
     "bail": {
       "description": "Report the first error as a hard error instead of tolerating it.",
@@ -1961,6 +2048,29 @@
           "$ref": "#/definitions/Externals"
         }
       ]
+    },
+    "infrastructureLogging": {
+      "description": "Options for infrastructure level logging",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "debug": {
+          "description": "Enable debug logging for specific loggers",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FilterTypes"
+            },
+            {
+              "description": "Enable/Disable debug logging for all loggers",
+              "type": "boolean"
+            }
+          ]
+        },
+        "level": {
+          "description": "Log level",
+          "enum": ["none", "error", "warn", "info", "log", "verbose"]
+        }
+      }
     },
     "loader": {
       "description": "Custom values available in the loader context.",
@@ -2149,7 +2259,8 @@
             "minimal",
             "normal",
             "detailed",
-            "verbose"
+            "verbose",
+            "errors-warnings"
           ]
         }
       ]
@@ -2165,7 +2276,8 @@
             "async-node",
             "node-webkit",
             "electron-main",
-            "electron-renderer"
+            "electron-renderer",
+            "electron-preload"
           ]
         },
         {

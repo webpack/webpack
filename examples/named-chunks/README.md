@@ -1,6 +1,6 @@
 # example.js
 
-``` javascript
+```javascript
 var a = require("a");
 
 require.ensure(["b"], function(require) {
@@ -23,12 +23,11 @@ require.ensure(["b"], function(require) {
 });
 ```
 
-
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -41,7 +40,7 @@ require.ensure(["b"], function(require) {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -133,6 +132,8 @@ require.ensure(["b"], function(require) {
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -142,7 +143,8 @@ require.ensure(["b"], function(require) {
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
@@ -231,7 +233,7 @@ require.ensure(["b"], function(require) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */,
 /* 1 */,
@@ -280,7 +282,7 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 
 # dist/1.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
 /*!***************************!*\
@@ -319,7 +321,7 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 
 # dist/2.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],[
 /* 0 */
 /*!***************************!*\
@@ -350,16 +352,16 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 1.output.js  677 bytes       1  [emitted]  my own chunk
 2.output.js  463 bytes       2  [emitted]  
-  output.js   9.07 KiB       0  [emitted]  main
+  output.js   9.29 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 432 bytes >{1}< >{2}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [2] ./example.js 421 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
      + 1 hidden module
 chunk    {1} 1.output.js (my own chunk) 33 bytes <{0}> [rendered]
     > [2] ./example.js 13:0-15:18
@@ -375,16 +377,16 @@ chunk    {2} 2.output.js 22 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 1.output.js  112 bytes    1, 2  [emitted]  my own chunk
 2.output.js   92 bytes       2  [emitted]  
-  output.js   2.19 KiB       0  [emitted]  main
+  output.js   2.26 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 432 bytes >{1}< >{2}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [2] ./example.js 421 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
      + 1 hidden module
 chunk    {1} 1.output.js (my own chunk) 33 bytes <{0}> [rendered]
     > [2] ./example.js 13:0-15:18

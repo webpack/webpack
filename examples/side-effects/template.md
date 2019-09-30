@@ -10,37 +10,37 @@ After being built by webpack, the output bundle contains `index.js` `a.js` `b.js
 
 Advantages:
 
-* Smaller bundles
-* Faster bootup
+- Smaller bundles
+- Faster bootup
 
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # node_modules/big-module/package.json
 
-``` javascript
-{{node_modules/big-module/package.json}}
+```javascript
+_{{node_modules/big-module/package.json}}_
 ```
 
 # node_modules/big-module-with-flag/package.json
 
-``` javascript
-{{node_modules/big-module-with-flag/package.json}}
+```javascript
+_{{node_modules/big-module-with-flag/package.json}}_
 ```
 
 # node_modules/big-module(-with-flag)/index.js
 
-``` javascript
-{{node_modules/big-module-with-flag/index.js}}
+```javascript
+_{{node_modules/big-module-with-flag/index.js}}_
 ```
 
 # dist/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
 # Info
@@ -48,11 +48,11 @@ Advantages:
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

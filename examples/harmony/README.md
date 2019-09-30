@@ -1,7 +1,6 @@
-
 # example.js
 
-``` javascript
+```javascript
 import { increment as inc } from './increment';
 var a = 1;
 inc(a); // 2
@@ -14,7 +13,7 @@ import("./async-loaded").then(function(asyncLoaded) {
 
 # increment.js
 
-``` javascript
+```javascript
 import { add } from './math';
 export function increment(val) {
     return add(val, 1);
@@ -25,7 +24,7 @@ export function increment(val) {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -38,7 +37,7 @@ export function increment(val) {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -130,6 +129,8 @@ export function increment(val) {
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -139,7 +140,8 @@ export function increment(val) {
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
@@ -228,7 +230,7 @@ export function increment(val) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!**********************!*\
@@ -298,13 +300,13 @@ __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*!
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 1.output.js  478 bytes       1  [emitted]  
-  output.js   9.48 KiB       0  [emitted]  main
+  output.js    9.7 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 400 bytes >{1}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./increment.js 90 bytes {0} [built]
      [exports: increment]
      harmony side effect evaluation ./increment [2] ./example.js 1:0-47
@@ -315,7 +317,7 @@ chunk    {0} output.js (main) 400 bytes >{1}< [entry] [rendered]
      harmony import specifier ./math [0] ./increment.js 3:11-14
  [2] ./example.js 175 bytes {0} [built]
      [no exports]
-     single entry .\example.js  main
+     single entry ./example.js  main
 chunk    {1} 1.output.js 24 bytes <{0}> [rendered]
     > ./async-loaded [2] ./example.js 6:0-24
  [3] ./async-loaded.js 24 bytes {1} [built]
@@ -327,19 +329,19 @@ chunk    {1} 1.output.js 24 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 1.output.js  144 bytes       1  [emitted]  
-  output.js    2.1 KiB       0  [emitted]  main
+  output.js   2.18 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 400 bytes >{1}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js + 2 modules 400 bytes {0} [built]
      [no exports]
-     single entry .\example.js  main
+     single entry ./example.js  main
      | ./example.js 175 bytes [built]
      |     [no exports]
-     |     single entry .\example.js  main
+     |     single entry ./example.js  main
      | ./increment.js 90 bytes [built]
      |     [exports: increment]
      |     [all exports used]

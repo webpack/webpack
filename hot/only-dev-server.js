@@ -72,12 +72,9 @@ if (module.hot) {
 						"warning",
 						"[HMR] Cannot check for update. Need to do a full reload!"
 					);
-					log("warning", "[HMR] " + (err.stack || err.message));
+					log("warning", "[HMR] " + log.formatError(err));
 				} else {
-					log(
-						"warning",
-						"[HMR] Update check failed: " + (err.stack || err.message)
-					);
+					log("warning", "[HMR] Update check failed: " + log.formatError(err));
 				}
 			});
 	};

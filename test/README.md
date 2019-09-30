@@ -52,14 +52,14 @@ Basically you don't need to write any expected behaviors your self. The assumpti
 
 Please follow the approach described bellow:
 
-* write your test code in ```statsCases/``` folder by creating a separate folder for it, for example
-```statsCases/some-file-import-stats/index.js```
+* write your test code in `statsCases/` folder by creating a separate folder for it, for example `statsCases/some-file-import-stats/index.js`
+
+```javascript
+import("./someModule");
 ```
-    import(./someModule);
-```
-** dont's forget the ```webpack.config.js```
+* don't forget the `webpack.config.js`
 * run the test
-* jest will automatically add the output from your test code to ```StatsTestCases.test.js.snap``` and you can always check your results there
+* jest will automatically add the output from your test code to `StatsTestCases.test.js.snap` and you can always check your results there
 * Next time test will run -> runner will compare results against your output written to snapshot previously
 
 You can read more about SnapShot testing [right here](https://jestjs.io/docs/snapshot-testing)

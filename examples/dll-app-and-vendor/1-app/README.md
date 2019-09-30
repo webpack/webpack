@@ -4,7 +4,7 @@ The previously built vendor dll is used. The DllReferencePlugin reads the conten
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../../");
 
@@ -27,7 +27,7 @@ module.exports = {
 
 # example-app.js
 
-``` javascript
+```javascript
 import { square } from "example-vendor";
 
 console.log(square(7));
@@ -36,7 +36,7 @@ console.log(new square(7));
 
 # example.html
 
-``` html
+```html
 <html>
 	<head></head>
 	<body>
@@ -50,7 +50,7 @@ console.log(new square(7));
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -141,7 +141,7 @@ console.log(new square(7));
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!************************!*\
@@ -189,7 +189,7 @@ module.exports = vendor_lib_a132d30959ef28c3f004;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
  Asset      Size  Chunks             Chunk Names
 app.js  4.86 KiB       0  [emitted]  main
 Entrypoint main = app.js
@@ -211,7 +211,7 @@ chunk    {0} app.js (main) 178 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
  Asset      Size  Chunks             Chunk Names
 app.js  1.09 KiB       0  [emitted]  main
 Entrypoint main = app.js

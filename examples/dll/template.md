@@ -4,23 +4,22 @@
 
 This is the _reference_ bundle (with the manifests) for [dll user example](https://github.com/webpack/webpack/tree/master/examples/dll-user)
 
-
 # webpack.config.js
 
-``` javascript
-{{webpack.config.js}}
+```javascript
+_{{webpack.config.js}}_
 ```
 
 # dist/MyDll.alpha.js
 
-``` javascript
-{{dist/MyDll.alpha.js}}
+```javascript
+_{{dist/MyDll.alpha.js}}_
 ```
 
 # dist/alpha-manifest.json
 
-``` javascript
-{{dist/alpha-manifest.json}}
+```javascript
+_{{dist/alpha-manifest.json}}_
 ```
 
 # Info
@@ -28,11 +27,11 @@ This is the _reference_ bundle (with the manifests) for [dll user example](https
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

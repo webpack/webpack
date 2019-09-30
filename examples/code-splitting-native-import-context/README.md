@@ -2,7 +2,7 @@
 
 This example illustrates how to leverage the `import()` syntax to create ContextModules which are separated into separate chunks for each module in the `./templates` folder.
 
-``` javascript
+```javascript
 async function getTemplate(templateName) {
 	try {
 		let template = await import(`./templates/${templateName}`);
@@ -20,13 +20,13 @@ getTemplate("baz");
 
 # templates/
 
-* foo.js
-* baz.js
-* bar.js
+- foo.js
+- baz.js
+- bar.js
 
 All templates are of this pattern:
 
-``` javascript
+```javascript
 var foo = "foo";
 
 export default foo;
@@ -36,7 +36,7 @@ export default foo;
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -49,7 +49,7 @@ export default foo;
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -141,6 +141,8 @@ export default foo;
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -150,7 +152,8 @@ export default foo;
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
@@ -239,7 +242,7 @@ export default foo;
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */,
 /* 1 */,
@@ -303,16 +306,16 @@ var map = {
 	]
 };
 function webpackAsyncContext(req) {
-	var ids = map[req];
-	if(!ids) {
+	if(!__webpack_require__.o(map, req)) {
 		return Promise.resolve().then(function() {
 			var e = new Error("Cannot find module '" + req + "'");
 			e.code = 'MODULE_NOT_FOUND';
 			throw e;
 		});
 	}
+
+	var ids = map[req], id = ids[0];
 	return __webpack_require__.e(ids[1]).then(function() {
-		var id = ids[0];
 		return __webpack_require__(id);
 	});
 }
@@ -332,12 +335,12 @@ module.exports = webpackAsyncContext;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  433 bytes       0  [emitted]  
 1.output.js  442 bytes       1  [emitted]  
 2.output.js  436 bytes       2  [emitted]  
-  output.js   9.24 KiB       3  [emitted]  main
+  output.js   9.48 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 38 bytes <{3}> [rendered]
     > ./bar [4] ./templates lazy ^\.\/.*$ namespace object ./bar
@@ -361,9 +364,9 @@ chunk    {2} 2.output.js 38 bytes <{3}> [rendered]
      context element ./foo [4] ./templates lazy ^\.\/.*$ namespace object ./foo
      context element ./foo.js [4] ./templates lazy ^\.\/.*$ namespace object ./foo.js
 chunk    {3} output.js (main) 441 bytes >{0}< >{1}< >{2}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [3] ./example.js 281 bytes {3} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [4] ./templates lazy ^\.\/.*$ namespace object 160 bytes {3} [optional] [built]
      import() context lazy ./templates [3] ./example.js 3:23-60
 ```
@@ -372,12 +375,12 @@ chunk    {3} output.js (main) 441 bytes >{0}< >{1}< >{2}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  113 bytes       0  [emitted]  
 1.output.js  114 bytes       1  [emitted]  
 2.output.js  115 bytes       2  [emitted]  
-  output.js   2.47 KiB       3  [emitted]  main
+  output.js   2.56 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 38 bytes <{3}> [rendered]
     > ./bar [4] ./templates lazy ^\.\/.*$ namespace object ./bar
@@ -401,9 +404,9 @@ chunk    {2} 2.output.js 38 bytes <{3}> [rendered]
      context element ./foo [4] ./templates lazy ^\.\/.*$ namespace object ./foo
      context element ./foo.js [4] ./templates lazy ^\.\/.*$ namespace object ./foo.js
 chunk    {3} output.js (main) 441 bytes >{0}< >{1}< >{2}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [3] ./example.js 281 bytes {3} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [4] ./templates lazy ^\.\/.*$ namespace object 160 bytes {3} [optional] [built]
      import() context lazy ./templates [3] ./example.js 3:23-60
 ```

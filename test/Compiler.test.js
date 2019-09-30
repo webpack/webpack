@@ -6,6 +6,7 @@ const path = require("path");
 const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const MemoryFs = require("memory-fs");
+const captureStdio = require("./helpers/captureStdio");
 
 describe("Compiler", () => {
 	jest.setTimeout(20000);
@@ -503,15 +504,122 @@ describe("Compiler", () => {
 			output: {
 				path: "/",
 				filename: "bundle.js"
-			},
+			}
 		});
-		compiler.hooks.failed.tap('CompilerTest', failedSpy);
+		compiler.hooks.failed.tap("CompilerTest", failedSpy);
 		compiler.outputFileSystem = new MemoryFs();
 		compiler.run((err, stats) => {
 			expect(err).toBeTruthy();
 			expect(failedSpy).toHaveBeenCalledTimes(1);
 			expect(failedSpy).toHaveBeenCalledWith(err);
 			done();
+		});
+	});
+	describe("infrastructure logging", () => {
+		let capture;
+		beforeEach(() => {
+			capture = captureStdio(process.stderr);
+		});
+		afterEach(() => {
+			capture.restore();
+		});
+		class MyPlugin {
+			apply(compiler) {
+				const logger = compiler.getInfrastructureLogger("MyPlugin");
+				logger.time("Time");
+				logger.group("Group");
+				logger.error("Error");
+				logger.warn("Warning");
+				logger.info("Info");
+				logger.log("Log");
+				logger.debug("Debug");
+				logger.groupCollapsed("Collaped group");
+				logger.log("Log inside collapsed group");
+				logger.groupEnd();
+				logger.groupEnd();
+				logger.timeEnd("Time");
+			}
+		}
+		it("should log to the console (verbose)", done => {
+			const compiler = webpack({
+				context: path.join(__dirname, "fixtures"),
+				entry: "./a",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				},
+				infrastructureLogging: {
+					level: "verbose"
+				},
+				plugins: [new MyPlugin()]
+			});
+			compiler.outputFileSystem = new MemoryFs();
+			compiler.run((err, stats) => {
+				expect(capture.toString().replace(/[\d.]+ms/, "Xms"))
+					.toMatchInlineSnapshot(`
+"<-> [MyPlugin] Group
+  <e> [MyPlugin] Error
+  <w> [MyPlugin] Warning
+  <i> [MyPlugin] Info
+      [MyPlugin] Log
+  <-> [MyPlugin] Collaped group
+        [MyPlugin] Log inside collapsed group
+<t> [MyPlugin] Time: Xms
+"
+`);
+				done();
+			});
+		});
+		it("should log to the console (debug mode)", done => {
+			const compiler = webpack({
+				context: path.join(__dirname, "fixtures"),
+				entry: "./a",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				},
+				infrastructureLogging: {
+					level: "error",
+					debug: /MyPlugin/
+				},
+				plugins: [new MyPlugin()]
+			});
+			compiler.outputFileSystem = new MemoryFs();
+			compiler.run((err, stats) => {
+				expect(capture.toString().replace(/[\d.]+ms/, "Xms"))
+					.toMatchInlineSnapshot(`
+"<-> [MyPlugin] Group
+  <e> [MyPlugin] Error
+  <w> [MyPlugin] Warning
+  <i> [MyPlugin] Info
+      [MyPlugin] Log
+      [MyPlugin] Debug
+  <-> [MyPlugin] Collaped group
+        [MyPlugin] Log inside collapsed group
+<t> [MyPlugin] Time: Xms
+"
+`);
+				done();
+			});
+		});
+		it("should log to the console (none)", done => {
+			const compiler = webpack({
+				context: path.join(__dirname, "fixtures"),
+				entry: "./a",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				},
+				infrastructureLogging: {
+					level: "none"
+				},
+				plugins: [new MyPlugin()]
+			});
+			compiler.outputFileSystem = new MemoryFs();
+			compiler.run((err, stats) => {
+				expect(capture.toString()).toMatchInlineSnapshot(`""`);
+				done();
+			});
 		});
 	});
 });

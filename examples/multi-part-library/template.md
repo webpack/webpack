@@ -14,20 +14,20 @@ Note: When your library has dependencies that should not be included in the comp
 
 # webpack.config.js
 
-``` javascript
-{{webpack.config.js}}
+```javascript
+_{{webpack.config.js}}_
 ```
 
 # dist/MyLibrary.alpha.js
 
-``` javascript
-{{dist/MyLibrary.alpha.js}}
+```javascript
+_{{dist/MyLibrary.alpha.js}}_
 ```
 
 # dist/MyLibrary.beta.js
 
-``` javascript
-{{dist/MyLibrary.beta.js}}
+```javascript
+_{{dist/MyLibrary.beta.js}}_
 ```
 
 # Info
@@ -35,11 +35,11 @@ Note: When your library has dependencies that should not be included in the comp
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

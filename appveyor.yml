@@ -31,5 +31,5 @@ test_script:
   - cmd: yarn appveyor:integration
   - cmd: yarn istanbul report --report lcovonly
   - cmd: yarn unlink webpack
-  - cmd: yarn global add codecov && codecov -F %job_part% --disable=gcov
+  - cmd: yarn global add codecov && codecov -F integration --disable=gcov
   - cmd: del /F /Q .jest-cache\\haste-map* .jest-cache\\perf-cache* 2> null || Ver > null

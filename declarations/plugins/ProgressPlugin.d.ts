@@ -8,11 +8,11 @@ export type ProgressPluginArgument = ProgressPluginOptions | HandlerFunction;
 /**
  * Function that executes for every progress step
  */
-export type HandlerFunction = ((
+export type HandlerFunction = (
 	percentage: number,
 	msg: string,
 	...args: string[]
-) => void);
+) => void;
 
 export interface ProgressPluginOptions {
 	/**

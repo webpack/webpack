@@ -1,20 +1,20 @@
 # example.js
 
 ``` javascript
-{{example.js}}
+_{{example.js}}_
 ```
 
 # a.js
 
 
 ``` javascript
-{{a.js}}
+_{{a.js}}_
 ```
 
 # dist/output.js
 
 ``` javascript
-{{dist/output.js}}
+_{{dist/output.js}}_
 ```
 
 # Info
@@ -22,11 +22,11 @@
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

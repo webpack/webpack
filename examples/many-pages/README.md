@@ -6,15 +6,15 @@ This example application contains 7 pages, each of them importing 1-3 modules fr
 
 The following configuration is used:
 
-* `optimization.splitChunks.chunks: "all"` - This opt-in into automatic splitting of initial chunks which is off by default
-* `optimization.splitChunks.maxInitial/AsyncRequests: 20` - This opt-in into a HTTP2 optimized splitting mode by increasing the allowed amount of requests. Browser only supports 6 requests in parallel for HTTP1.1.
+- `optimization.splitChunks.chunks: "all"` - This opt-in into automatic splitting of initial chunks which is off by default
+- `optimization.splitChunks.maxInitial/AsyncRequests: 20` - This opt-in into a HTTP2 optimized splitting mode by increasing the allowed amount of requests. Browser only supports 6 requests in parallel for HTTP1.1.
 
 # Interpreting the result
 
-* `pageA.js` the normal output files for the entrypoint `pageA`
-* `vendors~pageD~pageE~pageF~pageG.js` vendor libs shared by these pages extracted into a separate output file when larger then the threshold in size
-* `vendors~pageA.js` vendors only used by a single page but larger than the threshold in size
-* `pageA~pageD~pageF.js` application modules shared by these pages and larger than the threshold in size
+- `pageA.js` the normal output files for the entrypoint `pageA`
+- `vendors~pageD~pageE~pageF~pageG.js` vendor libs shared by these pages extracted into a separate output file when larger then the threshold in size
+- `vendors~pageA.js` vendors only used by a single page but larger than the threshold in size
+- `pageA~pageD~pageF.js` application modules shared by these pages and larger than the threshold in size
 
 The threshold is here 40 bytes, but by default (in a real application) 30kb.
 
@@ -52,16 +52,16 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.39.0
                              Asset       Size  Chunks             Chunk Names
-                          pageA.js   1.55 KiB       4  [emitted]  pageA
+                          pageA.js    1.6 KiB       4  [emitted]  pageA
               pageA~pageD~pageF.js  156 bytes       1  [emitted]  pageA~pageD~pageF
-                          pageB.js   1.65 KiB       5  [emitted]  pageB
-                          pageC.js   1.65 KiB       6  [emitted]  pageC
-                          pageD.js   1.55 KiB       7  [emitted]  pageD
-                          pageE.js   1.54 KiB       8  [emitted]  pageE
-                          pageF.js   1.55 KiB       9  [emitted]  pageF
-                          pageG.js   1.53 KiB      10  [emitted]  pageG
+                          pageB.js   1.69 KiB       5  [emitted]  pageB
+                          pageC.js   1.69 KiB       6  [emitted]  pageC
+                          pageD.js   1.59 KiB       7  [emitted]  pageD
+                          pageE.js   1.58 KiB       8  [emitted]  pageE
+                          pageF.js   1.59 KiB       9  [emitted]  pageF
+                          pageG.js   1.57 KiB      10  [emitted]  pageG
                   vendors~pageA.js  122 bytes      11  [emitted]  vendors~pageA
       vendors~pageA~pageB~pageC.js  178 bytes       2  [emitted]  vendors~pageA~pageB~pageC
                   vendors~pageB.js  122 bytes      12  [emitted]  vendors~pageB

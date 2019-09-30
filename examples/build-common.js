@@ -26,6 +26,13 @@ const doCompileAndReplace = (args, prefix, callback) => {
 	if(fs.existsSync("dist"))
 		for(const file of fs.readdirSync("dist"))
 			fs.unlinkSync(`dist/${file}`);
+
+	try {
+		require.resolve("webpack-cli");
+	} catch (e) {
+		throw new Error("Please install webpack-cli at root.");
+	}
+
 	cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${args} ${displayReasons} ${commonArgs}`, (error, stdout, stderr) => {
 		if(stderr)
 			console.log(stderr);

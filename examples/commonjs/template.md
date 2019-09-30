@@ -8,26 +8,26 @@ You can also see the info messages webpack prints to console (for both normal an
 
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # increment.js
 
-``` javascript
-{{increment.js}}
+```javascript
+_{{increment.js}}_
 ```
 
 # math.js
 
-``` javascript
-{{math.js}}
+```javascript
+_{{math.js}}_
 ```
 
 # dist/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
 # Info
@@ -35,11 +35,11 @@ You can also see the info messages webpack prints to console (for both normal an
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```
