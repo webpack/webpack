@@ -52,7 +52,6 @@
     "glob": "^7.1.3",
     "husky": "^1.1.3",
     "i18n-webpack-plugin": "^1.0.0",
-    "istanbul": "^0.4.5",
     "jest": "^24.9.0",
     "jest-junit": "^8.0.0",
     "json-loader": "^0.5.7",
@@ -128,12 +127,11 @@
     "pretty": "prettier --loglevel warn --write \"*.{ts,js,json,yml,yaml}\" \"{setup,lib,bin,hot,buildin,benchmark,tooling,schemas}/**/*.{js,json}\" \"test/*.js\" \"test/helpers/*.js\" \"test/{configCases,watchCases,statsCases,hotCases}/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
     "jest-lint": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.lint.js\" --no-verbose",
     "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
-    "cover": "yarn cover:all && yarn cover:report",
+    "cover": "yarn cover:all",
     "cover:all": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
     "cover:basic": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/te{st/TestCasesNormal,st/StatsTestCases,st/ConfigTestCases}.test.js\" --coverage",
     "cover:integration": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
-    "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
-    "cover:report": "istanbul report"
+    "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage"
   },
   "husky": {
     "hooks": {
@@ -190,7 +188,8 @@
     ],
     "testEnvironment": "node",
     "coverageReporters": [
-      "json"
+      "json",
+      "lcov"
     ]
   }
 }
