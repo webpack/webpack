@@ -1,6 +1,7 @@
 const { CachedSource } = require("webpack-sources");
+const AsyncWebAssemblyModulesPlugin = require("../../../../lib/wasm-async/AsyncWebAssemblyModulesPlugin");
 
-/** @typedef {import("../../../lib/Compilation")} Compilation */
+/** @typedef {import("../../../../lib/Compilation")} Compilation */
 
 module.exports = {
 	module: {
@@ -25,13 +26,12 @@ module.exports = {
 				 * @returns {void}
 				 */
 				compilation => {
-					compilation.moduleTemplates.webassembly.hooks.package.tap(
-						"Test",
-						source => {
-							// this is important to make each returned value a new instance
-							return new CachedSource(source);
-						}
-					);
+					AsyncWebAssemblyModulesPlugin.getCompilationHooks(
+						compilation
+					).renderModuleContent.tap("Test", source => {
+						// this is important to make each returned value a new instance
+						return new CachedSource(source);
+					});
 				}
 			);
 		}

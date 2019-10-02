@@ -1,143 +1,143 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-entry 1`] = `
-"Hash: 83f83194ca81e29ad93083f83194ca81e29ad930
+"Hash: b4524ca479888c8ceb73b4524ca479888c8ceb73
 Child fitting:
-    Hash: 83f83194ca81e29ad930
+    Hash: b4524ca479888c8ceb73
     Time: Xms
     Built at: 1970-04-20 12:42:42
     PublicPath: (none)
                       Asset      Size  Chunks                         Chunk Names
-    501a16e2f184bd3b8ea5.js  1.07 KiB   {785}  [emitted] [immutable]
-    b655127fd4eca55a90aa.js  1.91 KiB   {394}  [emitted] [immutable]
-    bac8938bfd9c34df221b.js  1.91 KiB   {102}  [emitted] [immutable]
-    ecb9144d6f2b6e082333.js  12.8 KiB    {10}  [emitted] [immutable]
-    Entrypoint main = b655127fd4eca55a90aa.js bac8938bfd9c34df221b.js ecb9144d6f2b6e082333.js
-    chunk {10} ecb9144d6f2b6e082333.js 1.87 KiB (javascript) 6.41 KiB (runtime) [entry] [rendered]
+    4393bf4227899af05251.js  1.91 KiB   {394}  [emitted] [immutable]
+    6dc81979aedbea58e281.js  12.8 KiB    {10}  [emitted] [immutable]
+    8d1687584089811a81ad.js  1.91 KiB   {102}  [emitted] [immutable]
+    98439f7e3080522c6b08.js  1.08 KiB   {785}  [emitted] [immutable]
+    Entrypoint main = 4393bf4227899af05251.js 8d1687584089811a81ad.js 6dc81979aedbea58e281.js
+    chunk {10} 6dc81979aedbea58e281.js 1.87 KiB (javascript) 6.41 KiB (runtime) [entry] [rendered]
         > ./index main
       [10] ./index.js 111 bytes {10} [built]
      [390] ./e.js 899 bytes {10} [built]
      [568] ./f.js 900 bytes {10} [built]
          + 7 hidden chunk modules
-    chunk {102} bac8938bfd9c34df221b.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
+    chunk {102} 8d1687584089811a81ad.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
         > ./index main
      [460] ./c.js 899 bytes {102} [built]
      [767] ./d.js 899 bytes {102} [built]
-    chunk {394} b655127fd4eca55a90aa.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
+    chunk {394} 4393bf4227899af05251.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
         > ./index main
      [847] ./a.js 899 bytes {394} [built]
      [996] ./b.js 899 bytes {394} [built]
-    chunk {785} 501a16e2f184bd3b8ea5.js 916 bytes [rendered]
+    chunk {785} 98439f7e3080522c6b08.js 916 bytes [rendered]
         > ./g [10] ./index.js 7:0-13
      [785] ./g.js 916 bytes {785} [built]
 Child content-change:
-    Hash: 83f83194ca81e29ad930
+    Hash: b4524ca479888c8ceb73
     Time: Xms
     Built at: 1970-04-20 12:42:42
     PublicPath: (none)
                       Asset      Size  Chunks                         Chunk Names
-    501a16e2f184bd3b8ea5.js  1.07 KiB   {785}  [emitted] [immutable]
-    b655127fd4eca55a90aa.js  1.91 KiB   {394}  [emitted] [immutable]
-    bac8938bfd9c34df221b.js  1.91 KiB   {102}  [emitted] [immutable]
-    ecb9144d6f2b6e082333.js  12.8 KiB    {10}  [emitted] [immutable]
-    Entrypoint main = b655127fd4eca55a90aa.js bac8938bfd9c34df221b.js ecb9144d6f2b6e082333.js
-    chunk {10} ecb9144d6f2b6e082333.js 1.87 KiB (javascript) 6.41 KiB (runtime) [entry] [rendered]
+    4393bf4227899af05251.js  1.91 KiB   {394}  [emitted] [immutable]
+    6dc81979aedbea58e281.js  12.8 KiB    {10}  [emitted] [immutable]
+    8d1687584089811a81ad.js  1.91 KiB   {102}  [emitted] [immutable]
+    98439f7e3080522c6b08.js  1.08 KiB   {785}  [emitted] [immutable]
+    Entrypoint main = 4393bf4227899af05251.js 8d1687584089811a81ad.js 6dc81979aedbea58e281.js
+    chunk {10} 6dc81979aedbea58e281.js 1.87 KiB (javascript) 6.41 KiB (runtime) [entry] [rendered]
         > ./index main
       [10] ./index.js 111 bytes {10} [built]
      [390] ./e.js 899 bytes {10} [built]
      [568] ./f.js 900 bytes {10} [built]
          + 7 hidden chunk modules
-    chunk {102} bac8938bfd9c34df221b.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
+    chunk {102} 8d1687584089811a81ad.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
         > ./index main
      [460] ./c.js 899 bytes {102} [built]
      [767] ./d.js 899 bytes {102} [built]
-    chunk {394} b655127fd4eca55a90aa.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
+    chunk {394} 4393bf4227899af05251.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
         > ./index main
      [847] ./a.js 899 bytes {394} [built]
      [996] ./b.js 899 bytes {394} [built]
-    chunk {785} 501a16e2f184bd3b8ea5.js 916 bytes [rendered]
+    chunk {785} 98439f7e3080522c6b08.js 916 bytes [rendered]
         > ./g [10] ./index.js 7:0-13
      [785] ./g.js 916 bytes {785} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-on-demand 1`] = `
-"Hash: a0835567cd5ac79ef1c9
+"Hash: 3b34ba02f86c5d2b468a
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
                   Asset        Size        Chunks                         Chunk Names
-035ce1d102419ee4897b.js  1010 bytes         {701}  [emitted] [immutable]
-1ffcc984ad7d7c92ab0b.js    1.91 KiB         {594}  [emitted] [immutable]
-2d925701a76fac28b8cc.js    1.91 KiB         {817}  [emitted] [immutable]
-4717957e3d668ff4f9e8.js    1.91 KiB         {591}  [emitted] [immutable]
-49dd7266942f0ed4ae64.js  1010 bytes         {847}  [emitted] [immutable]
-61fe00576946c9f2606d.js    1.91 KiB         {454}  [emitted] [immutable]
-a5d468e53d230541a8cb.js    9.31 KiB         {179}  [emitted] [immutable]  main
-b18de3d2b973b820ea21.js    1.91 KiB  {294}, {701}  [emitted] [immutable]
-bac8938bfd9c34df221b.js    1.91 KiB         {102}  [emitted] [immutable]
-c0e562c433da5d2d3cb7.js    1.91 KiB  {390}, {523}  [emitted] [immutable]
-f2593c9acd7da73fffbe.js  1010 bytes         {390}  [emitted] [immutable]
-f50587036d9d0e61836c.js    1.91 KiB         {613}  [emitted] [immutable]
-Entrypoint main = a5d468e53d230541a8cb.js
-chunk {102} bac8938bfd9c34df221b.js 1.76 KiB [rendered] [recorded] aggressive splitted
+07da00f0ae83da63d782.js  1010 bytes         {847}  [emitted] [immutable]
+2604db3ab2e79792c96c.js    1.91 KiB         {591}  [emitted] [immutable]
+56afd62529625582668f.js    9.32 KiB         {179}  [emitted] [immutable]  main
+60b17101a071250ce9a0.js    1.91 KiB         {454}  [emitted] [immutable]
+64a2cf8d2c3ddf1c3e46.js    1.91 KiB         {613}  [emitted] [immutable]
+6bafe7dc70c6faffaa36.js    1.91 KiB         {594}  [emitted] [immutable]
+886af1f8f436bb7b50c4.js  1010 bytes         {390}  [emitted] [immutable]
+8d1687584089811a81ad.js    1.91 KiB         {102}  [emitted] [immutable]
+a7a564e29811c704ecfe.js    1.91 KiB  {390}, {523}  [emitted] [immutable]
+d56725c242278ec75fcd.js    1.91 KiB         {817}  [emitted] [immutable]
+d5a902d3b3f0abea6457.js    1.91 KiB  {294}, {701}  [emitted] [immutable]
+daba47db1ba13dba0372.js  1010 bytes         {701}  [emitted] [immutable]
+Entrypoint main = 56afd62529625582668f.js
+chunk {102} 8d1687584089811a81ad.js 1.76 KiB [rendered] [recorded] aggressive splitted
     > ./c ./d ./e [942] ./index.js 3:0-30
  [460] ./c.js 899 bytes {102} {591} [built]
  [767] ./d.js 899 bytes {102} {817} [built]
-chunk {179} a5d468e53d230541a8cb.js (main) 248 bytes (javascript) 4.44 KiB (runtime) [entry] [rendered]
+chunk {179} 56afd62529625582668f.js (main) 248 bytes (javascript) 4.44 KiB (runtime) [entry] [rendered]
     > ./index main
  [942] ./index.js 248 bytes {179} [built]
      + 4 hidden chunk modules
-chunk {294} b18de3d2b973b820ea21.js 1.76 KiB [rendered]
+chunk {294} d5a902d3b3f0abea6457.js 1.76 KiB [rendered]
     > ./f ./g ./h ./i ./j ./k [942] ./index.js 4:0-51
  [138] ./j.js 901 bytes {294} {454} [built]
  [701] ./k.js 899 bytes {294} {701} [built]
-chunk {390} f2593c9acd7da73fffbe.js 899 bytes [rendered]
+chunk {390} 886af1f8f436bb7b50c4.js 899 bytes [rendered]
     > ./c ./d ./e [942] ./index.js 3:0-30
     > ./b ./d ./e ./f ./g [942] ./index.js 5:0-44
  [390] ./e.js 899 bytes {390} {523} [built]
-chunk {454} 61fe00576946c9f2606d.js 1.76 KiB [rendered] [recorded] aggressive splitted
+chunk {454} 60b17101a071250ce9a0.js 1.76 KiB [rendered] [recorded] aggressive splitted
     > ./b ./d ./e ./f ./g ./h ./i ./j ./k [942] ./index.js 6:0-72
  [101] ./i.js 899 bytes {454} {594} [built]
  [138] ./j.js 901 bytes {294} {454} [built]
-chunk {523} c0e562c433da5d2d3cb7.js 1.76 KiB [rendered] [recorded] aggressive splitted
+chunk {523} a7a564e29811c704ecfe.js 1.76 KiB [rendered] [recorded] aggressive splitted
     > ./b ./d ./e ./f ./g ./h ./i ./j ./k [942] ./index.js 6:0-72
  [307] ./h.js 899 bytes {523} {594} [built]
  [390] ./e.js 899 bytes {390} {523} [built]
-chunk {591} 4717957e3d668ff4f9e8.js 1.76 KiB [rendered]
+chunk {591} 2604db3ab2e79792c96c.js 1.76 KiB [rendered]
     > ./b ./c [942] ./index.js 2:0-23
  [460] ./c.js 899 bytes {102} {591} [built]
  [996] ./b.js 899 bytes {591} {817} [built]
-chunk {594} 1ffcc984ad7d7c92ab0b.js 1.76 KiB [rendered] [recorded] aggressive splitted
+chunk {594} 6bafe7dc70c6faffaa36.js 1.76 KiB [rendered] [recorded] aggressive splitted
     > ./f ./g ./h ./i ./j ./k [942] ./index.js 4:0-51
  [101] ./i.js 899 bytes {454} {594} [built]
  [307] ./h.js 899 bytes {523} {594} [built]
-chunk {613} f50587036d9d0e61836c.js 1.76 KiB [rendered] [recorded] aggressive splitted
+chunk {613} 64a2cf8d2c3ddf1c3e46.js 1.76 KiB [rendered] [recorded] aggressive splitted
     > ./f ./g ./h ./i ./j ./k [942] ./index.js 4:0-51
     > ./b ./d ./e ./f ./g [942] ./index.js 5:0-44
     > ./b ./d ./e ./f ./g ./h ./i ./j ./k [942] ./index.js 6:0-72
  [568] ./f.js 899 bytes {613} [built]
  [785] ./g.js 901 bytes {613} [built]
-chunk {701} 035ce1d102419ee4897b.js 899 bytes [rendered]
+chunk {701} daba47db1ba13dba0372.js 899 bytes [rendered]
     > ./b ./d ./e ./f ./g ./h ./i ./j ./k [942] ./index.js 6:0-72
  [701] ./k.js 899 bytes {294} {701} [built]
-chunk {817} 2d925701a76fac28b8cc.js 1.76 KiB [rendered] [recorded] aggressive splitted
+chunk {817} d56725c242278ec75fcd.js 1.76 KiB [rendered] [recorded] aggressive splitted
     > ./b ./d ./e ./f ./g [942] ./index.js 5:0-44
     > ./b ./d ./e ./f ./g ./h ./i ./j ./k [942] ./index.js 6:0-72
  [767] ./d.js 899 bytes {102} {817} [built]
  [996] ./b.js 899 bytes {591} {817} [built]
-chunk {847} 49dd7266942f0ed4ae64.js 899 bytes [rendered]
+chunk {847} 07da00f0ae83da63d782.js 899 bytes [rendered]
     > ./a [942] ./index.js 1:0-16
  [847] ./a.js 899 bytes {847} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for asset 1`] = `
-"Hash: 9be0f1e0623c01091019
+"Hash: 0e9f6ca6b21997c1583a
 Time: Xms
 Built at: 1970-04-20 12:42:42
                    Asset       Size   Chunks                         Chunk Names
 44af8fe384aadccba06e.svg  656 bytes  ({179})  [emitted] [immutable]  (main)
 62787d6ac9d673cc8926.png   14.6 KiB  ({179})  [emitted] [immutable]  (main)
-               bundle.js   4.27 KiB    {179}  [emitted]              main
+               bundle.js    4.3 KiB    {179}  [emitted]              main
 c2a9ba2e6ec92fd70245.jpg   5.89 KiB  ({179})  [emitted] [immutable]  (main)
 Entrypoint main = bundle.js (44af8fe384aadccba06e.svg 62787d6ac9d673cc8926.png c2a9ba2e6ec92fd70245.jpg)
  [10] ./index.js 111 bytes {179} [built]
@@ -447,13 +447,13 @@ Child all:
 `;
 
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
-"Hash: 1e086a89bae53380ecd2
+"Hash: b5735b789ea9f6271194
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
    Asset      Size  Chunks             Chunk Names
-main1.js  4.26 KiB     {1}  [emitted]  main1
-main2.js  4.25 KiB     {0}  [emitted]  main2
+main1.js  4.29 KiB     {1}  [emitted]  main1
+main2.js  4.29 KiB     {0}  [emitted]  main2
 Entrypoint main1 = main1.js
 Entrypoint main2 = main2.js
 chunk {0} main2.js (main2) 136 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
@@ -475,15 +475,15 @@ chunk {1} main1.js (main1) 136 bytes (javascript) 632 bytes (runtime) [entry] [r
 `;
 
 exports[`StatsTestCases should print correct stats for chunks 1`] = `
-"Hash: 4da70a103c7c9329f3ac
+"Hash: 808468ffb50d3cab9bbf
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
         Asset       Size  Chunks             Chunk Names
-460.bundle.js  306 bytes   {460}  [emitted]
+460.bundle.js  324 bytes   {460}  [emitted]
 524.bundle.js  210 bytes   {524}  [emitted]
 996.bundle.js  142 bytes   {996}  [emitted]
-    bundle.js    7.8 KiB   {179}  [emitted]  main
+    bundle.js   7.81 KiB   {179}  [emitted]  main
 Entrypoint main = bundle.js
 chunk {179} bundle.js (main) 73 bytes (javascript) 4.13 KiB (runtime) >{460}< >{996}< [entry] [rendered]
     > ./index main
@@ -515,15 +515,15 @@ chunk {996} 996.bundle.js 22 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for chunks-development 1`] = `
-"Hash: 37e46b7b140f40b87e4f
+"Hash: 4ddebd7e67b657a24523
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
               Asset       Size       Chunks             Chunk Names
      b_js.bundle.js  359 bytes       {b_js}  [emitted]
-          bundle.js    8.4 KiB       {main}  [emitted]  main
-     c_js.bundle.js  570 bytes       {c_js}  [emitted]
-d_js-e_js.bundle.js  750 bytes  {d_js-e_js}  [emitted]
+          bundle.js   8.41 KiB       {main}  [emitted]  main
+     c_js.bundle.js  588 bytes       {c_js}  [emitted]
+d_js-e_js.bundle.js  759 bytes  {d_js-e_js}  [emitted]
 Entrypoint main = bundle.js
 chunk {b_js} b_js.bundle.js 22 bytes <{main}> [rendered]
     > ./b [./index.js] ./index.js 2:0-16
@@ -569,7 +569,7 @@ chunk {786} 786.bundle.js (a) 49 bytes <{179}> <{459}> >{459}< [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for color-disabled 1`] = `
-"Hash: ab39ead63d47ea78804b
+"Hash: 192807ce932ddf7801c7
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset       Size  Chunks             Chunk Names
@@ -579,7 +579,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for color-enabled 1`] = `
-"Hash: <CLR=BOLD>ab39ead63d47ea78804b</CLR>
+"Hash: <CLR=BOLD>192807ce932ddf7801c7</CLR>
 Time: <CLR=BOLD>X</CLR>ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>             <CLR=BOLD>Chunk Names</CLR>
@@ -589,7 +589,7 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 `;
 
 exports[`StatsTestCases should print correct stats for color-enabled-custom 1`] = `
-"Hash: <CLR=BOLD>ab39ead63d47ea78804b</CLR>
+"Hash: <CLR=BOLD>192807ce932ddf7801c7</CLR>
 Time: <CLR=BOLD>X</CLR>ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>             <CLR=BOLD>Chunk Names</CLR>
@@ -599,12 +599,12 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32>main.js</CLR>
 `;
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-0 1`] = `
-"Hash: 386362a70942728c6784
+"Hash: d6c80d242715736e2fb7
 Time: Xms
 Built at: 1970-04-20 12:42:42
      Asset       Size  Chunks             Chunk Names
     429.js  278 bytes   {429}  [emitted]
-entry-1.js   5.21 KiB   {472}  [emitted]  entry-1
+entry-1.js   5.22 KiB   {472}  [emitted]  entry-1
 Entrypoint entry-1 = 429.js entry-1.js
 [115] ./modules/c.js 22 bytes {429} [built]
 [544] ./modules/f.js 22 bytes {472} [built]
@@ -617,11 +617,11 @@ Entrypoint entry-1 = 429.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-Infinity 1`] = `
-"Hash: 9c0c7df965d32c5af0d7
+"Hash: cd44d45f7ae9bef16123
 Time: Xms
 Built at: 1970-04-20 12:42:42
       Asset       Size  Chunks             Chunk Names
- entry-1.js   5.21 KiB   {472}  [emitted]  entry-1
+ entry-1.js   5.22 KiB   {472}  [emitted]  entry-1
 vendor-1.js  278 bytes   {844}  [emitted]  vendor-1
 Entrypoint entry-1 = vendor-1.js entry-1.js
 [115] ./modules/c.js 22 bytes {844} [built]
@@ -635,26 +635,26 @@ Entrypoint entry-1 = vendor-1.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-plugin-issue-4980 1`] = `
-"Hash: b5e5b4b55e7b2d7662c723bb67ab2183d45e0a07
+"Hash: 6f07316d6ddd6396f17f00fd6078629461e3d229
 Child
-    Hash: b5e5b4b55e7b2d7662c7
+    Hash: 6f07316d6ddd6396f17f
     Time: Xms
     Built at: 1970-04-20 12:42:42
                              Asset       Size  Chunks                         Chunk Names
-       app.8f85861f8fbd1c6860b5.js   6.73 KiB   {143}  [emitted] [immutable]  app
-    vendor.3ca106870164d059e3b7.js  606 bytes   {736}  [emitted] [immutable]  vendor
-    Entrypoint app = vendor.3ca106870164d059e3b7.js app.8f85861f8fbd1c6860b5.js
+       app.878864b2a48f6be36f58.js   6.73 KiB   {143}  [emitted] [immutable]  app
+    vendor.da0e56634afc22a486e6.js  615 bytes   {736}  [emitted] [immutable]  vendor
+    Entrypoint app = vendor.da0e56634afc22a486e6.js app.878864b2a48f6be36f58.js
     [117] ./entry-1.js + 2 modules 190 bytes {143} [built]
     [381] ./constants.js 87 bytes {736} [built]
         + 4 hidden modules
 Child
-    Hash: 23bb67ab2183d45e0a07
+    Hash: 00fd6078629461e3d229
     Time: Xms
     Built at: 1970-04-20 12:42:42
                              Asset       Size  Chunks                         Chunk Names
-       app.5e7c0987f5feb9f4522a.js   6.75 KiB   {143}  [emitted] [immutable]  app
-    vendor.3ca106870164d059e3b7.js  606 bytes   {736}  [emitted] [immutable]  vendor
-    Entrypoint app = vendor.3ca106870164d059e3b7.js app.5e7c0987f5feb9f4522a.js
+       app.e9b3c5cb3db397ea7e0c.js   6.75 KiB   {143}  [emitted] [immutable]  app
+    vendor.da0e56634afc22a486e6.js  615 bytes   {736}  [emitted] [immutable]  vendor
+    Entrypoint app = vendor.da0e56634afc22a486e6.js app.e9b3c5cb3db397ea7e0c.js
     [381] ./constants.js 87 bytes {736} [built]
     [655] ./entry-2.js + 2 modules 197 bytes {143} [built]
         + 4 hidden modules"
@@ -679,35 +679,35 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
 `;
 
 exports[`StatsTestCases should print correct stats for define-plugin 1`] = `
-"Hash: fda28c2a019271c6765c0073b4f9edcac2b2dd3d4f56029b41d3f8602887
+"Hash: aa5b115a0288f2c2e9ee54a3aa4e0ca2fb43d363c5b18c53850578be3fcd
 Child
-    Hash: fda28c2a019271c6765c
+    Hash: aa5b115a0288f2c2e9ee
     Time: Xms
     Built at: 1970-04-20 12:42:42
       Asset      Size  Chunks             Chunk Names
-    main.js  1.28 KiB   {179}  [emitted]  main
+    main.js  1.27 KiB   {179}  [emitted]  main
     Entrypoint main = main.js
     [10] ./index.js 24 bytes {179} [built]
 Child
-    Hash: 0073b4f9edcac2b2dd3d
+    Hash: 54a3aa4e0ca2fb43d363
     Time: Xms
     Built at: 1970-04-20 12:42:42
       Asset      Size  Chunks             Chunk Names
-    main.js  1.28 KiB   {179}  [emitted]  main
+    main.js  1.27 KiB   {179}  [emitted]  main
     Entrypoint main = main.js
     [10] ./index.js 24 bytes {179} [built]
 Child
-    Hash: 4f56029b41d3f8602887
+    Hash: c5b18c53850578be3fcd
     Time: Xms
     Built at: 1970-04-20 12:42:42
       Asset      Size  Chunks             Chunk Names
-    main.js  1.28 KiB   {179}  [emitted]  main
+    main.js  1.27 KiB   {179}  [emitted]  main
     Entrypoint main = main.js
     [10] ./index.js 24 bytes {179} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624 1`] = `
-"Hash: 87dbd4f2d15f56d76257
+"Hash: 75b20b1aa3e431fb8a95
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset       Size  Chunks             Chunk Names
@@ -717,7 +717,7 @@ Entrypoint main = bundle.js
 `;
 
 exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624-error 1`] = `
-"Hash: 74d364b1dc63cccf3462
+"Hash: 169e58ad4e677ac662a8
 Time: Xms
 Built at: 1970-04-20 12:42:42
 1 asset
@@ -730,11 +730,11 @@ Unexpected end of JSON input while parsing near ''
 `;
 
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
-"Hash: f9d96205378cf2d78ae3
+"Hash: 66932e2a273e3e402fd0
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset      Size  Chunks             Chunk Names
-bundle.js  3.53 KiB   {179}  [emitted]  main
+bundle.js  3.56 KiB   {179}  [emitted]  main
  + 1 hidden asset
 Entrypoint main = bundle.js (5bcd36918d225eeda398ea3f372b7f16.json)
  [10] ./index.js 77 bytes {179} [built]
@@ -743,7 +743,7 @@ Entrypoint main = bundle.js (5bcd36918d225eeda398ea3f372b7f16.json)
 `;
 
 exports[`StatsTestCases should print correct stats for external 1`] = `
-"Hash: 5b5b62b332898f49f8c8
+"Hash: 63db29e5c710b76e32fe
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset      Size  Chunks             Chunk Names
@@ -754,13 +754,13 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for filter-warnings 1`] = `
-"Hash: 573a4b066b341577dee9573a4b066b341577dee9573a4b066b341577dee9573a4b066b341577dee9573a4b066b341577dee9573a4b066b341577dee9573a4b066b341577dee9573a4b066b341577dee9573a4b066b341577dee9573a4b066b341577dee9573a4b066b341577dee9573a4b066b341577dee9573a4b066b341577dee9
+"Hash: e907826420a06c687389e907826420a06c687389e907826420a06c687389e907826420a06c687389e907826420a06c687389e907826420a06c687389e907826420a06c687389e907826420a06c687389e907826420a06c687389e907826420a06c687389e907826420a06c687389e907826420a06c687389e907826420a06c687389
 Child undefined:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
@@ -786,53 +786,53 @@ Child undefined:
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 
 Child Terser:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 Child /Terser/:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 Child warnings => true:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 Child [Terser]:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 Child [/Terser/]:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 Child [warnings => true]:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 Child should not filter:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
@@ -858,11 +858,11 @@ Child should not filter:
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 
 Child /should not filter/:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
@@ -888,11 +888,11 @@ Child /should not filter/:
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 
 Child warnings => false:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
@@ -918,11 +918,11 @@ Child warnings => false:
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 
 Child [should not filter]:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
@@ -948,11 +948,11 @@ Child [should not filter]:
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 
 Child [/should not filter/]:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
@@ -978,11 +978,11 @@ Child [/should not filter/]:
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 
 Child [warnings => false]:
-    Hash: 573a4b066b341577dee9
+    Hash: e907826420a06c687389
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  1.12 KiB   {179}  [emitted]  main
+    bundle.js  1.14 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
@@ -1104,19 +1104,19 @@ chunk {trees} trees.js (trees) 71 bytes [rendered]
 
 exports[`StatsTestCases should print correct stats for immutable 1`] = `
 "                  Asset       Size      Chunks                         Chunk Names
-5a00a5aaadb77d195a77.js  346 bytes  {chunk_js}  [emitted] [immutable]
-cc4f840c240486451e92.js   9.93 KiB      {main}  [emitted] [immutable]  main"
+e962f33a28fe7c3eba46.js  346 bytes  {chunk_js}  [emitted] [immutable]
+ff3f5f3afd7fc39dee35.js   9.94 KiB      {main}  [emitted] [immutable]  main"
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
-"Hash: 557ec55c23f1ec577bc1
+"Hash: 3e41c56e2bb16aa37a20
 Time: Xms
 Built at: 1970-04-20 12:42:42
    Asset       Size  Chunks             Chunk Names
-  398.js  475 bytes   {398}  [emitted]
-  544.js  475 bytes   {544}  [emitted]
-  718.js  475 bytes   {718}  [emitted]
-entry.js   9.62 KiB   {497}  [emitted]  entry
+  398.js  484 bytes   {398}  [emitted]
+  544.js  484 bytes   {544}  [emitted]
+  718.js  484 bytes   {718}  [emitted]
+entry.js   9.64 KiB   {497}  [emitted]  entry
 Entrypoint entry = entry.js
 [389] ./templates lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ namespace object 160 bytes {497} [optional] [built]
 [398] ./templates/bar.js 38 bytes {398} [optional] [built]
@@ -1127,7 +1127,7 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for import-weak 1`] = `
-"Hash: a79f737411e8ac5edc02
+"Hash: 5d3f315f2e18efcf9820
 Time: Xms
 Built at: 1970-04-20 12:42:42
    Asset       Size  Chunks             Chunk Names
@@ -1164,42 +1164,42 @@ Compilation error while processing magic comment(-s): /* webpackPrefetch: nope *
 `;
 
 exports[`StatsTestCases should print correct stats for issue-7577 1`] = `
-"Hash: 8007e5481ab0996b24229ab93e52c79cde06fdf3f9d8d6561e9b61fb9d05
+"Hash: 380267806f8a546a09e6febad2e5f9ae162599c1b988de17a1a0c2dae024
 Child
-    Hash: 8007e5481ab0996b2422
+    Hash: 380267806f8a546a09e6
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                      Asset       Size          Chunks                         Chunk Names
-        a-all-a_js-5ed868390c43e7086a86.js  144 bytes      {all-a_js}  [emitted] [immutable]
-            a-main-5b1dc11fec11f25eaf1b.js  115 bytes          {main}  [emitted] [immutable]  main
-    a-runtime~main-2ddfebad083f190c54f0.js   4.76 KiB  {runtime~main}  [emitted] [immutable]  runtime~main
-    Entrypoint main = a-runtime~main-2ddfebad083f190c54f0.js a-all-a_js-5ed868390c43e7086a86.js a-main-5b1dc11fec11f25eaf1b.js
+        a-all-a_js-7daa793cbf0b34cfc26d.js  144 bytes      {all-a_js}  [emitted] [immutable]
+            a-main-fc86a2cf757da86beae8.js  115 bytes          {main}  [emitted] [immutable]  main
+    a-runtime~main-a7f0d0a7a6024e5229d1.js   4.75 KiB  {runtime~main}  [emitted] [immutable]  runtime~main
+    Entrypoint main = a-runtime~main-a7f0d0a7a6024e5229d1.js a-all-a_js-7daa793cbf0b34cfc26d.js a-main-fc86a2cf757da86beae8.js
     [./a.js] 18 bytes {all-a_js} [built]
         + 1 hidden module
 Child
-    Hash: 9ab93e52c79cde06fdf3
+    Hash: febad2e5f9ae162599c1
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                                        Asset       Size                            Chunks                         Chunk Names
-                          b-all-b_js-89c3127ba563ffa436dc.js  497 bytes                        {all-b_js}  [emitted] [immutable]
-                              b-main-f043bf83e8ebac493a99.js  148 bytes                            {main}  [emitted] [immutable]  main
-                      b-runtime~main-419a0a24d9d86bf0f8fd.js   6.21 KiB                    {runtime~main}  [emitted] [immutable]  runtime~main
-    b-vendors-node_modules_vendor_js-a7aa3079a16cbae3f591.js  189 bytes  {vendors-node_modules_vendor_js}  [emitted] [immutable]
-    Entrypoint main = b-runtime~main-419a0a24d9d86bf0f8fd.js b-vendors-node_modules_vendor_js-a7aa3079a16cbae3f591.js b-all-b_js-89c3127ba563ffa436dc.js b-main-f043bf83e8ebac493a99.js
+                          b-all-b_js-5b048fc0e62af6a259e9.js  506 bytes                        {all-b_js}  [emitted] [immutable]
+                              b-main-3de463a8a3e085edeb6b.js  148 bytes                            {main}  [emitted] [immutable]  main
+                      b-runtime~main-7409f9b56a254efb03a8.js    6.2 KiB                    {runtime~main}  [emitted] [immutable]  runtime~main
+    b-vendors-node_modules_vendor_js-77f6ec0fbc8556ed87af.js  189 bytes  {vendors-node_modules_vendor_js}  [emitted] [immutable]
+    Entrypoint main = b-runtime~main-7409f9b56a254efb03a8.js b-vendors-node_modules_vendor_js-77f6ec0fbc8556ed87af.js b-all-b_js-5b048fc0e62af6a259e9.js b-main-3de463a8a3e085edeb6b.js
     [./b.js] 17 bytes {all-b_js} [built]
     [./node_modules/vendor.js] 23 bytes {vendors-node_modules_vendor_js} [built]
         + 4 hidden modules
 Child
-    Hash: f9d8d6561e9b61fb9d05
+    Hash: b988de17a1a0c2dae024
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                                        Asset       Size                            Chunks                         Chunk Names
-                          c-all-b_js-89c3127ba563ffa436dc.js  497 bytes                        {all-b_js}  [emitted] [immutable]
-                          c-all-c_js-936472833753792cc303.js  364 bytes                        {all-c_js}  [emitted] [immutable]
-                              c-main-74481bfa6b28e9e83c8f.js  164 bytes                            {main}  [emitted] [immutable]  main
-                      c-runtime~main-a40bb511645587263b1e.js   11.2 KiB                    {runtime~main}  [emitted] [immutable]  runtime~main
-    c-vendors-node_modules_vendor_js-a7aa3079a16cbae3f591.js  189 bytes  {vendors-node_modules_vendor_js}  [emitted] [immutable]
-    Entrypoint main = c-runtime~main-a40bb511645587263b1e.js c-all-c_js-936472833753792cc303.js c-main-74481bfa6b28e9e83c8f.js (prefetch: c-vendors-node_modules_vendor_js-a7aa3079a16cbae3f591.js c-all-b_js-89c3127ba563ffa436dc.js)
+                          c-all-b_js-5b048fc0e62af6a259e9.js  506 bytes                        {all-b_js}  [emitted] [immutable]
+                          c-all-c_js-dba8425221a1c8392a18.js  382 bytes                        {all-c_js}  [emitted] [immutable]
+                              c-main-143d5a3c252ba98b89ae.js  164 bytes                            {main}  [emitted] [immutable]  main
+                      c-runtime~main-e0b388d300c86ec70716.js   11.2 KiB                    {runtime~main}  [emitted] [immutable]  runtime~main
+    c-vendors-node_modules_vendor_js-77f6ec0fbc8556ed87af.js  189 bytes  {vendors-node_modules_vendor_js}  [emitted] [immutable]
+    Entrypoint main = c-runtime~main-e0b388d300c86ec70716.js c-all-c_js-dba8425221a1c8392a18.js c-main-143d5a3c252ba98b89ae.js (prefetch: c-vendors-node_modules_vendor_js-77f6ec0fbc8556ed87af.js c-all-b_js-5b048fc0e62af6a259e9.js)
     [./b.js] 17 bytes {all-b_js} [built]
     [./c.js] 61 bytes {all-c_js} [built]
     [./node_modules/vendor.js] 23 bytes {vendors-node_modules_vendor_js} [built]
@@ -1207,13 +1207,13 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
-"Hash: b89f59691cd5820b75668a4406e71413f56fa4008464c8e8dc0e38aae73271a37603ba9eac59b24f
+"Hash: 7bc11b8228ee5c6b9219ddfd4ec0cd4c351bafc5bc05efb0a248cb4c6f038d75b4cea6ef92a6f9fb
 Child 1 chunks:
-    Hash: b89f59691cd5820b7566
+    Hash: 7bc11b8228ee5c6b9219
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
-    bundle.js  4.25 KiB   {179}  [emitted]  main
+    bundle.js  4.28 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
     chunk {179} bundle.js (main) 219 bytes (javascript) 1.32 KiB (runtime) <{179}> >{179}< [entry] [rendered]
       [10] ./index.js 101 bytes {179} [built]
@@ -1224,12 +1224,12 @@ Child 1 chunks:
      [996] ./b.js 22 bytes {179} [built]
          + 3 hidden chunk modules
 Child 2 chunks:
-    Hash: 8a4406e71413f56fa400
+    Hash: ddfd4ec0cd4c351bafc5
     Time: Xms
     Built at: 1970-04-20 12:42:42
             Asset       Size  Chunks             Chunk Names
-    459.bundle.js  648 bytes   {459}  [emitted]  c
-        bundle.js   9.84 KiB   {179}  [emitted]  main
+    459.bundle.js  666 bytes   {459}  [emitted]  c
+        bundle.js   9.85 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
     chunk {179} bundle.js (main) 101 bytes (javascript) 5.45 KiB (runtime) >{459}< [entry] [rendered]
      [10] ./index.js 101 bytes {179} [built]
@@ -1241,13 +1241,13 @@ Child 2 chunks:
      [847] ./a.js 22 bytes {459} [built]
      [996] ./b.js 22 bytes {459} [built]
 Child 3 chunks:
-    Hash: 8464c8e8dc0e38aae732
+    Hash: bc05efb0a248cb4c6f03
     Time: Xms
     Built at: 1970-04-20 12:42:42
             Asset       Size  Chunks             Chunk Names
-    459.bundle.js  512 bytes   {459}  [emitted]  c
+    459.bundle.js  530 bytes   {459}  [emitted]  c
     524.bundle.js  210 bytes   {524}  [emitted]
-        bundle.js   9.84 KiB   {179}  [emitted]  main
+        bundle.js   9.85 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
     chunk {179} bundle.js (main) 101 bytes (javascript) 5.45 KiB (runtime) >{459}< [entry] [rendered]
      [10] ./index.js 101 bytes {179} [built]
@@ -1260,14 +1260,14 @@ Child 3 chunks:
      [390] ./e.js 22 bytes {524} [built]
      [767] ./d.js 22 bytes {524} [built]
 Child 4 chunks:
-    Hash: 71a37603ba9eac59b24f
+    Hash: 8d75b4cea6ef92a6f9fb
     Time: Xms
     Built at: 1970-04-20 12:42:42
             Asset       Size  Chunks             Chunk Names
     394.bundle.js  210 bytes   {394}  [emitted]
-    459.bundle.js  376 bytes   {459}  [emitted]  c
+    459.bundle.js  394 bytes   {459}  [emitted]  c
     524.bundle.js  210 bytes   {524}  [emitted]
-        bundle.js   9.84 KiB   {179}  [emitted]  main
+        bundle.js   9.85 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
     chunk {179} bundle.js (main) 101 bytes (javascript) 5.45 KiB (runtime) >{394}< >{459}< [entry] [rendered]
      [10] ./index.js 101 bytes {179} [built]
@@ -1284,7 +1284,7 @@ Child 4 chunks:
 
 exports[`StatsTestCases should print correct stats for logging 1`] = `
 "<i> <CLR=32,BOLD>[LogTestPlugin] Info</CLR>
-Hash: <CLR=BOLD>c6cf43db31de13663a98</CLR>
+Hash: <CLR=BOLD>9d0606e39f3f1b8c6983</CLR>
 Time: <CLR=BOLD>X</CLR>ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>             <CLR=BOLD>Chunk Names</CLR>
@@ -1325,11 +1325,11 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 `;
 
 exports[`StatsTestCases should print correct stats for max-modules 1`] = `
-"Hash: bc825797597fba258915
+"Hash: 9bece5f748f5bd0d5710
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset      Size  Chunks             Chunk Names
-main.js  4.99 KiB   {179}  [emitted]  main
+main.js  5.52 KiB   {179}  [emitted]  main
 Entrypoint main = main.js
  [10] ./index.js 181 bytes {179} [built]
  [92] ./c.js?1 33 bytes {179} [built]
@@ -1355,11 +1355,11 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for max-modules-default 1`] = `
-"Hash: bc825797597fba258915
+"Hash: 9bece5f748f5bd0d5710
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset      Size  Chunks             Chunk Names
-main.js  4.99 KiB   {179}  [emitted]  main
+main.js  5.52 KiB   {179}  [emitted]  main
 Entrypoint main = main.js
  [10] ./index.js 181 bytes {179} [built]
  [92] ./c.js?1 33 bytes {179} [built]
@@ -1380,15 +1380,15 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
-"Hash: 42b43e10f8b8eb885ec1
+"Hash: f07f12dc2ed78d25c272
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset       Size          Chunks             Chunk Names
   1.png     21 KiB         ({786})  [emitted]  (a)
   2.png     21 KiB  ({128}, {786})  [emitted]  (a, b)
-   a.js  961 bytes           {786}  [emitted]  a
-   b.js  598 bytes           {128}  [emitted]  b
-main.js   9.11 KiB           {179}  [emitted]  main
+   a.js  988 bytes           {786}  [emitted]  a
+   b.js  616 bytes           {128}  [emitted]  b
+main.js   9.12 KiB           {179}  [emitted]  main
 Entrypoint main = main.js
 Chunk Group a = a.js (1.png 2.png)
 Chunk Group b = b.js (2.png)
@@ -1412,12 +1412,12 @@ chunk {786} a.js (a) 138 bytes [rendered]
 
 exports[`StatsTestCases should print correct stats for module-deduplication 1`] = `
 " Asset       Size        Chunks             Chunk Names
-114.js  672 bytes         {114}  [emitted]
-172.js  672 bytes         {172}  [emitted]
-326.js  725 bytes  {326}, {593}  [emitted]
-593.js  672 bytes         {593}  [emitted]
-716.js  725 bytes  {172}, {716}  [emitted]
-923.js  725 bytes  {114}, {923}  [emitted]
+114.js  681 bytes         {114}  [emitted]
+172.js  681 bytes         {172}  [emitted]
+326.js  734 bytes  {326}, {593}  [emitted]
+593.js  681 bytes         {593}  [emitted]
+716.js  734 bytes  {172}, {716}  [emitted]
+923.js  734 bytes  {114}, {923}  [emitted]
  e1.js   10.3 KiB         {257}  [emitted]  e1
  e2.js   10.3 KiB         {621}  [emitted]  e2
  e3.js   10.3 KiB         {144}  [emitted]  e3
@@ -1464,9 +1464,9 @@ chunk {923} 923.js 37 bytes [rendered]
 
 exports[`StatsTestCases should print correct stats for module-deduplication-named 1`] = `
 "    Asset       Size  Chunks             Chunk Names
-async1.js  815 bytes   {515}  [emitted]  async1
-async2.js  815 bytes   {989}  [emitted]  async2
-async3.js  815 bytes   {611}  [emitted]  async3
+async1.js  824 bytes   {515}  [emitted]  async1
+async2.js  824 bytes   {989}  [emitted]  async2
+async3.js  824 bytes   {611}  [emitted]  async3
     e1.js   10.2 KiB   {257}  [emitted]  e1
     e2.js   10.2 KiB   {621}  [emitted]  e2
     e3.js   10.2 KiB   {144}  [emitted]  e3
@@ -1531,7 +1531,7 @@ If you don't want to include a polyfill, you can use an empty module like this:
 `;
 
 exports[`StatsTestCases should print correct stats for module-reasons 1`] = `
-"Hash: 1ca2ed371827dd8ca751
+"Hash: 50e640ed6293df4b34de
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset      Size  Chunks             Chunk Names
@@ -1653,11 +1653,11 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for named-chunks-plugin 1`] = `
-"Hash: 2104c049d0b8a07d9263
+"Hash: ee353a089d6d044a7df1
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset       Size    Chunks             Chunk Names
- entry.js   5.08 KiB   {entry}  [emitted]  entry
+ entry.js   5.09 KiB   {entry}  [emitted]  entry
 vendor.js  241 bytes  {vendor}  [emitted]  vendor
 Entrypoint entry = vendor.js entry.js
 [./entry.js] 72 bytes {entry} [built]
@@ -1668,12 +1668,12 @@ Entrypoint entry = vendor.js entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for named-chunks-plugin-async 1`] = `
-"Hash: 0556fc2ca6e831d439f7
+"Hash: 309d60ac34e4ee896b21
 Time: Xms
 Built at: 1970-04-20 12:42:42
           Asset       Size          Chunks             Chunk Names
-       entry.js   9.71 KiB         {entry}  [emitted]  entry
-modules_a_js.js  307 bytes  {modules_a_js}  [emitted]
+       entry.js   9.72 KiB         {entry}  [emitted]  entry
+modules_a_js.js  316 bytes  {modules_a_js}  [emitted]
 modules_b_js.js  153 bytes  {modules_b_js}  [emitted]
 Entrypoint entry = entry.js
 [594] ./entry.js 47 bytes {entry} [built]
@@ -1683,7 +1683,7 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for no-emit-on-errors-plugin-with-child-error 1`] = `
-"Hash: 65a90de8264b8fe4d528
+"Hash: 897dd93656fe4b0ef999
 Time: Xms
 Built at: 1970-04-20 12:42:42
 2 assets
@@ -1706,7 +1706,7 @@ Child child:
 `;
 
 exports[`StatsTestCases should print correct stats for optimize-chunks 1`] = `
-"Hash: 291b732d9430210b524e
+"Hash: 3fc0fee0be06c53d99d7
 Time: Xms
 Built at: 1970-04-20 12:42:42
             Asset       Size        Chunks             Chunk Names
@@ -1714,10 +1714,10 @@ Built at: 1970-04-20 12:42:42
            abd.js  197 bytes   {90}, {374}  [emitted]  abd
       ac in ab.js  114 bytes         {753}  [emitted]  ac in ab
          chunk.js  158 bytes  {284}, {753}  [emitted]  chunk
-          cir1.js  316 bytes         {592}  [emitted]  cir1
-cir2 from cir1.js  360 bytes  {288}, {289}  [emitted]  cir2 from cir1
-          cir2.js  316 bytes         {289}  [emitted]  cir2
-          main.js   8.61 KiB         {179}  [emitted]  main
+          cir1.js  334 bytes         {592}  [emitted]  cir1
+cir2 from cir1.js  378 bytes  {288}, {289}  [emitted]  cir2 from cir1
+          cir2.js  334 bytes         {289}  [emitted]  cir2
+          main.js   8.62 KiB         {179}  [emitted]  main
 Entrypoint main = main.js
 chunk {90} ab.js (ab) 2 bytes <{179}> >{753}< [rendered]
     > [10] ./index.js 1:0-6:8
@@ -1775,9 +1775,9 @@ You may need an appropriate loader to handle this file type, currently no loader
 `;
 
 exports[`StatsTestCases should print correct stats for performance-different-mode-and-target 1`] = `
-"Hash: e2b5a1bca95548546ae59d3cb806ed9e7152e2112ea6396cd288404e972aaa46ee8dfdb95338a233da85945fdce476f56d22aa46ee8dfdb95338a2332ea6396cd288404e972a
+"Hash: 7fcab1d9bdfa20807d16088f3fb744e50e71c0e3d95b388602aed487a11073a319f47bad7e37438426eb54f6bebed2df3a3673a319f47bad7e374384d95b388602aed487a110
 Child
-    Hash: e2b5a1bca95548546ae5
+    Hash: 7fcab1d9bdfa20807d16
     Time: Xms
     Built at: 1970-04-20 12:42:42
                  Asset     Size  Chunks                    Chunk Names
@@ -1800,7 +1800,7 @@ Child
     For more info visit https://webpack.js.org/guides/code-splitting/
 
 Child
-    Hash: 9d3cb806ed9e7152e211
+    Hash: 088f3fb744e50e71c0e3
     Time: Xms
     Built at: 1970-04-20 12:42:42
                        Asset     Size  Chunks                    Chunk Names
@@ -1823,7 +1823,7 @@ Child
     For more info visit https://webpack.js.org/guides/code-splitting/
 
 Child
-    Hash: 2ea6396cd288404e972a
+    Hash: d95b388602aed487a110
     Time: Xms
     Built at: 1970-04-20 12:42:42
                      Asset     Size  Chunks             Chunk Names
@@ -1831,7 +1831,7 @@ Child
     Entrypoint main = no-warning.pro-node.js
     [10] ./index.js 293 KiB {179} [built]
 Child
-    Hash: aa46ee8dfdb95338a233
+    Hash: 73a319f47bad7e374384
     Time: Xms
     Built at: 1970-04-20 12:42:42
                     Asset      Size  Chunks             Chunk Names
@@ -1839,7 +1839,7 @@ Child
     Entrypoint main = no-warning.dev-web.js
     [./index.js] 293 KiB {main} [built]
 Child
-    Hash: da85945fdce476f56d22
+    Hash: 26eb54f6bebed2df3a36
     Time: Xms
     Built at: 1970-04-20 12:42:42
                      Asset      Size  Chunks             Chunk Names
@@ -1847,7 +1847,7 @@ Child
     Entrypoint main = no-warning.dev-node.js
     [./index.js] 293 KiB {main} [built]
 Child
-    Hash: aa46ee8dfdb95338a233
+    Hash: 73a319f47bad7e374384
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                    Asset      Size  Chunks                    Chunk Names
@@ -1855,7 +1855,7 @@ Child
     Entrypoint main [big] = no-warning.dev-web-with-limit-set.js
     [./index.js] 293 KiB {main} [built]
 Child
-    Hash: 2ea6396cd288404e972a
+    Hash: d95b388602aed487a110
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                  Asset     Size  Chunks                    Chunk Names
@@ -1883,7 +1883,7 @@ exports[`StatsTestCases should print correct stats for performance-disabled 1`] 
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>             <CLR=BOLD>Chunk Names</CLR>
- <CLR=32,BOLD>460.js</CLR>  306 bytes   {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
+ <CLR=32,BOLD>460.js</CLR>  324 bytes   {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>524.js</CLR>  210 bytes   {<CLR=33,BOLD>524</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>996.js</CLR>  142 bytes   {<CLR=33,BOLD>996</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
 <CLR=32,BOLD>main.js</CLR>    301 KiB   {<CLR=33,BOLD>179</CLR>}  <CLR=32,BOLD>[emitted]</CLR>  main
@@ -1901,7 +1901,7 @@ exports[`StatsTestCases should print correct stats for performance-error 1`] = `
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>                    <CLR=BOLD>Chunk Names</CLR>
- <CLR=32,BOLD>460.js</CLR>  306 bytes   {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
+ <CLR=32,BOLD>460.js</CLR>  324 bytes   {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>524.js</CLR>  210 bytes   {<CLR=33,BOLD>524</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>996.js</CLR>  142 bytes   {<CLR=33,BOLD>996</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
 <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>   {<CLR=33,BOLD>179</CLR>}  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
@@ -1932,7 +1932,7 @@ exports[`StatsTestCases should print correct stats for performance-no-async-chun
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>      <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>                    <CLR=BOLD>Chunk Names</CLR>
 <CLR=33,BOLD>main.js</CLR>   <CLR=33,BOLD>294 KiB</CLR>   {<CLR=33,BOLD>179</CLR>}  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
- <CLR=32,BOLD>sec.js</CLR>  1.58 KiB   {<CLR=33,BOLD>295</CLR>}  <CLR=32,BOLD>[emitted]</CLR>         sec
+ <CLR=32,BOLD>sec.js</CLR>  1.59 KiB   {<CLR=33,BOLD>295</CLR>}  <CLR=32,BOLD>[emitted]</CLR>         sec
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 Entrypoint <CLR=BOLD>sec</CLR> = <CLR=32,BOLD>sec.js</CLR>
  [10] <CLR=BOLD>./index.js</CLR> 32 bytes {<CLR=33,BOLD>179</CLR>} <CLR=32,BOLD>[built]</CLR>
@@ -1963,7 +1963,7 @@ exports[`StatsTestCases should print correct stats for performance-no-hints 1`] 
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>                    <CLR=BOLD>Chunk Names</CLR>
- <CLR=32,BOLD>460.js</CLR>  306 bytes   {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
+ <CLR=32,BOLD>460.js</CLR>  324 bytes   {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>524.js</CLR>  210 bytes   {<CLR=33,BOLD>524</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>996.js</CLR>  142 bytes   {<CLR=33,BOLD>996</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
 <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>   {<CLR=33,BOLD>179</CLR>}  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
@@ -2015,7 +2015,7 @@ exports[`StatsTestCases should print correct stats for prefetch 1`] = `
      inner2.js  154 bytes   {641}  [emitted]  inner2
        main.js   12.2 KiB   {179}  [emitted]  main
      normal.js  113 bytes    {30}  [emitted]  normal
- prefetched.js  554 bytes   {505}  [emitted]  prefetched
+ prefetched.js  572 bytes   {505}  [emitted]  prefetched
 prefetched2.js  114 bytes   {379}  [emitted]  prefetched2
 prefetched3.js  114 bytes   {220}  [emitted]  prefetched3
 Entrypoint main = main.js (prefetch: prefetched2.js prefetched.js prefetched3.js)
@@ -2046,9 +2046,9 @@ exports[`StatsTestCases should print correct stats for preload 1`] = `
 "        Asset       Size  Chunks             Chunk Names
      inner.js  114 bytes   {746}  [emitted]  inner
     inner2.js  154 bytes   {641}  [emitted]  inner2
-      main.js   11.9 KiB   {179}  [emitted]  main
+      main.js     12 KiB   {179}  [emitted]  main
     normal.js  113 bytes    {30}  [emitted]  normal
- preloaded.js  539 bytes   {851}  [emitted]  preloaded
+ preloaded.js  557 bytes   {851}  [emitted]  preloaded
 preloaded2.js  113 bytes   {363}  [emitted]  preloaded2
 preloaded3.js  112 bytes   {355}  [emitted]  preloaded3
 Entrypoint main = main.js (preload: preloaded2.js preloaded.js preloaded3.js)
@@ -2070,15 +2070,15 @@ exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
   <+> [LogTestPlugin] Collaped group
       [LogTestPlugin] Log
     [LogTestPlugin] End
-Hash: ddc399920af7b70e3ea0
+Hash: 0ac6b9f93a7e7dd5cbef
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
   Asset       Size  Chunks             Chunk Names
- 460.js  306 bytes   {460}  [emitted]
+ 460.js  324 bytes   {460}  [emitted]
  524.js  210 bytes   {524}  [emitted]
  996.js  142 bytes   {996}  [emitted]
-main.js    7.8 KiB   {179}  [emitted]  main
+main.js   7.81 KiB   {179}  [emitted]  main
 Entrypoint main = main.js
 chunk {179} main.js (main) 73 bytes (javascript) 4.12 KiB (runtime) >{460}< >{996}< [entry] [rendered]
     > ./index main
@@ -2186,14 +2186,14 @@ exports[`StatsTestCases should print correct stats for preset-normal 1`] = `
 "<e> [LogTestPlugin] Error
 <w> [LogTestPlugin] Warning
 <i> [LogTestPlugin] Info
-Hash: ddc399920af7b70e3ea0
+Hash: 0ac6b9f93a7e7dd5cbef
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset       Size  Chunks             Chunk Names
- 460.js  306 bytes   {460}  [emitted]
+ 460.js  324 bytes   {460}  [emitted]
  524.js  210 bytes   {524}  [emitted]
  996.js  142 bytes   {996}  [emitted]
-main.js    7.8 KiB   {179}  [emitted]  main
+main.js   7.81 KiB   {179}  [emitted]  main
 Entrypoint main = main.js
  [10] ./index.js 51 bytes {179} [built]
 [390] ./e.js 22 bytes {524} [built]
@@ -2215,7 +2215,7 @@ exports[`StatsTestCases should print correct stats for preset-normal-performance
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>                    <CLR=BOLD>Chunk Names</CLR>
- <CLR=32,BOLD>460.js</CLR>  306 bytes   {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
+ <CLR=32,BOLD>460.js</CLR>  324 bytes   {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>524.js</CLR>  210 bytes   {<CLR=33,BOLD>524</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>996.js</CLR>  142 bytes   {<CLR=33,BOLD>996</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
 <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>   {<CLR=33,BOLD>179</CLR>}  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
@@ -2245,7 +2245,7 @@ exports[`StatsTestCases should print correct stats for preset-normal-performance
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
       <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>   <CLR=BOLD>Chunks</CLR>                          <CLR=BOLD>Chunk Names</CLR>
-     <CLR=32,BOLD>460.js</CLR>  338 bytes    {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
+     <CLR=32,BOLD>460.js</CLR>  356 bytes    {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>460.js.map</CLR>  212 bytes  ({<CLR=33,BOLD>460</CLR>})  <CLR=32,BOLD>[emitted]</CLR> <CLR=32,BOLD>[dev]</CLR>
      <CLR=32,BOLD>524.js</CLR>  242 bytes    {<CLR=33,BOLD>524</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>524.js.map</CLR>  218 bytes  ({<CLR=33,BOLD>524</CLR>})  <CLR=32,BOLD>[emitted]</CLR> <CLR=32,BOLD>[dev]</CLR>
@@ -2287,15 +2287,15 @@ exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
           [LogTestPlugin] Inner inner message
       [LogTestPlugin] Log
     [LogTestPlugin] End
-Hash: ddc399920af7b70e3ea0
+Hash: 0ac6b9f93a7e7dd5cbef
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
   Asset       Size  Chunks             Chunk Names
- 460.js  306 bytes   {460}  [emitted]
+ 460.js  324 bytes   {460}  [emitted]
  524.js  210 bytes   {524}  [emitted]
  996.js  142 bytes   {996}  [emitted]
-main.js    7.8 KiB   {179}  [emitted]  main
+main.js   7.81 KiB   {179}  [emitted]  main
 Entrypoint main = main.js
 chunk {179} main.js (main) 73 bytes (javascript) 4.12 KiB (runtime) >{460}< >{996}< [entry] [rendered]
     > ./index main
@@ -2387,11 +2387,11 @@ LOG from webpack.SplitChunksPlugin
 `;
 
 exports[`StatsTestCases should print correct stats for resolve-plugin-context 1`] = `
-"Hash: 1172ede5fd3c8c636237
+"Hash: 814e882a3081dbd47b6d
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset      Size  Chunks             Chunk Names
-bundle.js  1.69 KiB   {179}  [emitted]  main
+bundle.js  1.73 KiB   {179}  [emitted]  main
 Entrypoint main = bundle.js
  [10] ./index.js 48 bytes {179} [built]
 [258] ./node_modules/def/index.js 16 bytes {179} [built]
@@ -2401,11 +2401,11 @@ Entrypoint main = bundle.js
 `;
 
 exports[`StatsTestCases should print correct stats for reverse-sort-modules 1`] = `
-"Hash: bc825797597fba258915
+"Hash: 9bece5f748f5bd0d5710
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset      Size  Chunks             Chunk Names
-main.js  4.99 KiB   {179}  [emitted]  main
+main.js  5.52 KiB   {179}  [emitted]  main
 Entrypoint main = main.js
 [969] ./a.js?3 33 bytes {179} [built]
 [931] ./c.js?6 33 bytes {179} [built]
@@ -2438,9 +2438,9 @@ Entrypoint e2 = runtime~e2.js e2.js"
 exports[`StatsTestCases should print correct stats for runtime-chunk-integration 1`] = `
 "Child base:
          Asset       Size  Chunks             Chunk Names
-        505.js   1.19 KiB   {505}  [emitted]
-      main1.js  723 bytes   {909}  [emitted]  main1
-    runtime.js    9.6 KiB   {666}  [emitted]  runtime
+        505.js   1.22 KiB   {505}  [emitted]
+      main1.js  732 bytes   {909}  [emitted]  main1
+    runtime.js   9.59 KiB   {666}  [emitted]  runtime
     Entrypoint main1 = runtime.js main1.js
      [68] ./main1.js 66 bytes {909} [built]
     [460] ./c.js 20 bytes {505} [built]
@@ -2449,8 +2449,8 @@ exports[`StatsTestCases should print correct stats for runtime-chunk-integration
         + 6 hidden modules
 Child manifest is named entry:
           Asset       Size  Chunks             Chunk Names
-         505.js   1.19 KiB   {505}  [emitted]
-       main1.js  723 bytes   {909}  [emitted]  main1
+         505.js   1.22 KiB   {505}  [emitted]
+       main1.js  732 bytes   {909}  [emitted]  main1
     manifest.js   9.99 KiB   {700}  [emitted]  manifest
     Entrypoint main1 = manifest.js main1.js
     Entrypoint manifest = manifest.js
@@ -2473,7 +2473,7 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: bd588df93f01102150e9
+"Hash: 6488f8f2fdd28869b0a3
 Time: Xms
 Built at: 1970-04-20 12:42:42
 Entrypoint index = index.js
@@ -2503,9 +2503,9 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Hash: d7a6647c10750bba833a1bc5715209fdf2572cee
+"Hash: 58881658f9ef0ba4d46176bc49ce2d7948157fd6
 Child
-    Hash: d7a6647c10750bba833a
+    Hash: 58881658f9ef0ba4d461
     Time: Xms
     Built at: 1970-04-20 12:42:42
     Entrypoint first = vendor.js first.js
@@ -2523,7 +2523,7 @@ Child
     [965] ./vendor.js 25 bytes {736} [built]
         + 10 hidden modules
 Child
-    Hash: 1bc5715209fdf2572cee
+    Hash: 76bc49ce2d7948157fd6
     Time: Xms
     Built at: 1970-04-20 12:42:42
     Entrypoint first = vendor.js first.js
@@ -2550,11 +2550,11 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
-"Hash: 8a2d2fe73b751db10c6d
+"Hash: dbfabfa357b93d619912
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset       Size  Chunks             Chunk Names
-   1.js  633 bytes     {1}  [emitted]
+   1.js  642 bytes     {1}  [emitted]
 main.js   10.4 KiB     {0}  [emitted]  main
 Entrypoint main = main.js
 [0] ./main.js + 1 modules 231 bytes {0} [built]
@@ -2599,7 +2599,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
-"Hash: 68c2283824715bc339e3
+"Hash: a2547ccb2ca2f0e8c3ea
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset      Size  Chunks             Chunk Names
@@ -2631,7 +2631,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for simple 1`] = `
-"Hash: 40c62f46dc252dea3432
+"Hash: f9716925585c0d9a772b
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset       Size  Chunks             Chunk Names
@@ -2641,7 +2641,7 @@ Entrypoint main = bundle.js
 `;
 
 exports[`StatsTestCases should print correct stats for simple-more-info 1`] = `
-"Hash: ab39ead63d47ea78804b
+"Hash: 192807ce932ddf7801c7
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
@@ -3631,11 +3631,11 @@ chunk {794} default/async-a.js (async-a) 134 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: 3f54b6ba72ef0d38f5cc
+"Hash: e0ab7e769967b4622ab4
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset      Size  Chunks             Chunk Names
-bundle.js  7.72 KiB   {179}  [emitted]  main
+bundle.js  7.79 KiB   {179}  [emitted]  main
 Entrypoint main = bundle.js
  [10] ./index.js 315 bytes {179} [built]
       [no exports]
@@ -3669,11 +3669,11 @@ Entrypoint main = bundle.js
 `;
 
 exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
-"Hash: 44912a0fc5c471e3a94b
+"Hash: 0e0dbb0c6e288b3a94e0
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset      Size  Chunks             Chunk Names
-bundle.js  1.12 KiB   {179}  [emitted]  main
+bundle.js  1.14 KiB   {179}  [emitted]  main
 Entrypoint main = bundle.js
  [10] ./index.js 299 bytes {179} [built]
 [847] ./a.js 249 bytes {179} [built]
@@ -3692,7 +3692,7 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [./
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"Hash: 1abff85a74578f91c2f0
+"Hash: 3d7acccee475e7718e4f
 Time: Xms
 Built at: 1970-04-20 12:42:42
                            Asset       Size   Chunks                         Chunk Names
@@ -3701,7 +3701,7 @@ Built at: 1970-04-20 12:42:42
                    230.bundle.js  207 bytes    {230}  [emitted]
 256e72dd8b9a83a6e45b.module.wasm  120 bytes  ({325})  [emitted] [immutable]
                    325.bundle.js   3.71 KiB    {325}  [emitted]
-                   526.bundle.js  359 bytes    {526}  [emitted]
+                   526.bundle.js  368 bytes    {526}  [emitted]
                    780.bundle.js  495 bytes    {780}  [emitted]
                     99.bundle.js  205 bytes     {99}  [emitted]
 a0e9dd97d7ced35a5b2c.module.wasm  154 bytes  ({780})  [emitted] [immutable]

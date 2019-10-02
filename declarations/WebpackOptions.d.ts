@@ -1302,7 +1302,12 @@ export interface OutputOptions {
 	/**
 	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
 	 */
-	publicPath?: string | Function;
+	publicPath?:
+		| string
+		| ((
+				pathData: import("../lib/Compilation").PathData,
+				assetInfo?: import("../lib/Compilation").AssetInfo
+		  ) => string);
 	/**
 	 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
 	 */

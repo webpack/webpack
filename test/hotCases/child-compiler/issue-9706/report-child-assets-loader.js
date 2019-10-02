@@ -1,5 +1,4 @@
 const NodeTemplatePlugin = require("../../../../lib/node/NodeTemplatePlugin");
-const FunctionModulePlugin = require("../../../../lib/FunctionModulePlugin");
 const SingleEntryPlugin = require("../../../../lib/SingleEntryPlugin");
 
 const compilerCache = new WeakMap();
@@ -14,7 +13,6 @@ module.exports = function(source) {
 			},
 			[
 				new NodeTemplatePlugin(),
-				new FunctionModulePlugin(),
 				new SingleEntryPlugin(this.context, this.resource)
 			]
 		);
