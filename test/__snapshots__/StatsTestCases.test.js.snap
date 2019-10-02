@@ -515,7 +515,7 @@ chunk {996} 996.bundle.js 22 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for chunks-development 1`] = `
-"Hash: 4ddebd7e67b657a24523
+"Hash: 42e489d489e307c0cc66
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
@@ -1104,8 +1104,8 @@ chunk {trees} trees.js (trees) 71 bytes [rendered]
 
 exports[`StatsTestCases should print correct stats for immutable 1`] = `
 "                  Asset       Size      Chunks                         Chunk Names
-e962f33a28fe7c3eba46.js  346 bytes  {chunk_js}  [emitted] [immutable]
-ff3f5f3afd7fc39dee35.js   9.94 KiB      {main}  [emitted] [immutable]  main"
+81de2a32c0bb38e2e74d.js   9.94 KiB      {main}  [emitted] [immutable]  main
+b85995d75479dfea69ac.js  346 bytes  {chunk_js}  [emitted] [immutable]"
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
@@ -1775,7 +1775,7 @@ You may need an appropriate loader to handle this file type, currently no loader
 `;
 
 exports[`StatsTestCases should print correct stats for performance-different-mode-and-target 1`] = `
-"Hash: 7fcab1d9bdfa20807d16088f3fb744e50e71c0e3d95b388602aed487a11073a319f47bad7e37438426eb54f6bebed2df3a3673a319f47bad7e374384d95b388602aed487a110
+"Hash: 7fcab1d9bdfa20807d16088f3fb744e50e71c0e3d95b388602aed487a11051af519458dd4f572920ce718858fbf362f1d5e351af519458dd4f572920d95b388602aed487a110
 Child
     Hash: 7fcab1d9bdfa20807d16
     Time: Xms
@@ -1831,7 +1831,7 @@ Child
     Entrypoint main = no-warning.pro-node.js
     [10] ./index.js 293 KiB {179} [built]
 Child
-    Hash: 73a319f47bad7e374384
+    Hash: 51af519458dd4f572920
     Time: Xms
     Built at: 1970-04-20 12:42:42
                     Asset      Size  Chunks             Chunk Names
@@ -1839,7 +1839,7 @@ Child
     Entrypoint main = no-warning.dev-web.js
     [./index.js] 293 KiB {main} [built]
 Child
-    Hash: 26eb54f6bebed2df3a36
+    Hash: ce718858fbf362f1d5e3
     Time: Xms
     Built at: 1970-04-20 12:42:42
                      Asset      Size  Chunks             Chunk Names
@@ -1847,7 +1847,7 @@ Child
     Entrypoint main = no-warning.dev-node.js
     [./index.js] 293 KiB {main} [built]
 Child
-    Hash: 73a319f47bad7e374384
+    Hash: 51af519458dd4f572920
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                    Asset      Size  Chunks                    Chunk Names
@@ -2631,7 +2631,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for simple 1`] = `
-"Hash: f9716925585c0d9a772b
+"Hash: ebb9104130ac074d60d1
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset       Size  Chunks             Chunk Names
