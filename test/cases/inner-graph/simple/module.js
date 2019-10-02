@@ -1,4 +1,4 @@
-import { EXPORT, EXPORT2, EXPORT3 } from "./inner";
+import { EXPORT, EXPORT2, EXPORT3, EXPORT4 } from "./inner";
 
 export function f1() {
 	// no using EXPORT
@@ -46,6 +46,12 @@ function gb6() {
 	return ga6();
 }
 
+export class g7 {
+	static f() {
+		return EXPORT;
+	}
+}
+
 export const pure1 = /*#__PURE__*/ EXPORT;
 export const pure2 = /*#__PURE__*/ f6();
 const pure3 = /*#__PURE__*/ g5();
@@ -64,6 +70,10 @@ const x3 = () => {
 };
 
 const x4 = x3();
+
+export function fWithDefault(r = EXPORT4) {
+	return r;
+}
 
 export default (function() {
 	return EXPORT;
