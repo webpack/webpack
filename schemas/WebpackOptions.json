@@ -303,6 +303,29 @@
         }
       ]
     },
+    "LibraryCustomUmdCommentObject": {
+      "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "amd": {
+          "description": "Set comment for `amd` section in UMD",
+          "type": "string"
+        },
+        "commonjs": {
+          "description": "Set comment for `commonjs` (exports) section in UMD",
+          "type": "string"
+        },
+        "commonjs2": {
+          "description": "Set comment for `commonjs2` (module.exports) section in UMD",
+          "type": "string"
+        },
+        "root": {
+          "description": "Set comment for `root` (global variable) section in UMD",
+          "type": "string"
+        }
+      }
+    },
     "LibraryCustomUmdObject": {
       "type": "object",
       "additionalProperties": false,
@@ -1079,27 +1102,7 @@
               "type": "string"
             },
             {
-              "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.",
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "amd": {
-                  "description": "Set comment for `amd` section in UMD",
-                  "type": "string"
-                },
-                "commonjs": {
-                  "description": "Set comment for `commonjs` (exports) section in UMD",
-                  "type": "string"
-                },
-                "commonjs2": {
-                  "description": "Set comment for `commonjs2` (module.exports) section in UMD",
-                  "type": "string"
-                },
-                "root": {
-                  "description": "Set comment for `root` (global variable) section in UMD",
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/LibraryCustomUmdCommentObject"
             }
           ]
         },

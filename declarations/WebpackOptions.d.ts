@@ -1163,26 +1163,7 @@ export interface OutputOptions {
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */
-	auxiliaryComment?:
-		| string
-		| {
-				/**
-				 * Set comment for `amd` section in UMD
-				 */
-				amd?: string;
-				/**
-				 * Set comment for `commonjs` (exports) section in UMD
-				 */
-				commonjs?: string;
-				/**
-				 * Set comment for `commonjs2` (module.exports) section in UMD
-				 */
-				commonjs2?: string;
-				/**
-				 * Set comment for `root` (global variable) section in UMD
-				 */
-				root?: string;
-		  };
+	auxiliaryComment?: string | LibraryCustomUmdCommentObject;
 	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
@@ -1328,6 +1309,30 @@ export interface OutputOptions {
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
 	webassemblyModuleFilename?: string;
+}
+/**
+ * Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "LibraryCustomUmdCommentObject".
+ */
+export interface LibraryCustomUmdCommentObject {
+	/**
+	 * Set comment for `amd` section in UMD
+	 */
+	amd?: string;
+	/**
+	 * Set comment for `commonjs` (exports) section in UMD
+	 */
+	commonjs?: string;
+	/**
+	 * Set comment for `commonjs2` (module.exports) section in UMD
+	 */
+	commonjs2?: string;
+	/**
+	 * Set comment for `root` (global variable) section in UMD
+	 */
+	root?: string;
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
