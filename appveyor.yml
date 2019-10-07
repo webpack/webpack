@@ -27,7 +27,7 @@ matrix:
 test_script:
   - node --version
   - yarn --version
-  - cmd: set JEST=--maxWorkers=2 --cacheDirectory .jest-cache
+  - cmd: set JEST=--maxWorkers=2 --cacheDirectory .jest-cache --coverageReporters=lcovonly
   - cmd: yarn appveyor:integration
   - cmd: yarn unlink webpack
   - cmd: yarn global add codecov && codecov -F integration --disable=gcov
