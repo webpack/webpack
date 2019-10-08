@@ -124,10 +124,8 @@ When compiling for other targets like node.js, electron or WebWorkers, it may be
 
 # dist/output.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -147,7 +145,7 @@ When compiling for other targets like node.js, electron or WebWorkers, it may be
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -172,11 +170,6 @@ When compiling for other targets like node.js, electron or WebWorkers, it may be
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -184,7 +177,7 @@ When compiling for other targets like node.js, electron or WebWorkers, it may be
   \********************/
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__ */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -192,7 +185,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 (async ()=> {
-	await Object(_Actions_js__WEBPACK_IMPORTED_MODULE_0__.CreateUserAction)("John");
+	await (0,_Actions_js__WEBPACK_IMPORTED_MODULE_0__.CreateUserAction)("John");
 })();
 
 
@@ -205,12 +198,14 @@ __webpack_require__.r(__webpack_exports__);
 /*! export CreateUserAction [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.e, __webpack_require__ */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CreateUserAction", function() { return CreateUserAction; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AlternativeCreateUserAction", function() { return AlternativeCreateUserAction; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "CreateUserAction": () => /* binding */ CreateUserAction,
+/* harmony export */   "AlternativeCreateUserAction": () => /* binding */ AlternativeCreateUserAction
+/* harmony export */ });
 // import() doesn't care about whether a module is an async module or not
 const UserApi = __webpack_require__.e(/*! import() */ 497).then(__webpack_require__.bind(null, /*! ./UserApi.js */ 2));
 
@@ -253,7 +248,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
@@ -261,13 +256,15 @@ const AlternativeCreateUserAction = async name => {
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/define property getter */
+/******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
-/******/ 		// define getter function for harmony exports
+/******/ 		// define getter functions for harmony exports
 /******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
-/******/ 		__webpack_require__.d = function(exports, name, getter) {
-/******/ 			if(!hasOwnProperty.call(exports, name)) {
-/******/ 				Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
 /******/ 			}
 /******/ 		};
 /******/ 	}();
@@ -277,8 +274,8 @@ const AlternativeCreateUserAction = async name => {
 /******/ 		__webpack_require__.f = {};
 /******/ 		// This file contains only the entry chunk.
 /******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce(function(promises, key) {
+/******/ 		__webpack_require__.e = (chunkId) => {
+/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
 /******/ 				__webpack_require__.f[key](chunkId, promises);
 /******/ 				return promises;
 /******/ 			}, []));
@@ -293,7 +290,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
 /******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
@@ -313,67 +310,67 @@ const AlternativeCreateUserAction = async name => {
 /******/ 		
 /******/ 		
 /******/ 		
-/******/ 		__webpack_require__.f.j = function(chunkId, promises) {
-/******/ 			// JSONP chunk loading for javascript
-/******/ 			var installedChunkData = Object.prototype.hasOwnProperty.call(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
-/******/ 			if(installedChunkData !== 0) { // 0 means "already installed".
+/******/ 		__webpack_require__.f.j = (chunkId, promises) => {
+/******/ 				// JSONP chunk loading for javascript
+/******/ 				var installedChunkData = Object.prototype.hasOwnProperty.call(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 		
-/******/ 				// a Promise means "currently loading".
-/******/ 				if(installedChunkData) {
-/******/ 					promises.push(installedChunkData[2]);
-/******/ 				} else {
-/******/ 					if(true) { // all chunks have JS
-/******/ 						// setup Promise in chunk cache
-/******/ 						var promise = new Promise(function(resolve, reject) {
-/******/ 							installedChunkData = installedChunks[chunkId] = [resolve, reject];
-/******/ 						});
-/******/ 						promises.push(installedChunkData[2] = promise);
+/******/ 					// a Promise means "currently loading".
+/******/ 					if(installedChunkData) {
+/******/ 						promises.push(installedChunkData[2]);
+/******/ 					} else {
+/******/ 						if(true) { // all chunks have JS
+/******/ 							// setup Promise in chunk cache
+/******/ 							var promise = new Promise((resolve, reject) => {
+/******/ 								installedChunkData = installedChunks[chunkId] = [resolve, reject];
+/******/ 							});
+/******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 						// start chunk loading
-/******/ 						var url = __webpack_require__.p + __webpack_require__.u(chunkId);
-/******/ 						var loadingEnded = function() {
-/******/ 							if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
-/******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
-/******/ 						};
-/******/ 						var script = document.createElement('script');
-/******/ 						var onScriptComplete;
+/******/ 							// start chunk loading
+/******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
+/******/ 							var loadingEnded = () => {
+/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
+/******/ 								if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 							};
+/******/ 							var script = document.createElement('script');
+/******/ 							var onScriptComplete;
 /******/ 		
-/******/ 						script.charset = 'utf-8';
-/******/ 						script.timeout = 120;
-/******/ 						if (__webpack_require__.nc) {
-/******/ 							script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 						}
-/******/ 						script.src = url;
-/******/ 		
-/******/ 						// create error before stack unwound to get useful stacktrace later
-/******/ 						var error = new Error();
-/******/ 						onScriptComplete = function (event) {
-/******/ 							// avoid mem leaks in IE.
-/******/ 							script.onerror = script.onload = null;
-/******/ 							clearTimeout(timeout);
-/******/ 							var reportError = loadingEnded();
-/******/ 							if(reportError) {
-/******/ 								var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 								var realSrc = event && event.target && event.target.src;
-/******/ 								error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
-/******/ 								error.name = 'ChunkLoadError';
-/******/ 								error.type = errorType;
-/******/ 								error.request = realSrc;
-/******/ 								reportError(error);
+/******/ 							script.charset = 'utf-8';
+/******/ 							script.timeout = 120;
+/******/ 							if (__webpack_require__.nc) {
+/******/ 								script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 							}
-/******/ 						};
-/******/ 						var timeout = setTimeout(function(){
-/******/ 							onScriptComplete({ type: 'timeout', target: script });
-/******/ 						}, 120000);
-/******/ 						script.onerror = script.onload = onScriptComplete;
-/******/ 						document.head.appendChild(script);
-/******/ 					} else installedChunks[chunkId] = 0;
+/******/ 							script.src = url;
 /******/ 		
-/******/ 					// no HMR
+/******/ 							// create error before stack unwound to get useful stacktrace later
+/******/ 							var error = new Error();
+/******/ 							onScriptComplete = function (event) {
+/******/ 								// avoid mem leaks in IE.
+/******/ 								script.onerror = script.onload = null;
+/******/ 								clearTimeout(timeout);
+/******/ 								var reportError = loadingEnded();
+/******/ 								if(reportError) {
+/******/ 									var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 									var realSrc = event && event.target && event.target.src;
+/******/ 									error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 									error.name = 'ChunkLoadError';
+/******/ 									error.type = errorType;
+/******/ 									error.request = realSrc;
+/******/ 									reportError(error);
+/******/ 								}
+/******/ 							};
+/******/ 							var timeout = setTimeout(function(){
+/******/ 								onScriptComplete({ type: 'timeout', target: script });
+/******/ 							}, 120000);
+/******/ 							script.onerror = script.onload = onScriptComplete;
+/******/ 							document.head.appendChild(script);
+/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 		
+/******/ 						// no HMR
+/******/ 					}
 /******/ 				}
-/******/ 			}
 /******/ 		
-/******/ 			// no chunk preloading needed
+/******/ 				// no chunk preloading needed
 /******/ 		};
 /******/ 		
 /******/ 		// no prefetching
@@ -442,12 +439,14 @@ const AlternativeCreateUserAction = async name => {
 /*! export createUser [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__, __webpack_require__.d */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 module.exports = (async () => {
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createUser", function() { return createUser; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createUser": () => /* binding */ createUser
+/* harmony export */ });
 /* harmony import */ var _db_connection_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./db-connection.js */ 3);
 _db_connection_js__WEBPACK_IMPORTED_MODULE_0__ = await Promise.resolve(_db_connection_js__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -455,7 +454,7 @@ _db_connection_js__WEBPACK_IMPORTED_MODULE_0__ = await Promise.resolve(_db_conne
 const createUser = async name => {
 	command = `CREATE USER ${name}`;
 	// This is a normal await, because it's in an async function
-	await Object(_db_connection_js__WEBPACK_IMPORTED_MODULE_0__.dbCall)({ command });
+	await (0,_db_connection_js__WEBPACK_IMPORTED_MODULE_0__.dbCall)({ command });
 }
 
 return __webpack_exports__;
@@ -470,13 +469,15 @@ return __webpack_exports__;
 /*! export dbCall [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__.d, __webpack_require__ */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 module.exports = (async () => {
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dbCall", function() { return dbCall; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "close", function() { return close; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "dbCall": () => /* binding */ dbCall,
+/* harmony export */   "close": () => /* binding */ close
+/* harmony export */ });
 const connectToDB = async url => {
 	await new Promise(r => setTimeout(r, 1000));
 };
@@ -504,7 +505,7 @@ return __webpack_exports__;
 ## in production mode:
 
 ```javascript
-(window.webpackJsonp=window.webpackJsonp||[]).push([[497],{447:function(n,t,e){"use strict";n.exports=(async()=>{e.d(t,"d",function(){return n});await(async n=>{await new Promise(n=>setTimeout(n,1e3))})();const n=async n=>(await new Promise(n=>setTimeout(n,100)),"fake data");return t})()},497:function(n,t,e){"use strict";n.exports=(async()=>{e.r(t),e.d(t,"createUser",function(){return a});var n=e(447);n=await Promise.resolve(n);const a=async t=>{command=`CREATE USER ${t}`,await Object(n.d)({command:command})};return t})()}}]);
+(window.webpackJsonp=window.webpackJsonp||[]).push([[497],{447:(a,e,s)=>{"use strict";a.exports=(async()=>{s.d(e,{d:()=>a});await(async a=>{await new Promise(a=>setTimeout(a,1e3))})();const a=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");return e})()},497:(a,e,s)=>{"use strict";a.exports=(async()=>{s.r(e),s.d(e,{createUser:()=>t});var a=s(447);a=await Promise.resolve(a);const t=async e=>{command=`CREATE USER ${e}`,await(0,a.d)({command:command})};return e})()}}]);
 ```
 
 # Info
@@ -513,12 +514,12 @@ return __webpack_exports__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
         Asset      Size  Chunks             Chunk Names
 497.output.js  2.45 KiB   {497}  [emitted]
-    output.js  11.1 KiB   {179}  [emitted]  main
+    output.js  11.2 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {179} output.js (main) 1.19 KiB (javascript) 4.67 KiB (runtime) [entry] [rendered]
+chunk {179} output.js (main) 1.19 KiB (javascript) 4.75 KiB (runtime) [entry] [rendered]
     > ./example.js main
  [0] ./example.js 103 bytes {179} [built]
      [no exports]
@@ -549,12 +550,12 @@ chunk {497} 497.output.js 622 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
         Asset       Size  Chunks             Chunk Names
-497.output.js  532 bytes   {497}  [emitted]
-    output.js   1.93 KiB   {179}  [emitted]  main
+497.output.js  485 bytes   {497}  [emitted]
+    output.js   1.86 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {179} output.js (main) 1.19 KiB (javascript) 4.67 KiB (runtime) [entry] [rendered]
+chunk {179} output.js (main) 1.19 KiB (javascript) 4.75 KiB (runtime) [entry] [rendered]
     > ./example.js main
  [978] ./example.js + 1 modules 1.19 KiB {179} [built]
        [no exports]

@@ -18,7 +18,6 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.DllReferencePlugin({
-			context: ".",
 			manifest: require("../0-vendor/dist/vendor-manifest.json") // eslint-disable-line
 		})
 	]
@@ -48,10 +47,8 @@ console.log(new square(7));
 
 # dist/app.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -71,7 +68,7 @@ console.log(new square(7));
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -79,7 +76,6 @@ console.log(new square(7));
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -94,11 +90,6 @@ console.log(new square(7));
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-```javascript
 /******/ ([
 /* 0 */
 /*!************************!*\
@@ -106,39 +97,39 @@ console.log(new square(7));
   \************************/
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__ */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var example_vendor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! example-vendor */ 1);
 
 
-console.log(Object(example_vendor__WEBPACK_IMPORTED_MODULE_0__.square)(7));
+console.log((0,example_vendor__WEBPACK_IMPORTED_MODULE_0__.square)(7));
 console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 
 
 /***/ }),
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_1946831b6d376d7fa823 ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_89cb910ba5a8389c3c33 ***!
   \******************************************************************************************************/
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ ((module, __unusedexports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_1946831b6d376d7fa823 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_89cb910ba5a8389c3c33 */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_1946831b6d376d7fa823" ***!
+  !*** external "vendor_lib_89cb910ba5a8389c3c33" ***!
   \**************************************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
-module.exports = vendor_lib_1946831b6d376d7fa823;
+module.exports = vendor_lib_89cb910ba5a8389c3c33;
 
 /***/ })
 /******/ ],
@@ -153,7 +144,7 @@ module.exports = vendor_lib_1946831b6d376d7fa823;
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
@@ -174,25 +165,25 @@ module.exports = vendor_lib_1946831b6d376d7fa823;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
  Asset      Size  Chunks             Chunk Names
-app.js  3.59 KiB     {0}  [emitted]  main
+app.js  3.53 KiB     {0}  [emitted]  main
 Entrypoint main = app.js
-chunk {0} app.js (main) 178 bytes (javascript) 279 bytes (runtime) [entry] [rendered]
+chunk {0} app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
     > ./example-app main
  [0] ./example-app.js 94 bytes {0} [built]
      [no exports]
      [used exports unknown]
      entry ./example-app main
- [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_1946831b6d376d7fa823 42 bytes {0} [built]
+ [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_89cb910ba5a8389c3c33 42 bytes {0} [built]
      [exports: square]
      [used exports unknown]
      harmony side effect evaluation example-vendor [0] ./example-app.js 1:0-40
      harmony import specifier example-vendor [0] ./example-app.js 3:12-18
      harmony import specifier example-vendor [0] ./example-app.js 4:16-22
- [2] external "vendor_lib_1946831b6d376d7fa823" 42 bytes {0} [built]
+ [2] external "vendor_lib_89cb910ba5a8389c3c33" 42 bytes {0} [built]
      [used exports unknown]
-     delegated source dll-reference vendor_lib_1946831b6d376d7fa823 [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_1946831b6d376d7fa823
+     delegated source dll-reference vendor_lib_89cb910ba5a8389c3c33 [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_89cb910ba5a8389c3c33
      + 1 hidden chunk module
 ```
 
@@ -200,18 +191,18 @@ chunk {0} app.js (main) 178 bytes (javascript) 279 bytes (runtime) [entry] [rend
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
  Asset       Size  Chunks             Chunk Names
-app.js  589 bytes   {179}  [emitted]  main
+app.js  539 bytes   {179}  [emitted]  main
 Entrypoint main = app.js
-chunk {179} app.js (main) 178 bytes (javascript) 279 bytes (runtime) [entry] [rendered]
+chunk {179} app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
     > ./example-app main
-  [26] external "vendor_lib_1946831b6d376d7fa823" 42 bytes {179} [built]
-       delegated source dll-reference vendor_lib_1946831b6d376d7fa823 [694] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_1946831b6d376d7fa823
  [661] ./example-app.js 94 bytes {179} [built]
        [no exports]
        entry ./example-app main
- [694] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_1946831b6d376d7fa823 42 bytes {179} [built]
+ [948] external "vendor_lib_89cb910ba5a8389c3c33" 42 bytes {179} [built]
+       delegated source dll-reference vendor_lib_89cb910ba5a8389c3c33 [953] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_89cb910ba5a8389c3c33
+ [953] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_89cb910ba5a8389c3c33 42 bytes {179} [built]
        [exports: square]
        [all exports used]
        harmony side effect evaluation example-vendor [661] ./example-app.js 1:0-40

@@ -48,10 +48,8 @@ module.exports = (env = "development") => ({
 
 # dist/output.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -81,7 +79,6 @@ module.exports = (env = "development") => ({
 /******/ 	}
 /******/
 /******/
-/******/
 /******/ 	// the startup function
 /******/ 	function startup() {
 /******/ 		// Load entry module and return exports
@@ -92,11 +89,6 @@ module.exports = (env = "development") => ({
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -104,7 +96,7 @@ module.exports = (env = "development") => ({
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
 
 console.log(__webpack_require__(/*! ./index */ 1));
 
@@ -115,9 +107,16 @@ console.log(__webpack_require__(/*! ./index */ 1));
   !*** ./index.ts ***!
   \******************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements:  */
+/*! runtime requirements: top-level-this-exports */
 /***/ (function() {
 
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var myName = "Junya";
 var age = 22;
 function getArray() {
@@ -125,7 +124,7 @@ function getArray() {
     for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
     }
-    return args.slice();
+    return __spreadArrays(args);
 }
 console.log(getArray("foo", "bar"));
 console.log(getArray(1, 2, 3));
@@ -143,16 +142,16 @@ console.log(getArray(1, 2, 3));
 Starting type checking service...
 Using 1 worker with 2048MB memory limit
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
     Asset      Size  Chunks             Chunk Names
-output.js  2.08 KiB     {0}  [emitted]  main
+output.js  2.41 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
-chunk {0} output.js (main) 309 bytes [entry] [rendered]
+chunk {0} output.js (main) 652 bytes [entry] [rendered]
     > ./example.js main
  [0] ./example.js 33 bytes {0} [built]
      [used exports unknown]
      entry ./example.js main
- [1] ./index.ts 276 bytes {0} [built]
+ [1] ./index.ts 619 bytes {0} [built]
      [used exports unknown]
      cjs require ./index [0] ./example.js 1:12-30
 ```
@@ -163,14 +162,14 @@ chunk {0} output.js (main) 309 bytes [entry] [rendered]
 Starting type checking service...
 Using 1 worker with 2048MB memory limit
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
     Asset       Size  Chunks             Chunk Names
-output.js  377 bytes   {179}  [emitted]  main
+output.js  576 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {179} output.js (main) 309 bytes [entry] [rendered]
+chunk {179} output.js (main) 652 bytes [entry] [rendered]
     > ./example.js main
  [144] ./example.js 33 bytes {179} [built]
        entry ./example.js main
- [862] ./index.ts 276 bytes {179} [built]
+ [862] ./index.ts 619 bytes {179} [built]
        cjs require ./index [144] ./example.js 1:12-30
 ```

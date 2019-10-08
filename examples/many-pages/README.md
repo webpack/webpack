@@ -52,22 +52,22 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
    Asset       Size  Chunks             Chunk Names
-  115.js  180 bytes   {115}  [emitted]
-  402.js  121 bytes   {402}  [emitted]
-  497.js  121 bytes   {497}  [emitted]
-  505.js  156 bytes   {505}  [emitted]
-  730.js  121 bytes   {730}  [emitted]
-  777.js  121 bytes   {777}  [emitted]
-  833.js  180 bytes   {833}  [emitted]
-pageA.js   1.39 KiB   {424}  [emitted]  pageA
-pageB.js   1.47 KiB   {121}  [emitted]  pageB
-pageC.js   1.47 KiB   {178}  [emitted]  pageC
-pageD.js   1.39 KiB   {568}  [emitted]  pageD
-pageE.js   1.37 KiB   {356}  [emitted]  pageE
-pageF.js   1.39 KiB   {789}  [emitted]  pageF
-pageG.js   1.35 KiB   {547}  [emitted]  pageG
+  115.js  168 bytes   {115}  [emitted]
+  402.js  115 bytes   {402}  [emitted]
+  497.js  115 bytes   {497}  [emitted]
+  505.js  144 bytes   {505}  [emitted]
+  730.js  115 bytes   {730}  [emitted]
+  777.js  115 bytes   {777}  [emitted]
+  833.js  168 bytes   {833}  [emitted]
+pageA.js   1.31 KiB   {424}  [emitted]  pageA
+pageB.js   1.39 KiB   {121}  [emitted]  pageB
+pageC.js   1.39 KiB   {178}  [emitted]  pageC
+pageD.js   1.32 KiB   {568}  [emitted]  pageD
+pageE.js    1.3 KiB   {356}  [emitted]  pageE
+pageF.js   1.32 KiB   {789}  [emitted]  pageF
+pageG.js   1.28 KiB   {547}  [emitted]  pageG
 Entrypoint pageA = 115.js 730.js 505.js pageA.js
 Entrypoint pageB = 115.js 497.js pageB.js
 Entrypoint pageC = 115.js 402.js pageC.js
@@ -88,14 +88,14 @@ chunk {121} pageB.js (pageB) 199 bytes (javascript) 3.2 KiB (runtime) [entry] [r
  [354] ./stuff/s1.js 31 bytes {121} {547} {568} {789} [built]
  [707] ./stuff/s7.js 31 bytes {121} {356} [built]
      + 4 hidden chunk modules
-chunk {178} pageC.js (pageC) 199 bytes (javascript) 3.21 KiB (runtime) [entry] [rendered]
+chunk {178} pageC.js (pageC) 199 bytes (javascript) 3.2 KiB (runtime) [entry] [rendered]
     > ./pages/c pageC
   [33] ./stuff/s4.js 31 bytes {178} {424} [built]
  [178] ./stuff/s5.js 31 bytes {178} [built]
  [324] ./pages/c.js 106 bytes {178} [built]
  [377] ./stuff/s6.js 31 bytes {178} [built]
      + 4 hidden chunk modules
-chunk {356} pageE.js (pageE) 93 bytes (javascript) 3.21 KiB (runtime) [entry] [rendered]
+chunk {356} pageE.js (pageE) 93 bytes (javascript) 3.2 KiB (runtime) [entry] [rendered]
     > ./pages/e pageE
  [238] ./pages/e.js 62 bytes {356} [built]
  [707] ./stuff/s7.js 31 bytes {121} {356} [built]

@@ -25,10 +25,8 @@ module.exports = Math.random();
 
 # dist/output.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ``` javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -48,7 +46,7 @@ module.exports = Math.random();
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -71,11 +69,6 @@ module.exports = Math.random();
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-``` javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -83,7 +76,7 @@ module.exports = Math.random();
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.c */
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
 
 var a = __webpack_require__(/*! ./a */ 1);
 
@@ -106,7 +99,7 @@ if(a == a2) throw new Error("Cache clear failed :(");
   \**************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = Math.random();
 
@@ -120,9 +113,9 @@ module.exports = Math.random();
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
     Asset      Size  Chunks             Chunk Names
-output.js  2.23 KiB     {0}  [emitted]  main
+output.js  2.19 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 313 bytes [entry] [rendered]
     > ./example.js main
@@ -140,9 +133,9 @@ chunk {0} output.js (main) 313 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
     Asset       Size  Chunks             Chunk Names
-output.js  333 bytes   {179}  [emitted]  main
+output.js  299 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
 chunk {179} output.js (main) 313 bytes [entry] [rendered]
     > ./example.js main

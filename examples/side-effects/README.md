@@ -54,10 +54,8 @@ export { c } from "./c";
 
 # dist/output.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -77,7 +75,7 @@ export { c } from "./c";
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -85,7 +83,6 @@ export { c } from "./c";
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -100,11 +97,6 @@ export { c } from "./c";
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -112,7 +104,7 @@ export { c } from "./c";
   \********************/
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__ */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -140,13 +132,15 @@ console.log(
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.d */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _a__WEBPACK_IMPORTED_MODULE_0__[["a"]]; });
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _b__WEBPACK_IMPORTED_MODULE_1__[["b"]]; });
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _c__WEBPACK_IMPORTED_MODULE_2__[["c"]]; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "a": () => /* reexport safe */ _a__WEBPACK_IMPORTED_MODULE_0__.a,
+/* harmony export */   "b": () => /* reexport safe */ _b__WEBPACK_IMPORTED_MODULE_1__.b,
+/* harmony export */   "c": () => /* reexport safe */ _c__WEBPACK_IMPORTED_MODULE_2__.c
+/* harmony export */ });
 /* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */ 2);
 /* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */ 3);
 /* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */ 4);
@@ -163,11 +157,13 @@ __webpack_require__.r(__webpack_exports__);
 /*! export a [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return a; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "a": () => /* binding */ a
+/* harmony export */ });
 const a = "a";
 
 
@@ -179,11 +175,13 @@ const a = "a";
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return b; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "b": () => /* binding */ b
+/* harmony export */ });
 const b = "b";
 
 
@@ -195,11 +193,13 @@ const b = "b";
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return c; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "c": () => /* binding */ c
+/* harmony export */ });
 const c = "c";
 
 
@@ -211,11 +211,13 @@ const c = "c";
 /*! export a [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return a; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "a": () => /* binding */ a
+/* harmony export */ });
 const a = "a";
 
 
@@ -227,11 +229,13 @@ const a = "a";
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return b; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "b": () => /* binding */ b
+/* harmony export */ });
 const b = "b";
 
 
@@ -248,7 +252,7 @@ const b = "b";
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
@@ -256,13 +260,15 @@ const b = "b";
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/define property getter */
+/******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
-/******/ 		// define getter function for harmony exports
+/******/ 		// define getter functions for harmony exports
 /******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
-/******/ 		__webpack_require__.d = function(exports, name, getter) {
-/******/ 			if(!hasOwnProperty.call(exports, name)) {
-/******/ 				Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
 /******/ 			}
 /******/ 		};
 /******/ 	}();
@@ -280,11 +286,11 @@ const b = "b";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
     Asset      Size  Chunks             Chunk Names
-output.js  7.94 KiB     {0}  [emitted]  main
+output.js  8.07 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
-chunk {0} output.js (main) 325 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
+chunk {0} output.js (main) 325 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
     > ./example.js main
  [0] ./example.js 140 bytes {0} [built]
      [no exports]
@@ -330,11 +336,11 @@ chunk {0} output.js (main) 325 bytes (javascript) 560 bytes (runtime) [entry] [r
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
     Asset       Size  Chunks             Chunk Names
-output.js  568 bytes   {179}  [emitted]  main
+output.js  558 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {179} output.js (main) 325 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
+chunk {179} output.js (main) 325 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
     > ./example.js main
  [295] ./example.js + 6 modules 325 bytes {179} [built]
        [no exports]

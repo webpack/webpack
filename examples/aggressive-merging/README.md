@@ -60,13 +60,13 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
           Asset       Size  Chunks             Chunk Names
-   394.chunk.js  536 bytes   {394}  [emitted]
-   456.chunk.js   6.17 KiB   {456}  [emitted]
-pageA.bundle.js   8.11 KiB   {424}  [emitted]  pageA
-pageB.bundle.js   8.12 KiB   {121}  [emitted]  pageB
-pageC.bundle.js   8.12 KiB   {178}  [emitted]  pageC
+   394.chunk.js  526 bytes   {394}  [emitted]
+   456.chunk.js   6.16 KiB   {456}  [emitted]
+pageA.bundle.js   8.09 KiB   {424}  [emitted]  pageA
+pageB.bundle.js    8.1 KiB   {121}  [emitted]  pageB
+pageC.bundle.js    8.1 KiB   {178}  [emitted]  pageC
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js
@@ -119,13 +119,13 @@ chunk {456} 456.chunk.js 5.45 KiB [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
           Asset       Size        Chunks             Chunk Names
-   394.chunk.js  124 bytes         {394}  [emitted]
-   456.chunk.js  183 bytes  {394}, {456}  [emitted]
-pageA.bundle.js   1.59 KiB         {424}  [emitted]  pageA
-pageB.bundle.js   1.59 KiB         {121}  [emitted]  pageB
-pageC.bundle.js    1.6 KiB         {178}  [emitted]  pageC
+   394.chunk.js  108 bytes         {394}  [emitted]
+   456.chunk.js  159 bytes  {394}, {456}  [emitted]
+pageA.bundle.js    1.5 KiB         {424}  [emitted]  pageA
+pageB.bundle.js    1.5 KiB         {121}  [emitted]  pageB
+pageC.bundle.js   1.52 KiB         {178}  [emitted]  pageC
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js

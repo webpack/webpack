@@ -69,10 +69,8 @@ export const memory = await getMemoryFromParentInWorker();
 
 # dist/output.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -92,7 +90,7 @@ export const memory = await getMemoryFromParentInWorker();
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -100,7 +98,6 @@ export const memory = await getMemoryFromParentInWorker();
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -115,11 +112,6 @@ export const memory = await getMemoryFromParentInWorker();
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -127,7 +119,7 @@ export const memory = await getMemoryFromParentInWorker();
   \********************/
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__ */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 module.exports = (async () => {
@@ -137,16 +129,16 @@ _magic_js__WEBPACK_IMPORTED_MODULE_0__ = await Promise.resolve(_magic_js__WEBPAC
 
 
 // accessing memory
-console.log(Object(_magic_js__WEBPACK_IMPORTED_MODULE_0__.get)());
-Object(_magic_js__WEBPACK_IMPORTED_MODULE_0__.set)(42);
-console.log(Object(_magic_js__WEBPACK_IMPORTED_MODULE_0__.get)());
-Object(_magic_js__WEBPACK_IMPORTED_MODULE_0__.set)(123);
-console.log(Object(_magic_js__WEBPACK_IMPORTED_MODULE_0__.get)());
+console.log((0,_magic_js__WEBPACK_IMPORTED_MODULE_0__.get)());
+(0,_magic_js__WEBPACK_IMPORTED_MODULE_0__.set)(42);
+console.log((0,_magic_js__WEBPACK_IMPORTED_MODULE_0__.get)());
+(0,_magic_js__WEBPACK_IMPORTED_MODULE_0__.set)(123);
+console.log((0,_magic_js__WEBPACK_IMPORTED_MODULE_0__.get)());
 
 // random numbers
-console.log(Object(_magic_js__WEBPACK_IMPORTED_MODULE_0__.getNumber)());
-console.log(Object(_magic_js__WEBPACK_IMPORTED_MODULE_0__.getNumber)());
-console.log(Object(_magic_js__WEBPACK_IMPORTED_MODULE_0__.getNumber)());
+console.log((0,_magic_js__WEBPACK_IMPORTED_MODULE_0__.getNumber)());
+console.log((0,_magic_js__WEBPACK_IMPORTED_MODULE_0__.getNumber)());
+console.log((0,_magic_js__WEBPACK_IMPORTED_MODULE_0__.getNumber)());
 
 return __webpack_exports__;
 })();
@@ -161,14 +153,16 @@ return __webpack_exports__;
 /*! export set [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__, __webpack_require__.d */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 module.exports = (async () => {
 __webpack_require__.r(__webpack_exports__);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "get", function() { return _magic_wat__WEBPACK_IMPORTED_MODULE_0__[["get"]]; });
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getNumber", function() { return _magic_wat__WEBPACK_IMPORTED_MODULE_0__[["getNumber"]]; });
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "set", function() { return _magic_wat__WEBPACK_IMPORTED_MODULE_0__[["set"]]; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "get": () => /* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.get,
+/* harmony export */   "getNumber": () => /* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.getNumber,
+/* harmony export */   "set": () => /* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.set
+/* harmony export */ });
 /* harmony import */ var _magic_wat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./magic.wat */ 2);
 _magic_wat__WEBPACK_IMPORTED_MODULE_0__ = await Promise.resolve(_magic_wat__WEBPACK_IMPORTED_MODULE_0__);
 // reexporting
@@ -187,7 +181,7 @@ return __webpack_exports__;
 /*! export set [provided] [no usage info] [provision prevents renaming (no use info)] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_exports__, __webpack_require__.v, __webpack_require__ */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ ((module, exports, __webpack_require__) => {
 
 /* harmony import */ var WEBPACK_IMPORTED_MODULE_0 = __webpack_require__(/*! ./memory.js */ 3);
 
@@ -210,12 +204,14 @@ module.exports = Promise.resolve(WEBPACK_IMPORTED_MODULE_0).then(function(WEBPAC
 /*! export memory [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__.d, __webpack_require__ */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 module.exports = (async () => {
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "memory", function() { return memory; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "memory": () => /* binding */ memory
+/* harmony export */ });
 async function getMemoryFromParentInWorker() {
 	await new Promise(r => setTimeout(r, 200));
 	// fake
@@ -236,12 +232,14 @@ return __webpack_exports__;
 /*! export getRandomNumber [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getNumber", function() { return getNumber; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getRandomNumber", function() { return getRandomNumber; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "getNumber": () => /* binding */ getNumber,
+/* harmony export */   "getRandomNumber": () => /* binding */ getRandomNumber
+/* harmony export */ });
 function getNumber() {
 	return 42;
 }
@@ -264,7 +262,7 @@ function getRandomNumber() {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
@@ -272,13 +270,15 @@ function getRandomNumber() {
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/define property getter */
+/******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
-/******/ 		// define getter function for harmony exports
+/******/ 		// define getter functions for harmony exports
 /******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
-/******/ 		__webpack_require__.d = function(exports, name, getter) {
-/******/ 			if(!hasOwnProperty.call(exports, name)) {
-/******/ 				Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
 /******/ 			}
 /******/ 		};
 /******/ 	}();
@@ -316,12 +316,12 @@ function getRandomNumber() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
-                           Asset       Size   Chunks             Chunk Names
-594f5a209057602bfc3f.module.wasm  139 bytes  ({179})  [emitted]  (main)
-                       output.js   8.75 KiB    {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.30
+                           Asset       Size   Chunks                         Chunk Names
+594f5a209057602bfc3f.module.wasm  139 bytes  ({179})  [emitted] [immutable]  (main)
+                       output.js    8.7 KiB    {179}  [emitted]              main
 Entrypoint main = output.js (594f5a209057602bfc3f.module.wasm)
-chunk {179} output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 1.17 KiB (runtime) [entry] [rendered]
+chunk {179} output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 1.24 KiB (runtime) [entry] [rendered]
     > ./example.js main
  [0] ./example.js 253 bytes {179} [built]
      [no exports]
@@ -359,12 +359,12 @@ chunk {179} output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 1.17
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
-                           Asset       Size   Chunks             Chunk Names
-4636ea8e62e0734a195f.module.wasm  139 bytes  ({179})  [emitted]  (main)
-                       output.js   1.93 KiB    {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.30
+                           Asset       Size   Chunks                         Chunk Names
+4636ea8e62e0734a195f.module.wasm  139 bytes  ({179})  [emitted] [immutable]  (main)
+                       output.js   1.76 KiB    {179}  [emitted]              main
 Entrypoint main = output.js (4636ea8e62e0734a195f.module.wasm)
-chunk {179} output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 1.17 KiB (runtime) [entry] [rendered]
+chunk {179} output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 1.24 KiB (runtime) [entry] [rendered]
     > ./example.js main
   [69] ./magic.wat 70 bytes (javascript) 139 bytes (webassembly) {179} [built]
        [exports: get, getNumber, set]

@@ -63,12 +63,8 @@ module.exports = {
 # dist/dll.js
 
 ```javascript
-var dll_177b7487f347e5467c9c =
-```
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
-``` js
-/******/ (function(modules, runtime) { // webpackBootstrap
+var dll_c2667a48ccf45ebf665f =
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -88,7 +84,7 @@ var dll_177b7487f347e5467c9c =
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -96,7 +92,6 @@ var dll_177b7487f347e5467c9c =
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -111,11 +106,6 @@ var dll_177b7487f347e5467c9c =
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-``` js
 /******/ ([
 /* 0 */
 /*!***************!*\
@@ -124,7 +114,7 @@ var dll_177b7487f347e5467c9c =
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__, module */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ ((module, __unusedexports, __webpack_require__) => {
 
 module.exports = __webpack_require__;
 
@@ -139,7 +129,7 @@ module.exports = __webpack_require__;
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.t, __webpack_require__.n, __webpack_require__ */
 /*! ModuleConcatenation bailout: Cannot concat with ./cjs.js (<- Module is not an ECMAScript module) */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -159,9 +149,11 @@ var a = "a";
 var cjs = __webpack_require__(2);
 
 // CONCATENATED MODULE: ./example.js
-/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "a", function() { return a; });
-/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "b", function() { return b; });
-/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "c", function() { return cjs.c; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "a": () => /* concated reexport __WEBPACK_MODULE_REFERENCE__1_5b2261225d_asiSafe__ */ a,
+/* harmony export */   "b": () => /* concated reexport __WEBPACK_MODULE_REFERENCE__1_5b2262225d_asiSafe__ */ b,
+/* harmony export */   "c": () => /* concated reexport __WEBPACK_MODULE_REFERENCE__2_5b2263225d_asiSafe__ */ cjs.c
+/* harmony export */ });
 
 
 
@@ -174,7 +166,7 @@ var cjs = __webpack_require__(2);
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(__unusedmodule, exports) {
+/***/ ((__unusedmodule, exports) => {
 
 // module cjs (commonjs)
 exports.c = "c";
@@ -193,7 +185,7 @@ exports.c = "c";
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
@@ -201,13 +193,15 @@ exports.c = "c";
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/define property getter */
+/******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
-/******/ 		// define getter function for harmony exports
+/******/ 		// define getter functions for harmony exports
 /******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
-/******/ 		__webpack_require__.d = function(exports, name, getter) {
-/******/ 			if(!hasOwnProperty.call(exports, name)) {
-/******/ 				Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
 /******/ 			}
 /******/ 		};
 /******/ 	}();
@@ -226,7 +220,11 @@ exports.c = "c";
 /******/ 			var ns = Object.create(null);
 /******/ 			__webpack_require__.r(ns);
 /******/ 			Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 			if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 			if(mode & 2 && typeof value != 'string') {
+/******/ 				var def = {};
+/******/ 				for(const key in value) def[key] = () => value[key];
+/******/ 				__webpack_require__.d(ns, def);
+/******/ 			}
 /******/ 			return ns;
 /******/ 		};
 /******/ 	}();
@@ -234,11 +232,11 @@ exports.c = "c";
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	!function() {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = function(module) {
+/******/ 		__webpack_require__.n = (module) => {
 /******/ 			var getter = module && module.__esModule ?
-/******/ 				function getDefault() { return module['default']; } :
-/******/ 				function getModuleExports() { return module; };
-/******/ 			__webpack_require__.d(getter, 'a', getter);
+/******/ 				() => module['default'] :
+/******/ 				() => module;
+/******/ 			__webpack_require__.d(getter, { a: getter });
 /******/ 			return getter;
 /******/ 		};
 /******/ 	}();
@@ -253,7 +251,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_177b7487f347e5467c9c","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["a","b","c"]}}}
+{"name":"dll_c2667a48ccf45ebf665f","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -262,11 +260,11 @@ exports.c = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
  Asset      Size  Chunks             Chunk Names
-dll.js  5.95 KiB     {0}  [emitted]  dll
+dll.js  6.08 KiB     {0}  [emitted]  dll
 Entrypoint dll = dll.js
-chunk {0} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [rendered]
+chunk {0} dll.js (dll) 216 bytes (javascript) 1.58 KiB (runtime) [entry] [rendered]
     > dll
  [0] dll dll 12 bytes {0} [built]
      [used exports unknown]
@@ -286,11 +284,11 @@ chunk {0} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [render
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
  Asset      Size  Chunks             Chunk Names
-dll.js  1.15 KiB   {874}  [emitted]  dll
+dll.js  1.01 KiB   {874}  [emitted]  dll
 Entrypoint dll = dll.js
-chunk {874} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [rendered]
+chunk {874} dll.js (dll) 216 bytes (javascript) 1.58 KiB (runtime) [entry] [rendered]
     > dll
  [312] dll dll 12 bytes {874} [built]
        dll entry

@@ -50,12 +50,5 @@ module.exports = (env = "development") => ({
 # Info
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.19
-    Asset     Size  Chunks             Chunk Names
-output.js  1.8 MiB     {0}  [emitted]  main
-Entrypoint main = output.js
-chunk {0} output.js (main) 1.55 MiB (javascript) 1.07 KiB (runtime) [entry]
-    > ./example.js main
-    530 chunk modules
+
 ```

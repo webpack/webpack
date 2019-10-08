@@ -43,7 +43,7 @@ module.exports = {
 	<body>
 		<!-- inlined minimized file "runtime~main.[chunkhash].js" -->
 		<script>
-			!function(e,t){"use strict";var r={};function n(t){if(r[t])return r[t].exports;var o=r[t]={i:t,l:!1,exports:{}};return e[t].call(o.exports,o,o.exports,n),o.l=!0,o.exports}n.m=e,function(e){e.f={},e.e=function(t){return Promise.all(Object.keys(e.f).reduce(function(r,n){return e.f[n](t,r),r},[]))},e.t=function(t,r){if(1&r&&(t=this(t)),8&r)return t;if(4&r&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(e.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&r&&"string"!=typeof t)for(var o in t)e.d(n,o,function(e){return t[e]}.bind(null,o));return n},t=Object.prototype.hasOwnProperty,e.d=function(e,r,n){t.call(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:n})},e.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},e.p="dist/",e.u=function(e){return e+".[chunkhash].js"},function(){var t={303:0},r=[];e.f.j=function(r,n){var o=Object.prototype.hasOwnProperty.call(t,r)?t[r]:void 0;if(0!==o)if(o)n.push(o[2]);else{var u=new Promise(function(e,n){o=t[r]=[e,n]});n.push(o[2]=u);var i,a=e.p+e.u(r),c=document.createElement("script");c.charset="utf-8",c.timeout=120,e.nc&&c.setAttribute("nonce",e.nc),c.src=a;var f=new Error;i=function(e){c.onerror=c.onload=null,clearTimeout(l);var n=function(){if(Object.prototype.hasOwnProperty.call(t,r)&&t[r])return t[r][1];0!==t[r]&&(t[r]=void 0)}();if(n){var o=e&&("load"===e.type?"missing":e.type),u=e&&e.target&&e.target.src;f.message="Loading chunk "+r+" failed.\n("+o+": "+u+")",f.name="ChunkLoadError",f.type=o,f.request=u,n(f)}};var l=setTimeout(function(){i({type:"timeout",target:c})},12e4);c.onerror=c.onload=i,document.head.appendChild(c)}};var n=function(){};function o(){for(var n,o=0;o<r.length;o++){for(var u=r[o],i=!0,a=1;a<u.length;a++){var c=u[a];0!==t[c]&&(i=!1)}i&&(r.splice(o--,1),n=e(e.s=u[0]))}return n}function u(o){for(var u,i,a=o[0],c=o[1],l=o[2],p=o[3],s=0,d=[];s<a.length;s++)i=a[s],Object.prototype.hasOwnProperty.call(t,i)&&t[i]&&d.push(t[i][0]),t[i]=0;for(u in c)Object.prototype.hasOwnProperty.call(c,u)&&(e.m[u]=c[u]);for(p&&p(e),f&&f(o);d.length;)d.shift()();return l&&r.push.apply(r,l),n()}e.x=function(){return(n=o)()};var i=window.webpackJsonp=window.webpackJsonp||[],a=i.push.bind(i);i.push=u,i=i.slice();for(var c=0;c<i.length;c++)u(i[c]);var f=a}();var t}(n),n.x()}([]);
+			((e,r)=>{"use strict";var t={};function o(r){if(t[r])return t[r].exports;var n=t[r]={i:r,l:!1,exports:{}};return e[r](n,n.exports,o),n.l=!0,n.exports}o.m=e,function(e){e.f={},e.e=r=>Promise.all(Object.keys(e.f).reduce((t,o)=>(e.f[o](r,t),t),[])),e.t=function(r,t){if(1&t&&(r=this(r)),8&t)return r;if(4&t&&"object"==typeof r&&r&&r.__esModule)return r;var o=Object.create(null);if(e.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:r}),2&t&&"string"!=typeof r){var n={};for(const e in r)n[e]=()=>r[e];e.d(o,n)}return o},r=Object.prototype.hasOwnProperty,e.d=(e,t)=>{for(var o in t)r.call(t,o)&&!r.call(e,o)&&Object.defineProperty(e,o,{enumerable:!0,get:t[o]})},e.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},e.p="dist/",e.u=e=>e+".[chunkhash].js",function(){var r={303:0},t=[];e.f.j=(t,o)=>{var n=Object.prototype.hasOwnProperty.call(r,t)?r[t]:void 0;if(0!==n)if(n)o.push(n[2]);else{var a=new Promise((e,o)=>{n=r[t]=[e,o]});o.push(n[2]=a);var i,u=e.p+e.u(t),l=document.createElement("script");l.charset="utf-8",l.timeout=120,e.nc&&l.setAttribute("nonce",e.nc),l.src=u;var p=new Error;i=function(e){l.onerror=l.onload=null,clearTimeout(c);var o=(()=>{if(Object.prototype.hasOwnProperty.call(r,t)&&r[t])return r[t][1];0!==r[t]&&(r[t]=void 0)})();if(o){var n=e&&("load"===e.type?"missing":e.type),a=e&&e.target&&e.target.src;p.message="Loading chunk "+t+" failed.\n("+n+": "+a+")",p.name="ChunkLoadError",p.type=n,p.request=a,o(p)}};var c=setTimeout(function(){i({type:"timeout",target:l})},12e4);l.onerror=l.onload=i,document.head.appendChild(l)}};var o=()=>{};function n(){for(var o,n=0;n<t.length;n++){for(var a=t[n],i=!0,u=1;u<a.length;u++){var l=a[u];0!==r[l]&&(i=!1)}i&&(t.splice(n--,1),o=e(e.s=a[0]))}return o}function a(n){for(var a,i,u=n[0],l=n[1],c=n[2],s=n[3],f=0,d=[];f<u.length;f++)i=u[f],Object.prototype.hasOwnProperty.call(r,i)&&r[i]&&d.push(r[i][0]),r[i]=0;for(a in l)Object.prototype.hasOwnProperty.call(l,a)&&(e.m[a]=l[a]);for(s&&s(e),p&&p(n);d.length;)d.shift()();return c&&t.push.apply(t,c),o()}e.x=()=>(o=n)();var i=window.webpackJsonp=window.webpackJsonp||[],u=i.push.bind(i);i.push=a,i=i.slice();for(var l=0;l<i.length;l++)a(i[l]);var p=u}();var r}(o),o.x()})([]);
 		</script>
 
 		<script src="dist/main.[chunkhash].js"></script>
@@ -53,10 +53,8 @@ module.exports = {
 
 # dist/runtime~main.[chunkhash].js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -76,7 +74,7 @@ module.exports = {
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -97,11 +95,6 @@ module.exports = {
 /******/ 	return __webpack_require__.x();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-```javascript
 /******/ ([],
 ```
 
@@ -116,8 +109,8 @@ module.exports = {
 /******/ 		__webpack_require__.f = {};
 /******/ 		// This file contains only the entry chunk.
 /******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce(function(promises, key) {
+/******/ 		__webpack_require__.e = (chunkId) => {
+/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
 /******/ 				__webpack_require__.f[key](chunkId, promises);
 /******/ 				return promises;
 /******/ 			}, []));
@@ -138,18 +131,24 @@ module.exports = {
 /******/ 			var ns = Object.create(null);
 /******/ 			__webpack_require__.r(ns);
 /******/ 			Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 			if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 			if(mode & 2 && typeof value != 'string') {
+/******/ 				var def = {};
+/******/ 				for(const key in value) def[key] = () => value[key];
+/******/ 				__webpack_require__.d(ns, def);
+/******/ 			}
 /******/ 			return ns;
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/define property getter */
+/******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
-/******/ 		// define getter function for harmony exports
+/******/ 		// define getter functions for harmony exports
 /******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
-/******/ 		__webpack_require__.d = function(exports, name, getter) {
-/******/ 			if(!hasOwnProperty.call(exports, name)) {
-/******/ 				Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
 /******/ 			}
 /******/ 		};
 /******/ 	}();
@@ -157,7 +156,7 @@ module.exports = {
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
@@ -173,7 +172,7 @@ module.exports = {
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
 /******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".[chunkhash].js";
 /******/ 		};
@@ -195,67 +194,67 @@ module.exports = {
 /******/ 		];
 /******/ 		
 /******/ 		
-/******/ 		__webpack_require__.f.j = function(chunkId, promises) {
-/******/ 			// JSONP chunk loading for javascript
-/******/ 			var installedChunkData = Object.prototype.hasOwnProperty.call(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
-/******/ 			if(installedChunkData !== 0) { // 0 means "already installed".
+/******/ 		__webpack_require__.f.j = (chunkId, promises) => {
+/******/ 				// JSONP chunk loading for javascript
+/******/ 				var installedChunkData = Object.prototype.hasOwnProperty.call(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 		
-/******/ 				// a Promise means "currently loading".
-/******/ 				if(installedChunkData) {
-/******/ 					promises.push(installedChunkData[2]);
-/******/ 				} else {
-/******/ 					if(true) { // all chunks have JS
-/******/ 						// setup Promise in chunk cache
-/******/ 						var promise = new Promise(function(resolve, reject) {
-/******/ 							installedChunkData = installedChunks[chunkId] = [resolve, reject];
-/******/ 						});
-/******/ 						promises.push(installedChunkData[2] = promise);
+/******/ 					// a Promise means "currently loading".
+/******/ 					if(installedChunkData) {
+/******/ 						promises.push(installedChunkData[2]);
+/******/ 					} else {
+/******/ 						if(true) { // all chunks have JS
+/******/ 							// setup Promise in chunk cache
+/******/ 							var promise = new Promise((resolve, reject) => {
+/******/ 								installedChunkData = installedChunks[chunkId] = [resolve, reject];
+/******/ 							});
+/******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 						// start chunk loading
-/******/ 						var url = __webpack_require__.p + __webpack_require__.u(chunkId);
-/******/ 						var loadingEnded = function() {
-/******/ 							if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
-/******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
-/******/ 						};
-/******/ 						var script = document.createElement('script');
-/******/ 						var onScriptComplete;
+/******/ 							// start chunk loading
+/******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
+/******/ 							var loadingEnded = () => {
+/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
+/******/ 								if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 							};
+/******/ 							var script = document.createElement('script');
+/******/ 							var onScriptComplete;
 /******/ 		
-/******/ 						script.charset = 'utf-8';
-/******/ 						script.timeout = 120;
-/******/ 						if (__webpack_require__.nc) {
-/******/ 							script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 						}
-/******/ 						script.src = url;
-/******/ 		
-/******/ 						// create error before stack unwound to get useful stacktrace later
-/******/ 						var error = new Error();
-/******/ 						onScriptComplete = function (event) {
-/******/ 							// avoid mem leaks in IE.
-/******/ 							script.onerror = script.onload = null;
-/******/ 							clearTimeout(timeout);
-/******/ 							var reportError = loadingEnded();
-/******/ 							if(reportError) {
-/******/ 								var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 								var realSrc = event && event.target && event.target.src;
-/******/ 								error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
-/******/ 								error.name = 'ChunkLoadError';
-/******/ 								error.type = errorType;
-/******/ 								error.request = realSrc;
-/******/ 								reportError(error);
+/******/ 							script.charset = 'utf-8';
+/******/ 							script.timeout = 120;
+/******/ 							if (__webpack_require__.nc) {
+/******/ 								script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 							}
-/******/ 						};
-/******/ 						var timeout = setTimeout(function(){
-/******/ 							onScriptComplete({ type: 'timeout', target: script });
-/******/ 						}, 120000);
-/******/ 						script.onerror = script.onload = onScriptComplete;
-/******/ 						document.head.appendChild(script);
-/******/ 					} else installedChunks[chunkId] = 0;
+/******/ 							script.src = url;
 /******/ 		
-/******/ 					// no HMR
+/******/ 							// create error before stack unwound to get useful stacktrace later
+/******/ 							var error = new Error();
+/******/ 							onScriptComplete = function (event) {
+/******/ 								// avoid mem leaks in IE.
+/******/ 								script.onerror = script.onload = null;
+/******/ 								clearTimeout(timeout);
+/******/ 								var reportError = loadingEnded();
+/******/ 								if(reportError) {
+/******/ 									var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 									var realSrc = event && event.target && event.target.src;
+/******/ 									error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 									error.name = 'ChunkLoadError';
+/******/ 									error.type = errorType;
+/******/ 									error.request = realSrc;
+/******/ 									reportError(error);
+/******/ 								}
+/******/ 							};
+/******/ 							var timeout = setTimeout(function(){
+/******/ 								onScriptComplete({ type: 'timeout', target: script });
+/******/ 							}, 120000);
+/******/ 							script.onerror = script.onload = onScriptComplete;
+/******/ 							document.head.appendChild(script);
+/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 		
+/******/ 						// no HMR
+/******/ 					}
 /******/ 				}
-/******/ 			}
 /******/ 		
-/******/ 			// no chunk preloading needed
+/******/ 				// no chunk preloading needed
 /******/ 		};
 /******/ 		
 /******/ 		// no prefetching
@@ -264,7 +263,9 @@ module.exports = {
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		var checkDeferredModules = function() {};
+/******/ 		var checkDeferredModules = () => {
+/******/ 		
+/******/ 		};
 /******/ 		function checkDeferredModulesImpl() {
 /******/ 			var result;
 /******/ 			for(var i = 0; i < deferredModules.length; i++) {
@@ -282,7 +283,7 @@ module.exports = {
 /******/ 			// no prefetch
 /******/ 			return result;
 /******/ 		}
-/******/ 		__webpack_require__.x = function() {
+/******/ 		__webpack_require__.x = () => {
 /******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
 /******/ 		};
 /******/ 		
@@ -346,8 +347,8 @@ module.exports = {
   !*** ./example.js ***!
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__.e, __webpack_require__.t, __webpack_require__, __webpack_require__.d, __webpack_require__.r */
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+/*! runtime requirements: __webpack_require__.e, __webpack_require__.t, __webpack_require__ */
+/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
 
 // some module
 __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.t.bind(__webpack_require__, /*! ./async1 */ 1, 7));
@@ -364,14 +365,14 @@ __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.t.bind(__webpa
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
                     Asset       Size  Chunks             Chunk Names
-           2.[chunkhash].js  319 bytes     {2}  [emitted]
-           3.[chunkhash].js  313 bytes     {3}  [emitted]
-        main.[chunkhash].js  707 bytes     {1}  [emitted]  main
-runtime~main.[chunkhash].js   10.5 KiB     {0}  [emitted]  runtime~main
+           2.[chunkhash].js  314 bytes     {2}  [emitted]
+           3.[chunkhash].js  308 bytes     {3}  [emitted]
+        main.[chunkhash].js  656 bytes     {1}  [emitted]  main
+runtime~main.[chunkhash].js   10.6 KiB     {0}  [emitted]  runtime~main
 Entrypoint main = runtime~main.[chunkhash].js main.[chunkhash].js
-chunk {0} runtime~main.[chunkhash].js (runtime~main) 6.32 KiB [entry] [rendered]
+chunk {0} runtime~main.[chunkhash].js (runtime~main) 6.39 KiB [entry] [rendered]
     > ./example main
     7 chunk modules
 chunk {1} main.[chunkhash].js (main) 55 bytes [initial] [rendered]
@@ -395,12 +396,12 @@ chunk {3} 3.[chunkhash].js 28 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
                     Asset       Size  Chunks             Chunk Names
-         114.[chunkhash].js   79 bytes   {114}  [emitted]
-         172.[chunkhash].js   79 bytes   {172}  [emitted]
-        main.[chunkhash].js  161 bytes   {179}  [emitted]  main
-runtime~main.[chunkhash].js   2.35 KiB   {303}  [emitted]  runtime~main
+         114.[chunkhash].js   73 bytes   {114}  [emitted]
+         172.[chunkhash].js   73 bytes   {172}  [emitted]
+        main.[chunkhash].js  155 bytes   {179}  [emitted]  main
+runtime~main.[chunkhash].js   2.26 KiB   {303}  [emitted]  runtime~main
 Entrypoint main = runtime~main.[chunkhash].js main.[chunkhash].js
 chunk {114} 114.[chunkhash].js 28 bytes [rendered]
     > ./async1 [144] ./example.js 2:0-18
@@ -414,7 +415,7 @@ chunk {179} main.[chunkhash].js (main) 55 bytes [initial] [rendered]
     > ./example main
  [144] ./example.js 55 bytes {179} [built]
        entry ./example main
-chunk {303} runtime~main.[chunkhash].js (runtime~main) 6.32 KiB [entry] [rendered]
+chunk {303} runtime~main.[chunkhash].js (runtime~main) 6.39 KiB [entry] [rendered]
     > ./example main
     7 chunk modules
 ```

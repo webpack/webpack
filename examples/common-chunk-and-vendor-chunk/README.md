@@ -81,7 +81,7 @@ module.exports = {
   \*********************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "vendor1";
 
@@ -93,7 +93,7 @@ module.exports = "vendor1";
   \*********************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "vendor2";
 
@@ -113,7 +113,7 @@ module.exports = "vendor2";
   \*********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "utility2";
 
@@ -133,7 +133,7 @@ module.exports = "utility2";
   \*********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "utility3";
 
@@ -144,10 +144,8 @@ module.exports = "utility3";
 
 # dist/pageA.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -167,7 +165,7 @@ module.exports = "utility3";
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -188,11 +186,6 @@ module.exports = "utility3";
 /******/ 	return __webpack_require__.x();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-```javascript
 /******/ ([
 /* 0 */
 /*!******************!*\
@@ -200,7 +193,7 @@ module.exports = "utility3";
   \******************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__, module */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ ((module, __unusedexports, __webpack_require__) => {
 
 var vendor1 = __webpack_require__(/*! vendor1 */ 1);
 var utility1 = __webpack_require__(/*! ./utility1 */ 2);
@@ -217,7 +210,7 @@ module.exports = "pageA";
   \*********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "utility1";
 
@@ -255,7 +248,9 @@ module.exports = "utility1";
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		var checkDeferredModules = function() {};
+/******/ 		var checkDeferredModules = () => {
+/******/ 		
+/******/ 		};
 /******/ 		function checkDeferredModulesImpl() {
 /******/ 			var result;
 /******/ 			for(var i = 0; i < deferredModules.length; i++) {
@@ -273,7 +268,7 @@ module.exports = "utility1";
 /******/ 			// no prefetch
 /******/ 			return result;
 /******/ 		}
-/******/ 		__webpack_require__.x = function() {
+/******/ 		__webpack_require__.x = () => {
 /******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
 /******/ 		};
 /******/ 		
@@ -331,7 +326,7 @@ module.exports = "utility1";
 # dist/pageB.js
 
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -351,7 +346,7 @@ module.exports = "utility1";
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -380,7 +375,7 @@ module.exports = "utility1";
   \******************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__, module */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ ((module, __unusedexports, __webpack_require__) => {
 
 var vendor2 = __webpack_require__(/*! vendor2 */ 5);
 var utility2 = __webpack_require__(/*! ./utility2 */ 3);
@@ -419,7 +414,9 @@ module.exports = "pageB";
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		var checkDeferredModules = function() {};
+/******/ 		var checkDeferredModules = () => {
+/******/ 		
+/******/ 		};
 /******/ 		function checkDeferredModulesImpl() {
 /******/ 			var result;
 /******/ 			for(var i = 0; i < deferredModules.length; i++) {
@@ -437,7 +434,7 @@ module.exports = "pageB";
 /******/ 			// no prefetch
 /******/ 			return result;
 /******/ 		}
-/******/ 		__webpack_require__.x = function() {
+/******/ 		__webpack_require__.x = () => {
 /******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
 /******/ 		};
 /******/ 		
@@ -492,7 +489,7 @@ module.exports = "pageB";
 # dist/pageC.js
 
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -512,7 +509,7 @@ module.exports = "pageB";
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -541,7 +538,7 @@ module.exports = "pageB";
   \******************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__, module */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ ((module, __unusedexports, __webpack_require__) => {
 
 var utility2 = __webpack_require__(/*! ./utility2 */ 3);
 var utility3 = __webpack_require__(/*! ./utility3 */ 6);
@@ -578,7 +575,9 @@ module.exports = "pageC";
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		var checkDeferredModules = function() {};
+/******/ 		var checkDeferredModules = () => {
+/******/ 		
+/******/ 		};
 /******/ 		function checkDeferredModulesImpl() {
 /******/ 			var result;
 /******/ 			for(var i = 0; i < deferredModules.length; i++) {
@@ -596,7 +595,7 @@ module.exports = "pageC";
 /******/ 			// no prefetch
 /******/ 			return result;
 /******/ 		}
-/******/ 		__webpack_require__.x = function() {
+/******/ 		__webpack_require__.x = () => {
 /******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
 /******/ 		};
 /******/ 		
@@ -654,14 +653,14 @@ module.exports = "pageC";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
                  Asset       Size                 Chunks             Chunk Names
-commons-utility2_js.js  351 bytes  {commons-utility2_js}  [emitted]
-commons-utility3_js.js  351 bytes  {commons-utility3_js}  [emitted]
-              pageA.js   5.52 KiB                {pageA}  [emitted]  pageA
-              pageB.js   5.29 KiB                {pageB}  [emitted]  pageB
-              pageC.js   5.22 KiB                {pageC}  [emitted]  pageC
-             vendor.js  667 bytes               {vendor}  [emitted]  vendor
+commons-utility2_js.js  346 bytes  {commons-utility2_js}  [emitted]
+commons-utility3_js.js  346 bytes  {commons-utility3_js}  [emitted]
+              pageA.js    5.5 KiB                {pageA}  [emitted]  pageA
+              pageB.js   5.27 KiB                {pageB}  [emitted]  pageB
+              pageC.js   5.21 KiB                {pageC}  [emitted]  pageC
+             vendor.js  657 bytes               {vendor}  [emitted]  vendor
 Entrypoint pageA = vendor.js commons-utility2_js.js pageA.js
 Entrypoint pageB = vendor.js commons-utility2_js.js commons-utility3_js.js pageB.js
 Entrypoint pageC = commons-utility2_js.js commons-utility3_js.js pageC.js
@@ -681,7 +680,7 @@ chunk {commons-utility3_js} commons-utility3_js.js 28 bytes [initial] [rendered]
      [used exports unknown]
      cjs require ./utility3 [4] ./pageB.js 3:15-36
      cjs require ./utility3 [7] ./pageC.js 2:15-36
-chunk {pageA} pageA.js (pageA) 165 bytes (javascript) 2.36 KiB (runtime) [entry] [rendered]
+chunk {pageA} pageA.js (pageA) 165 bytes (javascript) 2.35 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
  [0] ./pageA.js 137 bytes {pageA} [built]
      [used exports unknown]
@@ -696,7 +695,7 @@ chunk {pageB} pageB.js (pageB) 137 bytes (javascript) 2.38 KiB (runtime) [entry]
      [used exports unknown]
      entry ./pageB pageB
      + 1 hidden chunk module
-chunk {pageC} pageC.js (pageC) 102 bytes (javascript) 2.38 KiB (runtime) [entry] [rendered]
+chunk {pageC} pageC.js (pageC) 102 bytes (javascript) 2.37 KiB (runtime) [entry] [rendered]
     > ./pageC pageC
  [7] ./pageC.js 102 bytes {pageC} [built]
      [used exports unknown]
@@ -717,14 +716,14 @@ chunk {vendor} vendor.js (vendor) 54 bytes [initial] [rendered] split chunk (cac
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
-                 Asset        Size                 Chunks             Chunk Names
-commons-utility2_js.js   118 bytes  {commons-utility2_js}  [emitted]
-commons-utility3_js.js   118 bytes  {commons-utility3_js}  [emitted]
-              pageA.js  1000 bytes                {pageA}  [emitted]  pageA
-              pageB.js   987 bytes                {pageB}  [emitted]  pageB
-              pageC.js   971 bytes                {pageC}  [emitted]  pageC
-             vendor.js   141 bytes               {vendor}  [emitted]  vendor
+Version: webpack 5.0.0-alpha.30
+                 Asset       Size                 Chunks             Chunk Names
+commons-utility2_js.js  110 bytes  {commons-utility2_js}  [emitted]
+commons-utility3_js.js  110 bytes  {commons-utility3_js}  [emitted]
+              pageA.js  949 bytes                {pageA}  [emitted]  pageA
+              pageB.js  941 bytes                {pageB}  [emitted]  pageB
+              pageC.js  925 bytes                {pageC}  [emitted]  pageC
+             vendor.js  125 bytes               {vendor}  [emitted]  vendor
 Entrypoint pageA = vendor.js commons-utility2_js.js pageA.js
 Entrypoint pageB = vendor.js commons-utility2_js.js commons-utility3_js.js pageB.js
 Entrypoint pageC = commons-utility2_js.js commons-utility3_js.js pageC.js
@@ -749,12 +748,12 @@ chunk {pageA} pageA.js (pageA) 165 bytes (javascript) 2.36 KiB (runtime) [entry]
  [558] ./utility1.js 28 bytes {pageA} [built]
        cjs require ./utility1 [366] ./pageA.js 2:15-36
      + 1 hidden chunk module
-chunk {pageB} pageB.js (pageB) 137 bytes (javascript) 2.39 KiB (runtime) [entry] [rendered]
+chunk {pageB} pageB.js (pageB) 137 bytes (javascript) 2.38 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
  [588] ./pageB.js 137 bytes {pageB} [built]
        entry ./pageB pageB
      + 1 hidden chunk module
-chunk {pageC} pageC.js (pageC) 102 bytes (javascript) 2.38 KiB (runtime) [entry] [rendered]
+chunk {pageC} pageC.js (pageC) 102 bytes (javascript) 2.37 KiB (runtime) [entry] [rendered]
     > ./pageC pageC
  [145] ./pageC.js 102 bytes {pageC} [built]
        entry ./pageC pageC

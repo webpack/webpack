@@ -44,11 +44,7 @@ module.exports = {
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["alpha"] = factory();
 })(window, function() {
-```
-<details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
-``` js
-return /******/ (function(modules, runtime) { // webpackBootstrap
+return /******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -68,7 +64,7 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -76,7 +72,6 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -89,11 +84,6 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-``` js
 /******/ ([
 /* 0 */
 /*!******************!*\
@@ -101,7 +91,7 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
   \******************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "alpha";
 
@@ -123,7 +113,7 @@ module.exports = "alpha";
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["beta"] = factory();
 })(window, function() {
-return /******/ (function(modules, runtime) { // webpackBootstrap
+return /******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -143,7 +133,7 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -151,7 +141,6 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -172,7 +161,7 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
   \*****************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "beta";
 
@@ -187,10 +176,10 @@ module.exports = "beta";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
              Asset      Size  Chunks             Chunk Names
-MyLibrary.alpha.js  1.93 KiB     {0}  [emitted]  alpha
- MyLibrary.beta.js  1.93 KiB     {1}  [emitted]  beta
+MyLibrary.alpha.js  1.89 KiB     {0}  [emitted]  alpha
+ MyLibrary.beta.js  1.89 KiB     {1}  [emitted]  beta
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk {0} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
@@ -209,10 +198,10 @@ chunk {1} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
              Asset       Size  Chunks             Chunk Names
-MyLibrary.alpha.js  481 bytes   {487}  [emitted]  alpha
- MyLibrary.beta.js  476 bytes   {904}  [emitted]  beta
+MyLibrary.alpha.js  453 bytes   {487}  [emitted]  alpha
+ MyLibrary.beta.js  448 bytes   {904}  [emitted]  beta
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk {487} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]

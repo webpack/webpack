@@ -37,10 +37,8 @@ exports.add = function() {
 
 # dist/output.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -60,7 +58,7 @@ exports.add = function() {
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -68,7 +66,6 @@ exports.add = function() {
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -81,11 +78,6 @@ exports.add = function() {
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -93,7 +85,7 @@ exports.add = function() {
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
 
 const inc = __webpack_require__(/*! ./increment */ 1).increment;
 const a = 1;
@@ -107,7 +99,7 @@ inc(a); // 2
   \**********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__ */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ ((__unusedmodule, exports, __webpack_require__) => {
 
 const add = __webpack_require__(/*! ./math */ 2).add;
 exports.increment = function(val) {
@@ -122,7 +114,7 @@ exports.increment = function(val) {
   \*****************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
-/***/ (function(__unusedmodule, exports) {
+/***/ ((__unusedmodule, exports) => {
 
 exports.add = function() {
     var sum = 0, i = 0, args = arguments, l = args.length;
@@ -142,9 +134,9 @@ exports.add = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
-    Asset      Size  Chunks             Chunk Names
-output.js  2.45 KiB     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.30
+    Asset     Size  Chunks             Chunk Names
+output.js  2.4 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 326 bytes [entry] [rendered]
     > ./example.js main
@@ -163,9 +155,9 @@ chunk {0} output.js (main) 326 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
     Asset       Size  Chunks             Chunk Names
-output.js  406 bytes   {179}  [emitted]  main
+output.js  368 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
 chunk {179} output.js (main) 326 bytes [entry] [rendered]
     > ./example.js main

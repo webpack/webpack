@@ -59,11 +59,7 @@ module.exports = {
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
 })(window, function(__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) {
-```
-<details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
-``` js
-return /******/ (function(modules, runtime) { // webpackBootstrap
+return /******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -83,7 +79,7 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -91,7 +87,6 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -104,11 +99,6 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-``` js
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -116,7 +106,7 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__ */
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
+/***/ ((__unusedmodule, exports, __webpack_require__) => {
 
 var add = __webpack_require__(/*! add */ 1);
 var subtract = __webpack_require__(/*! subtract */ 2);
@@ -130,7 +120,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
   \**********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 
@@ -141,7 +131,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
   \***************************************************************************************************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
@@ -156,9 +146,9 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
     Asset      Size  Chunks             Chunk Names
-output.js  3.11 KiB     {0}  [emitted]  main
+output.js  3.06 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 194 bytes [entry] [rendered]
     > ./example.js main
@@ -177,9 +167,9 @@ chunk {0} output.js (main) 194 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
     Asset       Size  Chunks             Chunk Names
-output.js  708 bytes   {179}  [emitted]  main
+output.js  666 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
 chunk {179} output.js (main) 194 bytes [entry] [rendered]
     > ./example.js main

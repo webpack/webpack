@@ -47,10 +47,8 @@ module.exports = [
 
 # dist/desktop.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,7 +68,7 @@ module.exports = [
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -78,7 +76,6 @@ module.exports = [
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -91,11 +88,6 @@ module.exports = [
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -103,7 +95,7 @@ module.exports = [
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements:  */
-/***/ (function() {
+/***/ (() => {
 
 if(false) {}
 console.log("Running " + "desktop" + " build");
@@ -115,7 +107,7 @@ console.log("Running " + "desktop" + " build");
 # dist/mobile.js
 
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -135,7 +127,7 @@ console.log("Running " + "desktop" + " build");
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -143,7 +135,6 @@ console.log("Running " + "desktop" + " build");
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -163,7 +154,7 @@ console.log("Running " + "desktop" + " build");
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
 
 if(true) {
 	__webpack_require__(/*! ./mobile-stuff */ 1);
@@ -177,7 +168,7 @@ console.log("Running " + "mobile" + " build");
   \*************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements:  */
-/***/ (function() {
+/***/ (() => {
 
 // mobile only stuff
 
@@ -191,11 +182,11 @@ console.log("Running " + "mobile" + " build");
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-        Asset     Size  Chunks             Chunk Names
-    mobile.js  1.9 KiB     {0}  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    mobile.js  1.86 KiB     {0}  [emitted]  main
     Entrypoint main = mobile.js
     chunk {0} mobile.js (main) 114 bytes [entry] [rendered]
         > ./example main
@@ -207,8 +198,8 @@ Child mobile:
          cjs require ./mobile-stuff [0] ./example.js 2:1-26
 Child desktop:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-         Asset      Size  Chunks             Chunk Names
-    desktop.js  1.54 KiB     {0}  [emitted]  main
+         Asset     Size  Chunks             Chunk Names
+    desktop.js  1.5 KiB     {0}  [emitted]  main
     Entrypoint main = desktop.js
     chunk {0} desktop.js (main) 94 bytes [entry] [rendered]
         > ./example main
@@ -221,11 +212,11 @@ Child desktop:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset       Size  Chunks             Chunk Names
-    mobile.js  263 bytes   {179}  [emitted]  main
+    mobile.js  231 bytes   {179}  [emitted]  main
     Entrypoint main = mobile.js
     chunk {179} mobile.js (main) 114 bytes [entry] [rendered]
         > ./example main
@@ -236,7 +227,7 @@ Child mobile:
 Child desktop:
     Hash: 0a1b2c3d4e5f6a7b8c9d
          Asset       Size  Chunks             Chunk Names
-    desktop.js  235 bytes   {179}  [emitted]  main
+    desktop.js  209 bytes   {179}  [emitted]  main
     Entrypoint main = desktop.js
     chunk {179} desktop.js (main) 94 bytes [entry] [rendered]
         > ./example main

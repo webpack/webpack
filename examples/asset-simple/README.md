@@ -60,10 +60,8 @@ module.exports = {
 
 # js/output.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -83,7 +81,7 @@ module.exports = {
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -91,7 +89,6 @@ module.exports = {
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -106,19 +103,14 @@ module.exports = {
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.d */
-/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.n */
+/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -155,7 +147,7 @@ function createImageElement(title, src) {
 	container.appendChild(div);
 }
 
-[_images_file_png__WEBPACK_IMPORTED_MODULE_0___default.a, _images_file_jpg__WEBPACK_IMPORTED_MODULE_1___default.a, _images_file_svg__WEBPACK_IMPORTED_MODULE_2___default.a].forEach(src => {
+[(_images_file_png__WEBPACK_IMPORTED_MODULE_0___default()), (_images_file_jpg__WEBPACK_IMPORTED_MODULE_1___default()), (_images_file_svg__WEBPACK_IMPORTED_MODULE_2___default())].forEach(src => {
 	createImageElement(src.split(".").pop(), src);
 });
 
@@ -167,7 +159,7 @@ function createImageElement(title, src) {
   \*************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module, __webpack_require__.p, __webpack_require__ */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ ((module, __unusedexports, __webpack_require__) => {
 
 "use strict";
 module.exports = __webpack_require__.p + "images/24e804317f239f7906e1.png";
@@ -179,7 +171,7 @@ module.exports = __webpack_require__.p + "images/24e804317f239f7906e1.png";
   \*************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module, __webpack_require__.p, __webpack_require__ */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ ((module, __unusedexports, __webpack_require__) => {
 
 "use strict";
 module.exports = __webpack_require__.p + "images/afb284cb97b4374bd1fc.jpg";
@@ -191,7 +183,7 @@ module.exports = __webpack_require__.p + "images/afb284cb97b4374bd1fc.jpg";
   \*************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module, __webpack_require__.p, __webpack_require__ */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ ((module, __unusedexports, __webpack_require__) => {
 
 "use strict";
 module.exports = __webpack_require__.p + "images/1be7b55b29524343503e.svg";
@@ -209,7 +201,7 @@ module.exports = __webpack_require__.p + "images/1be7b55b29524343503e.svg";
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
@@ -220,29 +212,31 @@ module.exports = __webpack_require__.p + "images/1be7b55b29524343503e.svg";
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	!function() {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = function(module) {
+/******/ 		__webpack_require__.n = (module) => {
 /******/ 			var getter = module && module.__esModule ?
-/******/ 				function getDefault() { return module['default']; } :
-/******/ 				function getModuleExports() { return module; };
-/******/ 			__webpack_require__.d(getter, 'a', getter);
+/******/ 				() => module['default'] :
+/******/ 				() => module;
+/******/ 			__webpack_require__.d(getter, { a: getter });
 /******/ 			return getter;
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getter */
-/******/ 	!function() {
-/******/ 		// define getter function for harmony exports
-/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
-/******/ 		__webpack_require__.d = function(exports, name, getter) {
-/******/ 			if(!hasOwnProperty.call(exports, name)) {
-/******/ 				Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 			}
 /******/ 		};
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	!function() {
 /******/ 		__webpack_require__.p = "dist/";
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	!function() {
+/******/ 		// define getter functions for harmony exports
+/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
 /******/ 	}();
 /******/ 	
 /******/ }
@@ -258,14 +252,14 @@ module.exports = __webpack_require__.p + "images/1be7b55b29524343503e.svg";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
-                          Asset       Size  Chunks             Chunk Names
-images/1be7b55b29524343503e.svg  656 bytes   ({0})  [emitted]  (main)
-images/24e804317f239f7906e1.png   14.6 KiB   ({0})  [emitted]  (main)
-images/afb284cb97b4374bd1fc.jpg   5.89 KiB   ({0})  [emitted]  (main)
-                      output.js   6.23 KiB     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.30
+                          Asset       Size  Chunks                         Chunk Names
+images/1be7b55b29524343503e.svg  656 bytes   ({0})  [emitted] [immutable]  (main)
+images/24e804317f239f7906e1.png   14.6 KiB   ({0})  [emitted] [immutable]  (main)
+images/afb284cb97b4374bd1fc.jpg   5.89 KiB   ({0})  [emitted] [immutable]  (main)
+                      output.js   6.19 KiB     {0}  [emitted]              main
 Entrypoint main = output.js (images/1be7b55b29524343503e.svg images/24e804317f239f7906e1.png images/afb284cb97b4374bd1fc.jpg)
-chunk {0} output.js (main) 868 bytes (javascript) 21.1 KiB (asset) 920 bytes (runtime) [entry] [rendered]
+chunk {0} output.js (main) 868 bytes (javascript) 21.1 KiB (asset) 927 bytes (runtime) [entry] [rendered]
     > ./example.js main
  [0] ./example.js 742 bytes {0} [built]
      [no exports]

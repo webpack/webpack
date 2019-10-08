@@ -24,10 +24,8 @@ module.exports = 42
 
 # dist/output.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -47,7 +45,7 @@ module.exports = 42
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -55,7 +53,6 @@ module.exports = 42
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -68,11 +65,6 @@ module.exports = 42
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -80,7 +72,7 @@ module.exports = 42
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
-/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
+/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
 
 console.log(__webpack_require__(/*! ./cup1 */ 1));
 
@@ -91,7 +83,7 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
   \*********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ ((module, __unusedexports, __webpack_require__) => {
 
 module.exports = {
   cool: "stuff",
@@ -108,7 +100,7 @@ module.exports = {
   \*********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 console.log("yeah coffee-script");
 
@@ -125,9 +117,9 @@ module.exports = 42;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
     Asset      Size  Chunks             Chunk Names
-output.js  2.31 KiB     {0}  [emitted]  main
+output.js  2.27 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 206 bytes [entry] [rendered]
     > ./example.js main
@@ -147,9 +139,9 @@ chunk {0} output.js (main) 206 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
     Asset       Size  Chunks             Chunk Names
-output.js  369 bytes   {179}  [emitted]  main
+output.js  329 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
 chunk {179} output.js (main) 206 bytes [entry] [rendered]
     > ./example.js main

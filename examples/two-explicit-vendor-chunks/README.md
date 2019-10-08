@@ -36,10 +36,8 @@ module.exports = {
 
 # dist/vendor1.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -59,7 +57,7 @@ module.exports = {
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -67,7 +65,6 @@ module.exports = {
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -80,11 +77,6 @@ module.exports = {
 /******/ 	return startup();
 /******/ })
 /************************************************************************/
-```
-
-</details>
-
-```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -92,7 +84,7 @@ module.exports = {
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "Vendor1";
 
@@ -103,7 +95,7 @@ module.exports = "Vendor1";
 # dist/vendor2.js
 
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -123,7 +115,7 @@ module.exports = "Vendor1";
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -131,7 +123,6 @@ module.exports = "Vendor1";
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -151,7 +142,7 @@ module.exports = "Vendor1";
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "Vendor1";
 
@@ -162,7 +153,7 @@ module.exports = "Vendor1";
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ ((module, __unusedexports, __webpack_require__) => {
 
 module.exports = "Vendor2";
 __webpack_require__(/*! ./vendor1 */ 0);
@@ -175,7 +166,7 @@ __webpack_require__(/*! ./vendor1 */ 0);
 # dist/pageA.js
 
 ```javascript
-/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ ((modules, runtime) => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -195,7 +186,7 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /******/ 		};
 /******/
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
 /******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
@@ -203,7 +194,6 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
 /******/
 /******/
 /******/ 	// the startup function
@@ -223,7 +213,7 @@ __webpack_require__(/*! ./vendor1 */ 0);
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "Vendor1";
 
@@ -234,7 +224,7 @@ module.exports = "Vendor1";
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ ((module, __unusedexports, __webpack_require__) => {
 
 module.exports = "Vendor2";
 __webpack_require__(/*! ./vendor1 */ 0);
@@ -247,7 +237,7 @@ __webpack_require__(/*! ./vendor1 */ 0);
   \******************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ (function(module, __unusedexports, __webpack_require__) {
+/***/ ((module, __unusedexports, __webpack_require__) => {
 
 module.exports = "pageA";
 __webpack_require__(/*! ./vendor1 */ 0);
@@ -264,13 +254,13 @@ __webpack_require__(/*! ./vendor2 */ 1);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
      Asset      Size  Chunks             Chunk Names
-  pageA.js  2.25 KiB     {2}  [emitted]  pageA
-  pageB.js  1.52 KiB     {3}  [emitted]  pageB
-  pageC.js  1.52 KiB     {4}  [emitted]  pageC
-vendor1.js  1.52 KiB     {0}  [emitted]  vendor1
-vendor2.js  1.87 KiB     {1}  [emitted]  vendor2
+  pageA.js   2.2 KiB     {2}  [emitted]  pageA
+  pageB.js  1.48 KiB     {3}  [emitted]  pageB
+  pageC.js  1.48 KiB     {4}  [emitted]  pageC
+vendor1.js  1.48 KiB     {0}  [emitted]  vendor1
+vendor2.js  1.82 KiB     {1}  [emitted]  vendor2
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor2.js
 Entrypoint pageA = pageA.js
@@ -324,13 +314,13 @@ chunk {4} pageC.js (pageC) 25 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.30
      Asset       Size               Chunks             Chunk Names
-  pageA.js  320 bytes  {374}, {424}, {971}  [emitted]  pageA
-  pageB.js  217 bytes                {121}  [emitted]  pageB
-  pageC.js  217 bytes                {178}  [emitted]  pageC
-vendor1.js  219 bytes                {971}  [emitted]  vendor1
-vendor2.js  267 bytes         {374}, {971}  [emitted]  vendor2
+  pageA.js  280 bytes  {374}, {424}, {971}  [emitted]  pageA
+  pageB.js  189 bytes                {121}  [emitted]  pageB
+  pageC.js  189 bytes                {178}  [emitted]  pageC
+vendor1.js  191 bytes                {971}  [emitted]  vendor1
+vendor2.js  233 bytes         {374}, {971}  [emitted]  vendor2
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor2.js
 Entrypoint pageA = pageA.js
