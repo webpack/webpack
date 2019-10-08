@@ -17,10 +17,5 @@ it("should include only one use strict per module", function() {
 
 	matches.sort();
 
-	expect(matches).toEqual([
-		"/******/ 		// Check if module is in cache",
-		"/******/ 		// define __esModule on exports",
-		"/******/ 		// define getter functions for harmony exports",
-		"/******/ 	var __webpack_modules__ = ({"
-	]);
+	expect(matches).toEqual(["/******/ 	var __webpack_modules__ = ({"]);
 });
