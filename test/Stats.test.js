@@ -220,10 +220,10 @@ describe("Stats", () => {
 			      ],
 			      "emitted": true,
 			      "info": Object {
-			        "size": 2081,
+			        "size": 2242,
 			      },
 			      "name": "entryB.js",
-			      "size": 2081,
+			      "size": 2242,
 			    },
 			  ],
 			  "assetsByChunkName": Object {

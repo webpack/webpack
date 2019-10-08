@@ -553,6 +553,10 @@ export interface Experiments {
 	 */
 	mjs?: boolean;
 	/**
+	 * Allow outputing javascript files as module source type
+	 */
+	outputModule?: boolean;
+	/**
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated)
 	 */
 	syncWebAssembly?: boolean;
@@ -1238,6 +1242,10 @@ export interface OutputOptions {
 	 */
 	hotUpdateMainFilename?: string;
 	/**
+	 * Wrap javascript code into IIFEs to avoid leaking into global scope.
+	 */
+	iife?: boolean;
+	/**
 	 * The JSONP function used by webpack for async loading of chunks.
 	 */
 	jsonpFunction?: string;
@@ -1258,6 +1266,7 @@ export interface OutputOptions {
 	 */
 	libraryTarget?:
 		| "var"
+		| "module"
 		| "assign"
 		| "this"
 		| "window"
@@ -1272,6 +1281,10 @@ export interface OutputOptions {
 		| "umd2"
 		| "jsonp"
 		| "system";
+	/**
+	 * Output javascript files as module source type.
+	 */
+	module?: boolean;
 	/**
 	 * The output directory as **absolute path** (required).
 	 */

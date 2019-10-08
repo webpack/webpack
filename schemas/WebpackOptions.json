@@ -118,6 +118,10 @@
           "description": "Support .mjs files as way to define strict ESM file (node.js)",
           "type": "boolean"
         },
+        "outputModule": {
+          "description": "Allow outputing javascript files as module source type",
+          "type": "boolean"
+        },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated)",
           "type": "boolean"
@@ -1223,6 +1227,10 @@
           "type": "string",
           "absolutePath": false
         },
+        "iife": {
+          "description": "Wrap javascript code into IIFEs to avoid leaking into global scope.",
+          "type": "boolean"
+        },
         "jsonpFunction": {
           "description": "The JSONP function used by webpack for async loading of chunks.",
           "type": "string"
@@ -1264,6 +1272,7 @@
           "description": "Type of library",
           "enum": [
             "var",
+            "module",
             "assign",
             "this",
             "window",
@@ -1279,6 +1288,10 @@
             "jsonp",
             "system"
           ]
+        },
+        "module": {
+          "description": "Output javascript files as module source type.",
+          "type": "boolean"
         },
         "path": {
           "description": "The output directory as **absolute path** (required).",

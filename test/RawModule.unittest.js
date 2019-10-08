@@ -1,8 +1,6 @@
 "use strict";
 
 const RawModule = require("../lib/RawModule");
-const OriginalSource = require("webpack-sources").OriginalSource;
-const RawSource = require("webpack-sources").RawSource;
 const RequestShortener = require("../lib/RequestShortener");
 const path = require("path");
 
@@ -32,31 +30,6 @@ describe("RawModule", () => {
 			() => {
 				const requestShortener = new RequestShortener(path.resolve());
 				expect(myRawModule.readableIdentifier(requestShortener)).toBeDefined();
-			}
-		);
-	});
-
-	describe("source", () => {
-		it(
-			"returns a new OriginalSource instance with sourceStr attribute and " +
-				"return value of identifier() function provided as constructor arguments",
-			() => {
-				const originalSource = new OriginalSource(
-					myRawModule.sourceStr,
-					myRawModule.identifier()
-				);
-				myRawModule.useSourceMap = true;
-				expect(myRawModule.source()).toEqual(originalSource);
-			}
-		);
-
-		it(
-			"returns a new RawSource instance with sourceStr attribute provided " +
-				"as constructor argument if useSourceMap is falsy",
-			() => {
-				const rawSource = new RawSource(myRawModule.sourceStr);
-				myRawModule.useSourceMap = false;
-				expect(myRawModule.source()).toEqual(rawSource);
 			}
 		);
 	});
