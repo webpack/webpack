@@ -1,5 +1,5 @@
 const { CachedSource } = require("webpack-sources");
-const AsyncWebAssemblyModulesPlugin = require("../../../../lib/wasm-async/AsyncWebAssemblyModulesPlugin");
+const { AsyncWebAssemblyModulesPlugin } = require("../../../../").wasm;
 
 /** @typedef {import("../../../../lib/Compilation")} Compilation */
 

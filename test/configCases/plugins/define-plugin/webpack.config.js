@@ -1,5 +1,5 @@
-var DefinePlugin = require("../../../../lib/DefinePlugin");
-const Module = require("../../../../lib/Module");
+var DefinePlugin = require("../../../../").DefinePlugin;
+const Module = require("../../../../").Module;
 module.exports = {
 	plugins: [
 		new DefinePlugin({

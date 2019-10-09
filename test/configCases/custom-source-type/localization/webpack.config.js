@@ -1,7 +1,7 @@
 const { RawSource } = require("webpack-sources");
-const Generator = require("../../../../lib/Generator");
-const RuntimeModule = require("../../../../lib/RuntimeModule");
-const RuntimeGlobals = require("../../../../lib/RuntimeGlobals");
+const Generator = require("../../../../").Generator;
+const RuntimeModule = require("../../../../").RuntimeModule;
+const RuntimeGlobals = require("../../../../").RuntimeGlobals;
 const webpack = require("../../../../");
 
 /** @typedef {import("../../../../lib/Compiler")} Compiler */

@@ -1,4 +1,4 @@
-const Compilation = require("../../../../lib/Compilation");
+const Compilation = require("../../../../").Compilation;
 const Source = require("webpack-sources").Source;
 
 module.exports = {

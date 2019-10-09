@@ -1,6 +1,4 @@
-const DependencyReference = require("../../../../").dependencies
-	.DependencyReference;
-
+const { DependencyReference } = require("../../../../").dependencies;
 /** @typedef {import("../../../../lib/Compilation")} Compilation */
 
 module.exports = {
