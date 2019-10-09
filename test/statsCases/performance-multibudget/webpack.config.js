@@ -7,7 +7,6 @@ module.exports = [
 			image: "./big"
 		},
 		mode: "production",
-		target: "node",
 		performance: {
 			hints: "warning",
 			assetFilter: function(asset) {
@@ -23,7 +22,6 @@ module.exports = [
 			image: "./big"
 		},
 		mode: "production",
-		target: "node",
 		performance: [
 			{
 				hints: "warning",
@@ -41,7 +39,6 @@ module.exports = [
 			image: "./big"
 		},
 		mode: "production",
-		target: "node",
 		performance: [
 			{
 				hints: "warning",
@@ -65,7 +62,6 @@ module.exports = [
 			image: "./big"
 		},
 		mode: "production",
-		target: "node",
 		performance: [
 			{
 				hints: "warning"
@@ -80,7 +76,6 @@ module.exports = [
 			image: "./big"
 		},
 		mode: "production",
-		target: "node",
 		performance: {
 			hints: "warning"
 		}
@@ -93,7 +88,6 @@ module.exports = [
 			image: "./big"
 		},
 		mode: "production",
-		target: "node",
 		performance: {
 			hints: "warning",
 			maxAssetSize: 100000,
@@ -108,7 +102,6 @@ module.exports = [
 			image: "./big"
 		},
 		mode: "production",
-		target: "node",
 		performance: [
 			{
 				hints: "warning",
@@ -122,6 +115,27 @@ module.exports = [
 				assetFilter: function(asset) {
 					return !asset.startsWith("image");
 				}
+			}
+		]
+	},
+	{
+		entry: {
+			big: "./big",
+			medium: "./medium",
+			small: "./small",
+			image: "./big"
+		},
+		mode: "production",
+		performance: [
+			{
+				hints: "warning",
+				maxAssetSize: 500000,
+				maxEntrypointSize: 500000
+			},
+			{
+				hints: "warning",
+				maxAssetSize: 1,
+				maxEntrypointSize: 1
 			}
 		]
 	}

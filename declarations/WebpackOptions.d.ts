@@ -343,45 +343,7 @@ export interface WebpackOptions {
 	/**
 	 * Configuration for web performance recommendations.
 	 */
-	performance?:
-		| false
-		| PerformanceOptions
-		| {
-				/**
-				 * Filter function to select assets that are checked
-				 */
-				assetFilter?: Function;
-				/**
-				 * Sets the format of the hints: warnings, errors or nothing at all
-				 */
-				hints?: false | "warning" | "error";
-				/**
-				 * Filesize limit (in bytes) when exceeded, that webpack will provide performance hints
-				 */
-				maxAssetSize?: number;
-				/**
-				 * Total size of an entry point (in bytes)
-				 */
-				maxEntrypointSize?: number;
-		  }[]
-		| {
-				/**
-				 * Filter function to select assets that are checked
-				 */
-				assetFilter?: Function;
-				/**
-				 * Sets the format of the hints: warnings, errors or nothing at all
-				 */
-				hints?: false | "warning" | "error";
-				/**
-				 * Filesize limit (in bytes) when exceeded, that webpack will provide performance hints
-				 */
-				maxAssetSize?: number;
-				/**
-				 * Total size of an entry point (in bytes)
-				 */
-				maxEntrypointSize?: number;
-		  };
+	performance?: false | PerformanceOptions | PerformanceOptions[];
 	/**
 	 * Add additional plugins to the compiler.
 	 */

@@ -2136,56 +2136,13 @@
         {
           "type": "array",
           "items": {
-            "description": "Configuration entry for web performance recommendations.",
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "assetFilter": {
-                "description": "Filter function to select assets that are checked",
-                "instanceof": "Function",
-                "tsType": "Function"
-              },
-              "hints": {
-                "description": "Sets the format of the hints: warnings, errors or nothing at all",
-                "enum": [false, "warning", "error"]
-              },
-              "maxAssetSize": {
-                "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints",
-                "type": "number"
-              },
-              "maxEntrypointSize": {
-                "description": "Total size of an entry point (in bytes)",
-                "type": "number"
+            "description": "Plugin of type object or instanceof Function",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/PerformanceOptions"
               }
-            }
+            ]
           }
-        },
-        {
-          "anyOf": [
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "assetFilter": {
-                  "description": "Filter function to select assets that are checked",
-                  "instanceof": "Function",
-                  "tsType": "Function"
-                },
-                "hints": {
-                  "description": "Sets the format of the hints: warnings, errors or nothing at all",
-                  "enum": [false, "warning", "error"]
-                },
-                "maxAssetSize": {
-                  "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints",
-                  "type": "number"
-                },
-                "maxEntrypointSize": {
-                  "description": "Total size of an entry point (in bytes)",
-                  "type": "number"
-                }
-              }
-            }
-          ]
         }
       ]
     },
