@@ -55,58 +55,17 @@ export { c } from "./c";
 # dist/output.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/ 	// initialize runtime
-/******/ 	runtime(__webpack_require__);
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var big_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! big-module */ 1);
 /* harmony import */ var big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! big-module-with-flag */ 5);
@@ -131,10 +90,9 @@ console.log(
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.d */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "a": () => /* reexport safe */ _a__WEBPACK_IMPORTED_MODULE_0__.a,
@@ -156,10 +114,9 @@ __webpack_require__.r(__webpack_exports__);
   \**************************************/
 /*! export a [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "a": () => /* binding */ a
@@ -174,10 +131,9 @@ const a = "a";
   \**************************************/
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "b": () => /* binding */ b
@@ -192,10 +148,9 @@ const b = "b";
   \**************************************/
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "c": () => /* binding */ c
@@ -210,10 +165,9 @@ const c = "c";
   \************************************************/
 /*! export a [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "a": () => /* binding */ a
@@ -228,10 +182,9 @@ const a = "a";
   \************************************************/
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "b": () => /* binding */ b
@@ -240,15 +193,35 @@ const b = "b";
 
 
 /***/ })
-/******/ ],
-```
-
-<details><summary><code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code></summary>
-
-``` js
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ 	"use strict";
-/******/ 
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
@@ -273,12 +246,14 @@ const b = "b";
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ }
-);
+/************************************************************************/
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__(0);
+/******/ 	// This entry module used 'exports' so it can't be inlined
+/******/ })()
+;
 ```
-
-</details>
-
 
 # Info
 
@@ -286,49 +261,49 @@ const b = "b";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset      Size  Chunks             Chunk Names
-output.js  8.07 KiB     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset      Size
+output.js  8.03 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {0} output.js (main) 325 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
+chunk output.js (main) 325 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
     > ./example.js main
- [0] ./example.js 140 bytes {0} [built]
+ ./example.js 140 bytes [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
- [1] ./node_modules/big-module/index.js 75 bytes {0} [built]
-     [exports: a, b, c]
-     [used exports unknown]
-     harmony side effect evaluation big-module [0] ./example.js 1:0-46
-     harmony import specifier big-module [0] ./example.js 5:1-3
-     harmony import specifier big-module [0] ./example.js 6:1-3
- [2] ./node_modules/big-module/a.js 22 bytes {0} [built]
+ ./node_modules/big-module-with-flag/a.js 22 bytes [built]
      [exports: a]
      [used exports unknown]
-     harmony side effect evaluation ./a [1] ./node_modules/big-module/index.js 1:0-24
-     harmony export imported specifier ./a [1] ./node_modules/big-module/index.js 1:0-24
- [3] ./node_modules/big-module/b.js 22 bytes {0} [built]
-     [exports: b]
-     [used exports unknown]
-     harmony side effect evaluation ./b [1] ./node_modules/big-module/index.js 2:0-24
-     harmony export imported specifier ./b [1] ./node_modules/big-module/index.js 2:0-24
- [4] ./node_modules/big-module/c.js 22 bytes {0} [built]
-     [exports: c]
-     [used exports unknown]
-     harmony side effect evaluation ./c [1] ./node_modules/big-module/index.js 3:0-24
-     harmony export imported specifier ./c [1] ./node_modules/big-module/index.js 3:0-24
- [5] ./node_modules/big-module-with-flag/a.js 22 bytes {0} [built]
-     [exports: a]
-     [used exports unknown]
-     harmony import specifier big-module-with-flag [0] ./example.js 7:1-3 (skipped side-effect-free modules)
+     harmony import specifier big-module-with-flag ./example.js 7:1-3 (skipped side-effect-free modules)
      harmony side effect evaluation ./a ./node_modules/big-module-with-flag/index.js 1:0-24
      harmony export imported specifier ./a ./node_modules/big-module-with-flag/index.js 1:0-24
- [6] ./node_modules/big-module-with-flag/b.js 22 bytes {0} [built]
+ ./node_modules/big-module-with-flag/b.js 22 bytes [built]
      [exports: b]
      [used exports unknown]
-     harmony import specifier big-module-with-flag [0] ./example.js 8:1-3 (skipped side-effect-free modules)
+     harmony import specifier big-module-with-flag ./example.js 8:1-3 (skipped side-effect-free modules)
      harmony side effect evaluation ./b ./node_modules/big-module-with-flag/index.js 2:0-24
      harmony export imported specifier ./b ./node_modules/big-module-with-flag/index.js 2:0-24
+ ./node_modules/big-module/a.js 22 bytes [built]
+     [exports: a]
+     [used exports unknown]
+     harmony side effect evaluation ./a ./node_modules/big-module/index.js 1:0-24
+     harmony export imported specifier ./a ./node_modules/big-module/index.js 1:0-24
+ ./node_modules/big-module/b.js 22 bytes [built]
+     [exports: b]
+     [used exports unknown]
+     harmony side effect evaluation ./b ./node_modules/big-module/index.js 2:0-24
+     harmony export imported specifier ./b ./node_modules/big-module/index.js 2:0-24
+ ./node_modules/big-module/c.js 22 bytes [built]
+     [exports: c]
+     [used exports unknown]
+     harmony side effect evaluation ./c ./node_modules/big-module/index.js 3:0-24
+     harmony export imported specifier ./c ./node_modules/big-module/index.js 3:0-24
+ ./node_modules/big-module/index.js 75 bytes [built]
+     [exports: a, b, c]
+     [used exports unknown]
+     harmony side effect evaluation big-module ./example.js 1:0-46
+     harmony import specifier big-module ./example.js 5:1-3
+     harmony import specifier big-module ./example.js 6:1-3
      + 2 hidden chunk modules
 ```
 
@@ -336,18 +311,18 @@ chunk {0} output.js (main) 325 bytes (javascript) 632 bytes (runtime) [entry] [r
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset       Size  Chunks             Chunk Names
-output.js  558 bytes   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset      Size
+output.js  62 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 325 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
+chunk output.js (main) 325 bytes [entry] [rendered]
     > ./example.js main
- [295] ./example.js + 6 modules 325 bytes {179} [built]
-       [no exports]
-       harmony side effect evaluation ./a ./node_modules/big-module-with-flag/index.js 1:0-24
-       harmony export imported specifier ./a ./node_modules/big-module-with-flag/index.js 1:0-24
-       harmony side effect evaluation ./b ./node_modules/big-module-with-flag/index.js 2:0-24
-       harmony export imported specifier ./b ./node_modules/big-module-with-flag/index.js 2:0-24
-       entry ./example.js main
-     + 2 hidden chunk modules
+ ./example.js + 6 modules 325 bytes [built]
+     [no exports]
+     [no exports used]
+     harmony side effect evaluation ./a ./node_modules/big-module-with-flag/index.js 1:0-24
+     harmony export imported specifier ./a ./node_modules/big-module-with-flag/index.js 1:0-24
+     harmony side effect evaluation ./b ./node_modules/big-module-with-flag/index.js 2:0-24
+     harmony export imported specifier ./b ./node_modules/big-module-with-flag/index.js 2:0-24
+     entry ./example.js main
 ```

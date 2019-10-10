@@ -38,68 +38,16 @@ exports.add = function() {
 # dist/output.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__ */
-/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
-
-const inc = __webpack_require__(/*! ./increment */ 1).increment;
-const a = 1;
-inc(a); // 2
-
-
-/***/ }),
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
 /* 1 */
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__ */
-/***/ ((__unusedmodule, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 const add = __webpack_require__(/*! ./math */ 2).add;
 exports.increment = function(val) {
@@ -114,7 +62,7 @@ exports.increment = function(val) {
   \*****************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
-/***/ ((__unusedmodule, exports) => {
+/***/ ((__unused_webpack_module, exports) => {
 
 exports.add = function() {
     var sum = 0, i = 0, args = arguments, l = args.length;
@@ -125,7 +73,48 @@ exports.add = function() {
 };
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+!function() {
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__ */
+const inc = __webpack_require__(/*! ./increment */ 1).increment;
+const a = 1;
+inc(a); // 2
+
+}();
+/******/ })()
+;
 ```
 
 # Info
@@ -134,37 +123,38 @@ exports.add = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset     Size  Chunks             Chunk Names
-output.js  2.4 KiB     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset      Size
+output.js  2.23 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {0} output.js (main) 326 bytes [entry] [rendered]
+chunk output.js (main) 326 bytes [entry] [rendered]
     > ./example.js main
- [0] ./example.js 72 bytes {0} [built]
+ ./example.js 72 bytes [built]
      [used exports unknown]
      entry ./example.js main
- [1] ./increment.js 98 bytes {0} [built]
+ ./increment.js 98 bytes [built]
      [used exports unknown]
-     cjs require ./increment [0] ./example.js 1:12-34
- [2] ./math.js 156 bytes {0} [built]
+     cjs require ./increment ./example.js 1:12-34
+ ./math.js 156 bytes [built]
      [used exports unknown]
-     cjs require ./math [1] ./increment.js 1:12-29
+     cjs require ./math ./increment.js 1:12-29
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset       Size  Chunks             Chunk Names
-output.js  368 bytes   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset       Size
+output.js  333 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 326 bytes [entry] [rendered]
+chunk output.js (main) 326 bytes [entry] [rendered]
     > ./example.js main
- [144] ./example.js 72 bytes {179} [built]
-       entry ./example.js main
- [451] ./math.js 156 bytes {179} [built]
-       cjs require ./math [822] ./increment.js 1:12-29
- [822] ./increment.js 98 bytes {179} [built]
-       cjs require ./increment [144] ./example.js 1:12-34
+ ./example.js 72 bytes [built]
+     [no exports used]
+     entry ./example.js main
+ ./increment.js 98 bytes [built]
+     cjs require ./increment ./example.js 1:12-34
+ ./math.js 156 bytes [built]
+     cjs require ./math ./increment.js 1:12-29
 ```

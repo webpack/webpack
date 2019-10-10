@@ -59,54 +59,15 @@ module.exports = {
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
 })(window, function(__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) {
-return /******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+return /******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__ */
-/***/ ((__unusedmodule, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 var add = __webpack_require__(/*! add */ 1);
 var subtract = __webpack_require__(/*! subtract */ 2);
@@ -122,6 +83,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 /*! runtime requirements: module */
 /***/ ((module) => {
 
+"use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 
 /***/ }),
@@ -133,10 +95,45 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 /*! runtime requirements: module */
 /***/ ((module) => {
 
+"use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })()
+;
 });
 ```
 
@@ -146,37 +143,38 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset      Size  Chunks             Chunk Names
-output.js  3.06 KiB     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset      Size
+output.js  3.18 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {0} output.js (main) 194 bytes [entry] [rendered]
+chunk output.js (main) 194 bytes [entry] [rendered]
     > ./example.js main
- [0] ./example.js 110 bytes {0} [built]
-     [used exports unknown]
+ ./example.js 110 bytes [built]
      entry ./example.js main
- [1] external "add" 42 bytes {0} [built]
+     used a library export
+ external "add" 42 bytes [built]
      [used exports unknown]
-     cjs require add [0] ./example.js 1:10-24
- [2] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
+     cjs require add ./example.js 1:10-24
+ external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes [built]
      [used exports unknown]
-     cjs require subtract [0] ./example.js 2:15-34
+     cjs require subtract ./example.js 2:15-34
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset       Size  Chunks             Chunk Names
-output.js  666 bytes   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset       Size
+output.js  666 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 194 bytes [entry] [rendered]
+chunk output.js (main) 194 bytes [entry] [rendered]
     > ./example.js main
- [144] ./example.js 110 bytes {179} [built]
-       entry ./example.js main
- [324] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {179} [built]
-       cjs require subtract [144] ./example.js 2:15-34
- [630] external "add" 42 bytes {179} [built]
-       cjs require add [144] ./example.js 1:10-24
+ ./example.js 110 bytes [built]
+     entry ./example.js main
+     used a library export
+ external "add" 42 bytes [built]
+     cjs require add ./example.js 1:10-24
+ external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes [built]
+     cjs require subtract ./example.js 2:15-34
 ```

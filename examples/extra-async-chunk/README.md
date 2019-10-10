@@ -47,80 +47,39 @@ require.ensure(["./a"], function(require) {
 # dist/output.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({});
+/************************************************************************/
 /******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-/******/
+/******/ 	
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-/******/
+/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+/******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/ 	// initialize runtime
-/******/ 	runtime(__webpack_require__);
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
 /************************************************************************/
-/******/ ([
-/* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__.e, __webpack_require__.oe, __webpack_require__ */
-/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
-
-// a chunks with a, b, c
-Promise.all(/*! AMD require */[__webpack_require__.e(394), __webpack_require__.e(460)]).then(function() {[__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 2), __webpack_require__(/*! ./c */ 3)];}).catch(__webpack_require__.oe);
-
-// a chunk with a, b, d
-Promise.all(/*! require.ensure */[__webpack_require__.e(394), __webpack_require__.e(767)]).then((function(require) {
-	__webpack_require__(/*! ./b */ 2);
-	__webpack_require__(/*! ./d */ 4);
-}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
-
-
-/***/ })
-/******/ ],
-```
-
-<details><summary><code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code></summary>
-
-``` js
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ 	"use strict";
-/******/ 
 /******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	!function() {
 /******/ 		__webpack_require__.f = {};
@@ -271,12 +230,24 @@ Promise.all(/*! require.ensure */[__webpack_require__.e(394), __webpack_require_
 /******/ 		var parentJsonpFunction = oldJsonpFunction;
 /******/ 	}();
 /******/ 	
-/******/ }
-);
+/************************************************************************/
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__.e, __webpack_require__.oe, __webpack_require__, __webpack_require__.* */
+// a chunks with a, b, c
+Promise.all(/*! AMD require */[__webpack_require__.e(394), __webpack_require__.e(460)]).then(function() {[__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 2), __webpack_require__(/*! ./c */ 3)];}).catch(__webpack_require__.oe);
+
+// a chunk with a, b, d
+Promise.all(/*! require.ensure */[__webpack_require__.e(394), __webpack_require__.e(767)]).then((function(require) {
+	__webpack_require__(/*! ./b */ 2);
+	__webpack_require__(/*! ./d */ 4);
+}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+
+/******/ })()
+;
 ```
-
-</details>
-
 
 # dist/394.output.js
 
@@ -354,73 +325,74 @@ module.exports = "d";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-        Asset       Size  Chunks             Chunk Names
-394.output.js  530 bytes   {394}  [emitted]
-460.output.js  300 bytes   {460}  [emitted]
-767.output.js  300 bytes   {767}  [emitted]
-    output.js   8.36 KiB   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+        Asset       Size
+394.output.js  530 bytes  [emitted]
+460.output.js  300 bytes  [emitted]
+767.output.js  300 bytes  [emitted]
+    output.js   8.07 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 164 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 164 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [0] ./example.js 164 bytes {179} [built]
+ ./example.js 164 bytes [built]
      [used exports unknown]
      entry ./example.js main
      + 4 hidden chunk modules
-chunk {394} 394.output.js 42 bytes [rendered] split chunk (cache group: default)
-    > ./a ./b ./c [0] ./example.js 2:0-30
-    > [0] ./example.js 5:0-8:2
- [1] ./a.js 21 bytes {394} [built]
+chunk 394.output.js 42 bytes [rendered] split chunk (cache group: default)
+    > ./a ./b ./c ./example.js 2:0-30
+    > ./example.js 5:0-8:2
+ ./a.js 21 bytes [built]
      [used exports unknown]
-     amd require ./a [0] ./example.js 2:0-30
-     require.ensure item ./a [0] ./example.js 5:0-8:2
- [2] ./b.js 21 bytes {394} [built]
+     amd require ./a ./example.js 2:0-30
+     require.ensure item ./a ./example.js 5:0-8:2
+ ./b.js 21 bytes [built]
      [used exports unknown]
-     amd require ./b [0] ./example.js 2:0-30
-     cjs require ./b [0] ./example.js 6:1-15
-chunk {460} 460.output.js 21 bytes [rendered]
-    > ./a ./b ./c [0] ./example.js 2:0-30
- [3] ./c.js 21 bytes {460} [built]
+     amd require ./b ./example.js 2:0-30
+     cjs require ./b ./example.js 6:1-15
+chunk 460.output.js 21 bytes [rendered]
+    > ./a ./b ./c ./example.js 2:0-30
+ ./c.js 21 bytes [built]
      [used exports unknown]
-     amd require ./c [0] ./example.js 2:0-30
-chunk {767} 767.output.js 21 bytes [rendered]
-    > [0] ./example.js 5:0-8:2
- [4] ./d.js 21 bytes {767} [built]
+     amd require ./c ./example.js 2:0-30
+chunk 767.output.js 21 bytes [rendered]
+    > ./example.js 5:0-8:2
+ ./d.js 21 bytes [built]
      [used exports unknown]
-     cjs require ./d [0] ./example.js 7:1-15
+     cjs require ./d ./example.js 7:1-15
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-        Asset       Size  Chunks             Chunk Names
-394.output.js  108 bytes   {394}  [emitted]
-460.output.js   85 bytes   {460}  [emitted]
-767.output.js   85 bytes   {767}  [emitted]
-    output.js   1.59 KiB   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+        Asset       Size
+394.output.js  108 bytes  [emitted]
+460.output.js   85 bytes  [emitted]
+767.output.js   85 bytes  [emitted]
+    output.js   1.54 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 164 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 164 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [144] ./example.js 164 bytes {179} [built]
-       entry ./example.js main
+ ./example.js 164 bytes [built]
+     [no exports used]
+     entry ./example.js main
      + 4 hidden chunk modules
-chunk {394} 394.output.js 42 bytes [rendered] split chunk (cache group: default)
-    > ./a ./b ./c [144] ./example.js 2:0-30
-    > [144] ./example.js 5:0-8:2
- [847] ./a.js 21 bytes {394} [built]
-       amd require ./a [144] ./example.js 2:0-30
-       require.ensure item ./a [144] ./example.js 5:0-8:2
- [996] ./b.js 21 bytes {394} [built]
-       amd require ./b [144] ./example.js 2:0-30
-       cjs require ./b [144] ./example.js 6:1-15
-chunk {460} 460.output.js 21 bytes [rendered]
-    > ./a ./b ./c [144] ./example.js 2:0-30
- [460] ./c.js 21 bytes {460} [built]
-       amd require ./c [144] ./example.js 2:0-30
-chunk {767} 767.output.js 21 bytes [rendered]
-    > [144] ./example.js 5:0-8:2
- [767] ./d.js 21 bytes {767} [built]
-       cjs require ./d [144] ./example.js 7:1-15
+chunk 394.output.js 42 bytes [rendered] split chunk (cache group: default)
+    > ./a ./b ./c ./example.js 2:0-30
+    > ./example.js 5:0-8:2
+ ./a.js 21 bytes [built]
+     amd require ./a ./example.js 2:0-30
+     require.ensure item ./a ./example.js 5:0-8:2
+ ./b.js 21 bytes [built]
+     amd require ./b ./example.js 2:0-30
+     cjs require ./b ./example.js 6:1-15
+chunk 460.output.js 21 bytes [rendered]
+    > ./a ./b ./c ./example.js 2:0-30
+ ./c.js 21 bytes [built]
+     amd require ./c ./example.js 2:0-30
+chunk 767.output.js 21 bytes [rendered]
+    > ./example.js 5:0-8:2
+ ./d.js 21 bytes [built]
+     cjs require ./d ./example.js 7:1-15
 ```

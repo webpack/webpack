@@ -23,61 +23,17 @@ export function increment(val) {
 # dist/output.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/ 	// initialize runtime
-/******/ 	runtime(__webpack_require__);
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.e */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.e, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _increment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./increment */ 1);
 
@@ -97,10 +53,9 @@ __webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(null, /*
   \**********************/
 /*! export increment [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.d */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "increment": () => /* binding */ increment
@@ -119,10 +74,9 @@ function increment(val) {
   \*****************/
 /*! export add [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "add": () => /* binding */ add
@@ -137,15 +91,38 @@ function add() {
 
 
 /***/ })
-/******/ ],
-```
-
-<details><summary><code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code></summary>
-
-``` js
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ 	"use strict";
-/******/ 
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
@@ -320,12 +297,14 @@ function add() {
 /******/ 		var parentJsonpFunction = oldJsonpFunction;
 /******/ 	}();
 /******/ 	
-/******/ }
-);
+/************************************************************************/
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__(0);
+/******/ 	// This entry module used 'exports' so it can't be inlined
+/******/ })()
+;
 ```
-
-</details>
-
 
 # Info
 
@@ -333,33 +312,33 @@ function add() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-       Asset       Size  Chunks             Chunk Names
-35.output.js  740 bytes    {35}  [emitted]
-   output.js   10.8 KiB   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+       Asset       Size
+35.output.js  751 bytes  [emitted]
+   output.js   10.8 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {35} 35.output.js 24 bytes [rendered]
-    > ./async-loaded [0] ./example.js 6:0-24
- [3] ./async-loaded.js 24 bytes {35} [built]
+chunk 35.output.js 24 bytes [rendered]
+    > ./async-loaded ./example.js 6:0-24
+ ./async-loaded.js 24 bytes [built]
      [exports: answer]
      [used exports unknown]
-     import() ./async-loaded [0] ./example.js 6:0-24
-chunk {179} output.js (main) 400 bytes (javascript) 4.75 KiB (runtime) [entry] [rendered]
+     import() ./async-loaded ./example.js 6:0-24
+chunk output.js (main) 400 bytes (javascript) 4.75 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [0] ./example.js 175 bytes {179} [built]
+ ./example.js 175 bytes [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
- [1] ./increment.js 90 bytes {179} [built]
+ ./increment.js 90 bytes [built]
      [exports: increment]
      [used exports unknown]
-     harmony side effect evaluation ./increment [0] ./example.js 1:0-47
-     harmony import specifier ./increment [0] ./example.js 3:0-3
- [2] ./math.js 135 bytes {179} [built]
+     harmony side effect evaluation ./increment ./example.js 1:0-47
+     harmony import specifier ./increment ./example.js 3:0-3
+ ./math.js 135 bytes [built]
      [exports: add]
      [used exports unknown]
-     harmony side effect evaluation ./math [1] ./increment.js 1:0-29
-     harmony import specifier ./math [1] ./increment.js 3:11-14
+     harmony side effect evaluation ./math ./increment.js 1:0-29
+     harmony import specifier ./math ./increment.js 3:11-14
      + 6 hidden chunk modules
 ```
 
@@ -367,20 +346,21 @@ chunk {179} output.js (main) 400 bytes (javascript) 4.75 KiB (runtime) [entry] [
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-       Asset       Size  Chunks             Chunk Names
-35.output.js  126 bytes    {35}  [emitted]
-   output.js   1.89 KiB   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+       Asset       Size
+35.output.js  126 bytes  [emitted]
+   output.js   1.85 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {35} 35.output.js 24 bytes [rendered]
+chunk 35.output.js 24 bytes [rendered]
     > ./async-loaded ./example.js 6:0-24
- [35] ./async-loaded.js 24 bytes {35} [built]
-      [exports: answer]
-      import() ./async-loaded [973] ./example.js + 2 modules ./example.js 6:0-24
-chunk {179} output.js (main) 400 bytes (javascript) 4.75 KiB (runtime) [entry] [rendered]
+ ./async-loaded.js 24 bytes [built]
+     [exports: answer]
+     import() ./async-loaded ./example.js + 2 modules ./example.js 6:0-24
+chunk output.js (main) 400 bytes (javascript) 4.75 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [973] ./example.js + 2 modules 400 bytes {179} [built]
-       [no exports]
-       entry ./example.js main
+ ./example.js + 2 modules 400 bytes [built]
+     [no exports]
+     [no exports used]
+     entry ./example.js main
      + 6 hidden chunk modules
 ```

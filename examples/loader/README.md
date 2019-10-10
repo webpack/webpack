@@ -34,71 +34,16 @@ module.exports = function(content) {
 # dist/output.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__ */
-/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
-
-// use our loader
-console.dir(__webpack_require__(/*! ./loader!./file */ 1));
-
-// use buildin css loader
-console.dir(__webpack_require__(/*! ./test.css */ 2)); // default by extension
-console.dir(__webpack_require__(/*! css-loader!./test.css */ 2)); // manual
-
-
-/***/ }),
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
 /* 1 */
 /*!*****************************!*\
   !*** ./loader.js!./file.js ***!
   \*****************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
-/***/ ((__unusedmodule, exports) => {
+/***/ ((__unused_webpack_module, exports) => {
 
 exports.answer = 42;
 exports.foo = "bar";
@@ -219,7 +164,51 @@ function toComment(sourceMap) {
 }
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+!function() {
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__ */
+// use our loader
+console.dir(__webpack_require__(/*! ./loader!./file */ 1));
+
+// use buildin css loader
+console.dir(__webpack_require__(/*! ./test.css */ 2)); // default by extension
+console.dir(__webpack_require__(/*! css-loader!./test.css */ 2)); // manual
+
+}();
+/******/ })()
+;
 ```
 
 # Console output
@@ -238,44 +227,45 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset      Size  Chunks             Chunk Names
-output.js  5.64 KiB     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset      Size
+output.js  5.46 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {0} output.js (main) 3.03 KiB [entry] [rendered]
+chunk output.js (main) 3.03 KiB [entry] [rendered]
     > ./example.js main
- [0] ./example.js 204 bytes {0} [built]
+ (webpack)/node_modules/css-loader/dist/cjs.js!./test.css 178 bytes [built]
+     [used exports unknown]
+     cjs require ./test.css ./example.js 5:12-33
+     cjs require !css-loader!./test.css ./example.js 6:12-45
+ (webpack)/node_modules/css-loader/dist/runtime/api.js 2.61 KiB [built]
+     [used exports unknown]
+     cjs require ../../node_modules/css-loader/dist/runtime/api.js (webpack)/node_modules/css-loader/dist/cjs.js!./test.css 1:27-87
+ ./example.js 204 bytes [built]
      [used exports unknown]
      entry ./example.js main
- [1] ./loader.js!./file.js 41 bytes {0} [built]
+ ./loader.js!./file.js 41 bytes [built]
      [used exports unknown]
-     cjs require ./loader!./file [0] ./example.js 2:12-38
- [2] (webpack)/node_modules/css-loader/dist/cjs.js!./test.css 178 bytes {0} [built]
-     [used exports unknown]
-     cjs require ./test.css [0] ./example.js 5:12-33
-     cjs require !css-loader!./test.css [0] ./example.js 6:12-45
- [3] (webpack)/node_modules/css-loader/dist/runtime/api.js 2.61 KiB {0} [built]
-     [used exports unknown]
-     cjs require ../../node_modules/css-loader/dist/runtime/api.js [2] (webpack)/node_modules/css-loader/dist/cjs.js!./test.css 1:27-87
+     cjs require ./loader!./file ./example.js 2:12-38
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset      Size  Chunks             Chunk Names
-output.js  1.21 KiB   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset      Size
+output.js  1.17 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 3.03 KiB [entry] [rendered]
+chunk output.js (main) 3.03 KiB [entry] [rendered]
     > ./example.js main
-  [90] (webpack)/node_modules/css-loader/dist/cjs.js!./test.css 178 bytes {179} [built]
-       cjs require ./test.css [144] ./example.js 5:12-33
-       cjs require !css-loader!./test.css [144] ./example.js 6:12-45
- [144] ./example.js 204 bytes {179} [built]
-       entry ./example.js main
- [232] ./loader.js!./file.js 41 bytes {179} [built]
-       cjs require ./loader!./file [144] ./example.js 2:12-38
- [609] (webpack)/node_modules/css-loader/dist/runtime/api.js 2.61 KiB {179} [built]
-       cjs require ../../node_modules/css-loader/dist/runtime/api.js [90] (webpack)/node_modules/css-loader/dist/cjs.js!./test.css 1:27-87
+ (webpack)/node_modules/css-loader/dist/cjs.js!./test.css 178 bytes [built]
+     cjs require ./test.css ./example.js 5:12-33
+     cjs require !css-loader!./test.css ./example.js 6:12-45
+ (webpack)/node_modules/css-loader/dist/runtime/api.js 2.61 KiB [built]
+     cjs require ../../node_modules/css-loader/dist/runtime/api.js (webpack)/node_modules/css-loader/dist/cjs.js!./test.css 1:27-87
+ ./example.js 204 bytes [built]
+     [no exports used]
+     entry ./example.js main
+ ./loader.js!./file.js 41 bytes [built]
+     cjs require ./loader!./file ./example.js 2:12-38
 ```

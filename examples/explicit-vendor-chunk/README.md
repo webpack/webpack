@@ -46,55 +46,16 @@ module.exports = [
 # dist/vendor.js
 
 ```javascript
-var vendor_695bfbe76b2ae61a7a14 =
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+var vendor_5b4c3f3ff46856555bbd =
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!****************!*\
   !*** dll main ***!
   \****************/
 /*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: __webpack_require__, module */
-/***/ ((module, __unusedexports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = __webpack_require__;
 
@@ -121,60 +82,55 @@ module.exports = "Vendor";
 module.exports = "Vendor2";
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })()
+;
 ```
 
 # dist/pageA.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__, module */
-/***/ ((module, __unusedexports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 console.log(__webpack_require__(/*! ./vendor */ 1));
 module.exports = "pageA";
@@ -182,27 +138,62 @@ module.exports = "pageA";
 /***/ }),
 /* 1 */
 /*!****************************************************************************!*\
-  !*** delegated ./vendor.js from dll-reference vendor_695bfbe76b2ae61a7a14 ***!
+  !*** delegated ./vendor.js from dll-reference vendor_5b4c3f3ff46856555bbd ***!
   \****************************************************************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unusedexports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_695bfbe76b2ae61a7a14 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_5b4c3f3ff46856555bbd */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**********************************************!*\
-  !*** external "vendor_695bfbe76b2ae61a7a14" ***!
+  !*** external "vendor_5b4c3f3ff46856555bbd" ***!
   \**********************************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
-module.exports = vendor_695bfbe76b2ae61a7a14;
+"use strict";
+module.exports = vendor_5b4c3f3ff46856555bbd;
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__(0);
+/******/ 	// This entry module used 'module' so it can't be inlined
+/******/ })()
+;
 ```
 
 # Info
@@ -211,59 +202,60 @@ module.exports = vendor_695bfbe76b2ae61a7a14;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
+Version: webpack 5.0.0-alpha.31
 Child vendor:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-        Asset     Size  Chunks             Chunk Names
-    vendor.js  2.1 KiB     {0}  [emitted]  main
+        Asset      Size
+    vendor.js  2.17 KiB  [emitted]  [name: main]
     Entrypoint main = vendor.js
-    chunk {0} vendor.js (main) 65 bytes [entry] [rendered]
+    chunk vendor.js (main) 65 bytes [entry] [rendered]
         > main
-     [0] dll main 12 bytes {0} [built]
+     ./vendor.js 26 bytes [built]
+         entry ./vendor dll main main[0]
+         DllPlugin
+     ./vendor2.js 27 bytes [built]
+         entry ./vendor2 dll main main[1]
+         DllPlugin
+     dll main 12 bytes [built]
          dll entry
-         DllPlugin
-     [1] ./vendor.js 26 bytes {0} [built]
-         entry ./vendor [0] dll main main[0]
-         DllPlugin
-     [2] ./vendor2.js 27 bytes {0} [built]
-         entry ./vendor2 [0] dll main main[1]
+         used a library export
          DllPlugin
 Child app:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-       Asset      Size  Chunks             Chunk Names
-    pageA.js  2.45 KiB     {0}  [emitted]  pageA
-    pageB.js  2.47 KiB     {1}  [emitted]  pageB
-    pageC.js  1.48 KiB     {2}  [emitted]  pageC
+       Asset      Size
+    pageA.js   2.5 KiB  [emitted]  [name: pageA]
+    pageB.js  2.53 KiB  [emitted]  [name: pageB]
+    pageC.js   1.5 KiB  [emitted]  [name: pageC]
     Entrypoint pageA = pageA.js
     Entrypoint pageB = pageB.js
     Entrypoint pageC = pageC.js
-    chunk {0} pageA.js (pageA) 143 bytes [entry] [rendered]
+    chunk pageA.js (pageA) 143 bytes [entry] [rendered]
         > ./pageA pageA
-     [0] ./pageA.js 59 bytes {0} [built]
+     ./pageA.js 59 bytes [built]
          [used exports unknown]
          entry ./pageA pageA
-     [1] delegated ./vendor.js from dll-reference vendor_695bfbe76b2ae61a7a14 42 bytes {0} [built]
+     delegated ./vendor.js from dll-reference vendor_5b4c3f3ff46856555bbd 42 bytes [built]
          [used exports unknown]
-         cjs require ./vendor [0] ./pageA.js 1:12-31
-     [2] external "vendor_695bfbe76b2ae61a7a14" 42 bytes {0} {1} [built]
+         cjs require ./vendor ./pageA.js 1:12-31
+     external "vendor_5b4c3f3ff46856555bbd" 42 bytes [built]
          [used exports unknown]
-         delegated source dll-reference vendor_695bfbe76b2ae61a7a14 [1] delegated ./vendor.js from dll-reference vendor_695bfbe76b2ae61a7a14
-         delegated source dll-reference vendor_695bfbe76b2ae61a7a14 [4] delegated ./vendor2.js from dll-reference vendor_695bfbe76b2ae61a7a14
-    chunk {1} pageB.js (pageB) 144 bytes [entry] [rendered]
+         delegated source dll-reference vendor_5b4c3f3ff46856555bbd delegated ./vendor.js from dll-reference vendor_5b4c3f3ff46856555bbd
+         delegated source dll-reference vendor_5b4c3f3ff46856555bbd delegated ./vendor2.js from dll-reference vendor_5b4c3f3ff46856555bbd
+    chunk pageB.js (pageB) 144 bytes [entry] [rendered]
         > ./pageB pageB
-     [2] external "vendor_695bfbe76b2ae61a7a14" 42 bytes {0} {1} [built]
-         [used exports unknown]
-         delegated source dll-reference vendor_695bfbe76b2ae61a7a14 [1] delegated ./vendor.js from dll-reference vendor_695bfbe76b2ae61a7a14
-         delegated source dll-reference vendor_695bfbe76b2ae61a7a14 [4] delegated ./vendor2.js from dll-reference vendor_695bfbe76b2ae61a7a14
-     [3] ./pageB.js 60 bytes {1} [built]
+     ./pageB.js 60 bytes [built]
          [used exports unknown]
          entry ./pageB pageB
-     [4] delegated ./vendor2.js from dll-reference vendor_695bfbe76b2ae61a7a14 42 bytes {1} [built]
+     delegated ./vendor2.js from dll-reference vendor_5b4c3f3ff46856555bbd 42 bytes [built]
          [used exports unknown]
-         cjs require ./vendor2 [3] ./pageB.js 1:12-32
-    chunk {2} pageC.js (pageC) 25 bytes [entry] [rendered]
+         cjs require ./vendor2 ./pageB.js 1:12-32
+     external "vendor_5b4c3f3ff46856555bbd" 42 bytes [built]
+         [used exports unknown]
+         delegated source dll-reference vendor_5b4c3f3ff46856555bbd delegated ./vendor.js from dll-reference vendor_5b4c3f3ff46856555bbd
+         delegated source dll-reference vendor_5b4c3f3ff46856555bbd delegated ./vendor2.js from dll-reference vendor_5b4c3f3ff46856555bbd
+    chunk pageC.js (pageC) 25 bytes [entry] [rendered]
         > ./pageC pageC
-     [5] ./pageC.js 25 bytes {2} [built]
+     ./pageC.js 25 bytes [built]
          [used exports unknown]
          entry ./pageC pageC
 ```
@@ -272,52 +264,56 @@ Child app:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
+Version: webpack 5.0.0-alpha.31
 Child vendor:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-        Asset       Size  Chunks             Chunk Names
-    vendor.js  285 bytes   {179}  [emitted]  main
+        Asset       Size
+    vendor.js  271 bytes  [emitted]  [name: main]
     Entrypoint main = vendor.js
-    chunk {179} vendor.js (main) 65 bytes [entry] [rendered]
+    chunk vendor.js (main) 65 bytes [entry] [rendered]
         > main
-     [117] ./vendor2.js 27 bytes {179} [built]
-           entry ./vendor2 [550] dll main main[1]
-           DllPlugin
-     [550] dll main 12 bytes {179} [built]
-           dll entry
-           DllPlugin
-     [965] ./vendor.js 26 bytes {179} [built]
-           entry ./vendor [550] dll main main[0]
-           DllPlugin
+     ./vendor.js 26 bytes [built]
+         entry ./vendor dll main main[0]
+         DllPlugin
+     ./vendor2.js 27 bytes [built]
+         entry ./vendor2 dll main main[1]
+         DllPlugin
+     dll main 12 bytes [built]
+         dll entry
+         used a library export
+         DllPlugin
 Child app:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-       Asset       Size  Chunks             Chunk Names
-    pageA.js  299 bytes   {424}  [emitted]  pageA
-    pageB.js  299 bytes   {121}  [emitted]  pageB
-    pageC.js  189 bytes   {178}  [emitted]  pageC
+       Asset       Size
+    pageA.js  299 bytes  [emitted]  [name: pageA]
+    pageB.js  299 bytes  [emitted]  [name: pageB]
+    pageC.js  176 bytes  [emitted]  [name: pageC]
     Entrypoint pageA = pageA.js
     Entrypoint pageB = pageB.js
     Entrypoint pageC = pageC.js
-    chunk {121} pageB.js (pageB) 144 bytes [entry] [rendered]
+    chunk pageB.js (pageB) 144 bytes [entry] [rendered]
         > ./pageB pageB
-     [176] delegated ./vendor2.js from dll-reference vendor_294b5611efd66201d189 42 bytes {121} [built]
-           cjs require ./vendor2 [588] ./pageB.js 1:12-32
-     [409] external "vendor_294b5611efd66201d189" 42 bytes {121} {424} [built]
-           delegated source dll-reference vendor_294b5611efd66201d189 [176] delegated ./vendor2.js from dll-reference vendor_294b5611efd66201d189
-           delegated source dll-reference vendor_294b5611efd66201d189 [373] delegated ./vendor.js from dll-reference vendor_294b5611efd66201d189
-     [588] ./pageB.js 60 bytes {121} [built]
-           entry ./pageB pageB
-    chunk {178} pageC.js (pageC) 25 bytes [entry] [rendered]
+     ./pageB.js 60 bytes [built]
+         [no exports used]
+         entry ./pageB pageB
+     delegated ./vendor2.js from dll-reference vendor_271aa7296a1e24171574 42 bytes [built]
+         cjs require ./vendor2 ./pageB.js 1:12-32
+     external "vendor_271aa7296a1e24171574" 42 bytes [built]
+         delegated source dll-reference vendor_271aa7296a1e24171574 delegated ./vendor.js from dll-reference vendor_271aa7296a1e24171574
+         delegated source dll-reference vendor_271aa7296a1e24171574 delegated ./vendor2.js from dll-reference vendor_271aa7296a1e24171574
+    chunk pageC.js (pageC) 25 bytes [entry] [rendered]
         > ./pageC pageC
-     [145] ./pageC.js 25 bytes {178} [built]
-           entry ./pageC pageC
-    chunk {424} pageA.js (pageA) 143 bytes [entry] [rendered]
+     ./pageC.js 25 bytes [built]
+         [no exports used]
+         entry ./pageC pageC
+    chunk pageA.js (pageA) 143 bytes [entry] [rendered]
         > ./pageA pageA
-     [366] ./pageA.js 59 bytes {424} [built]
-           entry ./pageA pageA
-     [373] delegated ./vendor.js from dll-reference vendor_294b5611efd66201d189 42 bytes {424} [built]
-           cjs require ./vendor [366] ./pageA.js 1:12-31
-     [409] external "vendor_294b5611efd66201d189" 42 bytes {121} {424} [built]
-           delegated source dll-reference vendor_294b5611efd66201d189 [176] delegated ./vendor2.js from dll-reference vendor_294b5611efd66201d189
-           delegated source dll-reference vendor_294b5611efd66201d189 [373] delegated ./vendor.js from dll-reference vendor_294b5611efd66201d189
+     ./pageA.js 59 bytes [built]
+         [no exports used]
+         entry ./pageA pageA
+     delegated ./vendor.js from dll-reference vendor_271aa7296a1e24171574 42 bytes [built]
+         cjs require ./vendor ./pageA.js 1:12-31
+     external "vendor_271aa7296a1e24171574" 42 bytes [built]
+         delegated source dll-reference vendor_271aa7296a1e24171574 delegated ./vendor.js from dll-reference vendor_271aa7296a1e24171574
+         delegated source dll-reference vendor_271aa7296a1e24171574 delegated ./vendor2.js from dll-reference vendor_271aa7296a1e24171574
 ```

@@ -48,56 +48,15 @@ console.log(new square(7));
 # dist/app.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/ 	// initialize runtime
-/******/ 	runtime(__webpack_require__);
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!************************!*\
   !*** ./example-app.js ***!
   \************************/
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -111,36 +70,57 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 /***/ }),
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_89cb910ba5a8389c3c33 ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_7fed5908c1238c18375f ***!
   \******************************************************************************************************/
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unusedexports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_89cb910ba5a8389c3c33 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_7fed5908c1238c18375f */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_89cb910ba5a8389c3c33" ***!
+  !*** external "vendor_lib_7fed5908c1238c18375f" ***!
   \**************************************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
-module.exports = vendor_lib_89cb910ba5a8389c3c33;
+"use strict";
+module.exports = vendor_lib_7fed5908c1238c18375f;
 
 /***/ })
-/******/ ],
-```
-
-<details><summary><code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code></summary>
-
-``` js
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ 	"use strict";
-/******/ 
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
@@ -152,12 +132,14 @@ module.exports = vendor_lib_89cb910ba5a8389c3c33;
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ }
-);
+/************************************************************************/
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__(0);
+/******/ 	// This entry module used 'exports' so it can't be inlined
+/******/ })()
+;
 ```
-
-</details>
-
 
 # Info
 
@@ -165,25 +147,25 @@ module.exports = vendor_lib_89cb910ba5a8389c3c33;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
- Asset      Size  Chunks             Chunk Names
-app.js  3.53 KiB     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+ Asset     Size
+app.js  3.5 KiB  [emitted]  [name: main]
 Entrypoint main = app.js
-chunk {0} app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
+chunk app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
     > ./example-app main
- [0] ./example-app.js 94 bytes {0} [built]
+ ./example-app.js 94 bytes [built]
      [no exports]
      [used exports unknown]
      entry ./example-app main
- [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_89cb910ba5a8389c3c33 42 bytes {0} [built]
+ delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_7fed5908c1238c18375f 42 bytes [built]
      [exports: square]
      [used exports unknown]
-     harmony side effect evaluation example-vendor [0] ./example-app.js 1:0-40
-     harmony import specifier example-vendor [0] ./example-app.js 3:12-18
-     harmony import specifier example-vendor [0] ./example-app.js 4:16-22
- [2] external "vendor_lib_89cb910ba5a8389c3c33" 42 bytes {0} [built]
+     harmony side effect evaluation example-vendor ./example-app.js 1:0-40
+     harmony import specifier example-vendor ./example-app.js 3:12-18
+     harmony import specifier example-vendor ./example-app.js 4:16-22
+ external "vendor_lib_7fed5908c1238c18375f" 42 bytes [built]
      [used exports unknown]
-     delegated source dll-reference vendor_lib_89cb910ba5a8389c3c33 [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_89cb910ba5a8389c3c33
+     delegated source dll-reference vendor_lib_7fed5908c1238c18375f delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_7fed5908c1238c18375f
      + 1 hidden chunk module
 ```
 
@@ -191,24 +173,24 @@ chunk {0} app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rend
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
- Asset       Size  Chunks             Chunk Names
-app.js  539 bytes   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+ Asset       Size
+app.js  340 bytes  [emitted]  [name: main]
 Entrypoint main = app.js
-chunk {179} app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
+chunk app.js (main) 178 bytes [entry] [rendered]
     > ./example-app main
- [661] ./example-app.js 94 bytes {179} [built]
-       [no exports]
-       entry ./example-app main
- [948] external "vendor_lib_89cb910ba5a8389c3c33" 42 bytes {179} [built]
-       delegated source dll-reference vendor_lib_89cb910ba5a8389c3c33 [953] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_89cb910ba5a8389c3c33
- [953] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_89cb910ba5a8389c3c33 42 bytes {179} [built]
-       [exports: square]
-       [all exports used]
-       harmony side effect evaluation example-vendor [661] ./example-app.js 1:0-40
-       harmony import specifier example-vendor [661] ./example-app.js 3:12-18
-       harmony import specifier example-vendor [661] ./example-app.js 4:16-22
-     + 1 hidden chunk module
+ ./example-app.js 94 bytes [built]
+     [no exports]
+     [no exports used]
+     entry ./example-app main
+ delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_7fed5908c1238c18375f 42 bytes [built]
+     [exports: square]
+     [all exports used]
+     harmony side effect evaluation example-vendor ./example-app.js 1:0-40
+     harmony import specifier example-vendor ./example-app.js 3:12-18
+     harmony import specifier example-vendor ./example-app.js 4:16-22
+ external "vendor_lib_7fed5908c1238c18375f" 42 bytes [built]
+     delegated source dll-reference vendor_lib_7fed5908c1238c18375f delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_7fed5908c1238c18375f
 ```
 
 <!-- @TODO:

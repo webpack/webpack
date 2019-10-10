@@ -38,68 +38,9 @@ require.ensure(["c"], function(require) {
 # dist/output.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/ 	// initialize runtime
-/******/ 	runtime(__webpack_require__);
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.e */
-/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
-
-var a = __webpack_require__(/*! a */ 1);
-var b = __webpack_require__(/*! b */ 2);
-__webpack_require__.e(/*! require.ensure */ 796).then((function(require) {
-    __webpack_require__(/*! b */ 2).xyz();
-    var d = __webpack_require__(/*! d */ 4);
-}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
-
-/***/ }),
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
 /* 1 */
 /*!***************************!*\
   !*** ./node_modules/a.js ***!
@@ -122,15 +63,38 @@ __webpack_require__.e(/*! require.ensure */ 796).then((function(require) {
 // module b
 
 /***/ })
-/******/ ],
-```
-
-<details><summary><code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code></summary>
-
-``` js
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ 	"use strict";
-/******/ 
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
 /******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	!function() {
 /******/ 		__webpack_require__.f = {};
@@ -281,12 +245,23 @@ __webpack_require__.e(/*! require.ensure */ 796).then((function(require) {
 /******/ 		var parentJsonpFunction = oldJsonpFunction;
 /******/ 	}();
 /******/ 	
-/******/ }
-);
+/************************************************************************/
+!function() {
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.* */
+var a = __webpack_require__(/*! a */ 1);
+var b = __webpack_require__(/*! b */ 2);
+__webpack_require__.e(/*! require.ensure */ 796).then((function(require) {
+    __webpack_require__(/*! b */ 2).xyz();
+    var d = __webpack_require__(/*! d */ 4);
+}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+}();
+/******/ })()
+;
 ```
-
-</details>
-
 
 # dist/796.output.js
 
@@ -332,57 +307,58 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-        Asset       Size  Chunks             Chunk Names
-796.output.js  582 bytes   {796}  [emitted]
-    output.js   8.57 KiB   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+        Asset       Size
+796.output.js  582 bytes  [emitted]
+    output.js   8.32 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 161 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 161 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [0] ./example.js 139 bytes {179} [built]
+ ./example.js 139 bytes [built]
      [used exports unknown]
      entry ./example.js main
- [1] ./node_modules/a.js 11 bytes {179} [built]
+ ./node_modules/a.js 11 bytes [built]
      [used exports unknown]
-     cjs require a [0] ./example.js 1:8-20
- [2] ./node_modules/b.js 11 bytes {179} [built]
+     cjs require a ./example.js 1:8-20
+ ./node_modules/b.js 11 bytes [built]
      [used exports unknown]
-     cjs require b [0] ./example.js 2:8-20
-     cjs require b [0] ./example.js 4:4-16
+     cjs require b ./example.js 2:8-20
+     cjs require b ./example.js 4:4-16
      + 4 hidden chunk modules
-chunk {796} 796.output.js 22 bytes [rendered]
-    > [0] ./example.js 3:0-6:2
- [3] ./node_modules/c.js 11 bytes {796} [built]
+chunk 796.output.js 22 bytes [rendered]
+    > ./example.js 3:0-6:2
+ ./node_modules/c.js 11 bytes [built]
      [used exports unknown]
-     require.ensure item c [0] ./example.js 3:0-6:2
- [4] ./node_modules/d.js 11 bytes {796} [built]
+     require.ensure item c ./example.js 3:0-6:2
+ ./node_modules/d.js 11 bytes [built]
      [used exports unknown]
-     cjs require d [0] ./example.js 5:12-24
+     cjs require d ./example.js 5:12-24
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-        Asset      Size  Chunks             Chunk Names
-796.output.js  84 bytes   {796}  [emitted]
-    output.js  1.52 KiB   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+        Asset      Size
+796.output.js  84 bytes  [emitted]
+    output.js  1.49 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 161 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 161 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [144] ./example.js 139 bytes {179} [built]
-       entry ./example.js main
- [213] ./node_modules/a.js 11 bytes {179} [built]
-       cjs require a [144] ./example.js 1:8-20
- [644] ./node_modules/b.js 11 bytes {179} [built]
-       cjs require b [144] ./example.js 2:8-20
-       cjs require b [144] ./example.js 4:4-16
+ ./example.js 139 bytes [built]
+     [no exports used]
+     entry ./example.js main
+ ./node_modules/a.js 11 bytes [built]
+     cjs require a ./example.js 1:8-20
+ ./node_modules/b.js 11 bytes [built]
+     cjs require b ./example.js 2:8-20
+     cjs require b ./example.js 4:4-16
      + 4 hidden chunk modules
-chunk {796} 796.output.js 22 bytes [rendered]
-    > [144] ./example.js 3:0-6:2
- [286] ./node_modules/c.js 11 bytes {796} [built]
-       require.ensure item c [144] ./example.js 3:0-6:2
- [882] ./node_modules/d.js 11 bytes {796} [built]
-       cjs require d [144] ./example.js 5:12-24
+chunk 796.output.js 22 bytes [rendered]
+    > ./example.js 3:0-6:2
+ ./node_modules/c.js 11 bytes [built]
+     require.ensure item c ./example.js 3:0-6:2
+ ./node_modules/d.js 11 bytes [built]
+     cjs require d ./example.js 5:12-24
 ```

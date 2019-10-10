@@ -25,65 +25,16 @@ module.exports = 42
 # dist/output.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__ */
-/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
-
-console.log(__webpack_require__(/*! ./cup1 */ 1));
-
-/***/ }),
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
 /* 1 */
 /*!*********************!*\
   !*** ./cup1.coffee ***!
   \*********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unusedexports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = {
   cool: "stuff",
@@ -108,7 +59,45 @@ module.exports = 42;
 
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+!function() {
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__ */
+console.log(__webpack_require__(/*! ./cup1 */ 1));
+}();
+/******/ })()
+;
 ```
 
 # Info
@@ -117,39 +106,40 @@ module.exports = 42;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset      Size  Chunks             Chunk Names
-output.js  2.27 KiB     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset      Size
+output.js  2.09 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {0} output.js (main) 206 bytes [entry] [rendered]
+chunk output.js (main) 206 bytes [entry] [rendered]
     > ./example.js main
- [0] ./example.js 31 bytes {0} [built]
+ ./cup1.coffee 118 bytes [built]
+     [used exports unknown]
+     cjs require ./cup1 ./example.js 1:12-29
+ ./cup2.coffee 57 bytes [built]
+     [used exports unknown]
+     cjs require ./cup2.coffee ./cup1.coffee 4:12-36
+     cjs require ./cup2 ./cup1.coffee 5:9-26
+ ./example.js 31 bytes [built]
      [used exports unknown]
      entry ./example.js main
- [1] ./cup1.coffee 118 bytes {0} [built]
-     [used exports unknown]
-     cjs require ./cup1 [0] ./example.js 1:12-29
- [2] ./cup2.coffee 57 bytes {0} [built]
-     [used exports unknown]
-     cjs require ./cup2.coffee [1] ./cup1.coffee 4:12-36
-     cjs require ./cup2 [1] ./cup1.coffee 5:9-26
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset       Size  Chunks             Chunk Names
-output.js  329 bytes   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset       Size
+output.js  294 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 206 bytes [entry] [rendered]
+chunk output.js (main) 206 bytes [entry] [rendered]
     > ./example.js main
-  [56] ./cup2.coffee 57 bytes {179} [built]
-       cjs require ./cup2.coffee [867] ./cup1.coffee 4:12-36
-       cjs require ./cup2 [867] ./cup1.coffee 5:9-26
- [144] ./example.js 31 bytes {179} [built]
-       entry ./example.js main
- [867] ./cup1.coffee 118 bytes {179} [built]
-       cjs require ./cup1 [144] ./example.js 1:12-29
+ ./cup1.coffee 118 bytes [built]
+     cjs require ./cup1 ./example.js 1:12-29
+ ./cup2.coffee 57 bytes [built]
+     cjs require ./cup2.coffee ./cup1.coffee 4:12-36
+     cjs require ./cup2 ./cup1.coffee 5:9-26
+ ./example.js 31 bytes [built]
+     [no exports used]
+     entry ./example.js main
 ```

@@ -49,59 +49,9 @@ module.exports = (env = "development") => ({
 # dist/output.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__ */
-/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
-
-console.log(__webpack_require__(/*! ./index */ 1));
-
-
-/***/ }),
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
 /* 1 */
 /*!******************!*\
   !*** ./index.ts ***!
@@ -131,7 +81,46 @@ console.log(getArray(1, 2, 3));
 
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+!function() {
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__ */
+console.log(__webpack_require__(/*! ./index */ 1));
+
+}();
+/******/ })()
+;
 ```
 
 # Info
@@ -142,18 +131,18 @@ console.log(getArray(1, 2, 3));
 Starting type checking service...
 Using 1 worker with 2048MB memory limit
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset      Size  Chunks             Chunk Names
-output.js  2.41 KiB     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset      Size
+output.js  2.23 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {0} output.js (main) 652 bytes [entry] [rendered]
+chunk output.js (main) 652 bytes [entry] [rendered]
     > ./example.js main
- [0] ./example.js 33 bytes {0} [built]
+ ./example.js 33 bytes [built]
      [used exports unknown]
      entry ./example.js main
- [1] ./index.ts 619 bytes {0} [built]
+ ./index.ts 619 bytes [built]
      [used exports unknown]
-     cjs require ./index [0] ./example.js 1:12-30
+     cjs require ./index ./example.js 1:12-30
 ```
 
 ## Production mode
@@ -162,14 +151,15 @@ chunk {0} output.js (main) 652 bytes [entry] [rendered]
 Starting type checking service...
 Using 1 worker with 2048MB memory limit
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset       Size  Chunks             Chunk Names
-output.js  576 bytes   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset       Size
+output.js  541 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 652 bytes [entry] [rendered]
+chunk output.js (main) 652 bytes [entry] [rendered]
     > ./example.js main
- [144] ./example.js 33 bytes {179} [built]
-       entry ./example.js main
- [862] ./index.ts 619 bytes {179} [built]
-       cjs require ./index [144] ./example.js 1:12-30
+ ./example.js 33 bytes [built]
+     [no exports used]
+     entry ./example.js main
+ ./index.ts 619 bytes [built]
+     cjs require ./index ./example.js 1:12-30
 ```

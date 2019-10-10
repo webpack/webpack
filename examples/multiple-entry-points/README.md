@@ -106,55 +106,15 @@ module.exports = "Common";
 # dist/pageA.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/
-/******/ 	// initialize runtime
-/******/ 	runtime(__webpack_require__);
-/******/
-/******/ 	// run startup
-/******/ 	return __webpack_require__.x();
-/******/ })
-/************************************************************************/
-/******/ ([
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.oe */
-/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.oe, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 var common = __webpack_require__(/*! ./common */ 1);
 __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 3)]; (function(shared) {
@@ -162,15 +122,38 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 }).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
 
 /***/ })
-/******/ ],
-```
-
-<details><summary><code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code></summary>
-
-``` js
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ 	"use strict";
-/******/ 
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
 /******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	!function() {
 /******/ 		__webpack_require__.f = {};
@@ -351,66 +334,26 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 		var parentJsonpFunction = oldJsonpFunction;
 /******/ 	}();
 /******/ 	
-/******/ }
-);
+/************************************************************************/
+/******/ 	// run startup
+/******/ 	return __webpack_require__.x();
+/******/ })()
+;
 ```
-
-</details>
-
 
 # dist/pageB.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/
-/******/ 	// initialize runtime
-/******/ 	runtime(__webpack_require__);
-/******/
-/******/ 	// run startup
-/******/ 	return __webpack_require__.x();
-/******/ })
-/************************************************************************/
-/******/ ({
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
 
 /***/ 2:
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.e */
-/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 var common = __webpack_require__(/*! ./common */ 1);
 __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
@@ -420,10 +363,38 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 
 /***/ })
 
-/******/ },
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ 	"use strict";
-/******/ 
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
 /******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	!function() {
 /******/ 		__webpack_require__.f = {};
@@ -604,8 +575,11 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 		var parentJsonpFunction = oldJsonpFunction;
 /******/ 	}();
 /******/ 	
-/******/ }
-);
+/************************************************************************/
+/******/ 	// run startup
+/******/ 	return __webpack_require__.x();
+/******/ })()
+;
 ```
 
 # dist/52.js
@@ -619,7 +593,7 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
   \*******************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__, module */
-/***/ ((module, __unusedexports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var common = __webpack_require__(/*! ./common */ 1);
 module.exports = function(msg) {
@@ -637,39 +611,39 @@ module.exports = function(msg) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-     Asset       Size  Chunks             Chunk Names
-     52.js  459 bytes    {52}  [emitted]
-commons.js  326 bytes   {351}  [emitted]  commons
-  pageA.js   9.24 KiB   {424}  [emitted]  pageA
-  pageB.js   9.18 KiB   {121}  [emitted]  pageB
+Version: webpack 5.0.0-alpha.31
+     Asset       Size
+     52.js  468 bytes  [emitted]
+commons.js  326 bytes  [emitted]  [name: commons] [id hint: commons]
+  pageA.js   9.27 KiB  [emitted]  [name: pageA]
+  pageB.js   9.21 KiB  [emitted]  [name: pageB]
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
-chunk {52} 52.js 88 bytes [rendered]
-    > ./shared [0] ./pageA.js 2:0-4:2
-    > [2] ./pageB.js 2:0-5:2
- [3] ./shared.js 88 bytes {52} [built]
+chunk 52.js 88 bytes [rendered]
+    > ./shared ./pageA.js 2:0-4:2
+    > ./pageB.js 2:0-5:2
+ ./shared.js 88 bytes [built]
      [used exports unknown]
-     amd require ./shared [0] ./pageA.js 2:0-4:2
-     require.ensure item ./shared [2] ./pageB.js 2:0-5:2
-     cjs require ./shared [2] ./pageB.js 3:14-33
-chunk {121} pageB.js (pageB) 148 bytes (javascript) 5.07 KiB (runtime) [entry] [rendered]
+     amd require ./shared ./pageA.js 2:0-4:2
+     require.ensure item ./shared ./pageB.js 2:0-5:2
+     cjs require ./shared ./pageB.js 3:14-33
+chunk pageB.js (pageB) 148 bytes (javascript) 5.07 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
- [2] ./pageB.js 148 bytes {121} [built]
+ ./pageB.js 148 bytes [built]
      [used exports unknown]
      entry ./pageB pageB
      + 4 hidden chunk modules
-chunk {351} commons.js (commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
+chunk commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
     > ./pageA pageA
     > ./pageB pageB
- [1] ./common.js 26 bytes {351} [built]
+ ./common.js 26 bytes [built]
      [used exports unknown]
-     cjs require ./common [0] ./pageA.js 1:13-32
-     cjs require ./common [2] ./pageB.js 1:13-32
-     cjs require ./common [3] ./shared.js 1:13-32
-chunk {424} pageA.js (pageA) 105 bytes (javascript) 5.07 KiB (runtime) [entry] [rendered]
+     cjs require ./common ./pageA.js 1:13-32
+     cjs require ./common ./pageB.js 1:13-32
+     cjs require ./common ./shared.js 1:13-32
+chunk pageA.js (pageA) 105 bytes (javascript) 5.07 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
- [0] ./pageA.js 105 bytes {424} [built]
+ ./pageA.js 105 bytes [built]
      [used exports unknown]
      entry ./pageA pageA
      + 4 hidden chunk modules
@@ -679,36 +653,38 @@ chunk {424} pageA.js (pageA) 105 bytes (javascript) 5.07 KiB (runtime) [entry] [
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-     Asset       Size  Chunks             Chunk Names
-     52.js  120 bytes    {52}  [emitted]
-commons.js   90 bytes   {351}  [emitted]  commons
-  pageA.js   1.79 KiB   {424}  [emitted]  pageA
-  pageB.js   1.77 KiB   {121}  [emitted]  pageB
+Version: webpack 5.0.0-alpha.31
+     Asset       Size
+     52.js  120 bytes  [emitted]
+commons.js   90 bytes  [emitted]  [name: commons] [id hint: commons]
+  pageA.js   1.76 KiB  [emitted]  [name: pageA]
+  pageB.js   1.74 KiB  [emitted]  [name: pageB]
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
-chunk {52} 52.js 88 bytes [rendered]
-    > ./shared [366] ./pageA.js 2:0-4:2
-    > [588] ./pageB.js 2:0-5:2
- [52] ./shared.js 88 bytes {52} [built]
-      amd require ./shared [366] ./pageA.js 2:0-4:2
-      require.ensure item ./shared [588] ./pageB.js 2:0-5:2
-      cjs require ./shared [588] ./pageB.js 3:14-33
-chunk {121} pageB.js (pageB) 148 bytes (javascript) 5.08 KiB (runtime) [entry] [rendered]
+chunk 52.js 88 bytes [rendered]
+    > ./shared ./pageA.js 2:0-4:2
+    > ./pageB.js 2:0-5:2
+ ./shared.js 88 bytes [built]
+     amd require ./shared ./pageA.js 2:0-4:2
+     require.ensure item ./shared ./pageB.js 2:0-5:2
+     cjs require ./shared ./pageB.js 3:14-33
+chunk pageB.js (pageB) 148 bytes (javascript) 5.08 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
- [588] ./pageB.js 148 bytes {121} [built]
-       entry ./pageB pageB
+ ./pageB.js 148 bytes [built]
+     [no exports used]
+     entry ./pageB pageB
      + 4 hidden chunk modules
-chunk {351} commons.js (commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
+chunk commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
     > ./pageA pageA
     > ./pageB pageB
- [543] ./common.js 26 bytes {351} [built]
-       cjs require ./common [52] ./shared.js 1:13-32
-       cjs require ./common [366] ./pageA.js 1:13-32
-       cjs require ./common [588] ./pageB.js 1:13-32
-chunk {424} pageA.js (pageA) 105 bytes (javascript) 5.08 KiB (runtime) [entry] [rendered]
+ ./common.js 26 bytes [built]
+     cjs require ./common ./shared.js 1:13-32
+     cjs require ./common ./pageA.js 1:13-32
+     cjs require ./common ./pageB.js 1:13-32
+chunk pageA.js (pageA) 105 bytes (javascript) 5.08 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
- [366] ./pageA.js 105 bytes {424} [built]
-       entry ./pageA pageA
+ ./pageA.js 105 bytes [built]
+     [no exports used]
+     entry ./pageA pageA
      + 4 hidden chunk modules
 ```

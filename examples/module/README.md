@@ -43,7 +43,7 @@ export function reset() {
   !*** ./example.js + 2 modules ***!
   \********************************/
 /*! exports [not provided] [unused] */
-/*! runtime requirements: supports-symbols-deconflicting */
+/*! runtime requirements:  */
 
 // CONCATENATED MODULE: ./counter.js
 let value = 0;
@@ -86,13 +86,13 @@ let o=0;function n(){o++}const c=o=>console.log(o);c(o),n(),n(),n(),c(o),c(o=0);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset       Size  Chunks             Chunk Names
-output.js  621 bytes     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset       Size
+output.js  591 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {0} output.js (main) 429 bytes [entry] [rendered]
+chunk output.js (main) 429 bytes [entry] [rendered]
     > ./example.js main
- [0] ./example.js + 2 modules 429 bytes {0} [built]
+ ./example.js + 2 modules 429 bytes [built]
      [no exports]
      [no exports used]
      entry ./example.js main
@@ -103,15 +103,15 @@ chunk {0} output.js (main) 429 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-    Asset      Size  Chunks             Chunk Names
-output.js  80 bytes   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset      Size
+output.js  80 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 429 bytes [entry] [rendered]
+chunk output.js (main) 429 bytes [entry] [rendered]
     > ./example.js main
- [291] ./example.js + 2 modules 429 bytes {179} [built]
-       [no exports]
-       [no exports used]
-       entry ./example.js main
-       used a library export
+ ./example.js + 2 modules 429 bytes [built]
+     [no exports]
+     [no exports used]
+     entry ./example.js main
+     used a library export
 ```

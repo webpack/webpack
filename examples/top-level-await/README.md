@@ -125,61 +125,17 @@ When compiling for other targets like node.js, electron or WebWorkers, it may be
 # dist/output.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/ 	// initialize runtime
-/******/ 	runtime(__webpack_require__);
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Actions_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Actions.js */ 1);
 
@@ -197,10 +153,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! export AlternativeCreateUserAction [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export CreateUserAction [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.e, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.e, __webpack_require__, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "CreateUserAction": () => /* binding */ CreateUserAction,
@@ -236,15 +191,38 @@ const AlternativeCreateUserAction = async name => {
 
 
 /***/ })
-/******/ ],
-```
-
-<details><summary><code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code></summary>
-
-``` js
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ 	"use strict";
-/******/ 
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
@@ -419,12 +397,14 @@ const AlternativeCreateUserAction = async name => {
 /******/ 		var parentJsonpFunction = oldJsonpFunction;
 /******/ 	}();
 /******/ 	
-/******/ }
-);
+/************************************************************************/
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__(0);
+/******/ 	// This entry module used 'exports' so it can't be inlined
+/******/ })()
+;
 ```
-
-</details>
-
 
 # dist/497.output.js
 
@@ -438,7 +418,7 @@ const AlternativeCreateUserAction = async name => {
   \********************/
 /*! export createUser [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__, __webpack_require__.d */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -468,7 +448,7 @@ return __webpack_exports__;
 /*! export close [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export dbCall [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__.d, __webpack_require__ */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__.d, __webpack_require__.* */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -505,7 +485,7 @@ return __webpack_exports__;
 ## in production mode:
 
 ```javascript
-(window.webpackJsonp=window.webpackJsonp||[]).push([[497],{447:(a,e,s)=>{"use strict";a.exports=(async()=>{s.d(e,{d:()=>a});await(async a=>{await new Promise(a=>setTimeout(a,1e3))})();const a=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");return e})()},497:(a,e,s)=>{"use strict";a.exports=(async()=>{s.r(e),s.d(e,{createUser:()=>t});var a=s(447);a=await Promise.resolve(a);const t=async e=>{command=`CREATE USER ${e}`,await(0,a.d)({command:command})};return e})()}}]);
+(window.webpackJsonp=window.webpackJsonp||[]).push([[497],{447:(a,e,s)=>{"use strict";a.exports=(async()=>{s.d(e,{d:()=>a});await(async a=>{await new Promise(a=>setTimeout(a,1e3))})();const a=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");return e})()},497:(a,e,s)=>{"use strict";a.exports=(async()=>{s.r(e),s.d(e,{createUser:()=>t});var a=s(447);a=await Promise.resolve(a);const t=async e=>{command=`CREATE USER ${e}`,await(0,a.d)({command})};return e})()}}]);
 ```
 
 # Info
@@ -514,63 +494,64 @@ return __webpack_exports__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-        Asset      Size  Chunks             Chunk Names
-497.output.js  2.45 KiB   {497}  [emitted]
-    output.js  11.2 KiB   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+        Asset      Size
+497.output.js  2.48 KiB  [emitted]
+    output.js  11.2 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 1.19 KiB (javascript) 4.75 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 1.19 KiB (javascript) 4.75 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [0] ./example.js 103 bytes {179} [built]
+ ./Actions.js 1.09 KiB [built]
+     [exports: AlternativeCreateUserAction, CreateUserAction]
+     [used exports unknown]
+     harmony side effect evaluation ./Actions.js ./example.js 1:0-48
+     harmony import specifier ./Actions.js ./example.js 4:7-23
+ ./example.js 103 bytes [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
- [1] ./Actions.js 1.09 KiB {179} [built]
-     [exports: AlternativeCreateUserAction, CreateUserAction]
-     [used exports unknown]
-     harmony side effect evaluation ./Actions.js [0] ./example.js 1:0-48
-     harmony import specifier ./Actions.js [0] ./example.js 4:7-23
      + 6 hidden chunk modules
-chunk {497} 497.output.js 622 bytes [rendered]
-    > ./UserApi.js [1] ./Actions.js 22:30-52
-    > ./UserApi.js [1] ./Actions.js 2:16-38
- [2] ./UserApi.js 220 bytes {497} [built]
+chunk 497.output.js 622 bytes [rendered]
+    > ./UserApi.js ./Actions.js 22:30-52
+    > ./UserApi.js ./Actions.js 2:16-38
+ ./UserApi.js 220 bytes [built]
      [exports: createUser]
      [used exports unknown]
-     import() ./UserApi.js [1] ./Actions.js 2:16-38
-     import() ./UserApi.js [1] ./Actions.js 22:30-52
- [3] ./db-connection.js 402 bytes {497} [built]
+     import() ./UserApi.js ./Actions.js 2:16-38
+     import() ./UserApi.js ./Actions.js 22:30-52
+ ./db-connection.js 402 bytes [built]
      [exports: close, dbCall]
      [used exports unknown]
-     harmony side effect evaluation ./db-connection.js [2] ./UserApi.js 1:0-50
-     harmony import specifier ./db-connection.js [2] ./UserApi.js 6:7-13
+     harmony side effect evaluation ./db-connection.js ./UserApi.js 1:0-50
+     harmony import specifier ./db-connection.js ./UserApi.js 6:7-13
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-        Asset       Size  Chunks             Chunk Names
-497.output.js  485 bytes   {497}  [emitted]
-    output.js   1.86 KiB   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+        Asset       Size
+497.output.js  477 bytes  [emitted]
+    output.js   1.81 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 1.19 KiB (javascript) 4.75 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 1.19 KiB (javascript) 4.75 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [978] ./example.js + 1 modules 1.19 KiB {179} [built]
-       [no exports]
-       entry ./example.js main
+ ./example.js + 1 modules 1.19 KiB [built]
+     [no exports]
+     [no exports used]
+     entry ./example.js main
      + 6 hidden chunk modules
-chunk {497} 497.output.js 622 bytes [rendered]
+chunk 497.output.js 622 bytes [rendered]
     > ./UserApi.js ./Actions.js 22:30-52
     > ./UserApi.js ./Actions.js 2:16-38
- [447] ./db-connection.js 402 bytes {497} [built]
-       [exports: close, dbCall]
-       [only some exports used: dbCall]
-       harmony side effect evaluation ./db-connection.js [497] ./UserApi.js 1:0-50
-       harmony import specifier ./db-connection.js [497] ./UserApi.js 6:7-13
- [497] ./UserApi.js 220 bytes {497} [built]
-       [exports: createUser]
-       import() ./UserApi.js [978] ./example.js + 1 modules ./Actions.js 2:16-38
-       import() ./UserApi.js [978] ./example.js + 1 modules ./Actions.js 22:30-52
+ ./UserApi.js 220 bytes [built]
+     [exports: createUser]
+     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 2:16-38
+     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 22:30-52
+ ./db-connection.js 402 bytes [built]
+     [exports: close, dbCall]
+     [only some exports used: dbCall]
+     harmony side effect evaluation ./db-connection.js ./UserApi.js 1:0-50
+     harmony import specifier ./db-connection.js ./UserApi.js 6:7-13
 ```

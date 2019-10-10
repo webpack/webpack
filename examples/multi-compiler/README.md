@@ -48,120 +48,24 @@ module.exports = [
 # dist/desktop.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
+/******/ (() => { // webpackBootstrap
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements:  */
-/***/ (() => {
-
 if(false) {}
 console.log("Running " + "desktop" + " build");
-
-/***/ })
-/******/ ]);
+/******/ })()
+;
 ```
 
 # dist/mobile.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__ */
-/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
-
-if(true) {
-	__webpack_require__(/*! ./mobile-stuff */ 1);
-}
-console.log("Running " + "mobile" + " build");
-
-/***/ }),
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
 /* 1 */
 /*!*************************!*\
   !*** ./mobile-stuff.js ***!
@@ -173,7 +77,48 @@ console.log("Running " + "mobile" + " build");
 // mobile only stuff
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+!function() {
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__ */
+if(true) {
+	__webpack_require__(/*! ./mobile-stuff */ 1);
+}
+console.log("Running " + "mobile" + " build");
+}();
+/******/ })()
+;
 ```
 
 # Info
@@ -182,28 +127,28 @@ console.log("Running " + "mobile" + " build");
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
+Version: webpack 5.0.0-alpha.31
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-        Asset      Size  Chunks             Chunk Names
-    mobile.js  1.86 KiB     {0}  [emitted]  main
+        Asset      Size
+    mobile.js  1.67 KiB  [emitted]  [name: main]
     Entrypoint main = mobile.js
-    chunk {0} mobile.js (main) 114 bytes [entry] [rendered]
+    chunk mobile.js (main) 114 bytes [entry] [rendered]
         > ./example main
-     [0] ./example.js 94 bytes {0} [built]
+     ./example.js 94 bytes [built]
          [used exports unknown]
          entry ./example main
-     [1] ./mobile-stuff.js 20 bytes {0} [built]
+     ./mobile-stuff.js 20 bytes [built]
          [used exports unknown]
-         cjs require ./mobile-stuff [0] ./example.js 2:1-26
+         cjs require ./mobile-stuff ./example.js 2:1-26
 Child desktop:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-         Asset     Size  Chunks             Chunk Names
-    desktop.js  1.5 KiB     {0}  [emitted]  main
+         Asset       Size
+    desktop.js  287 bytes  [emitted]  [name: main]
     Entrypoint main = desktop.js
-    chunk {0} desktop.js (main) 94 bytes [entry] [rendered]
+    chunk desktop.js (main) 94 bytes [entry] [rendered]
         > ./example main
-     [0] ./example.js 94 bytes {0} [built]
+     ./example.js 94 bytes [built]
          [used exports unknown]
          entry ./example main
 ```
@@ -212,25 +157,27 @@ Child desktop:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
+Version: webpack 5.0.0-alpha.31
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-        Asset       Size  Chunks             Chunk Names
-    mobile.js  231 bytes   {179}  [emitted]  main
+        Asset       Size
+    mobile.js  196 bytes  [emitted]  [name: main]
     Entrypoint main = mobile.js
-    chunk {179} mobile.js (main) 114 bytes [entry] [rendered]
+    chunk mobile.js (main) 114 bytes [entry] [rendered]
         > ./example main
-     [144] ./example.js 94 bytes {179} [built]
-           entry ./example main
-     [791] ./mobile-stuff.js 20 bytes {179} [built]
-           cjs require ./mobile-stuff [144] ./example.js 2:1-26
+     ./example.js 94 bytes [built]
+         [no exports used]
+         entry ./example main
+     ./mobile-stuff.js 20 bytes [built]
+         cjs require ./mobile-stuff ./example.js 2:1-26
 Child desktop:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-         Asset       Size  Chunks             Chunk Names
-    desktop.js  209 bytes   {179}  [emitted]  main
+         Asset      Size
+    desktop.js  37 bytes  [emitted]  [name: main]
     Entrypoint main = desktop.js
-    chunk {179} desktop.js (main) 94 bytes [entry] [rendered]
+    chunk desktop.js (main) 94 bytes [entry] [rendered]
         > ./example main
-     [144] ./example.js 94 bytes {179} [built]
-           entry ./example main
+     ./example.js 94 bytes [built]
+         [no exports used]
+         entry ./example main
 ```

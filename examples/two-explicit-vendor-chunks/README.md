@@ -37,47 +37,8 @@ module.exports = {
 # dist/vendor1.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
   !*** ./vendor1.js ***!
@@ -89,53 +50,48 @@ module.exports = {
 module.exports = "Vendor1";
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	__webpack_require__(0);
+/******/ })()
+;
 ```
 
 # dist/vendor2.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(1);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
   !*** ./vendor1.js ***!
@@ -153,60 +109,55 @@ module.exports = "Vendor1";
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unusedexports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = "Vendor2";
 __webpack_require__(/*! ./vendor1 */ 0);
 
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	__webpack_require__(1);
+/******/ })()
+;
 ```
 
 # dist/pageA.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(2);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
   !*** ./vendor1.js ***!
@@ -224,7 +175,7 @@ module.exports = "Vendor1";
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unusedexports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = "Vendor2";
 __webpack_require__(/*! ./vendor1 */ 0);
@@ -237,7 +188,7 @@ __webpack_require__(/*! ./vendor1 */ 0);
   \******************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unusedexports, __webpack_require__) => {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = "pageA";
 __webpack_require__(/*! ./vendor1 */ 0);
@@ -245,7 +196,41 @@ __webpack_require__(/*! ./vendor2 */ 1);
 
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__(2);
+/******/ 	// This entry module used 'module' so it can't be inlined
+/******/ })()
+;
 ```
 
 # Info
@@ -254,58 +239,58 @@ __webpack_require__(/*! ./vendor2 */ 1);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-     Asset      Size  Chunks             Chunk Names
-  pageA.js   2.2 KiB     {2}  [emitted]  pageA
-  pageB.js  1.48 KiB     {3}  [emitted]  pageB
-  pageC.js  1.48 KiB     {4}  [emitted]  pageC
-vendor1.js  1.48 KiB     {0}  [emitted]  vendor1
-vendor2.js  1.82 KiB     {1}  [emitted]  vendor2
+Version: webpack 5.0.0-alpha.31
+     Asset      Size
+  pageA.js  2.24 KiB  [emitted]  [name: pageA]
+  pageB.js   1.5 KiB  [emitted]  [name: pageB]
+  pageC.js   1.5 KiB  [emitted]  [name: pageC]
+vendor1.js  1.52 KiB  [emitted]  [name: vendor1]
+vendor2.js  1.87 KiB  [emitted]  [name: vendor2]
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor2.js
 Entrypoint pageA = pageA.js
 Entrypoint pageB = pageB.js
 Entrypoint pageC = pageC.js
-chunk {0} vendor1.js (vendor1) 27 bytes [entry] [rendered]
+chunk vendor1.js (vendor1) 27 bytes [entry] [rendered]
     > ./vendor1 vendor1
- [0] ./vendor1.js 27 bytes {0} {1} {2} [built]
+ ./vendor1.js 27 bytes [built]
      [used exports unknown]
-     cjs require ./vendor1 [1] ./vendor2.js 2:0-20
-     cjs require ./vendor1 [2] ./pageA.js 2:0-20
+     cjs require ./vendor1 ./vendor2.js 2:0-20
+     cjs require ./vendor1 ./pageA.js 2:0-20
      entry ./vendor1 vendor1
-chunk {1} vendor2.js (vendor2) 77 bytes [entry] [rendered]
+chunk vendor2.js (vendor2) 77 bytes [entry] [rendered]
     > ./vendor2 vendor2
- [0] ./vendor1.js 27 bytes {0} {1} {2} [built]
+ ./vendor1.js 27 bytes [built]
      [used exports unknown]
-     cjs require ./vendor1 [1] ./vendor2.js 2:0-20
-     cjs require ./vendor1 [2] ./pageA.js 2:0-20
+     cjs require ./vendor1 ./vendor2.js 2:0-20
+     cjs require ./vendor1 ./pageA.js 2:0-20
      entry ./vendor1 vendor1
- [1] ./vendor2.js 50 bytes {1} {2} [built]
+ ./vendor2.js 50 bytes [built]
      [used exports unknown]
-     cjs require ./vendor2 [2] ./pageA.js 3:0-20
+     cjs require ./vendor2 ./pageA.js 3:0-20
      entry ./vendor2 vendor2
-chunk {2} pageA.js (pageA) 147 bytes [entry] [rendered]
+chunk pageA.js (pageA) 147 bytes [entry] [rendered]
     > ./pageA pageA
- [0] ./vendor1.js 27 bytes {0} {1} {2} [built]
-     [used exports unknown]
-     cjs require ./vendor1 [1] ./vendor2.js 2:0-20
-     cjs require ./vendor1 [2] ./pageA.js 2:0-20
-     entry ./vendor1 vendor1
- [1] ./vendor2.js 50 bytes {1} {2} [built]
-     [used exports unknown]
-     cjs require ./vendor2 [2] ./pageA.js 3:0-20
-     entry ./vendor2 vendor2
- [2] ./pageA.js 70 bytes {2} [built]
+ ./pageA.js 70 bytes [built]
      [used exports unknown]
      entry ./pageA pageA
-chunk {3} pageB.js (pageB) 25 bytes [entry] [rendered]
+ ./vendor1.js 27 bytes [built]
+     [used exports unknown]
+     cjs require ./vendor1 ./vendor2.js 2:0-20
+     cjs require ./vendor1 ./pageA.js 2:0-20
+     entry ./vendor1 vendor1
+ ./vendor2.js 50 bytes [built]
+     [used exports unknown]
+     cjs require ./vendor2 ./pageA.js 3:0-20
+     entry ./vendor2 vendor2
+chunk pageB.js (pageB) 25 bytes [entry] [rendered]
     > ./pageB pageB
- [3] ./pageB.js 25 bytes {3} [built]
+ ./pageB.js 25 bytes [built]
      [used exports unknown]
      entry ./pageB pageB
-chunk {4} pageC.js (pageC) 25 bytes [entry] [rendered]
+chunk pageC.js (pageC) 25 bytes [entry] [rendered]
     > ./pageC pageC
- [4] ./pageC.js 25 bytes {4} [built]
+ ./pageC.js 25 bytes [built]
      [used exports unknown]
      entry ./pageC pageC
 ```
@@ -314,50 +299,53 @@ chunk {4} pageC.js (pageC) 25 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-     Asset       Size               Chunks             Chunk Names
-  pageA.js  280 bytes  {374}, {424}, {971}  [emitted]  pageA
-  pageB.js  189 bytes                {121}  [emitted]  pageB
-  pageC.js  189 bytes                {178}  [emitted]  pageC
-vendor1.js  191 bytes                {971}  [emitted]  vendor1
-vendor2.js  233 bytes         {374}, {971}  [emitted]  vendor2
+Version: webpack 5.0.0-alpha.31
+     Asset       Size
+  pageA.js  267 bytes  [emitted]  [name: pageA]
+  pageB.js  176 bytes  [emitted]  [name: pageB]
+  pageC.js  176 bytes  [emitted]  [name: pageC]
+vendor1.js  178 bytes  [emitted]  [name: vendor1]
+vendor2.js  220 bytes  [emitted]  [name: vendor2]
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor2.js
 Entrypoint pageA = pageA.js
 Entrypoint pageB = pageB.js
 Entrypoint pageC = pageC.js
-chunk {121} pageB.js (pageB) 25 bytes [entry] [rendered]
+chunk pageB.js (pageB) 25 bytes [entry] [rendered]
     > ./pageB pageB
- [588] ./pageB.js 25 bytes {121} [built]
-       entry ./pageB pageB
-chunk {178} pageC.js (pageC) 25 bytes [entry] [rendered]
+ ./pageB.js 25 bytes [built]
+     [no exports used]
+     entry ./pageB pageB
+chunk pageC.js (pageC) 25 bytes [entry] [rendered]
     > ./pageC pageC
- [145] ./pageC.js 25 bytes {178} [built]
-       entry ./pageC pageC
-chunk {374} vendor2.js (vendor2) 77 bytes [entry] [rendered]
+ ./pageC.js 25 bytes [built]
+     [no exports used]
+     entry ./pageC pageC
+chunk vendor2.js (vendor2) 77 bytes [entry] [rendered]
     > ./vendor2 vendor2
- [117] ./vendor2.js 50 bytes {374} {424} [built]
-       cjs require ./vendor2 [366] ./pageA.js 3:0-20
-       entry ./vendor2 vendor2
- [466] ./vendor1.js 27 bytes {374} {424} {971} [built]
-       cjs require ./vendor1 [117] ./vendor2.js 2:0-20
-       cjs require ./vendor1 [366] ./pageA.js 2:0-20
-       entry ./vendor1 vendor1
-chunk {424} pageA.js (pageA) 147 bytes [entry] [rendered]
+ ./vendor1.js 27 bytes [built]
+     cjs require ./vendor1 ./vendor2.js 2:0-20
+     cjs require ./vendor1 ./pageA.js 2:0-20
+     entry ./vendor1 vendor1
+ ./vendor2.js 50 bytes [built]
+     cjs require ./vendor2 ./pageA.js 3:0-20
+     entry ./vendor2 vendor2
+chunk pageA.js (pageA) 147 bytes [entry] [rendered]
     > ./pageA pageA
- [117] ./vendor2.js 50 bytes {374} {424} [built]
-       cjs require ./vendor2 [366] ./pageA.js 3:0-20
-       entry ./vendor2 vendor2
- [366] ./pageA.js 70 bytes {424} [built]
-       entry ./pageA pageA
- [466] ./vendor1.js 27 bytes {374} {424} {971} [built]
-       cjs require ./vendor1 [117] ./vendor2.js 2:0-20
-       cjs require ./vendor1 [366] ./pageA.js 2:0-20
-       entry ./vendor1 vendor1
-chunk {971} vendor1.js (vendor1) 27 bytes [entry] [rendered]
+ ./pageA.js 70 bytes [built]
+     [no exports used]
+     entry ./pageA pageA
+ ./vendor1.js 27 bytes [built]
+     cjs require ./vendor1 ./vendor2.js 2:0-20
+     cjs require ./vendor1 ./pageA.js 2:0-20
+     entry ./vendor1 vendor1
+ ./vendor2.js 50 bytes [built]
+     cjs require ./vendor2 ./pageA.js 3:0-20
+     entry ./vendor2 vendor2
+chunk vendor1.js (vendor1) 27 bytes [entry] [rendered]
     > ./vendor1 vendor1
- [466] ./vendor1.js 27 bytes {374} {424} {971} [built]
-       cjs require ./vendor1 [117] ./vendor2.js 2:0-20
-       cjs require ./vendor1 [366] ./pageA.js 2:0-20
-       entry ./vendor1 vendor1
+ ./vendor1.js 27 bytes [built]
+     cjs require ./vendor1 ./vendor2.js 2:0-20
+     cjs require ./vendor1 ./pageA.js 2:0-20
+     entry ./vendor1 vendor1
 ```

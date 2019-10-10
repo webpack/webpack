@@ -27,61 +27,20 @@ module.exports = {
 	else
 		root["MyLibrary"] = factory();
 })(window, function() {
-return /******/ ((modules, runtime) => { // webpackBootstrap
+return /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/ 	// initialize runtime
-/******/ 	runtime(__webpack_require__);
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export increment [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export value [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! export default [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! export increment [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! export value [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "value": () => /* binding */ value,
@@ -96,10 +55,35 @@ function increment() {
 
 
 /***/ })
-/******/ ],
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ 	"use strict";
-/******/ 
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
@@ -124,8 +108,13 @@ function increment() {
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ }
-);
+/************************************************************************/
+/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })()
+;
 });
 ```
 
@@ -135,16 +124,16 @@ function increment() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-           Asset      Size  Chunks             Chunk Names
-MyLibrary.umd.js  3.83 KiB     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+           Asset      Size
+MyLibrary.umd.js  3.83 KiB  [emitted]  [name: main]
 Entrypoint main = MyLibrary.umd.js
-chunk {0} MyLibrary.umd.js (main) 92 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
+chunk MyLibrary.umd.js (main) 92 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
     > ./example main
- [0] ./example.js 92 bytes {0} [built]
+ ./example.js 92 bytes [built]
      [exports: default, increment, value]
-     [used exports unknown]
      entry ./example main
+     used a library export
      + 2 hidden chunk modules
 ```
 
@@ -152,14 +141,15 @@ chunk {0} MyLibrary.umd.js (main) 92 bytes (javascript) 632 bytes (runtime) [ent
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-           Asset       Size  Chunks             Chunk Names
-MyLibrary.umd.js  854 bytes   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+           Asset       Size
+MyLibrary.umd.js  837 bytes  [emitted]  [name: main]
 Entrypoint main = MyLibrary.umd.js
-chunk {179} MyLibrary.umd.js (main) 92 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
+chunk MyLibrary.umd.js (main) 92 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
     > ./example main
- [144] ./example.js 92 bytes {179} [built]
-       [exports: default, increment, value]
-       entry ./example main
+ ./example.js 92 bytes [built]
+     [exports: default, increment, value]
+     entry ./example main
+     used a library export
      + 2 hidden chunk modules
 ```

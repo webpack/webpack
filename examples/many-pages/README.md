@@ -52,22 +52,22 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-   Asset       Size  Chunks             Chunk Names
-  115.js  168 bytes   {115}  [emitted]
-  402.js  115 bytes   {402}  [emitted]
-  497.js  115 bytes   {497}  [emitted]
-  505.js  144 bytes   {505}  [emitted]
-  730.js  115 bytes   {730}  [emitted]
-  777.js  115 bytes   {777}  [emitted]
-  833.js  168 bytes   {833}  [emitted]
-pageA.js   1.31 KiB   {424}  [emitted]  pageA
-pageB.js   1.39 KiB   {121}  [emitted]  pageB
-pageC.js   1.39 KiB   {178}  [emitted]  pageC
-pageD.js   1.32 KiB   {568}  [emitted]  pageD
-pageE.js    1.3 KiB   {356}  [emitted]  pageE
-pageF.js   1.32 KiB   {789}  [emitted]  pageF
-pageG.js   1.28 KiB   {547}  [emitted]  pageG
+Version: webpack 5.0.0-alpha.31
+   Asset       Size
+  115.js  168 bytes  [emitted]  [id hint: vendors]
+  402.js  115 bytes  [emitted]  [id hint: vendors]
+  497.js  115 bytes  [emitted]  [id hint: vendors]
+  505.js  144 bytes  [emitted]
+  730.js  115 bytes  [emitted]  [id hint: vendors]
+  777.js  115 bytes  [emitted]  [id hint: vendors]
+  833.js  168 bytes  [emitted]  [id hint: vendors]
+pageA.js   1.13 KiB  [emitted]  [name: pageA]
+pageB.js    1.2 KiB  [emitted]  [name: pageB]
+pageC.js    1.2 KiB  [emitted]  [name: pageC]
+pageD.js   1.13 KiB  [emitted]  [name: pageD]
+pageE.js   1.11 KiB  [emitted]  [name: pageE]
+pageF.js   1.13 KiB  [emitted]  [name: pageF]
+pageG.js   1.09 KiB  [emitted]  [name: pageG]
 Entrypoint pageA = 115.js 730.js 505.js pageA.js
 Entrypoint pageB = 115.js 497.js pageB.js
 Entrypoint pageC = 115.js 402.js pageC.js
@@ -75,76 +75,76 @@ Entrypoint pageD = 777.js 833.js 505.js pageD.js
 Entrypoint pageE = 777.js 833.js pageE.js
 Entrypoint pageF = 777.js 833.js 505.js pageF.js
 Entrypoint pageG = 777.js pageG.js
-chunk {115} 115.js 86 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
+chunk 115.js (id hint: vendors) 86 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./pages/a pageA
     > ./pages/b pageB
     > ./pages/c pageC
- [394] ./node_modules/m1.js 43 bytes {115} [built]
- [947] ./node_modules/m2.js 43 bytes {115} [built]
-chunk {121} pageB.js (pageB) 199 bytes (javascript) 3.2 KiB (runtime) [entry] [rendered]
+ ./node_modules/m1.js 43 bytes [built]
+ ./node_modules/m2.js 43 bytes [built]
+chunk pageB.js (pageB) 199 bytes (javascript) 2.93 KiB (runtime) [entry] [rendered]
     > ./pages/b pageB
-   [8] ./pages/b.js 106 bytes {121} [built]
- [175] ./stuff/s8.js 31 bytes {121} [built]
- [354] ./stuff/s1.js 31 bytes {121} {547} {568} {789} [built]
- [707] ./stuff/s7.js 31 bytes {121} {356} [built]
-     + 4 hidden chunk modules
-chunk {178} pageC.js (pageC) 199 bytes (javascript) 3.2 KiB (runtime) [entry] [rendered]
+ ./pages/b.js 106 bytes [built]
+ ./stuff/s1.js 31 bytes [built]
+ ./stuff/s7.js 31 bytes [built]
+ ./stuff/s8.js 31 bytes [built]
+     + 3 hidden chunk modules
+chunk pageC.js (pageC) 199 bytes (javascript) 2.94 KiB (runtime) [entry] [rendered]
     > ./pages/c pageC
-  [33] ./stuff/s4.js 31 bytes {178} {424} [built]
- [178] ./stuff/s5.js 31 bytes {178} [built]
- [324] ./pages/c.js 106 bytes {178} [built]
- [377] ./stuff/s6.js 31 bytes {178} [built]
-     + 4 hidden chunk modules
-chunk {356} pageE.js (pageE) 93 bytes (javascript) 3.2 KiB (runtime) [entry] [rendered]
+ ./pages/c.js 106 bytes [built]
+ ./stuff/s4.js 31 bytes [built]
+ ./stuff/s5.js 31 bytes [built]
+ ./stuff/s6.js 31 bytes [built]
+     + 3 hidden chunk modules
+chunk pageE.js (pageE) 93 bytes (javascript) 2.94 KiB (runtime) [entry] [rendered]
     > ./pages/e pageE
- [238] ./pages/e.js 62 bytes {356} [built]
- [707] ./stuff/s7.js 31 bytes {121} {356} [built]
-     + 4 hidden chunk modules
-chunk {402} 402.js 43 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
+ ./pages/e.js 62 bytes [built]
+ ./stuff/s7.js 31 bytes [built]
+     + 3 hidden chunk modules
+chunk 402.js (id hint: vendors) 43 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./pages/c pageC
- [402] ./node_modules/m5.js 43 bytes {402} [built]
-chunk {424} pageA.js (pageA) 137 bytes (javascript) 3.21 KiB (runtime) [entry] [rendered]
+ ./node_modules/m5.js 43 bytes [built]
+chunk pageA.js (pageA) 137 bytes (javascript) 2.94 KiB (runtime) [entry] [rendered]
     > ./pages/a pageA
-  [33] ./stuff/s4.js 31 bytes {178} {424} [built]
- [473] ./pages/a.js 106 bytes {424} [built]
-     + 4 hidden chunk modules
-chunk {497} 497.js 43 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
+ ./pages/a.js 106 bytes [built]
+ ./stuff/s4.js 31 bytes [built]
+     + 3 hidden chunk modules
+chunk 497.js (id hint: vendors) 43 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./pages/b pageB
- [497] ./node_modules/m4.js 43 bytes {497} [built]
-chunk {505} 505.js 62 bytes [initial] [rendered] split chunk (cache group: default)
+ ./node_modules/m4.js 43 bytes [built]
+chunk 505.js 62 bytes [initial] [rendered] split chunk (cache group: default)
     > ./pages/a pageA
     > ./pages/d pageD
     > ./pages/f pageF
- [584] ./stuff/s3.js 31 bytes {505} [built]
- [742] ./stuff/s2.js 31 bytes {505} [built]
-chunk {547} pageG.js (pageG) 67 bytes (javascript) 3.2 KiB (runtime) [entry] [rendered]
+ ./stuff/s2.js 31 bytes [built]
+ ./stuff/s3.js 31 bytes [built]
+chunk pageG.js (pageG) 67 bytes (javascript) 2.93 KiB (runtime) [entry] [rendered]
     > ./pages/g pageG
- [354] ./stuff/s1.js 31 bytes {121} {547} {568} {789} [built]
- [677] ./pages/g.js 36 bytes {547} [built]
-     + 4 hidden chunk modules
-chunk {568} pageD.js (pageD) 137 bytes (javascript) 3.21 KiB (runtime) [entry] [rendered]
+ ./pages/g.js 36 bytes [built]
+ ./stuff/s1.js 31 bytes [built]
+     + 3 hidden chunk modules
+chunk pageD.js (pageD) 137 bytes (javascript) 2.94 KiB (runtime) [entry] [rendered]
     > ./pages/d pageD
- [354] ./stuff/s1.js 31 bytes {121} {547} {568} {789} [built]
- [901] ./pages/d.js 106 bytes {568} [built]
-     + 4 hidden chunk modules
-chunk {730} 730.js 43 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
+ ./pages/d.js 106 bytes [built]
+ ./stuff/s1.js 31 bytes [built]
+     + 3 hidden chunk modules
+chunk 730.js (id hint: vendors) 43 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./pages/a pageA
- [730] ./node_modules/m3.js 43 bytes {730} [built]
-chunk {777} 777.js 43 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
+ ./node_modules/m3.js 43 bytes [built]
+chunk 777.js (id hint: vendors) 43 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./pages/d pageD
     > ./pages/e pageE
     > ./pages/f pageF
     > ./pages/g pageG
- [777] ./node_modules/m6.js 43 bytes {777} [built]
-chunk {789} pageF.js (pageF) 137 bytes (javascript) 3.21 KiB (runtime) [entry] [rendered]
+ ./node_modules/m6.js 43 bytes [built]
+chunk pageF.js (pageF) 137 bytes (javascript) 2.94 KiB (runtime) [entry] [rendered]
     > ./pages/f pageF
- [247] ./pages/f.js 106 bytes {789} [built]
- [354] ./stuff/s1.js 31 bytes {121} {547} {568} {789} [built]
-     + 4 hidden chunk modules
-chunk {833} 833.js 86 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
+ ./pages/f.js 106 bytes [built]
+ ./stuff/s1.js 31 bytes [built]
+     + 3 hidden chunk modules
+chunk 833.js (id hint: vendors) 86 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./pages/d pageD
     > ./pages/e pageE
     > ./pages/f pageF
- [502] ./node_modules/m7.js 43 bytes {833} [built]
- [848] ./node_modules/m8.js 43 bytes {833} [built]
+ ./node_modules/m7.js 43 bytes [built]
+ ./node_modules/m8.js 43 bytes [built]
 ```

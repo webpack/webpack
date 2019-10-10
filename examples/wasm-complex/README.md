@@ -70,55 +70,14 @@ export const memory = await getMemoryFromParentInWorker();
 # dist/output.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/ 	// initialize runtime
-/******/ 	runtime(__webpack_require__);
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__ */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__, __webpack_require__.* */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -152,7 +111,7 @@ return __webpack_exports__;
 /*! export getNumber [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export set [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__, __webpack_require__.d */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -180,7 +139,7 @@ return __webpack_exports__;
 /*! export getNumber [provided] [no usage info] [provision prevents renaming (no use info)] */
 /*! export set [provided] [no usage info] [provision prevents renaming (no use info)] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: module, __webpack_exports__, __webpack_require__.v, __webpack_require__ */
+/*! runtime requirements: module, __webpack_exports__, __webpack_require__.v, __webpack_require__, __webpack_require__.* */
 /***/ ((module, exports, __webpack_require__) => {
 
 /* harmony import */ var WEBPACK_IMPORTED_MODULE_0 = __webpack_require__(/*! ./memory.js */ 3);
@@ -203,7 +162,7 @@ module.exports = Promise.resolve(WEBPACK_IMPORTED_MODULE_0).then(function(WEBPAC
   \*******************/
 /*! export memory [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__.d, __webpack_require__ */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__.d, __webpack_require__.* */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -231,8 +190,8 @@ return __webpack_exports__;
 /*! export getNumber [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export getRandomNumber [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -250,15 +209,35 @@ function getRandomNumber() {
 
 
 /***/ })
-/******/ ],
-```
-
-<details><summary><code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code></summary>
-
-``` js
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ 	"use strict";
-/******/ 
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
@@ -303,12 +282,14 @@ function getRandomNumber() {
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ }
-);
+/************************************************************************/
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__(0);
+/******/ 	// This entry module used 'module' so it can't be inlined
+/******/ })()
+;
 ```
-
-</details>
-
 
 # Info
 
@@ -316,42 +297,42 @@ function getRandomNumber() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-                           Asset       Size   Chunks                         Chunk Names
-594f5a209057602bfc3f.module.wasm  139 bytes  ({179})  [emitted] [immutable]  (main)
-                       output.js    8.7 KiB    {179}  [emitted]              main
+Version: webpack 5.0.0-alpha.31
+                           Asset       Size
+594f5a209057602bfc3f.module.wasm  139 bytes  [emitted] [immutable]  [name: (main)]
+                       output.js    8.7 KiB  [emitted]              [name: main]
 Entrypoint main = output.js (594f5a209057602bfc3f.module.wasm)
-chunk {179} output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 1.24 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 1.24 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [0] ./example.js 253 bytes {179} [built]
+ ./example.js 253 bytes [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
- [1] ./magic.js 50 bytes {179} [built]
-     [exports: get, getNumber, set]
-     [used exports unknown]
-     harmony side effect evaluation ./magic.js [0] ./example.js 1:0-55
-     harmony import specifier ./magic.js [0] ./example.js 4:12-15
-     harmony import specifier ./magic.js [0] ./example.js 5:0-3
-     harmony import specifier ./magic.js [0] ./example.js 6:12-15
-     harmony import specifier ./magic.js [0] ./example.js 7:0-3
-     harmony import specifier ./magic.js [0] ./example.js 8:12-15
-     harmony import specifier ./magic.js [0] ./example.js 11:12-21
-     harmony import specifier ./magic.js [0] ./example.js 12:12-21
-     harmony import specifier ./magic.js [0] ./example.js 13:12-21
- [2] ./magic.wat 70 bytes (javascript) 139 bytes (webassembly) {179} [built]
-     [exports: get, getNumber, set]
-     [used exports unknown]
-     harmony side effect evaluation ./magic.wat [1] ./magic.js 2:0-34
-     harmony export imported specifier ./magic.wat [1] ./magic.js 2:0-34
- [3] ./memory.js 211 bytes {179} [built]
-     [exports: memory]
-     [used exports unknown]
-     wasm import ./memory.js [2] ./magic.wat
- [4] ./magic-number.js 124 bytes {179} [built]
+ ./magic-number.js 124 bytes [built]
      [exports: getNumber, getRandomNumber]
      [used exports unknown]
-     wasm import ./magic-number.js [2] ./magic.wat
+     wasm import ./magic-number.js ./magic.wat
+ ./magic.js 50 bytes [built]
+     [exports: get, getNumber, set]
+     [used exports unknown]
+     harmony side effect evaluation ./magic.js ./example.js 1:0-55
+     harmony import specifier ./magic.js ./example.js 4:12-15
+     harmony import specifier ./magic.js ./example.js 5:0-3
+     harmony import specifier ./magic.js ./example.js 6:12-15
+     harmony import specifier ./magic.js ./example.js 7:0-3
+     harmony import specifier ./magic.js ./example.js 8:12-15
+     harmony import specifier ./magic.js ./example.js 11:12-21
+     harmony import specifier ./magic.js ./example.js 12:12-21
+     harmony import specifier ./magic.js ./example.js 13:12-21
+ ./magic.wat 70 bytes (javascript) 139 bytes (webassembly) [built]
+     [exports: get, getNumber, set]
+     [used exports unknown]
+     harmony side effect evaluation ./magic.wat ./magic.js 2:0-34
+     harmony export imported specifier ./magic.wat ./magic.js 2:0-34
+ ./memory.js 211 bytes [built]
+     [exports: memory]
+     [used exports unknown]
+     wasm import ./memory.js ./magic.wat
      + 4 hidden chunk modules
 ```
 
@@ -359,40 +340,41 @@ chunk {179} output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 1.24
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-                           Asset       Size   Chunks                         Chunk Names
-4636ea8e62e0734a195f.module.wasm  139 bytes  ({179})  [emitted] [immutable]  (main)
-                       output.js   1.76 KiB    {179}  [emitted]              main
+Version: webpack 5.0.0-alpha.31
+                           Asset       Size
+4636ea8e62e0734a195f.module.wasm  139 bytes  [emitted] [immutable]  [name: (main)]
+                       output.js   1.59 KiB  [emitted]              [name: main]
 Entrypoint main = output.js (4636ea8e62e0734a195f.module.wasm)
-chunk {179} output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 1.24 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 999 bytes (runtime) [entry] [rendered]
     > ./example.js main
-  [69] ./magic.wat 70 bytes (javascript) 139 bytes (webassembly) {179} [built]
-       [exports: get, getNumber, set]
-       [all exports used]
-       harmony side effect evaluation ./magic.wat [555] ./magic.js 2:0-34
-       harmony export imported specifier ./magic.wat [555] ./magic.js 2:0-34
- [115] ./memory.js 211 bytes {179} [built]
-       [exports: memory]
-       [all exports used]
-       wasm import ./memory.js [69] ./magic.wat
- [144] ./example.js 253 bytes {179} [built]
-       [no exports]
-       entry ./example.js main
- [555] ./magic.js 50 bytes {179} [built]
-       [exports: get, getNumber, set]
-       [all exports used]
-       harmony side effect evaluation ./magic.js [144] ./example.js 1:0-55
-       harmony import specifier ./magic.js [144] ./example.js 4:12-15
-       harmony import specifier ./magic.js [144] ./example.js 5:0-3
-       harmony import specifier ./magic.js [144] ./example.js 6:12-15
-       harmony import specifier ./magic.js [144] ./example.js 7:0-3
-       harmony import specifier ./magic.js [144] ./example.js 8:12-15
-       harmony import specifier ./magic.js [144] ./example.js 11:12-21
-       harmony import specifier ./magic.js [144] ./example.js 12:12-21
-       harmony import specifier ./magic.js [144] ./example.js 13:12-21
- [575] ./magic-number.js 124 bytes {179} [built]
-       [exports: getNumber, getRandomNumber]
-       [only some exports used: getRandomNumber]
-       wasm import ./magic-number.js [69] ./magic.wat
-     + 4 hidden chunk modules
+ ./example.js 253 bytes [built]
+     [no exports]
+     [no exports used]
+     entry ./example.js main
+ ./magic-number.js 124 bytes [built]
+     [exports: getNumber, getRandomNumber]
+     [only some exports used: getRandomNumber]
+     wasm import ./magic-number.js ./magic.wat
+ ./magic.js 50 bytes [built]
+     [exports: get, getNumber, set]
+     [all exports used]
+     harmony side effect evaluation ./magic.js ./example.js 1:0-55
+     harmony import specifier ./magic.js ./example.js 4:12-15
+     harmony import specifier ./magic.js ./example.js 5:0-3
+     harmony import specifier ./magic.js ./example.js 6:12-15
+     harmony import specifier ./magic.js ./example.js 7:0-3
+     harmony import specifier ./magic.js ./example.js 8:12-15
+     harmony import specifier ./magic.js ./example.js 11:12-21
+     harmony import specifier ./magic.js ./example.js 12:12-21
+     harmony import specifier ./magic.js ./example.js 13:12-21
+ ./magic.wat 70 bytes (javascript) 139 bytes (webassembly) [built]
+     [exports: get, getNumber, set]
+     [all exports used]
+     harmony side effect evaluation ./magic.wat ./magic.js 2:0-34
+     harmony export imported specifier ./magic.wat ./magic.js 2:0-34
+ ./memory.js 211 bytes [built]
+     [exports: memory]
+     [all exports used]
+     wasm import ./memory.js ./magic.wat
+     + 3 hidden chunk modules
 ```

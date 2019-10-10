@@ -112,88 +112,10 @@ module.exports = {
 # dist/output.js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/ 	// initialize runtime
-/******/ 	runtime(__webpack_require__);
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/*!********************************!*\
-  !*** ./example.js + 2 modules ***!
-  \********************************/
-/*! exports [not provided] [maybe used (runtime-defined)] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.n, __webpack_require__.e, __webpack_require__ */
-/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js (<- Module is referenced from different chunks by these modules: ./lazy.js + 2 modules) */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-
-// EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
-var shared = __webpack_require__(1);
-
-// CONCATENATED MODULE: ./node_modules/a.js
-// module a
-var a = "a";
-
-
-// CONCATENATED MODULE: ./node_modules/b.js
-// module b
-function b_a() {
-	return "b";
-};
-
-// CONCATENATED MODULE: ./example.js
-
-
-
-__webpack_require__.e(/*! import() */ 262).then(__webpack_require__.bind(null, /*! ./lazy */ 2)).then(function(lazy) {
-	console.log(a, b_a(), shared.x, shared.y, lazy.c, lazy.d.a, lazy.x, lazy.y);
-});
-
-
-/***/ }),
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
 /* 1 */
 /*!********************************************!*\
   !*** ./node_modules/shared.js + 1 modules ***!
@@ -201,10 +123,9 @@ __webpack_require__.e(/*! import() */ 262).then(__webpack_require__.bind(null, /
 /*! export x [provided] [used] [can be renamed] */
 /*! export y [provided] [used] [can be renamed] */
 /*! other exports [not provided] [unused] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__ */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 
 // CONCATENATED MODULE: ./node_modules/shared2.js
 // shared2 module
@@ -221,23 +142,48 @@ var x = "x";
 
 
 /***/ })
-/******/ ],
-```
-
-<details><summary><code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code></summary>
-
-``` js
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ 	"use strict";
-/******/ 
-/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	!function() {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		__webpack_require__.f = {};
+/******/ 		// This file contains only the entry chunk.
+/******/ 		// The chunk loading function for additional chunks
+/******/ 		__webpack_require__.e = (chunkId) => {
+/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
+/******/ 				__webpack_require__.f[key](chunkId, promises);
+/******/ 				return promises;
+/******/ 			}, []));
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -254,51 +200,14 @@ var x = "x";
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => module['default'] :
-/******/ 				() => module;
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	!function() {
-/******/ 		__webpack_require__.f = {};
-/******/ 		// This file contains only the entry chunk.
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = (chunkId) => {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 				__webpack_require__.f[key](chunkId, promises);
-/******/ 				return promises;
-/******/ 			}, []));
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/create fake namespace object */
-/******/ 	!function() {
-/******/ 		// create a fake namespace object
-/******/ 		// mode & 1: value is a module id, require it
-/******/ 		// mode & 2: merge all properties of value into the ns
-/******/ 		// mode & 4: return value when already ns object
-/******/ 		// mode & 8|1: behave like require
-/******/ 		__webpack_require__.t = function(value, mode) {
-/******/ 			if(mode & 1) value = this(value);
-/******/ 			if(mode & 8) return value;
-/******/ 			if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 			var ns = Object.create(null);
-/******/ 			__webpack_require__.r(ns);
-/******/ 			Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 			if(mode & 2 && typeof value != 'string') {
-/******/ 				var def = {};
-/******/ 				for(const key in value) def[key] = () => value[key];
-/******/ 				__webpack_require__.d(ns, def);
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
-/******/ 			return ns;
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -439,12 +348,41 @@ var x = "x";
 /******/ 		var parentJsonpFunction = oldJsonpFunction;
 /******/ 	}();
 /******/ 	
-/******/ }
-);
+/************************************************************************/
+!function() {
+/*!********************************!*\
+  !*** ./example.js + 2 modules ***!
+  \********************************/
+/*! exports [not provided] [unused] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.* */
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js (<- Module is referenced from different chunks by these modules: ./lazy.js + 2 modules) */
+
+// EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
+var shared = __webpack_require__(1);
+
+// CONCATENATED MODULE: ./node_modules/a.js
+// module a
+var a = "a";
+
+
+// CONCATENATED MODULE: ./node_modules/b.js
+// module b
+function b_a() {
+	return "b";
+};
+
+// CONCATENATED MODULE: ./example.js
+
+
+
+__webpack_require__.e(/*! import() */ 262).then(__webpack_require__.bind(null, /*! ./lazy */ 2)).then(function(lazy) {
+	console.log(a, b_a(), shared.x, shared.y, lazy.c, lazy.d.a, lazy.x, lazy.y);
+});
+
+}();
+/******/ })()
+;
 ```
-
-</details>
-
 
 # dist/262.output.js
 
@@ -463,10 +401,10 @@ var x = "x";
 /*! export x [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
 /*! export y [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
 /*! other exports [not provided] [maybe used (runtime-defined)] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.t, __webpack_require__.n, __webpack_require__ */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__, __webpack_require__.* */
 /*! ModuleConcatenation bailout: Cannot concat with ./node_modules/cjs.js (<- Module is not an ECMAScript module) */
 /*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js (<- Module is referenced from different chunks by these modules: ./lazy.js + 2 modules) */
-/***/ ((__unusedmodule, __webpack_exports__, __webpack_require__) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -515,7 +453,7 @@ var a = "d";
 /*! other exports [maybe provided (runtime-defined)] [unused] */
 /*! runtime requirements: __webpack_exports__ */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ ((__unusedmodule, exports) => {
+/***/ ((__unused_webpack_module, exports) => {
 
 // module cjs (commonjs)
 exports.c = "e";
@@ -537,66 +475,68 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-        Asset      Size  Chunks             Chunk Names
-262.output.js  2.85 KiB   {262}  [emitted]
-    output.js    12 KiB   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+        Asset      Size
+262.output.js  2.84 KiB  [emitted]
+    output.js  10.1 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 372 bytes (javascript) 5.71 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 372 bytes (javascript) 4.75 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [0] ./example.js + 2 modules 272 bytes {179} [built]
+ ./example.js + 2 modules 272 bytes [built]
      [no exports]
+     [no exports used]
      entry ./example.js main
- [1] ./node_modules/shared.js + 1 modules 100 bytes {179} [built]
+ ./node_modules/shared.js + 1 modules 100 bytes [built]
      [exports: x, y]
      [all exports used]
-     harmony side effect evaluation shared [0] ./example.js + 2 modules ./node_modules/a.js 3:0-23
-     harmony export imported specifier shared [0] ./example.js + 2 modules ./node_modules/a.js 3:0-23
-     harmony side effect evaluation shared [2] ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
-     harmony export imported specifier shared [2] ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
-     harmony export imported specifier shared [2] ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
-     + 8 hidden chunk modules
-chunk {262} 262.output.js 273 bytes [rendered]
+     harmony side effect evaluation shared ./example.js + 2 modules ./node_modules/a.js 3:0-23
+     harmony export imported specifier shared ./example.js + 2 modules ./node_modules/a.js 3:0-23
+     harmony side effect evaluation shared ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
+     harmony export imported specifier shared ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
+     harmony export imported specifier shared ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
+     + 6 hidden chunk modules
+chunk 262.output.js 273 bytes [rendered]
     > ./lazy ./example.js 4:0-16
- [2] ./lazy.js + 2 modules 231 bytes {262} [built]
+ ./lazy.js + 2 modules 231 bytes [built]
      [exports: c, d, x, y]
-     import() ./lazy [0] ./example.js + 2 modules ./example.js 4:0-16
- [3] ./node_modules/cjs.js 42 bytes {262} [built]
+     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
+ ./node_modules/cjs.js 42 bytes [built]
      [only some exports used: c]
-     harmony side effect evaluation cjs [2] ./lazy.js + 2 modules ./node_modules/c.js 2:0-29
-     harmony import specifier cjs [2] ./lazy.js + 2 modules ./node_modules/c.js 4:35-47
+     harmony side effect evaluation cjs ./lazy.js + 2 modules ./node_modules/c.js 2:0-29
+     harmony import specifier cjs ./lazy.js + 2 modules ./node_modules/c.js 4:35-47
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-        Asset       Size  Chunks             Chunk Names
-262.output.js  265 bytes   {262}  [emitted]
-    output.js   2.26 KiB   {179}  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+        Asset       Size
+262.output.js  265 bytes  [emitted]
+    output.js   1.87 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk {179} output.js (main) 372 bytes (javascript) 5.71 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 372 bytes (javascript) 4.75 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [350] ./node_modules/shared.js + 1 modules 100 bytes {179} [built]
-       [exports: x, y]
-       [all exports used]
-       harmony side effect evaluation shared [262] ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
-       harmony export imported specifier shared [262] ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
-       harmony export imported specifier shared [262] ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
-       harmony side effect evaluation shared [789] ./example.js + 2 modules ./node_modules/a.js 3:0-23
-       harmony export imported specifier shared [789] ./example.js + 2 modules ./node_modules/a.js 3:0-23
- [789] ./example.js + 2 modules 272 bytes {179} [built]
-       [no exports]
-       entry ./example.js main
-     + 8 hidden chunk modules
-chunk {262} 262.output.js 273 bytes [rendered]
+ ./example.js + 2 modules 272 bytes [built]
+     [no exports]
+     [no exports used]
+     entry ./example.js main
+ ./node_modules/shared.js + 1 modules 100 bytes [built]
+     [exports: x, y]
+     [all exports used]
+     harmony side effect evaluation shared ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
+     harmony export imported specifier shared ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
+     harmony export imported specifier shared ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
+     harmony side effect evaluation shared ./example.js + 2 modules ./node_modules/a.js 3:0-23
+     harmony export imported specifier shared ./example.js + 2 modules ./node_modules/a.js 3:0-23
+     + 6 hidden chunk modules
+chunk 262.output.js 273 bytes [rendered]
     > ./lazy ./example.js 4:0-16
-  [75] ./node_modules/cjs.js 42 bytes {262} [built]
-       [only some exports used: c]
-       harmony side effect evaluation cjs [262] ./lazy.js + 2 modules ./node_modules/c.js 2:0-29
-       harmony import specifier cjs [262] ./lazy.js + 2 modules ./node_modules/c.js 4:35-47
- [262] ./lazy.js + 2 modules 231 bytes {262} [built]
-       [exports: c, d, x, y]
-       import() ./lazy [789] ./example.js + 2 modules ./example.js 4:0-16
+ ./lazy.js + 2 modules 231 bytes [built]
+     [exports: c, d, x, y]
+     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
+ ./node_modules/cjs.js 42 bytes [built]
+     [only some exports used: c]
+     harmony side effect evaluation cjs ./lazy.js + 2 modules ./node_modules/c.js 2:0-29
+     harmony import specifier cjs ./lazy.js + 2 modules ./node_modules/c.js 4:35-47
 ```

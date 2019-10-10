@@ -44,59 +44,54 @@ module.exports = {
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["alpha"] = factory();
 })(window, function() {
-return /******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(0);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+return /******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
 module.exports = "alpha";
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })()
+;
 });
 ```
 
@@ -113,60 +108,55 @@ module.exports = "alpha";
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["beta"] = factory();
 })(window, function() {
-return /******/ ((modules, runtime) => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// the startup function
-/******/ 	function startup() {
-/******/ 		// Load entry module and return exports
-/******/ 		return __webpack_require__(1);
-/******/ 	};
-/******/
-/******/ 	// run startup
-/******/ 	return startup();
-/******/ })
-/************************************************************************/
-/******/ ([
+return /******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
 /*!*****************!*\
   !*** ./beta.js ***!
   \*****************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
 module.exports = "beta";
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(1);
+/******/ })()
+;
 });
 ```
 
@@ -176,40 +166,42 @@ module.exports = "beta";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-             Asset      Size  Chunks             Chunk Names
-MyLibrary.alpha.js  1.89 KiB     {0}  [emitted]  alpha
- MyLibrary.beta.js  1.89 KiB     {1}  [emitted]  beta
+Version: webpack 5.0.0-alpha.31
+             Asset      Size
+MyLibrary.alpha.js  1.97 KiB  [emitted]  [name: alpha]
+ MyLibrary.beta.js  1.98 KiB  [emitted]  [name: beta]
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
-chunk {0} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
+chunk MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
     > ./alpha alpha
- [0] ./alpha.js 25 bytes {0} [built]
-     [used exports unknown]
+ ./alpha.js 25 bytes [built]
      entry ./alpha alpha
-chunk {1} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
+     used a library export
+chunk MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     > ./beta beta
- [1] ./beta.js 24 bytes {1} [built]
-     [used exports unknown]
+ ./beta.js 24 bytes [built]
      entry ./beta beta
+     used a library export
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-             Asset       Size  Chunks             Chunk Names
-MyLibrary.alpha.js  453 bytes   {487}  [emitted]  alpha
- MyLibrary.beta.js  448 bytes   {904}  [emitted]  beta
+Version: webpack 5.0.0-alpha.31
+             Asset       Size
+MyLibrary.alpha.js  427 bytes  [emitted]  [name: alpha]
+ MyLibrary.beta.js  422 bytes  [emitted]  [name: beta]
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
-chunk {487} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
+chunk MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
     > ./alpha alpha
- [758] ./alpha.js 25 bytes {487} [built]
-       entry ./alpha alpha
-chunk {904} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
+ ./alpha.js 25 bytes [built]
+     entry ./alpha alpha
+     used a library export
+chunk MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     > ./beta beta
- [97] ./beta.js 24 bytes {904} [built]
-      entry ./beta beta
+ ./beta.js 24 bytes [built]
+     entry ./beta beta
+     used a library export
 ```

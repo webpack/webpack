@@ -43,7 +43,7 @@ module.exports = {
 	<body>
 		<!-- inlined minimized file "runtime~main.[chunkhash].js" -->
 		<script>
-			((e,r)=>{"use strict";var t={};function o(r){if(t[r])return t[r].exports;var n=t[r]={i:r,l:!1,exports:{}};return e[r](n,n.exports,o),n.l=!0,n.exports}o.m=e,function(e){e.f={},e.e=r=>Promise.all(Object.keys(e.f).reduce((t,o)=>(e.f[o](r,t),t),[])),e.t=function(r,t){if(1&t&&(r=this(r)),8&t)return r;if(4&t&&"object"==typeof r&&r&&r.__esModule)return r;var o=Object.create(null);if(e.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:r}),2&t&&"string"!=typeof r){var n={};for(const e in r)n[e]=()=>r[e];e.d(o,n)}return o},r=Object.prototype.hasOwnProperty,e.d=(e,t)=>{for(var o in t)r.call(t,o)&&!r.call(e,o)&&Object.defineProperty(e,o,{enumerable:!0,get:t[o]})},e.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},e.p="dist/",e.u=e=>e+".[chunkhash].js",function(){var r={303:0},t=[];e.f.j=(t,o)=>{var n=Object.prototype.hasOwnProperty.call(r,t)?r[t]:void 0;if(0!==n)if(n)o.push(n[2]);else{var a=new Promise((e,o)=>{n=r[t]=[e,o]});o.push(n[2]=a);var i,u=e.p+e.u(t),l=document.createElement("script");l.charset="utf-8",l.timeout=120,e.nc&&l.setAttribute("nonce",e.nc),l.src=u;var p=new Error;i=function(e){l.onerror=l.onload=null,clearTimeout(c);var o=(()=>{if(Object.prototype.hasOwnProperty.call(r,t)&&r[t])return r[t][1];0!==r[t]&&(r[t]=void 0)})();if(o){var n=e&&("load"===e.type?"missing":e.type),a=e&&e.target&&e.target.src;p.message="Loading chunk "+t+" failed.\n("+n+": "+a+")",p.name="ChunkLoadError",p.type=n,p.request=a,o(p)}};var c=setTimeout(function(){i({type:"timeout",target:l})},12e4);l.onerror=l.onload=i,document.head.appendChild(l)}};var o=()=>{};function n(){for(var o,n=0;n<t.length;n++){for(var a=t[n],i=!0,u=1;u<a.length;u++){var l=a[u];0!==r[l]&&(i=!1)}i&&(t.splice(n--,1),o=e(e.s=a[0]))}return o}function a(n){for(var a,i,u=n[0],l=n[1],c=n[2],s=n[3],f=0,d=[];f<u.length;f++)i=u[f],Object.prototype.hasOwnProperty.call(r,i)&&r[i]&&d.push(r[i][0]),r[i]=0;for(a in l)Object.prototype.hasOwnProperty.call(l,a)&&(e.m[a]=l[a]);for(s&&s(e),p&&p(n);d.length;)d.shift()();return c&&t.push.apply(t,c),o()}e.x=()=>(o=n)();var i=window.webpackJsonp=window.webpackJsonp||[],u=i.push.bind(i);i.push=a,i=i.slice();for(var l=0;l<i.length;l++)a(i[l]);var p=u}();var r}(o),o.x()})([]);
+			(()=>{"use strict";var e={},r={};function t(o){if(r[o])return r[o].exports;var n=r[o]={i:o,l:!1,exports:{}};return e[o](n,n.exports,t),n.l=!0,n.exports}t.m=e,t.f={},t.e=e=>Promise.all(Object.keys(t.f).reduce((r,o)=>(t.f[o](e,r),r),[])),t.t=function(e,r){if(1&r&&(e=this(e)),8&r)return e;if(4&r&&"object"==typeof e&&e&&e.__esModule)return e;var o=Object.create(null);if(t.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:e}),2&r&&"string"!=typeof e){var n={};for(const r in e)n[r]=()=>e[r];t.d(o,n)}return o},function(){var e=Object.prototype.hasOwnProperty;t.d=(r,t)=>{for(var o in t)e.call(t,o)&&!e.call(r,o)&&Object.defineProperty(r,o,{enumerable:!0,get:t[o]})}}(),t.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},t.p="dist/",t.u=e=>e+".[chunkhash].js",function(){var e={303:0},r=[];t.f.j=(r,o)=>{var n=Object.prototype.hasOwnProperty.call(e,r)?e[r]:void 0;if(0!==n)if(n)o.push(n[2]);else{var a=new Promise((t,o)=>{n=e[r]=[t,o]});o.push(n[2]=a);var i,u=t.p+t.u(r),l=document.createElement("script");l.charset="utf-8",l.timeout=120,t.nc&&l.setAttribute("nonce",t.nc),l.src=u;var p=new Error;i=function(t){l.onerror=l.onload=null,clearTimeout(c);var o=(()=>{if(Object.prototype.hasOwnProperty.call(e,r)&&e[r])return e[r][1];0!==e[r]&&(e[r]=void 0)})();if(o){var n=t&&("load"===t.type?"missing":t.type),a=t&&t.target&&t.target.src;p.message="Loading chunk "+r+" failed.\n("+n+": "+a+")",p.name="ChunkLoadError",p.type=n,p.request=a,o(p)}};var c=setTimeout(function(){i({type:"timeout",target:l})},12e4);l.onerror=l.onload=i,document.head.appendChild(l)}};var o=()=>{};function n(){for(var o,n=0;n<r.length;n++){for(var a=r[n],i=!0,u=1;u<a.length;u++){var l=a[u];0!==e[l]&&(i=!1)}i&&(r.splice(n--,1),o=t(t.s=a[0]))}return o}function a(n){for(var a,i,u=n[0],l=n[1],c=n[2],s=n[3],f=0,d=[];f<u.length;f++)i=u[f],Object.prototype.hasOwnProperty.call(e,i)&&e[i]&&d.push(e[i][0]),e[i]=0;for(a in l)Object.prototype.hasOwnProperty.call(l,a)&&(t.m[a]=l[a]);for(s&&s(t),p&&p(n);d.length;)d.shift()();return c&&r.push.apply(r,c),o()}t.x=()=>(o=n)();var i=window.webpackJsonp=window.webpackJsonp||[],u=i.push.bind(i);i.push=a,i=i.slice();for(var l=0;l<i.length;l++)a(i[l]);var p=u}(),t.x()})();
 		</script>
 
 		<script src="dist/main.[chunkhash].js"></script>
@@ -54,56 +54,40 @@ module.exports = {
 # dist/runtime~main.[chunkhash].js
 
 ```javascript
-/******/ ((modules, runtime) => { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({});
+/************************************************************************/
 /******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-/******/
+/******/ 	
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId](module, module.exports, __webpack_require__);
-/******/
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-/******/
+/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+/******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/
-/******/ 	// initialize runtime
-/******/ 	runtime(__webpack_require__);
-/******/
-/******/ 	// run startup
-/******/ 	return __webpack_require__.x();
-/******/ })
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
 /************************************************************************/
-/******/ ([],
-```
-
-<details><summary><code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code></summary>
-
-``` js
-/******/ function(__webpack_require__) { // webpackRuntimeModules
-/******/ 	"use strict";
-/******/ 
 /******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	!function() {
 /******/ 		__webpack_require__.f = {};
@@ -331,12 +315,12 @@ module.exports = {
 /******/ 		var parentJsonpFunction = oldJsonpFunction;
 /******/ 	}();
 /******/ 	
-/******/ }
-);
+/************************************************************************/
+/******/ 	// run startup
+/******/ 	return __webpack_require__.x();
+/******/ })()
+;
 ```
-
-</details>
-
 
 # dist/main.[chunkhash].js
 
@@ -347,8 +331,8 @@ module.exports = {
   !*** ./example.js ***!
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__.e, __webpack_require__.t, __webpack_require__ */
-/***/ ((__unusedmodule, __unusedexports, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__.e, __webpack_require__.t, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 // some module
 __webpack_require__.e(/*! import() */ 2).then(__webpack_require__.t.bind(__webpack_require__, /*! ./async1 */ 1, 7));
@@ -365,57 +349,58 @@ __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.t.bind(__webpa
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-                    Asset       Size  Chunks             Chunk Names
-           2.[chunkhash].js  314 bytes     {2}  [emitted]
-           3.[chunkhash].js  308 bytes     {3}  [emitted]
-        main.[chunkhash].js  656 bytes     {1}  [emitted]  main
-runtime~main.[chunkhash].js   10.6 KiB     {0}  [emitted]  runtime~main
+Version: webpack 5.0.0-alpha.31
+                    Asset       Size
+           2.[chunkhash].js  314 bytes  [emitted]
+           3.[chunkhash].js  308 bytes  [emitted]
+        main.[chunkhash].js  676 bytes  [emitted]  [name: main]
+runtime~main.[chunkhash].js   10.6 KiB  [emitted]  [name: runtime~main]
 Entrypoint main = runtime~main.[chunkhash].js main.[chunkhash].js
-chunk {0} runtime~main.[chunkhash].js (runtime~main) 6.39 KiB [entry] [rendered]
+chunk runtime~main.[chunkhash].js (runtime~main) 6.39 KiB [entry] [rendered]
     > ./example main
     7 chunk modules
-chunk {1} main.[chunkhash].js (main) 55 bytes [initial] [rendered]
+chunk main.[chunkhash].js (main) 55 bytes [initial] [rendered]
     > ./example main
- [0] ./example.js 55 bytes {1} [built]
+ ./example.js 55 bytes [built]
      [used exports unknown]
      entry ./example main
-chunk {2} 2.[chunkhash].js 28 bytes [rendered]
-    > ./async1 [0] ./example.js 2:0-18
- [1] ./async1.js 28 bytes {2} [built]
+chunk 2.[chunkhash].js 28 bytes [rendered]
+    > ./async1 ./example.js 2:0-18
+ ./async1.js 28 bytes [built]
      [used exports unknown]
-     import() ./async1 [0] ./example.js 2:0-18
-chunk {3} 3.[chunkhash].js 28 bytes [rendered]
-    > ./async2 [0] ./example.js 3:0-18
- [2] ./async2.js 28 bytes {3} [built]
+     import() ./async1 ./example.js 2:0-18
+chunk 3.[chunkhash].js 28 bytes [rendered]
+    > ./async2 ./example.js 3:0-18
+ ./async2.js 28 bytes [built]
      [used exports unknown]
-     import() ./async2 [0] ./example.js 3:0-18
+     import() ./async2 ./example.js 3:0-18
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.30
-                    Asset       Size  Chunks             Chunk Names
-         114.[chunkhash].js   73 bytes   {114}  [emitted]
-         172.[chunkhash].js   73 bytes   {172}  [emitted]
-        main.[chunkhash].js  155 bytes   {179}  [emitted]  main
-runtime~main.[chunkhash].js   2.26 KiB   {303}  [emitted]  runtime~main
+Version: webpack 5.0.0-alpha.31
+                    Asset       Size
+         114.[chunkhash].js   73 bytes  [emitted]
+         172.[chunkhash].js   73 bytes  [emitted]
+        main.[chunkhash].js  155 bytes  [emitted]  [name: main]
+runtime~main.[chunkhash].js   2.25 KiB  [emitted]  [name: runtime~main]
 Entrypoint main = runtime~main.[chunkhash].js main.[chunkhash].js
-chunk {114} 114.[chunkhash].js 28 bytes [rendered]
-    > ./async1 [144] ./example.js 2:0-18
- [114] ./async1.js 28 bytes {114} [built]
-       import() ./async1 [144] ./example.js 2:0-18
-chunk {172} 172.[chunkhash].js 28 bytes [rendered]
-    > ./async2 [144] ./example.js 3:0-18
- [172] ./async2.js 28 bytes {172} [built]
-       import() ./async2 [144] ./example.js 3:0-18
-chunk {179} main.[chunkhash].js (main) 55 bytes [initial] [rendered]
+chunk 114.[chunkhash].js 28 bytes [rendered]
+    > ./async1 ./example.js 2:0-18
+ ./async1.js 28 bytes [built]
+     import() ./async1 ./example.js 2:0-18
+chunk 172.[chunkhash].js 28 bytes [rendered]
+    > ./async2 ./example.js 3:0-18
+ ./async2.js 28 bytes [built]
+     import() ./async2 ./example.js 3:0-18
+chunk main.[chunkhash].js (main) 55 bytes [initial] [rendered]
     > ./example main
- [144] ./example.js 55 bytes {179} [built]
-       entry ./example main
-chunk {303} runtime~main.[chunkhash].js (runtime~main) 6.39 KiB [entry] [rendered]
+ ./example.js 55 bytes [built]
+     [no exports used]
+     entry ./example main
+chunk runtime~main.[chunkhash].js (runtime~main) 6.39 KiB [entry] [rendered]
     > ./example main
     7 chunk modules
 ```
