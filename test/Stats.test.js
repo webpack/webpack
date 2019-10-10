@@ -178,13 +178,11 @@ describe("Stats", () => {
 			Object {
 			  "assets": Array [
 			    Object {
+			      "auxiliaryChunkIdHints": Array [],
 			      "auxiliaryChunkNames": Array [],
-			      "auxiliaryChunks": Array [],
+			      "chunkIdHints": Array [],
 			      "chunkNames": Array [
 			        "chunkB",
-			      ],
-			      "chunks": Array [
-			        336,
 			      ],
 			      "emitted": true,
 			      "info": Object {
@@ -194,13 +192,11 @@ describe("Stats", () => {
 			      "size": 111,
 			    },
 			    Object {
+			      "auxiliaryChunkIdHints": Array [],
 			      "auxiliaryChunkNames": Array [],
-			      "auxiliaryChunks": Array [],
+			      "chunkIdHints": Array [],
 			      "chunkNames": Array [
 			        "entryA",
-			      ],
-			      "chunks": Array [
-			        938,
 			      ],
 			      "emitted": true,
 			      "info": Object {
@@ -210,13 +206,11 @@ describe("Stats", () => {
 			      "size": 198,
 			    },
 			    Object {
+			      "auxiliaryChunkIdHints": Array [],
 			      "auxiliaryChunkNames": Array [],
-			      "auxiliaryChunks": Array [],
+			      "chunkIdHints": Array [],
 			      "chunkNames": Array [
 			        "entryB",
-			      ],
-			      "chunks": Array [
-			        513,
 			      ],
 			      "emitted": true,
 			      "info": Object {
