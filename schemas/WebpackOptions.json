@@ -1159,11 +1159,17 @@
           "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
           "anyOf": [
             {
-              "enum": [5]
+              "type": "number",
+              "minimum": 5,
+              "maximum": 11
+            },
+            {
+              "enum": [2009]
             },
             {
               "type": "number",
-              "minimum": 2015
+              "minimum": 2015,
+              "maximum": 2020
             }
           ]
         },

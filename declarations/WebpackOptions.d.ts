@@ -1199,7 +1199,7 @@ export interface OutputOptions {
 	/**
 	 * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
 	 */
-	ecmaVersion?: 5 | number;
+	ecmaVersion?: number | 2009;
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
