@@ -1,6 +1,6 @@
 "use strict";
 
-var NoEmitOnErrorsPlugin = require("../../../lib/NoEmitOnErrorsPlugin");
+var NoEmitOnErrorsPlugin = require("../../../").NoEmitOnErrorsPlugin;
 var TestChildCompilationFailurePlugin = require("./TestChildCompilationFailurePlugin");
 
 module.exports = {

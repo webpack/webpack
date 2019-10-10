@@ -118,6 +118,10 @@
           "description": "Support .mjs files as way to define strict ESM file (node.js)",
           "type": "boolean"
         },
+        "outputModule": {
+          "description": "Allow outputing javascript files as module source type",
+          "type": "boolean"
+        },
         "syncWebAssembly": {
           "description": "Support WebAssembly as synchronous EcmaScript Module (outdated)",
           "type": "boolean"
@@ -302,6 +306,29 @@
           }
         }
       ]
+    },
+    "LibraryCustomUmdCommentObject": {
+      "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "amd": {
+          "description": "Set comment for `amd` section in UMD",
+          "type": "string"
+        },
+        "commonjs": {
+          "description": "Set comment for `commonjs` (exports) section in UMD",
+          "type": "string"
+        },
+        "commonjs2": {
+          "description": "Set comment for `commonjs2` (module.exports) section in UMD",
+          "type": "string"
+        },
+        "root": {
+          "description": "Set comment for `root` (global variable) section in UMD",
+          "type": "string"
+        }
+      }
     },
     "LibraryCustomUmdObject": {
       "type": "object",
@@ -1079,27 +1106,7 @@
               "type": "string"
             },
             {
-              "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.",
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "amd": {
-                  "description": "Set comment for `amd` section in UMD",
-                  "type": "string"
-                },
-                "commonjs": {
-                  "description": "Set comment for `commonjs` (exports) section in UMD",
-                  "type": "string"
-                },
-                "commonjs2": {
-                  "description": "Set comment for `commonjs2` (module.exports) section in UMD",
-                  "type": "string"
-                },
-                "root": {
-                  "description": "Set comment for `root` (global variable) section in UMD",
-                  "type": "string"
-                }
-              }
+              "$ref": "#/definitions/LibraryCustomUmdCommentObject"
             }
           ]
         },
@@ -1220,6 +1227,10 @@
           "type": "string",
           "absolutePath": false
         },
+        "iife": {
+          "description": "Wrap javascript code into IIFEs to avoid leaking into global scope.",
+          "type": "boolean"
+        },
         "jsonpFunction": {
           "description": "The JSONP function used by webpack for async loading of chunks.",
           "type": "string"
@@ -1261,6 +1272,7 @@
           "description": "Type of library",
           "enum": [
             "var",
+            "module",
             "assign",
             "this",
             "window",
@@ -1276,6 +1288,10 @@
             "jsonp",
             "system"
           ]
+        },
+        "module": {
+          "description": "Output javascript files as module source type.",
+          "type": "boolean"
         },
         "path": {
           "description": "The output directory as **absolute path** (required).",
@@ -1294,7 +1310,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
             }
           ]
         },

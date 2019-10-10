@@ -553,6 +553,10 @@ export interface Experiments {
 	 */
 	mjs?: boolean;
 	/**
+	 * Allow outputing javascript files as module source type
+	 */
+	outputModule?: boolean;
+	/**
 	 * Support WebAssembly as synchronous EcmaScript Module (outdated)
 	 */
 	syncWebAssembly?: boolean;
@@ -1163,26 +1167,7 @@ export interface OutputOptions {
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */
-	auxiliaryComment?:
-		| string
-		| {
-				/**
-				 * Set comment for `amd` section in UMD
-				 */
-				amd?: string;
-				/**
-				 * Set comment for `commonjs` (exports) section in UMD
-				 */
-				commonjs?: string;
-				/**
-				 * Set comment for `commonjs2` (module.exports) section in UMD
-				 */
-				commonjs2?: string;
-				/**
-				 * Set comment for `root` (global variable) section in UMD
-				 */
-				root?: string;
-		  };
+	auxiliaryComment?: string | LibraryCustomUmdCommentObject;
 	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
@@ -1257,6 +1242,10 @@ export interface OutputOptions {
 	 */
 	hotUpdateMainFilename?: string;
 	/**
+	 * Wrap javascript code into IIFEs to avoid leaking into global scope.
+	 */
+	iife?: boolean;
+	/**
 	 * The JSONP function used by webpack for async loading of chunks.
 	 */
 	jsonpFunction?: string;
@@ -1277,6 +1266,7 @@ export interface OutputOptions {
 	 */
 	libraryTarget?:
 		| "var"
+		| "module"
 		| "assign"
 		| "this"
 		| "window"
@@ -1292,6 +1282,10 @@ export interface OutputOptions {
 		| "jsonp"
 		| "system";
 	/**
+	 * Output javascript files as module source type.
+	 */
+	module?: boolean;
+	/**
 	 * The output directory as **absolute path** (required).
 	 */
 	path?: string;
@@ -1302,7 +1296,12 @@ export interface OutputOptions {
 	/**
 	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
 	 */
-	publicPath?: string | Function;
+	publicPath?:
+		| string
+		| ((
+				pathData: import("../lib/Compilation").PathData,
+				assetInfo?: import("../lib/Compilation").AssetInfo
+		  ) => string);
 	/**
 	 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
 	 */
@@ -1323,6 +1322,30 @@ export interface OutputOptions {
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
 	webassemblyModuleFilename?: string;
+}
+/**
+ * Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "LibraryCustomUmdCommentObject".
+ */
+export interface LibraryCustomUmdCommentObject {
+	/**
+	 * Set comment for `amd` section in UMD
+	 */
+	amd?: string;
+	/**
+	 * Set comment for `commonjs` (exports) section in UMD
+	 */
+	commonjs?: string;
+	/**
+	 * Set comment for `commonjs2` (module.exports) section in UMD
+	 */
+	commonjs2?: string;
+	/**
+	 * Set comment for `root` (global variable) section in UMD
+	 */
+	root?: string;
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema

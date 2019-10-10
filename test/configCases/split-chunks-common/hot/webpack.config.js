@@ -1,4 +1,5 @@
-var HotModuleReplacementPlugin = require("../../../../lib/HotModuleReplacementPlugin");
+var HotModuleReplacementPlugin = require("../../../../")
+	.HotModuleReplacementPlugin;
 module.exports = {
 	entry: {
 		main: "./index"

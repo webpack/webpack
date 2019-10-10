@@ -204,10 +204,10 @@ describe("Stats", () => {
 			      ],
 			      "emitted": true,
 			      "info": Object {
-			        "size": 211,
+			        "size": 198,
 			      },
 			      "name": "entryA.js",
-			      "size": 211,
+			      "size": 198,
 			    },
 			    Object {
 			      "auxiliaryChunkNames": Array [],
@@ -220,10 +220,10 @@ describe("Stats", () => {
 			      ],
 			      "emitted": true,
 			      "info": Object {
-			        "size": 2085,
+			        "size": 2068,
 			      },
 			      "name": "entryB.js",
-			      "size": 2085,
+			      "size": 2068,
 			    },
 			  ],
 			  "assetsByChunkName": Object {

@@ -1,4 +1,4 @@
-const MinChunkSizePlugin = require("../../../lib/optimize/MinChunkSizePlugin");
+const { MinChunkSizePlugin } = require("../../../").optimize;
 
 const baseConfig = {
 	mode: "production",

@@ -24,7 +24,10 @@ module.exports = (stdio, tty) => {
 		reset: () => (logs = []),
 
 		toString: () => {
-			return logs.map(v => stripAnsi(v)).join("");
+			return stripAnsi(logs.join("")).replace(
+				/\([^)]+\) (\[[^\]]+\]\s*)?DeprecationWarning.+(\n\s+at .*)*\n?/g,
+				""
+			);
 		},
 
 		toStringRaw: () => {

@@ -1,4 +1,4 @@
-const SplitChunksPlugin = require("../../../../lib/optimize/SplitChunksPlugin");
+const { SplitChunksPlugin } = require("../../../../").optimize;
 
 module.exports = {
 	entry: {

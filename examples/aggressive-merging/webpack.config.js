@@ -1,5 +1,6 @@
 var path = require("path");
-var AggressiveMergingPlugin = require("../../lib/optimize/AggressiveMergingPlugin");
+var { AggressiveMergingPlugin } = require("../../").optimize;
+
 module.exports = {
 	// mode: "development" || "production",
 	entry: {
