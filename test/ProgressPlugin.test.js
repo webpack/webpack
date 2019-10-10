@@ -88,7 +88,9 @@ const createSimpleCompiler = () => {
 
 	compiler.outputFileSystem = new MemoryFs();
 
-	new webpack.ProgressPlugin().apply(compiler);
+	new webpack.ProgressPlugin({
+		activeModules: true
+	}).apply(compiler);
 
 	return compiler;
 };
