@@ -87,3 +87,16 @@ or incremental (in watch mode)
 ```bash
 yarn type-lint --watch
 ```
+
+### To update all examples use
+
+```bash
+yarn build:examples
+```
+
+### To update a specific example use
+
+```bash
+cd examples/<path to example>
+node build.js
+```
