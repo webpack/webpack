@@ -112,6 +112,8 @@ const schema = [
 	}
 ];
 
+const allSerializables = new Set();
+
 for (const filePath of allFiles) {
 	let content = fs.readFileSync(filePath, "utf-8");
 	const nl = /(\r?\n)/.exec(content);
@@ -173,6 +175,33 @@ for (const filePath of allFiles) {
 			console.log(filePath);
 		} else {
 			canUpdateWithWrite = true;
+			process.exitCode = 1;
+		}
+	}
+
+	const matches = content.match(
+		/makeSerializable\(\s*[^,]+,\s*"webpack\/lib\/[^"]+"\s*(?:,[^,]+)\)/g
+	);
+	if (matches) {
+		for (const match of matches) {
+			const str = /makeSerializable\(\s*[^,]+,\s*"webpack\/lib\/([^"]+)"\s*(?:,[^,]+)\)/.exec(
+				match
+			)[1];
+			allSerializables.add(str);
+		}
+	}
+}
+
+// Check if lib/util/internalSerializables.js includes all serializables in webpack
+{
+	const content = fs.readFileSync(
+		path.resolve(__dirname, "../lib/util/internalSerializables.js")
+	);
+	for (const serializable of allSerializables) {
+		if (!content.includes(`../${serializable}`)) {
+			console.log(
+				`lib/util/internalSerializables.js: must include static require to ../${serializable}`
+			);
 			process.exitCode = 1;
 		}
 	}
