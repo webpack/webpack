@@ -3,6 +3,7 @@ module.exports = {
 		libraryTarget: "commonjs2"
 	},
 	externals: {
-		external: "external"
+		external: "external",
+		external2: "amd external2"
 	}
 };
