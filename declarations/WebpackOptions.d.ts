@@ -343,7 +343,7 @@ export interface WebpackOptions {
 	/**
 	 * Configuration for web performance recommendations.
 	 */
-	performance?: false | PerformanceOptions;
+	performance?: false | PerformanceOptions | PerformanceOptions[];
 	/**
 	 * Add additional plugins to the compiler.
 	 */

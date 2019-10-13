@@ -2132,6 +2132,17 @@
         },
         {
           "$ref": "#/definitions/PerformanceOptions"
+        },
+        {
+          "type": "array",
+          "items": {
+            "description": "Plugin of type object or instanceof Function",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/PerformanceOptions"
+              }
+            ]
+          }
         }
       ]
     },

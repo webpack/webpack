@@ -1790,6 +1790,276 @@ Entrypoints:
 </CLR>"
 `;
 
+exports[`StatsTestCases should print correct stats for performance-multibudget 1`] = `
+"Hash: e395897a0983d476c150e395897a0983d476c150e395897a0983d476c150e395897a0983d476c150e395897a0983d476c150e395897a0983d476c150e395897a0983d476c150e395897a0983d476c150
+Child
+    Hash: e395897a0983d476c150
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks                    Chunk Names
+       big.js   297 KiB    0, 1  [emitted]  [big]  big
+     image.js   297 KiB    1, 0  [emitted]         image
+    medium.js  91.8 KiB       2  [emitted]         medium
+     small.js  3.61 KiB       3  [emitted]         small
+    Entrypoint big [big] = big.js
+    Entrypoint medium = medium.js
+    Entrypoint small = small.js
+    Entrypoint image = image.js
+    [0] ./big.js 293 KiB {0} {1} [built]
+    [1] ./medium.js 88.2 KiB {2} [built]
+    [2] ./small.js 35 bytes {3} [built]
+    
+    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+    This can impact web performance.
+    Assets: 
+      big.js (297 KiB)
+    
+    WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+    Entrypoints:
+      big (297 KiB)
+          big.js
+    
+    
+    WARNING in webpack performance recommendations: 
+    You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+    For more info visit https://webpack.js.org/guides/code-splitting/
+Child
+    Hash: e395897a0983d476c150
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks                    Chunk Names
+       big.js   297 KiB    0, 1  [emitted]  [big]  big
+     image.js   297 KiB    1, 0  [emitted]         image
+    medium.js  91.8 KiB       2  [emitted]         medium
+     small.js  3.61 KiB       3  [emitted]         small
+    Entrypoint big [big] = big.js
+    Entrypoint medium = medium.js
+    Entrypoint small = small.js
+    Entrypoint image = image.js
+    [0] ./big.js 293 KiB {0} {1} [built]
+    [1] ./medium.js 88.2 KiB {2} [built]
+    [2] ./small.js 35 bytes {3} [built]
+    
+    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+    This can impact web performance.
+    Assets: 
+      big.js (297 KiB)
+    
+    WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+    Entrypoints:
+      big (297 KiB)
+          big.js
+    
+    
+    WARNING in webpack performance recommendations: 
+    You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+    For more info visit https://webpack.js.org/guides/code-splitting/
+Child
+    Hash: e395897a0983d476c150
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks                    Chunk Names
+       big.js   297 KiB    0, 1  [emitted]  [big]  big
+     image.js   297 KiB    1, 0  [emitted]  [big]  image
+    medium.js  91.8 KiB       2  [emitted]         medium
+     small.js  3.61 KiB       3  [emitted]         small
+    Entrypoint big [big] = big.js
+    Entrypoint medium = medium.js
+    Entrypoint small = small.js
+    Entrypoint image [big] = image.js
+    [0] ./big.js 293 KiB {0} {1} [built]
+    [1] ./medium.js 88.2 KiB {2} [built]
+    [2] ./small.js 35 bytes {3} [built]
+    
+    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+    This can impact web performance.
+    Assets: 
+      big.js (297 KiB)
+    
+    WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+    Entrypoints:
+      big (297 KiB)
+          big.js
+    
+    
+    WARNING in webpack performance recommendations: 
+    You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+    For more info visit https://webpack.js.org/guides/code-splitting/
+Child
+    Hash: e395897a0983d476c150
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks                    Chunk Names
+       big.js   297 KiB    0, 1  [emitted]  [big]  big
+     image.js   297 KiB    1, 0  [emitted]  [big]  image
+    medium.js  91.8 KiB       2  [emitted]         medium
+     small.js  3.61 KiB       3  [emitted]         small
+    Entrypoint big [big] = big.js
+    Entrypoint medium = medium.js
+    Entrypoint small = small.js
+    Entrypoint image [big] = image.js
+    [0] ./big.js 293 KiB {0} {1} [built]
+    [1] ./medium.js 88.2 KiB {2} [built]
+    [2] ./small.js 35 bytes {3} [built]
+    
+    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+    This can impact web performance.
+    Assets: 
+      big.js (297 KiB)
+      image.js (297 KiB)
+    
+    WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+    Entrypoints:
+      big (297 KiB)
+          big.js
+      image (297 KiB)
+          image.js
+    
+    
+    WARNING in webpack performance recommendations: 
+    You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+    For more info visit https://webpack.js.org/guides/code-splitting/
+Child
+    Hash: e395897a0983d476c150
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks                    Chunk Names
+       big.js   297 KiB    0, 1  [emitted]  [big]  big
+     image.js   297 KiB    1, 0  [emitted]  [big]  image
+    medium.js  91.8 KiB       2  [emitted]         medium
+     small.js  3.61 KiB       3  [emitted]         small
+    Entrypoint big [big] = big.js
+    Entrypoint medium = medium.js
+    Entrypoint small = small.js
+    Entrypoint image [big] = image.js
+    [0] ./big.js 293 KiB {0} {1} [built]
+    [1] ./medium.js 88.2 KiB {2} [built]
+    [2] ./small.js 35 bytes {3} [built]
+    
+    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+    This can impact web performance.
+    Assets: 
+      big.js (297 KiB)
+      image.js (297 KiB)
+    
+    WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+    Entrypoints:
+      big (297 KiB)
+          big.js
+      image (297 KiB)
+          image.js
+    
+    
+    WARNING in webpack performance recommendations: 
+    You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+    For more info visit https://webpack.js.org/guides/code-splitting/
+Child
+    Hash: e395897a0983d476c150
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks                    Chunk Names
+       big.js   297 KiB    0, 1  [emitted]  [big]  big
+     image.js   297 KiB    1, 0  [emitted]  [big]  image
+    medium.js  91.8 KiB       2  [emitted]         medium
+     small.js  3.61 KiB       3  [emitted]         small
+    Entrypoint big [big] = big.js
+    Entrypoint medium = medium.js
+    Entrypoint small = small.js
+    Entrypoint image [big] = image.js
+    [0] ./big.js 293 KiB {0} {1} [built]
+    [1] ./medium.js 88.2 KiB {2} [built]
+    [2] ./small.js 35 bytes {3} [built]
+    
+    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (97.7 KiB).
+    This can impact web performance.
+    Assets: 
+      big.js (297 KiB)
+      image.js (297 KiB)
+    
+    WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (97.7 KiB). This can impact web performance.
+    Entrypoints:
+      big (297 KiB)
+          big.js
+      image (297 KiB)
+          image.js
+    
+    
+    WARNING in webpack performance recommendations: 
+    You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+    For more info visit https://webpack.js.org/guides/code-splitting/
+Child
+    Hash: e395897a0983d476c150
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks                    Chunk Names
+       big.js   297 KiB    0, 1  [emitted]  [big]  big
+     image.js   297 KiB    1, 0  [emitted]         image
+    medium.js  91.8 KiB       2  [emitted]         medium
+     small.js  3.61 KiB       3  [emitted]         small
+    Entrypoint big [big] = big.js
+    Entrypoint medium = medium.js
+    Entrypoint small = small.js
+    Entrypoint image = image.js
+    [0] ./big.js 293 KiB {0} {1} [built]
+    [1] ./medium.js 88.2 KiB {2} [built]
+    [2] ./small.js 35 bytes {3} [built]
+    
+    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (97.7 KiB).
+    This can impact web performance.
+    Assets: 
+      big.js (297 KiB)
+    
+    WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (97.7 KiB). This can impact web performance.
+    Entrypoints:
+      big (297 KiB)
+          big.js
+    
+    
+    WARNING in webpack performance recommendations: 
+    You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+    For more info visit https://webpack.js.org/guides/code-splitting/
+Child
+    Hash: e395897a0983d476c150
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks                    Chunk Names
+       big.js   297 KiB    0, 1  [emitted]  [big]  big
+     image.js   297 KiB    1, 0  [emitted]  [big]  image
+    medium.js  91.8 KiB       2  [emitted]  [big]  medium
+     small.js  3.61 KiB       3  [emitted]  [big]  small
+    Entrypoint big [big] = big.js
+    Entrypoint medium [big] = medium.js
+    Entrypoint small [big] = small.js
+    Entrypoint image [big] = image.js
+    [0] ./big.js 293 KiB {0} {1} [built]
+    [1] ./medium.js 88.2 KiB {2} [built]
+    [2] ./small.js 35 bytes {3} [built]
+    
+    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (1 bytes).
+    This can impact web performance.
+    Assets: 
+      big.js (297 KiB)
+      image.js (297 KiB)
+      medium.js (91.8 KiB)
+      small.js (3.61 KiB)
+    
+    WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (1 bytes). This can impact web performance.
+    Entrypoints:
+      big (297 KiB)
+          big.js
+      medium (91.8 KiB)
+          medium.js
+      small (3.61 KiB)
+          small.js
+      image (297 KiB)
+          image.js
+    
+    
+    WARNING in webpack performance recommendations: 
+    You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+    For more info visit https://webpack.js.org/guides/code-splitting/"
+`;
+
 exports[`StatsTestCases should print correct stats for performance-no-async-chunks-shown 1`] = `
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
