@@ -24,10 +24,16 @@ describe("Examples", () => {
 				webpackConfigPath =
 					webpackConfigPath.substr(0, 1).toUpperCase() +
 					webpackConfigPath.substr(1);
+
 				if (fs.existsSync(webpackConfigPath))
 					options = require(webpackConfigPath);
-				if (Array.isArray(options)) options.forEach(processOptions);
-				else processOptions(options);
+				if (Array.isArray(options)) {
+					options.forEach(processOptions);
+				} else if (typeof options === "function") {
+					options = processOptions(options());
+				} else {
+					processOptions(options);
+				}
 
 				function processOptions(options) {
 					options.context = examplePath;
@@ -44,6 +50,7 @@ describe("Examples", () => {
 							options: {}
 						})
 					);
+					return options;
 				}
 				webpack(options, (err, stats) => {
 					if (err) return done(err);
