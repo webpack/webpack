@@ -2087,6 +2087,10 @@
           "description": "add details to errors (like resolving log)",
           "type": "boolean"
         },
+        "errorStack": {
+          "description": "add internal stack trace to errors",
+          "type": "boolean"
+        },
         "errors": {
           "description": "add errors",
           "type": "boolean"

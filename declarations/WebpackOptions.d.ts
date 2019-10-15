@@ -1500,6 +1500,10 @@ export interface StatsOptions {
 	 */
 	errorDetails?: boolean;
 	/**
+	 * add internal stack trace to errors
+	 */
+	errorStack?: boolean;
+	/**
 	 * add errors
 	 */
 	errors?: boolean;
