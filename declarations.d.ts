@@ -7,11 +7,26 @@ declare namespace NodeJS {
 	}
 }
 
+// TODO remove when https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38753 is merged
+declare module "util" {
+	function deprecate<T extends Function>(
+		fn: T,
+		message: string,
+		code?: string
+	): T;
+}
+
 declare module "neo-async" {
+	interface QueueObject<T, E> {
+		push(item: T): void;
+		drain: () => void;
+		error: (err: E) => void;
+	}
+
 	export interface Dictionary<T> {
 		[key: string]: T;
 	}
-	export type IterableCollection<T> = T[] | IterableIterator<T> | Dictionary<T>;
+	export type IterableCollection<T> = T[] | Iterable<T> | Dictionary<T>;
 
 	export interface ErrorCallback<T> {
 		(err?: T): void;
@@ -103,6 +118,11 @@ declare module "neo-async" {
 		tasks: Dictionary<AsyncFunction<T, E>>,
 		callback?: AsyncResultObjectCallback<T, E>
 	): void;
+
+	export function queue<T, E>(
+		worker: AsyncFunction<T, E>,
+		concurrency?: number
+	): QueueObject<T, E>;
 
 	export const forEach: typeof each;
 	export const forEachLimit: typeof eachLimit;
@@ -228,6 +248,103 @@ declare module "@webassemblyjs/ast" {
 	export function isFuncImportDescr(n: Node): boolean;
 }
 
+declare module "webpack-sources" {
+	type MapOptions = { columns?: boolean; module?: boolean };
+
+	export abstract class Source {
+		size(): number;
+
+		map(options?: MapOptions): Object;
+
+		sourceAndMap(
+			options?: MapOptions
+		): {
+			source: string | Buffer;
+			map: Object;
+		};
+
+		updateHash(hash: import("./lib/util/Hash")): void;
+
+		source(): string | Buffer;
+
+		buffer(): Buffer;
+	}
+
+	export class RawSource extends Source {
+		constructor(source: string | Buffer);
+
+		// TODO remove internals
+		_value: string | Buffer;
+	}
+
+	export class OriginalSource extends Source {
+		constructor(source: string | Buffer, name: string);
+
+		// TODO remove internals
+		_value: string | Buffer;
+		_name: string;
+	}
+
+	export class ReplaceSource extends Source {
+		constructor(source: Source, name?: string);
+
+		replace(start: number, end: number, newValue: string, name?: string): void;
+		insert(pos: number, newValue: string, name?: string): void;
+
+		// TODO remove internals
+		_name: string;
+		_source: string;
+		_replacements: {
+			start: number;
+			end: number;
+			content: string;
+			insertIndex: number;
+			name: string;
+		}[];
+	}
+
+	export class SourceMapSource extends Source {
+		constructor(
+			source: string,
+			name: string,
+			sourceMap: Object | string,
+			originalSource?: string,
+			innerSourceMap?: Object
+		);
+	}
+
+	export class ConcatSource extends Source {
+		constructor(...args: (string | Source)[]);
+
+		children: (string | Source)[];
+
+		add(item: string | Source): void;
+	}
+
+	export class PrefixSource extends Source {
+		constructor(prefix: string, source: string | Source);
+
+		_source: string | Source;
+		_prefix: string;
+	}
+
+	export class CachedSource extends Source {
+		constructor(source: Source);
+
+		_source: Source;
+		_cachedSource: string | Buffer;
+		_cachedBuffer: Buffer;
+		_cachedSize: number;
+		_cachedMaps: Object;
+	}
+
+	export class SizeOnlySource extends Source {
+		constructor(size: number);
+
+		_size: number;
+	}
+}
+
 // This "hack" is needed because typescript doesn't support recursive type definitions
 // It's referenced from "ruleSet-conditions" in schemas/WebpackOptions.json
 interface RuleSetConditionsRecursive
@@ -242,17 +359,19 @@ interface RuleSetConditionsAbsoluteRecursive
  * @todo Once this issue is resolved, remove these globals and add JSDoc onsite instead
  * https://github.com/Microsoft/TypeScript/issues/15626
  */
-declare const $hash$;
-declare const $requestTimeout$;
-declare const installedModules;
-declare const $require$;
-declare const hotDownloadManifest;
-declare const hotDownloadUpdateChunk;
-declare const hotDisposeChunk;
-declare const modules;
-declare const installedChunks;
-declare const hotAddUpdateChunk;
-declare const parentHotUpdateCallback;
+declare const $moduleCache$;
+declare let $getFullHash$;
+declare const $interceptModuleExecution$;
+declare const $hmrDownloadManifest$;
+declare let $hmrDownloadUpdateHandlers$;
+declare let $hmrModuleData$;
+declare const $options$;
+declare const $updateModuleFactories$;
+declare const $updateRuntimeModules$;
+declare const $moduleFactories$;
+declare const $onError$;
+declare const $publicPath$;
+declare const __webpack_require__;
 declare const $hotChunkFilename$;
 declare const $hotMainFilename$;
 declare namespace WebAssembly {}

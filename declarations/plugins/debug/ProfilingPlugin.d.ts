@@ -6,7 +6,7 @@
 
 export interface ProfilingPluginOptions {
 	/**
-	 * Path to the output file e.g. `profiling/events.json`. Defaults to `events.json`.
+	 * Path to the output file e.g. `path.resolve(__dirname, 'profiling/events.json')`. Defaults to `events.json`.
 	 */
 	outputPath?: string;
 }

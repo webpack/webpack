@@ -43,22 +43,22 @@ _{{example.js}}_
 _{{dist/output.js}}_
 ```
 
-# dist/0.output.js
+# dist/394.output.js
 
 ```javascript
-_{{dist/0.output.js}}_
+_{{dist/394.output.js}}_
 ```
 
-# dist/2.output.js
+# dist/460.output.js
 
 ```javascript
-_{{dist/2.output.js}}_
+_{{dist/460.output.js}}_
 ```
 
-# dist/3.output.js
+# dist/767.output.js
 
 ```javascript
-_{{dist/3.output.js}}_
+_{{dist/767.output.js}}_
 ```
 
 # Info

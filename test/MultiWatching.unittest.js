@@ -1,6 +1,5 @@
 "use strict";
 
-const Tapable = require("tapable").Tapable;
 const SyncHook = require("tapable").SyncHook;
 const MultiWatching = require("../lib/MultiWatching");
 
@@ -19,7 +18,6 @@ const createCompiler = () => {
 			watchClose: new SyncHook([])
 		}
 	};
-	Tapable.addCompatLayer(compiler);
 	return compiler;
 };
 

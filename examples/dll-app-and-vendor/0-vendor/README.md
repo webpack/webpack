@@ -17,13 +17,13 @@ module.exports = {
 	context: __dirname,
 	entry: ["example-vendor"],
 	output: {
-		filename: "vendor.js", // best use [hash] here too
+		filename: "vendor.js", // best use [fullhash] here too
 		path: path.resolve(__dirname, "dist"),
-		library: "vendor_lib_[hash]"
+		library: "vendor_lib_[fullhash]"
 	},
 	plugins: [
 		new webpack.DllPlugin({
-			name: "vendor_lib_[hash]",
+			name: "vendor_lib_[fullhash]",
 			path: path.resolve(__dirname, "dist/vendor-manifest.json")
 		})
 	]
@@ -41,110 +41,16 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_a132d30959ef28c3f004 =
-```
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
-
-``` js
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "dist/";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
-/******/ })
-/************************************************************************/
-```
-
-</details>
-
-``` js
-/******/ ([
+var vendor_lib_7fed5908c1238c18375f =
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!****************!*\
   !*** dll main ***!
   \****************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! runtime requirements: __webpack_require__, module */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = __webpack_require__;
 
@@ -153,26 +59,88 @@ module.exports = __webpack_require__;
 /*!*****************************************!*\
   !*** ../node_modules/example-vendor.js ***!
   \*****************************************/
-/*! exports provided: square */
-/*! all exports used */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! export square [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "square", function() { return square; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "square": () => /* binding */ square
+/* harmony export */ });
 function square(n) {
 	return n * n;
 }
 
 
 /***/ })
-/******/ ]);
+/******/ 	]);
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	!function() {
+/******/ 		// define getter functions for harmony exports
+/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/************************************************************************/
+/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })()
+;
 ```
 
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_a132d30959ef28c3f004","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
+{"name":"vendor_lib_7fed5908c1238c18375f","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["square"]}}}
 ```
 
 # Info
@@ -181,30 +149,40 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
-    Asset      Size  Chunks             Chunk Names
-vendor.js  4.28 KiB       0  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset      Size
+vendor.js  3.48 KiB  [emitted]  [name: main]
 Entrypoint main = vendor.js
-chunk    {0} vendor.js (main) 57 bytes [entry] [rendered]
+chunk vendor.js (main) 57 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
     > main
- [0] dll main 12 bytes {0} [built]
-     dll entry 
-      DllPlugin
-     + 1 hidden module
+ ../node_modules/example-vendor.js 45 bytes [built]
+     [exports: square]
+     entry example-vendor dll main main[0]
+     DllPlugin
+ dll main 12 bytes [built]
+     dll entry
+     used a library export
+     DllPlugin
+     + 2 hidden chunk modules
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
-    Asset      Size  Chunks             Chunk Names
-vendor.js  1.06 KiB       0  [emitted]  main
+Version: webpack 5.0.0-alpha.31
+    Asset       Size
+vendor.js  626 bytes  [emitted]  [name: main]
 Entrypoint main = vendor.js
-chunk    {0} vendor.js (main) 57 bytes [entry] [rendered]
+chunk vendor.js (main) 57 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
     > main
- [0] dll main 12 bytes {0} [built]
-     dll entry 
-      DllPlugin
-     + 1 hidden module
+ ../node_modules/example-vendor.js 45 bytes [built]
+     [exports: square]
+     entry example-vendor dll main main[0]
+     DllPlugin
+ dll main 12 bytes [built]
+     dll entry
+     used a library export
+     DllPlugin
+     + 2 hidden chunk modules
 ```

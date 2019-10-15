@@ -8,9 +8,9 @@ module.exports = {
 				"./module": {
 					id: 1,
 					buildMeta: {
-						exportsType: "namespace",
-						providedExports: ["default"]
-					}
+						exportsType: "namespace"
+					},
+					exports: ["default"]
 				}
 			}
 		}),

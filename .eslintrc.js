@@ -11,7 +11,7 @@ module.exports = {
 		es6: true
 	},
 	parserOptions: {
-		ecmaVersion: 2017
+		ecmaVersion: 2018
 	},
 	rules: {
 		"prettier/prettier": "error",
@@ -28,7 +28,7 @@ module.exports = {
 		"no-extra-bind": "warn",
 		"no-process-exit": "warn",
 		"no-use-before-define": "off",
-		"no-unused-vars": ["error", { args: "none" }],
+		"no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true }],
 		"no-unsafe-negation": "error",
 		"no-loop-func": "warn",
 		indent: "off",
@@ -73,14 +73,14 @@ module.exports = {
 				description: false,
 				desc: false,
 				inheritdoc: false,
-				class: false
+				class: "constructor"
 			},
 			overrideReplacesDocs: false
 		}
 	},
 	overrides: [
 		{
-			files: ["lib/**/*.runtime.js", "buildin/*.js", "hot/*.js"],
+			files: ["lib/**/*.runtime.js", "hot/*.js"],
 			env: {
 				es6: false,
 				browser: true

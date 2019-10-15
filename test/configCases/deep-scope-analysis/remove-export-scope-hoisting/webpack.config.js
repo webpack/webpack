@@ -1,5 +1,6 @@
-const DependencyReference = require("../../../../").dependencies
-	.DependencyReference;
+const { DependencyReference } = require("../../../../").dependencies;
+/** @typedef {import("../../../../lib/Compilation")} Compilation */
+
 module.exports = {
 	optimization: {
 		usedExports: true,
@@ -7,28 +8,38 @@ module.exports = {
 	},
 	plugins: [
 		function() {
-			this.hooks.compilation.tap("Test", compilation => {
-				compilation.hooks.dependencyReference.tap(
-					"Test",
-					(ref, dep, module) => {
+			this.hooks.compilation.tap(
+				"Test",
+				/**
+				 * @param {Compilation} compilation the compilation
+				 * @returns {void}
+				 */
+				compilation => {
+					compilation.hooks.dependencyReference.tap("Test", (ref, dep) => {
+						const module = compilation.moduleGraph.getParentModule(dep);
 						if (
 							module.identifier().endsWith("module.js") &&
 							ref.module &&
 							ref.module.identifier().endsWith("reference.js") &&
 							Array.isArray(ref.importedNames) &&
-							ref.importedNames.includes("unused")
+							ref.importedNames.some(
+								names => names.length === 1 && names[0] === "unused"
+							)
 						) {
+							const newExports = ref.importedNames.filter(
+								names => names.length !== 1 || names[0] !== "unused"
+							);
 							return new DependencyReference(
-								ref.module,
-								ref.importedNames.filter(item => item !== "unused"),
+								() => ref.module,
+								newExports,
 								ref.weak,
 								ref.order
 							);
 						}
 						return ref;
-					}
-				);
-			});
+					});
+				}
+			);
 		}
 	]
 };

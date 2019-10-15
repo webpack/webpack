@@ -1,8 +1,7 @@
-/* global beforeAll expect */
 "use strict";
 
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
@@ -10,8 +9,7 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const { remove } = require("./helpers/remove");
 
-const Stats = require("../lib/Stats");
-const webpack = require("../lib/webpack");
+const webpack = require("..");
 
 function copyDiff(src, dest, initial) {
 	if (!fs.existsSync(dest)) fs.mkdirSync(dest);
@@ -183,8 +181,10 @@ describe("WatchTestCases", () => {
 										if (waitMode) return;
 										run.done = true;
 										if (err) return compilationFinished(err);
-										const statOptions = Stats.presetToOptions("verbose");
-										statOptions.colors = false;
+										const statOptions = {
+											preset: "verbose",
+											colors: false
+										};
 										mkdirp.sync(outputDirectory);
 										fs.writeFileSync(
 											path.join(outputDirectory, "stats.txt"),

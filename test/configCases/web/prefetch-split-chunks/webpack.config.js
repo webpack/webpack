@@ -1,6 +1,7 @@
 module.exports = {
 	target: "web",
 	output: {
+		filename: "[name].js",
 		chunkFilename: "[name].js",
 		crossOriginLoading: "anonymous"
 	},
@@ -9,6 +10,7 @@ module.exports = {
 	},
 	optimization: {
 		minimize: false,
+		chunkIds: "named",
 		splitChunks: {
 			cacheGroups: {
 				separate: {

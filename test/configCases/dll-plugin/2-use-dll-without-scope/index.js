@@ -51,7 +51,7 @@ it("should give modules the correct ids", function() {
 		"../0-create-dll/h.js",
 		"../0-create-dll/hb.js",
 		"./index.js",
-		"dll-reference ../0-create-dll/dll.js"
+		"dll-reference ../0-create-dll/dll.js",
 	]);
 });
 

@@ -116,22 +116,22 @@ within webpack itself use this plugin interface. This makes webpack very
 |[extract-text-webpack-plugin][extract]|![extract-npm]|![extract-size]|Extract text from a bundle, or bundles, into a separate file|
 
 [common-npm]: https://img.shields.io/npm/v/webpack.svg
-[extract]: https://github.com/webpack/extract-text-webpack-plugin
+[extract]: https://github.com/webpack-contrib/extract-text-webpack-plugin
 [extract-npm]: https://img.shields.io/npm/v/extract-text-webpack-plugin.svg
 [extract-size]: https://packagephobia.now.sh/badge?p=extract-text-webpack-plugin
 [mini-css]: https://github.com/webpack-contrib/mini-css-extract-plugin
 [mini-css-npm]: https://img.shields.io/npm/v/mini-css-extract-plugin.svg
 [mini-css-size]: https://packagephobia.now.sh/badge?p=mini-css-extract-plugin
-[component]: https://github.com/webpack/component-webpack-plugin
+[component]: https://github.com/webpack-contrib/component-webpack-plugin
 [component-npm]: https://img.shields.io/npm/v/component-webpack-plugin.svg
 [component-size]: https://packagephobia.now.sh/badge?p=component-webpack-plugin
-[compression]: https://github.com/webpack/compression-webpack-plugin
+[compression]: https://github.com/webpack-contrib/compression-webpack-plugin
 [compression-npm]: https://img.shields.io/npm/v/compression-webpack-plugin.svg
 [compression-size]: https://packagephobia.now.sh/badge?p=compression-webpack-plugin
-[i18n]: https://github.com/webpack/i18n-webpack-plugin
+[i18n]: https://github.com/webpack-contrib/i18n-webpack-plugin
 [i18n-npm]: https://img.shields.io/npm/v/i18n-webpack-plugin.svg
 [i18n-size]: https://packagephobia.now.sh/badge?p=i18n-webpack-plugin
-[html-plugin]: https://github.com/ampedandwired/html-webpack-plugin
+[html-plugin]: https://github.com/jantimon/html-webpack-plugin
 [html-plugin-npm]: https://img.shields.io/npm/v/html-webpack-plugin.svg
 [html-plugin-size]: https://packagephobia.now.sh/badge?p=html-webpack-plugin
 
@@ -154,16 +154,16 @@ or are automatically applied via regex from your webpack configuration.
 |[file-loader][file]|![file-npm]|![file-size]|Emits the file into the output folder and returns the (relative) url|
 
 
-[raw]: https://github.com/webpack/raw-loader
+[raw]: https://github.com/webpack-contrib/raw-loader
 [raw-npm]: https://img.shields.io/npm/v/raw-loader.svg
 [raw-size]: https://packagephobia.now.sh/badge?p=raw-loader
-[val]: https://github.com/webpack/val-loader
+[val]: https://github.com/webpack-contrib/val-loader
 [val-npm]: https://img.shields.io/npm/v/val-loader.svg
 [val-size]: https://packagephobia.now.sh/badge?p=val-loader
-[url]: https://github.com/webpack/url-loader
+[url]: https://github.com/webpack-contrib/url-loader
 [url-npm]: https://img.shields.io/npm/v/url-loader.svg
 [url-size]: https://packagephobia.now.sh/badge?p=url-loader
-[file]: https://github.com/webpack/file-loader
+[file]: https://github.com/webpack-contrib/file-loader
 [file-npm]: https://img.shields.io/npm/v/file-loader.svg
 [file-size]: https://packagephobia.now.sh/badge?p=file-loader
 
@@ -171,8 +171,8 @@ or are automatically applied via regex from your webpack configuration.
 
 |Name|Status|Install Size|Description|
 |:--:|:----:|:----------:|:----------|
-|<a href="https://github.com/webpack/json-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/json.svg"></a>|![json-npm]|![json-size]|Loads a JSON file (included by default)|
-|<a href="https://github.com/webpack/json5-loader"><img width="48" height="10.656" src="https://cdn.rawgit.com/json5/json5-logo/master/json5-logo.svg"></a>|![json5-npm]|![json5-size]|Loads and transpiles a JSON 5 file|
+|<a href="https://github.com/webpack-contrib/json-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/json.svg"></a>|![json-npm]|![json-size]|Loads a JSON file (included by default)|
+|<a href="https://github.com/webpack-contrib/json5-loader"><img width="48" height="10.656" src="https://cdn.rawgit.com/json5/json5-logo/master/json5-logo.svg"></a>|![json5-npm]|![json5-size]|Loads and transpiles a JSON 5 file|
 |<a href="https://github.com/awnist/cson-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>|![cson-npm]|![cson-size]|Loads and transpiles a CSON file|
 
 
@@ -187,12 +187,12 @@ or are automatically applied via regex from your webpack configuration.
 
 |Name|Status|Install Size|Description|
 |:--:|:----:|:----------:|:----------|
-|<a href="https://github.com/webpack/script-loader">`<script>`</a>|![script-npm]|![script-size]|Executes a JavaScript file once in global context (like in script tag), `require()`s are not parsed|
+|<a href="https://github.com/webpack-contrib/script-loader">`<script>`</a>|![script-npm]|![script-size]|Executes a JavaScript file once in global context (like in script tag), `require()`s are not parsed|
 |<a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a>|![babel-npm]|![babel-size]|Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a>|
 |<a href="https://github.com/jupl/traceur-loader"><img width="48" height="48" src="https://google.github.com/traceur-compiler/logo/tc.svg"></a>|![traceur-npm]|![traceur-size]|Loads ES2015+ code and transpiles to ES5 using [Traceur](https://github.com/google/traceur-compiler)|
 |<a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>|![type-npm]|![type-size]|Loads TypeScript like JavaScript|
 |[`awesome-typescript-loader`](https://github.com/s-panferov/awesome-typescript-loader)|![awesome-typescript-npm]|![awesome-typescript-size]|Awesome TypeScript loader for webpack|
-|<a href="https://github.com/webpack/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>|![coffee-npm]|![coffee-size]|Loads CoffeeScript like JavaScript|
+|<a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>|![coffee-npm]|![coffee-size]|Loads CoffeeScript like JavaScript|
 
 
 [script-npm]: https://img.shields.io/npm/v/script-loader.svg
@@ -212,12 +212,11 @@ or are automatically applied via regex from your webpack configuration.
 
 |Name|Status|Install Size|Description|
 |:--:|:----:|:----------:|:----------|
-|<a href="https://github.com/webpack/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>|![html-npm]|![html-size]|Exports HTML as string, requires references to static resources|
+|<a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>|![html-npm]|![html-size]|Exports HTML as string, requires references to static resources|
 |<a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>|![pug-npm]|![pug-size]|Loads Pug templates and returns a function|
-|<a href="https://github.com/webpack/jade-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/jade-3.svg"></a>|![jade-npm]|![jade-size]|Loads Jade templates and returns a function|
 |<a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/markdown.svg"></a>|![md-npm]|![md-size]|Compiles Markdown to HTML|
 |<a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="http://posthtml.github.io/posthtml/logo.svg"></a>|![posthtml-npm]|![posthtml-size]|Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml)|
-|<a href="https://github.com/altano/handlebars-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/handlebars-1.svg"></a>|![hbs-npm]|![hbs-size]| Compiles Handlebars to HTML|
+|<a href="https://github.com/pcardune/handlebars-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/handlebars-1.svg"></a>|![hbs-npm]|![hbs-size]| Compiles Handlebars to HTML|
 
 
 [html-npm]: https://img.shields.io/npm/v/html-loader.svg
@@ -237,10 +236,10 @@ or are automatically applied via regex from your webpack configuration.
 
 |Name|Status|Install Size|Description|
 |:--:|:----:|:----------:|:----------|
-|<a href="https://github.com/webpack/style-loader">`<style>`</a>|![style-npm]|![style-size]|Add exports of a module as style to DOM|
-|<a href="https://github.com/webpack/css-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/css-3.svg"></a>|![css-npm]|![css-size]|Loads CSS file with resolved imports and returns CSS code|
-|<a href="https://github.com/webpack/less-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/less-63.svg"></a>|![less-npm]|![less-size]|Loads and compiles a LESS file|
-|<a href="https://github.com/jtangelder/sass-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/sass-1.svg"></a>|![sass-npm]|![sass-size]|Loads and compiles a Sass/SCSS file|
+|<a href="https://github.com/webpack-contrib/style-loader">`<style>`</a>|![style-npm]|![style-size]|Add exports of a module as style to DOM|
+|<a href="https://github.com/webpack-contrib/css-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/css-3.svg"></a>|![css-npm]|![css-size]|Loads CSS file with resolved imports and returns CSS code|
+|<a href="https://github.com/webpack-contrib/less-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/less-63.svg"></a>|![less-npm]|![less-size]|Loads and compiles a LESS file|
+|<a href="https://github.com/webpack-contrib/sass-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/sass-1.svg"></a>|![sass-npm]|![sass-size]|Loads and compiles a Sass/SCSS file|
 |<a href="https://github.com/shama/stylus-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/stylus.svg"></a>|![stylus-npm]|![stylus-size]|Loads and compiles a Stylus file|
 |<a href="https://github.com/postcss/postcss-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/postcss.svg"></a>|![postcss-npm]|![postcss-size]|Loads and transforms a CSS/SSS file using [PostCSS](http://postcss.org)|
 
@@ -262,8 +261,8 @@ or are automatically applied via regex from your webpack configuration.
 
 |Name|Status|Install Size|Description|
 |:--:|:----:|:----------:|:----------|
-|<a href="https://github.com/webpack/mocha-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/mocha.svg"></a>|![mocha-npm]|![mocha-size]|Tests with mocha (Browser/NodeJS)|
-|<a href="https://github.com/MoOx/eslint-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/eslint.svg"></a>|![eslint-npm]|![eslint-size]|PreLoader for linting code using ESLint|
+|<a href="https://github.com/webpack-contrib/mocha-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/mocha.svg"></a>|![mocha-npm]|![mocha-size]|Tests with mocha (Browser/NodeJS)|
+|<a href="https://github.com/webpack-contrib/eslint-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/eslint.svg"></a>|![eslint-npm]|![eslint-size]|PreLoader for linting code using ESLint|
 |<a href="https://github.com/webpack-contrib/jshint-loader"><img width="48" height="20.64" src="http://jshint.com/res/jshint-dark.png"></a>|![jshint-npm]|![jshint-size]|PreLoader for linting code using JSHint|
 
 [mocha-npm]: https://img.shields.io/npm/v/mocha-loader.svg
@@ -282,7 +281,7 @@ or are automatically applied via regex from your webpack configuration.
 |<a href="https://github.com/vuejs/vue-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/vue-9.svg"></a>|![vue-npm]|![vue-size]|Loads and compiles Vue Components|
 |<a href="https://github.com/webpack-contrib/polymer-webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg"></a>|![polymer-npm]|![polymer-size]|Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules|
 |<a href="https://github.com/TheLarkInn/angular2-template-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/angular-icon-1.svg"></a>|![angular-npm]|![angular-size]| Loads and compiles Angular 2 Components|
-|<a href="https://github.com/riot/tag-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/riot.svg"></a>|![riot-npm]|![riot-size]| Riot official webpack loader|
+|<a href="https://github.com/riot/webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/riot.svg"></a>|![riot-npm]|![riot-size]| Riot official webpack loader|
 
 
 

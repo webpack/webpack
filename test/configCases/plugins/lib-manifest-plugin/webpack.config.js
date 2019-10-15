@@ -1,5 +1,5 @@
 var path = require("path");
-var LibManifestPlugin = require("../../../../lib/LibManifestPlugin");
+var LibManifestPlugin = require("../../../../").LibManifestPlugin;
 
 module.exports = {
 	entry: {
@@ -11,7 +11,7 @@ module.exports = {
 				__dirname,
 				"../../../js/config/plugins/lib-manifest-plugin/[name]-manifest.json"
 			),
-			name: "[name]_[hash]"
+			name: "[name]_[fullhash]"
 		})
 	],
 	node: {

@@ -3,9 +3,9 @@ module.exports = [
 	{
 		name: "hash with length in publicPath",
 		output: {
-			publicPath: "/[hash:6]/",
-			filename: "bundle0.[hash:6].js",
-			chunkFilename: "[id].bundle0.[hash:6].js"
+			publicPath: "/[fullhash:6]/",
+			filename: "bundle0.[fullhash:6].js",
+			chunkFilename: "[id].bundle0.[fullhash:6].js"
 		},
 		amd: {
 			expectedFilenameLength: 17,
@@ -15,9 +15,9 @@ module.exports = [
 	{
 		name: "hash in publicPath",
 		output: {
-			publicPath: "/[hash]/",
-			filename: "bundle1.[hash].js",
-			chunkFilename: "[id].bundle1.[hash].js"
+			publicPath: "/[fullhash]/",
+			filename: "bundle1.[fullhash].js",
+			chunkFilename: "[id].bundle1.[fullhash].js"
 		},
 		amd: {
 			expectedFilenameLength: 31,
@@ -49,8 +49,8 @@ module.exports = [
 	{
 		name: "hash with and without length",
 		output: {
-			filename: "bundle4.[hash].js",
-			chunkFilename: "[id].bundle4.[hash:8].js"
+			filename: "bundle4.[fullhash].js",
+			chunkFilename: "[id].bundle4.[fullhash:8].js"
 		},
 		amd: {
 			expectedFilenameLength: 31,
@@ -60,8 +60,8 @@ module.exports = [
 	{
 		name: "hash with length",
 		output: {
-			filename: "bundle5.[hash:6].js",
-			chunkFilename: "[id].bundle5.[hash:8].js"
+			filename: "bundle5.[fullhash:6].js",
+			chunkFilename: "[id].bundle5.[fullhash:8].js"
 		},
 		amd: {
 			expectedFilenameLength: 17,
@@ -71,7 +71,7 @@ module.exports = [
 	{
 		name: "chunkhash in chunkFilename ",
 		output: {
-			filename: "bundle6.[hash].js",
+			filename: "bundle6.[fullhash].js",
 			chunkFilename: "[id].bundle6.[chunkhash:7].js"
 		},
 		amd: {
@@ -83,7 +83,7 @@ module.exports = [
 	{
 		name: "hash with length and chunkhash with length",
 		output: {
-			filename: "bundle7.[hash:7].js",
+			filename: "bundle7.[fullhash:7].js",
 			chunkFilename: "[id].bundle7.[chunkhash:7].js"
 		},
 		target: "node",
@@ -95,8 +95,8 @@ module.exports = [
 	{
 		name: "hash with length in chunkFilename",
 		output: {
-			filename: "bundle8.[hash].js",
-			chunkFilename: "[id].bundle8.[hash:7].js"
+			filename: "bundle8.[fullhash].js",
+			chunkFilename: "[id].bundle8.[fullhash:7].js"
 		},
 		target: "node",
 		amd: {
@@ -107,7 +107,7 @@ module.exports = [
 	{
 		name: "chunkhash with length in chunkFilename",
 		output: {
-			filename: "bundle9.[hash].js",
+			filename: "bundle9.[fullhash].js",
 			chunkFilename: "[id].bundle9.[chunkhash:7].js"
 		},
 		target: "node",
@@ -170,7 +170,7 @@ module.exports = [
 		output: {
 			filename: "bundle14.[contenthash].js",
 			chunkFilename: "[id].bundle14.[contenthash].js",
-			globalObject: "this"
+			globalObject: "window"
 		},
 		target: "web",
 		amd: {
@@ -184,7 +184,7 @@ module.exports = [
 		output: {
 			filename: "bundle15.[contenthash:7].js",
 			chunkFilename: "[id].bundle15.[contenthash:7].js",
-			globalObject: "this"
+			globalObject: "window"
 		},
 		target: "web",
 		amd: {
@@ -198,7 +198,7 @@ module.exports = [
 		output: {
 			filename: "bundle16.[contenthash].js",
 			chunkFilename: "[id].bundle16.[contenthash].js",
-			globalObject: "this"
+			globalObject: "self"
 		},
 		target: "webworker",
 		amd: {
@@ -212,7 +212,7 @@ module.exports = [
 		output: {
 			filename: "bundle17.[contenthash:7].js",
 			chunkFilename: "[id].bundle17.[contenthash:7].js",
-			globalObject: "this"
+			globalObject: "self"
 		},
 		target: "webworker",
 		amd: {

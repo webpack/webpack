@@ -64,7 +64,7 @@
       "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict",
       "oneOf": [
         {
-          "description": "Custom function generating the identifer",
+          "description": "Custom function generating the identifier",
           "instanceof": "Function",
           "tsType": "Function"
         },
@@ -100,45 +100,6 @@
         }
       ]
     },
-    "lineToLine": {
-      "description": "(deprecated) try to map original files line to line to generated files",
-      "anyOf": [
-        {
-          "type": "boolean"
-        },
-        {
-          "description": "Simplify and speed up source mapping by using line to line source mappings for matched modules",
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "exclude": {
-              "description": "Exclude modules that match the given value from source map generation",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/rules"
-                }
-              ]
-            },
-            "include": {
-              "description": "Include source maps for module paths that match the given value",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/rules"
-                }
-              ]
-            },
-            "test": {
-              "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/rules"
-                }
-              ]
-            }
-          }
-        }
-      ]
-    },
     "module": {
       "description": "Indicates whether SourceMaps from loaders should be used (defaults to true)",
       "type": "boolean"
@@ -147,7 +108,7 @@
       "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap",
       "oneOf": [
         {
-          "description": "Custom function generating the identifer",
+          "description": "Custom function generating the identifier",
           "instanceof": "Function",
           "tsType": "Function"
         },

@@ -1,4 +1,3 @@
-/* globals expect */
 expect.extend({
 	toBeTypeOf(received, expected) {
 		const objType = typeof received;
@@ -50,3 +49,65 @@ if (process.env.ALTERNATIVE_SORT) {
 		return this;
 	};
 }
+
+// Setup debugging info for tests
+if (process.env.DEBUG_INFO) {
+	const addDebugInfo = it => {
+		return (name, fn, timeout) => {
+			if (fn.length === 0) {
+				it(
+					name,
+					() => {
+						process.stdout.write(`START1 ${name}\n`);
+						try {
+							const promise = fn();
+							if (promise && promise.then) {
+								return promise.then(
+									r => {
+										process.stdout.write(`DONE OK ${name}\n`);
+										return r;
+									},
+									e => {
+										process.stdout.write(`DONE FAIL ${name}\n`);
+										throw e;
+									}
+								);
+							} else {
+								process.stdout.write(`DONE OK ${name}\n`);
+							}
+						} catch (e) {
+							process.stdout.write(`DONE FAIL ${name}\n`);
+							throw e;
+						}
+					},
+					timeout
+				);
+			} else {
+				it(
+					name,
+					done => {
+						process.stdout.write(`START2 ${name}\n`);
+						return fn(err => {
+							if (err) {
+								process.stdout.write(`DONE FAIL ${name}\n`);
+							} else {
+								process.stdout.write(`DONE OK ${name}\n`);
+							}
+							return done(err);
+						});
+					},
+					timeout
+				);
+			}
+		};
+	};
+	const env = jasmine.getEnv();
+	env.it = addDebugInfo(env.it);
+}
+
+// Workaround for a memory leak in wabt
+// It leaks an Error object on construction
+// so it leaks the whole stack trace
+require("wast-loader");
+process.removeAllListeners("uncaughtException");
+process.removeAllListeners("unhandledRejection");

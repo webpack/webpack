@@ -4,6 +4,7 @@ const stats = {
 	builtAt: false,
 	assets: false,
 	chunks: true,
+	chunkRelations: true,
 	chunkOrigins: true,
 	entrypoints: true,
 	modules: false
@@ -18,7 +19,8 @@ module.exports = {
 	},
 	optimization: {
 		splitChunks: {
-			minSize: 80
+			minSize: 80,
+			minRemainingSize: 0
 		}
 	},
 	stats

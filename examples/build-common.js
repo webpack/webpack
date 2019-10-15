@@ -19,13 +19,28 @@ const commonArgs = `--display-chunks --display-max-modules 99999 --display-origi
 let readme = fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8");
 
 const doCompileAndReplace = (args, prefix, callback) => {
-	if(!tc.needResults(readme, prefix)) {
+	if (!tc.needResults(readme, prefix)) {
 		callback();
 		return;
 	}
-	if(fs.existsSync("dist"))
-		for(const file of fs.readdirSync("dist"))
-			fs.unlinkSync(`dist/${file}`);
+
+	const deleteFiles = (dir) => {
+		const targetDir = path.resolve("dist", dir);
+
+		if (path.extname(targetDir) === "") {
+			fs.readdirSync(targetDir).forEach((file) => {
+				deleteFiles(path.join(targetDir, file));
+			});
+		} else {
+			fs.unlinkSync(targetDir);
+		}
+	};
+
+	if (fs.existsSync("dist")) {
+		for (const dir of fs.readdirSync("dist")) {
+			deleteFiles(dir);
+		}
+	}
 
 	try {
 		require.resolve("webpack-cli");
@@ -34,13 +49,13 @@ const doCompileAndReplace = (args, prefix, callback) => {
 	}
 
 	cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${args} ${displayReasons} ${commonArgs}`, (error, stdout, stderr) => {
-		if(stderr)
+		if (stderr)
 			console.log(stderr);
-		if(error !== null)
+		if (error !== null)
 			console.log(error);
 		try {
 			readme = tc.replaceResults(readme, process.cwd(), stdout.replace(/[\r?\n]*$/, ""), prefix);
-		} catch(e) {
+		} catch (e) {
 			console.log(stderr);
 			throw e;
 		}
@@ -49,10 +64,10 @@ const doCompileAndReplace = (args, prefix, callback) => {
 };
 
 async.series([
-	callback => doCompileAndReplace("--mode production", "production", callback),
-	callback => doCompileAndReplace("--mode development --devtool none", "development", callback),
-	callback => doCompileAndReplace("--mode none --output-pathinfo", "", callback)
+	callback => doCompileAndReplace("--mode production --env production", "production", callback),
+	callback => doCompileAndReplace("--mode development --env development --devtool none", "development", callback),
+	callback => doCompileAndReplace("--mode none --env none --output-pathinfo", "", callback)
 ], () => {
 	readme = tc.replaceBase(readme);
-	fs.writeFile("README.md", readme, "utf-8", function() {});
+	fs.writeFile("README.md", readme, "utf-8", function () { });
 });

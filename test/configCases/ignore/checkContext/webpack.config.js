@@ -1,16 +1,13 @@
 "use strict";
 
-const IgnorePlugin = require("../../../../lib/IgnorePlugin");
+const IgnorePlugin = require("../../../../").IgnorePlugin;
 
 module.exports = {
 	entry: "./test.js",
 	plugins: [
 		new IgnorePlugin({
-			checkResource(resource) {
-				return /ignored-module/.test(resource);
-			},
-			checkContext(context) {
-				return /folder-b/.test(context);
+			checkResource(resource, context) {
+				return /ignored-module/.test(resource) && /folder-b/.test(context);
 			}
 		})
 	]

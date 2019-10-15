@@ -21,11 +21,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "checkContext": {
-          "description": "A filter function for context",
-          "instanceof": "Function",
-          "tsType": "((context: string) => boolean)"
-        },
         "checkResource": {
           "description": "A filter function for resource and context",
           "instanceof": "Function",

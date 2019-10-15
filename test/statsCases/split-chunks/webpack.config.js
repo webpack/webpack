@@ -4,6 +4,7 @@ const stats = {
 	builtAt: false,
 	assets: false,
 	chunks: true,
+	chunkRelations: true,
 	chunkOrigins: true,
 	entrypoints: true,
 	modules: false
@@ -55,10 +56,9 @@ module.exports = [
 		mode: "production",
 		entry: {
 			main: "./",
-			a: "./a",
-			b: "./b",
-			c: "./c",
-			vendors: ["x", "y", "z"]
+			a: ["x", "y", "z", "./a"],
+			b: ["x", "y", "z", "./b"],
+			c: ["x", "y", "z", "./c"]
 		},
 		output: {
 			filename: "default/[name].js"
@@ -70,7 +70,7 @@ module.exports = [
 				cacheGroups: {
 					default: false,
 					vendors: {
-						test: "vendors",
+						test: /[\\/]node_modules[\\/]/,
 						name: "vendors",
 						enforce: true
 					}
@@ -100,28 +100,7 @@ module.exports = [
 		},
 		stats
 	},
-	{
-		name: "name-too-long-limited",
-		mode: "production",
-		entry: {
-			main: "./",
-			aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: "./a",
-			bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb: "./b",
-			cccccccccccccccccccccccccccccc: "./c"
-		},
-		output: {
-			filename: "[name].js"
-		},
-		optimization: {
-			splitChunks: {
-				minSize: 0,
-				maxInitialRequests: Infinity,
-				chunks: "all",
-				automaticNameMaxLength: 30
-			}
-		},
-		stats
-	},
+
 	{
 		name: "custom-chunks-filter",
 		mode: "production",
@@ -148,10 +127,9 @@ module.exports = [
 		mode: "production",
 		entry: {
 			main: "./",
-			a: "./a",
-			b: "./b",
-			c: "./c",
-			vendors: ["x", "y", "z"]
+			a: ["x", "y", "z", "./a"],
+			b: ["x", "y", "z", "./b"],
+			c: ["x", "y", "z", "./c"]
 		},
 		output: {
 			filename: "default/[name].js"
@@ -163,7 +141,7 @@ module.exports = [
 				cacheGroups: {
 					default: false,
 					vendors: {
-						test: "vendors",
+						test: /[\\/]node_modules[\\/]/,
 						name: "vendors",
 						enforce: true,
 						chunks: chunk => chunk.name !== "a"

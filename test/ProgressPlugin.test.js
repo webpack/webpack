@@ -12,7 +12,7 @@ describe("ProgressPlugin", function() {
 
 	beforeEach(() => {
 		stderr = captureStdio(process.stderr, true);
-		webpack = require("../");
+		webpack = require("..");
 	});
 	afterEach(() => {
 		stderr && stderr.restore();
@@ -29,26 +29,22 @@ describe("ProgressPlugin", function() {
 
 	it("should not print lines longer than stderr.columns", () => {
 		const compiler = createSimpleCompiler();
-		process.stderr.columns = 31;
+		process.stderr.columns = 36;
 
 		return RunCompilerAsync(compiler).then(() => {
 			const logs = getLogs(stderr.toString());
 
 			expect(logs.length).toBeGreaterThan(20);
-			logs.forEach(log => expect(log.length).toBeLessThanOrEqual(30));
+			logs.forEach(log => expect(log.length).toBeLessThanOrEqual(35));
 			expect(logs).toContain(
-				"77% ...timization ...nksPlugin",
+				"75% ...optimization ...ChunksPlugin",
 				"trims each detail string equally"
 			);
 			expect(logs).toContain(
-				"10% building ...dules 0 active",
-				"remove empty arguments"
+				"10% ...ding ...ries ...ules ...tive",
+				"remove empty arguments and omit arguments when no space"
 			);
-			expect(logs).toContain(
-				"10% building ...dules 1 active",
-				"omit arguments when no space"
-			);
-			expect(logs).toContain("93% ...hunk asset optimization");
+			expect(logs).toContain("92% after chunk asset optimization");
 			expect(logs).toContain("100%");
 		});
 	});
@@ -92,7 +88,9 @@ const createSimpleCompiler = () => {
 
 	compiler.outputFileSystem = new MemoryFs();
 
-	new webpack.ProgressPlugin().apply(compiler);
+	new webpack.ProgressPlugin({
+		activeModules: true
+	}).apply(compiler);
 
 	return compiler;
 };

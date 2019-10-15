@@ -5,8 +5,12 @@ module.exports = {
 			{
 				test: /\.wat$/,
 				loader: "wast-loader",
-				type: "webassembly/experimental"
+				type: "webassembly/sync"
 			}
 		]
+	},
+	experiments: {
+		syncWebAssembly: true,
+		importAwait: true
 	}
 };

@@ -26,10 +26,10 @@ _{{commonjs.js}}_
 _{{dist/output.js}}_
 ```
 
-# dist/1.output.js
+# dist/635.output.js
 
 ```javascript
-_{{dist/1.output.js}}_
+_{{dist/635.output.js}}_
 ```
 
 # Info

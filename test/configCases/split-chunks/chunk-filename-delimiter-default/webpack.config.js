@@ -1,4 +1,5 @@
 module.exports = {
+	mode: "development",
 	entry: {
 		main: "./index"
 	},
@@ -13,7 +14,14 @@ module.exports = {
 	},
 	optimization: {
 		splitChunks: {
-			minSize: 1
+			cacheGroups: {
+				async: {
+					chunks: "async",
+					reuseExistingChunk: true,
+					minSize: 1,
+					maxSize: 1
+				}
+			}
 		}
 	}
 };

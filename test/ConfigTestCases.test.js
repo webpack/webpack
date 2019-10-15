@@ -1,8 +1,7 @@
 "use strict";
 
-/* globals describe expect it */
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
@@ -10,8 +9,7 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const FakeDocument = require("./helpers/FakeDocument");
 
-const Stats = require("../lib/Stats");
-const webpack = require("../lib/webpack");
+const webpack = require("..");
 const prepareOptions = require("./helpers/prepareOptions");
 
 describe("ConfigTestCases", () => {
@@ -112,7 +110,12 @@ describe("ConfigTestCases", () => {
 								webpack(options, (err, stats) => {
 									if (err) {
 										const fakeStats = {
-											errors: [err.stack]
+											errors: [
+												{
+													message: err.message,
+													stack: err.stack
+												}
+											]
 										};
 										if (
 											checkArrayExpectation(
@@ -127,8 +130,10 @@ describe("ConfigTestCases", () => {
 										// Wait for uncaught errors to occur
 										return setTimeout(done, 200);
 									}
-									const statOptions = Stats.presetToOptions("verbose");
-									statOptions.colors = false;
+									const statOptions = {
+										preset: "verbose",
+										colors: false
+									};
 									mkdirp.sync(outputDirectory);
 									fs.writeFileSync(
 										path.join(outputDirectory, "stats.txt"),
@@ -138,6 +143,11 @@ describe("ConfigTestCases", () => {
 									const jsonStats = stats.toJson({
 										errorDetails: true
 									});
+									fs.writeFileSync(
+										path.join(outputDirectory, "stats.json"),
+										JSON.stringify(jsonStats, null, 2),
+										"utf-8"
+									);
 									if (
 										checkArrayExpectation(
 											testDirectory,
@@ -174,7 +184,7 @@ describe("ConfigTestCases", () => {
 										}
 									};
 
-									function _require(currentDirectory, module) {
+									function _require(currentDirectory, options, module) {
 										if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 											let content;
 											let p;
@@ -195,8 +205,12 @@ describe("ConfigTestCases", () => {
 											};
 											let runInNewContext = false;
 											const moduleScope = {
-												require: _require.bind(null, path.dirname(p)),
-												importScripts: _require.bind(null, path.dirname(p)),
+												require: _require.bind(null, path.dirname(p), options),
+												importScripts: _require.bind(
+													null,
+													path.dirname(p),
+													options
+												),
 												module: m,
 												exports: m.exports,
 												__dirname: path.dirname(p),
@@ -207,6 +221,7 @@ describe("ConfigTestCases", () => {
 												expect,
 												jest,
 												_globalAssign: { expect },
+												__STATS__: jsonStats,
 												nsObj: m => {
 													Object.defineProperty(m, Symbol.toStringTag, {
 														value: "Module"
@@ -245,11 +260,14 @@ describe("ConfigTestCases", () => {
 
 									if (testConfig.noTests) return process.nextTick(done);
 									if (testConfig.beforeExecute) testConfig.beforeExecute();
+									const results = [];
 									for (let i = 0; i < optionsArr.length; i++) {
 										const bundlePath = testConfig.findBundle(i, optionsArr[i]);
 										if (bundlePath) {
 											filesCount++;
-											_require(outputDirectory, bundlePath);
+											results.push(
+												_require(outputDirectory, optionsArr[i], bundlePath)
+											);
 										}
 									}
 									// give a free pass to compilation that generated an error
@@ -262,10 +280,17 @@ describe("ConfigTestCases", () => {
 												"Should have found at least one bundle file per webpack config"
 											)
 										);
-									if (testConfig.afterExecute) testConfig.afterExecute();
-									if (getNumberOfTests() < filesCount)
-										return done(new Error("No tests exported by test case"));
-									done();
+									Promise.all(results)
+										.then(() => {
+											if (testConfig.afterExecute) testConfig.afterExecute();
+											if (getNumberOfTests() < filesCount) {
+												return done(
+													new Error("No tests exported by test case")
+												);
+											}
+											done();
+										})
+										.catch(done);
 								});
 							})
 					);

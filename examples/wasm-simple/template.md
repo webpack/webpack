@@ -1,6 +1,7 @@
 This very simple example shows usage of WebAssembly.
 
-WebAssembly modules can be imported like other modules. Their download and compilation happens in parallel to the download and evaluation of the javascript chunk.
+WebAssembly modules can be imported like other async modules with `import await` or `import()`.
+They are downloaded and instantiated in a streaming way when importing.
 
 # example.js
 
@@ -18,18 +19,6 @@ _{{math.js}}_
 
 ```javascript
 _{{dist/output.js}}_
-```
-
-# dist/1.output.js
-
-```javascript
-_{{dist/1.output.js}}_
-```
-
-# dist/2.output.js
-
-```javascript
-_{{dist/2.output.js}}_
 ```
 
 # Info

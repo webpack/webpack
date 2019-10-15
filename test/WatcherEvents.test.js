@@ -1,9 +1,8 @@
 "use strict";
 
-/* globals describe it */
 const path = require("path");
 const MemoryFs = require("memory-fs");
-const webpack = require("../");
+const webpack = require("..");
 
 const createCompiler = config => {
 	const compiler = webpack(config);

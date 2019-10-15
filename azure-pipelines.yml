@@ -5,7 +5,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "^10.10.0"
+          versionSpec: "^12.4.0"
         displayName: "Install Node.js"
       - script: |
           curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -50,7 +50,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "^10.10.0"
+          versionSpec: "^12.4.0"
         displayName: "Install Node.js"
       - script: |
           curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -93,13 +93,11 @@ jobs:
       maxParallel: 4
       matrix:
         node-12:
-          node_version: ^12.2.0
+          node_version: ^12.4.0
         node-10:
-          node_version: ^10.10.0
+          node_version: ^10.15.0
         node-8:
-          node_version: ^8.12.0
-        node-6:
-          node_version: ^6.14.4
+          node_version: ^8.16.0
     steps:
       - task: NodeTool@0
         inputs:
@@ -143,13 +141,11 @@ jobs:
       maxParallel: 4
       matrix:
         node-12:
-          node_version: ^12.2.0
+          node_version: ^12.4.0
         node-10:
-          node_version: ^10.10.0
+          node_version: ^10.15.0
         node-8:
-          node_version: ^8.12.0
-        node-6:
-          node_version: ^6.14.4
+          node_version: ^8.16.0
     steps:
       - task: NodeTool@0
         inputs:
@@ -193,13 +189,11 @@ jobs:
       maxParallel: 4
       matrix:
         node-12:
-          node_version: ^12.2.0
+          node_version: ^12.4.0
         node-10:
-          node_version: ^10.10.0
+          node_version: ^10.15.0
         node-8:
-          node_version: ^8.12.0
-        node-6:
-          node_version: ^6.14.4
+          node_version: ^8.16.0
     steps:
       - task: NodeTool@0
         inputs:

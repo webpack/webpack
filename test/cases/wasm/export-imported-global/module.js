@@ -1,1 +1,1 @@
-export * from "./module.wat";
+export await * from "./module.wat";
