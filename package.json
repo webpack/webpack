@@ -28,6 +28,7 @@
     "webpack-sources": "2.0.0-beta.4"
   },
   "devDependencies": {
+    "@types/estree": "0.0.39",
     "@types/node": "^12.6.9",
     "@yarnpkg/lockfile": "^1.1.0",
     "benchmark": "^2.1.1",
