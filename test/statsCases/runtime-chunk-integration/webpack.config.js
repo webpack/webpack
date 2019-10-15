@@ -1,4 +1,4 @@
-const MinChunkSizePlugin = require("../../../lib/optimize/MinChunkSizePlugin");
+const { MinChunkSizePlugin } = require("../../../").optimize;
 
 const baseConfig = {
 	mode: "production",
@@ -18,7 +18,8 @@ const baseConfig = {
 	]
 };
 
-const withoutNamedEntry = Object.assign({}, baseConfig, {
+const withoutNamedEntry = {
+	...baseConfig,
 	name: "base",
 	entry: {
 		main1: "./main1"
@@ -26,9 +27,10 @@ const withoutNamedEntry = Object.assign({}, baseConfig, {
 	optimization: {
 		runtimeChunk: "single"
 	}
-});
+};
 
-const withNamedEntry = Object.assign({}, baseConfig, {
+const withNamedEntry = {
+	...baseConfig,
 	name: "manifest is named entry",
 	entry: {
 		main1: "./main1",
@@ -39,6 +41,6 @@ const withNamedEntry = Object.assign({}, baseConfig, {
 			name: "manifest"
 		}
 	}
-});
+};
 
 module.exports = [withoutNamedEntry, withNamedEntry];

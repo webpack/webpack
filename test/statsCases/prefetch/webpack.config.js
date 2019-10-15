@@ -5,6 +5,7 @@ module.exports = {
 		all: false,
 		assets: true,
 		entrypoints: true,
+		chunkRelations: true,
 		chunks: true
 	}
 };

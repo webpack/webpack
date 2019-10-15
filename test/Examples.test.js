@@ -1,9 +1,9 @@
 "use strict";
 
-/* globals describe it */
+/* describe it */
 const path = require("path");
-const fs = require("fs");
-const webpack = require("../");
+const fs = require("graceful-fs");
+const webpack = require("..");
 
 describe("Examples", () => {
 	const basePath = path.join(__dirname, "..", "examples");
@@ -26,6 +26,7 @@ describe("Examples", () => {
 					webpackConfigPath.substr(1);
 				if (fs.existsSync(webpackConfigPath))
 					options = require(webpackConfigPath);
+				if (typeof options === "function") options = options();
 				if (Array.isArray(options)) options.forEach(processOptions);
 				else processOptions(options);
 
@@ -37,13 +38,6 @@ describe("Examples", () => {
 					options.output.publicPath = "dist/";
 					if (!options.entry) options.entry = "./example.js";
 					if (!options.plugins) options.plugins = [];
-					// To support deprecated loaders
-					// TODO remove in webpack 5
-					options.plugins.push(
-						new webpack.LoaderOptionsPlugin({
-							options: {}
-						})
-					);
 				}
 				webpack(options, (err, stats) => {
 					if (err) return done(err);

@@ -36,16 +36,16 @@ _{{example.js}}_
 _{{dist/output.js}}_
 ```
 
-# dist/1.output.js
+# dist/796.output.js
 
 ```javascript
-_{{dist/1.output.js}}_
+_{{dist/796.output.js}}_
 ```
 
 Minimized
 
 ```javascript
-_{{production:dist/1.output.js}}_
+_{{production:dist/796.output.js}}_
 ```
 
 # Info

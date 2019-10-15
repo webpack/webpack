@@ -1,10 +1,10 @@
 "use strict";
 
-/* globals describe it */
+/* describe it */
 const path = require("path");
 const MemoryFs = require("memory-fs");
-const webpack = require("../");
-const fs = require("fs");
+const webpack = require("..");
+const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 
 const createCompiler = config => {

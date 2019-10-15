@@ -1,0 +1,2 @@
+import "./index";
+import "./b";

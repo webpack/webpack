@@ -1,5 +1,5 @@
 module.exports = {
 	findBundle: function(i, options) {
-		return ["main.js", "bundle0.js", "separate~main.js"];
+		return ["main.js", "runtime~main.js", "separate-public-path_js.js"];
 	}
 };

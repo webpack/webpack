@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const asyncLib = require("neo-async");
 const Benchmark = require("benchmark");
 const { remove } = require("./helpers/remove");
@@ -77,7 +77,7 @@ describe("BenchmarkTestCases", function() {
 
 					function doLoadWebpack() {
 						const baselineWebpack = require.requireActual(
-							path.resolve(baselinePath, "lib/webpack.js")
+							path.resolve(baselinePath, "lib/index.js")
 						);
 						baselines.push({
 							name: baselineInfo.name,

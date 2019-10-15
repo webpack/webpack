@@ -13,8 +13,8 @@ coverage:
       integration:
         flags: integration
         target: auto
-      unit:
-        flags: unit
+      lintunit:
+        flags: lintunit
         target: 0%
     patch:
       default: off
@@ -26,8 +26,8 @@ coverage:
         flags: integration
         target: 90%
         base: pr
-      unit:
-        flags: unit
+      lintunit:
+        flags: lintunit
         target: 0%
         base: pr
     changes:
@@ -38,12 +38,12 @@ coverage:
       integration:
         flags: integration
         target: 0%
-      unit:
-        flags: unit
+      lintunit:
+        flags: lintunit
         target: 0%
 comment: off
 flags:
   basic:
     joined: false
-  unit:
+  lintunit:
     joined: false

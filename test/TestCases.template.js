@@ -1,16 +1,15 @@
-/* global describe it expect */
 "use strict";
 
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
+const rimraf = require("rimraf");
 const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 
-const Stats = require("../lib/Stats");
-const webpack = require("../lib/webpack");
+const webpack = require("..");
 
 const terserForTesting = new TerserPlugin({
 	cache: false,
@@ -23,14 +22,14 @@ const DEFAULT_OPTIMIZATIONS = {
 	removeEmptyChunks: true,
 	mergeDuplicateChunks: true,
 	flagIncludedChunks: true,
-	occurrenceOrder: true,
 	sideEffects: true,
 	providedExports: true,
 	usedExports: true,
+	mangleExports: true,
 	noEmitOnErrors: false,
 	concatenateModules: false,
-	namedModules: false,
-	hashedModuleIds: false,
+	moduleIds: "size",
+	chunkIds: "size",
 	minimizer: [terserForTesting]
 };
 
@@ -82,6 +81,13 @@ const describeCases = config => {
 								category.name,
 								testName
 							);
+							const cacheDirectory = path.join(
+								__dirname,
+								"js/.cache",
+								config.name,
+								category.name,
+								testName
+							);
 							const options = {
 								context: casesPath,
 								entry: "./" + category.name + "/" + testName + "/index",
@@ -90,13 +96,20 @@ const describeCases = config => {
 								mode: config.mode || "none",
 								optimization: config.mode
 									? NO_EMIT_ON_ERRORS_OPTIMIZATIONS
-									: Object.assign(
-											{},
-											config.optimization,
-											DEFAULT_OPTIMIZATIONS
-									  ),
+									: {
+											...DEFAULT_OPTIMIZATIONS,
+											...config.optimization
+									  },
 								performance: {
 									hints: false
+								},
+								node: {
+									__dirname: "mock",
+									__filename: "mock"
+								},
+								cache: config.cache && {
+									cacheDirectory,
+									...config.cache
 								},
 								output: {
 									pathinfo: true,
@@ -114,14 +127,7 @@ const describeCases = config => {
 										"main"
 									],
 									aliasFields: ["browser"],
-									extensions: [
-										".mjs",
-										".webpack.js",
-										".web.js",
-										".js",
-										".json"
-									],
-									concord: true
+									extensions: [".mjs", ".webpack.js", ".web.js", ".js", ".json"]
 								},
 								resolveLoader: {
 									modules: [
@@ -151,7 +157,7 @@ const describeCases = config => {
 										{
 											test: /\.wat$/i,
 											loader: "wast-loader",
-											type: "webassembly/experimental"
+											type: "webassembly/async"
 										}
 									]
 								},
@@ -159,8 +165,8 @@ const describeCases = config => {
 									this.hooks.compilation.tap("TestCasesTest", compilation => {
 										[
 											"optimize",
-											"optimizeModulesBasic",
-											"optimizeChunksBasic",
+											"optimizeModules",
+											"optimizeChunks",
 											"afterOptimizeTree",
 											"afterOptimizeAssets"
 										].forEach(hook => {
@@ -169,81 +175,140 @@ const describeCases = config => {
 											);
 										});
 									});
-								})
+								}),
+								experiments: {
+									mjs: true,
+									asyncWebAssembly: true,
+									topLevelAwait: true,
+									importAwait: true
+								}
 							};
+							beforeAll(done => {
+								rimraf(cacheDirectory, done);
+							});
+							if (config.cache) {
+								it(`${testName} should pre-compile to fill disk cache (1st)`, done => {
+									const oldPath = options.output.path;
+									options.output.path = path.join(
+										options.output.path,
+										"cache1"
+									);
+									webpack(options, err => {
+										options.output.path = oldPath;
+										if (err) return done(err);
+										done();
+									});
+								}, 60000);
+								it(`${testName} should pre-compile to fill disk cache (2nd)`, done => {
+									const oldPath = options.output.path;
+									options.output.path = path.join(
+										options.output.path,
+										"cache2"
+									);
+									webpack(options, err => {
+										options.output.path = oldPath;
+										if (err) return done(err);
+										done();
+									});
+								}, 10000);
+							}
 							it(
 								testName + " should compile",
 								done => {
-									webpack(options, (err, stats) => {
-										if (err) done(err);
-										const statOptions = Stats.presetToOptions("verbose");
-										statOptions.colors = false;
-										mkdirp.sync(outputDirectory);
-										fs.writeFileSync(
-											path.join(outputDirectory, "stats.txt"),
-											stats.toString(statOptions),
-											"utf-8"
-										);
-										const jsonStats = stats.toJson({
-											errorDetails: true
-										});
-										if (
-											checkArrayExpectation(
-												testDirectory,
-												jsonStats,
-												"error",
-												"Error",
-												done
-											)
-										)
-											return;
-										if (
-											checkArrayExpectation(
-												testDirectory,
-												jsonStats,
-												"warning",
-												"Warning",
-												done
-											)
-										)
-											return;
-
-										function _require(module) {
-											if (module.substr(0, 2) === "./") {
-												const p = path.join(outputDirectory, module);
-												const fn = vm.runInThisContext(
-													"(function(require, module, exports, __dirname, it, expect) {" +
-														"global.expect = expect;" +
-														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
-														fs.readFileSync(p, "utf-8") +
-														"\n})",
-													p
-												);
-												const m = {
-													exports: {},
-													webpackTestSuiteModule: true
+									const compiler = webpack(options);
+									const run = () => {
+										compiler.run((err, stats) => {
+											if (err) return done(err);
+											compiler.close(err => {
+												if (err) return done(err);
+												const statOptions = {
+													preset: "verbose",
+													colors: false
 												};
-												fn.call(
-													m.exports,
-													_require,
-													m,
-													m.exports,
-													outputDirectory,
-													_it,
-													expect
+												mkdirp.sync(outputDirectory);
+												fs.writeFileSync(
+													path.join(outputDirectory, "stats.txt"),
+													stats.toString(statOptions),
+													"utf-8"
 												);
-												return m.exports;
-											} else return require(module);
-										}
-										_require.webpackTestSuiteRequire = true;
-										_require("./bundle.js");
-										if (getNumberOfTests() === 0)
-											return done(new Error("No tests exported by test case"));
+												const jsonStats = stats.toJson({
+													errorDetails: true
+												});
+												if (
+													checkArrayExpectation(
+														testDirectory,
+														jsonStats,
+														"error",
+														"Error",
+														done
+													)
+												)
+													return;
+												if (
+													checkArrayExpectation(
+														testDirectory,
+														jsonStats,
+														"warning",
+														"Warning",
+														done
+													)
+												)
+													return;
 
-										done();
-									});
+												Promise.resolve().then(done);
+											});
+										});
+									};
+									if (config.cache) {
+										// pre-compile to fill memory cache
+										compiler.run(err => {
+											if (err) return done(err);
+											run();
+										});
+									} else {
+										run();
+									}
 								},
-								60000
+								config.cache ? 10000 : 60000
+							);
+
+							it(
+								testName + " should load the compiled tests",
+								done => {
+									function _require(module) {
+										if (module.substr(0, 2) === "./") {
+											const p = path.join(outputDirectory, module);
+											const fn = vm.runInThisContext(
+												"(function(require, module, exports, __dirname, it, expect) {" +
+													"global.expect = expect;" +
+													'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
+													fs.readFileSync(p, "utf-8") +
+													"\n})",
+												p
+											);
+											const m = {
+												exports: {},
+												webpackTestSuiteModule: true
+											};
+											fn.call(
+												m.exports,
+												_require,
+												m,
+												m.exports,
+												outputDirectory,
+												_it,
+												expect
+											);
+											return m.exports;
+										} else return require(module);
+									}
+									_require.webpackTestSuiteRequire = true;
+									_require("./bundle.js");
+									if (getNumberOfTests() === 0)
+										return done(new Error("No tests exported by test case"));
+									done();
+								},
+								10000
 							);
 
 							const { it: _it, getNumberOfTests } = createLazyTestEnv(

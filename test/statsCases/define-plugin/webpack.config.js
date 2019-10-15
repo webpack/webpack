@@ -4,7 +4,7 @@ var join = require("path").join;
 
 function read(path) {
 	return JSON.stringify(
-		fs.readFileSync(join(__dirname, path), "utf8").replace(/\r\n/g, "\n")
+		fs.readFileSync(join(__dirname, path), "utf8").replace(/\r\n?/g, "\n")
 	);
 }
 

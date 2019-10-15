@@ -89,10 +89,13 @@ it("should be able to import commonjs", function() {
 	function x() { throw new Error("should not be executed"); }
 	// next line doesn't end with semicolon
 	x
+	Thing
 	expect(Thing).toBeTypeOf("function");
 	x
+	Thing()
 	expect(Thing()).toBe("thing");
 	x
+	Other
 	expect(Other).toBe("other");
 
 	expect(Thing2).toBeTypeOf("function");

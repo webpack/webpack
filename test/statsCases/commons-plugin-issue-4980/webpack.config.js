@@ -3,7 +3,7 @@ module.exports = [
 	{
 		mode: "production",
 		output: {
-			chunkFilename: "[name].[chunkhash].js"
+			filename: "[name].[chunkhash].js"
 		},
 		entry: {
 			app: "./entry-1.js"
@@ -18,14 +18,13 @@ module.exports = [
 						test: /constants/
 					}
 				}
-			},
-			namedModules: true
+			}
 		}
 	},
 	{
 		mode: "production",
 		output: {
-			chunkFilename: "[name].[chunkhash].js"
+			filename: "[name].[chunkhash].js"
 		},
 		entry: {
 			app: "./entry-2.js"
@@ -40,8 +39,7 @@ module.exports = [
 						test: /constants/
 					}
 				}
-			},
-			namedModules: true
+			}
 		}
 	}
 ];

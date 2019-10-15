@@ -3,6 +3,6 @@ module.exports = {
 	optimization: {
 		usedExports: true,
 		concatenateModules: true,
-		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
 	}
 };

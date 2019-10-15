@@ -2,27 +2,27 @@
 
 exports[`ConfigTestCases records issue-2991 exported tests should write relative paths to records 1`] = `
 "{
-  \\"modules\\": {
-    \\"byIdentifier\\": {
-      \\"test.js\\": 0,
-      \\"ignored  pkgs/somepackage/foo\\": 1,
-      \\"external \\\\\\"fs\\\\\\"\\": 2,
-      \\"external \\\\\\"path\\\\\\"\\": 3
-    },
-    \\"usedIds\\": {
-      \\"0\\": 0,
-      \\"1\\": 1,
-      \\"2\\": 2,
-      \\"3\\": 3
-    }
-  },
   \\"chunks\\": {
     \\"byName\\": {
-      \\"main\\": 0
+      \\"main\\": 179
     },
     \\"bySource\\": {},
     \\"usedIds\\": [
-      0
+      179
+    ]
+  },
+  \\"modules\\": {
+    \\"byIdentifier\\": {
+      \\"./test.js\\": 393,
+      \\"external \\\\\\"fs\\\\\\"\\": 747,
+      \\"external \\\\\\"path\\\\\\"\\": 622,
+      \\"ignored|pkgs/somepackage/foo\\": 713
+    },
+    \\"usedIds\\": [
+      393,
+      622,
+      713,
+      747
     ]
   }
 }"
@@ -30,31 +30,31 @@ exports[`ConfigTestCases records issue-2991 exported tests should write relative
 
 exports[`ConfigTestCases records issue-7339 exported tests should write relative dynamic-require paths to records 1`] = `
 "{
-  \\"modules\\": {
-    \\"byIdentifier\\": {
-      \\"dependencies/bar.js\\": 0,
-      \\"dependencies/foo.js\\": 1,
-      \\"test.js\\": 2,
-      \\"dependencies sync /^\\\\\\\\.\\\\\\\\/.*$/\\": 3,
-      \\"external \\\\\\"fs\\\\\\"\\": 4,
-      \\"external \\\\\\"path\\\\\\"\\": 5
-    },
-    \\"usedIds\\": {
-      \\"0\\": 0,
-      \\"1\\": 1,
-      \\"2\\": 2,
-      \\"3\\": 3,
-      \\"4\\": 4,
-      \\"5\\": 5
-    }
-  },
   \\"chunks\\": {
     \\"byName\\": {
-      \\"main\\": 0
+      \\"main\\": 179
     },
     \\"bySource\\": {},
     \\"usedIds\\": [
-      0
+      179
+    ]
+  },
+  \\"modules\\": {
+    \\"byIdentifier\\": {
+      \\"./dependencies/bar.js\\": 379,
+      \\"./dependencies/foo.js\\": 117,
+      \\"./dependencies|sync|/^\\\\\\\\.\\\\\\\\/.*$/\\": 412,
+      \\"./test.js\\": 393,
+      \\"external \\\\\\"fs\\\\\\"\\": 747,
+      \\"external \\\\\\"path\\\\\\"\\": 622
+    },
+    \\"usedIds\\": [
+      117,
+      379,
+      393,
+      412,
+      622,
+      747
     ]
   }
 }"

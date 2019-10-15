@@ -1,4 +1,3 @@
-/* globals describe, beforeEach, it */
 "use strict";
 
 const identifierUtil = require("../lib/util/identifier");
@@ -6,17 +5,49 @@ const identifierUtil = require("../lib/util/identifier");
 describe("util/identifier", () => {
 	describe("makePathsRelative", () => {
 		describe("given a context and a pathConstruct", () => {
-			let context, pathConstruct, expected;
-			beforeEach(() => {
-				context = "/some/dir/";
-				pathConstruct = "/some/dir/to/somewhere|some/other/dir!../more/dir";
-				expected = "to/somewhere|some/other/dir!../more/dir";
-			});
-
 			it("computes the correct relative results for the path construct", () => {
-				expect(identifierUtil.makePathsRelative(context, pathConstruct)).toBe(
-					expected
-				);
+				[
+					[
+						"/some/dir/",
+						"/some/dir/to/somewhere|some/other/dir!../more/dir",
+						"./to/somewhere|some/other/dir!../more/dir"
+					],
+					[
+						"/dir/",
+						"/dir/to/somewhere|some/other/dir!../more/dir",
+						"./to/somewhere|some/other/dir!../more/dir"
+					],
+					[
+						"/",
+						"/dir/to/somewhere|some/other/dir!../more/dir",
+						"./dir/to/somewhere|some/other/dir!../more/dir"
+					],
+					[
+						"c:\\some\\dir\\",
+						"c:\\some\\dir\\to\\somewhere|some/other/dir!../more/dir",
+						"./to/somewhere|some/other/dir!../more/dir"
+					],
+					[
+						"c:\\some\\dir\\",
+						"C:\\some\\dir\\to\\somewhere|some/other/dir!../more/dir",
+						"./to/somewhere|some/other/dir!../more/dir"
+					],
+					[
+						"C:\\some\\dir",
+						"C:\\some\\dir\\to\\somewhere|some/other/dir!../more/dir",
+						"./to/somewhere|some/other/dir!../more/dir"
+					],
+					[
+						"C:\\\\some\\dir",
+						"c:\\some\\\\dir\\to\\\\somewhere|some/other/dir!../more/dir",
+						"./to/somewhere|some/other/dir!../more/dir"
+					],
+					["/dir", "/dir/to/somewhere??ref-123", "./to/somewhere??ref-123"]
+				].forEach(([context, pathConstruct, expected]) => {
+					expect(identifierUtil.makePathsRelative(context, pathConstruct)).toBe(
+						expected
+					);
+				});
 			});
 		});
 	});

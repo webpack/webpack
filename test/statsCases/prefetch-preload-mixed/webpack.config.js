@@ -3,6 +3,7 @@ module.exports = {
 	entry: "./index",
 	stats: {
 		all: false,
+		chunkRelations: true,
 		chunks: true
 	}
 };

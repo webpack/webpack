@@ -13,8 +13,10 @@ webpack(
 		node: {
 			__dirname: false
 		},
+		optimization: {
+			moduleIds: "named"
+		},
 		plugins: [
-			new webpack.NamedModulesPlugin(),
 			new webpack.IgnorePlugin(/^(fsevents|terser)$/),
 			new webpack.NormalModuleReplacementPlugin(
 				/^.\/loadLoader$/,

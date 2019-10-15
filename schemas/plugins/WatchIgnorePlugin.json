@@ -1,18 +1,25 @@
 {
   "title": "WatchIgnorePluginOptions",
-  "description": "A list of RegExps or absolute paths to directories or files that should be ignored",
-  "type": "array",
-  "items": {
-    "description": "RegExp or absolute path to directories or files that should be ignored",
-    "oneOf": [
-      {
-        "type": "string"
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "paths": {
+      "description": "A list of RegExps or absolute paths to directories or files that should be ignored",
+      "type": "array",
+      "items": {
+        "description": "RegExp or absolute path to directories or files that should be ignored",
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "instanceof": "RegExp",
+            "tsType": "RegExp"
+          }
+        ]
       },
-      {
-        "instanceof": "RegExp",
-        "tsType": "RegExp"
-      }
-    ]
+      "minItems": 1
+    }
   },
-  "minItems": 1
+  "required": ["paths"]
 }

@@ -5,6 +5,7 @@ module.exports = {
 		reasons: false,
 		modules: false,
 		chunks: true,
+		chunkRelations: true,
 		chunkModules: true,
 		chunkOrigins: true
 	}

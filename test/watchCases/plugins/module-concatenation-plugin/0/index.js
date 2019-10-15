@@ -9,5 +9,5 @@ it("should watch for changes", function() {
 		expect(require("./foo/" + WATCH_STEP)).toBe('This should be working.' + WATCH_STEP);
 	}
 
-	expect(STATS_JSON.modules.length).toBe(4 + Number(WATCH_STEP));
+	expect(STATS_JSON.modules.length).toBe(6 + Number(WATCH_STEP));
 });

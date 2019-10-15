@@ -1,9 +1,9 @@
-/* globals describe, it */
 "use strict";
 
 const path = require("path");
 
-const webpack = require("../");
+const webpack = require("..");
+const Stats = require("../lib/Stats");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const MemoryFs = require("memory-fs");
 const captureStdio = require("./helpers/captureStdio");
@@ -22,19 +22,18 @@ describe("Compiler", () => {
 			minimize: false
 		};
 		const logs = {
-			mkdirp: [],
+			mkdir: [],
 			writeFile: []
 		};
 
 		const c = webpack(options);
 		const files = {};
 		c.outputFileSystem = {
-			join() {
-				return [].join.call(arguments, "/").replace(/\/+/g, "/");
-			},
-			mkdirp(path, callback) {
-				logs.mkdirp.push(path);
-				callback();
+			mkdir(path, callback) {
+				logs.mkdir.push(path);
+				const err = new Error();
+				err.code = "EEXIST";
+				callback(err);
 			},
 			writeFile(name, content, callback) {
 				logs.writeFile.push(name, content);
@@ -76,7 +75,7 @@ describe("Compiler", () => {
 				}
 			},
 			(stats, files) => {
-				expect(stats.logs.mkdirp).toEqual(["/what", "/what/the"]);
+				expect(stats.logs.mkdir).toEqual(["/what", "/what/the"]);
 				done();
 			}
 		);
@@ -87,7 +86,7 @@ describe("Compiler", () => {
 			expect(Object.keys(files)).toEqual(["/main.js"]);
 			const bundle = files["/main.js"];
 			expect(bundle).toMatch("function __webpack_require__(");
-			expect(bundle).toMatch(/__webpack_require__\(\/\*! \.\/a \*\/ \d\);/);
+			expect(bundle).toMatch(/__webpack_require__\(\/\*! \.\/a \*\/ \w+\);/);
 			expect(bundle).toMatch("./c.js");
 			expect(bundle).toMatch("./a.js");
 			expect(bundle).toMatch("This is a");
@@ -147,9 +146,9 @@ describe("Compiler", () => {
 	it("should compile a file with multiple chunks", done => {
 		compile("./chunks", {}, (stats, files) => {
 			expect(stats.chunks).toHaveLength(2);
-			expect(Object.keys(files)).toEqual(["/main.js", "/1.js"]);
+			expect(Object.keys(files)).toEqual(["/main.js", "/394.js"]);
 			const bundle = files["/main.js"];
-			const chunk = files["/1.js"];
+			const chunk = files["/394.js"];
 			expect(bundle).toMatch("function __webpack_require__(");
 			expect(bundle).toMatch("__webpack_require__(/*! ./b */");
 			expect(chunk).not.toMatch("__webpack_require__(/* ./b */");
@@ -259,6 +258,73 @@ describe("Compiler", () => {
 			done();
 		});
 	});
+	it("should bubble up errors when wrapped in a promise and bail is true", async done => {
+		try {
+			const createCompiler = options => {
+				return new Promise((resolve, reject) => {
+					const c = webpack(options);
+					c.run((err, stats) => {
+						if (err) {
+							reject(err);
+						}
+						if (stats !== undefined && "errors" in stats) {
+							reject(err);
+						} else {
+							resolve(stats);
+						}
+					});
+				});
+			};
+			const compiler = await createCompiler({
+				context: __dirname,
+				mode: "production",
+				entry: "./missing-file",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				},
+				bail: true
+			});
+			done();
+			return compiler;
+		} catch (err) {
+			expect(err.toString()).toMatch(
+				"ModuleNotFoundError: Module not found: Error: Can't resolve './missing-file'"
+			);
+			done();
+		}
+	});
+	it("should not emit compilation errors in async (watch)", async done => {
+		try {
+			const createCompiler = options => {
+				return new Promise((resolve, reject) => {
+					const c = webpack(options);
+					c.outputFileSystem = new MemoryFs();
+					const watching = c.watch({}, (err, stats) => {
+						watching.close(() => {
+							if (err) return reject(err);
+							resolve(stats);
+						});
+					});
+				});
+			};
+			const compiler = await createCompiler({
+				context: __dirname,
+				mode: "production",
+				entry: "./missing-file",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				},
+				watch: true
+			});
+			expect(compiler).toBeInstanceOf(Stats);
+			done();
+		} catch (err) {
+			done(err);
+		}
+	});
+
 	it("should not emit on errors (watch)", done => {
 		const compiler = webpack({
 			context: __dirname,
@@ -449,6 +515,134 @@ describe("Compiler", () => {
 				done();
 			});
 		});
+	});
+	it("should run again correctly inside afterDone hook", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		let once = true;
+		compiler.hooks.afterDone.tap("RunAgainTest", () => {
+			if (!once) return;
+			once = false;
+			compiler.run((err, stats) => {
+				if (err) return done(err);
+				done();
+			});
+		});
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+		});
+	});
+	it("should call afterDone hook after other callbacks (run)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		const runCb = jest.fn();
+		const doneHookCb = jest.fn();
+		compiler.hooks.done.tap("afterDoneRunTest", doneHookCb);
+		compiler.hooks.afterDone.tap("afterDoneRunTest", () => {
+			expect(runCb).toHaveBeenCalled();
+			expect(doneHookCb).toHaveBeenCalled();
+			done();
+		});
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+			runCb();
+		});
+	});
+	it("should call afterDone hook after other callbacks (instance cb)", function(done) {
+		const instanceCb = jest.fn();
+		const compiler = webpack(
+			{
+				context: __dirname,
+				mode: "production",
+				entry: "./c",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				}
+			},
+			(err, stats) => {
+				if (err) return done(err);
+				instanceCb();
+			}
+		);
+		compiler.outputFileSystem = new MemoryFs();
+		const doneHookCb = jest.fn();
+		compiler.hooks.done.tap("afterDoneRunTest", doneHookCb);
+		compiler.hooks.afterDone.tap("afterDoneRunTest", () => {
+			expect(instanceCb).toHaveBeenCalled();
+			expect(doneHookCb).toHaveBeenCalled();
+			done();
+		});
+	});
+	it("should call afterDone hook after other callbacks (watch)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		const doneHookCb = jest.fn();
+		const watchCb = jest.fn();
+		const invalidateCb = jest.fn();
+		compiler.hooks.done.tap("afterDoneWatchTest", doneHookCb);
+		compiler.hooks.afterDone.tap("afterDoneWatchTest", () => {
+			expect(doneHookCb).toHaveBeenCalled();
+			expect(watchCb).toHaveBeenCalled();
+			expect(invalidateCb).toHaveBeenCalled();
+			done();
+		});
+		const watch = compiler.watch({}, (err, stats) => {
+			if (err) return done(err);
+			watchCb();
+		});
+		watch.invalidate(invalidateCb);
+	});
+	it("should call afterDone hook after other callbacks (watch close)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		const watchCloseCb = jest.fn();
+		const watchCloseHookCb = jest.fn();
+		const invalidateCb = jest.fn();
+		compiler.hooks.watchClose.tap("afterDoneWatchTest", watchCloseHookCb);
+		compiler.hooks.afterDone.tap("afterDoneWatchTest", () => {
+			expect(watchCloseCb).toHaveBeenCalled();
+			expect(watchCloseHookCb).toHaveBeenCalled();
+			expect(invalidateCb).toHaveBeenCalled();
+			done();
+		});
+		const watch = compiler.watch({}, (err, stats) => {
+			if (err) return done(err);
+			watch.close(watchCloseCb);
+		});
+		watch.invalidate(invalidateCb);
 	});
 	it("should flag watchMode as true in watch", function(done) {
 		const compiler = webpack({

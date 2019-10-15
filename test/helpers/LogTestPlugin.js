@@ -15,8 +15,8 @@ module.exports = class LogTestPlugin {
 			logger.groupCollapsed("Collaped group");
 			logger.log("Log inside collapsed group");
 			logger.group("Inner group");
-			logger.groupEnd();
 			logger.log("Inner inner message");
+			logger.groupEnd();
 			logger.groupEnd();
 			logger.log("Log");
 			logger.groupEnd();

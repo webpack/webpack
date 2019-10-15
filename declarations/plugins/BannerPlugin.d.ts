@@ -15,8 +15,6 @@ export type BannerFunction = (data: {
 	hash: string;
 	chunk: import("../../lib/Chunk");
 	filename: string;
-	basename: string;
-	query: string;
 }) => string;
 export type Rules = Rule[] | Rule;
 export type Rule = RegExp | string;

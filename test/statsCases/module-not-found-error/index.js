@@ -1,0 +1,2 @@
+require('buffer')
+require('os')

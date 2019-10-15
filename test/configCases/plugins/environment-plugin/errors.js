@@ -26,7 +26,7 @@ modules.forEach(module => {
 		if (module.variables.indexOf(variable) === -1) {
 			// the module doesn't include the env variable, an error is expected when requiring the variable
 			regex.push([
-				new RegExp(`(${module.name})`),
+				{compilerPath: new RegExp(`${module.name}`)},
 				new RegExp(`Can't resolve '${variable}'`),
 			]);
 		}

@@ -563,12 +563,12 @@ rules:
       ensure:
         value: "{{issue.reactions.[+1]}}"
         range: "< 10"
-      last_action_age: 26w # half a year
+      last_action_age: 13w # three months
     actions:
       comment:
-        identifer: inactive-warning
+        identifier: inactive-warning
         message: |-
-          **This issue had no activity for at least half a year.**
+          **This issue had no activity for at least three months.**
 
           It's subject to automatic issue closing if there is no activity in the next 15 days.
       label: inactive
@@ -576,7 +576,7 @@ rules:
       open: true
       label: inactive
       last_action_age:
-        maximum: 26w # half a year
+        maximum: 13w # three months
     actions:
       label:
         remove:
@@ -590,7 +590,7 @@ rules:
     actions:
       close: true
       comment:
-        identifer: inactive-close
+        identifier: inactive-close
         message: |-
           Issue was closed because of inactivity.
 
@@ -610,7 +610,7 @@ rules:
         message: |-
           *For maintainers only:*
 
-          * [ ] <!-- document --> This need to be documented (issue in webpack/webpack.js.org will be filed when merged)
+          * [ ] <!-- document --> This needs to be documented (issue in webpack/webpack.js.org will be filed when merged)
 
   # When a pull request need to be documented, create an issue in webpack/webpack.js.org when merged
   - filters:

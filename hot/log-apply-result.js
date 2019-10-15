@@ -38,7 +38,7 @@ module.exports = function(updatedModules, renewedModules) {
 		if (numberIds)
 			log(
 				"info",
-				"[HMR] Consider using the NamedModulesPlugin for module names."
+				'[HMR] Consider using the optimization.moduleIds: "named" for module names.'
 			);
 	}
 };

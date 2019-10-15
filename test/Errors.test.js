@@ -1,397 +1,718 @@
 "use strict";
 
-/*globals describe it */
 const path = require("path");
+const fs = require("graceful-fs");
+const webpack = require("..");
+const prettyFormat = require("pretty-format");
 
-const webpack = require("../lib/webpack");
+const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
+const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/gm;
 
-const base = path.join(__dirname, "fixtures", "errors");
+function cleanError(err) {
+	const result = Object.getOwnPropertyNames(err).reduce((result, key) => {
+		result[key] = err[key];
+		return result;
+	}, {});
 
-describe("Errors", () => {
-	jest.setTimeout(20000);
-
-	function customOutputFilesystem(c) {
-		const files = {};
-		c.outputFileSystem = {
-			join: path.join.bind(path),
-			mkdirp(path, callback) {
-				callback();
-			},
-			writeFile(name, content, callback) {
-				files[name] = content.toString("utf-8");
-				callback();
-			}
-		};
-		return files;
+	if (result.message) {
+		result.message = err.message.replace(ERROR_STACK_PATTERN, "");
 	}
 
-	function getErrors(options, callback) {
-		options.context = base;
-		const c = webpack(options);
-		customOutputFilesystem(c);
-		c.run((err, stats) => {
-			if (err) throw err;
-			expect(typeof stats).toBe("object");
-			stats = stats.toJson({
-				errorDetails: false
-			});
-			expect(typeof stats).toBe("object");
-			expect(stats).toHaveProperty("errors");
-			expect(stats).toHaveProperty("warnings");
-			expect(Array.isArray(stats.errors)).toBe(true);
-			expect(Array.isArray(stats.warnings)).toBe(true);
-			callback(stats.errors, stats.warnings);
+	if (result.stack) {
+		result.stack = result.stack.replace(ERROR_STACK_PATTERN, "");
+	}
+
+	return result;
+}
+
+function serialize(received) {
+	return prettyFormat(received, prettyFormatOptions)
+		.replace(CWD_PATTERN, "<cwd>")
+		.trim();
+}
+
+const prettyFormatOptions = {
+	escapeRegex: false,
+	printFunctionName: false,
+	plugins: [
+		{
+			test(val) {
+				return typeof val === "string";
+			},
+			print(val) {
+				return `"${val
+					.replace(/\\/gm, "/")
+					.replace(/"/gm, '\\"')
+					.replace(/\r?\n/gm, "\\n")}"`;
+			}
+		}
+	]
+};
+
+expect.addSnapshotSerializer({
+	test(received) {
+		return received.errors || received.warnings;
+	},
+	print(received) {
+		return serialize({
+			errors: received.errors.map(cleanError),
+			warnings: received.warnings.map(cleanError)
 		});
 	}
+});
 
-	function getErrorsPromise(options, callback) {
-		return new Promise((resolve, reject) => {
-			getErrors(options, (errors, warnings) => {
-				callback(errors, warnings);
-				resolve();
-			});
-		});
+expect.addSnapshotSerializer({
+	test(received) {
+		return received.message;
+	},
+	print(received) {
+		return serialize(cleanError(received));
 	}
-	it("should throw an error if file doesn't exist", done => {
-		getErrors(
-			{
-				mode: "development",
-				entry: "./missingFile"
-			},
-			(errors, warnings) => {
-				expect(errors).toHaveLength(2);
-				expect(warnings).toHaveLength(0);
-				errors.sort();
-				let lines = errors[0].split("\n");
-				expect(lines[0]).toMatch(/missingFile.js/);
-				expect(lines[1]).toMatch(/^Module not found/);
-				expect(lines[1]).toMatch(/\.\/dir\/missing2/);
-				expect(lines[2]).toMatch(/missingFile.js 12:9/);
-				lines = errors[1].split("\n");
-				expect(lines[0]).toMatch(/missingFile.js/);
-				expect(lines[1]).toMatch(/^Module not found/);
-				expect(lines[1]).toMatch(/\.\/missing/);
-				expect(lines[2]).toMatch(/missingFile.js 4:0/);
-				done();
-			}
-		);
-	});
-	it("should report require.extensions as unsupported", done => {
-		getErrors(
-			{
-				mode: "development",
-				entry: "./require.extensions"
-			},
-			(errors, warnings) => {
-				expect(errors).toHaveLength(0);
-				expect(warnings).toHaveLength(1);
-				const lines = warnings[0].split("\n");
-				expect(lines[0]).toMatch(/require.extensions\.js/);
-				expect(lines[1]).toMatch(
-					/require.extensions is not supported by webpack/
-				);
-				done();
-			}
-		);
-	});
-	it("should report require.main.require as unsupported", done => {
-		getErrors(
-			{
-				mode: "development",
-				entry: "./require.main.require"
-			},
-			(errors, warnings) => {
-				expect(errors).toHaveLength(0);
-				expect(warnings).toHaveLength(1);
-				const lines = warnings[0].split("\n");
-				expect(lines[0]).toMatch(/require.main.require\.js/);
-				expect(lines[1]).toMatch(
-					/require.main.require is not supported by webpack/
-				);
-				done();
-			}
-		);
-	});
-	it("should report module.parent.require as unsupported", done => {
-		getErrors(
-			{
-				mode: "development",
-				entry: "./module.parent.require"
-			},
-			(errors, warnings) => {
-				expect(errors).toHaveLength(0);
-				expect(warnings).toHaveLength(1);
-				const lines = warnings[0].split("\n");
-				expect(lines[0]).toMatch(/module.parent.require\.js/);
-				expect(lines[1]).toMatch(
-					/module.parent.require is not supported by webpack/
-				);
-				done();
-			}
-		);
-	});
-	it("should warn about case-sensitive module names", done => {
-		getErrors(
-			{
-				mode: "development",
-				entry: "./case-sensitive"
-			},
-			(errors, warnings) => {
-				if (errors.length === 0) {
-					expect(warnings).toHaveLength(1);
-					const lines = warnings[0].split("\n");
-					expect(lines[4]).toMatch(/FILE\.js/);
-					expect(lines[5]).toMatch(/Used by/);
-					expect(lines[6]).toMatch(/case-sensitive/);
-					expect(lines[7]).toMatch(/file\.js/);
-					expect(lines[8]).toMatch(/Used by/);
-					expect(lines[9]).toMatch(/case-sensitive/);
-				} else {
-					expect(errors).toHaveLength(1);
-					expect(warnings).toHaveLength(0);
+});
+
+const defaults = {
+	options: {
+		context: path.resolve(__dirname, "fixtures", "errors"),
+		mode: "none",
+		devtool: false,
+		optimization: {
+			minimize: false
+		}
+	},
+	outputFileSystem: {
+		mkdir(dir, callback) {
+			callback();
+		},
+		writeFile(file, content, callback) {
+			callback();
+		}
+	}
+};
+
+async function compile(options) {
+	const stats = await new Promise((resolve, reject) => {
+		const compiler = webpack({ ...defaults.options, ...options });
+		if (options.mode === "production") {
+			if (options.optimization) options.optimization.minimize = true;
+			else options.optimization = { minimize: true };
+		}
+		compiler.outputFileSystem = defaults.outputFileSystem;
+
+		try {
+			compiler.run((bailedError, stats) => {
+				if (bailedError) {
+					return reject(bailedError);
 				}
-				done();
-			}
-		);
-	});
-	it("should warn when not using mode", done => {
-		getErrors(
-			{
-				entry: "./entry-point"
-			},
-			(errors, warnings) => {
-				expect(errors).toHaveLength(0);
-				expect(warnings).toHaveLength(1);
-				let lines = warnings[0].split("\n");
-				expect(lines[0]).toMatch(/configuration/);
-				expect(lines[1]).toMatch(/mode/);
-				expect(lines[1]).toMatch(/development/);
-				expect(lines[1]).toMatch(/production/);
-				done();
-			}
-		);
-	});
-	it("should not warn if the NoEmitOnErrorsPlugin is used over the NoErrorsPlugin", done => {
-		getErrors(
-			{
-				mode: "production",
-				entry: "./no-errors-deprecate"
-			},
-			(errors, warnings) => {
-				expect(errors).toHaveLength(0);
-				expect(warnings).toHaveLength(0);
-				done();
-			}
-		);
-	});
-	it("should not not emit if NoEmitOnErrorsPlugin is used and there is an error", done => {
-		getErrors(
-			{
-				mode: "production",
-				entry: "./missingFile"
-			},
-			(errors, warnings) => {
-				expect(errors).toHaveLength(2);
-				expect(warnings).toHaveLength(0);
-				errors.sort();
-				let lines = errors[0].split("\n");
-				expect(lines[0]).toMatch(/missingFile.js/);
-				expect(lines[1]).toMatch(/^Module not found/);
-				expect(lines[1]).toMatch(/\.\/dir\/missing2/);
-				expect(lines[2]).toMatch(/missingFile.js 12:9/);
-				lines = errors[1].split("\n");
-				expect(lines[0]).toMatch(/missingFile.js/);
-				expect(lines[1]).toMatch(/^Module not found/);
-				expect(lines[1]).toMatch(/\.\/missing/);
-				expect(lines[2]).toMatch(/missingFile.js 4:0/);
-				done();
-			}
-		);
-	});
-	it("should throw an error when trying to use [chunkhash] when it's invalid", done => {
-		getErrors(
-			{
-				mode: "development",
-				entry: {
-					a: "./entry-point",
-					b: "./entry-point",
-					c: "./entry-point"
-				},
-				output: {
-					filename: "[chunkhash].js"
-				},
-				plugins: [new webpack.HotModuleReplacementPlugin()]
-			},
-			(errors, warnings) => {
-				expect(errors).toHaveLength(3);
-				expect(warnings).toHaveLength(0);
-				errors.forEach(error => {
-					const lines = error.split("\n");
-					expect(lines[0]).toMatch(/chunk (a|b|c)/);
-					expect(lines[2]).toMatch(/\[chunkhash\].js/);
-					expect(lines[2]).toMatch(/use \[hash\] instead/);
+				compiler.close(closeError => {
+					if (closeError) {
+						return reject(closeError);
+					}
+					resolve(stats);
 				});
-				done();
-			}
-		);
+			});
+		} catch (err) {
+			// capture sync throwm errors
+			reject(err);
+		}
 	});
-	it("should show loader name when emit/throw errors or warnings from loaders", () => {
-		return Promise.all([
-			getErrorsPromise(
-				{
-					mode: "development",
-					entry: "./entry-point-error-loader-required.js"
-				},
-				(errors, warnings) => {
-					expect(warnings).toHaveLength(1);
-					expect(warnings[0].split("\n")[1]).toMatch(
-						/^Module Warning \(from .\/emit-error-loader.js\):$/
-					);
-					expect(errors).toHaveLength(1);
-					expect(errors[0].split("\n")[1]).toMatch(
-						/^Module Error \(from .\/emit-error-loader.js\):$/
-					);
-				}
-			),
-			getErrorsPromise(
-				{
-					mode: "development",
-					entry: path.resolve(base, "./emit-error-loader") + "!./entry-point.js"
-				},
-				(errors, warnings) => {
-					expect(warnings).toHaveLength(1);
-					expect(warnings[0].split("\n")[1]).toMatch(
-						/^Module Warning \(from .\/emit-error-loader.js\):$/
-					);
-					expect(errors).toHaveLength(1);
-					expect(errors[0].split("\n")[1]).toMatch(
-						/^Module Error \(from .\/emit-error-loader.js\):$/
-					);
-				}
-			),
-			getErrorsPromise(
-				{
-					mode: "development",
-					entry: "./not-a-json.js",
-					module: {
-						rules: [
-							{
-								test: /not-a-json\.js$/,
-								use: [
-									"json-loader",
-									{
-										loader: path.resolve(base, "./emit-error-loader")
-									}
-								]
-							}
-						]
-					}
-				},
-				(errors, warnings) => {
-					expect(warnings).toHaveLength(1);
-					expect(warnings[0].split("\n")[1]).toMatch(
-						/^Module Warning \(from .\/emit-error-loader.js\):$/
-					);
-					expect(errors).toHaveLength(2);
-					expect(errors[0].split("\n")[1]).toMatch(
-						/^Module Error \(from .\/emit-error-loader.js\):$/
-					);
-					expect(errors[1].split("\n")[1]).toMatch(
-						/^Module build failed \(from \(webpack\)\/node_modules\/json-loader\/index.js\):$/
-					);
-				}
-			),
-			getErrorsPromise(
-				{
-					mode: "development",
-					entry: "./entry-point.js",
-					module: {
-						rules: [
-							{
-								test: /entry-point\.js$/,
-								use: path.resolve(base, "./async-error-loader")
-							}
-						]
-					}
-				},
-				(errors, warnings) => {
-					expect(errors).toHaveLength(1);
-					expect(errors[0].split("\n")[1]).toMatch(
-						/^Module build failed \(from .\/async-error-loader.js\):$/
-					);
-				}
-			),
-			getErrorsPromise(
-				{
-					mode: "development",
-					entry: "./entry-point.js",
-					module: {
-						rules: [
-							{
-								test: /entry-point\.js$/,
-								use: path.resolve(base, "./throw-error-loader")
-							}
-						]
-					}
-				},
-				(errors, warnings) => {
-					expect(errors).toHaveLength(1);
-					expect(errors[0].split("\n")[1]).toMatch(
-						/^Module build failed \(from .\/throw-error-loader.js\):$/
-					);
-				}
-			),
-			getErrorsPromise(
-				{
-					mode: "development",
-					entry: "./entry-point.js",
-					module: {
-						rules: [
-							{
-								test: /entry-point\.js$/,
-								use: path.resolve(base, "./irregular-error-loader")
-							}
-						]
-					}
-				},
-				(errors, warnings) => {
-					expect(warnings).toHaveLength(2);
-					expect(warnings[0].split("\n")[1]).toMatch(
-						/^Module Warning \(from .\/irregular-error-loader.js\):$/
-					);
-					expect(warnings[1].split("\n")[1]).toMatch(
-						/^Module Warning \(from .\/irregular-error-loader.js\):$/
-					);
 
-					expect(errors).toHaveLength(3);
-					expect(errors[0].split("\n")[1]).toMatch(
-						/^Module Error \(from .\/irregular-error-loader.js\):$/
-					);
-					expect(errors[1].split("\n")[1]).toMatch(
-						/^Module Error \(from .\/irregular-error-loader.js\):$/
-					);
-					expect(errors[2].split("\n")[1]).toMatch(
-						/^Module build failed \(from .\/irregular-error-loader.js\):$/
-					);
-				}
-			)
-		]);
+	expect(typeof stats).toEqual("object");
+	const statsResult = stats.toJson({ errorDetails: false });
+	expect(typeof statsResult).toBe("object");
+	const { errors, warnings } = statsResult;
+	expect(Array.isArray(errors)).toBe(true);
+	expect(Array.isArray(warnings)).toBe(true);
+
+	return { errors, warnings };
+}
+
+it("should emit warning for missingFile", async () => {
+	await expect(
+		compile({
+			entry: "./missingFile"
+		})
+	).resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "loc": "4:0-20",
+					      "message": "Module not found: Error: Can't resolve './missing' in '<cwd>/test/fixtures/errors'",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
+					      "moduleName": "./missingFile.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleNotFoundError: Module not found: Error: Can't resolve './missing' in '<cwd>/test/fixtures/errors'",
+					    },
+					    Object {
+					      "loc": "12:9-34",
+					      "message": "Module not found: Error: Can't resolve './dir/missing2' in '<cwd>/test/fixtures/errors'",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
+					      "moduleName": "./missingFile.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleNotFoundError: Module not found: Error: Can't resolve './dir/missing2' in '<cwd>/test/fixtures/errors'",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+});
+
+it("should emit warning for require.extensions", async () => {
+	await expect(compile({ entry: "./require.extensions" })).resolves
+		.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [],
+					  "warnings": Array [
+					    Object {
+					      "loc": "1:0-18",
+					      "message": "require.extensions is not supported by webpack. Use a loader instead.",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/require.extensions.js",
+					      "moduleName": "./require.extensions.js",
+					      "moduleTrace": Array [],
+					      "stack": "UnsupportedFeatureWarning: require.extensions is not supported by webpack. Use a loader instead.",
+					    },
+					  ],
+					}
+				`);
+});
+
+it("should emit warning for require.main.require", async () => {
+	await expect(compile({ entry: "./require.main.require" })).resolves
+		.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [],
+					  "warnings": Array [
+					    Object {
+					      "loc": "1:0-20",
+					      "message": "require.main.require is not supported by webpack.",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/require.main.require.js",
+					      "moduleName": "./require.main.require.js",
+					      "moduleTrace": Array [],
+					      "stack": "UnsupportedFeatureWarning: require.main.require is not supported by webpack.",
+					    },
+					  ],
+					}
+				`);
+});
+it("should emit warning for module.parent.require", async () => {
+	await expect(compile({ entry: "./module.parent.require" })).resolves
+		.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [],
+					  "warnings": Array [
+					    Object {
+					      "loc": "1:0-21",
+					      "message": "module.parent.require is not supported by webpack.",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/module.parent.require.js",
+					      "moduleName": "./module.parent.require.js",
+					      "moduleTrace": Array [],
+					      "stack": "UnsupportedFeatureWarning: module.parent.require is not supported by webpack.",
+					    },
+					  ],
+					}
+				`);
+});
+
+const isCaseInsensitiveFilesystem = fs.existsSync(
+	path.resolve(__dirname, "fixtures", "errors", "FILE.js")
+);
+if (isCaseInsensitiveFilesystem) {
+	it("should emit warning for case-preserved disk", async () => {
+		const result = await compile({
+			mode: "development",
+			entry: "./case-sensitive"
+		});
+		expect(result).toMatchInlineSnapshot(`
+		Object {
+		  "errors": Array [],
+		  "warnings": Array [
+		    Object {
+		      "message": "There are multiple modules with names that only differ in casing.\\nThis can lead to unexpected behavior when compiling on a filesystem with other case-semantic.\\nUse equal casing. Compare these module identifiers:\\n* <cwd>/test/fixtures/errors/FILE.js\\n    Used by 1 module(s), i. e.\\n    <cwd>/test/fixtures/errors/case-sensitive.js\\n* <cwd>/test/fixtures/errors/file.js\\n    Used by 1 module(s), i. e.\\n    <cwd>/test/fixtures/errors/case-sensitive.js",
+		      "moduleId": "./FILE.js",
+		      "moduleIdentifier": "<cwd>/test/fixtures/errors/FILE.js",
+		      "moduleName": "./FILE.js",
+		      "moduleTrace": Array [
+		        Object {
+		          "dependencies": Array [
+		            Object {
+		              "loc": "2:0-17",
+		            },
+		          ],
+		          "moduleId": "./FILE.js",
+		          "moduleIdentifier": "<cwd>/test/fixtures/errors/FILE.js",
+		          "moduleName": "./FILE.js",
+		          "originId": "./case-sensitive.js",
+		          "originIdentifier": "<cwd>/test/fixtures/errors/case-sensitive.js",
+		          "originName": "./case-sensitive.js",
+		        },
+		      ],
+		      "stack": "CaseSensitiveModulesWarning: There are multiple modules with names that only differ in casing.\\nThis can lead to unexpected behavior when compiling on a filesystem with other case-semantic.\\nUse equal casing. Compare these module identifiers:\\n* <cwd>/test/fixtures/errors/FILE.js\\n    Used by 1 module(s), i. e.\\n    <cwd>/test/fixtures/errors/case-sensitive.js\\n* <cwd>/test/fixtures/errors/file.js\\n    Used by 1 module(s), i. e.\\n    <cwd>/test/fixtures/errors/case-sensitive.js",
+		    },
+		  ],
+		}
+	`);
 	});
-	it("should throw a build error if no source be returned after run loaders", done => {
-		getErrors(
-			{
-				mode: "development",
-				entry: path.resolve(base, "./no-return-loader") + "!./entry-point.js"
-			},
-			(errors, warnings) => {
-				expect(errors).toHaveLength(1);
-				const messages = errors[0].split("\n");
-				expect(messages[1]).toMatch(
-					/^Module build failed: Error: Final loader \(.+\) didn't return a Buffer or String/
-				);
-				done();
-			}
-		);
+} else {
+	it("should emit error for case-sensitive", async () => {
+		const result = await compile({
+			mode: "development",
+			entry: "./case-sensitive"
+		});
+		expect(result).toMatchInlineSnapshot(`
+		Object {
+		  "errors": Array [
+		    Object {
+		      "loc": "2:0-17",
+		      "message": "Module not found: Error: Can't resolve './FILE' in '<cwd>/test/fixtures/errors'",
+		      "moduleId": "./case-sensitive.js",
+		      "moduleIdentifier": "<cwd>/test/fixtures/errors/case-sensitive.js",
+		      "moduleName": "./case-sensitive.js",
+		      "moduleTrace": Array [],
+		      "stack": "ModuleNotFoundError: Module not found: Error: Can't resolve './FILE' in '<cwd>/test/fixtures/errors'",
+		    },
+		  ],
+		  "warnings": Array [],
+		}
+	`);
+	});
+}
+
+it("should emit warning for undef mode", async () => {
+	await expect(compile({ mode: undefined, entry: "./entry-point" })).resolves
+		.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [],
+					  "warnings": Array [
+					    Object {
+					      "message": "configuration\\nThe 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.\\nYou can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/",
+					      "stack": "NoModeWarning: configuration\\nThe 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.\\nYou can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/",
+					    },
+					  ],
+					}
+				`);
+});
+it("should emit no errors or warnings for no-errors-deprecate", async () => {
+	await expect(compile({ mode: "production", entry: "./no-errors-deprecate" }))
+		.resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [],
+					  "warnings": Array [],
+					}
+				`);
+});
+
+it("should emit errors for missingFile for production", async () => {
+	await expect(compile({ mode: "production", entry: "./missingFile" })).resolves
+		.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "loc": "4:0-20",
+					      "message": "Module not found: Error: Can't resolve './missing' in '<cwd>/test/fixtures/errors'",
+					      "moduleId": 814,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
+					      "moduleName": "./missingFile.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleNotFoundError: Module not found: Error: Can't resolve './missing' in '<cwd>/test/fixtures/errors'",
+					    },
+					    Object {
+					      "loc": "12:9-34",
+					      "message": "Module not found: Error: Can't resolve './dir/missing2' in '<cwd>/test/fixtures/errors'",
+					      "moduleId": 814,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
+					      "moduleName": "./missingFile.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleNotFoundError: Module not found: Error: Can't resolve './dir/missing2' in '<cwd>/test/fixtures/errors'",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+});
+
+it("should emit module build errors", async () => {
+	await expect(compile({ entry: "./has-syntax-error" })).resolves
+		.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "loc": "2:12",
+					      "message": "Module parse failed: Unexpected token (2:12)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n| window.foo = {\\n>   bar: true,;\\n| };\\n| ",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/has-syntax-error.js",
+					      "moduleName": "./has-syntax-error.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleParseError: Module parse failed: Unexpected token (2:12)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n| window.foo = {\\n>   bar: true,;\\n| };\\n| ",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+});
+
+it("should bao; thrown sync error from plugin", async () => {
+	await expect(
+		compile({
+			entry: "./no-errors-deprecate",
+			plugins: [require("./fixtures/errors/throw-error-plugin")]
+		})
+	).rejects.toMatchInlineSnapshot(`
+					Object {
+					  "message": "foo",
+					  "stack": "Error: foo",
+					}
+				`);
+});
+
+describe("loaders", () => {
+	it("should emit error thrown at module level", async () => {
+		await expect(
+			compile({
+				entry: "./module-level-throw-error-loader!./no-errors-deprecate"
+			})
+		).resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module build failed (from ./module-level-throw-error-loader.js):\\nError: this is a thrown error from module level",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/module-level-throw-error-loader.js!<cwd>/test/fixtures/errors/no-errors-deprecate.js",
+					      "moduleName": "./module-level-throw-error-loader.js!./no-errors-deprecate.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleBuildError: Module build failed (from ./module-level-throw-error-loader.js):\\nError: this is a thrown error from module level",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+	});
+	it("should emit errors & warnings for emit-error-loader", async () => {
+		await expect(compile({ entry: "./entry-point-error-loader-required.js" }))
+			.resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module Error (from ./emit-error-loader.js):\\nthis is an error",
+					      "moduleId": 1,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/emit-error-loader.js!<cwd>/test/fixtures/errors/file.js",
+					      "moduleName": "./emit-error-loader.js!./file.js",
+					      "moduleTrace": Array [
+					        Object {
+					          "dependencies": Array [
+					            Object {
+					              "loc": "1:0-40",
+					            },
+					          ],
+					          "moduleId": 1,
+					          "moduleIdentifier": "<cwd>/test/fixtures/errors/emit-error-loader.js!<cwd>/test/fixtures/errors/file.js",
+					          "moduleName": "./emit-error-loader.js!./file.js",
+					          "originId": 0,
+					          "originIdentifier": "<cwd>/test/fixtures/errors/entry-point-error-loader-required.js",
+					          "originName": "./entry-point-error-loader-required.js",
+					        },
+					      ],
+					      "stack": "ModuleError: Module Error (from ./emit-error-loader.js):\\nthis is an error",
+					    },
+					  ],
+					  "warnings": Array [
+					    Object {
+					      "message": "Module Warning (from ./emit-error-loader.js):\\nthis is a warning",
+					      "moduleId": 1,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/emit-error-loader.js!<cwd>/test/fixtures/errors/file.js",
+					      "moduleName": "./emit-error-loader.js!./file.js",
+					      "moduleTrace": Array [
+					        Object {
+					          "dependencies": Array [
+					            Object {
+					              "loc": "1:0-40",
+					            },
+					          ],
+					          "moduleId": 1,
+					          "moduleIdentifier": "<cwd>/test/fixtures/errors/emit-error-loader.js!<cwd>/test/fixtures/errors/file.js",
+					          "moduleName": "./emit-error-loader.js!./file.js",
+					          "originId": 0,
+					          "originIdentifier": "<cwd>/test/fixtures/errors/entry-point-error-loader-required.js",
+					          "originName": "./entry-point-error-loader-required.js",
+					        },
+					      ],
+					      "stack": "ModuleWarning: Module Warning (from ./emit-error-loader.js):\\nthis is a warning",
+					    },
+					  ],
+					}
+				`);
+	});
+
+	it("should emit error & warning for emit-error-loader", async () => {
+		await expect(compile({ entry: "./emit-error-loader!./entry-point.js" }))
+			.resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module Error (from ./emit-error-loader.js):\\nthis is an error",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/emit-error-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./emit-error-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleError: Module Error (from ./emit-error-loader.js):\\nthis is an error",
+					    },
+					  ],
+					  "warnings": Array [
+					    Object {
+					      "message": "Module Warning (from ./emit-error-loader.js):\\nthis is a warning",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/emit-error-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./emit-error-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleWarning: Module Warning (from ./emit-error-loader.js):\\nthis is a warning",
+					    },
+					  ],
+					}
+				`);
+	});
+	it("should emit error for json-loader when not json", async () => {
+		await expect(compile({ entry: "json-loader!./not-a-json.js" })).resolves
+			.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module build failed (from (webpack)/node_modules/json-loader/index.js):\\nSyntaxError: Unexpected end of JSON input",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/node_modules/json-loader/index.js!<cwd>/test/fixtures/errors/not-a-json.js",
+					      "moduleName": "(webpack)/node_modules/json-loader!./not-a-json.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleBuildError: Module build failed (from (webpack)/node_modules/json-loader/index.js):\\nSyntaxError: Unexpected end of JSON input",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+	});
+
+	it("should emit error for async-error-loader", async () => {
+		await expect(compile({ entry: "./async-error-loader!./entry-point.js" }))
+			.resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module build failed (from ./async-error-loader.js):\\nError: this is a callback error",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/async-error-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./async-error-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleBuildError: Module build failed (from ./async-error-loader.js):\\nError: this is a callback error",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+	});
+
+	it("should emit error thrown from raw loader", async () => {
+		await expect(compile({ entry: "./throw-error-loader!./entry-point.js" }))
+			.resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module build failed (from ./throw-error-loader.js):\\nError: this is a thrown error",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/throw-error-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./throw-error-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleBuildError: Module build failed (from ./throw-error-loader.js):\\nError: this is a thrown error",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+	});
+
+	it("should emit error thrown from pitch loader", async () => {
+		await expect(compile({ entry: "./throw-error-loader!./entry-point.js" }))
+			.resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module build failed (from ./throw-error-loader.js):\\nError: this is a thrown error",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/throw-error-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./throw-error-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleBuildError: Module build failed (from ./throw-error-loader.js):\\nError: this is a thrown error",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+	});
+	it("should emit error thrown from yaw loader", async () => {
+		await expect(compile({ entry: "./throw-error-loader!./entry-point.js" }))
+			.resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module build failed (from ./throw-error-loader.js):\\nError: this is a thrown error",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/throw-error-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./throw-error-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleBuildError: Module build failed (from ./throw-error-loader.js):\\nError: this is a thrown error",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+	});
+
+	it("should emit errors & warnings for irregular-error-loader", async () => {
+		await expect(
+			compile({ entry: "./irregular-error-loader!./entry-point.js" })
+		).resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module Error (from ./irregular-error-loader.js):\\n(Emitted value instead of an instance of Error) null",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/irregular-error-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./irregular-error-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleError: Module Error (from ./irregular-error-loader.js):\\n(Emitted value instead of an instance of Error) null",
+					    },
+					    Object {
+					      "message": "Module Error (from ./irregular-error-loader.js):\\nError",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/irregular-error-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./irregular-error-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleError: Module Error (from ./irregular-error-loader.js):\\nError",
+					    },
+					    Object {
+					      "message": "Module build failed (from ./irregular-error-loader.js):\\nNonErrorEmittedError: (Emitted value instead of an instance of Error) a string error",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/irregular-error-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./irregular-error-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleBuildError: Module build failed (from ./irregular-error-loader.js):\\nNonErrorEmittedError: (Emitted value instead of an instance of Error) a string error",
+					    },
+					  ],
+					  "warnings": Array [
+					    Object {
+					      "message": "Module Warning (from ./irregular-error-loader.js):\\n(Emitted value instead of an instance of Error) null",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/irregular-error-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./irregular-error-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleWarning: Module Warning (from ./irregular-error-loader.js):\\n(Emitted value instead of an instance of Error) null",
+					    },
+					    Object {
+					      "message": "Module Warning (from ./irregular-error-loader.js):\\nError",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/irregular-error-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./irregular-error-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleWarning: Module Warning (from ./irregular-error-loader.js):\\nError",
+					    },
+					  ],
+					}
+				`);
+	});
+
+	it("should emit error for no-return-loader", async () => {
+		await expect(compile({ entry: "./no-return-loader!./entry-point.js" }))
+			.resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module build failed: Error: Final loader (./no-return-loader.js) didn't return a Buffer or String",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/no-return-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./no-return-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleBuildError: Module build failed: Error: Final loader (./no-return-loader.js) didn't return a Buffer or String",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+	});
+
+	it("should emit error for doesnt-exist-loader", async () => {
+		await expect(compile({ entry: "./doesnt-exist-loader!./entry-point.js" }))
+			.resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "loc": "main",
+					      "message": "Module not found: Error: Can't resolve './doesnt-exist-loader' in '<cwd>/test/fixtures/errors'",
+					      "stack": "ModuleNotFoundError: Module not found: Error: Can't resolve './doesnt-exist-loader' in '<cwd>/test/fixtures/errors'",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+	});
+
+	it("should emit error for return-undefined-loader", async () => {
+		await expect(
+			compile({ entry: "./return-undefined-loader!./entry-point.js" })
+		).resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module build failed: Error: Final loader (./return-undefined-loader.js) didn't return a Buffer or String",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/return-undefined-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./return-undefined-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleBuildError: Module build failed: Error: Final loader (./return-undefined-loader.js) didn't return a Buffer or String",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+	});
+
+	it("should emit error for module-exports-object-loader", async () => {
+		await expect(
+			compile({ entry: "./module-exports-object-loader!./entry-point.js" })
+		).resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module build failed (from ./module-exports-object-loader.js):\\nLoaderRunnerError: Module '<cwd>/test/fixtures/errors/module-exports-object-loader.js' is not a loader (must have normal or pitch function)",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/module-exports-object-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./module-exports-object-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleBuildError: Module build failed (from ./module-exports-object-loader.js):\\nLoaderRunnerError: Module '<cwd>/test/fixtures/errors/module-exports-object-loader.js' is not a loader (must have normal or pitch function)",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
+	});
+
+	it("should emit error for module-exports-string-loader", async () => {
+		await expect(
+			compile({ entry: "./module-exports-string-loader!./entry-point.js" })
+		).resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "message": "Module build failed (from ./module-exports-string-loader.js):\\nLoaderRunnerError: Module '<cwd>/test/fixtures/errors/module-exports-string-loader.js' is not a loader (export function or es6 module)",
+					      "moduleId": 0,
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/module-exports-string-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
+					      "moduleName": "./module-exports-string-loader.js!./entry-point.js",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleBuildError: Module build failed (from ./module-exports-string-loader.js):\\nLoaderRunnerError: Module '<cwd>/test/fixtures/errors/module-exports-string-loader.js' is not a loader (export function or es6 module)",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
 	});
 
 	const identityLoader = path.resolve(
@@ -403,9 +724,9 @@ describe("Errors", () => {
 		"fixtures/errors/add-comment-loader.js"
 	);
 
-	it("should show loader used if it is present when module parsing fails", done => {
-		getErrors(
-			{
+	it("should show loader used if it is present when module parsing fails", async () => {
+		await expect(
+			compile({
 				mode: "development",
 				entry: "./abc.html",
 				module: {
@@ -416,29 +737,28 @@ describe("Errors", () => {
 						}
 					]
 				}
-			},
-			(errors, warnings) => {
-				expect(errors).toMatchInlineSnapshot(`
-Array [
-  "./abc.html 1:0
-Module parse failed: Unexpected token (1:0)
-File was processed with these loaders:
- * ./identity-loader.js
-You may need an additional loader to handle the result of these loaders.
-> <!DOCTYPE html>
-| <html>
-| 	<body>",
-]
-`);
-				expect(errors[0]).toMatch("File was processed with these loaders");
-				done();
-			}
-		);
+			})
+		).resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "loc": "1:0",
+					      "message": "Module parse failed: Unexpected token (1:0)\\nFile was processed with these loaders:\\n * ./identity-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+					      "moduleId": "./abc.html",
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/identity-loader.js!<cwd>/test/fixtures/errors/abc.html",
+					      "moduleName": "./abc.html",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleParseError: Module parse failed: Unexpected token (1:0)\\nFile was processed with these loaders:\\n * ./identity-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
 	});
 
-	it("should show all loaders used if they are in config when module parsing fails", done => {
-		getErrors(
-			{
+	it("should show all loaders used if they are in config when module parsing fails", async () => {
+		await expect(
+			compile({
 				mode: "development",
 				entry: "./abc.html",
 				module: {
@@ -449,30 +769,28 @@ You may need an additional loader to handle the result of these loaders.
 						}
 					]
 				}
-			},
-			(errors, warnings) => {
-				expect(errors).toMatchInlineSnapshot(`
-Array [
-  "./abc.html 1:0
-Module parse failed: Unexpected token (1:0)
-File was processed with these loaders:
- * ./identity-loader.js
- * ./add-comment-loader.js
-You may need an additional loader to handle the result of these loaders.
-> <!DOCTYPE html>
-| <html>
-| 	<body>",
-]
-`);
-				expect(errors[0]).toMatch("File was processed with these loaders");
-				done();
-			}
-		);
+			})
+		).resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "loc": "1:0",
+					      "message": "Module parse failed: Unexpected token (1:0)\\nFile was processed with these loaders:\\n * ./identity-loader.js\\n * ./add-comment-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+					      "moduleId": "./abc.html",
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/identity-loader.js!<cwd>/test/fixtures/errors/add-comment-loader.js!<cwd>/test/fixtures/errors/abc.html",
+					      "moduleName": "./abc.html",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleParseError: Module parse failed: Unexpected token (1:0)\\nFile was processed with these loaders:\\n * ./identity-loader.js\\n * ./add-comment-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
 	});
 
-	it("should show all loaders used if use is a string", done => {
-		getErrors(
-			{
+	it("should show all loaders used if use is a string", async () => {
+		await expect(
+			compile({
 				mode: "development",
 				entry: "./abc.html",
 				module: {
@@ -481,72 +799,73 @@ You may need an additional loader to handle the result of these loaders.
 						{ test: /\.html$/, use: addCommentLoader }
 					]
 				}
-			},
-			(errors, warnings) => {
-				expect(errors).toMatchInlineSnapshot(`
-Array [
-  "./abc.html 1:0
-Module parse failed: Unexpected token (1:0)
-File was processed with these loaders:
- * ./identity-loader.js
- * ./add-comment-loader.js
-You may need an additional loader to handle the result of these loaders.
-> <!DOCTYPE html>
-| <html>
-| 	<body>",
-]
-`);
-				expect(errors[0]).toMatch("File was processed with these loaders");
-				done();
-			}
-		);
+			})
+		).resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "loc": "1:0",
+					      "message": "Module parse failed: Unexpected token (1:0)\\nFile was processed with these loaders:\\n * ./identity-loader.js\\n * ./add-comment-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+					      "moduleId": "./abc.html",
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/identity-loader.js!<cwd>/test/fixtures/errors/add-comment-loader.js!<cwd>/test/fixtures/errors/abc.html",
+					      "moduleName": "./abc.html",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleParseError: Module parse failed: Unexpected token (1:0)\\nFile was processed with these loaders:\\n * ./identity-loader.js\\n * ./add-comment-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
 	});
 
-	it("should show 'no loaders are configured to process this file' if loaders are not included in config when module parsing fails", done => {
-		getErrors(
-			{
+	it("should show 'no loaders are configured to process this file' if loaders are not included in config when module parsing fails", async () => {
+		await expect(
+			compile({
 				mode: "development",
 				entry: "./abc.html",
 				module: {}
-			},
-			(errors, warnings) => {
-				expect(errors).toMatchInlineSnapshot(`
-Array [
-  "./abc.html 1:0
-Module parse failed: Unexpected token (1:0)
-You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
-> <!DOCTYPE html>
-| <html>
-| 	<body>",
-]
-`);
-				expect(errors[0]).toMatch(
-					"no loaders are configured to process this file"
-				);
-				done();
-			}
-		);
+			})
+		).resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "loc": "1:0",
+					      "message": "Module parse failed: Unexpected token (1:0)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+					      "moduleId": "./abc.html",
+					      "moduleIdentifier": "<cwd>/test/fixtures/errors/abc.html",
+					      "moduleName": "./abc.html",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleParseError: Module parse failed: Unexpected token (1:0)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
 	});
 
-	it("should show 'source code omitted for this binary file' when module parsing fails for binary files", done => {
+	it("should show 'source code omitted for this binary file' when module parsing fails for binary files", async () => {
 		const folder = path.join(__dirname, "/fixtures");
-		getErrors(
-			{
+		await expect(
+			compile({
 				mode: "development",
 				entry: path.resolve(folder, "./font.ttf"),
 				module: {}
-			},
-			(errors, warnings) => {
-				expect(errors).toMatchInlineSnapshot(`
-Array [
-  "../font.ttf 1:0
-Module parse failed: Unexpected character ' ' (1:0)
-You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
-(Source code omitted for this binary file)",
-]
-`);
-				done();
-			}
-		);
+			})
+		).resolves.toMatchInlineSnapshot(`
+					Object {
+					  "errors": Array [
+					    Object {
+					      "loc": "1:0",
+					      "message": "Module parse failed: Unexpected character ' ' (1:0)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n(Source code omitted for this binary file)",
+					      "moduleId": "../font.ttf",
+					      "moduleIdentifier": "<cwd>/test/fixtures/font.ttf",
+					      "moduleName": "../font.ttf",
+					      "moduleTrace": Array [],
+					      "stack": "ModuleParseError: Module parse failed: Unexpected character ' ' (1:0)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n(Source code omitted for this binary file)",
+					    },
+					  ],
+					  "warnings": Array [],
+					}
+				`);
 	});
 });

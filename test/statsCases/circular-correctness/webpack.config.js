@@ -10,6 +10,7 @@ module.exports = {
 		builtAt: false,
 		assets: false,
 		chunks: true,
+		chunkRelations: true,
 		chunkModules: true,
 		modules: false
 	}

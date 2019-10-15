@@ -1,6 +1,6 @@
 "use strict";
 
-const fs = require("fs");
+const fs = require("graceful-fs");
 const path = require("path");
 const glob = require("glob");
 const rootDir = path.resolve(__dirname, "..");
@@ -45,6 +45,7 @@ describe("Schemas", () => {
 					"enum",
 					"minLength",
 					"minimum",
+					"maximum",
 					"required",
 					"uniqueItems",
 					"minItems",

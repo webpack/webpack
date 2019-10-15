@@ -1,11 +1,10 @@
-/* globals describe, it */
 "use strict";
 
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 
-const webpack = require("../");
+const webpack = require("..");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 let fixtureCount = 0;
 
@@ -17,25 +16,25 @@ describe("Compiler (caching)", () => {
 		options = new WebpackOptionsDefaulter().process(options);
 		options.cache = true;
 		options.entry = entry;
+		options.optimization.moduleIds = "natural";
 		options.optimization.minimize = false;
 		options.context = path.join(__dirname, "fixtures");
 		options.output.path = "/";
 		options.output.filename = "bundle.js";
 		options.output.pathinfo = true;
 		const logs = {
-			mkdirp: [],
+			mkdir: [],
 			writeFile: []
 		};
 
 		const c = webpack(options);
 		const files = {};
 		c.outputFileSystem = {
-			join() {
-				return [].join.call(arguments, "/").replace(/\/+/g, "/");
-			},
-			mkdirp(path, callback) {
-				logs.mkdirp.push(path);
-				callback();
+			mkdir(path, callback) {
+				logs.mkdir.push(path);
+				const err = new Error();
+				err.code = "EEXIST";
+				callback(err);
 			},
 			writeFile(name, content, callback) {
 				logs.writeFile.push(name, content);

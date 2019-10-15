@@ -8,6 +8,7 @@ module.exports = {
 	},
 	optimization: {
 		concatenateModules: true,
+		chunkIds: "named",
 		runtimeChunk: "single",
 		splitChunks: {
 			minSize: 0,

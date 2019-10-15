@@ -10,16 +10,16 @@ _{{example.js}}_
 _{{dist/output.js}}_
 ```
 
-# dist/1.output.js
+# dist/666.output.js
 
 ```javascript
-_{{dist/1.output.js}}_
+_{{dist/666.output.js}}_
 ```
 
-# dist/2.output.js
+# dist/885.output.js
 
 ```javascript
-_{{dist/2.output.js}}_
+_{{dist/885.output.js}}_
 ```
 
 # Info

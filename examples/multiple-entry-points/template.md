@@ -15,7 +15,7 @@ You can see the output files:
   - chunk loading logic
   - the entry point `pageA.js`
   - it would contain any other module that is only used by `pageA`
-- `0.chunk.js` is an additional chunk which is used by both pages. It contains:
+- `406.js` is an additional chunk which is used by both pages. It contains:
   - module `shared.js`
 
 You can also see the info that is printed to console. It shows among others:
@@ -70,10 +70,10 @@ _{{dist/pageA.js}}_
 _{{dist/pageB.js}}_
 ```
 
-# dist/1.js
+# dist/52.js
 
 ```javascript
-_{{dist/1.js}}_
+_{{dist/52.js}}_
 ```
 
 # Info

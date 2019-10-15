@@ -10,7 +10,7 @@ describe("Template", () => {
 		const items = [];
 		let item;
 		for (let i = 0; i < 80; i += 1) {
-			item = Template.numberToIdentifer(i);
+			item = Template.numberToIdentifier(i);
 			expect(item).not.toBe("");
 			expect(items).not.toContain(item);
 			items.push(item);

@@ -5,6 +5,7 @@ module.exports = {
 		all: false,
 		modules: true,
 		nestedModules: true,
+		orphanModules: true,
 		optimizationBailout: true
 	}
 };

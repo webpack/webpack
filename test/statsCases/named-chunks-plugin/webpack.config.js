@@ -1,12 +1,11 @@
-var NamedChunksPlugin = require("../../../lib/NamedChunksPlugin");
-var NamedModulesPlugin = require("../../../lib/NamedModulesPlugin");
-
 module.exports = {
 	mode: "production",
 	entry: {
 		entry: "./entry"
 	},
 	optimization: {
+		moduleIds: "named",
+		chunkIds: "named",
 		splitChunks: {
 			cacheGroups: {
 				vendor: {
@@ -17,6 +16,5 @@ module.exports = {
 				}
 			}
 		}
-	},
-	plugins: [new NamedChunksPlugin(), new NamedModulesPlugin()]
+	}
 };
