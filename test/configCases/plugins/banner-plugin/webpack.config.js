@@ -20,6 +20,12 @@ module.exports = {
 		}),
 		new webpack.BannerPlugin({
 			banner: ({ chunk }) => `multiline\nbanner\n${chunk.name}`
-		})
+		}),
+		new webpack.BannerPlugin(
+			"trim trailing whitespace\t \n\ntrailing whitespace "
+		),
+		new webpack.BannerPlugin(
+			"trim trailing whitespace\t \n\nno trailing whitespace"
+		)
 	]
 };
