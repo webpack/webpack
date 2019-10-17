@@ -2,7 +2,7 @@
 
 const webpack = require("../../../");
 const RequestShortener = require("../../../lib/RequestShortener");
-const { compareModulesById } = require("../../../lib/util/comparators");
+const { compareModulesByIdentifier } = require("../../../lib/util/comparators");
 
 module.exports = {
 	mode: "production",
@@ -19,7 +19,7 @@ module.exports = {
 				Array.from(
 					chunkGraph.getOrderedChunkModulesIterable(
 						chunk,
-						compareModulesById(chunkGraph)
+						compareModulesByIdentifier
 					),
 					mod => {
 						const rs = new RequestShortener(mod.context);
