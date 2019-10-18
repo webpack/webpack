@@ -2,7 +2,7 @@ const { describeCases } = require("./TestCases.template");
 
 describe("TestCases", () => {
 	describeCases({
-		name: "devtool-cheap-eval-module-source-map",
-		devtool: "cheap-module-eval-source-map"
+		name: "devtool-eval-cheap-source-map",
+		devtool: "eval-cheap-source-map"
 	});
 });
