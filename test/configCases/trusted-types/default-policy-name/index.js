@@ -2,7 +2,6 @@ it("should use default trusted types policy name", function() {
 	// emulate trusted types in a window object
 	const noop = (i) => i
 	const rules = {
-		createURL: noop,
 		createScriptURL: noop,
 	}
 	window.trustedTypes = {
