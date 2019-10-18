@@ -2,8 +2,8 @@ var path = require("path");
 
 module.exports = [
 	"eval",
-	"cheap-eval-source-map",
-	"cheap-module-eval-source-map",
+	"eval-cheap-source-map",
+	"eval-cheap-module-source-map",
 	"eval-source-map",
 	"cheap-source-map",
 	"cheap-module-source-map",
