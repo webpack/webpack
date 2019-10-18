@@ -501,9 +501,9 @@ export interface FileCacheOptions {
 	 */
 	name?: string;
 	/**
-	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file, idle: Store data when compiler is idle in multiple files; background: Store data in background while compiling, but doesn't block the compilation; instant: Store data when creating blocking compilation until data is stored; defaults to idle)
+	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file)
 	 */
-	store?: "pack" | "idle" | "background" | "instant";
+	store?: "pack";
 	/**
 	 * Filesystem caching
 	 */
