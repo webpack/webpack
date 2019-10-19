@@ -3624,13 +3624,13 @@ chunk default/async-a.js (async-a) 134 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: 7d7dad4422b7ff62309c
+"Hash: 555c0be8eff50e0d063c
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset      Size
 bundle.js  7.13 KiB  [emitted]  [name: main]
 Entrypoint main = bundle.js
-./index.js 315 bytes [built]
+./index.js 316 bytes [built] [1 warning]
     [no exports]
     [no exports used]
 ./reexport-known.js 49 bytes [built]
@@ -3659,7 +3659,11 @@ Entrypoint main = bundle.js
     [only some exports used: c]
 ./unknown2.js 1 bytes [built]
     [only some exports used: y]
-    + 2 hidden modules"
+    + 2 hidden modules
+
+WARNING in ./index.js 9:0-36
+require.include() is deprecated and will be removed soon.
+"
 `;
 
 exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
