@@ -95,9 +95,7 @@ jobs:
         node-12:
           node_version: ^12.4.0
         node-10:
-          node_version: ^10.15.0
-        node-8:
-          node_version: ^8.16.0
+          node_version: ^10.13.0
     steps:
       - task: NodeTool@0
         inputs:
@@ -143,9 +141,7 @@ jobs:
         node-12:
           node_version: ^12.4.0
         node-10:
-          node_version: ^10.15.0
-        node-8:
-          node_version: ^8.16.0
+          node_version: ^10.13.0
     steps:
       - task: NodeTool@0
         inputs:
@@ -191,9 +187,7 @@ jobs:
         node-12:
           node_version: ^12.4.0
         node-10:
-          node_version: ^10.15.0
-        node-8:
-          node_version: ^8.16.0
+          node_version: ^10.13.0
     steps:
       - task: NodeTool@0
         inputs:
