@@ -2381,13 +2381,14 @@
       "type": "object"
     },
     "devtool": {
-      "description": "A developer tool to enhance debugging.",
-      "anyOf": [
+      "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+      "oneOf": [
         {
-          "type": "string"
+          "enum": [false, "eval"]
         },
         {
-          "enum": [false]
+          "type": "string",
+          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$"
         }
       ]
     },

@@ -5,7 +5,7 @@ describe("TestCases", () => {
 	describeCases({
 		name: "all-combined",
 		mode: "production",
-		devtool: "#@source-map",
+		devtool: "source-map",
 		minimize: true,
 		optimization: {
 			moduleIds: "named",

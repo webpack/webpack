@@ -58,16 +58,16 @@ _{{dist/bundle-eval-source-map.js}}_
 _{{dist/bundle-eval.js}}_
 ```
 
-## cheap-eval-source-map.js
+## eval-cheap-source-map.js
 
 ```javascript
-_{{dist/bundle-cheap-eval-source-map.js}}_
+_{{dist/bundle-eval-cheap-source-map.js}}_
 ```
 
-## cheap-module-eval-source-map.js
+## eval-cheap-module-source-map.js
 
 ```javascript
-_{{dist/bundle-cheap-module-eval-source-map.js}}_
+_{{dist/bundle-eval-cheap-module-source-map.js}}_
 ```
 
 ## cheap-module-source-map.js.map

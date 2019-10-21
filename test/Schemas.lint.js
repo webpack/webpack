@@ -44,6 +44,7 @@ describe("Schemas", () => {
 					"description",
 					"enum",
 					"minLength",
+					"pattern",
 					"minimum",
 					"maximum",
 					"required",

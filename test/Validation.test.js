@@ -220,11 +220,12 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
 			 - configuration.devtool should be one of these:
-			   string | false
-			   -> A developer tool to enhance debugging.
+			   false | \\"eval\\" | string (should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$\\")
+			   -> A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 			   Details:
-			    * configuration.devtool should be a string.
-			    * configuration.devtool should be false."
+			    * configuration.devtool should be one of these:
+			      false | \\"eval\\"
+			    * configuration.devtool should be a string (should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$\\")."
 		`)
 	);
 
@@ -545,6 +546,30 @@ describe("Validation", () => {
 			   Details:
 			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
 			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
+		`)
+	);
+
+	createTestCase(
+		"devtool sourcemap",
+		{
+			devtool: "sourcemap"
+		},
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
+			 - configuration.devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$\\"."
+		`)
+	);
+
+	createTestCase(
+		"devtool source-maps",
+		{
+			devtool: "source-maps"
+		},
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
+			 - configuration.devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$\\"."
 		`)
 	);
 });

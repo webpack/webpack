@@ -299,9 +299,9 @@ export interface WebpackOptions {
 		[k: string]: any;
 	};
 	/**
-	 * A developer tool to enhance debugging.
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 	 */
-	devtool?: string | false;
+	devtool?: (false | "eval") | string;
 	/**
 	 * The entry point(s) of the compilation.
 	 */
