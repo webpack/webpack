@@ -1,6 +1,6 @@
 "use strict";
 
-const BasicEvaluatedExpression = require("../lib/BasicEvaluatedExpression");
+const BasicEvaluatedExpression = require("../lib/javascript/BasicEvaluatedExpression");
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
 describe("JavascriptParser", () => {
