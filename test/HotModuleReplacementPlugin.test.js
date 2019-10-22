@@ -257,4 +257,68 @@ describe("HotModuleReplacementPlugin", () => {
 			});
 		});
 	});
+	it("should handle correctly noEmitOnErrors", done => {
+		const outputPath = path.join(__dirname, "js", "HotModuleReplacementPlugin");
+		const entryFile = path.join(outputPath, "entry.js");
+		const recordsFile = path.join(outputPath, "records.json");
+		const testModuleFile = path.join(outputPath, "test-module.js");
+		try {
+			mkdirp.sync(path.join(__dirname, "js", "HotModuleReplacementPlugin"));
+		} catch (e) {
+			// empty
+		}
+		try {
+			fs.unlinkSync(recordsFile);
+		} catch (e) {
+			// empty
+		}
+
+		fs.writeFileSync(testModuleFile, "export const p = 10;", "utf-8");
+		fs.writeFileSync(entryFile, "import * as x from './test-module';", "utf-8");
+
+		const compiler = webpack({
+			mode: "development",
+			entry: {
+				bundle: entryFile
+			},
+			recordsPath: recordsFile,
+			output: {
+				path: outputPath
+			},
+			plugins: [new webpack.HotModuleReplacementPlugin()],
+			optimization: {
+				runtimeChunk: "single",
+				noEmitOnErrors: true
+			}
+		});
+
+		let watcher;
+		let isFirstEmit = true;
+		let isFirstError = true;
+
+		compiler.hooks.afterCompile.tap("a", compilation => {
+			if (compilation.getStats().hasErrors() && isFirstError) {
+				isFirstError = false;
+				fs.writeFileSync(entryFile, "import * as x from './test-module';", "utf-8");
+			}
+		});
+
+		compiler.hooks.afterEmit.tapAsync("b", function (compilation, callback) {
+			const emittedFiles = Object
+				.keys(compilation.assets)
+				.filter(assetKey => compilation.assets[assetKey].emitted);
+
+			if (isFirstEmit) {
+				isFirstEmit = false;
+				fs.writeFileSync(entryFile, "import * as x from './test-module12';", "utf-8");
+			} else {
+				expect(emittedFiles).toEqual(['bundle.js', 'runtime.js']);
+				watcher.close();
+				done();
+			}
+			callback();
+		});
+
+		watcher = compiler.watch({}, (err, stats) => {});
+	});
 });
