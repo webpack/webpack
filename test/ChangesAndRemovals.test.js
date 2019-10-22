@@ -35,8 +35,8 @@ const onceDone = (compiler, action) => {
 	});
 };
 
-function cleanup() {
-	rimraf.sync(tempFolderPath);
+function cleanup(callback) {
+	rimraf(tempFolderPath, callback);
 }
 
 function createFiles() {
@@ -67,13 +67,14 @@ describe("ChangesAndRemovals", () => {
 
 	jest.setTimeout(10000);
 
-	beforeEach(() => {
-		cleanup();
-		createFiles();
+	beforeEach(done => {
+		cleanup(err => {
+			if (err) return done(err);
+			createFiles();
+			done();
+		});
 	});
-	afterEach(() => {
-		cleanup();
-	});
+	afterEach(cleanup);
 
 	it("should track modified files when they've been modified in watchRun", done => {
 		const compiler = createSingleCompiler();
