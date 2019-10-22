@@ -753,13 +753,13 @@ external \\"test\\" 42 bytes [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for filter-warnings 1`] = `
-"Hash: 6a68e680069ffb0d683e6a68e680069ffb0d683e6a68e680069ffb0d683e6a68e680069ffb0d683e6a68e680069ffb0d683e6a68e680069ffb0d683e6a68e680069ffb0d683e6a68e680069ffb0d683e6a68e680069ffb0d683e6a68e680069ffb0d683e6a68e680069ffb0d683e6a68e680069ffb0d683e6a68e680069ffb0d683e
+"Hash: 879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e
 Child undefined:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -785,53 +785,53 @@ Child undefined:
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 
 Child Terser:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 Child /Terser/:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 Child warnings => true:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 Child [Terser]:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 Child [/Terser/]:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 Child [warnings => true]:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 Child should not filter:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -857,11 +857,11 @@ Child should not filter:
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 
 Child /should not filter/:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -887,11 +887,11 @@ Child /should not filter/:
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 
 Child warnings => false:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -917,11 +917,11 @@ Child warnings => false:
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 
 Child [should not filter]:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -947,11 +947,11 @@ Child [should not filter]:
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 
 Child [/should not filter/]:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -977,11 +977,11 @@ Child [/should not filter/]:
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 
 Child [warnings => false]:
-    Hash: 6a68e680069ffb0d683e
+    Hash: 879578402f867cc4d61e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset      Size
-    bundle.js  1.02 KiB  [emitted]  [name: main]
+        Asset        Size
+    bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -3667,11 +3667,11 @@ require.include() is deprecated and will be removed soon.
 `;
 
 exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
-"Hash: 69c97531172bedcf286c
+"Hash: 45e6fee3b26534a40e17
 Time: Xms
 Built at: 1970-04-20 12:42:42
-    Asset      Size
-bundle.js  1.02 KiB  [emitted]  [name: main]
+    Asset        Size
+bundle.js  1010 bytes  [emitted]  [name: main]
 Entrypoint main = bundle.js
 ./index.js 299 bytes [built]
     [no exports used]
