@@ -1,7 +1,7 @@
 "use strict";
 
-const BasicEvaluatedExpression = require("../lib/BasicEvaluatedExpression");
-const JavascriptParser = require("../lib/JavascriptParser");
+const BasicEvaluatedExpression = require("../lib/javascript/BasicEvaluatedExpression");
+const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
 describe("JavascriptParser", () => {
 	/* eslint-disable no-undef */
