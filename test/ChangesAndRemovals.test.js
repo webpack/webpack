@@ -26,6 +26,15 @@ const createSingleCompiler = () => {
 	});
 };
 
+const onceDone = (compiler, action) => {
+	let initial = true;
+	compiler.hooks.done.tap("ChangesAndRemovalsTest", () => {
+		if (!initial) return;
+		initial = false;
+		setTimeout(action, 100);
+	});
+};
+
 function cleanup() {
 	rimraf.sync(tempFolderPath);
 }
@@ -70,7 +79,7 @@ describe("ChangesAndRemovals", () => {
 		const compiler = createSingleCompiler();
 		let watcher;
 
-		compiler.hooks.watchRun.tap("ModifiedFilesTest", compiler => {
+		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
 			if (!compiler.modifiedFiles) return;
 			const modifications = Array.from(compiler.modifiedFiles);
 			expect(modifications).toContain(tempFilePath);
@@ -81,16 +90,16 @@ describe("ChangesAndRemovals", () => {
 			if (err) done(err);
 		});
 
-		setTimeout(() => {
+		onceDone(compiler, () => {
 			fs.appendFileSync(tempFilePath, "\nlet x = 'file modified';");
-		}, 1000);
+		});
 	});
 
 	it("should not track modified files during initial watchRun", done => {
 		const compiler = createSingleCompiler();
 		let watcher;
 		const watchRunFinished = new Promise(resolve => {
-			compiler.hooks.watchRun.tap("ModifiedFilesTest", compiler => {
+			compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
 				expect(compiler.modifiedFiles).toBe(undefined);
 				resolve();
 			});
@@ -106,7 +115,7 @@ describe("ChangesAndRemovals", () => {
 		const compiler = createSingleCompiler();
 		let watcher;
 
-		compiler.hooks.watchRun.tap("ModifiedFilesTest", compiler => {
+		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
 			if (!compiler.modifiedFiles) return;
 			const modifications = Array.from(compiler.modifiedFiles);
 			expect(modifications).toHaveLength(0);
@@ -115,16 +124,16 @@ describe("ChangesAndRemovals", () => {
 
 		watcher = compiler.watch({ aggregateTimeout: 50 }, () => {});
 
-		setTimeout(() => {
+		onceDone(compiler, () => {
 			fs.unlinkSync(tempFilePath);
-		}, 1000);
+		});
 	});
 
 	it("should track removed files when they've been deleted in watchRun", done => {
 		const compiler = createSingleCompiler();
 		let watcher;
 
-		compiler.hooks.watchRun.tap("RemovedFilesTest", compiler => {
+		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
 			if (!compiler.removedFiles) return;
 			const removals = Array.from(compiler.removedFiles);
 			expect(removals).toContain(tempFilePath);
@@ -133,9 +142,9 @@ describe("ChangesAndRemovals", () => {
 
 		watcher = compiler.watch({ aggregateTimeout: 50 }, () => {});
 
-		setTimeout(() => {
+		onceDone(compiler, () => {
 			fs.unlinkSync(tempFilePath);
-		}, 1000);
+		});
 	});
 
 	it("should not track removed files during initial watchRun", done => {
@@ -143,7 +152,7 @@ describe("ChangesAndRemovals", () => {
 		let watcher;
 
 		const watchRunFinished = new Promise(resolve => {
-			compiler.hooks.watchRun.tap("RemovedFilesTest", compiler => {
+			compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
 				expect(compiler.removedFiles).toBe(undefined);
 				resolve();
 			});
@@ -159,7 +168,7 @@ describe("ChangesAndRemovals", () => {
 		const compiler = createSingleCompiler();
 		let watcher;
 
-		compiler.hooks.watchRun.tap("RemovedFilesTest", compiler => {
+		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
 			if (!compiler.removedFiles) return;
 			const removals = Array.from(compiler.removedFiles);
 			expect(removals).toHaveLength(0);
@@ -168,8 +177,8 @@ describe("ChangesAndRemovals", () => {
 
 		watcher = compiler.watch({ aggregateTimeout: 50 }, () => {});
 
-		setTimeout(() => {
+		onceDone(compiler, () => {
 			fs.appendFileSync(tempFilePath, "\nlet x = 'file modified';");
-		}, 1000);
+		});
 	});
 });
