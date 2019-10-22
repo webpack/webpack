@@ -753,9 +753,9 @@ external \\"test\\" 42 bytes [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for filter-warnings 1`] = `
-"Hash: 879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e879578402f867cc4d61e
+"Hash: e865ee1cdbd25d5b868de865ee1cdbd25d5b868de865ee1cdbd25d5b868de865ee1cdbd25d5b868de865ee1cdbd25d5b868de865ee1cdbd25d5b868de865ee1cdbd25d5b868de865ee1cdbd25d5b868de865ee1cdbd25d5b868de865ee1cdbd25d5b868de865ee1cdbd25d5b868de865ee1cdbd25d5b868de865ee1cdbd25d5b868d
 Child undefined:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
@@ -785,49 +785,49 @@ Child undefined:
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 
 Child Terser:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
     bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 Child /Terser/:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
     bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 Child warnings => true:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
     bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 Child [Terser]:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
     bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 Child [/Terser/]:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
     bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 Child [warnings => true]:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
     bundle.js  1010 bytes  [emitted]  [name: main]
     Entrypoint main = bundle.js
 Child should not filter:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
@@ -857,7 +857,7 @@ Child should not filter:
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 
 Child /should not filter/:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
@@ -887,7 +887,7 @@ Child /should not filter/:
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 
 Child warnings => false:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
@@ -917,7 +917,7 @@ Child warnings => false:
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 
 Child [should not filter]:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
@@ -947,7 +947,7 @@ Child [should not filter]:
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 
 Child [/should not filter/]:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
@@ -977,7 +977,7 @@ Child [/should not filter/]:
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 
 Child [warnings => false]:
-    Hash: 879578402f867cc4d61e
+    Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset        Size
@@ -3667,7 +3667,7 @@ require.include() is deprecated and will be removed soon.
 `;
 
 exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
-"Hash: 45e6fee3b26534a40e17
+"Hash: 3de643cb3274b848d296
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset        Size
