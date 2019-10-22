@@ -5,4 +5,4 @@ it("should include webpack://mylibrary/./test.js in SourceMap", function() {
 	expect(map.sources).toContain("webpack://mylibrary/./test.js");
 });
 
-require.include("./test.js");
+if (Math.random() < 0) require("./test.js");
