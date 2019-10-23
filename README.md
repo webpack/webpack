@@ -137,7 +137,7 @@ within webpack itself use this plugin interface. This makes webpack very
 
 ### [Loaders](https://webpack.js.org/loaders/)
 
-webpack enables use of loaders to preprocess files. This allows you to bundle
+webpack enables the use of loaders to preprocess files. This allows you to bundle
 **any static resource** way beyond JavaScript. You can easily [write your own
 loaders](https://webpack.js.org/api/loaders/) using Node.js.
 
