@@ -124,7 +124,7 @@ function increment() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
            Asset      Size
 MyLibrary.umd.js  3.83 KiB  [emitted]  [name: main]
 Entrypoint main = MyLibrary.umd.js
@@ -141,9 +141,9 @@ chunk MyLibrary.umd.js (main) 92 bytes (javascript) 632 bytes (runtime) [entry] 
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
            Asset       Size
-MyLibrary.umd.js  837 bytes  [emitted]  [name: main]
+MyLibrary.umd.js  840 bytes  [emitted]  [name: main]
 Entrypoint main = MyLibrary.umd.js
 chunk MyLibrary.umd.js (main) 92 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
     > ./example main

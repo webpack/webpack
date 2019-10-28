@@ -226,7 +226,7 @@ function c() { console.log("c"); }
 # dist/output.js
 
 ```javascript
-(()=>{"use strict";var r={169:(r,t,e)=>{},345:(r,t,e)=>{e.d(t,{h:()=>n.j});e(169);var n=e(451)},451:(r,t,e)=>{e.d(t,{k:()=>(function(){var r=0,t=0,e=arguments,n=e.length;for(;t<n;)r+=e[t++];return r}),j:()=>(function(){var r=1,t=0,e=arguments,n=e.length;for(;t<n;)r*=e[t++];return r})})}},t={};function e(n){if(t[n])return t[n].exports;var o=t[n]={i:n,l:!1,exports:{}};return r[n](o,o.exports,e),o.l=!0,o.exports}!function(){var r=Object.prototype.hasOwnProperty;e.d=(t,e)=>{for(var n in e)r.call(e,n)&&!r.call(t,n)&&Object.defineProperty(t,n,{enumerable:!0,get:e[n]})}}(),function(){var r=e(451),t=e(345);(0,r.k)(1,2),t.h(1,2)}()})();
+(()=>{"use strict";var r={169:(r,t,e)=>{},345:(r,t,e)=>{e.d(t,{H:()=>n.jj});e(169);var n=e(451)},451:(r,t,e)=>{function n(){for(var r=0,t=0,e=arguments,n=e.length;t<n;)r+=e[t++];return r}function o(){for(var r=1,t=0,e=arguments,n=e.length;t<n;)r*=e[t++];return r}e.d(t,{Kn:()=>n,jj:()=>o})}},t={};function e(n){if(t[n])return t[n].exports;var o=t[n]={i:n,l:!1,exports:{}};return r[n](o,o.exports,e),o.l=!0,o.exports}!function(){var r=Object.prototype.hasOwnProperty;e.d=(t,e)=>{for(var n in e)r.call(e,n)&&!r.call(t,n)&&Object.defineProperty(t,n,{enumerable:!0,get:e[n]})}}(),function(){var r=e(451),t=e(345);(0,r.Kn)(1,2),t.H(1,2)}()})();
 ```
 
 # Info
@@ -235,7 +235,7 @@ function c() { console.log("c"); }
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
     Asset     Size
 output.js  6.8 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
@@ -272,9 +272,9 @@ chunk output.js (main) 698 bytes (javascript) 632 bytes (runtime) [entry] [rende
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
     Asset       Size
-output.js  635 bytes  [emitted]  [name: main]
+output.js  639 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk output.js (main) 698 bytes (javascript) 358 bytes (runtime) [entry] [rendered]
     > ./example.js main

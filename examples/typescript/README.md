@@ -128,10 +128,8 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-Starting type checking service...
-Using 1 worker with 2048MB memory limit
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
     Asset      Size
 output.js  2.23 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
@@ -148,10 +146,8 @@ chunk output.js (main) 652 bytes [entry] [rendered]
 ## Production mode
 
 ```
-Starting type checking service...
-Using 1 worker with 2048MB memory limit
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
     Asset       Size
 output.js  541 bytes  [emitted]  [name: main]
 Entrypoint main = output.js

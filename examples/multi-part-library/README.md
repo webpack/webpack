@@ -166,7 +166,7 @@ module.exports = "beta";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
              Asset      Size
 MyLibrary.alpha.js  1.97 KiB  [emitted]  [name: alpha]
  MyLibrary.beta.js  1.98 KiB  [emitted]  [name: beta]
@@ -188,10 +188,10 @@ chunk MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
              Asset       Size
-MyLibrary.alpha.js  427 bytes  [emitted]  [name: alpha]
- MyLibrary.beta.js  422 bytes  [emitted]  [name: beta]
+MyLibrary.alpha.js  429 bytes  [emitted]  [name: alpha]
+ MyLibrary.beta.js  424 bytes  [emitted]  [name: beta]
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]

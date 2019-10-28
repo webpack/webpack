@@ -143,7 +143,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
     Asset      Size
 output.js  3.18 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
@@ -164,9 +164,9 @@ chunk output.js (main) 194 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
     Asset       Size
-output.js  666 bytes  [emitted]  [name: main]
+output.js  668 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk output.js (main) 194 bytes [entry] [rendered]
     > ./example.js main

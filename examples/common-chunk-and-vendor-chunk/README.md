@@ -618,7 +618,7 @@ module.exports = "pageC";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
                  Asset       Size
 commons-utility2_js.js  346 bytes  [emitted]  [id hint: commons]
 commons-utility3_js.js  346 bytes  [emitted]  [id hint: commons]
@@ -681,7 +681,7 @@ chunk vendor.js (vendor) (id hint: vendor) 54 bytes [initial] [rendered] split c
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
                  Asset       Size
 commons-utility2_js.js  110 bytes  [emitted]  [id hint: commons]
 commons-utility3_js.js  110 bytes  [emitted]  [id hint: commons]
@@ -697,15 +697,15 @@ chunk commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] sp
     > ./pageB pageB
     > ./pageC pageC
  ./utility2.js 28 bytes [built]
-     cjs require ./utility2 ./pageC.js 1:15-36
      cjs require ./utility2 ./pageA.js 3:15-36
      cjs require ./utility2 ./pageB.js 2:15-36
+     cjs require ./utility2 ./pageC.js 1:15-36
 chunk commons-utility3_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
     > ./pageB pageB
     > ./pageC pageC
  ./utility3.js 28 bytes [built]
-     cjs require ./utility3 ./pageC.js 2:15-36
      cjs require ./utility3 ./pageB.js 3:15-36
+     cjs require ./utility3 ./pageC.js 2:15-36
 chunk pageA.js (pageA) 165 bytes (javascript) 2.36 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
  ./pageA.js 137 bytes [built]

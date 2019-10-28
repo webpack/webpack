@@ -611,7 +611,7 @@ module.exports = function(msg) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
      Asset       Size
      52.js  468 bytes  [emitted]
 commons.js  326 bytes  [emitted]  [name: commons] [id hint: commons]
@@ -653,11 +653,11 @@ chunk pageA.js (pageA) 105 bytes (javascript) 5.07 KiB (runtime) [entry] [render
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
      Asset       Size
      52.js  120 bytes  [emitted]
 commons.js   90 bytes  [emitted]  [name: commons] [id hint: commons]
-  pageA.js   1.76 KiB  [emitted]  [name: pageA]
+  pageA.js   1.77 KiB  [emitted]  [name: pageA]
   pageB.js   1.74 KiB  [emitted]  [name: pageB]
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
@@ -678,9 +678,9 @@ chunk commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] spli
     > ./pageA pageA
     > ./pageB pageB
  ./common.js 26 bytes [built]
-     cjs require ./common ./shared.js 1:13-32
      cjs require ./common ./pageA.js 1:13-32
      cjs require ./common ./pageB.js 1:13-32
+     cjs require ./common ./shared.js 1:13-32
 chunk pageA.js (pageA) 105 bytes (javascript) 5.08 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
  ./pageA.js 105 bytes [built]

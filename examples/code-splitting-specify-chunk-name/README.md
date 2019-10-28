@@ -325,7 +325,7 @@ __webpack_require__(1)("./ba" + createContextVar).then(function(bar) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset       Size
 548.output.js  835 bytes  [emitted]  [name: chunk-bar-baz2]
 791.output.js  835 bytes  [emitted]  [name: chunk-bar-baz0]
@@ -371,12 +371,12 @@ chunk 930.output.js (chunk-foo) 38 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset       Size
 548.output.js  134 bytes  [emitted]  [name: chunk-bar-baz2]
 791.output.js  134 bytes  [emitted]  [name: chunk-bar-baz0]
 930.output.js  134 bytes  [emitted]  [name: chunk-foo]
-    output.js   2.29 KiB  [emitted]  [name: main]
+    output.js    2.3 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk output.js (main) 565 bytes (javascript) 4.75 KiB (runtime) [entry] [rendered]
     > ./example.js main

@@ -185,7 +185,7 @@ race = function(winner, ...runners) {
 /*! runtime requirements:  */
 /***/ (() => {
 
-eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9leGFtcGxlLmNvZmZlZT8yNDE2Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7QUFBQSxJQUFBLElBQUEsRUFBQTs7QUFHQSxJQUFBLEdBQ0U7RUFBQSxJQUFBLEVBQVEsSUFBSSxDQUFDLElBQWI7RUFDQSxNQUFBLEVBQVEsTUFEUjtFQUVBLElBQUEsRUFBUSxRQUFBLENBQUMsQ0FBRCxDQUFBO1dBQU8sQ0FBQSxHQUFJLE1BQUEsQ0FBTyxDQUFQO0VBQVg7QUFGUixFQUpGOzs7QUFTQSxJQUFBLEdBQU8sUUFBQSxDQUFDLE1BQUQsRUFBQSxHQUFTLE9BQVQsQ0FBQTtTQUNMLEtBQUEsQ0FBTSxNQUFOLEVBQWMsT0FBZDtBQURLIiwic291cmNlc0NvbnRlbnQiOlsiIyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xuXG4jIE9iamVjdHM6XG5tYXRoID1cbiAgcm9vdDogICBNYXRoLnNxcnRcbiAgc3F1YXJlOiBzcXVhcmVcbiAgY3ViZTogICAoeCkgLT4geCAqIHNxdWFyZSB4XG5cbiMgU3BsYXRzOlxucmFjZSA9ICh3aW5uZXIsIHJ1bm5lcnMuLi4pIC0+XG4gIHByaW50IHdpbm5lciwgcnVubmVyc1xuIl19\n//# sourceURL=webpack-internal:///0\n");
+eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9leGFtcGxlLmNvZmZlZT8yNDE2Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7QUFBQSxJQUFBLElBQUEsRUFBQTs7QUFHQSxJQUFBLEdBQ0U7RUFBQSxJQUFBLEVBQVEsSUFBSSxDQUFDLElBQWI7RUFDQSxNQUFBLEVBQVEsTUFEUjtFQUVBLElBQUEsRUFBUSxRQUFBLENBQUMsQ0FBRCxDQUFBO1dBQU8sQ0FBQSxHQUFJLE1BQUEsQ0FBTyxDQUFQO0VBQVg7QUFGUixFQUpGOzs7QUFTQSxJQUFBLEdBQU8sUUFBQSxDQUFDLE1BQUQsRUFBQSxHQUFTLE9BQVQsQ0FBQTtTQUNMLEtBQUEsQ0FBTSxNQUFOLEVBQWMsT0FBZDtBQURLIiwic291cmNlc0NvbnRlbnQiOlsiIyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xuXG4jIE9iamVjdHM6XG5tYXRoID1cbiAgcm9vdDogICBNYXRoLnNxcnRcbiAgc3F1YXJlOiBzcXVhcmVcbiAgY3ViZTogICAoeCkgLT4geCAqIHNxdWFyZSB4XG5cbiMgU3BsYXRzOlxucmFjZSA9ICh3aW5uZXIsIHJ1bm5lcnMuLi4pIC0+XG4gIHByaW50IHdpbm5lciwgcnVubmVyc1xuIl19\n//# sourceURL=webpack-internal:///0\n");
 
 /***/ })
 ],[[0,0]]]);
@@ -221,7 +221,7 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 /*! runtime requirements:  */
 /***/ (() => {
 
-eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2V4YW1wbGUuY29mZmVlP2MxNzAiXSwic291cmNlc0NvbnRlbnQiOlsiLy8gVGFrZW4gZnJvbSBodHRwOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuLy8gT2JqZWN0czpcbnZhciBtYXRoLCByYWNlO1xuXG5tYXRoID0ge1xuICByb290OiBNYXRoLnNxcnQsXG4gIHNxdWFyZTogc3F1YXJlLFxuICBjdWJlOiBmdW5jdGlvbih4KSB7XG4gICAgcmV0dXJuIHggKiBzcXVhcmUoeCk7XG4gIH1cbn07XG5cbi8vIFNwbGF0czpcbnJhY2UgPSBmdW5jdGlvbih3aW5uZXIsIC4uLnJ1bm5lcnMpIHtcbiAgcmV0dXJuIHByaW50KHdpbm5lciwgcnVubmVycyk7XG59O1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///0\n");
+eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2V4YW1wbGUuY29mZmVlP2MxNzAiXSwic291cmNlc0NvbnRlbnQiOlsiLy8gVGFrZW4gZnJvbSBodHRwOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuLy8gT2JqZWN0czpcbnZhciBtYXRoLCByYWNlO1xuXG5tYXRoID0ge1xuICByb290OiBNYXRoLnNxcnQsXG4gIHNxdWFyZTogc3F1YXJlLFxuICBjdWJlOiBmdW5jdGlvbih4KSB7XG4gICAgcmV0dXJuIHggKiBzcXVhcmUoeCk7XG4gIH1cbn07XG5cbi8vIFNwbGF0czpcbnJhY2UgPSBmdW5jdGlvbih3aW5uZXIsIC4uLnJ1bm5lcnMpIHtcbiAgcmV0dXJuIHByaW50KHdpbm5lciwgcnVubmVycyk7XG59O1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///0\n");
 
 /***/ })
 ],[[0,0]]]);
@@ -239,7 +239,7 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 /*! runtime requirements:  */
 /***/ (() => {
 
-eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9leGFtcGxlLmNvZmZlZT8yNDE2Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7QUFBQSxJQUFBLElBQUEsRUFBQTs7QUFHQSxJQUFBLEdBQ0U7RUFBQSxJQUFBLEVBQVEsSUFBSSxDQUFDLElBQWI7RUFDQSxNQUFBLEVBQVEsTUFEUjtFQUVBLElBQUEsRUFBUSxRQUFBLENBQUMsQ0FBRCxDQUFBO1dBQU8sQ0FBQSxHQUFJLE1BQUEsQ0FBTyxDQUFQO0VBQVg7QUFGUixFQUpGOzs7QUFTQSxJQUFBLEdBQU8sUUFBQSxDQUFDLE1BQUQsRUFBQSxHQUFTLE9BQVQsQ0FBQTtTQUNMLEtBQUEsQ0FBTSxNQUFOLEVBQWMsT0FBZDtBQURLIiwic291cmNlc0NvbnRlbnQiOlsiIyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xuXG4jIE9iamVjdHM6XG5tYXRoID1cbiAgcm9vdDogICBNYXRoLnNxcnRcbiAgc3F1YXJlOiBzcXVhcmVcbiAgY3ViZTogICAoeCkgLT4geCAqIHNxdWFyZSB4XG5cbiMgU3BsYXRzOlxucmFjZSA9ICh3aW5uZXIsIHJ1bm5lcnMuLi4pIC0+XG4gIHByaW50IHdpbm5lciwgcnVubmVyc1xuIl19\n//# sourceURL=webpack-internal:///0\n");
+eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9leGFtcGxlLmNvZmZlZT8yNDE2Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7QUFBQSxJQUFBLElBQUEsRUFBQTs7QUFHQSxJQUFBLEdBQ0U7RUFBQSxJQUFBLEVBQVEsSUFBSSxDQUFDLElBQWI7RUFDQSxNQUFBLEVBQVEsTUFEUjtFQUVBLElBQUEsRUFBUSxRQUFBLENBQUMsQ0FBRCxDQUFBO1dBQU8sQ0FBQSxHQUFJLE1BQUEsQ0FBTyxDQUFQO0VBQVg7QUFGUixFQUpGOzs7QUFTQSxJQUFBLEdBQU8sUUFBQSxDQUFDLE1BQUQsRUFBQSxHQUFTLE9BQVQsQ0FBQTtTQUNMLEtBQUEsQ0FBTSxNQUFOLEVBQWMsT0FBZDtBQURLIiwic291cmNlc0NvbnRlbnQiOlsiIyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xuXG4jIE9iamVjdHM6XG5tYXRoID1cbiAgcm9vdDogICBNYXRoLnNxcnRcbiAgc3F1YXJlOiBzcXVhcmVcbiAgY3ViZTogICAoeCkgLT4geCAqIHNxdWFyZSB4XG5cbiMgU3BsYXRzOlxucmFjZSA9ICh3aW5uZXIsIHJ1bm5lcnMuLi4pIC0+XG4gIHByaW50IHdpbm5lciwgcnVubmVyc1xuIl19\n//# sourceURL=webpack-internal:///0\n");
 
 /***/ })
 ],[[0,0]]]);
@@ -261,7 +261,7 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.0
+Version: webpack 5.0.0-beta.1
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                        Asset       Size
@@ -279,7 +279,7 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                         Asset      Size
-            ./bundle-eval-cheap-source-map.js  1.41 KiB  [emitted]  [name: bundle]
+            ./bundle-eval-cheap-source-map.js  1.43 KiB  [emitted]  [name: bundle]
     ./runtime~bundle-eval-cheap-source-map.js  4.75 KiB  [emitted]  [name: runtime~bundle]
     Entrypoint bundle = ./runtime~bundle-eval-cheap-source-map.js ./bundle-eval-cheap-source-map.js
     chunk ./runtime~bundle-eval-cheap-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
@@ -293,7 +293,7 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                                Asset      Size
-            ./bundle-eval-cheap-module-source-map.js  1.56 KiB  [emitted]  [name: bundle]
+            ./bundle-eval-cheap-module-source-map.js  1.58 KiB  [emitted]  [name: bundle]
     ./runtime~bundle-eval-cheap-module-source-map.js  4.75 KiB  [emitted]  [name: runtime~bundle]
     Entrypoint bundle = ./runtime~bundle-eval-cheap-module-source-map.js ./bundle-eval-cheap-module-source-map.js
     chunk ./runtime~bundle-eval-cheap-module-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
@@ -307,7 +307,7 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                   Asset      Size
-            ./bundle-eval-source-map.js  1.56 KiB  [emitted]  [name: bundle]
+            ./bundle-eval-source-map.js  1.58 KiB  [emitted]  [name: bundle]
     ./runtime~bundle-eval-source-map.js  4.75 KiB  [emitted]  [name: runtime~bundle]
     Entrypoint bundle = ./runtime~bundle-eval-source-map.js ./bundle-eval-source-map.js
     chunk ./runtime~bundle-eval-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]

@@ -487,7 +487,7 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
               Asset       Size
      aPage.chunk.js  354 bytes  [emitted]  [name: aPage]
      bPage.chunk.js  354 bytes  [emitted]  [name: bPage]
@@ -510,8 +510,8 @@ chunk bPage.chunk.js (bPage) 59 bytes [initial] [rendered] reused as split chunk
     > ./router pageB
  ./bPage.js 59 bytes [built]
      [used exports unknown]
-     context element ./bPage . lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
      cjs require ./bPage ./bEntry.js 3:7-25
+     context element ./bPage . lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
 chunk pageA.bundle.js (pageA) 87 bytes (javascript) 6.44 KiB (runtime) [entry] [rendered]
     > ./aEntry pageA
     > ./router pageA
@@ -537,8 +537,8 @@ chunk router_js.bundle.js 950 bytes [initial] [rendered] split chunk (cache grou
  ./render.js 58 bytes [built]
      [used exports unknown]
      cjs require ./render ./aEntry.js 2:13-32
-     cjs require ./render ./router.js 1:13-32
      cjs require ./render ./bEntry.js 2:13-32
+     cjs require ./render ./router.js 1:13-32
  ./router.js 732 bytes [built]
      [used exports unknown]
      entry ./router pageA
@@ -549,7 +549,7 @@ chunk router_js.bundle.js 950 bytes [initial] [rendered] split chunk (cache grou
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
               Asset       Size
      aPage.chunk.js  121 bytes  [emitted]  [name: aPage]
      bPage.chunk.js  121 bytes  [emitted]  [name: bPage]
@@ -595,8 +595,8 @@ chunk router_js.bundle.js 950 bytes [initial] [rendered] split chunk (cache grou
      import() context lazy . ./router.js 15:1-59
  ./render.js 58 bytes [built]
      cjs require ./render ./aEntry.js 2:13-32
-     cjs require ./render ./router.js 1:13-32
      cjs require ./render ./bEntry.js 2:13-32
+     cjs require ./render ./router.js 1:13-32
  ./router.js 732 bytes [built]
      [no exports used]
      entry ./router pageA

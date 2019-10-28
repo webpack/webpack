@@ -485,7 +485,7 @@ return __webpack_exports__;
 ## in production mode:
 
 ```javascript
-(window.webpackJsonp=window.webpackJsonp||[]).push([[497],{447:(a,e,s)=>{"use strict";a.exports=(async()=>{s.d(e,{d:()=>a});await(async a=>{await new Promise(a=>setTimeout(a,1e3))})();const a=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");return e})()},497:(a,e,s)=>{"use strict";a.exports=(async()=>{s.r(e),s.d(e,{createUser:()=>t});var a=s(447);a=await Promise.resolve(a);const t=async e=>{command=`CREATE USER ${e}`,await(0,a.d)({command})};return e})()}}]);
+(window.webpackJsonp=window.webpackJsonp||[]).push([[497],{497:(a,e,s)=>{"use strict";a.exports=(async()=>{s.r(e),s.d(e,{createUser:()=>t});var a=s(447);a=await Promise.resolve(a);const t=async e=>{command=`CREATE USER ${e}`,await(0,a.D)({command})};return e})()},447:(a,e,s)=>{"use strict";a.exports=(async()=>{s.d(e,{D:()=>a});await(async a=>{await new Promise(a=>setTimeout(a,1e3))})();const a=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");return e})()}}]);
 ```
 
 # Info
@@ -494,7 +494,7 @@ return __webpack_exports__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset      Size
 497.output.js  2.48 KiB  [emitted]
     output.js  11.2 KiB  [emitted]  [name: main]
@@ -530,10 +530,10 @@ chunk 497.output.js 622 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset       Size
 497.output.js  477 bytes  [emitted]
-    output.js   1.81 KiB  [emitted]  [name: main]
+    output.js   1.82 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk output.js (main) 1.19 KiB (javascript) 4.75 KiB (runtime) [entry] [rendered]
     > ./example.js main

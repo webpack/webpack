@@ -239,7 +239,7 @@ __webpack_require__(/*! ./vendor2 */ 1);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
      Asset      Size
   pageA.js  2.24 KiB  [emitted]  [name: pageA]
   pageB.js   1.5 KiB  [emitted]  [name: pageB]
@@ -255,15 +255,15 @@ chunk vendor1.js (vendor1) 27 bytes [entry] [rendered]
     > ./vendor1 vendor1
  ./vendor1.js 27 bytes [built]
      [used exports unknown]
-     cjs require ./vendor1 ./vendor2.js 2:0-20
      cjs require ./vendor1 ./pageA.js 2:0-20
+     cjs require ./vendor1 ./vendor2.js 2:0-20
      entry ./vendor1 vendor1
 chunk vendor2.js (vendor2) 77 bytes [entry] [rendered]
     > ./vendor2 vendor2
  ./vendor1.js 27 bytes [built]
      [used exports unknown]
-     cjs require ./vendor1 ./vendor2.js 2:0-20
      cjs require ./vendor1 ./pageA.js 2:0-20
+     cjs require ./vendor1 ./vendor2.js 2:0-20
      entry ./vendor1 vendor1
  ./vendor2.js 50 bytes [built]
      [used exports unknown]
@@ -276,8 +276,8 @@ chunk pageA.js (pageA) 147 bytes [entry] [rendered]
      entry ./pageA pageA
  ./vendor1.js 27 bytes [built]
      [used exports unknown]
-     cjs require ./vendor1 ./vendor2.js 2:0-20
      cjs require ./vendor1 ./pageA.js 2:0-20
+     cjs require ./vendor1 ./vendor2.js 2:0-20
      entry ./vendor1 vendor1
  ./vendor2.js 50 bytes [built]
      [used exports unknown]
@@ -299,7 +299,7 @@ chunk pageC.js (pageC) 25 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
      Asset       Size
   pageA.js  267 bytes  [emitted]  [name: pageA]
   pageB.js  176 bytes  [emitted]  [name: pageB]
@@ -324,8 +324,8 @@ chunk pageC.js (pageC) 25 bytes [entry] [rendered]
 chunk vendor2.js (vendor2) 77 bytes [entry] [rendered]
     > ./vendor2 vendor2
  ./vendor1.js 27 bytes [built]
-     cjs require ./vendor1 ./vendor2.js 2:0-20
      cjs require ./vendor1 ./pageA.js 2:0-20
+     cjs require ./vendor1 ./vendor2.js 2:0-20
      entry ./vendor1 vendor1
  ./vendor2.js 50 bytes [built]
      cjs require ./vendor2 ./pageA.js 3:0-20
@@ -336,8 +336,8 @@ chunk pageA.js (pageA) 147 bytes [entry] [rendered]
      [no exports used]
      entry ./pageA pageA
  ./vendor1.js 27 bytes [built]
-     cjs require ./vendor1 ./vendor2.js 2:0-20
      cjs require ./vendor1 ./pageA.js 2:0-20
+     cjs require ./vendor1 ./vendor2.js 2:0-20
      entry ./vendor1 vendor1
  ./vendor2.js 50 bytes [built]
      cjs require ./vendor2 ./pageA.js 3:0-20
@@ -345,7 +345,7 @@ chunk pageA.js (pageA) 147 bytes [entry] [rendered]
 chunk vendor1.js (vendor1) 27 bytes [entry] [rendered]
     > ./vendor1 vendor1
  ./vendor1.js 27 bytes [built]
-     cjs require ./vendor1 ./vendor2.js 2:0-20
      cjs require ./vendor1 ./pageA.js 2:0-20
+     cjs require ./vendor1 ./vendor2.js 2:0-20
      entry ./vendor1 vendor1
 ```

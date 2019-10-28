@@ -371,7 +371,7 @@ module.exports = webpackAsyncContext;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset       Size
 346.output.js  325 bytes  [emitted]
 644.output.js  317 bytes  [emitted]
@@ -416,12 +416,12 @@ chunk 644.output.js 11 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset      Size
 346.output.js  73 bytes  [emitted]
 644.output.js  73 bytes  [emitted]
  98.output.js  71 bytes  [emitted]
-    output.js  2.64 KiB  [emitted]  [name: main]
+    output.js  2.65 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk 98.output.js 13 bytes [rendered]
     > ./2 ./node_modules/c lazy ^\.\/.*$ namespace object ./2
