@@ -1,4 +1,3 @@
-const { DependencyReference } = require("../../../../").dependencies;
 /** @typedef {import("../../../../lib/Compilation")} Compilation */
 
 module.exports = {
@@ -15,25 +14,27 @@ module.exports = {
 				 * @returns {void}
 				 */
 				compilation => {
-					compilation.hooks.dependencyReference.tap("Test", (ref, dep) => {
-						const module = compilation.moduleGraph.getParentModule(dep);
-						if (!module.identifier().endsWith("module.js")) return ref;
-						const refModule = compilation.moduleGraph.getModule(dep);
-						if (
-							refModule &&
-							refModule.identifier().endsWith("reference.js") &&
-							Array.isArray(ref.importedNames) &&
-							ref.importedNames.some(
-								names => names.length === 1 && names[0] === "unused"
-							)
-						) {
-							const newExports = ref.importedNames.filter(
-								names => names.length !== 1 || names[0] !== "unused"
-							);
-							return new DependencyReference(newExports);
+					compilation.hooks.dependencyReferencedExports.tap(
+						"Test",
+						(referencedExports, dep) => {
+							const module = compilation.moduleGraph.getParentModule(dep);
+							if (!module.identifier().endsWith("module.js"))
+								return referencedExports;
+							const refModule = compilation.moduleGraph.getModule(dep);
+							if (
+								refModule &&
+								refModule.identifier().endsWith("reference.js") &&
+								referencedExports.some(
+									names => names.length === 1 && names[0] === "unused"
+								)
+							) {
+								return referencedExports.filter(
+									names => names.length !== 1 || names[0] !== "unused"
+								);
+							}
+							return referencedExports;
 						}
-						return ref;
-					});
+					);
 				}
 			);
 		}
