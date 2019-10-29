@@ -25,7 +25,7 @@ module.exports = {
 						const newExports = ref.importedNames.filter(
 							names => names.length !== 1 || names[0] !== "unused"
 						);
-						return new DependencyReference(newExports, ref.order);
+						return new DependencyReference(newExports);
 					}
 					return ref;
 				});
