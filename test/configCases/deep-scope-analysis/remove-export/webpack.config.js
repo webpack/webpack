@@ -27,7 +27,6 @@ module.exports = {
 						return new DependencyReference(
 							() => ref.module,
 							newExports,
-							ref.weak,
 							ref.order
 						);
 					}
