@@ -26,7 +26,8 @@ const explain = object => {
 				value = JSON.stringify(value);
 			}
 			let msg = `${key} = ${value}`;
-			if (key !== "stack" && msg.length > 100) msg = msg.slice(0, 97) + "...";
+			if (key !== "stack" && key !== "details" && msg.length > 100)
+				msg = msg.slice(0, 97) + "...";
 			return msg;
 		})
 		.join("; ");

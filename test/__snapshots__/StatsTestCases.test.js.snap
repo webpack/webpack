@@ -2550,8 +2550,8 @@ Entrypoint main = main.js
 ./main.js + 1 modules 231 bytes [built]
     [no exports used]
     harmony side effect evaluation ./CompB ./components/src/CompAB/index.js 2:0-43
-    harmony export imported specifier ./CompB ./components/src/CompAB/index.js 2:0-43
-    harmony export imported specifier ./CompAB ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
+    [inactive] harmony export imported specifier ./CompB ./components/src/CompAB/index.js 2:0-43
+    [inactive] harmony export imported specifier ./CompAB ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
     entry ./main.js main
     | ./components/src/CompAB/CompB.js 77 bytes [built]
     |     [only some exports used: default]
@@ -2560,33 +2560,33 @@ Entrypoint main = main.js
     |     [no exports used]
 ./components/src/CompAB/CompA.js 89 bytes [built]
     [only some exports used: default]
-    harmony side effect evaluation ./CompA ./components/src/CompAB/index.js 1:0-43
-    harmony export imported specifier ./CompA ./components/src/CompAB/index.js 1:0-43
-    harmony export imported specifier ./CompAB ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
+    [inactive] harmony side effect evaluation ./CompA ./components/src/CompAB/index.js 1:0-43
+    [inactive] harmony export imported specifier ./CompA ./components/src/CompAB/index.js 1:0-43
+    [inactive] harmony export imported specifier ./CompAB ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
     harmony import specifier ./components ./foo.js 3:20-25 (skipped side-effect-free modules)
     harmony import specifier ./components ./main.js + 1 modules ./main.js 3:15-20 (skipped side-effect-free modules)
 ./foo.js 101 bytes [built]
     import() ./foo ./main.js + 1 modules ./main.js 6:0-15
 ./components/src/index.js 84 bytes [orphan] [built]
     [module unused]
-    harmony side effect evaluation ./components ./foo.js 1:0-37
-    harmony side effect evaluation ./components ./main.js + 1 modules ./main.js 1:0-44
+    [inactive] harmony side effect evaluation ./components ./foo.js 1:0-37
+    [inactive] harmony side effect evaluation ./components ./main.js + 1 modules ./main.js 1:0-44
 ./components/src/CompAB/utils.js 97 bytes [built]
-    harmony side effect evaluation ./utils ./components/src/CompAB/CompA.js 1:0-35
+    [inactive] harmony side effect evaluation ./utils ./components/src/CompAB/CompA.js 1:0-35
     harmony import specifier ./utils ./components/src/CompAB/CompA.js 5:5-12
-    harmony side effect evaluation ./utils ./main.js + 1 modules ./components/src/CompAB/CompB.js 1:0-30
+    [inactive] harmony side effect evaluation ./utils ./main.js + 1 modules ./components/src/CompAB/CompB.js 1:0-30
     harmony import specifier ./utils ./main.js + 1 modules ./components/src/CompAB/CompB.js 5:2-5
 ./components/src/CompAB/index.js 87 bytes [orphan] [built]
     [module unused]
-    harmony side effect evaluation ./CompAB ./components/src/index.js 1:0-40
+    [inactive] harmony side effect evaluation ./CompAB ./components/src/index.js 1:0-40
 ./components/src/CompC/CompC.js 33 bytes [orphan] [built]
     [module unused]
-    harmony side effect evaluation ./CompC ./components/src/CompC/index.js 1:0-34
-    harmony export imported specifier ./CompC ./components/src/CompC/index.js 1:0-34
-    harmony export imported specifier ./CompC ./components/src/index.js 2:0-43 (skipped side-effect-free modules)
+    [inactive] harmony side effect evaluation ./CompC ./components/src/CompC/index.js 1:0-34
+    [inactive] harmony export imported specifier ./CompC ./components/src/CompC/index.js 1:0-34
+    [inactive] harmony export imported specifier ./CompC ./components/src/index.js 2:0-43 (skipped side-effect-free modules)
 ./components/src/CompC/index.js 34 bytes [orphan] [built]
     [module unused]
-    harmony side effect evaluation ./CompC ./components/src/index.js 2:0-43
+    [inactive] harmony side effect evaluation ./CompC ./components/src/index.js 2:0-43
     + 6 hidden modules"
 `;
 
@@ -2600,27 +2600,27 @@ Entrypoint main = main.js
 ./index.js + 2 modules 158 bytes [built]
     [no exports used]
     harmony side effect evaluation ./c ./node_modules/pmodule/b.js 5:0-24
-    harmony export imported specifier ./c ./node_modules/pmodule/b.js 5:0-24
+    [inactive] harmony export imported specifier ./c ./node_modules/pmodule/b.js 5:0-24
     entry ./index main
     | ./node_modules/pmodule/index.js 75 bytes [built]
     |     [only some exports used: default]
-    |     harmony side effect evaluation pmodule ./index.js 1:0-33
+    |     [inactive] harmony side effect evaluation pmodule ./index.js 1:0-33
     |     harmony import specifier pmodule ./index.js 3:12-15
     | ./node_modules/pmodule/c.js 28 bytes [built]
     |     [only some exports used: z]
     |     harmony import specifier pmodule ./index.js 3:17-18 (skipped side-effect-free modules)
-    |     harmony export imported specifier ./b ./node_modules/pmodule/index.js 2:0-30 (skipped side-effect-free modules)
+    |     [inactive] harmony export imported specifier ./b ./node_modules/pmodule/index.js 2:0-30 (skipped side-effect-free modules)
     | ./index.js 55 bytes [built]
     |     [no exports used]
 ./node_modules/pmodule/a.js 60 bytes [orphan] [built]
     [module unused]
-    harmony side effect evaluation ./a ./index.js + 2 modules ./node_modules/pmodule/index.js 1:0-20
-    harmony export imported specifier ./a ./index.js + 2 modules ./node_modules/pmodule/index.js 1:0-20
+    [inactive] harmony side effect evaluation ./a ./index.js + 2 modules ./node_modules/pmodule/index.js 1:0-20
+    [inactive] harmony export imported specifier ./a ./index.js + 2 modules ./node_modules/pmodule/index.js 1:0-20
 ./node_modules/pmodule/b.js 69 bytes [orphan] [built]
     [module unused]
-    harmony side effect evaluation ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
-    harmony export imported specifier ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
-    harmony export imported specifier ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30"
+    [inactive] harmony side effect evaluation ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+    [inactive] harmony export imported specifier ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+    [inactive] harmony export imported specifier ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30"
 `;
 
 exports[`StatsTestCases should print correct stats for simple 1`] = `
