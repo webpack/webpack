@@ -2540,16 +2540,16 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
-"Hash: 511b75a49bce32fdac1f
+"Hash: 7b858d960ed70c9bad20
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset       Size
    1.js  642 bytes  [emitted]
-main.js   10.1 KiB  [emitted]  [name: main]
+main.js   9.86 KiB  [emitted]  [name: main]
 Entrypoint main = main.js
 ./main.js + 1 modules 231 bytes [built]
     [no exports used]
-    harmony side effect evaluation ./CompB ./components/src/CompAB/index.js 2:0-43
+    [inactive] harmony side effect evaluation ./CompB ./components/src/CompAB/index.js 2:0-43
     [inactive] harmony export imported specifier ./CompB ./components/src/CompAB/index.js 2:0-43
     [inactive] harmony export imported specifier ./CompAB ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
     entry ./main.js main
@@ -2591,15 +2591,15 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
-"Hash: 5410fc291f7069e82143
+"Hash: 74ca09d69d62c4bfb288
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset       Size
-main.js  664 bytes  [emitted]  [name: main]
+main.js  322 bytes  [emitted]  [name: main]
 Entrypoint main = main.js
 ./index.js + 2 modules 158 bytes [built]
     [no exports used]
-    harmony side effect evaluation ./c ./node_modules/pmodule/b.js 5:0-24
+    [inactive] harmony side effect evaluation ./c ./node_modules/pmodule/b.js 5:0-24
     [inactive] harmony export imported specifier ./c ./node_modules/pmodule/b.js 5:0-24
     entry ./index main
     | ./node_modules/pmodule/index.js 75 bytes [built]
