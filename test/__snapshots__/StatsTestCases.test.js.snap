@@ -3701,7 +3701,7 @@ Built at: 1970-04-20 12:42:42
 256e72dd8b9a83a6e45b.module.wasm  120 bytes  [emitted] [immutable]
                    325.bundle.js   3.71 KiB  [emitted]
                    526.bundle.js  368 bytes  [emitted]              [id hint: vendors]
-                   780.bundle.js  495 bytes  [emitted]
+                   780.bundle.js  496 bytes  [emitted]
                     99.bundle.js  205 bytes  [emitted]
 a0e9dd97d7ced35a5b2c.module.wasm  154 bytes  [emitted] [immutable]
                        bundle.js     11 KiB  [emitted]              [name: main-1df31ce3]
