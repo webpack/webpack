@@ -1,7 +1,6 @@
 "use strict";
 
 const NormalModule = require("../lib/NormalModule");
-const NullDependency = require("../lib/dependencies/NullDependency");
 const SourceMapSource = require("webpack-sources").SourceMapSource;
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
@@ -177,16 +176,6 @@ describe("NormalModule", () => {
 		});
 		it("returns an original Source", () => {
 			expect(normalModule.originalSource()).toBe(normalModule._source);
-		});
-	});
-
-	describe("#hasDependencies", () => {
-		it("returns true if has dependencies", () => {
-			normalModule.addDependency(new NullDependency());
-			expect(normalModule.hasDependencies()).toBe(true);
-		});
-		it("returns false if has dependencies", () => {
-			expect(normalModule.hasDependencies()).toBe(false);
 		});
 	});
 
