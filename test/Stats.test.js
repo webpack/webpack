@@ -217,10 +217,10 @@ describe("Stats", () => {
 			      "comparedForEmit": false,
 			      "emitted": true,
 			      "info": Object {
-			        "size": 2085,
+			        "size": 2044,
 			      },
 			      "name": "entryB.js",
-			      "size": 2085,
+			      "size": 2044,
 			    },
 			  ],
 			  "assetsByChunkName": Object {
