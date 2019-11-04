@@ -1123,6 +1123,10 @@
           "description": "Number of milliseconds before chunk request expires",
           "type": "number"
         },
+        "compareBeforeEmit": {
+          "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem",
+          "type": "boolean"
+        },
         "crossOriginLoading": {
           "description": "This option enables cross-origin loading of chunks.",
           "enum": [false, "anonymous", "use-credentials"]
