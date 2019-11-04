@@ -1181,6 +1181,10 @@ export interface OutputOptions {
 	 */
 	chunkLoadTimeout?: number;
 	/**
+	 * Check if to be emitted file already exists and have the same content before writing to output filesystem
+	 */
+	compareBeforeEmit?: boolean;
+	/**
 	 * This option enables cross-origin loading of chunks.
 	 */
 	crossOriginLoading?: false | "anonymous" | "use-credentials";

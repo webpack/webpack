@@ -2,6 +2,8 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
+const mkdirp = require("mkdirp");
+const rimraf = require("rimraf");
 const captureStdio = require("./helpers/captureStdio");
 
 let webpack;
@@ -46,6 +48,9 @@ describe("StatsTestCases", () => {
 	tests.forEach(testName => {
 		it("should print correct stats for " + testName, done => {
 			jest.setTimeout(30000);
+			const outputDirectory = path.join(outputBase, testName);
+			rimraf.sync(outputDirectory);
+			mkdirp.sync(outputDirectory);
 			let options = {
 				mode: "development",
 				entry: "./index",
@@ -59,8 +64,7 @@ describe("StatsTestCases", () => {
 			(Array.isArray(options) ? options : [options]).forEach(options => {
 				if (!options.context) options.context = path.join(base, testName);
 				if (!options.output) options.output = options.output || {};
-				if (!options.output.path)
-					options.output.path = path.join(outputBase, testName);
+				if (!options.output.path) options.output.path = outputDirectory;
 				if (!options.plugins) options.plugins = [];
 				if (!options.optimization) options.optimization = {};
 				if (options.optimization.minimize === undefined)
