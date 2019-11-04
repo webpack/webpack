@@ -1,61 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-entry 1`] = `
-"Hash: d89b2fa88cb132dd2f3ed89b2fa88cb132dd2f3e
+"Hash: 21902312560238912c7e45ec1b9983d1c74bd8c5
 Child fitting:
-    Hash: d89b2fa88cb132dd2f3e
+    Hash: 21902312560238912c7e
     Time: Xms
     Built at: 1970-04-20 12:42:42
     PublicPath: (none)
-                      Asset      Size
-    35bda92cf5ea05aff412.js  1.91 KiB  [emitted] [immutable]
-    3e4894c38178f8515f2a.js  1.91 KiB  [emitted] [immutable]
-    9fbc06f33314445dd40e.js    13 KiB  [emitted] [immutable]
-    dc9eb8f6a8dc6829a3ce.js  1.08 KiB  [emitted] [immutable]
-    Entrypoint main = 35bda92cf5ea05aff412.js 3e4894c38178f8515f2a.js 9fbc06f33314445dd40e.js
-    chunk 9fbc06f33314445dd40e.js 1.87 KiB (javascript) 6.5 KiB (runtime) [entry] [rendered]
+                              Asset      Size
+    fitting-07302ed1a3c05122e3f9.js    13 KiB  [emitted] [immutable]
+    fitting-35bda92cf5ea05aff412.js  1.91 KiB  [emitted] [immutable]
+    fitting-3e4894c38178f8515f2a.js  1.91 KiB  [emitted] [immutable]
+    fitting-dc9eb8f6a8dc6829a3ce.js  1.08 KiB  [emitted] [immutable]
+    Entrypoint main = fitting-35bda92cf5ea05aff412.js fitting-3e4894c38178f8515f2a.js fitting-07302ed1a3c05122e3f9.js
+    chunk fitting-07302ed1a3c05122e3f9.js 1.87 KiB (javascript) 6.51 KiB (runtime) [entry] [rendered]
         > ./index main
      ./e.js 899 bytes [built]
      ./f.js 900 bytes [built]
      ./index.js 111 bytes [built]
          + 7 hidden chunk modules
-    chunk 3e4894c38178f8515f2a.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
+    chunk fitting-3e4894c38178f8515f2a.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
         > ./index main
      ./c.js 899 bytes [built]
      ./d.js 899 bytes [built]
-    chunk 35bda92cf5ea05aff412.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
+    chunk fitting-35bda92cf5ea05aff412.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
         > ./index main
      ./a.js 899 bytes [built]
      ./b.js 899 bytes [built]
-    chunk dc9eb8f6a8dc6829a3ce.js 916 bytes [rendered]
+    chunk fitting-dc9eb8f6a8dc6829a3ce.js 916 bytes [rendered]
         > ./g ./index.js 7:0-13
      ./g.js 916 bytes [built]
 Child content-change:
-    Hash: d89b2fa88cb132dd2f3e
+    Hash: 45ec1b9983d1c74bd8c5
     Time: Xms
     Built at: 1970-04-20 12:42:42
     PublicPath: (none)
-                      Asset      Size
-    35bda92cf5ea05aff412.js  1.91 KiB  [emitted] [immutable]
-    3e4894c38178f8515f2a.js  1.91 KiB  [emitted] [immutable]
-    9fbc06f33314445dd40e.js    13 KiB  [emitted] [immutable]
-    dc9eb8f6a8dc6829a3ce.js  1.08 KiB  [emitted] [immutable]
-    Entrypoint main = 35bda92cf5ea05aff412.js 3e4894c38178f8515f2a.js 9fbc06f33314445dd40e.js
-    chunk 9fbc06f33314445dd40e.js 1.87 KiB (javascript) 6.5 KiB (runtime) [entry] [rendered]
+                                     Asset      Size
+    content-change-35bda92cf5ea05aff412.js  1.91 KiB  [emitted] [immutable]
+    content-change-3e4894c38178f8515f2a.js  1.91 KiB  [emitted] [immutable]
+    content-change-d60032b193fdb4bf4c38.js    13 KiB  [emitted] [immutable]
+    content-change-dc9eb8f6a8dc6829a3ce.js  1.08 KiB  [emitted] [immutable]
+    Entrypoint main = content-change-35bda92cf5ea05aff412.js content-change-3e4894c38178f8515f2a.js content-change-d60032b193fdb4bf4c38.js
+    chunk content-change-d60032b193fdb4bf4c38.js 1.87 KiB (javascript) 6.51 KiB (runtime) [entry] [rendered]
         > ./index main
      ./e.js 899 bytes [built]
      ./f.js 900 bytes [built]
      ./index.js 111 bytes [built]
          + 7 hidden chunk modules
-    chunk 3e4894c38178f8515f2a.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
+    chunk content-change-3e4894c38178f8515f2a.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
         > ./index main
      ./c.js 899 bytes [built]
      ./d.js 899 bytes [built]
-    chunk 35bda92cf5ea05aff412.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
+    chunk content-change-35bda92cf5ea05aff412.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
         > ./index main
      ./a.js 899 bytes [built]
      ./b.js 899 bytes [built]
-    chunk dc9eb8f6a8dc6829a3ce.js 916 bytes [rendered]
+    chunk content-change-dc9eb8f6a8dc6829a3ce.js 916 bytes [rendered]
         > ./g ./index.js 7:0-13
      ./g.js 916 bytes [built]"
 `;
@@ -758,9 +758,9 @@ Child undefined:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+         Asset        Size
+    bundle0.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle0.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
 
@@ -788,51 +788,51 @@ Child Terser:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+         Asset        Size
+    bundle1.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle1.js
 Child /Terser/:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+         Asset        Size
+    bundle2.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle2.js
 Child warnings => true:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+         Asset        Size
+    bundle3.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle3.js
 Child [Terser]:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+         Asset        Size
+    bundle4.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle4.js
 Child [/Terser/]:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+         Asset        Size
+    bundle5.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle5.js
 Child [warnings => true]:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+         Asset        Size
+    bundle6.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle6.js
 Child should not filter:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+         Asset        Size
+    bundle7.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle7.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
 
@@ -860,9 +860,9 @@ Child /should not filter/:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+         Asset        Size
+    bundle8.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle8.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
 
@@ -890,9 +890,9 @@ Child warnings => false:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+         Asset        Size
+    bundle9.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle9.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
 
@@ -920,9 +920,9 @@ Child [should not filter]:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+          Asset        Size
+    bundle10.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle10.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
 
@@ -950,9 +950,9 @@ Child [/should not filter/]:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+          Asset        Size
+    bundle11.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle11.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
 
@@ -980,9 +980,9 @@ Child [warnings => false]:
     Hash: e865ee1cdbd25d5b868d
     Time: Xms
     Built at: 1970-04-20 12:42:42
-        Asset        Size
-    bundle.js  1010 bytes  [emitted]  [name: main]
-    Entrypoint main = bundle.js
+          Asset        Size
+    bundle12.js  1010 bytes  [emitted]  [name: main]
+    Entrypoint main = bundle12.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
 
@@ -2427,23 +2427,23 @@ Entrypoint e2 = runtime~e2.js e2.js"
 
 exports[`StatsTestCases should print correct stats for runtime-chunk-integration 1`] = `
 "Child base:
-         Asset       Size
-        505.js   1.22 KiB  [emitted]
-      main1.js  556 bytes  [emitted]  [name: main1]
-    runtime.js   9.74 KiB  [emitted]  [name: runtime]
-    Entrypoint main1 = runtime.js main1.js
+                 Asset       Size
+        without-505.js   1.22 KiB  [emitted]
+      without-main1.js  556 bytes  [emitted]  [name: main1]
+    without-runtime.js   9.75 KiB  [emitted]  [name: runtime]
+    Entrypoint main1 = without-runtime.js without-main1.js
     ./main1.js 66 bytes [built]
     ./b.js 20 bytes [built]
     ./c.js 20 bytes [built]
     ./d.js 20 bytes [built]
         + 6 hidden modules
 Child manifest is named entry:
-          Asset       Size
-         505.js   1.22 KiB  [emitted]
-       main1.js  556 bytes  [emitted]  [name: main1]
-    manifest.js   9.87 KiB  [emitted]  [name: manifest]
-    Entrypoint main1 = manifest.js main1.js
-    Entrypoint manifest = manifest.js
+               Asset       Size
+         with-505.js   1.22 KiB  [emitted]
+       with-main1.js  556 bytes  [emitted]  [name: main1]
+    with-manifest.js   9.88 KiB  [emitted]  [name: manifest]
+    Entrypoint main1 = with-manifest.js with-main1.js
+    Entrypoint manifest = with-manifest.js
     ./main1.js 66 bytes [built]
     ./f.js 20 bytes [built]
     ./b.js 20 bytes [built]

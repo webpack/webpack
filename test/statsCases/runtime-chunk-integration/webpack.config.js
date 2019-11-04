@@ -3,9 +3,6 @@ const { MinChunkSizePlugin } = require("../../../").optimize;
 const baseConfig = {
 	mode: "production",
 	target: "web",
-	output: {
-		filename: "[name].js"
-	},
 	stats: {
 		hash: false,
 		timings: false,
@@ -20,6 +17,9 @@ const baseConfig = {
 
 const withoutNamedEntry = {
 	...baseConfig,
+	output: {
+		filename: "without-[name].js"
+	},
 	name: "base",
 	entry: {
 		main1: "./main1"
@@ -31,6 +31,9 @@ const withoutNamedEntry = {
 
 const withNamedEntry = {
 	...baseConfig,
+	output: {
+		filename: "with-[name].js"
+	},
 	name: "manifest is named entry",
 	entry: {
 		main1: "./main1",

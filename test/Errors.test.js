@@ -85,6 +85,9 @@ const defaults = {
 		},
 		writeFile(file, content, callback) {
 			callback();
+		},
+		stat(file, callback) {
+			callback(new Error("ENOENT"));
 		}
 	}
 };

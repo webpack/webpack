@@ -2,9 +2,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 const baseConfig = {
 	mode: "production",
 	entry: "./index",
-	output: {
-		filename: "bundle.js"
-	},
 	optimization: {
 		minimize: true,
 		minimizer: [
@@ -46,8 +43,12 @@ module.exports = [
 	["should not filter"],
 	[/should not filter/],
 	[warnings => false]
-].map(filter => ({
+].map((filter, idx) => ({
 	...baseConfig,
 	name: Array.isArray(filter) ? `[${filter}]` : `${filter}`,
-	stats: { ...baseConfig.stats, warningsFilter: filter }
+	output: { filename: `bundle${idx}.js` },
+	stats: {
+		...baseConfig.stats,
+		warningsFilter: filter
+	}
 }));
