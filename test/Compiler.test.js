@@ -39,6 +39,9 @@ describe("Compiler", () => {
 				logs.writeFile.push(name, content);
 				files[name] = content.toString("utf-8");
 				callback();
+			},
+			stat(path, callback) {
+				callback(new Error("ENOENT"));
 			}
 		};
 		c.hooks.compilation.tap(
