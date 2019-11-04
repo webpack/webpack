@@ -640,10 +640,10 @@ Child
     Hash: 11c5088030cef384e47e
     Time: Xms
     Built at: 1970-04-20 12:42:42
-                             Asset       Size
-       app.d6fd64d04ea003e46dd3.js   5.81 KiB  [emitted] [immutable]  [name: app]
-    vendor.4101ce64a32446c20561.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
-    Entrypoint app = vendor.4101ce64a32446c20561.js app.d6fd64d04ea003e46dd3.js
+                               Asset       Size
+       app.d6fd64d04ea003e46dd3-1.js   5.81 KiB  [emitted] [immutable]  [name: app]
+    vendor.4101ce64a32446c20561-1.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
+    Entrypoint app = vendor.4101ce64a32446c20561-1.js app.d6fd64d04ea003e46dd3-1.js
     ./entry-1.js + 2 modules 190 bytes [built]
     ./constants.js 87 bytes [built]
         + 2 hidden modules
@@ -651,10 +651,10 @@ Child
     Hash: 64484202182c974f95ad
     Time: Xms
     Built at: 1970-04-20 12:42:42
-                             Asset       Size
-       app.627c1e16b9b5fb645153.js   5.82 KiB  [emitted] [immutable]  [name: app]
-    vendor.4101ce64a32446c20561.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
-    Entrypoint app = vendor.4101ce64a32446c20561.js app.627c1e16b9b5fb645153.js
+                               Asset       Size
+       app.627c1e16b9b5fb645153-2.js   5.82 KiB  [emitted] [immutable]  [name: app]
+    vendor.4101ce64a32446c20561-2.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
+    Entrypoint app = vendor.4101ce64a32446c20561-2.js app.627c1e16b9b5fb645153-2.js
     ./entry-2.js + 2 modules 197 bytes [built]
     ./constants.js 87 bytes [built]
         + 2 hidden modules"
