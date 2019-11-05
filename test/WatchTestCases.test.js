@@ -24,6 +24,8 @@ function copyDiff(src, dest, initial) {
 			var content = fs.readFileSync(srcFile);
 			if (/^DELETE\s*$/.test(content.toString("utf-8"))) {
 				fs.unlinkSync(destFile);
+			} else if (/^DELETE_DIRECTORY\s*$/.test(content.toString("utf-8"))) {
+				rimraf.sync(destFile);
 			} else {
 				fs.writeFileSync(destFile, content);
 				if (initial) {
