@@ -40,7 +40,7 @@ module.exports = [
 			c: "./c"
 		},
 		output: {
-			filename: "default/[name].js"
+			filename: "all-chunks/[name].js"
 		},
 		optimization: {
 			splitChunks: {
@@ -61,7 +61,7 @@ module.exports = [
 			c: ["x", "y", "z", "./c"]
 		},
 		output: {
-			filename: "default/[name].js"
+			filename: "manual/[name].js"
 		},
 		optimization: {
 			splitChunks: {
@@ -89,7 +89,7 @@ module.exports = [
 			cccccccccccccccccccccccccccccc: "./c"
 		},
 		output: {
-			filename: "[name].js"
+			filename: "name-too-long/[name].js"
 		},
 		optimization: {
 			splitChunks: {
@@ -111,7 +111,7 @@ module.exports = [
 			c: "./c"
 		},
 		output: {
-			filename: "default/[name].js"
+			filename: "custom-chunks-filter/[name].js"
 		},
 		optimization: {
 			splitChunks: {
@@ -132,7 +132,7 @@ module.exports = [
 			c: ["x", "y", "z", "./c"]
 		},
 		output: {
-			filename: "default/[name].js"
+			filename: "custom-chunks-filter-in-cache-groups/[name].js"
 		},
 		optimization: {
 			splitChunks: {
