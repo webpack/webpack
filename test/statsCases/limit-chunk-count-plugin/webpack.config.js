@@ -4,7 +4,7 @@ module.exports = [1, 2, 3, 4].map(n => ({
 	mode: "production",
 	entry: "./index",
 	output: {
-		filename: "bundle.js"
+		filename: `bundle${n}.js`
 	},
 	plugins: [
 		new webpack.optimize.LimitChunkCountPlugin({

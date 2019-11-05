@@ -7,7 +7,7 @@ module.exports = [
 		},
 		target: "web",
 		output: {
-			filename: "[name].js"
+			filename: "a-[name].js"
 		},
 		optimization: {
 			concatenateModules: false,
@@ -35,7 +35,7 @@ module.exports = [
 		},
 		target: "web",
 		output: {
-			filename: "[name].js"
+			filename: "b-[name].js"
 		},
 		optimization: {
 			splitChunks: {
