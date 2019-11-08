@@ -52,6 +52,18 @@ it("should define OBJECT.SUB.STRING", function() {
 		expect(sub.STRING).toBe("string");
 	}(OBJECT.SUB));
 });
+it("should define ARRAY", function() {
+	expect(Array.isArray(ARRAY)).toBeTruthy();
+	expect(ARRAY).toHaveLength(2);
+});
+it("should define ARRAY[0]", function() {
+	expect(ARRAY[0]).toBe(2);
+});
+it("should define ARRAY[1][0]", function() {
+	expect(Array.isArray(ARRAY[1])).toBeTruthy();
+	expect(ARRAY[1]).toHaveLength(1);
+	expect(ARRAY[1][0]).toBe("six");
+});
 it("should define process.env.DEFINED_NESTED_KEY", function() {
 	expect((process.env.DEFINED_NESTED_KEY)).toBe(5);
 	expect((typeof process.env.DEFINED_NESTED_KEY)).toBe("number");
