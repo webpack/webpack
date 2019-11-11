@@ -145,15 +145,15 @@ describe("NormalModule", () => {
 		});
 		describe("given no sourcemap", () => {
 			it("returns a RawSource", () => {
-				expect(normalModule.createSourceForAsset(name, content)).toBeInstanceOf(
-					RawSource
-				);
+				expect(
+					normalModule.createSourceForAsset("/", name, content)
+				).toBeInstanceOf(RawSource);
 			});
 		});
 		describe("given a string as the sourcemap", () => {
 			it("returns a OriginalSource", () => {
 				expect(
-					normalModule.createSourceForAsset(name, content, sourceMap)
+					normalModule.createSourceForAsset("/", name, content, sourceMap)
 				).toBeInstanceOf(OriginalSource);
 			});
 		});
@@ -163,7 +163,7 @@ describe("NormalModule", () => {
 			});
 			it("returns a SourceMapSource", () => {
 				expect(
-					normalModule.createSourceForAsset(name, content, sourceMap)
+					normalModule.createSourceForAsset("/", name, content, sourceMap)
 				).toBeInstanceOf(SourceMapSource);
 			});
 		});
