@@ -271,18 +271,15 @@ declare module "webpack-sources" {
 	}
 
 	export class RawSource extends Source {
-		constructor(source: string | Buffer);
+		constructor(source: string | Buffer, convertToString?: boolean);
 
-		// TODO remove internals
-		_value: string | Buffer;
+		isBuffer(): boolean;
 	}
 
 	export class OriginalSource extends Source {
 		constructor(source: string | Buffer, name: string);
 
-		// TODO remove internals
-		_value: string | Buffer;
-		_name: string;
+		getName(): string;
 	}
 
 	export class ReplaceSource extends Source {
@@ -291,10 +288,9 @@ declare module "webpack-sources" {
 		replace(start: number, end: number, newValue: string, name?: string): void;
 		insert(pos: number, newValue: string, name?: string): void;
 
-		// TODO remove internals
-		_name: string;
-		_source: string;
-		_replacements: {
+		getName(): string;
+		original(): string;
+		getReplacements(): {
 			start: number;
 			end: number;
 			content: string;
@@ -305,43 +301,47 @@ declare module "webpack-sources" {
 
 	export class SourceMapSource extends Source {
 		constructor(
-			source: string,
+			source: string | Buffer,
 			name: string,
-			sourceMap: Object | string,
-			originalSource?: string,
-			innerSourceMap?: Object
+			sourceMap: Object | string | Buffer,
+			originalSource?: string | Buffer,
+			innerSourceMap?: Object | string | Buffer
 		);
+
+		getArgsAsBuffers(): [
+			Buffer,
+			string,
+			Buffer,
+			Buffer | undefined,
+			Buffer | undefined
+		];
 	}
 
 	export class ConcatSource extends Source {
 		constructor(...args: (string | Source)[]);
 
-		children: (string | Source)[];
+		getChildren(): Source[];
 
 		add(item: string | Source): void;
+		addAllSkipOptimizing(items: Source[]): void;
 	}
 
 	export class PrefixSource extends Source {
 		constructor(prefix: string, source: string | Source);
 
-		_source: string | Source;
-		_prefix: string;
+		original(): Source;
+		getPrefix(): string;
 	}
 
 	export class CachedSource extends Source {
-		constructor(source: Source);
+		constructor(source: Source, cachedData?: any);
 
-		_source: Source;
-		_cachedSource: string | Buffer;
-		_cachedBuffer: Buffer;
-		_cachedSize: number;
-		_cachedMaps: Object;
+		original(): Source;
+		getCachedData(): any;
 	}
 
 	export class SizeOnlySource extends Source {
 		constructor(size: number);
-
-		_size: number;
 	}
 }
 
