@@ -345,6 +345,47 @@ declare module "webpack-sources" {
 	}
 }
 
+declare module "enhanced-resolve" {
+	type ResolveFunction = (
+		path: string,
+		request: string,
+		resolveContext: ResolveContext,
+		callback: (
+			err?: NodeJS.ErrnoException,
+			result?: string,
+			additionalInfo?: Object
+		) => void
+	) => void;
+
+	export function create(options: any): ResolveFunction;
+
+	interface ResolveContext {
+		log?: (message: string) => void;
+		fileDependencies?: Set<string>;
+		contextDependencies?: Set<string>;
+		missingDependencies?: Set<string>;
+		stack?: Set<string>;
+	}
+
+	export class Resolver {
+		resolve(
+			context: Object,
+			path: string,
+			request: string,
+			resolveContext: ResolveContext,
+			callback: (
+				err?: NodeJS.ErrnoException,
+				result?: string,
+				additionalInfo?: Object
+			) => void
+		): void;
+	}
+
+	export class ResolverFactory {
+		static createResolver(options: TODO): Resolver;
+	}
+}
+
 // This "hack" is needed because typescript doesn't support recursive type definitions
 // It's referenced from "ruleSet-conditions" in schemas/WebpackOptions.json
 interface RuleSetConditionsRecursive
