@@ -41,7 +41,7 @@ describe("ProgressPlugin", function() {
 				"trims each detail string equally"
 			);
 			expect(logs).toContain(
-				"10% ...ding ...ries ...ules ...tive",
+				"10% ...ding ...ries ...cies ...ules",
 				"remove empty arguments and omit arguments when no space"
 			);
 			expect(logs).toContain("92% after chunk asset optimization");

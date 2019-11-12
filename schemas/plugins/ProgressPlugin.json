@@ -13,6 +13,14 @@
           "description": "Show active modules count and one active module in progress message",
           "type": "boolean"
         },
+        "dependencies": {
+          "description": "Show dependencies count in progress message",
+          "type": "boolean"
+        },
+        "dependenciesCount": {
+          "description": "Minimum dependencies count to start with. For better progress calculation. Default: 10000",
+          "type": "number"
+        },
         "entries": {
           "description": "Show entries count in progress message",
           "type": "boolean"
@@ -30,7 +38,7 @@
           "type": "boolean"
         },
         "modulesCount": {
-          "description": "Minimum modules count to start with. Only for mode=modules. Default: 500",
+          "description": "Minimum modules count to start with. For better progress calculation. Default: 5000",
           "type": "number"
         },
         "profile": {
