@@ -20,6 +20,14 @@ export interface ProgressPluginOptions {
 	 */
 	activeModules?: boolean;
 	/**
+	 * Show dependencies count in progress message
+	 */
+	dependencies?: boolean;
+	/**
+	 * Minimum dependencies count to start with. For better progress calculation. Default: 10000
+	 */
+	dependenciesCount?: number;
+	/**
 	 * Show entries count in progress message
 	 */
 	entries?: boolean;
@@ -32,7 +40,7 @@ export interface ProgressPluginOptions {
 	 */
 	modules?: boolean;
 	/**
-	 * Minimum modules count to start with. Only for mode=modules. Default: 500
+	 * Minimum modules count to start with. For better progress calculation. Default: 5000
 	 */
 	modulesCount?: number;
 	/**
