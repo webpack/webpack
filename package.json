@@ -89,6 +89,10 @@
     "type": "git",
     "url": "https://github.com/webpack/webpack.git"
   },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/webpack"
+  },
   "homepage": "https://github.com/webpack/webpack",
   "main": "lib/index.js",
   "bin": "./bin/webpack.js",
