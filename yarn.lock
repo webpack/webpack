@@ -6545,10 +6545,10 @@ webidl-conversions@^4.0.2:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-4.0.2.tgz#a855980b1f0b6b359ba1d5d9fb39ae941faa63ad"
   integrity sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==
 
-webpack-sources@2.0.0-beta.6:
-  version "2.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-2.0.0-beta.6.tgz#80707d4e417cf734ec634efcb1cdca4c57aa1be8"
-  integrity sha512-zbYXdCVyNpHFs8vR0O3Tf7kfxmL76RDBGf1kBbeBrW1zlIKAp3msFKBVllwUAfyoMa/5OJ5iQRrqE7zn3eBjbw==
+webpack-sources@2.0.0-beta.7:
+  version "2.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-2.0.0-beta.7.tgz#525b4caaef7371fd7f8bf7e5fffe692880038926"
+  integrity sha512-jbUJbBcU/PHABhHDtUfXCSU6wD6dYOBMH4oIQnXxyapigyuOSHdkmqENayzV+3OEK8tm45qRQD/ggtyAMxqjAQ==
   dependencies:
     source-list-map "^2.0.1"
     source-map "~0.6.1"
