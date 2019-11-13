@@ -220,10 +220,13 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
 			 - configuration.devtool should be one of these:
-			   string | false
+			   string | object { type, options? } | false
 			   -> A developer tool to enhance debugging.
 			   Details:
 			    * configuration.devtool should be a string.
+			    * configuration.devtool should be an object:
+			      object { type, options? }
+			      -> Devtool options
 			    * configuration.devtool should be false."
 		`)
 	);

@@ -28,6 +28,22 @@
         "minLength": 1
       }
     },
+    "Devtool": {
+      "description": "Devtool options",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "options": {
+          "description": "The options for a devtool plugin (SourceMapDevToolPlugin, EvalSourceMapDevToolPlugin or EvalDevToolModulePlugin, depends on devtool type)",
+          "type": "object"
+        },
+        "type": {
+          "description": "Devtool type",
+          "type": "string"
+        }
+      },
+      "required": ["type"]
+    },
     "Entry": {
       "anyOf": [
         {
@@ -2381,6 +2397,9 @@
       "anyOf": [
         {
           "type": "string"
+        },
+        {
+          "$ref": "#/definitions/Devtool"
         },
         {
           "enum": [false]

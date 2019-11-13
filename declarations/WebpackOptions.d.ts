@@ -301,7 +301,7 @@ export interface WebpackOptions {
 	/**
 	 * A developer tool to enhance debugging.
 	 */
-	devtool?: string | false;
+	devtool?: string | Devtool | false;
 	/**
 	 * The entry point(s) of the compilation.
 	 */
@@ -512,6 +512,24 @@ export interface FileCacheOptions {
 	 * Version of the cache data. Different versions won't allow to reuse the cache and override existing content. Update the version when config changed in a way which doesn't allow to reuse cache. This will invalidate the cache.
 	 */
 	version?: string;
+}
+/**
+ * Devtool options
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "Devtool".
+ */
+export interface Devtool {
+	/**
+	 * The options for a devtool plugin (SourceMapDevToolPlugin, EvalSourceMapDevToolPlugin or EvalDevToolModulePlugin, depends on devtool type)
+	 */
+	options?: {
+		[k: string]: any;
+	};
+	/**
+	 * Devtool type
+	 */
+	type: string;
 }
 /**
  * Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.
