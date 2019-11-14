@@ -65,7 +65,7 @@ require(
   !*** ./commonjs.js ***!
   \*********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: module, __webpack_require__.oe, __webpack_require__, __webpack_require__.* */
+/*! runtime requirements: module, __webpack_require__, __webpack_require__.oe, __webpack_require__.* */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 // CommonJs Module Format
@@ -103,7 +103,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Fo
   \********************/
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.d, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -155,30 +155,6 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	!function() {
-/******/ 		__webpack_require__.f = {};
-/******/ 		// This file contains only the entry chunk.
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = (chunkId) => {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 				__webpack_require__.f[key](chunkId, promises);
-/******/ 				return promises;
-/******/ 			}, []));
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	}();
-/******/ 	
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	!function() {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
@@ -204,9 +180,17 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/publicPath */
+/******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	!function() {
-/******/ 		__webpack_require__.p = "dist/";
+/******/ 		__webpack_require__.f = {};
+/******/ 		// This file contains only the entry chunk.
+/******/ 		// The chunk loading function for additional chunks
+/******/ 		__webpack_require__.e = (chunkId) => {
+/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
+/******/ 				__webpack_require__.f[key](chunkId, promises);
+/******/ 				return promises;
+/******/ 			}, []));
+/******/ 		};
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -216,6 +200,22 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	!function() {
+/******/ 		__webpack_require__.p = "dist/";
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -251,8 +251,11 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							var loadingEnded = () => {
-/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
-/******/ 								if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId)) {
+/******/ 									installedChunkData = installedChunks[chunkId];
+/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
+/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 								}
 /******/ 							};
 /******/ 							var script = document.createElement('script');
 /******/ 							var onScriptComplete;
@@ -267,6 +270,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
 /******/ 							onScriptComplete = function (event) {
+/******/ 								onScriptComplete = function() {};
 /******/ 								// avoid mem leaks in IE.
 /******/ 								script.onerror = script.onload = null;
 /******/ 								clearTimeout(timeout);
@@ -457,12 +461,12 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
         Asset      Size
 635.output.js   2.1 KiB  [emitted]
-    output.js  12.6 KiB  [emitted]  [name: main]
+    output.js  12.8 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk output.js (main) 1010 bytes (javascript) 5.01 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 1010 bytes (javascript) 5.1 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./amd.js 298 bytes [built]
      [used exports unknown]
@@ -474,8 +478,8 @@ chunk output.js (main) 1010 bytes (javascript) 5.01 KiB (runtime) [entry] [rende
      harmony side effect evaluation ./amd ./harmony.js 3:0-24
  ./commonjs.js 223 bytes [built]
      [used exports unknown]
-     amd require ./commonjs ./amd.js 2:0-12:1
      cjs require ./commonjs ./amd.js 7:18-39
+     amd require ./commonjs ./amd.js
      cjs require ./commonjs ./example.js 2:16-37
      amd require ./commonjs ./example.js 7:0-14:1
      amd require ./commonjs ./example.js 7:0-14:1
@@ -486,8 +490,8 @@ chunk output.js (main) 1010 bytes (javascript) 5.01 KiB (runtime) [entry] [rende
  ./harmony.js 96 bytes [built]
      [exports: default]
      [used exports unknown]
-     amd require ./harmony ./amd.js 2:0-12:1
      cjs require ./harmony ./amd.js 8:17-37
+     amd require ./harmony ./amd.js
      amd require ./harmony ./commonjs.js 5:0-11:1
      cjs require ./harmony ./commonjs.js 9:17-37
      cjs require ./harmony ./example.js 4:15-35
@@ -512,12 +516,12 @@ chunk 635.output.js 433 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
         Asset       Size
 635.output.js  617 bytes  [emitted]
-    output.js   2.29 KiB  [emitted]  [name: main]
+    output.js    2.3 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk output.js (main) 1010 bytes (javascript) 5.01 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 1010 bytes (javascript) 5.1 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./amd.js 298 bytes [built]
      amd require ./amd ./commonjs.js 5:0-11:1
@@ -527,8 +531,8 @@ chunk output.js (main) 1010 bytes (javascript) 5.01 KiB (runtime) [entry] [rende
      amd require ./amd ./example.js 7:0-14:1
      harmony side effect evaluation ./amd ./harmony.js 3:0-24
  ./commonjs.js 223 bytes [built]
-     amd require ./commonjs ./amd.js 2:0-12:1
      cjs require ./commonjs ./amd.js 7:18-39
+     amd require ./commonjs ./amd.js
      cjs require ./commonjs ./example.js 2:16-37
      amd require ./commonjs ./example.js 7:0-14:1
      amd require ./commonjs ./example.js 7:0-14:1
@@ -538,8 +542,8 @@ chunk output.js (main) 1010 bytes (javascript) 5.01 KiB (runtime) [entry] [rende
      entry ./example.js main
  ./harmony.js 96 bytes [built]
      [exports: default]
-     amd require ./harmony ./amd.js 2:0-12:1
      cjs require ./harmony ./amd.js 8:17-37
+     amd require ./harmony ./amd.js
      amd require ./harmony ./commonjs.js 5:0-11:1
      cjs require ./harmony ./commonjs.js 9:17-37
      cjs require ./harmony ./example.js 4:15-35

@@ -33,7 +33,7 @@ module.exports = 42
   !*** ./cup1.coffee ***!
   \*********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: module, __webpack_require__ */
+/*! runtime requirements: __webpack_require__, module */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = {
@@ -106,7 +106,7 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
     Asset      Size
 output.js  2.09 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
@@ -128,7 +128,7 @@ chunk output.js (main) 206 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
     Asset       Size
 output.js  294 bytes  [emitted]  [name: main]
 Entrypoint main = output.js

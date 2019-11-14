@@ -167,11 +167,6 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/publicPath */
-/******/ 	!function() {
-/******/ 		__webpack_require__.p = "dist/";
-/******/ 	}();
-/******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
 /******/ 		// This function allow to reference async chunks
@@ -179,6 +174,11 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".js";
 /******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	!function() {
+/******/ 		__webpack_require__.p = "dist/";
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -216,8 +216,11 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							var loadingEnded = () => {
-/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
-/******/ 								if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId)) {
+/******/ 									installedChunkData = installedChunks[chunkId];
+/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
+/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 								}
 /******/ 							};
 /******/ 							var script = document.createElement('script');
 /******/ 							var onScriptComplete;
@@ -232,6 +235,7 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
 /******/ 							onScriptComplete = function (event) {
+/******/ 								onScriptComplete = function() {};
 /******/ 								// avoid mem leaks in IE.
 /******/ 								script.onerror = script.onload = null;
 /******/ 								clearTimeout(timeout);
@@ -408,11 +412,6 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/publicPath */
-/******/ 	!function() {
-/******/ 		__webpack_require__.p = "dist/";
-/******/ 	}();
-/******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
 /******/ 		// This function allow to reference async chunks
@@ -420,6 +419,11 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".js";
 /******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	!function() {
+/******/ 		__webpack_require__.p = "dist/";
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -457,8 +461,11 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							var loadingEnded = () => {
-/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
-/******/ 								if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId)) {
+/******/ 									installedChunkData = installedChunks[chunkId];
+/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
+/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 								}
 /******/ 							};
 /******/ 							var script = document.createElement('script');
 /******/ 							var onScriptComplete;
@@ -473,6 +480,7 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
 /******/ 							onScriptComplete = function (event) {
+/******/ 								onScriptComplete = function() {};
 /******/ 								// avoid mem leaks in IE.
 /******/ 								script.onerror = script.onload = null;
 /******/ 								clearTimeout(timeout);
@@ -611,12 +619,12 @@ module.exports = function(msg) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
      Asset       Size
      52.js  468 bytes  [emitted]
 commons.js  326 bytes  [emitted]  [name: commons] [id hint: commons]
-  pageA.js   9.27 KiB  [emitted]  [name: pageA]
-  pageB.js   9.21 KiB  [emitted]  [name: pageB]
+  pageA.js   9.41 KiB  [emitted]  [name: pageA]
+  pageB.js   9.34 KiB  [emitted]  [name: pageB]
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 chunk 52.js 88 bytes [rendered]
@@ -627,7 +635,7 @@ chunk 52.js 88 bytes [rendered]
      amd require ./shared ./pageA.js 2:0-4:2
      require.ensure item ./shared ./pageB.js 2:0-5:2
      cjs require ./shared ./pageB.js 3:14-33
-chunk pageB.js (pageB) 148 bytes (javascript) 5.07 KiB (runtime) [entry] [rendered]
+chunk pageB.js (pageB) 148 bytes (javascript) 5.17 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
  ./pageB.js 148 bytes [built]
      [used exports unknown]
@@ -641,7 +649,7 @@ chunk commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] spli
      cjs require ./common ./pageA.js 1:13-32
      cjs require ./common ./pageB.js 1:13-32
      cjs require ./common ./shared.js 1:13-32
-chunk pageA.js (pageA) 105 bytes (javascript) 5.07 KiB (runtime) [entry] [rendered]
+chunk pageA.js (pageA) 105 bytes (javascript) 5.17 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
  ./pageA.js 105 bytes [built]
      [used exports unknown]
@@ -653,12 +661,12 @@ chunk pageA.js (pageA) 105 bytes (javascript) 5.07 KiB (runtime) [entry] [render
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
      Asset       Size
      52.js  120 bytes  [emitted]
 commons.js   90 bytes  [emitted]  [name: commons] [id hint: commons]
-  pageA.js   1.77 KiB  [emitted]  [name: pageA]
-  pageB.js   1.74 KiB  [emitted]  [name: pageB]
+  pageA.js   1.78 KiB  [emitted]  [name: pageA]
+  pageB.js   1.76 KiB  [emitted]  [name: pageB]
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 chunk 52.js 88 bytes [rendered]
@@ -668,7 +676,7 @@ chunk 52.js 88 bytes [rendered]
      amd require ./shared ./pageA.js 2:0-4:2
      require.ensure item ./shared ./pageB.js 2:0-5:2
      cjs require ./shared ./pageB.js 3:14-33
-chunk pageB.js (pageB) 148 bytes (javascript) 5.08 KiB (runtime) [entry] [rendered]
+chunk pageB.js (pageB) 148 bytes (javascript) 5.17 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
  ./pageB.js 148 bytes [built]
      [no exports used]
@@ -681,7 +689,7 @@ chunk commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] spli
      cjs require ./common ./pageA.js 1:13-32
      cjs require ./common ./pageB.js 1:13-32
      cjs require ./common ./shared.js 1:13-32
-chunk pageA.js (pageA) 105 bytes (javascript) 5.08 KiB (runtime) [entry] [rendered]
+chunk pageA.js (pageA) 105 bytes (javascript) 5.17 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
  ./pageA.js 105 bytes [built]
      [no exports used]
