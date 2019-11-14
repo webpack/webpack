@@ -466,7 +466,7 @@ exports.c = "e";
 Minimized
 
 ```javascript
-(window.webpackJsonp=window.webpackJsonp||[]).push([[262],{75:(r,d)=>{d.c="e"},262:(r,d,a)=>{"use strict";a.r(d);var c={};a.r(c),a.d(c,{a:()=>n});var o=a(75),e=a(350),w=String.fromCharCode(o.c.charCodeAt(0)-2),n="d";a.d(d,{c:()=>w,x:()=>e.x,y:()=>e.y,d:()=>c})}}]);
+(window.webpackJsonp=window.webpackJsonp||[]).push([[262],{262:(r,d,a)=>{"use strict";a.r(d);var c={};a.r(c),a.d(c,{a:()=>n});var o=a(75),e=a(350),w=String.fromCharCode(o.c.charCodeAt(0)-2),n="d";a.d(d,{c:()=>w,x:()=>e.x,y:()=>e.y,d:()=>c})},75:(r,d)=>{d.c="e"}}]);
 ```
 
 # Info
@@ -475,7 +475,7 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset      Size
 262.output.js  2.84 KiB  [emitted]
     output.js  10.1 KiB  [emitted]  [name: main]
@@ -510,7 +510,7 @@ chunk 262.output.js 273 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset       Size
 262.output.js  265 bytes  [emitted]
     output.js   1.87 KiB  [emitted]  [name: main]
@@ -524,11 +524,11 @@ chunk output.js (main) 372 bytes (javascript) 4.75 KiB (runtime) [entry] [render
  ./node_modules/shared.js + 1 modules 100 bytes [built]
      [exports: x, y]
      [all exports used]
+     harmony side effect evaluation shared ./example.js + 2 modules ./node_modules/a.js 3:0-23
+     harmony export imported specifier shared ./example.js + 2 modules ./node_modules/a.js 3:0-23
      harmony side effect evaluation shared ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
      harmony export imported specifier shared ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
      harmony export imported specifier shared ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
-     harmony side effect evaluation shared ./example.js + 2 modules ./node_modules/a.js 3:0-23
-     harmony export imported specifier shared ./example.js + 2 modules ./node_modules/a.js 3:0-23
      + 6 hidden chunk modules
 chunk 262.output.js 273 bytes [rendered]
     > ./lazy ./example.js 4:0-16

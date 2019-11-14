@@ -82,12 +82,12 @@ const schema = [
 	},
 	{
 		title: "imports",
-		regexp: /(const (\{\s+\w+(,\s+\w+)*\s+\}|\w+) = (\/\*\* @type \{TODO\} \*\/\s\()?require\("[^"]+"\)\)?(\.\w+)*;\n)+\n/g,
+		regexp: /(const (\{\s+\w+(?::\s+\w+)?(,\s+\w+(?::\s+\w+)?)*\s+\}|\w+) = (\/\*\* @type \{TODO\} \*\/\s\()?require\("[^"]+"\)\)?(\.\w+)*;\n)+\n/g,
 		updateMessage: "sort imports alphabetically",
 		update(content) {
 			const items = execToArray(
 				content,
-				/const (?:\{\s+\w+(?:,\s+\w+)*\s+\}|\w+) = (?:\/\*\* @type \{TODO\} \*\/\s\()?require\("([^"]+)"\)\)?((?:\.\w+)*);\n/g
+				/const (?:\{\s+\w+(?::\s+\w+)?(?:,\s+\w+(?::\s+\w+)?)*\s+\}|\w+) = (?:\/\*\* @type \{TODO\} \*\/\s\()?require\("([^"]+)"\)\)?((?:\.\w+)*);\n/g
 			);
 			items.sort(sortImport);
 			return items.map(item => item.content).join("") + "\n";
@@ -180,11 +180,11 @@ for (const filePath of allFiles) {
 	}
 
 	const matches = content.match(
-		/makeSerializable\(\s*[^,]+,\s*"webpack\/lib\/[^"]+"\s*(?:,[^,]+)\)/g
+		/makeSerializable\(\s*[^,]+,\s*"webpack\/lib\/[^"]+"\s*(?:,[^)]+)?\)/g
 	);
 	if (matches) {
 		for (const match of matches) {
-			const str = /makeSerializable\(\s*[^,]+,\s*"webpack\/lib\/([^"]+)"\s*(?:,[^,]+)\)/.exec(
+			const str = /makeSerializable\(\s*[^,]+,\s*"webpack\/lib\/([^"]+)"/.exec(
 				match
 			)[1];
 			allSerializables.add(str);
@@ -198,7 +198,7 @@ for (const filePath of allFiles) {
 		path.resolve(__dirname, "../lib/util/internalSerializables.js")
 	);
 	for (const serializable of allSerializables) {
-		if (!content.includes(`../${serializable}`)) {
+		if (!content.includes(`"../${serializable}"`)) {
 			console.log(
 				`lib/util/internalSerializables.js: must include static require to ../${serializable}`
 			);

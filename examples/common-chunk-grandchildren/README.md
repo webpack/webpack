@@ -420,7 +420,7 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset       Size
 145.output.js  514 bytes  [emitted]
 366.output.js  520 bytes  [emitted]
@@ -462,7 +462,7 @@ chunk 588.output.js 133 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset       Size
 145.output.js  138 bytes  [emitted]
 366.output.js  138 bytes  [emitted]
@@ -488,8 +488,8 @@ chunk 421.output.js 69 bytes [rendered] split chunk (cache group: default)
     > ./example.js 3:1-6:3
     > ./pageB.js 3:1-6:3
  ./reusableComponent.js 69 bytes [built]
-     cjs require ./reusableComponent ./pageC.js 1:24-54
      cjs require ./reusableComponent ./pageA.js 1:24-54
+     cjs require ./reusableComponent ./pageC.js 1:24-54
 chunk 588.output.js 133 bytes [rendered]
     > ./example.js 7:1-10:3
  ./pageB.js 133 bytes [built]

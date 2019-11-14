@@ -63,7 +63,7 @@ module.exports = {
 # dist/dll.js
 
 ```javascript
-var dll_4b5a0a343c656cf0738e =
+var dll_81985c12e859f51e5a80 =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -197,7 +197,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_4b5a0a343c656cf0738e","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["a","b","c"]}}}
+{"name":"dll_81985c12e859f51e5a80","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -206,7 +206,7 @@ exports.c = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
  Asset      Size
 dll.js  4.59 KiB  [emitted]  [name: dll]
 Entrypoint dll = dll.js
@@ -230,9 +230,9 @@ chunk dll.js (dll) 216 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
  Asset       Size
-dll.js  666 bytes  [emitted]  [name: dll]
+dll.js  667 bytes  [emitted]  [name: dll]
 Entrypoint dll = dll.js
 chunk dll.js (dll) 216 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
     > dll

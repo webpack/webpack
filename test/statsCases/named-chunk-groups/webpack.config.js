@@ -13,9 +13,6 @@ const config = {
 	entry: {
 		main: "./"
 	},
-	output: {
-		filename: "[name].js"
-	},
 	optimization: {
 		splitChunks: {
 			minSize: 100,
@@ -34,10 +31,16 @@ const config = {
 module.exports = [
 	{
 		stats: { entrypoints: false, chunkGroups: true, ...stats },
+		output: {
+			filename: "a-[name].js"
+		},
 		...config
 	},
 	{
 		stats: { entrypoints: true, chunkGroups: true, ...stats },
+		output: {
+			filename: "b-[name].js"
+		},
 		...config
 	}
 ];

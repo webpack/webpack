@@ -41,7 +41,7 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_7fed5908c1238c18375f =
+var vendor_lib_427d036e1fe0feadbdd9 =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -140,7 +140,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_7fed5908c1238c18375f","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["square"]}}}
+{"name":"vendor_lib_427d036e1fe0feadbdd9","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["square"]}}}
 ```
 
 # Info
@@ -149,7 +149,7 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
     Asset      Size
 vendor.js  3.48 KiB  [emitted]  [name: main]
 Entrypoint main = vendor.js
@@ -170,9 +170,9 @@ chunk vendor.js (main) 57 bytes (javascript) 632 bytes (runtime) [entry] [render
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
     Asset       Size
-vendor.js  626 bytes  [emitted]  [name: main]
+vendor.js  627 bytes  [emitted]  [name: main]
 Entrypoint main = vendor.js
 chunk vendor.js (main) 57 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
     > main

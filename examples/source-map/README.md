@@ -22,16 +22,18 @@ race = (winner, runners...) ->
 var path = require("path");
 
 module.exports = [
-	"cheap-eval-source-map",
-	"cheap-module-eval-source-map",
-	"cheap-module-source-map",
-	"cheap-source-map",
 	"eval",
+	"eval-cheap-source-map",
+	"eval-cheap-module-source-map",
 	"eval-source-map",
-	"hidden-source-map",
+	"cheap-source-map",
+	"cheap-module-source-map",
+	"inline-cheap-source-map",
+	"inline-cheap-module-source-map",
+	"source-map",
 	"inline-source-map",
-	"nosources-source-map",
-	"source-map"
+	"hidden-source-map",
+	"nosources-source-map"
 ].map(devtool => ({
 	mode: "development",
 	entry: {
@@ -207,7 +209,7 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 ],[[0,0]]]);
 ```
 
-## cheap-eval-source-map.js
+## eval-cheap-source-map.js
 
 ```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
@@ -225,7 +227,7 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 ],[[0,0]]]);
 ```
 
-## cheap-module-eval-source-map.js
+## eval-cheap-module-source-map.js
 
 ```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
@@ -259,17 +261,31 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
+Child
+    Hash: 0a1b2c3d4e5f6a7b8c9d
+                       Asset       Size
+            ./bundle-eval.js  775 bytes  [emitted]  [name: bundle]
+    ./runtime~bundle-eval.js   4.75 KiB  [emitted]  [name: runtime~bundle]
+    Entrypoint bundle = ./runtime~bundle-eval.js ./bundle-eval.js
+    chunk ./runtime~bundle-eval.js (runtime~bundle) 2.31 KiB [entry] [rendered]
+        > coffee-loader!./example.coffee bundle
+        1 chunk module
+    chunk ./bundle-eval.js (bundle) 256 bytes [initial] [rendered]
+        > coffee-loader!./example.coffee bundle
+     (webpack)/node_modules/coffee-loader!./example.coffee 256 bytes [built]
+         [used exports unknown]
+         entry coffee-loader!./example.coffee bundle
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                         Asset      Size
-            ./bundle-cheap-eval-source-map.js  1.43 KiB  [emitted]  [name: bundle]
-    ./runtime~bundle-cheap-eval-source-map.js  4.75 KiB  [emitted]  [name: runtime~bundle]
-    Entrypoint bundle = ./runtime~bundle-cheap-eval-source-map.js ./bundle-cheap-eval-source-map.js
-    chunk ./runtime~bundle-cheap-eval-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
+            ./bundle-eval-cheap-source-map.js  1.43 KiB  [emitted]  [name: bundle]
+    ./runtime~bundle-eval-cheap-source-map.js  4.75 KiB  [emitted]  [name: runtime~bundle]
+    Entrypoint bundle = ./runtime~bundle-eval-cheap-source-map.js ./bundle-eval-cheap-source-map.js
+    chunk ./runtime~bundle-eval-cheap-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
         > coffee-loader!./example.coffee bundle
         1 chunk module
-    chunk ./bundle-cheap-eval-source-map.js (bundle) 256 bytes [initial] [rendered]
+    chunk ./bundle-eval-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
         > coffee-loader!./example.coffee bundle
      (webpack)/node_modules/coffee-loader!./example.coffee 256 bytes [built]
          [used exports unknown]
@@ -277,29 +293,27 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                                Asset      Size
-            ./bundle-cheap-module-eval-source-map.js  1.58 KiB  [emitted]  [name: bundle]
-    ./runtime~bundle-cheap-module-eval-source-map.js  4.75 KiB  [emitted]  [name: runtime~bundle]
-    Entrypoint bundle = ./runtime~bundle-cheap-module-eval-source-map.js ./bundle-cheap-module-eval-source-map.js
-    chunk ./runtime~bundle-cheap-module-eval-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
+            ./bundle-eval-cheap-module-source-map.js  1.58 KiB  [emitted]  [name: bundle]
+    ./runtime~bundle-eval-cheap-module-source-map.js  4.75 KiB  [emitted]  [name: runtime~bundle]
+    Entrypoint bundle = ./runtime~bundle-eval-cheap-module-source-map.js ./bundle-eval-cheap-module-source-map.js
+    chunk ./runtime~bundle-eval-cheap-module-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
         > coffee-loader!./example.coffee bundle
         1 chunk module
-    chunk ./bundle-cheap-module-eval-source-map.js (bundle) 256 bytes [initial] [rendered]
+    chunk ./bundle-eval-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
         > coffee-loader!./example.coffee bundle
      (webpack)/node_modules/coffee-loader!./example.coffee 256 bytes [built]
          [used exports unknown]
          entry coffee-loader!./example.coffee bundle
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
-                                              Asset       Size
-                ./bundle-cheap-module-source-map.js  726 bytes  [emitted]        [name: bundle]
-            ./bundle-cheap-module-source-map.js.map  443 bytes  [emitted] [dev]  [name: (bundle)]
-        ./runtime~bundle-cheap-module-source-map.js   4.82 KiB  [emitted]        [name: runtime~bundle]
-    ./runtime~bundle-cheap-module-source-map.js.map   4.11 KiB  [emitted] [dev]  [name: (runtime~bundle)]
-    Entrypoint bundle = ./runtime~bundle-cheap-module-source-map.js ./bundle-cheap-module-source-map.js (./bundle-cheap-module-source-map.js.map ./runtime~bundle-cheap-module-source-map.js.map)
-    chunk ./runtime~bundle-cheap-module-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
+                                  Asset      Size
+            ./bundle-eval-source-map.js  1.58 KiB  [emitted]  [name: bundle]
+    ./runtime~bundle-eval-source-map.js  4.75 KiB  [emitted]  [name: runtime~bundle]
+    Entrypoint bundle = ./runtime~bundle-eval-source-map.js ./bundle-eval-source-map.js
+    chunk ./runtime~bundle-eval-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
         > coffee-loader!./example.coffee bundle
         1 chunk module
-    chunk ./bundle-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
+    chunk ./bundle-eval-source-map.js (bundle) 256 bytes [initial] [rendered]
         > coffee-loader!./example.coffee bundle
      (webpack)/node_modules/coffee-loader!./example.coffee 256 bytes [built]
          [used exports unknown]
@@ -322,28 +336,74 @@ Child
          entry coffee-loader!./example.coffee bundle
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
-                       Asset       Size
-            ./bundle-eval.js  775 bytes  [emitted]  [name: bundle]
-    ./runtime~bundle-eval.js   4.75 KiB  [emitted]  [name: runtime~bundle]
-    Entrypoint bundle = ./runtime~bundle-eval.js ./bundle-eval.js
-    chunk ./runtime~bundle-eval.js (runtime~bundle) 2.31 KiB [entry] [rendered]
+                                              Asset       Size
+                ./bundle-cheap-module-source-map.js  726 bytes  [emitted]        [name: bundle]
+            ./bundle-cheap-module-source-map.js.map  443 bytes  [emitted] [dev]  [name: (bundle)]
+        ./runtime~bundle-cheap-module-source-map.js   4.82 KiB  [emitted]        [name: runtime~bundle]
+    ./runtime~bundle-cheap-module-source-map.js.map   4.11 KiB  [emitted] [dev]  [name: (runtime~bundle)]
+    Entrypoint bundle = ./runtime~bundle-cheap-module-source-map.js ./bundle-cheap-module-source-map.js (./bundle-cheap-module-source-map.js.map ./runtime~bundle-cheap-module-source-map.js.map)
+    chunk ./runtime~bundle-cheap-module-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
         > coffee-loader!./example.coffee bundle
         1 chunk module
-    chunk ./bundle-eval.js (bundle) 256 bytes [initial] [rendered]
+    chunk ./bundle-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
         > coffee-loader!./example.coffee bundle
      (webpack)/node_modules/coffee-loader!./example.coffee 256 bytes [built]
          [used exports unknown]
          entry coffee-loader!./example.coffee bundle
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
-                                  Asset      Size
-            ./bundle-eval-source-map.js  1.58 KiB  [emitted]  [name: bundle]
-    ./runtime~bundle-eval-source-map.js  4.75 KiB  [emitted]  [name: runtime~bundle]
-    Entrypoint bundle = ./runtime~bundle-eval-source-map.js ./bundle-eval-source-map.js
-    chunk ./runtime~bundle-eval-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
+                                          Asset      Size
+            ./bundle-inline-cheap-source-map.js   1.4 KiB  [emitted]  [name: bundle]
+    ./runtime~bundle-inline-cheap-source-map.js  10.3 KiB  [emitted]  [name: runtime~bundle]
+    Entrypoint bundle = ./runtime~bundle-inline-cheap-source-map.js ./bundle-inline-cheap-source-map.js
+    chunk ./runtime~bundle-inline-cheap-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
         > coffee-loader!./example.coffee bundle
         1 chunk module
-    chunk ./bundle-eval-source-map.js (bundle) 256 bytes [initial] [rendered]
+    chunk ./bundle-inline-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
+        > coffee-loader!./example.coffee bundle
+     (webpack)/node_modules/coffee-loader!./example.coffee 256 bytes [built]
+         [used exports unknown]
+         entry coffee-loader!./example.coffee bundle
+Child
+    Hash: 0a1b2c3d4e5f6a7b8c9d
+                                                 Asset      Size
+            ./bundle-inline-cheap-module-source-map.js   1.3 KiB  [emitted]  [name: bundle]
+    ./runtime~bundle-inline-cheap-module-source-map.js  10.3 KiB  [emitted]  [name: runtime~bundle]
+    Entrypoint bundle = ./runtime~bundle-inline-cheap-module-source-map.js ./bundle-inline-cheap-module-source-map.js
+    chunk ./runtime~bundle-inline-cheap-module-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
+        > coffee-loader!./example.coffee bundle
+        1 chunk module
+    chunk ./bundle-inline-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
+        > coffee-loader!./example.coffee bundle
+     (webpack)/node_modules/coffee-loader!./example.coffee 256 bytes [built]
+         [used exports unknown]
+         entry coffee-loader!./example.coffee bundle
+Child
+    Hash: 0a1b2c3d4e5f6a7b8c9d
+                                 Asset       Size
+                ./bundle-source-map.js  713 bytes  [emitted]        [name: bundle]
+            ./bundle-source-map.js.map  539 bytes  [emitted] [dev]  [name: (bundle)]
+        ./runtime~bundle-source-map.js    4.8 KiB  [emitted]        [name: runtime~bundle]
+    ./runtime~bundle-source-map.js.map   4.07 KiB  [emitted] [dev]  [name: (runtime~bundle)]
+    Entrypoint bundle = ./runtime~bundle-source-map.js ./bundle-source-map.js (./bundle-source-map.js.map ./runtime~bundle-source-map.js.map)
+    chunk ./runtime~bundle-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
+        > coffee-loader!./example.coffee bundle
+        1 chunk module
+    chunk ./bundle-source-map.js (bundle) 256 bytes [initial] [rendered]
+        > coffee-loader!./example.coffee bundle
+     (webpack)/node_modules/coffee-loader!./example.coffee 256 bytes [built]
+         [used exports unknown]
+         entry coffee-loader!./example.coffee bundle
+Child
+    Hash: 0a1b2c3d4e5f6a7b8c9d
+                                    Asset      Size
+            ./bundle-inline-source-map.js  1.43 KiB  [emitted]  [name: bundle]
+    ./runtime~bundle-inline-source-map.js  10.3 KiB  [emitted]  [name: runtime~bundle]
+    Entrypoint bundle = ./runtime~bundle-inline-source-map.js ./bundle-inline-source-map.js
+    chunk ./runtime~bundle-inline-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
+        > coffee-loader!./example.coffee bundle
+        1 chunk module
+    chunk ./bundle-inline-source-map.js (bundle) 256 bytes [initial] [rendered]
         > coffee-loader!./example.coffee bundle
      (webpack)/node_modules/coffee-loader!./example.coffee 256 bytes [built]
          [used exports unknown]
@@ -366,20 +426,6 @@ Child
          entry coffee-loader!./example.coffee bundle
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
-                                    Asset      Size
-            ./bundle-inline-source-map.js  1.43 KiB  [emitted]  [name: bundle]
-    ./runtime~bundle-inline-source-map.js  10.3 KiB  [emitted]  [name: runtime~bundle]
-    Entrypoint bundle = ./runtime~bundle-inline-source-map.js ./bundle-inline-source-map.js
-    chunk ./runtime~bundle-inline-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
-        > coffee-loader!./example.coffee bundle
-        1 chunk module
-    chunk ./bundle-inline-source-map.js (bundle) 256 bytes [initial] [rendered]
-        > coffee-loader!./example.coffee bundle
-     (webpack)/node_modules/coffee-loader!./example.coffee 256 bytes [built]
-         [used exports unknown]
-         entry coffee-loader!./example.coffee bundle
-Child
-    Hash: 0a1b2c3d4e5f6a7b8c9d
                                            Asset       Size
                 ./bundle-nosources-source-map.js  723 bytes  [emitted]        [name: bundle]
             ./bundle-nosources-source-map.js.map  326 bytes  [emitted] [dev]  [name: (bundle)]
@@ -390,22 +436,6 @@ Child
         > coffee-loader!./example.coffee bundle
         1 chunk module
     chunk ./bundle-nosources-source-map.js (bundle) 256 bytes [initial] [rendered]
-        > coffee-loader!./example.coffee bundle
-     (webpack)/node_modules/coffee-loader!./example.coffee 256 bytes [built]
-         [used exports unknown]
-         entry coffee-loader!./example.coffee bundle
-Child
-    Hash: 0a1b2c3d4e5f6a7b8c9d
-                                 Asset       Size
-                ./bundle-source-map.js  713 bytes  [emitted]        [name: bundle]
-            ./bundle-source-map.js.map  539 bytes  [emitted] [dev]  [name: (bundle)]
-        ./runtime~bundle-source-map.js    4.8 KiB  [emitted]        [name: runtime~bundle]
-    ./runtime~bundle-source-map.js.map   4.07 KiB  [emitted] [dev]  [name: (runtime~bundle)]
-    Entrypoint bundle = ./runtime~bundle-source-map.js ./bundle-source-map.js (./bundle-source-map.js.map ./runtime~bundle-source-map.js.map)
-    chunk ./runtime~bundle-source-map.js (runtime~bundle) 2.31 KiB [entry] [rendered]
-        > coffee-loader!./example.coffee bundle
-        1 chunk module
-    chunk ./bundle-source-map.js (bundle) 256 bytes [initial] [rendered]
         > coffee-loader!./example.coffee bundle
      (webpack)/node_modules/coffee-loader!./example.coffee 256 bytes [built]
          [used exports unknown]

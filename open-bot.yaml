@@ -611,6 +611,7 @@ rules:
           *For maintainers only:*
 
           * [ ] <!-- document --> This needs to be documented (issue in webpack/webpack.js.org will be filed when merged)
+          * [ ] <!-- webpack-4-backport --> This needs to be backported to webpack 4 (issue will be created when merged)
 
   # When a pull request need to be documented, create an issue in webpack/webpack.js.org when merged
   - filters:
@@ -641,6 +642,32 @@ rules:
         identifier: admin-action-document-executed
         message: |-
           I've created an issue to document this in webpack/webpack.js.org.
+
+  # When a pull request need to be backported, create an issue in webpack/webpack when merged
+  - filters:
+      pull_request:
+        merged: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] <!-- webpack-4-backport -->"
+      not:
+        comment_1:
+          author: webpack-bot
+          matching: admin-action-webpack-4-backport-executed
+    actions:
+      new_issue:
+        target: webpack/webpack
+        title: "Backport to webpack 4: {{{pull_request.title}}}"
+        body: |-
+          {{{pull_request.html_url}}} needs to be backported to webpack 4.
+          
+          Send a PR.
+          
+          cc @{{pull_request.user.login}}
+      comment:
+        identifier: admin-action-webpack-4-backport-executed
+        message: |-
+          I've created an issue to backport this.
 
   # Check open issues and pull requests every day
   - filters:

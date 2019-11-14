@@ -1,6 +1,6 @@
 import { a as a1 } from "./reexport-known";
 import { a as a2, c as c2 } from "./reexport-unknown";
-import { a as a3} from "./reexport-star-known";
+import { a as a3 } from "./reexport-star-known";
 import { a as a4, c as c4 } from "./reexport-star-unknown";
 import { y } from "./edge";
 

@@ -10,7 +10,7 @@ work is not in vain.
 Most of the time, if webpack is not working correctly for you, it is a simple configuration issue.
 
 If you are still having difficulty after looking over your configuration carefully, please post
-a question to [StackOverflow with the webpack tag](http://stackoverflow.com/tags/webpack). Questions
+a question to [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack). Questions
 that include your webpack.config.js, relevant files, and the full error message are more likely to receive responses.
 
 **If you have discovered a bug or have a feature suggestion, please [create an issue on GitHub](https://github.com/webpack/webpack/issues/new).**
@@ -43,7 +43,7 @@ Something that will increase the chance that your pull request is accepted:
 
 * [Write tests](./test/README.md)
 * Follow the existing coding style
-* Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+* Write a [good commit message](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 
 ## Documentation
 

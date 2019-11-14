@@ -1,7 +1,10 @@
+variables:
+  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+
 jobs:
   - job: basic
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-latest
     steps:
       - task: NodeTool@0
         inputs:
@@ -16,6 +19,11 @@ jobs:
           node -v
           yarn -v
         displayName: "Print versions"
+      - task: CacheBeta@1
+        inputs:
+          key: yarn | $(Agent.OS) | yarn.lock
+          path: $(YARN_CACHE_FOLDER)
+        displayName: "Cache Yarn packages"
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
@@ -46,7 +54,7 @@ jobs:
 
   - job: lint
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-latest
     steps:
       - task: NodeTool@0
         inputs:
@@ -61,6 +69,11 @@ jobs:
           node -v
           yarn -v
         displayName: "Print versions"
+      - task: CacheBeta@1
+        inputs:
+          key: yarn | $(Agent.OS) | yarn.lock
+          path: $(YARN_CACHE_FOLDER)
+        displayName: "Cache Yarn packages"
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
@@ -88,16 +101,16 @@ jobs:
       - basic
       - lint
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-latest
     strategy:
-      maxParallel: 4
+      maxParallel: 3
       matrix:
+        node-13:
+          node_version: ^13.0.0
         node-12:
           node_version: ^12.4.0
         node-10:
-          node_version: ^10.15.0
-        node-8:
-          node_version: ^8.16.0
+          node_version: ^10.13.0
     steps:
       - task: NodeTool@0
         inputs:
@@ -112,6 +125,11 @@ jobs:
           node -v
           yarn -v
         displayName: "Print versions"
+      - task: CacheBeta@1
+        inputs:
+          key: yarn | $(Agent.OS) | yarn.lock
+          path: $(YARN_CACHE_FOLDER)
+        displayName: "Cache Yarn packages"
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
@@ -136,16 +154,16 @@ jobs:
       - basic
       - lint
     pool:
-      vmImage: "macOS 10.13"
+      vmImage: macOS-latest
     strategy:
-      maxParallel: 4
+      maxParallel: 3
       matrix:
+        node-13:
+          node_version: ^13.0.0
         node-12:
           node_version: ^12.4.0
         node-10:
-          node_version: ^10.15.0
-        node-8:
-          node_version: ^8.16.0
+          node_version: ^10.13.0
     steps:
       - task: NodeTool@0
         inputs:
@@ -160,6 +178,11 @@ jobs:
           node -v
           yarn -v
         displayName: "Print versions"
+      - task: CacheBeta@1
+        inputs:
+          key: yarn | $(Agent.OS) | yarn.lock
+          path: $(YARN_CACHE_FOLDER)
+        displayName: "Cache Yarn packages"
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
@@ -184,16 +207,16 @@ jobs:
       - basic
       - lint
     pool:
-      vmImage: vs2017-win2016
+      vmImage: windows-latest
     strategy:
-      maxParallel: 4
+      maxParallel: 3
       matrix:
+        node-13:
+          node_version: ^13.0.0
         node-12:
           node_version: ^12.4.0
         node-10:
-          node_version: ^10.15.0
-        node-8:
-          node_version: ^8.16.0
+          node_version: ^10.13.0
     steps:
       - task: NodeTool@0
         inputs:
@@ -206,6 +229,11 @@ jobs:
           node -v
           yarn -v
         displayName: "Print versions"
+      - task: CacheBeta@1
+        inputs:
+          key: yarn | $(Agent.OS) | yarn.lock
+          path: $(YARN_CACHE_FOLDER)
+        displayName: "Cache Yarn packages"
       - script: |
           yarn --frozen-lockfile
           yarn link --frozen-lockfile || true

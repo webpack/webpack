@@ -31,11 +31,13 @@ it("should ignore recursive module mappings", function() {
 it("should use empty modules for ignored modules", function() {
 	expect(require("ignoring-module").module).toEqual({});
 	expect(require("ignoring-module").file).toEqual({});
-	expect(require("ignoring-module").module).not.toBe(require("ignoring-module").file);
+	expect(require("ignoring-module").module).not.toBe(
+		require("ignoring-module").file
+	);
 });
 
 // Errors
-require.include("recursive-file/a");
-require.include("recursive-file/b");
-require.include("recursive-file/c");
-require.include("recursive-file/d");
+if (Math.random() < 0) require("recursive-file/a");
+if (Math.random() < 0) require("recursive-file/b");
+if (Math.random() < 0) require("recursive-file/c");
+if (Math.random() < 0) require("recursive-file/d");

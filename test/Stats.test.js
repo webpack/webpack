@@ -184,6 +184,7 @@ describe("Stats", () => {
 			      "chunkNames": Array [
 			        "chunkB",
 			      ],
+			      "comparedForEmit": false,
 			      "emitted": true,
 			      "info": Object {
 			        "size": 111,
@@ -198,6 +199,7 @@ describe("Stats", () => {
 			      "chunkNames": Array [
 			        "entryA",
 			      ],
+			      "comparedForEmit": false,
 			      "emitted": true,
 			      "info": Object {
 			        "size": 198,
@@ -212,12 +214,13 @@ describe("Stats", () => {
 			      "chunkNames": Array [
 			        "entryB",
 			      ],
+			      "comparedForEmit": false,
 			      "emitted": true,
 			      "info": Object {
-			        "size": 2068,
+			        "size": 2044,
 			      },
 			      "name": "entryB.js",
-			      "size": 2068,
+			      "size": 2044,
 			    },
 			  ],
 			  "assetsByChunkName": Object {

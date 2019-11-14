@@ -5,8 +5,8 @@ module.exports = ["fitting", "content-change"].map(type => ({
 	cache: true, // AggressiveSplittingPlugin rebuilds multiple times, we need to cache the assets
 	entry: "./index",
 	output: {
-		filename: "[chunkhash].js",
-		chunkFilename: "[chunkhash].js"
+		filename: `${type}-[chunkhash].js`,
+		chunkFilename: `${type}-[chunkhash].js`
 	},
 	plugins: [
 		new webpack.optimize.AggressiveSplittingPlugin({

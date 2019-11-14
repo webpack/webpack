@@ -1,7 +1,7 @@
 module.exports = function() {
 	const { name, expect, usedExports } = JSON.parse(this.query.slice(1));
 	return [
-		`require.include(${JSON.stringify(
+		`if (Math.random() < 0) require(${JSON.stringify(
 			`../_helpers/testModuleLoader?${JSON.stringify(usedExports)}!`
 		)});`,
 		"",

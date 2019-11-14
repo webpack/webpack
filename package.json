@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.0.0-beta.0",
+  "version": "5.0.0-beta.5",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -11,7 +11,7 @@
     "@webassemblyjs/wasm-parser": "1.8.5",
     "acorn": "^7.0.0",
     "chrome-trace-event": "^1.0.2",
-    "enhanced-resolve": "5.0.0-beta.3",
+    "enhanced-resolve": "5.0.0-beta.4",
     "eslint-scope": "^5.0.0",
     "events": "^3.0.0",
     "glob-to-regexp": "^0.4.1",
@@ -21,15 +21,18 @@
     "loader-utils": "^1.2.3",
     "neo-async": "^2.6.1",
     "pkg-dir": "^4.2.0",
-    "schema-utils": "^2.3.0",
+    "schema-utils": "^2.5.0",
     "tapable": "2.0.0-beta.8",
-    "terser-webpack-plugin": "^1.4.1",
-    "watchpack": "2.0.0-beta.7",
-    "webpack-sources": "2.0.0-beta.4"
+    "terser-webpack-plugin": "^2.2.1",
+    "watchpack": "2.0.0-beta.9",
+    "webpack-sources": "2.0.0-beta.7"
   },
   "devDependencies": {
+    "@babel/core": "^7.7.2",
+    "@types/estree": "0.0.39",
     "@types/node": "^12.6.9",
     "@yarnpkg/lockfile": "^1.1.0",
+    "babel-loader": "^8.0.6",
     "benchmark": "^2.1.1",
     "bundle-loader": "~0.5.0",
     "coffee-loader": "^0.9.0",
@@ -41,7 +44,7 @@
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-jest": "^22.2.2",
     "eslint-plugin-jsdoc": "^15.3.2",
-    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-prettier": "^3.1.0",
     "file-loader": "^4.1.0",
     "fork-ts-checker-webpack-plugin": "^1.5.0",
@@ -56,7 +59,7 @@
     "less-loader": "^5.0.0",
     "lint-staged": "^9.2.1",
     "lodash": "^4.17.4",
-    "memory-fs": "~0.4.1",
+    "memory-fs": "~0.5.0",
     "mini-css-extract-plugin": "^0.8.0",
     "mkdirp": "^0.5.1",
     "open-cli": "^5.0.0",
@@ -67,24 +70,28 @@
     "raw-loader": "^3.1.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
-    "rimraf": "^2.6.2",
+    "rimraf": "^3.0.0",
     "script-loader": "~0.7.0",
     "simple-git": "^1.65.0",
     "strip-ansi": "^5.2.0",
     "style-loader": "^1.0.0",
     "ts-loader": "^6.0.4",
-    "typescript": "^3.5.3",
+    "typescript": "^3.6.4",
     "url-loader": "^2.1.0",
     "wast-loader": "^1.5.5",
     "worker-loader": "^2.0.0",
     "xxhashjs": "^0.2.1"
   },
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">=10.13.0"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/webpack/webpack.git"
+  },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/webpack"
   },
   "homepage": "https://github.com/webpack/webpack",
   "main": "lib/index.js",

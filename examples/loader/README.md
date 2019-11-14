@@ -227,7 +227,7 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
     Asset      Size
 output.js  5.46 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
@@ -252,9 +252,9 @@ chunk output.js (main) 3.03 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
     Asset      Size
-output.js  1.17 KiB  [emitted]  [name: main]
+output.js  1.18 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk output.js (main) 3.03 KiB [entry] [rendered]
     > ./example.js main

@@ -2,6 +2,8 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
+const mkdirp = require("mkdirp");
+const rimraf = require("rimraf");
 const captureStdio = require("./helpers/captureStdio");
 
 let webpack;
@@ -46,6 +48,9 @@ describe("StatsTestCases", () => {
 	tests.forEach(testName => {
 		it("should print correct stats for " + testName, done => {
 			jest.setTimeout(30000);
+			const outputDirectory = path.join(outputBase, testName);
+			rimraf.sync(outputDirectory);
+			mkdirp.sync(outputDirectory);
 			let options = {
 				mode: "development",
 				entry: "./index",
@@ -56,11 +61,21 @@ describe("StatsTestCases", () => {
 			if (fs.existsSync(path.join(base, testName, "webpack.config.js"))) {
 				options = require(path.join(base, testName, "webpack.config.js"));
 			}
+			let testConfig = {};
+			try {
+				// try to load a test file
+				testConfig = Object.assign(
+					testConfig,
+					require(path.join(base, testName, "test.config.js"))
+				);
+			} catch (e) {
+				// ignored
+			}
+
 			(Array.isArray(options) ? options : [options]).forEach(options => {
 				if (!options.context) options.context = path.join(base, testName);
 				if (!options.output) options.output = options.output || {};
-				if (!options.output.path)
-					options.output.path = path.join(outputBase, testName);
+				if (!options.output.path) options.output.path = outputDirectory;
 				if (!options.plugins) options.plugins = [];
 				if (!options.optimization) options.optimization = {};
 				if (options.optimization.minimize === undefined)
@@ -106,7 +121,16 @@ describe("StatsTestCases", () => {
 				if (/error$/.test(testName)) {
 					expect(stats.hasErrors()).toBe(true);
 				} else if (stats.hasErrors()) {
-					return done(new Error(stats.toString({ all: false, errors: true })));
+					return done(
+						new Error(
+							stats.toString({
+								all: false,
+								errors: true,
+								errorStack: true,
+								errorDetails: true
+							})
+						)
+					);
 				} else {
 					fs.writeFileSync(
 						path.join(outputBase, testName, "stats.txt"),
@@ -169,6 +193,7 @@ describe("StatsTestCases", () => {
 					.replace(/(\w)\\(\w)/g, "$1/$2")
 					.replace(/, additional resolving: Xms/g, "");
 				expect(actual).toMatchSnapshot();
+				if (testConfig.validate) testConfig.validate(stats, stderr.toString());
 				done();
 			});
 		});

@@ -1,9 +1,9 @@
-sudo: false
 dist: trusty
 language: node_js
 
 branches:
   only:
+    - webpack-4
     - master
     - next
 
@@ -38,7 +38,7 @@ matrix:
     - os: linux
       node_js: "10"
       env:
-        - NODEJS_VERSION=v13.0.0-nightly201906148cdc1bdad6
+        - NODEJS_VERSION=v13.0.0-nightly201910156afed1dc85
         - YARN_EXTRA_ARGS="--ignore-engines"
         - NO_WATCH_TESTS=1
         - JEST="--maxWorkers=2 --cacheDirectory .jest-cache"

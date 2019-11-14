@@ -7,6 +7,12 @@ it("should contain banner in bundle0 chunk", () => {
 	expect(source).toMatch("banner is a string");
 	expect(source).toMatch("banner is a function");
 	expect(source).toMatch("/*!\n * multiline\n * banner\n * bundle0\n */");
+	expect(source).toMatch(
+		"/*!\n * trim trailing whitespace\n *\n * trailing whitespace\n */"
+	);
+	expect(source).toMatch(
+		"/*!\n * trim trailing whitespace\n *\n * no trailing whitespace\n */"
+	);
 });
 
 it("should not contain banner in vendors chunk", () => {
@@ -14,4 +20,4 @@ it("should not contain banner in vendors chunk", () => {
 	expect(source).not.toMatch("A test value");
 });
 
-require.include("./test.js");
+if (Math.random() < 0) require("./test.js");

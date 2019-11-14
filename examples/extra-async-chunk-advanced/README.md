@@ -252,7 +252,7 @@ Promise.all(/*! require.ensure */[__webpack_require__.e(847), __webpack_require_
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset       Size
 390.output.js  300 bytes  [emitted]
 460.output.js  300 bytes  [emitted]
@@ -321,7 +321,7 @@ chunk 996.output.js 21 bytes [rendered] split chunk (cache group: default)
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset      Size
 390.output.js  85 bytes  [emitted]
 460.output.js  85 bytes  [emitted]
@@ -330,7 +330,7 @@ Version: webpack 5.0.0-alpha.31
 785.output.js  85 bytes  [emitted]
 847.output.js  85 bytes  [emitted]
 996.output.js  85 bytes  [emitted]
-    output.js  1.84 KiB  [emitted]  [name: main]
+    output.js  1.85 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk output.js (main) 346 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
     > ./example.js main

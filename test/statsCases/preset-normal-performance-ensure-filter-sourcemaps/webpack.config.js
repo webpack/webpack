@@ -1,6 +1,6 @@
 module.exports = {
 	mode: "production",
-	devtool: "sourcemap",
+	devtool: "source-map",
 	performance: {
 		hints: "warning"
 	},

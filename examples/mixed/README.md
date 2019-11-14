@@ -457,7 +457,7 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset      Size
 635.output.js   2.1 KiB  [emitted]
     output.js  12.6 KiB  [emitted]  [name: main]
@@ -466,19 +466,19 @@ chunk output.js (main) 1010 bytes (javascript) 5.01 KiB (runtime) [entry] [rende
     > ./example.js main
  ./amd.js 298 bytes [built]
      [used exports unknown]
+     amd require ./amd ./commonjs.js 5:0-11:1
+     cjs require ./amd ./commonjs.js 8:13-29
      cjs require ./amd ./example.js 3:11-27
      amd require ./amd ./example.js 7:0-14:1
      amd require ./amd ./example.js 7:0-14:1
-     amd require ./amd ./commonjs.js 5:0-11:1
-     cjs require ./amd ./commonjs.js 8:13-29
      harmony side effect evaluation ./amd ./harmony.js 3:0-24
  ./commonjs.js 223 bytes [built]
      [used exports unknown]
+     amd require ./commonjs ./amd.js 2:0-12:1
+     cjs require ./commonjs ./amd.js 7:18-39
      cjs require ./commonjs ./example.js 2:16-37
      amd require ./commonjs ./example.js 7:0-14:1
      amd require ./commonjs ./example.js 7:0-14:1
-     amd require ./commonjs ./amd.js 2:0-12:1
-     cjs require ./commonjs ./amd.js 7:18-39
      harmony side effect evaluation ./commonjs ./harmony.js 2:0-34
  ./example.js 396 bytes [built]
      [used exports unknown]
@@ -486,11 +486,11 @@ chunk output.js (main) 1010 bytes (javascript) 5.01 KiB (runtime) [entry] [rende
  ./harmony.js 96 bytes [built]
      [exports: default]
      [used exports unknown]
-     cjs require ./harmony ./example.js 4:15-35
-     amd require ./harmony ./commonjs.js 5:0-11:1
-     cjs require ./harmony ./commonjs.js 9:17-37
      amd require ./harmony ./amd.js 2:0-12:1
      cjs require ./harmony ./amd.js 8:17-37
+     amd require ./harmony ./commonjs.js 5:0-11:1
+     cjs require ./harmony ./commonjs.js 9:17-37
+     cjs require ./harmony ./example.js 4:15-35
      + 7 hidden chunk modules
 chunk 635.output.js 433 bytes [rendered]
     > ./example.js 7:0-14:1
@@ -512,37 +512,37 @@ chunk 635.output.js 433 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
         Asset       Size
 635.output.js  617 bytes  [emitted]
-    output.js   2.28 KiB  [emitted]  [name: main]
+    output.js   2.29 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk output.js (main) 1010 bytes (javascript) 5.01 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./amd.js 298 bytes [built]
+     amd require ./amd ./commonjs.js 5:0-11:1
+     cjs require ./amd ./commonjs.js 8:13-29
      cjs require ./amd ./example.js 3:11-27
      amd require ./amd ./example.js 7:0-14:1
      amd require ./amd ./example.js 7:0-14:1
-     amd require ./amd ./commonjs.js 5:0-11:1
-     cjs require ./amd ./commonjs.js 8:13-29
      harmony side effect evaluation ./amd ./harmony.js 3:0-24
  ./commonjs.js 223 bytes [built]
+     amd require ./commonjs ./amd.js 2:0-12:1
+     cjs require ./commonjs ./amd.js 7:18-39
      cjs require ./commonjs ./example.js 2:16-37
      amd require ./commonjs ./example.js 7:0-14:1
      amd require ./commonjs ./example.js 7:0-14:1
      harmony side effect evaluation ./commonjs ./harmony.js 2:0-34
-     amd require ./commonjs ./amd.js 2:0-12:1
-     cjs require ./commonjs ./amd.js 7:18-39
  ./example.js 396 bytes [built]
      [no exports used]
      entry ./example.js main
  ./harmony.js 96 bytes [built]
      [exports: default]
-     cjs require ./harmony ./example.js 4:15-35
-     amd require ./harmony ./commonjs.js 5:0-11:1
-     cjs require ./harmony ./commonjs.js 9:17-37
      amd require ./harmony ./amd.js 2:0-12:1
      cjs require ./harmony ./amd.js 8:17-37
+     amd require ./harmony ./commonjs.js 5:0-11:1
+     cjs require ./harmony ./commonjs.js 9:17-37
+     cjs require ./harmony ./example.js 4:15-35
      + 7 hidden chunk modules
 chunk 635.output.js 433 bytes [rendered]
     > ./example.js 7:0-14:1

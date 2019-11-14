@@ -83,7 +83,7 @@ or packaging just about any resource or asset.
 
 **TL;DR**
 
-* Bundles [ES Modules](http://www.2ality.com/2014/09/es6-modules-final.html), [CommonJS](http://wiki.commonjs.org/), and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
+* Bundles [ES Modules](https://www.2ality.com/2014/09/es6-modules-final.html), [CommonJS](http://wiki.commonjs.org/), and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
 * Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
 * Dependencies are resolved during compilation, reducing the runtime size.
 * Loaders can preprocess files while compiling, e.g. TypeScript to JavaScript, Handlebars strings to compiled functions, images to Base64, etc.
@@ -95,7 +95,7 @@ Check out webpack's quick [**Get Started**](https://webpack.js.org/guides/gettin
 
 ### Browser Compatibility
 
-webpack supports all browsers that are [ES5-compliant](http://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
 webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
 
 <h2 align="center">Concepts</h2>
@@ -137,7 +137,7 @@ within webpack itself use this plugin interface. This makes webpack very
 
 ### [Loaders](https://webpack.js.org/loaders/)
 
-webpack enables use of loaders to preprocess files. This allows you to bundle
+webpack enables the use of loaders to preprocess files. This allows you to bundle
 **any static resource** way beyond JavaScript. You can easily [write your own
 loaders](https://webpack.js.org/api/loaders/) using Node.js.
 
@@ -215,7 +215,7 @@ or are automatically applied via regex from your webpack configuration.
 |<a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>|![html-npm]|![html-size]|Exports HTML as string, requires references to static resources|
 |<a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>|![pug-npm]|![pug-size]|Loads Pug templates and returns a function|
 |<a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/markdown.svg"></a>|![md-npm]|![md-size]|Compiles Markdown to HTML|
-|<a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="http://posthtml.github.io/posthtml/logo.svg"></a>|![posthtml-npm]|![posthtml-size]|Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml)|
+|<a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="https://posthtml.github.io/posthtml/logo.svg"></a>|![posthtml-npm]|![posthtml-size]|Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml)|
 |<a href="https://github.com/pcardune/handlebars-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/handlebars-1.svg"></a>|![hbs-npm]|![hbs-size]| Compiles Handlebars to HTML|
 
 
@@ -241,7 +241,7 @@ or are automatically applied via regex from your webpack configuration.
 |<a href="https://github.com/webpack-contrib/less-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/less-63.svg"></a>|![less-npm]|![less-size]|Loads and compiles a LESS file|
 |<a href="https://github.com/webpack-contrib/sass-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/sass-1.svg"></a>|![sass-npm]|![sass-size]|Loads and compiles a Sass/SCSS file|
 |<a href="https://github.com/shama/stylus-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/stylus.svg"></a>|![stylus-npm]|![stylus-size]|Loads and compiles a Stylus file|
-|<a href="https://github.com/postcss/postcss-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/postcss.svg"></a>|![postcss-npm]|![postcss-size]|Loads and transforms a CSS/SSS file using [PostCSS](http://postcss.org)|
+|<a href="https://github.com/postcss/postcss-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/postcss.svg"></a>|![postcss-npm]|![postcss-size]|Loads and transforms a CSS/SSS file using [PostCSS](https://postcss.org)|
 
 
 [style-npm]: https://img.shields.io/npm/v/style-loader.svg
@@ -263,7 +263,7 @@ or are automatically applied via regex from your webpack configuration.
 |:--:|:----:|:----------:|:----------|
 |<a href="https://github.com/webpack-contrib/mocha-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/mocha.svg"></a>|![mocha-npm]|![mocha-size]|Tests with mocha (Browser/NodeJS)|
 |<a href="https://github.com/webpack-contrib/eslint-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/eslint.svg"></a>|![eslint-npm]|![eslint-size]|PreLoader for linting code using ESLint|
-|<a href="https://github.com/webpack-contrib/jshint-loader"><img width="48" height="20.64" src="http://jshint.com/res/jshint-dark.png"></a>|![jshint-npm]|![jshint-size]|PreLoader for linting code using JSHint|
+|<a href="https://github.com/webpack-contrib/jshint-loader"><img width="48" height="20.64" src="https://jshint.com/res/jshint-dark.png"></a>|![jshint-npm]|![jshint-size]|PreLoader for linting code using JSHint|
 
 [mocha-npm]: https://img.shields.io/npm/v/mocha-loader.svg
 [mocha-size]: https://packagephobia.now.sh/badge?p=mocha-loader
@@ -320,7 +320,7 @@ friendly** by using hashes.
 
 <h2 align="center">Contributing</h2>
 
-**We want contributing to webpack to be fun, enjoyable, and educational for anyone, and everyone.** We have a [vibrant ecosystem](https://medium.com/webpack/contributors-guide/home) that spans beyond this single repo. We welcome you to check out any of the repositories in [our organization](http://github.com/webpack) or [webpack-contrib organization](http://github.com/webpack-contrib) which houses all of our loaders and plugins.
+**We want contributing to webpack to be fun, enjoyable, and educational for anyone, and everyone.** We have a [vibrant ecosystem](https://medium.com/webpack/contributors-guide/home) that spans beyond this single repo. We welcome you to check out any of the repositories in [our organization](https://github.com/webpack) or [webpack-contrib organization](https://github.com/webpack-contrib) which houses all of our loaders and plugins.
 
 Contributions go far beyond pull requests and commits. Although we love giving you the opportunity to put your stamp on webpack, we also are thrilled to receive a variety of other contributions including:
 
@@ -439,7 +439,7 @@ Before we started using OpenCollective, donations were made anonymously. Now tha
 
 <div align="center">
 
-[Google Angular Team](https://angular.io/), [Architects.io](http://architects.io/),
+[Google Angular Team](https://angular.io/), [Architects.io](https://architects.io/),
 <a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img
 src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a>
 <a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img
@@ -747,7 +747,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 * @google for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
 * @medikoo for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webmake. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
 * @substack for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
-* @jrburke for [require.js](http://requirejs.org/), which is a similar project and source for many ideas.
+* @jrburke for [require.js](https://requirejs.org/), which is a similar project and source for many ideas.
 * @defunctzombie for the [browser-field spec](https://gist.github.com/defunctzombie/4339901), which makes modules available for node.js, browserify and webpack.
 * Every early webpack user, which contributed to webpack by writing issues or PRs. You influenced the direction...
 * @shama, @jhnns and @sokra for maintaining this project

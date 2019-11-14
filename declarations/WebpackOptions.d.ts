@@ -299,9 +299,9 @@ export interface WebpackOptions {
 		[k: string]: any;
 	};
 	/**
-	 * A developer tool to enhance debugging.
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 	 */
-	devtool?: string | Devtool | false;
+	devtool?: (false | "eval") | Devtool | string;
 	/**
 	 * The entry point(s) of the compilation.
 	 */
@@ -501,9 +501,9 @@ export interface FileCacheOptions {
 	 */
 	name?: string;
 	/**
-	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file, idle: Store data when compiler is idle in multiple files; background: Store data in background while compiling, but doesn't block the compilation; instant: Store data when creating blocking compilation until data is stored; defaults to idle)
+	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file)
 	 */
-	store?: "pack" | "idle" | "background" | "instant";
+	store?: "pack";
 	/**
 	 * Filesystem caching
 	 */
@@ -1199,6 +1199,10 @@ export interface OutputOptions {
 	 */
 	chunkLoadTimeout?: number;
 	/**
+	 * Check if to be emitted file already exists and have the same content before writing to output filesystem
+	 */
+	compareBeforeEmit?: boolean;
+	/**
 	 * This option enables cross-origin loading of chunks.
 	 */
 	crossOriginLoading?: false | "anonymous" | "use-credentials";
@@ -1517,6 +1521,10 @@ export interface StatsOptions {
 	 * add details to errors (like resolving log)
 	 */
 	errorDetails?: boolean;
+	/**
+	 * add internal stack trace to errors
+	 */
+	errorStack?: boolean;
 	/**
 	 * add errors
 	 */

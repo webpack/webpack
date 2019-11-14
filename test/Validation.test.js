@@ -220,14 +220,15 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
 			 - configuration.devtool should be one of these:
-			   string | object { type, options? } | false
-			   -> A developer tool to enhance debugging.
+			   false | \\"eval\\" | object { type, options? } | string (should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$\\")
+			   -> A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 			   Details:
-			    * configuration.devtool should be a string.
+			    * configuration.devtool should be one of these:
+			      false | \\"eval\\"
 			    * configuration.devtool should be an object:
 			      object { type, options? }
 			      -> Devtool options
-			    * configuration.devtool should be false."
+			    * configuration.devtool should be a string (should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$\\")."
 		`)
 	);
 
@@ -492,11 +493,11 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
 			 - configuration.output.ecmaVersion should be one of these:
-			   number (should be >= 5, should be <= 11) | 2009 | number (should be >= 2015, should be <= 2020)
+			   number (should be >= 5 and <= 11) | 2009 | number (should be >= 2015 and <= 2020)
 			   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
 			   Details:
-			    * configuration.output.ecmaVersion should be <= 11.
-			    * configuration.output.ecmaVersion should be >= 2015."
+			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
+			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
 		`)
 	);
 
@@ -509,11 +510,11 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
 			 - configuration.output.ecmaVersion should be one of these:
-			   number (should be >= 5, should be <= 11) | 2009 | number (should be >= 2015, should be <= 2020)
+			   number (should be >= 5 and <= 11) | 2009 | number (should be >= 2015 and <= 2020)
 			   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
 			   Details:
-			    * configuration.output.ecmaVersion should be <= 11.
-			    * configuration.output.ecmaVersion should be <= 2020."
+			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
+			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
 		`)
 	);
 
@@ -526,11 +527,11 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
 			 - configuration.output.ecmaVersion should be one of these:
-			   number (should be >= 5, should be <= 11) | 2009 | number (should be >= 2015, should be <= 2020)
+			   number (should be >= 5 and <= 11) | 2009 | number (should be >= 2015 and <= 2020)
 			   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
 			   Details:
-			    * configuration.output.ecmaVersion should be >= 5.
-			    * configuration.output.ecmaVersion should be >= 2015."
+			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
+			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
 		`)
 	);
 
@@ -543,11 +544,35 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
 			 - configuration.output.ecmaVersion should be one of these:
-			   number (should be >= 5, should be <= 11) | 2009 | number (should be >= 2015, should be <= 2020)
+			   number (should be >= 5 and <= 11) | 2009 | number (should be >= 2015 and <= 2020)
 			   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
 			   Details:
-			    * configuration.output.ecmaVersion should be <= 11.
-			    * configuration.output.ecmaVersion should be >= 2015."
+			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
+			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
+		`)
+	);
+
+	createTestCase(
+		"devtool sourcemap",
+		{
+			devtool: "sourcemap"
+		},
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
+			 - configuration.devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$\\"."
+		`)
+	);
+
+	createTestCase(
+		"devtool source-maps",
+		{
+			devtool: "source-maps"
+		},
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
+			 - configuration.devtool should match pattern \\"^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$\\"."
 		`)
 	);
 });

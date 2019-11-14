@@ -15,10 +15,7 @@
       "description": "Limit the maximum number of chunks using a value greater greater than or equal to 1",
       "type": "number",
       "minimum": 1
-    },
-    "minChunkSize": {
-      "description": "Set a minimum chunk size",
-      "type": "number"
     }
-  }
+  },
+  "required": ["maxChunks"]
 }

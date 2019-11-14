@@ -61,7 +61,7 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
           Asset       Size
    394.chunk.js  526 bytes  [emitted]
    456.chunk.js   6.16 KiB  [emitted]
@@ -120,7 +120,7 @@ chunk 456.chunk.js 5.45 KiB [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.1
           Asset       Size
    394.chunk.js  108 bytes  [emitted]
    456.chunk.js  159 bytes  [emitted]
@@ -145,11 +145,11 @@ chunk pageC.bundle.js (pageC) 68 bytes (javascript) 4.13 KiB (runtime) [entry] [
 chunk 394.chunk.js 42 bytes [rendered]
     > ./a ./pageC.js 1:0-3:2
  ./a.js 21 bytes [built]
-     amd require ./a ./pageC.js 1:0-3:2
      cjs require ./a ./pageA.js 2:8-22
+     amd require ./a ./pageC.js 1:0-3:2
  ./b.js 21 bytes [built]
-     cjs require ./b ./pageC.js 2:17-31
      cjs require ./b ./pageB.js 2:8-22
+     cjs require ./b ./pageC.js 2:17-31
 chunk pageA.bundle.js (pageA) 69 bytes (javascript) 4.13 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
  ./pageA.js 69 bytes [built]
@@ -160,11 +160,11 @@ chunk 456.chunk.js 5.45 KiB [rendered]
     > ./common ./pageA.js 1:0-3:2
     > ./common ./pageB.js 1:0-3:2
  ./a.js 21 bytes [built]
-     amd require ./a ./pageC.js 1:0-3:2
      cjs require ./a ./pageA.js 2:8-22
+     amd require ./a ./pageC.js 1:0-3:2
  ./b.js 21 bytes [built]
-     cjs require ./b ./pageC.js 2:17-31
      cjs require ./b ./pageB.js 2:8-22
+     cjs require ./b ./pageC.js 2:17-31
  ./common.js 5.41 KiB [built]
      amd require ./common ./pageA.js 1:0-3:2
      amd require ./common ./pageB.js 1:0-3:2

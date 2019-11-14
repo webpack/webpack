@@ -7,9 +7,9 @@ it("should include test.js in SourceMap for bundle0 chunk", function() {
 
 it("should not produce a SourceMap for vendors chunk", function() {
 	var fs = require("fs"),
-			path = require("path"),
-			assert = require("assert");
+		path = require("path"),
+		assert = require("assert");
 	expect(fs.existsSync(path.join(__dirname, "vendors.js.map"))).toBe(false);
 });
 
-require.include("./test.js");
+if (Math.random() < 0) require("./test.js");

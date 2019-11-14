@@ -276,8 +276,8 @@
           "type": "string"
         },
         "store": {
-          "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file, idle: Store data when compiler is idle in multiple files; background: Store data in background while compiling, but doesn't block the compilation; instant: Store data when creating blocking compilation until data is stored; defaults to idle)",
-          "enum": ["pack", "idle", "background", "instant"]
+          "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file)",
+          "enum": ["pack"]
         },
         "type": {
           "description": "Filesystem caching",
@@ -1138,6 +1138,10 @@
         "chunkLoadTimeout": {
           "description": "Number of milliseconds before chunk request expires",
           "type": "number"
+        },
+        "compareBeforeEmit": {
+          "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem",
+          "type": "boolean"
         },
         "crossOriginLoading": {
           "description": "This option enables cross-origin loading of chunks.",
@@ -2103,6 +2107,10 @@
           "description": "add details to errors (like resolving log)",
           "type": "boolean"
         },
+        "errorStack": {
+          "description": "add internal stack trace to errors",
+          "type": "boolean"
+        },
         "errors": {
           "description": "add errors",
           "type": "boolean"
@@ -2393,16 +2401,17 @@
       "type": "object"
     },
     "devtool": {
-      "description": "A developer tool to enhance debugging.",
-      "anyOf": [
+      "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+      "oneOf": [
         {
-          "type": "string"
+          "enum": [false, "eval"]
         },
         {
           "$ref": "#/definitions/Devtool"
         },
         {
-          "enum": [false]
+          "type": "string",
+          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$"
         }
       ]
     },
