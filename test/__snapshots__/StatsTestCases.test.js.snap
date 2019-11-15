@@ -3126,6 +3126,24 @@ chunk main.js (main) 147 bytes (javascript) 4.84 KiB (runtime) >{async-a}< >{asy
      + 6 hidden root modules"
 `;
 
+exports[`StatsTestCases should print correct stats for split-chunks-chunk-name 1`] = `
+"Entrypoint main = default/main.js
+chunk default/main.js (main) 192 bytes (javascript) 4.89 KiB (runtime) >{334}< >{709}< >{794}< [entry] [rendered]
+    > ./ main
+ ./index.js 192 bytes [built]
+     + 6 hidden chunk modules
+chunk default/async-b.js (async-b) (id hint: vendors) 122 bytes <{179}> [rendered] reused as split chunk (cache group: defaultVendors)
+    > b ./index.js 2:0-45
+ ./node_modules/b.js 122 bytes [built]
+chunk default/async-c-1.js (async-c-1) (id hint: vendors) 122 bytes <{179}> [rendered] reused as split chunk (cache group: defaultVendors)
+    > c ./index.js 3:0-47
+    > c ./index.js 4:0-47
+ ./node_modules/c.js 122 bytes [built]
+chunk default/async-a.js (async-a) 20 bytes <{179}> [rendered]
+    > a ./index.js 1:0-45
+ ./node_modules/a.js 20 bytes [built]"
+`;
+
 exports[`StatsTestCases should print correct stats for split-chunks-combinations 1`] = `
 "Entrypoint main = main.js
 chunk async-d.js (async-d) 101 bytes <{179}> [rendered]
