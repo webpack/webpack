@@ -35,6 +35,15 @@ const onceDone = (compiler, action) => {
 	});
 };
 
+const getChanges = compiler => {
+	const modifiedFiles = compiler.modifiedFiles;
+	const removedFiles = compiler.removedFiles;
+	return {
+		removed: removedFiles && Array.from(removedFiles),
+		modified: modifiedFiles && Array.from(modifiedFiles)
+	};
+};
+
 function cleanup(callback) {
 	rimraf(tempFolderPath, callback);
 }
@@ -81,8 +90,10 @@ describe("ChangesAndRemovals", () => {
 		let watcher;
 		const watchRunFinished = new Promise(resolve => {
 			compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
-				expect(compiler.modifiedFiles).toBe(undefined);
-				expect(compiler.removedFiles).toBe(undefined);
+				expect(getChanges(compiler)).toEqual({
+					removed: undefined,
+					modified: undefined
+				});
 				resolve();
 			});
 		});
@@ -102,10 +113,10 @@ describe("ChangesAndRemovals", () => {
 		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
 			if (!watcher) return;
 			if (!compiler.modifiedFiles) return;
-			const modifications = Array.from(compiler.modifiedFiles);
-			expect(modifications).toContain(tempFilePath);
-			const removals = Array.from(compiler.removedFiles);
-			expect(removals).toHaveLength(0);
+			expect(getChanges(compiler)).toEqual({
+				modified: [tempFilePath],
+				removed: []
+			});
 			watcher.close(done);
 			watcher = null;
 		});
@@ -126,10 +137,10 @@ describe("ChangesAndRemovals", () => {
 		compiler.hooks.watchRun.tap("ChangesAndRemovalsTest", compiler => {
 			if (!watcher) return;
 			if (!compiler.modifiedFiles) return;
-			const removals = Array.from(compiler.removedFiles);
-			expect(removals).toContain(tempFilePath);
-			const modifications = Array.from(compiler.modifiedFiles);
-			expect(modifications).toHaveLength(0);
+			expect(getChanges(compiler)).toEqual({
+				removed: [tempFilePath],
+				modified: []
+			});
 			watcher.close(done);
 			watcher = null;
 		});
