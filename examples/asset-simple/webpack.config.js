@@ -6,7 +6,10 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(png|jpg|svg)$/,
-				type: "asset"
+				type: "asset",
+				generator: {
+					foo: "bar"
+				}
 			}
 		]
 	},

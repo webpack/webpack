@@ -1786,6 +1786,10 @@
             }
           ]
         },
+        "generator": {
+          "description": "The options for the module generator",
+          "type": "object"
+        },
         "include": {
           "description": "Shortcut for resource.include",
           "anyOf": [
