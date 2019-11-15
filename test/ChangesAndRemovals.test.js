@@ -49,17 +49,21 @@ function cleanup(callback) {
 }
 
 function createFiles() {
-	fs.mkdirSync(tempFolderPath);
-
 	// Set file timestamps to 5 seconds earlier,
 	// otherwise the newly-created files will trigger the webpack watch mode to re-compile.
 	let fakeTime = new Date(Date.now() - 5000);
+
+	fs.mkdirSync(tempFolderPath);
+	fs.utimesSync(tempFolderPath, fakeTime, fakeTime);
+	fs.utimesSync(path.dirname(tempFolderPath), fakeTime, fakeTime);
+
 	fs.writeFileSync(
 		tempFilePath,
 		"module.exports = function temp() {return 'temp file';};\n require('./temp-file2')",
 		"utf-8"
 	);
 	fs.utimesSync(tempFilePath, fakeTime, fakeTime);
+
 	fs.writeFileSync(
 		tempFile2Path,
 		"module.exports = function temp2() {return 'temp file 2';};",
