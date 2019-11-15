@@ -34,7 +34,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
   !*** ./example.js ***!
   \********************/
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.e, __webpack_require__.t, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.t, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -147,17 +147,6 @@ module.exports = webpackAsyncContext;
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	}();
-/******/ 	
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	!function() {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
@@ -167,19 +156,6 @@ module.exports = webpackAsyncContext;
 /******/ 				() => module;
 /******/ 			__webpack_require__.d(getter, { a: getter });
 /******/ 			return getter;
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	!function() {
-/******/ 		__webpack_require__.f = {};
-/******/ 		// This file contains only the entry chunk.
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = (chunkId) => {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
-/******/ 				__webpack_require__.f[key](chunkId, promises);
-/******/ 				return promises;
-/******/ 			}, []));
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -196,12 +172,12 @@ module.exports = webpackAsyncContext;
 /******/ 			if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
 /******/ 			var ns = Object.create(null);
 /******/ 			__webpack_require__.r(ns);
-/******/ 			Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 			if(mode & 2 && typeof value != 'string') {
-/******/ 				var def = {};
+/******/ 			var def = {};
+/******/ 			if(mode & 2 && typeof value == 'object' && value) {
 /******/ 				for(const key in value) def[key] = () => value[key];
-/******/ 				__webpack_require__.d(ns, def);
 /******/ 			}
+/******/ 			def['default'] = () => value;
+/******/ 			__webpack_require__.d(ns, def);
 /******/ 			return ns;
 /******/ 		};
 /******/ 	}();
@@ -219,9 +195,17 @@ module.exports = webpackAsyncContext;
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/publicPath */
+/******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	!function() {
-/******/ 		__webpack_require__.p = "dist/";
+/******/ 		__webpack_require__.f = {};
+/******/ 		// This file contains only the entry chunk.
+/******/ 		// The chunk loading function for additional chunks
+/******/ 		__webpack_require__.e = (chunkId) => {
+/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
+/******/ 				__webpack_require__.f[key](chunkId, promises);
+/******/ 				return promises;
+/******/ 			}, []));
+/******/ 		};
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
@@ -231,6 +215,22 @@ module.exports = webpackAsyncContext;
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	!function() {
+/******/ 		__webpack_require__.p = "dist/";
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -266,8 +266,11 @@ module.exports = webpackAsyncContext;
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							var loadingEnded = () => {
-/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
-/******/ 								if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId)) {
+/******/ 									installedChunkData = installedChunks[chunkId];
+/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
+/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 								}
 /******/ 							};
 /******/ 							var script = document.createElement('script');
 /******/ 							var onScriptComplete;
@@ -282,6 +285,7 @@ module.exports = webpackAsyncContext;
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
 /******/ 							onScriptComplete = function (event) {
+/******/ 								onScriptComplete = function() {};
 /******/ 								// avoid mem leaks in IE.
 /******/ 								script.onerror = script.onload = null;
 /******/ 								clearTimeout(timeout);
@@ -371,12 +375,12 @@ module.exports = webpackAsyncContext;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
         Asset       Size
 346.output.js  325 bytes  [emitted]
 644.output.js  317 bytes  [emitted]
  98.output.js  324 bytes  [emitted]
-    output.js   12.2 KiB  [emitted]  [name: main]
+    output.js   12.3 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk 98.output.js 13 bytes [rendered]
     > ./2 ./node_modules/c lazy ^\.\/.*$ namespace object ./2
@@ -385,7 +389,7 @@ chunk 98.output.js 13 bytes [rendered]
      [used exports unknown]
      context element ./2 ./node_modules/c lazy ^\.\/.*$ namespace object ./2
      context element ./2.js ./node_modules/c lazy ^\.\/.*$ namespace object ./2.js
-chunk output.js (main) 414 bytes (javascript) 5.71 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 414 bytes (javascript) 5.77 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js 243 bytes [built]
      [no exports]
@@ -416,12 +420,12 @@ chunk 644.output.js 11 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
         Asset      Size
 346.output.js  73 bytes  [emitted]
 644.output.js  73 bytes  [emitted]
  98.output.js  71 bytes  [emitted]
-    output.js  2.65 KiB  [emitted]  [name: main]
+    output.js  2.62 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk 98.output.js 13 bytes [rendered]
     > ./2 ./node_modules/c lazy ^\.\/.*$ namespace object ./2
@@ -429,7 +433,7 @@ chunk 98.output.js 13 bytes [rendered]
  ./node_modules/c/2.js 13 bytes [optional] [built]
      context element ./2 ./node_modules/c lazy ^\.\/.*$ namespace object ./2
      context element ./2.js ./node_modules/c lazy ^\.\/.*$ namespace object ./2.js
-chunk output.js (main) 414 bytes (javascript) 5.71 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 414 bytes (javascript) 5.77 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js 243 bytes [built]
      [no exports]

@@ -117,6 +117,19 @@ module.exports = webpackAsyncContext;
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	!function() {
+/******/ 		// define getter functions for harmony exports
+/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
 /******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	!function() {
 /******/ 		__webpack_require__.f = {};
@@ -127,6 +140,15 @@ module.exports = webpackAsyncContext;
 /******/ 				__webpack_require__.f[key](chunkId, promises);
 /******/ 				return promises;
 /******/ 			}, []));
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/get javascript chunk filename */
+/******/ 	!function() {
+/******/ 		// This function allow to reference async chunks
+/******/ 		__webpack_require__.u = (chunkId) => {
+/******/ 			// return url for filenames based on template
+/******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -141,31 +163,9 @@ module.exports = webpackAsyncContext;
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
-/******/ 		// define getter functions for harmony exports
-/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	}();
-/******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	!function() {
 /******/ 		__webpack_require__.p = "dist/";
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	!function() {
-/******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = (chunkId) => {
-/******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".output.js";
-/******/ 		};
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -201,8 +201,11 @@ module.exports = webpackAsyncContext;
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							var loadingEnded = () => {
-/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
-/******/ 								if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId)) {
+/******/ 									installedChunkData = installedChunks[chunkId];
+/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
+/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 								}
 /******/ 							};
 /******/ 							var script = document.createElement('script');
 /******/ 							var onScriptComplete;
@@ -217,6 +220,7 @@ module.exports = webpackAsyncContext;
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
 /******/ 							onScriptComplete = function (event) {
+/******/ 								onScriptComplete = function() {};
 /******/ 								// avoid mem leaks in IE.
 /******/ 								script.onerror = script.onload = null;
 /******/ 								clearTimeout(timeout);
@@ -325,14 +329,14 @@ __webpack_require__(1)("./ba" + createContextVar).then(function(bar) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
         Asset       Size
 548.output.js  835 bytes  [emitted]  [name: chunk-bar-baz2]
 791.output.js  835 bytes  [emitted]  [name: chunk-bar-baz0]
 930.output.js  835 bytes  [emitted]  [name: chunk-foo]
-    output.js   10.2 KiB  [emitted]  [name: main]
+    output.js   10.3 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk output.js (main) 565 bytes (javascript) 4.75 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 565 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js 405 bytes [built]
      [used exports unknown]
@@ -371,14 +375,14 @@ chunk 930.output.js (chunk-foo) 38 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
         Asset       Size
 548.output.js  134 bytes  [emitted]  [name: chunk-bar-baz2]
 791.output.js  134 bytes  [emitted]  [name: chunk-bar-baz0]
 930.output.js  134 bytes  [emitted]  [name: chunk-foo]
-    output.js    2.3 KiB  [emitted]  [name: main]
+    output.js   2.31 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk output.js (main) 565 bytes (javascript) 4.75 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 565 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js 405 bytes [built]
      [no exports used]

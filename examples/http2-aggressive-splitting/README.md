@@ -47,57 +47,57 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
                   Asset      Size
-341b961df0f09e0e9675.js  7.15 KiB  [emitted] [immutable]
-acb75ce818b29a818443.js   118 KiB  [emitted] [immutable]  [id hint: vendors]
-fbcd6ede3858e0e4c928.js  17.8 KiB  [emitted] [immutable]  [name: main]
-Entrypoint main = fbcd6ede3858e0e4c928.js
-chunk fbcd6ede3858e0e4c928.js (main) 8.95 KiB (javascript) 4.18 KiB (runtime) [entry] [rendered]
+7598e98a1006fa74c6e5.js  7.15 KiB  [emitted] [immutable]
+bd7487f4ebb1f501a0fa.js  17.7 KiB  [emitted] [immutable]  [name: main]
+d90620a8d5b803dfc7e9.js   117 KiB  [emitted] [immutable]  [id hint: vendors]
+Entrypoint main = bd7487f4ebb1f501a0fa.js
+chunk bd7487f4ebb1f501a0fa.js (main) 8.77 KiB (javascript) 4.28 KiB (runtime) [entry] [rendered]
     > ./example main
  (webpack)/node_modules/object-assign/index.js 2.06 KiB [built]
- (webpack)/node_modules/react/cjs/react.production.min.js 6.67 KiB [built]
+ (webpack)/node_modules/react/cjs/react.production.min.js 6.49 KiB [built]
  (webpack)/node_modules/react/index.js 190 bytes [built]
  ./example.js 42 bytes [built]
      + 4 hidden chunk modules
-chunk 341b961df0f09e0e9675.js 6.52 KiB [rendered]
+chunk 7598e98a1006fa74c6e5.js 6.52 KiB [rendered]
     > react-dom ./example.js 2:0-22
  (webpack)/node_modules/react-dom/index.js 1.33 KiB [built]
  (webpack)/node_modules/scheduler/cjs/scheduler.production.min.js 4.99 KiB [built]
  (webpack)/node_modules/scheduler/index.js 198 bytes [built]
-chunk acb75ce818b29a818443.js (id hint: vendors) 117 KiB [rendered] split chunk (cache group: defaultVendors)
+chunk d90620a8d5b803dfc7e9.js (id hint: vendors) 116 KiB [rendered] split chunk (cache group: defaultVendors)
     > react-dom ./example.js 2:0-22
- (webpack)/node_modules/react-dom/cjs/react-dom.production.min.js 117 KiB [built]
+ (webpack)/node_modules/react-dom/cjs/react-dom.production.min.js 116 KiB [built]
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
                           Asset       Size
-        680d399360bf5cffd32e.js   4.98 KiB  [emitted] [immutable]
-680d399360bf5cffd32e.js.LICENSE  246 bytes  [emitted]
-        8c8e59f1c9e241196970.js    115 KiB  [emitted] [immutable]  [id hint: vendors]
-8c8e59f1c9e241196970.js.LICENSE  247 bytes  [emitted]
-        9d0bde51d5fe2d05f913.js   8.87 KiB  [emitted] [immutable]  [name: main]
-9d0bde51d5fe2d05f913.js.LICENSE  295 bytes  [emitted]
-Entrypoint main = 9d0bde51d5fe2d05f913.js
-chunk 9d0bde51d5fe2d05f913.js (main) 8.95 KiB (javascript) 4.19 KiB (runtime) [entry] [rendered]
+        9d197b298deac2e3d4d5.js    114 KiB  [emitted] [immutable]  [id hint: vendors]
+9d197b298deac2e3d4d5.js.LICENSE  247 bytes  [emitted]
+        d060f216c0ec95bc7558.js   8.71 KiB  [emitted] [immutable]  [name: main]
+d060f216c0ec95bc7558.js.LICENSE  295 bytes  [emitted]
+        db2eac6661b345a54896.js   4.98 KiB  [emitted] [immutable]
+db2eac6661b345a54896.js.LICENSE  246 bytes  [emitted]
+Entrypoint main = d060f216c0ec95bc7558.js
+chunk d060f216c0ec95bc7558.js (main) 8.77 KiB (javascript) 4.28 KiB (runtime) [entry] [rendered]
     > ./example main
  (webpack)/node_modules/object-assign/index.js 2.06 KiB [built]
- (webpack)/node_modules/react/cjs/react.production.min.js 6.67 KiB [built]
+ (webpack)/node_modules/react/cjs/react.production.min.js 6.49 KiB [built]
  (webpack)/node_modules/react/index.js 190 bytes [built]
  ./example.js 42 bytes [built]
      + 4 hidden chunk modules
-chunk 680d399360bf5cffd32e.js 6.52 KiB [rendered]
+chunk db2eac6661b345a54896.js 6.52 KiB [rendered]
     > react-dom ./example.js 2:0-22
  (webpack)/node_modules/react-dom/index.js 1.33 KiB [built]
  (webpack)/node_modules/scheduler/cjs/scheduler.production.min.js 4.99 KiB [built]
  (webpack)/node_modules/scheduler/index.js 198 bytes [built]
-chunk 8c8e59f1c9e241196970.js (id hint: vendors) 117 KiB [rendered] split chunk (cache group: defaultVendors)
+chunk 9d197b298deac2e3d4d5.js (id hint: vendors) 116 KiB [rendered] split chunk (cache group: defaultVendors)
     > react-dom ./example.js 2:0-22
- (webpack)/node_modules/react-dom/cjs/react-dom.production.min.js 117 KiB [built]
+ (webpack)/node_modules/react-dom/cjs/react-dom.production.min.js 116 KiB [built]
 ```
 
 ## Records

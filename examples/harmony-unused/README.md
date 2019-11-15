@@ -58,7 +58,7 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
   !*** ./example.js ***!
   \********************/
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -80,7 +80,7 @@ _library__WEBPACK_IMPORTED_MODULE_1__.reexportedMultiply(1, 2);
 /*! export list [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export multiply [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -121,7 +121,7 @@ function list() {
 /*! export reexportedAdd [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export reexportedMultiply [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.d, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -146,7 +146,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -190,17 +190,6 @@ function c() { console.log("c"); }
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	}();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
 /******/ 		// define getter functions for harmony exports
@@ -211,6 +200,17 @@ function c() { console.log("c"); }
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	!function() {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -235,7 +235,7 @@ function c() { console.log("c"); }
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
     Asset     Size
 output.js  6.8 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
@@ -272,7 +272,7 @@ chunk output.js (main) 698 bytes (javascript) 632 bytes (runtime) [entry] [rende
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
     Asset       Size
 output.js  639 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
@@ -282,9 +282,9 @@ chunk output.js (main) 698 bytes (javascript) 358 bytes (runtime) [entry] [rende
      [exports: a, b, c]
      [no exports used]
      harmony side effect evaluation ./abc ./library.js 1:0-32
-     harmony export imported specifier ./abc ./library.js 1:0-32
-     harmony export imported specifier ./abc ./library.js 1:0-32
-     harmony export imported specifier ./abc ./library.js 1:0-32
+     [inactive] harmony export imported specifier ./abc ./library.js 1:0-32
+     [inactive] harmony export imported specifier ./abc ./library.js 1:0-32
+     [inactive] harmony export imported specifier ./abc ./library.js 1:0-32
  ./example.js 114 bytes [built]
      [no exports]
      [no exports used]
@@ -300,7 +300,7 @@ chunk output.js (main) 698 bytes (javascript) 358 bytes (runtime) [entry] [rende
      harmony side effect evaluation ./math ./example.js 1:0-29
      harmony import specifier ./math ./example.js 4:0-3
      harmony side effect evaluation ./math ./library.js 2:0-78
-     harmony export imported specifier ./math ./library.js 2:0-78
+     [inactive] harmony export imported specifier ./math ./library.js 2:0-78
      harmony export imported specifier ./math ./library.js 2:0-78
      + 1 hidden chunk module
 ```

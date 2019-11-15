@@ -61,23 +61,23 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
           Asset       Size
    394.chunk.js  526 bytes  [emitted]
    456.chunk.js   6.16 KiB  [emitted]
-pageA.bundle.js    7.8 KiB  [emitted]  [name: pageA]
-pageB.bundle.js    7.8 KiB  [emitted]  [name: pageB]
-pageC.bundle.js    7.8 KiB  [emitted]  [name: pageC]
+pageA.bundle.js   7.94 KiB  [emitted]  [name: pageA]
+pageB.bundle.js   7.94 KiB  [emitted]  [name: pageB]
+pageC.bundle.js   7.94 KiB  [emitted]  [name: pageC]
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js
-chunk pageB.bundle.js (pageB) 69 bytes (javascript) 4.13 KiB (runtime) [entry] [rendered]
+chunk pageB.bundle.js (pageB) 69 bytes (javascript) 4.23 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
  ./pageB.js 69 bytes [built]
      [used exports unknown]
      entry ./pageB pageB
      + 4 hidden chunk modules
-chunk pageC.bundle.js (pageC) 68 bytes (javascript) 4.13 KiB (runtime) [entry] [rendered]
+chunk pageC.bundle.js (pageC) 68 bytes (javascript) 4.23 KiB (runtime) [entry] [rendered]
     > ./pageC pageC
  ./pageC.js 68 bytes [built]
      [used exports unknown]
@@ -93,7 +93,7 @@ chunk 394.chunk.js 42 bytes [rendered]
      [used exports unknown]
      cjs require ./b ./pageB.js 2:8-22
      cjs require ./b ./pageC.js 2:17-31
-chunk pageA.bundle.js (pageA) 69 bytes (javascript) 4.13 KiB (runtime) [entry] [rendered]
+chunk pageA.bundle.js (pageA) 69 bytes (javascript) 4.23 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
  ./pageA.js 69 bytes [built]
      [used exports unknown]
@@ -120,23 +120,23 @@ chunk 456.chunk.js 5.45 KiB [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
           Asset       Size
    394.chunk.js  108 bytes  [emitted]
    456.chunk.js  159 bytes  [emitted]
-pageA.bundle.js   1.46 KiB  [emitted]  [name: pageA]
-pageB.bundle.js   1.46 KiB  [emitted]  [name: pageB]
-pageC.bundle.js   1.47 KiB  [emitted]  [name: pageC]
+pageA.bundle.js   1.47 KiB  [emitted]  [name: pageA]
+pageB.bundle.js   1.47 KiB  [emitted]  [name: pageB]
+pageC.bundle.js   1.49 KiB  [emitted]  [name: pageC]
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js
-chunk pageB.bundle.js (pageB) 69 bytes (javascript) 4.13 KiB (runtime) [entry] [rendered]
+chunk pageB.bundle.js (pageB) 69 bytes (javascript) 4.23 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
  ./pageB.js 69 bytes [built]
      [no exports used]
      entry ./pageB pageB
      + 4 hidden chunk modules
-chunk pageC.bundle.js (pageC) 68 bytes (javascript) 4.13 KiB (runtime) [entry] [rendered]
+chunk pageC.bundle.js (pageC) 68 bytes (javascript) 4.23 KiB (runtime) [entry] [rendered]
     > ./pageC pageC
  ./pageC.js 68 bytes [built]
      [no exports used]
@@ -150,7 +150,7 @@ chunk 394.chunk.js 42 bytes [rendered]
  ./b.js 21 bytes [built]
      cjs require ./b ./pageB.js 2:8-22
      cjs require ./b ./pageC.js 2:17-31
-chunk pageA.bundle.js (pageA) 69 bytes (javascript) 4.13 KiB (runtime) [entry] [rendered]
+chunk pageA.bundle.js (pageA) 69 bytes (javascript) 4.23 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
  ./pageA.js 69 bytes [built]
      [no exports used]

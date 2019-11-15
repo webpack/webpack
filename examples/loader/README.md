@@ -54,7 +54,7 @@ exports.foo = "bar";
   !*** (webpack)/node_modules/css-loader/dist/cjs.js!./test.css ***!
   \****************************************************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_exports__, module, __webpack_require__ */
+/*! runtime requirements: __webpack_require__, module, __webpack_exports__ */
 /***/ ((module, exports, __webpack_require__) => {
 
 exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ 3)(false);
@@ -227,7 +227,7 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
     Asset      Size
 output.js  5.46 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
@@ -252,7 +252,7 @@ chunk output.js (main) 3.03 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
     Asset      Size
 output.js  1.18 KiB  [emitted]  [name: main]
 Entrypoint main = output.js

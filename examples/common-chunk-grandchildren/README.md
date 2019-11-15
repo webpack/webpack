@@ -152,11 +152,6 @@ module.exports = {
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/publicPath */
-/******/ 	!function() {
-/******/ 		__webpack_require__.p = "dist/";
-/******/ 	}();
-/******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
 /******/ 		// This function allow to reference async chunks
@@ -164,6 +159,11 @@ module.exports = {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	!function() {
+/******/ 		__webpack_require__.p = "dist/";
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -199,8 +199,11 @@ module.exports = {
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							var loadingEnded = () => {
-/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
-/******/ 								if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId)) {
+/******/ 									installedChunkData = installedChunks[chunkId];
+/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
+/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 								}
 /******/ 							};
 /******/ 							var script = document.createElement('script');
 /******/ 							var onScriptComplete;
@@ -215,6 +218,7 @@ module.exports = {
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
 /******/ 							onScriptComplete = function (event) {
+/******/ 								onScriptComplete = function() {};
 /******/ 								// avoid mem leaks in IE.
 /******/ 								script.onerror = script.onload = null;
 /******/ 								clearTimeout(timeout);
@@ -294,7 +298,7 @@ module.exports = {
   !*** ./example.js ***!
   \********************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__.e, __webpack_require__, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.* */
 var main = function() {
 	console.log("Main class");
 	Promise.all(/*! require.ensure */[__webpack_require__.e(421), __webpack_require__.e(366)]).then((() => {
@@ -348,7 +352,7 @@ module.exports = function() {
   !*** ./pageB.js ***!
   \******************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: module, __webpack_require__.e, __webpack_require__, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, module, __webpack_require__.e, __webpack_require__.* */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = function() {
@@ -420,20 +424,20 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
         Asset       Size
 145.output.js  514 bytes  [emitted]
 366.output.js  520 bytes  [emitted]
 421.output.js  396 bytes  [emitted]
 588.output.js  698 bytes  [emitted]
-    output.js   7.99 KiB  [emitted]  [name: main]
+    output.js   8.13 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk 145.output.js 136 bytes [rendered]
     > ./pageB.js 3:1-6:3
  ./pageC.js 136 bytes [built]
      [used exports unknown]
      cjs require ./pageC ./pageB.js 4:15-33
-chunk output.js (main) 220 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 220 bytes (javascript) 4.23 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js 220 bytes [built]
      [used exports unknown]
@@ -462,19 +466,19 @@ chunk 588.output.js 133 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
         Asset       Size
 145.output.js  138 bytes  [emitted]
 366.output.js  138 bytes  [emitted]
 421.output.js  127 bytes  [emitted]
 588.output.js  202 bytes  [emitted]
-    output.js   1.53 KiB  [emitted]  [name: main]
+    output.js   1.54 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk 145.output.js 136 bytes [rendered]
     > ./pageB.js 3:1-6:3
  ./pageC.js 136 bytes [built]
      cjs require ./pageC ./pageB.js 4:15-33
-chunk output.js (main) 220 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 220 bytes (javascript) 4.23 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js 220 bytes [built]
      [no exports used]

@@ -27,7 +27,7 @@ module.exports = "It works";
   !*** (webpack)/node_modules/bundle-loader!./file.js ***!
   \******************************************************/
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: module, __webpack_require__.e, __webpack_require__, __webpack_require__.* */
+/*! runtime requirements: module, __webpack_require__, __webpack_require__.e, __webpack_require__.* */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var cbs = [], 
@@ -91,11 +91,6 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/publicPath */
-/******/ 	!function() {
-/******/ 		__webpack_require__.p = "dist/";
-/******/ 	}();
-/******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
 /******/ 		// This function allow to reference async chunks
@@ -103,6 +98,11 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
+/******/ 	}();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	!function() {
+/******/ 		__webpack_require__.p = "dist/";
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -138,8 +138,11 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							var loadingEnded = () => {
-/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
-/******/ 								if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId)) {
+/******/ 									installedChunkData = installedChunks[chunkId];
+/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
+/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 								}
 /******/ 							};
 /******/ 							var script = document.createElement('script');
 /******/ 							var onScriptComplete;
@@ -154,6 +157,7 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
 /******/ 							onScriptComplete = function (event) {
+/******/ 								onScriptComplete = function() {};
 /******/ 								// avoid mem leaks in IE.
 /******/ 								script.onerror = script.onload = null;
 /******/ 								clearTimeout(timeout);
@@ -270,12 +274,12 @@ module.exports = "It works";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
         Asset       Size
 929.output.js  316 bytes  [emitted]
-    output.js   8.42 KiB  [emitted]  [name: main]
+    output.js   8.56 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk output.js (main) 375 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 375 bytes (javascript) 4.23 KiB (runtime) [entry] [rendered]
     > ./example.js main
  (webpack)/node_modules/bundle-loader!./file.js 281 bytes [built]
      [used exports unknown]
@@ -295,12 +299,12 @@ chunk 929.output.js 28 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
         Asset      Size
 929.output.js  92 bytes  [emitted]
-    output.js  1.58 KiB  [emitted]  [name: main]
+    output.js   1.6 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk output.js (main) 375 bytes (javascript) 4.14 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 375 bytes (javascript) 4.23 KiB (runtime) [entry] [rendered]
     > ./example.js main
  (webpack)/node_modules/bundle-loader!./file.js 281 bytes [built]
      cjs require bundle-loader!./file.js ./example.js 1:0-34

@@ -120,8 +120,8 @@ module.exports = {
 /*!********************************************!*\
   !*** ./node_modules/shared.js + 1 modules ***!
   \********************************************/
-/*! export x [provided] [used] [can be renamed] */
-/*! export y [provided] [used] [can be renamed] */
+/*! export x [provided] [used] [could be renamed] */
+/*! export y [provided] [used] [could be renamed] */
 /*! other exports [not provided] [unused] */
 /*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -174,6 +174,19 @@ var x = "x";
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	!function() {
+/******/ 		// define getter functions for harmony exports
+/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	}();
+/******/ 	
 /******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	!function() {
 /******/ 		__webpack_require__.f = {};
@@ -187,16 +200,12 @@ var x = "x";
 /******/ 		};
 /******/ 	}();
 /******/ 	
-/******/ 	/* webpack/runtime/define property getters */
+/******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
-/******/ 		// define getter functions for harmony exports
-/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
+/******/ 		// This function allow to reference async chunks
+/******/ 		__webpack_require__.u = (chunkId) => {
+/******/ 			// return url for filenames based on template
+/******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -214,15 +223,6 @@ var x = "x";
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	!function() {
 /******/ 		__webpack_require__.p = "dist/";
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	!function() {
-/******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = (chunkId) => {
-/******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".output.js";
-/******/ 		};
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -258,8 +258,11 @@ var x = "x";
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							var loadingEnded = () => {
-/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
-/******/ 								if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId)) {
+/******/ 									installedChunkData = installedChunks[chunkId];
+/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
+/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 								}
 /******/ 							};
 /******/ 							var script = document.createElement('script');
 /******/ 							var onScriptComplete;
@@ -274,6 +277,7 @@ var x = "x";
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
 /******/ 							onScriptComplete = function (event) {
+/******/ 								onScriptComplete = function() {};
 /******/ 								// avoid mem leaks in IE.
 /******/ 								script.onerror = script.onload = null;
 /******/ 								clearTimeout(timeout);
@@ -475,12 +479,12 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
         Asset      Size
 262.output.js  2.84 KiB  [emitted]
-    output.js  10.1 KiB  [emitted]  [name: main]
+    output.js  10.2 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk output.js (main) 372 bytes (javascript) 4.75 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 372 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js + 2 modules 272 bytes [built]
      [no exports]
@@ -510,12 +514,12 @@ chunk 262.output.js 273 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
         Asset       Size
 262.output.js  265 bytes  [emitted]
-    output.js   1.87 KiB  [emitted]  [name: main]
+    output.js   1.89 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk output.js (main) 372 bytes (javascript) 4.75 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 372 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js + 2 modules 272 bytes [built]
      [no exports]
