@@ -49,7 +49,10 @@ function checkSymlinkExistsAsync() {
 function ensureYarnInstalledAsync() {
 	const semverPattern = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/;
 	return execGetOutput("yarn", ["-v"], "Check yarn version")
-		.then(stdout => semverPattern.test(stdout), () => false)
+		.then(
+			stdout => semverPattern.test(stdout),
+			() => false
+		)
 		.then(hasYarn => hasYarn || installYarnAsync());
 }
 

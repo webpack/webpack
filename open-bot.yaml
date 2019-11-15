@@ -660,9 +660,9 @@ rules:
         title: "Backport to webpack 4: {{{pull_request.title}}}"
         body: |-
           {{{pull_request.html_url}}} needs to be backported to webpack 4.
-          
+
           Send a PR.
-          
+
           cc @{{pull_request.user.login}}
       comment:
         identifier: admin-action-webpack-4-backport-executed

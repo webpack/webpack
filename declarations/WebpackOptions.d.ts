@@ -27,7 +27,7 @@ export type EntryStatic = EntryObject | EntryItem;
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "NonEmptyArrayOfUniqueStringValues".
  */
-export type NonEmptyArrayOfUniqueStringValues = [string, ...(string)[]];
+export type NonEmptyArrayOfUniqueStringValues = [string, ...string[]];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "EntryItem".
@@ -50,7 +50,8 @@ export type Externals =
 					request: string,
 					callback: (err?: Error, result?: string) => void
 			  ) => void)
-			| ExternalItem)[];
+			| ExternalItem
+	  )[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "ExternalItem".
@@ -412,7 +413,8 @@ export interface WebpackOptions {
 				| "normal"
 				| "detailed"
 				| "verbose"
-				| "errors-warnings");
+				| "errors-warnings"
+		  );
 	/**
 	 * Environment to build for
 	 */
@@ -425,7 +427,8 @@ export interface WebpackOptions {
 				| "node-webkit"
 				| "electron-main"
 				| "electron-renderer"
-				| "electron-preload")
+				| "electron-preload"
+		  )
 		| ((compiler: import("../lib/Compiler")) => void);
 	/**
 	 * Enter watch mode, which rebuilds on file change.
@@ -594,10 +597,10 @@ export interface ModuleOptions {
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
 	noParse?:
-		| [RegExp, ...(RegExp)[]]
+		| [RegExp, ...RegExp[]]
 		| RegExp
 		| Function
-		| [string, ...(string)[]]
+		| [string, ...string[]]
 		| string;
 	/**
 	 * An array of rules applied for modules.
