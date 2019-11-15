@@ -3,6 +3,7 @@
 /test/browsertest/js
 /test/fixtures/temp-*
 /test/temp
+/test/ChangesAndRemovals
 /benchmark/js
 /benchmark/fixtures
 /examples/**/dist
