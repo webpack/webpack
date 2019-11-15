@@ -12,7 +12,7 @@ declare module "util" {
 	function deprecate<T extends Function>(
 		fn: T,
 		message: string,
-		code?: string
+		code: string
 	): T;
 }
 
