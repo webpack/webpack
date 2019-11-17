@@ -1,6 +1,6 @@
-This very simple example shows usage of the asset module type.
+This example shows usage of the asset module type with asset generator options customization.
 
-Files can be imported like other modules without file-loader.
+Files can be imported like other modules without file-loader or url-loader.
 
 # example.js
 
