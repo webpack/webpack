@@ -9,10 +9,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "enabled": {
-          "description": "Is data url encoding enabled (true by default)",
-          "type": "boolean"
-        },
         "encoding": {
           "description": "Module output encoding",
           "enum": [false, "base64"]

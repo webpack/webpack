@@ -27,10 +27,6 @@ export interface AssetModulesPluginOptions {
  */
 export interface DataUrlOptions {
 	/**
-	 * Is data url encoding enabled (true by default)
-	 */
-	enabled?: boolean;
-	/**
 	 * Module output encoding
 	 */
 	encoding?: false | "base64";

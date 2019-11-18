@@ -139,9 +139,9 @@ Built at: 1970-04-20 12:42:42
                bundle.js  12.2 KiB  [emitted]              [name: main]
 Entrypoint main = bundle.js (62787d6ac9d673cc8926.png)
 ./index.js 111 bytes [built]
-./images/file.png 68 bytes (javascript) 14.6 KiB (asset) [built]
-./images/file.svg 922 bytes [built]
-./images/file.jpg 7.89 KiB [built]
+./images/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
+./images/file.svg 984 bytes [built]
+./images/file.jpg 8.83 KiB [built]
     + 3 hidden modules"
 `;
 
