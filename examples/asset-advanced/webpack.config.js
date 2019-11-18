@@ -7,7 +7,11 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.(png|jpg|svg)$/,
+				test: /\.(png|jpg)$/,
+				type: "asset"
+			},
+			{
+				test: /\.svg$/,
 				type: "asset",
 				generator: {
 					dataUrl: content => {
