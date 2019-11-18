@@ -232,17 +232,16 @@ module.exports = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' v
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-beta.7
-                          Asset       Size
-images/44f5018145f1c78c78e8.svg  656 bytes  [emitted] [immutable]  [name: (main)]
-                      output.js   5.08 KiB  [emitted]              [name: main]
-Entrypoint main = output.js (images/44f5018145f1c78c78e8.svg)
-chunk output.js (main) 1.35 KiB (javascript) 656 bytes (asset) 895 bytes (runtime) [entry] [rendered]
+    Asset      Size
+output.js  5.08 KiB  [emitted]  [name: main]
+Entrypoint main = output.js
+chunk output.js (main) 1.6 KiB (javascript) 895 bytes (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js 658 bytes [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
- ./images/file.svg 656 bytes (asset) 728 bytes (javascript) [built]
+ ./images/file.svg 984 bytes [built]
      [used exports unknown]
      harmony side effect evaluation ./images/file.svg ./example.js 1:0-36
      harmony import specifier ./images/file.svg ./example.js 26:1-4

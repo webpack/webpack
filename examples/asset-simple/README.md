@@ -241,27 +241,25 @@ module.exports = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5v
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-beta.7
-                          Asset       Size
-images/1be7b55b29524343503e.svg  656 bytes  [emitted] [immutable]  [name: (main)]
-images/24e804317f239f7906e1.png   14.6 KiB  [emitted] [immutable]  [name: (main)]
-images/afb284cb97b4374bd1fc.jpg   5.89 KiB  [emitted] [immutable]  [name: (main)]
-                      output.js   14.6 KiB  [emitted]              [name: main]
-Entrypoint main = output.js (images/1be7b55b29524343503e.svg images/24e804317f239f7906e1.png images/afb284cb97b4374bd1fc.jpg)
-chunk output.js (main) 9.59 KiB (javascript) 21.1 KiB (asset) 927 bytes (runtime) [entry] [rendered]
+                          Asset      Size
+images/24e804317f239f7906e1.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
+                      output.js  14.6 KiB  [emitted]              [name: main]
+Entrypoint main = output.js (images/24e804317f239f7906e1.png)
+chunk output.js (main) 10.6 KiB (javascript) 14.6 KiB (asset) 927 bytes (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js 742 bytes [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
- ./images/file.jpg 5.89 KiB (asset) 7.89 KiB (javascript) [built]
+ ./images/file.jpg 8.83 KiB [built]
      [used exports unknown]
      harmony side effect evaluation ./images/file.jpg ./example.js 2:0-36
      harmony import specifier ./images/file.jpg ./example.js 28:6-9
- ./images/file.png 14.6 KiB (asset) 75 bytes (javascript) [built]
+ ./images/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
      [used exports unknown]
      harmony side effect evaluation ./images/file.png ./example.js 1:0-36
      harmony import specifier ./images/file.png ./example.js 28:1-4
- ./images/file.svg 656 bytes (asset) 922 bytes (javascript) [built]
+ ./images/file.svg 984 bytes [built]
      [used exports unknown]
      harmony side effect evaluation ./images/file.svg ./example.js 3:0-36
      harmony import specifier ./images/file.svg ./example.js 28:11-14

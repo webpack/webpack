@@ -3,17 +3,19 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.(png|svg)$/,
+				test: /\.(png|jpg)$/,
 				type: "asset",
 				generator: {
 					dataUrl: false
 				}
 			},
 			{
-				test: /\.jpg$/,
+				test: /\.svg$/,
 				type: "asset",
 				generator: {
-					dataUrl: false
+					dataUrl() {
+						return "data:image/svg+xml;base64,custom-content";
+					}
 				}
 			}
 		]

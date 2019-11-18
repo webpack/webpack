@@ -15,7 +15,10 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(png|svg)$/,
-				type: "asset"
+				type: "asset",
+				generator: {
+					dataUrl: false
+				}
 			}
 		]
 	},

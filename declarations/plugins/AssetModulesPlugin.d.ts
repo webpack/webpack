@@ -16,13 +16,20 @@ export type DataUrlFn = (
 ) => string | Buffer | null;
 
 export interface AssetModulesPluginOptions {
-	dataUrl?: DataUrlOptions | DataUrlFn;
+	/**
+	 * The options for data url generator
+	 */
+	dataUrl?: false | DataUrlOptions | DataUrlFn;
 }
 /**
  * This interface was referenced by `AssetModulesPluginOptions`'s JSON-Schema
  * via the `definition` "DataUrlOptions".
  */
 export interface DataUrlOptions {
+	/**
+	 * Is data url encoding enabled (true by default)
+	 */
+	enabled?: boolean;
 	/**
 	 * Module output encoding
 	 */

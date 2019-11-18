@@ -6,14 +6,18 @@ module.exports = {
 				test: /\.(png|svg)$/,
 				type: "asset",
 				generator: {
-					dataUrl: false
+					dataUrl: {
+						maxSize: Infinity
+					}
 				}
 			},
 			{
 				test: /\.jpg$/,
 				type: "asset",
 				generator: {
-					dataUrl: false
+					dataUrl: {
+						maxSize: Infinity
+					}
 				}
 			}
 		]

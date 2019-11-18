@@ -9,6 +9,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "enabled": {
+          "description": "Is data url encoding enabled (true by default)",
+          "type": "boolean"
+        },
         "encoding": {
           "description": "Module output encoding",
           "enum": [false, "base64"]
@@ -29,7 +33,11 @@
   "additionalProperties": false,
   "properties": {
     "dataUrl": {
+      "description": "The options for data url generator",
       "oneOf": [
+        {
+          "enum": [false]
+        },
         {
           "$ref": "#/definitions/DataUrlOptions"
         },
