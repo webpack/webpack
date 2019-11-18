@@ -38,6 +38,8 @@ function createImageElement(title, src) {
 # webpack.config.js
 
 ```javascript
+const svgToMiniDataURI = require("mini-svg-data-uri");
+
 module.exports = {
 	output: {
 		assetModuleFilename: "images/[hash][ext]"
@@ -53,24 +55,7 @@ module.exports = {
 							content = content.toString();
 						}
 
-						// just like in svg-url-loader https://github.com/bhovhannes/svg-url-loader/blob/e5ef4445f2fbb6f85245d8a6c88e2ea9a4377357/src/loader.js#L38-L44
-						const REGEX_DOUBLE_QUOTE = /"/g;
-						const REGEX_MULTIPLE_SPACES = /\s+/g;
-						const REGEX_UNSAFE_CHARS = /[{}|\\^~[\]`"<>#%]/g;
-
-						content = content.replace(REGEX_DOUBLE_QUOTE, "'");
-						content = content.replace(REGEX_MULTIPLE_SPACES, " ");
-						content = content.replace(
-							REGEX_UNSAFE_CHARS,
-							match =>
-								"%" +
-								match[0]
-									.charCodeAt(0)
-									.toString(16)
-									.toUpperCase()
-						);
-
-						return "data:image/svg+xml," + content.trim();
+						return svgToMiniDataURI(content);
 					}
 				}
 			}
@@ -138,7 +123,7 @@ function createImageElement(title, src) {
 /*! runtime requirements: module */
 /***/ ((module) => {
 
-module.exports = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Ctitle%3Eicon-square-small%3C/title%3E%3Cpath fill='%23FFF' d='M300 .1L565 150v299.9L300 599.8 35 449.9V150z'/%3E%3Cpath fill='%238ED6FB' d='M517.7 439.5L308.8 557.8v-92L439 394.1l78.7 45.4zm14.3-12.9V179.4l-76.4 44.1v159l76.4 44.1zM81.5 439.5l208.9 118.2v-92l-130.2-71.6-78.7 45.4zm-14.3-12.9V179.4l76.4 44.1v159l-76.4 44.1zm8.9-263.2L290.4 42.2v89l-137.3 75.5-1.1.6-75.9-43.9zm446.9 0L308.8 42.2v89L446 206.8l1.1.6 75.9-44z'/%3E%3Cpath fill='%231C78C0' d='M290.4 444.8L162 374.1V234.2l128.4 74.1v136.5zm18.4 0l128.4-70.6v-140l-128.4 74.1v136.5zM299.6 303zm-129-85l129-70.9L428.5 218l-128.9 74.4-129-74.4z'/%3E%3C/svg%3E";
+module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3e%3ctitle%3eicon-square-small%3c/title%3e%3cpath fill='white' d='M300 .1L565 150v299.9L300 599.8 35 449.9V150z'/%3e%3cpath fill='%238ED6FB' d='M517.7 439.5L308.8 557.8v-92L439 394.1l78.7 45.4zm14.3-12.9V179.4l-76.4 44.1v159l76.4 44.1zM81.5 439.5l208.9 118.2v-92l-130.2-71.6-78.7 45.4zm-14.3-12.9V179.4l76.4 44.1v159l-76.4 44.1zm8.9-263.2L290.4 42.2v89l-137.3 75.5-1.1.6-75.9-43.9zm446.9 0L308.8 42.2v89L446 206.8l1.1.6 75.9-44z'/%3e%3cpath fill='%231C78C0' d='M290.4 444.8L162 374.1V234.2l128.4 74.1v136.5zm18.4 0l128.4-70.6v-140l-128.4 74.1v136.5zM299.6 303zm-129-85l129-70.9L428.5 218l-128.9 74.4-129-74.4z'/%3e%3c/svg%3e";
 
 /***/ })
 /******/ 	]);
