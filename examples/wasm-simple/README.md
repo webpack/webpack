@@ -186,6 +186,11 @@ module.exports = __webpack_require__.v(exports, module.i)
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -259,6 +264,11 @@ module.exports = __webpack_require__.v(exports, module.i)
 /******/ 	}();
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// startup
 /******/ 	// Load entry module
 /******/ 	__webpack_require__(0);
@@ -328,7 +338,7 @@ Version: webpack 5.0.0-beta.6
 5ba3e3921117e9d828f5.wasm  67 bytes  [emitted] [immutable]  [name: (main)]
 5dd947250fab86306d49.wasm  62 bytes  [emitted] [immutable]  [name: (main)]
 6f6c0ffc52ce3a45ff7e.wasm  41 bytes  [emitted] [immutable]  [name: (main)]
-                output.js  1.72 KiB  [emitted]              [name: main]
+                output.js   1.7 KiB  [emitted]              [name: main]
 Entrypoint main = output.js (5ba3e3921117e9d828f5.wasm 5dd947250fab86306d49.wasm 6f6c0ffc52ce3a45ff7e.wasm)
 chunk output.js (main) 1.3 KiB (javascript) 170 bytes (webassembly) 1.03 KiB (runtime) [entry] [rendered]
     > ./example.js main

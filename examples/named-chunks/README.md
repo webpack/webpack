@@ -41,6 +41,11 @@ require.ensure(["b"], function(require) {
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -227,6 +232,11 @@ require.ensure(["b"], function(require) {
 /******/ 	}();
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 !function() {
 /*!********************!*\
   !*** ./example.js ***!

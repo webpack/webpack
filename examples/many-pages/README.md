@@ -52,7 +52,7 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
    Asset       Size
   115.js  168 bytes  [emitted]  [id hint: vendors]
   402.js  115 bytes  [emitted]  [id hint: vendors]

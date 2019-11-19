@@ -193,6 +193,11 @@ render(__webpack_require__(/*! ./aPage */ 2));
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -457,6 +462,11 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 	}();
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// run startup
 /******/ 	return __webpack_require__.x();
 /******/ })()

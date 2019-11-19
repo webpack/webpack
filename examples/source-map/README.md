@@ -261,7 +261,7 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                        Asset       Size

@@ -176,6 +176,11 @@ module.exports = "utility1";
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -300,6 +305,11 @@ module.exports = "utility1";
 /******/ 	}();
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// run startup
 /******/ 	return __webpack_require__.x();
 /******/ })()
@@ -330,6 +340,11 @@ module.exports = "pageB";
 /***/ })
 
 /******/ 	});
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -454,6 +469,11 @@ module.exports = "pageB";
 /******/ 	}();
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// run startup
 /******/ 	return __webpack_require__.x();
 /******/ })()
@@ -482,6 +502,11 @@ module.exports = "pageC";
 /***/ })
 
 /******/ 	});
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -606,6 +631,11 @@ module.exports = "pageC";
 /******/ 	}();
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// run startup
 /******/ 	return __webpack_require__.x();
 /******/ })()
@@ -618,7 +648,7 @@ module.exports = "pageC";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
                  Asset       Size
 commons-utility2_js.js  346 bytes  [emitted]  [id hint: commons]
 commons-utility3_js.js  346 bytes  [emitted]  [id hint: commons]
@@ -681,7 +711,7 @@ chunk vendor.js (vendor) (id hint: vendor) 54 bytes [initial] [rendered] split c
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
                  Asset       Size
 commons-utility2_js.js  110 bytes  [emitted]  [id hint: commons]
 commons-utility3_js.js  110 bytes  [emitted]  [id hint: commons]
