@@ -13,7 +13,7 @@
 export type DataUrlFn = (
 	source: string | Buffer,
 	resourcePath: string
-) => string | Buffer | null;
+) => string | null;
 
 export interface AssetModulesPluginOptions {
 	/**

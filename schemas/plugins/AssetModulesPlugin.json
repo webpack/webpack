@@ -3,7 +3,7 @@
     "DataUrlFn": {
       "description": "Function that executes for module source abd resource and should return new module source",
       "instanceof": "Function",
-      "tsType": "((source: string|Buffer, resourcePath: string) => string|Buffer|null)"
+      "tsType": "((source: string|Buffer, resourcePath: string) => string|null)"
     },
     "DataUrlOptions": {
       "type": "object",
