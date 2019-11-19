@@ -1,5 +1,3 @@
 import { CreateUserAction } from "./Actions.js";
 
-(async ()=> {
-	await CreateUserAction("John");
-})();
+await CreateUserAction("John");

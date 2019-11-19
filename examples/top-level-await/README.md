@@ -498,7 +498,7 @@ return __webpack_exports__;
 ```
 Hash: [1mb9ba1fd84ace416de17b[39m[22m
 Version: webpack [1m5.0.0-beta.6[39m[22m
-Time: [1m81[39m[22mms
+Time: [1m87[39m[22mms
         [1mAsset[39m[22m      [1mSize[39m[22m
 [1m[32m497.output.js[39m[22m  2.48 KiB  [1m[32m[emitted][39m[22m
     [1m[32moutput.js[39m[22m  11.3 KiB  [1m[32m[emitted][39m[22m  [name: main]
@@ -535,7 +535,7 @@ chunk [1m[32m497.output.js[39m[22m 622 bytes [1m[32m[rendered][39m[22m
 ```
 Hash: [1m0e7a3e674a6d2316f26a[39m[22m
 Version: webpack [1m5.0.0-beta.6[39m[22m
-Time: [1m404[39m[22mms
+Time: [1m197[39m[22mms
         [1mAsset[39m[22m       [1mSize[39m[22m
 [1m[32m497.output.js[39m[22m  477 bytes  [1m[32m[emitted][39m[22m
     [1m[32moutput.js[39m[22m   1.94 KiB  [1m[32m[emitted][39m[22m  [name: main]
