@@ -135,6 +135,11 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_dcd111488d58f75099
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -163,6 +168,11 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_dcd111488d58f75099
 /******/ 	}
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 !function() {
 /*!********************!*\
   !*** ./example.js ***!

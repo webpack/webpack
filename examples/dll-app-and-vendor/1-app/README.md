@@ -93,6 +93,11 @@ module.exports = vendor_lib_02cb05c865a84081bc8b;
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -133,6 +138,11 @@ module.exports = vendor_lib_02cb05c865a84081bc8b;
 /******/ 	}();
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// startup
 /******/ 	// Load entry module
 /******/ 	__webpack_require__(0);

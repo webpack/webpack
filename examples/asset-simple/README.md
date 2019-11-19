@@ -146,6 +146,11 @@ module.exports = __webpack_require__.p + "images/1be7b55b29524343503e.svg";
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -216,6 +221,11 @@ module.exports = __webpack_require__.p + "images/1be7b55b29524343503e.svg";
 /******/ 	}();
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// startup
 /******/ 	// Load entry module
 /******/ 	__webpack_require__(0);

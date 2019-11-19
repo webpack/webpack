@@ -78,6 +78,11 @@ console.log("Running " + "desktop" + " build");
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -106,6 +111,11 @@ console.log("Running " + "desktop" + " build");
 /******/ 	}
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 !function() {
 /*!********************!*\
   !*** ./example.js ***!
@@ -127,7 +137,7 @@ console.log("Running " + "mobile" + " build");
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset      Size
@@ -157,7 +167,7 @@ Child desktop:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset       Size

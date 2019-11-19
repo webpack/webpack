@@ -86,7 +86,7 @@ let o=0;function n(){o++}const c=o=>console.log(o);c(o),n(),n(),n(),c(o),c(o=0);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
     Asset       Size
 output.js  591 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
@@ -103,7 +103,7 @@ chunk output.js (main) 429 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
     Asset      Size
 output.js  80 bytes  [emitted]  [name: main]
 Entrypoint main = output.js

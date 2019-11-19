@@ -83,6 +83,11 @@ module.exports = "Vendor2";
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -111,6 +116,11 @@ module.exports = "Vendor2";
 /******/ 	}
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
@@ -160,6 +170,11 @@ module.exports = vendor_57330e24282ed92fe266;
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -188,6 +203,11 @@ module.exports = vendor_57330e24282ed92fe266;
 /******/ 	}
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// startup
 /******/ 	// Load entry module
 /******/ 	__webpack_require__(0);

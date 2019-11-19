@@ -63,6 +63,11 @@ module.exports = Math.random();
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -94,6 +99,11 @@ module.exports = Math.random();
 /******/ 	__webpack_require__.c = __webpack_module_cache__;
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// module cache are used so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module
@@ -108,7 +118,7 @@ module.exports = Math.random();
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
     Asset      Size
 output.js  2.26 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
@@ -128,7 +138,7 @@ chunk output.js (main) 313 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
     Asset       Size
 output.js  286 bytes  [emitted]  [name: main]
 Entrypoint main = output.js

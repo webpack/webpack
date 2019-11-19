@@ -13,8 +13,7 @@ function lessStrict(regExpStr) {
 	return regExpStr;
 }
 
-const runtimeRegexp = /(```\s*(?:js|javascript)\n)?(.*)(\/\*\*\*\*\*\*\/ \(function\(modules, runtime\) \{ \/\/ webpackBootstrap\n(?:.|\n)*?\n\/\*\*\*\*\*\*\/ \}\)\n\/\**\/\n)/;
-const runtimeModulesRegexp = /(\/\*\*\*\*\*\*\/ function\(__webpack_require__\) \{ \/\/ webpackRuntimeModules\n(?:.|\n)*?\n\/\*\*\*\*\*\*\/ \}\n\);\n)```\n/;
+const runtimeModulesRegexp = /(\/\*{72}\/\n(?:\/(?:\*{6}|\*{72})\/.*\n)*\/\*{72}\/\n)/g;
 const timeRegexp = /\s*Time: \d+ms/g;
 const buildAtRegexp = /\s*Built at: .+/mg;
 const hashRegexp = /Hash: [a-f0-9]+/g;
@@ -45,14 +44,8 @@ exports.replaceBase = (template) => {
 		.replace(/\.chunkhash\./g, ".[chunkhash].")
 		.replace(runtimeModulesRegexp, function(match, content) {
 			return "```\n\n<details><summary>"+
-			"<code>function(__webpack_require__) { /* webpackRuntimeModules */ });</code>"+
-			"</summary>\n\n``` js\n" + content + "```\n\n</details>\n\n";
-		})
-		.replace(runtimeRegexp, function(match) {
-			match = runtimeRegexp.exec(match);
-			const prefix = match[1] ? "" : "```\n";
-			const inner = match[1] ? match[1] : "``` js\n";
-			return prefix + "<details><summary><code>" + match[2] + "/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>\n\n" + inner + match[2] + match[3] + "```\n\n</details>\n\n" + inner;
+			"<code>/* webpack runtime code */</code>"+
+			"</summary>\n\n``` js\n" + content + "```\n\n</details>\n\n``` js\n";
 		});
 };
 

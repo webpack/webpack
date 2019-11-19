@@ -51,6 +51,11 @@ module.exports = "Vendor1";
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -79,6 +84,11 @@ module.exports = "Vendor1";
 /******/ 	}
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// startup
 /******/ 	// Load entry module
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
@@ -117,6 +127,11 @@ __webpack_require__(/*! ./vendor1 */ 0);
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -145,6 +160,11 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /******/ 	}
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// startup
 /******/ 	// Load entry module
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
@@ -197,6 +217,11 @@ __webpack_require__(/*! ./vendor2 */ 1);
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -225,6 +250,11 @@ __webpack_require__(/*! ./vendor2 */ 1);
 /******/ 	}
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// startup
 /******/ 	// Load entry module
 /******/ 	__webpack_require__(2);
@@ -239,7 +269,7 @@ __webpack_require__(/*! ./vendor2 */ 1);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
      Asset      Size
   pageA.js  2.24 KiB  [emitted]  [name: pageA]
   pageB.js   1.5 KiB  [emitted]  [name: pageB]
@@ -299,7 +329,7 @@ chunk pageC.js (pageC) 25 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
      Asset       Size
   pageA.js  267 bytes  [emitted]  [name: pageA]
   pageB.js  176 bytes  [emitted]  [name: pageB]

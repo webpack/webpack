@@ -106,6 +106,11 @@ module.exports = function() {
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -134,6 +139,11 @@ module.exports = function() {
 /******/ 	}
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 !function() {
 /*!********************!*\
   !*** ./example.js ***!
@@ -156,7 +166,7 @@ console.log(getTemplate("b"));
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
     Asset     Size
 output.js  3.3 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
@@ -186,7 +196,7 @@ chunk output.js (main) 603 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.31
+Version: webpack 5.0.0-beta.6
     Asset       Size
 output.js  820 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
