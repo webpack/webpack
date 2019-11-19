@@ -107,9 +107,7 @@ It's a normal module and can be used via `import`.
 ```javascript
 import { CreateUserAction } from "./Actions.js";
 
-(async ()=> {
-	await CreateUserAction("John");
-})();
+await CreateUserAction("John");
 ```
 
 Note that you may `import await` from a normal module too.
@@ -133,17 +131,18 @@ When compiling for other targets like node.js, electron or WebWorkers, it may be
   !*** ./example.js ***!
   \********************/
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, module, __webpack_require__.* */
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+module.exports = (async () => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Actions_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Actions.js */ 1);
 
 
-(async ()=> {
-	await (0,_Actions_js__WEBPACK_IMPORTED_MODULE_0__.CreateUserAction)("John");
-})();
+await (0,_Actions_js__WEBPACK_IMPORTED_MODULE_0__.CreateUserAction)("John");
 
+return __webpack_exports__;
+})();
 
 /***/ }),
 /* 1 */
@@ -405,7 +404,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 	// startup
 /******/ 	// Load entry module
 /******/ 	__webpack_require__(0);
-/******/ 	// This entry module used 'exports' so it can't be inlined
+/******/ 	// This entry module used 'module' so it can't be inlined
 /******/ })()
 ;
 ```
@@ -497,65 +496,72 @@ return __webpack_exports__;
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-        Asset      Size
-497.output.js  2.48 KiB  [emitted]
-    output.js  11.3 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 1.19 KiB (javascript) 4.85 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./Actions.js 1.09 KiB [built]
-     [exports: AlternativeCreateUserAction, CreateUserAction]
-     [used exports unknown]
-     harmony side effect evaluation ./Actions.js ./example.js 1:0-48
-     harmony import specifier ./Actions.js ./example.js 4:7-23
- ./example.js 103 bytes [built]
-     [no exports]
-     [used exports unknown]
-     entry ./example.js main
+Hash: [1mb9ba1fd84ace416de17b[39m[22m
+Version: webpack [1m5.0.0-beta.6[39m[22m
+Time: [1m81[39m[22mms
+        [1mAsset[39m[22m      [1mSize[39m[22m
+[1m[32m497.output.js[39m[22m  2.48 KiB  [1m[32m[emitted][39m[22m
+    [1m[32moutput.js[39m[22m  11.3 KiB  [1m[32m[emitted][39m[22m  [name: main]
+Entrypoint [1mmain[39m[22m = [1m[32moutput.js[39m[22m
+chunk [1m[32moutput.js[39m[22m (main) 1.17 KiB (javascript) 4.85 KiB (runtime) [1m[33m[entry][39m[22m [1m[32m[rendered][39m[22m
+    > ./example.js [1m[39m[22m main
+ [1m./Actions.js[39m[22m 1.09 KiB [1m[32m[built][39m[22m
+     [1m[36m[exports: AlternativeCreateUserAction, CreateUserAction][39m[22m
+     [1m[36m[used exports unknown][39m[22m
+     harmony side effect evaluation [1m[36m./Actions.js[39m[22m [1m[35m./example.js[39m[22m 1:0-48 [1m[36m[39m[22m
+     harmony import specifier [1m[36m./Actions.js[39m[22m [1m[35m./example.js[39m[22m 3:6-22 [1m[36m[39m[22m
+ [1m./example.js[39m[22m 82 bytes [1m[32m[built][39m[22m
+     [1m[36m[no exports][39m[22m
+     [1m[36m[used exports unknown][39m[22m
+     entry [1m[36m./example.js[39m[22m [1m[35mnull[39m[22m main [1m[36m[39m[22m
      + 6 hidden chunk modules
-chunk 497.output.js 622 bytes [rendered]
-    > ./UserApi.js ./Actions.js 22:30-52
-    > ./UserApi.js ./Actions.js 2:16-38
- ./UserApi.js 220 bytes [built]
-     [exports: createUser]
-     [used exports unknown]
-     import() ./UserApi.js ./Actions.js 2:16-38
-     import() ./UserApi.js ./Actions.js 22:30-52
- ./db-connection.js 402 bytes [built]
-     [exports: close, dbCall]
-     [used exports unknown]
-     harmony side effect evaluation ./db-connection.js ./UserApi.js 1:0-50
-     harmony import specifier ./db-connection.js ./UserApi.js 6:7-13
+chunk [1m[32m497.output.js[39m[22m 622 bytes [1m[32m[rendered][39m[22m
+    > ./UserApi.js [1m./Actions.js[39m[22m 22:30-52
+    > ./UserApi.js [1m./Actions.js[39m[22m 2:16-38
+ [1m./UserApi.js[39m[22m 220 bytes [1m[32m[built][39m[22m
+     [1m[36m[exports: createUser][39m[22m
+     [1m[36m[used exports unknown][39m[22m
+     import() [1m[36m./UserApi.js[39m[22m [1m[35m./Actions.js[39m[22m 2:16-38 [1m[36m[39m[22m
+     import() [1m[36m./UserApi.js[39m[22m [1m[35m./Actions.js[39m[22m 22:30-52 [1m[36m[39m[22m
+ [1m./db-connection.js[39m[22m 402 bytes [1m[32m[built][39m[22m
+     [1m[36m[exports: close, dbCall][39m[22m
+     [1m[36m[used exports unknown][39m[22m
+     harmony side effect evaluation [1m[36m./db-connection.js[39m[22m [1m[35m./UserApi.js[39m[22m 1:0-50 [1m[36m[39m[22m
+     harmony import specifier [1m[36m./db-connection.js[39m[22m [1m[35m./UserApi.js[39m[22m 6:7-13 [1m[36m[39m[22m
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-        Asset       Size
-497.output.js  477 bytes  [emitted]
-    output.js   1.83 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 1.19 KiB (javascript) 4.85 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js + 1 modules 1.19 KiB [built]
-     [no exports]
-     [no exports used]
-     entry ./example.js main
+Hash: [1m0e7a3e674a6d2316f26a[39m[22m
+Version: webpack [1m5.0.0-beta.6[39m[22m
+Time: [1m404[39m[22mms
+        [1mAsset[39m[22m       [1mSize[39m[22m
+[1m[32m497.output.js[39m[22m  477 bytes  [1m[32m[emitted][39m[22m
+    [1m[32moutput.js[39m[22m   1.94 KiB  [1m[32m[emitted][39m[22m  [name: main]
+Entrypoint [1mmain[39m[22m = [1m[32moutput.js[39m[22m
+chunk [1m[32moutput.js[39m[22m (main) 1.17 KiB (javascript) 4.85 KiB (runtime) [1m[33m[entry][39m[22m [1m[32m[rendered][39m[22m
+    > ./example.js [1m[39m[22m main
+ [1m./Actions.js[39m[22m 1.09 KiB [1m[32m[built][39m[22m
+     [1m[36m[exports: AlternativeCreateUserAction, CreateUserAction][39m[22m
+     [1m[36m[only some exports used: CreateUserAction][39m[22m
+     harmony side effect evaluation [1m[36m./Actions.js[39m[22m [1m[35m./example.js[39m[22m 1:0-48 [1m[36m[39m[22m
+     harmony import specifier [1m[36m./Actions.js[39m[22m [1m[35m./example.js[39m[22m 3:6-22 [1m[36m[39m[22m
+ [1m./example.js[39m[22m 82 bytes [1m[32m[built][39m[22m
+     [1m[36m[no exports][39m[22m
+     [1m[36m[no exports used][39m[22m
+     entry [1m[36m./example.js[39m[22m [1m[35mnull[39m[22m main [1m[36m[39m[22m
      + 6 hidden chunk modules
-chunk 497.output.js 622 bytes [rendered]
-    > ./UserApi.js ./Actions.js 22:30-52
-    > ./UserApi.js ./Actions.js 2:16-38
- ./UserApi.js 220 bytes [built]
-     [exports: createUser]
-     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 2:16-38
-     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 22:30-52
- ./db-connection.js 402 bytes [built]
-     [exports: close, dbCall]
-     [only some exports used: dbCall]
-     harmony side effect evaluation ./db-connection.js ./UserApi.js 1:0-50
-     harmony import specifier ./db-connection.js ./UserApi.js 6:7-13
+chunk [1m[32m497.output.js[39m[22m 622 bytes [1m[32m[rendered][39m[22m
+    > ./UserApi.js [1m./Actions.js[39m[22m 22:30-52
+    > ./UserApi.js [1m./Actions.js[39m[22m 2:16-38
+ [1m./UserApi.js[39m[22m 220 bytes [1m[32m[built][39m[22m
+     [1m[36m[exports: createUser][39m[22m
+     import() [1m[36m./UserApi.js[39m[22m [1m[35m./Actions.js[39m[22m 2:16-38 [1m[36m[39m[22m
+     import() [1m[36m./UserApi.js[39m[22m [1m[35m./Actions.js[39m[22m 22:30-52 [1m[36m[39m[22m
+ [1m./db-connection.js[39m[22m 402 bytes [1m[32m[built][39m[22m
+     [1m[36m[exports: close, dbCall][39m[22m
+     [1m[36m[only some exports used: dbCall][39m[22m
+     harmony side effect evaluation [1m[36m./db-connection.js[39m[22m [1m[35m./UserApi.js[39m[22m 1:0-50 [1m[36m[39m[22m
+     harmony import specifier [1m[36m./db-connection.js[39m[22m [1m[35m./UserApi.js[39m[22m 6:7-13 [1m[36m[39m[22m
 ```
