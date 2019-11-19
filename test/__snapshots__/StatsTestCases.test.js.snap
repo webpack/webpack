@@ -131,18 +131,18 @@ chunk b4a95c5544295741de67.js 899 bytes [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for asset 1`] = `
-"Hash: b52cbf090dc450f1a713
+"Hash: 2f8b01594b17eabf4be0
 Time: Xms
 Built at: 1970-04-20 12:42:42
                    Asset      Size
-62787d6ac9d673cc8926.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
-               bundle.js  12.2 KiB  [emitted]              [name: main]
-Entrypoint main = bundle.js (62787d6ac9d673cc8926.png)
+6e537cb1f9c5a99c2f2e.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
+               bundle.js  10.7 KiB  [emitted]              [name: main]
+Entrypoint main = bundle.js (6e537cb1f9c5a99c2f2e.png)
 ./index.js 111 bytes [built]
 ./images/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
 ./images/file.svg 984 bytes [built]
 ./images/file.jpg 8.83 KiB [built]
-    + 3 hidden modules"
+    + 1 hidden module"
 `;
 
 exports[`StatsTestCases should print correct stats for async-commons-chunk 1`] = `

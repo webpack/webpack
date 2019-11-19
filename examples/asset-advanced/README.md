@@ -82,12 +82,11 @@ module.exports = {
   !*** ./example.js ***!
   \********************/
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _images_file_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images/file.svg */ 1);
-/* harmony import */ var _images_file_svg__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_images_file_svg__WEBPACK_IMPORTED_MODULE_0__);
 
 
 const container = document.createElement("div");
@@ -113,7 +112,7 @@ function createImageElement(title, src) {
 	container.appendChild(div);
 }
 
-[(_images_file_svg__WEBPACK_IMPORTED_MODULE_0___default())].forEach(src => {
+[_images_file_svg__WEBPACK_IMPORTED_MODULE_0__/* .default */ ].forEach(src => {
 	createImageElement(src.split(".").pop(), src);
 });
 
@@ -123,7 +122,9 @@ function createImageElement(title, src) {
 /*!*************************!*\
   !*** ./images/file.svg ***!
   \*************************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! export default [not provided] [no usage info] [no name, virtual] */
+/*!   exports [not provided] [no usage info] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -164,31 +165,6 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' v
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	!function() {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => module['default'] :
-/******/ 				() => module;
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
-/******/ 		// define getter functions for harmony exports
-/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	}();
-/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	!function() {
 /******/ 		// define __esModule on exports
@@ -222,17 +198,18 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' v
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-beta.7
     Asset      Size
-output.js  5.08 KiB  [emitted]  [name: main]
+output.js  4.01 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk output.js (main) 1.6 KiB (javascript) 895 bytes (runtime) [entry] [rendered]
+chunk output.js (main) 1.6 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js 658 bytes [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
  ./images/file.svg 984 bytes [built]
+     [no exports]
      [used exports unknown]
      harmony side effect evaluation ./images/file.svg ./example.js 1:0-36
      harmony import specifier ./images/file.svg ./example.js 26:1-4
-     + 3 hidden chunk modules
+     + 1 hidden chunk module
 ```
