@@ -25,7 +25,7 @@
     "tapable": "2.0.0-beta.8",
     "terser-webpack-plugin": "^2.2.1",
     "watchpack": "2.0.0-beta.10",
-    "webpack-sources": "2.0.0-beta.7"
+    "webpack-sources": "2.0.0-beta.8"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
