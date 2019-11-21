@@ -17,7 +17,7 @@ function setup() {
 				});
 			}
 		})
-		.then(message => {
+		.then(() => {
 			process.exitCode = 0;
 		})
 		.catch(e => {
