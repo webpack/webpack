@@ -359,11 +359,15 @@ declare module "enhanced-resolve" {
 
 	export function create(options: any): ResolveFunction;
 
+	interface WriteOnlySet<T> {
+		add(item: T): void;
+	}
+
 	interface ResolveContext {
 		log?: (message: string) => void;
-		fileDependencies?: Set<string>;
-		contextDependencies?: Set<string>;
-		missingDependencies?: Set<string>;
+		fileDependencies?: WriteOnlySet<string>;
+		contextDependencies?: WriteOnlySet<string>;
+		missingDependencies?: WriteOnlySet<string>;
 		stack?: Set<string>;
 	}
 
