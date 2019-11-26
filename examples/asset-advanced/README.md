@@ -200,13 +200,13 @@ Version: webpack 5.0.0-beta.7
     Asset      Size
 output.js  4.01 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk output.js (main) 1.6 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
+chunk output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js 658 bytes [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
- ./images/file.svg 984 bytes [built]
+ ./images/file.svg 915 bytes [built]
      [no exports]
      [used exports unknown]
      harmony side effect evaluation ./images/file.svg ./example.js 1:0-36

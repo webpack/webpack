@@ -3,18 +3,29 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.(png|jpg)$/,
-				type: "asset",
+				test: /\.png$/,
+				type: "asset/inline",
 				generator: {
-					dataUrl: false
+					dataUrl: {
+						mimetype: "mimetype/png"
+					}
+				}
+			},
+			{
+				test: /\.jpg$/,
+				type: "asset/inline",
+				generator: {
+					dataUrl() {
+						return "data:image/jpg;base64,custom-content";
+					}
 				}
 			},
 			{
 				test: /\.svg$/,
 				type: "asset",
 				generator: {
-					dataUrl() {
-						return "data:image/svg+xml;base64,custom-content";
+					dataUrl: {
+						encoding: false
 					}
 				}
 			}

@@ -4,18 +4,13 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(png|svg)$/,
-				type: "asset",
-				generator: {
-					dataUrl: {
-						maxSize: Infinity
-					}
-				}
+				type: "asset/inline"
 			},
 			{
 				test: /\.jpg$/,
 				type: "asset",
-				generator: {
-					dataUrl: {
+				parser: {
+					dataUrlCondition: {
 						maxSize: Infinity
 					}
 				}

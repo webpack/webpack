@@ -1,0 +1,39 @@
+{
+  "definitions": {
+    "DataUrlFunction": {
+      "description": "Function that executes for module and should return an DataUrl string",
+      "instanceof": "Function",
+      "tsType": "((source: string | Buffer, context: { filename: string, module: import('../../lib/Module') }) => string)"
+    },
+    "DataUrlOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "encoding": {
+          "description": "Asset encoding (defaults to base64)",
+          "enum": [false, "base64"]
+        },
+        "mimetype": {
+          "description": "Asset mimetype (getting from file extension by default)",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "title": "AssetModulesPluginGeneratorOptions",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "dataUrl": {
+      "description": "The options for data url generator",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/DataUrlOptions"
+        },
+        {
+          "$ref": "#/definitions/DataUrlFunction"
+        }
+      ]
+    }
+  }
+}

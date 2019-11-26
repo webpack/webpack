@@ -119,7 +119,7 @@ function createImageElement(title, src) {
 /*! runtime requirements: module, __webpack_require__.p, __webpack_require__.* */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = __webpack_require__.p + "images/0985f24c5584e5f04e32.png";
+module.exports = __webpack_require__.p + "images/151cfcfa1bd74779aadb.png";
 
 /***/ }),
 /* 2 */
@@ -220,16 +220,16 @@ module.exports = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDo...vc3ZnPgo="
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-beta.7
                           Asset      Size
-images/0985f24c5584e5f04e32.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
+images/151cfcfa1bd74779aadb.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
                       output.js  13.4 KiB  [emitted]              [name: main]
-Entrypoint main = output.js (images/0985f24c5584e5f04e32.png)
-chunk output.js (main) 10.6 KiB (javascript) 14.6 KiB (asset) 306 bytes (runtime) [entry] [rendered]
+Entrypoint main = output.js (images/151cfcfa1bd74779aadb.png)
+chunk output.js (main) 9.58 KiB (javascript) 14.6 KiB (asset) 306 bytes (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js 742 bytes [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
- ./images/file.jpg 8.83 KiB [built]
+ ./images/file.jpg 7.92 KiB [built]
      [no exports]
      [used exports unknown]
      harmony side effect evaluation ./images/file.jpg ./example.js 2:0-36
@@ -239,7 +239,7 @@ chunk output.js (main) 10.6 KiB (javascript) 14.6 KiB (asset) 306 bytes (runtime
      [used exports unknown]
      harmony side effect evaluation ./images/file.png ./example.js 1:0-36
      harmony import specifier ./images/file.png ./example.js 28:1-4
- ./images/file.svg 984 bytes [built]
+ ./images/file.svg 915 bytes [built]
      [no exports]
      [used exports unknown]
      harmony side effect evaluation ./images/file.svg ./example.js 3:0-36
