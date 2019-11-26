@@ -134,15 +134,14 @@ exports[`StatsTestCases should print correct stats for asset 1`] = `
 "Hash: f6c1cb50597248a12805
 Time: Xms
 Built at: 1970-04-20 12:42:42
-                   Asset       Size
-312082ab35d179f7618f.svg  656 bytes  [emitted] [immutable]  [name: (main)]
-b1586e02d344c0a2b83d.jpg   5.89 KiB  [emitted] [immutable]  [name: (main)]
-               bundle.js   10.7 KiB  [emitted]              [name: main]
-Entrypoint main = bundle.js (312082ab35d179f7618f.svg b1586e02d344c0a2b83d.jpg)
+                   Asset      Size
+7095cdad7dbe7d0415ca.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
+               bundle.js  10.7 KiB  [emitted]              [name: main]
+Entrypoint main = bundle.js (7095cdad7dbe7d0415ca.png)
 ./index.js 111 bytes [built]
-./images/file.png 42 bytes [built]
-./images/file.svg 915 bytes (javascript) 656 bytes (asset) [built]
-./images/file.jpg 7.92 KiB (javascript) 5.89 KiB (asset) [built]
+./images/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
+./images/file.svg 915 bytes [built]
+./images/file.jpg 7.92 KiB [built]
     + 1 hidden module"
 `;
 
