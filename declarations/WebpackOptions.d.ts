@@ -665,6 +665,12 @@ export interface RuleSetRule {
 	 */
 	exclude?: RuleSetConditionOrConditionsAbsolute;
 	/**
+	 * The options for the module generator
+	 */
+	generator?: {
+		[k: string]: any;
+	};
+	/**
 	 * Shortcut for resource.include
 	 */
 	include?: RuleSetConditionOrConditionsAbsolute;

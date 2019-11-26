@@ -17,6 +17,7 @@ const runtimeModulesRegexp = /(\/\*{72}\/\n(?:\/(?:\*{6}|\*{72})\/.*\n)*\/\*{72}
 const timeRegexp = /\s*Time: \d+ms/g;
 const buildAtRegexp = /\s*Built at: .+/mg;
 const hashRegexp = /Hash: [a-f0-9]+/g;
+const dataUrlRegexp = /("data:[^"]+")/g;
 
 exports.replaceBase = (template) => {
 
@@ -41,6 +42,10 @@ exports.replaceBase = (template) => {
 		.replace(timeRegexp, "")
 		.replace(buildAtRegexp, "")
 		.replace(hashRegexp, "Hash: 0a1b2c3d4e5f6a7b8c9d")
+		.replace(dataUrlRegexp, function(match) {
+			if(match.length < 100) return match;
+			return match.slice(0, 50) + "..." + match.slice(-10);
+		})
 		.replace(/\.chunkhash\./g, ".[chunkhash].")
 		.replace(runtimeModulesRegexp, function(match, content) {
 			return "```\n\n<details><summary>"+
