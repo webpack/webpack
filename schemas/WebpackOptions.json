@@ -1733,8 +1733,7 @@
             "$ref": "#/definitions/RuleSetCondition"
           }
         ]
-      },
-      "tsType": "RuleSetConditionsRecursive"
+      }
     },
     "RuleSetConditionsAbsolute": {
       "type": "array",
@@ -1745,8 +1744,7 @@
             "$ref": "#/definitions/RuleSetConditionAbsolute"
           }
         ]
-      },
-      "tsType": "RuleSetConditionsAbsoluteRecursive"
+      }
     },
     "RuleSetLoader": {
       "type": "string",

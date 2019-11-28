@@ -132,7 +132,7 @@ export type RuleSetCondition =
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetConditions".
  */
-export type RuleSetConditions = RuleSetConditionsRecursive;
+export type RuleSetConditions = RuleSetCondition[];
 /**
  * One or multiple rule conditions
  *
@@ -181,7 +181,7 @@ export type RuleSetConditionAbsolute =
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetConditionsAbsolute".
  */
-export type RuleSetConditionsAbsolute = RuleSetConditionsAbsoluteRecursive;
+export type RuleSetConditionsAbsolute = RuleSetConditionAbsolute[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetLoader".
