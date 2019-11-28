@@ -1,6 +1,6 @@
 This very simple example shows usage of a custom parser for json-modules.
 
-Toml files can be imported like other modules without toml-loader.
+Toml, yaml and json5 files can be imported like other modules without toml-loader.
 
 # data.toml
 
