@@ -14,24 +14,57 @@ bio = "GitHub Cofounder & CEO\nLikes tater tots and beer."
 dob = 1979-05-27T07:32:00Z
 ```
 
+# data.yaml
+
+```yaml
+title: TOML Example
+owner:
+  name: Tom Preston-Werner
+  organization: GitHub
+  bio: |-
+    GitHub Cofounder & CEO
+    Likes tater tots and beer.
+  dob: 1979-05-27T07:32:00.000Z
+```
+
+# data.json
+
+```json5
+{
+  // comment
+  title: "TOML Example",
+  owner: {
+    name: "Tom Preston-Werner",
+    organization: "GitHub",
+    bio: "GitHub Cofounder & CEO\n\
+Likes tater tots and beer.",
+    dob: "1979-05-27T07:32:00.000Z"
+  }
+}
+```
+
 # example.js
 
 ```javascript
-import data from "./data.toml";
+import toml from "./data.toml";
+import yaml from "./data.yaml";
+import json from "./data.json";
 
-document.querySelector('#app').innerHTML = `
+document.querySelector('#app').innerHTML = [toml, yaml, json].map(data => `
   <h1>${data.title}</h1>
   <div>${data.owner.name}</div>
   <div>${data.owner.organization}</div>
   <div>${data.owner.bio}</div>
   <div>${data.owner.dob}</div>
-`;
+`).join('<br><br>');
 ```
 
 # webpack.config.js
 
 ```javascript
 const toml = require("toml");
+const json5 = require('json5');
+const yaml = require('yamljs');
 
 module.exports = {
 	module: {
@@ -42,6 +75,24 @@ module.exports = {
 				parser: {
 					parse(input) {
 						return toml.parse(input);
+					}
+				}
+			},
+			{
+				test: /\.json$/,
+				type: "json",
+				parser: {
+					parse(input) {
+						return json5.parse(input);
+					}
+				}
+			},
+			{
+				test: /\.yaml$/,
+				type: "json",
+				parser: {
+					parse(input) {
+						return yaml.parse(input);
 					}
 				}
 			}
@@ -66,15 +117,19 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _data_toml__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./data.toml */ 1);
+/* harmony import */ var _data_yaml__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./data.yaml */ 2);
+/* harmony import */ var _data_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./data.json */ 3);
 
 
-document.querySelector('#app').innerHTML = `
-  <h1>${_data_toml__WEBPACK_IMPORTED_MODULE_0__/* .default.title */ .title}</h1>
-  <div>${_data_toml__WEBPACK_IMPORTED_MODULE_0__/* .default.owner.name */ .owner.name}</div>
-  <div>${_data_toml__WEBPACK_IMPORTED_MODULE_0__/* .default.owner.organization */ .owner.organization}</div>
-  <div>${_data_toml__WEBPACK_IMPORTED_MODULE_0__/* .default.owner.bio */ .owner.bio}</div>
-  <div>${_data_toml__WEBPACK_IMPORTED_MODULE_0__/* .default.owner.dob */ .owner.dob}</div>
-`;
+
+
+document.querySelector('#app').innerHTML = [_data_toml__WEBPACK_IMPORTED_MODULE_0__/* .default */ , _data_yaml__WEBPACK_IMPORTED_MODULE_1__/* .default */ , _data_json__WEBPACK_IMPORTED_MODULE_2__/* .default */ ].map(data => `
+  <h1>${data.title}</h1>
+  <div>${data.owner.name}</div>
+  <div>${data.owner.organization}</div>
+  <div>${data.owner.bio}</div>
+  <div>${data.owner.dob}</div>
+`).join('<br><br>');
 
 
 /***/ }),
@@ -96,6 +151,62 @@ document.querySelector('#app').innerHTML = `
 /*!   export bio [provided] [no usage info] [missing usage info prevents renaming] */
 /*!   export dob [provided] [no usage info] [missing usage info prevents renaming] */
 /*!     exports [not provided] [no usage info] */
+/*!   export name [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export organization [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   other exports [not provided] [no usage info] */
+/*! export title [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: module */
+/***/ ((module) => {
+
+module.exports = JSON.parse("{\"title\":\"TOML Example\",\"owner\":{\"name\":\"Tom Preston-Werner\",\"organization\":\"GitHub\",\"bio\":\"GitHub Cofounder & CEO\\nLikes tater tots and beer.\",\"dob\":\"1979-05-27T07:32:00.000Z\"}}");
+
+/***/ }),
+/* 2 */
+/*!*******************!*\
+  !*** ./data.yaml ***!
+  \*******************/
+/*! export default [provided] [no usage info] [no name, virtual] */
+/*!   export owner [provided] [no usage info] [missing usage info prevents renaming] */
+/*!     export bio [provided] [no usage info] [missing usage info prevents renaming] */
+/*!     export dob [provided] [no usage info] [missing usage info prevents renaming] */
+/*!       exports [not provided] [no usage info] */
+/*!     export name [provided] [no usage info] [missing usage info prevents renaming] */
+/*!     export organization [provided] [no usage info] [missing usage info prevents renaming] */
+/*!     other exports [not provided] [no usage info] */
+/*!   export title [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   other exports [not provided] [no usage info] */
+/*! export owner [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export bio [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export dob [provided] [no usage info] [missing usage info prevents renaming] */
+/*!     exports [not provided] [no usage info] */
+/*!   export name [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export organization [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   other exports [not provided] [no usage info] */
+/*! export title [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: module */
+/***/ ((module) => {
+
+module.exports = JSON.parse("{\"title\":\"TOML Example\",\"owner\":{\"name\":\"Tom Preston-Werner\",\"organization\":\"GitHub\",\"bio\":\"GitHub Cofounder & CEO\\nLikes tater tots and beer.\",\"dob\":\"1979-05-27T07:32:00.000Z\"}}");
+
+/***/ }),
+/* 3 */
+/*!*******************!*\
+  !*** ./data.json ***!
+  \*******************/
+/*! export default [provided] [no usage info] [no name, virtual] */
+/*!   export owner [provided] [no usage info] [missing usage info prevents renaming] */
+/*!     export bio [provided] [no usage info] [missing usage info prevents renaming] */
+/*!     export dob [provided] [no usage info] [missing usage info prevents renaming] */
+/*!     export name [provided] [no usage info] [missing usage info prevents renaming] */
+/*!     export organization [provided] [no usage info] [missing usage info prevents renaming] */
+/*!     other exports [not provided] [no usage info] */
+/*!   export title [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   other exports [not provided] [no usage info] */
+/*! export owner [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export bio [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export dob [provided] [no usage info] [missing usage info prevents renaming] */
 /*!   export name [provided] [no usage info] [missing usage info prevents renaming] */
 /*!   export organization [provided] [no usage info] [missing usage info prevents renaming] */
 /*!   other exports [not provided] [no usage info] */
@@ -171,24 +282,30 @@ module.exports = JSON.parse("{\"title\":\"TOML Example\",\"owner\":{\"name\":\"T
 ## webpack output
 
 ```
-Hash: [1m05de32641bf6fbad9390[39m[22m
+Hash: [1m8f69e0ad2f96aaaa29ec[39m[22m
 Version: webpack [1m5.0.0-beta.7[39m[22m
-Time: [1m145[39m[22mms
+Time: [1m123[39m[22mms
     [1mAsset[39m[22m      [1mSize[39m[22m
-[1m[32moutput.js[39m[22m  4.57 KiB  [1m[32m[emitted][39m[22m  [name: main]
+[1m[32moutput.js[39m[22m  8.17 KiB  [1m[32m[emitted][39m[22m  [name: main]
 Entrypoint [1mmain[39m[22m = [1m[32moutput.js[39m[22m
-chunk [1m[32moutput.js[39m[22m (main) 428 bytes (javascript) 274 bytes (runtime) [1m[33m[entry][39m[22m [1m[32m[rendered][39m[22m
+chunk [1m[32moutput.js[39m[22m (main) 917 bytes (javascript) 274 bytes (runtime) [1m[33m[entry][39m[22m [1m[32m[rendered][39m[22m
     > ./example.js [1m[39m[22m main
+ [1m./data.json[39m[22m 188 bytes [1m[32m[built][39m[22m
+     [1m[36m[exports: default, owner, title][39m[22m
+     [1m[36m[used exports unknown][39m[22m
+     harmony side effect evaluation [1m[36m./data.json[39m[22m [1m[35m./example.js[39m[22m 3:0-31 [1m[36m[39m[22m
+     harmony import specifier [1m[36m./data.json[39m[22m [1m[35m./example.js[39m[22m 5:56-60 [1m[36m[39m[22m
  [1m./data.toml[39m[22m 188 bytes [1m[32m[built][39m[22m
      [1m[36m[exports: default, owner, title][39m[22m
      [1m[36m[used exports unknown][39m[22m
      harmony side effect evaluation [1m[36m./data.toml[39m[22m [1m[35m./example.js[39m[22m 1:0-31 [1m[36m[39m[22m
-     harmony import specifier [1m[36m./data.toml[39m[22m [1m[35m./example.js[39m[22m 4:8-18 [1m[36m[39m[22m
-     harmony import specifier [1m[36m./data.toml[39m[22m [1m[35m./example.js[39m[22m 5:9-24 [1m[36m[39m[22m
-     harmony import specifier [1m[36m./data.toml[39m[22m [1m[35m./example.js[39m[22m 6:9-32 [1m[36m[39m[22m
-     harmony import specifier [1m[36m./data.toml[39m[22m [1m[35m./example.js[39m[22m 7:9-23 [1m[36m[39m[22m
-     harmony import specifier [1m[36m./data.toml[39m[22m [1m[35m./example.js[39m[22m 8:9-23 [1m[36m[39m[22m
- [1m./example.js[39m[22m 240 bytes [1m[32m[built][39m[22m
+     harmony import specifier [1m[36m./data.toml[39m[22m [1m[35m./example.js[39m[22m 5:44-48 [1m[36m[39m[22m
+ [1m./data.yaml[39m[22m 188 bytes [1m[32m[built][39m[22m
+     [1m[36m[exports: default, owner, title][39m[22m
+     [1m[36m[used exports unknown][39m[22m
+     harmony side effect evaluation [1m[36m./data.yaml[39m[22m [1m[35m./example.js[39m[22m 2:0-31 [1m[36m[39m[22m
+     harmony import specifier [1m[36m./data.yaml[39m[22m [1m[35m./example.js[39m[22m 5:50-54 [1m[36m[39m[22m
+ [1m./example.js[39m[22m 353 bytes [1m[32m[built][39m[22m
      [1m[36m[no exports][39m[22m
      [1m[36m[used exports unknown][39m[22m
      entry [1m[36m./example.js[39m[22m [1m[35mnull[39m[22m main [1m[36m[39m[22m

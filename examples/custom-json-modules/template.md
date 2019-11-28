@@ -8,6 +8,18 @@ Toml files can be imported like other modules without toml-loader.
 _{{data.toml}}_
 ```
 
+# data.yaml
+
+```yaml
+_{{data.yaml}}_
+```
+
+# data.json
+
+```json5
+_{{data.json}}_
+```
+
 # example.js
 
 ```javascript
