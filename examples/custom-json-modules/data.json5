@@ -1,6 +1,6 @@
 {
   // comment
-  title: "TOML Example",
+  title: "JSON5 Example",
   owner: {
     name: "Tom Preston-Werner",
     organization: "GitHub",

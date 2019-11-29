@@ -17,7 +17,7 @@ _{{data.yaml}}_
 # data.json
 
 ```json5
-_{{data.json}}_
+_{{data.json5}}_
 ```
 
 # example.js

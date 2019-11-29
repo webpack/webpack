@@ -15,7 +15,7 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.json$/,
+				test: /\.json5$/,
 				type: "json",
 				parser: {
 					parse(input) {
