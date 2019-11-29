@@ -390,38 +390,4 @@ declare module "enhanced-resolve" {
 	}
 }
 
-// This "hack" is needed because typescript doesn't support recursive type definitions
-// It's referenced from "ruleSet-conditions" in schemas/WebpackOptions.json
-interface RuleSetConditionsRecursive
-	extends Array<import("./declarations/WebpackOptions").RuleSetCondition> {}
-interface RuleSetConditionsAbsoluteRecursive
-	extends Array<
-		import("./declarations/WebpackOptions").RuleSetConditionAbsolute
-	> {}
-
-/**
- * Global variable declarations
- * @todo Once this issue is resolved, remove these globals and add JSDoc onsite instead
- * https://github.com/Microsoft/TypeScript/issues/15626
- */
-declare const $moduleCache$;
-declare let $getFullHash$;
-declare const $interceptModuleExecution$;
-declare const $hmrDownloadManifest$;
-declare let $hmrDownloadUpdateHandlers$;
-declare let $hmrModuleData$;
-declare const $options$;
-declare const $updateModuleFactories$;
-declare const $updateRuntimeModules$;
-declare const $moduleFactories$;
-declare const $onError$;
-declare const $publicPath$;
-declare const __webpack_require__;
-declare const $hotChunkFilename$;
-declare const $hotMainFilename$;
-declare namespace WebAssembly {}
-declare const importScripts;
-declare const $crossOriginLoading$;
-declare const chunkId;
-
 type TODO = any;
