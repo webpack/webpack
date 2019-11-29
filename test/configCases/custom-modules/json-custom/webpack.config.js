@@ -1,5 +1,4 @@
 const toml = require("toml");
-const NormalModule = require("../../../../lib/NormalModule");
 
 module.exports = [
 	{
@@ -10,10 +9,8 @@ module.exports = [
 					test: /\.toml$/,
 					type: "json",
 					parser: {
-						parse(input, module) {
-							expect(typeof input).toBe("string");
-							expect(module).toBeInstanceOf(NormalModule);
-
+						parse(input) {
+							expect(arguments.length).toBe(1);
 							return toml.parse(input);
 						}
 					}
@@ -29,10 +26,8 @@ module.exports = [
 					test: /\.toml$/,
 					type: "json",
 					parser: {
-						parse(input, module) {
-							expect(typeof input).toBe("string");
-							expect(module).toBeInstanceOf(NormalModule);
-
+						parse(input) {
+							expect(arguments.length).toBe(1);
 							return JSON.stringify(toml.parse(input));
 						}
 					}

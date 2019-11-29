@@ -73,27 +73,21 @@ module.exports = {
 				test: /\.toml$/,
 				type: "json",
 				parser: {
-					parse(input) {
-						return toml.parse(input);
-					}
+					parse: toml.parse
 				}
 			},
 			{
 				test: /\.json5$/,
 				type: "json",
 				parser: {
-					parse(input) {
-						return json5.parse(input);
-					}
+					parse: json5.parse
 				}
 			},
 			{
 				test: /\.yaml$/,
 				type: "json",
 				parser: {
-					parse(input) {
-						return yaml.parse(input);
-					}
+					parse: yaml.parse
 				}
 			}
 		]
@@ -284,7 +278,7 @@ module.exports = JSON.parse("{\"title\":\"JSON5 Example\",\"owner\":{\"name\":\"
 ```
 Hash: [1mf9cc6e468bda1ef6f9fb[39m[22m
 Version: webpack [1m5.0.0-beta.7[39m[22m
-Time: [1m204[39m[22mms
+Time: [1m161[39m[22mms
     [1mAsset[39m[22m      [1mSize[39m[22m
 [1m[32moutput.js[39m[22m  8.18 KiB  [1m[32m[emitted][39m[22m  [name: main]
 Entrypoint [1mmain[39m[22m = [1m[32moutput.js[39m[22m

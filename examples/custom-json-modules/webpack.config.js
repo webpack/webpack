@@ -9,27 +9,21 @@ module.exports = {
 				test: /\.toml$/,
 				type: "json",
 				parser: {
-					parse(input) {
-						return toml.parse(input);
-					}
+					parse: toml.parse
 				}
 			},
 			{
 				test: /\.json5$/,
 				type: "json",
 				parser: {
-					parse(input) {
-						return json5.parse(input);
-					}
+					parse: json5.parse
 				}
 			},
 			{
 				test: /\.yaml$/,
 				type: "json",
 				parser: {
-					parse(input) {
-						return yaml.parse(input);
-					}
+					parse: yaml.parse
 				}
 			}
 		]
