@@ -2,11 +2,12 @@ const { RawSource } = require("webpack-sources");
 const Generator = require("../../../../").Generator;
 const RuntimeModule = require("../../../../").RuntimeModule;
 const RuntimeGlobals = require("../../../../").RuntimeGlobals;
+const Parser = require("../../../../").Parser;
 const webpack = require("../../../../");
 
 /** @typedef {import("../../../../lib/Compiler")} Compiler */
 
-class LocalizationParser {
+class LocalizationParser extends Parser {
 	parse(source, { module }) {
 		module.buildInfo.content = JSON.parse(source);
 		return true;
