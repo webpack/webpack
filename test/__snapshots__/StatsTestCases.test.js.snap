@@ -70,7 +70,7 @@ PublicPath: (none)
 21fd8e73389271e24957.js    1.91 KiB  [emitted] [immutable]
 64ea4fa3fe9d8c4817d8.js    1.91 KiB  [emitted] [immutable]
 6a2a05a9feb43a535129.js    1.91 KiB  [emitted] [immutable]
-831ca3ab1d7c1dda3bc6.js    9.24 KiB  [emitted] [immutable]  [name: main]
+831ca3ab1d7c1dda3bc6.js    9.23 KiB  [emitted] [immutable]  [name: main]
 ae7ced4135ed4f2282f6.js    1.91 KiB  [emitted] [immutable]
 b4a95c5544295741de67.js  1010 bytes  [emitted] [immutable]
 b63bab94d02c84e0f081.js    1.91 KiB  [emitted] [immutable]
@@ -450,8 +450,8 @@ Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
    Asset      Size
-main1.js  4.31 KiB  [emitted]  [name: main1]
-main2.js   4.3 KiB  [emitted]  [name: main2]
+main1.js   4.3 KiB  [emitted]  [name: main1]
+main2.js  4.29 KiB  [emitted]  [name: main2]
 Entrypoint main1 = main1.js
 Entrypoint main2 = main2.js
 chunk main2.js (main2) 136 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
@@ -481,7 +481,7 @@ PublicPath: (none)
 460.bundle.js  324 bytes  [emitted]
 524.bundle.js  210 bytes  [emitted]
 996.bundle.js  142 bytes  [emitted]
-    bundle.js   7.76 KiB  [emitted]  [name: main]
+    bundle.js   7.75 KiB  [emitted]  [name: main]
 Entrypoint main = bundle.js
 chunk bundle.js (main) 73 bytes (javascript) 4.22 KiB (runtime) >{460}< >{996}< [entry] [rendered]
     > ./index main
@@ -519,7 +519,7 @@ Built at: 1970-04-20 12:42:42
 PublicPath: (none)
               Asset       Size
      b_js.bundle.js  359 bytes  [emitted]
-          bundle.js   8.34 KiB  [emitted]  [name: main]
+          bundle.js   8.33 KiB  [emitted]  [name: main]
      c_js.bundle.js  588 bytes  [emitted]
 d_js-e_js.bundle.js  759 bytes  [emitted]
 Entrypoint main = bundle.js
@@ -639,7 +639,7 @@ Child
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
-       app.1147bb1cde3dd41269e4-1.js   5.81 KiB  [emitted] [immutable]  [name: app]
+       app.1147bb1cde3dd41269e4-1.js    5.8 KiB  [emitted] [immutable]  [name: app]
     vendor.6b4bbfa3863de7632c2b-1.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
     Entrypoint app = vendor.6b4bbfa3863de7632c2b-1.js app.1147bb1cde3dd41269e4-1.js
     ./entry-1.js + 2 modules 190 bytes [built]
@@ -650,7 +650,7 @@ Child
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
-       app.10fa3cd6ae475f4c6e5c-2.js   5.82 KiB  [emitted] [immutable]  [name: app]
+       app.10fa3cd6ae475f4c6e5c-2.js   5.81 KiB  [emitted] [immutable]  [name: app]
     vendor.6b4bbfa3863de7632c2b-2.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
     Entrypoint app = vendor.6b4bbfa3863de7632c2b-2.js app.10fa3cd6ae475f4c6e5c-2.js
     ./entry-2.js + 2 modules 197 bytes [built]
@@ -684,7 +684,7 @@ Child
                                Asset       Size
          703-31a50198ea37e1d30825.js  438 bytes  [emitted] [immutable]
      703-31a50198ea37e1d30825.js.map  343 bytes  [emitted] [dev]
-        main-f94c4a4e5ad089468096.js   8.03 KiB  [emitted] [immutable]  [name: main]
+        main-f94c4a4e5ad089468096.js   8.01 KiB  [emitted] [immutable]  [name: main]
     main-f94c4a4e5ad089468096.js.map   7.12 KiB  [emitted] [dev]        [name: (main)]
     Entrypoint main = main-f94c4a4e5ad089468096.js (main-f94c4a4e5ad089468096.js.map)
     ./a/index.js 40 bytes [built]
@@ -697,7 +697,7 @@ Child
                                Asset       Size
          703-31a50198ea37e1d30825.js  438 bytes  [emitted] [immutable]
      703-31a50198ea37e1d30825.js.map  343 bytes  [emitted] [dev]
-        main-f94c4a4e5ad089468096.js   8.03 KiB  [emitted] [immutable]  [name: main]
+        main-f94c4a4e5ad089468096.js   8.01 KiB  [emitted] [immutable]  [name: main]
     main-f94c4a4e5ad089468096.js.map   7.12 KiB  [emitted] [dev]        [name: (main)]
     Entrypoint main = main-f94c4a4e5ad089468096.js (main-f94c4a4e5ad089468096.js.map)
     ./b/index.js 40 bytes [built]
@@ -709,7 +709,7 @@ Child
     Built at: 1970-04-20 12:42:42
                            Asset       Size
      703-71c02d17a0d4fdf148ec.js  962 bytes  [emitted] [immutable]
-    main-7145276cf3aaae458872.js   8.37 KiB  [emitted] [immutable]  [name: main]
+    main-7145276cf3aaae458872.js   8.35 KiB  [emitted] [immutable]  [name: main]
     Entrypoint main = main-7145276cf3aaae458872.js
     ./a/index.js 40 bytes [built]
     ./a/chunk.js + 1 modules 66 bytes [built]
@@ -720,7 +720,7 @@ Child
     Built at: 1970-04-20 12:42:42
                            Asset       Size
      703-71c02d17a0d4fdf148ec.js  962 bytes  [emitted] [immutable]
-    main-7145276cf3aaae458872.js   8.37 KiB  [emitted] [immutable]  [name: main]
+    main-7145276cf3aaae458872.js   8.35 KiB  [emitted] [immutable]  [name: main]
     Entrypoint main = main-7145276cf3aaae458872.js
     ./b/index.js 40 bytes [built]
     ./b/chunk.js + 1 modules 66 bytes [built]
@@ -783,7 +783,7 @@ exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] =
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset      Size
-bundle.js  3.39 KiB  [emitted]  [name: main]
+bundle.js  3.38 KiB  [emitted]  [name: main]
  + 1 hidden asset
 Entrypoint main = bundle.js (5bcd36918d225eeda398ea3f372b7f16.json)
 ./index.js 77 bytes [built]
@@ -1154,7 +1154,7 @@ chunk trees.js (trees) 71 bytes [rendered]
 exports[`StatsTestCases should print correct stats for immutable 1`] = `
 "                  Asset       Size
 1b847d037d2872a4c68b.js  346 bytes  [emitted] [immutable]
-99c16c4af44c16e93796.js    9.8 KiB  [emitted] [immutable]  [name: main]"
+99c16c4af44c16e93796.js   9.78 KiB  [emitted] [immutable]  [name: main]"
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
@@ -1165,7 +1165,7 @@ Built at: 1970-04-20 12:42:42
   398.js  484 bytes  [emitted]
   544.js  484 bytes  [emitted]
   718.js  484 bytes  [emitted]
-entry.js   9.59 KiB  [emitted]  [name: entry]
+entry.js   9.57 KiB  [emitted]  [name: entry]
 Entrypoint entry = entry.js
 ./entry.js 450 bytes [built]
 ./templates lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ namespace object 160 bytes [optional] [built]
@@ -1181,7 +1181,7 @@ Time: Xms
 Built at: 1970-04-20 12:42:42
    Asset       Size
   836.js  142 bytes  [emitted]
-entry.js   10.2 KiB  [emitted]  [name: entry]
+entry.js   10.1 KiB  [emitted]  [name: entry]
 Entrypoint entry = entry.js
 ./entry.js 120 bytes [built]
 ./modules/b.js 22 bytes [built]
@@ -1232,7 +1232,7 @@ Child
                                                        Asset       Size
                           b-all-b_js-3219344d13cc334d7831.js  479 bytes  [emitted] [immutable]  [id hint: all]
                               b-main-6da637b8d22f213c8475.js  148 bytes  [emitted] [immutable]  [name: main]
-                      b-runtime~main-26eb148ab52ff25ff9bb.js   5.76 KiB  [emitted] [immutable]  [name: runtime~main]
+                      b-runtime~main-26eb148ab52ff25ff9bb.js   5.75 KiB  [emitted] [immutable]  [name: runtime~main]
     b-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js  189 bytes  [emitted] [immutable]  [id hint: vendors]
     Entrypoint main = b-runtime~main-26eb148ab52ff25ff9bb.js b-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js b-all-b_js-3219344d13cc334d7831.js b-main-6da637b8d22f213c8475.js
     ./b.js 17 bytes [built]
@@ -1262,7 +1262,7 @@ Child 1 chunks:
     Time: Xms
     Built at: 1970-04-20 12:42:42
          Asset      Size
-    bundle1.js  4.07 KiB  [emitted]  [name: main]
+    bundle1.js  4.06 KiB  [emitted]  [name: main]
     Entrypoint main = bundle1.js
     chunk bundle1.js (main) 219 bytes (javascript) 1.28 KiB (runtime) <{179}> >{179}< [entry] [rendered]
      ./a.js 22 bytes [built]
@@ -1278,7 +1278,7 @@ Child 2 chunks:
     Built at: 1970-04-20 12:42:42
              Asset       Size
     459.bundle2.js  666 bytes  [emitted]  [name: c]
-        bundle2.js   9.74 KiB  [emitted]  [name: main]
+        bundle2.js   9.71 KiB  [emitted]  [name: main]
     Entrypoint main = bundle2.js
     chunk bundle2.js (main) 101 bytes (javascript) 5.51 KiB (runtime) >{459}< [entry] [rendered]
      ./index.js 101 bytes [built]
@@ -1296,7 +1296,7 @@ Child 3 chunks:
              Asset       Size
     459.bundle3.js  530 bytes  [emitted]  [name: c]
     524.bundle3.js  210 bytes  [emitted]
-        bundle3.js   9.74 KiB  [emitted]  [name: main]
+        bundle3.js   9.71 KiB  [emitted]  [name: main]
     Entrypoint main = bundle3.js
     chunk bundle3.js (main) 101 bytes (javascript) 5.51 KiB (runtime) >{459}< [entry] [rendered]
      ./index.js 101 bytes [built]
@@ -1316,7 +1316,7 @@ Child 4 chunks:
     394.bundle4.js  210 bytes  [emitted]
     459.bundle4.js  394 bytes  [emitted]  [name: c]
     524.bundle4.js  210 bytes  [emitted]
-        bundle4.js   9.74 KiB  [emitted]  [name: main]
+        bundle4.js   9.71 KiB  [emitted]  [name: main]
     Entrypoint main = bundle4.js
     chunk bundle4.js (main) 101 bytes (javascript) 5.51 KiB (runtime) >{394}< >{459}< [entry] [rendered]
      ./index.js 101 bytes [built]
@@ -1437,7 +1437,7 @@ Built at: 1970-04-20 12:42:42
   2.png     21 KiB  [emitted]  [name: (a, b)]
    a.js  988 bytes  [emitted]  [name: a]
    b.js  616 bytes  [emitted]  [name: b]
-main.js   9.04 KiB  [emitted]  [name: main]
+main.js   9.01 KiB  [emitted]  [name: main]
 Entrypoint main = main.js
 Chunk Group a = a.js (1.png 2.png)
 Chunk Group b = b.js (2.png)
@@ -1705,7 +1705,7 @@ exports[`StatsTestCases should print correct stats for named-chunks-plugin 1`] =
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset       Size
- entry.js   5.08 KiB  [emitted]  [name: entry]
+ entry.js   5.07 KiB  [emitted]  [name: entry]
 vendor.js  241 bytes  [emitted]  [name: vendor] [id hint: vendor]
 Entrypoint entry = vendor.js entry.js
 ./entry.js 72 bytes [built]
@@ -1720,7 +1720,7 @@ exports[`StatsTestCases should print correct stats for named-chunks-plugin-async
 Time: Xms
 Built at: 1970-04-20 12:42:42
           Asset       Size
-       entry.js    9.6 KiB  [emitted]  [name: entry]
+       entry.js   9.58 KiB  [emitted]  [name: entry]
 modules_a_js.js  316 bytes  [emitted]
 modules_b_js.js  153 bytes  [emitted]
 Entrypoint entry = entry.js
@@ -1756,7 +1756,7 @@ Built at: 1970-04-20 12:42:42
           cir1.js  334 bytes  [emitted]  [name: cir1]
 cir2 from cir1.js  378 bytes  [emitted]  [name: cir2 from cir1]
           cir2.js  334 bytes  [emitted]  [name: cir2]
-          main.js   8.57 KiB  [emitted]  [name: main]
+          main.js   8.55 KiB  [emitted]  [name: main]
 Entrypoint main = main.js
 chunk ab.js (ab) 2 bytes <{179}> >{753}< [rendered]
     > ./index.js 1:0-6:8
@@ -2116,7 +2116,7 @@ PublicPath: (none)
  460.js  324 bytes   {460}  [emitted]
  524.js  210 bytes   {524}  [emitted]
  996.js  142 bytes   {996}  [emitted]
-main.js   7.76 KiB   {179}  [emitted]  [name: main]
+main.js   7.74 KiB   {179}  [emitted]  [name: main]
 Entrypoint main = main.js
 chunk {179} main.js (main) 73 bytes (javascript) 4.22 KiB (runtime) >{460}< >{996}< [entry] [rendered]
     > ./index main
@@ -2232,7 +2232,7 @@ Built at: 1970-04-20 12:42:42
  460.js  324 bytes  [emitted]
  524.js  210 bytes  [emitted]
  996.js  142 bytes  [emitted]
-main.js   7.76 KiB  [emitted]  [name: main]
+main.js   7.74 KiB  [emitted]  [name: main]
 Entrypoint main = main.js
 ./index.js 51 bytes [built]
 ./a.js 22 bytes [built]
@@ -2334,7 +2334,7 @@ PublicPath: (none)
  460.js  324 bytes   {460}  [emitted]
  524.js  210 bytes   {524}  [emitted]
  996.js  142 bytes   {996}  [emitted]
-main.js   7.76 KiB   {179}  [emitted]  [name: main]
+main.js   7.74 KiB   {179}  [emitted]  [name: main]
 Entrypoint main = main.js
 chunk {179} main.js (main) 73 bytes (javascript) 4.22 KiB (runtime) >{460}< >{996}< [entry] [rendered]
     > ./index main
@@ -2480,7 +2480,7 @@ exports[`StatsTestCases should print correct stats for runtime-chunk-integration
                  Asset       Size
         without-505.js   1.22 KiB  [emitted]
       without-main1.js  556 bytes  [emitted]  [name: main1]
-    without-runtime.js   9.75 KiB  [emitted]  [name: runtime]
+    without-runtime.js   9.72 KiB  [emitted]  [name: runtime]
     Entrypoint main1 = without-runtime.js without-main1.js
     ./main1.js 66 bytes [built]
     ./b.js 20 bytes [built]
@@ -2491,7 +2491,7 @@ Child manifest is named entry:
                Asset       Size
          with-505.js   1.22 KiB  [emitted]
        with-main1.js  556 bytes  [emitted]  [name: main1]
-    with-manifest.js   9.88 KiB  [emitted]  [name: manifest]
+    with-manifest.js   9.86 KiB  [emitted]  [name: manifest]
     Entrypoint main1 = with-manifest.js with-main1.js
     Entrypoint manifest = with-manifest.js
     ./main1.js 66 bytes [built]
@@ -2595,7 +2595,7 @@ Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset       Size
    1.js  642 bytes  [emitted]
-main.js   9.86 KiB  [emitted]  [name: main]
+main.js   9.83 KiB  [emitted]  [name: main]
 Entrypoint main = main.js
 ./main.js + 1 modules 231 bytes [built]
     [no exports used]
@@ -3696,7 +3696,7 @@ exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset      Size
-bundle.js  7.13 KiB  [emitted]  [name: main]
+bundle.js  7.12 KiB  [emitted]  [name: main]
 Entrypoint main = bundle.js
 ./index.js 316 bytes [built] [1 warning]
     [no exports]
