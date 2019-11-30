@@ -14,7 +14,7 @@ _{{data.toml}}_
 _{{data.yaml}}_
 ```
 
-# data.json
+# data.json5
 
 ```json5
 _{{data.json5}}_
