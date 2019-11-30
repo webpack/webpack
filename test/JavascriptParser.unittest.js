@@ -321,7 +321,7 @@ describe("JavascriptParser", () => {
 				testParser.state.xyz.push(testParser.parseString(expr.arguments[0]));
 				return true;
 			});
-			const actual = testParser.parse(source);
+			const actual = testParser.parse(source, {});
 			expect(typeof actual).toBe("object");
 			expect(actual).toEqual(state);
 		});
@@ -347,7 +347,7 @@ describe("JavascriptParser", () => {
 			return true;
 		});
 
-		const actual = testParser.parse(source);
+		const actual = testParser.parse(source, {});
 		expect(typeof actual).toBe("object");
 		expect(typeof actual.comments).toBe("object");
 		actual.comments.forEach((element, index) => {
@@ -376,7 +376,7 @@ describe("JavascriptParser", () => {
 				.tap("JavascriptParserTest", expr =>
 					new BasicEvaluatedExpression().setNumber(123).setRange(expr.range)
 				);
-			return parser.parse("test(" + source + ");").result;
+			return parser.parse("test(" + source + ");", {}).result;
 		}
 
 		const testCases = {
@@ -585,7 +585,7 @@ describe("JavascriptParser", () => {
 			Object.keys(cases).forEach(name => {
 				const expr = cases[name];
 				it(name, () => {
-					const actual = parser.parse(expr);
+					const actual = parser.parse(expr, {});
 					expect(typeof actual).toBe("object");
 				});
 			});
@@ -618,7 +618,7 @@ describe("JavascriptParser", () => {
 
 			Object.keys(cases).forEach(name => {
 				it(name, () => {
-					const actual = parser.parse(cases[name][0]);
+					const actual = parser.parse(cases[name][0], {});
 					expect(actual).toEqual(cases[name][1]);
 				});
 			});
@@ -634,7 +634,7 @@ describe("JavascriptParser", () => {
 			Object.keys(cases).forEach(name => {
 				const expr = cases[name];
 				it(name, () => {
-					const actual = JavascriptParser.parse(expr);
+					const actual = JavascriptParser.parse(expr, {});
 					expect(typeof actual).toBe("object");
 				});
 			});
@@ -650,7 +650,7 @@ describe("JavascriptParser", () => {
 				return true;
 			});
 
-			parser.parse("const { a, ...rest } = { a: 1, b: 2 };");
+			parser.parse("const { a, ...rest } = { a: 1, b: 2 };", {});
 
 			expect(definitions.has("a")).toBe(true);
 			expect(definitions.has("rest")).toBe(true);

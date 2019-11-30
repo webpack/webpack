@@ -111,12 +111,8 @@ describe("Compiler (caching)", () => {
 
 		// Copy over file since we"ll be modifying some of them
 		fs.mkdirSync(fixturePath);
-		fs.createReadStream(path.join(__dirname, "fixtures", "a.js")).pipe(
-			fs.createWriteStream(aFilepath)
-		);
-		fs.createReadStream(path.join(__dirname, "fixtures", "c.js")).pipe(
-			fs.createWriteStream(cFilepath)
-		);
+		fs.copyFileSync(path.join(__dirname, "fixtures", "a.js"), aFilepath);
+		fs.copyFileSync(path.join(__dirname, "fixtures", "c.js"), cFilepath);
 
 		fixtureCount++;
 		return {
