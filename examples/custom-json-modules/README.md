@@ -99,6 +99,7 @@ module.exports = {
 
 ```javascript
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
@@ -108,7 +109,6 @@ module.exports = {
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _data_toml__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./data.toml */ 1);
 /* harmony import */ var _data_yaml__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./data.yaml */ 2);
@@ -276,32 +276,31 @@ module.exports = JSON.parse("{\"title\":\"JSON5 Example\",\"owner\":{\"name\":\"
 ## webpack output
 
 ```
-Hash: [1mf9cc6e468bda1ef6f9fb[39m[22m
-Version: webpack [1m5.0.0-beta.7[39m[22m
-Time: [1m161[39m[22mms
-    [1mAsset[39m[22m      [1mSize[39m[22m
-[1m[32moutput.js[39m[22m  8.18 KiB  [1m[32m[emitted][39m[22m  [name: main]
-Entrypoint [1mmain[39m[22m = [1m[32moutput.js[39m[22m
-chunk [1m[32moutput.js[39m[22m (main) 919 bytes (javascript) 274 bytes (runtime) [1m[33m[entry][39m[22m [1m[32m[rendered][39m[22m
-    > ./example.js [1m[39m[22m main
- [1m./data.json5[39m[22m 189 bytes [1m[32m[built][39m[22m
-     [1m[36m[exports: default, owner, title][39m[22m
-     [1m[36m[used exports unknown][39m[22m
-     harmony side effect evaluation [1m[36m./data.json5[39m[22m [1m[35m./example.js[39m[22m 3:0-32 [1m[36m[39m[22m
-     harmony import specifier [1m[36m./data.json5[39m[22m [1m[35m./example.js[39m[22m 5:56-60 [1m[36m[39m[22m
- [1m./data.toml[39m[22m 188 bytes [1m[32m[built][39m[22m
-     [1m[36m[exports: default, owner, title][39m[22m
-     [1m[36m[used exports unknown][39m[22m
-     harmony side effect evaluation [1m[36m./data.toml[39m[22m [1m[35m./example.js[39m[22m 1:0-31 [1m[36m[39m[22m
-     harmony import specifier [1m[36m./data.toml[39m[22m [1m[35m./example.js[39m[22m 5:44-48 [1m[36m[39m[22m
- [1m./data.yaml[39m[22m 188 bytes [1m[32m[built][39m[22m
-     [1m[36m[exports: default, owner, title][39m[22m
-     [1m[36m[used exports unknown][39m[22m
-     harmony side effect evaluation [1m[36m./data.yaml[39m[22m [1m[35m./example.js[39m[22m 2:0-31 [1m[36m[39m[22m
-     harmony import specifier [1m[36m./data.yaml[39m[22m [1m[35m./example.js[39m[22m 5:50-54 [1m[36m[39m[22m
- [1m./example.js[39m[22m 354 bytes [1m[32m[built][39m[22m
-     [1m[36m[no exports][39m[22m
-     [1m[36m[used exports unknown][39m[22m
-     entry [1m[36m./example.js[39m[22m [1m[35mnull[39m[22m main [1m[36m[39m[22m
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 5.0.0-beta.7
+    Asset      Size
+output.js  8.19 KiB  [emitted]  [name: main]
+Entrypoint main = output.js
+chunk output.js (main) 919 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
+    > ./example.js main
+ ./data.json5 189 bytes [built]
+     [exports: default, owner, title]
+     [used exports unknown]
+     harmony side effect evaluation ./data.json5 ./example.js 3:0-32
+     harmony import specifier ./data.json5 ./example.js 5:56-60
+ ./data.toml 188 bytes [built]
+     [exports: default, owner, title]
+     [used exports unknown]
+     harmony side effect evaluation ./data.toml ./example.js 1:0-31
+     harmony import specifier ./data.toml ./example.js 5:44-48
+ ./data.yaml 188 bytes [built]
+     [exports: default, owner, title]
+     [used exports unknown]
+     harmony side effect evaluation ./data.yaml ./example.js 2:0-31
+     harmony import specifier ./data.yaml ./example.js 5:50-54
+ ./example.js 354 bytes [built]
+     [no exports]
+     [used exports unknown]
+     entry ./example.js main
      + 1 hidden chunk module
 ```
