@@ -1130,7 +1130,7 @@ Compilation error while processing magic comment(-s): /* webpackPrefetch: true, 
 `;
 
 exports[`StatsTestCases should print correct stats for issue-7577 1`] = `
-"Hash: c59def46138141fa7a145d8be42dd7b646f5c59e0937f17cc4cb6ec81b29
+"Hash: c59def46138141fa7a145d8be42dd7b646f5c59ee0550d04a4155014b2f0
 Child
     Hash: c59def46138141fa7a14
     Time: Xms
@@ -1154,7 +1154,7 @@ Child
     [0] ./node_modules/vendor.js 23 bytes {vendors~main} [built]
     [1] ./b.js 17 bytes {all~main} [built]
 Child
-    Hash: 0937f17cc4cb6ec81b29
+    Hash: e0550d04a4155014b2f0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                                      Asset       Size        Chunks                         Chunk Names
@@ -1162,8 +1162,8 @@ Child
                c-1-5eacbd7fee2224716029.js  153 bytes             1  [emitted] [immutable]  
         c-all~main-3de9f206741c28715d19.js  305 bytes      all~main  [emitted] [immutable]  all~main
             c-main-75156155081cda3092db.js  114 bytes          main  [emitted] [immutable]  main
-    c-runtime~main-e6fdf542ac2732af2e78.js   9.81 KiB  runtime~main  [emitted] [immutable]  runtime~main
-    Entrypoint main = c-runtime~main-e6fdf542ac2732af2e78.js c-all~main-3de9f206741c28715d19.js c-main-75156155081cda3092db.js (prefetch: c-1-5eacbd7fee2224716029.js c-0-5b8bdddff2dcbbac44bf.js)
+    c-runtime~main-e96d711750ce5af1501b.js   9.81 KiB  runtime~main  [emitted] [immutable]  runtime~main
+    Entrypoint main = c-runtime~main-e96d711750ce5af1501b.js c-all~main-3de9f206741c28715d19.js c-main-75156155081cda3092db.js (prefetch: c-1-5eacbd7fee2224716029.js c-0-5b8bdddff2dcbbac44bf.js)
     [0] ./b.js 17 bytes {0} [built]
     [1] ./c.js 61 bytes {all~main} [built]
     [2] ./node_modules/vendor.js 23 bytes {1} [built]"
