@@ -58,6 +58,11 @@ module.exports = "alpha";
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -86,6 +91,11 @@ module.exports = "alpha";
 /******/ 	}
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
@@ -123,6 +133,11 @@ module.exports = "beta";
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -151,6 +166,11 @@ module.exports = "beta";
 /******/ 	}
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
@@ -166,7 +186,7 @@ module.exports = "beta";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
              Asset      Size
 MyLibrary.alpha.js  1.97 KiB  [emitted]  [name: alpha]
  MyLibrary.beta.js  1.98 KiB  [emitted]  [name: beta]
@@ -188,7 +208,7 @@ chunk MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
+Version: webpack 5.0.0-beta.6
              Asset       Size
 MyLibrary.alpha.js  429 bytes  [emitted]  [name: alpha]
  MyLibrary.beta.js  424 bytes  [emitted]  [name: beta]

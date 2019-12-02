@@ -210,6 +210,11 @@ function getRandomNumber() {
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -283,6 +288,11 @@ function getRandomNumber() {
 /******/ 	}();
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// startup
 /******/ 	// Load entry module
 /******/ 	__webpack_require__(0);
@@ -343,7 +353,7 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-beta.6
                            Asset       Size
 4636ea8e62e0734a195f.module.wasm  139 bytes  [emitted] [immutable]  [name: (main)]
-                       output.js   1.61 KiB  [emitted]              [name: main]
+                       output.js   1.59 KiB  [emitted]              [name: main]
 Entrypoint main = output.js (4636ea8e62e0734a195f.module.wasm)
 chunk output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 999 bytes (runtime) [entry] [rendered]
     > ./example.js main

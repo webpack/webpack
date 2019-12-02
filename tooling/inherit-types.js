@@ -76,7 +76,10 @@ for (const sourceFile of program.getSourceFiles()) {
 		const nodeHandler = node => {
 			if (ts.isClassDeclaration(node) || ts.isClassExpression(node)) {
 				for (const member of node.members) {
-					if (ts.isMethodDeclaration(member)) {
+					if (
+						ts.isMethodDeclaration(member) &&
+						!(ts.getCombinedModifierFlags(member) & ts.ModifierFlags.Static)
+					) {
 						const baseDecl = findDeclarationInBaseClass(
 							node,
 							member.name.getText()

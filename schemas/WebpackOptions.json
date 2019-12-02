@@ -1733,8 +1733,7 @@
             "$ref": "#/definitions/RuleSetCondition"
           }
         ]
-      },
-      "tsType": "RuleSetConditionsRecursive"
+      }
     },
     "RuleSetConditionsAbsolute": {
       "type": "array",
@@ -1745,8 +1744,7 @@
             "$ref": "#/definitions/RuleSetConditionAbsolute"
           }
         ]
-      },
-      "tsType": "RuleSetConditionsAbsoluteRecursive"
+      }
     },
     "RuleSetLoader": {
       "type": "string",
@@ -1785,6 +1783,10 @@
               "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
           ]
+        },
+        "generator": {
+          "description": "The options for the module generator",
+          "type": "object"
         },
         "include": {
           "description": "Shortcut for resource.include",

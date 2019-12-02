@@ -83,6 +83,11 @@ module.exports = "module";
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -111,6 +116,11 @@ module.exports = "module";
 /******/ 	}
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports

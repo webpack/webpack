@@ -105,6 +105,11 @@ module.exports = webpackAsyncContext;
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -315,6 +320,11 @@ module.exports = webpackAsyncContext;
 /******/ 	}();
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 !function() {
 /*!********************!*\
   !*** ./example.js ***!

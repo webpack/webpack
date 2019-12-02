@@ -47,6 +47,11 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -233,6 +238,11 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 	}();
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 !function() {
 /*!********************!*\
   !*** ./example.js ***!
