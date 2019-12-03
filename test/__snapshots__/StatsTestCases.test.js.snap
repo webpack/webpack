@@ -1165,7 +1165,7 @@ Built at: 1970-04-20 12:42:42
   398.js  484 bytes  [emitted]
   544.js  484 bytes  [emitted]
   718.js  484 bytes  [emitted]
-entry.js   9.63 KiB  [emitted]  [name: entry]
+entry.js   9.61 KiB  [emitted]  [name: entry]
 Entrypoint entry = entry.js
 ./entry.js 450 bytes [built]
 ./templates lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ namespace object 160 bytes [optional] [built]
