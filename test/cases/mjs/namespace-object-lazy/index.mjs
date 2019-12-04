@@ -53,8 +53,7 @@ function contextMixed(name) {
 
 function promiseTest(promise, equalsTo) {
 	return promise.then(function(results) {
-		for(const result of results)
-			expect(result).toEqual(equalsTo);
+		expect(results).toEqual(results.map(() => equalsTo));
 	});
 }
 

@@ -14,8 +14,8 @@ it("should bailout when reading whole exports object from module.exports", () =>
 });
 
 it("should reassigning exports (assign values)", () => {
-	expect(require("./assign-exports-assign").abc).toBe("abc");
-	expect(require("./assign-exports-assign").def).toBe(undefined);
+	expect(require("./assign-exports-assign?1").abc).toBe("abc");
+	expect(require("./assign-exports-assign?2").def).toBe(undefined);
 });
 
 it("should reassigning exports (define values)", () => {
