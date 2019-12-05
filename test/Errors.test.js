@@ -188,7 +188,7 @@ it("should emit warning for require.main.require", async () => {
 					  "errors": Array [],
 					  "warnings": Array [
 					    Object {
-					      "loc": "1:0-20",
+					      "loc": "1:0-30",
 					      "message": "require.main.require is not supported by webpack.",
 					      "moduleId": 0,
 					      "moduleIdentifier": "<cwd>/test/fixtures/errors/require.main.require.js",
@@ -207,7 +207,7 @@ it("should emit warning for module.parent.require", async () => {
 					  "errors": Array [],
 					  "warnings": Array [
 					    Object {
-					      "loc": "1:0-21",
+					      "loc": "1:0-31",
 					      "message": "module.parent.require is not supported by webpack.",
 					      "moduleId": 0,
 					      "moduleIdentifier": "<cwd>/test/fixtures/errors/module.parent.require.js",
