@@ -81,22 +81,27 @@ if (!cli.installed) {
 	);
 
 	const question = `Do you want to install 'webpack-cli' (yes/no): `;
+	const failBecauseCliNotInstalled = () => {
+		console.error(
+			"You need to install 'webpack-cli' to use webpack via CLI.\n" +
+				"You can also install the CLI manually."
+		);
+		process.exitCode = 1;
+	};
 
 	const questionInterface = readLine.createInterface({
 		input: process.stdin,
 		output: process.stderr
 	});
+	let questionAnswered = false;
 	questionInterface.question(question, answer => {
+		questionAnswered = true;
 		questionInterface.close();
 
 		const normalizedAnswer = answer.toLowerCase().startsWith("y");
 
 		if (!normalizedAnswer) {
-			console.error(
-				"You need to install 'webpack-cli' to use webpack via CLI.\n" +
-					"You can also install the CLI manually."
-			);
-			process.exitCode = 1;
+			failBecauseCliNotInstalled();
 
 			return;
 		}
@@ -117,6 +122,11 @@ if (!cli.installed) {
 				console.error(error);
 				process.exitCode = 1;
 			});
+	});
+	questionInterface.on("close", () => {
+		if (!questionAnswered) {
+			failBecauseCliNotInstalled();
+		}
 	});
 } else {
 	const path = require("path");
