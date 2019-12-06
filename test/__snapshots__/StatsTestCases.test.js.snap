@@ -131,13 +131,13 @@ chunk b4a95c5544295741de67.js 899 bytes [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for asset 1`] = `
-"Hash: 37cb51e8f5211fe50dac
+"Hash: af0de91ff8df9396500e
 Time: Xms
 Built at: 1970-04-20 12:42:42
                    Asset      Size
-7095cdad7dbe7d0415ca.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
+6eef074bdaf47143a239.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
                bundle.js  10.6 KiB  [emitted]              [name: main]
-Entrypoint main = bundle.js (7095cdad7dbe7d0415ca.png)
+Entrypoint main = bundle.js (6eef074bdaf47143a239.png)
 ./index.js 111 bytes [built]
 ./images/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
 ./images/file.svg 915 bytes [built]
@@ -641,26 +641,26 @@ Entrypoint entry-1 = vendor-1.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-plugin-issue-4980 1`] = `
-"Hash: 7530d42df17d38e17cf0d8ddc1b3c6dfc68e54a5
+"Hash: cc1067a9ed68395a22d361ebf4f77d289ef5d090
 Child
-    Hash: 7530d42df17d38e17cf0
+    Hash: cc1067a9ed68395a22d3
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
-       app.213276d842f8b26072eb-1.js   5.86 KiB  [emitted] [immutable]  [name: app]
-    vendor.6b4bbfa3863de7632c2b-1.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
-    Entrypoint app = vendor.6b4bbfa3863de7632c2b-1.js app.213276d842f8b26072eb-1.js
+       app.e7c3ca90761b75404b15-1.js   5.86 KiB  [emitted] [immutable]  [name: app]
+    vendor.611fd9bad8fe7de29fe7-1.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
+    Entrypoint app = vendor.611fd9bad8fe7de29fe7-1.js app.e7c3ca90761b75404b15-1.js
     ./entry-1.js + 2 modules 190 bytes [built]
     ./constants.js 87 bytes [built]
         + 3 hidden modules
 Child
-    Hash: d8ddc1b3c6dfc68e54a5
+    Hash: 61ebf4f77d289ef5d090
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
-       app.20dda9088861f7369316-2.js   5.87 KiB  [emitted] [immutable]  [name: app]
-    vendor.6b4bbfa3863de7632c2b-2.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
-    Entrypoint app = vendor.6b4bbfa3863de7632c2b-2.js app.20dda9088861f7369316-2.js
+       app.3543b1c65e6a5b58cae6-2.js   5.87 KiB  [emitted] [immutable]  [name: app]
+    vendor.611fd9bad8fe7de29fe7-2.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
+    Entrypoint app = vendor.611fd9bad8fe7de29fe7-2.js app.3543b1c65e6a5b58cae6-2.js
     ./entry-2.js + 2 modules 197 bytes [built]
     ./constants.js 87 bytes [built]
         + 3 hidden modules"
@@ -2531,7 +2531,7 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: b204a5f18cb2550e0c62
+"Hash: 0c00bf20955429feb052
 Time: Xms
 Built at: 1970-04-20 12:42:42
 Entrypoint index = index.js
@@ -2561,9 +2561,9 @@ external \\"external\\" 42 bytes [built]
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Hash: 211c321421d4b1b819fd7c650e3a40573840a5e9
+"Hash: e2c7355c011145721c930f50cdfccf67cfa8eb2a
 Child
-    Hash: 211c321421d4b1b819fd
+    Hash: e2c7355c011145721c93
     Time: Xms
     Built at: 1970-04-20 12:42:42
     Entrypoint first = a-vendor.js a-first.js
@@ -2581,7 +2581,7 @@ Child
     ./common_lazy_shared.js 25 bytes [built]
         + 12 hidden modules
 Child
-    Hash: 7c650e3a40573840a5e9
+    Hash: 0f50cdfccf67cfa8eb2a
     Time: Xms
     Built at: 1970-04-20 12:42:42
     Entrypoint first = b-vendor.js b-first.js
@@ -3710,7 +3710,7 @@ chunk default/async-a.js (async-a) 134 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: 272c34f726bd750e9fef
+"Hash: 06b3690c160b35374c1d
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset      Size
@@ -3777,7 +3777,7 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [we
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"Hash: 33f6b591b85bed01b764
+"Hash: ebe9b2a585519304a1c8
 Time: Xms
 Built at: 1970-04-20 12:42:42
                            Asset       Size
