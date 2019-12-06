@@ -522,10 +522,10 @@ Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
               Asset       Size
-     b_js.bundle.js  387 bytes  [emitted]
-          bundle.js   8.49 KiB  [emitted]  [name: main]
-     c_js.bundle.js  616 bytes  [emitted]
-d_js-e_js.bundle.js  815 bytes  [emitted]
+     b_js.bundle.js  400 bytes  [emitted]
+          bundle.js   8.52 KiB  [emitted]  [name: main]
+     c_js.bundle.js  629 bytes  [emitted]
+d_js-e_js.bundle.js  841 bytes  [emitted]
 Entrypoint main = bundle.js
 chunk b_js.bundle.js 22 bytes <{main}> [rendered]
     > ./b ./index.js 2:0-16
@@ -1161,8 +1161,8 @@ chunk trees.js (trees) 71 bytes [rendered]
 
 exports[`StatsTestCases should print correct stats for immutable 1`] = `
 "                  Asset       Size
-1b847d037d2872a4c68b.js  374 bytes  [emitted] [immutable]
-945fb1b905025df1339f.js   9.86 KiB  [emitted] [immutable]  [name: main]"
+1b847d037d2872a4c68b.js  387 bytes  [emitted] [immutable]
+945fb1b905025df1339f.js   9.87 KiB  [emitted] [immutable]  [name: main]"
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
@@ -2696,7 +2696,7 @@ exports[`StatsTestCases should print correct stats for simple 1`] = `
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset       Size
-bundle.js  298 bytes  [emitted]  [name: main]
+bundle.js  311 bytes  [emitted]  [name: main]
 Entrypoint main = bundle.js
 ./index.js 1 bytes [built]"
 `;
