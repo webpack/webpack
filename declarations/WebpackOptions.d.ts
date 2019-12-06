@@ -231,6 +231,11 @@ export type RuleSetLoaderOptions =
  */
 export type ArrayOfStringOrStringArrayValues = (string | string[])[];
 /**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "RuleSetRules".
+ */
+export type RuleSetRules = RuleSetRule[];
+/**
  * Function acting as plugin
  *
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
@@ -240,11 +245,6 @@ export type WebpackPluginFunction = (
 	this: import("../lib/Compiler"),
 	compiler: import("../lib/Compiler")
 ) => void;
-/**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetRules".
- */
-export type RuleSetRules = RuleSetRule[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "OptimizationSplitChunksGetCacheGroups".
@@ -811,7 +811,7 @@ export interface ResolveOptions {
 	/**
 	 * Plugins for the resolver
 	 */
-	plugins?: (WebpackPluginInstance | WebpackPluginFunction)[];
+	plugins?: ResolvePluginInstance[];
 	/**
 	 * Custom resolver
 	 */
@@ -839,13 +839,13 @@ export interface ResolveOptions {
  * Plugin instance
  *
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "WebpackPluginInstance".
+ * via the `definition` "ResolvePluginInstance".
  */
-export interface WebpackPluginInstance {
+export interface ResolvePluginInstance {
 	/**
 	 * The run point of the plugin, required method.
 	 */
-	apply: (compiler: import("../lib/Compiler")) => void;
+	apply: (resolver: import("enhanced-resolve/lib/Resolver")) => void;
 	[k: string]: any;
 }
 /**
@@ -971,6 +971,19 @@ export interface OptimizationOptions {
 	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code
 	 */
 	usedExports?: boolean;
+}
+/**
+ * Plugin instance
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "WebpackPluginInstance".
+ */
+export interface WebpackPluginInstance {
+	/**
+	 * The run point of the plugin, required method.
+	 */
+	apply: (compiler: import("../lib/Compiler")) => void;
+	[k: string]: any;
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
