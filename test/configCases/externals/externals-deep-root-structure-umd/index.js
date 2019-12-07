@@ -8,5 +8,5 @@ it("should correctly import a deep structure", function() {
 
 it("should contain deep root accessor statements for the UMD external", function() {
 	var source = fs.readFileSync(path.join(__dirname, "bundle0.js"), "utf-8");
-	expect(source).toMatch("factory(root[\"ext-lib\"][\"alpha\"][\"beta\"][\"gamma\"])");
+	expect(source).toMatch("factory(root[\"ext-lib\"].alpha.beta.gamma)");
 });
