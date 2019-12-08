@@ -4,8 +4,11 @@ const NormalModule = require("../lib/NormalModule");
 const SourceMapSource = require("webpack-sources").SourceMapSource;
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
+const JavaScriptGenerator = require("../lib/javascript/JavascriptGenerator");
+const JsonGenerator = require("../lib/json/JsonGenerator");
 
 describe("NormalModule", () => {
+	let type;
 	let normalModule;
 	let request;
 	let userRequest;
@@ -13,7 +16,9 @@ describe("NormalModule", () => {
 	let loaders;
 	let resource;
 	let parser;
+	let generator;
 	beforeEach(() => {
+		type = "javascript/auto";
 		request = "/some/request";
 		userRequest = "/some/userRequest";
 		rawRequest = "some/rawRequest";
@@ -22,15 +27,16 @@ describe("NormalModule", () => {
 		parser = {
 			parse() {}
 		};
+		generator = new JavaScriptGenerator();
 		normalModule = new NormalModule({
-			type: "javascript/auto",
+			type,
 			request,
 			userRequest,
 			rawRequest,
 			loaders,
 			resource,
 			parser,
-			generator: null,
+			generator,
 			resolveOptions: {}
 		});
 		normalModule.buildInfo = {
@@ -306,6 +312,56 @@ describe("NormalModule", () => {
 					});
 				});
 			});
+		});
+	});
+
+	describe("#setModuleType", () => {
+		it("no argument does not override anything", () => {
+			normalModule.setModuleType();
+
+			expect(normalModule.type).toBe(type);
+			expect(normalModule.parser).toBe(parser);
+			expect(normalModule.generator).toBe(generator);
+		});
+
+		it("overrides type/parser/generator", () => {
+			const newType = "json";
+			const newParser = { parse() {} };
+			const newGenerator = new JsonGenerator();
+
+			normalModule.setModuleType(newType, newParser, newGenerator);
+
+			expect(normalModule.type).toBe(newType);
+			expect(normalModule.parser).toBe(newParser);
+			expect(normalModule.generator).toBe(newGenerator);
+		});
+	});
+
+	describe("#resetModuleType", () => {
+		it("should not do anything if type has not been overridden", () => {
+			normalModule.resetModuleType();
+
+			expect(normalModule.type).toBe(type);
+			expect(normalModule.parser).toBe(parser);
+			expect(normalModule.generator).toBe(generator);
+		});
+
+		it("should reset to the module to its initial type when called", () => {
+			const newType = "json";
+			const newParser = { parse() {} };
+			const newGenerator = new JsonGenerator();
+
+			normalModule.setModuleType(newType, newParser, newGenerator);
+
+			// Calling setModuleType() multiple time still allows
+			// to go back to initial values with resetModuleType()
+			normalModule.setModuleType(newType, newParser, newGenerator);
+
+			normalModule.resetModuleType();
+
+			expect(normalModule.type).toBe(type);
+			expect(normalModule.parser).toBe(parser);
+			expect(normalModule.generator).toBe(generator);
 		});
 	});
 });
