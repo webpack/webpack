@@ -1518,9 +1518,9 @@ cross-spawn@^7.0.0:
     which "^2.0.1"
 
 css-loader@^3.2.0:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-3.2.1.tgz#62849b45a414b7bde0bfba17325a026471040eae"
-  integrity sha512-q40kYdcBNzMvkIImCL2O+wk8dh+RGwPPV9Dfz3n7XtOYPXqe2Z6VgtvoxjkLHz02gmhepG9sOAJOUlx+3hHsBg==
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-3.3.1.tgz#7e80ee995e96adbd8cc08cca9cfbd8109121f312"
+  integrity sha512-I2Sz5X81b2pJ4SM2UwxWcIu6uXcCvfCHgRHa1j0J8PmZj7qXu9ZkFdBeIwl6brZPseW982MrBoPfCfHqbkAUZw==
   dependencies:
     camelcase "^5.3.1"
     cssesc "^3.0.0"
