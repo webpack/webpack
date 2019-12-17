@@ -2311,7 +2311,7 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Hash: 2fded77648d7f30051efea8940ce0e83e06c8e38
+"Hash: 2fded77648d7f30051ef5adfc4dbbfffbf889924
 Child
     Hash: 2fded77648d7f30051ef
     Time: Xms
@@ -2330,7 +2330,7 @@ Child
      [9] ./common_lazy_shared.js 25 bytes {2} {3} {4} [built]
     [10] ./common_lazy.js 25 bytes {2} {3} [built]
 Child
-    Hash: ea8940ce0e83e06c8e38
+    Hash: 5adfc4dbbfffbf889924
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
     Entrypoint first = vendor.js first.js
@@ -2358,7 +2358,7 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
-"Hash: 901a17990846f905bacb
+"Hash: 9899fa8456a2179a8d8c
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
