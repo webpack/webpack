@@ -10,7 +10,8 @@ describe("TestCases", () => {
 		},
 		optimization: {
 			innerGraph: true,
-			usedExports: true
+			usedExports: true,
+			concatenateModules: true
 		}
 	});
 });
