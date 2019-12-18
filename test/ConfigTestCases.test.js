@@ -7,6 +7,7 @@ const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
+const deprecationTracking = require("./helpers/deprecationTracking");
 const FakeDocument = require("./helpers/FakeDocument");
 
 const webpack = require("..");
@@ -107,6 +108,7 @@ describe("ConfigTestCases", () => {
 								}
 								if (testConfig.timeout) setDefaultTimeout(testConfig.timeout);
 
+								const deprecationTracker = deprecationTracking.start();
 								webpack(options, (err, stats) => {
 									if (err) {
 										const fakeStats = {
@@ -164,6 +166,17 @@ describe("ConfigTestCases", () => {
 											jsonStats,
 											"warning",
 											"Warning",
+											done
+										)
+									)
+										return;
+									const deprecations = deprecationTracker();
+									if (
+										checkArrayExpectation(
+											testDirectory,
+											{ deprecations },
+											"deprecation",
+											"Deprecation",
 											done
 										)
 									)
