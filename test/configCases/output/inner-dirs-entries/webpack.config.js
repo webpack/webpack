@@ -15,14 +15,8 @@ module.exports = {
 		minimize: false,
 		concatenateModules: false,
 		splitChunks: {
-			cacheGroups: {
-				commons: {
-					name: "commons",
-					chunks: "all",
-					maxSize: 512000,
-					minChunks: 2
-				}
-			}
+			chunks: "all",
+			minSize: 0
 		}
 	}
 };

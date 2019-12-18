@@ -1,6 +1,8 @@
-import dummy from './dep';
+import dummy from 'dummy_module';
 
-it("should load", done => {
-    dummy();
-    done();
+it("should load", () => {
+	expect(dummy()).toBe('this is just a dummy function');
+    return import("./inner-dir/b").then(importedModule => {
+		expect(importedModule.dummy()).toBe('this is just a dummy function');
+	})
 });
