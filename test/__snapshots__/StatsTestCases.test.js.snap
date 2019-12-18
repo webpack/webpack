@@ -2539,7 +2539,7 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: 419464d6e886f327e369
+"Hash: 0a5e50d43c4b5239e929
 Time: Xms
 Built at: 1970-04-20 12:42:42
 Entrypoint index = index.js
