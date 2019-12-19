@@ -2569,7 +2569,7 @@ external \\"external\\" 42 bytes [built]
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Hash: 7cb360b116ad92cf28c7d9faeae5ad5bc1e7f663
+"Hash: 7cb360b116ad92cf28c75017658cecd20c95d17f
 Child
     Hash: 7cb360b116ad92cf28c7
     Time: Xms
@@ -2589,7 +2589,7 @@ Child
     ./common_lazy_shared.js 25 bytes [built]
         + 12 hidden modules
 Child
-    Hash: d9faeae5ad5bc1e7f663
+    Hash: 5017658cecd20c95d17f
     Time: Xms
     Built at: 1970-04-20 12:42:42
     Entrypoint first = b-vendor.js b-first.js
@@ -2616,7 +2616,7 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
-"Hash: 75b3958bf148a2a60f1f
+"Hash: 63afda29824f1a48fef1
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset       Size
