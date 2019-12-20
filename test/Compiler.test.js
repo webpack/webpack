@@ -7,6 +7,7 @@ const Stats = require("../lib/Stats");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const MemoryFs = require("memory-fs");
 const captureStdio = require("./helpers/captureStdio");
+const largeCompilationConfig = require("./fixtures/large-compilation/webpack-dependency/webpack.config");
 
 describe("Compiler", () => {
 	jest.setTimeout(20000);
@@ -817,6 +818,107 @@ describe("Compiler", () => {
 				expect(capture.toString()).toMatchInlineSnapshot(`""`);
 				done();
 			});
+		});
+	});
+
+	describe("compiler.endCompilationEarly", () => {
+		it("should end a long compilation (run)", done => {
+			const compiler = webpack(largeCompilationConfig);
+			compiler.outputFileSystem = new MemoryFs();
+
+			const doneHook = jest.fn();
+			compiler.hooks.done.tap("CompilerTest", doneHook);
+
+			setTimeout(() => {
+				compiler.endCompilationEarly();
+			}, 1000);
+			compiler.run((err, stats) => {
+				if (err) return done(err);
+				if (compiler.outputFileSystem.existsSync("/bundle.js"))
+					return done(
+						new Error("Bundle should not be created on killed compilation")
+					);
+
+				expect(doneHook).toHaveBeenCalledTimes(1);
+				done();
+			});
+		});
+
+		it("should end a long compilation (watch)", done => {
+			const compiler = webpack(largeCompilationConfig);
+			compiler.outputFileSystem = new MemoryFs();
+
+			const doneHook = jest.fn();
+			compiler.hooks.done.tap("CompilerTest", doneHook);
+
+			setTimeout(() => {
+				compiler.endCompilationEarly();
+			}, 1000);
+			const watcher = compiler.watch({}, (err, stats) => {
+				watcher.close();
+
+				if (err) return done(err);
+				if (compiler.outputFileSystem.existsSync("/bundle.js"))
+					return done(
+						new Error("Bundle should not be created on killed compilation")
+					);
+				expect(doneHook).toHaveBeenCalledTimes(1);
+				done();
+			});
+		});
+	});
+
+	describe("watcher.kill", () => {
+		it("should end a long compilation and call correct hooks", done => {
+			const compiler = webpack(largeCompilationConfig);
+
+			const make = jest.fn();
+			const buildModule = jest.fn();
+			const finishModules = jest.fn();
+			const seal = jest.fn();
+			const afterCompile = jest.fn();
+			const doneHook = jest.fn();
+
+			const compilationCallback = jest.fn(compilation => {
+				compilation.hooks.buildModule.tap("CompilerTest", buildModule);
+				compilation.hooks.finishModules.tap("CompilerTest", finishModules);
+				compilation.hooks.seal.tap("CompilerTest", seal);
+			});
+
+			compiler.hooks.compilation.tap("CompilerTest", compilationCallback);
+
+			compiler.hooks.make.tap("CompilerTest", make);
+			compiler.hooks.afterCompile.tap("CompilerTest", afterCompile);
+			compiler.hooks.done.tap("CompilerTest", doneHook);
+
+			compiler.outputFileSystem = new MemoryFs();
+			const cb = jest.fn();
+			setTimeout(() => {
+				watcher.kill(() => {
+					// the watcher callback should not be called because the
+					// compilation is stopped, not completed
+					expect(cb).not.toHaveBeenCalled();
+
+					expect(make).toHaveBeenCalledTimes(1);
+					expect(compilationCallback).toHaveBeenCalledTimes(1);
+					expect(afterCompile).toHaveBeenCalledTimes(1);
+
+					// some modules will have been built, but not all modules
+					expect(buildModule.mock.calls.length > 1).toBeTruthy();
+
+					// these hooks should not be called because they do not make sense
+					// for a compilation that has been stopped before finishing
+					expect(finishModules).not.toHaveBeenCalled();
+					expect(seal).not.toHaveBeenCalled();
+
+					// using watcher.kill or watcher.close prevents the done hook from being
+					// called
+					expect(doneHook).not.toHaveBeenCalled();
+
+					done();
+				});
+			}, 1000);
+			const watcher = compiler.watch({}, cb);
 		});
 	});
 });
