@@ -684,52 +684,52 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
 `;
 
 exports[`StatsTestCases should print correct stats for context-independence 1`] = `
-"Hash: 7bc8b93f783425f912017bc8b93f783425f912012178c4311212dff34c272178c4311212dff34c27
+"Hash: 3c59c3d45edbe20ee0af3c59c3d45edbe20ee0af39303b7d3ef1ce28f20139303b7d3ef1ce28f201
 Child
-    Hash: 7bc8b93f783425f91201
+    Hash: 3c59c3d45edbe20ee0af
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
-         703-97267ca95e3cfbc183d4.js  438 bytes  [emitted] [immutable]
-     703-97267ca95e3cfbc183d4.js.map  343 bytes  [emitted] [dev]
-        main-aeb159b6fc904b34b7a7.js   8.02 KiB  [emitted] [immutable]  [name: main]
-    main-aeb159b6fc904b34b7a7.js.map   7.14 KiB  [emitted] [dev]        [name: (main)]
-    Entrypoint main = main-aeb159b6fc904b34b7a7.js (main-aeb159b6fc904b34b7a7.js.map)
+         703-35b05b4f9ece3e5b7253.js  438 bytes  [emitted] [immutable]
+     703-35b05b4f9ece3e5b7253.js.map  343 bytes  [emitted] [dev]
+        main-322147d992bb0a885b10.js   8.02 KiB  [emitted] [immutable]  [name: main]
+    main-322147d992bb0a885b10.js.map   7.14 KiB  [emitted] [dev]        [name: (main)]
+    Entrypoint main = main-322147d992bb0a885b10.js (main-322147d992bb0a885b10.js.map)
     ./a/index.js 40 bytes [built]
     ./a/chunk.js + 1 modules 66 bytes [built]
         + 6 hidden modules
 Child
-    Hash: 7bc8b93f783425f91201
+    Hash: 3c59c3d45edbe20ee0af
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
-         703-97267ca95e3cfbc183d4.js  438 bytes  [emitted] [immutable]
-     703-97267ca95e3cfbc183d4.js.map  343 bytes  [emitted] [dev]
-        main-aeb159b6fc904b34b7a7.js   8.02 KiB  [emitted] [immutable]  [name: main]
-    main-aeb159b6fc904b34b7a7.js.map   7.14 KiB  [emitted] [dev]        [name: (main)]
-    Entrypoint main = main-aeb159b6fc904b34b7a7.js (main-aeb159b6fc904b34b7a7.js.map)
+         703-35b05b4f9ece3e5b7253.js  438 bytes  [emitted] [immutable]
+     703-35b05b4f9ece3e5b7253.js.map  343 bytes  [emitted] [dev]
+        main-322147d992bb0a885b10.js   8.02 KiB  [emitted] [immutable]  [name: main]
+    main-322147d992bb0a885b10.js.map   7.14 KiB  [emitted] [dev]        [name: (main)]
+    Entrypoint main = main-322147d992bb0a885b10.js (main-322147d992bb0a885b10.js.map)
     ./b/index.js 40 bytes [built]
     ./b/chunk.js + 1 modules 66 bytes [built]
         + 6 hidden modules
 Child
-    Hash: 2178c4311212dff34c27
+    Hash: 39303b7d3ef1ce28f201
     Time: Xms
     Built at: 1970-04-20 12:42:42
                            Asset      Size
-     703-60017c0a0b42e422e290.js  1.49 KiB  [emitted] [immutable]
-    main-96b332b4af5b68dc9590.js  8.91 KiB  [emitted] [immutable]  [name: main]
-    Entrypoint main = main-96b332b4af5b68dc9590.js
+     703-d460da0006247c80e6fd.js  1.49 KiB  [emitted] [immutable]
+    main-d716298143ad43b551dc.js  8.91 KiB  [emitted] [immutable]  [name: main]
+    Entrypoint main = main-d716298143ad43b551dc.js
     ./a/index.js 40 bytes [built]
     ./a/chunk.js + 1 modules 66 bytes [built]
         + 6 hidden modules
 Child
-    Hash: 2178c4311212dff34c27
+    Hash: 39303b7d3ef1ce28f201
     Time: Xms
     Built at: 1970-04-20 12:42:42
                            Asset      Size
-     703-60017c0a0b42e422e290.js  1.49 KiB  [emitted] [immutable]
-    main-96b332b4af5b68dc9590.js  8.91 KiB  [emitted] [immutable]  [name: main]
-    Entrypoint main = main-96b332b4af5b68dc9590.js
+     703-d460da0006247c80e6fd.js  1.49 KiB  [emitted] [immutable]
+    main-d716298143ad43b551dc.js  8.91 KiB  [emitted] [immutable]  [name: main]
+    Entrypoint main = main-d716298143ad43b551dc.js
     ./b/index.js 40 bytes [built]
     ./b/chunk.js + 1 modules 66 bytes [built]
         + 6 hidden modules"
