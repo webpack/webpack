@@ -59,6 +59,17 @@ describe("StatsTestCases", () => {
 			if (fs.existsSync(path.join(base, testName, "webpack.config.js"))) {
 				options = require(path.join(base, testName, "webpack.config.js"));
 			}
+			let testConfig = {};
+			try {
+				// try to load a test file
+				testConfig = Object.assign(
+					testConfig,
+					require(path.join(base, testName, "test.config.js"))
+				);
+			} catch (e) {
+				// ignored
+			}
+
 			(Array.isArray(options) ? options : [options]).forEach(options => {
 				if (!options.context) options.context = path.join(base, testName);
 				if (!options.output) options.output = options.output || {};
@@ -152,6 +163,7 @@ describe("StatsTestCases", () => {
 					.replace(/(\w)\\(\w)/g, "$1/$2")
 					.replace(/ dependencies:Xms/g, "");
 				expect(actual).toMatchSnapshot();
+				if (testConfig.validate) testConfig.validate(stats, stderr.toString());
 				done();
 			});
 		});
