@@ -50,7 +50,8 @@ export type Externals =
 					request: string,
 					callback: (err?: Error, result?: string) => void
 			  ) => void)
-			| ExternalItem)[];
+			| ExternalItem
+	  )[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "ExternalItem".
@@ -391,7 +392,8 @@ export interface WebpackOptions {
 				| "normal"
 				| "detailed"
 				| "verbose"
-				| "errors-warnings");
+				| "errors-warnings"
+		  );
 	/**
 	 * Environment to build for
 	 */
@@ -404,7 +406,8 @@ export interface WebpackOptions {
 				| "node-webkit"
 				| "electron-main"
 				| "electron-renderer"
-				| "electron-preload")
+				| "electron-preload"
+		  )
 		| ((compiler: import("../lib/Compiler")) => void);
 	/**
 	 * Enter watch mode, which rebuilds on file change.

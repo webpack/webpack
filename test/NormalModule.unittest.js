@@ -210,8 +210,14 @@ describe("NormalModule", () => {
 			fileB = "fileB";
 			fileDependencies = [fileA, fileB];
 			contextDependencies = [fileA, fileB];
-			fileTimestamps = new Map([[fileA, 1], [fileB, 1]]);
-			contextTimestamps = new Map([[fileA, 1], [fileB, 1]]);
+			fileTimestamps = new Map([
+				[fileA, 1],
+				[fileB, 1]
+			]);
+			contextTimestamps = new Map([
+				[fileA, 1],
+				[fileB, 1]
+			]);
 			normalModule.buildTimestamp = 2;
 			setDeps(fileDependencies, contextDependencies);
 		});
