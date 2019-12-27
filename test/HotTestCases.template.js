@@ -3,6 +3,7 @@
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
+const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 
@@ -42,8 +43,8 @@ const describeCases = config => {
 									category.name,
 									testName
 								);
+								rimraf.sync(outputDirectory);
 								const recordsPath = path.join(outputDirectory, "records.json");
-								if (fs.existsSync(recordsPath)) fs.unlinkSync(recordsPath);
 								const fakeUpdateLoaderOptions = {
 									updateIndex: 0
 								};
