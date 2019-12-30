@@ -180,7 +180,8 @@ const describeCases = config => {
 									mjs: true,
 									asyncWebAssembly: true,
 									topLevelAwait: true,
-									importAwait: true
+									importAwait: true,
+									importAsync: true
 								}
 							};
 							beforeAll(done => {
