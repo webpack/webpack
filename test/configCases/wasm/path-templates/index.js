@@ -10,7 +10,9 @@ it("should use path template", function() {
             "stats.json"
         );
         const stats = JSON.parse(fs.readFileSync(statsPath));
+        let found = false;
         stats.assets.forEach((asset) => {
+            // found = found || asset.name ==
             console.log(asset.name);
         });
 		expect(true).toEqual(true);

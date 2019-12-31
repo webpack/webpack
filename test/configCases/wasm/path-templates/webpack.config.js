@@ -1,11 +1,9 @@
 const path = require('path');
 
 module.exports = {
-    mode: "development",
-    cache: false,
     entry: './index',
     output: {
-        webassemblyModuleFilename: "[hash].wasm"
+        webassemblyModuleFilename: "[base].wasm"
     },
     optimization: {
         chunkIds: "deterministic"
