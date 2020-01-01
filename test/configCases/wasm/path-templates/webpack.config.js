@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
     entry: './index',
     output: {
-        webassemblyModuleFilename: "[hash][ext].wasm"
+        webassemblyModuleFilename: "[hash].[hash:16].[base][ext].wasm"
     },
     optimization: {
         chunkIds: "deterministic"

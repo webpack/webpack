@@ -12,9 +12,10 @@ it("should use path template", function() {
         const stats = JSON.parse(fs.readFileSync(statsPath));
         let found = false;
         stats.assets.forEach((asset) => {
-            // found = found || asset.name ==
-            console.log(asset.name);
+            found = found || !!asset.name.match(
+                /^\w{20}\.\w{16}\.wasm\.wat\.wat\.wasm$/
+            );
         });
-		expect(true).toEqual(true);
+		expect(found).toEqual(true);
 	});
 });
