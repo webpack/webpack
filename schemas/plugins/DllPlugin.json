@@ -9,7 +9,7 @@
       "minLength": 1
     },
     "entryOnly": {
-      "description": "If true, only entry points will be exposed",
+      "description": "If true, only entry points will be exposed (default: true)",
       "type": "boolean"
     },
     "format": {
