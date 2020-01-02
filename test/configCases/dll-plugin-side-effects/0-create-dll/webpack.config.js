@@ -25,7 +25,8 @@ module.exports = {
 			path: path.resolve(
 				__dirname,
 				"../../../js/config/dll-plugin-side-effects/manifest0.json"
-			)
+			),
+			entryOnly: false
 		})
 	]
 };
