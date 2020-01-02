@@ -1,12 +1,12 @@
 module.exports = {
-    entry: "./index",
-    output: {
-        webassemblyModuleFilename: "[fullhash].[hash].[hash:16].[base][ext].wasm"
-    },
-    optimization: {
-        chunkIds: "deterministic"
-    },
-    module: {
+	entry: "./index",
+	output: {
+		webassemblyModuleFilename: "[fullhash].[hash].[hash:16].[base][ext].wasm"
+	},
+	optimization: {
+		chunkIds: "deterministic"
+	},
+	module: {
 		rules: [
 			{
 				test: /\.wat$/,
@@ -15,7 +15,7 @@ module.exports = {
 			}
 		]
 	},
-    experiments: {
+	experiments: {
 		syncWebAssembly: true,
 		importAwait: true
 	}
