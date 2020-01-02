@@ -3,7 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 
-it("should use path template", function() {
+it("should use path template for async wasm modules", function() {
 	return import("./module").then(function() {
         const statsPath = path.join(
             __dirname,
