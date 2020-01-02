@@ -1,9 +1,7 @@
-const path = require('path');
-
 module.exports = {
-    entry: './index',
+    entry: "./index",
     output: {
-        webassemblyModuleFilename: "[hash].[hash:16].[base][ext].wasm"
+        webassemblyModuleFilename: "[fullhash].[hash].[hash:16].[base][ext].wasm"
     },
     optimization: {
         chunkIds: "deterministic"

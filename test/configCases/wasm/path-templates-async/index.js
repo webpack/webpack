@@ -13,7 +13,7 @@ it("should use path template for async wasm modules", function() {
         let found = false;
         stats.assets.forEach((asset) => {
             found = found || !!asset.name.match(
-                /^\w{20}\.\w{16}\.wasm\.wat\.wat\.wasm$/
+                /^\w{20}\.\w{20}\.\w{16}\.wasm\.wat\.wat\.wasm$/
             );
         });
 		expect(found).toEqual(true);
