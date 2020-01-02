@@ -5,7 +5,7 @@ module.exports = {
 	mode: "development",
 	resolve: { alias: {} },
 	entry: {
-		components: ["./beta"]
+		"issue-9206-vendor": ["./beta"]
 	},
 	output: {
 		libraryTarget: "commonjs2",

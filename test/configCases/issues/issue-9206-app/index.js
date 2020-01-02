@@ -1,6 +1,6 @@
-  // resolve from 'components/beta/index' is fine
-  import b from 'components/beta';
 
-	it("should compile without error", function() {
+  import b from 'issue-9206-vendor/beta';
+
+	it("should load the module", function() {
 		expect(b).toBe("beta");
 	});
