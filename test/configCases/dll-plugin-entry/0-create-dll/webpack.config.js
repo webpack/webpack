@@ -13,8 +13,7 @@ module.exports = {
 			path: path.resolve(
 				__dirname,
 				"../../../js/config/dll-plugin-entry/manifest0.json"
-			),
-			entryOnly: true
+			)
 		})
 	]
 };

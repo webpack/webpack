@@ -10,7 +10,7 @@ export interface DllPluginOptions {
 	 */
 	context?: string;
 	/**
-	 * If true, only entry points will be exposed
+	 * If true, only entry points will be exposed (default: true)
 	 */
 	entryOnly?: boolean;
 	/**

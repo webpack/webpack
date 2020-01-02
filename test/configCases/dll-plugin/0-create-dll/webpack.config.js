@@ -34,7 +34,8 @@ module.exports = {
 			path: path.resolve(
 				__dirname,
 				"../../../js/config/dll-plugin/manifest0.json"
-			)
+			),
+			entryOnly: false
 		})
 	]
 };
