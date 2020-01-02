@@ -3785,7 +3785,7 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [we
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"Hash: 6447a9fca2b71320b7dd
+"Hash: 9098bd6e65dca188d536
 Time: Xms
 Built at: 1970-04-20 12:42:42
                            Asset       Size
@@ -3798,7 +3798,7 @@ Built at: 1970-04-20 12:42:42
                    780.bundle.js  526 bytes  [emitted]
                     99.bundle.js  220 bytes  [emitted]
 a0e9dd97d7ced35a5b2c.module.wasm  154 bytes  [emitted] [immutable]
-                       bundle.js     11 KiB  [emitted]              [name: main-1df31ce3]
+                       bundle.js   11.2 KiB  [emitted]              [name: main-1df31ce3]
 d37b3336426771c2a6e2.module.wasm  531 bytes  [emitted] [immutable]
 ebd3f263522776d85971.module.wasm  156 bytes  [emitted] [immutable]
 Entrypoint main = bundle.js
@@ -3810,9 +3810,9 @@ chunk 325.bundle.js 1.54 KiB (javascript) 274 bytes (webassembly) [rendered]
  ./popcnt.wasm 50 bytes (javascript) 120 bytes (webassembly) [built]
  ./testFunction.wasm 50 bytes (javascript) 154 bytes (webassembly) [built]
  ./tests.js 1.44 KiB [built]
-chunk bundle.js (main-1df31ce3) 586 bytes (javascript) 5.51 KiB (runtime) [entry] [rendered]
+chunk bundle.js (main-1df31ce3) 586 bytes (javascript) 5.56 KiB (runtime) [entry] [rendered]
  ./index.js 586 bytes [built]
-     + 8 hidden chunk modules
+     + 9 hidden chunk modules
 chunk 526.bundle.js (id hint: vendors) 34 bytes [rendered] split chunk (cache group: defaultVendors)
  ./node_modules/env.js 34 bytes [built]
 chunk 780.bundle.js 110 bytes (javascript) 444 bytes (webassembly) [rendered]
@@ -3827,5 +3827,5 @@ chunk 780.bundle.js 110 bytes (javascript) 444 bytes (webassembly) [rendered]
 ./fast-math.wasm 60 bytes (javascript) 290 bytes (webassembly) [built]
 ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) [built]
 ./node_modules/env.js 34 bytes [built]
-    + 8 hidden modules"
+    + 9 hidden modules"
 `;
