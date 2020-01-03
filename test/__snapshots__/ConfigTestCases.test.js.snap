@@ -72,19 +72,3 @@ exports[`ConfigTestCases records issue-7339 exported tests should write relative
   }
 }"
 `;
-
-exports[`ConfigTestCases wasm path-templates-async exported tests should use path template for async wasm modules 1`] = `
-Array [
-  "64929088be235eae57ab.1e503cb96ef8faab2831.1e503cb96ef8faab.wasm.wat.wat.wasm",
-  "662.bundle0.js",
-  "bundle0.js",
-]
-`;
-
-exports[`ConfigTestCases wasm path-templates-sync exported tests should use path template for sync wasm modules 1`] = `
-Array [
-  "3424f3537e5c2dc54c24.c77fa9bb6931c5078810.c77fa9bb6931c507.wasm.wat.wat.wasm",
-  "662.bundle0.js",
-  "bundle0.js",
-]
-`;

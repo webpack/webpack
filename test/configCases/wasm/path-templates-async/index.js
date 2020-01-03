@@ -11,7 +11,11 @@ it("should use path template for async wasm modules", function() {
         );
         const stats = JSON.parse(fs.readFileSync(statsPath));
         // this checks that the wasm output filename is correct
-        const names = stats.assets.map(asset => asset.name);
-        expect(names).toMatchSnapshot();
+        const found = stats.assets.some((asset) => {
+            return !!asset.name.match(
+                /^\w{20}\.\w{20}\.\w{16}\.wasm\.wat\.wat\.wasm$/
+            );
+        });
+        expect(found).toEqual(true);
 	});
 });
