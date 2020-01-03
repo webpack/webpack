@@ -1,5 +1,5 @@
 var path = require("path");
-var webpack = require("../../../../lib");
+var webpack = require("../../../../");
 
 module.exports = {
 	mode: "development",
