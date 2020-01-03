@@ -83,7 +83,7 @@ module.exports = {
 								`${i}: ${m.readableIdentifier(compilation.requestShortener)}`
 						)
 						.join(", ");
-					const indicies2 = Array.from(compilation.modules)
+					const indices2 = Array.from(compilation.modules)
 						.map(m => [moduleGraph.getPostOrderIndex(m), m])
 						.filter(p => typeof p[0] === "number")
 						.sort((a, b) => a[0] - b[0])
@@ -95,7 +95,7 @@ module.exports = {
 					expect(indices).toEqual(
 						"0: ./entry1.js, 1: ./a.js, 2: ./shared.js, 3: ./b.js, 4: ./c.js, 5: ./entry2.js, 6: ./async.js"
 					);
-					expect(indicies2).toEqual(
+					expect(indices2).toEqual(
 						"0: ./shared.js, 1: ./a.js, 2: ./b.js, 3: ./c.js, 4: ./entry1.js, 5: ./entry2.js, 6: ./async.js"
 					);
 				});
