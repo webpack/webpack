@@ -74,7 +74,7 @@ module.exports = {
 						asyncIndex: "0: ./async.js",
 						asyncIndex2: "0: ./async.js"
 					});
-					const indicies = Array.from(compilation.modules)
+					const indices = Array.from(compilation.modules)
 						.map(m => [moduleGraph.getPreOrderIndex(m), m])
 						.filter(p => typeof p[0] === "number")
 						.sort((a, b) => a[0] - b[0])
@@ -92,7 +92,7 @@ module.exports = {
 								`${i}: ${m.readableIdentifier(compilation.requestShortener)}`
 						)
 						.join(", ");
-					expect(indicies).toEqual(
+					expect(indices).toEqual(
 						"0: ./entry1.js, 1: ./a.js, 2: ./shared.js, 3: ./b.js, 4: ./c.js, 5: ./entry2.js, 6: ./async.js"
 					);
 					expect(indicies2).toEqual(
