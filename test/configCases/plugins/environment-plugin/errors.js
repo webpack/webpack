@@ -17,6 +17,9 @@ const modules = [{
 }, {
 	name: 'iii',
 	variables: ['iii']
+}, {
+	name: 'jjj',
+	variables: ['jjj']
 }];
 
 // build an array of regular expressions of expected errors

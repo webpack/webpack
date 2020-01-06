@@ -9,6 +9,7 @@ process.env.EEE = "eee";
 process.env.FFF = "fff";
 process.env.GGG = "ggg";
 process.env.III = "";
+process.env.JJJ = "jjj";
 
 module.exports = [
 	{
@@ -63,5 +64,13 @@ module.exports = [
 			unknownContextCritical: false
 		},
 		plugins: [new EnvironmentPlugin("III")]
+	},
+	{
+		name: "jjj",
+		module: {
+			unknownContextRegExp: /$^/,
+			unknownContextCritical: false
+		},
+		plugins: [new EnvironmentPlugin("JJJ")]
 	}
 ];

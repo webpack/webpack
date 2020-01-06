@@ -26,3 +26,8 @@ it("should import multiple process.env var with default values", () => {
 it("should import process.env var with empty value", () => {
 	if (process.env.III !== "") if (never) require("iii");
 });
+
+it("should import process.env var using destructuring", () => {
+	const { JJJ } = process.env;
+	if (JJJ !== "jjj") if (never) require("jjj");
+});
