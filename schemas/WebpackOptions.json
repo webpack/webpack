@@ -39,11 +39,12 @@
       ]
     },
     "EntryDescription": {
-      "description": "Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.",
+      "description": "Detailed description of an entry point.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "dependOn": {
+          "description": "The entrypoints that the current entrypoint depend on.",
           "oneOf": [
             {
               "$ref": "#/definitions/EntryItem"
@@ -51,6 +52,7 @@
           ]
         },
         "import": {
+          "description": "Entrypoint modules.",
           "oneOf": [
             {
               "$ref": "#/definitions/EntryItem"
