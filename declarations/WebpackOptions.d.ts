@@ -526,7 +526,17 @@ export interface EntryObject {
 	/**
 	 * An entry point with name
 	 */
-	[k: string]: string | NonEmptyArrayOfUniqueStringValues;
+	[k: string]: string | NonEmptyArrayOfUniqueStringValues | EntryDescription;
+}
+/**
+ * Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "EntryDescription".
+ */
+export interface EntryDescription {
+	dependOn?: EntryItem;
+	import: EntryItem;
 }
 /**
  * Enables/Disables experiments (experiemental features with relax SemVer compatibility)

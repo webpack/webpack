@@ -38,6 +38,28 @@
         }
       ]
     },
+    "EntryDescription": {
+      "description": "Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dependOn": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/EntryItem"
+            }
+          ]
+        },
+        "import": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/EntryItem"
+            }
+          ]
+        }
+      },
+      "required": ["import"]
+    },
     "EntryDynamic": {
       "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
       "instanceof": "Function",
@@ -76,6 +98,14 @@
             "anyOf": [
               {
                 "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
+              }
+            ]
+          },
+          {
+            "description": "All modules are loaded upon startup. The last one is exported.",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/EntryDescription"
               }
             ]
           }
