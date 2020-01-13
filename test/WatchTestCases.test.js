@@ -3,7 +3,6 @@
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
-const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
@@ -187,7 +186,7 @@ describe("WatchTestCases", () => {
 											preset: "verbose",
 											colors: false
 										};
-										mkdirp.sync(outputDirectory);
+										fs.mkdirSync(outputDirectory, { recursive: true });
 										fs.writeFileSync(
 											path.join(outputDirectory, "stats.txt"),
 											stats.toString(statOptions),

@@ -3,7 +3,6 @@
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
-const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
@@ -62,7 +61,7 @@ describe("ConfigTestCases", () => {
 									resolve();
 								};
 								rimraf.sync(outputDirectory);
-								mkdirp.sync(outputDirectory);
+								fs.mkdirSync(outputDirectory, { recursive: true });
 								const options = prepareOptions(
 									require(path.join(testDirectory, "webpack.config.js")),
 									{ testPath: outputDirectory }
@@ -136,7 +135,7 @@ describe("ConfigTestCases", () => {
 										preset: "verbose",
 										colors: false
 									};
-									mkdirp.sync(outputDirectory);
+									fs.mkdirSync(outputDirectory, { recursive: true });
 									fs.writeFileSync(
 										path.join(outputDirectory, "stats.txt"),
 										stats.toString(statOptions),
