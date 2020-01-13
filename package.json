@@ -15,6 +15,7 @@
     "chrome-trace-event": "^1.0.2",
     "enhanced-resolve": "^4.1.0",
     "eslint-scope": "^4.0.3",
+    "fork-ts-checker-webpack-plugin": "^3.1.1",
     "json-parse-better-errors": "^1.0.2",
     "loader-runner": "^2.4.0",
     "loader-utils": "^1.2.3",
