@@ -482,12 +482,12 @@ describe("loaders", () => {
 					Object {
 					  "errors": Array [
 					    Object {
-					      "message": "Module build failed (from (webpack)/node_modules/json-loader/index.js):\\nSyntaxError: Unexpected end of JSON input",
+					      "message": "Module build failed (from ../../../node_modules/json-loader/index.js):\\nSyntaxError: Unexpected end of JSON input",
 					      "moduleId": 0,
 					      "moduleIdentifier": "<cwd>/node_modules/json-loader/index.js!<cwd>/test/fixtures/errors/not-a-json.js",
-					      "moduleName": "(webpack)/node_modules/json-loader!./not-a-json.js",
+					      "moduleName": "../../../node_modules/json-loader/index.js!./not-a-json.js",
 					      "moduleTrace": Array [],
-					      "stack": "ModuleBuildError: Module build failed (from (webpack)/node_modules/json-loader/index.js):\\nSyntaxError: Unexpected end of JSON input",
+					      "stack": "ModuleBuildError: Module build failed (from ../../../node_modules/json-loader/index.js):\\nSyntaxError: Unexpected end of JSON input",
 					    },
 					  ],
 					  "warnings": Array [],
