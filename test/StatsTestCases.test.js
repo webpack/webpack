@@ -2,7 +2,6 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
-const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
 const captureStdio = require("./helpers/captureStdio");
 
@@ -50,7 +49,7 @@ describe("StatsTestCases", () => {
 			jest.setTimeout(30000);
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
-			mkdirp.sync(outputDirectory);
+			fs.mkdirSync(outputDirectory, { recursive: true });
 			let options = {
 				mode: "development",
 				entry: "./index",

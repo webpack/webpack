@@ -2,7 +2,6 @@
 
 const path = require("path");
 const fs = require("fs");
-const mkdirp = require("mkdirp");
 const ts = require("typescript");
 const program = require("./typescript-program");
 
@@ -125,7 +124,7 @@ for (const sourceFile of program.getSourceFiles()) {
 }
 
 const outputDirectory = path.resolve(__dirname, "../coverage");
-mkdirp.sync(outputDirectory);
+fs.mkdirSync(outputDirectory, { recursive: true });
 fs.writeFileSync(
 	path.resolve(outputDirectory, "coverage-types.json"),
 	JSON.stringify(coverageReport),
