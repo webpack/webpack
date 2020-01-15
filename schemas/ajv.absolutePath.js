@@ -42,7 +42,7 @@ module.exports = ajv =>
 				// \\\\ - Windows network absolute path
 				// \/ - Unix-like OS absolute path
 				const isCorrectAbsolutePath =
-					expected === /^(?:[A-Za-z]:(\\|\/)|\\\\|\/)/.test(data);
+					expected === /^(?:[A-Za-z]:\\|\\\\|\/)/.test(data);
 				if (!isCorrectAbsolutePath) {
 					callback.errors = [getErrorFor(expected, data, schema)];
 					passes = false;
