@@ -132,7 +132,7 @@ export type RuleSetCondition =
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetConditions".
  */
-export type RuleSetConditions = RuleSetCondition[]
+export type RuleSetConditions = RuleSetCondition[];
 /**
  * One or multiple rule conditions
  *
