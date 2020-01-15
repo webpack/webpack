@@ -25,8 +25,6 @@ module.exports = ajv =>
 			function callback(data) {
 				let passes = true;
 				const isExclamationMarkPresent = data.includes("!");
-				const isCorrectAbsoluteOrRelativePath =
-					expected === /^(?:[A-Za-z]:\\|\/)/.test(data);
 
 				if (isExclamationMarkPresent) {
 					callback.errors = [
@@ -40,8 +38,12 @@ module.exports = ajv =>
 					];
 					passes = false;
 				}
-
-				if (!isCorrectAbsoluteOrRelativePath) {
+				// ?:[A-Za-z]:\\ - Windows absolute path
+				// \\\\ - Windows network absolute path
+				// \/ - Unix-like OS absolute path
+				const isCorrectAbsolutePath =
+					expected === /^(?:[A-Za-z]:\\|\\\\|\/)/.test(data);
+				if (!isCorrectAbsolutePath) {
 					callback.errors = [getErrorFor(expected, data, schema)];
 					passes = false;
 				}
