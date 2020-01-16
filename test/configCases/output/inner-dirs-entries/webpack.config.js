@@ -1,8 +1,9 @@
 module.exports = {
 	mode: "none",
 	entry: {
-		a: "./a",
-		"inner-dir/b": "./inner-dir/b"
+		a: "./a?1",
+		"inner-dir/b": "./inner-dir/b",
+		"inner-dir/deep/deep/c": "./a?2"
 	},
 	target: "node",
 	output: {

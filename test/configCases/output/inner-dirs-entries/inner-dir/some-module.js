@@ -1,1 +1,1 @@
-export dummy from 'dummy-module';
+export dummy from "dummy-module";

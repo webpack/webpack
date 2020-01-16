@@ -1,7 +1,5 @@
 module.exports = {
 	findBundle: function() {
-		return [
-			"./inner-dir/b.js"
-		];
+		return ["./a.js", "./inner-dir/b.js", "./inner-dir/deep/deep/c.js"];
 	}
 };

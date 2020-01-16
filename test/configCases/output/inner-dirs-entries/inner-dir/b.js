@@ -1,6 +1,8 @@
-import dummy from 'dummy_module';
+import dummy from "dummy_module";
 
 it("should load", done => {
-    expect(dummy()).toBe('this is just a dummy function');
-    done();
+	expect(dummy()).toBe("this is just a dummy function");
+	done();
 });
+
+export { dummy };
