@@ -49,7 +49,7 @@ module.exports = {
 			{
 				test: /d\.js$/,
 				loader: "./loader",
-				options: "?"
+				options: ""
 			},
 			{
 				test: /f\.js$/,
@@ -64,12 +64,12 @@ module.exports = {
 			{
 				test: /h\.js$/,
 				loader: "./loader",
-				options: "?foo=bar"
+				options: "foo=bar"
 			},
 			{
 				test: /i\.js$/,
 				loader: "./loader",
-				options: `?${JSON.stringify({
+				options: `${JSON.stringify({
 					foo: "bar"
 				})}`
 			}
