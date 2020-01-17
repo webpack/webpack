@@ -201,13 +201,12 @@ describe("ConfigTestCases", () => {
 											let content;
 											let p;
 											if (Array.isArray(module)) {
-												p = path.join(currentDirectory, module[0]);
-												content = module
+												p = path.join(currentDirectory, ".array-require.js");
+												content = `module.exports = (${module
 													.map(arg => {
-														p = path.join(currentDirectory, arg);
-														return fs.readFileSync(p, "utf-8");
+														return `require(${JSON.stringify(`./${arg}`)})`;
 													})
-													.join("\n");
+													.join(", ")});`;
 											} else {
 												p = path.join(currentDirectory, module);
 												content = fs.readFileSync(p, "utf-8");
