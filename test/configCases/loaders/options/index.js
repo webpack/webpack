@@ -37,9 +37,15 @@ it("should get options", function() {
 		"=": "="
 	});
 	expect(require("./h")).toStrictEqual({
-		"foo": "bar"
+		foo: "bar"
 	});
 	expect(require("./i")).toStrictEqual({
-		"foo": "bar"
+		foo: "bar"
 	});
 });
+
+const never = false;
+if (never) {
+	require("./error1");
+	require("./error2");
+}

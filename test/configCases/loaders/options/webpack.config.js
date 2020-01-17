@@ -72,6 +72,20 @@ module.exports = {
 				options: `${JSON.stringify({
 					foo: "bar"
 				})}`
+			},
+			{
+				test: /error1\.js$/,
+				loader: "./loader-1",
+				options: {
+					arg6: { foo: "value", bar: { baz: 42 } }
+				}
+			},
+			{
+				test: /error2\.js$/,
+				loader: "./loader-2",
+				options: {
+					arg: false
+				}
 			}
 		]
 	}
