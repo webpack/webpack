@@ -5547,9 +5547,9 @@ schema-utils@^1.0.0:
     ajv-keywords "^3.1.0"
 
 schema-utils@^2.0.1, schema-utils@^2.5.0, schema-utils@^2.6.0, schema-utils@^2.6.1:
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-2.6.2.tgz#9205ec5978709b0d9edbccb9a316faf11617a017"
-  integrity sha512-sazKNMBX/jwrXRkOI7N6dtiTVYqzSckzol8SGuHt0lE/v3xSW6cUkOqzu6Bq2tW+dlUzq3CWIqHU3ZKauliqdg==
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-2.6.3.tgz#f889690172941febdf56b7e6785428d717d84786"
+  integrity sha512-4vpF5nc+MYrHjsAnA43R75OtvjYUOFDmuwAdhzW7g0/zlFsepaMX/NLhOThg0L+5mqxIw7IK1oR9M3MsrklMsA==
   dependencies:
     ajv "^6.10.2"
     ajv-keywords "^3.4.1"
