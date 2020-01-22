@@ -17,6 +17,10 @@ export type DataUrlFunction = (
 
 export interface AssetModulesPluginGeneratorOptions {
 	/**
+	 * Override for output.assetModuleFilename
+	 */
+	assetFilename?: string;
+	/**
 	 * The options for data url generator
 	 */
 	dataUrl?: DataUrlOptions | DataUrlFunction;

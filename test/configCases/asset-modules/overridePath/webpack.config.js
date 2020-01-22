@@ -1,23 +1,22 @@
 module.exports = {
-	mode: "production",
-	entry: "./index.js",
+	mode: "development",
+	output: {
+		assetModuleFilename: "images/file[ext]"
+	},
 	module: {
 		rules: [
 			{
-				test: /\.(png|jpg|svg)$/,
+				test: /\.png$/,
 				type: "asset"
 			},
 			{
 				test: /\.html$/,
 				type: "asset",
 				generator: {
-					assetFilename: "static/[name][ext]"
+					assetFilename: "static/index.html"
 				}
 			}
 		]
-	},
-	output: {
-		filename: "bundle.js"
 	},
 	experiments: {
 		asset: true
