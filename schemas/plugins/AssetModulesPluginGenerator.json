@@ -24,10 +24,6 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "assetFilename": {
-      "description": "Override for output.assetModuleFilename",
-      "type": "string"
-    },
     "dataUrl": {
       "description": "The options for data url generator",
       "oneOf": [
@@ -38,6 +34,10 @@
           "$ref": "#/definitions/DataUrlFunction"
         }
       ]
+    },
+    "filename": {
+      "description": "Override for output.assetModuleFilename",
+      "type": "string"
     }
   }
 }

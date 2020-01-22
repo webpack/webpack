@@ -13,7 +13,7 @@ module.exports = {
 				test: /\.html$/,
 				type: "asset",
 				generator: {
-					assetFilename: "static/index.html"
+					filename: "static/index.html"
 				}
 			}
 		]
