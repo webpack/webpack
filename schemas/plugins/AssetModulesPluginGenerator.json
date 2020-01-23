@@ -37,7 +37,16 @@
     },
     "filename": {
       "description": "Override for output.assetModuleFilename",
-      "type": "string"
+      "anyOf": [
+        {
+          "type": "string",
+          "absolutePath": false
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((pathData: import(\"../../lib/Compilation\").PathData, assetInfo?: import(\"../../lib/Compilation\").AssetInfo) => string)"
+        }
+      ]
     }
   }
 }

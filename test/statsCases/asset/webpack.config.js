@@ -9,7 +9,7 @@ module.exports = {
 			},
 			{
 				test: /\.html$/,
-				type: "asset",
+				type: "asset/resource",
 				generator: {
 					filename: "static/[name][ext]"
 				}

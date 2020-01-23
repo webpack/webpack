@@ -23,7 +23,12 @@ export interface AssetModulesPluginGeneratorOptions {
 	/**
 	 * Override for output.assetModuleFilename
 	 */
-	filename?: string;
+	filename?:
+		| string
+		| ((
+				pathData: import("../../lib/Compilation").PathData,
+				assetInfo?: import("../../lib/Compilation").AssetInfo
+		  ) => string);
 }
 /**
  * This interface was referenced by `AssetModulesPluginGeneratorOptions`'s JSON-Schema
