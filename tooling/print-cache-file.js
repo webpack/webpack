@@ -3,11 +3,11 @@ const fs = require("fs");
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
 const FileMiddleware = require("../lib/serialization/FileMiddleware");
 const Serializer = require("../lib/serialization/Serializer");
+const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
 
-const serializer = new Serializer([
-	new BinaryMiddleware(),
-	new FileMiddleware(fs)
-]);
+const binaryMiddleware = new BinaryMiddleware();
+
+const serializer = new Serializer([binaryMiddleware, new FileMiddleware(fs)]);
 
 const rawSerializer = new Serializer([new FileMiddleware(fs)]);
 
@@ -117,11 +117,15 @@ const printData = async (data, indent) => {
 			printLine(`buffer ${item.toString("hex")} = #${currentReference++}`);
 		} else if (typeof item === "function") {
 			const innerData = await item();
-			const info = lazySizes.shift();
-			const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
-				info.lazySize / 1048576
-			).toFixed(2)} lazy MiB`;
-			printLine(`lazy ${sizeInfo} {`);
+			if (!SerializerMiddleware.isLazy(item, binaryMiddleware)) {
+				const info = lazySizes.shift();
+				const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
+					info.lazySize / 1048576
+				).toFixed(2)} lazy MiB`;
+				printLine(`lazy-file ${sizeInfo} {`);
+			} else {
+				printLine(`lazy-inline {`);
+			}
 			await printData(innerData, indent + "  ");
 			printLine(`}`);
 		} else {
@@ -133,8 +137,9 @@ const printData = async (data, indent) => {
 const filename = process.argv[2];
 
 (async () => {
-	const structure = await rawSerializer.deserialize({
-		filename: path.resolve(filename)
+	const structure = await rawSerializer.deserialize(null, {
+		filename: path.resolve(filename),
+		extension: ".pack"
 	});
 	const info = await captureSize(structure);
 	const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
@@ -142,8 +147,9 @@ const filename = process.argv[2];
 	).toFixed(2)} lazy MiB`;
 	console.log(`${filename} ${sizeInfo}:`);
 
-	const data = await serializer.deserialize({
-		filename: path.resolve(filename)
+	const data = await serializer.deserialize(null, {
+		filename: path.resolve(filename),
+		extension: ".pack"
 	});
 	await printData(data, "");
 })();
