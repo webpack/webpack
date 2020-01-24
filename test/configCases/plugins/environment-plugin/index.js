@@ -26,3 +26,12 @@ it("should import multiple process.env var with default values", () => {
 it("should import process.env var with empty value", () => {
 	if (process.env.III !== "") if (never) require("iii");
 });
+
+it("should error when a process.env variable is undefined", () => {
+	if (process.env.JJJ !== "jjj") if (never) require("jjj");
+});
+
+it("should import multiple process.env var with default values even with errorLevel set to error", () => {
+	if (process.env.LLL !== "lll") if (never) require("lll");
+	if (process.env.MMM !== "mmm") if (never) require("mmm");
+});
