@@ -56,6 +56,7 @@ const printData = async (data, indent) => {
 		return;
 	}
 	const referencedValues = new Map();
+	const referencedValuesCounters = new Map();
 	const referencedTypes = new Map();
 	let currentReference = 0;
 	let currentTypeReference = 0;
@@ -81,6 +82,10 @@ const printData = async (data, indent) => {
 			} else if (typeof nextItem === "number" && nextItem < 0) {
 				const ref = currentReference + nextItem;
 				const value = referencedValues.get(ref);
+				referencedValuesCounters.set(
+					ref,
+					(referencedValuesCounters.get(ref) || 0) + 1
+				);
 				if (value) {
 					printLine(
 						`Reference ${nextItem} => ${JSON.stringify(value)} #${ref}`
@@ -130,6 +135,19 @@ const printData = async (data, indent) => {
 			printLine(`}`);
 		} else {
 			printLine(`${item}`);
+		}
+	}
+	const refCounters = Array.from(referencedValuesCounters);
+	refCounters.sort(([a, A], [b, B]) => {
+		return B - A;
+	});
+	printLine("SUMMARY: top references:");
+	for (const [ref, count] of refCounters.slice(10)) {
+		const value = referencedValues.get(ref);
+		if (value) {
+			printLine(`- #${ref} x ${count} = ${JSON.stringify(value)}`);
+		} else {
+			printLine(`- #${ref} x ${count}`);
 		}
 	}
 };
