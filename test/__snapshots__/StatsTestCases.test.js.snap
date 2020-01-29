@@ -131,17 +131,19 @@ chunk b4a95c5544295741de67.js 899 bytes [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for asset 1`] = `
-"Hash: af0de91ff8df9396500e
+"Hash: ccfed10a060986668b48
 Time: Xms
 Built at: 1970-04-20 12:42:42
                    Asset      Size
 6eef074bdaf47143a239.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
-               bundle.js  10.6 KiB  [emitted]              [name: main]
-Entrypoint main = bundle.js (6eef074bdaf47143a239.png)
-./index.js 111 bytes [built]
+               bundle.js  10.9 KiB  [emitted]              [name: main]
+        static/file.html  12 bytes  [emitted]              [name: (main)]
+Entrypoint main = bundle.js (6eef074bdaf47143a239.png static/file.html)
+./index.js 150 bytes [built]
 ./images/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
 ./images/file.svg 915 bytes [built]
 ./images/file.jpg 7.92 KiB [built]
+./static/file.html 42 bytes (javascript) 12 bytes (asset) [built]
     + 1 hidden module"
 `;
 
