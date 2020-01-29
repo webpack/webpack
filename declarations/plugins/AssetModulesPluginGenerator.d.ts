@@ -21,7 +21,7 @@ export interface AssetModulesPluginGeneratorOptions {
 	 */
 	dataUrl?: DataUrlOptions | DataUrlFunction;
 	/**
-	 * Override for output.assetModuleFilename
+	 * Template for asset filename
 	 */
 	filename?:
 		| string

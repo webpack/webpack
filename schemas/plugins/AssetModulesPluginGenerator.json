@@ -36,7 +36,7 @@
       ]
     },
     "filename": {
-      "description": "Override for output.assetModuleFilename",
+      "description": "Template for asset filename",
       "anyOf": [
         {
           "type": "string",
