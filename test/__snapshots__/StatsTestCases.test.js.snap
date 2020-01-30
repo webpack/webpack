@@ -2426,6 +2426,45 @@ LOG from webpack.Compiler
 <t> done hook: Xms
 <t> beginIdle: Xms
 
+LOG from webpack.FlagDependencyExportsPlugin
+<t> restore cached provided exports: Xms
+<t> figure out provided exports: Xms
+<t> store provided exports into cache: Xms
+
+LOG from webpack.InnerGraphPlugin
+<t> infer dependency usage: Xms
+
+LOG from webpack.Compilation
+<t> finish modules: Xms
+<t> report dependency errors and warnings: Xms
+<t> optimize dependencies: Xms
+<t> create chunks: Xms
+<t> optimize: Xms
+<t> module hashing: Xms
+<t> code generation: Xms
+<t> runtime requirements: Xms
+<t> hashing: initialize hash: Xms
+<t> hashing: sort chunks: Xms
+<t> hashing: hash runtime modules: Xms
+<t> hashing: hash chunks: Xms
+<t> hashing: hash digest: Xms
+<t> hashing: Xms
+<t> record hash: Xms
+<t> module assets: Xms
+<t> create chunk assets: Xms
+<t> additional assets: Xms
+<t> optimize assets: Xms
+<t> finish assets: Xms
+
+LOG from webpack.SideEffectsFlagPlugin
+<t> capture reexports from modules: Xms
+<t> flatten reexports: Xms
+<t> update imports: Xms
+
+LOG from webpack.FlagDependencyUsagePlugin
+<t> initialize exports usage: Xms
+<t> trace exports usage in graph: Xms
+
 LOG from webpack.buildChunkGraph
 <t> visitModules: prepare: Xms
 <t> visitModules: visiting: Xms
