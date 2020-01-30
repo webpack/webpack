@@ -18,7 +18,7 @@ export interface HashedModuleIdsPluginOptions {
 	 */
 	hashDigestLength?: number;
 	/**
-	 * The hashing algorithm to use, defaults to 'md5'. All functions from Node.JS' crypto.createHash are supported.
+	 * The hashing algorithm to use, defaults to 'md4'. All functions from Node.JS' crypto.createHash are supported.
 	 */
 	hashFunction?: string;
 }
