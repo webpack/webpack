@@ -44,6 +44,10 @@ export interface ProgressPluginOptions {
 	 */
 	modulesCount?: number;
 	/**
+	 * Collect percent algorithm. By default it calculates by a median from modules, entries and dependencies percent
+	 */
+	percentBy?: "entries" | "modules" | "dependencies" | null;
+	/**
 	 * Collect profile data for progress steps. Default: false
 	 */
 	profile?: true | false | null;
