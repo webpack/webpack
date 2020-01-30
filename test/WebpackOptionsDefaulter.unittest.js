@@ -141,7 +141,7 @@ describe("WebpackOptionsDefaulter", () => {
 		    "removeAvailableModules": false,
 		    "removeEmptyChunks": true,
 		    "runtimeChunk": undefined,
-		    "sideEffects": false,
+		    "sideEffects": true,
 		    "splitChunks": Object {
 		      "automaticNameDelimiter": "-",
 		      "cacheGroups": Object {
@@ -289,9 +289,6 @@ describe("WebpackOptionsDefaulter", () => {
 		+     "moduleIds": "deterministic",
 		+     "noEmitOnErrors": true,
 		+     "nodeEnv": "production",
-		@@ -76,1 +76,1 @@
-		-     "sideEffects": false,
-		+     "sideEffects": true,
 		@@ -94,3 +94,3 @@
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
@@ -345,9 +342,6 @@ describe("WebpackOptionsDefaulter", () => {
 		+     "moduleIds": "deterministic",
 		+     "noEmitOnErrors": true,
 		+     "nodeEnv": "production",
-		@@ -76,1 +76,1 @@
-		-     "sideEffects": false,
-		+     "sideEffects": true,
 		@@ -94,3 +94,3 @@
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
