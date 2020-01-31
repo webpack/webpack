@@ -2498,6 +2498,7 @@ LOG from webpack.buildChunkGraph
 <t> visitModules: visiting: Xms
 <t> visitModules: Xms
 <t> connectChunkGroups: Xms
+<t> handleDependOn: Xms
 <t> cleanup: Xms
 
 LOG from webpack.SplitChunksPlugin

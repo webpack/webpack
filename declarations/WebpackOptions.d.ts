@@ -543,6 +543,10 @@ export interface EntryObject {
  */
 export interface EntryDescription {
 	/**
+	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
+	 */
+	dependOn?: string | NonEmptyArrayOfUniqueStringValues;
+	/**
 	 * The filename of the entrypoint as relative path inside the `output.path` directory.
 	 */
 	filename?: string;
