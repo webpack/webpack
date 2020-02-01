@@ -6466,9 +6466,9 @@ walker@^1.0.7, walker@~1.0.5:
     makeerror "1.0.x"
 
 wast-loader@^1.5.5:
-  version "1.8.5"
-  resolved "https://registry.yarnpkg.com/wast-loader/-/wast-loader-1.8.5.tgz#b40115344de4855cb8287aaf323d75c84464b569"
-  integrity sha512-+ExDPgXjkimltGveOjCEW3kWRiIDFP6zdB8DccMcAhh9JaBu/2KbWnlZZd69MuoTDmH4MwqN6OBa59qBOAq9Xg==
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/wast-loader/-/wast-loader-1.9.0.tgz#00eb61a788b42a92dd25a82ac303ab8c1a7edc6b"
+  integrity sha512-5AufW8qi2X/G/qLeuQUgtqvv4bifxWXnhJ9ZgMOC1ZmI4wuytyaIB0uskfa2l/i286xVZFAYgsz1b4YsoaGVcQ==
   dependencies:
     wabt "1.0.0-nightly.20180421"
 
