@@ -38,6 +38,22 @@
         }
       ]
     },
+    "EntryDescription": {
+      "description": "An object with entry point description.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "import": {
+          "description": "Entrypoint modules.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/EntryItem"
+            }
+          ]
+        }
+      },
+      "required": ["import"]
+    },
     "EntryDynamic": {
       "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
       "instanceof": "Function",
@@ -76,6 +92,14 @@
             "anyOf": [
               {
                 "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
+              }
+            ]
+          },
+          {
+            "description": "An object with entry point description.",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/EntryDescription"
               }
             ]
           }

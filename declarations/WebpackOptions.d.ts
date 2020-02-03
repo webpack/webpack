@@ -526,7 +526,19 @@ export interface EntryObject {
 	/**
 	 * An entry point with name
 	 */
-	[k: string]: string | NonEmptyArrayOfUniqueStringValues;
+	[k: string]: string | NonEmptyArrayOfUniqueStringValues | EntryDescription;
+}
+/**
+ * An object with entry point description.
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "EntryDescription".
+ */
+export interface EntryDescription {
+	/**
+	 * Entrypoint modules.
+	 */
+	import: EntryItem;
 }
 /**
  * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
