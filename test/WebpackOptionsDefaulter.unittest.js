@@ -123,7 +123,7 @@ describe("WebpackOptionsDefaulter", () => {
 		    "chunkIds": "natural",
 		    "concatenateModules": false,
 		    "flagIncludedChunks": false,
-		    "innerGraph": false,
+		    "innerGraph": true,
 		    "mangleExports": false,
 		    "mangleWasmImports": false,
 		    "mergeDuplicateChunks": true,
@@ -141,7 +141,7 @@ describe("WebpackOptionsDefaulter", () => {
 		    "removeAvailableModules": false,
 		    "removeEmptyChunks": true,
 		    "runtimeChunk": undefined,
-		    "sideEffects": false,
+		    "sideEffects": true,
 		    "splitChunks": Object {
 		      "automaticNameDelimiter": "-",
 		      "cacheGroups": Object {
@@ -166,7 +166,7 @@ describe("WebpackOptionsDefaulter", () => {
 		      "minRemainingSize": undefined,
 		      "minSize": 10000,
 		    },
-		    "usedExports": false,
+		    "usedExports": true,
 		  },
 		  "output": Object {
 		    "assetModuleFilename": "[hash][ext]",
@@ -266,18 +266,17 @@ describe("WebpackOptionsDefaulter", () => {
 		@@ -20,1 +20,1 @@
 		-   "mode": "none",
 		+   "mode": undefined,
-		@@ -54,6 +54,6 @@
+		@@ -54,4 +54,4 @@
 		-     "checkWasmTypes": false,
 		-     "chunkIds": "natural",
 		-     "concatenateModules": false,
 		-     "flagIncludedChunks": false,
-		-     "innerGraph": false,
-		-     "mangleExports": false,
 		+     "checkWasmTypes": true,
 		+     "chunkIds": "deterministic",
 		+     "concatenateModules": true,
 		+     "flagIncludedChunks": true,
-		+     "innerGraph": true,
+		@@ -59,1 +59,1 @@
+		-     "mangleExports": false,
 		+     "mangleExports": true,
 		@@ -62,1 +62,1 @@
 		-     "minimize": false,
@@ -289,9 +288,6 @@ describe("WebpackOptionsDefaulter", () => {
 		+     "moduleIds": "deterministic",
 		+     "noEmitOnErrors": true,
 		+     "nodeEnv": "production",
-		@@ -76,1 +76,1 @@
-		-     "sideEffects": false,
-		+     "sideEffects": true,
 		@@ -94,3 +94,3 @@
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
@@ -302,9 +298,6 @@ describe("WebpackOptionsDefaulter", () => {
 		@@ -99,1 +99,1 @@
 		-       "minSize": 10000,
 		+       "minSize": 30000,
-		@@ -101,1 +101,1 @@
-		-     "usedExports": false,
-		+     "usedExports": true,
 		@@ -133,1 +133,5 @@
 		-   "performance": false,
 		+   "performance": Object {
@@ -322,18 +315,17 @@ describe("WebpackOptionsDefaulter", () => {
 		@@ -20,1 +20,1 @@
 		-   "mode": "none",
 		+   "mode": "production",
-		@@ -54,6 +54,6 @@
+		@@ -54,4 +54,4 @@
 		-     "checkWasmTypes": false,
 		-     "chunkIds": "natural",
 		-     "concatenateModules": false,
 		-     "flagIncludedChunks": false,
-		-     "innerGraph": false,
-		-     "mangleExports": false,
 		+     "checkWasmTypes": true,
 		+     "chunkIds": "deterministic",
 		+     "concatenateModules": true,
 		+     "flagIncludedChunks": true,
-		+     "innerGraph": true,
+		@@ -59,1 +59,1 @@
+		-     "mangleExports": false,
 		+     "mangleExports": true,
 		@@ -62,1 +62,1 @@
 		-     "minimize": false,
@@ -345,9 +337,6 @@ describe("WebpackOptionsDefaulter", () => {
 		+     "moduleIds": "deterministic",
 		+     "noEmitOnErrors": true,
 		+     "nodeEnv": "production",
-		@@ -76,1 +76,1 @@
-		-     "sideEffects": false,
-		+     "sideEffects": true,
 		@@ -94,3 +94,3 @@
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
@@ -358,9 +347,6 @@ describe("WebpackOptionsDefaulter", () => {
 		@@ -99,1 +99,1 @@
 		-       "minSize": 10000,
 		+       "minSize": 30000,
-		@@ -101,1 +101,1 @@
-		-     "usedExports": false,
-		+     "usedExports": true,
 		@@ -133,1 +133,5 @@
 		-   "performance": false,
 		+   "performance": Object {

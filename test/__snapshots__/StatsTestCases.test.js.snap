@@ -447,31 +447,29 @@ Child all:
 `;
 
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
-"Hash: 024b7b1350be3708ba8e
+"Hash: f33d111f25cd01c8c3cf
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
-   Asset      Size
-main1.js  4.39 KiB  [emitted]  [name: main1]
-main2.js  4.38 KiB  [emitted]  [name: main2]
+   Asset     Size
+main1.js  1.9 KiB  [emitted]  [name: main1]
+main2.js  1.9 KiB  [emitted]  [name: main2]
 Entrypoint main1 = main1.js
 Entrypoint main2 = main2.js
-chunk main2.js (main2) 136 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+chunk main2.js (main2) 136 bytes [entry] [rendered]
     > ./main2 main2
  ./a.js 20 bytes [built]
  ./d.js 20 bytes [built]
  ./e.js 20 bytes [built]
  ./f.js 20 bytes [built]
  ./main2.js 56 bytes [built]
-     + 3 hidden chunk modules
-chunk main1.js (main1) 136 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+chunk main1.js (main1) 136 bytes [entry] [rendered]
     > ./main1 main1
  ./a.js 20 bytes [built]
  ./b.js 20 bytes [built]
  ./c.js 20 bytes [built]
  ./d.js 20 bytes [built]
- ./main1.js 56 bytes [built]
-     + 3 hidden chunk modules"
+ ./main1.js 56 bytes [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for chunks 1`] = `
@@ -524,10 +522,10 @@ Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
               Asset       Size
-     b_js.bundle.js  967 bytes  [emitted]
-          bundle.js   8.95 KiB  [emitted]  [name: main]
-     c_js.bundle.js   1.17 KiB  [emitted]
-d_js-e_js.bundle.js   1.38 KiB  [emitted]
+     b_js.bundle.js  982 bytes  [emitted]
+          bundle.js   8.96 KiB  [emitted]  [name: main]
+     c_js.bundle.js   1.18 KiB  [emitted]
+d_js-e_js.bundle.js    1.4 KiB  [emitted]
 Entrypoint main = bundle.js
 chunk b_js.bundle.js 22 bytes <{main}> [rendered]
     > ./b ./index.js 2:0-16
@@ -1163,7 +1161,7 @@ chunk trees.js (trees) 71 bytes [rendered]
 
 exports[`StatsTestCases should print correct stats for immutable 1`] = `
 "                  Asset       Size
-459e878fcc68e6bc31b5.js  954 bytes  [emitted] [immutable]
+459e878fcc68e6bc31b5.js  969 bytes  [emitted] [immutable]
 8de1e5224fd97f952d35.js   10.3 KiB  [emitted] [immutable]  [name: main]"
 `;
 
@@ -1758,49 +1756,49 @@ exports[`StatsTestCases should print correct stats for optimize-chunks 1`] = `
 "Hash: 7d84007dec272e753c2e
 Time: Xms
 Built at: 1970-04-20 12:42:42
-            Asset       Size
-            ab.js  153 bytes  [emitted]  [name: ab]
-           abd.js  197 bytes  [emitted]  [name: abd]
-      ac in ab.js  114 bytes  [emitted]  [name: ac in ab]
-         chunk.js  158 bytes  [emitted]  [name: chunk]
-          cir1.js  334 bytes  [emitted]  [name: cir1]
-cir2 from cir1.js  378 bytes  [emitted]  [name: cir2 from cir1]
-          cir2.js  334 bytes  [emitted]  [name: cir2]
-          main.js   8.54 KiB  [emitted]  [name: main]
+            Asset       Size        Chunks
+            ab.js  153 bytes          {90}  [emitted]  [name: ab]
+           abd.js  197 bytes   {90}, {374}  [emitted]  [name: abd]
+      ac in ab.js  114 bytes         {753}  [emitted]  [name: ac in ab]
+         chunk.js  158 bytes  {284}, {753}  [emitted]  [name: chunk]
+          cir1.js  334 bytes         {592}  [emitted]  [name: cir1]
+cir2 from cir1.js  378 bytes  {288}, {289}  [emitted]  [name: cir2 from cir1]
+          cir2.js  334 bytes         {289}  [emitted]  [name: cir2]
+          main.js   8.54 KiB         {179}  [emitted]  [name: main]
 Entrypoint main = main.js
-chunk ab.js (ab) 2 bytes <{179}> >{753}< [rendered]
-    > ./index.js 1:0-6:8
- ./modules/a.js 1 bytes [built]
- ./modules/b.js 1 bytes [built]
-chunk main.js (main) 524 bytes (javascript) 4.3 KiB (runtime) >{90}< >{289}< >{374}< >{592}< [entry] [rendered]
+chunk {90} ab.js (ab) 2 bytes <{179}> >{753}< [rendered]
+    > [10] ./index.js 1:0-6:8
+ [839] ./modules/a.js 1 bytes {90} {374} [built]
+ [836] ./modules/b.js 1 bytes {90} {374} [built]
+chunk {179} main.js (main) 524 bytes (javascript) 4.3 KiB (runtime) >{90}< >{289}< >{374}< >{592}< [entry] [rendered]
     > ./index main
- ./index.js 523 bytes [built]
- ./modules/f.js 1 bytes [built]
+  [10] ./index.js 523 bytes {179} [built]
+ [544] ./modules/f.js 1 bytes {179} [built]
      + 5 hidden chunk modules
-chunk chunk.js (chunk) 2 bytes <{374}> <{753}> [rendered]
-    > ./index.js 3:2-4:13
-    > ./index.js 9:1-10:12
- ./modules/c.js 1 bytes [built]
- ./modules/d.js 1 bytes [built]
-chunk cir2 from cir1.js (cir2 from cir1) 82 bytes <{592}> [rendered]
-    > ./circular1.js 1:0-79
- ./circular2.js 81 bytes [built]
- ./modules/e.js 1 bytes [built]
-chunk cir2.js (cir2) 81 bytes <{179}> >{592}< [rendered]
-    > ./index.js 14:0-54
- ./circular2.js 81 bytes [built]
-chunk abd.js (abd) 3 bytes <{179}> >{284}< [rendered]
-    > ./index.js 8:0-11:9
- ./modules/a.js 1 bytes [built]
- ./modules/b.js 1 bytes [built]
- ./modules/d.js 1 bytes [built]
-chunk cir1.js (cir1) 81 bytes <{179}> <{289}> >{288}< [rendered]
-    > ./index.js 13:0-54
-    > ./circular2.js 1:0-79
- ./circular1.js 81 bytes [built]
-chunk ac in ab.js (ac in ab) 1 bytes <{90}> >{284}< [rendered]
-    > ./index.js 2:1-5:15
- ./modules/c.js 1 bytes [built]"
+chunk {284} chunk.js (chunk) 2 bytes <{374}> <{753}> [rendered]
+    > [10] ./index.js 3:2-4:13
+    > [10] ./index.js 9:1-10:12
+ [115] ./modules/c.js 1 bytes {284} {753} [built]
+ [928] ./modules/d.js 1 bytes {284} {374} [built]
+chunk {288} cir2 from cir1.js (cir2 from cir1) 82 bytes <{592}> [rendered]
+    > [655] ./circular1.js 1:0-79
+ [193] ./circular2.js 81 bytes {288} {289} [built]
+ [798] ./modules/e.js 1 bytes {288} [built]
+chunk {289} cir2.js (cir2) 81 bytes <{179}> >{592}< [rendered]
+    > [10] ./index.js 14:0-54
+ [193] ./circular2.js 81 bytes {288} {289} [built]
+chunk {374} abd.js (abd) 3 bytes <{179}> >{284}< [rendered]
+    > [10] ./index.js 8:0-11:9
+ [839] ./modules/a.js 1 bytes {90} {374} [built]
+ [836] ./modules/b.js 1 bytes {90} {374} [built]
+ [928] ./modules/d.js 1 bytes {284} {374} [built]
+chunk {592} cir1.js (cir1) 81 bytes <{179}> <{289}> >{288}< [rendered]
+    > [10] ./index.js 13:0-54
+    > [193] ./circular2.js 1:0-79
+ [655] ./circular1.js 81 bytes {592} [built]
+chunk {753} ac in ab.js (ac in ab) 1 bytes <{90}> >{284}< [rendered]
+    > [10] ./index.js 2:1-5:15
+ [115] ./modules/c.js 1 bytes {284} {753} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for parse-error 1`] = `
@@ -2426,6 +2424,45 @@ LOG from webpack.Compiler
 <t> done hook: Xms
 <t> beginIdle: Xms
 
+LOG from webpack.FlagDependencyExportsPlugin
+<t> restore cached provided exports: Xms
+<t> figure out provided exports: Xms
+<t> store provided exports into cache: Xms
+
+LOG from webpack.InnerGraphPlugin
+<t> infer dependency usage: Xms
+
+LOG from webpack.Compilation
+<t> finish modules: Xms
+<t> report dependency errors and warnings: Xms
+<t> optimize dependencies: Xms
+<t> create chunks: Xms
+<t> optimize: Xms
+<t> module hashing: Xms
+<t> code generation: Xms
+<t> runtime requirements: Xms
+<t> hashing: initialize hash: Xms
+<t> hashing: sort chunks: Xms
+<t> hashing: hash runtime modules: Xms
+<t> hashing: hash chunks: Xms
+<t> hashing: hash digest: Xms
+<t> hashing: Xms
+<t> record hash: Xms
+<t> module assets: Xms
+<t> create chunk assets: Xms
+<t> additional assets: Xms
+<t> optimize assets: Xms
+<t> finish assets: Xms
+
+LOG from webpack.SideEffectsFlagPlugin
+<t> capture reexports from modules: Xms
+<t> flatten reexports: Xms
+<t> update imports: Xms
+
+LOG from webpack.FlagDependencyUsagePlugin
+<t> initialize exports usage: Xms
+<t> trace exports usage in graph: Xms
+
 LOG from webpack.buildChunkGraph
 <t> visitModules: prepare: Xms
 <t> visitModules: visiting: Xms
@@ -2435,6 +2472,7 @@ LOG from webpack.buildChunkGraph
 <t> visitModules: calculating available modules: Xms
 <t> visitModules: merging available modules: Xms
 <t> visitModules: visiting: Xms
+<t> visitModules: Xms
 <t> connectChunkGroups: Xms
 <t> cleanup: Xms
 
@@ -2706,7 +2744,7 @@ exports[`StatsTestCases should print correct stats for simple 1`] = `
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset       Size
-bundle.js  878 bytes  [emitted]  [name: main]
+bundle.js  871 bytes  [emitted]  [name: main]
 Entrypoint main = bundle.js
 ./index.js 1 bytes [built]"
 `;
@@ -3435,10 +3473,10 @@ Child development:
     chunk dev-main-very-big_js-4647fb9d.js (main-very-big_js-4647fb9d) 1.57 KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
         > ./ main
      ./very-big.js?3 1.57 KiB [built]
-    chunk dev-main-very-big_js-62f7f644.js (main-very-big_js-62f7f644) 1.57 KiB (javascript) 3.83 KiB (runtime) ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [entry] [rendered]
+    chunk dev-main-very-big_js-62f7f644.js (main-very-big_js-62f7f644) 1.57 KiB (javascript) 3.57 KiB (runtime) ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [entry] [rendered]
         > ./ main
      ./very-big.js?1 1.57 KiB [built]
-         + 5 hidden root modules
+         + 4 hidden root modules
     chunk dev-vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2.js (id hint: vendors) 402 bytes ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered] split chunk (cache group: defaultVendors)
         > ./ main
      ./node_modules/big.js?1 268 bytes [built]
