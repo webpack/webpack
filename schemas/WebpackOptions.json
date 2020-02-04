@@ -44,7 +44,7 @@
       "additionalProperties": false,
       "properties": {
         "import": {
-          "description": "Entrypoint modules.",
+          "description": "The module(s) loaded at startup.",
           "oneOf": [
             {
               "$ref": "#/definitions/EntryItem"
@@ -62,12 +62,12 @@
     "EntryItem": {
       "oneOf": [
         {
-          "description": "An entry point without name. The string is resolved to a module which is loaded upon startup.",
+          "description": "The string is resolved to a module which is loaded upon startup.",
           "type": "string",
           "minLength": 1
         },
         {
-          "description": "An entry point without name. All modules are loaded upon startup. The last one is exported.",
+          "description": "All modules are loaded upon startup. The last one is exported.",
           "anyOf": [
             {
               "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
@@ -83,15 +83,10 @@
         "description": "An entry point with name",
         "oneOf": [
           {
-            "description": "The string is resolved to a module which is loaded upon startup.",
-            "type": "string",
-            "minLength": 1
-          },
-          {
-            "description": "All modules are loaded upon startup. The last one is exported.",
+            "description": "The module(s) loaded at startup.",
             "anyOf": [
               {
-                "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
+                "$ref": "#/definitions/EntryItem"
               }
             ]
           },
@@ -112,6 +107,14 @@
         {
           "$ref": "#/definitions/EntryObject"
         },
+        {
+          "$ref": "#/definitions/EntryUnnamed"
+        }
+      ]
+    },
+    "EntryUnnamed": {
+      "description": "An entry point without name.",
+      "anyOf": [
         {
           "$ref": "#/definitions/EntryItem"
         }
