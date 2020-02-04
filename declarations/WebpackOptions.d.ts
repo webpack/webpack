@@ -1550,6 +1550,10 @@ export interface StatsOptions {
 	 */
 	hash?: boolean;
 	/**
+	 * add ids
+	 */
+	ids?: boolean;
+	/**
 	 * add logging output
 	 */
 	logging?: boolean | ("none" | "error" | "warn" | "info" | "log" | "verbose");

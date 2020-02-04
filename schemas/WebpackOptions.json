@@ -2145,6 +2145,10 @@
           "description": "add the hash of the compilation",
           "type": "boolean"
         },
+        "ids": {
+          "description": "add ids",
+          "type": "boolean"
+        },
         "logging": {
           "description": "add logging output",
           "anyOf": [
