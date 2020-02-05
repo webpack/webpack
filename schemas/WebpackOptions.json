@@ -38,6 +38,22 @@
         }
       ]
     },
+    "EntryDescription": {
+      "description": "An object with entry point description.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "import": {
+          "description": "The module(s) loaded at startup.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/EntryItem"
+            }
+          ]
+        }
+      },
+      "required": ["import"]
+    },
     "EntryDynamic": {
       "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
       "instanceof": "Function",
@@ -46,12 +62,12 @@
     "EntryItem": {
       "oneOf": [
         {
-          "description": "An entry point without name. The string is resolved to a module which is loaded upon startup.",
+          "description": "The string is resolved to a module which is loaded upon startup.",
           "type": "string",
           "minLength": 1
         },
         {
-          "description": "An entry point without name. All modules are loaded upon startup. The last one is exported.",
+          "description": "All modules are loaded upon startup. The last one is exported.",
           "anyOf": [
             {
               "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
@@ -67,15 +83,18 @@
         "description": "An entry point with name",
         "oneOf": [
           {
-            "description": "The string is resolved to a module which is loaded upon startup.",
-            "type": "string",
-            "minLength": 1
-          },
-          {
-            "description": "All modules are loaded upon startup. The last one is exported.",
+            "description": "The module(s) loaded at startup.",
             "anyOf": [
               {
-                "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
+                "$ref": "#/definitions/EntryItem"
+              }
+            ]
+          },
+          {
+            "description": "An object with entry point description.",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/EntryDescription"
               }
             ]
           }
@@ -88,6 +107,14 @@
         {
           "$ref": "#/definitions/EntryObject"
         },
+        {
+          "$ref": "#/definitions/EntryUnnamed"
+        }
+      ]
+    },
+    "EntryUnnamed": {
+      "description": "An entry point without name.",
+      "anyOf": [
         {
           "$ref": "#/definitions/EntryItem"
         }
