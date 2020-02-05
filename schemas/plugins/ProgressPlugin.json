@@ -33,6 +33,10 @@
           "description": "Minimum modules count to start with. Only for mode=modules. Default: 500",
           "type": "number"
         },
+        "percentBy": {
+          "description": "Percent calculation algorithm. By default it calculates by max(modules, entries)",
+          "enum": ["entries", "modules", null]
+        },
         "profile": {
           "description": "Collect profile data for progress steps. Default: false",
           "enum": [true, false, null]

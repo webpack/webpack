@@ -36,6 +36,10 @@ export interface ProgressPluginOptions {
 	 */
 	modulesCount?: number;
 	/**
+	 * Percent calculation algorithm. By default it calculates by max(modules, entries)
+	 */
+	percentBy?: "entries" | "modules" | null;
+	/**
 	 * Collect profile data for progress steps. Default: false
 	 */
 	profile?: true | false | null;
