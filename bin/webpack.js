@@ -86,6 +86,16 @@ if (!cli.installed) {
 		input: process.stdin,
 		output: process.stderr
 	});
+
+	// If we're not in terminal mode, readline won't execute the callback function below.  Return here
+	// so that we can set the exit code properly.
+	if (!questionInterface.terminal) {
+		console.error(
+			"You need to install 'webpack-cli' to use webpack via CLI.\n" +
+				"You can also install the CLI manually."
+		);
+		process.exit(1);
+	}
 	questionInterface.question(question, answer => {
 		questionInterface.close();
 
