@@ -2,7 +2,7 @@
 
 This example illustrates webpack's algorithm for automatic deduplication using `optimization.splitChunks`.
 
-This example application contains 7 pages, each of them importing 1-3 modules from the `node_modules` folder (vendor libs) and 0-3 modules from the `stuff` folder (application modules). In reallity an application is probably more complex, but the same mechanisms apply.
+This example application contains 7 pages, each importing 1-3 modules from the `node_modules` folder (vendor libs) and 0-3 modules from the `stuff` folder (application modules). In reality an application is probably more complex, but the same mechanisms apply.
 
 The following configuration is used:
 
@@ -12,7 +12,7 @@ The following configuration is used:
 # Interpreting the result
 
 - `pageA.js` the normal output files for the entrypoint `pageA`
-- `vendors~pageD~pageE~pageF~pageG.js` vendor libs shared by these pages extracted into a separate output file when larger then the threshold in size
+- `vendors~pageD~pageE~pageF~pageG.js` vendor libs shared by these pages extracted into a separate output file when larger than the threshold in size
 - `vendors~pageA.js` vendors only used by a single page but larger than the threshold in size
 - `pageA~pageD~pageF.js` application modules shared by these pages and larger than the threshold in size
 
