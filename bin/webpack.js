@@ -87,7 +87,7 @@ if (!cli.installed) {
 		output: process.stderr
 	});
 
-	// If we're not in terminal mode, readline won't execute the callback function below.  Return here
+	// If we're not in terminal mode, readline won't execute the callback function below. Return here
 	// so that we can set the exit code properly.
 	if (!questionInterface.terminal) {
 		console.error(
