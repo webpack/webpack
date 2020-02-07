@@ -543,6 +543,10 @@ export interface EntryObject {
  */
 export interface EntryDescription {
 	/**
+	 * The filename of entry chunks as relative path inside the `output.path` directory.
+	 */
+	filename?: string;
+	/**
 	 * The module(s) loaded at startup.
 	 */
 	import: EntryItem;

@@ -786,6 +786,30 @@ Unexpected end of JSON input while parsing near ''
 "
 `;
 
+exports[`StatsTestCases should print correct stats for entry-filename 1`] = `
+"Hash: e0f8f2345bfd152ac522
+Time: Xms
+Built at: 1970-04-20 12:42:42
+PublicPath: (none)
+Asset     Size
+ a.js  1.3 KiB  [emitted]  [name: a]
+ c.js  1.3 KiB  [emitted]  [name: b]
+Entrypoint a = a.js
+Entrypoint b = c.js
+chunk c.js (b) 22 bytes [entry] [rendered]
+    > ./b.js b
+ ./b.js 22 bytes [built]
+     cjs self exports reference ./b.js 1:0-14
+     entry ./b.js b
+     Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+chunk a.js (a) 22 bytes [entry] [rendered]
+    > ./a.js a
+ ./a.js 22 bytes [built]
+     cjs self exports reference ./a.js 1:0-14
+     entry ./a.js a
+     Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)"
+`;
+
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
 "Hash: 574b1154129671ae12ac
 Time: Xms
