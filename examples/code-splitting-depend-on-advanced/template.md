@@ -18,16 +18,16 @@ _{{app.js}}_
 _{{page1.js}}_
 ```
 
+# lazy.js
+
+```javascript
+_{{lazy.js}}_
+```
+
 # other-vendors.js
 
 ```javascript
 _{{other-vendors.js}}_
-```
-
-# react-vendors.js
-
-```javascript
-_{{react-vendors.js}}_
 ```
 
 # dist/runtime.js

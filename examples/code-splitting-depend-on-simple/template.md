@@ -12,12 +12,6 @@ _{{webpack.config.js}}_
 _{{app.js}}_
 ```
 
-# react-vendors.js
-
-```javascript
-_{{react-vendors.js}}_
-```
-
 # dist/app.js
 
 ```javascript

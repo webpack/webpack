@@ -8,11 +8,15 @@ module.exports = {
 		app: { import: "./app.js", dependOn: ["other-vendors"] },
 		page1: { import: "./page1.js", dependOn: ["app", "react-vendors"] },
 		"react-vendors": ["react", "react-dom", "prop-types"],
-		"other-vendors": ["lodash", "isomorphic-fetch"]
+		"other-vendors": "./other-vendors"
 	},
 	optimization: {
 		runtimeChunk: "single",
-		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
+		chunkIds: "named" // To keep filename consistent between different modes (for example building only)
+	},
+	stats: {
+		chunks: true,
+		chunkRelations: true
 	}
 };
 ```
@@ -30,27 +34,31 @@ console.log(isomorphicFetch, lodash);
 
 ```javascript
 import isomorphicFetch from "isomorphic-fetch";
-import lodash from "lodash";
 import react from "react";
 import reactDOM from "react-dom";
+
+console.log(isomorphicFetch, react, reactDOM);
+
+import("./lazy");
+```
+
+# lazy.js
+
+```javascript
+import lodash from "lodash";
 import propTypes from "prop-types";
 
-console.log(isomorphicFetch, lodash, react, reactDOM, propTypes);
+console.log(lodash, propTypes);
 ```
 
 # other-vendors.js
 
 ```javascript
-export { default as lodash } from "lodash";
-export { default as isomorphicFetch } from "isomorphic-fetch";
-```
+import lodash from "lodash";
+import isomorphicFetch from "isomorphic-fetch";
 
-# react-vendors.js
-
-```javascript
-export { default as react } from "react";
-export { default as reactDOM } from "react-dom";
-export { default as propTypes } from "prop-types";
+// Additional initializations
+console.log(lodash, isomorphicFetch);
 ```
 
 # dist/runtime.js
@@ -116,9 +124,47 @@ export { default as propTypes } from "prop-types";
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/ensure chunk */
+/******/ 	(() => {
+/******/ 		__webpack_require__.f = {};
+/******/ 		// This file contains only the entry chunk.
+/******/ 		// The chunk loading function for additional chunks
+/******/ 		__webpack_require__.e = (chunkId) => {
+/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
+/******/ 				__webpack_require__.f[key](chunkId, promises);
+/******/ 				return promises;
+/******/ 			}, []));
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/get javascript chunk filename */
+/******/ 	(() => {
+/******/ 		// This function allow to reference async chunks
+/******/ 		__webpack_require__.u = (chunkId) => {
+/******/ 			// return url for filenames based on template
+/******/ 			return "" + chunkId + ".js";
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		__webpack_require__.p = "dist/";
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -127,13 +173,79 @@ export { default as propTypes } from "prop-types";
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			666: 0
+/******/ 			"runtime": 0
 /******/ 		};
 /******/ 		
 /******/ 		var deferredModules = [
 /******/ 		
 /******/ 		];
-/******/ 		// no chunk on demand loading
+/******/ 		__webpack_require__.f.j = (chunkId, promises) => {
+/******/ 				// JSONP chunk loading for javascript
+/******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
+/******/ 		
+/******/ 					// a Promise means "currently loading".
+/******/ 					if(installedChunkData) {
+/******/ 						promises.push(installedChunkData[2]);
+/******/ 					} else {
+/******/ 						if(true) { // all chunks have JS
+/******/ 							// setup Promise in chunk cache
+/******/ 							var promise = new Promise((resolve, reject) => {
+/******/ 								installedChunkData = installedChunks[chunkId] = [resolve, reject];
+/******/ 							});
+/******/ 							promises.push(installedChunkData[2] = promise);
+/******/ 		
+/******/ 							// start chunk loading
+/******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
+/******/ 							var loadingEnded = () => {
+/******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
+/******/ 									installedChunkData = installedChunks[chunkId];
+/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
+/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 								}
+/******/ 							};
+/******/ 							var script = document.createElement('script');
+/******/ 							var onScriptComplete;
+/******/ 		
+/******/ 							script.charset = 'utf-8';
+/******/ 							script.timeout = 120;
+/******/ 							if (__webpack_require__.nc) {
+/******/ 								script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 							}
+/******/ 							script.src = url;
+/******/ 		
+/******/ 							// create error before stack unwound to get useful stacktrace later
+/******/ 							var error = new Error();
+/******/ 							onScriptComplete = (event) => {
+/******/ 								onScriptComplete = () => {
+/******/ 		
+/******/ 								}
+/******/ 								// avoid mem leaks in IE.
+/******/ 								script.onerror = script.onload = null;
+/******/ 								clearTimeout(timeout);
+/******/ 								var reportError = loadingEnded();
+/******/ 								if(reportError) {
+/******/ 									var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 									var realSrc = event && event.target && event.target.src;
+/******/ 									error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 									error.name = 'ChunkLoadError';
+/******/ 									error.type = errorType;
+/******/ 									error.request = realSrc;
+/******/ 									reportError(error);
+/******/ 								}
+/******/ 							}
+/******/ 							;
+/******/ 							var timeout = setTimeout(() => {
+/******/ 								onScriptComplete({ type: 'timeout', target: script })
+/******/ 							}, 120000);
+/******/ 							script.onerror = script.onload = onScriptComplete;
+/******/ 							document.head.appendChild(script);
+/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 		
+/******/ 						// no HMR
+/******/ 					}
+/******/ 				}
+/******/ 		};
 /******/ 		
 /******/ 		// no prefetching
 /******/ 		
@@ -233,7 +345,7 @@ export { default as propTypes } from "prop-types";
 # dist/app.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[143],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["app"],[
 /* 0 */
 /*!****************!*\
   !*** ./app.js ***!
@@ -255,13 +367,13 @@ console.log((isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()), (lodash__
 
 
 /***/ })
-],[[0,666,205]]]);
+],[[0,"runtime","other-vendors"]]]);
 ```
 
 # dist/page1.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[484],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["page1"],{
 
 /***/ 3:
 /*!******************!*\
@@ -269,38 +381,34 @@ console.log((isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()), (lodash__
   \******************/
 /*! namespace exports */
 /*! exports [not provided] [unused] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.e, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
 "use strict";
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! isomorphic-fetch */ 1);
 /* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ 2);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ 4);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-dom */ 5);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! prop-types */ 6);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ 4);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-dom */ 5);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
 
+console.log((isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()), (react__WEBPACK_IMPORTED_MODULE_1___default()), (react_dom__WEBPACK_IMPORTED_MODULE_2___default()));
 
-
-console.log((isomorphic_fetch__WEBPACK_IMPORTED_MODULE_0___default()), (lodash__WEBPACK_IMPORTED_MODULE_1___default()), (react__WEBPACK_IMPORTED_MODULE_2___default()), (react_dom__WEBPACK_IMPORTED_MODULE_3___default()), (prop_types__WEBPACK_IMPORTED_MODULE_4___default()));
+__webpack_require__.e(/*! import() */ "lazy_js").then(__webpack_require__.bind(__webpack_require__, /*! ./lazy */ 8));
 
 
 /***/ })
 
-},[[3,666,205,703]]]);
+},[[3,"runtime","other-vendors","react-vendors"]]]);
 ```
 
 # dist/other-vendors.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[205],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["other-vendors"],[
 /* 0 */,
 /* 1 */
 /*!******************************************!*\
@@ -329,14 +437,40 @@ module.exports = "isomorphic-fetch";
 module.exports = 'lodash';
 
 
+/***/ }),
+/* 3 */,
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */
+/*!**************************!*\
+  !*** ./other-vendors.js ***!
+  \**************************/
+/*! namespace exports */
+/*! exports [not provided] [unused] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
+
+"use strict";
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ 2);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! isomorphic-fetch */ 1);
+/* harmony import */ var isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+// Additional initializations
+console.log((lodash__WEBPACK_IMPORTED_MODULE_0___default()), (isomorphic_fetch__WEBPACK_IMPORTED_MODULE_1___default()));
+
+
 /***/ })
-],[[2,666],[1,666]]]);
+],[[7,"runtime"]]]);
 ```
 
 # dist/react-vendors.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[703],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["react-vendors"],[
 /* 0 */,
 /* 1 */,
 /* 2 */,
@@ -379,11 +513,11 @@ module.exports = 'react-dom';
 /*! runtime requirements: module */
 /***/ ((module) => {
 
-module.exports = 'react';
+module.exports = 'prop-types';
 
 
 /***/ })
-],[[4,666],[5,666],[6,666]]]);
+],[[4,"runtime"],[5,"runtime"],[6,"runtime"]]]);
 ```
 
 # Info
@@ -394,75 +528,98 @@ module.exports = 'react';
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-beta.13
            Asset      Size
-          app.js  1.07 KiB  [emitted]  [name: app]
-other-vendors.js  1.02 KiB  [emitted]  [name: other-vendors]
-        page1.js  1.98 KiB  [emitted]  [name: page1]
-react-vendors.js  1.47 KiB  [emitted]  [name: react-vendors]
-      runtime.js  6.07 KiB  [emitted]  [name: runtime]
+          app.js  1.09 KiB  [emitted]  [name: app]
+      lazy_js.js  2.03 KiB  [emitted]
+other-vendors.js  2.11 KiB  [emitted]  [name: other-vendors]
+        page1.js  1.55 KiB  [emitted]  [name: page1]
+react-vendors.js   1.5 KiB  [emitted]  [name: react-vendors]
+      runtime.js  10.4 KiB  [emitted]  [name: runtime]
 Entrypoint app = runtime.js app.js other-vendors.js
 Entrypoint page1 = runtime.js page1.js other-vendors.js react-vendors.js
 Entrypoint react-vendors = runtime.js react-vendors.js
 Entrypoint other-vendors = runtime.js other-vendors.js
-chunk app.js (app) 116 bytes [initial] [rendered]
+chunk app.js (app) 116 bytes <{other-vendors}> <{runtime}> ={other-vendors}= ={runtime}= >{other-vendors}< >{page1}< >{react-vendors}< >{runtime}< [initial] [rendered]
     > ./app.js app
  ./app.js 116 bytes [built]
      [no exports]
      [no exports used]
      entry ./app.js app
-chunk other-vendors.js (other-vendors) 64 bytes [initial] [rendered]
+chunk lazy_js.js 156 bytes <{other-vendors}> <{page1}> <{react-vendors}> <{runtime}> [rendered]
+    > ./lazy ./page1.js 7:0-16
+ ./lazy.js 98 bytes [built]
+     [no exports]
+     import() ./lazy ./page1.js 7:0-16
+ ./node_modules/lodash.js 27 bytes [built]
+     harmony side effect evaluation lodash ./app.js 2:0-28
+     harmony import specifier lodash ./app.js 4:29-35
+     harmony side effect evaluation lodash ./lazy.js 1:0-28
+     harmony import specifier lodash ./lazy.js 4:12-18
+     cjs self exports reference ./node_modules/lodash.js 1:0-14
+     harmony side effect evaluation lodash ./other-vendors.js 1:0-28
+     harmony import specifier lodash ./other-vendors.js 5:12-18
+ ./node_modules/prop-types.js 31 bytes [built]
+     harmony side effect evaluation prop-types ./lazy.js 2:0-35
+     harmony import specifier prop-types ./lazy.js 4:20-29
+     cjs self exports reference ./node_modules/prop-types.js 1:0-14
+     entry prop-types react-vendors
+chunk other-vendors.js (other-vendors) 210 bytes <{app}> <{other-vendors}> <{react-vendors}> <{runtime}> ={app}= ={page1}= ={react-vendors}= ={runtime}= >{app}< >{lazy_js}< >{other-vendors}< >{page1}< >{react-vendors}< >{runtime}< [initial] [rendered]
     > ./app.js app
-    > isomorphic-fetch other-vendors
-    > lodash other-vendors
+    > ./other-vendors other-vendors
     > ./page1.js page1
  ./node_modules/isomorphic-fetch.js 37 bytes [built]
      harmony side effect evaluation isomorphic-fetch ./app.js 1:0-47
      harmony import specifier isomorphic-fetch ./app.js 4:12-27
      cjs self exports reference ./node_modules/isomorphic-fetch.js 1:0-14
+     harmony side effect evaluation isomorphic-fetch ./other-vendors.js 2:0-47
+     harmony import specifier isomorphic-fetch ./other-vendors.js 5:20-35
      harmony side effect evaluation isomorphic-fetch ./page1.js 1:0-47
-     harmony import specifier isomorphic-fetch ./page1.js 7:12-27
-     entry isomorphic-fetch other-vendors
+     harmony import specifier isomorphic-fetch ./page1.js 5:12-27
  ./node_modules/lodash.js 27 bytes [built]
      harmony side effect evaluation lodash ./app.js 2:0-28
      harmony import specifier lodash ./app.js 4:29-35
+     harmony side effect evaluation lodash ./lazy.js 1:0-28
+     harmony import specifier lodash ./lazy.js 4:12-18
      cjs self exports reference ./node_modules/lodash.js 1:0-14
-     harmony side effect evaluation lodash ./page1.js 2:0-28
-     harmony import specifier lodash ./page1.js 7:29-35
-     entry lodash other-vendors
-chunk page1.js (page1) 241 bytes [initial] [rendered]
+     harmony side effect evaluation lodash ./other-vendors.js 1:0-28
+     harmony import specifier lodash ./other-vendors.js 5:12-18
+ ./other-vendors.js 146 bytes [built]
+     [no exports]
+     [no exports used]
+     entry ./other-vendors other-vendors
+chunk page1.js (page1) 176 bytes <{app}> <{other-vendors}> <{react-vendors}> <{runtime}> ={other-vendors}= ={react-vendors}= ={runtime}= >{lazy_js}< [initial] [rendered]
     > ./page1.js page1
- ./page1.js 241 bytes [built]
+ ./page1.js 176 bytes [built]
      [no exports]
      [no exports used]
      entry ./page1.js page1
-chunk runtime.js (runtime) 3.15 KiB [entry] [rendered]
-    > ./app.js app
-    > isomorphic-fetch other-vendors
-    > lodash other-vendors
+chunk react-vendors.js (react-vendors) 87 bytes <{app}> <{other-vendors}> <{react-vendors}> <{runtime}> ={other-vendors}= ={page1}= ={runtime}= >{lazy_js}< >{other-vendors}< >{page1}< >{react-vendors}< >{runtime}< [initial] [rendered]
     > ./page1.js page1
     > prop-types react-vendors
     > react react-vendors
     > react-dom react-vendors
-    4 chunk modules
-chunk react-vendors.js (react-vendors) 82 bytes [initial] [rendered]
-    > ./page1.js page1
-    > prop-types react-vendors
-    > react react-vendors
-    > react-dom react-vendors
- ./node_modules/prop-types.js 26 bytes [built]
+ ./node_modules/prop-types.js 31 bytes [built]
+     harmony side effect evaluation prop-types ./lazy.js 2:0-35
+     harmony import specifier prop-types ./lazy.js 4:20-29
      cjs self exports reference ./node_modules/prop-types.js 1:0-14
-     harmony side effect evaluation prop-types ./page1.js 5:0-35
-     harmony import specifier prop-types ./page1.js 7:54-63
      entry prop-types react-vendors
  ./node_modules/react-dom.js 30 bytes [built]
      cjs self exports reference ./node_modules/react-dom.js 1:0-14
-     harmony side effect evaluation react-dom ./page1.js 4:0-33
-     harmony import specifier react-dom ./page1.js 7:44-52
+     harmony side effect evaluation react-dom ./page1.js 3:0-33
+     harmony import specifier react-dom ./page1.js 5:36-44
      entry react-dom react-vendors
  ./node_modules/react.js 26 bytes [built]
      cjs self exports reference ./node_modules/react.js 1:0-14
-     harmony side effect evaluation react ./page1.js 3:0-26
-     harmony import specifier react ./page1.js 7:37-42
+     harmony side effect evaluation react ./page1.js 2:0-26
+     harmony import specifier react ./page1.js 5:29-34
      entry react react-vendors
+chunk runtime.js (runtime) 6.2 KiB <{app}> <{other-vendors}> <{react-vendors}> <{runtime}> ={app}= ={other-vendors}= ={page1}= ={react-vendors}= >{app}< >{lazy_js}< >{other-vendors}< >{page1}< >{react-vendors}< >{runtime}< [entry] [rendered]
+    > ./app.js app
+    > ./other-vendors other-vendors
+    > ./page1.js page1
+    > prop-types react-vendors
+    > react react-vendors
+    > react-dom react-vendors
+    8 chunk modules
 ```
 
 ## Production mode
@@ -470,74 +627,97 @@ chunk react-vendors.js (react-vendors) 82 bytes [initial] [rendered]
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-beta.13
-           Asset        Size
-          app.js   166 bytes  [emitted]  [name: app]
-other-vendors.js   148 bytes  [emitted]  [name: other-vendors]
-        page1.js   234 bytes  [emitted]  [name: page1]
-react-vendors.js   175 bytes  [emitted]  [name: react-vendors]
-      runtime.js  1000 bytes  [emitted]  [name: runtime]
+           Asset       Size
+          app.js  186 bytes  [emitted]  [name: app]
+      lazy_js.js  222 bytes  [emitted]
+other-vendors.js  245 bytes  [emitted]  [name: other-vendors]
+        page1.js  260 bytes  [emitted]  [name: page1]
+react-vendors.js  210 bytes  [emitted]  [name: react-vendors]
+      runtime.js   1.94 KiB  [emitted]  [name: runtime]
 Entrypoint app = runtime.js app.js other-vendors.js
 Entrypoint page1 = runtime.js page1.js other-vendors.js react-vendors.js
 Entrypoint react-vendors = runtime.js react-vendors.js
 Entrypoint other-vendors = runtime.js other-vendors.js
-chunk app.js (app) 116 bytes [initial] [rendered]
+chunk app.js (app) 116 bytes <{other-vendors}> <{runtime}> ={other-vendors}= ={runtime}= >{other-vendors}< >{page1}< >{react-vendors}< >{runtime}< [initial] [rendered]
     > ./app.js app
  ./app.js 116 bytes [built]
      [no exports]
      [no exports used]
      entry ./app.js app
-chunk other-vendors.js (other-vendors) 64 bytes [initial] [rendered]
+chunk lazy_js.js 156 bytes <{other-vendors}> <{page1}> <{react-vendors}> <{runtime}> [rendered]
+    > ./lazy ./page1.js 7:0-16
+ ./lazy.js 98 bytes [built]
+     [no exports]
+     import() ./lazy ./page1.js 7:0-16
+ ./node_modules/lodash.js 27 bytes [built]
+     harmony side effect evaluation lodash ./app.js 2:0-28
+     harmony import specifier lodash ./app.js 4:29-35
+     harmony side effect evaluation lodash ./lazy.js 1:0-28
+     harmony import specifier lodash ./lazy.js 4:12-18
+     cjs self exports reference ./node_modules/lodash.js 1:0-14
+     harmony side effect evaluation lodash ./other-vendors.js 1:0-28
+     harmony import specifier lodash ./other-vendors.js 5:12-18
+ ./node_modules/prop-types.js 31 bytes [built]
+     harmony side effect evaluation prop-types ./lazy.js 2:0-35
+     harmony import specifier prop-types ./lazy.js 4:20-29
+     cjs self exports reference ./node_modules/prop-types.js 1:0-14
+     entry prop-types react-vendors
+chunk other-vendors.js (other-vendors) 210 bytes <{app}> <{other-vendors}> <{react-vendors}> <{runtime}> ={app}= ={page1}= ={react-vendors}= ={runtime}= >{app}< >{lazy_js}< >{other-vendors}< >{page1}< >{react-vendors}< >{runtime}< [initial] [rendered]
     > ./app.js app
-    > isomorphic-fetch other-vendors
-    > lodash other-vendors
+    > ./other-vendors other-vendors
     > ./page1.js page1
  ./node_modules/isomorphic-fetch.js 37 bytes [built]
      harmony side effect evaluation isomorphic-fetch ./app.js 1:0-47
      harmony import specifier isomorphic-fetch ./app.js 4:12-27
      cjs self exports reference ./node_modules/isomorphic-fetch.js 1:0-14
+     harmony side effect evaluation isomorphic-fetch ./other-vendors.js 2:0-47
+     harmony import specifier isomorphic-fetch ./other-vendors.js 5:20-35
      harmony side effect evaluation isomorphic-fetch ./page1.js 1:0-47
-     harmony import specifier isomorphic-fetch ./page1.js 7:12-27
-     entry isomorphic-fetch other-vendors
+     harmony import specifier isomorphic-fetch ./page1.js 5:12-27
  ./node_modules/lodash.js 27 bytes [built]
      harmony side effect evaluation lodash ./app.js 2:0-28
      harmony import specifier lodash ./app.js 4:29-35
+     harmony side effect evaluation lodash ./lazy.js 1:0-28
+     harmony import specifier lodash ./lazy.js 4:12-18
      cjs self exports reference ./node_modules/lodash.js 1:0-14
-     harmony side effect evaluation lodash ./page1.js 2:0-28
-     harmony import specifier lodash ./page1.js 7:29-35
-     entry lodash other-vendors
-chunk page1.js (page1) 241 bytes [initial] [rendered]
+     harmony side effect evaluation lodash ./other-vendors.js 1:0-28
+     harmony import specifier lodash ./other-vendors.js 5:12-18
+ ./other-vendors.js 146 bytes [built]
+     [no exports]
+     [no exports used]
+     entry ./other-vendors other-vendors
+chunk page1.js (page1) 176 bytes <{app}> <{other-vendors}> <{react-vendors}> <{runtime}> ={other-vendors}= ={react-vendors}= ={runtime}= >{lazy_js}< [initial] [rendered]
     > ./page1.js page1
- ./page1.js 241 bytes [built]
+ ./page1.js 176 bytes [built]
      [no exports]
      [no exports used]
      entry ./page1.js page1
-chunk runtime.js (runtime) 3.15 KiB [entry] [rendered]
-    > ./app.js app
-    > isomorphic-fetch other-vendors
-    > lodash other-vendors
+chunk react-vendors.js (react-vendors) 87 bytes <{app}> <{other-vendors}> <{react-vendors}> <{runtime}> ={other-vendors}= ={page1}= ={runtime}= >{lazy_js}< >{other-vendors}< >{page1}< >{react-vendors}< >{runtime}< [initial] [rendered]
     > ./page1.js page1
     > prop-types react-vendors
     > react react-vendors
     > react-dom react-vendors
-    4 chunk modules
-chunk react-vendors.js (react-vendors) 82 bytes [initial] [rendered]
-    > ./page1.js page1
-    > prop-types react-vendors
-    > react react-vendors
-    > react-dom react-vendors
- ./node_modules/prop-types.js 26 bytes [built]
+ ./node_modules/prop-types.js 31 bytes [built]
+     harmony side effect evaluation prop-types ./lazy.js 2:0-35
+     harmony import specifier prop-types ./lazy.js 4:20-29
      cjs self exports reference ./node_modules/prop-types.js 1:0-14
-     harmony side effect evaluation prop-types ./page1.js 5:0-35
-     harmony import specifier prop-types ./page1.js 7:54-63
      entry prop-types react-vendors
  ./node_modules/react-dom.js 30 bytes [built]
      cjs self exports reference ./node_modules/react-dom.js 1:0-14
-     harmony side effect evaluation react-dom ./page1.js 4:0-33
-     harmony import specifier react-dom ./page1.js 7:44-52
+     harmony side effect evaluation react-dom ./page1.js 3:0-33
+     harmony import specifier react-dom ./page1.js 5:36-44
      entry react-dom react-vendors
  ./node_modules/react.js 26 bytes [built]
      cjs self exports reference ./node_modules/react.js 1:0-14
-     harmony side effect evaluation react ./page1.js 3:0-26
-     harmony import specifier react ./page1.js 7:37-42
+     harmony side effect evaluation react ./page1.js 2:0-26
+     harmony import specifier react ./page1.js 5:29-34
      entry react react-vendors
+chunk runtime.js (runtime) 6.2 KiB <{app}> <{other-vendors}> <{react-vendors}> <{runtime}> ={app}= ={other-vendors}= ={page1}= ={react-vendors}= >{app}< >{lazy_js}< >{other-vendors}< >{page1}< >{react-vendors}< >{runtime}< [entry] [rendered]
+    > ./app.js app
+    > ./other-vendors other-vendors
+    > ./page1.js page1
+    > prop-types react-vendors
+    > react react-vendors
+    > react-dom react-vendors
+    8 chunk modules
 ```

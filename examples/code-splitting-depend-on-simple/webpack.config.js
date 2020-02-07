@@ -4,6 +4,10 @@ module.exports = {
 		"react-vendors": ["react", "react-dom", "prop-types"]
 	},
 	optimization: {
-		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
+		chunkIds: "named" // To keep filename consistent between different modes (for example building only)
+	},
+	stats: {
+		chunks: true,
+		chunkRelations: true
 	}
 };

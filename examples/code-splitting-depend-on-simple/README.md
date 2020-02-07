@@ -9,7 +9,11 @@ module.exports = {
 		"react-vendors": ["react", "react-dom", "prop-types"]
 	},
 	optimization: {
-		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
+		chunkIds: "named" // To keep filename consistent between different modes (for example building only)
+	},
+	stats: {
+		chunks: true,
+		chunkRelations: true
 	}
 };
 ```
@@ -24,18 +28,10 @@ import propTypes from "prop-types";
 console.log(react, reactDOM, propTypes);
 ```
 
-# react-vendors.js
-
-```javascript
-export { default as react } from "react";
-export { default as reactDOM } from "react-dom";
-export { default as propTypes } from "prop-types";
-```
-
 # dist/app.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[143],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["app"],[
 /* 0 */
 /*!****************!*\
   !*** ./app.js ***!
@@ -60,7 +56,7 @@ console.log((react__WEBPACK_IMPORTED_MODULE_0___default()), (react_dom__WEBPACK_
 
 
 /***/ })
-],[[0,703]]]);
+],[[0,"react-vendors"]]]);
 ```
 
 # dist/react-vendors.js
@@ -107,7 +103,7 @@ module.exports = 'react-dom';
 /*! runtime requirements: module */
 /***/ ((module) => {
 
-module.exports = 'react';
+module.exports = 'prop-types';
 
 
 /***/ })
@@ -180,7 +176,7 @@ module.exports = 'react';
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			703: 0
+/******/ 			"react-vendors": 0
 /******/ 		};
 /******/ 		
 /******/ 		var deferredModules = [
@@ -293,22 +289,22 @@ module.exports = 'react';
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-beta.13
            Asset      Size
-          app.js  1.34 KiB  [emitted]  [name: app]
-react-vendors.js  7.44 KiB  [emitted]  [name: react-vendors]
+          app.js  1.35 KiB  [emitted]  [name: app]
+react-vendors.js  7.46 KiB  [emitted]  [name: react-vendors]
 Entrypoint app = app.js react-vendors.js
 Entrypoint react-vendors = react-vendors.js
-chunk app.js (app) 139 bytes [initial] [rendered]
+chunk app.js (app) 139 bytes <{react-vendors}> ={react-vendors}= [initial] [rendered]
     > ./app.js app
  ./app.js 139 bytes [built]
      [no exports]
      [no exports used]
      entry ./app.js app
-chunk react-vendors.js (react-vendors) 82 bytes (javascript) 3.16 KiB (runtime) [entry] [rendered]
+chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.17 KiB (runtime) <{react-vendors}> ={app}= >{app}< >{react-vendors}< [entry] [rendered]
     > ./app.js app
     > prop-types react-vendors
     > react react-vendors
     > react-dom react-vendors
- ./node_modules/prop-types.js 26 bytes [built]
+ ./node_modules/prop-types.js 31 bytes [built]
      harmony side effect evaluation prop-types ./app.js 3:0-35
      harmony import specifier prop-types ./app.js 5:29-38
      cjs self exports reference ./node_modules/prop-types.js 1:0-14
@@ -332,22 +328,22 @@ chunk react-vendors.js (react-vendors) 82 bytes (javascript) 3.16 KiB (runtime) 
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-beta.13
            Asset       Size
-          app.js  183 bytes  [emitted]  [name: app]
-react-vendors.js   1.06 KiB  [emitted]  [name: react-vendors]
+          app.js  197 bytes  [emitted]  [name: app]
+react-vendors.js   1.08 KiB  [emitted]  [name: react-vendors]
 Entrypoint app = app.js react-vendors.js
 Entrypoint react-vendors = react-vendors.js
-chunk app.js (app) 139 bytes [initial] [rendered]
+chunk app.js (app) 139 bytes <{react-vendors}> ={react-vendors}= [initial] [rendered]
     > ./app.js app
  ./app.js 139 bytes [built]
      [no exports]
      [no exports used]
      entry ./app.js app
-chunk react-vendors.js (react-vendors) 82 bytes (javascript) 3.17 KiB (runtime) [entry] [rendered]
+chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.18 KiB (runtime) <{react-vendors}> ={app}= >{app}< >{react-vendors}< [entry] [rendered]
     > ./app.js app
     > prop-types react-vendors
     > react react-vendors
     > react-dom react-vendors
- ./node_modules/prop-types.js 26 bytes [built]
+ ./node_modules/prop-types.js 31 bytes [built]
      harmony side effect evaluation prop-types ./app.js 3:0-35
      harmony import specifier prop-types ./app.js 5:29-38
      cjs self exports reference ./node_modules/prop-types.js 1:0-14
