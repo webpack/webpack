@@ -1,4 +1,4 @@
-const variables = ['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff', 'ggg', 'hhh', 'iii', 'jjj', 'lll', 'mmm'];
+const variables = ['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff', 'ggg', 'hhh', 'iii'];
 const modules = [{
 	name: 'aaa',
 	variables: ['aaa']
@@ -7,7 +7,10 @@ const modules = [{
 	variables: ['bbb', 'ccc']
 }, {
 	name: 'ddd',
-	variables: []
+	variables: [],
+	allowedErrors: [
+		[{compilerPath: /ddd/}, /DDD environment variable is undefined./]
+	]
 }, {
 	name: 'eeefff',
 	variables: ['eee', 'fff']
@@ -17,15 +20,6 @@ const modules = [{
 }, {
 	name: 'iii',
 	variables: ['iii']
-}, {
-	name: 'jjj',
-	variables: [],
-	allowedErrors: [
-		[{compilerPath: /jjj/}, /JJJ environment variable is undefined./]
-	]
-}, {
-	name: 'lllmmm',
-	variables: ['lll', 'mmm']
 }];
 
 // build an array of regular expressions of expected errors
