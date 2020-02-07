@@ -31,8 +31,9 @@ console.log(react, reactDOM, propTypes);
 # dist/app.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["app"],[
-/* 0 */
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([["app"],{
+
+/***/ 3:
 /*!****************!*\
   !*** ./app.js ***!
   \****************/
@@ -42,11 +43,11 @@ console.log(react, reactDOM, propTypes);
 /***/ ((__unused_webpack_module, __unused_webpack___webpack_exports__, __webpack_require__) => {
 
 "use strict";
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ 1);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ 0);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ 2);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ 1);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ 3);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! prop-types */ 2);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_2__);
 
 
@@ -56,7 +57,8 @@ console.log((react__WEBPACK_IMPORTED_MODULE_0___default()), (react_dom__WEBPACK_
 
 
 /***/ })
-],[[0,"react-vendors"]]]);
+
+},[[3,"react-vendors"]]]);
 ```
 
 # dist/react-vendors.js
@@ -64,8 +66,7 @@ console.log((react__WEBPACK_IMPORTED_MODULE_0___default()), (react_dom__WEBPACK_
 ```javascript
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
-/* 0 */,
-/* 1 */
+/* 0 */
 /*!*******************************!*\
   !*** ./node_modules/react.js ***!
   \*******************************/
@@ -79,7 +80,7 @@ module.exports = 'react';
 
 
 /***/ }),
-/* 2 */
+/* 1 */
 /*!***********************************!*\
   !*** ./node_modules/react-dom.js ***!
   \***********************************/
@@ -93,7 +94,7 @@ module.exports = 'react-dom';
 
 
 /***/ }),
-/* 3 */
+/* 2 */
 /*!************************************!*\
   !*** ./node_modules/prop-types.js ***!
   \************************************/
@@ -180,9 +181,9 @@ module.exports = 'prop-types';
 /******/ 		};
 /******/ 		
 /******/ 		var deferredModules = [
+/******/ 			[0],
 /******/ 			[1],
-/******/ 			[2],
-/******/ 			[3]
+/******/ 			[2]
 /******/ 		];
 /******/ 		// no chunk on demand loading
 /******/ 		
@@ -290,17 +291,16 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-beta.13
            Asset      Size
           app.js  1.35 KiB  [emitted]  [name: app]
-react-vendors.js  7.46 KiB  [emitted]  [name: react-vendors]
-Entrypoint app = app.js react-vendors.js
+react-vendors.js  7.45 KiB  [emitted]  [name: react-vendors]
+Entrypoint app = app.js
 Entrypoint react-vendors = react-vendors.js
-chunk app.js (app) 139 bytes <{react-vendors}> ={react-vendors}= [initial] [rendered]
+chunk app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
     > ./app.js app
  ./app.js 139 bytes [built]
      [no exports]
      [no exports used]
      entry ./app.js app
-chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.17 KiB (runtime) <{react-vendors}> ={app}= >{app}< >{react-vendors}< [entry] [rendered]
-    > ./app.js app
+chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.17 KiB (runtime) >{app}< [entry] [rendered]
     > prop-types react-vendors
     > react react-vendors
     > react-dom react-vendors
@@ -330,16 +330,15 @@ Version: webpack 5.0.0-beta.13
            Asset       Size
           app.js  197 bytes  [emitted]  [name: app]
 react-vendors.js   1.08 KiB  [emitted]  [name: react-vendors]
-Entrypoint app = app.js react-vendors.js
+Entrypoint app = app.js
 Entrypoint react-vendors = react-vendors.js
-chunk app.js (app) 139 bytes <{react-vendors}> ={react-vendors}= [initial] [rendered]
+chunk app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
     > ./app.js app
  ./app.js 139 bytes [built]
      [no exports]
      [no exports used]
      entry ./app.js app
-chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.18 KiB (runtime) <{react-vendors}> ={app}= >{app}< >{react-vendors}< [entry] [rendered]
-    > ./app.js app
+chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.18 KiB (runtime) >{app}< [entry] [rendered]
     > prop-types react-vendors
     > react react-vendors
     > react-dom react-vendors
