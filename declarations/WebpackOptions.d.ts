@@ -429,6 +429,7 @@ export interface WebpackOptions {
 		| (
 				| "web"
 				| "webworker"
+				| "async-webworker"
 				| "node"
 				| "async-node"
 				| "node-webkit"
