@@ -543,7 +543,7 @@ export interface EntryObject {
  */
 export interface EntryDescription {
 	/**
-	 * The filename of entry chunks as relative path inside the `output.path` directory.
+	 * The filename of the entrypoint as relative path inside the `output.path` directory.
 	 */
 	filename?: string;
 	/**

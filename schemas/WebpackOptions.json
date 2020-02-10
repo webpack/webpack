@@ -44,7 +44,7 @@
       "additionalProperties": false,
       "properties": {
         "filename": {
-          "description": "The filename of entry chunks as relative path inside the `output.path` directory.",
+          "description": "The filename of the entrypoint as relative path inside the `output.path` directory.",
           "type": "string",
           "absolutePath": false
         },
