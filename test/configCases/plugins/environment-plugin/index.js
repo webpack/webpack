@@ -9,7 +9,7 @@ it("should import multiple process.env vars", () => {
 	if (process.env.CCC !== "ccc") if (never) require("ccc");
 });
 
-it("should warn when a process.env variable is undefined", () => {
+it("should error when a process.env variable is undefined", () => {
 	if (process.env.DDD !== "ddd") if (never) require("ddd");
 });
 
