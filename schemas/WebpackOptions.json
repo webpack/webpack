@@ -43,6 +43,11 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "filename": {
+          "description": "The filename of the entrypoint as relative path inside the `output.path` directory.",
+          "type": "string",
+          "absolutePath": false
+        },
         "import": {
           "description": "The module(s) loaded at startup.",
           "oneOf": [
