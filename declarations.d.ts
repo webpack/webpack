@@ -1,6 +1,6 @@
 declare module "*.json";
 
-// Deprecated NodeJS API usages in Webpack
+// Deprecated NodeJS API usages in webpack
 declare namespace NodeJS {
 	interface Process {
 		binding(internalModule: string): any;
