@@ -2492,9 +2492,11 @@ LOG from webpack.buildChunkGraph
 <t> visitModules: visiting: Xms
 <t> visitModules: calculating available modules: Xms
 <t> visitModules: merging available modules: Xms
+<t> visitModules: check modules for revist: Xms
 <t> visitModules: visiting: Xms
 <t> visitModules: calculating available modules: Xms
 <t> visitModules: merging available modules: Xms
+<t> visitModules: check modules for revist: Xms
 <t> visitModules: visiting: Xms
 <t> visitModules: Xms
 <t> connectChunkGroups: Xms

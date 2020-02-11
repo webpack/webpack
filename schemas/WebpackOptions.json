@@ -43,6 +43,24 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "dependOn": {
+          "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
+          "oneOf": [
+            {
+              "description": "The name of another entrypoint.",
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "description": "A list of other entrypoints.",
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
+                }
+              ]
+            }
+          ]
+        },
         "filename": {
           "description": "The filename of the entrypoint as relative path inside the `output.path` directory.",
           "type": "string",
