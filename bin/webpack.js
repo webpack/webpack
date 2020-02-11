@@ -86,6 +86,11 @@ if (!cli.installed) {
 		input: process.stdin,
 		output: process.stderr
 	});
+
+	// In certain scenarios (e.g. when STDIN is not in terminal mode), the callback function will not be
+	// executed. Setting the exit code here to ensure the script exits correctly in those cases. The callback
+	// function is responsible for clearing the exit code if the user wishes to install webpack-cli.
+	process.exitCode = 1;
 	questionInterface.question(question, answer => {
 		questionInterface.close();
 
@@ -96,10 +101,10 @@ if (!cli.installed) {
 				"You need to install 'webpack-cli' to use webpack via CLI.\n" +
 					"You can also install the CLI manually."
 			);
-			process.exitCode = 1;
 
 			return;
 		}
+		process.exitCode = 0;
 
 		console.log(
 			`Installing '${
