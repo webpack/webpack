@@ -2,7 +2,7 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
-const MemoryFs = require("memory-fs");
+const { createFsFromVolume, Volume } = require("memfs");
 
 const webpack = require("..");
 
@@ -72,7 +72,9 @@ describe("WatchDetection", () => {
 						filename: "bundle.js"
 					}
 				});
-				const memfs = (compiler.outputFileSystem = new MemoryFs());
+				const memfs = (compiler.outputFileSystem = new createFsFromVolume(
+					new Volume()
+				));
 				let onChange;
 				compiler.hooks.done.tap("WatchDetectionTest", () => {
 					if (onChange) onChange();
