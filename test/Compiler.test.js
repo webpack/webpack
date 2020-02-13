@@ -197,7 +197,7 @@ describe("Compiler", () => {
 				entry: "./c",
 				context: path.join(__dirname, "fixtures"),
 				output: {
-					path: "/",
+					path: "/directory",
 					pathinfo: true
 				}
 			});
@@ -269,7 +269,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./missing",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -303,7 +303,7 @@ describe("Compiler", () => {
 				mode: "production",
 				entry: "./missing-file",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				},
 				bail: true
@@ -336,7 +336,7 @@ describe("Compiler", () => {
 				mode: "production",
 				entry: "./missing-file",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				},
 				watch: true
@@ -354,7 +354,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./missing",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -373,7 +373,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -391,7 +391,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -409,7 +409,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -427,7 +427,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -446,7 +446,7 @@ describe("Compiler", () => {
 				mode: "production",
 				entry: "./c",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				}
 			},
@@ -463,7 +463,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -483,7 +483,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -503,7 +503,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -524,7 +524,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -545,7 +545,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -569,7 +569,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -595,7 +595,7 @@ describe("Compiler", () => {
 				mode: "production",
 				entry: "./c",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				}
 			},
@@ -619,7 +619,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -646,7 +646,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -673,7 +673,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -696,14 +696,14 @@ describe("Compiler", () => {
 			devtool: false,
 			entry: "./fixtures/count-loader!./fixtures/count-loader",
 			output: {
-				path: "/"
+				path: "/directory"
 			}
 		});
 		compiler.outputFileSystem = new createFsFromVolume(new Volume());
 		compiler.run(() => {
 			compiler.run(() => {
 				const result = compiler.outputFileSystem.readFileSync(
-					"/main.js",
+					"/directory/main.js",
 					"utf-8"
 				);
 				expect(result).toContain("module.exports = 0;");
@@ -719,7 +719,7 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./missing",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
@@ -762,7 +762,7 @@ describe("Compiler", () => {
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				},
 				infrastructureLogging: {
@@ -792,7 +792,7 @@ describe("Compiler", () => {
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				},
 				infrastructureLogging: {
@@ -824,7 +824,7 @@ describe("Compiler", () => {
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				},
 				infrastructureLogging: {
