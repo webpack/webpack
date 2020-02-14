@@ -7,15 +7,6 @@ declare namespace NodeJS {
 	}
 }
 
-// TODO remove when https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38753 is merged
-declare module "util" {
-	function deprecate<T extends Function>(
-		fn: T,
-		message: string,
-		code: string
-	): T;
-}
-
 declare module "neo-async" {
 	interface QueueObject<T, E> {
 		push(item: T): void;
