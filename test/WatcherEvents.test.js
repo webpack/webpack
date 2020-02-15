@@ -6,7 +6,7 @@ const webpack = require("..");
 
 const createCompiler = config => {
 	const compiler = webpack(config);
-	compiler.outputFileSystem = new createFsFromVolume(new Volume());
+	compiler.outputFileSystem = createFsFromVolume(new Volume());
 	return compiler;
 };
 

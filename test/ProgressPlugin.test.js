@@ -91,7 +91,7 @@ const createMultiCompiler = () => {
 			entry: "./b.js"
 		}
 	]);
-	compiler.outputFileSystem = new createFsFromVolume(new Volume());
+	compiler.outputFileSystem = createFsFromVolume(new Volume());
 
 	new webpack.ProgressPlugin().apply(compiler);
 
@@ -104,7 +104,7 @@ const createSimpleCompiler = progressOptions => {
 		entry: "./a.js"
 	});
 
-	compiler.outputFileSystem = new createFsFromVolume(new Volume());
+	compiler.outputFileSystem = createFsFromVolume(new Volume());
 
 	new webpack.ProgressPlugin({
 		activeModules: true,

@@ -15,7 +15,7 @@ const createMultiCompiler = () => {
 			entry: "./b.js"
 		}
 	]);
-	compiler.outputFileSystem = new createFsFromVolume(new Volume());
+	compiler.outputFileSystem = createFsFromVolume(new Volume());
 	return compiler;
 };
 
@@ -103,7 +103,7 @@ describe("MultiCompiler", function() {
 			},
 			() => {}
 		);
-		compiler.outputFileSystem = new createFsFromVolume(new Volume());
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			if (err) return done();
 		});

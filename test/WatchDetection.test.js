@@ -72,7 +72,7 @@ describe("WatchDetection", () => {
 						filename: "bundle.js"
 					}
 				});
-				const memfs = (compiler.outputFileSystem = new createFsFromVolume(
+				const memfs = (compiler.outputFileSystem = createFsFromVolume(
 					new Volume()
 				));
 				let onChange;

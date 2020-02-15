@@ -15,7 +15,7 @@ describe("MultiStats", () => {
 				entry: "./fixtures/b"
 			}
 		]);
-		compiler.outputFileSystem = new createFsFromVolume(new Volume());
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 			try {

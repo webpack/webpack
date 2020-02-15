@@ -6,7 +6,7 @@ const { createFsFromVolume, Volume } = require("memfs");
 const compile = options => {
 	return new Promise((resolve, reject) => {
 		const compiler = webpack(options);
-		compiler.outputFileSystem = new createFsFromVolume(new Volume());
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			if (err) {
 				reject(err);

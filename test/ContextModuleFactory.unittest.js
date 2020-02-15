@@ -8,7 +8,7 @@ describe("ContextModuleFactory", () => {
 		let factory, memfs;
 		beforeEach(() => {
 			factory = new ContextModuleFactory([]);
-			memfs = new createFsFromVolume(new Volume());
+			memfs = createFsFromVolume(new Volume());
 		});
 		it("should not report an error when ENOENT errors happen", done => {
 			memfs.readdir = (dir, callback) => {
