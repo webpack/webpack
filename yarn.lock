@@ -4071,10 +4071,10 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-memfs@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.0.4.tgz#17997ec34d67d0a4756f6a34f2fefd13a8dbab08"
-  integrity sha512-OcZEzwX9E5AoY8SXjuAvw0DbIAYwUzV/I236I8Pqvrlv7sL/Y0E9aRCon05DhaV8pg1b32uxj76RgW0s5xjHBA==
+memfs@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.0.5.tgz#3e7a2f75e560dd595380dcae48ce5ea28f600732"
+  integrity sha512-dsIGlAD8bNJUfbeMzoZWDvyxUhxjoXIooYM3mnVYdLxgihy+byT4811NjeQ4bhiP32aZ9FKO8oXvq9KjLrQL0A==
   dependencies:
     fast-extend "1.0.2"
     fs-monkey "0.3.3"
