@@ -3,11 +3,11 @@ const fs = require("fs");
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
 const FileMiddleware = require("../lib/serialization/FileMiddleware");
 const Serializer = require("../lib/serialization/Serializer");
+const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
 
-const serializer = new Serializer([
-	new BinaryMiddleware(),
-	new FileMiddleware(fs)
-]);
+const binaryMiddleware = new BinaryMiddleware();
+
+const serializer = new Serializer([binaryMiddleware, new FileMiddleware(fs)]);
 
 const rawSerializer = new Serializer([new FileMiddleware(fs)]);
 
@@ -56,6 +56,7 @@ const printData = async (data, indent) => {
 		return;
 	}
 	const referencedValues = new Map();
+	const referencedValuesCounters = new Map();
 	const referencedTypes = new Map();
 	let currentReference = 0;
 	let currentTypeReference = 0;
@@ -81,6 +82,10 @@ const printData = async (data, indent) => {
 			} else if (typeof nextItem === "number" && nextItem < 0) {
 				const ref = currentReference + nextItem;
 				const value = referencedValues.get(ref);
+				referencedValuesCounters.set(
+					ref,
+					(referencedValuesCounters.get(ref) || 0) + 1
+				);
 				if (value) {
 					printLine(
 						`Reference ${nextItem} => ${JSON.stringify(value)} #${ref}`
@@ -117,15 +122,32 @@ const printData = async (data, indent) => {
 			printLine(`buffer ${item.toString("hex")} = #${currentReference++}`);
 		} else if (typeof item === "function") {
 			const innerData = await item();
-			const info = lazySizes.shift();
-			const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
-				info.lazySize / 1048576
-			).toFixed(2)} lazy MiB`;
-			printLine(`lazy ${sizeInfo} {`);
+			if (!SerializerMiddleware.isLazy(item, binaryMiddleware)) {
+				const info = lazySizes.shift();
+				const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
+					info.lazySize / 1048576
+				).toFixed(2)} lazy MiB`;
+				printLine(`lazy-file ${sizeInfo} {`);
+			} else {
+				printLine(`lazy-inline {`);
+			}
 			await printData(innerData, indent + "  ");
 			printLine(`}`);
 		} else {
 			printLine(`${item}`);
+		}
+	}
+	const refCounters = Array.from(referencedValuesCounters);
+	refCounters.sort(([a, A], [b, B]) => {
+		return B - A;
+	});
+	printLine("SUMMARY: top references:");
+	for (const [ref, count] of refCounters.slice(10)) {
+		const value = referencedValues.get(ref);
+		if (value) {
+			printLine(`- #${ref} x ${count} = ${JSON.stringify(value)}`);
+		} else {
+			printLine(`- #${ref} x ${count}`);
 		}
 	}
 };
@@ -133,8 +155,9 @@ const printData = async (data, indent) => {
 const filename = process.argv[2];
 
 (async () => {
-	const structure = await rawSerializer.deserialize({
-		filename: path.resolve(filename)
+	const structure = await rawSerializer.deserialize(null, {
+		filename: path.resolve(filename),
+		extension: ".pack"
 	});
 	const info = await captureSize(structure);
 	const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
@@ -142,8 +165,9 @@ const filename = process.argv[2];
 	).toFixed(2)} lazy MiB`;
 	console.log(`${filename} ${sizeInfo}:`);
 
-	const data = await serializer.deserialize({
-		filename: path.resolve(filename)
+	const data = await serializer.deserialize(null, {
+		filename: path.resolve(filename),
+		extension: ".pack"
 	});
 	await printData(data, "");
 })();

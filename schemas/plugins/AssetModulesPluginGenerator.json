@@ -34,6 +34,19 @@
           "$ref": "#/definitions/DataUrlFunction"
         }
       ]
+    },
+    "filename": {
+      "description": "Template for asset filename",
+      "anyOf": [
+        {
+          "type": "string",
+          "absolutePath": false
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((pathData: import(\"../../lib/Compilation\").PathData, assetInfo?: import(\"../../lib/Compilation\").AssetInfo) => string)"
+        }
+      ]
     }
   }
 }

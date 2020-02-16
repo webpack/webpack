@@ -6,6 +6,13 @@ module.exports = {
 			{
 				test: /\.(png|jpg|svg)$/,
 				type: "asset"
+			},
+			{
+				test: /\.html$/,
+				type: "asset/resource",
+				generator: {
+					filename: "static/[name][ext]"
+				}
 			}
 		]
 	},

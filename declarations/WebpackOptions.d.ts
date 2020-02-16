@@ -20,7 +20,12 @@ export type EntryDynamic = () => EntryStatic | Promise<EntryStatic>;
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "EntryStatic".
  */
-export type EntryStatic = EntryObject | EntryItem;
+export type EntryStatic = EntryObject | EntryUnnamed;
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "EntryItem".
+ */
+export type EntryItem = string | NonEmptyArrayOfUniqueStringValues;
 /**
  * A non-empty array of non-empty strings
  *
@@ -29,10 +34,12 @@ export type EntryStatic = EntryObject | EntryItem;
  */
 export type NonEmptyArrayOfUniqueStringValues = [string, ...string[]];
 /**
+ * An entry point without name.
+ *
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "EntryItem".
+ * via the `definition` "EntryUnnamed".
  */
-export type EntryItem = string | NonEmptyArrayOfUniqueStringValues;
+export type EntryUnnamed = EntryItem;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "Externals".
@@ -526,7 +533,27 @@ export interface EntryObject {
 	/**
 	 * An entry point with name
 	 */
-	[k: string]: string | NonEmptyArrayOfUniqueStringValues;
+	[k: string]: EntryItem | EntryDescription;
+}
+/**
+ * An object with entry point description.
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "EntryDescription".
+ */
+export interface EntryDescription {
+	/**
+	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
+	 */
+	dependOn?: string | NonEmptyArrayOfUniqueStringValues;
+	/**
+	 * The filename of the entrypoint as relative path inside the `output.path` directory.
+	 */
+	filename?: string;
+	/**
+	 * The module(s) loaded at startup.
+	 */
+	import: EntryItem;
 }
 /**
  * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
@@ -1549,6 +1576,10 @@ export interface StatsOptions {
 	 * add the hash of the compilation
 	 */
 	hash?: boolean;
+	/**
+	 * add ids
+	 */
+	ids?: boolean;
 	/**
 	 * add logging output
 	 */

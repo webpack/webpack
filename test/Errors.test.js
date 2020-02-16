@@ -9,10 +9,10 @@ const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
 const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/gm;
 
 function cleanError(err) {
-	const result = Object.getOwnPropertyNames(err).reduce((result, key) => {
+	const result = {};
+	for (const key of Object.getOwnPropertyNames(err)) {
 		result[key] = err[key];
-		return result;
-	}, {});
+	}
 
 	if (result.message) {
 		result.message = err.message.replace(ERROR_STACK_PATTERN, "");

@@ -20,6 +20,15 @@ export interface AssetModulesPluginGeneratorOptions {
 	 * The options for data url generator
 	 */
 	dataUrl?: DataUrlOptions | DataUrlFunction;
+	/**
+	 * Template for asset filename
+	 */
+	filename?:
+		| string
+		| ((
+				pathData: import("../../lib/Compilation").PathData,
+				assetInfo?: import("../../lib/Compilation").AssetInfo
+		  ) => string);
 }
 /**
  * This interface was referenced by `AssetModulesPluginGeneratorOptions`'s JSON-Schema

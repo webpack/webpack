@@ -22,6 +22,7 @@ module.exports = {
 					STRING: JSON.stringify("string")
 				}
 			},
+			ARRAY: [2, [JSON.stringify("six")]],
 			"process.env.DEFINED_NESTED_KEY": 5,
 			"process.env.DEFINED_NESTED_KEY_STRING": '"string"',
 			"typeof wurst": "typeof suppe",
