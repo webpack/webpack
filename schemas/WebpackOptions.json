@@ -2655,6 +2655,7 @@
           "enum": [
             "web",
             "webworker",
+            "async-webworker",
             "node",
             "async-node",
             "node-webkit",
