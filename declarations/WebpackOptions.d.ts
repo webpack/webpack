@@ -5,44 +5,63 @@
  */
 
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "Entry".
+ * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
+ */
+export type Amd =
+	| false
+	| {
+			[k: string]: any;
+	  };
+/**
+ * Report the first error as a hard error instead of tolerating it.
+ */
+export type Bail = boolean;
+/**
+ * Cache generated modules and chunks to improve performance for multiple incremental builds.
+ */
+export type Cache = CacheNormalized | true;
+/**
+ * Cache generated modules and chunks to improve performance for multiple incremental builds.
+ */
+export type CacheNormalized = false | MemoryCacheOptions | FileCacheOptions;
+/**
+ * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
+ */
+export type Context = string;
+/**
+ * References to other configurations to depend on.
+ */
+export type Dependencies = string[];
+/**
+ * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+ */
+export type DevTool = (false | "eval") | string;
+/**
+ * The entry point(s) of the compilation.
  */
 export type Entry = EntryDynamic | EntryStatic;
 /**
  * A Function returning an entry object, an entry string, an entry array or a promise to these things.
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "EntryDynamic".
  */
 export type EntryDynamic = () => EntryStatic | Promise<EntryStatic>;
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "EntryStatic".
+ * A static entry description
  */
 export type EntryStatic = EntryObject | EntryUnnamed;
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "EntryItem".
+ * Module(s) that are loaded upon startup
  */
 export type EntryItem = string | NonEmptyArrayOfUniqueStringValues;
 /**
  * A non-empty array of non-empty strings
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "NonEmptyArrayOfUniqueStringValues".
  */
 export type NonEmptyArrayOfUniqueStringValues = [string, ...string[]];
 /**
  * An entry point without name.
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "EntryUnnamed".
  */
 export type EntryUnnamed = EntryItem;
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "Externals".
+ * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
  */
 export type Externals =
 	| ((
@@ -60,8 +79,7 @@ export type Externals =
 			| ExternalItem
 	  )[];
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ExternalItem".
+ * Specify dependency that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
  */
 export type ExternalItem =
 	| string
@@ -79,30 +97,27 @@ export type ExternalItem =
 	  }
 	| RegExp;
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ArrayOfStringValues".
+ * Array of strings
  */
 export type ArrayOfStringValues = string[];
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "FilterTypes".
+ * Filtering values
  */
 export type FilterTypes = FilterItemTypes | FilterItemTypes[];
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "FilterItemTypes".
+ * Filtering value, regexp or function
  */
 export type FilterItemTypes = RegExp | string | ((value: string) => boolean);
 /**
+ * Enable production optimizations or development hints.
+ */
+export type Mode = "development" | "production" | "none";
+/**
  * One or multiple rule conditions
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetConditionOrConditions".
  */
 export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetCondition".
+ * A condition matcher
  */
 export type RuleSetCondition =
 	| RegExp
@@ -136,22 +151,17 @@ export type RuleSetCondition =
 			test?: RuleSetConditionOrConditions;
 	  };
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetConditions".
+ * A list of rule conditions
  */
 export type RuleSetConditions = RuleSetCondition[];
 /**
- * One or multiple rule conditions
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetConditionOrConditionsAbsolute".
+ * One or multiple rule conditions matching an absolute path
  */
 export type RuleSetConditionOrConditionsAbsolute =
 	| RuleSetConditionAbsolute
 	| RuleSetConditionsAbsolute;
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetConditionAbsolute".
+ * A condition matcher matching an absolute path
  */
 export type RuleSetConditionAbsolute =
 	| RegExp
@@ -185,26 +195,22 @@ export type RuleSetConditionAbsolute =
 			test?: RuleSetConditionOrConditionsAbsolute;
 	  };
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetConditionsAbsolute".
+ * A list of rule conditions matching an absolute path
  */
 export type RuleSetConditionsAbsolute = RuleSetConditionAbsolute[];
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetLoader".
+ * A loader request
  */
 export type RuleSetLoader = string;
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetUse".
+ * A list of descriptions of loaders applied
  */
 export type RuleSetUse =
 	| RuleSetUseItem
 	| ((data: object) => RuleSetUseItem[])
 	| RuleSetUseItem[];
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetUseItem".
+ * A description of an applied loader
  */
 export type RuleSetUseItem =
 	| RuleSetLoader
@@ -224,8 +230,7 @@ export type RuleSetUseItem =
 			options?: RuleSetLoaderOptions;
 	  };
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetLoaderOptions".
+ * Options passed to a loader
  */
 export type RuleSetLoaderOptions =
 	| {
@@ -233,28 +238,42 @@ export type RuleSetLoaderOptions =
 	  }
 	| string;
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ArrayOfStringOrStringArrayValues".
+ * List of string or string-array values
  */
 export type ArrayOfStringOrStringArrayValues = (string | string[])[];
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetRules".
+ * A list of rules
  */
 export type RuleSetRules = RuleSetRule[];
 /**
+ * Name of the configuration. Used when loading multiple configurations.
+ */
+export type Name = string;
+/**
+ * Include polyfills or mocks for various node stuff.
+ */
+export type Node = false | NodeOptions;
+/**
  * Function acting as plugin
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "WebpackPluginFunction".
  */
 export type WebpackPluginFunction = (
 	this: import("../lib/Compiler"),
 	compiler: import("../lib/Compiler")
 ) => void;
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "OptimizationSplitChunksGetCacheGroups".
+ * Create an additional chunk which contains only the webpack runtime and chunk hash maps
+ */
+export type OptimizationRuntimeChunk =
+	| boolean
+	| ("single" | "multiple")
+	| {
+			/**
+			 * The name or name factory for the runtime chunks
+			 */
+			name?: string | Function;
+	  };
+/**
+ * A function returning cache groups
  */
 export type OptimizationSplitChunksGetCacheGroups = (
 	module: import("../lib/Module")
@@ -263,8 +282,7 @@ export type OptimizationSplitChunksGetCacheGroups = (
 	| OptimizationSplitChunksCacheGroup[]
 	| void;
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "OptimizationSplitChunksSizes".
+ * Size description for limits
  */
 export type OptimizationSplitChunksSizes =
 	| number
@@ -274,42 +292,128 @@ export type OptimizationSplitChunksSizes =
 			 */
 			[k: string]: number;
 	  };
+/**
+ * The number of parallel processed modules in the compilation.
+ */
+export type Parallelism = number;
+/**
+ * Configuration for web performance recommendations
+ */
+export type Performance = false | PerformanceOptions;
+/**
+ * Add additional plugins to the compiler.
+ */
+export type Plugins = (WebpackPluginInstance | WebpackPluginFunction)[];
+/**
+ * Capture timing information for each module.
+ */
+export type Profile = boolean;
+/**
+ * Store compiler state to a json file.
+ */
+export type RecordsInputPath = false | string;
+/**
+ * Load compiler state from a json file.
+ */
+export type RecordsOutputPath = false | string;
+/**
+ * Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.
+ */
+export type RecordsPath = false | string;
+/**
+ * Options for the resolver
+ */
+export type Resolve = ResolveOptions;
+/**
+ * Options for the resolver when resolving loaders
+ */
+export type ResolveLoader = ResolveOptions;
+/**
+ * Stats options object or preset name
+ */
+export type Stats =
+	| StatsOptions
+	| boolean
+	| (
+			| "none"
+			| "errors-only"
+			| "minimal"
+			| "normal"
+			| "detailed"
+			| "verbose"
+			| "errors-warnings"
+	  );
+/**
+ * Environment to build for
+ */
+export type Target =
+	| (
+			| "web"
+			| "webworker"
+			| "node"
+			| "async-node"
+			| "node-webkit"
+			| "electron-main"
+			| "electron-renderer"
+			| "electron-preload"
+	  )
+	| ((compiler: import("../lib/Compiler")) => void);
+/**
+ * Enter watch mode, which rebuilds on file change.
+ */
+export type Watch = boolean;
+/**
+ * A Function returning a Promise resolving to a normalized entry.
+ */
+export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
+/**
+ * The entry point(s) of the compilation.
+ */
+export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
+/**
+ * Create an additional chunk which contains only the webpack runtime and chunk hash maps
+ */
+export type OptimizationRuntimeChunkNormalized =
+	| false
+	| {
+			/**
+			 * The name factory for the runtime chunks
+			 */
+			name?: Function;
+	  };
 
+/**
+ * webpack options object as provided by the user
+ */
 export interface WebpackOptions {
 	/**
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?:
-		| false
-		| {
-				[k: string]: any;
-		  };
+	amd?: Amd;
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
 	 */
-	bail?: boolean;
+	bail?: Bail;
 	/**
 	 * Cache generated modules and chunks to improve performance for multiple incremental builds.
 	 */
-	cache?: false | true | MemoryCacheOptions | FileCacheOptions;
+	cache?: Cache;
 	/**
 	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
 	 */
-	context?: string;
+	context?: Context;
 	/**
 	 * References to other configurations to depend on.
 	 */
-	dependencies?: string[];
+	dependencies?: Dependencies;
 	/**
 	 * Options for the webpack-dev-server
 	 */
-	devServer?: {
-		[k: string]: any;
-	};
+	devServer?: DevServer;
 	/**
 	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 	 */
-	devtool?: (false | "eval") | string;
+	devtool?: DevTool;
 	/**
 	 * The entry point(s) of the compilation.
 	 */
@@ -325,130 +429,94 @@ export interface WebpackOptions {
 	/**
 	 * Options for infrastructure level logging
 	 */
-	infrastructureLogging?: {
-		/**
-		 * Enable debug logging for specific loggers
-		 */
-		debug?: FilterTypes | boolean;
-		/**
-		 * Log level
-		 */
-		level?: "none" | "error" | "warn" | "info" | "log" | "verbose";
-	};
+	infrastructureLogging?: InfrastructureLogging;
 	/**
 	 * Custom values available in the loader context.
 	 */
-	loader?: {
-		[k: string]: any;
-	};
+	loader?: Loader;
 	/**
 	 * Enable production optimizations or development hints.
 	 */
-	mode?: "development" | "production" | "none";
+	mode?: Mode;
 	/**
 	 * Options affecting the normal modules (`NormalModuleFactory`).
 	 */
-	module?: ModuleOptions;
+	module?: Module;
 	/**
 	 * Name of the configuration. Used when loading multiple configurations.
 	 */
-	name?: string;
+	name?: Name;
 	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
-	node?: false | NodeOptions;
+	node?: Node;
 	/**
 	 * Enables/Disables integrated optimizations
 	 */
-	optimization?: OptimizationOptions;
+	optimization?: Optimization;
 	/**
 	 * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
 	 */
-	output?: OutputOptions;
+	output?: Output;
 	/**
 	 * The number of parallel processed modules in the compilation.
 	 */
-	parallelism?: number;
+	parallelism?: Parallelism;
 	/**
-	 * Configuration for web performance recommendations.
+	 * Configuration for web performance recommendations
 	 */
-	performance?: false | PerformanceOptions;
+	performance?: Performance;
 	/**
 	 * Add additional plugins to the compiler.
 	 */
-	plugins?: (WebpackPluginInstance | WebpackPluginFunction)[];
+	plugins?: Plugins;
 	/**
 	 * Capture timing information for each module.
 	 */
-	profile?: boolean;
+	profile?: Profile;
 	/**
 	 * Store compiler state to a json file.
 	 */
-	recordsInputPath?: string;
+	recordsInputPath?: RecordsInputPath;
 	/**
 	 * Load compiler state from a json file.
 	 */
-	recordsOutputPath?: string;
+	recordsOutputPath?: RecordsOutputPath;
 	/**
 	 * Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.
 	 */
-	recordsPath?: string;
+	recordsPath?: RecordsPath;
 	/**
 	 * Options for the resolver
 	 */
-	resolve?: ResolveOptions;
+	resolve?: Resolve;
 	/**
 	 * Options for the resolver when resolving loaders
 	 */
-	resolveLoader?: ResolveOptions;
+	resolveLoader?: ResolveLoader;
 	/**
 	 * Options for webpack-serve
 	 */
-	serve?: {
-		[k: string]: any;
-	};
+	serve?: Serve;
 	/**
-	 * Used by the webpack CLI program to pass stats options.
+	 * Stats options object or preset name
 	 */
-	stats?:
-		| StatsOptions
-		| boolean
-		| (
-				| "none"
-				| "errors-only"
-				| "minimal"
-				| "normal"
-				| "detailed"
-				| "verbose"
-				| "errors-warnings"
-		  );
+	stats?: Stats;
 	/**
 	 * Environment to build for
 	 */
-	target?:
-		| (
-				| "web"
-				| "webworker"
-				| "node"
-				| "async-node"
-				| "node-webkit"
-				| "electron-main"
-				| "electron-renderer"
-				| "electron-preload"
-		  )
-		| ((compiler: import("../lib/Compiler")) => void);
+	target?: Target;
 	/**
 	 * Enter watch mode, which rebuilds on file change.
 	 */
-	watch?: boolean;
+	watch?: Watch;
 	/**
 	 * Options for the watcher
 	 */
 	watchOptions?: WatchOptions;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "MemoryCacheOptions".
+ * Options object for in-memory caching
  */
 export interface MemoryCacheOptions {
 	/**
@@ -465,8 +533,7 @@ export interface MemoryCacheOptions {
 	type: "memory";
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "FileCacheOptions".
+ * Options object for persistent file-based caching
  */
 export interface FileCacheOptions {
 	/**
@@ -524,10 +591,13 @@ export interface FileCacheOptions {
 	version?: string;
 }
 /**
- * Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "EntryObject".
+ * Options for the webpack-dev-server
+ */
+export interface DevServer {
+	[k: string]: any;
+}
+/**
+ * Multiple entry bundles are created. The key is the entry name. The value can be a string, an array or an entry description object.
  */
 export interface EntryObject {
 	/**
@@ -537,9 +607,6 @@ export interface EntryObject {
 }
 /**
  * An object with entry point description.
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "EntryDescription".
  */
 export interface EntryDescription {
 	/**
@@ -557,9 +624,6 @@ export interface EntryDescription {
 }
 /**
  * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "Experiments".
  */
 export interface Experiments {
 	/**
@@ -596,10 +660,28 @@ export interface Experiments {
 	topLevelAwait?: boolean;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ModuleOptions".
+ * Options for infrastructure level logging
  */
-export interface ModuleOptions {
+export interface InfrastructureLogging {
+	/**
+	 * Enable debug logging for specific loggers
+	 */
+	debug?: FilterTypes | boolean;
+	/**
+	 * Log level
+	 */
+	level?: "none" | "error" | "warn" | "info" | "log" | "verbose";
+}
+/**
+ * Custom values available in the loader context.
+ */
+export interface Loader {
+	[k: string]: any;
+}
+/**
+ * Options affecting the normal modules (`NormalModuleFactory`).
+ */
+export interface Module {
 	/**
 	 * An array of rules applied by default for modules.
 	 */
@@ -675,8 +757,7 @@ export interface ModuleOptions {
 	wrappedContextRegExp?: RegExp;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetRule".
+ * A rule description with conditions and effects for modules
  */
 export interface RuleSetRule {
 	/**
@@ -761,8 +842,7 @@ export interface RuleSetRule {
 	use?: RuleSetUse;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ResolveOptions".
+ * Options object for resolving requests
  */
 export interface ResolveOptions {
 	/**
@@ -864,9 +944,6 @@ export interface ResolveOptions {
 }
 /**
  * Plugin instance
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ResolvePluginInstance".
  */
 export interface ResolvePluginInstance {
 	/**
@@ -876,8 +953,7 @@ export interface ResolvePluginInstance {
 	[k: string]: any;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "NodeOptions".
+ * Options object for node compatibility features
  */
 export interface NodeOptions {
 	/**
@@ -895,11 +971,8 @@ export interface NodeOptions {
 }
 /**
  * Enables/Disables integrated optimizations
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "OptimizationOptions".
  */
-export interface OptimizationOptions {
+export interface Optimization {
 	/**
 	 * Check for incompatible wasm types when importing/exporting from/to ESM
 	 */
@@ -977,15 +1050,7 @@ export interface OptimizationOptions {
 	/**
 	 * Create an additional chunk which contains only the webpack runtime and chunk hash maps
 	 */
-	runtimeChunk?:
-		| boolean
-		| ("single" | "multiple")
-		| {
-				/**
-				 * The name or name factory for the runtime chunks
-				 */
-				name?: string | Function;
-		  };
+	runtimeChunk?: OptimizationRuntimeChunk;
 	/**
 	 * Skip over modules which are flagged to contain no side effects when exports are not used
 	 */
@@ -1001,9 +1066,6 @@ export interface OptimizationOptions {
 }
 /**
  * Plugin instance
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "WebpackPluginInstance".
  */
 export interface WebpackPluginInstance {
 	/**
@@ -1013,8 +1075,7 @@ export interface WebpackPluginInstance {
 	[k: string]: any;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "OptimizationSplitChunksOptions".
+ * Options object for splitting chunks into smaller chunks
  */
 export interface OptimizationSplitChunksOptions {
 	/**
@@ -1115,8 +1176,7 @@ export interface OptimizationSplitChunksOptions {
 	name?: false | Function | string;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "OptimizationSplitChunksCacheGroup".
+ * Options object for describing behavior of a cache group selecting modules that should be cached together
  */
 export interface OptimizationSplitChunksCacheGroup {
 	/**
@@ -1200,10 +1260,9 @@ export interface OptimizationSplitChunksCacheGroup {
 	type?: Function | string | RegExp;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "OutputOptions".
+ * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
  */
-export interface OutputOptions {
+export interface Output {
 	/**
 	 * The filename of asset modules as relative path inside the `output.path` directory.
 	 */
@@ -1378,9 +1437,6 @@ export interface OutputOptions {
 }
 /**
  * Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "LibraryCustomUmdCommentObject".
  */
 export interface LibraryCustomUmdCommentObject {
 	/**
@@ -1401,8 +1457,7 @@ export interface LibraryCustomUmdCommentObject {
 	root?: string;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "LibraryCustomUmdObject".
+ * Description object for all UMD variants of the library name
  */
 export interface LibraryCustomUmdObject {
 	/**
@@ -1419,8 +1474,7 @@ export interface LibraryCustomUmdObject {
 	root?: string | ArrayOfStringValues;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "PerformanceOptions".
+ * Configuration object for web performance recommendations
  */
 export interface PerformanceOptions {
 	/**
@@ -1441,8 +1495,13 @@ export interface PerformanceOptions {
 	maxEntrypointSize?: number;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "StatsOptions".
+ * Options for webpack-serve
+ */
+export interface Serve {
+	[k: string]: any;
+}
+/**
+ * Stats options object
  */
 export interface StatsOptions {
 	/**
@@ -1678,8 +1737,7 @@ export interface StatsOptions {
 	warningsFilter?: FilterTypes;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "WatchOptions".
+ * Options for the watcher
  */
 export interface WatchOptions {
 	/**
@@ -1698,4 +1756,142 @@ export interface WatchOptions {
 	 * Stop watching when stdin stream has ended
 	 */
 	stdin?: boolean;
+}
+/**
+ * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
+ */
+export interface EntryStaticNormalized {
+	/**
+	 * An object with entry point description.
+	 */
+	[k: string]: EntryDescription;
+}
+/**
+ * Normalized webpack options object
+ */
+export interface WebpackOptionsNormalized {
+	/**
+	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
+	 */
+	amd?: Amd;
+	/**
+	 * Report the first error as a hard error instead of tolerating it.
+	 */
+	bail?: Bail;
+	/**
+	 * Cache generated modules and chunks to improve performance for multiple incremental builds.
+	 */
+	cache: CacheNormalized;
+	/**
+	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
+	 */
+	context?: Context;
+	/**
+	 * References to other configurations to depend on.
+	 */
+	dependencies?: Dependencies;
+	/**
+	 * Options for the webpack-dev-server
+	 */
+	devServer?: DevServer;
+	/**
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+	 */
+	devtool?: DevTool;
+	/**
+	 * The entry point(s) of the compilation.
+	 */
+	entry: EntryNormalized;
+	/**
+	 * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
+	 */
+	experiments: Experiments;
+	/**
+	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
+	 */
+	externals: Externals;
+	/**
+	 * Options for infrastructure level logging
+	 */
+	infrastructureLogging: InfrastructureLogging;
+	/**
+	 * Custom values available in the loader context.
+	 */
+	loader?: Loader;
+	/**
+	 * Enable production optimizations or development hints.
+	 */
+	mode?: Mode;
+	/**
+	 * Options affecting the normal modules (`NormalModuleFactory`).
+	 */
+	module: Module;
+	/**
+	 * Name of the configuration. Used when loading multiple configurations.
+	 */
+	name?: Name;
+	/**
+	 * Include polyfills or mocks for various node stuff.
+	 */
+	node: Node;
+	/**
+	 * Enables/Disables integrated optimizations
+	 */
+	optimization: Optimization;
+	/**
+	 * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
+	 */
+	output: Output;
+	/**
+	 * The number of parallel processed modules in the compilation.
+	 */
+	parallelism?: Parallelism;
+	/**
+	 * Configuration for web performance recommendations
+	 */
+	performance?: Performance;
+	/**
+	 * Add additional plugins to the compiler.
+	 */
+	plugins: Plugins;
+	/**
+	 * Capture timing information for each module.
+	 */
+	profile?: Profile;
+	/**
+	 * Store compiler state to a json file.
+	 */
+	recordsInputPath?: RecordsInputPath;
+	/**
+	 * Load compiler state from a json file.
+	 */
+	recordsOutputPath?: RecordsOutputPath;
+	/**
+	 * Options for the resolver
+	 */
+	resolve: Resolve;
+	/**
+	 * Options for the resolver when resolving loaders
+	 */
+	resolveLoader: ResolveLoader;
+	/**
+	 * Options for webpack-serve
+	 */
+	serve?: Serve;
+	/**
+	 * Stats options object or preset name
+	 */
+	stats: Stats;
+	/**
+	 * Environment to build for
+	 */
+	target?: Target;
+	/**
+	 * Enter watch mode, which rebuilds on file change.
+	 */
+	watch?: Watch;
+	/**
+	 * Options for the watcher
+	 */
+	watchOptions: WatchOptions;
 }

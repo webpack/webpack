@@ -6,9 +6,6 @@
 
 /**
  * Function that executes for module and should return whenever asset should be inlined as DataUrl
- *
- * This interface was referenced by `AssetModulesPluginParserOptions`'s JSON-Schema
- * via the `definition` "DataUrlFunction".
  */
 export type DataUrlFunction = (
 	source: string | Buffer,
@@ -22,8 +19,7 @@ export interface AssetModulesPluginParserOptions {
 	dataUrlCondition?: DataUrlOptions | DataUrlFunction;
 }
 /**
- * This interface was referenced by `AssetModulesPluginParserOptions`'s JSON-Schema
- * via the `definition` "DataUrlOptions".
+ * Options object for DataUrl condition
  */
 export interface DataUrlOptions {
 	/**

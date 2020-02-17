@@ -5,15 +5,14 @@ const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 
 const webpack = require("..");
-const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 let fixtureCount = 0;
 
 describe("Compiler (caching)", () => {
 	jest.setTimeout(15000);
 
 	function compile(entry, options, callback) {
+		options = webpack.config.getNormalizedWebpackOptions(options);
 		options.mode = "none";
-		options = new WebpackOptionsDefaulter().process(options);
 		options.cache = true;
 		options.entry = entry;
 		options.optimization.moduleIds = "natural";

@@ -1,6 +1,7 @@
 {
   "definitions": {
     "rule": {
+      "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
       "oneOf": [
         {
           "instanceof": "RegExp",
@@ -13,6 +14,7 @@
       ]
     },
     "rules": {
+      "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
       "oneOf": [
         {
           "type": "array",
@@ -135,12 +137,7 @@
       "type": "string"
     },
     "test": {
-      "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/rules"
-        }
-      ]
+      "$ref": "#/definitions/rules"
     }
   }
 }
