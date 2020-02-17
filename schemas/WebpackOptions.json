@@ -14,6 +14,7 @@
       ]
     },
     "ArrayOfStringOrStringArrayValues": {
+      "description": "List of string or string-array values",
       "type": "array",
       "items": {
         "description": "string or array of strings",
@@ -34,6 +35,7 @@
       }
     },
     "ArrayOfStringValues": {
+      "description": "Array of strings",
       "type": "array",
       "items": {
         "description": "A non-empty string",
@@ -172,6 +174,7 @@
       "tsType": "(() => Promise<EntryStaticNormalized>)"
     },
     "EntryItem": {
+      "description": "Module(s) that are loaded upon startup",
       "oneOf": [
         {
           "description": "The string is resolved to a module which is loaded upon startup.",
@@ -226,6 +229,7 @@
       "minProperties": 1
     },
     "EntryStatic": {
+      "description": "A static entry description",
       "oneOf": [
         {
           "$ref": "#/definitions/EntryObject"
@@ -296,6 +300,7 @@
       }
     },
     "ExternalItem": {
+      "description": "Specify dependency that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",
       "anyOf": [
         {
           "description": "An exact matched dependency becomes external. The same string is used as external dependency.",
@@ -359,6 +364,7 @@
       ]
     },
     "FileCacheOptions": {
+      "description": "Options object for persistent file-based caching",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -439,6 +445,7 @@
       "required": ["type"]
     },
     "FilterItemTypes": {
+      "description": "Filtering value, regexp or function",
       "anyOf": [
         {
           "instanceof": "RegExp",
@@ -454,6 +461,7 @@
       ]
     },
     "FilterTypes": {
+      "description": "Filtering values",
       "anyOf": [
         {
           "$ref": "#/definitions/FilterItemTypes"
@@ -518,6 +526,7 @@
       }
     },
     "LibraryCustomUmdObject": {
+      "description": "Description object for all UMD variants of the library name",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -547,6 +556,7 @@
       "type": "object"
     },
     "MemoryCacheOptions": {
+      "description": "Options object for in-memory caching",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -736,6 +746,7 @@
       ]
     },
     "NodeOptions": {
+      "description": "Options object for node compatibility features",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -935,6 +946,7 @@
       ]
     },
     "OptimizationSplitChunksCacheGroup": {
+      "description": "Options object for describing behavior of a cache group selecting modules that should be cached together",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -1089,10 +1101,12 @@
       }
     },
     "OptimizationSplitChunksGetCacheGroups": {
+      "description": "A function returning cache groups",
       "instanceof": "Function",
       "tsType": "((module: import('../lib/Module')) => OptimizationSplitChunksCacheGroup | OptimizationSplitChunksCacheGroup[] | void)"
     },
     "OptimizationSplitChunksOptions": {
+      "description": "Options object for splitting chunks into smaller chunks",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -1298,6 +1312,7 @@
       }
     },
     "OptimizationSplitChunksSizes": {
+      "description": "Size description for limits",
       "anyOf": [
         {
           "description": "Size of the javascript part of the chunk",
@@ -1588,7 +1603,7 @@
       "minimum": 1
     },
     "Performance": {
-      "description": "Configuration for web performance recommendations.",
+      "description": "Configuration for web performance recommendations",
       "anyOf": [
         {
           "enum": [false]
@@ -1599,6 +1614,7 @@
       ]
     },
     "PerformanceOptions": {
+      "description": "Configuration object for web performance recommendations",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -1693,6 +1709,7 @@
       ]
     },
     "ResolveOptions": {
+      "description": "Options object for resolving requests",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -1888,6 +1905,7 @@
       "required": ["apply"]
     },
     "RuleSetCondition": {
+      "description": "A condition matcher",
       "anyOf": [
         {
           "instanceof": "RegExp",
@@ -1961,6 +1979,7 @@
       ]
     },
     "RuleSetConditionAbsolute": {
+      "description": "A condition matcher matching an absolute path",
       "anyOf": [
         {
           "instanceof": "RegExp",
@@ -2045,7 +2064,7 @@
       ]
     },
     "RuleSetConditionOrConditionsAbsolute": {
-      "description": "One or multiple rule conditions",
+      "description": "One or multiple rule conditions matching an absolute path",
       "anyOf": [
         {
           "$ref": "#/definitions/RuleSetConditionAbsolute"
@@ -2056,6 +2075,7 @@
       ]
     },
     "RuleSetConditions": {
+      "description": "A list of rule conditions",
       "type": "array",
       "items": {
         "description": "A rule condition",
@@ -2067,9 +2087,10 @@
       }
     },
     "RuleSetConditionsAbsolute": {
+      "description": "A list of rule conditions matching an absolute path",
       "type": "array",
       "items": {
-        "description": "A rule condition",
+        "description": "A rule condition matching an absolute path",
         "anyOf": [
           {
             "$ref": "#/definitions/RuleSetConditionAbsolute"
@@ -2078,10 +2099,12 @@
       }
     },
     "RuleSetLoader": {
+      "description": "A loader request",
       "type": "string",
       "minLength": 1
     },
     "RuleSetLoaderOptions": {
+      "description": "Options passed to a loader",
       "anyOf": [
         {
           "type": "object"
@@ -2092,6 +2115,7 @@
       ]
     },
     "RuleSetRule": {
+      "description": "A rule description with conditions and effects for modules",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -2235,6 +2259,7 @@
       }
     },
     "RuleSetRules": {
+      "description": "A list of rules",
       "type": "array",
       "items": {
         "description": "A rule",
@@ -2246,6 +2271,7 @@
       }
     },
     "RuleSetUse": {
+      "description": "A list of descriptions of loaders applied",
       "anyOf": [
         {
           "$ref": "#/definitions/RuleSetUseItem"
@@ -2268,6 +2294,7 @@
       ]
     },
     "RuleSetUseItem": {
+      "description": "A description of an applied loader",
       "anyOf": [
         {
           "$ref": "#/definitions/RuleSetLoader"
@@ -2309,7 +2336,7 @@
       "type": "object"
     },
     "Stats": {
-      "description": "Used by the webpack CLI program to pass stats options.",
+      "description": "Stats options object or preset name",
       "anyOf": [
         {
           "$ref": "#/definitions/StatsOptions"
@@ -2331,6 +2358,7 @@
       ]
     },
     "StatsOptions": {
+      "description": "Stats options object",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -2689,6 +2717,7 @@
       }
     },
     "WebpackOptionsNormalized": {
+      "description": "Normalized webpack options object",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -2822,6 +2851,7 @@
       "required": ["apply"]
     }
   },
+  "description": "webpack options object as provided by the user",
   "type": "object",
   "additionalProperties": false,
   "properties": {

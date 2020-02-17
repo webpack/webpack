@@ -16,7 +16,13 @@ export type BannerFunction = (data: {
 	chunk: import("../../lib/Chunk");
 	filename: string;
 }) => string;
+/**
+ * Filtering rules
+ */
 export type Rules = Rule[] | Rule;
+/**
+ * Filtering rule as regex or string
+ */
 export type Rule = RegExp | string;
 
 export interface BannerPluginOptions {

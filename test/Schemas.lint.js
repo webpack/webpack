@@ -139,7 +139,12 @@ describe("Schemas", () => {
 					if ("definitions" in item) {
 						Object.keys(item.definitions).forEach(name => {
 							describe(`#${name}`, () => {
-								walker(item.definitions[name]);
+								const def = item.definitions[name];
+								it("should have description set", () => {
+									expect(typeof def.description).toBe("string");
+									expect(def.description.length).toBeGreaterThan(1);
+								});
+								walker(def);
 							});
 						});
 					}
@@ -150,14 +155,18 @@ describe("Schemas", () => {
 						Object.keys(item.properties).forEach(name => {
 							describe(`> '${name}'`, () => {
 								const property = item.properties[name];
-								validateProperty(property);
+								if (Object.keys(property).join() !== "$ref") {
+									validateProperty(property);
+								}
 								walker(property);
 							});
 						});
 					}
 					if (typeof item.additionalProperties === "object") {
 						describe("properties", () => {
-							validateProperty(item.additionalProperties);
+							if (Object.keys(item.additionalProperties).join() !== "$ref") {
+								validateProperty(item.additionalProperties);
+							}
 							walker(item.additionalProperties);
 						});
 					}

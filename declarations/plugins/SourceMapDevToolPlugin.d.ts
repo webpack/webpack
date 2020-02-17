@@ -5,13 +5,11 @@
  */
 
 /**
- * This interface was referenced by `SourceMapDevToolPluginOptions`'s JSON-Schema
- * via the `definition` "rules".
+ * Include source maps for modules based on their extension (defaults to .js and .css)
  */
 export type Rules = Rule[] | Rule;
 /**
- * This interface was referenced by `SourceMapDevToolPluginOptions`'s JSON-Schema
- * via the `definition` "rule".
+ * Include source maps for modules based on their extension (defaults to .js and .css)
  */
 export type Rule = RegExp | string;
 

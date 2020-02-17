@@ -6,6 +6,7 @@
       "tsType": "((source: string | Buffer, context: { filename: string, module: import('../../lib/Module') }) => string)"
     },
     "DataUrlOptions": {
+      "description": "Options object for data url generation",
       "type": "object",
       "additionalProperties": false,
       "properties": {
