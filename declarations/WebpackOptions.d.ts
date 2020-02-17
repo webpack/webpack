@@ -1118,7 +1118,7 @@ export interface OutputOptions {
 	/**
 	 * The filename of the Hot Update Chunks. They are inside the output.path directory.
 	 */
-	hotUpdateChunkFilename?: string | Function;
+	hotUpdateChunkFilename?: string;
 	/**
 	 * The JSONP function used by webpack for async loading of hot update chunks.
 	 */
