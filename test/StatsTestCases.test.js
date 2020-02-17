@@ -146,16 +146,16 @@ describe("StatsTestCases", () => {
 					colors: false
 				};
 				let hasColorSetting = false;
-				if (typeof options.stats !== "undefined") {
-					toStringOptions = options.stats;
+				if (typeof c.options.stats !== "undefined") {
+					toStringOptions = c.options.stats;
 					if (toStringOptions === null || typeof toStringOptions !== "object")
 						toStringOptions = { preset: toStringOptions };
 					if (!toStringOptions.context)
 						toStringOptions.context = path.join(base, testName);
 					hasColorSetting = typeof toStringOptions.colors !== "undefined";
 				}
-				if (Array.isArray(options) && !toStringOptions.children) {
-					toStringOptions.children = options.map(o => o.stats);
+				if (Array.isArray(c.options) && !toStringOptions.children) {
+					toStringOptions.children = c.options.map(o => o.stats);
 				}
 				// mock timestamps
 				for (const s of [].concat(stats.stats || stats)) {

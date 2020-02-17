@@ -1,5 +1,18 @@
 {
   "definitions": {
+    "Amd": {
+      "description": "Set the value of `require.amd` and `define.amd`. Or disable AMD support.",
+      "anyOf": [
+        {
+          "description": "You can pass `false` to disable AMD support.",
+          "enum": [false]
+        },
+        {
+          "description": "You can pass an object to set the value of `require.amd` and `define.amd`.",
+          "type": "object"
+        }
+      ]
+    },
     "ArrayOfStringOrStringArrayValues": {
       "type": "array",
       "items": {
@@ -28,7 +41,78 @@
         "minLength": 1
       }
     },
+    "Bail": {
+      "description": "Report the first error as a hard error instead of tolerating it.",
+      "type": "boolean"
+    },
+    "Cache": {
+      "description": "Cache generated modules and chunks to improve performance for multiple incremental builds.",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CacheNormalized"
+        },
+        {
+          "description": "Enable in memory caching.",
+          "enum": [true]
+        }
+      ]
+    },
+    "CacheNormalized": {
+      "description": "Cache generated modules and chunks to improve performance for multiple incremental builds.",
+      "anyOf": [
+        {
+          "description": "Disable caching.",
+          "enum": [false]
+        },
+        {
+          "description": "Options for memory caching.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MemoryCacheOptions"
+            }
+          ]
+        },
+        {
+          "description": "Options for persistent caching.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FileCacheOptions"
+            }
+          ]
+        }
+      ]
+    },
+    "Context": {
+      "description": "The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.",
+      "type": "string",
+      "absolutePath": true
+    },
+    "Dependencies": {
+      "description": "References to other configurations to depend on.",
+      "type": "array",
+      "items": {
+        "description": "References to another configuration to depend on.",
+        "type": "string"
+      }
+    },
+    "DevServer": {
+      "description": "Options for the webpack-dev-server",
+      "type": "object"
+    },
+    "DevTool": {
+      "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+      "oneOf": [
+        {
+          "enum": [false, "eval"]
+        },
+        {
+          "type": "string",
+          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$"
+        }
+      ]
+    },
     "Entry": {
+      "description": "The entry point(s) of the compilation.",
       "anyOf": [
         {
           "$ref": "#/definitions/EntryDynamic"
@@ -82,6 +166,11 @@
       "instanceof": "Function",
       "tsType": "(() => EntryStatic | Promise<EntryStatic>)"
     },
+    "EntryDynamicNormalized": {
+      "description": "A Function returning a Promise resolving to a normalized entry.",
+      "instanceof": "Function",
+      "tsType": "(() => Promise<EntryStaticNormalized>)"
+    },
     "EntryItem": {
       "oneOf": [
         {
@@ -99,8 +188,19 @@
         }
       ]
     },
+    "EntryNormalized": {
+      "description": "The entry point(s) of the compilation.",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/EntryDynamicNormalized"
+        },
+        {
+          "$ref": "#/definitions/EntryStaticNormalized"
+        }
+      ]
+    },
     "EntryObject": {
-      "description": "Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.",
+      "description": "Multiple entry bundles are created. The key is the entry name. The value can be a string, an array or an entry description object.",
       "type": "object",
       "additionalProperties": {
         "description": "An entry point with name",
@@ -134,6 +234,19 @@
           "$ref": "#/definitions/EntryUnnamed"
         }
       ]
+    },
+    "EntryStaticNormalized": {
+      "description": "Multiple entry bundles are created. The key is the entry name. The value is an entry description object.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "An object with entry point description.",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/EntryDescription"
+          }
+        ]
+      },
+      "minProperties": 1
     },
     "EntryUnnamed": {
       "description": "An entry point without name.",
@@ -217,6 +330,7 @@
       ]
     },
     "Externals": {
+      "description": "Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",
       "anyOf": [
         {
           "description": "`function(context, request, callback(err, result))` The function is called on each dependency.",
@@ -357,6 +471,29 @@
         }
       ]
     },
+    "InfrastructureLogging": {
+      "description": "Options for infrastructure level logging",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "debug": {
+          "description": "Enable debug logging for specific loggers",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FilterTypes"
+            },
+            {
+              "description": "Enable/Disable debug logging for all loggers",
+              "type": "boolean"
+            }
+          ]
+        },
+        "level": {
+          "description": "Log level",
+          "enum": ["none", "error", "warn", "info", "log", "verbose"]
+        }
+      }
+    },
     "LibraryCustomUmdCommentObject": {
       "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.",
       "type": "object",
@@ -405,6 +542,10 @@
         }
       }
     },
+    "Loader": {
+      "description": "Custom values available in the loader context.",
+      "type": "object"
+    },
     "MemoryCacheOptions": {
       "type": "object",
       "additionalProperties": false,
@@ -436,7 +577,12 @@
       },
       "required": ["type"]
     },
-    "ModuleOptions": {
+    "Mode": {
+      "description": "Enable production optimizations or development hints.",
+      "enum": ["development", "production", "none"]
+    },
+    "Module": {
+      "description": "Options affecting the normal modules (`NormalModuleFactory`).",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -574,6 +720,21 @@
         }
       }
     },
+    "Name": {
+      "description": "Name of the configuration. Used when loading multiple configurations.",
+      "type": "string"
+    },
+    "Node": {
+      "description": "Include polyfills or mocks for various node stuff.",
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "$ref": "#/definitions/NodeOptions"
+        }
+      ]
+    },
     "NodeOptions": {
       "type": "object",
       "additionalProperties": false,
@@ -603,7 +764,7 @@
       "minItems": 1,
       "uniqueItems": true
     },
-    "OptimizationOptions": {
+    "Optimization": {
       "description": "Enables/Disables integrated optimizations",
       "type": "object",
       "additionalProperties": false,
@@ -702,33 +863,7 @@
           "type": "boolean"
         },
         "runtimeChunk": {
-          "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps",
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "enum": ["single", "multiple"]
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "name": {
-                  "description": "The name or name factory for the runtime chunks",
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "instanceof": "Function",
-                      "tsType": "Function"
-                    }
-                  ]
-                }
-              }
-            }
-          ]
+          "$ref": "#/definitions/OptimizationRuntimeChunk"
         },
         "sideEffects": {
           "description": "Skip over modules which are flagged to contain no side effects when exports are not used",
@@ -750,6 +885,54 @@
           "type": "boolean"
         }
       }
+    },
+    "OptimizationRuntimeChunk": {
+      "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps",
+      "oneOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "enum": ["single", "multiple"]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "description": "The name or name factory for the runtime chunks",
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "instanceof": "Function",
+                  "tsType": "Function"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "OptimizationRuntimeChunkNormalized": {
+      "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps",
+      "oneOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "description": "The name factory for the runtime chunks",
+              "instanceof": "Function",
+              "tsType": "Function"
+            }
+          }
+        }
+      ]
     },
     "OptimizationSplitChunksCacheGroup": {
       "type": "object",
@@ -1131,7 +1314,8 @@
         }
       ]
     },
-    "OutputOptions": {
+    "Output": {
+      "description": "Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -1398,6 +1582,22 @@
         }
       }
     },
+    "Parallelism": {
+      "description": "The number of parallel processed modules in the compilation.",
+      "type": "number",
+      "minimum": 1
+    },
+    "Performance": {
+      "description": "Configuration for web performance recommendations.",
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "$ref": "#/definitions/PerformanceOptions"
+        }
+      ]
+    },
     "PerformanceOptions": {
       "type": "object",
       "additionalProperties": false,
@@ -1420,6 +1620,77 @@
           "type": "number"
         }
       }
+    },
+    "Plugins": {
+      "description": "Add additional plugins to the compiler.",
+      "type": "array",
+      "items": {
+        "description": "Plugin of type object or instanceof Function",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/WebpackPluginInstance"
+          },
+          {
+            "$ref": "#/definitions/WebpackPluginFunction"
+          }
+        ]
+      }
+    },
+    "Profile": {
+      "description": "Capture timing information for each module.",
+      "type": "boolean"
+    },
+    "RecordsInputPath": {
+      "description": "Store compiler state to a json file.",
+      "oneOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "type": "string",
+          "absolutePath": true
+        }
+      ]
+    },
+    "RecordsOutputPath": {
+      "description": "Load compiler state from a json file.",
+      "oneOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "type": "string",
+          "absolutePath": true
+        }
+      ]
+    },
+    "RecordsPath": {
+      "description": "Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.",
+      "oneOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "type": "string",
+          "absolutePath": true
+        }
+      ]
+    },
+    "Resolve": {
+      "description": "Options for the resolver",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ResolveOptions"
+        }
+      ]
+    },
+    "ResolveLoader": {
+      "description": "Options for the resolver when resolving loaders",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ResolveOptions"
+        }
+      ]
     },
     "ResolveOptions": {
       "type": "object",
@@ -2033,6 +2304,32 @@
         }
       ]
     },
+    "Serve": {
+      "description": "Options for webpack-serve",
+      "type": "object"
+    },
+    "Stats": {
+      "description": "Used by the webpack CLI program to pass stats options.",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/StatsOptions"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "enum": [
+            "none",
+            "errors-only",
+            "minimal",
+            "normal",
+            "detailed",
+            "verbose",
+            "errors-warnings"
+          ]
+        }
+      ]
+    },
     "StatsOptions": {
       "type": "object",
       "additionalProperties": false,
@@ -2325,7 +2622,33 @@
         }
       }
     },
+    "Target": {
+      "description": "Environment to build for",
+      "anyOf": [
+        {
+          "enum": [
+            "web",
+            "webworker",
+            "node",
+            "async-node",
+            "node-webkit",
+            "electron-main",
+            "electron-renderer",
+            "electron-preload"
+          ]
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((compiler: import('../lib/Compiler')) => void)"
+        }
+      ]
+    },
+    "Watch": {
+      "description": "Enter watch mode, which rebuilds on file change.",
+      "type": "boolean"
+    },
     "WatchOptions": {
+      "description": "Options for the watcher",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -2365,6 +2688,121 @@
         }
       }
     },
+    "WebpackOptionsNormalized": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "amd": {
+          "$ref": "#/definitions/Amd"
+        },
+        "bail": {
+          "$ref": "#/definitions/Bail"
+        },
+        "cache": {
+          "$ref": "#/definitions/CacheNormalized"
+        },
+        "context": {
+          "$ref": "#/definitions/Context"
+        },
+        "dependencies": {
+          "$ref": "#/definitions/Dependencies"
+        },
+        "devServer": {
+          "$ref": "#/definitions/DevServer"
+        },
+        "devtool": {
+          "$ref": "#/definitions/DevTool"
+        },
+        "entry": {
+          "$ref": "#/definitions/EntryNormalized"
+        },
+        "experiments": {
+          "$ref": "#/definitions/Experiments"
+        },
+        "externals": {
+          "$ref": "#/definitions/Externals"
+        },
+        "infrastructureLogging": {
+          "$ref": "#/definitions/InfrastructureLogging"
+        },
+        "loader": {
+          "$ref": "#/definitions/Loader"
+        },
+        "mode": {
+          "$ref": "#/definitions/Mode"
+        },
+        "module": {
+          "$ref": "#/definitions/Module"
+        },
+        "name": {
+          "$ref": "#/definitions/Name"
+        },
+        "node": {
+          "$ref": "#/definitions/Node"
+        },
+        "optimization": {
+          "$ref": "#/definitions/Optimization"
+        },
+        "output": {
+          "$ref": "#/definitions/Output"
+        },
+        "parallelism": {
+          "$ref": "#/definitions/Parallelism"
+        },
+        "performance": {
+          "$ref": "#/definitions/Performance"
+        },
+        "plugins": {
+          "$ref": "#/definitions/Plugins"
+        },
+        "profile": {
+          "$ref": "#/definitions/Profile"
+        },
+        "recordsInputPath": {
+          "$ref": "#/definitions/RecordsInputPath"
+        },
+        "recordsOutputPath": {
+          "$ref": "#/definitions/RecordsOutputPath"
+        },
+        "resolve": {
+          "$ref": "#/definitions/Resolve"
+        },
+        "resolveLoader": {
+          "$ref": "#/definitions/ResolveLoader"
+        },
+        "serve": {
+          "$ref": "#/definitions/Serve"
+        },
+        "stats": {
+          "$ref": "#/definitions/Stats"
+        },
+        "target": {
+          "$ref": "#/definitions/Target"
+        },
+        "watch": {
+          "$ref": "#/definitions/Watch"
+        },
+        "watchOptions": {
+          "$ref": "#/definitions/WatchOptions"
+        }
+      },
+      "required": [
+        "cache",
+        "entry",
+        "experiments",
+        "externals",
+        "infrastructureLogging",
+        "module",
+        "node",
+        "optimization",
+        "output",
+        "plugins",
+        "resolve",
+        "resolveLoader",
+        "stats",
+        "watchOptions"
+      ]
+    },
     "WebpackPluginFunction": {
       "description": "Function acting as plugin",
       "instanceof": "Function",
@@ -2388,298 +2826,100 @@
   "additionalProperties": false,
   "properties": {
     "amd": {
-      "description": "Set the value of `require.amd` and `define.amd`. Or disable AMD support.",
-      "anyOf": [
-        {
-          "description": "You can pass `false` to disable AMD support.",
-          "enum": [false]
-        },
-        {
-          "description": "You can pass an object to set the value of `require.amd` and `define.amd`.",
-          "type": "object"
-        }
-      ]
+      "$ref": "#/definitions/Amd"
     },
     "bail": {
-      "description": "Report the first error as a hard error instead of tolerating it.",
-      "type": "boolean"
+      "$ref": "#/definitions/Bail"
     },
     "cache": {
-      "description": "Cache generated modules and chunks to improve performance for multiple incremental builds.",
-      "anyOf": [
-        {
-          "description": "Disable caching.",
-          "enum": [false]
-        },
-        {
-          "description": "Enable in memory caching.",
-          "enum": [true]
-        },
-        {
-          "description": "Options for memory caching.",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/MemoryCacheOptions"
-            }
-          ]
-        },
-        {
-          "description": "Options for persistent caching.",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/FileCacheOptions"
-            }
-          ]
-        }
-      ]
+      "$ref": "#/definitions/Cache"
     },
     "context": {
-      "description": "The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.",
-      "type": "string",
-      "absolutePath": true
+      "$ref": "#/definitions/Context"
     },
     "dependencies": {
-      "description": "References to other configurations to depend on.",
-      "type": "array",
-      "items": {
-        "description": "References to another configuration to depend on.",
-        "type": "string"
-      }
+      "$ref": "#/definitions/Dependencies"
     },
     "devServer": {
-      "description": "Options for the webpack-dev-server",
-      "type": "object"
+      "$ref": "#/definitions/DevServer"
     },
     "devtool": {
-      "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
-      "oneOf": [
-        {
-          "enum": [false, "eval"]
-        },
-        {
-          "type": "string",
-          "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$"
-        }
-      ]
+      "$ref": "#/definitions/DevTool"
     },
     "entry": {
-      "description": "The entry point(s) of the compilation.",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Entry"
-        }
-      ]
+      "$ref": "#/definitions/Entry"
     },
     "experiments": {
-      "description": "Enables/Disables experiments (experiemental features with relax SemVer compatibility)",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Experiments"
-        }
-      ]
+      "$ref": "#/definitions/Experiments"
     },
     "externals": {
-      "description": "Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Externals"
-        }
-      ]
+      "$ref": "#/definitions/Externals"
     },
     "infrastructureLogging": {
-      "description": "Options for infrastructure level logging",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "debug": {
-          "description": "Enable debug logging for specific loggers",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/FilterTypes"
-            },
-            {
-              "description": "Enable/Disable debug logging for all loggers",
-              "type": "boolean"
-            }
-          ]
-        },
-        "level": {
-          "description": "Log level",
-          "enum": ["none", "error", "warn", "info", "log", "verbose"]
-        }
-      }
+      "$ref": "#/definitions/InfrastructureLogging"
     },
     "loader": {
-      "description": "Custom values available in the loader context.",
-      "type": "object"
+      "$ref": "#/definitions/Loader"
     },
     "mode": {
-      "description": "Enable production optimizations or development hints.",
-      "enum": ["development", "production", "none"]
+      "$ref": "#/definitions/Mode"
     },
     "module": {
-      "description": "Options affecting the normal modules (`NormalModuleFactory`).",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ModuleOptions"
-        }
-      ]
+      "$ref": "#/definitions/Module"
     },
     "name": {
-      "description": "Name of the configuration. Used when loading multiple configurations.",
-      "type": "string"
+      "$ref": "#/definitions/Name"
     },
     "node": {
-      "description": "Include polyfills or mocks for various node stuff.",
-      "anyOf": [
-        {
-          "enum": [false]
-        },
-        {
-          "$ref": "#/definitions/NodeOptions"
-        }
-      ]
+      "$ref": "#/definitions/Node"
     },
     "optimization": {
-      "description": "Enables/Disables integrated optimizations",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/OptimizationOptions"
-        }
-      ]
+      "$ref": "#/definitions/Optimization"
     },
     "output": {
-      "description": "Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/OutputOptions"
-        }
-      ]
+      "$ref": "#/definitions/Output"
     },
     "parallelism": {
-      "description": "The number of parallel processed modules in the compilation.",
-      "type": "number",
-      "minimum": 1
+      "$ref": "#/definitions/Parallelism"
     },
     "performance": {
-      "description": "Configuration for web performance recommendations.",
-      "anyOf": [
-        {
-          "enum": [false]
-        },
-        {
-          "$ref": "#/definitions/PerformanceOptions"
-        }
-      ]
+      "$ref": "#/definitions/Performance"
     },
     "plugins": {
-      "description": "Add additional plugins to the compiler.",
-      "type": "array",
-      "items": {
-        "description": "Plugin of type object or instanceof Function",
-        "anyOf": [
-          {
-            "$ref": "#/definitions/WebpackPluginInstance"
-          },
-          {
-            "$ref": "#/definitions/WebpackPluginFunction"
-          }
-        ]
-      }
+      "$ref": "#/definitions/Plugins"
     },
     "profile": {
-      "description": "Capture timing information for each module.",
-      "type": "boolean"
+      "$ref": "#/definitions/Profile"
     },
     "recordsInputPath": {
-      "description": "Store compiler state to a json file.",
-      "type": "string",
-      "absolutePath": true
+      "$ref": "#/definitions/RecordsInputPath"
     },
     "recordsOutputPath": {
-      "description": "Load compiler state from a json file.",
-      "type": "string",
-      "absolutePath": true
+      "$ref": "#/definitions/RecordsOutputPath"
     },
     "recordsPath": {
-      "description": "Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.",
-      "type": "string",
-      "absolutePath": true
+      "$ref": "#/definitions/RecordsPath"
     },
     "resolve": {
-      "description": "Options for the resolver",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ResolveOptions"
-        }
-      ]
+      "$ref": "#/definitions/Resolve"
     },
     "resolveLoader": {
-      "description": "Options for the resolver when resolving loaders",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ResolveOptions"
-        }
-      ]
+      "$ref": "#/definitions/ResolveLoader"
     },
     "serve": {
-      "description": "Options for webpack-serve",
-      "type": "object"
+      "$ref": "#/definitions/Serve"
     },
     "stats": {
-      "description": "Used by the webpack CLI program to pass stats options.",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/StatsOptions"
-        },
-        {
-          "type": "boolean"
-        },
-        {
-          "enum": [
-            "none",
-            "errors-only",
-            "minimal",
-            "normal",
-            "detailed",
-            "verbose",
-            "errors-warnings"
-          ]
-        }
-      ]
+      "$ref": "#/definitions/Stats"
     },
     "target": {
-      "description": "Environment to build for",
-      "anyOf": [
-        {
-          "enum": [
-            "web",
-            "webworker",
-            "node",
-            "async-node",
-            "node-webkit",
-            "electron-main",
-            "electron-renderer",
-            "electron-preload"
-          ]
-        },
-        {
-          "instanceof": "Function",
-          "tsType": "((compiler: import('../lib/Compiler')) => void)"
-        }
-      ]
+      "$ref": "#/definitions/Target"
     },
     "watch": {
-      "description": "Enter watch mode, which rebuilds on file change.",
-      "type": "boolean"
+      "$ref": "#/definitions/Watch"
     },
     "watchOptions": {
-      "description": "Options for the watcher",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/WatchOptions"
-        }
-      ]
+      "$ref": "#/definitions/WatchOptions"
     }
   }
 }
