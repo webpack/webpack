@@ -5,6 +5,9 @@ declare namespace NodeJS {
 	interface Process {
 		binding(internalModule: string): any;
 	}
+	interface ProcessVersions {
+		pnp: "1" | "3";
+	}
 }
 
 declare module "neo-async" {
