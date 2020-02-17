@@ -495,10 +495,6 @@ export interface WebpackOptions {
 	 */
 	resolveLoader?: ResolveLoader;
 	/**
-	 * Options for webpack-serve
-	 */
-	serve?: Serve;
-	/**
 	 * Stats options object or preset name
 	 */
 	stats?: Stats;
@@ -1495,12 +1491,6 @@ export interface PerformanceOptions {
 	maxEntrypointSize?: number;
 }
 /**
- * Options for webpack-serve
- */
-export interface Serve {
-	[k: string]: any;
-}
-/**
  * Stats options object
  */
 export interface StatsOptions {
@@ -1874,10 +1864,6 @@ export interface WebpackOptionsNormalized {
 	 * Options for the resolver when resolving loaders
 	 */
 	resolveLoader: ResolveLoader;
-	/**
-	 * Options for webpack-serve
-	 */
-	serve?: Serve;
 	/**
 	 * Stats options object or preset name
 	 */

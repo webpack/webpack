@@ -2331,10 +2331,6 @@
         }
       ]
     },
-    "Serve": {
-      "description": "Options for webpack-serve",
-      "type": "object"
-    },
     "Stats": {
       "description": "Stats options object or preset name",
       "anyOf": [
@@ -2799,9 +2795,6 @@
         "resolveLoader": {
           "$ref": "#/definitions/ResolveLoader"
         },
-        "serve": {
-          "$ref": "#/definitions/Serve"
-        },
         "stats": {
           "$ref": "#/definitions/Stats"
         },
@@ -2935,9 +2928,6 @@
     },
     "resolveLoader": {
       "$ref": "#/definitions/ResolveLoader"
-    },
-    "serve": {
-      "$ref": "#/definitions/Serve"
     },
     "stats": {
       "$ref": "#/definitions/Stats"

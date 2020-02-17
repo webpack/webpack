@@ -258,7 +258,6 @@ describe("Defaults", () => {
 		      "index",
 		    ],
 		  },
-		  "serve": undefined,
 		  "stats": Object {},
 		  "target": "web",
 		  "watch": false,
@@ -599,7 +598,7 @@ describe("Defaults", () => {
 		+     "aliasFields": Array [],
 		@@ -163,1 +161,0 @@
 		-       "browser",
-		@@ -189,1 +186,1 @@
+		@@ -188,1 +185,1 @@
 		-   "target": "web",
 		+   "target": "node",
 	`)
@@ -612,7 +611,7 @@ describe("Defaults", () => {
 		@@ -126,1 +126,1 @@
 		-     "globalObject": "window",
 		+     "globalObject": "self",
-		@@ -189,1 +189,1 @@
+		@@ -188,1 +188,1 @@
 		-   "target": "web",
 		+   "target": "webworker",
 	`)
