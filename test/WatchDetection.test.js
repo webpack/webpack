@@ -87,9 +87,9 @@ describe("WatchDetection", () => {
 				function step1() {
 					onChange = () => {
 						if (
-							memfs.readFileSync("/bundle.js") &&
+							memfs.readFileSync("/directory/bundle.js") &&
 							memfs
-								.readFileSync("/bundle.js")
+								.readFileSync("/directory/bundle.js")
 								.toString()
 								.indexOf("original") >= 0
 						)
@@ -129,7 +129,7 @@ describe("WatchDetection", () => {
 					onChange = () => {
 						if (
 							memfs
-								.readFileSync("/bundle.js")
+								.readFileSync("/directory/bundle.js")
 								.toString()
 								.indexOf("correct") >= 0
 						)
