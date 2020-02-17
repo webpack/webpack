@@ -68,7 +68,7 @@ describe("WatchDetection", () => {
 					mode: "development",
 					entry: loaderPath + "!" + filePath,
 					output: {
-						path: "/",
+						path: "/directory",
 						filename: "bundle.js"
 					}
 				});
