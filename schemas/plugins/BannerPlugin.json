@@ -6,6 +6,7 @@
       "tsType": "(data: { hash: string, chunk: import('../../lib/Chunk'), filename: string }) => string"
     },
     "Rule": {
+      "description": "Filtering rule as regex or string",
       "oneOf": [
         {
           "instanceof": "RegExp",
@@ -18,6 +19,7 @@
       ]
     },
     "Rules": {
+      "description": "Filtering rules",
       "oneOf": [
         {
           "type": "array",

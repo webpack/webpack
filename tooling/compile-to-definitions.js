@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const prettierrc = require("../.prettierrc.js"); // eslint-disable-line
-const { compileFromFile } = require("json-schema-to-typescript");
+const { compile } = require("json-schema-to-typescript");
 
 const schemasDir = path.resolve(__dirname, "../schemas");
 const style = {
@@ -32,17 +32,24 @@ const makeSchemas = () => {
 };
 
 const makeDefinitionsForSchema = absSchemaPath => {
-	const basename = path
+	const relPath = path
 		.relative(schemasDir, absSchemaPath)
 		.replace(/\.json$/i, "");
-	const filename = path.resolve(__dirname, `../declarations/${basename}.d.ts`);
-	compileFromFile(absSchemaPath, {
+	const basename = path.basename(relPath);
+	const filename = path.resolve(__dirname, `../declarations/${relPath}.d.ts`);
+	const schema = JSON.parse(fs.readFileSync(absSchemaPath, "utf-8"));
+	preprocessSchema(schema);
+	compile(schema, basename, {
 		bannerComment:
 			"/**\n * This file was automatically generated.\n * DO NOT MODIFY BY HAND.\n * Run `yarn special-lint-fix` to update\n */",
 		unreachableDefinitions: true,
 		style
 	}).then(
 		ts => {
+			ts = ts.replace(
+				/\s+\*\s+\* This interface was referenced by `.+`'s JSON-Schema\s+\* via the `definition` ".+"\./g,
+				""
+			);
 			let normalizedContent = "";
 			try {
 				const content = fs.readFileSync(filename, "utf-8");
@@ -55,11 +62,11 @@ const makeDefinitionsForSchema = absSchemaPath => {
 					fs.mkdirSync(path.dirname(filename), { recursive: true });
 					fs.writeFileSync(filename, ts, "utf-8");
 					console.error(
-						`declarations/${basename.replace(/\\/g, "/")}.d.ts updated`
+						`declarations/${relPath.replace(/\\/g, "/")}.d.ts updated`
 					);
 				} else {
 					console.error(
-						`declarations/${basename.replace(
+						`declarations/${relPath.replace(
 							/\\/g,
 							"/"
 						)}.d.ts need to be updated`
@@ -73,6 +80,52 @@ const makeDefinitionsForSchema = absSchemaPath => {
 			process.exitCode = 1;
 		}
 	);
+};
+
+const resolvePath = (root, ref) => {
+	const parts = ref.split("/");
+	if (parts[0] !== "#") throw new Error("Unexpected ref");
+	let current = root;
+	for (const p of parts.slice(1)) {
+		current = current[p];
+	}
+	return current;
+};
+
+const preprocessSchema = (schema, root = schema) => {
+	if ("definitions" in schema) {
+		for (const key of Object.keys(schema.definitions)) {
+			preprocessSchema(schema.definitions[key], root);
+		}
+	}
+	if ("properties" in schema) {
+		for (const key of Object.keys(schema.properties)) {
+			const property = schema.properties[key];
+			if ("$ref" in property) {
+				const result = resolvePath(root, property.$ref);
+				schema.properties[key] = {
+					description: result.description,
+					anyOf: [property]
+				};
+			} else {
+				preprocessSchema(property, root);
+			}
+		}
+	}
+	if ("items" in schema) {
+		preprocessSchema(schema.items, root);
+	}
+	if (typeof schema.additionalProperties === "object") {
+		preprocessSchema(schema.additionalProperties, root);
+	}
+	const arrayProperties = ["oneOf", "anyOf", "allOf"];
+	for (const prop of arrayProperties) {
+		if (Array.isArray(schema[prop])) {
+			for (const item of schema[prop]) {
+				preprocessSchema(item, root);
+			}
+		}
+	}
 };
 
 makeSchemas();

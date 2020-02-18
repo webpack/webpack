@@ -6,6 +6,7 @@
       "tsType": "((source: string | Buffer, context: { filename: string, module: import('../../lib/Module') }) => boolean)"
     },
     "DataUrlOptions": {
+      "description": "Options object for DataUrl condition",
       "type": "object",
       "additionalProperties": false,
       "properties": {

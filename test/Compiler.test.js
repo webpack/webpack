@@ -4,7 +4,6 @@ const path = require("path");
 
 const webpack = require("..");
 const Stats = require("../lib/Stats");
-const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const { createFsFromVolume, Volume } = require("memfs");
 const captureStdio = require("./helpers/captureStdio");
 
@@ -12,8 +11,8 @@ describe("Compiler", () => {
 	jest.setTimeout(20000);
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
+		options = webpack.config.getNormalizedWebpackOptions(options);
 		if (!options.mode) options.mode = "production";
-		options = new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
 		if (noOutputPath) options.output.path = "/";
