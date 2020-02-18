@@ -101,6 +101,26 @@ export type ExternalItem =
  */
 export type ArrayOfStringValues = string[];
 /**
+ * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value)
+ */
+export type ExternalsType =
+	| "var"
+	| "module"
+	| "assign"
+	| "this"
+	| "window"
+	| "self"
+	| "global"
+	| "commonjs"
+	| "commonjs2"
+	| "commonjs-module"
+	| "amd"
+	| "amd-require"
+	| "umd"
+	| "umd2"
+	| "jsonp"
+	| "system";
+/**
  * Filtering values
  */
 export type FilterTypes = FilterItemTypes | FilterItemTypes[];
@@ -426,6 +446,10 @@ export interface WebpackOptions {
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
 	externals?: Externals;
+	/**
+	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value)
+	 */
+	externalsType?: ExternalsType;
 	/**
 	 * Options for infrastructure level logging
 	 */
@@ -1804,6 +1828,10 @@ export interface WebpackOptionsNormalized {
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
 	externals: Externals;
+	/**
+	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value)
+	 */
+	externalsType?: ExternalsType;
 	/**
 	 * Options for infrastructure level logging
 	 */

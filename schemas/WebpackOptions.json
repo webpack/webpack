@@ -363,6 +363,27 @@
         }
       ]
     },
+    "ExternalsType": {
+      "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value)",
+      "enum": [
+        "var",
+        "module",
+        "assign",
+        "this",
+        "window",
+        "self",
+        "global",
+        "commonjs",
+        "commonjs2",
+        "commonjs-module",
+        "amd",
+        "amd-require",
+        "umd",
+        "umd2",
+        "jsonp",
+        "system"
+      ]
+    },
     "FileCacheOptions": {
       "description": "Options object for persistent file-based caching",
       "type": "object",
@@ -2752,6 +2773,9 @@
         "externals": {
           "$ref": "#/definitions/Externals"
         },
+        "externalsType": {
+          "$ref": "#/definitions/ExternalsType"
+        },
         "infrastructureLogging": {
           "$ref": "#/definitions/InfrastructureLogging"
         },
@@ -2882,6 +2906,9 @@
     },
     "externals": {
       "$ref": "#/definitions/Externals"
+    },
+    "externalsType": {
+      "$ref": "#/definitions/ExternalsType"
     },
     "infrastructureLogging": {
       "$ref": "#/definitions/InfrastructureLogging"
