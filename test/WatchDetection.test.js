@@ -2,7 +2,7 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
-const MemoryFs = require("memory-fs");
+const { createFsFromVolume, Volume } = require("memfs");
 
 const webpack = require("..");
 
@@ -68,11 +68,13 @@ describe("WatchDetection", () => {
 					mode: "development",
 					entry: loaderPath + "!" + filePath,
 					output: {
-						path: "/",
+						path: "/directory",
 						filename: "bundle.js"
 					}
 				});
-				const memfs = (compiler.outputFileSystem = new MemoryFs());
+				const memfs = (compiler.outputFileSystem = createFsFromVolume(
+					new Volume()
+				));
 				let onChange;
 				compiler.hooks.done.tap("WatchDetectionTest", () => {
 					if (onChange) onChange();
@@ -85,9 +87,9 @@ describe("WatchDetection", () => {
 				function step1() {
 					onChange = () => {
 						if (
-							memfs.readFileSync("/bundle.js") &&
+							memfs.readFileSync("/directory/bundle.js") &&
 							memfs
-								.readFileSync("/bundle.js")
+								.readFileSync("/directory/bundle.js")
 								.toString()
 								.indexOf("original") >= 0
 						)
@@ -127,7 +129,7 @@ describe("WatchDetection", () => {
 					onChange = () => {
 						if (
 							memfs
-								.readFileSync("/bundle.js")
+								.readFileSync("/directory/bundle.js")
 								.toString()
 								.indexOf("correct") >= 0
 						)

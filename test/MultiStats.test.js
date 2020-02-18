@@ -1,7 +1,7 @@
 "use strict";
 
 const webpack = require("..");
-const MemoryFs = require("memory-fs");
+const { createFsFromVolume, Volume } = require("memfs");
 
 describe("MultiStats", () => {
 	it("should create JSON of children stats", done => {
@@ -15,7 +15,7 @@ describe("MultiStats", () => {
 				entry: "./fixtures/b"
 			}
 		]);
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 			try {
