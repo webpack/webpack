@@ -2664,6 +2664,17 @@
         {
           "instanceof": "Function",
           "tsType": "((compiler: import('../lib/Compiler')) => void)"
+        },
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "apply": {
+              "description": "The run point of the plugin.",
+              "instanceof": "Function",
+              "tsType": "((compiler: import('../lib/Compiler')) => void)"
+            }
+          }
         }
       ]
     },

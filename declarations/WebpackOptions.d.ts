@@ -357,7 +357,14 @@ export type Target =
 			| "electron-renderer"
 			| "electron-preload"
 	  )
-	| ((compiler: import("../lib/Compiler")) => void);
+	| ((compiler: import("../lib/Compiler")) => void)
+	| {
+			/**
+			 * The run point of the plugin.
+			 */
+			apply?: (compiler: import("../lib/Compiler")) => void;
+			[k: string]: any;
+	  };
 /**
  * Enter watch mode, which rebuilds on file change.
  */
