@@ -3,7 +3,7 @@ module.exports = [
 	{
 		output: {
 			filename: "commonjs.js",
-			libraryTarget: "commonjs-module"
+			libraryTarget: "commonjs"
 		},
 		resolve: {
 			alias: {

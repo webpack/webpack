@@ -43,6 +43,31 @@
         "minLength": 1
       }
     },
+    "AssetModuleFilename": {
+      "description": "The filename of asset modules as relative path inside the `output.path` directory.",
+      "anyOf": [
+        {
+          "type": "string",
+          "absolutePath": false
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+        }
+      ]
+    },
+    "AuxiliaryComment": {
+      "description": "Add a comment in the UMD wrapper.",
+      "anyOf": [
+        {
+          "description": "Append the same comment above each import style.",
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/LibraryCustomUmdCommentObject"
+        }
+      ]
+    },
     "Bail": {
       "description": "Report the first error as a hard error instead of tolerating it.",
       "type": "boolean"
@@ -84,10 +109,31 @@
         }
       ]
     },
+    "ChunkCallbackName": {
+      "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
+      "type": "string"
+    },
+    "ChunkFilename": {
+      "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
+      "type": "string",
+      "absolutePath": false
+    },
+    "ChunkLoadTimeout": {
+      "description": "Number of milliseconds before chunk request expires",
+      "type": "number"
+    },
+    "CompareBeforeEmit": {
+      "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem",
+      "type": "boolean"
+    },
     "Context": {
       "description": "The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.",
       "type": "string",
       "absolutePath": true
+    },
+    "CrossOriginLoading": {
+      "description": "This option enables cross-origin loading of chunks.",
+      "enum": [false, "anonymous", "use-credentials"]
     },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
@@ -112,6 +158,59 @@
           "pattern": "^(inline-|hidden-|eval-)?(nosources-)?(cheap-(module-)?)?source-map$"
         }
       ]
+    },
+    "DevtoolFallbackModuleFilenameTemplate": {
+      "description": "Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "Function"
+        }
+      ]
+    },
+    "DevtoolModuleFilenameTemplate": {
+      "description": "Filename template string of function for the sources array in a generated SourceMap.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "Function"
+        }
+      ]
+    },
+    "DevtoolNamespace": {
+      "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
+      "type": "string"
+    },
+    "EcmaVersion": {
+      "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 5,
+          "maximum": 11
+        },
+        {
+          "enum": [2009]
+        },
+        {
+          "type": "number",
+          "minimum": 2015,
+          "maximum": 2020
+        }
+      ]
+    },
+    "EnabledLibraryTypes": {
+      "description": "List of library types enabled for use by entry points",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LibraryType"
+      }
     },
     "Entry": {
       "description": "The entry point(s) of the compilation.",
@@ -465,6 +564,20 @@
       },
       "required": ["type"]
     },
+    "Filename": {
+      "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
+      "anyOf": [
+        {
+          "type": "string",
+          "absolutePath": false,
+          "minLength": 1
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+        }
+      ]
+    },
     "FilterItemTypes": {
       "description": "Filtering value, regexp or function",
       "anyOf": [
@@ -500,6 +613,56 @@
         }
       ]
     },
+    "GlobalObject": {
+      "description": "An expression which is used to address the global object/scope in runtime code",
+      "type": "string",
+      "minLength": 1
+    },
+    "HashDigest": {
+      "description": "Digest type used for the hash",
+      "type": "string"
+    },
+    "HashDigestLength": {
+      "description": "Number of chars which are used for the hash",
+      "type": "number",
+      "minimum": 1
+    },
+    "HashFunction": {
+      "description": "Algorithm used for generation the hash (see node.js crypto package)",
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "typeof import('../lib/util/Hash')"
+        }
+      ]
+    },
+    "HashSalt": {
+      "description": "Any string which is added to the hash to salt it",
+      "type": "string",
+      "minLength": 1
+    },
+    "HotUpdateChunkFilename": {
+      "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
+      "type": "string",
+      "absolutePath": false
+    },
+    "HotUpdateFunction": {
+      "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+      "type": "string"
+    },
+    "HotUpdateMainFilename": {
+      "description": "The filename of the Hot Update Main File. It is inside the `output.path` directory.",
+      "type": "string",
+      "absolutePath": false
+    },
+    "Iife": {
+      "description": "Wrap javascript code into IIFEs to avoid leaking into global scope.",
+      "type": "boolean"
+    },
     "InfrastructureLogging": {
       "description": "Options for infrastructure level logging",
       "type": "object",
@@ -522,6 +685,25 @@
           "enum": ["none", "error", "warn", "info", "log", "verbose"]
         }
       }
+    },
+    "JsonpFunction": {
+      "description": "The JSONP function used by webpack for async loading of chunks.",
+      "type": "string"
+    },
+    "JsonpScriptType": {
+      "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\"",
+      "enum": [false, "text/javascript", "module"]
+    },
+    "Library": {
+      "description": "Make the output files a library, exporting the exports of the entry point",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/LibraryName"
+        },
+        {
+          "$ref": "#/definitions/LibraryOptions"
+        }
+      ]
     },
     "LibraryCustomUmdCommentObject": {
       "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.",
@@ -571,6 +753,79 @@
           ]
         }
       }
+    },
+    "LibraryExport": {
+      "description": "Specify which export should be exposed as library",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/ArrayOfStringValues"
+        }
+      ]
+    },
+    "LibraryName": {
+      "description": "The name of the library (some types allow unnamed libraries too)",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "description": "A part of the library name",
+            "type": "string"
+          }
+        },
+        {
+          "$ref": "#/definitions/LibraryCustomUmdObject"
+        }
+      ]
+    },
+    "LibraryOptions": {
+      "description": "Options for library",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "auxiliaryComment": {
+          "$ref": "#/definitions/AuxiliaryComment"
+        },
+        "export": {
+          "$ref": "#/definitions/LibraryExport"
+        },
+        "name": {
+          "$ref": "#/definitions/LibraryName"
+        },
+        "type": {
+          "$ref": "#/definitions/LibraryType"
+        },
+        "umdNamedDefine": {
+          "$ref": "#/definitions/UmdNamedDefine"
+        }
+      },
+      "required": ["type"]
+    },
+    "LibraryType": {
+      "description": "Type of library",
+      "enum": [
+        "var",
+        "module",
+        "assign",
+        "this",
+        "window",
+        "self",
+        "global",
+        "commonjs",
+        "commonjs2",
+        "commonjs-module",
+        "amd",
+        "amd-require",
+        "umd",
+        "umd2",
+        "jsonp",
+        "system"
+      ]
     },
     "Loader": {
       "description": "Custom values available in the loader context.",
@@ -1356,270 +1611,225 @@
       "additionalProperties": false,
       "properties": {
         "assetModuleFilename": {
-          "description": "The filename of asset modules as relative path inside the `output.path` directory.",
-          "anyOf": [
-            {
-              "type": "string",
-              "absolutePath": false
-            },
-            {
-              "instanceof": "Function",
-              "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
-            }
-          ]
+          "$ref": "#/definitions/AssetModuleFilename"
         },
         "auxiliaryComment": {
-          "description": "Add a comment in the UMD wrapper.",
-          "anyOf": [
-            {
-              "description": "Append the same comment above each import style.",
-              "type": "string"
-            },
-            {
-              "$ref": "#/definitions/LibraryCustomUmdCommentObject"
-            }
-          ]
+          "$ref": "#/definitions/AuxiliaryComment"
         },
         "chunkCallbackName": {
-          "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
-          "type": "string"
+          "$ref": "#/definitions/ChunkCallbackName"
         },
         "chunkFilename": {
-          "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
-          "type": "string",
-          "absolutePath": false
+          "$ref": "#/definitions/ChunkFilename"
         },
         "chunkLoadTimeout": {
-          "description": "Number of milliseconds before chunk request expires",
-          "type": "number"
+          "$ref": "#/definitions/ChunkLoadTimeout"
         },
         "compareBeforeEmit": {
-          "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem",
-          "type": "boolean"
+          "$ref": "#/definitions/CompareBeforeEmit"
         },
         "crossOriginLoading": {
-          "description": "This option enables cross-origin loading of chunks.",
-          "enum": [false, "anonymous", "use-credentials"]
+          "$ref": "#/definitions/CrossOriginLoading"
         },
         "devtoolFallbackModuleFilenameTemplate": {
-          "description": "Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "instanceof": "Function",
-              "tsType": "Function"
-            }
-          ]
+          "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
         },
         "devtoolModuleFilenameTemplate": {
-          "description": "Filename template string of function for the sources array in a generated SourceMap.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "instanceof": "Function",
-              "tsType": "Function"
-            }
-          ]
+          "$ref": "#/definitions/DevtoolModuleFilenameTemplate"
         },
         "devtoolNamespace": {
-          "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
-          "type": "string"
+          "$ref": "#/definitions/DevtoolNamespace"
         },
         "ecmaVersion": {
-          "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-          "anyOf": [
-            {
-              "type": "number",
-              "minimum": 5,
-              "maximum": 11
-            },
-            {
-              "enum": [2009]
-            },
-            {
-              "type": "number",
-              "minimum": 2015,
-              "maximum": 2020
-            }
-          ]
+          "$ref": "#/definitions/EcmaVersion"
+        },
+        "enabledLibraryTypes": {
+          "$ref": "#/definitions/EnabledLibraryTypes"
         },
         "filename": {
-          "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
-          "anyOf": [
-            {
-              "type": "string",
-              "absolutePath": false,
-              "minLength": 1
-            },
-            {
-              "instanceof": "Function",
-              "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
-            }
-          ]
+          "$ref": "#/definitions/Filename"
         },
         "globalObject": {
-          "description": "An expression which is used to address the global object/scope in runtime code",
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/definitions/GlobalObject"
         },
         "hashDigest": {
-          "description": "Digest type used for the hash",
-          "type": "string"
+          "$ref": "#/definitions/HashDigest"
         },
         "hashDigestLength": {
-          "description": "Number of chars which are used for the hash",
-          "type": "number",
-          "minimum": 1
+          "$ref": "#/definitions/HashDigestLength"
         },
         "hashFunction": {
-          "description": "Algorithm used for generation the hash (see node.js crypto package)",
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "instanceof": "Function",
-              "tsType": "typeof import('../lib/util/Hash')"
-            }
-          ]
+          "$ref": "#/definitions/HashFunction"
         },
         "hashSalt": {
-          "description": "Any string which is added to the hash to salt it",
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/definitions/HashSalt"
         },
         "hotUpdateChunkFilename": {
-          "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
-          "type": "string",
-          "absolutePath": false
+          "$ref": "#/definitions/HotUpdateChunkFilename"
         },
         "hotUpdateFunction": {
-          "description": "The JSONP function used by webpack for async loading of hot update chunks.",
-          "type": "string"
+          "$ref": "#/definitions/HotUpdateFunction"
         },
         "hotUpdateMainFilename": {
-          "description": "The filename of the Hot Update Main File. It is inside the `output.path` directory.",
-          "type": "string",
-          "absolutePath": false
+          "$ref": "#/definitions/HotUpdateMainFilename"
         },
         "iife": {
-          "description": "Wrap javascript code into IIFEs to avoid leaking into global scope.",
-          "type": "boolean"
+          "$ref": "#/definitions/Iife"
         },
         "jsonpFunction": {
-          "description": "The JSONP function used by webpack for async loading of chunks.",
-          "type": "string"
+          "$ref": "#/definitions/JsonpFunction"
         },
         "jsonpScriptType": {
-          "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\"",
-          "enum": [false, "text/javascript", "module"]
+          "$ref": "#/definitions/JsonpScriptType"
         },
         "library": {
-          "description": "If set, export the bundle as library. `output.library` is the name.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "array",
-              "items": {
-                "description": "A part of the library name",
-                "type": "string"
-              }
-            },
-            {
-              "$ref": "#/definitions/LibraryCustomUmdObject"
-            }
-          ]
+          "$ref": "#/definitions/Library"
         },
         "libraryExport": {
-          "description": "Specify which export should be exposed as library",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "$ref": "#/definitions/ArrayOfStringValues"
-            }
-          ]
+          "$ref": "#/definitions/LibraryExport"
         },
         "libraryTarget": {
-          "description": "Type of library",
-          "enum": [
-            "var",
-            "module",
-            "assign",
-            "this",
-            "window",
-            "self",
-            "global",
-            "commonjs",
-            "commonjs2",
-            "commonjs-module",
-            "amd",
-            "amd-require",
-            "umd",
-            "umd2",
-            "jsonp",
-            "system"
-          ]
+          "$ref": "#/definitions/LibraryType"
         },
         "module": {
-          "description": "Output javascript files as module source type.",
-          "type": "boolean"
+          "$ref": "#/definitions/OutputModule"
         },
         "path": {
-          "description": "The output directory as **absolute path** (required).",
-          "type": "string",
-          "absolutePath": true
+          "$ref": "#/definitions/Path"
         },
         "pathinfo": {
-          "description": "Include comments with information about the modules.",
-          "type": "boolean"
+          "$ref": "#/definitions/Pathinfo"
         },
         "publicPath": {
-          "description": "The `publicPath` specifies the public URL address of the output files when referenced in a browser.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "instanceof": "Function",
-              "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
-            }
-          ]
+          "$ref": "#/definitions/PublicPath"
         },
         "sourceMapFilename": {
-          "description": "The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.",
-          "type": "string",
-          "absolutePath": false
+          "$ref": "#/definitions/SourceMapFilename"
         },
         "sourcePrefix": {
-          "description": "Prefixes every line of the source in the bundle with this string.",
-          "type": "string"
+          "$ref": "#/definitions/SourcePrefix"
         },
         "strictModuleExceptionHandling": {
-          "description": "Handles exceptions in module loading correctly at a performance cost.",
-          "type": "boolean"
+          "$ref": "#/definitions/StrictModuleExceptionHandling"
         },
         "umdNamedDefine": {
-          "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
-          "type": "boolean"
+          "$ref": "#/definitions/UmdNamedDefine"
         },
         "uniqueName": {
-          "description": "A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.",
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/definitions/UniqueName"
         },
         "webassemblyModuleFilename": {
-          "description": "The filename of WebAssembly modules as relative path inside the `output.path` directory.",
-          "type": "string",
-          "absolutePath": false
+          "$ref": "#/definitions/WebassemblyModuleFilename"
+        }
+      }
+    },
+    "OutputModule": {
+      "description": "Output javascript files as module source type.",
+      "type": "boolean"
+    },
+    "OutputNormalized": {
+      "description": "Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "assetModuleFilename": {
+          "$ref": "#/definitions/AssetModuleFilename"
+        },
+        "chunkCallbackName": {
+          "$ref": "#/definitions/ChunkCallbackName"
+        },
+        "chunkFilename": {
+          "$ref": "#/definitions/ChunkFilename"
+        },
+        "chunkLoadTimeout": {
+          "$ref": "#/definitions/ChunkLoadTimeout"
+        },
+        "compareBeforeEmit": {
+          "$ref": "#/definitions/CompareBeforeEmit"
+        },
+        "crossOriginLoading": {
+          "$ref": "#/definitions/CrossOriginLoading"
+        },
+        "devtoolFallbackModuleFilenameTemplate": {
+          "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
+        },
+        "devtoolModuleFilenameTemplate": {
+          "$ref": "#/definitions/DevtoolModuleFilenameTemplate"
+        },
+        "devtoolNamespace": {
+          "$ref": "#/definitions/DevtoolNamespace"
+        },
+        "ecmaVersion": {
+          "$ref": "#/definitions/EcmaVersion"
+        },
+        "enabledLibraryTypes": {
+          "$ref": "#/definitions/EnabledLibraryTypes"
+        },
+        "filename": {
+          "$ref": "#/definitions/Filename"
+        },
+        "globalObject": {
+          "$ref": "#/definitions/GlobalObject"
+        },
+        "hashDigest": {
+          "$ref": "#/definitions/HashDigest"
+        },
+        "hashDigestLength": {
+          "$ref": "#/definitions/HashDigestLength"
+        },
+        "hashFunction": {
+          "$ref": "#/definitions/HashFunction"
+        },
+        "hashSalt": {
+          "$ref": "#/definitions/HashSalt"
+        },
+        "hotUpdateChunkFilename": {
+          "$ref": "#/definitions/HotUpdateChunkFilename"
+        },
+        "hotUpdateFunction": {
+          "$ref": "#/definitions/HotUpdateFunction"
+        },
+        "hotUpdateMainFilename": {
+          "$ref": "#/definitions/HotUpdateMainFilename"
+        },
+        "iife": {
+          "$ref": "#/definitions/Iife"
+        },
+        "jsonpFunction": {
+          "$ref": "#/definitions/JsonpFunction"
+        },
+        "jsonpScriptType": {
+          "$ref": "#/definitions/JsonpScriptType"
+        },
+        "library": {
+          "$ref": "#/definitions/LibraryOptions"
+        },
+        "module": {
+          "$ref": "#/definitions/OutputModule"
+        },
+        "path": {
+          "$ref": "#/definitions/Path"
+        },
+        "pathinfo": {
+          "$ref": "#/definitions/Pathinfo"
+        },
+        "publicPath": {
+          "$ref": "#/definitions/PublicPath"
+        },
+        "sourceMapFilename": {
+          "$ref": "#/definitions/SourceMapFilename"
+        },
+        "sourcePrefix": {
+          "$ref": "#/definitions/SourcePrefix"
+        },
+        "strictModuleExceptionHandling": {
+          "$ref": "#/definitions/StrictModuleExceptionHandling"
+        },
+        "uniqueName": {
+          "$ref": "#/definitions/UniqueName"
+        },
+        "webassemblyModuleFilename": {
+          "$ref": "#/definitions/WebassemblyModuleFilename"
         }
       }
     },
@@ -1627,6 +1837,15 @@
       "description": "The number of parallel processed modules in the compilation.",
       "type": "number",
       "minimum": 1
+    },
+    "Path": {
+      "description": "The output directory as **absolute path** (required).",
+      "type": "string",
+      "absolutePath": true
+    },
+    "Pathinfo": {
+      "description": "Include comments with information about the modules.",
+      "type": "boolean"
     },
     "Performance": {
       "description": "Configuration for web performance recommendations",
@@ -1681,6 +1900,18 @@
     "Profile": {
       "description": "Capture timing information for each module.",
       "type": "boolean"
+    },
+    "PublicPath": {
+      "description": "The `publicPath` specifies the public URL address of the output files when referenced in a browser.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+        }
+      ]
     },
     "RecordsInputPath": {
       "description": "Store compiler state to a json file.",
@@ -2357,6 +2588,15 @@
         }
       ]
     },
+    "SourceMapFilename": {
+      "description": "The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.",
+      "type": "string",
+      "absolutePath": false
+    },
+    "SourcePrefix": {
+      "description": "Prefixes every line of the source in the bundle with this string.",
+      "type": "string"
+    },
     "Stats": {
       "description": "Stats options object or preset name",
       "anyOf": [
@@ -2672,6 +2912,10 @@
         }
       }
     },
+    "StrictModuleExceptionHandling": {
+      "description": "Handles exceptions in module loading correctly at a performance cost.",
+      "type": "boolean"
+    },
     "Target": {
       "description": "Environment to build for",
       "anyOf": [
@@ -2692,6 +2936,15 @@
           "tsType": "((compiler: import('../lib/Compiler')) => void)"
         }
       ]
+    },
+    "UmdNamedDefine": {
+      "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
+      "type": "boolean"
+    },
+    "UniqueName": {
+      "description": "A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.",
+      "type": "string",
+      "minLength": 1
     },
     "Watch": {
       "description": "Enter watch mode, which rebuilds on file change.",
@@ -2737,6 +2990,11 @@
           "type": "boolean"
         }
       }
+    },
+    "WebassemblyModuleFilename": {
+      "description": "The filename of WebAssembly modules as relative path inside the `output.path` directory.",
+      "type": "string",
+      "absolutePath": false
     },
     "WebpackOptionsNormalized": {
       "description": "Normalized webpack options object",
@@ -2798,7 +3056,7 @@
           "$ref": "#/definitions/Optimization"
         },
         "output": {
-          "$ref": "#/definitions/Output"
+          "$ref": "#/definitions/OutputNormalized"
         },
         "parallelism": {
           "$ref": "#/definitions/Parallelism"

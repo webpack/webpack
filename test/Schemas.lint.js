@@ -130,7 +130,7 @@ describe("Schemas", () => {
 					});
 					if ("items" in item) {
 						describe("items", () => {
-							if (Object.keys(item).join() !== "$ref") {
+							if (Object.keys(item.items).join() !== "$ref") {
 								validateProperty(item.items);
 							}
 							walker(item.items);
