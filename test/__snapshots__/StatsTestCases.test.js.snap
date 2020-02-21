@@ -651,7 +651,7 @@ Child
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks                         Chunk Names
-                            app.js   6.76 KiB       0  [emitted]              app
+                            app.js   6.78 KiB       0  [emitted]              app
     vendor.aa94f0c872c214f6cb2e.js  619 bytes       1  [emitted] [immutable]  vendor
     Entrypoint app = vendor.aa94f0c872c214f6cb2e.js app.js
     [./constants.js] 87 bytes {1} [built]
@@ -664,7 +664,7 @@ Child
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks                         Chunk Names
-                            app.js   6.78 KiB       0  [emitted]              app
+                            app.js    6.8 KiB       0  [emitted]              app
     vendor.aa94f0c872c214f6cb2e.js  619 bytes       1  [emitted] [immutable]  vendor
     Entrypoint app = vendor.aa94f0c872c214f6cb2e.js app.js
     [./constants.js] 87 bytes {1} [built]
@@ -699,8 +699,8 @@ Child
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                                Asset       Size  Chunks                         Chunk Names
-           1-4dcf1f7bb7b9da3c54c7.js  424 bytes       1  [emitted] [immutable]  
-       1-4dcf1f7bb7b9da3c54c7.js.map  336 bytes       1  [emitted] [dev]        
+           1-4dcf1f7bb7b9da3c54c7.js  443 bytes       1  [emitted] [immutable]  
+       1-4dcf1f7bb7b9da3c54c7.js.map  337 bytes       1  [emitted] [dev]        
         main-95e076639e5472415472.js   8.32 KiB       0  [emitted] [immutable]  main
     main-95e076639e5472415472.js.map   8.32 KiB       0  [emitted] [dev]        main
     Entrypoint main = main-95e076639e5472415472.js main-95e076639e5472415472.js.map
@@ -713,8 +713,8 @@ Child
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                                Asset       Size  Chunks                         Chunk Names
-           1-4dcf1f7bb7b9da3c54c7.js  424 bytes       1  [emitted] [immutable]  
-       1-4dcf1f7bb7b9da3c54c7.js.map  336 bytes       1  [emitted] [dev]        
+           1-4dcf1f7bb7b9da3c54c7.js  443 bytes       1  [emitted] [immutable]  
+       1-4dcf1f7bb7b9da3c54c7.js.map  337 bytes       1  [emitted] [dev]        
         main-95e076639e5472415472.js   8.32 KiB       0  [emitted] [immutable]  main
     main-95e076639e5472415472.js.map   8.32 KiB       0  [emitted] [dev]        main
     Entrypoint main = main-95e076639e5472415472.js main-95e076639e5472415472.js.map
@@ -727,7 +727,7 @@ Child
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                            Asset       Size  Chunks                         Chunk Names
-       1-4dcf1f7bb7b9da3c54c7.js  940 bytes       1  [emitted] [immutable]  
+       1-4dcf1f7bb7b9da3c54c7.js  960 bytes       1  [emitted] [immutable]  
     main-95e076639e5472415472.js   8.66 KiB       0  [emitted] [immutable]  main
     Entrypoint main = main-95e076639e5472415472.js
     [0] ./a/index.js 40 bytes {0} [built]
@@ -739,7 +739,7 @@ Child
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                            Asset       Size  Chunks                         Chunk Names
-       1-4dcf1f7bb7b9da3c54c7.js  940 bytes       1  [emitted] [immutable]  
+       1-4dcf1f7bb7b9da3c54c7.js  960 bytes       1  [emitted] [immutable]  
     main-95e076639e5472415472.js   8.66 KiB       0  [emitted] [immutable]  main
     Entrypoint main = main-95e076639e5472415472.js
     [0] ./b/index.js 40 bytes {0} [built]
@@ -1677,7 +1677,7 @@ chunk    {7} main.js (main) 523 bytes >{0}< >{1}< >{2}< >{5}< [entry] [rendered]
 
 exports[`StatsTestCases should print correct stats for parse-error 1`] = `
 "  Asset      Size  Chunks  Chunk Names
-main.js  4.11 KiB       0  main
+main.js  4.13 KiB       0  main
 Entrypoint main = main.js
 [0] ./b.js 271 bytes {0} [built] [failed] [1 error]
 [1] ./index.js + 1 modules 35 bytes {0} [built]
@@ -2419,7 +2419,7 @@ Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
    1.js  481 bytes       1  [emitted]  
-main.js   9.51 KiB       0  [emitted]  main
+main.js   9.53 KiB       0  [emitted]  main
 Entrypoint main = main.js
 [0] ./components/src/CompAB/index.js 87 bytes [built]
     [no exports used]
@@ -2466,8 +2466,8 @@ exports[`StatsTestCases should print correct stats for side-effects-simple-unuse
 "Hash: a5866e21e8cfa3ae1a89
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
-  Asset     Size  Chunks             Chunk Names
-main.js  3.9 KiB       0  [emitted]  main
+  Asset      Size  Chunks             Chunk Names
+main.js  3.92 KiB       0  [emitted]  main
 Entrypoint main = main.js
 [0] ./node_modules/pmodule/b.js 69 bytes [built]
     [no exports used]
