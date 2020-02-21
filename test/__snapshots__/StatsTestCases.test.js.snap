@@ -690,8 +690,8 @@ Child
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
-         703-35b05b4f9ece3e5b7253.js  438 bytes  [emitted] [immutable]
-     703-35b05b4f9ece3e5b7253.js.map  343 bytes  [emitted] [dev]
+         703-35b05b4f9ece3e5b7253.js  460 bytes  [emitted] [immutable]
+     703-35b05b4f9ece3e5b7253.js.map  344 bytes  [emitted] [dev]
         main-322147d992bb0a885b10.js   8.02 KiB  [emitted] [immutable]  [name: main]
     main-322147d992bb0a885b10.js.map   7.14 KiB  [emitted] [dev]        [name: (main)]
     Entrypoint main = main-322147d992bb0a885b10.js (main-322147d992bb0a885b10.js.map)
@@ -703,8 +703,8 @@ Child
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
-         703-35b05b4f9ece3e5b7253.js  438 bytes  [emitted] [immutable]
-     703-35b05b4f9ece3e5b7253.js.map  343 bytes  [emitted] [dev]
+         703-35b05b4f9ece3e5b7253.js  460 bytes  [emitted] [immutable]
+     703-35b05b4f9ece3e5b7253.js.map  344 bytes  [emitted] [dev]
         main-322147d992bb0a885b10.js   8.02 KiB  [emitted] [immutable]  [name: main]
     main-322147d992bb0a885b10.js.map   7.14 KiB  [emitted] [dev]        [name: (main)]
     Entrypoint main = main-322147d992bb0a885b10.js (main-322147d992bb0a885b10.js.map)
@@ -716,7 +716,7 @@ Child
     Time: Xms
     Built at: 1970-04-20 12:42:42
                            Asset      Size
-     703-d460da0006247c80e6fd.js  1.49 KiB  [emitted] [immutable]
+     703-d460da0006247c80e6fd.js  1.51 KiB  [emitted] [immutable]
     main-d716298143ad43b551dc.js  8.91 KiB  [emitted] [immutable]  [name: main]
     Entrypoint main = main-d716298143ad43b551dc.js
     ./a/index.js 40 bytes [built]
@@ -727,7 +727,7 @@ Child
     Time: Xms
     Built at: 1970-04-20 12:42:42
                            Asset      Size
-     703-d460da0006247c80e6fd.js  1.49 KiB  [emitted] [immutable]
+     703-d460da0006247c80e6fd.js  1.51 KiB  [emitted] [immutable]
     main-d716298143ad43b551dc.js  8.91 KiB  [emitted] [immutable]  [name: main]
     Entrypoint main = main-d716298143ad43b551dc.js
     ./b/index.js 40 bytes [built]
@@ -2635,7 +2635,7 @@ external \\"external\\" 42 bytes [built]
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Hash: 7cb360b116ad92cf28c75017658cecd20c95d17f
+"Hash: 7cb360b116ad92cf28c7eecef53ff6803bb3e2c1
 Child
     Hash: 7cb360b116ad92cf28c7
     Time: Xms
@@ -2655,7 +2655,7 @@ Child
     ./common_lazy_shared.js 25 bytes [built]
         + 12 hidden modules
 Child
-    Hash: 5017658cecd20c95d17f
+    Hash: eecef53ff6803bb3e2c1
     Time: Xms
     Built at: 1970-04-20 12:42:42
     Entrypoint first = b-vendor.js b-first.js
@@ -2678,7 +2678,7 @@ Child
         ModuleConcatenation bailout: Cannot concat with ./common_lazy_shared.js (<- Module is referenced from different chunks by these modules: ./lazy_first.js, ./lazy_second.js, ./lazy_shared.js)
     ./common_lazy.js 25 bytes [built]
     ./common_lazy_shared.js 25 bytes [built]
-        + 14 hidden modules"
+        + 12 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
