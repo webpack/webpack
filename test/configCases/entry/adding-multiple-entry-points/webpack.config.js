@@ -1,4 +1,4 @@
-const EntryPlugin = require("../../../../").EntryPlugin;
+const { EntryPlugin } = require("../../../../");
 module.exports = {
 	entry: () => ({}),
 	optimization: {

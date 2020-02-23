@@ -3,8 +3,8 @@ const stripAnsi = require("strip-ansi");
 module.exports = (stdio, tty) => {
 	let logs = [];
 
-	const write = stdio.write;
-	const isTTY = stdio.isTTY;
+	const { write } = stdio;
+	const { isTTY } = stdio;
 
 	stdio.write = function(str) {
 		logs.push(str);

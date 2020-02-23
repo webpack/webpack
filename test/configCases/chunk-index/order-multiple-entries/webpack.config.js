@@ -16,7 +16,7 @@ module.exports = {
 			 * @returns {void}
 			 */
 			const handler = compilation => {
-				const moduleGraph = compilation.moduleGraph;
+				const { moduleGraph } = compilation;
 				compilation.hooks.afterSeal.tap("testcase", () => {
 					const data = {};
 					for (const [name, group] of compilation.namedChunkGroups) {

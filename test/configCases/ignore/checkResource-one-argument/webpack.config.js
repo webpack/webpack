@@ -1,6 +1,6 @@
 "use strict";
 
-const IgnorePlugin = require("../../../../").IgnorePlugin;
+const { IgnorePlugin } = require("../../../../");
 
 module.exports = {
 	entry: "./test.js",

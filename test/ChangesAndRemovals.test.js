@@ -36,8 +36,8 @@ const onceDone = (compiler, action) => {
 };
 
 const getChanges = compiler => {
-	const modifiedFiles = compiler.modifiedFiles;
-	const removedFiles = compiler.removedFiles;
+	const { modifiedFiles } = compiler;
+	const { removedFiles } = compiler;
 	return {
 		removed: removedFiles && Array.from(removedFiles),
 		modified: modifiedFiles && Array.from(modifiedFiles)

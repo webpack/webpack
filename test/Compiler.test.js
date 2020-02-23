@@ -51,7 +51,7 @@ describe("Compiler", () => {
 		c.run((err, stats) => {
 			if (err) throw err;
 			expect(typeof stats).toBe("object");
-			const compilation = stats.compilation;
+			const { compilation } = stats;
 			stats = stats.toJson({
 				modules: true,
 				reasons: true

@@ -1,4 +1,4 @@
-const Compiler = require("../../../../").Compiler;
+const { Compiler } = require("../../../../");
 
 module.exports = {
 	optimization: {

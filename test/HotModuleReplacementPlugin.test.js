@@ -140,7 +140,7 @@ describe("HotModuleReplacementPlugin", () => {
 		compiler.run((err, stats) => {
 			if (err) throw err;
 			const jsonStats = stats.toJson();
-			const hash = jsonStats.hash;
+			const { hash } = jsonStats;
 			const chunkName = Object.keys(jsonStats.assetsByChunkName)[0];
 			fs.writeFileSync(statsFile3, stats.toString());
 			compiler.run((err, stats) => {
