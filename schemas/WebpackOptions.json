@@ -537,6 +537,10 @@
           "type": "string",
           "absolutePath": true
         },
+        "contextify": {
+          "description": "Write relative to cache folder paths instead of absolute",
+          "type": "boolean"
+        },
         "hashAlgorithm": {
           "description": "Algorithm used for generation the hash (see node.js crypto package)",
           "type": "string"

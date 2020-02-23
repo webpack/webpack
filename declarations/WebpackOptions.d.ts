@@ -757,6 +757,10 @@ export interface FileCacheOptions {
 	 */
 	cacheLocation?: string;
 	/**
+	 * Write relative to cache folder paths instead of absolute
+	 */
+	contextify?: boolean;
+	/**
 	 * Algorithm used for generation the hash (see node.js crypto package)
 	 */
 	hashAlgorithm?: string;
