@@ -1,0 +1,45 @@
+{
+  "title": "ContainerReferencePlugin",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "remoteType": {
+          "description": "The libraryTarget of a remote build",
+          "type": "string",
+          "minLength": 1
+        },
+        "remotes": {
+          "description": "A list of remote scopes or namespaces that reference federated Webpack instances",
+          "anyOf": [
+            {
+              "description": "List of provided remote scopes",
+              "type": "array"
+            },
+            {
+              "description": "A object of key value pairs for remote scopes",
+              "type": "object",
+              "additionalProperties": true
+            }
+          ]
+        },
+        "overrides": {
+          "description": "A list of requests that should be overridable by the host container",
+          "anyOf": [
+            {
+              "description": "List of provided remote scopes",
+              "type": "array",
+              "minLength": 1
+            },
+            {
+              "description": "A object of key value pairs for remote scopes",
+              "type": "object",
+              "additionalProperties": true
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
