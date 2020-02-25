@@ -1,0 +1,42 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "exposes": {
+      "description": "A map of modules you wish to expose",
+      "type": ["object", "array"]
+    },
+    "filename": {
+      "description": "The filename for this container relative path inside the `output.path` directory.",
+      "type": "string",
+      "absolutePath": false
+    },
+    "libraryTarget": {
+      "description": "Type of library",
+      "type": "string",
+      "enum": [
+        "var",
+        "this",
+        "window",
+        "self",
+        "global",
+        "commonjs",
+        "commonjs2",
+        "amd",
+        "amd-require",
+        "umd",
+        "umd2",
+        "system"
+      ]
+    },
+    "name": {
+      "description": "The name for this container",
+      "type": "string"
+    },
+    "overridables": {
+      "description": "An object for requests to override from host to this container",
+      "type": "object"
+    }
+  },
+  "required": ["name"]
+}
