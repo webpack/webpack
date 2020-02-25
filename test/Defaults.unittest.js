@@ -25,7 +25,7 @@ describe("Defaults", () => {
 		`${quotemeta(escapedCwd)}((?:\\\\\\\\)?(?:[a-zA-Z.\\-_]+\\\\\\\\)*)`,
 		"g"
 	);
-	const normalizeCwd = str => {
+	const normalize = str => {
 		if (cwd.startsWith("/")) {
 			str = str.replace(new RegExp(quotemeta(cwd), "g"), "<cwd>");
 		} else {
@@ -35,6 +35,12 @@ describe("Defaults", () => {
 				(m, g) => `<cwd>${g.replace(/\\\\/g, "/")}`
 			);
 		}
+
+		str = str.replace(
+			/\/\[.+]node_modules\[.+]\//,
+			"/[\\\\\\/]node_modules[\\\\\\/]/i"
+		);
+
 		return str;
 	};
 
@@ -49,7 +55,7 @@ describe("Defaults", () => {
 			return value instanceof Diff;
 		},
 		print(received) {
-			return normalizeCwd(received.value);
+			return normalize(received.value);
 		}
 	});
 
@@ -58,7 +64,16 @@ describe("Defaults", () => {
 			return typeof value === "string";
 		},
 		print(received) {
-			return JSON.stringify(normalizeCwd(received));
+			return JSON.stringify(normalize(received));
+		}
+	});
+
+	expect.addSnapshotSerializer({
+		test(value) {
+			return value instanceof RegExp;
+		},
+		print(received) {
+			return received.toString();
 		}
 	});
 
@@ -112,7 +127,7 @@ describe("Defaults", () => {
 		        "type": "javascript/auto",
 		      },
 		      Object {
-		        "test": /\\\\\\.json\\$/i,
+		        "test": /\\.json$/i,
 		        "type": "json",
 		      },
 		    ],
@@ -130,7 +145,7 @@ describe("Defaults", () => {
 		    "unsafeCache": false,
 		    "wrappedContextCritical": false,
 		    "wrappedContextRecursive": true,
-		    "wrappedContextRegExp": /\\.\\*/,
+		    "wrappedContextRegExp": /.*/,
 		  },
 		  "name": undefined,
 		  "node": Object {
@@ -175,7 +190,7 @@ describe("Defaults", () => {
 		          "idHint": "vendors",
 		          "priority": -10,
 		          "reuseExistingChunk": true,
-		          "test": /\\[\\\\\\\\\\\\/\\]node_modules\\[\\\\\\\\\\\\/\\]/i,
+		          "test": /[\\\\\\/]node_modules[\\\\\\/]/i,
 		        },
 		      },
 		      "chunks": "async",
@@ -805,7 +820,7 @@ describe("Defaults", () => {
 			-           "idHint": "vendors",
 			-           "priority": -10,
 			-           "reuseExistingChunk": true,
-			-           "test": /[\\\\\\/]node_modules[\\\\\\/]/i,
+			-           "test": /[\\\\\\/]node_modules[\\\\\\/]/ii,
 			-         },
 			-       },
 			-       "chunks": "async",
