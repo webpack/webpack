@@ -5,7 +5,9 @@ module.exports = {
 		new ContainerPlugin({
 			name: "container",
 			filename: "container-file.js",
-			libraryTarget: "commonjs",
+			library: {
+				type: "commonjs-module"
+			},
 			exposes: {
 				test: "./test",
 				test2: "./test2"
