@@ -189,12 +189,12 @@ describe("Defaults", () => {
 		  },
 		  "output": Object {
 		    "assetModuleFilename": "[hash][ext]",
-		    "chunkCallbackName": "webpackChunk",
+		    "chunkCallbackName": "webpackChunkwebpack",
 		    "chunkFilename": "[name].js",
 		    "chunkLoadTimeout": 120000,
 		    "compareBeforeEmit": true,
 		    "crossOriginLoading": false,
-		    "devtoolNamespace": "",
+		    "devtoolNamespace": "webpack",
 		    "ecmaVersion": 6,
 		    "filename": "[name].js",
 		    "globalObject": "window",
@@ -202,10 +202,10 @@ describe("Defaults", () => {
 		    "hashDigestLength": 20,
 		    "hashFunction": "md4",
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
-		    "hotUpdateFunction": "webpackHotUpdate",
+		    "hotUpdateFunction": "webpackHotUpdatewebpack",
 		    "hotUpdateMainFilename": "[fullhash].hot-update.json",
 		    "iife": true,
-		    "jsonpFunction": "webpackJsonp",
+		    "jsonpFunction": "webpackJsonpwebpack",
 		    "jsonpScriptType": false,
 		    "library": "",
 		    "libraryTarget": "var",
@@ -215,6 +215,7 @@ describe("Defaults", () => {
 		    "publicPath": "",
 		    "sourceMapFilename": "[file].map[query]",
 		    "strictModuleExceptionHandling": false,
+		    "uniqueName": "webpack",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
 		  },
 		  "parallelism": 100,
@@ -325,7 +326,7 @@ describe("Defaults", () => {
 		@@ -112,1 +112,1 @@
 		-       "minSize": 10000,
 		+       "minSize": 30000,
-		@@ -147,1 +147,5 @@
+		@@ -148,1 +148,5 @@
 		-   "performance": false,
 		+   "performance": Object {
 		+     "hints": "warning",
@@ -374,7 +375,7 @@ describe("Defaults", () => {
 		@@ -112,1 +112,1 @@
 		-       "minSize": 10000,
 		+       "minSize": 30000,
-		@@ -147,1 +147,5 @@
+		@@ -148,1 +148,5 @@
 		-   "performance": false,
 		+   "performance": Object {
 		+     "hints": "warning",
@@ -421,10 +422,10 @@ describe("Defaults", () => {
 		@@ -140,1 +146,1 @@
 		-     "pathinfo": false,
 		+     "pathinfo": true,
-		@@ -156,1 +162,1 @@
+		@@ -157,1 +163,1 @@
 		-     "cache": false,
 		+     "cache": true,
-		@@ -175,1 +181,1 @@
+		@@ -176,1 +182,1 @@
 		-     "cache": false,
 		+     "cache": true,
 	`)
@@ -464,7 +465,7 @@ describe("Defaults", () => {
 		+         "type": "javascript/esm",
 		+       },
 		+     ],
-		@@ -158,0 +168,1 @@
+		@@ -159,0 +169,1 @@
 		+       ".mjs",
 	`)
 	);
@@ -557,16 +558,16 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ -118,1 +118,1 @@
-		-     "chunkCallbackName": "webpackChunk",
+		-     "chunkCallbackName": "webpackChunkwebpack",
 		+     "chunkCallbackName": "webpackChunkmyLib_awesome",
 		@@ -123,1 +123,1 @@
-		-     "devtoolNamespace": "",
+		-     "devtoolNamespace": "webpack",
 		+     "devtoolNamespace": "myLib.awesome",
 		@@ -131,1 +131,1 @@
-		-     "hotUpdateFunction": "webpackHotUpdate",
+		-     "hotUpdateFunction": "webpackHotUpdatewebpack",
 		+     "hotUpdateFunction": "webpackHotUpdatemyLib_awesome",
 		@@ -134,1 +134,1 @@
-		-     "jsonpFunction": "webpackJsonp",
+		-     "jsonpFunction": "webpackJsonpwebpack",
 		+     "jsonpFunction": "webpackJsonpmyLib_awesome",
 		@@ -136,1 +136,4 @@
 		-     "library": "",
@@ -574,6 +575,9 @@ describe("Defaults", () => {
 		+       "myLib",
 		+       "awesome",
 		+     ],
+		@@ -144,1 +147,1 @@
+		-     "uniqueName": "webpack",
+		+     "uniqueName": "myLib.awesome",
 	`)
 	);
 	test("target node", { target: "node" }, e =>
@@ -591,14 +595,14 @@ describe("Defaults", () => {
 		@@ -126,1 +126,1 @@
 		-     "globalObject": "window",
 		+     "globalObject": "global",
-		@@ -153,3 +153,1 @@
+		@@ -154,3 +154,1 @@
 		-     "aliasFields": Array [
 		-       "browser",
 		-     ],
 		+     "aliasFields": Array [],
-		@@ -163,1 +161,0 @@
+		@@ -164,1 +162,0 @@
 		-       "browser",
-		@@ -188,1 +185,1 @@
+		@@ -189,1 +186,1 @@
 		-   "target": "web",
 		+   "target": "node",
 	`)
@@ -611,7 +615,7 @@ describe("Defaults", () => {
 		@@ -126,1 +126,1 @@
 		-     "globalObject": "window",
 		+     "globalObject": "self",
-		@@ -188,1 +188,1 @@
+		@@ -189,1 +189,1 @@
 		-   "target": "web",
 		+   "target": "webworker",
 	`)
@@ -624,7 +628,7 @@ describe("Defaults", () => {
 		@@ -84,1 +84,1 @@
 		-     "portableRecords": false,
 		+     "portableRecords": true,
-		@@ -150,2 +150,2 @@
+		@@ -151,2 +151,2 @@
 		-   "recordsInputPath": false,
 		-   "recordsOutputPath": false,
 		+   "recordsInputPath": "some-path",
@@ -697,10 +701,10 @@ describe("Defaults", () => {
 		@@ -55,1 +61,1 @@
 		-     "unsafeCache": false,
 		+     "unsafeCache": [Function anonymous],
-		@@ -156,1 +162,1 @@
+		@@ -157,1 +163,1 @@
 		-     "cache": false,
 		+     "cache": true,
-		@@ -175,1 +181,1 @@
+		@@ -176,1 +182,1 @@
 		-     "cache": false,
 		+     "cache": true,
 	`)
@@ -735,10 +739,10 @@ describe("Defaults", () => {
 		@@ -55,1 +74,1 @@
 		-     "unsafeCache": false,
 		+     "unsafeCache": [Function anonymous],
-		@@ -156,1 +175,1 @@
+		@@ -157,1 +176,1 @@
 		-     "cache": false,
 		+     "cache": true,
-		@@ -175,1 +194,1 @@
+		@@ -176,1 +195,1 @@
 		-     "cache": false,
 		+     "cache": true,
 	`)

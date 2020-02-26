@@ -1590,6 +1590,11 @@
           "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
           "type": "boolean"
         },
+        "uniqueName": {
+          "description": "A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.",
+          "type": "string",
+          "minLength": 1
+        },
         "webassemblyModuleFilename": {
           "description": "The filename of WebAssembly modules as relative path inside the `output.path` directory.",
           "type": "string",
