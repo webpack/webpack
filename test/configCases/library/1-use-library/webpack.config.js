@@ -32,7 +32,7 @@ module.exports = [
 		]
 	},
 	{
-		entry: "./global-test.js",
+		entry: "./this-test.js",
 		resolve: {
 			alias: {
 				library: path.resolve(
@@ -44,6 +44,22 @@ module.exports = [
 		plugins: [
 			new webpack.DefinePlugin({
 				NAME: JSON.stringify("this")
+			})
+		]
+	},
+	{
+		entry: "./var-test.js",
+		resolve: {
+			alias: {
+				library: path.resolve(
+					__dirname,
+					"../../../js/config/library/0-create-library/var.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("var")
 			})
 		]
 	},

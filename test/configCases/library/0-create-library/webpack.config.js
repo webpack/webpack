@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("../../../../");
 module.exports = [
 	{
 		output: {
@@ -47,14 +48,20 @@ module.exports = [
 	},
 	{
 		output: {
-			filename: "global.js",
-			library: "globalName"
+			filename: "var.js",
+			library: ["globalName", "x", "y"]
 		},
 		resolve: {
 			alias: {
 				external: "./non-external"
 			}
-		}
+		},
+		plugins: [
+			new webpack.BannerPlugin({
+				raw: true,
+				banner: "module.exports = () => globalName;\n"
+			})
+		]
 	},
 	{
 		output: {
