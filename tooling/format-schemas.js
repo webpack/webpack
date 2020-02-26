@@ -1,8 +1,10 @@
 const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
+const baseSchema = require("../schemas/WebpackOptions.json");
 
 const schemasDir = path.resolve(__dirname, "../schemas");
+const baseDefs = new Map(Object.entries(baseSchema.definitions));
 
 // When --write is set, files will be written in place
 // Elsewise it only prints outdated files
@@ -75,6 +77,16 @@ const NESTED_ARRAY = ["oneOf", "anyOf", "allOf"];
 
 const processJson = json => {
 	json = sortObjectWithList(json, PROPERTIES);
+
+	if (json.definitions) {
+		json.definitions = { ...json.definitions };
+		for (const key of Object.keys(json.definitions)) {
+			const baseDef = baseDefs.get(key);
+			if (baseDef) {
+				json.definitions[key] = baseDef;
+			}
+		}
+	}
 
 	for (const name of NESTED_WITH_NAME) {
 		if (name in json && json[name] && typeof json[name] === "object") {
