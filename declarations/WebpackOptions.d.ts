@@ -1427,6 +1427,10 @@ export interface Output {
 	 */
 	umdNamedDefine?: boolean;
 	/**
+	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
+	 */
+	uniqueName?: string;
+	/**
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
 	webassemblyModuleFilename?: string;
