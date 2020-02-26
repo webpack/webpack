@@ -1,4 +1,154 @@
 {
+  "definitions": {
+    "ArrayOfStringValues": {
+      "description": "Array of strings",
+      "type": "array",
+      "items": {
+        "description": "A non-empty string",
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "AuxiliaryComment": {
+      "description": "Add a comment in the UMD wrapper.",
+      "anyOf": [
+        {
+          "description": "Append the same comment above each import style.",
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/LibraryCustomUmdCommentObject"
+        }
+      ]
+    },
+    "LibraryCustomUmdCommentObject": {
+      "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "amd": {
+          "description": "Set comment for `amd` section in UMD",
+          "type": "string"
+        },
+        "commonjs": {
+          "description": "Set comment for `commonjs` (exports) section in UMD",
+          "type": "string"
+        },
+        "commonjs2": {
+          "description": "Set comment for `commonjs2` (module.exports) section in UMD",
+          "type": "string"
+        },
+        "root": {
+          "description": "Set comment for `root` (global variable) section in UMD",
+          "type": "string"
+        }
+      }
+    },
+    "LibraryCustomUmdObject": {
+      "description": "Description object for all UMD variants of the library name",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "amd": {
+          "description": "Name of the exposed AMD library in the UMD",
+          "type": "string"
+        },
+        "commonjs": {
+          "description": "Name of the exposed commonjs export in the UMD",
+          "type": "string"
+        },
+        "root": {
+          "description": "Name of the property exposed globally by a UMD library",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/ArrayOfStringValues"
+            }
+          ]
+        }
+      }
+    },
+    "LibraryExport": {
+      "description": "Specify which export should be exposed as library",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/ArrayOfStringValues"
+        }
+      ]
+    },
+    "LibraryName": {
+      "description": "The name of the library (some types allow unnamed libraries too)",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "description": "A part of the library name",
+            "type": "string"
+          }
+        },
+        {
+          "$ref": "#/definitions/LibraryCustomUmdObject"
+        }
+      ]
+    },
+    "LibraryOptions": {
+      "description": "Options for library",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "auxiliaryComment": {
+          "$ref": "#/definitions/AuxiliaryComment"
+        },
+        "export": {
+          "$ref": "#/definitions/LibraryExport"
+        },
+        "name": {
+          "$ref": "#/definitions/LibraryName"
+        },
+        "type": {
+          "$ref": "#/definitions/LibraryType"
+        },
+        "umdNamedDefine": {
+          "$ref": "#/definitions/UmdNamedDefine"
+        }
+      },
+      "required": ["type"]
+    },
+    "LibraryType": {
+      "description": "Type of library",
+      "enum": [
+        "var",
+        "module",
+        "assign",
+        "this",
+        "window",
+        "self",
+        "global",
+        "commonjs",
+        "commonjs2",
+        "commonjs-module",
+        "amd",
+        "amd-require",
+        "umd",
+        "umd2",
+        "jsonp",
+        "system"
+      ]
+    },
+    "UmdNamedDefine": {
+      "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
+      "type": "boolean"
+    }
+  },
+  "title": "ContainerPluginOptions",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -11,23 +161,8 @@
       "type": "string",
       "absolutePath": false
     },
-    "libraryTarget": {
-      "description": "Type of library",
-      "type": "string",
-      "enum": [
-        "var",
-        "this",
-        "window",
-        "self",
-        "global",
-        "commonjs",
-        "commonjs2",
-        "amd",
-        "amd-require",
-        "umd",
-        "umd2",
-        "system"
-      ]
+    "library": {
+      "$ref": "#/definitions/LibraryOptions"
     },
     "name": {
       "description": "The name for this container",
@@ -35,7 +170,7 @@
     },
     "overridables": {
       "description": "An object for requests to override from host to this container",
-      "type": "object"
+      "type": ["object", "array"]
     }
   },
   "required": ["name"]
