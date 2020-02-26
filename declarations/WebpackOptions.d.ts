@@ -57,6 +57,55 @@ export type EntryItem = string | NonEmptyArrayOfUniqueStringValues;
  */
 export type NonEmptyArrayOfUniqueStringValues = [string, ...string[]];
 /**
+ * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+ */
+export type Filename =
+	| string
+	| ((
+			pathData: import("../lib/Compilation").PathData,
+			assetInfo?: import("../lib/Compilation").AssetInfo
+	  ) => string);
+/**
+ * Add a comment in the UMD wrapper.
+ */
+export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
+/**
+ * Specify which export should be exposed as library
+ */
+export type LibraryExport = string | ArrayOfStringValues;
+/**
+ * Array of strings
+ */
+export type ArrayOfStringValues = string[];
+/**
+ * The name of the library (some types allow unnamed libraries too)
+ */
+export type LibraryName = string | string[] | LibraryCustomUmdObject;
+/**
+ * Type of library
+ */
+export type LibraryType =
+	| "var"
+	| "module"
+	| "assign"
+	| "this"
+	| "window"
+	| "self"
+	| "global"
+	| "commonjs"
+	| "commonjs2"
+	| "commonjs-module"
+	| "amd"
+	| "amd-require"
+	| "umd"
+	| "umd2"
+	| "jsonp"
+	| "system";
+/**
+ * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
+ */
+export type UmdNamedDefine = boolean;
+/**
  * An entry point without name.
  */
 export type EntryUnnamed = EntryItem;
@@ -97,9 +146,25 @@ export type ExternalItem =
 	  }
 	| RegExp;
 /**
- * Array of strings
+ * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value)
  */
-export type ArrayOfStringValues = string[];
+export type ExternalsType =
+	| "var"
+	| "module"
+	| "assign"
+	| "this"
+	| "window"
+	| "self"
+	| "global"
+	| "commonjs"
+	| "commonjs2"
+	| "commonjs-module"
+	| "amd"
+	| "amd-require"
+	| "umd"
+	| "umd2"
+	| "jsonp"
+	| "system";
 /**
  * Filtering values
  */
@@ -293,6 +358,144 @@ export type OptimizationSplitChunksSizes =
 			[k: string]: number;
 	  };
 /**
+ * The filename of asset modules as relative path inside the `output.path` directory.
+ */
+export type AssetModuleFilename =
+	| string
+	| ((
+			pathData: import("../lib/Compilation").PathData,
+			assetInfo?: import("../lib/Compilation").AssetInfo
+	  ) => string);
+/**
+ * The callback function name used by webpack for loading of chunks in WebWorkers.
+ */
+export type ChunkCallbackName = string;
+/**
+ * The filename of non-entry chunks as relative path inside the `output.path` directory.
+ */
+export type ChunkFilename = string;
+/**
+ * Number of milliseconds before chunk request expires
+ */
+export type ChunkLoadTimeout = number;
+/**
+ * Check if to be emitted file already exists and have the same content before writing to output filesystem
+ */
+export type CompareBeforeEmit = boolean;
+/**
+ * This option enables cross-origin loading of chunks.
+ */
+export type CrossOriginLoading = false | "anonymous" | "use-credentials";
+/**
+ * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
+ */
+export type DevtoolFallbackModuleFilenameTemplate = string | Function;
+/**
+ * Filename template string of function for the sources array in a generated SourceMap.
+ */
+export type DevtoolModuleFilenameTemplate = string | Function;
+/**
+ * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
+ */
+export type DevtoolNamespace = string;
+/**
+ * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
+ */
+export type EcmaVersion = number | 2009;
+/**
+ * List of library types enabled for use by entry points
+ */
+export type EnabledLibraryTypes = LibraryType[];
+/**
+ * An expression which is used to address the global object/scope in runtime code
+ */
+export type GlobalObject = string;
+/**
+ * Digest type used for the hash
+ */
+export type HashDigest = string;
+/**
+ * Number of chars which are used for the hash
+ */
+export type HashDigestLength = number;
+/**
+ * Algorithm used for generation the hash (see node.js crypto package)
+ */
+export type HashFunction = string | typeof import("../lib/util/Hash");
+/**
+ * Any string which is added to the hash to salt it
+ */
+export type HashSalt = string;
+/**
+ * The filename of the Hot Update Chunks. They are inside the output.path directory.
+ */
+export type HotUpdateChunkFilename = string;
+/**
+ * The JSONP function used by webpack for async loading of hot update chunks.
+ */
+export type HotUpdateFunction = string;
+/**
+ * The filename of the Hot Update Main File. It is inside the `output.path` directory.
+ */
+export type HotUpdateMainFilename = string;
+/**
+ * Wrap javascript code into IIFEs to avoid leaking into global scope.
+ */
+export type Iife = boolean;
+/**
+ * The JSONP function used by webpack for async loading of chunks.
+ */
+export type JsonpFunction = string;
+/**
+ * This option enables loading async chunks via a custom script type, such as script type="module"
+ */
+export type JsonpScriptType = false | "text/javascript" | "module";
+/**
+ * Make the output files a library, exporting the exports of the entry point
+ */
+export type Library = LibraryName | LibraryOptions;
+/**
+ * Output javascript files as module source type.
+ */
+export type OutputModule = boolean;
+/**
+ * The output directory as **absolute path** (required).
+ */
+export type Path = string;
+/**
+ * Include comments with information about the modules.
+ */
+export type Pathinfo = boolean;
+/**
+ * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
+ */
+export type PublicPath =
+	| string
+	| ((
+			pathData: import("../lib/Compilation").PathData,
+			assetInfo?: import("../lib/Compilation").AssetInfo
+	  ) => string);
+/**
+ * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
+ */
+export type SourceMapFilename = string;
+/**
+ * Prefixes every line of the source in the bundle with this string.
+ */
+export type SourcePrefix = string;
+/**
+ * Handles exceptions in module loading correctly at a performance cost.
+ */
+export type StrictModuleExceptionHandling = boolean;
+/**
+ * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
+ */
+export type UniqueName = string;
+/**
+ * The filename of WebAssembly modules as relative path inside the `output.path` directory.
+ */
+export type WebassemblyModuleFilename = string;
+/**
  * The number of parallel processed modules in the compilation.
  */
 export type Parallelism = number;
@@ -426,6 +629,10 @@ export interface WebpackOptions {
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
 	externals?: Externals;
+	/**
+	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value)
+	 */
+	externalsType?: ExternalsType;
 	/**
 	 * Options for infrastructure level logging
 	 */
@@ -610,13 +817,80 @@ export interface EntryDescription {
 	 */
 	dependOn?: string | NonEmptyArrayOfUniqueStringValues;
 	/**
-	 * The filename of the entrypoint as relative path inside the `output.path` directory.
+	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
-	filename?: string;
+	filename?: Filename;
 	/**
-	 * The module(s) loaded at startup.
+	 * Module(s) that are loaded upon startup
 	 */
 	import: EntryItem;
+	/**
+	 * Options for library
+	 */
+	library?: LibraryOptions;
+}
+/**
+ * Options for library
+ */
+export interface LibraryOptions {
+	/**
+	 * Add a comment in the UMD wrapper.
+	 */
+	auxiliaryComment?: AuxiliaryComment;
+	/**
+	 * Specify which export should be exposed as library
+	 */
+	export?: LibraryExport;
+	/**
+	 * The name of the library (some types allow unnamed libraries too)
+	 */
+	name?: LibraryName;
+	/**
+	 * Type of library
+	 */
+	type: LibraryType;
+	/**
+	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
+	 */
+	umdNamedDefine?: UmdNamedDefine;
+}
+/**
+ * Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.
+ */
+export interface LibraryCustomUmdCommentObject {
+	/**
+	 * Set comment for `amd` section in UMD
+	 */
+	amd?: string;
+	/**
+	 * Set comment for `commonjs` (exports) section in UMD
+	 */
+	commonjs?: string;
+	/**
+	 * Set comment for `commonjs2` (module.exports) section in UMD
+	 */
+	commonjs2?: string;
+	/**
+	 * Set comment for `root` (global variable) section in UMD
+	 */
+	root?: string;
+}
+/**
+ * Description object for all UMD variants of the library name
+ */
+export interface LibraryCustomUmdObject {
+	/**
+	 * Name of the exposed AMD library in the UMD
+	 */
+	amd?: string;
+	/**
+	 * Name of the exposed commonjs export in the UMD
+	 */
+	commonjs?: string;
+	/**
+	 * Name of the property exposed globally by a UMD library
+	 */
+	root?: string | ArrayOfStringValues;
 }
 /**
  * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
@@ -1262,212 +1536,151 @@ export interface Output {
 	/**
 	 * The filename of asset modules as relative path inside the `output.path` directory.
 	 */
-	assetModuleFilename?:
-		| string
-		| ((
-				pathData: import("../lib/Compilation").PathData,
-				assetInfo?: import("../lib/Compilation").AssetInfo
-		  ) => string);
+	assetModuleFilename?: AssetModuleFilename;
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */
-	auxiliaryComment?: string | LibraryCustomUmdCommentObject;
+	auxiliaryComment?: AuxiliaryComment;
 	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
-	chunkCallbackName?: string;
+	chunkCallbackName?: ChunkCallbackName;
 	/**
 	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
 	 */
-	chunkFilename?: string;
+	chunkFilename?: ChunkFilename;
 	/**
 	 * Number of milliseconds before chunk request expires
 	 */
-	chunkLoadTimeout?: number;
+	chunkLoadTimeout?: ChunkLoadTimeout;
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem
 	 */
-	compareBeforeEmit?: boolean;
+	compareBeforeEmit?: CompareBeforeEmit;
 	/**
 	 * This option enables cross-origin loading of chunks.
 	 */
-	crossOriginLoading?: false | "anonymous" | "use-credentials";
+	crossOriginLoading?: CrossOriginLoading;
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
-	devtoolFallbackModuleFilenameTemplate?: string | Function;
+	devtoolFallbackModuleFilenameTemplate?: DevtoolFallbackModuleFilenameTemplate;
 	/**
 	 * Filename template string of function for the sources array in a generated SourceMap.
 	 */
-	devtoolModuleFilenameTemplate?: string | Function;
+	devtoolModuleFilenameTemplate?: DevtoolModuleFilenameTemplate;
 	/**
 	 * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
 	 */
-	devtoolNamespace?: string;
+	devtoolNamespace?: DevtoolNamespace;
 	/**
 	 * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
 	 */
-	ecmaVersion?: number | 2009;
+	ecmaVersion?: EcmaVersion;
+	/**
+	 * List of library types enabled for use by entry points
+	 */
+	enabledLibraryTypes?: EnabledLibraryTypes;
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
-	filename?:
-		| string
-		| ((
-				pathData: import("../lib/Compilation").PathData,
-				assetInfo?: import("../lib/Compilation").AssetInfo
-		  ) => string);
+	filename?: Filename;
 	/**
 	 * An expression which is used to address the global object/scope in runtime code
 	 */
-	globalObject?: string;
+	globalObject?: GlobalObject;
 	/**
 	 * Digest type used for the hash
 	 */
-	hashDigest?: string;
+	hashDigest?: HashDigest;
 	/**
 	 * Number of chars which are used for the hash
 	 */
-	hashDigestLength?: number;
+	hashDigestLength?: HashDigestLength;
 	/**
 	 * Algorithm used for generation the hash (see node.js crypto package)
 	 */
-	hashFunction?: string | typeof import("../lib/util/Hash");
+	hashFunction?: HashFunction;
 	/**
 	 * Any string which is added to the hash to salt it
 	 */
-	hashSalt?: string;
+	hashSalt?: HashSalt;
 	/**
 	 * The filename of the Hot Update Chunks. They are inside the output.path directory.
 	 */
-	hotUpdateChunkFilename?: string;
+	hotUpdateChunkFilename?: HotUpdateChunkFilename;
 	/**
 	 * The JSONP function used by webpack for async loading of hot update chunks.
 	 */
-	hotUpdateFunction?: string;
+	hotUpdateFunction?: HotUpdateFunction;
 	/**
 	 * The filename of the Hot Update Main File. It is inside the `output.path` directory.
 	 */
-	hotUpdateMainFilename?: string;
+	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
 	 * Wrap javascript code into IIFEs to avoid leaking into global scope.
 	 */
-	iife?: boolean;
+	iife?: Iife;
 	/**
 	 * The JSONP function used by webpack for async loading of chunks.
 	 */
-	jsonpFunction?: string;
+	jsonpFunction?: JsonpFunction;
 	/**
 	 * This option enables loading async chunks via a custom script type, such as script type="module"
 	 */
-	jsonpScriptType?: false | "text/javascript" | "module";
+	jsonpScriptType?: JsonpScriptType;
 	/**
-	 * If set, export the bundle as library. `output.library` is the name.
+	 * Make the output files a library, exporting the exports of the entry point
 	 */
-	library?: string | string[] | LibraryCustomUmdObject;
+	library?: Library;
 	/**
 	 * Specify which export should be exposed as library
 	 */
-	libraryExport?: string | ArrayOfStringValues;
+	libraryExport?: LibraryExport;
 	/**
 	 * Type of library
 	 */
-	libraryTarget?:
-		| "var"
-		| "module"
-		| "assign"
-		| "this"
-		| "window"
-		| "self"
-		| "global"
-		| "commonjs"
-		| "commonjs2"
-		| "commonjs-module"
-		| "amd"
-		| "amd-require"
-		| "umd"
-		| "umd2"
-		| "jsonp"
-		| "system";
+	libraryTarget?: LibraryType;
 	/**
 	 * Output javascript files as module source type.
 	 */
-	module?: boolean;
+	module?: OutputModule;
 	/**
 	 * The output directory as **absolute path** (required).
 	 */
-	path?: string;
+	path?: Path;
 	/**
 	 * Include comments with information about the modules.
 	 */
-	pathinfo?: boolean;
+	pathinfo?: Pathinfo;
 	/**
 	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
 	 */
-	publicPath?:
-		| string
-		| ((
-				pathData: import("../lib/Compilation").PathData,
-				assetInfo?: import("../lib/Compilation").AssetInfo
-		  ) => string);
+	publicPath?: PublicPath;
 	/**
 	 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
 	 */
-	sourceMapFilename?: string;
+	sourceMapFilename?: SourceMapFilename;
 	/**
 	 * Prefixes every line of the source in the bundle with this string.
 	 */
-	sourcePrefix?: string;
+	sourcePrefix?: SourcePrefix;
 	/**
 	 * Handles exceptions in module loading correctly at a performance cost.
 	 */
-	strictModuleExceptionHandling?: boolean;
+	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
 	 */
-	umdNamedDefine?: boolean;
+	umdNamedDefine?: UmdNamedDefine;
+	/**
+	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
+	 */
+	uniqueName?: UniqueName;
 	/**
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
-	webassemblyModuleFilename?: string;
-}
-/**
- * Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.
- */
-export interface LibraryCustomUmdCommentObject {
-	/**
-	 * Set comment for `amd` section in UMD
-	 */
-	amd?: string;
-	/**
-	 * Set comment for `commonjs` (exports) section in UMD
-	 */
-	commonjs?: string;
-	/**
-	 * Set comment for `commonjs2` (module.exports) section in UMD
-	 */
-	commonjs2?: string;
-	/**
-	 * Set comment for `root` (global variable) section in UMD
-	 */
-	root?: string;
-}
-/**
- * Description object for all UMD variants of the library name
- */
-export interface LibraryCustomUmdObject {
-	/**
-	 * Name of the exposed AMD library in the UMD
-	 */
-	amd?: string;
-	/**
-	 * Name of the exposed commonjs export in the UMD
-	 */
-	commonjs?: string;
-	/**
-	 * Name of the property exposed globally by a UMD library
-	 */
-	root?: string | ArrayOfStringValues;
+	webassemblyModuleFilename?: WebassemblyModuleFilename;
 }
 /**
  * Configuration object for web performance recommendations
@@ -1748,13 +1961,171 @@ export interface WatchOptions {
 	stdin?: boolean;
 }
 /**
+ * An object with entry point description.
+ */
+export interface EntryDescriptionNormalized {
+	/**
+	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
+	 */
+	dependOn?: NonEmptyArrayOfUniqueStringValues;
+	/**
+	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+	 */
+	filename?: Filename;
+	/**
+	 * Module(s) that are loaded upon startup. The last one is exported.
+	 */
+	import: NonEmptyArrayOfUniqueStringValues;
+	/**
+	 * Options for library
+	 */
+	library?: LibraryOptions;
+}
+/**
  * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
  */
 export interface EntryStaticNormalized {
 	/**
 	 * An object with entry point description.
 	 */
-	[k: string]: EntryDescription;
+	[k: string]: EntryDescriptionNormalized;
+}
+/**
+ * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
+ */
+export interface OutputNormalized {
+	/**
+	 * The filename of asset modules as relative path inside the `output.path` directory.
+	 */
+	assetModuleFilename?: AssetModuleFilename;
+	/**
+	 * The callback function name used by webpack for loading of chunks in WebWorkers.
+	 */
+	chunkCallbackName?: ChunkCallbackName;
+	/**
+	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
+	 */
+	chunkFilename?: ChunkFilename;
+	/**
+	 * Number of milliseconds before chunk request expires
+	 */
+	chunkLoadTimeout?: ChunkLoadTimeout;
+	/**
+	 * Check if to be emitted file already exists and have the same content before writing to output filesystem
+	 */
+	compareBeforeEmit?: CompareBeforeEmit;
+	/**
+	 * This option enables cross-origin loading of chunks.
+	 */
+	crossOriginLoading?: CrossOriginLoading;
+	/**
+	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
+	 */
+	devtoolFallbackModuleFilenameTemplate?: DevtoolFallbackModuleFilenameTemplate;
+	/**
+	 * Filename template string of function for the sources array in a generated SourceMap.
+	 */
+	devtoolModuleFilenameTemplate?: DevtoolModuleFilenameTemplate;
+	/**
+	 * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
+	 */
+	devtoolNamespace?: DevtoolNamespace;
+	/**
+	 * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
+	 */
+	ecmaVersion?: EcmaVersion;
+	/**
+	 * List of library types enabled for use by entry points
+	 */
+	enabledLibraryTypes?: EnabledLibraryTypes;
+	/**
+	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+	 */
+	filename?: Filename;
+	/**
+	 * An expression which is used to address the global object/scope in runtime code
+	 */
+	globalObject?: GlobalObject;
+	/**
+	 * Digest type used for the hash
+	 */
+	hashDigest?: HashDigest;
+	/**
+	 * Number of chars which are used for the hash
+	 */
+	hashDigestLength?: HashDigestLength;
+	/**
+	 * Algorithm used for generation the hash (see node.js crypto package)
+	 */
+	hashFunction?: HashFunction;
+	/**
+	 * Any string which is added to the hash to salt it
+	 */
+	hashSalt?: HashSalt;
+	/**
+	 * The filename of the Hot Update Chunks. They are inside the output.path directory.
+	 */
+	hotUpdateChunkFilename?: HotUpdateChunkFilename;
+	/**
+	 * The JSONP function used by webpack for async loading of hot update chunks.
+	 */
+	hotUpdateFunction?: HotUpdateFunction;
+	/**
+	 * The filename of the Hot Update Main File. It is inside the `output.path` directory.
+	 */
+	hotUpdateMainFilename?: HotUpdateMainFilename;
+	/**
+	 * Wrap javascript code into IIFEs to avoid leaking into global scope.
+	 */
+	iife?: Iife;
+	/**
+	 * The JSONP function used by webpack for async loading of chunks.
+	 */
+	jsonpFunction?: JsonpFunction;
+	/**
+	 * This option enables loading async chunks via a custom script type, such as script type="module"
+	 */
+	jsonpScriptType?: JsonpScriptType;
+	/**
+	 * Options for library
+	 */
+	library?: LibraryOptions;
+	/**
+	 * Output javascript files as module source type.
+	 */
+	module?: OutputModule;
+	/**
+	 * The output directory as **absolute path** (required).
+	 */
+	path?: Path;
+	/**
+	 * Include comments with information about the modules.
+	 */
+	pathinfo?: Pathinfo;
+	/**
+	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: PublicPath;
+	/**
+	 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
+	 */
+	sourceMapFilename?: SourceMapFilename;
+	/**
+	 * Prefixes every line of the source in the bundle with this string.
+	 */
+	sourcePrefix?: SourcePrefix;
+	/**
+	 * Handles exceptions in module loading correctly at a performance cost.
+	 */
+	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
+	/**
+	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
+	 */
+	uniqueName?: UniqueName;
+	/**
+	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
+	 */
+	webassemblyModuleFilename?: WebassemblyModuleFilename;
 }
 /**
  * Normalized webpack options object
@@ -1801,6 +2172,10 @@ export interface WebpackOptionsNormalized {
 	 */
 	externals: Externals;
 	/**
+	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value)
+	 */
+	externalsType?: ExternalsType;
+	/**
 	 * Options for infrastructure level logging
 	 */
 	infrastructureLogging: InfrastructureLogging;
@@ -1829,9 +2204,9 @@ export interface WebpackOptionsNormalized {
 	 */
 	optimization: Optimization;
 	/**
-	 * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
+	 * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
 	 */
-	output: Output;
+	output: OutputNormalized;
 	/**
 	 * The number of parallel processed modules in the compilation.
 	 */

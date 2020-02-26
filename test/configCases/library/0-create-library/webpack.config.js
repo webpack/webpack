@@ -1,9 +1,10 @@
 const path = require("path");
+const webpack = require("../../../../");
 module.exports = [
 	{
 		output: {
 			filename: "commonjs.js",
-			libraryTarget: "commonjs-module"
+			libraryTarget: "commonjs"
 		},
 		resolve: {
 			alias: {
@@ -47,14 +48,20 @@ module.exports = [
 	},
 	{
 		output: {
-			filename: "global.js",
-			library: "globalName"
+			filename: "var.js",
+			library: ["globalName", "x", "y"]
 		},
 		resolve: {
 			alias: {
 				external: "./non-external"
 			}
-		}
+		},
+		plugins: [
+			new webpack.BannerPlugin({
+				raw: true,
+				banner: "module.exports = () => globalName;\n"
+			})
+		]
 	},
 	{
 		output: {
@@ -84,6 +91,37 @@ module.exports = [
 					}
 				}
 			}
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		}
+	},
+	{
+		entry: {
+			entryA: {
+				import: "./index"
+			},
+			entryB: {
+				import: "./index",
+				library: {
+					type: "umd",
+					name: "umd"
+				}
+			},
+			entryC: {
+				import: "./index",
+				library: {
+					type: "amd"
+				}
+			}
+		},
+		output: {
+			library: {
+				type: "commonjs-module"
+			},
+			filename: "[name].js"
 		},
 		resolve: {
 			alias: {
