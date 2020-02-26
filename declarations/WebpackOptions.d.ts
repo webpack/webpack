@@ -66,6 +66,46 @@ export type Filename =
 			assetInfo?: import("../lib/Compilation").AssetInfo
 	  ) => string);
 /**
+ * Add a comment in the UMD wrapper.
+ */
+export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
+/**
+ * Specify which export should be exposed as library
+ */
+export type LibraryExport = string | ArrayOfStringValues;
+/**
+ * Array of strings
+ */
+export type ArrayOfStringValues = string[];
+/**
+ * The name of the library (some types allow unnamed libraries too)
+ */
+export type LibraryName = string | string[] | LibraryCustomUmdObject;
+/**
+ * Type of library
+ */
+export type LibraryType =
+	| "var"
+	| "module"
+	| "assign"
+	| "this"
+	| "window"
+	| "self"
+	| "global"
+	| "commonjs"
+	| "commonjs2"
+	| "commonjs-module"
+	| "amd"
+	| "amd-require"
+	| "umd"
+	| "umd2"
+	| "jsonp"
+	| "system";
+/**
+ * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
+ */
+export type UmdNamedDefine = boolean;
+/**
  * An entry point without name.
  */
 export type EntryUnnamed = EntryItem;
@@ -105,10 +145,6 @@ export type ExternalItem =
 				| boolean;
 	  }
 	| RegExp;
-/**
- * Array of strings
- */
-export type ArrayOfStringValues = string[];
 /**
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value)
  */
@@ -331,10 +367,6 @@ export type AssetModuleFilename =
 			assetInfo?: import("../lib/Compilation").AssetInfo
 	  ) => string);
 /**
- * Add a comment in the UMD wrapper.
- */
-export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
-/**
  * The callback function name used by webpack for loading of chunks in WebWorkers.
  */
 export type ChunkCallbackName = string;
@@ -370,26 +402,6 @@ export type DevtoolNamespace = string;
  * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
  */
 export type EcmaVersion = number | 2009;
-/**
- * Type of library
- */
-export type LibraryType =
-	| "var"
-	| "module"
-	| "assign"
-	| "this"
-	| "window"
-	| "self"
-	| "global"
-	| "commonjs"
-	| "commonjs2"
-	| "commonjs-module"
-	| "amd"
-	| "amd-require"
-	| "umd"
-	| "umd2"
-	| "jsonp"
-	| "system";
 /**
  * List of library types enabled for use by entry points
  */
@@ -442,18 +454,6 @@ export type JsonpScriptType = false | "text/javascript" | "module";
  * Make the output files a library, exporting the exports of the entry point
  */
 export type Library = LibraryName | LibraryOptions;
-/**
- * The name of the library (some types allow unnamed libraries too)
- */
-export type LibraryName = string | string[] | LibraryCustomUmdObject;
-/**
- * Specify which export should be exposed as library
- */
-export type LibraryExport = string | ArrayOfStringValues;
-/**
- * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
- */
-export type UmdNamedDefine = boolean;
 /**
  * Output javascript files as module source type.
  */
@@ -824,6 +824,73 @@ export interface EntryDescription {
 	 * Module(s) that are loaded upon startup
 	 */
 	import: EntryItem;
+	/**
+	 * Options for library
+	 */
+	library?: LibraryOptions;
+}
+/**
+ * Options for library
+ */
+export interface LibraryOptions {
+	/**
+	 * Add a comment in the UMD wrapper.
+	 */
+	auxiliaryComment?: AuxiliaryComment;
+	/**
+	 * Specify which export should be exposed as library
+	 */
+	export?: LibraryExport;
+	/**
+	 * The name of the library (some types allow unnamed libraries too)
+	 */
+	name?: LibraryName;
+	/**
+	 * Type of library
+	 */
+	type: LibraryType;
+	/**
+	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
+	 */
+	umdNamedDefine?: UmdNamedDefine;
+}
+/**
+ * Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.
+ */
+export interface LibraryCustomUmdCommentObject {
+	/**
+	 * Set comment for `amd` section in UMD
+	 */
+	amd?: string;
+	/**
+	 * Set comment for `commonjs` (exports) section in UMD
+	 */
+	commonjs?: string;
+	/**
+	 * Set comment for `commonjs2` (module.exports) section in UMD
+	 */
+	commonjs2?: string;
+	/**
+	 * Set comment for `root` (global variable) section in UMD
+	 */
+	root?: string;
+}
+/**
+ * Description object for all UMD variants of the library name
+ */
+export interface LibraryCustomUmdObject {
+	/**
+	 * Name of the exposed AMD library in the UMD
+	 */
+	amd?: string;
+	/**
+	 * Name of the exposed commonjs export in the UMD
+	 */
+	commonjs?: string;
+	/**
+	 * Name of the property exposed globally by a UMD library
+	 */
+	root?: string | ArrayOfStringValues;
 }
 /**
  * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
@@ -1616,69 +1683,6 @@ export interface Output {
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
 }
 /**
- * Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.
- */
-export interface LibraryCustomUmdCommentObject {
-	/**
-	 * Set comment for `amd` section in UMD
-	 */
-	amd?: string;
-	/**
-	 * Set comment for `commonjs` (exports) section in UMD
-	 */
-	commonjs?: string;
-	/**
-	 * Set comment for `commonjs2` (module.exports) section in UMD
-	 */
-	commonjs2?: string;
-	/**
-	 * Set comment for `root` (global variable) section in UMD
-	 */
-	root?: string;
-}
-/**
- * Description object for all UMD variants of the library name
- */
-export interface LibraryCustomUmdObject {
-	/**
-	 * Name of the exposed AMD library in the UMD
-	 */
-	amd?: string;
-	/**
-	 * Name of the exposed commonjs export in the UMD
-	 */
-	commonjs?: string;
-	/**
-	 * Name of the property exposed globally by a UMD library
-	 */
-	root?: string | ArrayOfStringValues;
-}
-/**
- * Options for library
- */
-export interface LibraryOptions {
-	/**
-	 * Add a comment in the UMD wrapper.
-	 */
-	auxiliaryComment?: AuxiliaryComment;
-	/**
-	 * Specify which export should be exposed as library
-	 */
-	export?: LibraryExport;
-	/**
-	 * The name of the library (some types allow unnamed libraries too)
-	 */
-	name?: LibraryName;
-	/**
-	 * Type of library
-	 */
-	type: LibraryType;
-	/**
-	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
-	 */
-	umdNamedDefine?: UmdNamedDefine;
-}
-/**
  * Configuration object for web performance recommendations
  */
 export interface PerformanceOptions {
@@ -1972,6 +1976,10 @@ export interface EntryDescriptionNormalized {
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
 	import: NonEmptyArrayOfUniqueStringValues;
+	/**
+	 * Options for library
+	 */
+	library?: LibraryOptions;
 }
 /**
  * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.

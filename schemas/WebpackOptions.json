@@ -251,6 +251,9 @@
         },
         "import": {
           "$ref": "#/definitions/EntryItem"
+        },
+        "library": {
+          "$ref": "#/definitions/LibraryOptions"
         }
       },
       "required": ["import"]
@@ -278,6 +281,9 @@
               "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
             }
           ]
+        },
+        "library": {
+          "$ref": "#/definitions/LibraryOptions"
         }
       },
       "required": ["import"]

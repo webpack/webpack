@@ -111,5 +111,50 @@ module.exports = [
 				NAME: JSON.stringify("default")
 			})
 		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					__dirname,
+					"../../../js/config/library/0-create-library/entryA.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("entryA")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					__dirname,
+					"../../../js/config/library/0-create-library/entryB.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("entryB")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					__dirname,
+					"../../../js/config/library/0-create-library/entryC.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("entryC")
+			})
+		]
 	}
 ];

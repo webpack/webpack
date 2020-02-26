@@ -97,5 +97,36 @@ module.exports = [
 				external: "./non-external"
 			}
 		}
+	},
+	{
+		entry: {
+			entryA: {
+				import: "./index"
+			},
+			entryB: {
+				import: "./index",
+				library: {
+					type: "umd",
+					name: "umd"
+				}
+			},
+			entryC: {
+				import: "./index",
+				library: {
+					type: "amd"
+				}
+			}
+		},
+		output: {
+			library: {
+				type: "commonjs-module"
+			},
+			filename: "[name].js"
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		}
 	}
 ];
