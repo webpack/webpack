@@ -6,6 +6,7 @@ branches:
     - webpack-4
     - master
     - next
+    - dev-1
 
 cache:
   yarn: true
