@@ -57,6 +57,15 @@ export type EntryItem = string | NonEmptyArrayOfUniqueStringValues;
  */
 export type NonEmptyArrayOfUniqueStringValues = [string, ...string[]];
 /**
+ * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+ */
+export type Filename =
+	| string
+	| ((
+			pathData: import("../lib/Compilation").PathData,
+			assetInfo?: import("../lib/Compilation").AssetInfo
+	  ) => string);
+/**
  * An entry point without name.
  */
 export type EntryUnnamed = EntryItem;
@@ -385,15 +394,6 @@ export type LibraryType =
  * List of library types enabled for use by entry points
  */
 export type EnabledLibraryTypes = LibraryType[];
-/**
- * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
- */
-export type Filename =
-	| string
-	| ((
-			pathData: import("../lib/Compilation").PathData,
-			assetInfo?: import("../lib/Compilation").AssetInfo
-	  ) => string);
 /**
  * An expression which is used to address the global object/scope in runtime code
  */
@@ -817,11 +817,11 @@ export interface EntryDescription {
 	 */
 	dependOn?: string | NonEmptyArrayOfUniqueStringValues;
 	/**
-	 * The filename of the entrypoint as relative path inside the `output.path` directory.
+	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
-	filename?: string;
+	filename?: Filename;
 	/**
-	 * The module(s) loaded at startup.
+	 * Module(s) that are loaded upon startup
 	 */
 	import: EntryItem;
 }
@@ -1957,13 +1957,30 @@ export interface WatchOptions {
 	stdin?: boolean;
 }
 /**
+ * An object with entry point description.
+ */
+export interface EntryDescriptionNormalized {
+	/**
+	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
+	 */
+	dependOn?: NonEmptyArrayOfUniqueStringValues;
+	/**
+	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+	 */
+	filename?: Filename;
+	/**
+	 * Module(s) that are loaded upon startup. The last one is exported.
+	 */
+	import: NonEmptyArrayOfUniqueStringValues;
+}
+/**
  * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
  */
 export interface EntryStaticNormalized {
 	/**
 	 * An object with entry point description.
 	 */
-	[k: string]: EntryDescription;
+	[k: string]: EntryDescriptionNormalized;
 }
 /**
  * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.

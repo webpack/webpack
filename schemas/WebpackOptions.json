@@ -247,15 +247,35 @@
           ]
         },
         "filename": {
-          "description": "The filename of the entrypoint as relative path inside the `output.path` directory.",
-          "type": "string",
-          "absolutePath": false
+          "$ref": "#/definitions/Filename"
         },
         "import": {
-          "description": "The module(s) loaded at startup.",
-          "oneOf": [
+          "$ref": "#/definitions/EntryItem"
+        }
+      },
+      "required": ["import"]
+    },
+    "EntryDescriptionNormalized": {
+      "description": "An object with entry point description.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dependOn": {
+          "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
+          "anyOf": [
             {
-              "$ref": "#/definitions/EntryItem"
+              "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
+            }
+          ]
+        },
+        "filename": {
+          "$ref": "#/definitions/Filename"
+        },
+        "import": {
+          "description": "Module(s) that are loaded upon startup. The last one is exported.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
             }
           ]
         }
@@ -345,7 +365,7 @@
         "description": "An object with entry point description.",
         "anyOf": [
           {
-            "$ref": "#/definitions/EntryDescription"
+            "$ref": "#/definitions/EntryDescriptionNormalized"
           }
         ]
       },
