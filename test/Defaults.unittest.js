@@ -208,7 +208,7 @@ describe("Defaults", () => {
 		    "usedExports": false,
 		  },
 		  "output": Object {
-		    "assetModuleFilename": "[hash][ext]",
+		    "assetModuleFilename": "[hash][ext][query]",
 		    "chunkCallbackName": "webpackChunkwebpack",
 		    "chunkFilename": "[name].js",
 		    "chunkLoadTimeout": 120000,
@@ -1359,7 +1359,7 @@ describe("Defaults", () => {
 			-           "idHint": "vendors",
 			-           "priority": -10,
 			-           "reuseExistingChunk": true,
-			-           "test": /[\\\\/]node_modules[\\\\/]/i,
+			-           "test": /[\\\\\\/]node_modules[\\\\\\/]/i,
 			-         },
 			-       },
 			-       "chunks": "async",
