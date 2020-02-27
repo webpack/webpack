@@ -1,0 +1,14 @@
+module.exports = {
+	mode: "development",
+	module: {
+		rules: [
+			{
+				test: /\.(png|svg|jpg)$/,
+				type: "asset/resource"
+			}
+		]
+	},
+	experiments: {
+		asset: true
+	}
+};
