@@ -114,7 +114,7 @@ declare module "neo-async" {
 	): void;
 
 	export function queue<T, E>(
-		worker: AsyncFunction<T, E>,
+		worker: AsyncIterator<T, E>,
 		concurrency?: number
 	): QueueObject<T, E>;
 
