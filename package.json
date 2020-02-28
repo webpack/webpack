@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
-    "@types/estree": "0.0.39",
+    "@types/estree": "0.0.42",
     "@types/node": "^12.6.9",
     "@yarnpkg/lockfile": "^1.1.0",
     "babel-loader": "^8.0.6",

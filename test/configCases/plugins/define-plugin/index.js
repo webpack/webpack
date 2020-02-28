@@ -17,9 +17,40 @@ it("should define FUNCTION", function() {
 	expect((typeof FUNCTION)).toBe("function");
 	if(typeof FUNCTION !== "function") require("fail");
 });
+it("should define NULL", function() {
+	expect(NULL).toBeNull();
+	if(NULL) require("fail");
+	if(NULL !== null) require("fail");
+	if(typeof NULL !== "object") require("fail");
+});
 it("should define UNDEFINED", function() {
 	expect((typeof UNDEFINED)).toBe("undefined");
 	if(typeof UNDEFINED !== "undefined") require("fail");
+});
+it("should define NUMBER", function() {
+	expect(NUMBER).toBe(100.05);
+	expect((typeof NUMBER)).toBe("number");
+	if(NUMBER !== 100.05) require("fail");
+	if(typeof NUMBER !== "number") require("fail");
+});
+it("should define ZERO", function() {
+	expect(ZERO).toBe(0);
+	expect((typeof ZERO)).toBe("number");
+	if(ZERO !== 0) require("fail");
+	if(typeof ZERO !== "number") require("fail");
+});
+it("should define ONE", function() {
+	expect(ONE).toBe(1);
+	expect((typeof ONE)).toBe("number");
+	expect(42 / ONE).toBe(42);
+	if(ONE !== 1) require("fail");
+	if(typeof ONE !== "number") require("fail");
+});
+it("should define BIGINT", function() {
+	expect(BIGINT).toBe(9007199254740991n);
+	expect((typeof BIGINT)).toBe("bigint");
+	if(BIGINT !== 9007199254740991n) require("fail");
+	if(typeof BIGINT !== "bigint") require("fail");
 });
 it("should define POSITIVE_ZERO", function() {
 	expect(POSITIVE_ZERO).toBe(+0);
