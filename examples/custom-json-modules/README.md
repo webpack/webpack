@@ -1,4 +1,4 @@
-This very simple example shows usage of a custom parser for json-modules.
+This is a simple example that shows the usage of a custom parser for json-modules.
 
 Toml, yaml and json5 files can be imported like other modules without toml-loader.
 
