@@ -2,10 +2,7 @@ var path = require("path");
 var webpack = require("../../../../");
 
 module.exports = {
-	entry: ["./a", "./b", "./_d", "./_e", "./f", "./g.abc", "./h"],
-	resolve: {
-		extensions: [".js", ".jsx"]
-	},
+	entry: ["./index"],
 	output: {
 		filename: "dll.js",
 		chunkFilename: "[id].dll.js",
@@ -14,14 +11,7 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.abc\.js$/,
-				loader: "./g-loader.js",
-				options: {
-					test: 1
-				}
-			},
-			{
-				test: /0-create-dll.h/,
+				test: /0-create-dll.(module|dependency)/,
 				sideEffects: false
 			}
 		]
@@ -34,7 +24,7 @@ module.exports = {
 		new webpack.DllPlugin({
 			path: path.resolve(
 				__dirname,
-				"../../../js/config/dll-plugin/manifest0.json"
+				"../../../js/config/dll-plugin-side-effects/manifest0.json"
 			)
 		})
 	]
