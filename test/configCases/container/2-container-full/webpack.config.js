@@ -6,13 +6,8 @@ module.exports = {
 			name: "container",
 			library: { type: "commonjs-module" },
 			filename: "container.js",
-			exposes: {
-				ComponentB: "./ComponentB",
-				ComponentC: "./ComponentC"
-			},
 			remotes: {
-				containerA: "../0-container-full/container.js",
-				containerB: "./container.js"
+				containerB: "../1-container-full/container.js"
 			},
 			shared: ["react"]
 		})
