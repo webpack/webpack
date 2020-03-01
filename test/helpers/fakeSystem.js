@@ -26,7 +26,6 @@ const System = {
 				return Promise.resolve();
 			}
 		};
-
 		if (name in System.registry) {
 			throw new Error(`Module ${name} is already registered`);
 		}
