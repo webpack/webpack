@@ -2104,11 +2104,12 @@
         },
         "extensions": {
           "description": "Extensions added to the request when trying to find the file",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ArrayOfStringValues"
-            }
-          ]
+          "type": "array",
+          "items": {
+            "description": "An extension that starts with .",
+            "type": "string",
+            "pattern": "^\\."
+          }
         },
         "fileSystem": {
           "description": "Filesystem for the resolver"
