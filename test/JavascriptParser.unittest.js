@@ -380,6 +380,10 @@ describe("JavascriptParser", () => {
 		}
 
 		const testCases = {
+			true: "bool=true",
+			false: "bool=false",
+			"!true": "bool=false",
+			"!false": "bool=true",
 			'"strrring"': "string=strrring",
 			'"strr" + "ring"': "string=strrring",
 			'"s" + ("trr" + "rin") + "g"': "string=strrring",
@@ -441,6 +445,7 @@ describe("JavascriptParser", () => {
 			"false != true": "bool=true",
 			"!'a'": "bool=false",
 			"!''": "bool=true",
+			"!null": "bool=true",
 			"'pre' + a": "wrapped=['pre' string=pre]+[null]",
 			"a + 'post'": "wrapped=[null]+['post' string=post]",
 			"'pre' + a + 'post'": "wrapped=['pre' string=pre]+['post' string=post]",

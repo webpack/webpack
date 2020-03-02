@@ -1,11 +1,16 @@
 /* globals it, should */
 it("should define FALSE", function() {
 	expect(FALSE).toBe(false);
-	expect((typeof TRUE)).toBe("boolean");
+	expect((typeof FALSE)).toBe("boolean");
 	var x = require(FALSE ? "fail" : "./dir/a");
 	var y = FALSE ? require("fail") : require("./dir/a");
 });
-
+it("should define TRUE", function() {
+	expect(TRUE).toBe(true);
+	expect((typeof TRUE)).toBe("boolean");
+	var x = require(TRUE ? "./dir/a" : "fail");
+	var y = TRUE ? require("./dir/a"): require("fail");
+});
 it("should define CODE", function() {
 	expect(CODE).toBe(3);
 	expect((typeof CODE)).toBe("number");
@@ -90,6 +95,22 @@ it("should define POSITIVE_NUMBER", function() {
 	expect(POSITIVE_NUMBER / 100.25).toBe(1);
 	if(!POSITIVE_NUMBER) require("fail");
 	if(typeof POSITIVE_NUMBER !== "number") require("fail");
+});
+it("should define STRING", function() {
+	expect(STRING).toBe("string");
+	expect((typeof STRING)).toBe("string");
+	if(!STRING) require("fail");
+	if(typeof STRING !== "string") require("fail");
+	if(STRING === "") require("fail");
+	if(STRING == "") require("fail");
+});
+it("should define EMPTY_STRING", function() {
+	expect(EMPTY_STRING).toBe("");
+	expect((typeof EMPTY_STRING)).toBe("string");
+	if(EMPTY_STRING) require("fail");
+	if(typeof EMPTY_STRING !== "string") require("fail");
+	if(EMPTY_STRING !== "") require("fail");
+	if(EMPTY_STRING != "") require("fail");
 });
 it("should define REGEXP", function() {
 	expect(REGEXP.toString()).toBe("/abc/i");

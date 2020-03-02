@@ -10,6 +10,8 @@ module.exports = {
 			NUMBER: 100.05,
 			ZERO: 0,
 			ONE: 1,
+			STRING: '"string"',
+			EMPTY_STRING: '""',
 			BIGINT: 9007199254740991n,
 			POSITIVE_ZERO: +0,
 			NEGATIVE_ZER0: -0,
