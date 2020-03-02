@@ -6,7 +6,8 @@ module.exports = {
 	},
 	plugins: [
 		new DefinePlugin({
-			BIGINT: 9007199254740991n
+			BIGINT: 9007199254740991n,
+			ZERO_BIGINT: 0n
 		})
 	]
 };

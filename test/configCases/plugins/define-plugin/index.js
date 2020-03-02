@@ -55,6 +55,10 @@ it("should define BIGINT", function() {
 	expect(BIGINT).toBe(9007199254740991n);
 	expect((typeof BIGINT)).toBe("bigint");
 });
+it("should define ZERO_BIGINT", function() {
+	expect(ZERO_BIGINT).toBe(0n);
+	expect((typeof BIGINT)).toBe("bigint");
+});
 it("should define POSITIVE_ZERO", function() {
 	expect(POSITIVE_ZERO).toBe(+0);
 	expect(POSITIVE_ZERO).toBe(0);

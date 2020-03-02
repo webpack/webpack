@@ -13,6 +13,7 @@ module.exports = {
 			STRING: '"string"',
 			EMPTY_STRING: '""',
 			BIGINT: 9007199254740991n,
+			ZERO_BIGINT: 0n,
 			POSITIVE_ZERO: +0,
 			NEGATIVE_ZER0: -0,
 			NEGATIVE_NUMBER: -100.25,
