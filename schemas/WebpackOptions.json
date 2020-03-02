@@ -537,10 +537,6 @@
           "type": "string",
           "absolutePath": true
         },
-        "contextify": {
-          "description": "Write relative to cache folder paths instead of absolute",
-          "type": "boolean"
-        },
         "hashAlgorithm": {
           "description": "Algorithm used for generation the hash (see node.js crypto package)",
           "type": "string"
@@ -578,6 +574,10 @@
         "name": {
           "description": "Name for the cache. Different names will lead to different coexisting caches.",
           "type": "string"
+        },
+        "portable": {
+          "description": "Write relative to cache folder paths instead of absolute",
+          "type": "boolean"
         },
         "store": {
           "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file)",

@@ -757,10 +757,6 @@ export interface FileCacheOptions {
 	 */
 	cacheLocation?: string;
 	/**
-	 * Write relative to cache folder paths instead of absolute
-	 */
-	contextify?: boolean;
-	/**
 	 * Algorithm used for generation the hash (see node.js crypto package)
 	 */
 	hashAlgorithm?: string;
@@ -784,6 +780,10 @@ export interface FileCacheOptions {
 	 * Name for the cache. Different names will lead to different coexisting caches.
 	 */
 	name?: string;
+	/**
+	 * Write relative to cache folder paths instead of absolute
+	 */
+	portable?: boolean;
 	/**
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file)
 	 */
