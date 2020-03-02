@@ -1,6 +1,6 @@
 # example.js
 
-This example illustrates how to filter the ContextModule results of `import()` statements. only `.js` files that don't
+This example illustrates how to filter the ContextModule results of `import()` statements. Only `.js` files that don't
 end in `.noimport.js` within the `templates` folder will be bundled.
 
 ```javascript

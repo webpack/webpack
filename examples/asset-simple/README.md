@@ -1,4 +1,4 @@
-This very simple example shows usage of the asset module type.
+This is a very simple example that the shows usage of the asset module type.
 
 Files can be imported like other modules without file-loader.
 

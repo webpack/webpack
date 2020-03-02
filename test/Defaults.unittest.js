@@ -1,4 +1,4 @@
-const jestDiff = require("jest-diff");
+const jestDiff = require("jest-diff").default;
 const stripAnsi = require("strip-ansi");
 const {
 	applyWebpackOptionsDefaults,
