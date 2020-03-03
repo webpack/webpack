@@ -1,0 +1,78 @@
+{
+  "definitions": {
+    "Alias": {
+      "description": "The shortcut of the command",
+      "type": "string"
+    },
+    "DefaultValue": {
+      "description": "Link to the documentation.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "Function"
+        }
+      ]
+    },
+    "Description": {
+      "description": "Description of the flag",
+      "type": "string"
+    },
+    "Link": {
+      "description": "Link to the documentation.",
+      "type": "string"
+    },
+    "Name": {
+      "description": "The name of the flag",
+      "type": "string"
+    },
+    "Type": {
+      "description": "The typology of the flag. Using a function can force also a validation.",
+      "anyOf": [
+        {
+          "instanceof": "Function",
+          "tsType": "Function"
+        }
+      ]
+    },
+    "Usage": {
+      "description": "Shows how to use the flag.",
+      "type": "string"
+    }
+  },
+  "description": "webpack flags",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "alias": {
+      "$ref": "#/definitions/Alias"
+    },
+    "defaultValue": {
+      "$ref": "#/definitions/DefaultValue"
+    },
+    "description": {
+      "$ref": "#/definitions/Description"
+    },
+    "link": {
+      "$ref": "#/definitions/Link"
+    },
+    "name": {
+      "$ref": "#/definitions/Name"
+    },
+    "type": {
+      "$ref": "#/definitions/Type"
+    },
+    "usage": {
+      "$ref": "#/definitions/Usage"
+    }
+  },
+  "required": ["name"]
+}
