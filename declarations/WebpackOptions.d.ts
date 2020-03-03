@@ -2256,3 +2256,43 @@ export interface WebpackOptionsNormalized {
 	 */
 	watchOptions: WatchOptions;
 }
+
+export interface FlagDefinition {
+	/**
+	 * The name of the flag
+	 */
+	name: string;
+	/**
+	 * The typology of the flag. Using a function can force also a validation
+	 */
+	type: Function;
+	/**
+	 * The default value to give to the flag. Can be anything.
+	 */
+	defaultValue?: any;
+
+	/**
+	 * The description of the flag.
+	 */
+	description: string;
+
+	/**
+	 * Link to the documentation.
+	 */
+	link?: string;
+
+	/**
+	 * Can contain multiple values.
+	 */
+	multiple?: boolean;
+
+	/**
+	 * Shows how to use the flag
+	 */
+	usage?: string;
+
+	/**
+	 * A shortcut to use the flag
+	 */
+	alias?: string;
+}
