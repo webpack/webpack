@@ -5,10 +5,10 @@ import external3Default from 'external3';
  * through correctly and are usable by the webpack bundle.
  */
 it("should get an external from System", function() {
-	const external1 = require("external1");
+	const external1 = require("external1").default;
 	expect(external1).toBe("the external1 value");
 
-	const external2 = require("external2");
+	const external2 = require("external2").default;
 	expect(external2).toBe("the external2 value");
 
 	expect(external3Default).toBe("the external3 default export");
