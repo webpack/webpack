@@ -50,7 +50,7 @@ module.exports = {
 		"jsdoc/require-returns-description": "error",
 		"jsdoc/require-returns-type": "error",
 		"jsdoc/require-returns": "error",
-		"prefer-destructuring":"error"
+		"prefer-destructuring":["error", {"object": true, "array": false}]
 	},
 	settings: {
 		jsdoc: {

@@ -646,6 +646,7 @@ describe("JavascriptParser", () => {
 			const parser = new JavascriptParser();
 
 			parser.hooks.statement.tap("JavascriptParserTest", expr => {
+				// eslint-disable-next-line prefer-destructuring
 				definitions = parser.scope.definitions;
 				return true;
 			});
