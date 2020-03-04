@@ -11,6 +11,7 @@ module.exports = {
 			},
 			external3: {
 				default: "the external3 default export",
+				namedThing: "the external3 named export"
 			}
 		});
 	},
