@@ -5,10 +5,10 @@
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
   "dependencies": {
-    "@webassemblyjs/ast": "1.8.5",
-    "@webassemblyjs/helper-module-context": "1.8.5",
-    "@webassemblyjs/wasm-edit": "1.8.5",
-    "@webassemblyjs/wasm-parser": "1.8.5",
+    "@webassemblyjs/ast": "1.9.0",
+    "@webassemblyjs/helper-module-context": "1.9.0",
+    "@webassemblyjs/wasm-edit": "1.9.0",
+    "@webassemblyjs/wasm-parser": "1.9.0",
     "acorn": "^6.2.1",
     "ajv": "^6.10.2",
     "ajv-keywords": "^3.4.1",
@@ -80,6 +80,7 @@
     "vm-browserify": "~1.1.0",
     "wast-loader": "^1.5.5",
     "webpack-dev-middleware": "^3.5.1",
+    "webassembly-feature": "1.3.0",
     "worker-loader": "^2.0.0",
     "xxhashjs": "^0.2.1"
   },
