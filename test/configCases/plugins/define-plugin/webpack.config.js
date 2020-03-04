@@ -6,6 +6,10 @@ module.exports = {
 			TRUE: true,
 			FALSE: false,
 			UNDEFINED: undefined,
+			POSITIVE_ZERO: +0,
+			NEGATIVE_ZER0: -0,
+			NEGATIVE_NUMBER: -100.25,
+			POSITIVE_NUMBER: +100.25,
 			FUNCTION: /* istanbul ignore next */ function(a) {
 				return a + 1;
 			},
