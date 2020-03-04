@@ -1,7 +1,5 @@
 module.exports = {
-	output: {
-		libraryTarget: "var"
-	},
+	externalsType: "var",
 	externals: {
 		external: "external"
 	}

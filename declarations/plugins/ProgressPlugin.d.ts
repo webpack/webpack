@@ -14,6 +14,9 @@ export type HandlerFunction = (
 	...args: string[]
 ) => void;
 
+/**
+ * Options object for the ProgressPlugin
+ */
 export interface ProgressPluginOptions {
 	/**
 	 * Show active modules count and one active module in progress message

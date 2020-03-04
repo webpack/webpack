@@ -6,6 +6,7 @@
       "tsType": "((percentage: number, msg: string, ...args: string[]) => void)"
     },
     "ProgressPluginOptions": {
+      "description": "Options object for the ProgressPlugin",
       "type": "object",
       "additionalProperties": false,
       "properties": {

@@ -2,7 +2,7 @@
 
 const _ = require("lodash");
 const path = require("path");
-const MemoryFs = require("memory-fs");
+const { createFsFromVolume, Volume } = require("memfs");
 const captureStdio = require("./helpers/captureStdio");
 
 let webpack;
@@ -91,7 +91,7 @@ const createMultiCompiler = () => {
 			entry: "./b.js"
 		}
 	]);
-	compiler.outputFileSystem = new MemoryFs();
+	compiler.outputFileSystem = createFsFromVolume(new Volume());
 
 	new webpack.ProgressPlugin().apply(compiler);
 
@@ -104,7 +104,7 @@ const createSimpleCompiler = progressOptions => {
 		entry: "./a.js"
 	});
 
-	compiler.outputFileSystem = new MemoryFs();
+	compiler.outputFileSystem = createFsFromVolume(new Volume());
 
 	new webpack.ProgressPlugin({
 		activeModules: true,

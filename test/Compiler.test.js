@@ -4,16 +4,15 @@ const path = require("path");
 
 const webpack = require("..");
 const Stats = require("../lib/Stats");
-const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
-const MemoryFs = require("memory-fs");
+const { createFsFromVolume, Volume } = require("memfs");
 const captureStdio = require("./helpers/captureStdio");
 
 describe("Compiler", () => {
 	jest.setTimeout(20000);
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
+		options = webpack.config.getNormalizedWebpackOptions(options);
 		if (!options.mode) options.mode = "production";
-		options = new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
 		if (noOutputPath) options.output.path = "/";
@@ -197,7 +196,7 @@ describe("Compiler", () => {
 				entry: "./c",
 				context: path.join(__dirname, "fixtures"),
 				output: {
-					path: "/",
+					path: "/directory",
 					pathinfo: true
 				}
 			});
@@ -269,11 +268,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./missing",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 			if (compiler.outputFileSystem.existsSync("/bundle.js"))
@@ -303,7 +302,7 @@ describe("Compiler", () => {
 				mode: "production",
 				entry: "./missing-file",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				},
 				bail: true
@@ -322,7 +321,7 @@ describe("Compiler", () => {
 			const createCompiler = options => {
 				return new Promise((resolve, reject) => {
 					const c = webpack(options);
-					c.outputFileSystem = new MemoryFs();
+					c.outputFileSystem = createFsFromVolume(new Volume());
 					const watching = c.watch({}, (err, stats) => {
 						watching.close(() => {
 							if (err) return reject(err);
@@ -336,7 +335,7 @@ describe("Compiler", () => {
 				mode: "production",
 				entry: "./missing-file",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				},
 				watch: true
@@ -354,11 +353,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./missing",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		const watching = compiler.watch({}, (err, stats) => {
 			watching.close();
 			if (err) return done(err);
@@ -373,11 +372,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 		});
@@ -391,11 +390,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
 		});
@@ -409,11 +408,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 		});
@@ -427,11 +426,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
 		});
@@ -446,13 +445,13 @@ describe("Compiler", () => {
 				mode: "production",
 				entry: "./c",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				}
 			},
 			() => {}
 		);
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			if (err) return done();
 		});
@@ -463,11 +462,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 
@@ -483,11 +482,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 
@@ -503,11 +502,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		const watching = compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
 		});
@@ -524,11 +523,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		const watching = compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
 		});
@@ -545,11 +544,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		let once = true;
 		compiler.hooks.afterDone.tap("RunAgainTest", () => {
 			if (!once) return;
@@ -569,11 +568,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		const runCb = jest.fn();
 		const doneHookCb = jest.fn();
 		compiler.hooks.done.tap("afterDoneRunTest", doneHookCb);
@@ -595,7 +594,7 @@ describe("Compiler", () => {
 				mode: "production",
 				entry: "./c",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				}
 			},
@@ -604,7 +603,7 @@ describe("Compiler", () => {
 				instanceCb();
 			}
 		);
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		const doneHookCb = jest.fn();
 		compiler.hooks.done.tap("afterDoneRunTest", doneHookCb);
 		compiler.hooks.afterDone.tap("afterDoneRunTest", () => {
@@ -619,11 +618,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		const doneHookCb = jest.fn();
 		const watchCb = jest.fn();
 		const invalidateCb = jest.fn();
@@ -646,11 +645,11 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		const watchCloseCb = jest.fn();
 		const watchCloseHookCb = jest.fn();
 		const invalidateCb = jest.fn();
@@ -673,12 +672,12 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./c",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
 
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 
 		const watch = compiler.watch({}, err => {
 			if (err) return done(err);
@@ -696,14 +695,14 @@ describe("Compiler", () => {
 			devtool: false,
 			entry: "./fixtures/count-loader!./fixtures/count-loader",
 			output: {
-				path: "/"
+				path: "/directory"
 			}
 		});
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run(() => {
 			compiler.run(() => {
 				const result = compiler.outputFileSystem.readFileSync(
-					"/main.js",
+					"/directory/main.js",
 					"utf-8"
 				);
 				expect(result).toContain("module.exports = 0;");
@@ -719,12 +718,12 @@ describe("Compiler", () => {
 			mode: "production",
 			entry: "./missing",
 			output: {
-				path: "/",
+				path: "/directory",
 				filename: "bundle.js"
 			}
 		});
 		compiler.hooks.failed.tap("CompilerTest", failedSpy);
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			expect(err).toBeTruthy();
 			expect(failedSpy).toHaveBeenCalledTimes(1);
@@ -762,7 +761,7 @@ describe("Compiler", () => {
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				},
 				infrastructureLogging: {
@@ -770,7 +769,7 @@ describe("Compiler", () => {
 				},
 				plugins: [new MyPlugin()]
 			});
-			compiler.outputFileSystem = new MemoryFs();
+			compiler.outputFileSystem = createFsFromVolume(new Volume());
 			compiler.run((err, stats) => {
 				expect(capture.toString().replace(/[\d.]+ms/, "Xms"))
 					.toMatchInlineSnapshot(`
@@ -792,7 +791,7 @@ describe("Compiler", () => {
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				},
 				infrastructureLogging: {
@@ -801,7 +800,7 @@ describe("Compiler", () => {
 				},
 				plugins: [new MyPlugin()]
 			});
-			compiler.outputFileSystem = new MemoryFs();
+			compiler.outputFileSystem = createFsFromVolume(new Volume());
 			compiler.run((err, stats) => {
 				expect(capture.toString().replace(/[\d.]+ms/, "Xms"))
 					.toMatchInlineSnapshot(`
@@ -824,7 +823,7 @@ describe("Compiler", () => {
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a",
 				output: {
-					path: "/",
+					path: "/directory",
 					filename: "bundle.js"
 				},
 				infrastructureLogging: {
@@ -832,7 +831,7 @@ describe("Compiler", () => {
 				},
 				plugins: [new MyPlugin()]
 			});
-			compiler.outputFileSystem = new MemoryFs();
+			compiler.outputFileSystem = createFsFromVolume(new Volume());
 			compiler.run((err, stats) => {
 				expect(capture.toString()).toMatchInlineSnapshot(`""`);
 				done();

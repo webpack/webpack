@@ -6,9 +6,6 @@
 
 /**
  * Function that executes for module and should return an DataUrl string
- *
- * This interface was referenced by `AssetModulesPluginGeneratorOptions`'s JSON-Schema
- * via the `definition` "DataUrlFunction".
  */
 export type DataUrlFunction = (
 	source: string | Buffer,
@@ -31,8 +28,7 @@ export interface AssetModulesPluginGeneratorOptions {
 		  ) => string);
 }
 /**
- * This interface was referenced by `AssetModulesPluginGeneratorOptions`'s JSON-Schema
- * via the `definition` "DataUrlOptions".
+ * Options object for data url generation
  */
 export interface DataUrlOptions {
 	/**

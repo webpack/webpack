@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const MemoryFs = require("memory-fs");
+const { createFsFromVolume, Volume } = require("memfs");
 const webpack = require("..");
 
 const createMultiCompiler = () => {
@@ -15,7 +15,7 @@ const createMultiCompiler = () => {
 			entry: "./b.js"
 		}
 	]);
-	compiler.outputFileSystem = new MemoryFs();
+	compiler.outputFileSystem = createFsFromVolume(new Volume());
 	return compiler;
 };
 
@@ -103,7 +103,7 @@ describe("MultiCompiler", function() {
 			},
 			() => {}
 		);
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			if (err) return done();
 		});

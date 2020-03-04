@@ -1,6 +1,6 @@
 # example.js
 
-This example illustrates how to specify chunk name in `require.ensure()` and `import()` to separated modules into separate chunks manually.
+This example illustrates how to specify the chunk name in `require.ensure()` and `import()` to separated modules into separate chunks manually.
 
 ```javascript
 _{{example.js}}_
