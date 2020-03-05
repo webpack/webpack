@@ -1,4 +1,5 @@
-import external3Default, { namedThing } from 'external3';
+import external3Default, { namedThing } from "external3";
+import "external4";
 
 /* This test verifies that webpack externals are properly indicated as dependencies to System.
  * Also that when System provides the external variables to webpack that the variables get plumbed
