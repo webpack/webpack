@@ -731,42 +731,41 @@ describe("Defaults", () => {
 	);
 	test("cache filesystem", { cache: { type: "filesystem" } }, e =>
 		e.toMatchInlineSnapshot(`
-- Expected
-+ Received
+		- Expected
+		+ Received
 
-@@ -4,1 +4,21 @@
--   "cache": false,
-+   "cache": Object {
-+     "buildDependencies": Object {
-+       "defaultWebpack": Array [
-+         "<cwd>/lib/",
-+       ],
-+     },
-+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
-+     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-none",
-+     "hashAlgorithm": "md4",
-+     "idleTimeout": 60000,
-+     "idleTimeoutForInitialStore": 0,
-+     "immutablePaths": Array [],
-+     "managedPaths": Array [
-+       "<cwd>/node_modules",
-+     ],
-+     "name": "default-none",
-+     "portable": true,
-+     "store": "pack",
-+     "type": "filesystem",
-+     "version": "",
-+   },
-@@ -56,1 +76,1 @@
--     "unsafeCache": false,
-+     "unsafeCache": [Function anonymous],
-@@ -163,1 +183,1 @@
--     "cache": false,
-+     "cache": true,
-@@ -182,1 +202,1 @@
--     "cache": false,
-+     "cache": true,
-`)
+		@@ -4,1 +4,20 @@
+		-   "cache": false,
+		+   "cache": Object {
+		+     "buildDependencies": Object {
+		+       "defaultWebpack": Array [
+		+         "<cwd>/lib/",
+		+       ],
+		+     },
+		+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
+		+     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-none",
+		+     "hashAlgorithm": "md4",
+		+     "idleTimeout": 60000,
+		+     "idleTimeoutForInitialStore": 0,
+		+     "immutablePaths": Array [],
+		+     "managedPaths": Array [
+		+       "<cwd>/node_modules",
+		+     ],
+		+     "name": "default-none",
+		+     "store": "pack",
+		+     "type": "filesystem",
+		+     "version": "",
+		+   },
+		@@ -56,1 +75,1 @@
+		-     "unsafeCache": false,
+		+     "unsafeCache": [Function anonymous],
+		@@ -163,1 +182,1 @@
+		-     "cache": false,
+		+     "cache": true,
+		@@ -182,1 +201,1 @@
+		-     "cache": false,
+		+     "cache": true,
+	`)
 	);
 
 	test(
@@ -779,46 +778,46 @@ describe("Defaults", () => {
 		},
 		e =>
 			e.toMatchInlineSnapshot(`
-- Expected
-+ Received
+			- Expected
+			+ Received
 
-@@ -2,1 +2,1 @@
--   "amd": undefined,
-+   "amd": false,
-@@ -62,5 +62,1 @@
--   "node": Object {
--     "__dirname": "mock",
--     "__filename": "mock",
--     "global": true,
--   },
-+   "node": false,
-@@ -91,24 +87,1 @@
--     "splitChunks": Object {
--       "automaticNameDelimiter": "-",
--       "cacheGroups": Object {
--         "default": Object {
--           "idHint": "",
--           "minChunks": 2,
--           "priority": -20,
--           "reuseExistingChunk": true,
--         },
--         "defaultVendors": Object {
--           "idHint": "vendors",
--           "priority": -10,
--           "reuseExistingChunk": true,
--           "test": /[\\\\/]node_modules[\\\\/]/i,
--         },
--       },
--       "chunks": "async",
--       "hidePathInfo": false,
--       "maxAsyncRequests": Infinity,
--       "maxInitialRequests": Infinity,
--       "minChunks": 1,
--       "minRemainingSize": undefined,
--       "minSize": 10000,
--     },
-+     "splitChunks": false,
-`)
+			@@ -2,1 +2,1 @@
+			-   "amd": undefined,
+			+   "amd": false,
+			@@ -62,5 +62,1 @@
+			-   "node": Object {
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			-     "global": true,
+			-   },
+			+   "node": false,
+			@@ -91,24 +87,1 @@
+			-     "splitChunks": Object {
+			-       "automaticNameDelimiter": "-",
+			-       "cacheGroups": Object {
+			-         "default": Object {
+			-           "idHint": "",
+			-           "minChunks": 2,
+			-           "priority": -20,
+			-           "reuseExistingChunk": true,
+			-         },
+			-         "defaultVendors": Object {
+			-           "idHint": "vendors",
+			-           "priority": -10,
+			-           "reuseExistingChunk": true,
+			-           "test": /[\\\\/]node_modules[\\\\/]/i,
+			-         },
+			-       },
+			-       "chunks": "async",
+			-       "hidePathInfo": false,
+			-       "maxAsyncRequests": Infinity,
+			-       "maxInitialRequests": Infinity,
+			-       "minChunks": 1,
+			-       "minRemainingSize": undefined,
+			-       "minSize": 10000,
+			-     },
+			+     "splitChunks": false,
+		`)
 	);
 
 	test(
