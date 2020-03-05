@@ -766,7 +766,7 @@ describe("Defaults", () => {
 		@@ -182,1 +202,1 @@
 		-     "cache": false,
 		+     "cache": true,
-		`)
+	`)
 	);
 
 	test(
