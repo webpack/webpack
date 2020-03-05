@@ -734,7 +734,7 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -4,1 +4,20 @@
+		@@ -4,1 +4,21 @@
 		-   "cache": false,
 		+   "cache": Object {
 		+     "buildDependencies": Object {
@@ -752,20 +752,21 @@ describe("Defaults", () => {
 		+       "<cwd>/node_modules",
 		+     ],
 		+     "name": "default-none",
+		+     "portable": true,
 		+     "store": "pack",
 		+     "type": "filesystem",
 		+     "version": "",
 		+   },
-		@@ -56,1 +75,1 @@
+		@@ -56,1 +76,1 @@
 		-     "unsafeCache": false,
 		+     "unsafeCache": [Function anonymous],
-		@@ -163,1 +182,1 @@
+		@@ -163,1 +183,1 @@
 		-     "cache": false,
 		+     "cache": true,
-		@@ -182,1 +201,1 @@
+		@@ -182,1 +202,1 @@
 		-     "cache": false,
 		+     "cache": true,
-	`)
+		`)
 	);
 
 	test(
