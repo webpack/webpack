@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("../../..");
+const CatchCacheHitPlugin = require("./CatchCacheHitPlugin");
 
 process.exitCode = 1;
 
@@ -32,7 +33,19 @@ webpack(
 			alias: {
 				'~': __dirname,
 			}
-		}
+		},
+		plugins: [
+			new CatchCacheHitPlugin(
+				new Map(
+					[
+						[/^resolve\/normal.*\/a(\.js)?$/, 'resolve-a.js'],
+						[/^resolve\/normal.*\/b(\.js)?$/, 'resolve-b.js'],
+						[/^!module!.*\/a(\.js)?$/, 'a.js'],
+						[/^!module!.*\/b(\.js)?$/, 'b.js'],
+					]
+				)
+			)
+		]
 	},
 	(err, stats) => {
 		if (err) {

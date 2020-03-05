@@ -11,7 +11,7 @@ const writeFileAsync = promisify(fs.writeFile);
 const copyFileAsync = promisify(fs.copyFile);
 const outputDirectory = path.resolve(__dirname, "js/contextifyOutput");
 const inputDirectory1 = path.resolve(__dirname, "js/contextifyInput1");
-const inputDirectory2 = path.resolve(__dirname, "js/contextifyInput2/repo");
+const inputDirectory2 = path.resolve(__dirname, "js/contextifyInput2");
 
 const exec = (n, dir) => {
 	return new Promise((resolve, reject) => {
@@ -63,7 +63,8 @@ describe("Contextify cache paths", () => {
 	const shareCache = () =>
 		linkAsync(
 			path.resolve(inputDirectory1, ".cache"),
-			path.resolve(inputDirectory2, ".cache")
+			path.resolve(inputDirectory2, ".cache"),
+			require("os").platform() === "win32" ? "junction" : "dir"
 		);
 
 	beforeEach(done => rimraf(outputDirectory, done));
@@ -87,8 +88,15 @@ describe("Contextify cache paths", () => {
 					path.resolve(inputDirectory1, "a.js")
 				),
 				copyFileAsync(
-					path.resolve(__dirname, "./fixtures/contextifyCache/run1.js"),
+					path.resolve(__dirname, "./fixtures/contextifyCache/run.js"),
 					path.resolve(inputDirectory1, "run.js")
+				),
+				copyFileAsync(
+					path.resolve(
+						__dirname,
+						"./fixtures/contextifyCache/CatchCacheHitPlugin.js"
+					),
+					path.resolve(inputDirectory1, "CatchCacheHitPlugin.js")
 				),
 				copyFileAsync(
 					path.resolve(__dirname, "./fixtures/contextifyCache/b.js"),
@@ -99,7 +107,14 @@ describe("Contextify cache paths", () => {
 					path.resolve(inputDirectory2, "a.js")
 				),
 				copyFileAsync(
-					path.resolve(__dirname, "./fixtures/contextifyCache/run2.js"),
+					path.resolve(
+						__dirname,
+						"./fixtures/contextifyCache/CatchCacheHitPlugin.js"
+					),
+					path.resolve(inputDirectory2, "CatchCacheHitPlugin.js")
+				),
+				copyFileAsync(
+					path.resolve(__dirname, "./fixtures/contextifyCache/run.js"),
 					path.resolve(inputDirectory2, "run.js")
 				)
 			])
@@ -125,19 +140,39 @@ describe("Contextify cache paths", () => {
 		const results = Array.from({ length: 5 }).map((_, i) =>
 			require(`./js/contextifyOutput/${i}/main.js`)
 		);
+		const cacheHits = Array.from({ length: 5 }).map((_, i) =>
+			require(`./js/contextifyOutput/${i}/cacheHit.js`)
+		);
 
 		for (const r of results) {
 			expect(typeof r.a).toBe("number");
 			expect(typeof r.b).toBe("number");
 		}
 
-		// 0 -> 1 should stay cached
-		/* TODO */
-		// 1 -> 2 should restore only b from cache
-		/* TODO */
-		// 2 -> 3 should restore only b from cache
-		/* TODO */
+		// 0
+		expect(cacheHits[0].has("resolve-a.js")).toBeFalsy();
+		expect(cacheHits[0].has("resolve-b.js")).toBeFalsy();
+		expect(cacheHits[0].has("a.js")).toBeFalsy();
+		expect(cacheHits[0].has("b.js")).toBeFalsy();
+		// 0 -> 1
+		expect(cacheHits[1].has("resolve-a.js")).toBeTruthy();
+		expect(cacheHits[1].has("resolve-b.js")).toBeTruthy();
+		expect(cacheHits[1].has("a.js")).toBeTruthy();
+		expect(cacheHits[1].has("b.js")).toBeTruthy();
+		// 1 -> 2
+		expect(cacheHits[2].has("resolve-a.js")).toBeTruthy();
+		expect(cacheHits[2].has("resolve-b.js")).toBeTruthy();
+		expect(cacheHits[2].has("a.js")).toBeTruthy();
+		expect(cacheHits[2].has("b.js")).toBeTruthy();
+		// 2 -> 3
+		expect(cacheHits[3].has("resolve-a.js")).toBeTruthy();
+		expect(cacheHits[3].has("resolve-b.js")).toBeTruthy();
+		expect(cacheHits[3].has("a.js")).toBeTruthy();
+		expect(cacheHits[3].has("b.js")).toBeTruthy();
 		// 3 -> 4 should stay cached for user 2
-		/* TODO */
+		expect(cacheHits[4].has("resolve-a.js")).toBeTruthy();
+		expect(cacheHits[4].has("resolve-b.js")).toBeTruthy();
+		expect(cacheHits[4].has("a.js")).toBeTruthy();
+		expect(cacheHits[4].has("b.js")).toBeTruthy();
 	}, 200000);
 });
