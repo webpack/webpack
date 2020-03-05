@@ -14,10 +14,6 @@ webpack(
 			path: path.resolve(__dirname, "../../js/contextifyOutput/" + process.argv[2]),
 			libraryTarget: "commonjs2"
 		},
-		infrastructureLogging: {
-			// Optional: print more verbose logging about caching
-			level: "verbose"
-		},
 		cache: {
 			type: "filesystem",
 			portable: true,
