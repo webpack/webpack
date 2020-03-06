@@ -135,7 +135,7 @@
     "type-lint": "tsc --pretty",
     "spellcheck": "cspell \"{.github,benchmark,bin,examples,hot,lib,schemas,setup,tooling}/**/*.{md,yml,yaml,js,json}\" \"*.md\"",
     "special-lint": "node tooling/inherit-types && node tooling/format-schemas && node tooling/format-file-header && node tooling/compile-to-definitions",
-    "special-lint-fix": "node tooling/inherit-types --write --override && node tooling/format-schemas --write && node tooling/format-file-header --write && node tooling/compile-to-definitions --write",
+    "special-lint-fix": "node tooling/inherit-types --write --override && node tooling/format-schemas --write && node tooling/format-file-header --write && node tooling/compile-to-definitions --write && node ./tooling/generate-cli-flags.js",
     "fix": "yarn code-lint --fix && yarn special-lint-fix && yarn pretty-lint-fix",
     "pretty-lint-base": "prettier --loglevel warn \"*.{ts,js,json,yml,yaml,md}\" \"{setup,lib,bin,hot,benchmark,tooling,schemas}/**/*.{js,json}\" \"test/*.js\" \"test/helpers/*.js\" \"test/{configCases,watchCases,statsCases,hotCases}/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"examples/*.md\"",
     "pretty-lint-fix": "yarn pretty-lint-base --write",
