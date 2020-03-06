@@ -4,6 +4,8 @@ const prettier = require("prettier");
 const schema = require("../schemas/WebpackOptions");
 const prettierConfig = prettier.resolveConfig.sync("./bin/cli-flags.js");
 
+const flags = {};
+
 function decamelize(input) {
 	return input
 		.replace(/([\p{Lowercase_Letter}\d])(\p{Uppercase_Letter})/gu, `$1${"-"}$2`)
@@ -32,17 +34,39 @@ function getSchemaPart(path) {
 	return schemaPart;
 }
 
-const flags = {};
 const ignoredSchemaPaths = new Set(["devServer"]);
 const specialSchemaPathNames = {
 	"node/__dirname": "node/dirname",
 	"node/__filename": "node/filename"
 };
 
-// TODO - not, oneOf, anyOf, allOf, if/then/else
+function addFlag(schemaPath, schemaPart, multiple) {
+	const name = decamelize(schemaPath.replace(/\//g, "-"));
+	const types = schemaPart.enum
+		? [...new Set(schemaPart.enum.map(item => typeof item))]
+		: Array.isArray(schemaPart.type)
+		? schemaPart.type
+		: [schemaPart.type];
+
+	if (flags[name]) {
+		flags[name].types = [...new Set(flags[name].types.concat(types))];
+	} else {
+		flags[name] = { types, description: schemaPart.description };
+	}
+
+	if (multiple) {
+		flags[name].multiple = true;
+	}
+}
+
+// TODO support `not` and `if/then/else`
 // TODO support `const`, but we don't use it on our schema
-function traverse(schemaPart, schemaPath = "") {
+function traverse(schemaPart, schemaPath = "", depth = 0, inArray = false) {
 	if (ignoredSchemaPaths.has(schemaPath)) {
+		return;
+	}
+
+	if (depth === 10) {
 		return;
 	}
 
@@ -68,7 +92,8 @@ function traverse(schemaPart, schemaPath = "") {
 			Object.keys(schemaPart.properties).forEach(property =>
 				traverse(
 					schemaPart.properties[property],
-					schemaPath ? `${schemaPath}/${property}` : property
+					schemaPath ? `${schemaPath}/${property}` : property,
+					depth + 1
 				)
 			);
 		}
@@ -77,14 +102,25 @@ function traverse(schemaPart, schemaPath = "") {
 	}
 
 	if (schemaPart.type === "array") {
-		// TODO
+		if (Array.isArray(schemaPart.items)) {
+			// TODO
+
+			return;
+		}
+
+		traverse(schemaPart.items, schemaPath, depth + 1, true);
+
 		return;
 	}
 
-	if (schemaPart.oneOf || schemaPart.anyOf) {
-		const items = schemaPart.oneOf || schemaPart.anyOf;
+	const maybeOf = schemaPart.oneOf || schemaPart.anyOf || schemaPart.allOf;
 
-		items.forEach((item, index) => traverse(items[index], schemaPath));
+	if (maybeOf) {
+		const items = maybeOf;
+
+		items.forEach((item, index) =>
+			traverse(items[index], schemaPath, depth + 1)
+		);
 
 		return;
 	}
@@ -93,20 +129,7 @@ function traverse(schemaPart, schemaPath = "") {
 		schemaPath = specialSchemaPathNames[schemaPath];
 	}
 
-	const name = decamelize(schemaPath.replace(/\//g, "-"));
-	const types = schemaPart.enum
-		? [...new Set(schemaPart.enum.map(item => typeof item))]
-		: Array.isArray(schemaPart.type)
-		? schemaPart.type
-		: [schemaPart.type];
-
-	if (flags[name]) {
-		flags[name].types = [...new Set(flags[name].types.concat(types))];
-
-		return;
-	}
-
-	flags[name] = { types, description: schemaPart.description };
+	addFlag(schemaPath, schemaPart, inArray);
 }
 
 traverse(schema);
