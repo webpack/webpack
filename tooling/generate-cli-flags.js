@@ -77,12 +77,10 @@ function traverse(schemaPart, schemaPath = "") {
 		return;
 	}
 
-	if (schemaPart.anyOf) {
+	if (schemaPart.oneOf || schemaPart.anyOf) {
 		const items = schemaPart.oneOf || schemaPart.anyOf;
 
-		items.forEach((item, index) =>
-			traverse(schemaPart.anyOf[index], schemaPath)
-		);
+		items.forEach((item, index) => traverse(items[index], schemaPath));
 
 		return;
 	}

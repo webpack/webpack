@@ -61,13 +61,12 @@ module.exports = {
 			"The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory."
 	},
 	devtool: {
-		types: [null],
-		description:
-			"A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map)."
+		types: ["boolean", "string"]
 	},
 	entry: {
-		types: [null],
-		description: "A static entry description"
+		types: ["string"],
+		description:
+			"The string is resolved to a module which is loaded upon startup."
 	},
 	"experiments-asset": {
 		types: ["boolean"],
@@ -276,9 +275,10 @@ module.exports = {
 		description: "Remove chunks which are empty"
 	},
 	"optimization-runtime-chunk": {
-		types: [null],
-		description:
-			"Create an additional chunk which contains only the webpack runtime and chunk hash maps"
+		types: ["boolean", "string"]
+	},
+	"optimization-runtime-chunk-name": {
+		types: ["string"]
 	},
 	"optimization-side-effects": {
 		types: ["boolean"],
@@ -286,9 +286,80 @@ module.exports = {
 			"Skip over modules which are flagged to contain no side effects when exports are not used"
 	},
 	"optimization-split-chunks": {
-		types: [null],
+		types: ["boolean"]
+	},
+	"optimization-split-chunks-automatic-name-delimiter": {
+		types: ["string"],
+		description: "Sets the name delimiter for created chunks"
+	},
+	"optimization-split-chunks-chunks": {
+		types: ["string"]
+	},
+	"optimization-split-chunks-fallback-cache-group-automatic-name-delimiter": {
+		types: ["string"],
+		description: "Sets the name delimiter for created chunks"
+	},
+	"optimization-split-chunks-fallback-cache-group-max-async-size": {
+		types: ["number"],
+		description: "Size of the javascript part of the chunk"
+	},
+	"optimization-split-chunks-fallback-cache-group-max-initial-size": {
+		types: ["number"],
+		description: "Size of the javascript part of the chunk"
+	},
+	"optimization-split-chunks-fallback-cache-group-max-size": {
+		types: ["number"],
+		description: "Size of the javascript part of the chunk"
+	},
+	"optimization-split-chunks-fallback-cache-group-min-size": {
+		types: ["number"],
+		description: "Size of the javascript part of the chunk"
+	},
+	"optimization-split-chunks-filename": {
+		types: ["string"]
+	},
+	"optimization-split-chunks-hide-path-info": {
+		types: ["boolean"],
 		description:
-			"Optimize duplication and caching by splitting chunks by shared modules and cache group"
+			"Prevents exposing path info when creating names for parts splitted by maxSize"
+	},
+	"optimization-split-chunks-max-async-requests": {
+		types: ["number"],
+		description:
+			"Maximum number of requests which are accepted for on-demand loading"
+	},
+	"optimization-split-chunks-max-async-size": {
+		types: ["number"],
+		description: "Size of the javascript part of the chunk"
+	},
+	"optimization-split-chunks-max-initial-requests": {
+		types: ["number"],
+		description:
+			"Maximum number of initial chunks which are accepted for an entry point"
+	},
+	"optimization-split-chunks-max-initial-size": {
+		types: ["number"],
+		description: "Size of the javascript part of the chunk"
+	},
+	"optimization-split-chunks-max-size": {
+		types: ["number"],
+		description: "Size of the javascript part of the chunk"
+	},
+	"optimization-split-chunks-min-chunks": {
+		types: ["number"],
+		description:
+			"Minimum number of times a module has to be duplicated until it's considered for splitting"
+	},
+	"optimization-split-chunks-min-remaining-size": {
+		types: ["number"],
+		description: "Size of the javascript part of the chunk"
+	},
+	"optimization-split-chunks-min-size": {
+		types: ["number"],
+		description: "Size of the javascript part of the chunk"
+	},
+	"optimization-split-chunks-name": {
+		types: ["boolean", "string"]
 	},
 	"optimization-used-exports": {
 		types: ["boolean"],
@@ -543,17 +614,13 @@ module.exports = {
 		description: "Capture timing information for each module."
 	},
 	"records-input-path": {
-		types: [null],
-		description: "Store compiler state to a json file."
+		types: ["boolean", "string"]
 	},
 	"records-output-path": {
-		types: [null],
-		description: "Load compiler state from a json file."
+		types: ["boolean", "string"]
 	},
 	"records-path": {
-		types: [null],
-		description:
-			"Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined."
+		types: ["boolean", "string"]
 	},
 	"resolve-cache": {
 		types: ["boolean"],
@@ -667,8 +734,32 @@ module.exports = {
 		description: "sort the chunks by that field"
 	},
 	"stats-colors": {
-		types: [null],
-		description: "Enables/Disables colorful output"
+		types: ["boolean"],
+		description: "`webpack --colors` equivalent"
+	},
+	"stats-colors-bold": {
+		types: ["string"],
+		description: "Custom color for bold text"
+	},
+	"stats-colors-cyan": {
+		types: ["string"],
+		description: "Custom color for cyan text"
+	},
+	"stats-colors-green": {
+		types: ["string"],
+		description: "Custom color for green text"
+	},
+	"stats-colors-magenta": {
+		types: ["string"],
+		description: "Custom color for magenta text"
+	},
+	"stats-colors-red": {
+		types: ["string"],
+		description: "Custom color for red text"
+	},
+	"stats-colors-yellow": {
+		types: ["string"],
+		description: "Custom color for yellow text"
 	},
 	"stats-context": {
 		types: ["string"],
