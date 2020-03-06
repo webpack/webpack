@@ -12,6 +12,18 @@ module.exports = {
 		types: ["boolean"],
 		description: "Disable caching."
 	},
+	"cache-immutable-paths": {
+		types: ["string"],
+		description:
+			"A path to a immutable directory (usually a package manager cache directory)",
+		multiple: true
+	},
+	"cache-managed-paths": {
+		types: ["string"],
+		description:
+			"A path to a managed directory (usually a node_modules directory)",
+		multiple: true
+	},
 	"cache-type": {
 		types: ["string"],
 		description: "In memory caching"
@@ -60,13 +72,19 @@ module.exports = {
 		description:
 			"The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory."
 	},
+	dependencies: {
+		types: ["string"],
+		description: "References to another configuration to depend on.",
+		multiple: true
+	},
 	devtool: {
 		types: ["boolean", "string"]
 	},
 	entry: {
 		types: ["string"],
 		description:
-			"The string is resolved to a module which is loaded upon startup."
+			"The string is resolved to a module which is loaded upon startup.",
+		multiple: true
 	},
 	"experiments-asset": {
 		types: ["boolean"],
@@ -122,6 +140,53 @@ module.exports = {
 		types: ["string"],
 		description: "Enable production optimizations or development hints."
 	},
+	"module-default-rules-compiler": {
+		types: ["string"]
+	},
+	"module-default-rules-enforce": {
+		types: ["string"],
+		description: "Enforce this rule as pre or post step"
+	},
+	"module-default-rules-exclude": {
+		types: ["string"]
+	},
+	"module-default-rules-include": {
+		types: ["string"]
+	},
+	"module-default-rules-issuer": {
+		types: ["string"]
+	},
+	"module-default-rules-loader": {
+		types: ["string"],
+		description: "A loader request"
+	},
+	"module-default-rules-options": {
+		types: ["string"]
+	},
+	"module-default-rules-real-resource": {
+		types: ["string"]
+	},
+	"module-default-rules-resource": {
+		types: ["string"]
+	},
+	"module-default-rules-resource-query": {
+		types: ["string"]
+	},
+	"module-default-rules-side-effects": {
+		types: ["boolean"],
+		description: "Flags a module as with or without side effects"
+	},
+	"module-default-rules-test": {
+		types: ["string"]
+	},
+	"module-default-rules-type": {
+		types: ["string"],
+		description: "Module type to use for the module"
+	},
+	"module-default-rules-use": {
+		types: ["string"],
+		description: "A loader request"
+	},
 	"module-expr-context-critical": {
 		types: ["boolean"],
 		description: "Enable warnings for full dynamic dependencies"
@@ -139,7 +204,57 @@ module.exports = {
 		description: "Set the default request for full dynamic dependencies"
 	},
 	"module-no-parse": {
+		types: ["string"],
+		description:
+			"An absolute path, when the module starts with this path it is not parsed",
+		multiple: true
+	},
+	"module-rules-compiler": {
 		types: ["string"]
+	},
+	"module-rules-enforce": {
+		types: ["string"],
+		description: "Enforce this rule as pre or post step"
+	},
+	"module-rules-exclude": {
+		types: ["string"]
+	},
+	"module-rules-include": {
+		types: ["string"]
+	},
+	"module-rules-issuer": {
+		types: ["string"]
+	},
+	"module-rules-loader": {
+		types: ["string"],
+		description: "A loader request"
+	},
+	"module-rules-options": {
+		types: ["string"]
+	},
+	"module-rules-real-resource": {
+		types: ["string"]
+	},
+	"module-rules-resource": {
+		types: ["string"]
+	},
+	"module-rules-resource-query": {
+		types: ["string"]
+	},
+	"module-rules-side-effects": {
+		types: ["boolean"],
+		description: "Flags a module as with or without side effects"
+	},
+	"module-rules-test": {
+		types: ["string"]
+	},
+	"module-rules-type": {
+		types: ["string"],
+		description: "Module type to use for the module"
+	},
+	"module-rules-use": {
+		types: ["string"],
+		description: "A loader request"
 	},
 	"module-strict-export-presence": {
 		types: ["boolean"],
@@ -426,6 +541,11 @@ module.exports = {
 	"output-ecma-version": {
 		types: ["number"]
 	},
+	"output-enabled-library-types": {
+		types: ["string"],
+		description: "Type of library",
+		multiple: true
+	},
 	"output-filename": {
 		types: ["string"]
 	},
@@ -480,7 +600,8 @@ module.exports = {
 			'This option enables loading async chunks via a custom script type, such as script type="module"'
 	},
 	"output-library": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"output-library-amd": {
 		types: ["string"],
@@ -491,7 +612,8 @@ module.exports = {
 		description: "Name of the exposed commonjs export in the UMD"
 	},
 	"output-library-root": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"output-library-auxiliary-comment": {
 		types: ["string"],
@@ -514,10 +636,12 @@ module.exports = {
 		description: "Set comment for `root` (global variable) section in UMD"
 	},
 	"output-library-export": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"output-library-name": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"output-library-name-amd": {
 		types: ["string"],
@@ -528,7 +652,8 @@ module.exports = {
 		description: "Name of the exposed commonjs export in the UMD"
 	},
 	"output-library-name-root": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"output-library-type": {
 		types: ["string"],
@@ -622,6 +747,23 @@ module.exports = {
 	"records-path": {
 		types: ["boolean", "string"]
 	},
+	"resolve-alias-alias": {
+		types: ["string", "boolean"],
+		description: "New request",
+		multiple: true
+	},
+	"resolve-alias-name": {
+		types: ["string"],
+		description: "Request to be redirected"
+	},
+	"resolve-alias-only-module": {
+		types: ["boolean"],
+		description: "Redirect only exact matching request"
+	},
+	"resolve-alias-fields": {
+		types: ["string"],
+		multiple: true
+	},
 	"resolve-cache": {
 		types: ["boolean"],
 		description:
@@ -632,10 +774,34 @@ module.exports = {
 		description:
 			"Include the context information in the cache identifier when caching"
 	},
+	"resolve-description-files": {
+		types: ["string"],
+		description: "A non-empty string",
+		multiple: true
+	},
 	"resolve-enforce-extension": {
 		types: ["boolean"],
 		description:
 			"Enforce using one of the extensions from the extensions option"
+	},
+	"resolve-extensions": {
+		types: ["string"],
+		description: "A non-empty string",
+		multiple: true
+	},
+	"resolve-main-fields": {
+		types: ["string"],
+		multiple: true
+	},
+	"resolve-main-files": {
+		types: ["string"],
+		description: "A non-empty string",
+		multiple: true
+	},
+	"resolve-modules": {
+		types: ["string"],
+		description: "A non-empty string",
+		multiple: true
 	},
 	"resolve-symlinks": {
 		types: ["boolean"],
@@ -648,6 +814,23 @@ module.exports = {
 		types: ["boolean"],
 		description: "Use synchronous filesystem calls for the resolver"
 	},
+	"resolve-loader-alias-alias": {
+		types: ["string", "boolean"],
+		description: "New request",
+		multiple: true
+	},
+	"resolve-loader-alias-name": {
+		types: ["string"],
+		description: "Request to be redirected"
+	},
+	"resolve-loader-alias-only-module": {
+		types: ["boolean"],
+		description: "Redirect only exact matching request"
+	},
+	"resolve-loader-alias-fields": {
+		types: ["string"],
+		multiple: true
+	},
 	"resolve-loader-cache": {
 		types: ["boolean"],
 		description:
@@ -658,10 +841,34 @@ module.exports = {
 		description:
 			"Include the context information in the cache identifier when caching"
 	},
+	"resolve-loader-description-files": {
+		types: ["string"],
+		description: "A non-empty string",
+		multiple: true
+	},
 	"resolve-loader-enforce-extension": {
 		types: ["boolean"],
 		description:
 			"Enforce using one of the extensions from the extensions option"
+	},
+	"resolve-loader-extensions": {
+		types: ["string"],
+		description: "A non-empty string",
+		multiple: true
+	},
+	"resolve-loader-main-fields": {
+		types: ["string"],
+		multiple: true
+	},
+	"resolve-loader-main-files": {
+		types: ["string"],
+		description: "A non-empty string",
+		multiple: true
+	},
+	"resolve-loader-modules": {
+		types: ["string"],
+		description: "A non-empty string",
+		multiple: true
 	},
 	"resolve-loader-symlinks": {
 		types: ["boolean"],
@@ -919,7 +1126,8 @@ module.exports = {
 	"watch-options-ignored": {
 		types: ["string"],
 		description:
-			"A single glob pattern for files that should be ignored from watching"
+			"A single glob pattern for files that should be ignored from watching",
+		multiple: true
 	},
 	"watch-options-poll": {
 		types: ["boolean", "number"],
