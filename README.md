@@ -439,7 +439,9 @@ Before we started using OpenCollective, donations were made anonymously. Now tha
 
 <div align="center">
 
-[Google Angular Team](https://angular.io/), [Architects.io](https://architects.io/),
+<a href="https://angular.io/" target="_blank" title="JS framework"><img
+src="https://cdn.worldvectorlogo.com/logos/angular-icon-1.svg" height="30" alt="Angular"></a>
+, [Architects.io](https://architects.io/), 
 <a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img
 src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a>
 <a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img
