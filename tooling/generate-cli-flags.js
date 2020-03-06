@@ -102,7 +102,9 @@ function traverse(schemaPart, schemaPath = "", depth = 0, inArray = false) {
 
 	if (schemaPart.type === "array") {
 		if (Array.isArray(schemaPart.items)) {
-			// TODO
+			schemaPart.items.forEach(item => {
+				traverse(item, schemaPath, depth + 1, true);
+			});
 
 			return;
 		}
