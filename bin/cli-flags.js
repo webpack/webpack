@@ -189,11 +189,11 @@ module.exports = {
 	node: {
 		types: ["boolean"]
 	},
-	"node-__dirname": {
+	"node-dirname": {
 		types: ["boolean", "string"],
 		description: "Include a polyfill for the '__dirname' variable"
 	},
-	"node-__filename": {
+	"node-filename": {
 		types: ["boolean", "string"],
 		description: "Include a polyfill for the '__filename' variable"
 	},

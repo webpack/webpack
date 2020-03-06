@@ -34,6 +34,10 @@ function getSchemaPart(path) {
 
 const flags = {};
 const ignoredSchemaPaths = new Set(["devServer"]);
+const specialSchemaPathNames = {
+	"node/__dirname": "node/dirname",
+	"node/__filename": "node/filename"
+};
 
 // TODO - not, oneOf, anyOf, allOf, if/then/else
 // TODO support `const`, but we don't use it on our schema
@@ -83,6 +87,10 @@ function traverse(schemaPart, schemaPath = "") {
 		items.forEach((item, index) => traverse(items[index], schemaPath));
 
 		return;
+	}
+
+	if (specialSchemaPathNames[schemaPath]) {
+		schemaPath = specialSchemaPathNames[schemaPath];
 	}
 
 	const name = decamelize(schemaPath.replace(/\//g, "-"));
