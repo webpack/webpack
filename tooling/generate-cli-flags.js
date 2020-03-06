@@ -1,8 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
-const schema = require("../schemas/WebpackOptions");
-const prettierConfig = prettier.resolveConfig.sync("./bin/cli-flags.js");
+const schema = require("../schemas/WebpackOptions.json");
 
 const flags = {};
 
@@ -134,8 +133,11 @@ function traverse(schemaPart, schemaPath = "", depth = 0, inArray = false) {
 
 traverse(schema);
 
+const cliFlagsPath = path.resolve(__dirname, "../bin/cli-flags.js");
+const prettierConfig = prettier.resolveConfig.sync(cliFlagsPath);
+
 fs.writeFileSync(
-	path.resolve(__dirname, "../bin/cli-flags.js"),
+	cliFlagsPath,
 	prettier.format(`module.exports = ${JSON.stringify(flags, null, 2)};`, {
 		...prettierConfig,
 		parser: "babel"
