@@ -34,10 +34,10 @@ webpack(
 			new CatchCacheHitPlugin(
 				new Map(
 					[
-						[/^resolve\/normal.*\/a(\.js)?$/, 'resolve-a.js'],
-						[/^resolve\/normal.*\/b(\.js)?$/, 'resolve-b.js'],
-						[/^!module!.*\/a(\.js)?$/, 'a.js'],
-						[/^!module!.*\/b(\.js)?$/, 'b.js'],
+						[/^resolve\/normal.*[\/\\]a(\.js)?$/, 'resolve-a.js'],
+						[/^resolve\/normal.*[\/\\]b(\.js)?$/, 'resolve-b.js'],
+						[/^!module!.*[\/\\]a(\.js)?$/, 'a.js'],
+						[/^!module!.*[\/\\]b(\.js)?$/, 'b.js'],
 					]
 				)
 			)
