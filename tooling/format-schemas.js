@@ -43,6 +43,8 @@ const PROPERTIES = [
 	"description",
 	"type",
 
+	"cli",
+
 	"items",
 	"minItems",
 	"uniqueItems",

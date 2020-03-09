@@ -34,6 +34,7 @@ describe("Schemas", () => {
 					"$ref",
 					"$id",
 					"title",
+					"cli",
 					"items",
 					"properties",
 					"additionalProperties",

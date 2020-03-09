@@ -16,8 +16,14 @@
     "ArrayOfStringOrStringArrayValues": {
       "description": "List of string or string-array values.",
       "type": "array",
+      "cli": {
+        "helper": true
+      },
       "items": {
         "description": "String or array of strings.",
+        "cli": {
+          "helper": true
+        },
         "anyOf": [
           {
             "type": "string",
@@ -28,6 +34,9 @@
             "items": {
               "description": "A non-empty string.",
               "type": "string",
+              "cli": {
+                "helper": true
+              },
               "minLength": 1
             }
           }
@@ -37,9 +46,15 @@
     "ArrayOfStringValues": {
       "description": "Array of strings.",
       "type": "array",
+      "cli": {
+        "helper": true
+      },
       "items": {
         "description": "A non-empty string.",
         "type": "string",
+        "cli": {
+          "helper": true
+        },
         "minLength": 1
       }
     },
@@ -917,6 +932,9 @@
       "properties": {
         "defaultRules": {
           "description": "An array of rules applied by default for modules.",
+          "cli": {
+            "exclude": true
+          },
           "anyOf": [
             {
               "$ref": "#/definitions/RuleSetRules"
@@ -2206,6 +2224,9 @@
     },
     "RuleSetCondition": {
       "description": "A condition matcher.",
+      "cli": {
+        "helper": true
+      },
       "anyOf": [
         {
           "instanceof": "RegExp",
@@ -2256,6 +2277,9 @@
     },
     "RuleSetConditionAbsolute": {
       "description": "A condition matcher matching an absolute path.",
+      "cli": {
+        "helper": true
+      },
       "anyOf": [
         {
           "instanceof": "RegExp",
@@ -2306,6 +2330,9 @@
     },
     "RuleSetConditionOrConditions": {
       "description": "One or multiple rule conditions.",
+      "cli": {
+        "helper": true
+      },
       "anyOf": [
         {
           "$ref": "#/definitions/RuleSetCondition"
@@ -2317,6 +2344,9 @@
     },
     "RuleSetConditionOrConditionsAbsolute": {
       "description": "One or multiple rule conditions matching an absolute path.",
+      "cli": {
+        "helper": true
+      },
       "anyOf": [
         {
           "$ref": "#/definitions/RuleSetConditionAbsolute"
