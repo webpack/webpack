@@ -1,0 +1,2852 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Cli should generate the correct cli flags 1`] = `
+Object {
+  "amd": Object {
+    "description": "You can pass \`false\` to disable AMD support.",
+    "path": "amd",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "bail": Object {
+    "description": "Report the first error as a hard error instead of tolerating it.",
+    "path": "bail",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "cache": Object {
+    "description": "Disable caching. Enable in memory caching.",
+    "path": "cache",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "cache-cache-directory": Object {
+    "description": "Base directory for the cache (defaults to node_modules/.cache/webpack).",
+    "path": "cache.cacheDirectory",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "cache-cache-location": Object {
+    "description": "Locations for the cache (defaults to cacheDirectory / name).",
+    "path": "cache.cacheLocation",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "cache-hash-algorithm": Object {
+    "description": "Algorithm used for generation the hash (see node.js crypto package).",
+    "path": "cache.hashAlgorithm",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "cache-idle-timeout": Object {
+    "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').",
+    "path": "cache.idleTimeout",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "cache-idle-timeout-for-initial-store": Object {
+    "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').",
+    "path": "cache.idleTimeoutForInitialStore",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "cache-immutable-paths": Object {
+    "description": "A path to a immutable directory (usually a package manager cache directory).",
+    "path": "cache.immutablePaths",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "cache-managed-paths": Object {
+    "description": "A path to a managed directory (usually a node_modules directory).",
+    "path": "cache.managedPaths",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "cache-name": Object {
+    "description": "Name for the cache. Different names will lead to different coexisting caches.",
+    "path": "cache.name",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "cache-store": Object {
+    "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
+    "path": "cache.store",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "cache-type": Object {
+    "description": "In memory caching. Filesystem caching.",
+    "path": "cache.type",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "cache-version": Object {
+    "description": "Version of the cache data. Different versions won't allow to reuse the cache and override existing content. Update the version when config changed in a way which doesn't allow to reuse cache. This will invalidate the cache.",
+    "path": "cache.version",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "context": Object {
+    "description": "The base directory (absolute path!) for resolving the \`entry\` option. If \`output.pathinfo\` is set, the included pathinfo is shortened to this directory.",
+    "path": "context",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "dependencies": Object {
+    "description": "References to another configuration to depend on.",
+    "path": "dependencies",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "devtool": Object {
+    "description": undefined,
+    "path": "devtool",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "entry": Object {
+    "description": "The string is resolved to a module which is loaded upon startup. A non-empty string.",
+    "path": "entry",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "experiments-asset": Object {
+    "description": "Allow module type 'asset' to generate assets.",
+    "path": "experiments.asset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "experiments-async-web-assembly": Object {
+    "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+    "path": "experiments.asyncWebAssembly",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "experiments-import-async": Object {
+    "description": "Allow 'import/export' syntax to import async modules.",
+    "path": "experiments.importAsync",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "experiments-import-await": Object {
+    "description": "Allow 'import/export await' syntax to import async modules.",
+    "path": "experiments.importAwait",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "experiments-mjs": Object {
+    "description": "Support .mjs files as way to define strict ESM file (node.js).",
+    "path": "experiments.mjs",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "experiments-output-module": Object {
+    "description": "Allow outputing javascript files as module source type.",
+    "path": "experiments.outputModule",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "experiments-sync-web-assembly": Object {
+    "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
+    "path": "experiments.syncWebAssembly",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "experiments-top-level-await": Object {
+    "description": "Allow using top-level-await in EcmaScript Modules.",
+    "path": "experiments.topLevelAwait",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "externals": Object {
+    "description": "An exact matched dependency becomes external. The same string is used as external dependency.",
+    "path": "externals",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "externals-type": Object {
+    "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+    "path": "externalsType",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "infrastructure-logging-debug": Object {
+    "description": undefined,
+    "path": "infrastructureLogging.debug",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "infrastructure-logging-level": Object {
+    "description": "Log level.",
+    "path": "infrastructureLogging.level",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "mode": Object {
+    "description": "Enable production optimizations or development hints.",
+    "path": "mode",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-compiler": Object {
+    "description": undefined,
+    "path": "module.defaultRules.compiler",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-enforce": Object {
+    "description": "Enforce this rule as pre or post step.",
+    "path": "module.defaultRules.enforce",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-exclude": Object {
+    "description": undefined,
+    "path": "module.defaultRules.exclude",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-include": Object {
+    "description": undefined,
+    "path": "module.defaultRules.include",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-issuer": Object {
+    "description": undefined,
+    "path": "module.defaultRules.issuer",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-loader": Object {
+    "description": "A loader request.",
+    "path": "module.defaultRules.loader",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-options": Object {
+    "description": undefined,
+    "path": "module.defaultRules.options",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-real-resource": Object {
+    "description": undefined,
+    "path": "module.defaultRules.realResource",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-resource": Object {
+    "description": undefined,
+    "path": "module.defaultRules.resource",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-resource-query": Object {
+    "description": undefined,
+    "path": "module.defaultRules.resourceQuery",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-side-effects": Object {
+    "description": "Flags a module as with or without side effects.",
+    "path": "module.defaultRules.sideEffects",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "module-default-rules-test": Object {
+    "description": undefined,
+    "path": "module.defaultRules.test",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-type": Object {
+    "description": "Module type to use for the module.",
+    "path": "module.defaultRules.type",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-default-rules-use": Object {
+    "description": "A loader request.",
+    "path": "module.defaultRules.use",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-expr-context-critical": Object {
+    "description": "Enable warnings for full dynamic dependencies.",
+    "path": "module.exprContextCritical",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "module-expr-context-recursive": Object {
+    "description": "Enable recursive directory lookup for full dynamic dependencies.",
+    "path": "module.exprContextRecursive",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "module-expr-context-reg-exp": Object {
+    "description": undefined,
+    "path": "module.exprContextRegExp",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "module-expr-context-request": Object {
+    "description": "Set the default request for full dynamic dependencies.",
+    "path": "module.exprContextRequest",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-no-parse": Object {
+    "description": "An absolute path, when the module starts with this path it is not parsed.",
+    "path": "module.noParse",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-compiler": Object {
+    "description": undefined,
+    "path": "module.rules.compiler",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-enforce": Object {
+    "description": "Enforce this rule as pre or post step.",
+    "path": "module.rules.enforce",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-exclude": Object {
+    "description": undefined,
+    "path": "module.rules.exclude",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-include": Object {
+    "description": undefined,
+    "path": "module.rules.include",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-issuer": Object {
+    "description": undefined,
+    "path": "module.rules.issuer",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-loader": Object {
+    "description": "A loader request.",
+    "path": "module.rules.loader",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-options": Object {
+    "description": undefined,
+    "path": "module.rules.options",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-real-resource": Object {
+    "description": undefined,
+    "path": "module.rules.realResource",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-resource": Object {
+    "description": undefined,
+    "path": "module.rules.resource",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-resource-query": Object {
+    "description": undefined,
+    "path": "module.rules.resourceQuery",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-side-effects": Object {
+    "description": "Flags a module as with or without side effects.",
+    "path": "module.rules.sideEffects",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "module-rules-test": Object {
+    "description": undefined,
+    "path": "module.rules.test",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-type": Object {
+    "description": "Module type to use for the module.",
+    "path": "module.rules.type",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-use": Object {
+    "description": "A loader request.",
+    "path": "module.rules.use",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-strict-export-presence": Object {
+    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "path": "module.strictExportPresence",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "module-strict-this-context-on-imports": Object {
+    "description": "Handle the this context correctly according to the spec for namespace objects.",
+    "path": "module.strictThisContextOnImports",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "module-unknown-context-critical": Object {
+    "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+    "path": "module.unknownContextCritical",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "module-unknown-context-recursive": Object {
+    "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+    "path": "module.unknownContextRecursive",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "module-unknown-context-reg-exp": Object {
+    "description": undefined,
+    "path": "module.unknownContextRegExp",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "module-unknown-context-request": Object {
+    "description": "Sets the request when using the require function in a not statically analyse-able way.",
+    "path": "module.unknownContextRequest",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "module-unsafe-cache": Object {
+    "description": undefined,
+    "path": "module.unsafeCache",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "module-wrapped-context-critical": Object {
+    "description": "Enable warnings for partial dynamic dependencies.",
+    "path": "module.wrappedContextCritical",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "module-wrapped-context-recursive": Object {
+    "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+    "path": "module.wrappedContextRecursive",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "name": Object {
+    "description": "Name of the configuration. Used when loading multiple configurations.",
+    "path": "name",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "node": Object {
+    "description": undefined,
+    "path": "node",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "node-__dirname": Object {
+    "description": "Include a polyfill for the '__dirname' variable.",
+    "path": "node.__dirname",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "node-__filename": Object {
+    "description": "Include a polyfill for the '__filename' variable.",
+    "path": "node.__filename",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "node-global": Object {
+    "description": "Include a polyfill for the 'global' variable.",
+    "path": "node.global",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-check-wasm-types": Object {
+    "description": "Check for incompatible wasm types when importing/exporting from/to ESM.",
+    "path": "optimization.checkWasmTypes",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-chunk-ids": Object {
+    "description": "Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).",
+    "path": "optimization.chunkIds",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-concatenate-modules": Object {
+    "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
+    "path": "optimization.concatenateModules",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-flag-included-chunks": Object {
+    "description": "Also flag chunks as loaded which contain a subset of the modules.",
+    "path": "optimization.flagIncludedChunks",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-inner-graph": Object {
+    "description": "Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.",
+    "path": "optimization.innerGraph",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-mangle-exports": Object {
+    "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports).",
+    "path": "optimization.mangleExports",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-mangle-wasm-imports": Object {
+    "description": "Reduce size of WASM by changing imports to shorter strings.",
+    "path": "optimization.mangleWasmImports",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-merge-duplicate-chunks": Object {
+    "description": "Merge chunks which contain the same modules.",
+    "path": "optimization.mergeDuplicateChunks",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-minimize": Object {
+    "description": "Enable minimizing the output. Uses optimization.minimizer.",
+    "path": "optimization.minimize",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-module-ids": Object {
+    "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).",
+    "path": "optimization.moduleIds",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-no-emit-on-errors": Object {
+    "description": "Avoid emitting assets when errors occur.",
+    "path": "optimization.noEmitOnErrors",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-node-env": Object {
+    "description": undefined,
+    "path": "optimization.nodeEnv",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "optimization-portable-records": Object {
+    "description": "Generate records with relative paths to be able to move the context folder.",
+    "path": "optimization.portableRecords",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-provided-exports": Object {
+    "description": "Figure out which exports are provided by modules to generate more efficient code.",
+    "path": "optimization.providedExports",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-remove-available-modules": Object {
+    "description": "Removes modules from chunks when these modules are already included in all parents.",
+    "path": "optimization.removeAvailableModules",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-remove-empty-chunks": Object {
+    "description": "Remove chunks which are empty.",
+    "path": "optimization.removeEmptyChunks",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-runtime-chunk": Object {
+    "description": undefined,
+    "path": "optimization.runtimeChunk",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "optimization-runtime-chunk-name": Object {
+    "description": undefined,
+    "path": "optimization.runtimeChunk.name",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "optimization-side-effects": Object {
+    "description": "Skip over modules which are flagged to contain no side effects when exports are not used.",
+    "path": "optimization.sideEffects",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-split-chunks": Object {
+    "description": undefined,
+    "path": "optimization.splitChunks",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-split-chunks-automatic-name-delimiter": Object {
+    "description": "Sets the name delimiter for created chunks.",
+    "path": "optimization.splitChunks.automaticNameDelimiter",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "optimization-split-chunks-chunks": Object {
+    "description": undefined,
+    "path": "optimization.splitChunks.chunks",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "optimization-split-chunks-fallback-cache-group-automatic-name-delimiter": Object {
+    "description": "Sets the name delimiter for created chunks.",
+    "path": "optimization.splitChunks.fallbackCacheGroup.automaticNameDelimiter",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "optimization-split-chunks-fallback-cache-group-max-async-size": Object {
+    "description": "Size of the javascript part of the chunk.",
+    "path": "optimization.splitChunks.fallbackCacheGroup.maxAsyncSize",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "optimization-split-chunks-fallback-cache-group-max-initial-size": Object {
+    "description": "Size of the javascript part of the chunk.",
+    "path": "optimization.splitChunks.fallbackCacheGroup.maxInitialSize",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "optimization-split-chunks-fallback-cache-group-max-size": Object {
+    "description": "Size of the javascript part of the chunk.",
+    "path": "optimization.splitChunks.fallbackCacheGroup.maxSize",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "optimization-split-chunks-fallback-cache-group-min-size": Object {
+    "description": "Size of the javascript part of the chunk.",
+    "path": "optimization.splitChunks.fallbackCacheGroup.minSize",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "optimization-split-chunks-filename": Object {
+    "description": undefined,
+    "path": "optimization.splitChunks.filename",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "optimization-split-chunks-hide-path-info": Object {
+    "description": "Prevents exposing path info when creating names for parts splitted by maxSize.",
+    "path": "optimization.splitChunks.hidePathInfo",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "optimization-split-chunks-max-async-requests": Object {
+    "description": "Maximum number of requests which are accepted for on-demand loading.",
+    "path": "optimization.splitChunks.maxAsyncRequests",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "optimization-split-chunks-max-async-size": Object {
+    "description": "Size of the javascript part of the chunk.",
+    "path": "optimization.splitChunks.maxAsyncSize",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "optimization-split-chunks-max-initial-requests": Object {
+    "description": "Maximum number of initial chunks which are accepted for an entry point.",
+    "path": "optimization.splitChunks.maxInitialRequests",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "optimization-split-chunks-max-initial-size": Object {
+    "description": "Size of the javascript part of the chunk.",
+    "path": "optimization.splitChunks.maxInitialSize",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "optimization-split-chunks-max-size": Object {
+    "description": "Size of the javascript part of the chunk.",
+    "path": "optimization.splitChunks.maxSize",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "optimization-split-chunks-min-chunks": Object {
+    "description": "Minimum number of times a module has to be duplicated until it's considered for splitting.",
+    "path": "optimization.splitChunks.minChunks",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "optimization-split-chunks-min-remaining-size": Object {
+    "description": "Size of the javascript part of the chunk.",
+    "path": "optimization.splitChunks.minRemainingSize",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "optimization-split-chunks-min-size": Object {
+    "description": "Size of the javascript part of the chunk.",
+    "path": "optimization.splitChunks.minSize",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "optimization-split-chunks-name": Object {
+    "description": undefined,
+    "path": "optimization.splitChunks.name",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "optimization-used-exports": Object {
+    "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.",
+    "path": "optimization.usedExports",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "output-asset-module-filename": Object {
+    "description": undefined,
+    "path": "output.assetModuleFilename",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-auxiliary-comment": Object {
+    "description": "Append the same comment above each import style.",
+    "path": "output.auxiliaryComment",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-auxiliary-comment-amd": Object {
+    "description": "Set comment for \`amd\` section in UMD.",
+    "path": "output.auxiliaryComment.amd",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-auxiliary-comment-commonjs": Object {
+    "description": "Set comment for \`commonjs\` (exports) section in UMD.",
+    "path": "output.auxiliaryComment.commonjs",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-auxiliary-comment-commonjs2": Object {
+    "description": "Set comment for \`commonjs2\` (module.exports) section in UMD.",
+    "path": "output.auxiliaryComment.commonjs2",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-auxiliary-comment-root": Object {
+    "description": "Set comment for \`root\` (global variable) section in UMD.",
+    "path": "output.auxiliaryComment.root",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-chunk-callback-name": Object {
+    "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
+    "path": "output.chunkCallbackName",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-chunk-filename": Object {
+    "description": "The filename of non-entry chunks as relative path inside the \`output.path\` directory.",
+    "path": "output.chunkFilename",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-chunk-load-timeout": Object {
+    "description": "Number of milliseconds before chunk request expires.",
+    "path": "output.chunkLoadTimeout",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "output-compare-before-emit": Object {
+    "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem.",
+    "path": "output.compareBeforeEmit",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "output-cross-origin-loading": Object {
+    "description": "This option enables cross-origin loading of chunks.",
+    "path": "output.crossOriginLoading",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-devtool-fallback-module-filename-template": Object {
+    "description": undefined,
+    "path": "output.devtoolFallbackModuleFilenameTemplate",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-devtool-module-filename-template": Object {
+    "description": undefined,
+    "path": "output.devtoolModuleFilenameTemplate",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-devtool-namespace": Object {
+    "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to \`output.library\` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
+    "path": "output.devtoolNamespace",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-ecma-version": Object {
+    "description": undefined,
+    "path": "output.ecmaVersion",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "output-enabled-library-types": Object {
+    "description": "Type of library.",
+    "path": "output.enabledLibraryTypes",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "output-filename": Object {
+    "description": undefined,
+    "path": "output.filename",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-global-object": Object {
+    "description": "An expression which is used to address the global object/scope in runtime code.",
+    "path": "output.globalObject",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-hash-digest": Object {
+    "description": "Digest type used for the hash.",
+    "path": "output.hashDigest",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-hash-digest-length": Object {
+    "description": "Number of chars which are used for the hash.",
+    "path": "output.hashDigestLength",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "output-hash-function": Object {
+    "description": undefined,
+    "path": "output.hashFunction",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-hash-salt": Object {
+    "description": "Any string which is added to the hash to salt it.",
+    "path": "output.hashSalt",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-hot-update-chunk-filename": Object {
+    "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
+    "path": "output.hotUpdateChunkFilename",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-hot-update-function": Object {
+    "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+    "path": "output.hotUpdateFunction",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-hot-update-main-filename": Object {
+    "description": "The filename of the Hot Update Main File. It is inside the \`output.path\` directory.",
+    "path": "output.hotUpdateMainFilename",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-iife": Object {
+    "description": "Wrap javascript code into IIFEs to avoid leaking into global scope.",
+    "path": "output.iife",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "output-jsonp-function": Object {
+    "description": "The JSONP function used by webpack for async loading of chunks.",
+    "path": "output.jsonpFunction",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-jsonp-script-type": Object {
+    "description": "This option enables loading async chunks via a custom script type, such as script type=\\"module\\".",
+    "path": "output.jsonpScriptType",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library": Object {
+    "description": undefined,
+    "path": "output.library",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-amd": Object {
+    "description": "Name of the exposed AMD library in the UMD.",
+    "path": "output.library.amd",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-auxiliary-comment": Object {
+    "description": "Append the same comment above each import style.",
+    "path": "output.library.auxiliaryComment",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-auxiliary-comment-amd": Object {
+    "description": "Set comment for \`amd\` section in UMD.",
+    "path": "output.library.auxiliaryComment.amd",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-auxiliary-comment-commonjs": Object {
+    "description": "Set comment for \`commonjs\` (exports) section in UMD.",
+    "path": "output.library.auxiliaryComment.commonjs",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-auxiliary-comment-commonjs2": Object {
+    "description": "Set comment for \`commonjs2\` (module.exports) section in UMD.",
+    "path": "output.library.auxiliaryComment.commonjs2",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-auxiliary-comment-root": Object {
+    "description": "Set comment for \`root\` (global variable) section in UMD.",
+    "path": "output.library.auxiliaryComment.root",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-commonjs": Object {
+    "description": "Name of the exposed commonjs export in the UMD.",
+    "path": "output.library.commonjs",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-export": Object {
+    "description": undefined,
+    "path": "output.library.export",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-name": Object {
+    "description": undefined,
+    "path": "output.library.name",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-name-amd": Object {
+    "description": "Name of the exposed AMD library in the UMD.",
+    "path": "output.library.name.amd",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-name-commonjs": Object {
+    "description": "Name of the exposed commonjs export in the UMD.",
+    "path": "output.library.name.commonjs",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-name-root": Object {
+    "description": undefined,
+    "path": "output.library.name.root",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-root": Object {
+    "description": undefined,
+    "path": "output.library.root",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-target": Object {
+    "description": "Type of library.",
+    "path": "output.libraryTarget",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-type": Object {
+    "description": "Type of library.",
+    "path": "output.library.type",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-library-umd-named-define": Object {
+    "description": "If \`output.libraryTarget\` is set to umd and \`output.library\` is set, setting this to true will name the AMD module.",
+    "path": "output.library.umdNamedDefine",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "output-module": Object {
+    "description": "Output javascript files as module source type.",
+    "path": "output.module",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "output-path": Object {
+    "description": "The output directory as **absolute path** (required).",
+    "path": "output.path",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-pathinfo": Object {
+    "description": "Include comments with information about the modules.",
+    "path": "output.pathinfo",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "output-public-path": Object {
+    "description": undefined,
+    "path": "output.publicPath",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-source-map-filename": Object {
+    "description": "The filename of the SourceMaps for the JavaScript files. They are inside the \`output.path\` directory.",
+    "path": "output.sourceMapFilename",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-source-prefix": Object {
+    "description": "Prefixes every line of the source in the bundle with this string.",
+    "path": "output.sourcePrefix",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-strict-module-exception-handling": Object {
+    "description": "Handles exceptions in module loading correctly at a performance cost.",
+    "path": "output.strictModuleExceptionHandling",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "output-umd-named-define": Object {
+    "description": "If \`output.libraryTarget\` is set to umd and \`output.library\` is set, setting this to true will name the AMD module.",
+    "path": "output.umdNamedDefine",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "output-unique-name": Object {
+    "description": "A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.",
+    "path": "output.uniqueName",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "output-webassembly-module-filename": Object {
+    "description": "The filename of WebAssembly modules as relative path inside the \`output.path\` directory.",
+    "path": "output.webassemblyModuleFilename",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "parallelism": Object {
+    "description": "The number of parallel processed modules in the compilation.",
+    "path": "parallelism",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "performance": Object {
+    "description": undefined,
+    "path": "performance",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "performance-hints": Object {
+    "description": "Sets the format of the hints: warnings, errors or nothing at all.",
+    "path": "performance.hints",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "performance-max-asset-size": Object {
+    "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints.",
+    "path": "performance.maxAssetSize",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "performance-max-entrypoint-size": Object {
+    "description": "Total size of an entry point (in bytes).",
+    "path": "performance.maxEntrypointSize",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "profile": Object {
+    "description": "Capture timing information for each module.",
+    "path": "profile",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "records-input-path": Object {
+    "description": undefined,
+    "path": "recordsInputPath",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "records-output-path": Object {
+    "description": undefined,
+    "path": "recordsOutputPath",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "records-path": Object {
+    "description": undefined,
+    "path": "recordsPath",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-alias-alias": Object {
+    "description": "New request. One choice of request. Ignore request (replace with empty module).",
+    "path": "resolve.alias.alias",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-alias-fields": Object {
+    "description": undefined,
+    "path": "resolve.aliasFields",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-alias-name": Object {
+    "description": "Request to be redirected.",
+    "path": "resolve.alias.name",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-alias-only-module": Object {
+    "description": "Redirect only exact matching request.",
+    "path": "resolve.alias.onlyModule",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-cache": Object {
+    "description": "Enable caching of successfully resolved requests (cache entries are revalidated).",
+    "path": "resolve.cache",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-cache-with-context": Object {
+    "description": "Include the context information in the cache identifier when caching.",
+    "path": "resolve.cacheWithContext",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-description-files": Object {
+    "description": "A non-empty string.",
+    "path": "resolve.descriptionFiles",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-enforce-extension": Object {
+    "description": "Enforce using one of the extensions from the extensions option.",
+    "path": "resolve.enforceExtension",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-extensions": Object {
+    "description": "A non-empty string.",
+    "path": "resolve.extensions",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-loader-alias-alias": Object {
+    "description": "New request. One choice of request. Ignore request (replace with empty module).",
+    "path": "resolveLoader.alias.alias",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-loader-alias-fields": Object {
+    "description": undefined,
+    "path": "resolveLoader.aliasFields",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-loader-alias-name": Object {
+    "description": "Request to be redirected.",
+    "path": "resolveLoader.alias.name",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-loader-alias-only-module": Object {
+    "description": "Redirect only exact matching request.",
+    "path": "resolveLoader.alias.onlyModule",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-loader-cache": Object {
+    "description": "Enable caching of successfully resolved requests (cache entries are revalidated).",
+    "path": "resolveLoader.cache",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-loader-cache-with-context": Object {
+    "description": "Include the context information in the cache identifier when caching.",
+    "path": "resolveLoader.cacheWithContext",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-loader-description-files": Object {
+    "description": "A non-empty string.",
+    "path": "resolveLoader.descriptionFiles",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-loader-enforce-extension": Object {
+    "description": "Enforce using one of the extensions from the extensions option.",
+    "path": "resolveLoader.enforceExtension",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-loader-extensions": Object {
+    "description": "A non-empty string.",
+    "path": "resolveLoader.extensions",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-loader-main-fields": Object {
+    "description": undefined,
+    "path": "resolveLoader.mainFields",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-loader-main-files": Object {
+    "description": "A non-empty string.",
+    "path": "resolveLoader.mainFiles",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-loader-modules": Object {
+    "description": "A non-empty string.",
+    "path": "resolveLoader.modules",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-loader-symlinks": Object {
+    "description": "Enable resolving symlinks to the original location.",
+    "path": "resolveLoader.symlinks",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-loader-unsafe-cache": Object {
+    "description": undefined,
+    "path": "resolveLoader.unsafeCache",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-loader-use-sync-file-system-calls": Object {
+    "description": "Use synchronous filesystem calls for the resolver.",
+    "path": "resolveLoader.useSyncFileSystemCalls",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-main-fields": Object {
+    "description": undefined,
+    "path": "resolve.mainFields",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-main-files": Object {
+    "description": "A non-empty string.",
+    "path": "resolve.mainFiles",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-modules": Object {
+    "description": "A non-empty string.",
+    "path": "resolve.modules",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "resolve-symlinks": Object {
+    "description": "Enable resolving symlinks to the original location.",
+    "path": "resolve.symlinks",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-unsafe-cache": Object {
+    "description": undefined,
+    "path": "resolve.unsafeCache",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "resolve-use-sync-file-system-calls": Object {
+    "description": "Use synchronous filesystem calls for the resolver.",
+    "path": "resolve.useSyncFileSystemCalls",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats": Object {
+    "description": undefined,
+    "path": "stats",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-all": Object {
+    "description": "Fallback value for stats options when an option is not defined (has precedence over local webpack defaults).",
+    "path": "stats.all",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-assets": Object {
+    "description": "Add assets information.",
+    "path": "stats.assets",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-assets-sort": Object {
+    "description": "Sort the assets by that field.",
+    "path": "stats.assetsSort",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-built-at": Object {
+    "description": "Add built at time information.",
+    "path": "stats.builtAt",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-cached": Object {
+    "description": "Add information about cached (not built) modules.",
+    "path": "stats.cached",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-cached-assets": Object {
+    "description": "Show cached assets (setting this to \`false\` only shows emitted files).",
+    "path": "stats.cachedAssets",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-children": Object {
+    "description": "Add children information.",
+    "path": "stats.children",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-chunk-groups": Object {
+    "description": "Display all chunk groups with the corresponding bundles.",
+    "path": "stats.chunkGroups",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-chunk-modules": Object {
+    "description": "Add built modules information to chunk information.",
+    "path": "stats.chunkModules",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-chunk-origins": Object {
+    "description": "Add the origins of chunks and chunk merging info.",
+    "path": "stats.chunkOrigins",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-chunk-relations": Object {
+    "description": "Add information about parent, children and sibling chunks to chunk information.",
+    "path": "stats.chunkRelations",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-chunk-root-modules": Object {
+    "description": "Add root modules information to chunk information.",
+    "path": "stats.chunkRootModules",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-chunks": Object {
+    "description": "Add chunk information.",
+    "path": "stats.chunks",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-chunks-sort": Object {
+    "description": "Sort the chunks by that field.",
+    "path": "stats.chunksSort",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-colors": Object {
+    "description": "Enables/Disables colorful output.",
+    "path": "stats.colors",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-colors-bold": Object {
+    "description": "Custom color for bold text.",
+    "path": "stats.colors.bold",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-colors-cyan": Object {
+    "description": "Custom color for cyan text.",
+    "path": "stats.colors.cyan",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-colors-green": Object {
+    "description": "Custom color for green text.",
+    "path": "stats.colors.green",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-colors-magenta": Object {
+    "description": "Custom color for magenta text.",
+    "path": "stats.colors.magenta",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-colors-red": Object {
+    "description": "Custom color for red text.",
+    "path": "stats.colors.red",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-colors-yellow": Object {
+    "description": "Custom color for yellow text.",
+    "path": "stats.colors.yellow",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-context": Object {
+    "description": "Context directory for request shortening.",
+    "path": "stats.context",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-depth": Object {
+    "description": "Add module depth in module graph.",
+    "path": "stats.depth",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-entrypoints": Object {
+    "description": "Display the entry points with the corresponding bundles.",
+    "path": "stats.entrypoints",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-env": Object {
+    "description": "Add --env information.",
+    "path": "stats.env",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-error-details": Object {
+    "description": "Add details to errors (like resolving log).",
+    "path": "stats.errorDetails",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-error-stack": Object {
+    "description": "Add internal stack trace to errors.",
+    "path": "stats.errorStack",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-errors": Object {
+    "description": "Add errors.",
+    "path": "stats.errors",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-exclude": Object {
+    "description": undefined,
+    "path": "stats.exclude",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-exclude-assets": Object {
+    "description": undefined,
+    "path": "stats.excludeAssets",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-exclude-modules": Object {
+    "description": undefined,
+    "path": "stats.excludeModules",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-hash": Object {
+    "description": "Add the hash of the compilation.",
+    "path": "stats.hash",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-ids": Object {
+    "description": "Add ids.",
+    "path": "stats.ids",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-logging": Object {
+    "description": "Enable/disable logging output (\`true\`: shows normal logging output, loglevel: log). Specify log level of logging output.",
+    "path": "stats.logging",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-logging-debug": Object {
+    "description": undefined,
+    "path": "stats.loggingDebug",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-logging-trace": Object {
+    "description": "Add stack traces to logging output.",
+    "path": "stats.loggingTrace",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-max-modules": Object {
+    "description": "Set the maximum number of modules to be shown.",
+    "path": "stats.maxModules",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "stats-module-assets": Object {
+    "description": "Add information about assets inside modules.",
+    "path": "stats.moduleAssets",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-module-trace": Object {
+    "description": "Add dependencies and origin of warnings/errors.",
+    "path": "stats.moduleTrace",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-modules": Object {
+    "description": "Add built modules information.",
+    "path": "stats.modules",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-modules-sort": Object {
+    "description": "Sort the modules by that field.",
+    "path": "stats.modulesSort",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-nested-modules": Object {
+    "description": "Add information about modules nested in other modules (like with module concatenation).",
+    "path": "stats.nestedModules",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-optimization-bailout": Object {
+    "description": "Show reasons why optimization bailed out for modules.",
+    "path": "stats.optimizationBailout",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-orphan-modules": Object {
+    "description": "Add information about orphan modules.",
+    "path": "stats.orphanModules",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-output-path": Object {
+    "description": "Add output path information.",
+    "path": "stats.outputPath",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-performance": Object {
+    "description": "Add performance hint flags.",
+    "path": "stats.performance",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-preset": Object {
+    "description": undefined,
+    "path": "stats.preset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "stats-provided-exports": Object {
+    "description": "Show exports provided by modules.",
+    "path": "stats.providedExports",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-public-path": Object {
+    "description": "Add public path information.",
+    "path": "stats.publicPath",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-reasons": Object {
+    "description": "Add information about the reasons why modules are included.",
+    "path": "stats.reasons",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-runtime": Object {
+    "description": "Add information about runtime modules.",
+    "path": "stats.runtime",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-source": Object {
+    "description": "Add the source code of modules.",
+    "path": "stats.source",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-timings": Object {
+    "description": "Add timing information.",
+    "path": "stats.timings",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-used-exports": Object {
+    "description": "Show exports used by modules.",
+    "path": "stats.usedExports",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-version": Object {
+    "description": "Add webpack version information.",
+    "path": "stats.version",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-warnings": Object {
+    "description": "Add warnings.",
+    "path": "stats.warnings",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "stats-warnings-filter": Object {
+    "description": undefined,
+    "path": "stats.warningsFilter",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "target": Object {
+    "description": undefined,
+    "path": "target",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
+  "watch": Object {
+    "description": "Enter watch mode, which rebuilds on file change.",
+    "path": "watch",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+  "watch-options-aggregate-timeout": Object {
+    "description": "Delay the rebuilt after the first change. Value is a time in ms.",
+    "path": "watchOptions.aggregateTimeout",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "watch-options-ignored": Object {
+    "description": "A single glob pattern for files that should be ignored from watching. A non-empty string.",
+    "path": "watchOptions.ignored",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "watch-options-poll": Object {
+    "description": "\`true\`: use polling. \`number\`: use polling with specified interval.",
+    "path": "watchOptions.poll",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+      Object {
+        "multiple": false,
+        "type": "number",
+      },
+    ],
+  },
+  "watch-options-stdin": Object {
+    "description": "Stop watching when stdin stream has ended.",
+    "path": "watchOptions.stdin",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
+}
+`;
