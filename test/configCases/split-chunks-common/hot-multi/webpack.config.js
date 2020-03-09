@@ -1,5 +1,4 @@
-var HotModuleReplacementPlugin = require("../../../../")
-	.HotModuleReplacementPlugin;
+var { HotModuleReplacementPlugin } = require("../../../../");
 module.exports = {
 	entry: {
 		first: ["./shared", "./first"],

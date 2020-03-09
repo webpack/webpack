@@ -1,6 +1,6 @@
 "use strict";
 
-const DefinePlugin = require("../../../../").DefinePlugin;
+const { DefinePlugin } = require("../../../../");
 
 module.exports = [
 	{

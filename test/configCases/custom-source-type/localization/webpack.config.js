@@ -1,8 +1,8 @@
 const { RawSource } = require("webpack-sources");
-const Generator = require("../../../../").Generator;
-const RuntimeModule = require("../../../../").RuntimeModule;
-const RuntimeGlobals = require("../../../../").RuntimeGlobals;
-const Parser = require("../../../../").Parser;
+const { Generator } = require("../../../../");
+const { RuntimeModule } = require("../../../../");
+const { RuntimeGlobals } = require("../../../../");
+const { Parser } = require("../../../../");
 const webpack = require("../../../../");
 
 /** @typedef {import("../../../../lib/Compiler")} Compiler */
@@ -164,7 +164,7 @@ module.exports = definitions.map((defs, i) => ({
 					compilation.hooks.runtimeRequirementInTree
 						.for(RuntimeGlobals.ensureChunkHandlers)
 						.tap("LocalizationPlugin", (chunk, set) => {
-							const chunkGraph = compilation.chunkGraph;
+							const { chunkGraph } = compilation;
 							if (
 								!chunkGraph.hasModuleInGraph(chunk, m =>
 									m.type.startsWith("localization")

@@ -1,4 +1,4 @@
-var DelegatedPlugin = require("../../../../").DelegatedPlugin;
+var { DelegatedPlugin } = require("../../../../");
 module.exports = {
 	optimization: {
 		moduleIds: "hashed"

@@ -47,7 +47,9 @@ module.exports.setLogLevel = function(level) {
 };
 
 module.exports.formatError = function(err) {
+	// eslint-disable-next-line prefer-destructuring
 	var message = err.message;
+	// eslint-disable-next-line prefer-destructuring
 	var stack = err.stack;
 	if (!stack) {
 		return message;

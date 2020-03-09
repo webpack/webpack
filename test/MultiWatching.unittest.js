@@ -1,6 +1,6 @@
 "use strict";
 
-const SyncHook = require("tapable").SyncHook;
+const { SyncHook } = require("tapable");
 const MultiWatching = require("../lib/MultiWatching");
 
 const createWatching = () => {

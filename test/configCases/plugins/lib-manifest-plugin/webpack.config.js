@@ -1,5 +1,5 @@
 var path = require("path");
-var LibManifestPlugin = require("../../../../").LibManifestPlugin;
+var { LibManifestPlugin } = require("../../../../");
 
 module.exports = {
 	entry: {

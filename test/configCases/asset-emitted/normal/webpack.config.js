@@ -1,5 +1,5 @@
-const Compilation = require("../../../../").Compilation;
-const Source = require("webpack-sources").Source;
+const { Compilation } = require("../../../../");
+const { Source } = require("webpack-sources");
 
 module.exports = {
 	plugins: [

@@ -250,7 +250,7 @@ describe("BenchmarkTestCases", function() {
 					defer: true,
 					initCount: 1,
 					onComplete: function() {
-						const stats = bench.stats;
+						const { stats } = bench;
 						const n = stats.sample.length;
 						const nSqrt = Math.sqrt(n);
 						const z = tDistribution(n - 1);

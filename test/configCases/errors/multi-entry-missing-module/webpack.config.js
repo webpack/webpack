@@ -1,4 +1,4 @@
-const IgnorePlugin = require("../../../../").IgnorePlugin;
+const { IgnorePlugin } = require("../../../../");
 module.exports = {
 	entry: {
 		a: "./intentionally-missing-module.js",

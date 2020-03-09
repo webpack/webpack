@@ -1,4 +1,4 @@
-var ProvidePlugin = require("../../../../").ProvidePlugin;
+var { ProvidePlugin } = require("../../../../");
 module.exports = {
 	plugins: [
 		new ProvidePlugin({
