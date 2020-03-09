@@ -71,7 +71,7 @@ const System = {
 				const dep = m.deps[i];
 				const setters = m.mod.setters[i];
 				System.ensureExecuted(dep);
-				if (setters) setters(System.registry[dep].exports);
+				setters(System.registry[dep].exports);
 			}
 			m.mod.execute();
 		}
