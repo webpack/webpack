@@ -12,7 +12,7 @@ module.exports = {
 			ONE: 1,
 			STRING: '"string"',
 			EMPTY_STRING: '""',
-			BIGINT: BigInt(9007199254740991),
+			BIGINT: BigInt("9007199254740993"),
 			ZERO_BIGINT: BigInt(0),
 			POSITIVE_ZERO: +0,
 			NEGATIVE_ZER0: -0,
