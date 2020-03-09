@@ -163,7 +163,7 @@ Object {
     ],
   },
   "devtool": Object {
-    "description": undefined,
+    "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
     "path": "devtool",
     "types": Array [
       Object {
@@ -287,7 +287,7 @@ Object {
     ],
   },
   "infrastructure-logging-debug": Object {
-    "description": undefined,
+    "description": "Filtering value, regexp or function. Enable/Disable debug logging for all loggers.",
     "path": "infrastructureLogging.debug",
     "types": Array [
       Object {
@@ -341,7 +341,7 @@ Object {
     ],
   },
   "module-expr-context-reg-exp": Object {
-    "description": undefined,
+    "description": "Sets the default regular expression for full dynamic dependencies.",
     "path": "module.exprContextRegExp",
     "types": Array [
       Object {
@@ -375,7 +375,7 @@ Object {
     ],
   },
   "module-rules-compiler": Object {
-    "description": undefined,
+    "description": "Match the child compiler name.",
     "path": "module.rules.compiler",
     "types": Array [
       Object {
@@ -385,7 +385,7 @@ Object {
     ],
   },
   "module-rules-compiler-exclude": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.compiler.exclude",
     "types": Array [
       Object {
@@ -395,7 +395,7 @@ Object {
     ],
   },
   "module-rules-compiler-include": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching not any of these conditions.",
     "path": "module.rules.compiler.include",
     "types": Array [
       Object {
@@ -405,7 +405,7 @@ Object {
     ],
   },
   "module-rules-compiler-test": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.compiler.test",
     "types": Array [
       Object {
@@ -425,7 +425,7 @@ Object {
     ],
   },
   "module-rules-exclude": Object {
-    "description": undefined,
+    "description": "Shortcut for resource.exclude.",
     "path": "module.rules.exclude",
     "types": Array [
       Object {
@@ -435,7 +435,7 @@ Object {
     ],
   },
   "module-rules-exclude-exclude": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.exclude.exclude",
     "types": Array [
       Object {
@@ -445,7 +445,7 @@ Object {
     ],
   },
   "module-rules-exclude-include": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching not any of these conditions.",
     "path": "module.rules.exclude.include",
     "types": Array [
       Object {
@@ -455,7 +455,7 @@ Object {
     ],
   },
   "module-rules-exclude-test": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.exclude.test",
     "types": Array [
       Object {
@@ -465,7 +465,7 @@ Object {
     ],
   },
   "module-rules-include": Object {
-    "description": undefined,
+    "description": "Shortcut for resource.include.",
     "path": "module.rules.include",
     "types": Array [
       Object {
@@ -475,7 +475,7 @@ Object {
     ],
   },
   "module-rules-include-exclude": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.include.exclude",
     "types": Array [
       Object {
@@ -485,7 +485,7 @@ Object {
     ],
   },
   "module-rules-include-include": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching not any of these conditions.",
     "path": "module.rules.include.include",
     "types": Array [
       Object {
@@ -495,7 +495,7 @@ Object {
     ],
   },
   "module-rules-include-test": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.include.test",
     "types": Array [
       Object {
@@ -505,7 +505,7 @@ Object {
     ],
   },
   "module-rules-issuer": Object {
-    "description": undefined,
+    "description": "Match the issuer of the module (The module pointing to this module).",
     "path": "module.rules.issuer",
     "types": Array [
       Object {
@@ -515,7 +515,7 @@ Object {
     ],
   },
   "module-rules-issuer-exclude": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.issuer.exclude",
     "types": Array [
       Object {
@@ -525,7 +525,7 @@ Object {
     ],
   },
   "module-rules-issuer-include": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching not any of these conditions.",
     "path": "module.rules.issuer.include",
     "types": Array [
       Object {
@@ -535,7 +535,7 @@ Object {
     ],
   },
   "module-rules-issuer-test": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.issuer.test",
     "types": Array [
       Object {
@@ -575,7 +575,7 @@ Object {
     ],
   },
   "module-rules-loader-options": Object {
-    "description": undefined,
+    "description": "Options passed to a loader.",
     "path": "module.rules.loader.options",
     "types": Array [
       Object {
@@ -585,7 +585,7 @@ Object {
     ],
   },
   "module-rules-options": Object {
-    "description": undefined,
+    "description": "Options passed to a loader.",
     "path": "module.rules.options",
     "types": Array [
       Object {
@@ -595,7 +595,7 @@ Object {
     ],
   },
   "module-rules-real-resource": Object {
-    "description": undefined,
+    "description": "Match the real resource path of the module.",
     "path": "module.rules.realResource",
     "types": Array [
       Object {
@@ -605,7 +605,7 @@ Object {
     ],
   },
   "module-rules-real-resource-exclude": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.realResource.exclude",
     "types": Array [
       Object {
@@ -615,7 +615,7 @@ Object {
     ],
   },
   "module-rules-real-resource-include": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching not any of these conditions.",
     "path": "module.rules.realResource.include",
     "types": Array [
       Object {
@@ -625,7 +625,7 @@ Object {
     ],
   },
   "module-rules-real-resource-test": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.realResource.test",
     "types": Array [
       Object {
@@ -635,7 +635,7 @@ Object {
     ],
   },
   "module-rules-resource": Object {
-    "description": undefined,
+    "description": "Match the resource path of the module.",
     "path": "module.rules.resource",
     "types": Array [
       Object {
@@ -645,7 +645,7 @@ Object {
     ],
   },
   "module-rules-resource-exclude": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.resource.exclude",
     "types": Array [
       Object {
@@ -655,7 +655,7 @@ Object {
     ],
   },
   "module-rules-resource-include": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching not any of these conditions.",
     "path": "module.rules.resource.include",
     "types": Array [
       Object {
@@ -665,7 +665,7 @@ Object {
     ],
   },
   "module-rules-resource-query": Object {
-    "description": undefined,
+    "description": "Match the resource query of the module.",
     "path": "module.rules.resourceQuery",
     "types": Array [
       Object {
@@ -675,7 +675,7 @@ Object {
     ],
   },
   "module-rules-resource-query-exclude": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.resourceQuery.exclude",
     "types": Array [
       Object {
@@ -685,7 +685,7 @@ Object {
     ],
   },
   "module-rules-resource-query-include": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching not any of these conditions.",
     "path": "module.rules.resourceQuery.include",
     "types": Array [
       Object {
@@ -695,7 +695,7 @@ Object {
     ],
   },
   "module-rules-resource-query-test": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.resourceQuery.test",
     "types": Array [
       Object {
@@ -705,7 +705,7 @@ Object {
     ],
   },
   "module-rules-resource-test": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.resource.test",
     "types": Array [
       Object {
@@ -725,7 +725,7 @@ Object {
     ],
   },
   "module-rules-test": Object {
-    "description": undefined,
+    "description": "Shortcut for resource.test.",
     "path": "module.rules.test",
     "types": Array [
       Object {
@@ -735,7 +735,7 @@ Object {
     ],
   },
   "module-rules-test-exclude": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.test.exclude",
     "types": Array [
       Object {
@@ -745,7 +745,7 @@ Object {
     ],
   },
   "module-rules-test-include": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching not any of these conditions.",
     "path": "module.rules.test.include",
     "types": Array [
       Object {
@@ -755,7 +755,7 @@ Object {
     ],
   },
   "module-rules-test-test": Object {
-    "description": undefined,
+    "description": "Exclude all modules matching any of these conditions.",
     "path": "module.rules.test.test",
     "types": Array [
       Object {
@@ -805,7 +805,7 @@ Object {
     ],
   },
   "module-rules-use-options": Object {
-    "description": undefined,
+    "description": "Options passed to a loader.",
     "path": "module.rules.use.options",
     "types": Array [
       Object {
@@ -855,7 +855,7 @@ Object {
     ],
   },
   "module-unknown-context-reg-exp": Object {
-    "description": undefined,
+    "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
     "path": "module.unknownContextRegExp",
     "types": Array [
       Object {
@@ -879,7 +879,7 @@ Object {
     ],
   },
   "module-unsafe-cache": Object {
-    "description": undefined,
+    "description": "Cache the resolving of module requests.",
     "path": "module.unsafeCache",
     "types": Array [
       Object {
@@ -929,7 +929,7 @@ Object {
     ],
   },
   "node": Object {
-    "description": undefined,
+    "description": "Include polyfills or mocks for various node stuff.",
     "path": "node",
     "types": Array [
       Object {
@@ -1095,7 +1095,7 @@ Object {
     ],
   },
   "optimization-node-env": Object {
-    "description": undefined,
+    "description": "Set process.env.NODE_ENV to a specific value.",
     "path": "optimization.nodeEnv",
     "types": Array [
       Object {
@@ -1149,7 +1149,7 @@ Object {
     ],
   },
   "optimization-runtime-chunk": Object {
-    "description": undefined,
+    "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps.",
     "path": "optimization.runtimeChunk",
     "types": Array [
       Object {
@@ -1163,7 +1163,7 @@ Object {
     ],
   },
   "optimization-runtime-chunk-name": Object {
-    "description": undefined,
+    "description": "The name or name factory for the runtime chunks.",
     "path": "optimization.runtimeChunk.name",
     "types": Array [
       Object {
@@ -1183,7 +1183,7 @@ Object {
     ],
   },
   "optimization-split-chunks": Object {
-    "description": undefined,
+    "description": "Optimize duplication and caching by splitting chunks by shared modules and cache group.",
     "path": "optimization.splitChunks",
     "types": Array [
       Object {
@@ -1203,7 +1203,7 @@ Object {
     ],
   },
   "optimization-split-chunks-chunks": Object {
-    "description": undefined,
+    "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
     "path": "optimization.splitChunks.chunks",
     "types": Array [
       Object {
@@ -1263,7 +1263,7 @@ Object {
     ],
   },
   "optimization-split-chunks-filename": Object {
-    "description": undefined,
+    "description": "Sets the template for the filename for created chunks.",
     "path": "optimization.splitChunks.filename",
     "types": Array [
       Object {
@@ -1363,7 +1363,7 @@ Object {
     ],
   },
   "optimization-split-chunks-name": Object {
-    "description": undefined,
+    "description": "Give chunks created a name (chunks with equal name are merged).",
     "path": "optimization.splitChunks.name",
     "types": Array [
       Object {
@@ -1387,7 +1387,7 @@ Object {
     ],
   },
   "output-asset-module-filename": Object {
-    "description": undefined,
+    "description": "The filename of asset modules as relative path inside the \`output.path\` directory.",
     "path": "output.assetModuleFilename",
     "types": Array [
       Object {
@@ -1501,7 +1501,7 @@ Object {
     ],
   },
   "output-devtool-fallback-module-filename-template": Object {
-    "description": undefined,
+    "description": "Similar to \`output.devtoolModuleFilenameTemplate\`, but used in the case of duplicate module identifiers.",
     "path": "output.devtoolFallbackModuleFilenameTemplate",
     "types": Array [
       Object {
@@ -1511,7 +1511,7 @@ Object {
     ],
   },
   "output-devtool-module-filename-template": Object {
-    "description": undefined,
+    "description": "Filename template string of function for the sources array in a generated SourceMap.",
     "path": "output.devtoolModuleFilenameTemplate",
     "types": Array [
       Object {
@@ -1531,7 +1531,7 @@ Object {
     ],
   },
   "output-ecma-version": Object {
-    "description": undefined,
+    "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
     "path": "output.ecmaVersion",
     "types": Array [
       Object {
@@ -1551,7 +1551,7 @@ Object {
     ],
   },
   "output-filename": Object {
-    "description": undefined,
+    "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
     "path": "output.filename",
     "types": Array [
       Object {
@@ -1591,7 +1591,7 @@ Object {
     ],
   },
   "output-hash-function": Object {
-    "description": undefined,
+    "description": "Algorithm used for generation the hash (see node.js crypto package).",
     "path": "output.hashFunction",
     "types": Array [
       Object {
@@ -1675,7 +1675,7 @@ Object {
     ],
   },
   "output-library": Object {
-    "description": undefined,
+    "description": "The name of the library (some types allow unnamed libraries too). A part of the library name.",
     "path": "output.library",
     "types": Array [
       Object {
@@ -1755,7 +1755,7 @@ Object {
     ],
   },
   "output-library-export": Object {
-    "description": undefined,
+    "description": "Specify which export should be exposed as library.",
     "path": "output.library.export",
     "types": Array [
       Object {
@@ -1765,7 +1765,7 @@ Object {
     ],
   },
   "output-library-name": Object {
-    "description": undefined,
+    "description": "The name of the library (some types allow unnamed libraries too). A part of the library name.",
     "path": "output.library.name",
     "types": Array [
       Object {
@@ -1795,7 +1795,7 @@ Object {
     ],
   },
   "output-library-name-root": Object {
-    "description": undefined,
+    "description": "Name of the property exposed globally by a UMD library.",
     "path": "output.library.name.root",
     "types": Array [
       Object {
@@ -1805,7 +1805,7 @@ Object {
     ],
   },
   "output-library-root": Object {
-    "description": undefined,
+    "description": "Name of the property exposed globally by a UMD library.",
     "path": "output.library.root",
     "types": Array [
       Object {
@@ -1875,7 +1875,7 @@ Object {
     ],
   },
   "output-public-path": Object {
-    "description": undefined,
+    "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
     "path": "output.publicPath",
     "types": Array [
       Object {
@@ -1955,7 +1955,7 @@ Object {
     ],
   },
   "performance": Object {
-    "description": undefined,
+    "description": "Configuration for web performance recommendations.",
     "path": "performance",
     "types": Array [
       Object {
@@ -2009,7 +2009,7 @@ Object {
     ],
   },
   "records-input-path": Object {
-    "description": undefined,
+    "description": "Store compiler state to a json file.",
     "path": "recordsInputPath",
     "types": Array [
       Object {
@@ -2023,7 +2023,7 @@ Object {
     ],
   },
   "records-output-path": Object {
-    "description": undefined,
+    "description": "Load compiler state from a json file.",
     "path": "recordsOutputPath",
     "types": Array [
       Object {
@@ -2037,7 +2037,7 @@ Object {
     ],
   },
   "records-path": Object {
-    "description": undefined,
+    "description": "Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. \`recordsPath\` is used for \`recordsInputPath\` and \`recordsOutputPath\` if they left undefined.",
     "path": "recordsPath",
     "types": Array [
       Object {
@@ -2065,7 +2065,7 @@ Object {
     ],
   },
   "resolve-alias-fields": Object {
-    "description": undefined,
+    "description": "Fields in the description file (package.json) which are used to redirect requests inside the module.",
     "path": "resolve.aliasFields",
     "types": Array [
       Object {
@@ -2115,7 +2115,7 @@ Object {
     ],
   },
   "resolve-description-files": Object {
-    "description": "A non-empty string. Filenames used to find a description file.",
+    "description": "Filenames used to find a description file.",
     "path": "resolve.descriptionFiles",
     "types": Array [
       Object {
@@ -2135,7 +2135,7 @@ Object {
     ],
   },
   "resolve-extensions": Object {
-    "description": "A non-empty string. Extensions added to the request when trying to find the file.",
+    "description": "Extensions added to the request when trying to find the file.",
     "path": "resolve.extensions",
     "types": Array [
       Object {
@@ -2159,7 +2159,7 @@ Object {
     ],
   },
   "resolve-loader-alias-fields": Object {
-    "description": undefined,
+    "description": "Fields in the description file (package.json) which are used to redirect requests inside the module.",
     "path": "resolveLoader.aliasFields",
     "types": Array [
       Object {
@@ -2209,7 +2209,7 @@ Object {
     ],
   },
   "resolve-loader-description-files": Object {
-    "description": "A non-empty string. Filenames used to find a description file.",
+    "description": "Filenames used to find a description file.",
     "path": "resolveLoader.descriptionFiles",
     "types": Array [
       Object {
@@ -2229,7 +2229,7 @@ Object {
     ],
   },
   "resolve-loader-extensions": Object {
-    "description": "A non-empty string. Extensions added to the request when trying to find the file.",
+    "description": "Extensions added to the request when trying to find the file.",
     "path": "resolveLoader.extensions",
     "types": Array [
       Object {
@@ -2239,7 +2239,7 @@ Object {
     ],
   },
   "resolve-loader-main-fields": Object {
-    "description": undefined,
+    "description": "Field names from the description file (package.json) which are used to find the default entry point.",
     "path": "resolveLoader.mainFields",
     "types": Array [
       Object {
@@ -2249,7 +2249,7 @@ Object {
     ],
   },
   "resolve-loader-main-files": Object {
-    "description": "A non-empty string. Filenames used to find the default entry point if there is no description file or main field.",
+    "description": "Filenames used to find the default entry point if there is no description file or main field.",
     "path": "resolveLoader.mainFiles",
     "types": Array [
       Object {
@@ -2259,7 +2259,7 @@ Object {
     ],
   },
   "resolve-loader-modules": Object {
-    "description": "A non-empty string. Folder names or directory paths where to find modules.",
+    "description": "Folder names or directory paths where to find modules.",
     "path": "resolveLoader.modules",
     "types": Array [
       Object {
@@ -2279,7 +2279,7 @@ Object {
     ],
   },
   "resolve-loader-unsafe-cache": Object {
-    "description": undefined,
+    "description": "Enable caching of successfully resolved requests (cache entries are not revalidated).",
     "path": "resolveLoader.unsafeCache",
     "types": Array [
       Object {
@@ -2299,7 +2299,7 @@ Object {
     ],
   },
   "resolve-main-fields": Object {
-    "description": undefined,
+    "description": "Field names from the description file (package.json) which are used to find the default entry point.",
     "path": "resolve.mainFields",
     "types": Array [
       Object {
@@ -2309,7 +2309,7 @@ Object {
     ],
   },
   "resolve-main-files": Object {
-    "description": "A non-empty string. Filenames used to find the default entry point if there is no description file or main field.",
+    "description": "Filenames used to find the default entry point if there is no description file or main field.",
     "path": "resolve.mainFiles",
     "types": Array [
       Object {
@@ -2319,7 +2319,7 @@ Object {
     ],
   },
   "resolve-modules": Object {
-    "description": "A non-empty string. Folder names or directory paths where to find modules.",
+    "description": "Folder names or directory paths where to find modules.",
     "path": "resolve.modules",
     "types": Array [
       Object {
@@ -2339,7 +2339,7 @@ Object {
     ],
   },
   "resolve-unsafe-cache": Object {
-    "description": undefined,
+    "description": "Enable caching of successfully resolved requests (cache entries are not revalidated).",
     "path": "resolve.unsafeCache",
     "types": Array [
       Object {
@@ -2359,7 +2359,7 @@ Object {
     ],
   },
   "stats": Object {
-    "description": undefined,
+    "description": "Stats options object or preset name.",
     "path": "stats",
     "types": Array [
       Object {
@@ -2653,7 +2653,7 @@ Object {
     ],
   },
   "stats-exclude": Object {
-    "description": undefined,
+    "description": "Filtering value, regexp or function. Please use excludeModules instead.",
     "path": "stats.exclude",
     "types": Array [
       Object {
@@ -2667,7 +2667,7 @@ Object {
     ],
   },
   "stats-exclude-assets": Object {
-    "description": undefined,
+    "description": "Filtering value, regexp or function.",
     "path": "stats.excludeAssets",
     "types": Array [
       Object {
@@ -2677,7 +2677,7 @@ Object {
     ],
   },
   "stats-exclude-modules": Object {
-    "description": undefined,
+    "description": "Filtering value, regexp or function. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
     "path": "stats.excludeModules",
     "types": Array [
       Object {
@@ -2725,7 +2725,7 @@ Object {
     ],
   },
   "stats-logging-debug": Object {
-    "description": undefined,
+    "description": "Filtering value, regexp or function. Enable/Disable debug logging for all loggers.",
     "path": "stats.loggingDebug",
     "types": Array [
       Object {
@@ -2849,7 +2849,7 @@ Object {
     ],
   },
   "stats-preset": Object {
-    "description": undefined,
+    "description": "Preset for the default values.",
     "path": "stats.preset",
     "types": Array [
       Object {
@@ -2953,7 +2953,7 @@ Object {
     ],
   },
   "stats-warnings-filter": Object {
-    "description": undefined,
+    "description": "Filtering value, regexp or function.",
     "path": "stats.warningsFilter",
     "types": Array [
       Object {
@@ -2963,7 +2963,7 @@ Object {
     ],
   },
   "target": Object {
-    "description": undefined,
+    "description": "Environment to build for.",
     "path": "target",
     "types": Array [
       Object {
