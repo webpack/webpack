@@ -267,11 +267,11 @@ Object {
     ],
   },
   "externals": Object {
-    "description": "An exact matched dependency becomes external. The same string is used as external dependency.",
+    "description": "An exact matched dependency becomes external. The same string is used as external dependency. Every matched dependency becomes external.",
     "path": "externals",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -291,7 +291,7 @@ Object {
     "path": "infrastructureLogging.debug",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "string",
       },
       Object {
@@ -313,146 +313,6 @@ Object {
   "mode": Object {
     "description": "Enable production optimizations or development hints.",
     "path": "mode",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-compiler": Object {
-    "description": undefined,
-    "path": "module.defaultRules.compiler",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-enforce": Object {
-    "description": "Enforce this rule as pre or post step.",
-    "path": "module.defaultRules.enforce",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-exclude": Object {
-    "description": undefined,
-    "path": "module.defaultRules.exclude",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-include": Object {
-    "description": undefined,
-    "path": "module.defaultRules.include",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-issuer": Object {
-    "description": undefined,
-    "path": "module.defaultRules.issuer",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-loader": Object {
-    "description": "A loader request.",
-    "path": "module.defaultRules.loader",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-options": Object {
-    "description": undefined,
-    "path": "module.defaultRules.options",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-real-resource": Object {
-    "description": undefined,
-    "path": "module.defaultRules.realResource",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-resource": Object {
-    "description": undefined,
-    "path": "module.defaultRules.resource",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-resource-query": Object {
-    "description": undefined,
-    "path": "module.defaultRules.resourceQuery",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-side-effects": Object {
-    "description": "Flags a module as with or without side effects.",
-    "path": "module.defaultRules.sideEffects",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "boolean",
-      },
-    ],
-  },
-  "module-default-rules-test": Object {
-    "description": undefined,
-    "path": "module.defaultRules.test",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-type": Object {
-    "description": "Module type to use for the module.",
-    "path": "module.defaultRules.type",
-    "types": Array [
-      Object {
-        "multiple": false,
-        "type": "string",
-      },
-    ],
-  },
-  "module-default-rules-use": Object {
-    "description": "A loader request.",
-    "path": "module.defaultRules.use",
     "types": Array [
       Object {
         "multiple": false,
@@ -488,6 +348,10 @@ Object {
         "multiple": false,
         "type": "boolean",
       },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
     ],
   },
   "module-expr-context-request": Object {
@@ -501,7 +365,7 @@ Object {
     ],
   },
   "module-no-parse": Object {
-    "description": "An absolute path, when the module starts with this path it is not parsed.",
+    "description": "A regular expression, when matched the module is not parsed. Don't parse files matching. It's matched against the full resolved request. An absolute path, when the module starts with this path it is not parsed.",
     "path": "module.noParse",
     "types": Array [
       Object {
@@ -515,7 +379,37 @@ Object {
     "path": "module.rules.compiler",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-compiler-exclude": Object {
+    "description": undefined,
+    "path": "module.rules.compiler.exclude",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-compiler-include": Object {
+    "description": undefined,
+    "path": "module.rules.compiler.include",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-compiler-test": Object {
+    "description": undefined,
+    "path": "module.rules.compiler.test",
+    "types": Array [
+      Object {
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -525,7 +419,7 @@ Object {
     "path": "module.rules.enforce",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -535,7 +429,37 @@ Object {
     "path": "module.rules.exclude",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-exclude-exclude": Object {
+    "description": undefined,
+    "path": "module.rules.exclude.exclude",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-exclude-include": Object {
+    "description": undefined,
+    "path": "module.rules.exclude.include",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-exclude-test": Object {
+    "description": undefined,
+    "path": "module.rules.exclude.test",
+    "types": Array [
+      Object {
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -545,7 +469,37 @@ Object {
     "path": "module.rules.include",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-include-exclude": Object {
+    "description": undefined,
+    "path": "module.rules.include.exclude",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-include-include": Object {
+    "description": undefined,
+    "path": "module.rules.include.include",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-include-test": Object {
+    "description": undefined,
+    "path": "module.rules.include.test",
+    "types": Array [
+      Object {
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -555,7 +509,37 @@ Object {
     "path": "module.rules.issuer",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-issuer-exclude": Object {
+    "description": undefined,
+    "path": "module.rules.issuer.exclude",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-issuer-include": Object {
+    "description": undefined,
+    "path": "module.rules.issuer.include",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-issuer-test": Object {
+    "description": undefined,
+    "path": "module.rules.issuer.test",
+    "types": Array [
+      Object {
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -565,7 +549,37 @@ Object {
     "path": "module.rules.loader",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-loader-ident": Object {
+    "description": "Unique loader options identifier.",
+    "path": "module.rules.loader.ident",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-loader-loader": Object {
+    "description": "A loader request.",
+    "path": "module.rules.loader.loader",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-loader-options": Object {
+    "description": undefined,
+    "path": "module.rules.loader.options",
+    "types": Array [
+      Object {
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -575,7 +589,7 @@ Object {
     "path": "module.rules.options",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -585,7 +599,37 @@ Object {
     "path": "module.rules.realResource",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-real-resource-exclude": Object {
+    "description": undefined,
+    "path": "module.rules.realResource.exclude",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-real-resource-include": Object {
+    "description": undefined,
+    "path": "module.rules.realResource.include",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-real-resource-test": Object {
+    "description": undefined,
+    "path": "module.rules.realResource.test",
+    "types": Array [
+      Object {
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -595,7 +639,27 @@ Object {
     "path": "module.rules.resource",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-resource-exclude": Object {
+    "description": undefined,
+    "path": "module.rules.resource.exclude",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-resource-include": Object {
+    "description": undefined,
+    "path": "module.rules.resource.include",
+    "types": Array [
+      Object {
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -605,7 +669,47 @@ Object {
     "path": "module.rules.resourceQuery",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-resource-query-exclude": Object {
+    "description": undefined,
+    "path": "module.rules.resourceQuery.exclude",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-resource-query-include": Object {
+    "description": undefined,
+    "path": "module.rules.resourceQuery.include",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-resource-query-test": Object {
+    "description": undefined,
+    "path": "module.rules.resourceQuery.test",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-resource-test": Object {
+    "description": undefined,
+    "path": "module.rules.resource.test",
+    "types": Array [
+      Object {
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -615,7 +719,7 @@ Object {
     "path": "module.rules.sideEffects",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "boolean",
       },
     ],
@@ -625,7 +729,37 @@ Object {
     "path": "module.rules.test",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-test-exclude": Object {
+    "description": undefined,
+    "path": "module.rules.test.exclude",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-test-include": Object {
+    "description": undefined,
+    "path": "module.rules.test.include",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-test-test": Object {
+    "description": undefined,
+    "path": "module.rules.test.test",
+    "types": Array [
+      Object {
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -635,7 +769,7 @@ Object {
     "path": "module.rules.type",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -645,7 +779,37 @@ Object {
     "path": "module.rules.use",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-use-ident": Object {
+    "description": "Unique loader options identifier.",
+    "path": "module.rules.use.ident",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-use-loader": Object {
+    "description": "A loader request.",
+    "path": "module.rules.use.loader",
+    "types": Array [
+      Object {
+        "multiple": true,
+        "type": "string",
+      },
+    ],
+  },
+  "module-rules-use-options": Object {
+    "description": undefined,
+    "path": "module.rules.use.options",
+    "types": Array [
+      Object {
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -698,6 +862,10 @@ Object {
         "multiple": false,
         "type": "boolean",
       },
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
     ],
   },
   "module-unknown-context-request": Object {
@@ -740,6 +908,16 @@ Object {
       },
     ],
   },
+  "module-wrapped-context-reg-exp": Object {
+    "description": "Set the inner regular expression for partial dynamic dependencies.",
+    "path": "module.wrappedContextRegExp",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "string",
+      },
+    ],
+  },
   "name": Object {
     "description": "Name of the configuration. Used when loading multiple configurations.",
     "path": "name",
@@ -760,7 +938,7 @@ Object {
       },
     ],
   },
-  "node-__dirname": Object {
+  "node-dirname": Object {
     "description": "Include a polyfill for the '__dirname' variable.",
     "path": "node.__dirname",
     "types": Array [
@@ -774,7 +952,7 @@ Object {
       },
     ],
   },
-  "node-__filename": Object {
+  "node-filename": Object {
     "description": "Include a polyfill for the '__filename' variable.",
     "path": "node.__filename",
     "types": Array [
@@ -1873,7 +2051,7 @@ Object {
     ],
   },
   "resolve-alias-alias": Object {
-    "description": "New request. One choice of request. Ignore request (replace with empty module).",
+    "description": "New request. Ignore request (replace with empty module).",
     "path": "resolve.alias.alias",
     "types": Array [
       Object {
@@ -1881,7 +2059,7 @@ Object {
         "type": "string",
       },
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "boolean",
       },
     ],
@@ -1901,7 +2079,7 @@ Object {
     "path": "resolve.alias.name",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -1911,7 +2089,7 @@ Object {
     "path": "resolve.alias.onlyModule",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "boolean",
       },
     ],
@@ -1937,7 +2115,7 @@ Object {
     ],
   },
   "resolve-description-files": Object {
-    "description": "A non-empty string.",
+    "description": "A non-empty string. Filenames used to find a description file.",
     "path": "resolve.descriptionFiles",
     "types": Array [
       Object {
@@ -1957,7 +2135,7 @@ Object {
     ],
   },
   "resolve-extensions": Object {
-    "description": "A non-empty string.",
+    "description": "A non-empty string. Extensions added to the request when trying to find the file.",
     "path": "resolve.extensions",
     "types": Array [
       Object {
@@ -1967,7 +2145,7 @@ Object {
     ],
   },
   "resolve-loader-alias-alias": Object {
-    "description": "New request. One choice of request. Ignore request (replace with empty module).",
+    "description": "New request. Ignore request (replace with empty module).",
     "path": "resolveLoader.alias.alias",
     "types": Array [
       Object {
@@ -1975,7 +2153,7 @@ Object {
         "type": "string",
       },
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "boolean",
       },
     ],
@@ -1995,7 +2173,7 @@ Object {
     "path": "resolveLoader.alias.name",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -2005,7 +2183,7 @@ Object {
     "path": "resolveLoader.alias.onlyModule",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "boolean",
       },
     ],
@@ -2031,7 +2209,7 @@ Object {
     ],
   },
   "resolve-loader-description-files": Object {
-    "description": "A non-empty string.",
+    "description": "A non-empty string. Filenames used to find a description file.",
     "path": "resolveLoader.descriptionFiles",
     "types": Array [
       Object {
@@ -2051,7 +2229,7 @@ Object {
     ],
   },
   "resolve-loader-extensions": Object {
-    "description": "A non-empty string.",
+    "description": "A non-empty string. Extensions added to the request when trying to find the file.",
     "path": "resolveLoader.extensions",
     "types": Array [
       Object {
@@ -2071,7 +2249,7 @@ Object {
     ],
   },
   "resolve-loader-main-files": Object {
-    "description": "A non-empty string.",
+    "description": "A non-empty string. Filenames used to find the default entry point if there is no description file or main field.",
     "path": "resolveLoader.mainFiles",
     "types": Array [
       Object {
@@ -2081,7 +2259,7 @@ Object {
     ],
   },
   "resolve-loader-modules": Object {
-    "description": "A non-empty string.",
+    "description": "A non-empty string. Folder names or directory paths where to find modules.",
     "path": "resolveLoader.modules",
     "types": Array [
       Object {
@@ -2131,7 +2309,7 @@ Object {
     ],
   },
   "resolve-main-files": Object {
-    "description": "A non-empty string.",
+    "description": "A non-empty string. Filenames used to find the default entry point if there is no description file or main field.",
     "path": "resolve.mainFiles",
     "types": Array [
       Object {
@@ -2141,7 +2319,7 @@ Object {
     ],
   },
   "resolve-modules": Object {
-    "description": "A non-empty string.",
+    "description": "A non-empty string. Folder names or directory paths where to find modules.",
     "path": "resolve.modules",
     "types": Array [
       Object {
@@ -2479,7 +2657,7 @@ Object {
     "path": "stats.exclude",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "string",
       },
       Object {
@@ -2493,7 +2671,7 @@ Object {
     "path": "stats.excludeAssets",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -2503,7 +2681,7 @@ Object {
     "path": "stats.excludeModules",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "string",
       },
       Object {
@@ -2551,7 +2729,7 @@ Object {
     "path": "stats.loggingDebug",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "string",
       },
       Object {
@@ -2779,7 +2957,7 @@ Object {
     "path": "stats.warningsFilter",
     "types": Array [
       Object {
-        "multiple": false,
+        "multiple": true,
         "type": "string",
       },
     ],
@@ -2815,7 +2993,7 @@ Object {
     ],
   },
   "watch-options-ignored": Object {
-    "description": "A single glob pattern for files that should be ignored from watching. A non-empty string.",
+    "description": "A single glob pattern for files that should be ignored from watching. Ignore some files from watching (glob pattern).",
     "path": "watchOptions.ignored",
     "types": Array [
       Object {

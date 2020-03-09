@@ -2,6 +2,6 @@ const webpack = require("../");
 
 describe("Cli", () => {
 	it("should generate the correct cli flags", () => {
-		expect(webpack.cli.getFlags()).toMatchSnapshot();
+		expect(webpack.cli.getArguments()).toMatchSnapshot();
 	});
 });
