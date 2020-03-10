@@ -170,9 +170,9 @@ function traverse(schemaPart, schemaPath = "", inArray = false) {
 	const maybeOf = schemaPart.oneOf || schemaPart.anyOf || schemaPart.allOf;
 
 	if (maybeOf) {
-		const items = maybeOf;
-
-		items.forEach((item, index) => traverse(items[index], schemaPath, inArray));
+		maybeOf.forEach((item, index) =>
+			traverse(maybeOf[index], schemaPath, inArray)
+		);
 
 		return;
 	}
