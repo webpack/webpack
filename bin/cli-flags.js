@@ -1,3 +1,9 @@
+/**
+ * This file was automatically generated.
+ * DO NOT MODIFY BY HAND.
+ * Run `yarn special-lint-fix` to update
+ */
+
 module.exports = {
 	amd: {
 		types: ["boolean"],
