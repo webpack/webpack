@@ -720,8 +720,8 @@ module.exports = {
 			}
 		]
 	},
-	"node-__dirname": {
-		path: "node.__dirname",
+	"node-dirname": {
+		path: "node.dirname",
 		description: "Include a polyfill for the '__dirname' variable",
 		types: [
 			{
@@ -730,8 +730,8 @@ module.exports = {
 			}
 		]
 	},
-	"node-__filename": {
-		path: "node.__filename",
+	"node-filename": {
+		path: "node.filename",
 		description: "Include a polyfill for the '__filename' variable",
 		types: [
 			{

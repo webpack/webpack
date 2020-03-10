@@ -106,8 +106,8 @@ const ignoredSchemaRefs = new Set([
 	"#/definitions/RuleSetCondition"
 ]);
 const specialSchemaPathNames = {
-	"node/__dirname": "node/dirname",
-	"node/__filename": "node/filename"
+	"node.__dirname": "node.dirname",
+	"node.__filename": "node.filename"
 };
 
 // TODO support `not` and `if/then/else`
