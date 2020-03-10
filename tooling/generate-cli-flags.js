@@ -64,7 +64,47 @@ function addFlag(schemaPath, schemaPart, multiple) {
 	}
 }
 
-const ignoredSchemaPaths = new Set(["devServer"]);
+const ignoredSchemaPaths = new Set([
+	"devServer",
+	"module.defaultRules.compiler",
+	"module.defaultRules.rules",
+	"module.defaultRules.oneOf",
+	"module.defaultRules.loader",
+	"module.defaultRules.use.loader",
+	"module.defaultRules.use.options",
+	"module.rules.compiler",
+	"module.rules.rules",
+	"module.rules.oneOf",
+	"module.rules.loader",
+	"module.rules.use.loader",
+	"module.rules.use.options",
+	...["and", "exclude", "include", "not", "or", "test"].reduce(
+		(accumulator, currentValue) =>
+			accumulator.concat(
+				`module.defaultRules.test.${currentValue}`,
+				`module.defaultRules.include.${currentValue}`,
+				`module.defaultRules.exclude.${currentValue}`,
+				`module.defaultRules.issuer.${currentValue}`,
+				`module.defaultRules.resource.${currentValue}`,
+				`module.defaultRules.resourceQuery.${currentValue}`,
+				`module.defaultRules.realResource.${currentValue}`,
+				`module.defaultRules.use.${currentValue}`,
+				`module.rules.test.${currentValue}`,
+				`module.rules.include.${currentValue}`,
+				`module.rules.exclude.${currentValue}`,
+				`module.rules.issuer.${currentValue}`,
+				`module.rules.resource.${currentValue}`,
+				`module.rules.resourceQuery.${currentValue}`,
+				`module.rules.realResource.${currentValue}`,
+				`module.rules.use.${currentValue}`
+			),
+		[]
+	)
+]);
+const ignoredSchemaRefs = new Set([
+	"#/definitions/RuleSetConditionsAbsolute",
+	"#/definitions/RuleSetCondition"
+]);
 const specialSchemaPathNames = {
 	"node/__dirname": "node/dirname",
 	"node/__filename": "node/filename"
@@ -72,16 +112,16 @@ const specialSchemaPathNames = {
 
 // TODO support `not` and `if/then/else`
 // TODO support `const`, but we don't use it on our schema
-function traverse(schemaPart, schemaPath = "", inArray = false, depth = 0) {
+function traverse(schemaPart, schemaPath = "", inArray = false) {
 	if (ignoredSchemaPaths.has(schemaPath)) {
 		return;
 	}
 
-	if (depth === 10) {
-		return;
-	}
-
 	while (schemaPart.$ref) {
+		if (ignoredSchemaRefs.has(schemaPart.$ref)) {
+			return;
+		}
+
 		schemaPart = getSchemaPart(schemaPart.$ref);
 	}
 
@@ -105,8 +145,7 @@ function traverse(schemaPart, schemaPath = "", inArray = false, depth = 0) {
 				traverse(
 					schemaPart.properties[property],
 					schemaPath ? `${schemaPath}.${property}` : property,
-					inArray,
-					depth + 1
+					inArray
 				)
 			);
 		}
@@ -116,14 +155,12 @@ function traverse(schemaPart, schemaPath = "", inArray = false, depth = 0) {
 
 	if (schemaPart.type === "array") {
 		if (Array.isArray(schemaPart.items)) {
-			schemaPart.items.forEach(item =>
-				traverse(item, schemaPath, true, depth + 1)
-			);
+			schemaPart.items.forEach(item => traverse(item, schemaPath, true));
 
 			return;
 		}
 
-		traverse(schemaPart.items, schemaPath, true, depth + 1);
+		traverse(schemaPart.items, schemaPath, true);
 
 		return;
 	}
@@ -133,9 +170,7 @@ function traverse(schemaPart, schemaPath = "", inArray = false, depth = 0) {
 	if (maybeOf) {
 		const items = maybeOf;
 
-		items.forEach((item, index) =>
-			traverse(items[index], schemaPath, inArray, depth + 1)
-		);
+		items.forEach((item, index) => traverse(items[index], schemaPath, inArray));
 
 		return;
 	}
