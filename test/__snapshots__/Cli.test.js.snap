@@ -4,6 +4,9 @@ exports[`Cli should generate the correct cli flags 1`] = `
 Object {
   "amd": Object {
     "description": "You can pass \`false\` to disable AMD support.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "amd",
     "types": Array [
       Object {
@@ -14,6 +17,9 @@ Object {
   },
   "bail": Object {
     "description": "Report the first error as a hard error instead of tolerating it.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "bail",
     "types": Array [
       Object {
@@ -24,6 +30,10 @@ Object {
   },
   "cache": Object {
     "description": "Disable caching. Enable in memory caching.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "cache",
     "types": Array [
       Object {
@@ -34,6 +44,9 @@ Object {
   },
   "cache-cache-directory": Object {
     "description": "Base directory for the cache (defaults to node_modules/.cache/webpack).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "cache.cacheDirectory",
     "types": Array [
       Object {
@@ -44,6 +57,9 @@ Object {
   },
   "cache-cache-location": Object {
     "description": "Locations for the cache (defaults to cacheDirectory / name).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "cache.cacheLocation",
     "types": Array [
       Object {
@@ -54,6 +70,9 @@ Object {
   },
   "cache-hash-algorithm": Object {
     "description": "Algorithm used for generation the hash (see node.js crypto package).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "cache.hashAlgorithm",
     "types": Array [
       Object {
@@ -64,6 +83,9 @@ Object {
   },
   "cache-idle-timeout": Object {
     "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "cache.idleTimeout",
     "types": Array [
       Object {
@@ -74,6 +96,9 @@ Object {
   },
   "cache-idle-timeout-for-initial-store": Object {
     "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "cache.idleTimeoutForInitialStore",
     "types": Array [
       Object {
@@ -84,6 +109,10 @@ Object {
   },
   "cache-immutable-paths": Object {
     "description": "A path to a immutable directory (usually a package manager cache directory).",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "cache.immutablePaths",
     "types": Array [
       Object {
@@ -92,8 +121,25 @@ Object {
       },
     ],
   },
+  "cache-immutable-paths-reset": Object {
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "cache.immutablePaths.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "cache-managed-paths": Object {
     "description": "A path to a managed directory (usually a node_modules directory).",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "cache.managedPaths",
     "types": Array [
       Object {
@@ -102,8 +148,24 @@ Object {
       },
     ],
   },
+  "cache-managed-paths-reset": Object {
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not being modified otherwise.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "cache.managedPaths.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "cache-name": Object {
     "description": "Name for the cache. Different names will lead to different coexisting caches.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "cache.name",
     "types": Array [
       Object {
@@ -114,6 +176,9 @@ Object {
   },
   "cache-store": Object {
     "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "cache.store",
     "types": Array [
       Object {
@@ -124,6 +189,10 @@ Object {
   },
   "cache-type": Object {
     "description": "In memory caching. Filesystem caching.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "cache.type",
     "types": Array [
       Object {
@@ -134,6 +203,9 @@ Object {
   },
   "cache-version": Object {
     "description": "Version of the cache data. Different versions won't allow to reuse the cache and override existing content. Update the version when config changed in a way which doesn't allow to reuse cache. This will invalidate the cache.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "cache.version",
     "types": Array [
       Object {
@@ -144,6 +216,9 @@ Object {
   },
   "context": Object {
     "description": "The base directory (absolute path!) for resolving the \`entry\` option. If \`output.pathinfo\` is set, the included pathinfo is shortened to this directory.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "context",
     "types": Array [
       Object {
@@ -154,6 +229,9 @@ Object {
   },
   "dependencies": Object {
     "description": "References to another configuration to depend on.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "dependencies",
     "types": Array [
       Object {
@@ -162,8 +240,25 @@ Object {
       },
     ],
   },
+  "dependencies-reset": Object {
+    "description": "Clear all items provided in configuration. References to other configurations to depend on.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "dependencies.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "devtool": Object {
     "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "devtool",
     "types": Array [
       Object {
@@ -177,7 +272,10 @@ Object {
     ],
   },
   "entry": Object {
-    "description": "The string is resolved to a module which is loaded upon startup. A non-empty string.",
+    "description": "All modules are loaded upon startup. The last one is exported.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "entry",
     "types": Array [
       Object {
@@ -186,8 +284,24 @@ Object {
       },
     ],
   },
+  "entry-reset": Object {
+    "description": "Clear all items provided in configuration. All modules are loaded upon startup. The last one is exported.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "entry.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "experiments-asset": Object {
     "description": "Allow module type 'asset' to generate assets.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "experiments.asset",
     "types": Array [
       Object {
@@ -198,6 +312,9 @@ Object {
   },
   "experiments-async-web-assembly": Object {
     "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "experiments.asyncWebAssembly",
     "types": Array [
       Object {
@@ -208,6 +325,9 @@ Object {
   },
   "experiments-import-async": Object {
     "description": "Allow 'import/export' syntax to import async modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "experiments.importAsync",
     "types": Array [
       Object {
@@ -218,6 +338,9 @@ Object {
   },
   "experiments-import-await": Object {
     "description": "Allow 'import/export await' syntax to import async modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "experiments.importAwait",
     "types": Array [
       Object {
@@ -228,6 +351,9 @@ Object {
   },
   "experiments-mjs": Object {
     "description": "Support .mjs files as way to define strict ESM file (node.js).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "experiments.mjs",
     "types": Array [
       Object {
@@ -238,6 +364,9 @@ Object {
   },
   "experiments-output-module": Object {
     "description": "Allow outputing javascript files as module source type.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "experiments.outputModule",
     "types": Array [
       Object {
@@ -248,6 +377,9 @@ Object {
   },
   "experiments-sync-web-assembly": Object {
     "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "experiments.syncWebAssembly",
     "types": Array [
       Object {
@@ -258,6 +390,9 @@ Object {
   },
   "experiments-top-level-await": Object {
     "description": "Allow using top-level-await in EcmaScript Modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "experiments.topLevelAwait",
     "types": Array [
       Object {
@@ -268,6 +403,12 @@ Object {
   },
   "externals": Object {
     "description": "An exact matched dependency becomes external. The same string is used as external dependency. Every matched dependency becomes external.",
+    "handlers": Array [
+      [Function],
+      [Function],
+      [Function],
+      [Function],
+    ],
     "path": "externals",
     "types": Array [
       Object {
@@ -276,8 +417,24 @@ Object {
       },
     ],
   },
+  "externals-reset": Object {
+    "description": "Clear all items provided in configuration. Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on \`output.libraryTarget\`.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "externals.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "externals-type": Object {
     "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "externalsType",
     "types": Array [
       Object {
@@ -287,7 +444,14 @@ Object {
     ],
   },
   "infrastructure-logging-debug": Object {
-    "description": "Filtering value, regexp or function. Enable/Disable debug logging for all loggers.",
+    "description": "Enable debug logging for specific loggers. Enable/Disable debug logging for all loggers.",
+    "handlers": Array [
+      [Function],
+      [Function],
+      [Function],
+      [Function],
+      [Function],
+    ],
     "path": "infrastructureLogging.debug",
     "types": Array [
       Object {
@@ -300,8 +464,24 @@ Object {
       },
     ],
   },
+  "infrastructure-logging-debug-reset": Object {
+    "description": "Clear all items provided in configuration. Enable debug logging for specific loggers.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "infrastructureLogging.debug.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "infrastructure-logging-level": Object {
     "description": "Log level.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "infrastructureLogging.level",
     "types": Array [
       Object {
@@ -312,6 +492,9 @@ Object {
   },
   "mode": Object {
     "description": "Enable production optimizations or development hints.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "mode",
     "types": Array [
       Object {
@@ -322,6 +505,9 @@ Object {
   },
   "module-expr-context-critical": Object {
     "description": "Enable warnings for full dynamic dependencies.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.exprContextCritical",
     "types": Array [
       Object {
@@ -332,6 +518,9 @@ Object {
   },
   "module-expr-context-recursive": Object {
     "description": "Enable recursive directory lookup for full dynamic dependencies.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.exprContextRecursive",
     "types": Array [
       Object {
@@ -342,6 +531,10 @@ Object {
   },
   "module-expr-context-reg-exp": Object {
     "description": "Sets the default regular expression for full dynamic dependencies.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.exprContextRegExp",
     "types": Array [
       Object {
@@ -356,6 +549,9 @@ Object {
   },
   "module-expr-context-request": Object {
     "description": "Set the default request for full dynamic dependencies.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.exprContextRequest",
     "types": Array [
       Object {
@@ -366,6 +562,12 @@ Object {
   },
   "module-no-parse": Object {
     "description": "A regular expression, when matched the module is not parsed. Don't parse files matching. It's matched against the full resolved request. An absolute path, when the module starts with this path it is not parsed.",
+    "handlers": Array [
+      [Function],
+      [Function],
+      [Function],
+      [Function],
+    ],
     "path": "module.noParse",
     "types": Array [
       Object {
@@ -374,8 +576,25 @@ Object {
       },
     ],
   },
+  "module-no-parse-reset": Object {
+    "description": "Clear all items provided in configuration. Don't parse files matching. It's matched against the full resolved request.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "module.noParse.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "module-rules-compiler": Object {
     "description": "Match the child compiler name.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.compiler",
     "types": Array [
       Object {
@@ -386,6 +605,10 @@ Object {
   },
   "module-rules-compiler-exclude": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.compiler.exclude",
     "types": Array [
       Object {
@@ -396,6 +619,10 @@ Object {
   },
   "module-rules-compiler-include": Object {
     "description": "Exclude all modules matching not any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.compiler.include",
     "types": Array [
       Object {
@@ -406,6 +633,10 @@ Object {
   },
   "module-rules-compiler-test": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.compiler.test",
     "types": Array [
       Object {
@@ -416,6 +647,9 @@ Object {
   },
   "module-rules-enforce": Object {
     "description": "Enforce this rule as pre or post step.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.rules.enforce",
     "types": Array [
       Object {
@@ -426,6 +660,10 @@ Object {
   },
   "module-rules-exclude": Object {
     "description": "Shortcut for resource.exclude.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.exclude",
     "types": Array [
       Object {
@@ -436,6 +674,10 @@ Object {
   },
   "module-rules-exclude-exclude": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.exclude.exclude",
     "types": Array [
       Object {
@@ -446,6 +688,10 @@ Object {
   },
   "module-rules-exclude-include": Object {
     "description": "Exclude all modules matching not any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.exclude.include",
     "types": Array [
       Object {
@@ -456,6 +702,10 @@ Object {
   },
   "module-rules-exclude-test": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.exclude.test",
     "types": Array [
       Object {
@@ -466,6 +716,10 @@ Object {
   },
   "module-rules-include": Object {
     "description": "Shortcut for resource.include.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.include",
     "types": Array [
       Object {
@@ -476,6 +730,10 @@ Object {
   },
   "module-rules-include-exclude": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.include.exclude",
     "types": Array [
       Object {
@@ -486,6 +744,10 @@ Object {
   },
   "module-rules-include-include": Object {
     "description": "Exclude all modules matching not any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.include.include",
     "types": Array [
       Object {
@@ -496,6 +758,10 @@ Object {
   },
   "module-rules-include-test": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.include.test",
     "types": Array [
       Object {
@@ -506,6 +772,10 @@ Object {
   },
   "module-rules-issuer": Object {
     "description": "Match the issuer of the module (The module pointing to this module).",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.issuer",
     "types": Array [
       Object {
@@ -516,6 +786,10 @@ Object {
   },
   "module-rules-issuer-exclude": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.issuer.exclude",
     "types": Array [
       Object {
@@ -526,6 +800,10 @@ Object {
   },
   "module-rules-issuer-include": Object {
     "description": "Exclude all modules matching not any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.issuer.include",
     "types": Array [
       Object {
@@ -536,6 +814,10 @@ Object {
   },
   "module-rules-issuer-test": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.issuer.test",
     "types": Array [
       Object {
@@ -546,6 +828,10 @@ Object {
   },
   "module-rules-loader": Object {
     "description": "A loader request.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.loader",
     "types": Array [
       Object {
@@ -556,6 +842,9 @@ Object {
   },
   "module-rules-loader-ident": Object {
     "description": "Unique loader options identifier.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.rules.loader.ident",
     "types": Array [
       Object {
@@ -566,6 +855,9 @@ Object {
   },
   "module-rules-loader-loader": Object {
     "description": "A loader request.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.rules.loader.loader",
     "types": Array [
       Object {
@@ -576,6 +868,9 @@ Object {
   },
   "module-rules-loader-options": Object {
     "description": "Options passed to a loader.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.rules.loader.options",
     "types": Array [
       Object {
@@ -586,6 +881,9 @@ Object {
   },
   "module-rules-options": Object {
     "description": "Options passed to a loader.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.rules.options",
     "types": Array [
       Object {
@@ -596,6 +894,10 @@ Object {
   },
   "module-rules-real-resource": Object {
     "description": "Match the real resource path of the module.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.realResource",
     "types": Array [
       Object {
@@ -606,6 +908,10 @@ Object {
   },
   "module-rules-real-resource-exclude": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.realResource.exclude",
     "types": Array [
       Object {
@@ -616,6 +922,10 @@ Object {
   },
   "module-rules-real-resource-include": Object {
     "description": "Exclude all modules matching not any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.realResource.include",
     "types": Array [
       Object {
@@ -626,6 +936,10 @@ Object {
   },
   "module-rules-real-resource-test": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.realResource.test",
     "types": Array [
       Object {
@@ -634,8 +948,25 @@ Object {
       },
     ],
   },
+  "module-rules-reset": Object {
+    "description": "Clear all items provided in configuration. A list of rules.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "module.rules.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "module-rules-resource": Object {
     "description": "Match the resource path of the module.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.resource",
     "types": Array [
       Object {
@@ -646,6 +977,10 @@ Object {
   },
   "module-rules-resource-exclude": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.resource.exclude",
     "types": Array [
       Object {
@@ -656,6 +991,10 @@ Object {
   },
   "module-rules-resource-include": Object {
     "description": "Exclude all modules matching not any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.resource.include",
     "types": Array [
       Object {
@@ -666,6 +1005,10 @@ Object {
   },
   "module-rules-resource-query": Object {
     "description": "Match the resource query of the module.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.resourceQuery",
     "types": Array [
       Object {
@@ -676,6 +1019,10 @@ Object {
   },
   "module-rules-resource-query-exclude": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.resourceQuery.exclude",
     "types": Array [
       Object {
@@ -686,6 +1033,10 @@ Object {
   },
   "module-rules-resource-query-include": Object {
     "description": "Exclude all modules matching not any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.resourceQuery.include",
     "types": Array [
       Object {
@@ -696,6 +1047,10 @@ Object {
   },
   "module-rules-resource-query-test": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.resourceQuery.test",
     "types": Array [
       Object {
@@ -706,6 +1061,10 @@ Object {
   },
   "module-rules-resource-test": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.resource.test",
     "types": Array [
       Object {
@@ -716,6 +1075,9 @@ Object {
   },
   "module-rules-side-effects": Object {
     "description": "Flags a module as with or without side effects.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.rules.sideEffects",
     "types": Array [
       Object {
@@ -726,6 +1088,10 @@ Object {
   },
   "module-rules-test": Object {
     "description": "Shortcut for resource.test.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.test",
     "types": Array [
       Object {
@@ -736,6 +1102,10 @@ Object {
   },
   "module-rules-test-exclude": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.test.exclude",
     "types": Array [
       Object {
@@ -746,6 +1116,10 @@ Object {
   },
   "module-rules-test-include": Object {
     "description": "Exclude all modules matching not any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.test.include",
     "types": Array [
       Object {
@@ -756,6 +1130,10 @@ Object {
   },
   "module-rules-test-test": Object {
     "description": "Exclude all modules matching any of these conditions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.rules.test.test",
     "types": Array [
       Object {
@@ -766,6 +1144,9 @@ Object {
   },
   "module-rules-type": Object {
     "description": "Module type to use for the module.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.rules.type",
     "types": Array [
       Object {
@@ -776,6 +1157,9 @@ Object {
   },
   "module-rules-use": Object {
     "description": "A loader request.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.rules.use",
     "types": Array [
       Object {
@@ -786,6 +1170,9 @@ Object {
   },
   "module-rules-use-ident": Object {
     "description": "Unique loader options identifier.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.rules.use.ident",
     "types": Array [
       Object {
@@ -796,6 +1183,9 @@ Object {
   },
   "module-rules-use-loader": Object {
     "description": "A loader request.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.rules.use.loader",
     "types": Array [
       Object {
@@ -806,6 +1196,9 @@ Object {
   },
   "module-rules-use-options": Object {
     "description": "Options passed to a loader.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.rules.use.options",
     "types": Array [
       Object {
@@ -816,6 +1209,9 @@ Object {
   },
   "module-strict-export-presence": Object {
     "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.strictExportPresence",
     "types": Array [
       Object {
@@ -826,6 +1222,9 @@ Object {
   },
   "module-strict-this-context-on-imports": Object {
     "description": "Handle the this context correctly according to the spec for namespace objects.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.strictThisContextOnImports",
     "types": Array [
       Object {
@@ -836,6 +1235,9 @@ Object {
   },
   "module-unknown-context-critical": Object {
     "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.unknownContextCritical",
     "types": Array [
       Object {
@@ -846,6 +1248,9 @@ Object {
   },
   "module-unknown-context-recursive": Object {
     "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.unknownContextRecursive",
     "types": Array [
       Object {
@@ -856,6 +1261,10 @@ Object {
   },
   "module-unknown-context-reg-exp": Object {
     "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "module.unknownContextRegExp",
     "types": Array [
       Object {
@@ -870,6 +1279,9 @@ Object {
   },
   "module-unknown-context-request": Object {
     "description": "Sets the request when using the require function in a not statically analyse-able way.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.unknownContextRequest",
     "types": Array [
       Object {
@@ -880,6 +1292,9 @@ Object {
   },
   "module-unsafe-cache": Object {
     "description": "Cache the resolving of module requests.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.unsafeCache",
     "types": Array [
       Object {
@@ -890,6 +1305,9 @@ Object {
   },
   "module-wrapped-context-critical": Object {
     "description": "Enable warnings for partial dynamic dependencies.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.wrappedContextCritical",
     "types": Array [
       Object {
@@ -900,6 +1318,9 @@ Object {
   },
   "module-wrapped-context-recursive": Object {
     "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.wrappedContextRecursive",
     "types": Array [
       Object {
@@ -910,6 +1331,9 @@ Object {
   },
   "module-wrapped-context-reg-exp": Object {
     "description": "Set the inner regular expression for partial dynamic dependencies.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "module.wrappedContextRegExp",
     "types": Array [
       Object {
@@ -920,6 +1344,9 @@ Object {
   },
   "name": Object {
     "description": "Name of the configuration. Used when loading multiple configurations.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "name",
     "types": Array [
       Object {
@@ -930,6 +1357,9 @@ Object {
   },
   "node": Object {
     "description": "Include polyfills or mocks for various node stuff.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "node",
     "types": Array [
       Object {
@@ -940,6 +1370,9 @@ Object {
   },
   "node-dirname": Object {
     "description": "Include a polyfill for the '__dirname' variable.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "node.__dirname",
     "types": Array [
       Object {
@@ -954,6 +1387,9 @@ Object {
   },
   "node-filename": Object {
     "description": "Include a polyfill for the '__filename' variable.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "node.__filename",
     "types": Array [
       Object {
@@ -968,6 +1404,9 @@ Object {
   },
   "node-global": Object {
     "description": "Include a polyfill for the 'global' variable.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "node.global",
     "types": Array [
       Object {
@@ -978,6 +1417,9 @@ Object {
   },
   "optimization-check-wasm-types": Object {
     "description": "Check for incompatible wasm types when importing/exporting from/to ESM.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.checkWasmTypes",
     "types": Array [
       Object {
@@ -988,6 +1430,9 @@ Object {
   },
   "optimization-chunk-ids": Object {
     "description": "Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.chunkIds",
     "types": Array [
       Object {
@@ -1002,6 +1447,9 @@ Object {
   },
   "optimization-concatenate-modules": Object {
     "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.concatenateModules",
     "types": Array [
       Object {
@@ -1012,6 +1460,9 @@ Object {
   },
   "optimization-flag-included-chunks": Object {
     "description": "Also flag chunks as loaded which contain a subset of the modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.flagIncludedChunks",
     "types": Array [
       Object {
@@ -1022,6 +1473,9 @@ Object {
   },
   "optimization-inner-graph": Object {
     "description": "Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.innerGraph",
     "types": Array [
       Object {
@@ -1032,6 +1486,9 @@ Object {
   },
   "optimization-mangle-exports": Object {
     "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.mangleExports",
     "types": Array [
       Object {
@@ -1042,6 +1499,9 @@ Object {
   },
   "optimization-mangle-wasm-imports": Object {
     "description": "Reduce size of WASM by changing imports to shorter strings.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.mangleWasmImports",
     "types": Array [
       Object {
@@ -1052,6 +1512,9 @@ Object {
   },
   "optimization-merge-duplicate-chunks": Object {
     "description": "Merge chunks which contain the same modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.mergeDuplicateChunks",
     "types": Array [
       Object {
@@ -1062,6 +1525,9 @@ Object {
   },
   "optimization-minimize": Object {
     "description": "Enable minimizing the output. Uses optimization.minimizer.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.minimize",
     "types": Array [
       Object {
@@ -1072,6 +1538,9 @@ Object {
   },
   "optimization-module-ids": Object {
     "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.moduleIds",
     "types": Array [
       Object {
@@ -1086,6 +1555,9 @@ Object {
   },
   "optimization-no-emit-on-errors": Object {
     "description": "Avoid emitting assets when errors occur.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.noEmitOnErrors",
     "types": Array [
       Object {
@@ -1096,6 +1568,10 @@ Object {
   },
   "optimization-node-env": Object {
     "description": "Set process.env.NODE_ENV to a specific value.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "optimization.nodeEnv",
     "types": Array [
       Object {
@@ -1110,6 +1586,9 @@ Object {
   },
   "optimization-portable-records": Object {
     "description": "Generate records with relative paths to be able to move the context folder.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.portableRecords",
     "types": Array [
       Object {
@@ -1120,6 +1599,9 @@ Object {
   },
   "optimization-provided-exports": Object {
     "description": "Figure out which exports are provided by modules to generate more efficient code.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.providedExports",
     "types": Array [
       Object {
@@ -1130,6 +1612,9 @@ Object {
   },
   "optimization-remove-available-modules": Object {
     "description": "Removes modules from chunks when these modules are already included in all parents.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.removeAvailableModules",
     "types": Array [
       Object {
@@ -1140,6 +1625,9 @@ Object {
   },
   "optimization-remove-empty-chunks": Object {
     "description": "Remove chunks which are empty.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.removeEmptyChunks",
     "types": Array [
       Object {
@@ -1150,6 +1638,10 @@ Object {
   },
   "optimization-runtime-chunk": Object {
     "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "optimization.runtimeChunk",
     "types": Array [
       Object {
@@ -1164,6 +1656,9 @@ Object {
   },
   "optimization-runtime-chunk-name": Object {
     "description": "The name or name factory for the runtime chunks.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.runtimeChunk.name",
     "types": Array [
       Object {
@@ -1174,6 +1669,9 @@ Object {
   },
   "optimization-side-effects": Object {
     "description": "Skip over modules which are flagged to contain no side effects when exports are not used.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.sideEffects",
     "types": Array [
       Object {
@@ -1184,6 +1682,9 @@ Object {
   },
   "optimization-split-chunks": Object {
     "description": "Optimize duplication and caching by splitting chunks by shared modules and cache group.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks",
     "types": Array [
       Object {
@@ -1194,6 +1695,9 @@ Object {
   },
   "optimization-split-chunks-automatic-name-delimiter": Object {
     "description": "Sets the name delimiter for created chunks.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.automaticNameDelimiter",
     "types": Array [
       Object {
@@ -1204,6 +1708,9 @@ Object {
   },
   "optimization-split-chunks-chunks": Object {
     "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.chunks",
     "types": Array [
       Object {
@@ -1214,6 +1721,9 @@ Object {
   },
   "optimization-split-chunks-fallback-cache-group-automatic-name-delimiter": Object {
     "description": "Sets the name delimiter for created chunks.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.fallbackCacheGroup.automaticNameDelimiter",
     "types": Array [
       Object {
@@ -1224,6 +1734,9 @@ Object {
   },
   "optimization-split-chunks-fallback-cache-group-max-async-size": Object {
     "description": "Size of the javascript part of the chunk.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.fallbackCacheGroup.maxAsyncSize",
     "types": Array [
       Object {
@@ -1234,6 +1747,9 @@ Object {
   },
   "optimization-split-chunks-fallback-cache-group-max-initial-size": Object {
     "description": "Size of the javascript part of the chunk.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.fallbackCacheGroup.maxInitialSize",
     "types": Array [
       Object {
@@ -1244,6 +1760,9 @@ Object {
   },
   "optimization-split-chunks-fallback-cache-group-max-size": Object {
     "description": "Size of the javascript part of the chunk.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.fallbackCacheGroup.maxSize",
     "types": Array [
       Object {
@@ -1254,6 +1773,9 @@ Object {
   },
   "optimization-split-chunks-fallback-cache-group-min-size": Object {
     "description": "Size of the javascript part of the chunk.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.fallbackCacheGroup.minSize",
     "types": Array [
       Object {
@@ -1264,6 +1786,9 @@ Object {
   },
   "optimization-split-chunks-filename": Object {
     "description": "Sets the template for the filename for created chunks.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.filename",
     "types": Array [
       Object {
@@ -1274,6 +1799,9 @@ Object {
   },
   "optimization-split-chunks-hide-path-info": Object {
     "description": "Prevents exposing path info when creating names for parts splitted by maxSize.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.hidePathInfo",
     "types": Array [
       Object {
@@ -1284,6 +1812,9 @@ Object {
   },
   "optimization-split-chunks-max-async-requests": Object {
     "description": "Maximum number of requests which are accepted for on-demand loading.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.maxAsyncRequests",
     "types": Array [
       Object {
@@ -1294,6 +1825,9 @@ Object {
   },
   "optimization-split-chunks-max-async-size": Object {
     "description": "Size of the javascript part of the chunk.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.maxAsyncSize",
     "types": Array [
       Object {
@@ -1304,6 +1838,9 @@ Object {
   },
   "optimization-split-chunks-max-initial-requests": Object {
     "description": "Maximum number of initial chunks which are accepted for an entry point.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.maxInitialRequests",
     "types": Array [
       Object {
@@ -1314,6 +1851,9 @@ Object {
   },
   "optimization-split-chunks-max-initial-size": Object {
     "description": "Size of the javascript part of the chunk.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.maxInitialSize",
     "types": Array [
       Object {
@@ -1324,6 +1864,9 @@ Object {
   },
   "optimization-split-chunks-max-size": Object {
     "description": "Size of the javascript part of the chunk.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.maxSize",
     "types": Array [
       Object {
@@ -1334,6 +1877,9 @@ Object {
   },
   "optimization-split-chunks-min-chunks": Object {
     "description": "Minimum number of times a module has to be duplicated until it's considered for splitting.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.minChunks",
     "types": Array [
       Object {
@@ -1344,6 +1890,9 @@ Object {
   },
   "optimization-split-chunks-min-remaining-size": Object {
     "description": "Size of the javascript part of the chunk.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.minRemainingSize",
     "types": Array [
       Object {
@@ -1354,6 +1903,9 @@ Object {
   },
   "optimization-split-chunks-min-size": Object {
     "description": "Size of the javascript part of the chunk.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.splitChunks.minSize",
     "types": Array [
       Object {
@@ -1364,6 +1916,10 @@ Object {
   },
   "optimization-split-chunks-name": Object {
     "description": "Give chunks created a name (chunks with equal name are merged).",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "optimization.splitChunks.name",
     "types": Array [
       Object {
@@ -1378,6 +1934,9 @@ Object {
   },
   "optimization-used-exports": Object {
     "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "optimization.usedExports",
     "types": Array [
       Object {
@@ -1388,6 +1947,9 @@ Object {
   },
   "output-asset-module-filename": Object {
     "description": "The filename of asset modules as relative path inside the \`output.path\` directory.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.assetModuleFilename",
     "types": Array [
       Object {
@@ -1398,6 +1960,9 @@ Object {
   },
   "output-auxiliary-comment": Object {
     "description": "Append the same comment above each import style.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.auxiliaryComment",
     "types": Array [
       Object {
@@ -1408,6 +1973,9 @@ Object {
   },
   "output-auxiliary-comment-amd": Object {
     "description": "Set comment for \`amd\` section in UMD.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.auxiliaryComment.amd",
     "types": Array [
       Object {
@@ -1418,6 +1986,9 @@ Object {
   },
   "output-auxiliary-comment-commonjs": Object {
     "description": "Set comment for \`commonjs\` (exports) section in UMD.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.auxiliaryComment.commonjs",
     "types": Array [
       Object {
@@ -1428,6 +1999,9 @@ Object {
   },
   "output-auxiliary-comment-commonjs2": Object {
     "description": "Set comment for \`commonjs2\` (module.exports) section in UMD.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.auxiliaryComment.commonjs2",
     "types": Array [
       Object {
@@ -1438,6 +2012,9 @@ Object {
   },
   "output-auxiliary-comment-root": Object {
     "description": "Set comment for \`root\` (global variable) section in UMD.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.auxiliaryComment.root",
     "types": Array [
       Object {
@@ -1448,6 +2025,9 @@ Object {
   },
   "output-chunk-callback-name": Object {
     "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.chunkCallbackName",
     "types": Array [
       Object {
@@ -1458,6 +2038,9 @@ Object {
   },
   "output-chunk-filename": Object {
     "description": "The filename of non-entry chunks as relative path inside the \`output.path\` directory.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.chunkFilename",
     "types": Array [
       Object {
@@ -1468,6 +2051,9 @@ Object {
   },
   "output-chunk-load-timeout": Object {
     "description": "Number of milliseconds before chunk request expires.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.chunkLoadTimeout",
     "types": Array [
       Object {
@@ -1478,6 +2064,9 @@ Object {
   },
   "output-compare-before-emit": Object {
     "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.compareBeforeEmit",
     "types": Array [
       Object {
@@ -1488,6 +2077,9 @@ Object {
   },
   "output-cross-origin-loading": Object {
     "description": "This option enables cross-origin loading of chunks.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.crossOriginLoading",
     "types": Array [
       Object {
@@ -1502,6 +2094,9 @@ Object {
   },
   "output-devtool-fallback-module-filename-template": Object {
     "description": "Similar to \`output.devtoolModuleFilenameTemplate\`, but used in the case of duplicate module identifiers.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.devtoolFallbackModuleFilenameTemplate",
     "types": Array [
       Object {
@@ -1512,6 +2107,9 @@ Object {
   },
   "output-devtool-module-filename-template": Object {
     "description": "Filename template string of function for the sources array in a generated SourceMap.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.devtoolModuleFilenameTemplate",
     "types": Array [
       Object {
@@ -1522,6 +2120,9 @@ Object {
   },
   "output-devtool-namespace": Object {
     "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to \`output.library\` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.devtoolNamespace",
     "types": Array [
       Object {
@@ -1532,6 +2133,11 @@ Object {
   },
   "output-ecma-version": Object {
     "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
+    "handlers": Array [
+      [Function],
+      [Function],
+      [Function],
+    ],
     "path": "output.ecmaVersion",
     "types": Array [
       Object {
@@ -1542,6 +2148,9 @@ Object {
   },
   "output-enabled-library-types": Object {
     "description": "Type of library.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.enabledLibraryTypes",
     "types": Array [
       Object {
@@ -1550,8 +2159,24 @@ Object {
       },
     ],
   },
+  "output-enabled-library-types-reset": Object {
+    "description": "Clear all items provided in configuration. List of library types enabled for use by entry points.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "output.enabledLibraryTypes.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "output-filename": Object {
     "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.filename",
     "types": Array [
       Object {
@@ -1562,6 +2187,9 @@ Object {
   },
   "output-global-object": Object {
     "description": "An expression which is used to address the global object/scope in runtime code.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.globalObject",
     "types": Array [
       Object {
@@ -1572,6 +2200,9 @@ Object {
   },
   "output-hash-digest": Object {
     "description": "Digest type used for the hash.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.hashDigest",
     "types": Array [
       Object {
@@ -1582,6 +2213,9 @@ Object {
   },
   "output-hash-digest-length": Object {
     "description": "Number of chars which are used for the hash.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.hashDigestLength",
     "types": Array [
       Object {
@@ -1592,6 +2226,9 @@ Object {
   },
   "output-hash-function": Object {
     "description": "Algorithm used for generation the hash (see node.js crypto package).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.hashFunction",
     "types": Array [
       Object {
@@ -1602,6 +2239,9 @@ Object {
   },
   "output-hash-salt": Object {
     "description": "Any string which is added to the hash to salt it.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.hashSalt",
     "types": Array [
       Object {
@@ -1612,6 +2252,9 @@ Object {
   },
   "output-hot-update-chunk-filename": Object {
     "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.hotUpdateChunkFilename",
     "types": Array [
       Object {
@@ -1622,6 +2265,9 @@ Object {
   },
   "output-hot-update-function": Object {
     "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.hotUpdateFunction",
     "types": Array [
       Object {
@@ -1632,6 +2278,9 @@ Object {
   },
   "output-hot-update-main-filename": Object {
     "description": "The filename of the Hot Update Main File. It is inside the \`output.path\` directory.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.hotUpdateMainFilename",
     "types": Array [
       Object {
@@ -1642,6 +2291,9 @@ Object {
   },
   "output-iife": Object {
     "description": "Wrap javascript code into IIFEs to avoid leaking into global scope.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.iife",
     "types": Array [
       Object {
@@ -1652,6 +2304,9 @@ Object {
   },
   "output-jsonp-function": Object {
     "description": "The JSONP function used by webpack for async loading of chunks.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.jsonpFunction",
     "types": Array [
       Object {
@@ -1662,6 +2317,9 @@ Object {
   },
   "output-jsonp-script-type": Object {
     "description": "This option enables loading async chunks via a custom script type, such as script type=\\"module\\".",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.jsonpScriptType",
     "types": Array [
       Object {
@@ -1676,6 +2334,10 @@ Object {
   },
   "output-library": Object {
     "description": "The name of the library (some types allow unnamed libraries too). A part of the library name.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "output.library",
     "types": Array [
       Object {
@@ -1686,6 +2348,9 @@ Object {
   },
   "output-library-amd": Object {
     "description": "Name of the exposed AMD library in the UMD.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.library.amd",
     "types": Array [
       Object {
@@ -1696,6 +2361,9 @@ Object {
   },
   "output-library-auxiliary-comment": Object {
     "description": "Append the same comment above each import style.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.library.auxiliaryComment",
     "types": Array [
       Object {
@@ -1706,6 +2374,9 @@ Object {
   },
   "output-library-auxiliary-comment-amd": Object {
     "description": "Set comment for \`amd\` section in UMD.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.library.auxiliaryComment.amd",
     "types": Array [
       Object {
@@ -1716,6 +2387,9 @@ Object {
   },
   "output-library-auxiliary-comment-commonjs": Object {
     "description": "Set comment for \`commonjs\` (exports) section in UMD.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.library.auxiliaryComment.commonjs",
     "types": Array [
       Object {
@@ -1726,6 +2400,9 @@ Object {
   },
   "output-library-auxiliary-comment-commonjs2": Object {
     "description": "Set comment for \`commonjs2\` (module.exports) section in UMD.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.library.auxiliaryComment.commonjs2",
     "types": Array [
       Object {
@@ -1736,6 +2413,9 @@ Object {
   },
   "output-library-auxiliary-comment-root": Object {
     "description": "Set comment for \`root\` (global variable) section in UMD.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.library.auxiliaryComment.root",
     "types": Array [
       Object {
@@ -1746,6 +2426,9 @@ Object {
   },
   "output-library-commonjs": Object {
     "description": "Name of the exposed commonjs export in the UMD.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.library.commonjs",
     "types": Array [
       Object {
@@ -1755,7 +2438,13 @@ Object {
     ],
   },
   "output-library-export": Object {
-    "description": "Specify which export should be exposed as library.",
+    "description": "Specify which export should be exposed as library. Part of the export that should be exposed as library.",
+    "handlers": Array [
+      [Function],
+      [Function],
+      [Function],
+      [Function],
+    ],
     "path": "output.library.export",
     "types": Array [
       Object {
@@ -1766,6 +2455,10 @@ Object {
   },
   "output-library-name": Object {
     "description": "The name of the library (some types allow unnamed libraries too). A part of the library name.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "output.library.name",
     "types": Array [
       Object {
@@ -1776,6 +2469,9 @@ Object {
   },
   "output-library-name-amd": Object {
     "description": "Name of the exposed AMD library in the UMD.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.library.name.amd",
     "types": Array [
       Object {
@@ -1786,6 +2482,9 @@ Object {
   },
   "output-library-name-commonjs": Object {
     "description": "Name of the exposed commonjs export in the UMD.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.library.name.commonjs",
     "types": Array [
       Object {
@@ -1795,7 +2494,11 @@ Object {
     ],
   },
   "output-library-name-root": Object {
-    "description": "Name of the property exposed globally by a UMD library.",
+    "description": "Name of the property exposed globally by a UMD library. Part of the name of the property exposed globally by a UMD library.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "output.library.name.root",
     "types": Array [
       Object {
@@ -1805,7 +2508,11 @@ Object {
     ],
   },
   "output-library-root": Object {
-    "description": "Name of the property exposed globally by a UMD library.",
+    "description": "Name of the property exposed globally by a UMD library. Part of the name of the property exposed globally by a UMD library.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "output.library.root",
     "types": Array [
       Object {
@@ -1816,6 +2523,9 @@ Object {
   },
   "output-library-target": Object {
     "description": "Type of library.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.libraryTarget",
     "types": Array [
       Object {
@@ -1826,6 +2536,9 @@ Object {
   },
   "output-library-type": Object {
     "description": "Type of library.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.library.type",
     "types": Array [
       Object {
@@ -1836,6 +2549,9 @@ Object {
   },
   "output-library-umd-named-define": Object {
     "description": "If \`output.libraryTarget\` is set to umd and \`output.library\` is set, setting this to true will name the AMD module.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.library.umdNamedDefine",
     "types": Array [
       Object {
@@ -1846,6 +2562,9 @@ Object {
   },
   "output-module": Object {
     "description": "Output javascript files as module source type.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.module",
     "types": Array [
       Object {
@@ -1856,6 +2575,9 @@ Object {
   },
   "output-path": Object {
     "description": "The output directory as **absolute path** (required).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.path",
     "types": Array [
       Object {
@@ -1866,6 +2588,9 @@ Object {
   },
   "output-pathinfo": Object {
     "description": "Include comments with information about the modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.pathinfo",
     "types": Array [
       Object {
@@ -1876,6 +2601,9 @@ Object {
   },
   "output-public-path": Object {
     "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.publicPath",
     "types": Array [
       Object {
@@ -1886,6 +2614,9 @@ Object {
   },
   "output-source-map-filename": Object {
     "description": "The filename of the SourceMaps for the JavaScript files. They are inside the \`output.path\` directory.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.sourceMapFilename",
     "types": Array [
       Object {
@@ -1896,6 +2627,9 @@ Object {
   },
   "output-source-prefix": Object {
     "description": "Prefixes every line of the source in the bundle with this string.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.sourcePrefix",
     "types": Array [
       Object {
@@ -1906,6 +2640,9 @@ Object {
   },
   "output-strict-module-exception-handling": Object {
     "description": "Handles exceptions in module loading correctly at a performance cost.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.strictModuleExceptionHandling",
     "types": Array [
       Object {
@@ -1916,6 +2653,9 @@ Object {
   },
   "output-umd-named-define": Object {
     "description": "If \`output.libraryTarget\` is set to umd and \`output.library\` is set, setting this to true will name the AMD module.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.umdNamedDefine",
     "types": Array [
       Object {
@@ -1926,6 +2666,9 @@ Object {
   },
   "output-unique-name": Object {
     "description": "A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.uniqueName",
     "types": Array [
       Object {
@@ -1936,6 +2679,9 @@ Object {
   },
   "output-webassembly-module-filename": Object {
     "description": "The filename of WebAssembly modules as relative path inside the \`output.path\` directory.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "output.webassemblyModuleFilename",
     "types": Array [
       Object {
@@ -1946,6 +2692,9 @@ Object {
   },
   "parallelism": Object {
     "description": "The number of parallel processed modules in the compilation.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "parallelism",
     "types": Array [
       Object {
@@ -1956,6 +2705,9 @@ Object {
   },
   "performance": Object {
     "description": "Configuration for web performance recommendations.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "performance",
     "types": Array [
       Object {
@@ -1966,6 +2718,9 @@ Object {
   },
   "performance-hints": Object {
     "description": "Sets the format of the hints: warnings, errors or nothing at all.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "performance.hints",
     "types": Array [
       Object {
@@ -1980,6 +2735,9 @@ Object {
   },
   "performance-max-asset-size": Object {
     "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "performance.maxAssetSize",
     "types": Array [
       Object {
@@ -1990,6 +2748,9 @@ Object {
   },
   "performance-max-entrypoint-size": Object {
     "description": "Total size of an entry point (in bytes).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "performance.maxEntrypointSize",
     "types": Array [
       Object {
@@ -2000,6 +2761,9 @@ Object {
   },
   "profile": Object {
     "description": "Capture timing information for each module.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "profile",
     "types": Array [
       Object {
@@ -2010,6 +2774,10 @@ Object {
   },
   "records-input-path": Object {
     "description": "Store compiler state to a json file.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "recordsInputPath",
     "types": Array [
       Object {
@@ -2024,6 +2792,10 @@ Object {
   },
   "records-output-path": Object {
     "description": "Load compiler state from a json file.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "recordsOutputPath",
     "types": Array [
       Object {
@@ -2038,6 +2810,10 @@ Object {
   },
   "records-path": Object {
     "description": "Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. \`recordsPath\` is used for \`recordsInputPath\` and \`recordsOutputPath\` if they left undefined.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "recordsPath",
     "types": Array [
       Object {
@@ -2052,6 +2828,10 @@ Object {
   },
   "resolve-alias-alias": Object {
     "description": "New request. Ignore request (replace with empty module).",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "resolve.alias.alias",
     "types": Array [
       Object {
@@ -2066,6 +2846,9 @@ Object {
   },
   "resolve-alias-fields": Object {
     "description": "Fields in the description file (package.json) which are used to redirect requests inside the module.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.aliasFields",
     "types": Array [
       Object {
@@ -2074,8 +2857,24 @@ Object {
       },
     ],
   },
+  "resolve-alias-fields-reset": Object {
+    "description": "Clear all items provided in configuration. Fields in the description file (package.json) which are used to redirect requests inside the module.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolve.aliasFields.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-alias-name": Object {
     "description": "Request to be redirected.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.alias.name",
     "types": Array [
       Object {
@@ -2086,6 +2885,9 @@ Object {
   },
   "resolve-alias-only-module": Object {
     "description": "Redirect only exact matching request.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.alias.onlyModule",
     "types": Array [
       Object {
@@ -2094,8 +2896,24 @@ Object {
       },
     ],
   },
+  "resolve-alias-reset": Object {
+    "description": "Clear all items provided in configuration. Redirect module requests.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolve.alias.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-cache": Object {
     "description": "Enable caching of successfully resolved requests (cache entries are revalidated).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.cache",
     "types": Array [
       Object {
@@ -2106,6 +2924,9 @@ Object {
   },
   "resolve-cache-with-context": Object {
     "description": "Include the context information in the cache identifier when caching.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.cacheWithContext",
     "types": Array [
       Object {
@@ -2116,6 +2937,9 @@ Object {
   },
   "resolve-description-files": Object {
     "description": "Filenames used to find a description file.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.descriptionFiles",
     "types": Array [
       Object {
@@ -2124,8 +2948,24 @@ Object {
       },
     ],
   },
+  "resolve-description-files-reset": Object {
+    "description": "Clear all items provided in configuration. Filenames used to find a description file.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolve.descriptionFiles.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-enforce-extension": Object {
     "description": "Enforce using one of the extensions from the extensions option.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.enforceExtension",
     "types": Array [
       Object {
@@ -2136,6 +2976,9 @@ Object {
   },
   "resolve-extensions": Object {
     "description": "Extensions added to the request when trying to find the file.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.extensions",
     "types": Array [
       Object {
@@ -2144,8 +2987,25 @@ Object {
       },
     ],
   },
+  "resolve-extensions-reset": Object {
+    "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolve.extensions.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-loader-alias-alias": Object {
     "description": "New request. Ignore request (replace with empty module).",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "resolveLoader.alias.alias",
     "types": Array [
       Object {
@@ -2160,6 +3020,9 @@ Object {
   },
   "resolve-loader-alias-fields": Object {
     "description": "Fields in the description file (package.json) which are used to redirect requests inside the module.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.aliasFields",
     "types": Array [
       Object {
@@ -2168,8 +3031,24 @@ Object {
       },
     ],
   },
+  "resolve-loader-alias-fields-reset": Object {
+    "description": "Clear all items provided in configuration. Fields in the description file (package.json) which are used to redirect requests inside the module.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolveLoader.aliasFields.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-loader-alias-name": Object {
     "description": "Request to be redirected.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.alias.name",
     "types": Array [
       Object {
@@ -2180,6 +3059,9 @@ Object {
   },
   "resolve-loader-alias-only-module": Object {
     "description": "Redirect only exact matching request.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.alias.onlyModule",
     "types": Array [
       Object {
@@ -2188,8 +3070,24 @@ Object {
       },
     ],
   },
+  "resolve-loader-alias-reset": Object {
+    "description": "Clear all items provided in configuration. Redirect module requests.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolveLoader.alias.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-loader-cache": Object {
     "description": "Enable caching of successfully resolved requests (cache entries are revalidated).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.cache",
     "types": Array [
       Object {
@@ -2200,6 +3098,9 @@ Object {
   },
   "resolve-loader-cache-with-context": Object {
     "description": "Include the context information in the cache identifier when caching.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.cacheWithContext",
     "types": Array [
       Object {
@@ -2210,6 +3111,9 @@ Object {
   },
   "resolve-loader-description-files": Object {
     "description": "Filenames used to find a description file.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.descriptionFiles",
     "types": Array [
       Object {
@@ -2218,8 +3122,24 @@ Object {
       },
     ],
   },
+  "resolve-loader-description-files-reset": Object {
+    "description": "Clear all items provided in configuration. Filenames used to find a description file.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolveLoader.descriptionFiles.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-loader-enforce-extension": Object {
     "description": "Enforce using one of the extensions from the extensions option.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.enforceExtension",
     "types": Array [
       Object {
@@ -2230,6 +3150,9 @@ Object {
   },
   "resolve-loader-extensions": Object {
     "description": "Extensions added to the request when trying to find the file.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.extensions",
     "types": Array [
       Object {
@@ -2238,8 +3161,24 @@ Object {
       },
     ],
   },
+  "resolve-loader-extensions-reset": Object {
+    "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolveLoader.extensions.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-loader-main-fields": Object {
     "description": "Field names from the description file (package.json) which are used to find the default entry point.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.mainFields",
     "types": Array [
       Object {
@@ -2248,8 +3187,24 @@ Object {
       },
     ],
   },
+  "resolve-loader-main-fields-reset": Object {
+    "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the default entry point.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolveLoader.mainFields.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-loader-main-files": Object {
     "description": "Filenames used to find the default entry point if there is no description file or main field.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.mainFiles",
     "types": Array [
       Object {
@@ -2258,8 +3213,24 @@ Object {
       },
     ],
   },
+  "resolve-loader-main-files-reset": Object {
+    "description": "Clear all items provided in configuration. Filenames used to find the default entry point if there is no description file or main field.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolveLoader.mainFiles.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-loader-modules": Object {
     "description": "Folder names or directory paths where to find modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.modules",
     "types": Array [
       Object {
@@ -2268,8 +3239,24 @@ Object {
       },
     ],
   },
+  "resolve-loader-modules-reset": Object {
+    "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolveLoader.modules.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-loader-symlinks": Object {
     "description": "Enable resolving symlinks to the original location.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.symlinks",
     "types": Array [
       Object {
@@ -2280,6 +3267,9 @@ Object {
   },
   "resolve-loader-unsafe-cache": Object {
     "description": "Enable caching of successfully resolved requests (cache entries are not revalidated).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.unsafeCache",
     "types": Array [
       Object {
@@ -2290,6 +3280,9 @@ Object {
   },
   "resolve-loader-use-sync-file-system-calls": Object {
     "description": "Use synchronous filesystem calls for the resolver.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolveLoader.useSyncFileSystemCalls",
     "types": Array [
       Object {
@@ -2300,6 +3293,9 @@ Object {
   },
   "resolve-main-fields": Object {
     "description": "Field names from the description file (package.json) which are used to find the default entry point.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.mainFields",
     "types": Array [
       Object {
@@ -2308,8 +3304,24 @@ Object {
       },
     ],
   },
+  "resolve-main-fields-reset": Object {
+    "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the default entry point.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolve.mainFields.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-main-files": Object {
     "description": "Filenames used to find the default entry point if there is no description file or main field.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.mainFiles",
     "types": Array [
       Object {
@@ -2318,8 +3330,24 @@ Object {
       },
     ],
   },
+  "resolve-main-files-reset": Object {
+    "description": "Clear all items provided in configuration. Filenames used to find the default entry point if there is no description file or main field.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolve.mainFiles.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-modules": Object {
     "description": "Folder names or directory paths where to find modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.modules",
     "types": Array [
       Object {
@@ -2328,8 +3356,24 @@ Object {
       },
     ],
   },
+  "resolve-modules-reset": Object {
+    "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "resolve.modules.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "resolve-symlinks": Object {
     "description": "Enable resolving symlinks to the original location.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.symlinks",
     "types": Array [
       Object {
@@ -2340,6 +3384,9 @@ Object {
   },
   "resolve-unsafe-cache": Object {
     "description": "Enable caching of successfully resolved requests (cache entries are not revalidated).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.unsafeCache",
     "types": Array [
       Object {
@@ -2350,6 +3397,9 @@ Object {
   },
   "resolve-use-sync-file-system-calls": Object {
     "description": "Use synchronous filesystem calls for the resolver.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "resolve.useSyncFileSystemCalls",
     "types": Array [
       Object {
@@ -2360,6 +3410,10 @@ Object {
   },
   "stats": Object {
     "description": "Stats options object or preset name.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "stats",
     "types": Array [
       Object {
@@ -2374,6 +3428,9 @@ Object {
   },
   "stats-all": Object {
     "description": "Fallback value for stats options when an option is not defined (has precedence over local webpack defaults).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.all",
     "types": Array [
       Object {
@@ -2384,6 +3441,9 @@ Object {
   },
   "stats-assets": Object {
     "description": "Add assets information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.assets",
     "types": Array [
       Object {
@@ -2394,6 +3454,9 @@ Object {
   },
   "stats-assets-sort": Object {
     "description": "Sort the assets by that field.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.assetsSort",
     "types": Array [
       Object {
@@ -2404,6 +3467,9 @@ Object {
   },
   "stats-built-at": Object {
     "description": "Add built at time information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.builtAt",
     "types": Array [
       Object {
@@ -2414,6 +3480,9 @@ Object {
   },
   "stats-cached": Object {
     "description": "Add information about cached (not built) modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.cached",
     "types": Array [
       Object {
@@ -2424,6 +3493,9 @@ Object {
   },
   "stats-cached-assets": Object {
     "description": "Show cached assets (setting this to \`false\` only shows emitted files).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.cachedAssets",
     "types": Array [
       Object {
@@ -2434,6 +3506,9 @@ Object {
   },
   "stats-children": Object {
     "description": "Add children information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.children",
     "types": Array [
       Object {
@@ -2444,6 +3519,9 @@ Object {
   },
   "stats-chunk-groups": Object {
     "description": "Display all chunk groups with the corresponding bundles.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.chunkGroups",
     "types": Array [
       Object {
@@ -2454,6 +3532,9 @@ Object {
   },
   "stats-chunk-modules": Object {
     "description": "Add built modules information to chunk information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.chunkModules",
     "types": Array [
       Object {
@@ -2464,6 +3545,9 @@ Object {
   },
   "stats-chunk-origins": Object {
     "description": "Add the origins of chunks and chunk merging info.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.chunkOrigins",
     "types": Array [
       Object {
@@ -2474,6 +3558,9 @@ Object {
   },
   "stats-chunk-relations": Object {
     "description": "Add information about parent, children and sibling chunks to chunk information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.chunkRelations",
     "types": Array [
       Object {
@@ -2484,6 +3571,9 @@ Object {
   },
   "stats-chunk-root-modules": Object {
     "description": "Add root modules information to chunk information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.chunkRootModules",
     "types": Array [
       Object {
@@ -2494,6 +3584,9 @@ Object {
   },
   "stats-chunks": Object {
     "description": "Add chunk information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.chunks",
     "types": Array [
       Object {
@@ -2504,6 +3597,9 @@ Object {
   },
   "stats-chunks-sort": Object {
     "description": "Sort the chunks by that field.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.chunksSort",
     "types": Array [
       Object {
@@ -2514,6 +3610,9 @@ Object {
   },
   "stats-colors": Object {
     "description": "Enables/Disables colorful output.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.colors",
     "types": Array [
       Object {
@@ -2524,6 +3623,9 @@ Object {
   },
   "stats-colors-bold": Object {
     "description": "Custom color for bold text.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.colors.bold",
     "types": Array [
       Object {
@@ -2534,6 +3636,9 @@ Object {
   },
   "stats-colors-cyan": Object {
     "description": "Custom color for cyan text.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.colors.cyan",
     "types": Array [
       Object {
@@ -2544,6 +3649,9 @@ Object {
   },
   "stats-colors-green": Object {
     "description": "Custom color for green text.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.colors.green",
     "types": Array [
       Object {
@@ -2554,6 +3662,9 @@ Object {
   },
   "stats-colors-magenta": Object {
     "description": "Custom color for magenta text.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.colors.magenta",
     "types": Array [
       Object {
@@ -2564,6 +3675,9 @@ Object {
   },
   "stats-colors-red": Object {
     "description": "Custom color for red text.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.colors.red",
     "types": Array [
       Object {
@@ -2574,6 +3688,9 @@ Object {
   },
   "stats-colors-yellow": Object {
     "description": "Custom color for yellow text.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.colors.yellow",
     "types": Array [
       Object {
@@ -2584,6 +3701,9 @@ Object {
   },
   "stats-context": Object {
     "description": "Context directory for request shortening.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.context",
     "types": Array [
       Object {
@@ -2594,6 +3714,9 @@ Object {
   },
   "stats-depth": Object {
     "description": "Add module depth in module graph.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.depth",
     "types": Array [
       Object {
@@ -2604,6 +3727,9 @@ Object {
   },
   "stats-entrypoints": Object {
     "description": "Display the entry points with the corresponding bundles.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.entrypoints",
     "types": Array [
       Object {
@@ -2614,6 +3740,9 @@ Object {
   },
   "stats-env": Object {
     "description": "Add --env information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.env",
     "types": Array [
       Object {
@@ -2624,6 +3753,9 @@ Object {
   },
   "stats-error-details": Object {
     "description": "Add details to errors (like resolving log).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.errorDetails",
     "types": Array [
       Object {
@@ -2634,6 +3766,9 @@ Object {
   },
   "stats-error-stack": Object {
     "description": "Add internal stack trace to errors.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.errorStack",
     "types": Array [
       Object {
@@ -2644,6 +3779,9 @@ Object {
   },
   "stats-errors": Object {
     "description": "Add errors.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.errors",
     "types": Array [
       Object {
@@ -2652,22 +3790,14 @@ Object {
       },
     ],
   },
-  "stats-exclude": Object {
-    "description": "Filtering value, regexp or function. Please use excludeModules instead.",
-    "path": "stats.exclude",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-      Object {
-        "multiple": false,
-        "type": "boolean",
-      },
-    ],
-  },
   "stats-exclude-assets": Object {
-    "description": "Filtering value, regexp or function.",
+    "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+      [Function],
+      [Function],
+    ],
     "path": "stats.excludeAssets",
     "types": Array [
       Object {
@@ -2676,8 +3806,28 @@ Object {
       },
     ],
   },
+  "stats-exclude-assets-reset": Object {
+    "description": "Clear all items provided in configuration. Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "stats.excludeAssets.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "stats-exclude-modules": Object {
-    "description": "Filtering value, regexp or function. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+    "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+      [Function],
+      [Function],
+      [Function],
+    ],
     "path": "stats.excludeModules",
     "types": Array [
       Object {
@@ -2690,8 +3840,24 @@ Object {
       },
     ],
   },
+  "stats-exclude-modules-reset": Object {
+    "description": "Clear all items provided in configuration. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "stats.excludeModules.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "stats-hash": Object {
     "description": "Add the hash of the compilation.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.hash",
     "types": Array [
       Object {
@@ -2702,6 +3868,9 @@ Object {
   },
   "stats-ids": Object {
     "description": "Add ids.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.ids",
     "types": Array [
       Object {
@@ -2712,6 +3881,10 @@ Object {
   },
   "stats-logging": Object {
     "description": "Enable/disable logging output (\`true\`: shows normal logging output, loglevel: log). Specify log level of logging output.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "stats.logging",
     "types": Array [
       Object {
@@ -2725,7 +3898,14 @@ Object {
     ],
   },
   "stats-logging-debug": Object {
-    "description": "Filtering value, regexp or function. Enable/Disable debug logging for all loggers.",
+    "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions. Enable/Disable debug logging for all loggers.",
+    "handlers": Array [
+      [Function],
+      [Function],
+      [Function],
+      [Function],
+      [Function],
+    ],
     "path": "stats.loggingDebug",
     "types": Array [
       Object {
@@ -2738,8 +3918,24 @@ Object {
       },
     ],
   },
+  "stats-logging-debug-reset": Object {
+    "description": "Clear all items provided in configuration. Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "stats.loggingDebug.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "stats-logging-trace": Object {
     "description": "Add stack traces to logging output.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.loggingTrace",
     "types": Array [
       Object {
@@ -2750,6 +3946,9 @@ Object {
   },
   "stats-max-modules": Object {
     "description": "Set the maximum number of modules to be shown.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.maxModules",
     "types": Array [
       Object {
@@ -2760,6 +3959,9 @@ Object {
   },
   "stats-module-assets": Object {
     "description": "Add information about assets inside modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.moduleAssets",
     "types": Array [
       Object {
@@ -2770,6 +3972,9 @@ Object {
   },
   "stats-module-trace": Object {
     "description": "Add dependencies and origin of warnings/errors.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.moduleTrace",
     "types": Array [
       Object {
@@ -2780,6 +3985,9 @@ Object {
   },
   "stats-modules": Object {
     "description": "Add built modules information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.modules",
     "types": Array [
       Object {
@@ -2790,6 +3998,9 @@ Object {
   },
   "stats-modules-sort": Object {
     "description": "Sort the modules by that field.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.modulesSort",
     "types": Array [
       Object {
@@ -2800,6 +4011,9 @@ Object {
   },
   "stats-nested-modules": Object {
     "description": "Add information about modules nested in other modules (like with module concatenation).",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.nestedModules",
     "types": Array [
       Object {
@@ -2810,6 +4024,9 @@ Object {
   },
   "stats-optimization-bailout": Object {
     "description": "Show reasons why optimization bailed out for modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.optimizationBailout",
     "types": Array [
       Object {
@@ -2820,6 +4037,9 @@ Object {
   },
   "stats-orphan-modules": Object {
     "description": "Add information about orphan modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.orphanModules",
     "types": Array [
       Object {
@@ -2830,6 +4050,9 @@ Object {
   },
   "stats-output-path": Object {
     "description": "Add output path information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.outputPath",
     "types": Array [
       Object {
@@ -2840,6 +4063,9 @@ Object {
   },
   "stats-performance": Object {
     "description": "Add performance hint flags.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.performance",
     "types": Array [
       Object {
@@ -2850,6 +4076,10 @@ Object {
   },
   "stats-preset": Object {
     "description": "Preset for the default values.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "stats.preset",
     "types": Array [
       Object {
@@ -2864,6 +4094,9 @@ Object {
   },
   "stats-provided-exports": Object {
     "description": "Show exports provided by modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.providedExports",
     "types": Array [
       Object {
@@ -2874,6 +4107,9 @@ Object {
   },
   "stats-public-path": Object {
     "description": "Add public path information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.publicPath",
     "types": Array [
       Object {
@@ -2884,6 +4120,9 @@ Object {
   },
   "stats-reasons": Object {
     "description": "Add information about the reasons why modules are included.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.reasons",
     "types": Array [
       Object {
@@ -2894,6 +4133,9 @@ Object {
   },
   "stats-runtime": Object {
     "description": "Add information about runtime modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.runtime",
     "types": Array [
       Object {
@@ -2904,6 +4146,9 @@ Object {
   },
   "stats-source": Object {
     "description": "Add the source code of modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.source",
     "types": Array [
       Object {
@@ -2914,6 +4159,9 @@ Object {
   },
   "stats-timings": Object {
     "description": "Add timing information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.timings",
     "types": Array [
       Object {
@@ -2924,6 +4172,9 @@ Object {
   },
   "stats-used-exports": Object {
     "description": "Show exports used by modules.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.usedExports",
     "types": Array [
       Object {
@@ -2934,6 +4185,9 @@ Object {
   },
   "stats-version": Object {
     "description": "Add webpack version information.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.version",
     "types": Array [
       Object {
@@ -2944,6 +4198,9 @@ Object {
   },
   "stats-warnings": Object {
     "description": "Add warnings.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "stats.warnings",
     "types": Array [
       Object {
@@ -2953,7 +4210,13 @@ Object {
     ],
   },
   "stats-warnings-filter": Object {
-    "description": "Filtering value, regexp or function.",
+    "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "handlers": Array [
+      [Function],
+      [Function],
+      [Function],
+      [Function],
+    ],
     "path": "stats.warningsFilter",
     "types": Array [
       Object {
@@ -2962,8 +4225,24 @@ Object {
       },
     ],
   },
+  "stats-warnings-filter-reset": Object {
+    "description": "Clear all items provided in configuration. Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "stats.warningsFilter.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "target": Object {
     "description": "Environment to build for.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "target",
     "types": Array [
       Object {
@@ -2974,6 +4253,9 @@ Object {
   },
   "watch": Object {
     "description": "Enter watch mode, which rebuilds on file change.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "watch",
     "types": Array [
       Object {
@@ -2984,6 +4266,9 @@ Object {
   },
   "watch-options-aggregate-timeout": Object {
     "description": "Delay the rebuilt after the first change. Value is a time in ms.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "watchOptions.aggregateTimeout",
     "types": Array [
       Object {
@@ -2994,6 +4279,10 @@ Object {
   },
   "watch-options-ignored": Object {
     "description": "A single glob pattern for files that should be ignored from watching. Ignore some files from watching (glob pattern).",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "watchOptions.ignored",
     "types": Array [
       Object {
@@ -3002,8 +4291,25 @@ Object {
       },
     ],
   },
+  "watch-options-ignored-reset": Object {
+    "description": "Clear all items provided in configuration. Ignore some files from watching (glob pattern).",
+    "handlers": Array [
+      [Function],
+    ],
+    "path": "watchOptions.ignored.reset",
+    "types": Array [
+      Object {
+        "multiple": false,
+        "type": "boolean",
+      },
+    ],
+  },
   "watch-options-poll": Object {
     "description": "\`true\`: use polling. \`number\`: use polling with specified interval.",
+    "handlers": Array [
+      [Function],
+      [Function],
+    ],
     "path": "watchOptions.poll",
     "types": Array [
       Object {
@@ -3018,6 +4324,9 @@ Object {
   },
   "watch-options-stdin": Object {
     "description": "Stop watching when stdin stream has ended.",
+    "handlers": Array [
+      [Function],
+    ],
     "path": "watchOptions.stdin",
     "types": Array [
       Object {

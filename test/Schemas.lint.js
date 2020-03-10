@@ -97,6 +97,12 @@ describe("Schemas", () => {
 						});
 					}
 
+					if ("type" in item) {
+						it("should have a single type", () => {
+							expect(item.type).toBeTypeOf("string");
+						});
+					}
+
 					if ("instanceof" in item) {
 						it("should have tsType specified when using instanceof", () => {
 							if (!("tsType" in item)) {
