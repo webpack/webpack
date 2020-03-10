@@ -33,12 +33,6 @@ function getSchemaPart(path) {
 	return schemaPart;
 }
 
-const ignoredSchemaPaths = new Set(["devServer"]);
-const specialSchemaPathNames = {
-	"node/__dirname": "node/dirname",
-	"node/__filename": "node/filename"
-};
-
 function addFlag(schemaPath, schemaPart, multiple) {
 	const name = decamelize(schemaPath.replace(/\//g, "-"));
 	const types = schemaPart.enum
@@ -57,6 +51,12 @@ function addFlag(schemaPath, schemaPart, multiple) {
 		flags[name].multiple = true;
 	}
 }
+
+const ignoredSchemaPaths = new Set(["devServer"]);
+const specialSchemaPathNames = {
+	"node/__dirname": "node/dirname",
+	"node/__filename": "node/filename"
+};
 
 // TODO support `not` and `if/then/else`
 // TODO support `const`, but we don't use it on our schema
@@ -77,7 +77,8 @@ function traverse(schemaPart, schemaPath = "", depth = 0, inArray = false) {
 		!schemaPart.type &&
 		!schemaPart.enum &&
 		!schemaPart.oneOf &&
-		!schemaPart.anyOf
+		!schemaPart.anyOf &&
+		!schemaPart.allOf
 	) {
 		return;
 	}
@@ -92,7 +93,8 @@ function traverse(schemaPart, schemaPath = "", depth = 0, inArray = false) {
 				traverse(
 					schemaPart.properties[property],
 					schemaPath ? `${schemaPath}/${property}` : property,
-					depth + 1
+					depth + 1,
+					inArray
 				)
 			);
 		}
@@ -102,9 +104,9 @@ function traverse(schemaPart, schemaPath = "", depth = 0, inArray = false) {
 
 	if (schemaPart.type === "array") {
 		if (Array.isArray(schemaPart.items)) {
-			schemaPart.items.forEach(item => {
-				traverse(item, schemaPath, depth + 1, true);
-			});
+			schemaPart.items.forEach(item =>
+				traverse(item, schemaPath, depth + 1, true)
+			);
 
 			return;
 		}
@@ -120,7 +122,7 @@ function traverse(schemaPart, schemaPath = "", depth = 0, inArray = false) {
 		const items = maybeOf;
 
 		items.forEach((item, index) =>
-			traverse(items[index], schemaPath, depth + 1)
+			traverse(items[index], schemaPath, depth + 1, inArray)
 		);
 
 		return;

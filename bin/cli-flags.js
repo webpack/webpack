@@ -128,7 +128,8 @@ module.exports = {
 	externals: {
 		types: ["string"],
 		description:
-			"An exact matched dependency becomes external. The same string is used as external dependency."
+			"An exact matched dependency becomes external. The same string is used as external dependency.",
+		multiple: true
 	},
 	"externals-type": {
 		types: ["string"],
@@ -136,7 +137,8 @@ module.exports = {
 			"Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value)"
 	},
 	"infrastructure-logging-debug": {
-		types: ["string", "boolean"]
+		types: ["string", "boolean"],
+		multiple: true
 	},
 	"infrastructure-logging-level": {
 		types: ["string"],
@@ -147,51 +149,65 @@ module.exports = {
 		description: "Enable production optimizations or development hints."
 	},
 	"module-default-rules-compiler": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-default-rules-enforce": {
 		types: ["string"],
-		description: "Enforce this rule as pre or post step"
+		description: "Enforce this rule as pre or post step",
+		multiple: true
 	},
 	"module-default-rules-exclude": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-default-rules-include": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-default-rules-issuer": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-default-rules-loader": {
 		types: ["string"],
-		description: "A loader request"
+		description: "A loader request",
+		multiple: true
 	},
 	"module-default-rules-options": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-default-rules-real-resource": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-default-rules-resource": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-default-rules-resource-query": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-default-rules-side-effects": {
 		types: ["boolean"],
-		description: "Flags a module as with or without side effects"
+		description: "Flags a module as with or without side effects",
+		multiple: true
 	},
 	"module-default-rules-test": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-default-rules-type": {
 		types: ["string"],
-		description: "Module type to use for the module"
+		description: "Module type to use for the module",
+		multiple: true
 	},
 	"module-default-rules-use": {
 		types: ["string"],
-		description: "A loader request"
+		description: "A loader request",
+		multiple: true
 	},
 	"module-expr-context-critical": {
 		types: ["boolean"],
@@ -216,51 +232,65 @@ module.exports = {
 		multiple: true
 	},
 	"module-rules-compiler": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-rules-enforce": {
 		types: ["string"],
-		description: "Enforce this rule as pre or post step"
+		description: "Enforce this rule as pre or post step",
+		multiple: true
 	},
 	"module-rules-exclude": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-rules-include": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-rules-issuer": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-rules-loader": {
 		types: ["string"],
-		description: "A loader request"
+		description: "A loader request",
+		multiple: true
 	},
 	"module-rules-options": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-rules-real-resource": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-rules-resource": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-rules-resource-query": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-rules-side-effects": {
 		types: ["boolean"],
-		description: "Flags a module as with or without side effects"
+		description: "Flags a module as with or without side effects",
+		multiple: true
 	},
 	"module-rules-test": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"module-rules-type": {
 		types: ["string"],
-		description: "Module type to use for the module"
+		description: "Module type to use for the module",
+		multiple: true
 	},
 	"module-rules-use": {
 		types: ["string"],
-		description: "A loader request"
+		description: "A loader request",
+		multiple: true
 	},
 	"module-strict-export-presence": {
 		types: ["boolean"],
@@ -760,11 +790,13 @@ module.exports = {
 	},
 	"resolve-alias-name": {
 		types: ["string"],
-		description: "Request to be redirected"
+		description: "Request to be redirected",
+		multiple: true
 	},
 	"resolve-alias-only-module": {
 		types: ["boolean"],
-		description: "Redirect only exact matching request"
+		description: "Redirect only exact matching request",
+		multiple: true
 	},
 	"resolve-alias-fields": {
 		types: ["string"],
@@ -827,11 +859,13 @@ module.exports = {
 	},
 	"resolve-loader-alias-name": {
 		types: ["string"],
-		description: "Request to be redirected"
+		description: "Request to be redirected",
+		multiple: true
 	},
 	"resolve-loader-alias-only-module": {
 		types: ["boolean"],
-		description: "Redirect only exact matching request"
+		description: "Redirect only exact matching request",
+		multiple: true
 	},
 	"resolve-loader-alias-fields": {
 		types: ["string"],
@@ -1003,13 +1037,16 @@ module.exports = {
 		description: "add errors"
 	},
 	"stats-exclude": {
-		types: ["string", "boolean"]
+		types: ["string", "boolean"],
+		multiple: true
 	},
 	"stats-exclude-assets": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	"stats-exclude-modules": {
-		types: ["string", "boolean"]
+		types: ["string", "boolean"],
+		multiple: true
 	},
 	"stats-hash": {
 		types: ["boolean"],
@@ -1025,7 +1062,8 @@ module.exports = {
 			"enable/disable logging output (true: shows normal logging output, loglevel: log)"
 	},
 	"stats-logging-debug": {
-		types: ["string", "boolean"]
+		types: ["string", "boolean"],
+		multiple: true
 	},
 	"stats-logging-trace": {
 		types: ["boolean"],
@@ -1112,7 +1150,8 @@ module.exports = {
 		description: "add warnings"
 	},
 	"stats-warnings-filter": {
-		types: ["string"]
+		types: ["string"],
+		multiple: true
 	},
 	stats: {
 		types: ["boolean", "string"]
