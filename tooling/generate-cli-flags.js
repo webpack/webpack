@@ -53,7 +53,9 @@ function addFlag(schemaPath, schemaPart, multiple) {
 		const duplicateIndex = flags[name].types.findIndex(() => type === type);
 
 		if (duplicateIndex > -1) {
-			flags[name].types[duplicateIndex].multiple = true;
+			if (multiple) {
+				flags[name].types[duplicateIndex].multiple = true;
+			}
 
 			break;
 		}
@@ -70,7 +72,7 @@ const specialSchemaPathNames = {
 
 // TODO support `not` and `if/then/else`
 // TODO support `const`, but we don't use it on our schema
-function traverse(schemaPart, schemaPath = "", depth = 0, inArray = false) {
+function traverse(schemaPart, schemaPath = "", inArray = false, depth = 0) {
 	if (ignoredSchemaPaths.has(schemaPath)) {
 		return;
 	}
@@ -103,8 +105,8 @@ function traverse(schemaPart, schemaPath = "", depth = 0, inArray = false) {
 				traverse(
 					schemaPart.properties[property],
 					schemaPath ? `${schemaPath}/${property}` : property,
-					depth + 1,
-					inArray
+					inArray,
+					depth + 1
 				)
 			);
 		}
@@ -115,13 +117,13 @@ function traverse(schemaPart, schemaPath = "", depth = 0, inArray = false) {
 	if (schemaPart.type === "array") {
 		if (Array.isArray(schemaPart.items)) {
 			schemaPart.items.forEach(item =>
-				traverse(item, schemaPath, depth + 1, true)
+				traverse(item, schemaPath, true, depth + 1)
 			);
 
 			return;
 		}
 
-		traverse(schemaPart.items, schemaPath, depth + 1, true);
+		traverse(schemaPart.items, schemaPath, true, depth + 1);
 
 		return;
 	}
@@ -132,7 +134,7 @@ function traverse(schemaPart, schemaPath = "", depth = 0, inArray = false) {
 		const items = maybeOf;
 
 		items.forEach((item, index) =>
-			traverse(items[index], schemaPath, depth + 1, inArray)
+			traverse(items[index], schemaPath, inArray, depth + 1)
 		);
 
 		return;

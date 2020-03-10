@@ -28,7 +28,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		],
 		description: "Disable caching."
@@ -57,7 +57,7 @@ module.exports = {
 		types: [
 			{
 				type: "string",
-				multiple: true
+				multiple: false
 			}
 		],
 		description: "In memory caching"
@@ -164,7 +164,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		]
 	},
@@ -684,7 +684,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		],
 		description: "Include a polyfill for the '__dirname' variable"
@@ -693,7 +693,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		],
 		description: "Include a polyfill for the '__filename' variable"
@@ -721,7 +721,7 @@ module.exports = {
 		types: [
 			{
 				type: "string",
-				multiple: true
+				multiple: false
 			}
 		],
 		description:
@@ -798,7 +798,7 @@ module.exports = {
 		types: [
 			{
 				type: "string",
-				multiple: true
+				multiple: false
 			}
 		],
 		description:
@@ -817,7 +817,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		]
 	},
@@ -864,7 +864,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		]
 	},
@@ -1053,7 +1053,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		]
 	},
@@ -1163,7 +1163,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		],
 		description: "This option enables cross-origin loading of chunks."
@@ -1198,7 +1198,7 @@ module.exports = {
 		types: [
 			{
 				type: "number",
-				multiple: true
+				multiple: false
 			}
 		]
 	},
@@ -1318,7 +1318,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		],
 		description:
@@ -1589,7 +1589,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		],
 		description:
@@ -1627,7 +1627,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		]
 	},
@@ -1635,7 +1635,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		]
 	},
@@ -1643,7 +1643,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		]
 	},
@@ -2218,7 +2218,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		],
 		description:
@@ -2336,7 +2336,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		]
 	},
@@ -2433,7 +2433,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		]
 	},
@@ -2478,7 +2478,7 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
-				multiple: true
+				multiple: false
 			}
 		],
 		description: "`true`: use polling."
