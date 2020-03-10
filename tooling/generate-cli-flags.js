@@ -50,7 +50,9 @@ function addFlag(schemaPath, schemaPart, multiple) {
 	}
 
 	for (const type of types) {
-		const duplicateIndex = flags[name].types.findIndex(() => type === type);
+		const duplicateIndex = flags[name].types.findIndex(
+			item => item.type === type
+		);
 
 		if (duplicateIndex > -1) {
 			if (multiple) {
