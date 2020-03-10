@@ -329,15 +329,6 @@ module.exports = {
 			}
 		]
 	},
-	"module-default-rules-compiler": {
-		path: "module.defaultRules.compiler",
-		types: [
-			{
-				type: "string",
-				multiple: true
-			}
-		]
-	},
 	"module-default-rules-enforce": {
 		path: "module.defaultRules.enforce",
 		description: "Enforce this rule as pre or post step",
@@ -375,16 +366,6 @@ module.exports = {
 			}
 		]
 	},
-	"module-default-rules-loader": {
-		path: "module.defaultRules.loader",
-		description: "A loader request",
-		types: [
-			{
-				type: "string",
-				multiple: true
-			}
-		]
-	},
 	"module-default-rules-options": {
 		path: "module.defaultRules.options",
 		types: [
@@ -405,15 +386,6 @@ module.exports = {
 	},
 	"module-default-rules-resource": {
 		path: "module.defaultRules.resource",
-		types: [
-			{
-				type: "string",
-				multiple: true
-			}
-		]
-	},
-	"module-default-rules-resource-query": {
-		path: "module.defaultRules.resourceQuery",
 		types: [
 			{
 				type: "string",
@@ -453,6 +425,16 @@ module.exports = {
 	"module-default-rules-use": {
 		path: "module.defaultRules.use",
 		description: "A loader request",
+		types: [
+			{
+				type: "string",
+				multiple: true
+			}
+		]
+	},
+	"module-default-rules-use-ident": {
+		path: "module.defaultRules.use.ident",
+		description: "Unique loader options identifier",
 		types: [
 			{
 				type: "string",
@@ -511,15 +493,6 @@ module.exports = {
 			}
 		]
 	},
-	"module-rules-compiler": {
-		path: "module.rules.compiler",
-		types: [
-			{
-				type: "string",
-				multiple: true
-			}
-		]
-	},
 	"module-rules-enforce": {
 		path: "module.rules.enforce",
 		description: "Enforce this rule as pre or post step",
@@ -557,16 +530,6 @@ module.exports = {
 			}
 		]
 	},
-	"module-rules-loader": {
-		path: "module.rules.loader",
-		description: "A loader request",
-		types: [
-			{
-				type: "string",
-				multiple: true
-			}
-		]
-	},
 	"module-rules-options": {
 		path: "module.rules.options",
 		types: [
@@ -587,15 +550,6 @@ module.exports = {
 	},
 	"module-rules-resource": {
 		path: "module.rules.resource",
-		types: [
-			{
-				type: "string",
-				multiple: true
-			}
-		]
-	},
-	"module-rules-resource-query": {
-		path: "module.rules.resourceQuery",
 		types: [
 			{
 				type: "string",
@@ -635,6 +589,16 @@ module.exports = {
 	"module-rules-use": {
 		path: "module.rules.use",
 		description: "A loader request",
+		types: [
+			{
+				type: "string",
+				multiple: true
+			}
+		]
+	},
+	"module-rules-use-ident": {
+		path: "module.rules.use.ident",
+		description: "Unique loader options identifier",
 		types: [
 			{
 				type: "string",
