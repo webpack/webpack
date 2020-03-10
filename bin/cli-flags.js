@@ -182,6 +182,10 @@ module.exports = {
 			{
 				type: "boolean",
 				multiple: false
+			},
+			{
+				type: "string",
+				multiple: false
 			}
 		]
 	},
@@ -306,6 +310,10 @@ module.exports = {
 			{
 				type: "string",
 				multiple: true
+			},
+			{
+				type: "boolean",
+				multiple: false
 			}
 		]
 	},
@@ -727,6 +735,10 @@ module.exports = {
 			{
 				type: "boolean",
 				multiple: false
+			},
+			{
+				type: "string",
+				multiple: false
 			}
 		]
 	},
@@ -736,6 +748,10 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
+				multiple: false
+			},
+			{
+				type: "string",
 				multiple: false
 			}
 		]
@@ -768,6 +784,10 @@ module.exports = {
 		types: [
 			{
 				type: "string",
+				multiple: false
+			},
+			{
+				type: "boolean",
 				multiple: false
 			}
 		]
@@ -854,6 +874,10 @@ module.exports = {
 			{
 				type: "string",
 				multiple: false
+			},
+			{
+				type: "boolean",
+				multiple: false
 			}
 		]
 	},
@@ -872,6 +896,10 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
+				multiple: false
+			},
+			{
+				type: "string",
 				multiple: false
 			}
 		]
@@ -924,6 +952,10 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
+				multiple: false
+			},
+			{
+				type: "string",
 				multiple: false
 			}
 		]
@@ -1135,6 +1167,10 @@ module.exports = {
 			{
 				type: "boolean",
 				multiple: false
+			},
+			{
+				type: "string",
+				multiple: false
 			}
 		]
 	},
@@ -1257,6 +1293,10 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
+				multiple: false
+			},
+			{
+				type: "string",
 				multiple: false
 			}
 		]
@@ -1430,6 +1470,10 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
+				multiple: false
+			},
+			{
+				type: "string",
 				multiple: false
 			}
 		]
@@ -1732,6 +1776,10 @@ module.exports = {
 			{
 				type: "boolean",
 				multiple: false
+			},
+			{
+				type: "string",
+				multiple: false
 			}
 		]
 	},
@@ -1772,6 +1820,10 @@ module.exports = {
 			{
 				type: "boolean",
 				multiple: false
+			},
+			{
+				type: "string",
+				multiple: false
 			}
 		]
 	},
@@ -1780,6 +1832,10 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
+				multiple: false
+			},
+			{
+				type: "string",
 				multiple: false
 			}
 		]
@@ -1790,6 +1846,10 @@ module.exports = {
 			{
 				type: "boolean",
 				multiple: false
+			},
+			{
+				type: "string",
+				multiple: false
 			}
 		]
 	},
@@ -1799,6 +1859,10 @@ module.exports = {
 		types: [
 			{
 				type: "string",
+				multiple: true
+			},
+			{
+				type: "boolean",
 				multiple: true
 			}
 		]
@@ -1949,6 +2013,10 @@ module.exports = {
 		types: [
 			{
 				type: "string",
+				multiple: true
+			},
+			{
+				type: "boolean",
 				multiple: true
 			}
 		]
@@ -2382,6 +2450,10 @@ module.exports = {
 			{
 				type: "string",
 				multiple: true
+			},
+			{
+				type: "boolean",
+				multiple: false
 			}
 		]
 	},
@@ -2400,6 +2472,10 @@ module.exports = {
 			{
 				type: "string",
 				multiple: true
+			},
+			{
+				type: "boolean",
+				multiple: false
 			}
 		]
 	},
@@ -2431,6 +2507,10 @@ module.exports = {
 			{
 				type: "boolean",
 				multiple: false
+			},
+			{
+				type: "string",
+				multiple: false
 			}
 		]
 	},
@@ -2440,6 +2520,10 @@ module.exports = {
 			{
 				type: "string",
 				multiple: true
+			},
+			{
+				type: "boolean",
+				multiple: false
 			}
 		]
 	},
@@ -2560,6 +2644,10 @@ module.exports = {
 			{
 				type: "boolean",
 				multiple: false
+			},
+			{
+				type: "string",
+				multiple: false
 			}
 		]
 	},
@@ -2668,6 +2756,10 @@ module.exports = {
 			{
 				type: "boolean",
 				multiple: false
+			},
+			{
+				type: "string",
+				multiple: false
 			}
 		]
 	},
@@ -2718,6 +2810,10 @@ module.exports = {
 		types: [
 			{
 				type: "boolean",
+				multiple: false
+			},
+			{
+				type: "number",
 				multiple: false
 			}
 		]
