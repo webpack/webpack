@@ -21,6 +21,47 @@ it("should define UNDEFINED", function() {
 	expect((typeof UNDEFINED)).toBe("undefined");
 	if(typeof UNDEFINED !== "undefined") require("fail");
 });
+it("should define POSITIVE_ZERO", function() {
+	expect(POSITIVE_ZERO).toBe(+0);
+	expect(POSITIVE_ZERO).toBe(0);
+	expect((typeof POSITIVE_ZERO)).toBe("number");
+	expect(Object.is(POSITIVE_ZERO, 0)).toBe(true);
+	expect(Object.is(POSITIVE_ZERO, +0)).toBe(true);
+	expect(Object.is(POSITIVE_ZERO, -0)).toBe(false);
+	if(POSITIVE_ZERO) require("fail");
+	if(typeof POSITIVE_ZERO !== "number") require("fail");
+	if(POSITIVE_ZERO !== +0) require("fail");
+	if(POSITIVE_ZERO != +0) require("fail");
+	if(POSITIVE_ZERO !== 0) require("fail");
+	if(POSITIVE_ZERO != 0) require("fail");
+});
+it("should define NEGATIVE_ZER0", function() {
+	expect(NEGATIVE_ZER0).toBe(-0);
+	expect((typeof NEGATIVE_ZER0)).toBe("number");
+	expect(Object.is(NEGATIVE_ZER0, 0)).toBe(false);
+	expect(Object.is(NEGATIVE_ZER0, +0)).toBe(false);
+	expect(Object.is(NEGATIVE_ZER0, -0)).toBe(true);
+	if(NEGATIVE_ZER0) require("fail");
+	if(typeof NEGATIVE_ZER0 !== "number") require("fail");
+	if(NEGATIVE_ZER0 !== +0) require("fail");
+	if(NEGATIVE_ZER0 != +0) require("fail");
+	if(NEGATIVE_ZER0 !== 0) require("fail");
+	if(NEGATIVE_ZER0 != 0) require("fail");
+});
+it("should define NEGATIVE_NUMBER", function() {
+	expect(NEGATIVE_NUMBER).toBe(-100.25);
+	expect((typeof NEGATIVE_NUMBER)).toBe("number");
+	expect(100.25 / NEGATIVE_NUMBER).toBe(-1);
+	if(!NEGATIVE_NUMBER) require("fail");
+	if(typeof NEGATIVE_NUMBER !== "number") require("fail");
+});
+it("should define POSITIVE_NUMBER", function() {
+	expect(POSITIVE_NUMBER).toBe(+100.25);
+	expect((typeof POSITIVE_NUMBER)).toBe("number");
+	expect(POSITIVE_NUMBER / 100.25).toBe(1);
+	if(!POSITIVE_NUMBER) require("fail");
+	if(typeof POSITIVE_NUMBER !== "number") require("fail");
+});
 it("should define REGEXP", function() {
 	expect(REGEXP.toString()).toBe("/abc/i");
 	expect((typeof REGEXP)).toBe("object");
