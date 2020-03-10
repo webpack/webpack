@@ -35,7 +35,6 @@ function getSchemaPart(path) {
 
 function addFlag(schemaPath, schemaPart, multiple) {
 	const name = decamelize(schemaPath.replace(/\./g, "-"));
-	// TODO move it under property
 	const types = schemaPart.enum
 		? [...new Set(schemaPart.enum.map(item => typeof item))]
 		: Array.isArray(schemaPart.type)
