@@ -140,8 +140,16 @@ const prettierConfig = prettier.resolveConfig.sync(cliFlagsPath);
 
 fs.writeFileSync(
 	cliFlagsPath,
-	prettier.format(`module.exports = ${JSON.stringify(flags, null, 2)};`, {
-		...prettierConfig,
-		parser: "babel"
-	})
+	prettier.format(
+		`/**
+ * This file was automatically generated.
+ * DO NOT MODIFY BY HAND.
+ * Run \`yarn special-lint-fix\` to update
+ */\n
+  module.exports = ${JSON.stringify(flags, null, 2)};`,
+		{
+			...prettierConfig,
+			parser: "babel"
+		}
+	)
 );
