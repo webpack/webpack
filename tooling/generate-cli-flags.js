@@ -34,7 +34,7 @@ function getSchemaPart(path) {
 }
 
 function addFlag(schemaPath, schemaPart, multiple) {
-	const name = decamelize(schemaPath.replace(/\//g, "-"));
+	const name = decamelize(schemaPath.replace(/\./g, "-"));
 	// TODO move it under property
 	const types = schemaPart.enum
 		? [...new Set(schemaPart.enum.map(item => typeof item))]
@@ -44,8 +44,9 @@ function addFlag(schemaPath, schemaPart, multiple) {
 
 	if (!flags[name]) {
 		flags[name] = {
-			types: [],
-			description: schemaPart.description
+			path: schemaPath,
+			description: schemaPart.description,
+			types: []
 		};
 	}
 
@@ -104,7 +105,7 @@ function traverse(schemaPart, schemaPath = "", inArray = false, depth = 0) {
 			Object.keys(schemaPart.properties).forEach(property =>
 				traverse(
 					schemaPart.properties[property],
-					schemaPath ? `${schemaPath}/${property}` : property,
+					schemaPath ? `${schemaPath}.${property}` : property,
 					inArray,
 					depth + 1
 				)
