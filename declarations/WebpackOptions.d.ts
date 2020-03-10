@@ -72,11 +72,7 @@ export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 /**
  * Specify which export should be exposed as library.
  */
-export type LibraryExport = string | ArrayOfStringValues;
-/**
- * Array of strings.
- */
-export type ArrayOfStringValues = string[];
+export type LibraryExport = string | string[];
 /**
  * The name of the library (some types allow unnamed libraries too).
  */
@@ -145,6 +141,10 @@ export type ExternalItem =
 				| boolean;
 	  }
 	| RegExp;
+/**
+ * Array of strings.
+ */
+export type ArrayOfStringValues = string[];
 /**
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
@@ -890,7 +890,7 @@ export interface LibraryCustomUmdObject {
 	/**
 	 * Name of the property exposed globally by a UMD library.
 	 */
-	root?: string | ArrayOfStringValues;
+	root?: string | string[];
 }
 /**
  * Enables/Disables experiments (experiemental features with relax SemVer compatibility).
