@@ -35,20 +35,30 @@ function getSchemaPart(path) {
 
 function addFlag(schemaPath, schemaPart, multiple) {
 	const name = decamelize(schemaPath.replace(/\//g, "-"));
+	// TODO move it under property
 	const types = schemaPart.enum
 		? [...new Set(schemaPart.enum.map(item => typeof item))]
 		: Array.isArray(schemaPart.type)
 		? schemaPart.type
 		: [schemaPart.type];
 
-	if (flags[name]) {
-		flags[name].types = [...new Set(flags[name].types.concat(types))];
-	} else {
-		flags[name] = { types, description: schemaPart.description };
+	if (!flags[name]) {
+		flags[name] = {
+			types: [],
+			description: schemaPart.description
+		};
 	}
 
-	if (multiple) {
-		flags[name].multiple = true;
+	for (const type of types) {
+		const duplicateIndex = flags[name].types.findIndex(() => type === type);
+
+		if (duplicateIndex > -1) {
+			flags[name].types[duplicateIndex].multiple = true;
+
+			break;
+		}
+
+		flags[name].types.push({ type: type, multiple });
 	}
 }
 
