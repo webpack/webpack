@@ -380,6 +380,10 @@ describe("JavascriptParser", () => {
 		}
 
 		const testCases = {
+			true: "bool=true",
+			false: "bool=false",
+			"!true": "bool=false",
+			"!false": "bool=true",
 			'"strrring"': "string=strrring",
 			'"strr" + "ring"': "string=strrring",
 			'"s" + ("trr" + "rin") + "g"': "string=strrring",
@@ -414,12 +418,34 @@ describe("JavascriptParser", () => {
 			"!0": "bool=true",
 			"!-0": "bool=true",
 			"!+0": "bool=true",
+			"20n": "bigint=20",
+			"10n + 10n": "bigint=20",
+			"10n - 5n": "bigint=5",
+			"10n * 5n": "bigint=50",
+			"10n / 5n": "bigint=2",
+			"5n ** 2n": "bigint=25",
+			"5n == 5n": "bool=true",
+			"5n === 5n": "bool=true",
+			"5n != 5n": "bool=false",
+			"5n !== 5n": "bool=false",
+			"5n != 1n": "bool=true",
+			"5n !== 1n": "bool=true",
+			"5n & 3n": "bigint=1",
+			"5n | 2n": "bigint=7",
+			"5n ^ 2n": "bigint=7",
+			"5n >> 2n": "bigint=1",
+			"5n << 2n": "bigint=20",
+			"null == null": "bool=true",
+			"null === null": "bool=true",
+			"null != null": "bool=false",
+			"null !== null": "bool=false",
 			"true === false": "bool=false",
 			"false !== false": "bool=false",
 			"true == true": "bool=true",
 			"false != true": "bool=true",
 			"!'a'": "bool=false",
 			"!''": "bool=true",
+			"!null": "bool=true",
 			"'pre' + a": "wrapped=['pre' string=pre]+[null]",
 			"a + 'post'": "wrapped=[null]+['post' string=post]",
 			"'pre' + a + 'post'": "wrapped=['pre' string=pre]+['post' string=post]",
@@ -448,6 +474,10 @@ describe("JavascriptParser", () => {
 			"typeof b.Number": "string=number",
 			"typeof b['Number']": "string=number",
 			"typeof b[Number]": "",
+			"typeof true": "string=boolean",
+			"typeof null": "string=object",
+			"typeof 1": "string=number",
+			"typeof 1n": "string=bigint",
 			"b.Number": "number=123",
 			"b['Number']": "number=123",
 			"b[Number]": "",
@@ -532,6 +562,7 @@ describe("JavascriptParser", () => {
 					const result = [];
 					if (evalExpr.isString()) result.push("string=" + evalExpr.string);
 					if (evalExpr.isNumber()) result.push("number=" + evalExpr.number);
+					if (evalExpr.isBigInt()) result.push("bigint=" + evalExpr.bigint);
 					if (evalExpr.isBoolean()) result.push("bool=" + evalExpr.bool);
 					if (evalExpr.isRegExp()) result.push("regExp=" + evalExpr.regExp);
 					if (evalExpr.isConditional())
