@@ -1,29 +1,29 @@
 {
   "definitions": {
     "DllReferencePluginOptionsContent": {
-      "description": "The mappings from request to module info",
+      "description": "The mappings from request to module info.",
       "type": "object",
       "additionalProperties": {
-        "description": "Module info",
+        "description": "Module info.",
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "buildMeta": {
-            "description": "Meta information about the module",
+            "description": "Meta information about the module.",
             "type": "object"
           },
           "exports": {
-            "description": "Information about the provided exports of the module",
+            "description": "Information about the provided exports of the module.",
             "anyOf": [
               {
-                "description": "Exports unknown/dynamic",
+                "description": "Exports unknown/dynamic.",
                 "enum": [true]
               },
               {
-                "description": "List of provided exports of the module",
+                "description": "List of provided exports of the module.",
                 "type": "array",
                 "items": {
-                  "description": "Name of the export",
+                  "description": "Name of the export.",
                   "type": "string",
                   "minLength": 1
                 }
@@ -31,7 +31,7 @@
             ]
           },
           "id": {
-            "description": "Module ID",
+            "description": "Module ID.",
             "anyOf": [
               {
                 "type": "number"
@@ -48,12 +48,12 @@
       "minProperties": 1
     },
     "DllReferencePluginOptionsManifest": {
-      "description": "An object containing content, name and type",
+      "description": "An object containing content, name and type.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "content": {
-          "description": "The mappings from request to module info",
+          "description": "The mappings from request to module info.",
           "anyOf": [
             {
               "$ref": "#/definitions/DllReferencePluginOptionsContent"
@@ -61,12 +61,12 @@
           ]
         },
         "name": {
-          "description": "The name where the dll is exposed (external name)",
+          "description": "The name where the dll is exposed (external name).",
           "type": "string",
           "minLength": 1
         },
         "type": {
-          "description": "The type how the dll is exposed (external type)",
+          "description": "The type how the dll is exposed (external type).",
           "anyOf": [
             {
               "$ref": "#/definitions/DllReferencePluginOptionsSourceType"
@@ -77,7 +77,7 @@
       "required": ["content"]
     },
     "DllReferencePluginOptionsSourceType": {
-      "description": "The type how the dll is exposed (external type)",
+      "description": "The type how the dll is exposed (external type).",
       "enum": [
         "var",
         "assign",
@@ -102,20 +102,20 @@
       "additionalProperties": false,
       "properties": {
         "context": {
-          "description": "(absolute path) context of requests in the manifest (or content property)",
+          "description": "Context of requests in the manifest (or content property) as absolute path.",
           "type": "string",
           "absolutePath": true
         },
         "extensions": {
-          "description": "Extensions used to resolve modules in the dll bundle (only used when using 'scope')",
+          "description": "Extensions used to resolve modules in the dll bundle (only used when using 'scope').",
           "type": "array",
           "items": {
-            "description": "An extension",
+            "description": "An extension.",
             "type": "string"
           }
         },
         "manifest": {
-          "description": "An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation",
+          "description": "An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.",
           "oneOf": [
             {
               "$ref": "#/definitions/DllReferencePluginOptionsManifest"
@@ -127,17 +127,17 @@
           ]
         },
         "name": {
-          "description": "The name where the dll is exposed (external name, defaults to manifest.name)",
+          "description": "The name where the dll is exposed (external name, defaults to manifest.name).",
           "type": "string",
           "minLength": 1
         },
         "scope": {
-          "description": "Prefix which is used for accessing the content of the dll",
+          "description": "Prefix which is used for accessing the content of the dll.",
           "type": "string",
           "minLength": 1
         },
         "sourceType": {
-          "description": "How the dll is exposed (libraryTarget, defaults to manifest.type)",
+          "description": "How the dll is exposed (libraryTarget, defaults to manifest.type).",
           "anyOf": [
             {
               "$ref": "#/definitions/DllReferencePluginOptionsSourceType"
@@ -145,7 +145,7 @@
           ]
         },
         "type": {
-          "description": "The way how the export of the dll bundle is used",
+          "description": "The way how the export of the dll bundle is used.",
           "enum": ["require", "object"]
         }
       },
@@ -156,7 +156,7 @@
       "additionalProperties": false,
       "properties": {
         "content": {
-          "description": "The mappings from request to module info",
+          "description": "The mappings from request to module info.",
           "anyOf": [
             {
               "$ref": "#/definitions/DllReferencePluginOptionsContent"
@@ -164,30 +164,30 @@
           ]
         },
         "context": {
-          "description": "(absolute path) context of requests in the manifest (or content property)",
+          "description": "Context of requests in the manifest (or content property) as absolute path.",
           "type": "string",
           "absolutePath": true
         },
         "extensions": {
-          "description": "Extensions used to resolve modules in the dll bundle (only used when using 'scope')",
+          "description": "Extensions used to resolve modules in the dll bundle (only used when using 'scope').",
           "type": "array",
           "items": {
-            "description": "An extension",
+            "description": "An extension.",
             "type": "string"
           }
         },
         "name": {
-          "description": "The name where the dll is exposed (external name)",
+          "description": "The name where the dll is exposed (external name).",
           "type": "string",
           "minLength": 1
         },
         "scope": {
-          "description": "Prefix which is used for accessing the content of the dll",
+          "description": "Prefix which is used for accessing the content of the dll.",
           "type": "string",
           "minLength": 1
         },
         "sourceType": {
-          "description": "How the dll is exposed (libraryTarget)",
+          "description": "How the dll is exposed (libraryTarget).",
           "anyOf": [
             {
               "$ref": "#/definitions/DllReferencePluginOptionsSourceType"
@@ -195,7 +195,7 @@
           ]
         },
         "type": {
-          "description": "The way how the export of the dll bundle is used",
+          "description": "The way how the export of the dll bundle is used.",
           "enum": ["require", "object"]
         }
       },

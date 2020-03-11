@@ -6,7 +6,7 @@
 
 export interface JsonModulesPluginParserOptions {
 	/**
-	 * Function that executes for a module source string and should return json-compatible data
+	 * Function that executes for a module source string and should return json-compatible data.
 	 */
 	parse?: (input: string) => any;
 }
