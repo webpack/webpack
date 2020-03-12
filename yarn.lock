@@ -4091,9 +4091,9 @@ map-visit@^1.0.0:
     object-visit "^1.0.0"
 
 memfs@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.1.1.tgz#3a23799a783102d40b13595cb25a7b39605bbcd0"
-  integrity sha512-A6QWLLH6HolvLeACaEc6WAAxU7c7iAvVgeyp1iDwzSIbwfGUjR4x9bAFUVq3YtSVFCYQAx4Nw2o4TEYAfH+lAg==
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.1.2.tgz#2bb51600dacec67ed35677b1185abb708b7d2ad6"
+  integrity sha512-YubKuE+RGSdpZcRq2Nih8HcHj3LrqndsDFNB9IFjrgwzdM4eq+fImlDMfNm/HdRhYRkLdUecHGIpdz+wyrqlDg==
   dependencies:
     fs-monkey "1.0.0"
 
