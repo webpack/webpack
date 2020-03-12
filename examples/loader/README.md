@@ -4,7 +4,7 @@
 // use our loader
 console.dir(require("./loader!./file"));
 
-// use buildin css loader
+// use built-in css loader
 console.dir(require("./test.css")); // default by extension
 console.dir(require("!css-loader!./test.css")); // manual
 ```
@@ -212,7 +212,7 @@ function toComment(sourceMap) {
 // use our loader
 console.dir(__webpack_require__(/*! ./loader!./file */ 1));
 
-// use buildin css loader
+// use built-in css loader
 console.dir(__webpack_require__(/*! ./test.css */ 2)); // default by extension
 console.dir(__webpack_require__(/*! css-loader!./test.css */ 2)); // manual
 

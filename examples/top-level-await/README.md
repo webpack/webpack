@@ -96,7 +96,7 @@ export const AlternativeCreateUserAction = async name => {
 };
 
 // Note: Using await import() at top-level doesn't make much sense
-//       except in rare cases. It will import modules sequencially.
+//       except in rare cases. It will import modules sequentially.
 ```
 
 As `Actions.js` doesn't use any top-level-await nor `import await` it's not an async module.
@@ -187,7 +187,7 @@ const AlternativeCreateUserAction = async name => {
 };
 
 // Note: Using await import() at top-level doesn't make much sense
-//       except in rare cases. It will import modules sequencially.
+//       except in rare cases. It will import modules sequentially.
 
 
 /***/ })

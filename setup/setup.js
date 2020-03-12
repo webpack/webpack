@@ -73,7 +73,7 @@ function exec(command, args, description) {
 		});
 		cp.on("exit", exitCode => {
 			if (exitCode) {
-				reject(`${description} failed with exitcode ${exitCode}`);
+				reject(`${description} failed with exit code ${exitCode}`);
 			} else {
 				resolve();
 			}
@@ -94,7 +94,7 @@ function execGetOutput(command, args, description) {
 		});
 		cp.on("exit", exitCode => {
 			if (exitCode) {
-				reject(`${description} failed with exitcode ${exitCode}`);
+				reject(`${description} failed with exit code ${exitCode}`);
 			} else {
 				resolve(
 					Buffer.concat(buffers)

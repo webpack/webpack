@@ -24,4 +24,4 @@ export const AlternativeCreateUserAction = async name => {
 };
 
 // Note: Using await import() at top-level doesn't make much sense
-//       except in rare cases. It will import modules sequencially.
+//       except in rare cases. It will import modules sequentially.
