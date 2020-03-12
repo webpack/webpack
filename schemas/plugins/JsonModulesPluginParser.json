@@ -4,7 +4,7 @@
   "additionalProperties": false,
   "properties": {
     "parse": {
-      "description": "Function that executes for a module source string and should return json-compatible data",
+      "description": "Function that executes for a module source string and should return json-compatible data.",
       "instanceof": "Function",
       "tsType": "((input: string) => any)"
     }

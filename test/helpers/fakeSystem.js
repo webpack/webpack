@@ -69,8 +69,9 @@ const System = {
 			m.executed = true;
 			for (let i = 0; i < m.deps.length; i++) {
 				const dep = m.deps[i];
+				const setters = m.mod.setters[i];
 				System.ensureExecuted(dep);
-				m.mod.setters[i](System.registry[dep].exports);
+				setters(System.registry[dep].exports);
 			}
 			m.mod.execute();
 		}

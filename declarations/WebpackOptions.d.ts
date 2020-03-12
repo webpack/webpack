@@ -45,15 +45,15 @@ export type Entry = EntryDynamic | EntryStatic;
  */
 export type EntryDynamic = () => EntryStatic | Promise<EntryStatic>;
 /**
- * A static entry description
+ * A static entry description.
  */
 export type EntryStatic = EntryObject | EntryUnnamed;
 /**
- * Module(s) that are loaded upon startup
+ * Module(s) that are loaded upon startup.
  */
 export type EntryItem = string | NonEmptyArrayOfUniqueStringValues;
 /**
- * A non-empty array of non-empty strings
+ * A non-empty array of non-empty strings.
  */
 export type NonEmptyArrayOfUniqueStringValues = [string, ...string[]];
 /**
@@ -70,19 +70,15 @@ export type Filename =
  */
 export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 /**
- * Specify which export should be exposed as library
+ * Specify which export should be exposed as library.
  */
-export type LibraryExport = string | ArrayOfStringValues;
+export type LibraryExport = string | string[];
 /**
- * Array of strings
- */
-export type ArrayOfStringValues = string[];
-/**
- * The name of the library (some types allow unnamed libraries too)
+ * The name of the library (some types allow unnamed libraries too).
  */
 export type LibraryName = string | string[] | LibraryCustomUmdObject;
 /**
- * Type of library
+ * Type of library.
  */
 export type LibraryType =
 	| "var"
@@ -134,7 +130,7 @@ export type ExternalItem =
 	| string
 	| {
 			/**
-			 * The dependency used for the external
+			 * The dependency used for the external.
 			 */
 			[k: string]:
 				| string
@@ -146,7 +142,11 @@ export type ExternalItem =
 	  }
 	| RegExp;
 /**
- * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value)
+ * Array of strings.
+ */
+export type ArrayOfStringValues = string[];
+/**
+ * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
 export type ExternalsType =
 	| "var"
@@ -166,11 +166,11 @@ export type ExternalsType =
 	| "jsonp"
 	| "system";
 /**
- * Filtering values
+ * Filtering values.
  */
 export type FilterTypes = FilterItemTypes | FilterItemTypes[];
 /**
- * Filtering value, regexp or function
+ * Filtering value, regexp or function.
  */
 export type FilterItemTypes = RegExp | string | ((value: string) => boolean);
 /**
@@ -178,11 +178,11 @@ export type FilterItemTypes = RegExp | string | ((value: string) => boolean);
  */
 export type Mode = "development" | "production" | "none";
 /**
- * One or multiple rule conditions
+ * One or multiple rule conditions.
  */
 export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
 /**
- * A condition matcher
+ * A condition matcher.
  */
 export type RuleSetCondition =
 	| RegExp
@@ -191,42 +191,42 @@ export type RuleSetCondition =
 	| RuleSetConditions
 	| {
 			/**
-			 * Logical AND
+			 * Logical AND.
 			 */
 			and?: RuleSetConditions;
 			/**
-			 * Exclude all modules matching any of these conditions
+			 * Exclude all modules matching any of these conditions.
 			 */
 			exclude?: RuleSetConditionOrConditions;
 			/**
-			 * Exclude all modules matching not any of these conditions
+			 * Exclude all modules matching not any of these conditions.
 			 */
 			include?: RuleSetConditionOrConditions;
 			/**
-			 * Logical NOT
+			 * Logical NOT.
 			 */
 			not?: RuleSetConditions;
 			/**
-			 * Logical OR
+			 * Logical OR.
 			 */
 			or?: RuleSetConditions;
 			/**
-			 * Exclude all modules matching any of these conditions
+			 * Exclude all modules matching any of these conditions.
 			 */
 			test?: RuleSetConditionOrConditions;
 	  };
 /**
- * A list of rule conditions
+ * A list of rule conditions.
  */
 export type RuleSetConditions = RuleSetCondition[];
 /**
- * One or multiple rule conditions matching an absolute path
+ * One or multiple rule conditions matching an absolute path.
  */
 export type RuleSetConditionOrConditionsAbsolute =
 	| RuleSetConditionAbsolute
 	| RuleSetConditionsAbsolute;
 /**
- * A condition matcher matching an absolute path
+ * A condition matcher matching an absolute path.
  */
 export type RuleSetConditionAbsolute =
 	| RegExp
@@ -235,67 +235,67 @@ export type RuleSetConditionAbsolute =
 	| RuleSetConditionsAbsolute
 	| {
 			/**
-			 * Logical AND
+			 * Logical AND.
 			 */
 			and?: RuleSetConditionsAbsolute;
 			/**
-			 * Exclude all modules matching any of these conditions
+			 * Exclude all modules matching any of these conditions.
 			 */
 			exclude?: RuleSetConditionOrConditionsAbsolute;
 			/**
-			 * Exclude all modules matching not any of these conditions
+			 * Exclude all modules matching not any of these conditions.
 			 */
 			include?: RuleSetConditionOrConditionsAbsolute;
 			/**
-			 * Logical NOT
+			 * Logical NOT.
 			 */
 			not?: RuleSetConditionsAbsolute;
 			/**
-			 * Logical OR
+			 * Logical OR.
 			 */
 			or?: RuleSetConditionsAbsolute;
 			/**
-			 * Exclude all modules matching any of these conditions
+			 * Exclude all modules matching any of these conditions.
 			 */
 			test?: RuleSetConditionOrConditionsAbsolute;
 	  };
 /**
- * A list of rule conditions matching an absolute path
+ * A list of rule conditions matching an absolute path.
  */
 export type RuleSetConditionsAbsolute = RuleSetConditionAbsolute[];
 /**
- * A loader request
+ * A loader request.
  */
 export type RuleSetLoader = string;
 /**
- * A list of descriptions of loaders applied
+ * A list of descriptions of loaders applied.
  */
 export type RuleSetUse =
 	| RuleSetUseItem
 	| ((data: object) => RuleSetUseItem[])
 	| RuleSetUseItem[];
 /**
- * A description of an applied loader
+ * A description of an applied loader.
  */
 export type RuleSetUseItem =
 	| RuleSetLoader
 	| ((data: object) => RuleSetUseItem | RuleSetUseItem[])
 	| {
 			/**
-			 * Unique loader options identifier
+			 * Unique loader options identifier.
 			 */
 			ident?: string;
 			/**
-			 * Loader name
+			 * Loader name.
 			 */
 			loader?: RuleSetLoader;
 			/**
-			 * Loader options
+			 * Loader options.
 			 */
 			options?: RuleSetLoaderOptions;
 	  };
 /**
- * Options passed to a loader
+ * Options passed to a loader.
  */
 export type RuleSetLoaderOptions =
 	| {
@@ -303,11 +303,11 @@ export type RuleSetLoaderOptions =
 	  }
 	| string;
 /**
- * List of string or string-array values
+ * List of string or string-array values.
  */
 export type ArrayOfStringOrStringArrayValues = (string | string[])[];
 /**
- * A list of rules
+ * A list of rules.
  */
 export type RuleSetRules = RuleSetRule[];
 /**
@@ -319,26 +319,26 @@ export type Name = string;
  */
 export type Node = false | NodeOptions;
 /**
- * Function acting as plugin
+ * Function acting as plugin.
  */
 export type WebpackPluginFunction = (
 	this: import("../lib/Compiler"),
 	compiler: import("../lib/Compiler")
 ) => void;
 /**
- * Create an additional chunk which contains only the webpack runtime and chunk hash maps
+ * Create an additional chunk which contains only the webpack runtime and chunk hash maps.
  */
 export type OptimizationRuntimeChunk =
 	| boolean
 	| ("single" | "multiple")
 	| {
 			/**
-			 * The name or name factory for the runtime chunks
+			 * The name or name factory for the runtime chunks.
 			 */
 			name?: string | Function;
 	  };
 /**
- * A function returning cache groups
+ * A function returning cache groups.
  */
 export type OptimizationSplitChunksGetCacheGroups = (
 	module: import("../lib/Module")
@@ -347,13 +347,13 @@ export type OptimizationSplitChunksGetCacheGroups = (
 	| OptimizationSplitChunksCacheGroup[]
 	| void;
 /**
- * Size description for limits
+ * Size description for limits.
  */
 export type OptimizationSplitChunksSizes =
 	| number
 	| {
 			/**
-			 * Size of the part of the chunk with the type of the key
+			 * Size of the part of the chunk with the type of the key.
 			 */
 			[k: string]: number;
 	  };
@@ -375,11 +375,11 @@ export type ChunkCallbackName = string;
  */
 export type ChunkFilename = string;
 /**
- * Number of milliseconds before chunk request expires
+ * Number of milliseconds before chunk request expires.
  */
 export type ChunkLoadTimeout = number;
 /**
- * Check if to be emitted file already exists and have the same content before writing to output filesystem
+ * Check if to be emitted file already exists and have the same content before writing to output filesystem.
  */
 export type CompareBeforeEmit = boolean;
 /**
@@ -403,27 +403,27 @@ export type DevtoolNamespace = string;
  */
 export type EcmaVersion = number | 2009;
 /**
- * List of library types enabled for use by entry points
+ * List of library types enabled for use by entry points.
  */
 export type EnabledLibraryTypes = LibraryType[];
 /**
- * An expression which is used to address the global object/scope in runtime code
+ * An expression which is used to address the global object/scope in runtime code.
  */
 export type GlobalObject = string;
 /**
- * Digest type used for the hash
+ * Digest type used for the hash.
  */
 export type HashDigest = string;
 /**
- * Number of chars which are used for the hash
+ * Number of chars which are used for the hash.
  */
 export type HashDigestLength = number;
 /**
- * Algorithm used for generation the hash (see node.js crypto package)
+ * Algorithm used for generation the hash (see node.js crypto package).
  */
 export type HashFunction = string | typeof import("../lib/util/Hash");
 /**
- * Any string which is added to the hash to salt it
+ * Any string which is added to the hash to salt it.
  */
 export type HashSalt = string;
 /**
@@ -447,11 +447,11 @@ export type Iife = boolean;
  */
 export type JsonpFunction = string;
 /**
- * This option enables loading async chunks via a custom script type, such as script type="module"
+ * This option enables loading async chunks via a custom script type, such as script type="module".
  */
 export type JsonpScriptType = false | "text/javascript" | "module";
 /**
- * Make the output files a library, exporting the exports of the entry point
+ * Make the output files a library, exporting the exports of the entry point.
  */
 export type Library = LibraryName | LibraryOptions;
 /**
@@ -500,7 +500,7 @@ export type WebassemblyModuleFilename = string;
  */
 export type Parallelism = number;
 /**
- * Configuration for web performance recommendations
+ * Configuration for web performance recommendations.
  */
 export type Performance = false | PerformanceOptions;
 /**
@@ -524,15 +524,15 @@ export type RecordsOutputPath = false | string;
  */
 export type RecordsPath = false | string;
 /**
- * Options for the resolver
+ * Options for the resolver.
  */
 export type Resolve = ResolveOptions;
 /**
- * Options for the resolver when resolving loaders
+ * Options for the resolver when resolving loaders.
  */
 export type ResolveLoader = ResolveOptions;
 /**
- * Stats options object or preset name
+ * Stats options object or preset name.
  */
 export type Stats =
 	| StatsOptions
@@ -547,7 +547,7 @@ export type Stats =
 			| "errors-warnings"
 	  );
 /**
- * Environment to build for
+ * Environment to build for.
  */
 export type Target =
 	| (
@@ -574,19 +574,19 @@ export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
  */
 export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
 /**
- * Create an additional chunk which contains only the webpack runtime and chunk hash maps
+ * Create an additional chunk which contains only the webpack runtime and chunk hash maps.
  */
 export type OptimizationRuntimeChunkNormalized =
 	| false
 	| {
 			/**
-			 * The name factory for the runtime chunks
+			 * The name factory for the runtime chunks.
 			 */
 			name?: Function;
 	  };
 
 /**
- * webpack options object as provided by the user
+ * Options object as provided by the user.
  */
 export interface WebpackOptions {
 	/**
@@ -610,7 +610,7 @@ export interface WebpackOptions {
 	 */
 	dependencies?: Dependencies;
 	/**
-	 * Options for the webpack-dev-server
+	 * Options for the webpack-dev-server.
 	 */
 	devServer?: DevServer;
 	/**
@@ -622,7 +622,7 @@ export interface WebpackOptions {
 	 */
 	entry?: Entry;
 	/**
-	 * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
+	 * Enables/Disables experiments (experiemental features with relax SemVer compatibility).
 	 */
 	experiments?: Experiments;
 	/**
@@ -630,11 +630,11 @@ export interface WebpackOptions {
 	 */
 	externals?: Externals;
 	/**
-	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value)
+	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
 	externalsType?: ExternalsType;
 	/**
-	 * Options for infrastructure level logging
+	 * Options for infrastructure level logging.
 	 */
 	infrastructureLogging?: InfrastructureLogging;
 	/**
@@ -658,7 +658,7 @@ export interface WebpackOptions {
 	 */
 	node?: Node;
 	/**
-	 * Enables/Disables integrated optimizations
+	 * Enables/Disables integrated optimizations.
 	 */
 	optimization?: Optimization;
 	/**
@@ -670,7 +670,7 @@ export interface WebpackOptions {
 	 */
 	parallelism?: Parallelism;
 	/**
-	 * Configuration for web performance recommendations
+	 * Configuration for web performance recommendations.
 	 */
 	performance?: Performance;
 	/**
@@ -694,19 +694,19 @@ export interface WebpackOptions {
 	 */
 	recordsPath?: RecordsPath;
 	/**
-	 * Options for the resolver
+	 * Options for the resolver.
 	 */
 	resolve?: Resolve;
 	/**
-	 * Options for the resolver when resolving loaders
+	 * Options for the resolver when resolving loaders.
 	 */
 	resolveLoader?: ResolveLoader;
 	/**
-	 * Stats options object or preset name
+	 * Stats options object or preset name.
 	 */
 	stats?: Stats;
 	/**
-	 * Environment to build for
+	 * Environment to build for.
 	 */
 	target?: Target;
 	/**
@@ -714,37 +714,37 @@ export interface WebpackOptions {
 	 */
 	watch?: Watch;
 	/**
-	 * Options for the watcher
+	 * Options for the watcher.
 	 */
 	watchOptions?: WatchOptions;
 }
 /**
- * Options object for in-memory caching
+ * Options object for in-memory caching.
  */
 export interface MemoryCacheOptions {
 	/**
-	 * List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable
+	 * List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.
 	 */
 	immutablePaths?: string[];
 	/**
-	 * List of paths that are managed by a package manager and can be trusted to not being modified otherwise
+	 * List of paths that are managed by a package manager and can be trusted to not being modified otherwise.
 	 */
 	managedPaths?: string[];
 	/**
-	 * In memory caching
+	 * In memory caching.
 	 */
 	type: "memory";
 }
 /**
- * Options object for persistent file-based caching
+ * Options object for persistent file-based caching.
  */
 export interface FileCacheOptions {
 	/**
-	 * Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack')
+	 * Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').
 	 */
 	buildDependencies?: {
 		/**
-		 * List of dependencies the build depends on
+		 * List of dependencies the build depends on.
 		 */
 		[k: string]: string[];
 	};
@@ -757,23 +757,23 @@ export interface FileCacheOptions {
 	 */
 	cacheLocation?: string;
 	/**
-	 * Algorithm used for generation the hash (see node.js crypto package)
+	 * Algorithm used for generation the hash (see node.js crypto package).
 	 */
 	hashAlgorithm?: string;
 	/**
-	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle')
+	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').
 	 */
 	idleTimeout?: number;
 	/**
-	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle')
+	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').
 	 */
 	idleTimeoutForInitialStore?: number;
 	/**
-	 * List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable
+	 * List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.
 	 */
 	immutablePaths?: string[];
 	/**
-	 * List of paths that are managed by a package manager and can be trusted to not being modified otherwise
+	 * List of paths that are managed by a package manager and can be trusted to not being modified otherwise.
 	 */
 	managedPaths?: string[];
 	/**
@@ -781,11 +781,11 @@ export interface FileCacheOptions {
 	 */
 	name?: string;
 	/**
-	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file)
+	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
 	store?: "pack";
 	/**
-	 * Filesystem caching
+	 * Filesystem caching.
 	 */
 	type: "filesystem";
 	/**
@@ -794,7 +794,7 @@ export interface FileCacheOptions {
 	version?: string;
 }
 /**
- * Options for the webpack-dev-server
+ * Options for the webpack-dev-server.
  */
 export interface DevServer {
 	[k: string]: any;
@@ -804,7 +804,7 @@ export interface DevServer {
  */
 export interface EntryObject {
 	/**
-	 * An entry point with name
+	 * An entry point with name.
 	 */
 	[k: string]: EntryItem | EntryDescription;
 }
@@ -821,16 +821,16 @@ export interface EntryDescription {
 	 */
 	filename?: Filename;
 	/**
-	 * Module(s) that are loaded upon startup
+	 * Module(s) that are loaded upon startup.
 	 */
 	import: EntryItem;
 	/**
-	 * Options for library
+	 * Options for library.
 	 */
 	library?: LibraryOptions;
 }
 /**
- * Options for library
+ * Options for library.
  */
 export interface LibraryOptions {
 	/**
@@ -838,15 +838,15 @@ export interface LibraryOptions {
 	 */
 	auxiliaryComment?: AuxiliaryComment;
 	/**
-	 * Specify which export should be exposed as library
+	 * Specify which export should be exposed as library.
 	 */
 	export?: LibraryExport;
 	/**
-	 * The name of the library (some types allow unnamed libraries too)
+	 * The name of the library (some types allow unnamed libraries too).
 	 */
 	name?: LibraryName;
 	/**
-	 * Type of library
+	 * Type of library.
 	 */
 	type: LibraryType;
 	/**
@@ -859,86 +859,86 @@ export interface LibraryOptions {
  */
 export interface LibraryCustomUmdCommentObject {
 	/**
-	 * Set comment for `amd` section in UMD
+	 * Set comment for `amd` section in UMD.
 	 */
 	amd?: string;
 	/**
-	 * Set comment for `commonjs` (exports) section in UMD
+	 * Set comment for `commonjs` (exports) section in UMD.
 	 */
 	commonjs?: string;
 	/**
-	 * Set comment for `commonjs2` (module.exports) section in UMD
+	 * Set comment for `commonjs2` (module.exports) section in UMD.
 	 */
 	commonjs2?: string;
 	/**
-	 * Set comment for `root` (global variable) section in UMD
+	 * Set comment for `root` (global variable) section in UMD.
 	 */
 	root?: string;
 }
 /**
- * Description object for all UMD variants of the library name
+ * Description object for all UMD variants of the library name.
  */
 export interface LibraryCustomUmdObject {
 	/**
-	 * Name of the exposed AMD library in the UMD
+	 * Name of the exposed AMD library in the UMD.
 	 */
 	amd?: string;
 	/**
-	 * Name of the exposed commonjs export in the UMD
+	 * Name of the exposed commonjs export in the UMD.
 	 */
 	commonjs?: string;
 	/**
-	 * Name of the property exposed globally by a UMD library
+	 * Name of the property exposed globally by a UMD library.
 	 */
-	root?: string | ArrayOfStringValues;
+	root?: string | string[];
 }
 /**
- * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
+ * Enables/Disables experiments (experiemental features with relax SemVer compatibility).
  */
 export interface Experiments {
 	/**
-	 * Allow module type 'asset' to generate assets
+	 * Allow module type 'asset' to generate assets.
 	 */
 	asset?: boolean;
 	/**
-	 * Support WebAssembly as asynchronous EcmaScript Module
+	 * Support WebAssembly as asynchronous EcmaScript Module.
 	 */
 	asyncWebAssembly?: boolean;
 	/**
-	 * Allow 'import/export' syntax to import async modules
+	 * Allow 'import/export' syntax to import async modules.
 	 */
 	importAsync?: boolean;
 	/**
-	 * Allow 'import/export await' syntax to import async modules
+	 * Allow 'import/export await' syntax to import async modules.
 	 */
 	importAwait?: boolean;
 	/**
-	 * Support .mjs files as way to define strict ESM file (node.js)
+	 * Support .mjs files as way to define strict ESM file (node.js).
 	 */
 	mjs?: boolean;
 	/**
-	 * Allow outputing javascript files as module source type
+	 * Allow outputing javascript files as module source type.
 	 */
 	outputModule?: boolean;
 	/**
-	 * Support WebAssembly as synchronous EcmaScript Module (outdated)
+	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
 	 */
 	syncWebAssembly?: boolean;
 	/**
-	 * Allow using top-level-await in EcmaScript Modules
+	 * Allow using top-level-await in EcmaScript Modules.
 	 */
 	topLevelAwait?: boolean;
 }
 /**
- * Options for infrastructure level logging
+ * Options for infrastructure level logging.
  */
 export interface InfrastructureLogging {
 	/**
-	 * Enable debug logging for specific loggers
+	 * Enable debug logging for specific loggers.
 	 */
 	debug?: FilterTypes | boolean;
 	/**
-	 * Log level
+	 * Log level.
 	 */
 	level?: "none" | "error" | "warn" | "info" | "log" | "verbose";
 }
@@ -957,19 +957,19 @@ export interface Module {
 	 */
 	defaultRules?: RuleSetRules;
 	/**
-	 * Enable warnings for full dynamic dependencies
+	 * Enable warnings for full dynamic dependencies.
 	 */
 	exprContextCritical?: boolean;
 	/**
-	 * Enable recursive directory lookup for full dynamic dependencies
+	 * Enable recursive directory lookup for full dynamic dependencies.
 	 */
 	exprContextRecursive?: boolean;
 	/**
-	 * Sets the default regular expression for full dynamic dependencies
+	 * Sets the default regular expression for full dynamic dependencies.
 	 */
 	exprContextRegExp?: boolean | RegExp;
 	/**
-	 * Set the default request for full dynamic dependencies
+	 * Set the default request for full dynamic dependencies.
 	 */
 	exprContextRequest?: string;
 	/**
@@ -986,221 +986,221 @@ export interface Module {
 	 */
 	rules?: RuleSetRules;
 	/**
-	 * Emit errors instead of warnings when imported names don't exist in imported module
+	 * Emit errors instead of warnings when imported names don't exist in imported module.
 	 */
 	strictExportPresence?: boolean;
 	/**
-	 * Handle the this context correctly according to the spec for namespace objects
+	 * Handle the this context correctly according to the spec for namespace objects.
 	 */
 	strictThisContextOnImports?: boolean;
 	/**
-	 * Enable warnings when using the require function in a not statically analyse-able way
+	 * Enable warnings when using the require function in a not statically analyse-able way.
 	 */
 	unknownContextCritical?: boolean;
 	/**
-	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way
+	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way.
 	 */
 	unknownContextRecursive?: boolean;
 	/**
-	 * Sets the regular expression when using the require function in a not statically analyse-able way
+	 * Sets the regular expression when using the require function in a not statically analyse-able way.
 	 */
 	unknownContextRegExp?: boolean | RegExp;
 	/**
-	 * Sets the request when using the require function in a not statically analyse-able way
+	 * Sets the request when using the require function in a not statically analyse-able way.
 	 */
 	unknownContextRequest?: string;
 	/**
-	 * Cache the resolving of module requests
+	 * Cache the resolving of module requests.
 	 */
 	unsafeCache?: boolean | Function;
 	/**
-	 * Enable warnings for partial dynamic dependencies
+	 * Enable warnings for partial dynamic dependencies.
 	 */
 	wrappedContextCritical?: boolean;
 	/**
-	 * Enable recursive directory lookup for partial dynamic dependencies
+	 * Enable recursive directory lookup for partial dynamic dependencies.
 	 */
 	wrappedContextRecursive?: boolean;
 	/**
-	 * Set the inner regular expression for partial dynamic dependencies
+	 * Set the inner regular expression for partial dynamic dependencies.
 	 */
 	wrappedContextRegExp?: RegExp;
 }
 /**
- * A rule description with conditions and effects for modules
+ * A rule description with conditions and effects for modules.
  */
 export interface RuleSetRule {
 	/**
-	 * Match the child compiler name
+	 * Match the child compiler name.
 	 */
 	compiler?: RuleSetConditionOrConditions;
 	/**
-	 * Enforce this rule as pre or post step
+	 * Enforce this rule as pre or post step.
 	 */
 	enforce?: "pre" | "post";
 	/**
-	 * Shortcut for resource.exclude
+	 * Shortcut for resource.exclude.
 	 */
 	exclude?: RuleSetConditionOrConditionsAbsolute;
 	/**
-	 * The options for the module generator
+	 * The options for the module generator.
 	 */
 	generator?: {
 		[k: string]: any;
 	};
 	/**
-	 * Shortcut for resource.include
+	 * Shortcut for resource.include.
 	 */
 	include?: RuleSetConditionOrConditionsAbsolute;
 	/**
-	 * Match the issuer of the module (The module pointing to this module)
+	 * Match the issuer of the module (The module pointing to this module).
 	 */
 	issuer?: RuleSetConditionOrConditionsAbsolute;
 	/**
-	 * Shortcut for use.loader
+	 * Shortcut for use.loader.
 	 */
 	loader?: RuleSetLoader | RuleSetUse;
 	/**
-	 * Only execute the first matching rule in this array
+	 * Only execute the first matching rule in this array.
 	 */
 	oneOf?: RuleSetRules;
 	/**
-	 * Shortcut for use.options
+	 * Shortcut for use.options.
 	 */
 	options?: RuleSetLoaderOptions;
 	/**
-	 * Options for parsing
+	 * Options for parsing.
 	 */
 	parser?: {
 		[k: string]: any;
 	};
 	/**
-	 * Match the real resource path of the module
+	 * Match the real resource path of the module.
 	 */
 	realResource?: RuleSetConditionOrConditionsAbsolute;
 	/**
-	 * Options for the resolver
+	 * Options for the resolver.
 	 */
 	resolve?: ResolveOptions;
 	/**
-	 * Match the resource path of the module
+	 * Match the resource path of the module.
 	 */
 	resource?: RuleSetConditionOrConditionsAbsolute;
 	/**
-	 * Match the resource query of the module
+	 * Match the resource query of the module.
 	 */
 	resourceQuery?: RuleSetConditionOrConditions;
 	/**
-	 * Match and execute these rules when this rule is matched
+	 * Match and execute these rules when this rule is matched.
 	 */
 	rules?: RuleSetRules;
 	/**
-	 * Flags a module as with or without side effects
+	 * Flags a module as with or without side effects.
 	 */
 	sideEffects?: boolean;
 	/**
-	 * Shortcut for resource.test
+	 * Shortcut for resource.test.
 	 */
 	test?: RuleSetConditionOrConditionsAbsolute;
 	/**
-	 * Module type to use for the module
+	 * Module type to use for the module.
 	 */
 	type?: string;
 	/**
-	 * Modifiers applied to the module when rule is matched
+	 * Modifiers applied to the module when rule is matched.
 	 */
 	use?: RuleSetUse;
 }
 /**
- * Options object for resolving requests
+ * Options object for resolving requests.
  */
 export interface ResolveOptions {
 	/**
-	 * Redirect module requests
+	 * Redirect module requests.
 	 */
 	alias?:
 		| {
 				/**
-				 * New request
+				 * New request.
 				 */
 				[k: string]: string | string[] | false;
 		  }
 		| {
 				/**
-				 * New request
+				 * New request.
 				 */
 				alias: string | string[] | false;
 				/**
-				 * Request to be redirected
+				 * Request to be redirected.
 				 */
 				name: string;
 				/**
-				 * Redirect only exact matching request
+				 * Redirect only exact matching request.
 				 */
 				onlyModule?: boolean;
 		  }[];
 	/**
-	 * Fields in the description file (package.json) which are used to redirect requests inside the module
+	 * Fields in the description file (package.json) which are used to redirect requests inside the module.
 	 */
 	aliasFields?: ArrayOfStringOrStringArrayValues;
 	/**
-	 * Enable caching of successfully resolved requests (cache entries are revalidated)
+	 * Enable caching of successfully resolved requests (cache entries are revalidated).
 	 */
 	cache?: boolean;
 	/**
-	 * Predicate function to decide which requests should be cached
+	 * Predicate function to decide which requests should be cached.
 	 */
 	cachePredicate?: Function;
 	/**
-	 * Include the context information in the cache identifier when caching
+	 * Include the context information in the cache identifier when caching.
 	 */
 	cacheWithContext?: boolean;
 	/**
-	 * Filenames used to find a description file
+	 * Filenames used to find a description file.
 	 */
 	descriptionFiles?: ArrayOfStringValues;
 	/**
-	 * Enforce using one of the extensions from the extensions option
+	 * Enforce using one of the extensions from the extensions option.
 	 */
 	enforceExtension?: boolean;
 	/**
-	 * Extensions added to the request when trying to find the file
+	 * Extensions added to the request when trying to find the file.
 	 */
 	extensions?: ArrayOfStringValues;
 	/**
-	 * Filesystem for the resolver
+	 * Filesystem for the resolver.
 	 */
 	fileSystem?: {
 		[k: string]: any;
 	};
 	/**
-	 * Field names from the description file (package.json) which are used to find the default entry point
+	 * Field names from the description file (package.json) which are used to find the default entry point.
 	 */
 	mainFields?: ArrayOfStringOrStringArrayValues;
 	/**
-	 * Filenames used to find the default entry point if there is no description file or main field
+	 * Filenames used to find the default entry point if there is no description file or main field.
 	 */
 	mainFiles?: ArrayOfStringValues;
 	/**
-	 * Folder names or directory paths where to find modules
+	 * Folder names or directory paths where to find modules.
 	 */
 	modules?: ArrayOfStringValues;
 	/**
-	 * Plugins for the resolver
+	 * Plugins for the resolver.
 	 */
 	plugins?: ResolvePluginInstance[];
 	/**
-	 * Custom resolver
+	 * Custom resolver.
 	 */
 	resolver?: {
 		[k: string]: any;
 	};
 	/**
-	 * Enable resolving symlinks to the original location
+	 * Enable resolving symlinks to the original location.
 	 */
 	symlinks?: boolean;
 	/**
-	 * Enable caching of successfully resolved requests (cache entries are not revalidated)
+	 * Enable caching of successfully resolved requests (cache entries are not revalidated).
 	 */
 	unsafeCache?:
 		| boolean
@@ -1208,12 +1208,12 @@ export interface ResolveOptions {
 				[k: string]: any;
 		  };
 	/**
-	 * Use synchronous filesystem calls for the resolver
+	 * Use synchronous filesystem calls for the resolver.
 	 */
 	useSyncFileSystemCalls?: boolean;
 }
 /**
- * Plugin instance
+ * Plugin instance.
  */
 export interface ResolvePluginInstance {
 	/**
@@ -1223,32 +1223,32 @@ export interface ResolvePluginInstance {
 	[k: string]: any;
 }
 /**
- * Options object for node compatibility features
+ * Options object for node compatibility features.
  */
 export interface NodeOptions {
 	/**
-	 * Include a polyfill for the '__dirname' variable
+	 * Include a polyfill for the '__dirname' variable.
 	 */
 	__dirname?: false | true | "mock";
 	/**
-	 * Include a polyfill for the '__filename' variable
+	 * Include a polyfill for the '__filename' variable.
 	 */
 	__filename?: false | true | "mock";
 	/**
-	 * Include a polyfill for the 'global' variable
+	 * Include a polyfill for the 'global' variable.
 	 */
 	global?: boolean;
 }
 /**
- * Enables/Disables integrated optimizations
+ * Enables/Disables integrated optimizations.
  */
 export interface Optimization {
 	/**
-	 * Check for incompatible wasm types when importing/exporting from/to ESM
+	 * Check for incompatible wasm types when importing/exporting from/to ESM.
 	 */
 	checkWasmTypes?: boolean;
 	/**
-	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)
+	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	chunkIds?:
 		| "natural"
@@ -1258,19 +1258,19 @@ export interface Optimization {
 		| "total-size"
 		| false;
 	/**
-	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer
+	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.
 	 */
 	concatenateModules?: boolean;
 	/**
-	 * Also flag chunks as loaded which contain a subset of the modules
+	 * Also flag chunks as loaded which contain a subset of the modules.
 	 */
 	flagIncludedChunks?: boolean;
 	/**
-	 * Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection
+	 * Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection.
 	 */
 	innerGraph?: boolean;
 	/**
-	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports)
+	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports).
 	 */
 	mangleExports?: boolean;
 	/**
@@ -1278,7 +1278,7 @@ export interface Optimization {
 	 */
 	mangleWasmImports?: boolean;
 	/**
-	 * Merge chunks which contain the same modules
+	 * Merge chunks which contain the same modules.
 	 */
 	mergeDuplicateChunks?: boolean;
 	/**
@@ -1286,56 +1286,56 @@ export interface Optimization {
 	 */
 	minimize?: boolean;
 	/**
-	 * Minimizer(s) to use for minimizing the output
+	 * Minimizer(s) to use for minimizing the output.
 	 */
 	minimizer?: (WebpackPluginInstance | WebpackPluginFunction)[];
 	/**
-	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin)
+	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	moduleIds?: "natural" | "named" | "hashed" | "deterministic" | "size" | false;
 	/**
-	 * Avoid emitting assets when errors occur
+	 * Avoid emitting assets when errors occur.
 	 */
 	noEmitOnErrors?: boolean;
 	/**
-	 * Set process.env.NODE_ENV to a specific value
+	 * Set process.env.NODE_ENV to a specific value.
 	 */
 	nodeEnv?: false | string;
 	/**
-	 * Generate records with relative paths to be able to move the context folder
+	 * Generate records with relative paths to be able to move the context folder.
 	 */
 	portableRecords?: boolean;
 	/**
-	 * Figure out which exports are provided by modules to generate more efficient code
+	 * Figure out which exports are provided by modules to generate more efficient code.
 	 */
 	providedExports?: boolean;
 	/**
-	 * Removes modules from chunks when these modules are already included in all parents
+	 * Removes modules from chunks when these modules are already included in all parents.
 	 */
 	removeAvailableModules?: boolean;
 	/**
-	 * Remove chunks which are empty
+	 * Remove chunks which are empty.
 	 */
 	removeEmptyChunks?: boolean;
 	/**
-	 * Create an additional chunk which contains only the webpack runtime and chunk hash maps
+	 * Create an additional chunk which contains only the webpack runtime and chunk hash maps.
 	 */
 	runtimeChunk?: OptimizationRuntimeChunk;
 	/**
-	 * Skip over modules which are flagged to contain no side effects when exports are not used
+	 * Skip over modules which are flagged to contain no side effects when exports are not used.
 	 */
 	sideEffects?: boolean;
 	/**
-	 * Optimize duplication and caching by splitting chunks by shared modules and cache group
+	 * Optimize duplication and caching by splitting chunks by shared modules and cache group.
 	 */
 	splitChunks?: false | OptimizationSplitChunksOptions;
 	/**
-	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code
+	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.
 	 */
 	usedExports?: boolean;
 }
 /**
- * Plugin instance
+ * Plugin instance.
  */
 export interface WebpackPluginInstance {
 	/**
@@ -1345,19 +1345,19 @@ export interface WebpackPluginInstance {
 	[k: string]: any;
 }
 /**
- * Options object for splitting chunks into smaller chunks
+ * Options object for splitting chunks into smaller chunks.
  */
 export interface OptimizationSplitChunksOptions {
 	/**
-	 * Sets the name delimiter for created chunks
+	 * Sets the name delimiter for created chunks.
 	 */
 	automaticNameDelimiter?: string;
 	/**
-	 * Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')
+	 * Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors').
 	 */
 	cacheGroups?: {
 		/**
-		 * Configuration for a cache group
+		 * Configuration for a cache group.
 		 */
 		[k: string]:
 			| false
@@ -1367,36 +1367,36 @@ export interface OptimizationSplitChunksOptions {
 			| OptimizationSplitChunksCacheGroup;
 	};
 	/**
-	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML)
+	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 	 */
 	chunks?: ("initial" | "async" | "all") | Function;
 	/**
-	 * Options for modules not selected by any other cache group
+	 * Options for modules not selected by any other cache group.
 	 */
 	fallbackCacheGroup?: {
 		/**
-		 * Sets the name delimiter for created chunks
+		 * Sets the name delimiter for created chunks.
 		 */
 		automaticNameDelimiter?: string;
 		/**
-		 * Maximal size hint for the on-demand chunks
+		 * Maximal size hint for the on-demand chunks.
 		 */
 		maxAsyncSize?: OptimizationSplitChunksSizes;
 		/**
-		 * Maximal size hint for the initial chunks
+		 * Maximal size hint for the initial chunks.
 		 */
 		maxInitialSize?: OptimizationSplitChunksSizes;
 		/**
-		 * Maximal size hint for the created chunks
+		 * Maximal size hint for the created chunks.
 		 */
 		maxSize?: OptimizationSplitChunksSizes;
 		/**
-		 * Minimal size for the created chunk
+		 * Minimal size for the created chunk.
 		 */
 		minSize?: OptimizationSplitChunksSizes;
 	};
 	/**
-	 * Sets the template for the filename for created chunks
+	 * Sets the template for the filename for created chunks.
 	 */
 	filename?:
 		| string
@@ -1405,66 +1405,66 @@ export interface OptimizationSplitChunksOptions {
 				assetInfo?: import("../lib/Compilation").AssetInfo
 		  ) => string);
 	/**
-	 * Prevents exposing path info when creating names for parts splitted by maxSize
+	 * Prevents exposing path info when creating names for parts splitted by maxSize.
 	 */
 	hidePathInfo?: boolean;
 	/**
-	 * Maximum number of requests which are accepted for on-demand loading
+	 * Maximum number of requests which are accepted for on-demand loading.
 	 */
 	maxAsyncRequests?: number;
 	/**
-	 * Maximal size hint for the on-demand chunks
+	 * Maximal size hint for the on-demand chunks.
 	 */
 	maxAsyncSize?: OptimizationSplitChunksSizes;
 	/**
-	 * Maximum number of initial chunks which are accepted for an entry point
+	 * Maximum number of initial chunks which are accepted for an entry point.
 	 */
 	maxInitialRequests?: number;
 	/**
-	 * Maximal size hint for the initial chunks
+	 * Maximal size hint for the initial chunks.
 	 */
 	maxInitialSize?: OptimizationSplitChunksSizes;
 	/**
-	 * Maximal size hint for the created chunks
+	 * Maximal size hint for the created chunks.
 	 */
 	maxSize?: OptimizationSplitChunksSizes;
 	/**
-	 * Minimum number of times a module has to be duplicated until it's considered for splitting
+	 * Minimum number of times a module has to be duplicated until it's considered for splitting.
 	 */
 	minChunks?: number;
 	/**
-	 * Minimal size for the chunks the stay after moving the modules to a new chunk
+	 * Minimal size for the chunks the stay after moving the modules to a new chunk.
 	 */
 	minRemainingSize?: OptimizationSplitChunksSizes;
 	/**
-	 * Minimal size for the created chunks
+	 * Minimal size for the created chunks.
 	 */
 	minSize?: OptimizationSplitChunksSizes;
 	/**
-	 * Give chunks created a name (chunks with equal name are merged)
+	 * Give chunks created a name (chunks with equal name are merged).
 	 */
 	name?: false | Function | string;
 }
 /**
- * Options object for describing behavior of a cache group selecting modules that should be cached together
+ * Options object for describing behavior of a cache group selecting modules that should be cached together.
  */
 export interface OptimizationSplitChunksCacheGroup {
 	/**
-	 * Sets the name delimiter for created chunks
+	 * Sets the name delimiter for created chunks.
 	 */
 	automaticNameDelimiter?: string;
 	/**
-	 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML)
+	 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML).
 	 */
 	chunks?:
 		| ("initial" | "async" | "all")
 		| OptimizationSplitChunksGetCacheGroups;
 	/**
-	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group
+	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
 	 */
 	enforce?: boolean;
 	/**
-	 * Sets the template for the filename for created chunks
+	 * Sets the template for the filename for created chunks.
 	 */
 	filename?:
 		| string
@@ -1473,59 +1473,59 @@ export interface OptimizationSplitChunksCacheGroup {
 				assetInfo?: import("../lib/Compilation").AssetInfo
 		  ) => string);
 	/**
-	 * Sets the hint for chunk id
+	 * Sets the hint for chunk id.
 	 */
 	idHint?: string;
 	/**
-	 * Maximum number of requests which are accepted for on-demand loading
+	 * Maximum number of requests which are accepted for on-demand loading.
 	 */
 	maxAsyncRequests?: number;
 	/**
-	 * Maximal size hint for the on-demand chunks
+	 * Maximal size hint for the on-demand chunks.
 	 */
 	maxAsyncSize?: OptimizationSplitChunksSizes;
 	/**
-	 * Maximum number of initial chunks which are accepted for an entry point
+	 * Maximum number of initial chunks which are accepted for an entry point.
 	 */
 	maxInitialRequests?: number;
 	/**
-	 * Maximal size hint for the initial chunks
+	 * Maximal size hint for the initial chunks.
 	 */
 	maxInitialSize?: OptimizationSplitChunksSizes;
 	/**
-	 * Maximal size hint for the created chunks
+	 * Maximal size hint for the created chunks.
 	 */
 	maxSize?: OptimizationSplitChunksSizes;
 	/**
-	 * Minimum number of times a module has to be duplicated until it's considered for splitting
+	 * Minimum number of times a module has to be duplicated until it's considered for splitting.
 	 */
 	minChunks?: number;
 	/**
-	 * Minimal size for the chunks the stay after moving the modules to a new chunk
+	 * Minimal size for the chunks the stay after moving the modules to a new chunk.
 	 */
 	minRemainingSize?: OptimizationSplitChunksSizes;
 	/**
-	 * Minimal size for the created chunk
+	 * Minimal size for the created chunk.
 	 */
 	minSize?: OptimizationSplitChunksSizes;
 	/**
-	 * Give chunks for this cache group a name (chunks with equal name are merged)
+	 * Give chunks for this cache group a name (chunks with equal name are merged).
 	 */
 	name?: false | Function | string;
 	/**
-	 * Priority of this cache group
+	 * Priority of this cache group.
 	 */
 	priority?: number;
 	/**
-	 * Try to reuse existing chunk (with name) when it has matching modules
+	 * Try to reuse existing chunk (with name) when it has matching modules.
 	 */
 	reuseExistingChunk?: boolean;
 	/**
-	 * Assign modules to a cache group by module name
+	 * Assign modules to a cache group by module name.
 	 */
 	test?: Function | string | RegExp;
 	/**
-	 * Assign modules to a cache group by module type
+	 * Assign modules to a cache group by module type.
 	 */
 	type?: Function | string | RegExp;
 }
@@ -1550,11 +1550,11 @@ export interface Output {
 	 */
 	chunkFilename?: ChunkFilename;
 	/**
-	 * Number of milliseconds before chunk request expires
+	 * Number of milliseconds before chunk request expires.
 	 */
 	chunkLoadTimeout?: ChunkLoadTimeout;
 	/**
-	 * Check if to be emitted file already exists and have the same content before writing to output filesystem
+	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: CompareBeforeEmit;
 	/**
@@ -1578,7 +1578,7 @@ export interface Output {
 	 */
 	ecmaVersion?: EcmaVersion;
 	/**
-	 * List of library types enabled for use by entry points
+	 * List of library types enabled for use by entry points.
 	 */
 	enabledLibraryTypes?: EnabledLibraryTypes;
 	/**
@@ -1586,23 +1586,23 @@ export interface Output {
 	 */
 	filename?: Filename;
 	/**
-	 * An expression which is used to address the global object/scope in runtime code
+	 * An expression which is used to address the global object/scope in runtime code.
 	 */
 	globalObject?: GlobalObject;
 	/**
-	 * Digest type used for the hash
+	 * Digest type used for the hash.
 	 */
 	hashDigest?: HashDigest;
 	/**
-	 * Number of chars which are used for the hash
+	 * Number of chars which are used for the hash.
 	 */
 	hashDigestLength?: HashDigestLength;
 	/**
-	 * Algorithm used for generation the hash (see node.js crypto package)
+	 * Algorithm used for generation the hash (see node.js crypto package).
 	 */
 	hashFunction?: HashFunction;
 	/**
-	 * Any string which is added to the hash to salt it
+	 * Any string which is added to the hash to salt it.
 	 */
 	hashSalt?: HashSalt;
 	/**
@@ -1626,19 +1626,19 @@ export interface Output {
 	 */
 	jsonpFunction?: JsonpFunction;
 	/**
-	 * This option enables loading async chunks via a custom script type, such as script type="module"
+	 * This option enables loading async chunks via a custom script type, such as script type="module".
 	 */
 	jsonpScriptType?: JsonpScriptType;
 	/**
-	 * Make the output files a library, exporting the exports of the entry point
+	 * Make the output files a library, exporting the exports of the entry point.
 	 */
 	library?: Library;
 	/**
-	 * Specify which export should be exposed as library
+	 * Specify which export should be exposed as library.
 	 */
 	libraryExport?: LibraryExport;
 	/**
-	 * Type of library
+	 * Type of library.
 	 */
 	libraryTarget?: LibraryType;
 	/**
@@ -1683,143 +1683,143 @@ export interface Output {
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
 }
 /**
- * Configuration object for web performance recommendations
+ * Configuration object for web performance recommendations.
  */
 export interface PerformanceOptions {
 	/**
-	 * Filter function to select assets that are checked
+	 * Filter function to select assets that are checked.
 	 */
 	assetFilter?: Function;
 	/**
-	 * Sets the format of the hints: warnings, errors or nothing at all
+	 * Sets the format of the hints: warnings, errors or nothing at all.
 	 */
 	hints?: false | "warning" | "error";
 	/**
-	 * Filesize limit (in bytes) when exceeded, that webpack will provide performance hints
+	 * Filesize limit (in bytes) when exceeded, that webpack will provide performance hints.
 	 */
 	maxAssetSize?: number;
 	/**
-	 * Total size of an entry point (in bytes)
+	 * Total size of an entry point (in bytes).
 	 */
 	maxEntrypointSize?: number;
 }
 /**
- * Stats options object
+ * Stats options object.
  */
 export interface StatsOptions {
 	/**
-	 * fallback value for stats options when an option is not defined (has precedence over local webpack defaults)
+	 * Fallback value for stats options when an option is not defined (has precedence over local webpack defaults).
 	 */
 	all?: boolean;
 	/**
-	 * add assets information
+	 * Add assets information.
 	 */
 	assets?: boolean;
 	/**
-	 * sort the assets by that field
+	 * Sort the assets by that field.
 	 */
 	assetsSort?: string;
 	/**
-	 * add built at time information
+	 * Add built at time information.
 	 */
 	builtAt?: boolean;
 	/**
-	 * add information about cached (not built) modules
+	 * Add information about cached (not built) modules.
 	 */
 	cached?: boolean;
 	/**
-	 * Show cached assets (setting this to `false` only shows emitted files)
+	 * Show cached assets (setting this to `false` only shows emitted files).
 	 */
 	cachedAssets?: boolean;
 	/**
-	 * add children information
+	 * Add children information.
 	 */
 	children?: boolean;
 	/**
-	 * Display all chunk groups with the corresponding bundles
+	 * Display all chunk groups with the corresponding bundles.
 	 */
 	chunkGroups?: boolean;
 	/**
-	 * add built modules information to chunk information
+	 * Add built modules information to chunk information.
 	 */
 	chunkModules?: boolean;
 	/**
-	 * add the origins of chunks and chunk merging info
+	 * Add the origins of chunks and chunk merging info.
 	 */
 	chunkOrigins?: boolean;
 	/**
-	 * add information about parent, children and sibling chunks to chunk information
+	 * Add information about parent, children and sibling chunks to chunk information.
 	 */
 	chunkRelations?: boolean;
 	/**
-	 * add root modules information to chunk information
+	 * Add root modules information to chunk information.
 	 */
 	chunkRootModules?: boolean;
 	/**
-	 * add chunk information
+	 * Add chunk information.
 	 */
 	chunks?: boolean;
 	/**
-	 * sort the chunks by that field
+	 * Sort the chunks by that field.
 	 */
 	chunksSort?: string;
 	/**
-	 * Enables/Disables colorful output
+	 * Enables/Disables colorful output.
 	 */
 	colors?:
 		| boolean
 		| {
 				/**
-				 * Custom color for bold text
+				 * Custom color for bold text.
 				 */
 				bold?: string;
 				/**
-				 * Custom color for cyan text
+				 * Custom color for cyan text.
 				 */
 				cyan?: string;
 				/**
-				 * Custom color for green text
+				 * Custom color for green text.
 				 */
 				green?: string;
 				/**
-				 * Custom color for magenta text
+				 * Custom color for magenta text.
 				 */
 				magenta?: string;
 				/**
-				 * Custom color for red text
+				 * Custom color for red text.
 				 */
 				red?: string;
 				/**
-				 * Custom color for yellow text
+				 * Custom color for yellow text.
 				 */
 				yellow?: string;
 		  };
 	/**
-	 * context directory for request shortening
+	 * Context directory for request shortening.
 	 */
 	context?: string;
 	/**
-	 * add module depth in module graph
+	 * Add module depth in module graph.
 	 */
 	depth?: boolean;
 	/**
-	 * Display the entry points with the corresponding bundles
+	 * Display the entry points with the corresponding bundles.
 	 */
 	entrypoints?: boolean;
 	/**
-	 * add --env information
+	 * Add --env information.
 	 */
 	env?: boolean;
 	/**
-	 * add details to errors (like resolving log)
+	 * Add details to errors (like resolving log).
 	 */
 	errorDetails?: boolean;
 	/**
-	 * add internal stack trace to errors
+	 * Add internal stack trace to errors.
 	 */
 	errorStack?: boolean;
 	/**
-	 * add errors
+	 * Add errors.
 	 */
 	errors?: boolean;
 	/**
@@ -1827,120 +1827,120 @@ export interface StatsOptions {
 	 */
 	exclude?: FilterTypes | boolean;
 	/**
-	 * Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions
+	 * Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.
 	 */
 	excludeAssets?: FilterTypes;
 	/**
-	 * Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions
+	 * Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.
 	 */
 	excludeModules?: FilterTypes | boolean;
 	/**
-	 * add the hash of the compilation
+	 * Add the hash of the compilation.
 	 */
 	hash?: boolean;
 	/**
-	 * add ids
+	 * Add ids.
 	 */
 	ids?: boolean;
 	/**
-	 * add logging output
+	 * Add logging output.
 	 */
 	logging?: boolean | ("none" | "error" | "warn" | "info" | "log" | "verbose");
 	/**
-	 * Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions
+	 * Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.
 	 */
 	loggingDebug?: FilterTypes | boolean;
 	/**
-	 * add stack traces to logging output
+	 * Add stack traces to logging output.
 	 */
 	loggingTrace?: boolean;
 	/**
-	 * Set the maximum number of modules to be shown
+	 * Set the maximum number of modules to be shown.
 	 */
 	maxModules?: number;
 	/**
-	 * add information about assets inside modules
+	 * Add information about assets inside modules.
 	 */
 	moduleAssets?: boolean;
 	/**
-	 * add dependencies and origin of warnings/errors
+	 * Add dependencies and origin of warnings/errors.
 	 */
 	moduleTrace?: boolean;
 	/**
-	 * add built modules information
+	 * Add built modules information.
 	 */
 	modules?: boolean;
 	/**
-	 * sort the modules by that field
+	 * Sort the modules by that field.
 	 */
 	modulesSort?: string;
 	/**
-	 * add information about modules nested in other modules (like with module concatenation)
+	 * Add information about modules nested in other modules (like with module concatenation).
 	 */
 	nestedModules?: boolean;
 	/**
-	 * show reasons why optimization bailed out for modules
+	 * Show reasons why optimization bailed out for modules.
 	 */
 	optimizationBailout?: boolean;
 	/**
-	 * add information about orphan modules
+	 * Add information about orphan modules.
 	 */
 	orphanModules?: boolean;
 	/**
-	 * Add output path information
+	 * Add output path information.
 	 */
 	outputPath?: boolean;
 	/**
-	 * add performance hint flags
+	 * Add performance hint flags.
 	 */
 	performance?: boolean;
 	/**
-	 * preset for the default values
+	 * Preset for the default values.
 	 */
 	preset?: boolean | string;
 	/**
-	 * show exports provided by modules
+	 * Show exports provided by modules.
 	 */
 	providedExports?: boolean;
 	/**
-	 * Add public path information
+	 * Add public path information.
 	 */
 	publicPath?: boolean;
 	/**
-	 * add information about the reasons why modules are included
+	 * Add information about the reasons why modules are included.
 	 */
 	reasons?: boolean;
 	/**
-	 * add information about runtime modules
+	 * Add information about runtime modules.
 	 */
 	runtime?: boolean;
 	/**
-	 * add the source code of modules
+	 * Add the source code of modules.
 	 */
 	source?: boolean;
 	/**
-	 * add timing information
+	 * Add timing information.
 	 */
 	timings?: boolean;
 	/**
-	 * show exports used by modules
+	 * Show exports used by modules.
 	 */
 	usedExports?: boolean;
 	/**
-	 * add webpack version information
+	 * Add webpack version information.
 	 */
 	version?: boolean;
 	/**
-	 * add warnings
+	 * Add warnings.
 	 */
 	warnings?: boolean;
 	/**
-	 * Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions
+	 * Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.
 	 */
 	warningsFilter?: FilterTypes;
 }
 /**
- * Options for the watcher
+ * Options for the watcher.
  */
 export interface WatchOptions {
 	/**
@@ -1948,15 +1948,15 @@ export interface WatchOptions {
 	 */
 	aggregateTimeout?: number;
 	/**
-	 * Ignore some files from watching (glob pattern)
+	 * Ignore some files from watching (glob pattern).
 	 */
 	ignored?: string | ArrayOfStringValues;
 	/**
-	 * Enable polling mode for watching
+	 * Enable polling mode for watching.
 	 */
 	poll?: boolean | number;
 	/**
-	 * Stop watching when stdin stream has ended
+	 * Stop watching when stdin stream has ended.
 	 */
 	stdin?: boolean;
 }
@@ -1977,7 +1977,7 @@ export interface EntryDescriptionNormalized {
 	 */
 	import: NonEmptyArrayOfUniqueStringValues;
 	/**
-	 * Options for library
+	 * Options for library.
 	 */
 	library?: LibraryOptions;
 }
@@ -2007,11 +2007,11 @@ export interface OutputNormalized {
 	 */
 	chunkFilename?: ChunkFilename;
 	/**
-	 * Number of milliseconds before chunk request expires
+	 * Number of milliseconds before chunk request expires.
 	 */
 	chunkLoadTimeout?: ChunkLoadTimeout;
 	/**
-	 * Check if to be emitted file already exists and have the same content before writing to output filesystem
+	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: CompareBeforeEmit;
 	/**
@@ -2035,7 +2035,7 @@ export interface OutputNormalized {
 	 */
 	ecmaVersion?: EcmaVersion;
 	/**
-	 * List of library types enabled for use by entry points
+	 * List of library types enabled for use by entry points.
 	 */
 	enabledLibraryTypes?: EnabledLibraryTypes;
 	/**
@@ -2043,23 +2043,23 @@ export interface OutputNormalized {
 	 */
 	filename?: Filename;
 	/**
-	 * An expression which is used to address the global object/scope in runtime code
+	 * An expression which is used to address the global object/scope in runtime code.
 	 */
 	globalObject?: GlobalObject;
 	/**
-	 * Digest type used for the hash
+	 * Digest type used for the hash.
 	 */
 	hashDigest?: HashDigest;
 	/**
-	 * Number of chars which are used for the hash
+	 * Number of chars which are used for the hash.
 	 */
 	hashDigestLength?: HashDigestLength;
 	/**
-	 * Algorithm used for generation the hash (see node.js crypto package)
+	 * Algorithm used for generation the hash (see node.js crypto package).
 	 */
 	hashFunction?: HashFunction;
 	/**
-	 * Any string which is added to the hash to salt it
+	 * Any string which is added to the hash to salt it.
 	 */
 	hashSalt?: HashSalt;
 	/**
@@ -2083,11 +2083,11 @@ export interface OutputNormalized {
 	 */
 	jsonpFunction?: JsonpFunction;
 	/**
-	 * This option enables loading async chunks via a custom script type, such as script type="module"
+	 * This option enables loading async chunks via a custom script type, such as script type="module".
 	 */
 	jsonpScriptType?: JsonpScriptType;
 	/**
-	 * Options for library
+	 * Options for library.
 	 */
 	library?: LibraryOptions;
 	/**
@@ -2128,7 +2128,7 @@ export interface OutputNormalized {
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
 }
 /**
- * Normalized webpack options object
+ * Normalized webpack options object.
  */
 export interface WebpackOptionsNormalized {
 	/**
@@ -2152,7 +2152,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	dependencies?: Dependencies;
 	/**
-	 * Options for the webpack-dev-server
+	 * Options for the webpack-dev-server.
 	 */
 	devServer?: DevServer;
 	/**
@@ -2164,7 +2164,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	entry: EntryNormalized;
 	/**
-	 * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
+	 * Enables/Disables experiments (experiemental features with relax SemVer compatibility).
 	 */
 	experiments: Experiments;
 	/**
@@ -2172,11 +2172,11 @@ export interface WebpackOptionsNormalized {
 	 */
 	externals: Externals;
 	/**
-	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value)
+	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
 	externalsType?: ExternalsType;
 	/**
-	 * Options for infrastructure level logging
+	 * Options for infrastructure level logging.
 	 */
 	infrastructureLogging: InfrastructureLogging;
 	/**
@@ -2200,7 +2200,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	node: Node;
 	/**
-	 * Enables/Disables integrated optimizations
+	 * Enables/Disables integrated optimizations.
 	 */
 	optimization: Optimization;
 	/**
@@ -2212,7 +2212,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	parallelism?: Parallelism;
 	/**
-	 * Configuration for web performance recommendations
+	 * Configuration for web performance recommendations.
 	 */
 	performance?: Performance;
 	/**
@@ -2232,19 +2232,19 @@ export interface WebpackOptionsNormalized {
 	 */
 	recordsOutputPath?: RecordsOutputPath;
 	/**
-	 * Options for the resolver
+	 * Options for the resolver.
 	 */
 	resolve: Resolve;
 	/**
-	 * Options for the resolver when resolving loaders
+	 * Options for the resolver when resolving loaders.
 	 */
 	resolveLoader: ResolveLoader;
 	/**
-	 * Stats options object or preset name
+	 * Stats options object or preset name.
 	 */
 	stats: Stats;
 	/**
-	 * Environment to build for
+	 * Environment to build for.
 	 */
 	target?: Target;
 	/**
@@ -2252,7 +2252,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	watch?: Watch;
 	/**
-	 * Options for the watcher
+	 * Options for the watcher.
 	 */
 	watchOptions: WatchOptions;
 }
