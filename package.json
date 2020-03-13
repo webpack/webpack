@@ -156,6 +156,9 @@
   "lint-staged": {
     "*.js|{lib,setup,bin,hot,tooling,schemas}/**/*.js|test/*.js|{test,examples}/**/webpack.config.js}": [
       "eslint --cache"
+    ],
+    "*.md|{.github,benchmark,bin,examples,hot,lib,schemas,setup,tooling}/**/*.{md,yml,yaml,js,json}": [
+      "cspell"
     ]
   },
   "jest": {
