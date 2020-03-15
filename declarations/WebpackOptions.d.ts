@@ -195,14 +195,6 @@ export type RuleSetCondition =
 			 */
 			and?: RuleSetConditions;
 			/**
-			 * Exclude all modules matching any of these conditions.
-			 */
-			exclude?: RuleSetConditionOrConditions;
-			/**
-			 * Exclude all modules matching not any of these conditions.
-			 */
-			include?: RuleSetConditionOrConditions;
-			/**
 			 * Logical NOT.
 			 */
 			not?: RuleSetConditions;
@@ -210,10 +202,6 @@ export type RuleSetCondition =
 			 * Logical OR.
 			 */
 			or?: RuleSetConditions;
-			/**
-			 * Exclude all modules matching any of these conditions.
-			 */
-			test?: RuleSetConditionOrConditions;
 	  };
 /**
  * A list of rule conditions.
@@ -239,14 +227,6 @@ export type RuleSetConditionAbsolute =
 			 */
 			and?: RuleSetConditionsAbsolute;
 			/**
-			 * Exclude all modules matching any of these conditions.
-			 */
-			exclude?: RuleSetConditionOrConditionsAbsolute;
-			/**
-			 * Exclude all modules matching not any of these conditions.
-			 */
-			include?: RuleSetConditionOrConditionsAbsolute;
-			/**
 			 * Logical NOT.
 			 */
 			not?: RuleSetConditionsAbsolute;
@@ -254,10 +234,6 @@ export type RuleSetConditionAbsolute =
 			 * Logical OR.
 			 */
 			or?: RuleSetConditionsAbsolute;
-			/**
-			 * Exclude all modules matching any of these conditions.
-			 */
-			test?: RuleSetConditionOrConditionsAbsolute;
 	  };
 /**
  * A list of rule conditions matching an absolute path.
