@@ -60,6 +60,9 @@ describe("Schemas", () => {
 					it("should have description set", () => {
 						expect(typeof property.description).toBe("string");
 						expect(property.description.length).toBeGreaterThan(1);
+						expect(property.description).toMatch(/^[A-Z`]/);
+						expect(property.description).toEndWith(".");
+						expect(property.description).not.toEndWith("..");
 					});
 				};
 
