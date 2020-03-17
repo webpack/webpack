@@ -48,9 +48,9 @@ Stats cases are similar to configCases except specifically focusing on the `expe
 
 By default, the "expected" outcome is a pain to write by hand so instead when statsCases are run, runner is checking output using jest's awesome snapshot functionality.
 
-Basically you don't need to write any expected behaviors your self. The assumption is that the stats output from your test code is what you expect.
+Basically you don't need to write any expected behaviors yourself. The assumption is that the stats output from your test code is what you expect.
 
-Please follow the approach described bellow:
+Please follow the approach described below:
 
 * write your test code in `statsCases/` folder by creating a separate folder for it, for example `statsCases/some-file-import-stats/index.js`
 

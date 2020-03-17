@@ -1,1 +1,1 @@
-[Code of Conduct](https://js.foundation/community/code-of-conduct)
+[Code of Conduct](https://github.com/openjs-foundation/code-and-learn/blob/master/CODE_OF_CONDUCT.md)
