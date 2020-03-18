@@ -1,4 +1,4 @@
-// loosly based on https://github.com/plantain-00/type-coverage
+// loosely based on https://github.com/plantain-00/type-coverage
 
 const path = require("path");
 const fs = require("fs");

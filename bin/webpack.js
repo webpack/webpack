@@ -2,7 +2,7 @@
 
 /**
  * @param {string} command process to run
- * @param {string[]} args commandline arguments
+ * @param {string[]} args command line arguments
  * @returns {Promise<void>} promise
  */
 const runCommand = (command, args) => {
