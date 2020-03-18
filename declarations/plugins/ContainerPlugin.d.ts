@@ -9,19 +9,15 @@
  */
 export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 /**
- * Specify which export should be exposed as library
+ * Specify which export should be exposed as library.
  */
-export type LibraryExport = string | ArrayOfStringValues;
+export type LibraryExport = string | string[];
 /**
- * Array of strings
- */
-export type ArrayOfStringValues = string[];
-/**
- * The name of the library (some types allow unnamed libraries too)
+ * The name of the library (some types allow unnamed libraries too).
  */
 export type LibraryName = string | string[] | LibraryCustomUmdObject;
 /**
- * Type of library
+ * Type of library.
  */
 export type LibraryType =
 	| "var"
@@ -44,10 +40,14 @@ export type LibraryType =
  * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
  */
 export type UmdNamedDefine = boolean;
+/**
+ * Array of strings.
+ */
+export type ArrayOfStringValues = string[];
 
 export interface ContainerPluginOptions {
 	/**
-	 * A map of modules you wish to expose
+	 * A map of modules you wish to expose.
 	 */
 	exposes?:
 		| {
@@ -59,15 +59,15 @@ export interface ContainerPluginOptions {
 	 */
 	filename?: string;
 	/**
-	 * Options for library
+	 * Options for library.
 	 */
 	library?: LibraryOptions;
 	/**
-	 * The name for this container
+	 * The name for this container.
 	 */
 	name: string;
 	/**
-	 * An object for requests to override from host to this container
+	 * An object for requests to override from host to this container.
 	 */
 	overridables?:
 		| {
@@ -76,7 +76,7 @@ export interface ContainerPluginOptions {
 		| any[];
 }
 /**
- * Options for library
+ * Options for library.
  */
 export interface LibraryOptions {
 	/**
@@ -84,15 +84,15 @@ export interface LibraryOptions {
 	 */
 	auxiliaryComment?: AuxiliaryComment;
 	/**
-	 * Specify which export should be exposed as library
+	 * Specify which export should be exposed as library.
 	 */
 	export?: LibraryExport;
 	/**
-	 * The name of the library (some types allow unnamed libraries too)
+	 * The name of the library (some types allow unnamed libraries too).
 	 */
 	name?: LibraryName;
 	/**
-	 * Type of library
+	 * Type of library.
 	 */
 	type: LibraryType;
 	/**
@@ -105,36 +105,36 @@ export interface LibraryOptions {
  */
 export interface LibraryCustomUmdCommentObject {
 	/**
-	 * Set comment for `amd` section in UMD
+	 * Set comment for `amd` section in UMD.
 	 */
 	amd?: string;
 	/**
-	 * Set comment for `commonjs` (exports) section in UMD
+	 * Set comment for `commonjs` (exports) section in UMD.
 	 */
 	commonjs?: string;
 	/**
-	 * Set comment for `commonjs2` (module.exports) section in UMD
+	 * Set comment for `commonjs2` (module.exports) section in UMD.
 	 */
 	commonjs2?: string;
 	/**
-	 * Set comment for `root` (global variable) section in UMD
+	 * Set comment for `root` (global variable) section in UMD.
 	 */
 	root?: string;
 }
 /**
- * Description object for all UMD variants of the library name
+ * Description object for all UMD variants of the library name.
  */
 export interface LibraryCustomUmdObject {
 	/**
-	 * Name of the exposed AMD library in the UMD
+	 * Name of the exposed AMD library in the UMD.
 	 */
 	amd?: string;
 	/**
-	 * Name of the exposed commonjs export in the UMD
+	 * Name of the exposed commonjs export in the UMD.
 	 */
 	commonjs?: string;
 	/**
-	 * Name of the property exposed globally by a UMD library
+	 * Name of the property exposed globally by a UMD library.
 	 */
-	root?: string | ArrayOfStringValues;
+	root?: string | string[];
 }

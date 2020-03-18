@@ -1,10 +1,10 @@
 {
   "definitions": {
     "ArrayOfStringValues": {
-      "description": "Array of strings",
+      "description": "Array of strings.",
       "type": "array",
       "items": {
-        "description": "A non-empty string",
+        "description": "A non-empty string.",
         "type": "string",
         "minLength": 1
       }
@@ -27,71 +27,87 @@
       "additionalProperties": false,
       "properties": {
         "amd": {
-          "description": "Set comment for `amd` section in UMD",
+          "description": "Set comment for `amd` section in UMD.",
           "type": "string"
         },
         "commonjs": {
-          "description": "Set comment for `commonjs` (exports) section in UMD",
+          "description": "Set comment for `commonjs` (exports) section in UMD.",
           "type": "string"
         },
         "commonjs2": {
-          "description": "Set comment for `commonjs2` (module.exports) section in UMD",
+          "description": "Set comment for `commonjs2` (module.exports) section in UMD.",
           "type": "string"
         },
         "root": {
-          "description": "Set comment for `root` (global variable) section in UMD",
+          "description": "Set comment for `root` (global variable) section in UMD.",
           "type": "string"
         }
       }
     },
     "LibraryCustomUmdObject": {
-      "description": "Description object for all UMD variants of the library name",
+      "description": "Description object for all UMD variants of the library name.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "amd": {
-          "description": "Name of the exposed AMD library in the UMD",
-          "type": "string"
+          "description": "Name of the exposed AMD library in the UMD.",
+          "type": "string",
+          "minLength": 1
         },
         "commonjs": {
-          "description": "Name of the exposed commonjs export in the UMD",
-          "type": "string"
+          "description": "Name of the exposed commonjs export in the UMD.",
+          "type": "string",
+          "minLength": 1
         },
         "root": {
-          "description": "Name of the property exposed globally by a UMD library",
+          "description": "Name of the property exposed globally by a UMD library.",
           "anyOf": [
             {
-              "type": "string"
+              "type": "string",
+              "minLength": 1
             },
             {
-              "$ref": "#/definitions/ArrayOfStringValues"
+              "type": "array",
+              "items": {
+                "description": "Part of the name of the property exposed globally by a UMD library.",
+                "type": "string",
+                "minLength": 1
+              }
             }
           ]
         }
       }
     },
     "LibraryExport": {
-      "description": "Specify which export should be exposed as library",
+      "description": "Specify which export should be exposed as library.",
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
-          "$ref": "#/definitions/ArrayOfStringValues"
-        }
-      ]
-    },
-    "LibraryName": {
-      "description": "The name of the library (some types allow unnamed libraries too)",
-      "anyOf": [
-        {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         },
         {
           "type": "array",
           "items": {
-            "description": "A part of the library name",
-            "type": "string"
+            "description": "Part of the export that should be exposed as library.",
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      ]
+    },
+    "LibraryName": {
+      "description": "The name of the library (some types allow unnamed libraries too).",
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "items": {
+            "description": "A part of the library name.",
+            "type": "string",
+            "minLength": 1
           }
         },
         {
@@ -100,7 +116,7 @@
       ]
     },
     "LibraryOptions": {
-      "description": "Options for library",
+      "description": "Options for library.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -123,7 +139,7 @@
       "required": ["type"]
     },
     "LibraryType": {
-      "description": "Type of library",
+      "description": "Type of library.",
       "enum": [
         "var",
         "module",
@@ -153,7 +169,7 @@
   "additionalProperties": false,
   "properties": {
     "exposes": {
-      "description": "A map of modules you wish to expose",
+      "description": "A map of modules you wish to expose.",
       "type": ["object", "array"]
     },
     "filename": {
@@ -165,11 +181,11 @@
       "$ref": "#/definitions/LibraryOptions"
     },
     "name": {
-      "description": "The name for this container",
+      "description": "The name for this container.",
       "type": "string"
     },
     "overridables": {
-      "description": "An object for requests to override from host to this container",
+      "description": "An object for requests to override from host to this container.",
       "type": ["object", "array"]
     }
   },

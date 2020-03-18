@@ -6,7 +6,7 @@
 
 export type ContainerReferencePlugin = {
 	/**
-	 * A list of requests that should be overridable by the host container
+	 * A list of requests that should be overridable by the host container.
 	 */
 	overrides?:
 		| any[]
@@ -14,11 +14,11 @@ export type ContainerReferencePlugin = {
 				[k: string]: any;
 		  };
 	/**
-	 * The libraryTarget of a remote build
+	 * The libraryTarget of a remote build.
 	 */
 	remoteType?: string;
 	/**
-	 * A list of remote scopes or namespaces that reference federated Webpack instances
+	 * A list of remote scopes or namespaces that reference federated Webpack instances.
 	 */
 	remotes?:
 		| any[]
