@@ -2234,22 +2234,6 @@
                 }
               ]
             },
-            "exclude": {
-              "description": "Exclude all modules matching any of these conditions.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionOrConditions"
-                }
-              ]
-            },
-            "include": {
-              "description": "Exclude all modules matching not any of these conditions.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionOrConditions"
-                }
-              ]
-            },
             "not": {
               "description": "Logical NOT.",
               "anyOf": [
@@ -2263,14 +2247,6 @@
               "anyOf": [
                 {
                   "$ref": "#/definitions/RuleSetConditions"
-                }
-              ]
-            },
-            "test": {
-              "description": "Exclude all modules matching any of these conditions.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionOrConditions"
                 }
               ]
             }
@@ -2308,22 +2284,6 @@
                 }
               ]
             },
-            "exclude": {
-              "description": "Exclude all modules matching any of these conditions.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
-                }
-              ]
-            },
-            "include": {
-              "description": "Exclude all modules matching not any of these conditions.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
-                }
-              ]
-            },
             "not": {
               "description": "Logical NOT.",
               "anyOf": [
@@ -2337,14 +2297,6 @@
               "anyOf": [
                 {
                   "$ref": "#/definitions/RuleSetConditionsAbsolute"
-                }
-              ]
-            },
-            "test": {
-              "description": "Exclude all modules matching any of these conditions.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
                 }
               ]
             }
