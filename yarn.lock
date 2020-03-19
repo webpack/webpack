@@ -1591,14 +1591,14 @@ cosmiconfig@^6.0.0:
     yaml "^1.7.2"
 
 coveralls@^3.0.2:
-  version "3.0.9"
-  resolved "https://registry.yarnpkg.com/coveralls/-/coveralls-3.0.9.tgz#8cfc5a5525f84884e2948a0bf0f1c0e90aac0420"
-  integrity sha512-nNBg3B1+4iDox5A5zqHKzUTiwl2ey4k2o0NEcVZYvl+GOSJdKBj4AJGKLv6h3SvWch7tABHePAQOSZWM9E2hMg==
+  version "3.0.10"
+  resolved "https://registry.yarnpkg.com/coveralls/-/coveralls-3.0.10.tgz#165a0f3395a58c26036ada82cbc81cac618a2d73"
+  integrity sha512-HW0W5p9F95ww1mHyZP+mvIbHtz7VVwafngnR4HbNjedoH33QSpcl86hdCGBvMwnMV4ut8/Tp4IAIFpX05Kr92g==
   dependencies:
     js-yaml "^3.13.1"
     lcov-parse "^1.0.0"
     log-driver "^1.2.7"
-    minimist "^1.2.0"
+    minimist "^1.2.5"
     request "^2.88.0"
 
 cross-spawn@^6.0.0, cross-spawn@^6.0.5:
