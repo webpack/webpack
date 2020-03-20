@@ -195,14 +195,6 @@ export type RuleSetCondition =
 			 */
 			and?: RuleSetConditions;
 			/**
-			 * Exclude all modules matching any of these conditions.
-			 */
-			exclude?: RuleSetConditionOrConditions;
-			/**
-			 * Exclude all modules matching not any of these conditions.
-			 */
-			include?: RuleSetConditionOrConditions;
-			/**
 			 * Logical NOT.
 			 */
 			not?: RuleSetConditions;
@@ -210,10 +202,6 @@ export type RuleSetCondition =
 			 * Logical OR.
 			 */
 			or?: RuleSetConditions;
-			/**
-			 * Exclude all modules matching any of these conditions.
-			 */
-			test?: RuleSetConditionOrConditions;
 	  };
 /**
  * A list of rule conditions.
@@ -239,14 +227,6 @@ export type RuleSetConditionAbsolute =
 			 */
 			and?: RuleSetConditionsAbsolute;
 			/**
-			 * Exclude all modules matching any of these conditions.
-			 */
-			exclude?: RuleSetConditionOrConditionsAbsolute;
-			/**
-			 * Exclude all modules matching not any of these conditions.
-			 */
-			include?: RuleSetConditionOrConditionsAbsolute;
-			/**
 			 * Logical NOT.
 			 */
 			not?: RuleSetConditionsAbsolute;
@@ -254,10 +234,6 @@ export type RuleSetConditionAbsolute =
 			 * Logical OR.
 			 */
 			or?: RuleSetConditionsAbsolute;
-			/**
-			 * Exclude all modules matching any of these conditions.
-			 */
-			test?: RuleSetConditionOrConditionsAbsolute;
 	  };
 /**
  * A list of rule conditions matching an absolute path.
@@ -439,7 +415,7 @@ export type HotUpdateFunction = string;
  */
 export type HotUpdateMainFilename = string;
 /**
- * Wrap javascript code into IIFEs to avoid leaking into global scope.
+ * Wrap javascript code into IIFE's to avoid leaking into global scope.
  */
 export type Iife = boolean;
 /**
@@ -622,7 +598,7 @@ export interface WebpackOptions {
 	 */
 	entry?: Entry;
 	/**
-	 * Enables/Disables experiments (experiemental features with relax SemVer compatibility).
+	 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
 	 */
 	experiments?: Experiments;
 	/**
@@ -893,7 +869,7 @@ export interface LibraryCustomUmdObject {
 	root?: string | string[];
 }
 /**
- * Enables/Disables experiments (experiemental features with relax SemVer compatibility).
+ * Enables/Disables experiments (experimental features with relax SemVer compatibility).
  */
 export interface Experiments {
 	/**
@@ -917,7 +893,7 @@ export interface Experiments {
 	 */
 	mjs?: boolean;
 	/**
-	 * Allow outputing javascript files as module source type.
+	 * Allow output javascript files as module source type.
 	 */
 	outputModule?: boolean;
 	/**
@@ -1618,7 +1594,7 @@ export interface Output {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
-	 * Wrap javascript code into IIFEs to avoid leaking into global scope.
+	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
 	 */
 	iife?: Iife;
 	/**
@@ -1695,7 +1671,7 @@ export interface PerformanceOptions {
 	 */
 	hints?: false | "warning" | "error";
 	/**
-	 * Filesize limit (in bytes) when exceeded, that webpack will provide performance hints.
+	 * File size limit (in bytes) when exceeded, that webpack will provide performance hints.
 	 */
 	maxAssetSize?: number;
 	/**
@@ -2075,7 +2051,7 @@ export interface OutputNormalized {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
-	 * Wrap javascript code into IIFEs to avoid leaking into global scope.
+	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
 	 */
 	iife?: Iife;
 	/**
@@ -2164,7 +2140,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	entry: EntryNormalized;
 	/**
-	 * Enables/Disables experiments (experiemental features with relax SemVer compatibility).
+	 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
 	 */
 	experiments: Experiments;
 	/**

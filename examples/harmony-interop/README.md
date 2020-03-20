@@ -15,7 +15,7 @@ fs2.readFile("file");
 import { readFile as readFile2 } from "./reexport-commonjs";
 readFile2("file");
 
-// import a CommonJs module for sideeffects
+// import a CommonJs module for side effects
 import "./example2";
 ```
 
@@ -97,7 +97,7 @@ _fs__WEBPACK_IMPORTED_MODULE_0__.readFile("file");
 
 (0,_reexport_commonjs__WEBPACK_IMPORTED_MODULE_1__.readFile)("file");
 
-// import a CommonJs module for sideeffects
+// import a CommonJs module for side effects
 
 
 

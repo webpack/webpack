@@ -12,7 +12,7 @@
       "type": "number"
     },
     "maxSize": {
-      "description": "Byte, maxsize of per file (Default: 50kiB).",
+      "description": "Byte, max size of per file (Default: 50kiB).",
       "type": "number"
     },
     "minSize": {

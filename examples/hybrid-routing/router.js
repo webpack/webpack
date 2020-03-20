@@ -6,7 +6,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 	// require the page with a dynamic require
 
 	// It's important that this require only matches the pages
-	//  elsewise there is blood in the bundle. Here this is done with a
+	//  otherwise there is blood in the bundle. Here this is done with a
 	//  specific file prefix. It's also possible to use a directory,
 	//  overwriting the RegExp with the ContextReplacementPlugin, or
 	//  using the require.context method.

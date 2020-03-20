@@ -7,7 +7,7 @@ const schemasDir = path.resolve(__dirname, "../schemas");
 const baseDefs = new Map(Object.entries(baseSchema.definitions));
 
 // When --write is set, files will be written in place
-// Elsewise it only prints outdated files
+// Otherwise it only prints outdated files
 const doWrite = process.argv.includes("--write");
 
 const sortObjectAlphabetically = obj => {

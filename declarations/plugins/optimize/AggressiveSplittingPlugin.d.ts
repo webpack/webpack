@@ -14,7 +14,7 @@ export interface AggressiveSplittingPluginOptions {
 	 */
 	entryChunkMultiplicator?: number;
 	/**
-	 * Byte, maxsize of per file (Default: 50kiB).
+	 * Byte, max size of per file (Default: 50kiB).
 	 */
 	maxSize?: number;
 	/**

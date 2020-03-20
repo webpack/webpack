@@ -386,7 +386,7 @@
       ]
     },
     "Experiments": {
-      "description": "Enables/Disables experiments (experiemental features with relax SemVer compatibility).",
+      "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -411,7 +411,7 @@
           "type": "boolean"
         },
         "outputModule": {
-          "description": "Allow outputing javascript files as module source type.",
+          "description": "Allow output javascript files as module source type.",
           "type": "boolean"
         },
         "syncWebAssembly": {
@@ -687,7 +687,7 @@
       "absolutePath": false
     },
     "Iife": {
-      "description": "Wrap javascript code into IIFEs to avoid leaking into global scope.",
+      "description": "Wrap javascript code into IIFE's to avoid leaking into global scope.",
       "type": "boolean"
     },
     "InfrastructureLogging": {
@@ -1916,7 +1916,7 @@
           "enum": [false, "warning", "error"]
         },
         "maxAssetSize": {
-          "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints.",
+          "description": "File size limit (in bytes) when exceeded, that webpack will provide performance hints.",
           "type": "number"
         },
         "maxEntrypointSize": {
@@ -2234,22 +2234,6 @@
                 }
               ]
             },
-            "exclude": {
-              "description": "Exclude all modules matching any of these conditions.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionOrConditions"
-                }
-              ]
-            },
-            "include": {
-              "description": "Exclude all modules matching not any of these conditions.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionOrConditions"
-                }
-              ]
-            },
             "not": {
               "description": "Logical NOT.",
               "anyOf": [
@@ -2263,14 +2247,6 @@
               "anyOf": [
                 {
                   "$ref": "#/definitions/RuleSetConditions"
-                }
-              ]
-            },
-            "test": {
-              "description": "Exclude all modules matching any of these conditions.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionOrConditions"
                 }
               ]
             }
@@ -2308,22 +2284,6 @@
                 }
               ]
             },
-            "exclude": {
-              "description": "Exclude all modules matching any of these conditions.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
-                }
-              ]
-            },
-            "include": {
-              "description": "Exclude all modules matching not any of these conditions.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
-                }
-              ]
-            },
             "not": {
               "description": "Logical NOT.",
               "anyOf": [
@@ -2337,14 +2297,6 @@
               "anyOf": [
                 {
                   "$ref": "#/definitions/RuleSetConditionsAbsolute"
-                }
-              ]
-            },
-            "test": {
-              "description": "Exclude all modules matching any of these conditions.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
                 }
               ]
             }
