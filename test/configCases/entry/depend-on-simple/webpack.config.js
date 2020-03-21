@@ -1,3 +1,6 @@
+/** @typedef {import("../../../../").Compiler} Compiler */
+/** @typedef {import("../../../../").Compilation} Compilation */
+
 module.exports = {
 	entry: {
 		app: { import: "./app.js", dependOn: "react-vendors" },
@@ -8,6 +11,9 @@ module.exports = {
 		filename: "[name].js"
 	},
 	plugins: [
+		/**
+		 * @this {Compiler} compiler
+		 */
 		function () {
 			/**
 			 * @param {Compilation} compilation compilation

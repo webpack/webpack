@@ -42,7 +42,7 @@
       "description": "Report the first error as a hard error instead of tolerating it.",
       "type": "boolean"
     },
-    "Cache": {
+    "CacheOptions": {
       "description": "Cache generated modules and chunks to improve performance for multiple incremental builds.",
       "anyOf": [
         {
@@ -50,11 +50,11 @@
           "enum": [true]
         },
         {
-          "$ref": "#/definitions/CacheNormalized"
+          "$ref": "#/definitions/CacheOptionsNormalized"
         }
       ]
     },
-    "CacheNormalized": {
+    "CacheOptionsNormalized": {
       "description": "Cache generated modules and chunks to improve performance for multiple incremental builds.",
       "anyOf": [
         {
@@ -878,7 +878,7 @@
       "description": "Enable production optimizations or development hints.",
       "enum": ["development", "production", "none"]
     },
-    "Module": {
+    "ModuleOptions": {
       "description": "Options affecting the normal modules (`NormalModuleFactory`).",
       "type": "object",
       "additionalProperties": false,
@@ -2626,28 +2626,6 @@
       "description": "Prefixes every line of the source in the bundle with this string.",
       "type": "string"
     },
-    "Stats": {
-      "description": "Stats options object or preset name.",
-      "anyOf": [
-        {
-          "enum": [
-            "none",
-            "errors-only",
-            "minimal",
-            "normal",
-            "detailed",
-            "verbose",
-            "errors-warnings"
-          ]
-        },
-        {
-          "type": "boolean"
-        },
-        {
-          "$ref": "#/definitions/StatsOptions"
-        }
-      ]
-    },
     "StatsOptions": {
       "description": "Stats options object.",
       "type": "object",
@@ -2944,6 +2922,28 @@
         }
       }
     },
+    "StatsValue": {
+      "description": "Stats options object or preset name.",
+      "anyOf": [
+        {
+          "enum": [
+            "none",
+            "errors-only",
+            "minimal",
+            "normal",
+            "detailed",
+            "verbose",
+            "errors-warnings"
+          ]
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/definitions/StatsOptions"
+        }
+      ]
+    },
     "StrictModuleExceptionHandling": {
       "description": "Handles exceptions in module loading correctly at a performance cost.",
       "type": "boolean"
@@ -3045,7 +3045,7 @@
           "$ref": "#/definitions/Bail"
         },
         "cache": {
-          "$ref": "#/definitions/CacheNormalized"
+          "$ref": "#/definitions/CacheOptionsNormalized"
         },
         "context": {
           "$ref": "#/definitions/Context"
@@ -3081,7 +3081,7 @@
           "$ref": "#/definitions/Mode"
         },
         "module": {
-          "$ref": "#/definitions/Module"
+          "$ref": "#/definitions/ModuleOptions"
         },
         "name": {
           "$ref": "#/definitions/Name"
@@ -3120,7 +3120,7 @@
           "$ref": "#/definitions/ResolveLoader"
         },
         "stats": {
-          "$ref": "#/definitions/Stats"
+          "$ref": "#/definitions/StatsValue"
         },
         "target": {
           "$ref": "#/definitions/Target"
@@ -3179,7 +3179,7 @@
       "$ref": "#/definitions/Bail"
     },
     "cache": {
-      "$ref": "#/definitions/Cache"
+      "$ref": "#/definitions/CacheOptions"
     },
     "context": {
       "$ref": "#/definitions/Context"
@@ -3215,7 +3215,7 @@
       "$ref": "#/definitions/Mode"
     },
     "module": {
-      "$ref": "#/definitions/Module"
+      "$ref": "#/definitions/ModuleOptions"
     },
     "name": {
       "$ref": "#/definitions/Name"
@@ -3257,7 +3257,7 @@
       "$ref": "#/definitions/ResolveLoader"
     },
     "stats": {
-      "$ref": "#/definitions/Stats"
+      "$ref": "#/definitions/StatsValue"
     },
     "target": {
       "$ref": "#/definitions/Target"

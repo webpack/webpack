@@ -1,5 +1,5 @@
-/** @typedef {import("../../../../lib/Compilation")} Compilation */
-/** @typedef {import("../../../../lib/Module")} Module */
+/** @typedef {import("../../../../").Compilation} Compilation */
+/** @typedef {import("../../../../").Module} Module */
 
 module.exports = {
 	entry: {

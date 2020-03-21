@@ -1,5 +1,5 @@
 const path = require("path");
-const NormalModule = require("../../../../lib/NormalModule");
+const NormalModule = require("../../../../").NormalModule;
 
 module.exports = {
 	mode: "development",

@@ -1,4 +1,4 @@
-/** @typedef {import("../../../../lib/Compilation")} Compilation */
+/** @typedef {import("../../../../").Compilation} Compilation */
 
 module.exports = {
 	optimization: {
