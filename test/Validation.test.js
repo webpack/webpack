@@ -77,8 +77,8 @@ describe("Validation", () => {
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.module.wrappedContextRegExp should be an instance of RegExp
-			   -> Set the inner regular expression for partial dynamic dependencies.."
+			 - configuration.module.wrappedContextRegExp should be an instance of RegExp.
+			   -> Set the inner regular expression for partial dynamic dependencies."
 		`)
 	);
 
@@ -312,17 +312,17 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.plugins[0] should be one of these:
-			   object { apply, … } | function
-			   -> Plugin of type object or instanceof Function.
-			   Details:
-			    * configuration.plugins[0] should be an object:
-			      object { apply, … }
-			      -> Plugin instance.
-			    * configuration.plugins[0] should be an instance of function
-			      -> Function acting as plugin.."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.plugins[0] should be one of these:
+   object { apply, … } | function
+   -> Plugin of type object or instanceof Function.
+   Details:
+    * configuration.plugins[0] should be an object:
+      object { apply, … }
+      -> Plugin instance.
+    * configuration.plugins[0] should be an instance of function.
+      -> Function acting as plugin."
+`)
 	);
 
 	createTestCase(
@@ -333,17 +333,17 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.plugins[0] should be one of these:
-			   object { apply, … } | function
-			   -> Plugin of type object or instanceof Function.
-			   Details:
-			    * configuration.plugins[0] should be an object:
-			      object { apply, … }
-			      -> Plugin instance.
-			    * configuration.plugins[0] should be an instance of function
-			      -> Function acting as plugin.."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.plugins[0] should be one of these:
+   object { apply, … } | function
+   -> Plugin of type object or instanceof Function.
+   Details:
+    * configuration.plugins[0] should be an object:
+      object { apply, … }
+      -> Plugin instance.
+    * configuration.plugins[0] should be an instance of function.
+      -> Function acting as plugin."
+`)
 	);
 
 	createTestCase(
@@ -354,17 +354,17 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.plugins[0] should be one of these:
-			   object { apply, … } | function
-			   -> Plugin of type object or instanceof Function.
-			   Details:
-			    * configuration.plugins[0] should be an object:
-			      object { apply, … }
-			      -> Plugin instance.
-			    * configuration.plugins[0] should be an instance of function
-			      -> Function acting as plugin.."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.plugins[0] should be one of these:
+   object { apply, … } | function
+   -> Plugin of type object or instanceof Function.
+   Details:
+    * configuration.plugins[0] should be an object:
+      object { apply, … }
+      -> Plugin instance.
+    * configuration.plugins[0] should be an instance of function.
+      -> Function acting as plugin."
+`)
 	);
 
 	createTestCase(
@@ -375,17 +375,17 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.plugins[0] should be one of these:
-			   object { apply, … } | function
-			   -> Plugin of type object or instanceof Function.
-			   Details:
-			    * configuration.plugins[0] should be an object:
-			      object { apply, … }
-			      -> Plugin instance.
-			    * configuration.plugins[0] should be an instance of function
-			      -> Function acting as plugin.."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.plugins[0] should be one of these:
+   object { apply, … } | function
+   -> Plugin of type object or instanceof Function.
+   Details:
+    * configuration.plugins[0] should be an object:
+      object { apply, … }
+      -> Plugin instance.
+    * configuration.plugins[0] should be an instance of function.
+      -> Function acting as plugin."
+`)
 	);
 
 	createTestCase(
@@ -452,18 +452,18 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.optimization.splitChunks.cacheGroups should not be object { test, … }
-			   -> Using the cacheGroup shorthand syntax with a cache group named 'test' is a potential config error
-			   Did you intent to define a cache group with a test instead?
-			   cacheGroups: {
-			     <name>: {
-			       test: ...
-			     }
-			   }.
-			   object { <key>: false | function | string | RegExp | object { automaticNameDelimiter?, chunks?, enforce?, filename?, idHint?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name?, priority?, reuseExistingChunk?, test?, type? } }
-			   -> Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.optimization.splitChunks.cacheGroups should not be object { test, … }.
+   -> Using the cacheGroup shorthand syntax with a cache group named 'test' is a potential config error
+   Did you intent to define a cache group with a test instead?
+   cacheGroups: {
+     <name>: {
+       test: ...
+     }
+   }.
+   object { <key>: false | function | string | RegExp | object { automaticNameDelimiter?, chunks?, enforce?, filename?, idHint?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name?, priority?, reuseExistingChunk?, test?, type? } }
+   -> Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')."
+`)
 	);
 
 	createTestCase(
