@@ -1,6 +1,6 @@
 // harmony module
 
-// import from CommonJs module
+// import from CommonJS module
 import fs from "./fs";
 import { readFile } from "./fs";
 import * as fs2 from "./fs";
