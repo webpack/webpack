@@ -455,9 +455,9 @@ rules:
     actions:
       label:
         remove:
-         - "PR: next"
-         - "PR: webpack-4"
-         - "PR: non-master"
+          - "PR: next"
+          - "PR: webpack-4"
+          - "PR: non-master"
   - filters:
       pull_request:
         base_ref: "^next$"
@@ -465,8 +465,8 @@ rules:
       label:
         add: "PR: next"
         remove:
-         - "PR: webpack-4"
-         - "PR: non-master"
+          - "PR: webpack-4"
+          - "PR: non-master"
   - filters:
       pull_request:
         base_ref: "^webpack-4$"
@@ -474,8 +474,8 @@ rules:
       label:
         add: "PR: webpack-4"
         remove:
-         - "PR: next"
-         - "PR: non-master"
+          - "PR: next"
+          - "PR: non-master"
   - filters:
       pull_request:
         base_ref: "^(?!master$)(?!webpack-4$)(?!next$)"
@@ -483,8 +483,8 @@ rules:
       label:
         add: "PR: non-master"
         remove:
-         - "PR: next"
-         - "PR: webpack-4"
+          - "PR: next"
+          - "PR: webpack-4"
 
   # add non-master label to pull request to other branch
   - filters:
