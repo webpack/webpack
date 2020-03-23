@@ -7,7 +7,6 @@
     -   [Questions? Comments?](#questions?-comments?)
     -   [Footnotes](#footnotes)
 
-
 # Welcome to the webpack test suite!!!!
 Every pull request that you submit to webpack (besides README and spelling corrections in comments) requires tests that are created.
 
