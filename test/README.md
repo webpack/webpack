@@ -1,3 +1,13 @@
+# Table of Content
+-   [Welcome to the webpack test suite!!!!](#welcome-to-webpack-test-suite!!!!)
+    -   [tl;dr](#tl;dr)
+    -   [Test suite overview](#test-suite-overview)
+        -   [Class Tests](#class-tests)
+        -   [xCases](#xcases)
+    -   [Questions? Comments?](#questions?-comments?)
+    -   [Footnotes](#footnotes)
+
+
 # Welcome to the webpack test suite!!!!
 Every pull request that you submit to webpack (besides README and spelling corrections in comments) requires tests that are created.
 
