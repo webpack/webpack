@@ -113,7 +113,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "cache.immutablePaths",
+    "path": "cache.immutablePaths[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -140,7 +140,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "cache.managedPaths",
+    "path": "cache.managedPaths[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -232,7 +232,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "dependencies",
+    "path": "dependencies[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -276,7 +276,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "entry",
+    "path": "entry[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -363,7 +363,7 @@ Object {
     ],
   },
   "experiments-output-module": Object {
-    "description": "Allow outputing javascript files as module source type.",
+    "description": "Allow output javascript files as module source type.",
     "handlers": Array [
       [Function],
     ],
@@ -568,7 +568,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "module.noParse",
+    "path": "module.noParse[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -595,49 +595,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "module.rules.compiler",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-compiler-exclude": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.compiler.exclude",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-compiler-include": Object {
-    "description": "Exclude all modules matching not any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.compiler.include",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-compiler-test": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.compiler.test",
+    "path": "module.rules[].compiler",
     "types": Array [
       Object {
         "multiple": true,
@@ -650,7 +608,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "module.rules.enforce",
+    "path": "module.rules[].enforce",
     "types": Array [
       Object {
         "multiple": true,
@@ -664,49 +622,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "module.rules.exclude",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-exclude-exclude": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.exclude.exclude",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-exclude-include": Object {
-    "description": "Exclude all modules matching not any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.exclude.include",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-exclude-test": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.exclude.test",
+    "path": "module.rules[].exclude",
     "types": Array [
       Object {
         "multiple": true,
@@ -720,49 +636,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "module.rules.include",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-include-exclude": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.include.exclude",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-include-include": Object {
-    "description": "Exclude all modules matching not any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.include.include",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-include-test": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.include.test",
+    "path": "module.rules[].include",
     "types": Array [
       Object {
         "multiple": true,
@@ -776,49 +650,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "module.rules.issuer",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-issuer-exclude": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.issuer.exclude",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-issuer-include": Object {
-    "description": "Exclude all modules matching not any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.issuer.include",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-issuer-test": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.issuer.test",
+    "path": "module.rules[].issuer",
     "types": Array [
       Object {
         "multiple": true,
@@ -832,7 +664,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "module.rules.loader",
+    "path": "module.rules[].loader",
     "types": Array [
       Object {
         "multiple": true,
@@ -845,7 +677,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "module.rules.loader.ident",
+    "path": "module.rules[].loader.ident",
     "types": Array [
       Object {
         "multiple": true,
@@ -858,7 +690,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "module.rules.loader.loader",
+    "path": "module.rules[].loader.loader",
     "types": Array [
       Object {
         "multiple": true,
@@ -871,7 +703,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "module.rules.loader.options",
+    "path": "module.rules[].loader.options",
     "types": Array [
       Object {
         "multiple": true,
@@ -884,7 +716,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "module.rules.options",
+    "path": "module.rules[].options",
     "types": Array [
       Object {
         "multiple": true,
@@ -898,49 +730,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "module.rules.realResource",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-real-resource-exclude": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.realResource.exclude",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-real-resource-include": Object {
-    "description": "Exclude all modules matching not any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.realResource.include",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-real-resource-test": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.realResource.test",
+    "path": "module.rules[].realResource",
     "types": Array [
       Object {
         "multiple": true,
@@ -967,35 +757,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "module.rules.resource",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-resource-exclude": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.resource.exclude",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-resource-include": Object {
-    "description": "Exclude all modules matching not any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.resource.include",
+    "path": "module.rules[].resource",
     "types": Array [
       Object {
         "multiple": true,
@@ -1009,63 +771,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "module.rules.resourceQuery",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-resource-query-exclude": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.resourceQuery.exclude",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-resource-query-include": Object {
-    "description": "Exclude all modules matching not any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.resourceQuery.include",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-resource-query-test": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.resourceQuery.test",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-resource-test": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.resource.test",
+    "path": "module.rules[].resourceQuery",
     "types": Array [
       Object {
         "multiple": true,
@@ -1078,7 +784,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "module.rules.sideEffects",
+    "path": "module.rules[].sideEffects",
     "types": Array [
       Object {
         "multiple": true,
@@ -1092,49 +798,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "module.rules.test",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-test-exclude": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.test.exclude",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-test-include": Object {
-    "description": "Exclude all modules matching not any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.test.include",
-    "types": Array [
-      Object {
-        "multiple": true,
-        "type": "string",
-      },
-    ],
-  },
-  "module-rules-test-test": Object {
-    "description": "Exclude all modules matching any of these conditions.",
-    "handlers": Array [
-      [Function],
-      [Function],
-    ],
-    "path": "module.rules.test.test",
+    "path": "module.rules[].test",
     "types": Array [
       Object {
         "multiple": true,
@@ -1147,7 +811,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "module.rules.type",
+    "path": "module.rules[].type",
     "types": Array [
       Object {
         "multiple": true,
@@ -1160,7 +824,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "module.rules.use",
+    "path": "module.rules[].use",
     "types": Array [
       Object {
         "multiple": true,
@@ -1173,7 +837,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "module.rules.use.ident",
+    "path": "module.rules[].use.ident",
     "types": Array [
       Object {
         "multiple": true,
@@ -1186,7 +850,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "module.rules.use.loader",
+    "path": "module.rules[].use.loader",
     "types": Array [
       Object {
         "multiple": true,
@@ -1199,7 +863,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "module.rules.use.options",
+    "path": "module.rules[].use.options",
     "types": Array [
       Object {
         "multiple": true,
@@ -2151,7 +1815,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "output.enabledLibraryTypes",
+    "path": "output.enabledLibraryTypes[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -2290,7 +1954,7 @@ Object {
     ],
   },
   "output-iife": Object {
-    "description": "Wrap javascript code into IIFEs to avoid leaking into global scope.",
+    "description": "Wrap javascript code into IIFE's to avoid leaking into global scope.",
     "handlers": Array [
       [Function],
     ],
@@ -2734,7 +2398,7 @@ Object {
     ],
   },
   "performance-max-asset-size": Object {
-    "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints.",
+    "description": "File size limit (in bytes) when exceeded, that webpack will provide performance hints.",
     "handlers": Array [
       [Function],
     ],
@@ -2832,7 +2496,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "resolve.alias.alias",
+    "path": "resolve.alias[].alias",
     "types": Array [
       Object {
         "multiple": true,
@@ -2849,7 +2513,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolve.aliasFields",
+    "path": "resolve.aliasFields[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -2875,7 +2539,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolve.alias.name",
+    "path": "resolve.alias[].name",
     "types": Array [
       Object {
         "multiple": true,
@@ -2888,7 +2552,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolve.alias.onlyModule",
+    "path": "resolve.alias[].onlyModule",
     "types": Array [
       Object {
         "multiple": true,
@@ -2940,7 +2604,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolve.descriptionFiles",
+    "path": "resolve.descriptionFiles[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -2979,7 +2643,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolve.extensions",
+    "path": "resolve.extensions[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -3006,7 +2670,7 @@ Object {
       [Function],
       [Function],
     ],
-    "path": "resolveLoader.alias.alias",
+    "path": "resolveLoader.alias[].alias",
     "types": Array [
       Object {
         "multiple": true,
@@ -3023,7 +2687,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolveLoader.aliasFields",
+    "path": "resolveLoader.aliasFields[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -3049,7 +2713,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolveLoader.alias.name",
+    "path": "resolveLoader.alias[].name",
     "types": Array [
       Object {
         "multiple": true,
@@ -3062,7 +2726,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolveLoader.alias.onlyModule",
+    "path": "resolveLoader.alias[].onlyModule",
     "types": Array [
       Object {
         "multiple": true,
@@ -3114,7 +2778,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolveLoader.descriptionFiles",
+    "path": "resolveLoader.descriptionFiles[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -3153,7 +2817,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolveLoader.extensions",
+    "path": "resolveLoader.extensions[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -3179,7 +2843,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolveLoader.mainFields",
+    "path": "resolveLoader.mainFields[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -3205,7 +2869,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolveLoader.mainFiles",
+    "path": "resolveLoader.mainFiles[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -3231,7 +2895,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolveLoader.modules",
+    "path": "resolveLoader.modules[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -3296,7 +2960,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolve.mainFields",
+    "path": "resolve.mainFields[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -3322,7 +2986,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolve.mainFiles",
+    "path": "resolve.mainFiles[]",
     "types": Array [
       Object {
         "multiple": true,
@@ -3348,7 +3012,7 @@ Object {
     "handlers": Array [
       [Function],
     ],
-    "path": "resolve.modules",
+    "path": "resolve.modules[]",
     "types": Array [
       Object {
         "multiple": true,
