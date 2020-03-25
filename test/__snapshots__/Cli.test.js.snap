@@ -2339,6 +2339,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "output-library-export-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Specify which export should be exposed as library.",
+        "multiple": false,
+        "path": "output.libraryExport.reset",
+        "type": "boolean",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Specify which export should be exposed as library.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-library-name": Object {
     "configs": Array [
       Object {
@@ -2384,6 +2397,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-library-name-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. The name of the library (some types allow unnamed libraries too).",
+        "multiple": false,
+        "path": "output.library.name.reset",
+        "type": "boolean",
+      },
+    ],
+    "description": "Clear all items provided in configuration. The name of the library (some types allow unnamed libraries too).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-library-name-root": Object {
     "configs": Array [
       Object {
@@ -2403,6 +2429,32 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "output-library-name-root-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Name of the property exposed globally by a UMD library.",
+        "multiple": false,
+        "path": "output.library.name.root.reset",
+        "type": "boolean",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Name of the property exposed globally by a UMD library.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-library-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. The name of the library (some types allow unnamed libraries too).",
+        "multiple": false,
+        "path": "output.library.reset",
+        "type": "boolean",
+      },
+    ],
+    "description": "Clear all items provided in configuration. The name of the library (some types allow unnamed libraries too).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-library-root": Object {
     "configs": Array [
       Object {
@@ -2421,6 +2473,19 @@ Object {
     "description": "Name of the property exposed globally by a UMD library. Part of the name of the property exposed globally by a UMD library.",
     "multiple": true,
     "simpleType": "string",
+  },
+  "output-library-root-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Name of the property exposed globally by a UMD library.",
+        "multiple": false,
+        "path": "output.library.root.reset",
+        "type": "boolean",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Name of the property exposed globally by a UMD library.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "output-library-target": Object {
     "configs": Array [
