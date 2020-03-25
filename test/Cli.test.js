@@ -145,36 +145,20 @@ describe("Cli", () => {
 		{},
 		e =>
 			e.toMatchInlineSnapshot(`
-Array [
-  Object {
-    "argument": "module-rules-test",
-    "index": 0,
-    "path": "module.rules",
-    "type": "non-object",
-    "value": "/\\\\.css$/",
+Object {
+  "module": Object {
+    "rules": Array [
+      Object {
+        "test": /\\\\\\.css\\$/,
+        "use": "css-loader",
+      },
+      Object {
+        "test": /\\\\\\.js\\$/,
+        "use": "babel-loader",
+      },
+    ],
   },
-  Object {
-    "argument": "module-rules-test",
-    "index": 0,
-    "path": "module.rules",
-    "type": "non-object",
-    "value": "/\\\\.css$/",
-  },
-  Object {
-    "argument": "module-rules-test",
-    "index": 1,
-    "path": "module.rules",
-    "type": "non-object",
-    "value": "/\\\\.js$/",
-  },
-  Object {
-    "argument": "module-rules-test",
-    "index": 1,
-    "path": "module.rules",
-    "type": "non-object",
-    "value": "/\\\\.js$/",
-  },
-]
+}
 `)
 	);
 });
