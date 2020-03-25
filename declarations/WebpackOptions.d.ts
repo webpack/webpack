@@ -952,10 +952,9 @@ export interface Module {
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
 	noParse?:
-		| [RegExp, ...RegExp[]]
+		| [RegExp | Function | string, ...(RegExp | Function | string)[]]
 		| RegExp
 		| Function
-		| [string, ...string[]]
 		| string;
 	/**
 	 * An array of rules applied for modules.

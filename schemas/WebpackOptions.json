@@ -992,13 +992,31 @@
             {
               "type": "array",
               "items": {
-                "description": "A regular expression, when matched the module is not parsed.",
-                "instanceof": "RegExp",
-                "tsType": "RegExp"
+                "description": "Don't parse files matching. It's matched against the full resolved request.",
+                "anyOf": [
+                  {
+                    "description": "A regular expression, when matched the module is not parsed.",
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
+                  },
+                  {
+                    "instanceof": "Function",
+                    "tsType": "Function"
+                  },
+                  {
+                    "description": "An absolute path, when the module starts with this path it is not parsed.",
+                    "type": "string",
+                    "absolutePath": true
+                  }
+                ]
               },
               "minItems": 1
             },
             {
+              "description": "A regular expression, when matched the module is not parsed.",
+              "cli": {
+                "exclude": true
+              },
               "instanceof": "RegExp",
               "tsType": "RegExp"
             },
@@ -1007,16 +1025,11 @@
               "tsType": "Function"
             },
             {
-              "type": "array",
-              "items": {
-                "description": "An absolute path, when the module starts with this path it is not parsed.",
-                "type": "string",
-                "absolutePath": true
-              },
-              "minItems": 1
-            },
-            {
+              "description": "An absolute path, when the module starts with this path it is not parsed.",
               "type": "string",
+              "cli": {
+                "exclude": true
+              },
               "absolutePath": true
             }
           ]
