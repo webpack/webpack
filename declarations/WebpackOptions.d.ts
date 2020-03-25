@@ -1142,7 +1142,7 @@ export interface ResolveOptions {
 	/**
 	 * Extensions added to the request when trying to find the file.
 	 */
-	extensions?: ArrayOfStringValues;
+	extensions?: string[];
 	/**
 	 * Filesystem for the resolver.
 	 */
