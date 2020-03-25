@@ -135,7 +135,6 @@ describe("Cli", () => {
 		`)
 	);
 
-	// TODO fix this test case
 	test(
 		"nested multiple",
 		{
