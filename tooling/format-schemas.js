@@ -21,9 +21,9 @@ const typeOrder = [
 	"array",
 	"enum",
 	"RegExp",
-	"string",
 	"number",
 	"boolean",
+	"string",
 	"object",
 	"Function",
 	undefined

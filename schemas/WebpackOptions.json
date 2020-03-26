@@ -413,12 +413,12 @@
                 }
               },
               {
-                "description": "The target of the external.",
-                "type": "string"
-              },
-              {
                 "description": "`true`: The dependency name is used as target of the external.",
                 "type": "boolean"
+              },
+              {
+                "description": "The target of the external.",
+                "type": "string"
               },
               {
                 "type": "object"
@@ -2891,10 +2891,10 @@
           "description": "Preset for the default values.",
           "anyOf": [
             {
-              "type": "string"
+              "type": "boolean"
             },
             {
-              "type": "boolean"
+              "type": "string"
             }
           ]
         },
