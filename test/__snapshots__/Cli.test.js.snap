@@ -34,15 +34,6 @@ Object {
   "cache": Object {
     "configs": Array [
       Object {
-        "description": "Disable caching.",
-        "multiple": false,
-        "path": "cache",
-        "type": "enum",
-        "values": Array [
-          false,
-        ],
-      },
-      Object {
         "description": "Enable in memory caching.",
         "multiple": false,
         "path": "cache",
@@ -51,8 +42,17 @@ Object {
           true,
         ],
       },
+      Object {
+        "description": "Disable caching.",
+        "multiple": false,
+        "path": "cache",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
     ],
-    "description": "Disable caching. Enable in memory caching.",
+    "description": "Enable in memory caching. Disable caching.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -305,13 +305,13 @@ Object {
   "entry": Object {
     "configs": Array [
       Object {
-        "description": "All modules are loaded upon startup. The last one is exported.",
+        "description": "A module that is loaded upon startup. Only the last one is exported.",
         "multiple": true,
         "path": "entry[]",
         "type": "string",
       },
     ],
-    "description": "All modules are loaded upon startup. The last one is exported.",
+    "description": "A module that is loaded upon startup. Only the last one is exported.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -435,15 +435,9 @@ Object {
   "externals": Object {
     "configs": Array [
       Object {
-        "description": "An exact matched dependency becomes external. The same string is used as external dependency.",
-        "multiple": false,
-        "path": "externals",
-        "type": "string",
-      },
-      Object {
         "description": "Every matched dependency becomes external.",
-        "multiple": false,
-        "path": "externals",
+        "multiple": true,
+        "path": "externals[]",
         "type": "RegExp",
       },
       Object {
@@ -451,15 +445,9 @@ Object {
         "multiple": true,
         "path": "externals[]",
         "type": "string",
-      },
-      Object {
-        "description": "Every matched dependency becomes external.",
-        "multiple": true,
-        "path": "externals[]",
-        "type": "RegExp",
       },
     ],
-    "description": "An exact matched dependency becomes external. The same string is used as external dependency. Every matched dependency becomes external.",
+    "description": "Every matched dependency becomes external. An exact matched dependency becomes external. The same string is used as external dependency.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -510,37 +498,25 @@ Object {
   "infrastructure-logging-debug": Object {
     "configs": Array [
       Object {
-        "description": "Enable debug logging for specific loggers.",
-        "multiple": false,
-        "path": "infrastructureLogging.debug",
-        "type": "RegExp",
-      },
-      Object {
-        "description": "Enable debug logging for specific loggers.",
-        "multiple": false,
-        "path": "infrastructureLogging.debug",
-        "type": "string",
-      },
-      Object {
-        "description": "Enable debug logging for specific loggers.",
-        "multiple": true,
-        "path": "infrastructureLogging.debug[]",
-        "type": "RegExp",
-      },
-      Object {
-        "description": "Enable debug logging for specific loggers.",
-        "multiple": true,
-        "path": "infrastructureLogging.debug[]",
-        "type": "string",
-      },
-      Object {
         "description": "Enable/Disable debug logging for all loggers.",
         "multiple": false,
         "path": "infrastructureLogging.debug",
         "type": "boolean",
       },
+      Object {
+        "description": "Enable debug logging for specific loggers.",
+        "multiple": true,
+        "path": "infrastructureLogging.debug[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Enable debug logging for specific loggers.",
+        "multiple": true,
+        "path": "infrastructureLogging.debug[]",
+        "type": "string",
+      },
     ],
-    "description": "Enable debug logging for specific loggers. Enable/Disable debug logging for all loggers.",
+    "description": "Enable/Disable debug logging for all loggers. Enable debug logging for specific loggers.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -628,13 +604,13 @@ Object {
         "description": "Sets the default regular expression for full dynamic dependencies.",
         "multiple": false,
         "path": "module.exprContextRegExp",
-        "type": "boolean",
+        "type": "RegExp",
       },
       Object {
         "description": "Sets the default regular expression for full dynamic dependencies.",
         "multiple": false,
         "path": "module.exprContextRegExp",
-        "type": "RegExp",
+        "type": "boolean",
       },
     ],
     "description": "Sets the default regular expression for full dynamic dependencies.",
@@ -1069,13 +1045,13 @@ Object {
         "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
         "multiple": false,
         "path": "module.unknownContextRegExp",
-        "type": "boolean",
+        "type": "RegExp",
       },
       Object {
         "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
         "multiple": false,
         "path": "module.unknownContextRegExp",
-        "type": "RegExp",
+        "type": "boolean",
       },
     ],
     "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
@@ -1464,17 +1440,17 @@ Object {
         "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps.",
         "multiple": false,
         "path": "optimization.runtimeChunk",
-        "type": "boolean",
-      },
-      Object {
-        "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps.",
-        "multiple": false,
-        "path": "optimization.runtimeChunk",
         "type": "enum",
         "values": Array [
           "single",
           "multiple",
         ],
+      },
+      Object {
+        "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps.",
+        "multiple": false,
+        "path": "optimization.runtimeChunk",
+        "type": "boolean",
       },
     ],
     "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps.",
@@ -1977,16 +1953,16 @@ Object {
         "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
         "multiple": false,
         "path": "output.ecmaVersion",
-        "type": "number",
+        "type": "enum",
+        "values": Array [
+          2009,
+        ],
       },
       Object {
         "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
         "multiple": false,
         "path": "output.ecmaVersion",
-        "type": "enum",
-        "values": Array [
-          2009,
-        ],
+        "type": "number",
       },
     ],
     "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
@@ -2201,19 +2177,13 @@ Object {
   "output-library": Object {
     "configs": Array [
       Object {
-        "description": "The name of the library (some types allow unnamed libraries too).",
-        "multiple": false,
-        "path": "output.library",
-        "type": "string",
-      },
-      Object {
         "description": "A part of the library name.",
         "multiple": true,
         "path": "output.library[]",
         "type": "string",
       },
     ],
-    "description": "The name of the library (some types allow unnamed libraries too). A part of the library name.",
+    "description": "A part of the library name.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2311,21 +2281,9 @@ Object {
   "output-library-export": Object {
     "configs": Array [
       Object {
-        "description": "Specify which export should be exposed as library.",
-        "multiple": false,
-        "path": "output.library.export",
-        "type": "string",
-      },
-      Object {
         "description": "Part of the export that should be exposed as library.",
         "multiple": true,
         "path": "output.library.export[]",
-        "type": "string",
-      },
-      Object {
-        "description": "Specify which export should be exposed as library.",
-        "multiple": false,
-        "path": "output.libraryExport",
         "type": "string",
       },
       Object {
@@ -2335,7 +2293,7 @@ Object {
         "type": "string",
       },
     ],
-    "description": "Specify which export should be exposed as library. Part of the export that should be exposed as library.",
+    "description": "Part of the export that should be exposed as library.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2355,19 +2313,13 @@ Object {
   "output-library-name": Object {
     "configs": Array [
       Object {
-        "description": "The name of the library (some types allow unnamed libraries too).",
-        "multiple": false,
-        "path": "output.library.name",
-        "type": "string",
-      },
-      Object {
         "description": "A part of the library name.",
         "multiple": true,
         "path": "output.library.name[]",
         "type": "string",
       },
     ],
-    "description": "The name of the library (some types allow unnamed libraries too). A part of the library name.",
+    "description": "A part of the library name.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2413,19 +2365,13 @@ Object {
   "output-library-name-root": Object {
     "configs": Array [
       Object {
-        "description": "Name of the property exposed globally by a UMD library.",
-        "multiple": false,
-        "path": "output.library.name.root",
-        "type": "string",
-      },
-      Object {
         "description": "Part of the name of the property exposed globally by a UMD library.",
         "multiple": true,
         "path": "output.library.name.root[]",
         "type": "string",
       },
     ],
-    "description": "Name of the property exposed globally by a UMD library. Part of the name of the property exposed globally by a UMD library.",
+    "description": "Part of the name of the property exposed globally by a UMD library.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2458,19 +2404,13 @@ Object {
   "output-library-root": Object {
     "configs": Array [
       Object {
-        "description": "Name of the property exposed globally by a UMD library.",
-        "multiple": false,
-        "path": "output.library.root",
-        "type": "string",
-      },
-      Object {
         "description": "Part of the name of the property exposed globally by a UMD library.",
         "multiple": true,
         "path": "output.library.root[]",
         "type": "string",
       },
     ],
-    "description": "Name of the property exposed globally by a UMD library. Part of the name of the property exposed globally by a UMD library.",
+    "description": "Part of the name of the property exposed globally by a UMD library.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2847,12 +2787,6 @@ Object {
   "resolve-alias-alias": Object {
     "configs": Array [
       Object {
-        "description": "New request.",
-        "multiple": true,
-        "path": "resolve.alias[].alias",
-        "type": "string",
-      },
-      Object {
         "description": "Ignore request (replace with empty module).",
         "multiple": true,
         "path": "resolve.alias[].alias",
@@ -2861,34 +2795,40 @@ Object {
           false,
         ],
       },
+      Object {
+        "description": "New request.",
+        "multiple": true,
+        "path": "resolve.alias[].alias",
+        "type": "string",
+      },
     ],
-    "description": "New request. Ignore request (replace with empty module).",
+    "description": "Ignore request (replace with empty module). New request.",
     "multiple": true,
     "simpleType": "string",
   },
   "resolve-alias-fields": Object {
     "configs": Array [
       Object {
-        "description": "Fields in the description file (package.json) which are used to redirect requests inside the module.",
+        "description": "Field in the description file (usually package.json) which are used to redirect requests inside the module.",
         "multiple": true,
         "path": "resolve.aliasFields[]",
         "type": "string",
       },
     ],
-    "description": "Fields in the description file (package.json) which are used to redirect requests inside the module.",
+    "description": "Field in the description file (usually package.json) which are used to redirect requests inside the module.",
     "multiple": true,
     "simpleType": "string",
   },
   "resolve-alias-fields-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Fields in the description file (package.json) which are used to redirect requests inside the module.",
+        "description": "Clear all items provided in configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
         "multiple": false,
         "path": "resolve.aliasFields.reset",
         "type": "boolean",
       },
     ],
-    "description": "Clear all items provided in configuration. Fields in the description file (package.json) which are used to redirect requests inside the module.",
+    "description": "Clear all items provided in configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2960,26 +2900,26 @@ Object {
   "resolve-description-files": Object {
     "configs": Array [
       Object {
-        "description": "Filenames used to find a description file.",
+        "description": "Filename used to find a description file (like a package.json).",
         "multiple": true,
         "path": "resolve.descriptionFiles[]",
         "type": "string",
       },
     ],
-    "description": "Filenames used to find a description file.",
+    "description": "Filename used to find a description file (like a package.json).",
     "multiple": true,
     "simpleType": "string",
   },
   "resolve-description-files-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Filenames used to find a description file.",
+        "description": "Clear all items provided in configuration. Filenames used to find a description file (like a package.json).",
         "multiple": false,
         "path": "resolve.descriptionFiles.reset",
         "type": "boolean",
       },
     ],
-    "description": "Clear all items provided in configuration. Filenames used to find a description file.",
+    "description": "Clear all items provided in configuration. Filenames used to find a description file (like a package.json).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2999,13 +2939,13 @@ Object {
   "resolve-extensions": Object {
     "configs": Array [
       Object {
-        "description": "Extensions added to the request when trying to find the file.",
+        "description": "Extension added to the request when trying to find the file.",
         "multiple": true,
         "path": "resolve.extensions[]",
         "type": "string",
       },
     ],
-    "description": "Extensions added to the request when trying to find the file.",
+    "description": "Extension added to the request when trying to find the file.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3025,12 +2965,6 @@ Object {
   "resolve-loader-alias-alias": Object {
     "configs": Array [
       Object {
-        "description": "New request.",
-        "multiple": true,
-        "path": "resolveLoader.alias[].alias",
-        "type": "string",
-      },
-      Object {
         "description": "Ignore request (replace with empty module).",
         "multiple": true,
         "path": "resolveLoader.alias[].alias",
@@ -3039,34 +2973,40 @@ Object {
           false,
         ],
       },
+      Object {
+        "description": "New request.",
+        "multiple": true,
+        "path": "resolveLoader.alias[].alias",
+        "type": "string",
+      },
     ],
-    "description": "New request. Ignore request (replace with empty module).",
+    "description": "Ignore request (replace with empty module). New request.",
     "multiple": true,
     "simpleType": "string",
   },
   "resolve-loader-alias-fields": Object {
     "configs": Array [
       Object {
-        "description": "Fields in the description file (package.json) which are used to redirect requests inside the module.",
+        "description": "Field in the description file (usually package.json) which are used to redirect requests inside the module.",
         "multiple": true,
         "path": "resolveLoader.aliasFields[]",
         "type": "string",
       },
     ],
-    "description": "Fields in the description file (package.json) which are used to redirect requests inside the module.",
+    "description": "Field in the description file (usually package.json) which are used to redirect requests inside the module.",
     "multiple": true,
     "simpleType": "string",
   },
   "resolve-loader-alias-fields-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Fields in the description file (package.json) which are used to redirect requests inside the module.",
+        "description": "Clear all items provided in configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
         "multiple": false,
         "path": "resolveLoader.aliasFields.reset",
         "type": "boolean",
       },
     ],
-    "description": "Clear all items provided in configuration. Fields in the description file (package.json) which are used to redirect requests inside the module.",
+    "description": "Clear all items provided in configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3138,26 +3078,26 @@ Object {
   "resolve-loader-description-files": Object {
     "configs": Array [
       Object {
-        "description": "Filenames used to find a description file.",
+        "description": "Filename used to find a description file (like a package.json).",
         "multiple": true,
         "path": "resolveLoader.descriptionFiles[]",
         "type": "string",
       },
     ],
-    "description": "Filenames used to find a description file.",
+    "description": "Filename used to find a description file (like a package.json).",
     "multiple": true,
     "simpleType": "string",
   },
   "resolve-loader-description-files-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Filenames used to find a description file.",
+        "description": "Clear all items provided in configuration. Filenames used to find a description file (like a package.json).",
         "multiple": false,
         "path": "resolveLoader.descriptionFiles.reset",
         "type": "boolean",
       },
     ],
-    "description": "Clear all items provided in configuration. Filenames used to find a description file.",
+    "description": "Clear all items provided in configuration. Filenames used to find a description file (like a package.json).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3177,13 +3117,13 @@ Object {
   "resolve-loader-extensions": Object {
     "configs": Array [
       Object {
-        "description": "Extensions added to the request when trying to find the file.",
+        "description": "Extension added to the request when trying to find the file.",
         "multiple": true,
         "path": "resolveLoader.extensions[]",
         "type": "string",
       },
     ],
-    "description": "Extensions added to the request when trying to find the file.",
+    "description": "Extension added to the request when trying to find the file.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3203,13 +3143,13 @@ Object {
   "resolve-loader-main-fields": Object {
     "configs": Array [
       Object {
-        "description": "Field names from the description file (package.json) which are used to find the default entry point.",
+        "description": "Field name from the description file (package.json) which are used to find the default entry point.",
         "multiple": true,
         "path": "resolveLoader.mainFields[]",
         "type": "string",
       },
     ],
-    "description": "Field names from the description file (package.json) which are used to find the default entry point.",
+    "description": "Field name from the description file (package.json) which are used to find the default entry point.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3229,13 +3169,13 @@ Object {
   "resolve-loader-main-files": Object {
     "configs": Array [
       Object {
-        "description": "Filenames used to find the default entry point if there is no description file or main field.",
+        "description": "Filename used to find the default entry point if there is no description file or main field.",
         "multiple": true,
         "path": "resolveLoader.mainFiles[]",
         "type": "string",
       },
     ],
-    "description": "Filenames used to find the default entry point if there is no description file or main field.",
+    "description": "Filename used to find the default entry point if there is no description file or main field.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3255,13 +3195,13 @@ Object {
   "resolve-loader-modules": Object {
     "configs": Array [
       Object {
-        "description": "Folder names or directory paths where to find modules.",
+        "description": "Folder name or directory path where to find modules.",
         "multiple": true,
         "path": "resolveLoader.modules[]",
         "type": "string",
       },
     ],
-    "description": "Folder names or directory paths where to find modules.",
+    "description": "Folder name or directory path where to find modules.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3320,13 +3260,13 @@ Object {
   "resolve-main-fields": Object {
     "configs": Array [
       Object {
-        "description": "Field names from the description file (package.json) which are used to find the default entry point.",
+        "description": "Field name from the description file (package.json) which are used to find the default entry point.",
         "multiple": true,
         "path": "resolve.mainFields[]",
         "type": "string",
       },
     ],
-    "description": "Field names from the description file (package.json) which are used to find the default entry point.",
+    "description": "Field name from the description file (package.json) which are used to find the default entry point.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3346,13 +3286,13 @@ Object {
   "resolve-main-files": Object {
     "configs": Array [
       Object {
-        "description": "Filenames used to find the default entry point if there is no description file or main field.",
+        "description": "Filename used to find the default entry point if there is no description file or main field.",
         "multiple": true,
         "path": "resolve.mainFiles[]",
         "type": "string",
       },
     ],
-    "description": "Filenames used to find the default entry point if there is no description file or main field.",
+    "description": "Filename used to find the default entry point if there is no description file or main field.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3372,13 +3312,13 @@ Object {
   "resolve-modules": Object {
     "configs": Array [
       Object {
-        "description": "Folder names or directory paths where to find modules.",
+        "description": "Folder name or directory path where to find modules.",
         "multiple": true,
         "path": "resolve.modules[]",
         "type": "string",
       },
     ],
-    "description": "Folder names or directory paths where to find modules.",
+    "description": "Folder name or directory path where to find modules.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3440,12 +3380,6 @@ Object {
         "description": "Stats options object or preset name.",
         "multiple": false,
         "path": "stats",
-        "type": "boolean",
-      },
-      Object {
-        "description": "Stats options object or preset name.",
-        "multiple": false,
-        "path": "stats",
         "type": "enum",
         "values": Array [
           "none",
@@ -3456,6 +3390,12 @@ Object {
           "verbose",
           "errors-warnings",
         ],
+      },
+      Object {
+        "description": "Stats options object or preset name.",
+        "multiple": false,
+        "path": "stats",
+        "type": "boolean",
       },
     ],
     "description": "Stats options object or preset name.",
@@ -3830,18 +3770,6 @@ Object {
     "configs": Array [
       Object {
         "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
-        "multiple": false,
-        "path": "stats.excludeAssets",
-        "type": "RegExp",
-      },
-      Object {
-        "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
-        "multiple": false,
-        "path": "stats.excludeAssets",
-        "type": "string",
-      },
-      Object {
-        "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
         "multiple": true,
         "path": "stats.excludeAssets[]",
         "type": "RegExp",
@@ -3876,31 +3804,19 @@ Object {
         "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
         "multiple": false,
         "path": "stats.excludeModules",
-        "type": "RegExp",
-      },
-      Object {
-        "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
-        "multiple": false,
-        "path": "stats.excludeModules",
-        "type": "string",
-      },
-      Object {
-        "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
-        "multiple": true,
-        "path": "stats.excludeModules[]",
-        "type": "RegExp",
-      },
-      Object {
-        "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
-        "multiple": true,
-        "path": "stats.excludeModules[]",
-        "type": "string",
-      },
-      Object {
-        "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
-        "multiple": false,
-        "path": "stats.excludeModules",
         "type": "boolean",
+      },
+      Object {
+        "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+        "multiple": true,
+        "path": "stats.excludeModules[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+        "multiple": true,
+        "path": "stats.excludeModules[]",
+        "type": "string",
       },
     ],
     "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
@@ -3949,12 +3865,6 @@ Object {
   "stats-logging": Object {
     "configs": Array [
       Object {
-        "description": "Enable/disable logging output (\`true\`: shows normal logging output, loglevel: log).",
-        "multiple": false,
-        "path": "stats.logging",
-        "type": "boolean",
-      },
-      Object {
         "description": "Specify log level of logging output.",
         "multiple": false,
         "path": "stats.logging",
@@ -3968,45 +3878,39 @@ Object {
           "verbose",
         ],
       },
+      Object {
+        "description": "Enable/disable logging output (\`true\`: shows normal logging output, loglevel: log).",
+        "multiple": false,
+        "path": "stats.logging",
+        "type": "boolean",
+      },
     ],
-    "description": "Enable/disable logging output (\`true\`: shows normal logging output, loglevel: log). Specify log level of logging output.",
+    "description": "Specify log level of logging output. Enable/disable logging output (\`true\`: shows normal logging output, loglevel: log).",
     "multiple": false,
     "simpleType": "string",
   },
   "stats-logging-debug": Object {
     "configs": Array [
       Object {
-        "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
-        "multiple": false,
-        "path": "stats.loggingDebug",
-        "type": "RegExp",
-      },
-      Object {
-        "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
-        "multiple": false,
-        "path": "stats.loggingDebug",
-        "type": "string",
-      },
-      Object {
-        "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
-        "multiple": true,
-        "path": "stats.loggingDebug[]",
-        "type": "RegExp",
-      },
-      Object {
-        "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
-        "multiple": true,
-        "path": "stats.loggingDebug[]",
-        "type": "string",
-      },
-      Object {
         "description": "Enable/Disable debug logging for all loggers.",
         "multiple": false,
         "path": "stats.loggingDebug",
         "type": "boolean",
       },
+      Object {
+        "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.loggingDebug[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+        "multiple": true,
+        "path": "stats.loggingDebug[]",
+        "type": "string",
+      },
     ],
-    "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions. Enable/Disable debug logging for all loggers.",
+    "description": "Enable/Disable debug logging for all loggers. Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -4172,13 +4076,13 @@ Object {
         "description": "Preset for the default values.",
         "multiple": false,
         "path": "stats.preset",
-        "type": "boolean",
+        "type": "string",
       },
       Object {
         "description": "Preset for the default values.",
         "multiple": false,
         "path": "stats.preset",
-        "type": "string",
+        "type": "boolean",
       },
     ],
     "description": "Preset for the default values.",
@@ -4306,18 +4210,6 @@ Object {
     "configs": Array [
       Object {
         "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
-        "multiple": false,
-        "path": "stats.warningsFilter",
-        "type": "RegExp",
-      },
-      Object {
-        "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
-        "multiple": false,
-        "path": "stats.warningsFilter",
-        "type": "string",
-      },
-      Object {
-        "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
         "multiple": true,
         "path": "stats.warningsFilter[]",
         "type": "RegExp",
@@ -4398,19 +4290,13 @@ Object {
   "watch-options-ignored": Object {
     "configs": Array [
       Object {
-        "description": "A single glob pattern for files that should be ignored from watching.",
-        "multiple": false,
-        "path": "watchOptions.ignored",
-        "type": "string",
-      },
-      Object {
-        "description": "Ignore some files from watching (glob pattern).",
+        "description": "A glob pattern for files that should be ignored from watching.",
         "multiple": true,
         "path": "watchOptions.ignored[]",
         "type": "string",
       },
     ],
-    "description": "A single glob pattern for files that should be ignored from watching. Ignore some files from watching (glob pattern).",
+    "description": "A glob pattern for files that should be ignored from watching.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -4430,19 +4316,19 @@ Object {
   "watch-options-poll": Object {
     "configs": Array [
       Object {
-        "description": "\`true\`: use polling.",
-        "multiple": false,
-        "path": "watchOptions.poll",
-        "type": "boolean",
-      },
-      Object {
         "description": "\`number\`: use polling with specified interval.",
         "multiple": false,
         "path": "watchOptions.poll",
         "type": "number",
       },
+      Object {
+        "description": "\`true\`: use polling.",
+        "multiple": false,
+        "path": "watchOptions.poll",
+        "type": "boolean",
+      },
     ],
-    "description": "\`true\`: use polling. \`number\`: use polling with specified interval.",
+    "description": "\`number\`: use polling with specified interval. \`true\`: use polling.",
     "multiple": false,
     "simpleType": "string",
   },

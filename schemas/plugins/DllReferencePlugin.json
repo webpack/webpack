@@ -16,10 +16,6 @@
             "description": "Information about the provided exports of the module.",
             "anyOf": [
               {
-                "description": "Exports unknown/dynamic.",
-                "enum": [true]
-              },
-              {
                 "description": "List of provided exports of the module.",
                 "type": "array",
                 "items": {
@@ -27,6 +23,10 @@
                   "type": "string",
                   "minLength": 1
                 }
+              },
+              {
+                "description": "Exports unknown/dynamic.",
+                "enum": [true]
               }
             ]
           },
@@ -34,11 +34,11 @@
             "description": "Module ID.",
             "anyOf": [
               {
-                "type": "number"
-              },
-              {
                 "type": "string",
                 "minLength": 1
+              },
+              {
+                "type": "number"
               }
             ]
           }
@@ -118,11 +118,11 @@
           "description": "An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.",
           "oneOf": [
             {
-              "$ref": "#/definitions/DllReferencePluginOptionsManifest"
-            },
-            {
               "type": "string",
               "absolutePath": true
+            },
+            {
+              "$ref": "#/definitions/DllReferencePluginOptionsManifest"
             }
           ]
         },

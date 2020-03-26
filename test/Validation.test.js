@@ -60,10 +60,10 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.entry['bundle'] should be an non-empty array.
-			   -> A non-empty array of non-empty strings."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.entry['bundle'] should be an non-empty array.
+   -> All modules are loaded upon startup. The last one is exported."
+`)
 	);
 
 	createTestCase(
@@ -103,10 +103,10 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.entry should not contain the item 'abc' twice.
-			   -> A non-empty array of non-empty strings."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.entry should not contain the item 'abc' twice.
+   -> All modules are loaded upon startup. The last one is exported."
+`)
 	);
 
 	createTestCase(
@@ -119,16 +119,16 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.entry[0] should be a non-empty string.
-			   -> A non-empty string.
-			 - configuration.output.filename should be one of these:
-			   non-empty string | function
-			   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
-			   Details:
-			    * configuration.output.filename should be a non-empty string.
-			    * configuration.output.filename should be an instance of function."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.entry[0] should be a non-empty string.
+   -> A module that is loaded upon startup. Only the last one is exported.
+ - configuration.output.filename should be one of these:
+   non-empty string | function
+   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+   Details:
+    * configuration.output.filename should be a non-empty string.
+    * configuration.output.filename should be an instance of function."
+`)
 	);
 
 	createTestCase(
@@ -146,16 +146,16 @@ describe("Validation", () => {
 		],
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration[0].entry[0] should be a non-empty string.
-			   -> A non-empty string.
-			 - configuration[1].output.filename should be one of these:
-			   non-empty string | function
-			   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
-			   Details:
-			    * configuration[1].output.filename should be a non-empty string.
-			    * configuration[1].output.filename should be an instance of function."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration[0].entry[0] should be a non-empty string.
+   -> A module that is loaded upon startup. Only the last one is exported.
+ - configuration[1].output.filename should be one of these:
+   non-empty string | function
+   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+   Details:
+    * configuration[1].output.filename should be a non-empty string.
+    * configuration[1].output.filename should be an instance of function."
+`)
 	);
 
 	createTestCase(
@@ -461,7 +461,7 @@ describe("Validation", () => {
        test: ...
      }
    }.
-   object { <key>: false | function | string | RegExp | object { automaticNameDelimiter?, chunks?, enforce?, filename?, idHint?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name?, priority?, reuseExistingChunk?, test?, type? } }
+   object { <key>: false | RegExp | string | function | object { automaticNameDelimiter?, chunks?, enforce?, filename?, idHint?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name?, priority?, reuseExistingChunk?, test?, type? } }
    -> Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')."
 `)
 	);
@@ -494,14 +494,14 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.output.ecmaVersion should be one of these:
-			   number (should be >= 5 and <= 11) | 2009 | number (should be >= 2015 and <= 2020)
-			   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
-			   Details:
-			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
-			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.output.ecmaVersion should be one of these:
+   2009 | number (should be >= 5 and <= 11) | number (should be >= 2015 and <= 2020)
+   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
+   Details:
+    * configuration.output.ecmaVersion should be >= 5 and <= 11.
+    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
+`)
 	);
 
 	createTestCase(
@@ -511,14 +511,14 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.output.ecmaVersion should be one of these:
-			   number (should be >= 5 and <= 11) | 2009 | number (should be >= 2015 and <= 2020)
-			   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
-			   Details:
-			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
-			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.output.ecmaVersion should be one of these:
+   2009 | number (should be >= 5 and <= 11) | number (should be >= 2015 and <= 2020)
+   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
+   Details:
+    * configuration.output.ecmaVersion should be >= 5 and <= 11.
+    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
+`)
 	);
 
 	createTestCase(
@@ -528,14 +528,14 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.output.ecmaVersion should be one of these:
-			   number (should be >= 5 and <= 11) | 2009 | number (should be >= 2015 and <= 2020)
-			   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
-			   Details:
-			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
-			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.output.ecmaVersion should be one of these:
+   2009 | number (should be >= 5 and <= 11) | number (should be >= 2015 and <= 2020)
+   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
+   Details:
+    * configuration.output.ecmaVersion should be >= 5 and <= 11.
+    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
+`)
 	);
 
 	createTestCase(
@@ -545,14 +545,14 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.output.ecmaVersion should be one of these:
-			   number (should be >= 5 and <= 11) | 2009 | number (should be >= 2015 and <= 2020)
-			   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
-			   Details:
-			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
-			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.output.ecmaVersion should be one of these:
+   2009 | number (should be >= 5 and <= 11) | number (should be >= 2015 and <= 2020)
+   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
+   Details:
+    * configuration.output.ecmaVersion should be >= 5 and <= 11.
+    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
+`)
 	);
 
 	createTestCase(

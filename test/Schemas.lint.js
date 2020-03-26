@@ -134,6 +134,12 @@ describe("Schemas", () => {
 					arrayProperties.forEach(prop => {
 						if (prop in item) {
 							describe(prop, () => {
+								it("should not double nest array properties", () => {
+									for (const nestedProp of arrayProperties) {
+										for (const value of item[prop])
+											expect(value).not.toHaveProperty(nestedProp);
+									}
+								});
 								item[prop].forEach(walker);
 							});
 						}

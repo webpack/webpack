@@ -13,51 +13,6 @@
         }
       ]
     },
-    "ArrayOfStringOrStringArrayValues": {
-      "description": "List of string or string-array values.",
-      "type": "array",
-      "cli": {
-        "helper": true
-      },
-      "items": {
-        "description": "String or array of strings.",
-        "cli": {
-          "helper": true
-        },
-        "anyOf": [
-          {
-            "type": "string",
-            "minLength": 1
-          },
-          {
-            "type": "array",
-            "items": {
-              "description": "A non-empty string.",
-              "type": "string",
-              "cli": {
-                "helper": true
-              },
-              "minLength": 1
-            }
-          }
-        ]
-      }
-    },
-    "ArrayOfStringValues": {
-      "description": "Array of strings.",
-      "type": "array",
-      "cli": {
-        "helper": true
-      },
-      "items": {
-        "description": "A non-empty string.",
-        "type": "string",
-        "cli": {
-          "helper": true
-        },
-        "minLength": 1
-      }
-    },
     "AssetModuleFilename": {
       "description": "The filename of asset modules as relative path inside the `output.path` directory.",
       "anyOf": [
@@ -91,11 +46,11 @@
       "description": "Cache generated modules and chunks to improve performance for multiple incremental builds.",
       "anyOf": [
         {
-          "$ref": "#/definitions/CacheNormalized"
-        },
-        {
           "description": "Enable in memory caching.",
           "enum": [true]
+        },
+        {
+          "$ref": "#/definitions/CacheNormalized"
         }
       ]
     },
@@ -107,20 +62,10 @@
           "enum": [false]
         },
         {
-          "description": "Options for memory caching.",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/MemoryCacheOptions"
-            }
-          ]
+          "$ref": "#/definitions/MemoryCacheOptions"
         },
         {
-          "description": "Options for persistent caching.",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/FileCacheOptions"
-            }
-          ]
+          "$ref": "#/definitions/FileCacheOptions"
         }
       ]
     },
@@ -206,12 +151,12 @@
       "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
       "anyOf": [
         {
+          "enum": [2009]
+        },
+        {
           "type": "number",
           "minimum": 5,
           "maximum": 11
-        },
-        {
-          "enum": [2009]
         },
         {
           "type": "number",
@@ -247,17 +192,20 @@
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
           "oneOf": [
             {
-              "description": "The name of another entrypoint.",
-              "type": "string",
-              "minLength": 1
+              "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
+              "type": "array",
+              "items": {
+                "description": "An entrypoint that the current entrypoint depend on. It must be loaded when this entrypoint is loaded.",
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1,
+              "uniqueItems": true
             },
             {
-              "description": "A list of other entrypoints.",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
-                }
-              ]
+              "description": "An entrypoint that the current entrypoint depend on. It must be loaded when this entrypoint is loaded.",
+              "type": "string",
+              "minLength": 1
             }
           ]
         },
@@ -282,7 +230,15 @@
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
           "anyOf": [
             {
-              "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
+              "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
+              "type": "array",
+              "items": {
+                "description": "An entrypoint that the current entrypoint depend on. It must be loaded when this entrypoint is loaded.",
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1,
+              "uniqueItems": true
             }
           ]
         },
@@ -293,7 +249,15 @@
           "description": "Module(s) that are loaded upon startup. The last one is exported.",
           "anyOf": [
             {
-              "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
+              "description": "Module(s) that are loaded upon startup. The last one is exported.",
+              "type": "array",
+              "items": {
+                "description": "Module that is loaded upon startup. Only the last one is exported.",
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1,
+              "uniqueItems": true
             }
           ]
         },
@@ -317,20 +281,20 @@
       "description": "Module(s) that are loaded upon startup.",
       "oneOf": [
         {
-          "description": "The string is resolved to a module which is loaded upon startup.",
-          "type": "string",
-          "cli": {
-            "exclude": true
+          "description": "All modules are loaded upon startup. The last one is exported.",
+          "type": "array",
+          "items": {
+            "description": "A module that is loaded upon startup. Only the last one is exported.",
+            "type": "string",
+            "minLength": 1
           },
-          "minLength": 1
+          "minItems": 1,
+          "uniqueItems": true
         },
         {
-          "description": "All modules are loaded upon startup. The last one is exported.",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
-            }
-          ]
+          "description": "The string is resolved to a module which is loaded upon startup.",
+          "type": "string",
+          "minLength": 1
         }
       ]
     },
@@ -352,20 +316,10 @@
         "description": "An entry point with name.",
         "oneOf": [
           {
-            "description": "The module(s) loaded at startup.",
-            "anyOf": [
-              {
-                "$ref": "#/definitions/EntryItem"
-              }
-            ]
+            "$ref": "#/definitions/EntryItem"
           },
           {
-            "description": "An object with entry point description.",
-            "anyOf": [
-              {
-                "$ref": "#/definitions/EntryDescription"
-              }
-            ]
+            "$ref": "#/definitions/EntryDescription"
           }
         ]
       },
@@ -446,6 +400,11 @@
       "description": "Specify dependency that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",
       "anyOf": [
         {
+          "description": "Every matched dependency becomes external.",
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
+        },
+        {
           "description": "An exact matched dependency becomes external. The same string is used as external dependency.",
           "type": "string"
         },
@@ -456,24 +415,31 @@
             "description": "The dependency used for the external.",
             "anyOf": [
               {
+                "type": "array",
+                "items": {
+                  "description": "A part of the target of the external.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              {
+                "description": "The target of the external.",
                 "type": "string"
               },
               {
-                "type": "object"
-              },
-              {
-                "$ref": "#/definitions/ArrayOfStringValues"
-              },
-              {
+                "description": "`true`: The dependency name is used as target of the external.",
                 "type": "boolean"
+              },
+              {
+                "type": "object"
               }
             ]
           }
         },
         {
-          "description": "Every matched dependency becomes external.",
-          "instanceof": "RegExp",
-          "tsType": "RegExp"
+          "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
+          "instanceof": "Function",
+          "tsType": "((context: string, request: string, callback: (err?: Error, result?: string) => void) => void)"
         }
       ]
     },
@@ -481,28 +447,13 @@
       "description": "Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",
       "anyOf": [
         {
-          "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
-          "instanceof": "Function",
-          "tsType": "((context: string, request: string, callback: (err?: Error, result?: string) => void) => void)"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExternalItem"
+          }
         },
         {
           "$ref": "#/definitions/ExternalItem"
-        },
-        {
-          "type": "array",
-          "items": {
-            "description": "External configuration.",
-            "anyOf": [
-              {
-                "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
-                "instanceof": "Function",
-                "tsType": "((context: string, request: string, callback: (err?: Error, result?: string) => void) => void)"
-              },
-              {
-                "$ref": "#/definitions/ExternalItem"
-              }
-            ]
-          }
         }
       ]
     },
@@ -649,9 +600,6 @@
       },
       "anyOf": [
         {
-          "$ref": "#/definitions/FilterItemTypes"
-        },
-        {
           "type": "array",
           "items": {
             "description": "Rule to filter.",
@@ -664,6 +612,9 @@
               }
             ]
           }
+        },
+        {
+          "$ref": "#/definitions/FilterItemTypes"
         }
       ]
     },
@@ -726,11 +677,11 @@
           "description": "Enable debug logging for specific loggers.",
           "anyOf": [
             {
-              "$ref": "#/definitions/FilterTypes"
-            },
-            {
               "description": "Enable/Disable debug logging for all loggers.",
               "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/FilterTypes"
             }
           ]
         },
@@ -801,16 +752,16 @@
           "description": "Name of the property exposed globally by a UMD library.",
           "anyOf": [
             {
-              "type": "string",
-              "minLength": 1
-            },
-            {
               "type": "array",
               "items": {
                 "description": "Part of the name of the property exposed globally by a UMD library.",
                 "type": "string",
                 "minLength": 1
               }
+            },
+            {
+              "type": "string",
+              "minLength": 1
             }
           ]
         }
@@ -820,16 +771,16 @@
       "description": "Specify which export should be exposed as library.",
       "anyOf": [
         {
-          "type": "string",
-          "minLength": 1
-        },
-        {
           "type": "array",
           "items": {
             "description": "Part of the export that should be exposed as library.",
             "type": "string",
             "minLength": 1
           }
+        },
+        {
+          "type": "string",
+          "minLength": 1
         }
       ]
     },
@@ -837,16 +788,16 @@
       "description": "The name of the library (some types allow unnamed libraries too).",
       "anyOf": [
         {
-          "type": "string",
-          "minLength": 1
-        },
-        {
           "type": "array",
           "items": {
             "description": "A part of the library name.",
             "type": "string",
             "minLength": 1
           }
+        },
+        {
+          "type": "string",
+          "minLength": 1
         },
         {
           "$ref": "#/definitions/LibraryCustomUmdObject"
@@ -965,11 +916,11 @@
           "description": "Sets the default regular expression for full dynamic dependencies.",
           "anyOf": [
             {
-              "type": "boolean"
-            },
-            {
               "instanceof": "RegExp",
               "tsType": "RegExp"
+            },
+            {
+              "type": "boolean"
             }
           ]
         },
@@ -991,13 +942,13 @@
                     "tsType": "RegExp"
                   },
                   {
-                    "instanceof": "Function",
-                    "tsType": "Function"
-                  },
-                  {
                     "description": "An absolute path, when the module starts with this path it is not parsed.",
                     "type": "string",
                     "absolutePath": true
+                  },
+                  {
+                    "instanceof": "Function",
+                    "tsType": "Function"
                   }
                 ]
               },
@@ -1005,23 +956,17 @@
             },
             {
               "description": "A regular expression, when matched the module is not parsed.",
-              "cli": {
-                "exclude": true
-              },
               "instanceof": "RegExp",
               "tsType": "RegExp"
             },
             {
-              "instanceof": "Function",
-              "tsType": "Function"
-            },
-            {
               "description": "An absolute path, when the module starts with this path it is not parsed.",
               "type": "string",
-              "cli": {
-                "exclude": true
-              },
               "absolutePath": true
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ]
         },
@@ -1053,11 +998,11 @@
           "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
           "anyOf": [
             {
-              "type": "boolean"
-            },
-            {
               "instanceof": "RegExp",
               "tsType": "RegExp"
+            },
+            {
+              "type": "boolean"
             }
           ]
         },
@@ -1125,23 +1070,6 @@
           "type": "boolean"
         }
       }
-    },
-    "NonEmptyArrayOfUniqueStringValues": {
-      "description": "A non-empty array of non-empty strings.",
-      "type": "array",
-      "cli": {
-        "helper": true
-      },
-      "items": {
-        "description": "A non-empty string.",
-        "type": "string",
-        "cli": {
-          "helper": true
-        },
-        "minLength": 1
-      },
-      "minItems": 1,
-      "uniqueItems": true
     },
     "Optimization": {
       "description": "Enables/Disables integrated optimizations.",
@@ -1269,10 +1197,10 @@
       "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps.",
       "oneOf": [
         {
-          "type": "boolean"
+          "enum": ["single", "multiple"]
         },
         {
-          "enum": ["single", "multiple"]
+          "type": "boolean"
         },
         {
           "type": "object",
@@ -1418,11 +1346,11 @@
               "enum": [false]
             },
             {
-              "instanceof": "Function",
-              "tsType": "Function"
+              "type": "string"
             },
             {
-              "type": "string"
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ]
         },
@@ -1438,15 +1366,15 @@
           "description": "Assign modules to a cache group by module name.",
           "oneOf": [
             {
-              "instanceof": "Function",
-              "tsType": "Function"
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
             },
             {
               "type": "string"
             },
             {
-              "instanceof": "RegExp",
-              "tsType": "RegExp"
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ]
         },
@@ -1454,15 +1382,15 @@
           "description": "Assign modules to a cache group by module type.",
           "oneOf": [
             {
-              "instanceof": "Function",
-              "tsType": "Function"
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
             },
             {
               "type": "string"
             },
             {
-              "instanceof": "RegExp",
-              "tsType": "RegExp"
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ]
         }
@@ -1493,15 +1421,15 @@
                 "enum": [false]
               },
               {
-                "instanceof": "Function",
-                "tsType": "Function"
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
               },
               {
                 "type": "string"
               },
               {
-                "instanceof": "RegExp",
-                "tsType": "RegExp"
+                "instanceof": "Function",
+                "tsType": "Function"
               },
               {
                 "$ref": "#/definitions/OptimizationSplitChunksCacheGroup"
@@ -1669,11 +1597,11 @@
               "enum": [false]
             },
             {
-              "instanceof": "Function",
-              "tsType": "Function"
+              "type": "string"
             },
             {
-              "type": "string"
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ]
         }
@@ -2066,32 +1994,6 @@
           "description": "Redirect module requests.",
           "anyOf": [
             {
-              "type": "object",
-              "additionalProperties": {
-                "description": "New request.",
-                "oneOf": [
-                  {
-                    "description": "New request.",
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  {
-                    "description": "Multiple alternative requests.",
-                    "type": "array",
-                    "items": {
-                      "description": "One choice of request.",
-                      "type": "string",
-                      "minLength": 1
-                    }
-                  },
-                  {
-                    "description": "Ignore request (replace with empty module).",
-                    "enum": [false]
-                  }
-                ]
-              }
-            },
-            {
               "type": "array",
               "items": {
                 "description": "Alias configuration.",
@@ -2101,11 +2003,6 @@
                   "alias": {
                     "description": "New request.",
                     "oneOf": [
-                      {
-                        "description": "New request.",
-                        "type": "string",
-                        "minLength": 1
-                      },
                       {
                         "description": "Multiple alternative requests.",
                         "type": "array",
@@ -2118,6 +2015,11 @@
                       {
                         "description": "Ignore request (replace with empty module).",
                         "enum": [false]
+                      },
+                      {
+                        "description": "New request.",
+                        "type": "string",
+                        "minLength": 1
                       }
                     ]
                   },
@@ -2132,14 +2034,57 @@
                 },
                 "required": ["alias", "name"]
               }
+            },
+            {
+              "type": "object",
+              "additionalProperties": {
+                "description": "New request.",
+                "oneOf": [
+                  {
+                    "description": "Multiple alternative requests.",
+                    "type": "array",
+                    "items": {
+                      "description": "One choice of request.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  {
+                    "description": "Ignore request (replace with empty module).",
+                    "enum": [false]
+                  },
+                  {
+                    "description": "New request.",
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ]
+              }
             }
           ]
         },
         "aliasFields": {
-          "description": "Fields in the description file (package.json) which are used to redirect requests inside the module.",
+          "description": "Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
           "anyOf": [
             {
-              "$ref": "#/definitions/ArrayOfStringOrStringArrayValues"
+              "type": "array",
+              "items": {
+                "description": "Field in the description file (usually package.json) which are used to redirect requests inside the module.",
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "description": "Part of the field path in the description file (usually package.json) which are used to redirect requests inside the module.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ]
+              }
             }
           ]
         },
@@ -2157,10 +2102,15 @@
           "type": "boolean"
         },
         "descriptionFiles": {
-          "description": "Filenames used to find a description file.",
+          "description": "Filenames used to find a description file (like a package.json).",
           "anyOf": [
             {
-              "$ref": "#/definitions/ArrayOfStringValues"
+              "type": "array",
+              "items": {
+                "description": "Filename used to find a description file (like a package.json).",
+                "type": "string",
+                "minLength": 1
+              }
             }
           ]
         },
@@ -2172,7 +2122,12 @@
           "description": "Extensions added to the request when trying to find the file.",
           "anyOf": [
             {
-              "$ref": "#/definitions/ArrayOfStringValues"
+              "type": "array",
+              "items": {
+                "description": "Extension added to the request when trying to find the file.",
+                "type": "string",
+                "minLength": 1
+              }
             }
           ]
         },
@@ -2183,7 +2138,24 @@
           "description": "Field names from the description file (package.json) which are used to find the default entry point.",
           "anyOf": [
             {
-              "$ref": "#/definitions/ArrayOfStringOrStringArrayValues"
+              "type": "array",
+              "items": {
+                "description": "Field name from the description file (package.json) which are used to find the default entry point.",
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "description": "Part of the field path from the description file (package.json) which are used to find the default entry point.",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ]
+              }
             }
           ]
         },
@@ -2191,7 +2163,12 @@
           "description": "Filenames used to find the default entry point if there is no description file or main field.",
           "anyOf": [
             {
-              "$ref": "#/definitions/ArrayOfStringValues"
+              "type": "array",
+              "items": {
+                "description": "Filename used to find the default entry point if there is no description file or main field.",
+                "type": "string",
+                "minLength": 1
+              }
             }
           ]
         },
@@ -2199,7 +2176,12 @@
           "description": "Folder names or directory paths where to find modules.",
           "anyOf": [
             {
-              "$ref": "#/definitions/ArrayOfStringValues"
+              "type": "array",
+              "items": {
+                "description": "Folder name or directory path where to find modules.",
+                "type": "string",
+                "minLength": 1
+              }
             }
           ]
         },
@@ -2268,13 +2250,6 @@
           "minLength": 1
         },
         {
-          "instanceof": "Function",
-          "tsType": "((value: string) => boolean)"
-        },
-        {
-          "$ref": "#/definitions/RuleSetConditions"
-        },
-        {
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -2303,6 +2278,13 @@
               ]
             }
           }
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((value: string) => boolean)"
+        },
+        {
+          "$ref": "#/definitions/RuleSetConditions"
         }
       ]
     },
@@ -2321,13 +2303,6 @@
           "absolutePath": true
         },
         {
-          "instanceof": "Function",
-          "tsType": "((value: string) => boolean)"
-        },
-        {
-          "$ref": "#/definitions/RuleSetConditionsAbsolute"
-        },
-        {
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -2356,6 +2331,13 @@
               ]
             }
           }
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((value: string) => boolean)"
+        },
+        {
+          "$ref": "#/definitions/RuleSetConditionsAbsolute"
         }
       ]
     },
@@ -2420,10 +2402,10 @@
       "description": "Options passed to a loader.",
       "anyOf": [
         {
-          "type": "object"
+          "type": "string"
         },
         {
-          "type": "string"
+          "type": "object"
         }
       ]
     },
@@ -2587,13 +2569,6 @@
       "description": "A list of descriptions of loaders applied.",
       "anyOf": [
         {
-          "$ref": "#/definitions/RuleSetUseItem"
-        },
-        {
-          "instanceof": "Function",
-          "tsType": "((data: object) => RuleSetUseItem[])"
-        },
-        {
           "type": "array",
           "items": {
             "description": "An use item.",
@@ -2603,19 +2578,19 @@
               }
             ]
           }
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((data: object) => RuleSetUseItem[])"
+        },
+        {
+          "$ref": "#/definitions/RuleSetUseItem"
         }
       ]
     },
     "RuleSetUseItem": {
       "description": "A description of an applied loader.",
       "anyOf": [
-        {
-          "$ref": "#/definitions/RuleSetLoader"
-        },
-        {
-          "instanceof": "Function",
-          "tsType": "((data: object) => RuleSetUseItem|RuleSetUseItem[])"
-        },
         {
           "type": "object",
           "additionalProperties": false,
@@ -2641,6 +2616,13 @@
               ]
             }
           }
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((data: object) => RuleSetUseItem|RuleSetUseItem[])"
+        },
+        {
+          "$ref": "#/definitions/RuleSetLoader"
         }
       ]
     },
@@ -2657,12 +2639,6 @@
       "description": "Stats options object or preset name.",
       "anyOf": [
         {
-          "$ref": "#/definitions/StatsOptions"
-        },
-        {
-          "type": "boolean"
-        },
-        {
           "enum": [
             "none",
             "errors-only",
@@ -2672,6 +2648,12 @@
             "verbose",
             "errors-warnings"
           ]
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/definitions/StatsOptions"
         }
       ]
     },
@@ -2811,10 +2793,10 @@
           },
           "anyOf": [
             {
-              "$ref": "#/definitions/FilterTypes"
+              "type": "boolean"
             },
             {
-              "type": "boolean"
+              "$ref": "#/definitions/FilterTypes"
             }
           ]
         },
@@ -2830,10 +2812,10 @@
           "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
           "anyOf": [
             {
-              "$ref": "#/definitions/FilterTypes"
+              "type": "boolean"
             },
             {
-              "type": "boolean"
+              "$ref": "#/definitions/FilterTypes"
             }
           ]
         },
@@ -2849,12 +2831,12 @@
           "description": "Add logging output.",
           "anyOf": [
             {
-              "description": "Enable/disable logging output (`true`: shows normal logging output, loglevel: log).",
-              "type": "boolean"
-            },
-            {
               "description": "Specify log level of logging output.",
               "enum": ["none", "error", "warn", "info", "log", "verbose"]
+            },
+            {
+              "description": "Enable/disable logging output (`true`: shows normal logging output, loglevel: log).",
+              "type": "boolean"
             }
           ]
         },
@@ -2862,11 +2844,11 @@
           "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
           "anyOf": [
             {
-              "$ref": "#/definitions/FilterTypes"
-            },
-            {
               "description": "Enable/Disable debug logging for all loggers.",
               "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/FilterTypes"
             }
           ]
         },
@@ -2918,10 +2900,10 @@
           "description": "Preset for the default values.",
           "anyOf": [
             {
-              "type": "boolean"
+              "type": "string"
             },
             {
-              "type": "string"
+              "type": "boolean"
             }
           ]
         },
@@ -3022,12 +3004,17 @@
           "description": "Ignore some files from watching (glob pattern).",
           "anyOf": [
             {
+              "type": "array",
+              "items": {
+                "description": "A glob pattern for files that should be ignored from watching.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            {
               "description": "A single glob pattern for files that should be ignored from watching.",
               "type": "string",
               "minLength": 1
-            },
-            {
-              "$ref": "#/definitions/ArrayOfStringValues"
             }
           ]
         },
@@ -3035,12 +3022,12 @@
           "description": "Enable polling mode for watching.",
           "anyOf": [
             {
-              "description": "`true`: use polling.",
-              "type": "boolean"
-            },
-            {
               "description": "`number`: use polling with specified interval.",
               "type": "number"
+            },
+            {
+              "description": "`true`: use polling.",
+              "type": "boolean"
             }
           ]
         },

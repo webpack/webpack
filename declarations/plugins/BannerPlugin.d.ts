@@ -5,9 +5,9 @@
  */
 
 export type BannerPluginArgument =
+	| string
 	| BannerPluginOptions
-	| BannerFunction
-	| string;
+	| BannerFunction;
 /**
  * The banner as function, it will be wrapped in a comment.
  */
@@ -29,7 +29,7 @@ export interface BannerPluginOptions {
 	/**
 	 * Specifies the banner.
 	 */
-	banner: BannerFunction | string;
+	banner: string | BannerFunction;
 	/**
 	 * If true, the banner will only be added to the entry chunks.
 	 */
