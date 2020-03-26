@@ -124,15 +124,15 @@ describe("Cli", () => {
 		{},
 		e =>
 			e.toMatchInlineSnapshot(`
-			Object {
-			  "stats": Object {
-			    "warningsFilter": Array [
-			      /module/,
-			      "path",
-			    ],
-			  },
-			}
-		`)
+Object {
+  "stats": Object {
+    "warningsFilter": Array [
+      /module/,
+      "path",
+    ],
+  },
+}
+`)
 	);
 
 	test(
@@ -155,6 +155,50 @@ Object {
         "test": /\\\\\\.js\\$/,
         "use": "babel-loader",
       },
+    ],
+  },
+}
+`)
+	);
+
+	test(
+		"reset array",
+		{
+			"stats-warnings-filter-reset": true,
+			"stats-warnings-filter": "path",
+			"module-rules-reset": true,
+			"module-rules-test": ["/\\.css$/", "/\\.js$/"],
+			"module-rules-use": ["css-loader", "babel-loader"]
+		},
+		{
+			stats: { warningsFilter: [/a/, /b/] },
+			module: {
+				rules: [
+					{
+						test: /\.js$/,
+						use: "typescript-loader"
+					}
+				]
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+Object {
+  "module": Object {
+    "rules": Array [
+      Object {
+        "test": /\\\\\\.css\\$/,
+        "use": "css-loader",
+      },
+      Object {
+        "test": /\\\\\\.js\\$/,
+        "use": "babel-loader",
+      },
+    ],
+  },
+  "stats": Object {
+    "warningsFilter": Array [
+      "path",
     ],
   },
 }

@@ -109,7 +109,7 @@
     },
     "DevTool": {
       "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",
-      "oneOf": [
+      "anyOf": [
         {
           "enum": [false, "eval"]
         },
@@ -190,7 +190,7 @@
       "properties": {
         "dependOn": {
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
-          "oneOf": [
+          "anyOf": [
             {
               "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
               "type": "array",
@@ -279,7 +279,7 @@
     },
     "EntryItem": {
       "description": "Module(s) that are loaded upon startup.",
-      "oneOf": [
+      "anyOf": [
         {
           "description": "All modules are loaded upon startup. The last one is exported.",
           "type": "array",
@@ -314,7 +314,7 @@
       "type": "object",
       "additionalProperties": {
         "description": "An entry point with name.",
-        "oneOf": [
+        "anyOf": [
           {
             "$ref": "#/definitions/EntryItem"
           },
@@ -327,7 +327,7 @@
     },
     "EntryStatic": {
       "description": "A static entry description.",
-      "oneOf": [
+      "anyOf": [
         {
           "$ref": "#/definitions/EntryObject"
         },
@@ -1178,7 +1178,7 @@
         },
         "splitChunks": {
           "description": "Optimize duplication and caching by splitting chunks by shared modules and cache group.",
-          "oneOf": [
+          "anyOf": [
             {
               "enum": [false]
             },
@@ -1195,7 +1195,7 @@
     },
     "OptimizationRuntimeChunk": {
       "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps.",
-      "oneOf": [
+      "anyOf": [
         {
           "enum": ["single", "multiple"]
         },
@@ -1208,7 +1208,7 @@
           "properties": {
             "name": {
               "description": "The name or name factory for the runtime chunks.",
-              "oneOf": [
+              "anyOf": [
                 {
                   "type": "string"
                 },
@@ -1224,7 +1224,7 @@
     },
     "OptimizationRuntimeChunkNormalized": {
       "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps.",
-      "oneOf": [
+      "anyOf": [
         {
           "enum": [false]
         },
@@ -1253,7 +1253,7 @@
         },
         "chunks": {
           "description": "Select chunks for determining cache group content (defaults to \"initial\", \"initial\" and \"all\" requires adding these chunks to the HTML).",
-          "oneOf": [
+          "anyOf": [
             {
               "enum": ["initial", "async", "all"]
             },
@@ -1291,7 +1291,7 @@
         },
         "maxAsyncSize": {
           "description": "Maximal size hint for the on-demand chunks.",
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1304,7 +1304,7 @@
         },
         "maxInitialSize": {
           "description": "Maximal size hint for the initial chunks.",
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1312,7 +1312,7 @@
         },
         "maxSize": {
           "description": "Maximal size hint for the created chunks.",
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1325,7 +1325,7 @@
         },
         "minRemainingSize": {
           "description": "Minimal size for the chunks the stay after moving the modules to a new chunk.",
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1333,7 +1333,7 @@
         },
         "minSize": {
           "description": "Minimal size for the created chunk.",
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1341,7 +1341,7 @@
         },
         "name": {
           "description": "Give chunks for this cache group a name (chunks with equal name are merged).",
-          "oneOf": [
+          "anyOf": [
             {
               "enum": [false]
             },
@@ -1364,7 +1364,7 @@
         },
         "test": {
           "description": "Assign modules to a cache group by module name.",
-          "oneOf": [
+          "anyOf": [
             {
               "instanceof": "RegExp",
               "tsType": "RegExp"
@@ -1380,7 +1380,7 @@
         },
         "type": {
           "description": "Assign modules to a cache group by module type.",
-          "oneOf": [
+          "anyOf": [
             {
               "instanceof": "RegExp",
               "tsType": "RegExp"
@@ -1463,7 +1463,7 @@
         },
         "chunks": {
           "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML).",
-          "oneOf": [
+          "anyOf": [
             {
               "enum": ["initial", "async", "all"]
             },
@@ -1485,7 +1485,7 @@
             },
             "maxAsyncSize": {
               "description": "Maximal size hint for the on-demand chunks.",
-              "oneOf": [
+              "anyOf": [
                 {
                   "$ref": "#/definitions/OptimizationSplitChunksSizes"
                 }
@@ -1493,7 +1493,7 @@
             },
             "maxInitialSize": {
               "description": "Maximal size hint for the initial chunks.",
-              "oneOf": [
+              "anyOf": [
                 {
                   "$ref": "#/definitions/OptimizationSplitChunksSizes"
                 }
@@ -1501,7 +1501,7 @@
             },
             "maxSize": {
               "description": "Maximal size hint for the created chunks.",
-              "oneOf": [
+              "anyOf": [
                 {
                   "$ref": "#/definitions/OptimizationSplitChunksSizes"
                 }
@@ -1509,7 +1509,7 @@
             },
             "minSize": {
               "description": "Minimal size for the created chunk.",
-              "oneOf": [
+              "anyOf": [
                 {
                   "$ref": "#/definitions/OptimizationSplitChunksSizes"
                 }
@@ -1542,7 +1542,7 @@
         },
         "maxAsyncSize": {
           "description": "Maximal size hint for the on-demand chunks.",
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1555,7 +1555,7 @@
         },
         "maxInitialSize": {
           "description": "Maximal size hint for the initial chunks.",
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1563,7 +1563,7 @@
         },
         "maxSize": {
           "description": "Maximal size hint for the created chunks.",
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1576,7 +1576,7 @@
         },
         "minRemainingSize": {
           "description": "Minimal size for the chunks the stay after moving the modules to a new chunk.",
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1584,7 +1584,7 @@
         },
         "minSize": {
           "description": "Minimal size for the created chunks.",
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1592,7 +1592,7 @@
         },
         "name": {
           "description": "Give chunks created a name (chunks with equal name are merged).",
-          "oneOf": [
+          "anyOf": [
             {
               "enum": [false]
             },
@@ -1634,7 +1634,14 @@
           "$ref": "#/definitions/AssetModuleFilename"
         },
         "auxiliaryComment": {
-          "$ref": "#/definitions/AuxiliaryComment"
+          "cli": {
+            "exclude": true
+          },
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AuxiliaryComment"
+            }
+          ]
         },
         "chunkCallbackName": {
           "$ref": "#/definitions/ChunkCallbackName"
@@ -1706,10 +1713,24 @@
           "$ref": "#/definitions/Library"
         },
         "libraryExport": {
-          "$ref": "#/definitions/LibraryExport"
+          "cli": {
+            "exclude": true
+          },
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LibraryExport"
+            }
+          ]
         },
         "libraryTarget": {
-          "$ref": "#/definitions/LibraryType"
+          "cli": {
+            "exclude": true
+          },
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LibraryType"
+            }
+          ]
         },
         "module": {
           "$ref": "#/definitions/OutputModule"
@@ -1733,7 +1754,14 @@
           "$ref": "#/definitions/StrictModuleExceptionHandling"
         },
         "umdNamedDefine": {
-          "$ref": "#/definitions/UmdNamedDefine"
+          "cli": {
+            "exclude": true
+          },
+          "anyOf": [
+            {
+              "$ref": "#/definitions/UmdNamedDefine"
+            }
+          ]
         },
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
@@ -1935,7 +1963,7 @@
     },
     "RecordsInputPath": {
       "description": "Store compiler state to a json file.",
-      "oneOf": [
+      "anyOf": [
         {
           "enum": [false]
         },
@@ -1947,7 +1975,7 @@
     },
     "RecordsOutputPath": {
       "description": "Load compiler state from a json file.",
-      "oneOf": [
+      "anyOf": [
         {
           "enum": [false]
         },
@@ -1959,7 +1987,7 @@
     },
     "RecordsPath": {
       "description": "Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.",
-      "oneOf": [
+      "anyOf": [
         {
           "enum": [false]
         },
@@ -2002,7 +2030,7 @@
                 "properties": {
                   "alias": {
                     "description": "New request.",
-                    "oneOf": [
+                    "anyOf": [
                       {
                         "description": "Multiple alternative requests.",
                         "type": "array",
@@ -2039,7 +2067,7 @@
               "type": "object",
               "additionalProperties": {
                 "description": "New request.",
-                "oneOf": [
+                "anyOf": [
                   {
                     "description": "Multiple alternative requests.",
                     "type": "array",
@@ -2459,9 +2487,6 @@
           "anyOf": [
             {
               "$ref": "#/definitions/RuleSetLoader"
-            },
-            {
-              "$ref": "#/definitions/RuleSetUse"
             }
           ]
         },
@@ -2720,7 +2745,7 @@
         },
         "colors": {
           "description": "Enables/Disables colorful output.",
-          "oneOf": [
+          "anyOf": [
             {
               "description": "Enables/Disables colorful output.",
               "type": "boolean"

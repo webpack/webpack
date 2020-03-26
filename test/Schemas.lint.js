@@ -57,7 +57,17 @@ describe("Schemas", () => {
 					"not"
 				];
 
+				const isReference = schema => {
+					return (
+						"$ref" in schema ||
+						("anyOf" in schema &&
+							schema.anyOf.length === 1 &&
+							"$ref" in schema.anyOf[0])
+					);
+				};
+
 				const validateProperty = property => {
+					if (isReference(property)) return;
 					it("should have description set", () => {
 						expect(typeof property.description).toBe("string");
 						expect(property.description.length).toBeGreaterThan(1);
@@ -140,15 +150,18 @@ describe("Schemas", () => {
 											expect(value).not.toHaveProperty(nestedProp);
 									}
 								});
+								if (prop !== "anyOf") {
+									it("should have multiple items", () => {
+										expect(item[prop].length).toBeGreaterThan(1);
+									});
+								}
 								item[prop].forEach(walker);
 							});
 						}
 					});
 					if ("items" in item) {
 						describe("items", () => {
-							if (Object.keys(item.items).join() !== "$ref") {
-								validateProperty(item.items);
-							}
+							validateProperty(item.items);
 							walker(item.items);
 						});
 					}
@@ -171,18 +184,14 @@ describe("Schemas", () => {
 						Object.keys(item.properties).forEach(name => {
 							describe(`> '${name}'`, () => {
 								const property = item.properties[name];
-								if (Object.keys(property).join() !== "$ref") {
-									validateProperty(property);
-								}
+								validateProperty(property);
 								walker(property);
 							});
 						});
 					}
 					if (typeof item.additionalProperties === "object") {
 						describe("properties", () => {
-							if (Object.keys(item.additionalProperties).join() !== "$ref") {
-								validateProperty(item.additionalProperties);
-							}
+							validateProperty(item.additionalProperties);
 							walker(item.additionalProperties);
 						});
 					}

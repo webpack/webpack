@@ -107,6 +107,18 @@ const preprocessSchema = (schema, root = schema) => {
 					description: result.description,
 					anyOf: [property]
 				};
+			} else if (
+				"anyOf" in property &&
+				property.anyOf.length === 1 &&
+				"$ref" in property.anyOf[0] &&
+				!("description" in property)
+			) {
+				const result = resolvePath(root, property.anyOf[0].$ref);
+				schema.properties[key] = {
+					description: result.description,
+					...property
+				};
+				preprocessSchema(schema.properties[key], root);
 			} else {
 				preprocessSchema(property, root);
 			}
