@@ -204,4 +204,175 @@ Object {
 }
 `)
 	);
+
+	test(
+		"numbers",
+		{
+			"watch-options-aggregate-timeout": 100,
+			"output-ecma-version": "2015"
+		},
+		{},
+		e =>
+			e.toMatchInlineSnapshot(`
+Object {
+  "output": Object {
+    "ecmaVersion": "2015",
+  },
+  "watchOptions": Object {
+    "aggregateTimeout": 100,
+  },
+}
+`)
+	);
+
+	test(
+		"booleans and enums",
+		{
+			"optimization-used-exports": true,
+			"output-compare-before-emit": false,
+			"output-iife": "true",
+			"output-library-name": ["hello", "world"],
+			"output-library-umd-named-define": "false",
+			"stats-logging": "verbose",
+			amd: "false"
+		},
+		{},
+		e =>
+			e.toMatchInlineSnapshot(`
+Object {
+  "amd": false,
+  "optimization": Object {
+    "usedExports": true,
+  },
+  "output": Object {
+    "compareBeforeEmit": false,
+    "iife": true,
+    "library": Object {
+      "name": Array [
+        "hello",
+        "world",
+      ],
+      "umdNamedDefine": false,
+    },
+  },
+  "stats": Object {
+    "logging": "verbose",
+  },
+}
+`)
+	);
+
+	test(
+		"errors",
+		{
+			"output-library-name": "non-object",
+			"resolve-loader-unsafe-cache": [true, false],
+			"output-ecma-version": "2015x",
+			"cache-type": "filsystem",
+			"entry-reset": false,
+			"module-unknown-context-reg-exp": "ab?c*",
+			"module-wrapped-context-reg-exp": 123,
+			"my-argument": true
+		},
+		{
+			output: {
+				library: "hello"
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+Array [
+  Object {
+    "argument": "output-library-name",
+    "index": undefined,
+    "path": "output",
+    "type": "unexpected-non-object-in-path",
+    "value": "non-object",
+  },
+  Object {
+    "argument": "resolve-loader-unsafe-cache",
+    "index": 0,
+    "path": "resolveLoader.unsafeCache",
+    "type": "multiple-values-unexpected",
+    "value": true,
+  },
+  Object {
+    "argument": "resolve-loader-unsafe-cache",
+    "index": 1,
+    "path": "resolveLoader.unsafeCache",
+    "type": "multiple-values-unexpected",
+    "value": false,
+  },
+  Object {
+    "argument": "output-ecma-version",
+    "expected": "2009",
+    "index": undefined,
+    "path": "output.ecmaVersion",
+    "type": "invalid-value",
+    "value": "2015x",
+  },
+  Object {
+    "argument": "output-ecma-version",
+    "expected": "number",
+    "index": undefined,
+    "path": "output.ecmaVersion",
+    "type": "invalid-value",
+    "value": "2015x",
+  },
+  Object {
+    "argument": "cache-type",
+    "expected": "memory",
+    "index": undefined,
+    "path": "cache.type",
+    "type": "invalid-value",
+    "value": "filsystem",
+  },
+  Object {
+    "argument": "cache-type",
+    "expected": "filesystem",
+    "index": undefined,
+    "path": "cache.type",
+    "type": "invalid-value",
+    "value": "filsystem",
+  },
+  Object {
+    "argument": "entry-reset",
+    "expected": "true (will reset the previous value to an empty array)",
+    "index": undefined,
+    "path": "entry",
+    "type": "invalid-value",
+    "value": false,
+  },
+  Object {
+    "argument": "module-unknown-context-reg-exp",
+    "expected": "regular expression (example: /ab?c*/)",
+    "index": undefined,
+    "path": "module.unknownContextRegExp",
+    "type": "invalid-value",
+    "value": "ab?c*",
+  },
+  Object {
+    "argument": "module-unknown-context-reg-exp",
+    "expected": "true | false",
+    "index": undefined,
+    "path": "module.unknownContextRegExp",
+    "type": "invalid-value",
+    "value": "ab?c*",
+  },
+  Object {
+    "argument": "module-wrapped-context-reg-exp",
+    "expected": "regular expression (example: /ab?c*/)",
+    "index": undefined,
+    "path": "module.wrappedContextRegExp",
+    "type": "invalid-value",
+    "value": 123,
+  },
+  Object {
+    "argument": "my-argument",
+    "path": "",
+    "type": "unknown-argument",
+  },
+]
+`)
+	);
 });
