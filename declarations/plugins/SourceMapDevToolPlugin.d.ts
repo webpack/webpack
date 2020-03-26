@@ -29,7 +29,7 @@ export interface SourceMapDevToolPluginOptions {
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
 	 */
-	fallbackModuleFilenameTemplate?: Function | string;
+	fallbackModuleFilenameTemplate?: string | Function;
 	/**
 	 * Path prefix to which the [file] placeholder is relative to.
 	 */
@@ -49,7 +49,7 @@ export interface SourceMapDevToolPluginOptions {
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap.
 	 */
-	moduleFilenameTemplate?: Function | string;
+	moduleFilenameTemplate?: string | Function;
 	/**
 	 * Namespace prefix to allow multiple webpack roots in the devtools.
 	 */
