@@ -60,9 +60,9 @@ describe("Schemas", () => {
 				const isReference = schema => {
 					return (
 						"$ref" in schema ||
-						("anyOf" in schema &&
-							schema.anyOf.length === 1 &&
-							"$ref" in schema.anyOf[0])
+						("oneOf" in schema &&
+							schema.oneOf.length === 1 &&
+							"$ref" in schema.oneOf[0])
 					);
 				};
 
@@ -99,7 +99,7 @@ describe("Schemas", () => {
 							);
 							if (otherProperties.length > 0) {
 								throw new Error(
-									`When using $ref not other properties are possible (${otherProperties.join(
+									`When using $ref other properties are not possible (${otherProperties.join(
 										", "
 									)})`
 								);
@@ -150,7 +150,12 @@ describe("Schemas", () => {
 											expect(value).not.toHaveProperty(nestedProp);
 									}
 								});
-								if (prop !== "anyOf") {
+								if (prop === "oneOf") {
+									it("should have only one item which is a $ref", () => {
+										expect(item[prop].length).toBe(1);
+										expect(Object.keys(item[prop][0])).toEqual(["$ref"]);
+									});
+								} else {
 									it("should have multiple items", () => {
 										expect(item[prop].length).toBeGreaterThan(1);
 									});

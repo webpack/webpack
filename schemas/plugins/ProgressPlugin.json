@@ -28,7 +28,7 @@
         },
         "handler": {
           "description": "Function that executes for every progress step.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/HandlerFunction"
             }
@@ -54,7 +54,7 @@
     }
   },
   "title": "ProgressPluginArgument",
-  "oneOf": [
+  "anyOf": [
     {
       "$ref": "#/definitions/ProgressPluginOptions"
     },

@@ -2,7 +2,7 @@
   "definitions": {
     "rule": {
       "description": "Include source maps for modules based on their extension (defaults to .js and .css).",
-      "oneOf": [
+      "anyOf": [
         {
           "instanceof": "RegExp",
           "tsType": "RegExp"
@@ -15,12 +15,12 @@
     },
     "rules": {
       "description": "Include source maps for modules based on their extension (defaults to .js and .css).",
-      "oneOf": [
+      "anyOf": [
         {
           "type": "array",
           "items": {
             "description": "A rule condition.",
-            "anyOf": [
+            "oneOf": [
               {
                 "$ref": "#/definitions/rule"
               }
@@ -39,7 +39,7 @@
   "properties": {
     "append": {
       "description": "Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending.",
-      "oneOf": [
+      "anyOf": [
         {
           "description": "Append no SourceMap comment to the bundle, but still generate SourceMaps.",
           "enum": [false, null]
@@ -56,7 +56,7 @@
     },
     "exclude": {
       "description": "Exclude modules that match the given value from source map generation.",
-      "anyOf": [
+      "oneOf": [
         {
           "$ref": "#/definitions/rules"
         }
@@ -64,7 +64,7 @@
     },
     "fallbackModuleFilenameTemplate": {
       "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.",
-      "oneOf": [
+      "anyOf": [
         {
           "type": "string",
           "minLength": 1
@@ -82,7 +82,7 @@
     },
     "filename": {
       "description": "Defines the output filename of the SourceMap (will be inlined if no value is provided).",
-      "oneOf": [
+      "anyOf": [
         {
           "description": "Disable separate SourceMap file and inline SourceMap as DataUrl.",
           "enum": [false, null]
@@ -96,7 +96,7 @@
     },
     "include": {
       "description": "Include source maps for module paths that match the given value.",
-      "anyOf": [
+      "oneOf": [
         {
           "$ref": "#/definitions/rules"
         }
@@ -108,7 +108,7 @@
     },
     "moduleFilenameTemplate": {
       "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap.",
-      "oneOf": [
+      "anyOf": [
         {
           "type": "string",
           "minLength": 1

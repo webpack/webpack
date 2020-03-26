@@ -228,38 +228,28 @@
       "properties": {
         "dependOn": {
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
-          "anyOf": [
-            {
-              "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
-              "type": "array",
-              "items": {
-                "description": "An entrypoint that the current entrypoint depend on. It must be loaded when this entrypoint is loaded.",
-                "type": "string",
-                "minLength": 1
-              },
-              "minItems": 1,
-              "uniqueItems": true
-            }
-          ]
+          "type": "array",
+          "items": {
+            "description": "An entrypoint that the current entrypoint depend on. It must be loaded when this entrypoint is loaded.",
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
         },
         "filename": {
           "$ref": "#/definitions/Filename"
         },
         "import": {
           "description": "Module(s) that are loaded upon startup. The last one is exported.",
-          "anyOf": [
-            {
-              "description": "Module(s) that are loaded upon startup. The last one is exported.",
-              "type": "array",
-              "items": {
-                "description": "Module that is loaded upon startup. Only the last one is exported.",
-                "type": "string",
-                "minLength": 1
-              },
-              "minItems": 1,
-              "uniqueItems": true
-            }
-          ]
+          "type": "array",
+          "items": {
+            "description": "Module that is loaded upon startup. Only the last one is exported.",
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
@@ -341,7 +331,7 @@
       "type": "object",
       "additionalProperties": {
         "description": "An object with entry point description.",
-        "anyOf": [
+        "oneOf": [
           {
             "$ref": "#/definitions/EntryDescriptionNormalized"
           }
@@ -351,7 +341,7 @@
     },
     "EntryUnnamed": {
       "description": "An entry point without name.",
-      "anyOf": [
+      "oneOf": [
         {
           "$ref": "#/definitions/EntryItem"
         }
@@ -606,7 +596,7 @@
             "cli": {
               "helper": true
             },
-            "anyOf": [
+            "oneOf": [
               {
                 "$ref": "#/definitions/FilterItemTypes"
               }
@@ -898,7 +888,7 @@
           "cli": {
             "exclude": true
           },
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetRules"
             }
@@ -972,7 +962,7 @@
         },
         "rules": {
           "description": "An array of rules applied for modules.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetRules"
             }
@@ -1291,7 +1281,7 @@
         },
         "maxAsyncSize": {
           "description": "Maximal size hint for the on-demand chunks.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1304,7 +1294,7 @@
         },
         "maxInitialSize": {
           "description": "Maximal size hint for the initial chunks.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1312,7 +1302,7 @@
         },
         "maxSize": {
           "description": "Maximal size hint for the created chunks.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1325,7 +1315,7 @@
         },
         "minRemainingSize": {
           "description": "Minimal size for the chunks the stay after moving the modules to a new chunk.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1333,7 +1323,7 @@
         },
         "minSize": {
           "description": "Minimal size for the created chunk.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1485,7 +1475,7 @@
             },
             "maxAsyncSize": {
               "description": "Maximal size hint for the on-demand chunks.",
-              "anyOf": [
+              "oneOf": [
                 {
                   "$ref": "#/definitions/OptimizationSplitChunksSizes"
                 }
@@ -1493,7 +1483,7 @@
             },
             "maxInitialSize": {
               "description": "Maximal size hint for the initial chunks.",
-              "anyOf": [
+              "oneOf": [
                 {
                   "$ref": "#/definitions/OptimizationSplitChunksSizes"
                 }
@@ -1501,7 +1491,7 @@
             },
             "maxSize": {
               "description": "Maximal size hint for the created chunks.",
-              "anyOf": [
+              "oneOf": [
                 {
                   "$ref": "#/definitions/OptimizationSplitChunksSizes"
                 }
@@ -1509,7 +1499,7 @@
             },
             "minSize": {
               "description": "Minimal size for the created chunk.",
-              "anyOf": [
+              "oneOf": [
                 {
                   "$ref": "#/definitions/OptimizationSplitChunksSizes"
                 }
@@ -1542,7 +1532,7 @@
         },
         "maxAsyncSize": {
           "description": "Maximal size hint for the on-demand chunks.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1555,7 +1545,7 @@
         },
         "maxInitialSize": {
           "description": "Maximal size hint for the initial chunks.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1563,7 +1553,7 @@
         },
         "maxSize": {
           "description": "Maximal size hint for the created chunks.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1576,7 +1566,7 @@
         },
         "minRemainingSize": {
           "description": "Minimal size for the chunks the stay after moving the modules to a new chunk.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1584,7 +1574,7 @@
         },
         "minSize": {
           "description": "Minimal size for the created chunks.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
@@ -1637,7 +1627,7 @@
           "cli": {
             "exclude": true
           },
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/AuxiliaryComment"
             }
@@ -1716,7 +1706,7 @@
           "cli": {
             "exclude": true
           },
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/LibraryExport"
             }
@@ -1726,7 +1716,7 @@
           "cli": {
             "exclude": true
           },
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/LibraryType"
             }
@@ -1757,7 +1747,7 @@
           "cli": {
             "exclude": true
           },
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/UmdNamedDefine"
             }
@@ -1999,7 +1989,7 @@
     },
     "Resolve": {
       "description": "Options for the resolver.",
-      "anyOf": [
+      "oneOf": [
         {
           "$ref": "#/definitions/ResolveOptions"
         }
@@ -2007,7 +1997,7 @@
     },
     "ResolveLoader": {
       "description": "Options for the resolver when resolving loaders.",
-      "anyOf": [
+      "oneOf": [
         {
           "$ref": "#/definitions/ResolveOptions"
         }
@@ -2093,28 +2083,24 @@
         },
         "aliasFields": {
           "description": "Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "description": "Field in the description file (usually package.json) which are used to redirect requests inside the module.",
-                "anyOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "description": "Part of the field path in the description file (usually package.json) which are used to redirect requests inside the module.",
-                      "type": "string",
-                      "minLength": 1
-                    }
-                  },
-                  {
-                    "type": "string",
-                    "minLength": 1
-                  }
-                ]
+          "type": "array",
+          "items": {
+            "description": "Field in the description file (usually package.json) which are used to redirect requests inside the module.",
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "description": "Part of the field path in the description file (usually package.json) which are used to redirect requests inside the module.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              {
+                "type": "string",
+                "minLength": 1
               }
-            }
-          ]
+            ]
+          }
         },
         "cache": {
           "description": "Enable caching of successfully resolved requests (cache entries are revalidated).",
@@ -2131,16 +2117,12 @@
         },
         "descriptionFiles": {
           "description": "Filenames used to find a description file (like a package.json).",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "description": "Filename used to find a description file (like a package.json).",
-                "type": "string",
-                "minLength": 1
-              }
-            }
-          ]
+          "type": "array",
+          "items": {
+            "description": "Filename used to find a description file (like a package.json).",
+            "type": "string",
+            "minLength": 1
+          }
         },
         "enforceExtension": {
           "description": "Enforce using one of the extensions from the extensions option.",
@@ -2148,77 +2130,61 @@
         },
         "extensions": {
           "description": "Extensions added to the request when trying to find the file.",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "description": "Extension added to the request when trying to find the file.",
-                "type": "string",
-                "minLength": 1
-              }
-            }
-          ]
+          "type": "array",
+          "items": {
+            "description": "Extension added to the request when trying to find the file.",
+            "type": "string",
+            "minLength": 1
+          }
         },
         "fileSystem": {
           "description": "Filesystem for the resolver."
         },
         "mainFields": {
           "description": "Field names from the description file (package.json) which are used to find the default entry point.",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "description": "Field name from the description file (package.json) which are used to find the default entry point.",
-                "anyOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "description": "Part of the field path from the description file (package.json) which are used to find the default entry point.",
-                      "type": "string",
-                      "minLength": 1
-                    }
-                  },
-                  {
-                    "type": "string",
-                    "minLength": 1
-                  }
-                ]
+          "type": "array",
+          "items": {
+            "description": "Field name from the description file (package.json) which are used to find the default entry point.",
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "description": "Part of the field path from the description file (package.json) which are used to find the default entry point.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              {
+                "type": "string",
+                "minLength": 1
               }
-            }
-          ]
+            ]
+          }
         },
         "mainFiles": {
           "description": "Filenames used to find the default entry point if there is no description file or main field.",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "description": "Filename used to find the default entry point if there is no description file or main field.",
-                "type": "string",
-                "minLength": 1
-              }
-            }
-          ]
+          "type": "array",
+          "items": {
+            "description": "Filename used to find the default entry point if there is no description file or main field.",
+            "type": "string",
+            "minLength": 1
+          }
         },
         "modules": {
           "description": "Folder names or directory paths where to find modules.",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "description": "Folder name or directory path where to find modules.",
-                "type": "string",
-                "minLength": 1
-              }
-            }
-          ]
+          "type": "array",
+          "items": {
+            "description": "Folder name or directory path where to find modules.",
+            "type": "string",
+            "minLength": 1
+          }
         },
         "plugins": {
           "description": "Plugins for the resolver.",
           "type": "array",
           "items": {
             "description": "Plugin of type object or instanceof Function.",
-            "anyOf": [
+            "oneOf": [
               {
                 "$ref": "#/definitions/ResolvePluginInstance"
               }
@@ -2283,7 +2249,7 @@
           "properties": {
             "and": {
               "description": "Logical AND.",
-              "anyOf": [
+              "oneOf": [
                 {
                   "$ref": "#/definitions/RuleSetConditions"
                 }
@@ -2291,7 +2257,7 @@
             },
             "not": {
               "description": "Logical NOT.",
-              "anyOf": [
+              "oneOf": [
                 {
                   "$ref": "#/definitions/RuleSetConditions"
                 }
@@ -2299,7 +2265,7 @@
             },
             "or": {
               "description": "Logical OR.",
-              "anyOf": [
+              "oneOf": [
                 {
                   "$ref": "#/definitions/RuleSetConditions"
                 }
@@ -2336,7 +2302,7 @@
           "properties": {
             "and": {
               "description": "Logical AND.",
-              "anyOf": [
+              "oneOf": [
                 {
                   "$ref": "#/definitions/RuleSetConditionsAbsolute"
                 }
@@ -2344,7 +2310,7 @@
             },
             "not": {
               "description": "Logical NOT.",
-              "anyOf": [
+              "oneOf": [
                 {
                   "$ref": "#/definitions/RuleSetConditionsAbsolute"
                 }
@@ -2352,7 +2318,7 @@
             },
             "or": {
               "description": "Logical OR.",
-              "anyOf": [
+              "oneOf": [
                 {
                   "$ref": "#/definitions/RuleSetConditionsAbsolute"
                 }
@@ -2402,7 +2368,7 @@
       "type": "array",
       "items": {
         "description": "A rule condition.",
-        "anyOf": [
+        "oneOf": [
           {
             "$ref": "#/definitions/RuleSetCondition"
           }
@@ -2414,7 +2380,7 @@
       "type": "array",
       "items": {
         "description": "A rule condition matching an absolute path.",
-        "anyOf": [
+        "oneOf": [
           {
             "$ref": "#/definitions/RuleSetConditionAbsolute"
           }
@@ -2444,7 +2410,7 @@
       "properties": {
         "compiler": {
           "description": "Match the child compiler name.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetConditionOrConditions"
             }
@@ -2456,7 +2422,7 @@
         },
         "exclude": {
           "description": "Shortcut for resource.exclude.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
@@ -2468,7 +2434,7 @@
         },
         "include": {
           "description": "Shortcut for resource.include.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
@@ -2476,7 +2442,7 @@
         },
         "issuer": {
           "description": "Match the issuer of the module (The module pointing to this module).",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
@@ -2484,7 +2450,7 @@
         },
         "loader": {
           "description": "Shortcut for use.loader.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetLoader"
             }
@@ -2492,7 +2458,7 @@
         },
         "oneOf": {
           "description": "Only execute the first matching rule in this array.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetRules"
             }
@@ -2500,7 +2466,7 @@
         },
         "options": {
           "description": "Shortcut for use.options.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetLoaderOptions"
             }
@@ -2513,7 +2479,7 @@
         },
         "realResource": {
           "description": "Match the real resource path of the module.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
@@ -2522,7 +2488,7 @@
         "resolve": {
           "description": "Options for the resolver.",
           "type": "object",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/ResolveOptions"
             }
@@ -2530,7 +2496,7 @@
         },
         "resource": {
           "description": "Match the resource path of the module.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
@@ -2538,7 +2504,7 @@
         },
         "resourceQuery": {
           "description": "Match the resource query of the module.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetConditionOrConditions"
             }
@@ -2546,7 +2512,7 @@
         },
         "rules": {
           "description": "Match and execute these rules when this rule is matched.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetRules"
             }
@@ -2558,7 +2524,7 @@
         },
         "test": {
           "description": "Shortcut for resource.test.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
@@ -2570,7 +2536,7 @@
         },
         "use": {
           "description": "Modifiers applied to the module when rule is matched.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/RuleSetUse"
             }
@@ -2583,7 +2549,7 @@
       "type": "array",
       "items": {
         "description": "A rule.",
-        "anyOf": [
+        "oneOf": [
           {
             "$ref": "#/definitions/RuleSetRule"
           }
@@ -2597,7 +2563,7 @@
           "type": "array",
           "items": {
             "description": "An use item.",
-            "anyOf": [
+            "oneOf": [
               {
                 "$ref": "#/definitions/RuleSetUseItem"
               }
@@ -2626,7 +2592,7 @@
             },
             "loader": {
               "description": "Loader name.",
-              "anyOf": [
+              "oneOf": [
                 {
                   "$ref": "#/definitions/RuleSetLoader"
                 }
@@ -2634,7 +2600,7 @@
             },
             "options": {
               "description": "Loader options.",
-              "anyOf": [
+              "oneOf": [
                 {
                   "$ref": "#/definitions/RuleSetLoaderOptions"
                 }
@@ -2827,7 +2793,7 @@
         },
         "excludeAssets": {
           "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/FilterTypes"
             }
@@ -2970,7 +2936,7 @@
         },
         "warningsFilter": {
           "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/FilterTypes"
             }
