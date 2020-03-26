@@ -23,7 +23,7 @@
   "properties": {
     "dataUrlCondition": {
       "description": "The condition for inlining the asset as DataUrl.",
-      "oneOf": [
+      "anyOf": [
         {
           "$ref": "#/definitions/DataUrlOptions"
         },

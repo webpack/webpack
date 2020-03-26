@@ -27,7 +27,7 @@
   "properties": {
     "dataUrl": {
       "description": "The options for data url generator.",
-      "oneOf": [
+      "anyOf": [
         {
           "$ref": "#/definitions/DataUrlOptions"
         },

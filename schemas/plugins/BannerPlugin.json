@@ -7,7 +7,7 @@
     },
     "Rule": {
       "description": "Filtering rule as regex or string.",
-      "oneOf": [
+      "anyOf": [
         {
           "instanceof": "RegExp",
           "tsType": "RegExp"
@@ -20,12 +20,12 @@
     },
     "Rules": {
       "description": "Filtering rules.",
-      "oneOf": [
+      "anyOf": [
         {
           "type": "array",
           "items": {
             "description": "A rule condition.",
-            "anyOf": [
+            "oneOf": [
               {
                 "$ref": "#/definitions/Rule"
               }
@@ -39,7 +39,7 @@
     }
   },
   "title": "BannerPluginArgument",
-  "oneOf": [
+  "anyOf": [
     {
       "description": "The banner as string, it will be wrapped in a comment.",
       "type": "string",
@@ -67,7 +67,7 @@
         },
         "exclude": {
           "description": "Exclude all modules matching any of these conditions.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/Rules"
             }
@@ -75,7 +75,7 @@
         },
         "include": {
           "description": "Include all modules matching any of these conditions.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/Rules"
             }
@@ -87,7 +87,7 @@
         },
         "test": {
           "description": "Include all modules that pass test assertion.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/Rules"
             }

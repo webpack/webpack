@@ -54,7 +54,7 @@
       "properties": {
         "content": {
           "description": "The mappings from request to module info.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/DllReferencePluginOptionsContent"
             }
@@ -67,7 +67,7 @@
         },
         "type": {
           "description": "The type how the dll is exposed (external type).",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/DllReferencePluginOptionsSourceType"
             }
@@ -116,7 +116,7 @@
         },
         "manifest": {
           "description": "An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.",
-          "oneOf": [
+          "anyOf": [
             {
               "type": "string",
               "absolutePath": true
@@ -138,7 +138,7 @@
         },
         "sourceType": {
           "description": "How the dll is exposed (libraryTarget, defaults to manifest.type).",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/DllReferencePluginOptionsSourceType"
             }
@@ -157,7 +157,7 @@
       "properties": {
         "content": {
           "description": "The mappings from request to module info.",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/DllReferencePluginOptionsContent"
             }
@@ -188,7 +188,7 @@
         },
         "sourceType": {
           "description": "How the dll is exposed (libraryTarget).",
-          "anyOf": [
+          "oneOf": [
             {
               "$ref": "#/definitions/DllReferencePluginOptionsSourceType"
             }
