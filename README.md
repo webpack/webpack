@@ -327,6 +327,8 @@ Contributions go far beyond pull requests and commits. Although we love giving y
 - [Blogging, speaking about, or creating tutorials](https://github.com/webpack-contrib/awesome-webpack) about one of webpack's many features.
 - Helping others in our webpack [gitter channel](https://gitter.im/webpack/webpack).
 
+To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/master/CONTRIBUTING.md).
+
 If you are worried or don't know where to start, you can **always** reach out to [Sean Larkin (@TheLarkInn) on Twitter](https://twitter.com/thelarkinn) or simply submit an issue and a maintainer can help give you guidance!
 
 We have also started a series on our [Medium Publication](https://medium.com/webpack) called [The Contributor's Guide to webpack](https://medium.com/webpack/contributors-guide/home). We welcome you to read it and post any questions or responses if you still need help.
