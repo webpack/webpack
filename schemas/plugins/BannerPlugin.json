@@ -41,6 +41,11 @@
   "title": "BannerPluginArgument",
   "oneOf": [
     {
+      "description": "The banner as string, it will be wrapped in a comment.",
+      "type": "string",
+      "minLength": 1
+    },
+    {
       "title": "BannerPluginOptions",
       "type": "object",
       "additionalProperties": false,
@@ -49,10 +54,10 @@
           "description": "Specifies the banner.",
           "anyOf": [
             {
-              "$ref": "#/definitions/BannerFunction"
+              "type": "string"
             },
             {
-              "type": "string"
+              "$ref": "#/definitions/BannerFunction"
             }
           ]
         },
@@ -93,11 +98,6 @@
     },
     {
       "$ref": "#/definitions/BannerFunction"
-    },
-    {
-      "description": "The banner as string, it will be wrapped in a comment.",
-      "type": "string",
-      "minLength": 1
     }
   ]
 }

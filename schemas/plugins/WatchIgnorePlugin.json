@@ -10,11 +10,11 @@
         "description": "RegExp or absolute path to directories or files that should be ignored.",
         "oneOf": [
           {
-            "type": "string"
-          },
-          {
             "instanceof": "RegExp",
             "tsType": "RegExp"
+          },
+          {
+            "type": "string"
           }
         ]
       },

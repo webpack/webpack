@@ -19,7 +19,7 @@ export type Bail = boolean;
 /**
  * Cache generated modules and chunks to improve performance for multiple incremental builds.
  */
-export type Cache = CacheNormalized | true;
+export type Cache = true | CacheNormalized;
 /**
  * Cache generated modules and chunks to improve performance for multiple incremental builds.
  */
@@ -51,11 +51,7 @@ export type EntryStatic = EntryObject | EntryUnnamed;
 /**
  * Module(s) that are loaded upon startup.
  */
-export type EntryItem = string | NonEmptyArrayOfUniqueStringValues;
-/**
- * A non-empty array of non-empty strings.
- */
-export type NonEmptyArrayOfUniqueStringValues = [string, ...string[]];
+export type EntryItem = [string, ...string[]] | string;
 /**
  * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
  */
@@ -72,11 +68,11 @@ export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 /**
  * Specify which export should be exposed as library.
  */
-export type LibraryExport = string | string[];
+export type LibraryExport = string[] | string;
 /**
  * The name of the library (some types allow unnamed libraries too).
  */
-export type LibraryName = string | string[] | LibraryCustomUmdObject;
+export type LibraryName = string[] | string | LibraryCustomUmdObject;
 /**
  * Type of library.
  */
@@ -108,43 +104,30 @@ export type EntryUnnamed = EntryItem;
 /**
  * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
  */
-export type Externals =
-	| ((
-			context: string,
-			request: string,
-			callback: (err?: Error, result?: string) => void
-	  ) => void)
-	| ExternalItem
-	| (
-			| ((
-					context: string,
-					request: string,
-					callback: (err?: Error, result?: string) => void
-			  ) => void)
-			| ExternalItem
-	  )[];
+export type Externals = ExternalItem[] | ExternalItem;
 /**
  * Specify dependency that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
  */
 export type ExternalItem =
+	| RegExp
 	| string
 	| {
 			/**
 			 * The dependency used for the external.
 			 */
 			[k: string]:
+				| string[]
 				| string
+				| boolean
 				| {
 						[k: string]: any;
-				  }
-				| ArrayOfStringValues
-				| boolean;
+				  };
 	  }
-	| RegExp;
-/**
- * Array of strings.
- */
-export type ArrayOfStringValues = string[];
+	| ((
+			context: string,
+			request: string,
+			callback: (err?: Error, result?: string) => void
+	  ) => void);
 /**
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
@@ -168,7 +151,7 @@ export type ExternalsType =
 /**
  * Filtering values.
  */
-export type FilterTypes = FilterItemTypes | FilterItemTypes[];
+export type FilterTypes = FilterItemTypes[] | FilterItemTypes;
 /**
  * Filtering value, regexp or function.
  */
@@ -187,8 +170,6 @@ export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
 export type RuleSetCondition =
 	| RegExp
 	| string
-	| ((value: string) => boolean)
-	| RuleSetConditions
 	| {
 			/**
 			 * Logical AND.
@@ -202,7 +183,9 @@ export type RuleSetCondition =
 			 * Logical OR.
 			 */
 			or?: RuleSetConditions;
-	  };
+	  }
+	| ((value: string) => boolean)
+	| RuleSetConditions;
 /**
  * A list of rule conditions.
  */
@@ -219,8 +202,6 @@ export type RuleSetConditionOrConditionsAbsolute =
 export type RuleSetConditionAbsolute =
 	| RegExp
 	| string
-	| ((value: string) => boolean)
-	| RuleSetConditionsAbsolute
 	| {
 			/**
 			 * Logical AND.
@@ -234,7 +215,9 @@ export type RuleSetConditionAbsolute =
 			 * Logical OR.
 			 */
 			or?: RuleSetConditionsAbsolute;
-	  };
+	  }
+	| ((value: string) => boolean)
+	| RuleSetConditionsAbsolute;
 /**
  * A list of rule conditions matching an absolute path.
  */
@@ -247,15 +230,13 @@ export type RuleSetLoader = string;
  * A list of descriptions of loaders applied.
  */
 export type RuleSetUse =
-	| RuleSetUseItem
+	| RuleSetUseItem[]
 	| ((data: object) => RuleSetUseItem[])
-	| RuleSetUseItem[];
+	| RuleSetUseItem;
 /**
  * A description of an applied loader.
  */
 export type RuleSetUseItem =
-	| RuleSetLoader
-	| ((data: object) => RuleSetUseItem | RuleSetUseItem[])
 	| {
 			/**
 			 * Unique loader options identifier.
@@ -269,19 +250,17 @@ export type RuleSetUseItem =
 			 * Loader options.
 			 */
 			options?: RuleSetLoaderOptions;
-	  };
+	  }
+	| ((data: object) => RuleSetUseItem | RuleSetUseItem[])
+	| RuleSetLoader;
 /**
  * Options passed to a loader.
  */
 export type RuleSetLoaderOptions =
+	| string
 	| {
 			[k: string]: any;
-	  }
-	| string;
-/**
- * List of string or string-array values.
- */
-export type ArrayOfStringOrStringArrayValues = (string | string[])[];
+	  };
 /**
  * A list of rules.
  */
@@ -305,8 +284,8 @@ export type WebpackPluginFunction = (
  * Create an additional chunk which contains only the webpack runtime and chunk hash maps.
  */
 export type OptimizationRuntimeChunk =
-	| boolean
 	| ("single" | "multiple")
+	| boolean
 	| {
 			/**
 			 * The name or name factory for the runtime chunks.
@@ -377,7 +356,7 @@ export type DevtoolNamespace = string;
 /**
  * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
  */
-export type EcmaVersion = number | 2009;
+export type EcmaVersion = 2009 | number;
 /**
  * List of library types enabled for use by entry points.
  */
@@ -511,8 +490,6 @@ export type ResolveLoader = ResolveOptions;
  * Stats options object or preset name.
  */
 export type Stats =
-	| StatsOptions
-	| boolean
 	| (
 			| "none"
 			| "errors-only"
@@ -521,7 +498,9 @@ export type Stats =
 			| "detailed"
 			| "verbose"
 			| "errors-warnings"
-	  );
+	  )
+	| boolean
+	| StatsOptions;
 /**
  * Environment to build for.
  */
@@ -791,7 +770,7 @@ export interface EntryDescription {
 	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
-	dependOn?: string | NonEmptyArrayOfUniqueStringValues;
+	dependOn?: [string, ...string[]] | string;
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
@@ -866,7 +845,7 @@ export interface LibraryCustomUmdObject {
 	/**
 	 * Name of the property exposed globally by a UMD library.
 	 */
-	root?: string | string[];
+	root?: string[] | string;
 }
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
@@ -912,7 +891,7 @@ export interface InfrastructureLogging {
 	/**
 	 * Enable debug logging for specific loggers.
 	 */
-	debug?: FilterTypes | boolean;
+	debug?: boolean | FilterTypes;
 	/**
 	 * Log level.
 	 */
@@ -943,7 +922,7 @@ export interface Module {
 	/**
 	 * Sets the default regular expression for full dynamic dependencies.
 	 */
-	exprContextRegExp?: boolean | RegExp;
+	exprContextRegExp?: RegExp | boolean;
 	/**
 	 * Set the default request for full dynamic dependencies.
 	 */
@@ -952,10 +931,10 @@ export interface Module {
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
 	noParse?:
-		| [RegExp | Function | string, ...(RegExp | Function | string)[]]
+		| [RegExp | string | Function, ...(RegExp | string | Function)[]]
 		| RegExp
-		| Function
-		| string;
+		| string
+		| Function;
 	/**
 	 * An array of rules applied for modules.
 	 */
@@ -979,7 +958,7 @@ export interface Module {
 	/**
 	 * Sets the regular expression when using the require function in a not statically analyse-able way.
 	 */
-	unknownContextRegExp?: boolean | RegExp;
+	unknownContextRegExp?: RegExp | boolean;
 	/**
 	 * Sets the request when using the require function in a not statically analyse-able way.
 	 */
@@ -1098,13 +1077,7 @@ export interface ResolveOptions {
 				/**
 				 * New request.
 				 */
-				[k: string]: string | string[] | false;
-		  }
-		| {
-				/**
-				 * New request.
-				 */
-				alias: string | string[] | false;
+				alias: string[] | false | string;
 				/**
 				 * Request to be redirected.
 				 */
@@ -1113,11 +1086,17 @@ export interface ResolveOptions {
 				 * Redirect only exact matching request.
 				 */
 				onlyModule?: boolean;
-		  }[];
+		  }[]
+		| {
+				/**
+				 * New request.
+				 */
+				[k: string]: string[] | false | string;
+		  };
 	/**
-	 * Fields in the description file (package.json) which are used to redirect requests inside the module.
+	 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
 	 */
-	aliasFields?: ArrayOfStringOrStringArrayValues;
+	aliasFields?: (string[] | string)[];
 	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
 	 */
@@ -1131,9 +1110,9 @@ export interface ResolveOptions {
 	 */
 	cacheWithContext?: boolean;
 	/**
-	 * Filenames used to find a description file.
+	 * Filenames used to find a description file (like a package.json).
 	 */
-	descriptionFiles?: ArrayOfStringValues;
+	descriptionFiles?: string[];
 	/**
 	 * Enforce using one of the extensions from the extensions option.
 	 */
@@ -1141,7 +1120,7 @@ export interface ResolveOptions {
 	/**
 	 * Extensions added to the request when trying to find the file.
 	 */
-	extensions?: ArrayOfStringValues;
+	extensions?: string[];
 	/**
 	 * Filesystem for the resolver.
 	 */
@@ -1151,15 +1130,15 @@ export interface ResolveOptions {
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point.
 	 */
-	mainFields?: ArrayOfStringOrStringArrayValues;
+	mainFields?: (string[] | string)[];
 	/**
 	 * Filenames used to find the default entry point if there is no description file or main field.
 	 */
-	mainFiles?: ArrayOfStringValues;
+	mainFiles?: string[];
 	/**
 	 * Folder names or directory paths where to find modules.
 	 */
-	modules?: ArrayOfStringValues;
+	modules?: string[];
 	/**
 	 * Plugins for the resolver.
 	 */
@@ -1336,9 +1315,9 @@ export interface OptimizationSplitChunksOptions {
 		 */
 		[k: string]:
 			| false
-			| Function
-			| string
 			| RegExp
+			| string
+			| Function
 			| OptimizationSplitChunksCacheGroup;
 	};
 	/**
@@ -1418,7 +1397,7 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Give chunks created a name (chunks with equal name are merged).
 	 */
-	name?: false | Function | string;
+	name?: false | string | Function;
 }
 /**
  * Options object for describing behavior of a cache group selecting modules that should be cached together.
@@ -1486,7 +1465,7 @@ export interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Give chunks for this cache group a name (chunks with equal name are merged).
 	 */
-	name?: false | Function | string;
+	name?: false | string | Function;
 	/**
 	 * Priority of this cache group.
 	 */
@@ -1498,11 +1477,11 @@ export interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Assign modules to a cache group by module name.
 	 */
-	test?: Function | string | RegExp;
+	test?: RegExp | string | Function;
 	/**
 	 * Assign modules to a cache group by module type.
 	 */
-	type?: Function | string | RegExp;
+	type?: RegExp | string | Function;
 }
 /**
  * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
@@ -1800,7 +1779,7 @@ export interface StatsOptions {
 	/**
 	 * Please use excludeModules instead.
 	 */
-	exclude?: FilterTypes | boolean;
+	exclude?: boolean | FilterTypes;
 	/**
 	 * Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.
 	 */
@@ -1808,7 +1787,7 @@ export interface StatsOptions {
 	/**
 	 * Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.
 	 */
-	excludeModules?: FilterTypes | boolean;
+	excludeModules?: boolean | FilterTypes;
 	/**
 	 * Add the hash of the compilation.
 	 */
@@ -1820,11 +1799,11 @@ export interface StatsOptions {
 	/**
 	 * Add logging output.
 	 */
-	logging?: boolean | ("none" | "error" | "warn" | "info" | "log" | "verbose");
+	logging?: ("none" | "error" | "warn" | "info" | "log" | "verbose") | boolean;
 	/**
 	 * Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.
 	 */
-	loggingDebug?: FilterTypes | boolean;
+	loggingDebug?: boolean | FilterTypes;
 	/**
 	 * Add stack traces to logging output.
 	 */
@@ -1872,7 +1851,7 @@ export interface StatsOptions {
 	/**
 	 * Preset for the default values.
 	 */
-	preset?: boolean | string;
+	preset?: string | boolean;
 	/**
 	 * Show exports provided by modules.
 	 */
@@ -1925,11 +1904,11 @@ export interface WatchOptions {
 	/**
 	 * Ignore some files from watching (glob pattern).
 	 */
-	ignored?: string | ArrayOfStringValues;
+	ignored?: string[] | string;
 	/**
 	 * Enable polling mode for watching.
 	 */
-	poll?: boolean | number;
+	poll?: number | boolean;
 	/**
 	 * Stop watching when stdin stream has ended.
 	 */
@@ -1942,7 +1921,7 @@ export interface EntryDescriptionNormalized {
 	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
-	dependOn?: NonEmptyArrayOfUniqueStringValues;
+	dependOn?: [string, ...string[]];
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
@@ -1950,7 +1929,7 @@ export interface EntryDescriptionNormalized {
 	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
-	import: NonEmptyArrayOfUniqueStringValues;
+	import: [string, ...string[]];
 	/**
 	 * Options for library.
 	 */
