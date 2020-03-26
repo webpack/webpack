@@ -121,6 +121,6 @@ export interface DllReferencePluginOptionsContent {
 		/**
 		 * Module ID.
 		 */
-		id: string | number;
+		id: number | string;
 	};
 }

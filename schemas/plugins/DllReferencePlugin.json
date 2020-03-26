@@ -34,11 +34,11 @@
             "description": "Module ID.",
             "anyOf": [
               {
-                "type": "string",
-                "minLength": 1
+                "type": "number"
               },
               {
-                "type": "number"
+                "type": "string",
+                "minLength": 1
               }
             ]
           }

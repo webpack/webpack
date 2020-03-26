@@ -117,8 +117,8 @@ export type ExternalItem =
 			 */
 			[k: string]:
 				| string[]
-				| string
 				| boolean
+				| string
 				| {
 						[k: string]: any;
 				  };
@@ -1851,7 +1851,7 @@ export interface StatsOptions {
 	/**
 	 * Preset for the default values.
 	 */
-	preset?: string | boolean;
+	preset?: boolean | string;
 	/**
 	 * Show exports provided by modules.
 	 */
