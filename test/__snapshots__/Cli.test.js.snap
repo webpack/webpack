@@ -139,8 +139,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.",
         "multiple": false,
-        "path": "cache.immutablePaths.reset",
-        "type": "boolean",
+        "path": "cache.immutablePaths",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.",
@@ -165,8 +165,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not being modified otherwise.",
         "multiple": false,
-        "path": "cache.managedPaths.reset",
-        "type": "boolean",
+        "path": "cache.managedPaths",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not being modified otherwise.",
@@ -271,8 +271,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. References to other configurations to depend on.",
         "multiple": false,
-        "path": "dependencies.reset",
-        "type": "boolean",
+        "path": "dependencies",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. References to other configurations to depend on.",
@@ -320,8 +320,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. All modules are loaded upon startup. The last one is exported.",
         "multiple": false,
-        "path": "entry.reset",
-        "type": "boolean",
+        "path": "entry",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. All modules are loaded upon startup. The last one is exported.",
@@ -456,8 +456,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on \`output.libraryTarget\`.",
         "multiple": false,
-        "path": "externals.reset",
-        "type": "boolean",
+        "path": "externals",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on \`output.libraryTarget\`.",
@@ -525,8 +525,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Enable debug logging for specific loggers.",
         "multiple": false,
-        "path": "infrastructureLogging.debug.reset",
-        "type": "boolean",
+        "path": "infrastructureLogging.debug",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Enable debug logging for specific loggers.",
@@ -654,8 +654,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Don't parse files matching. It's matched against the full resolved request.",
         "multiple": false,
-        "path": "module.noParse.reset",
-        "type": "boolean",
+        "path": "module.noParse",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Don't parse files matching. It's matched against the full resolved request.",
@@ -768,45 +768,6 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
-  "module-rules-loader-ident": Object {
-    "configs": Array [
-      Object {
-        "description": "Unique loader options identifier.",
-        "multiple": true,
-        "path": "module.rules[].loader.ident",
-        "type": "string",
-      },
-    ],
-    "description": "Unique loader options identifier.",
-    "multiple": true,
-    "simpleType": "string",
-  },
-  "module-rules-loader-loader": Object {
-    "configs": Array [
-      Object {
-        "description": "A loader request.",
-        "multiple": true,
-        "path": "module.rules[].loader.loader",
-        "type": "string",
-      },
-    ],
-    "description": "A loader request.",
-    "multiple": true,
-    "simpleType": "string",
-  },
-  "module-rules-loader-options": Object {
-    "configs": Array [
-      Object {
-        "description": "Options passed to a loader.",
-        "multiple": true,
-        "path": "module.rules[].loader.options",
-        "type": "string",
-      },
-    ],
-    "description": "Options passed to a loader.",
-    "multiple": true,
-    "simpleType": "string",
-  },
   "module-rules-options": Object {
     "configs": Array [
       Object {
@@ -844,8 +805,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. A list of rules.",
         "multiple": false,
-        "path": "module.rules.reset",
-        "type": "boolean",
+        "path": "module.rules",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. A list of rules.",
@@ -1773,71 +1734,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-auxiliary-comment": Object {
-    "configs": Array [
-      Object {
-        "description": "Append the same comment above each import style.",
-        "multiple": false,
-        "path": "output.auxiliaryComment",
-        "type": "string",
-      },
-    ],
-    "description": "Append the same comment above each import style.",
-    "multiple": false,
-    "simpleType": "string",
-  },
-  "output-auxiliary-comment-amd": Object {
-    "configs": Array [
-      Object {
-        "description": "Set comment for \`amd\` section in UMD.",
-        "multiple": false,
-        "path": "output.auxiliaryComment.amd",
-        "type": "string",
-      },
-    ],
-    "description": "Set comment for \`amd\` section in UMD.",
-    "multiple": false,
-    "simpleType": "string",
-  },
-  "output-auxiliary-comment-commonjs": Object {
-    "configs": Array [
-      Object {
-        "description": "Set comment for \`commonjs\` (exports) section in UMD.",
-        "multiple": false,
-        "path": "output.auxiliaryComment.commonjs",
-        "type": "string",
-      },
-    ],
-    "description": "Set comment for \`commonjs\` (exports) section in UMD.",
-    "multiple": false,
-    "simpleType": "string",
-  },
-  "output-auxiliary-comment-commonjs2": Object {
-    "configs": Array [
-      Object {
-        "description": "Set comment for \`commonjs2\` (module.exports) section in UMD.",
-        "multiple": false,
-        "path": "output.auxiliaryComment.commonjs2",
-        "type": "string",
-      },
-    ],
-    "description": "Set comment for \`commonjs2\` (module.exports) section in UMD.",
-    "multiple": false,
-    "simpleType": "string",
-  },
-  "output-auxiliary-comment-root": Object {
-    "configs": Array [
-      Object {
-        "description": "Set comment for \`root\` (global variable) section in UMD.",
-        "multiple": false,
-        "path": "output.auxiliaryComment.root",
-        "type": "string",
-      },
-    ],
-    "description": "Set comment for \`root\` (global variable) section in UMD.",
-    "multiple": false,
-    "simpleType": "string",
-  },
   "output-chunk-callback-name": Object {
     "configs": Array [
       Object {
@@ -2005,8 +1901,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. List of library types enabled for use by entry points.",
         "multiple": false,
-        "path": "output.enabledLibraryTypes.reset",
-        "type": "boolean",
+        "path": "output.enabledLibraryTypes",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. List of library types enabled for use by entry points.",
@@ -2286,12 +2182,6 @@ Object {
         "path": "output.library.export[]",
         "type": "string",
       },
-      Object {
-        "description": "Part of the export that should be exposed as library.",
-        "multiple": true,
-        "path": "output.libraryExport[]",
-        "type": "string",
-      },
     ],
     "description": "Part of the export that should be exposed as library.",
     "multiple": true,
@@ -2302,8 +2192,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Specify which export should be exposed as library.",
         "multiple": false,
-        "path": "output.libraryExport.reset",
-        "type": "boolean",
+        "path": "output.library.export",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Specify which export should be exposed as library.",
@@ -2354,8 +2244,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. The name of the library (some types allow unnamed libraries too).",
         "multiple": false,
-        "path": "output.library.name.reset",
-        "type": "boolean",
+        "path": "output.library.name",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. The name of the library (some types allow unnamed libraries too).",
@@ -2380,8 +2270,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Name of the property exposed globally by a UMD library.",
         "multiple": false,
-        "path": "output.library.name.root.reset",
-        "type": "boolean",
+        "path": "output.library.name.root",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Name of the property exposed globally by a UMD library.",
@@ -2393,8 +2283,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. The name of the library (some types allow unnamed libraries too).",
         "multiple": false,
-        "path": "output.library.reset",
-        "type": "boolean",
+        "path": "output.library",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. The name of the library (some types allow unnamed libraries too).",
@@ -2419,44 +2309,13 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Name of the property exposed globally by a UMD library.",
         "multiple": false,
-        "path": "output.library.root.reset",
-        "type": "boolean",
+        "path": "output.library.root",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Name of the property exposed globally by a UMD library.",
     "multiple": false,
     "simpleType": "boolean",
-  },
-  "output-library-target": Object {
-    "configs": Array [
-      Object {
-        "description": "Type of library.",
-        "multiple": false,
-        "path": "output.libraryTarget",
-        "type": "enum",
-        "values": Array [
-          "var",
-          "module",
-          "assign",
-          "this",
-          "window",
-          "self",
-          "global",
-          "commonjs",
-          "commonjs2",
-          "commonjs-module",
-          "amd",
-          "amd-require",
-          "umd",
-          "umd2",
-          "jsonp",
-          "system",
-        ],
-      },
-    ],
-    "description": "Type of library.",
-    "multiple": false,
-    "simpleType": "string",
   },
   "output-library-type": Object {
     "configs": Array [
@@ -2590,19 +2449,6 @@ Object {
       },
     ],
     "description": "Handles exceptions in module loading correctly at a performance cost.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "output-umd-named-define": Object {
-    "configs": Array [
-      Object {
-        "description": "If \`output.libraryTarget\` is set to umd and \`output.library\` is set, setting this to true will name the AMD module.",
-        "multiple": false,
-        "path": "output.umdNamedDefine",
-        "type": "boolean",
-      },
-    ],
-    "description": "If \`output.libraryTarget\` is set to umd and \`output.library\` is set, setting this to true will name the AMD module.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2824,8 +2670,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
         "multiple": false,
-        "path": "resolve.aliasFields.reset",
-        "type": "boolean",
+        "path": "resolve.aliasFields",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
@@ -2863,8 +2709,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Redirect module requests.",
         "multiple": false,
-        "path": "resolve.alias.reset",
-        "type": "boolean",
+        "path": "resolve.alias",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Redirect module requests.",
@@ -2915,8 +2761,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Filenames used to find a description file (like a package.json).",
         "multiple": false,
-        "path": "resolve.descriptionFiles.reset",
-        "type": "boolean",
+        "path": "resolve.descriptionFiles",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Filenames used to find a description file (like a package.json).",
@@ -2954,8 +2800,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
         "multiple": false,
-        "path": "resolve.extensions.reset",
-        "type": "boolean",
+        "path": "resolve.extensions",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
@@ -3002,8 +2848,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
         "multiple": false,
-        "path": "resolveLoader.aliasFields.reset",
-        "type": "boolean",
+        "path": "resolveLoader.aliasFields",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
@@ -3041,8 +2887,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Redirect module requests.",
         "multiple": false,
-        "path": "resolveLoader.alias.reset",
-        "type": "boolean",
+        "path": "resolveLoader.alias",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Redirect module requests.",
@@ -3093,8 +2939,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Filenames used to find a description file (like a package.json).",
         "multiple": false,
-        "path": "resolveLoader.descriptionFiles.reset",
-        "type": "boolean",
+        "path": "resolveLoader.descriptionFiles",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Filenames used to find a description file (like a package.json).",
@@ -3132,8 +2978,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
         "multiple": false,
-        "path": "resolveLoader.extensions.reset",
-        "type": "boolean",
+        "path": "resolveLoader.extensions",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
@@ -3158,8 +3004,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the default entry point.",
         "multiple": false,
-        "path": "resolveLoader.mainFields.reset",
-        "type": "boolean",
+        "path": "resolveLoader.mainFields",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the default entry point.",
@@ -3184,8 +3030,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Filenames used to find the default entry point if there is no description file or main field.",
         "multiple": false,
-        "path": "resolveLoader.mainFiles.reset",
-        "type": "boolean",
+        "path": "resolveLoader.mainFiles",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Filenames used to find the default entry point if there is no description file or main field.",
@@ -3210,8 +3056,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
         "multiple": false,
-        "path": "resolveLoader.modules.reset",
-        "type": "boolean",
+        "path": "resolveLoader.modules",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
@@ -3275,8 +3121,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the default entry point.",
         "multiple": false,
-        "path": "resolve.mainFields.reset",
-        "type": "boolean",
+        "path": "resolve.mainFields",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the default entry point.",
@@ -3301,8 +3147,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Filenames used to find the default entry point if there is no description file or main field.",
         "multiple": false,
-        "path": "resolve.mainFiles.reset",
-        "type": "boolean",
+        "path": "resolve.mainFiles",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Filenames used to find the default entry point if there is no description file or main field.",
@@ -3327,8 +3173,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
         "multiple": false,
-        "path": "resolve.modules.reset",
-        "type": "boolean",
+        "path": "resolve.modules",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
@@ -3790,8 +3636,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
         "multiple": false,
-        "path": "stats.excludeAssets.reset",
-        "type": "boolean",
+        "path": "stats.excludeAssets",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
@@ -3828,8 +3674,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
         "multiple": false,
-        "path": "stats.excludeModules.reset",
-        "type": "boolean",
+        "path": "stats.excludeModules",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
@@ -3919,8 +3765,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
         "multiple": false,
-        "path": "stats.loggingDebug.reset",
-        "type": "boolean",
+        "path": "stats.loggingDebug",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
@@ -4230,8 +4076,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
         "multiple": false,
-        "path": "stats.warningsFilter.reset",
-        "type": "boolean",
+        "path": "stats.warningsFilter",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
@@ -4305,8 +4151,8 @@ Object {
       Object {
         "description": "Clear all items provided in configuration. Ignore some files from watching (glob pattern).",
         "multiple": false,
-        "path": "watchOptions.ignored.reset",
-        "type": "boolean",
+        "path": "watchOptions.ignored",
+        "type": "reset",
       },
     ],
     "description": "Clear all items provided in configuration. Ignore some files from watching (glob pattern).",

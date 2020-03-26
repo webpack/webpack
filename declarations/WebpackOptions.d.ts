@@ -227,6 +227,14 @@ export type RuleSetConditionsAbsolute = RuleSetConditionAbsolute[];
  */
 export type RuleSetLoader = string;
 /**
+ * Options passed to a loader.
+ */
+export type RuleSetLoaderOptions =
+	| string
+	| {
+			[k: string]: any;
+	  };
+/**
  * A list of descriptions of loaders applied.
  */
 export type RuleSetUse =
@@ -253,14 +261,6 @@ export type RuleSetUseItem =
 	  }
 	| ((data: object) => RuleSetUseItem | RuleSetUseItem[])
 	| RuleSetLoader;
-/**
- * Options passed to a loader.
- */
-export type RuleSetLoaderOptions =
-	| string
-	| {
-			[k: string]: any;
-	  };
 /**
  * A list of rules.
  */
@@ -1013,7 +1013,7 @@ export interface RuleSetRule {
 	/**
 	 * Shortcut for use.loader.
 	 */
-	loader?: RuleSetLoader | RuleSetUse;
+	loader?: RuleSetLoader;
 	/**
 	 * Only execute the first matching rule in this array.
 	 */
