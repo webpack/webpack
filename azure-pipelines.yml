@@ -1,7 +1,7 @@
 jobs:
   - job: basic
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-latest
     steps:
       - task: NodeTool@0
         inputs:
@@ -46,7 +46,7 @@ jobs:
 
   - job: lint
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-latest
     steps:
       - task: NodeTool@0
         inputs:
@@ -88,7 +88,7 @@ jobs:
       - basic
       - lint
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-latest
     strategy:
       maxParallel: 4
       matrix:
@@ -138,7 +138,7 @@ jobs:
       - basic
       - lint
     pool:
-      vmImage: "macOS 10.13"
+      vmImage: macOS-latest
     strategy:
       maxParallel: 4
       matrix:
@@ -188,7 +188,7 @@ jobs:
       - basic
       - lint
     pool:
-      vmImage: vs2017-win2016
+      vmImage: windows-latest
     strategy:
       maxParallel: 4
       matrix:
