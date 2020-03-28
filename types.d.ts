@@ -1958,7 +1958,7 @@ declare interface EntryDescription {
 	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
-	dependOn?: string | [string, ...string[]];
+	dependOn?: EntryItem;
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -2181,7 +2181,11 @@ declare class ExportInfo {
 	exportsInfoOwned: boolean;
 	exportsInfo: ExportsInfo;
 	readonly canMangle: boolean;
-	getUsedName(fallbackName?: any): any;
+
+	/**
+	 * get used name
+	 */
+	getUsedName(fallbackName?: string): string | boolean | typeof SKIP_OVER_NAME;
 	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): ExportsInfo;
 	getUsedInfo():
@@ -2243,9 +2247,25 @@ declare class ExportsInfo {
 	isUsed(): boolean;
 	getUsedExports(): any;
 	getProvidedExports(): true | string[];
-	isExportProvided(name: string | string[]): boolean;
-	isExportUsed(name: string | string[]): 0 | 1 | 2 | 3 | 4;
-	getUsedName(name: string | string[]): string | false | string[];
+	isExportProvided(name: LibraryExport): boolean;
+	isExportUsed(name: LibraryExport): 0 | 1 | 2 | 3 | 4;
+	getUsedName(
+		name: LibraryExport
+	):
+		| string
+		| boolean
+		| {
+				/**
+				 * Returns a string representation of an object.
+				 */
+				toString(): string;
+				/**
+				 * Returns the primitive value of the specified object.
+				 */
+				valueOf(): __Type_2;
+				readonly [Symbol.toStringTag]: string;
+		  }
+		| string[];
 	getRestoreProvidedData(): any;
 	restoreProvided(__0: {
 		otherProvided: any;
@@ -2313,7 +2333,7 @@ type ExternalItem =
 	  ) => void);
 declare class ExternalModule extends Module {
 	constructor(request?: any, type?: any, userRequest?: any);
-	request: string | string[] | Record<string, string | string[]>;
+	request: string | string[] | Record<string, LibraryExport>;
 	externalType: string;
 	userRequest: string;
 	getSourceString(
@@ -3224,7 +3244,7 @@ declare class LibManifestPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type Library = string | LibraryOptions | string[] | LibraryCustomUmdObject;
+type Library = string | string[] | LibraryOptions | LibraryCustomUmdObject;
 declare interface LibraryContext<T> {
 	compilation: Compilation;
 	options: T;
@@ -3272,7 +3292,7 @@ declare interface LibraryCustomUmdObject {
 	/**
 	 * Name of the property exposed globally by a UMD library.
 	 */
-	root?: string | string[];
+	root?: LibraryExport;
 }
 type LibraryExport = string | string[];
 type LibraryName = string | string[] | LibraryCustomUmdObject;
@@ -3644,12 +3664,26 @@ declare class Module extends DependenciesBlock {
 	isModuleUsed(moduleGraph: ModuleGraph): boolean;
 	isExportUsed(
 		moduleGraph: ModuleGraph,
-		exportName: string | string[]
+		exportName: LibraryExport
 	): 0 | 1 | 2 | 3 | 4;
 	getUsedName(
 		moduleGraph: ModuleGraph,
-		exportName: string | string[]
-	): string | false | string[];
+		exportName: LibraryExport
+	):
+		| string
+		| boolean
+		| {
+				/**
+				 * Returns a string representation of an object.
+				 */
+				toString(): string;
+				/**
+				 * Returns the primitive value of the specified object.
+				 */
+				valueOf(): __Type_2;
+				readonly [Symbol.toStringTag]: string;
+		  }
+		| string[];
 	needBuild(
 		context: NeedBuildContext,
 		callback: (arg0: WebpackError, arg1: boolean) => void
@@ -3813,7 +3847,7 @@ declare class ModuleGraph {
 		module: Module
 	): (string | ((requestShortener: RequestShortener) => string))[];
 	getProvidedExports(module: Module): true | string[];
-	isExportProvided(module: Module, exportName: string | string[]): boolean;
+	isExportProvided(module: Module, exportName: LibraryExport): boolean;
 	getExportsInfo(module: Module): ExportsInfo;
 	getExportInfo(module: Module, exportName: string): ExportInfo;
 	getReadOnlyExportInfo(module: Module, exportName: string): ExportInfo;
@@ -5260,8 +5294,8 @@ declare interface ProgressPluginOptions {
 	profile?: boolean;
 }
 declare class ProvidePlugin {
-	constructor(definitions: Record<string, string | string[]>);
-	definitions: Record<string, string | string[]>;
+	constructor(definitions: Record<string, LibraryExport>);
+	definitions: Record<string, LibraryExport>;
 
 	/**
 	 * Apply the plugin
@@ -5542,7 +5576,7 @@ declare interface ResolveOptions {
 	/**
 	 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
 	 */
-	aliasFields?: (string | string[])[];
+	aliasFields?: LibraryExport[];
 
 	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
@@ -5582,7 +5616,7 @@ declare interface ResolveOptions {
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point.
 	 */
-	mainFields?: (string | string[])[];
+	mainFields?: LibraryExport[];
 
 	/**
 	 * Filenames used to find the default entry point if there is no description file or main field.
@@ -6146,7 +6180,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the export name
 		 */
-		exportName: string | string[];
+		exportName: LibraryExport;
 		/**
 		 * the origin module
 		 */
@@ -6474,7 +6508,7 @@ declare class Stats {
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
 	toJson(options?: any): any;
-	toString(options?: any): any;
+	toString(options?: any): void | "";
 }
 declare abstract class StatsFactory {
 	hooks: Readonly<{
@@ -6807,7 +6841,11 @@ declare abstract class StatsPrinter {
 		print: HookMap<SyncBailHook<[any, any], any>>;
 		result: HookMap<SyncWaterfallHook<[string, any]>>;
 	}>;
-	print(type?: any, object?: any, baseContext?: any): any;
+
+	/**
+	 * print
+	 */
+	print(type: string, object?: any, baseContext?: any): void;
 }
 type StatsValue =
 	| boolean
@@ -6848,9 +6886,9 @@ declare class Template {
 	static toPath(str: string): string;
 	static numberToIdentifier(n: number): string;
 	static numberToIdentifierContinuation(n: number): string;
-	static indent(s: string | string[]): string;
-	static prefix(s: string | string[], prefix: string): string;
-	static asString(str: string | string[]): string;
+	static indent(s: LibraryExport): string;
+	static prefix(s: LibraryExport, prefix: string): string;
+	static asString(str: LibraryExport): string;
 	static getModulesArrayBounds(modules: WithId[]): false | [number, number];
 	static renderChunkModules(
 		renderContext: RenderContextModuleTemplate,
@@ -6920,7 +6958,7 @@ declare interface WatchOptions {
 	/**
 	 * Ignore some files from watching (glob pattern).
 	 */
-	ignored?: string | string[];
+	ignored?: LibraryExport;
 
 	/**
 	 * Enable polling mode for watching.
@@ -6947,7 +6985,7 @@ declare abstract class Watching {
 		/**
 		 * Ignore some files from watching (glob pattern).
 		 */
-		ignored?: string | string[];
+		ignored?: LibraryExport;
 		/**
 		 * Enable polling mode for watching.
 		 */
@@ -7223,6 +7261,17 @@ type __TypeWebpackOptions = (data: {}) =>
 	  }
 	| __TypeWebpackOptions
 	| RuleSetUseItem[];
+type __Type_2 = {
+	/**
+	 * Returns a string representation of an object.
+	 */
+	toString(): string;
+	/**
+	 * Returns the primitive value of the specified object.
+	 */
+	valueOf(): __Type_2;
+	readonly [Symbol.toStringTag]: string;
+};
 declare function exports(
 	options: Configuration,
 	callback?: CallbackWebpack<Stats>
