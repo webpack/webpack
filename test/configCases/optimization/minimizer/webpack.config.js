@@ -9,7 +9,7 @@ module.exports = {
 					expect(compiler).toBeInstanceOf(Compiler);
 				}
 			},
-			function(compiler) {
+			function (compiler) {
 				expect(compiler).toBe(this);
 				expect(compiler).toBeInstanceOf(Compiler);
 			}

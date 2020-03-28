@@ -7,8 +7,8 @@ module.exports = {
 		filename: "[name].js"
 	},
 	plugins: [
-		function() {
-			this.hooks.emit.tap("TestPlugin", function(compilation) {
+		function () {
+			this.hooks.emit.tap("TestPlugin", function (compilation) {
 				delete compilation.assets["b.js"];
 			});
 		}
