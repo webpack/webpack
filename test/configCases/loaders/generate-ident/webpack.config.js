@@ -8,7 +8,7 @@ module.exports = {
 					{
 						loader: "./loader2",
 						options: {
-							f: function() {
+							f: function () {
 								return "ok";
 							}
 						}
@@ -24,7 +24,7 @@ module.exports = {
 				use: {
 					loader: "./loader2",
 					options: {
-						f: function() {
+						f: function () {
 							return "maybe";
 						}
 					}
@@ -35,7 +35,7 @@ module.exports = {
 				use: {
 					loader: "./loader2",
 					options: {
-						f: function() {
+						f: function () {
 							return "yes";
 						}
 					}
@@ -50,7 +50,7 @@ module.exports = {
 					{
 						loader: "./loader2",
 						options: {
-							f: function() {
+							f: function () {
 								return "ok";
 							}
 						}

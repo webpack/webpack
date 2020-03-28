@@ -5,7 +5,7 @@ const fs = require("graceful-fs");
 const webpack = require("../");
 const rimraf = require("rimraf");
 
-describe("Profiling Plugin", function() {
+describe("Profiling Plugin", function () {
 	jest.setTimeout(15000);
 
 	it("should handle output path with folder creation", done => {

@@ -7,7 +7,7 @@ const outputPath = path.join(__dirname, "js");
 
 const benchmarkOptions = {
 	defer: true,
-	onCycle: function() {
+	onCycle: function () {
 		process.stderr.write(".");
 	},
 	minSamples: 10

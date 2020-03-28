@@ -18,7 +18,7 @@ module.exports = {
 		importAwait: true
 	},
 	plugins: [
-		function() {
+		function () {
 			this.hooks.compilation.tap(
 				"Test",
 				/**

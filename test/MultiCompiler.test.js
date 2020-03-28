@@ -19,7 +19,7 @@ const createMultiCompiler = () => {
 	return compiler;
 };
 
-describe("MultiCompiler", function() {
+describe("MultiCompiler", function () {
 	jest.setTimeout(20000);
 
 	it("should trigger 'run' for each child compiler", done => {
@@ -53,7 +53,7 @@ describe("MultiCompiler", function() {
 		});
 	});
 
-	it("should not be run twice at a time (run)", function(done) {
+	it("should not be run twice at a time (run)", function (done) {
 		const compiler = createMultiCompiler();
 		compiler.run((err, stats) => {
 			if (err) return done(err);
@@ -62,7 +62,7 @@ describe("MultiCompiler", function() {
 			if (err) return done();
 		});
 	});
-	it("should not be run twice at a time (watch)", function(done) {
+	it("should not be run twice at a time (watch)", function (done) {
 		const compiler = createMultiCompiler();
 		const watcher = compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
@@ -71,7 +71,7 @@ describe("MultiCompiler", function() {
 			if (err) return watcher.close(done);
 		});
 	});
-	it("should not be run twice at a time (run - watch)", function(done) {
+	it("should not be run twice at a time (run - watch)", function (done) {
 		const compiler = createMultiCompiler();
 		compiler.run((err, stats) => {
 			if (err) return done(err);
@@ -80,7 +80,7 @@ describe("MultiCompiler", function() {
 			if (err) return done();
 		});
 	});
-	it("should not be run twice at a time (watch - run)", function(done) {
+	it("should not be run twice at a time (watch - run)", function (done) {
 		const compiler = createMultiCompiler();
 		let watcher;
 		watcher = compiler.watch({}, (err, stats) => {
@@ -90,7 +90,7 @@ describe("MultiCompiler", function() {
 			if (err) return watcher.close(done);
 		});
 	});
-	it("should not be run twice at a time (instance cb)", function(done) {
+	it("should not be run twice at a time (instance cb)", function (done) {
 		const compiler = webpack(
 			{
 				context: __dirname,
@@ -108,7 +108,7 @@ describe("MultiCompiler", function() {
 			if (err) return done();
 		});
 	});
-	it("should run again correctly after first compilation", function(done) {
+	it("should run again correctly after first compilation", function (done) {
 		const compiler = createMultiCompiler();
 		compiler.run((err, stats) => {
 			if (err) return done(err);
@@ -119,7 +119,7 @@ describe("MultiCompiler", function() {
 			});
 		});
 	});
-	it("should watch again correctly after first compilation", function(done) {
+	it("should watch again correctly after first compilation", function (done) {
 		const compiler = createMultiCompiler();
 		compiler.run((err, stats) => {
 			if (err) return done(err);
@@ -131,7 +131,7 @@ describe("MultiCompiler", function() {
 			});
 		});
 	});
-	it("should run again correctly after first closed watch", function(done) {
+	it("should run again correctly after first closed watch", function (done) {
 		const compiler = createMultiCompiler();
 		const watching = compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
@@ -143,7 +143,7 @@ describe("MultiCompiler", function() {
 			});
 		});
 	});
-	it("should watch again correctly after first closed watch", function(done) {
+	it("should watch again correctly after first closed watch", function (done) {
 		const compiler = createMultiCompiler();
 		const watching = compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
