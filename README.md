@@ -138,8 +138,7 @@ within webpack itself use this plugin interface. This makes webpack very
 ### [Loaders](https://webpack.js.org/loaders/)
 
 webpack enables the use of loaders to preprocess files. This allows you to bundle
-**any static resource** way beyond JavaScript. You can easily [write your own
-loaders](https://webpack.js.org/api/loaders/) using Node.js.
+**any static resource** way beyond JavaScript. You can easily [write your loaders](https://webpack.js.org/api/loaders/) using Node.js.
 
 Loaders are activated by using `loadername!` prefixes in `require()` statements,
 or are automatically applied via regex from your webpack configuration.
@@ -149,7 +148,7 @@ or are automatically applied via regex from your webpack configuration.
 |        Name         |   Status    | Install Size | Description                                                                               |
 | :-----------------: | :---------: | :----------: | :---------------------------------------------------------------------------------------- |
 |  [raw-loader][raw]  | ![raw-npm]  | ![raw-size]  | Loads raw content of a file (utf-8)                                                       |
-|  [val-loader][val]  | ![val-npm]  | ![val-size]  | Executes code as module and considers exports as JS code                                  |
+|  [val-loader][val]  | ![val-npm]  | ![val-size]  | Executes code as a module and considers exports as JS code                                  |
 |  [url-loader][url]  | ![url-npm]  | ![url-size]  | Works like the file loader, but can return a Data Url if the file is smaller than a limit |
 | [file-loader][file] | ![file-npm] | ![file-size] | Emits the file into the output folder and returns the (relative) url                      |
 
@@ -185,7 +184,7 @@ or are automatically applied via regex from your webpack configuration.
 
 |                                                                            Name                                                                            |          Status           |        Install Size        | Description                                                                                          |
 | :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------: | :------------------------: | :--------------------------------------------------------------------------------------------------- |
-|                                         <a href="https://github.com/webpack-contrib/script-loader">`<script>`</a>                                          |       ![script-npm]       |       ![script-size]       | Executes a JavaScript file once in global context (like in script tag), `require()`s are not parsed  |
+|                                         <a href="https://github.com/webpack-contrib/script-loader">`<script>`</a>                                          |       ![script-npm]       |       ![script-size]       | Executes a JavaScript file once in a global context (like in script tag), `require()`s are not parsed  |
 | <a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a> |       ![babel-npm]        |       ![babel-size]        | Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a>    |
 |       <a href="https://github.com/jupl/traceur-loader"><img width="48" height="48" src="https://google.github.com/traceur-compiler/logo/tc.svg"></a>       |      ![traceur-npm]       |      ![traceur-size]       | Loads ES2015+ code and transpiles to ES5 using [Traceur](https://github.com/google/traceur-compiler) |
 |  <a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>  |        ![type-npm]        |        ![type-size]        | Loads TypeScript like JavaScript                                                                     |
@@ -209,7 +208,7 @@ or are automatically applied via regex from your webpack configuration.
 
 |                                                                                 Name                                                                                  |     Status      |   Install Size   | Description                                                                             |
 | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :-------------------------------------------------------------------------------------- |
-|              <a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>              |   ![html-npm]   |   ![html-size]   | Exports HTML as string, requires references to static resources                         |
+|              <a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>              |   ![html-npm]   |   ![html-size]   | Exports HTML as a string, requires references to static resources                         |
 | <a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a> |   ![pug-npm]    |   ![pug-size]    | Loads Pug templates and returns a function                                              |
 |              <a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/markdown.svg"></a>              |    ![md-npm]    |    ![md-size]    | Compiles Markdown to HTML                                                               |
 |               <a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="https://posthtml.github.io/posthtml/logo.svg"></a>               | ![posthtml-npm] | ![posthtml-size] | Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml) |
@@ -321,7 +320,7 @@ Contributions go far beyond pull requests and commits. Although we love giving y
 - Spelling or grammar fixes
 - README.md corrections or redesigns
 - Adding unit, or functional tests
-- Triaging GitHub issues -- especially determining whether an issue still persists or is reproducible.
+- Triaging GitHub issues -- especially determining whether an issue persists or is reproducible.
 - [Searching #webpack on twitter](https://twitter.com/search?q=webpack) and helping someone else who needs help
 - Teaching others how to contribute to one of the many webpack's repos!
 - [Blogging, speaking about, or creating tutorials](https://github.com/webpack-contrib/awesome-webpack) about one of webpack's many features.
@@ -329,19 +328,19 @@ Contributions go far beyond pull requests and commits. Although we love giving y
 
 To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/master/CONTRIBUTING.md).
 
-If you are worried or don't know where to start, you can **always** reach out to [Sean Larkin (@TheLarkInn) on Twitter](https://twitter.com/thelarkinn) or simply submit an issue and a maintainer can help give you guidance!
+If you are worried or don't know where to start, you can **always** reach out to [Sean Larkin (@TheLarkInn) on Twitter](https://twitter.com/thelarkinn) or simply submit an issue and a maintainer can help to guide you!
 
 We have also started a series on our [Medium Publication](https://medium.com/webpack) called [The Contributor's Guide to webpack](https://medium.com/webpack/contributors-guide/home). We welcome you to read it and post any questions or responses if you still need help.
 
 _Looking to speak about webpack?_ We'd **love** to review your talk abstract/CFP! You can email it to webpack [at] opencollective [dot] com and we can give pointers or tips!!!
 
-<h3 align="center">Creating your own plugins and loaders</h3>
+<h3 align="center">Creating your plugins and loaders</h3>
 
 If you create a loader or plugin, we would <3 for you to open source it, and put it on npm. We follow the `x-loader`, `x-webpack-plugin` naming convention.
 
 <h2 align="center">Support</h2>
 
-We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of its flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways to improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
+We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of its flexibility, webpack isn't always the _easiest_ entry-level solution. However, we do believe it is the most powerful. That said, we're always looking for ways to improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
 
 If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high level overview that is great for beginners!!
 
@@ -740,14 +739,14 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 <p align="center">(In chronological order)</p>
 
 - [@google](https://github.com/google) for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
-- [@medikoo](https://github.com/medikoo) for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webmake. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
+- [@medikoo](https://github.com/medikoo) for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webmake. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur[https://github.com/phoscur] for the discussion).
 - [@substack](https://github.com/substack) for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
 - [@jrburke](https://github.com/jrburke) for [require.js](https://requirejs.org/), which is a similar project and source for many ideas.
 - [@defunctzombie](https://github.com/defunctzombie) for the [browser-field spec](https://github.com/defunctzombie/package-browser-field-spec), which makes modules available for node.js, browserify and webpack.
 - Every early webpack user, which contributed to webpack by writing issues or PRs. You influenced the direction...
 - [@shama](https://github.com/shama), [@jhnns](https://github.com/jhnns) and [@sokra](https://github.com/sokra) for maintaining this project
 - Everyone who has written a loader for webpack. You are the ecosystem...
-- Everyone I forgot to mention here, but also influenced webpack.
+- Everyone I forgot to mention here but also influenced webpack.
 
 [npm]: https://img.shields.io/npm/v/webpack.svg
 [npm-url]: https://npmjs.com/package/webpack
