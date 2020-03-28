@@ -60,7 +60,7 @@ yarn test:update-snapshots
 ### To run code formatter (prettier) run
 
 ```bash
-yarn pretty
+yarn pretty-lint --write
 ```
 
 ### To run all linters use
