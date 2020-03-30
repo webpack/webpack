@@ -514,9 +514,9 @@
   integrity sha512-E6M6N0blf/jiZx8Q3nb0vNaswQeEyn0XlupO+xN6DtJ6r6IT4nXrTry7zhIfYvFCl3/8Cu6WIysmUBKiqV0bqQ==
 
 "@types/node@^12.6.9":
-  version "12.12.32"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.32.tgz#0ccc836d273e8a3cddf568daf22729cfa57c1925"
-  integrity sha512-44/reuCrwiQEsXud3I5X3sqI5jIXAmHB5xoiyKUw965olNHF3IWKjBLKK3F9LOSUZmK+oDt8jmyO637iX+hMgA==
+  version "12.12.33"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.33.tgz#800eed80f280f591a5fa942b7d3ee0db6b56d254"
+  integrity sha512-KXxfbd6nOiC0rF/JV2F93nZEKecoKPJ+VQTwrApXHj9g5fyUmnIloflMT3w3m9wdCqNEJExGWFXLmimo21DLNA==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
