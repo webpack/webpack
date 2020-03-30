@@ -9,7 +9,7 @@ describe("JavascriptParser", () => {
 	/* eslint-disable no-inner-declarations */
 	const testCases = {
 		"call ident": [
-			function() {
+			function () {
 				abc("test");
 			},
 			{
@@ -17,7 +17,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"call member": [
-			function() {
+			function () {
 				cde.abc("membertest");
 			},
 			{
@@ -25,7 +25,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"call member using bracket notation": [
-			function() {
+			function () {
 				cde["abc"]("membertest");
 			},
 			{
@@ -33,7 +33,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"call inner member": [
-			function() {
+			function () {
 				cde.ddd.abc("inner");
 			},
 			{
@@ -41,7 +41,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"call inner member using bracket notation": [
-			function() {
+			function () {
 				cde.ddd["abc"]("inner");
 			},
 			{
@@ -49,7 +49,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		expression: [
-			function() {
+			function () {
 				fgh;
 			},
 			{
@@ -57,7 +57,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"expression sub": [
-			function() {
+			function () {
 				fgh.sub;
 			},
 			{
@@ -65,7 +65,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"member expression": [
-			function() {
+			function () {
 				test[memberExpr];
 				test[+memberExpr];
 			},
@@ -74,8 +74,8 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"in function definition": [
-			function() {
-				(function(abc, cde, fgh) {
+			function () {
+				(function (abc, cde, fgh) {
 					abc("test");
 					cde.abc("test");
 					cde.ddd.abc("test");
@@ -86,7 +86,7 @@ describe("JavascriptParser", () => {
 			{}
 		],
 		"const definition": [
-			function() {
+			function () {
 				let abc, cde, fgh;
 				abc("test");
 				cde.abc("test");
@@ -97,7 +97,7 @@ describe("JavascriptParser", () => {
 			{}
 		],
 		"var definition": [
-			function() {
+			function () {
 				var abc, cde, fgh;
 				abc("test");
 				cde.abc("test");
@@ -108,7 +108,7 @@ describe("JavascriptParser", () => {
 			{}
 		],
 		"function definition": [
-			function() {
+			function () {
 				function abc() {}
 
 				function cde() {}
@@ -123,7 +123,7 @@ describe("JavascriptParser", () => {
 			{}
 		],
 		"class definition": [
-			function() {
+			function () {
 				class memberExpr {
 					cde() {
 						abc("cde");
@@ -140,7 +140,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"in try": [
-			function() {
+			function () {
 				try {
 					fgh.sub;
 					fgh;
@@ -160,7 +160,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"renaming with const": [
-			function() {
+			function () {
 				const xyz = abc;
 				xyz("test");
 			},
@@ -169,7 +169,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"renaming with var": [
-			function() {
+			function () {
 				var xyz = abc;
 				xyz("test");
 			},
@@ -178,7 +178,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"renaming with assignment": [
-			function() {
+			function () {
 				const xyz = abc;
 				xyz("test");
 			},
@@ -187,8 +187,8 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"renaming with IIFE": [
-			function() {
-				!(function(xyz) {
+			function () {
+				!(function (xyz) {
 					xyz("test");
 				})(abc);
 			},
@@ -197,8 +197,8 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"renaming arguments with IIFE (called)": [
-			function() {
-				!function(xyz) {
+			function () {
+				!function (xyz) {
 					xyz("test");
 				}.call(fgh, abc);
 			},
@@ -208,8 +208,8 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"renaming this's properties with IIFE (called)": [
-			function() {
-				!function() {
+			function () {
+				!function () {
 					this.sub;
 				}.call(ijk);
 			},
@@ -218,9 +218,9 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"renaming this's properties with nested IIFE (called)": [
-			function() {
-				!function() {
-					!function() {
+			function () {
+				!function () {
+					!function () {
 						this.sub;
 					}.call(this);
 				}.call(ijk);
@@ -230,7 +230,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"new Foo(...)": [
-			function() {
+			function () {
 				new xyz("membertest");
 			},
 			{
@@ -238,7 +238,7 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"spread calls/literals": [
-			function() {
+			function () {
 				var xyz = [...abc("xyz"), cde];
 				Math.max(...fgh);
 			},
