@@ -2185,7 +2185,7 @@ declare class ExportInfo {
 	/**
 	 * get used name
 	 */
-	getUsedName(fallbackName?: string): string | boolean | typeof SKIP_OVER_NAME;
+	getUsedName(fallbackName?: string): string | false | typeof SKIP_OVER_NAME;
 	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): ExportsInfo;
 	getUsedInfo():
@@ -2249,23 +2249,7 @@ declare class ExportsInfo {
 	getProvidedExports(): true | string[];
 	isExportProvided(name: LibraryExport): boolean;
 	isExportUsed(name: LibraryExport): 0 | 1 | 2 | 3 | 4;
-	getUsedName(
-		name: LibraryExport
-	):
-		| string
-		| boolean
-		| {
-				/**
-				 * Returns a string representation of an object.
-				 */
-				toString(): string;
-				/**
-				 * Returns the primitive value of the specified object.
-				 */
-				valueOf(): __Type_2;
-				readonly [Symbol.toStringTag]: string;
-		  }
-		| string[];
+	getUsedName(name: LibraryExport): string | false | string[];
 	getRestoreProvidedData(): any;
 	restoreProvided(__0: {
 		otherProvided: any;
@@ -3669,21 +3653,7 @@ declare class Module extends DependenciesBlock {
 	getUsedName(
 		moduleGraph: ModuleGraph,
 		exportName: LibraryExport
-	):
-		| string
-		| boolean
-		| {
-				/**
-				 * Returns a string representation of an object.
-				 */
-				toString(): string;
-				/**
-				 * Returns the primitive value of the specified object.
-				 */
-				valueOf(): __Type_2;
-				readonly [Symbol.toStringTag]: string;
-		  }
-		| string[];
+	): string | false | string[];
 	needBuild(
 		context: NeedBuildContext,
 		callback: (arg0: WebpackError, arg1: boolean) => void
@@ -7261,17 +7231,6 @@ type __TypeWebpackOptions = (data: {}) =>
 	  }
 	| __TypeWebpackOptions
 	| RuleSetUseItem[];
-type __Type_2 = {
-	/**
-	 * Returns a string representation of an object.
-	 */
-	toString(): string;
-	/**
-	 * Returns the primitive value of the specified object.
-	 */
-	valueOf(): __Type_2;
-	readonly [Symbol.toStringTag]: string;
-};
 declare function exports(
 	options: Configuration,
 	callback?: CallbackWebpack<Stats>
