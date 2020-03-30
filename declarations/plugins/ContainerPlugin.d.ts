@@ -11,11 +11,11 @@ export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 /**
  * Specify which export should be exposed as library.
  */
-export type LibraryExport = string | string[];
+export type LibraryExport = string[] | string;
 /**
  * The name of the library (some types allow unnamed libraries too).
  */
-export type LibraryName = string | string[] | LibraryCustomUmdObject;
+export type LibraryName = string[] | string | LibraryCustomUmdObject;
 /**
  * Type of library.
  */
@@ -136,5 +136,5 @@ export interface LibraryCustomUmdObject {
 	/**
 	 * Name of the property exposed globally by a UMD library.
 	 */
-	root?: string | string[];
+	root?: string[] | string;
 }

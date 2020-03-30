@@ -63,16 +63,16 @@
           "description": "Name of the property exposed globally by a UMD library.",
           "anyOf": [
             {
-              "type": "string",
-              "minLength": 1
-            },
-            {
               "type": "array",
               "items": {
                 "description": "Part of the name of the property exposed globally by a UMD library.",
                 "type": "string",
                 "minLength": 1
               }
+            },
+            {
+              "type": "string",
+              "minLength": 1
             }
           ]
         }
@@ -82,16 +82,16 @@
       "description": "Specify which export should be exposed as library.",
       "anyOf": [
         {
-          "type": "string",
-          "minLength": 1
-        },
-        {
           "type": "array",
           "items": {
             "description": "Part of the export that should be exposed as library.",
             "type": "string",
             "minLength": 1
           }
+        },
+        {
+          "type": "string",
+          "minLength": 1
         }
       ]
     },
@@ -99,16 +99,16 @@
       "description": "The name of the library (some types allow unnamed libraries too).",
       "anyOf": [
         {
-          "type": "string",
-          "minLength": 1
-        },
-        {
           "type": "array",
           "items": {
             "description": "A part of the library name.",
             "type": "string",
             "minLength": 1
           }
+        },
+        {
+          "type": "string",
+          "minLength": 1
         },
         {
           "$ref": "#/definitions/LibraryCustomUmdObject"
