@@ -1190,7 +1190,7 @@ exports[`StatsTestCases should print correct stats for immutable 1`] = `
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
-"Hash: 5e1865f3f46f484bbbaf
+"Hash: 929ca56c76e036db72a4
 Time: X ms
 Built at: 1970-04-20 12:42:42
    Asset       Size
