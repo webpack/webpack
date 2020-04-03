@@ -256,11 +256,11 @@ describe("BenchmarkTestCases", function () {
 						const z = tDistribution(n - 1);
 						stats.minConfidence = stats.mean - (z * stats.deviation) / nSqrt;
 						stats.maxConfidence = stats.mean + (z * stats.deviation) / nSqrt;
-						stats.text = `${Math.round(stats.mean * 1000)}ms ± ${Math.round(
+						stats.text = `${Math.round(stats.mean * 1000)} ms ± ${Math.round(
 							stats.deviation * 1000
-						)}ms [${Math.round(stats.minConfidence * 1000)}ms; ${Math.round(
+						)} ms [${Math.round(stats.minConfidence * 1000)} ms; ${Math.round(
 							stats.maxConfidence * 1000
-						)}ms]`;
+						)} ms]`;
 						callback(null, bench.stats);
 					},
 					onError: callback

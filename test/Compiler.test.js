@@ -771,7 +771,7 @@ describe("Compiler", () => {
 			});
 			compiler.outputFileSystem = createFsFromVolume(new Volume());
 			compiler.run((err, stats) => {
-				expect(capture.toString().replace(/[\d.]+ms/, "Xms"))
+				expect(capture.toString().replace(/[\d.]+ ms/, "X ms"))
 					.toMatchInlineSnapshot(`
 "<-> [MyPlugin] Group
   <e> [MyPlugin] Error
@@ -780,7 +780,7 @@ describe("Compiler", () => {
       [MyPlugin] Log
   <-> [MyPlugin] Collaped group
         [MyPlugin] Log inside collapsed group
-<t> [MyPlugin] Time: Xms
+<t> [MyPlugin] Time: X ms
 "
 `);
 				done();
@@ -802,7 +802,7 @@ describe("Compiler", () => {
 			});
 			compiler.outputFileSystem = createFsFromVolume(new Volume());
 			compiler.run((err, stats) => {
-				expect(capture.toString().replace(/[\d.]+ms/, "Xms"))
+				expect(capture.toString().replace(/[\d.]+ ms/, "X ms"))
 					.toMatchInlineSnapshot(`
 "<-> [MyPlugin] Group
   <e> [MyPlugin] Error
@@ -812,7 +812,7 @@ describe("Compiler", () => {
       [MyPlugin] Debug
   <-> [MyPlugin] Collaped group
         [MyPlugin] Log inside collapsed group
-<t> [MyPlugin] Time: Xms
+<t> [MyPlugin] Time: X ms
 "
 `);
 				done();
