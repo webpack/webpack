@@ -15,10 +15,10 @@ describe("Dependencies", () => {
 		for (const dep of Object.keys(content)) {
 			describe(dep, () => {
 				const info = content[dep];
-				it("should resolve to a npm package", () => {
+				it("should resolve to an npm package", () => {
 					expect(info.resolved).toMatch(/^https:\/\/registry\.yarnpkg\.com\//);
 				});
-				it("should have a integrity hash", () => {
+				it("should have an integrity hash", () => {
 					expect(info.integrity).toMatch(/^(sha1|sha512)-/);
 				});
 			});

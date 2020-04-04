@@ -2492,11 +2492,11 @@ LOG from webpack.buildChunkGraph
 <t> visitModules: visiting: Xms
 <t> visitModules: calculating available modules: Xms
 <t> visitModules: merging available modules: Xms
-<t> visitModules: check modules for revist: Xms
+<t> visitModules: check modules for revisit: Xms
 <t> visitModules: visiting: Xms
 <t> visitModules: calculating available modules: Xms
 <t> visitModules: merging available modules: Xms
-<t> visitModules: check modules for revist: Xms
+<t> visitModules: check modules for revisit: Xms
 <t> visitModules: visiting: Xms
 <t> visitModules: Xms
 <t> connectChunkGroups: Xms
@@ -3575,12 +3575,12 @@ Child switched:
     WARNING in SplitChunksPlugin
     Cache group defaultVendors
     Configured minSize (1000 bytes) is bigger than maxSize (100 bytes).
-    This seem to be a invalid optimiziation.splitChunks configuration.
+    This seem to be a invalid optimization.splitChunks configuration.
 
     WARNING in SplitChunksPlugin
     Fallback cache group
     Configured minSize (1000 bytes) is bigger than maxSize (100 bytes).
-    This seem to be a invalid optimiziation.splitChunks configuration.
+    This seem to be a invalid optimization.splitChunks configuration.
 
 Child zero-min:
     Entrypoint main = zero-min-869.js zero-min-410.js zero-min-main-10f51d07.js zero-min-main-3c98d7c3.js zero-min-main-6bb16544.js zero-min-main-1df31ce3.js zero-min-main-2f7dcf2e.js zero-min-main-e7c5ace7.js zero-min-main-5cfff2c6.js zero-min-main-1443e336.js zero-min-main-77a8c116.js zero-min-main-89a43a0f.js zero-min-main-12217e1d.js

@@ -4,11 +4,11 @@ const ts = require("typescript");
 const program = require("./typescript-program");
 
 // When --override is set, base jsdoc will override sub class jsdoc
-// Elsewise on a conflict it will create a merge conflict in the file
+// Otherwise on a conflict it will create a merge conflict in the file
 const override = process.argv.includes("--override");
 
 // When --write is set, files will be written in place
-// Elsewise it only prints outdated files
+// Otherwise it only prints outdated files
 const doWrite = process.argv.includes("--write");
 
 const typeChecker = program.getTypeChecker();

@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 
 // When --write is set, files will be written in place
-// Elsewise it only prints outdated files
+// Otherwise it only prints outdated files
 const doWrite = process.argv.includes("--write");
 
 const allFiles = new Set();

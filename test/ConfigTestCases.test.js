@@ -43,7 +43,7 @@ describe("ConfigTestCases", () => {
 	categories.forEach(category => {
 		describe(category.name, () => {
 			category.tests.forEach(testName => {
-				describe(testName, function() {
+				describe(testName, function () {
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const outputDirectory = path.join(
 						__dirname,
@@ -84,7 +84,7 @@ describe("ConfigTestCases", () => {
 										options.output.filename = "bundle" + idx + ".js";
 								});
 								let testConfig = {
-									findBundle: function(i, options) {
+									findBundle: function (i, options) {
 										const ext = path.extname(options.output.filename);
 										if (
 											fs.existsSync(

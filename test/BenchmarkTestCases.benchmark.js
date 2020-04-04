@@ -6,9 +6,9 @@ const asyncLib = require("neo-async");
 const Benchmark = require("benchmark");
 const { remove } = require("./helpers/remove");
 
-describe("BenchmarkTestCases", function() {
+describe("BenchmarkTestCases", function () {
 	const casesPath = path.join(__dirname, "benchmarkCases");
-	const tests = fs.readdirSync(casesPath).filter(function(folder) {
+	const tests = fs.readdirSync(casesPath).filter(function (folder) {
 		return (
 			folder.indexOf("_") < 0 &&
 			fs.existsSync(path.resolve(casesPath, folder, "webpack.config.js"))
@@ -25,7 +25,7 @@ describe("BenchmarkTestCases", function() {
 		fs.mkdirSync(baselinesPath);
 	} catch (e) {} // eslint-disable-line no-empty
 
-	beforeAll(function(done) {
+	beforeAll(function (done) {
 		const git = require("simple-git");
 		const rootPath = path.join(__dirname, "..");
 		getBaselineRevs(rootPath, (err, baselineRevisions) => {
@@ -231,7 +231,7 @@ describe("BenchmarkTestCases", function() {
 		const warmupCompiler = webpack(config, (err, stats) => {
 			warmupCompiler.purgeInputFileSystem();
 			const bench = new Benchmark(
-				function(deferred) {
+				function (deferred) {
 					const compiler = webpack(config, (err, stats) => {
 						compiler.purgeInputFileSystem();
 						if (err) {
@@ -249,7 +249,7 @@ describe("BenchmarkTestCases", function() {
 					maxTime: 30,
 					defer: true,
 					initCount: 1,
-					onComplete: function() {
+					onComplete: function () {
 						const stats = bench.stats;
 						const n = stats.sample.length;
 						const nSqrt = Math.sqrt(n);
@@ -276,10 +276,10 @@ describe("BenchmarkTestCases", function() {
 		tests.forEach(testName => {
 			const testDirectory = path.join(casesPath, testName);
 			let headStats = null;
-			describe(`${testName} create benchmarks`, function() {
+			describe(`${testName} create benchmarks`, function () {
 				baselines.forEach(baseline => {
 					let baselineStats = null;
-					it(`should benchmark ${baseline.name} (${baseline.rev})`, function(done) {
+					it(`should benchmark ${baseline.name} (${baseline.rev})`, function (done) {
 						const outputDirectory = path.join(
 							__dirname,
 							"js",
@@ -330,7 +330,7 @@ describe("BenchmarkTestCases", function() {
 					}, 180000);
 
 					if (baseline.name !== "HEAD") {
-						it(`HEAD should not be slower than ${baseline.name} (${baseline.rev})`, function() {
+						it(`HEAD should not be slower than ${baseline.name} (${baseline.rev})`, function () {
 							if (baselineStats.maxConfidence < headStats.minConfidence) {
 								throw new Error(
 									`HEAD (${headStats.text}) is slower than ${baseline.name} (${baselineStats.text}) (90% confidence)`

@@ -1,11 +1,11 @@
-This example shows how you can mix different module styles in webpack. Here CommonJs, AMD and Harmony Modules (ES6 Modules) are used. In addition to that there are different types of dynamic requires (`"../require.context/templates/"+amd1+".js"` and `Math.random() < 0.5 ? "./commonjs" : "./amd"`).
+This example shows how you can mix different module styles in webpack. Here CommonJS, AMD and Harmony Modules (ES6 Modules) are used. In addition to that there are different types of dynamic requires (`"../require.context/templates/"+amd1+".js"` and `Math.random() < 0.5 ? "./commonjs" : "./amd"`).
 
 You see that everything is working nicely together.
 
 # example.js
 
 ```javascript
-// CommonJs-style requires
+// CommonJS-style requires
 var commonjs1 = require("./commonjs");
 var amd1 = require("./amd");
 var harmony1 = require("./harmony");
@@ -41,7 +41,7 @@ define(
 # commonjs.js
 
 ```javascript
-// CommonJs Module Format
+// CommonJS Module Format
 module.exports = 123;
 
 // but you can use amd style requires
@@ -68,7 +68,7 @@ require(
 /*! runtime requirements: module, __webpack_require__, __webpack_require__.oe, __webpack_require__.* */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-// CommonJs Module Format
+// CommonJS Module Format
 module.exports = 123;
 
 // but you can use amd style requires

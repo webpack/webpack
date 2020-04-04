@@ -6,7 +6,7 @@
 
 export interface OccurrenceChunkIdsPluginOptions {
 	/**
-	 * Prioritise initial size over total size
+	 * Prioritise initial size over total size.
 	 */
 	prioritiseInitial?: boolean;
 }

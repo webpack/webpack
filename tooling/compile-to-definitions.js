@@ -11,7 +11,7 @@ const style = {
 };
 
 // When --write is set, files will be written in place
-// Elsewise it only prints outdated files
+// Otherwise it only prints outdated files
 const doWrite = process.argv.includes("--write");
 
 const makeSchemas = () => {
@@ -107,6 +107,17 @@ const preprocessSchema = (schema, root = schema) => {
 					description: result.description,
 					anyOf: [property]
 				};
+			} else if (
+				"oneOf" in property &&
+				property.oneOf.length === 1 &&
+				"$ref" in property.oneOf[0]
+			) {
+				const result = resolvePath(root, property.oneOf[0].$ref);
+				schema.properties[key] = {
+					description: property.description || result.description,
+					anyOf: property.oneOf
+				};
+				preprocessSchema(schema.properties[key], root);
 			} else {
 				preprocessSchema(property, root);
 			}

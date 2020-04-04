@@ -5,7 +5,7 @@ const prettier = require("prettier");
 const schemasDir = path.resolve(__dirname, "../schemas");
 
 // When --write is set, files will be written in place
-// Elsewise it only prints outdated files
+// Otherwise it only prints outdated files
 const doWrite = process.argv.includes("--write");
 
 const sortObjectAlphabetically = obj => {
@@ -15,6 +15,31 @@ const sortObjectAlphabetically = obj => {
 		newObj[key] = obj[key];
 	}
 	return newObj;
+};
+
+const typeOrder = [
+	"array",
+	"enum",
+	"RegExp",
+	"number",
+	"boolean",
+	"string",
+	"object",
+	"Function",
+	undefined
+];
+
+const sortArrayByType = array => {
+	array.sort((a, b) => {
+		const aType = a.type || a.instanceof || (a.enum && "enum");
+		const bType = b.type || b.instanceof || (b.enum && "enum");
+		const aPos = typeOrder.indexOf(aType);
+		const bPos = typeOrder.indexOf(bType);
+		if (aPos === bPos) {
+			return array.indexOf(a) - array.indexOf(b);
+		}
+		return aPos - bPos;
+	});
 };
 
 const sortObjectWithList = (obj, props) => {
@@ -42,6 +67,8 @@ const PROPERTIES = [
 	"title",
 	"description",
 	"type",
+
+	"cli",
 
 	"items",
 	"minItems",
@@ -94,6 +121,7 @@ const processJson = json => {
 			for (let i = 0; i < json[name].length; i++) {
 				json[name][i] = processJson(json[name][i]);
 			}
+			sortArrayByType(json[name]);
 		}
 	}
 

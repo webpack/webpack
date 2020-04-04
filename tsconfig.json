@@ -15,6 +15,7 @@
   "include": [
     "declarations.d.ts",
     "declarations/*.d.ts",
+    "schemas/*.json",
     "bin/*.js",
     "lib/**/*.js",
     "tooling/**/*.js"

@@ -1,6 +1,6 @@
-var testPlugin = function() {
+var testPlugin = function () {
 	this.hooks.compilation.tap("TestPlugin", compilation => {
-		compilation.hooks.finishModules.tapAsync("TestPlugin", function(
+		compilation.hooks.finishModules.tapAsync("TestPlugin", function (
 			_modules,
 			callback
 		) {

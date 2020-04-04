@@ -4,17 +4,17 @@
   "additionalProperties": false,
   "properties": {
     "paths": {
-      "description": "A list of RegExps or absolute paths to directories or files that should be ignored",
+      "description": "A list of RegExps or absolute paths to directories or files that should be ignored.",
       "type": "array",
       "items": {
-        "description": "RegExp or absolute path to directories or files that should be ignored",
-        "oneOf": [
-          {
-            "type": "string"
-          },
+        "description": "RegExp or absolute path to directories or files that should be ignored.",
+        "anyOf": [
           {
             "instanceof": "RegExp",
             "tsType": "RegExp"
+          },
+          {
+            "type": "string"
           }
         ]
       },

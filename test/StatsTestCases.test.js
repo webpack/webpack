@@ -85,7 +85,7 @@ describe("StatsTestCases", () => {
 			compilers.forEach(c => {
 				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
-				c.inputFileSystem.readFile = function() {
+				c.inputFileSystem.readFile = function () {
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
 					ifs.readFile.apply(

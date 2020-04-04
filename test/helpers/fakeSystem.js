@@ -18,10 +18,18 @@ const System = {
 			}
 			entry.exports = result;
 		};
+		const systemContext = {
+			meta: {
+				url: `/${name}.js`
+			},
+			import() {
+				return Promise.resolve();
+			}
+		};
 		if (name in System.registry) {
 			throw new Error(`Module ${name} is already registered`);
 		}
-		const mod = fn(dynamicExport);
+		const mod = fn(dynamicExport, systemContext);
 		if (deps.length > 0) {
 			if (!Array.isArray(mod.setters)) {
 				throw new Error(
@@ -69,8 +77,9 @@ const System = {
 			m.executed = true;
 			for (let i = 0; i < m.deps.length; i++) {
 				const dep = m.deps[i];
+				const setters = m.mod.setters[i];
 				System.ensureExecuted(dep);
-				m.mod.setters[i](System.registry[dep].exports);
+				setters(System.registry[dep].exports);
 			}
 			m.mod.execute();
 		}

@@ -34,6 +34,7 @@ describe("Schemas", () => {
 					"$ref",
 					"$id",
 					"title",
+					"cli",
 					"items",
 					"properties",
 					"additionalProperties",
@@ -56,10 +57,23 @@ describe("Schemas", () => {
 					"not"
 				];
 
+				const isReference = schema => {
+					return (
+						"$ref" in schema ||
+						("oneOf" in schema &&
+							schema.oneOf.length === 1 &&
+							"$ref" in schema.oneOf[0])
+					);
+				};
+
 				const validateProperty = property => {
+					if (isReference(property)) return;
 					it("should have description set", () => {
 						expect(typeof property.description).toBe("string");
 						expect(property.description.length).toBeGreaterThan(1);
+						expect(property.description).toMatch(/^[A-Z`]/);
+						expect(property.description).toEndWith(".");
+						expect(property.description).not.toEndWith("..");
 					});
 				};
 
@@ -85,11 +99,17 @@ describe("Schemas", () => {
 							);
 							if (otherProperties.length > 0) {
 								throw new Error(
-									`When using $ref not other properties are possible (${otherProperties.join(
+									`When using $ref other properties are not possible (${otherProperties.join(
 										", "
 									)})`
 								);
 							}
+						});
+					}
+
+					if ("type" in item) {
+						it("should have a single type", () => {
+							expect(item.type).toBeTypeOf("string");
 						});
 					}
 
@@ -124,15 +144,29 @@ describe("Schemas", () => {
 					arrayProperties.forEach(prop => {
 						if (prop in item) {
 							describe(prop, () => {
+								it("should not double nest array properties", () => {
+									for (const nestedProp of arrayProperties) {
+										for (const value of item[prop])
+											expect(value).not.toHaveProperty(nestedProp);
+									}
+								});
+								if (prop === "oneOf") {
+									it("should have only one item which is a $ref", () => {
+										expect(item[prop].length).toBe(1);
+										expect(Object.keys(item[prop][0])).toEqual(["$ref"]);
+									});
+								} else {
+									it("should have multiple items", () => {
+										expect(item[prop].length).toBeGreaterThan(1);
+									});
+								}
 								item[prop].forEach(walker);
 							});
 						}
 					});
 					if ("items" in item) {
 						describe("items", () => {
-							if (Object.keys(item.items).join() !== "$ref") {
-								validateProperty(item.items);
-							}
+							validateProperty(item.items);
 							walker(item.items);
 						});
 					}
@@ -155,18 +189,14 @@ describe("Schemas", () => {
 						Object.keys(item.properties).forEach(name => {
 							describe(`> '${name}'`, () => {
 								const property = item.properties[name];
-								if (Object.keys(property).join() !== "$ref") {
-									validateProperty(property);
-								}
+								validateProperty(property);
 								walker(property);
 							});
 						});
 					}
 					if (typeof item.additionalProperties === "object") {
 						describe("properties", () => {
-							if (Object.keys(item.additionalProperties).join() !== "$ref") {
-								validateProperty(item.additionalProperties);
-							}
+							validateProperty(item.additionalProperties);
 							walker(item.additionalProperties);
 						});
 					}
