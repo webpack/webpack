@@ -1,26 +1,20 @@
 const ModuleFederationPlugin = require("../../../../lib/container/ModuleFederationPlugin");
 
-const webpack = require("../../../../");
-
-function createConfig(system) {
-	const systemString = "" + system;
+function createConfig() {
 	return {
+		output: {
+			libraryTarget: "system"
+		},
 		externalsType: "system",
-		name: `system_${systemString}`,
+		name: `system_js_build`,
 		module: {
 			rules: [
 				{
-					test: /\.js$/,
-					parser: {
-						system
-					}
+					test: /\.js$/
 				}
 			]
 		},
 		plugins: [
-			new webpack.DefinePlugin({
-				__SYSTEM__: systemString
-			}),
 			new ModuleFederationPlugin({
 				name: "container",
 				filename: "container.js",
@@ -33,8 +27,4 @@ function createConfig(system) {
 	};
 }
 
-module.exports = [
-	createConfig(undefined),
-	createConfig(true),
-	createConfig(false)
-];
+module.exports = createConfig();

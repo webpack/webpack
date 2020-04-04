@@ -1,3 +1,5 @@
+const System = require("../../../helpers/fakeSystem");
+
 module.exports = {
 	moduleScope(scope) {
 		scope.ABC = {
