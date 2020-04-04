@@ -736,7 +736,7 @@ export interface FileCacheOptions {
 	 */
 	name?: string;
 	/**
-	 * Write relative to cache folder paths instead of absolute
+	 * Write relative to cache folder paths instead of absolute.
 	 */
 	portable?: boolean;
 	/**
