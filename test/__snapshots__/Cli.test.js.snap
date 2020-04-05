@@ -186,6 +186,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "cache-portable": Object {
+    "configs": Array [
+      Object {
+        "description": "Write relative to cache folder paths instead of absolute.",
+        "multiple": false,
+        "path": "cache.portable",
+        "type": "boolean",
+      },
+    ],
+    "description": "Write relative to cache folder paths instead of absolute.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "cache-store": Object {
     "configs": Array [
       Object {
