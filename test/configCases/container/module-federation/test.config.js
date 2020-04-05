@@ -1,7 +1,11 @@
 const System = require("../../../helpers/fakeSystem");
 
 module.exports = {
+	beforeExecute: () => {
+		System.init();
+	},
 	moduleScope(scope) {
+		scope.System = System;
 		scope.ABC = {
 			get(module) {
 				return new Promise(resolve => {
@@ -24,5 +28,8 @@ module.exports = {
 				});
 			}
 		};
+	},
+	afterExecute: () => {
+		System.execute("(anonym)");
 	}
 };

@@ -5,12 +5,14 @@ function createConfig() {
 		output: {
 			libraryTarget: "system"
 		},
-		externalsType: "system",
-		name: `system_js_build`,
+		//externalsType: "system",
 		module: {
 			rules: [
 				{
-					test: /\.js$/
+					test: /\.js$/,
+					parser: {
+						system: false
+					}
 				}
 			]
 		},

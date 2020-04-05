@@ -1,5 +1,3 @@
-const System = require("../../../helpers/fakeSystem");
-
 import abc from "abc/hello-world";
 import def, { module } from "def/hello-world";
 import def2, { module as module2 } from "def/hello/other/world";
