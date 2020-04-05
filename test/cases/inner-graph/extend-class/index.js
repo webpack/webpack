@@ -1,7 +1,7 @@
 import {exportsInfoForA, exportsInfoForB} from "./dep2";
 
 it("should load module correctly", () => {
-	return require("./module");
+	require("./module");
 });
 
 it("B should not be used", () => {
