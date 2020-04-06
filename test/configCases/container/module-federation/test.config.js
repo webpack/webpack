@@ -6,12 +6,7 @@ module.exports = {
 	},
 	moduleScope(scope) {
 		scope.System = System;
-		// System.register("´ABC", [], ($__export)=>{
-		// 	$__export()
-		//
-		// );
-
-		System.register("´ABC", [], $__export => {
+		System.register("ABC", [], $__export => {
 			$__export({
 				get(module) {
 					return new Promise(resolve => {
@@ -22,7 +17,7 @@ module.exports = {
 				}
 			});
 		});
-		System.register("´DEF", [], $__export => {
+		System.register("DEF", [], $__export => {
 			$__export({
 				get(module) {
 					return new Promise(resolve => {
