@@ -6,7 +6,7 @@ module.exports = {
 	},
 	moduleScope(scope) {
 		scope.System = System;
-		scope.ABC = {
+		System.register("´ABC", [], {
 			get(module) {
 				return new Promise(resolve => {
 					setTimeout(() => {
@@ -14,7 +14,21 @@ module.exports = {
 					}, 100);
 				});
 			}
-		};
+		});
+		System.register("´DEF", [], {
+
+			get(module) {
+				return new Promise(resolve => {
+					setTimeout(() => {
+						resolve(() => ({
+							__esModule: true,
+							module,
+							default: "def"
+						}));
+					}, 100);
+				});
+			}
+		})
 		scope.DEF = {
 			get(module) {
 				return new Promise(resolve => {
