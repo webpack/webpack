@@ -6,29 +6,37 @@ module.exports = {
 	},
 	moduleScope(scope) {
 		scope.System = System;
-		System.register("´ABC", [], {
-			get(module) {
-				return new Promise(resolve => {
-					setTimeout(() => {
-						resolve(() => "abc " + module);
-					}, 100);
-				});
-			}
-		});
-		System.register("´DEF", [], {
+		// System.register("´ABC", [], ($__export)=>{
+		// 	$__export()
+		//
+		// );
 
-			get(module) {
-				return new Promise(resolve => {
-					setTimeout(() => {
-						resolve(() => ({
-							__esModule: true,
-							module,
-							default: "def"
-						}));
-					}, 100);
-				});
-			}
-		})
+		System.register("´ABC", [], $__export => {
+			$__export({
+				get(module) {
+					return new Promise(resolve => {
+						setTimeout(() => {
+							resolve(() => "abc " + module);
+						}, 100);
+					});
+				}
+			});
+		});
+		System.register("´DEF", [], $__export => {
+			$__export({
+				get(module) {
+					return new Promise(resolve => {
+						setTimeout(() => {
+							resolve(() => ({
+								__esModule: true,
+								module,
+								default: "def"
+							}));
+						}, 100);
+					});
+				}
+			});
+		});
 		scope.DEF = {
 			get(module) {
 				return new Promise(resolve => {
