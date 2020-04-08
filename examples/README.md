@@ -139,7 +139,7 @@
 
 
 # Requests
-If you think an example is missing, please report it as issue. :)
+If you think an example is missing, please report it as an issue. :)
 
 # Building an Example
 1. Run `yarn` in the root of the project.

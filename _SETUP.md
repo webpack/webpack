@@ -2,7 +2,7 @@
 
 At webpack we use `yarn` to execute commands.
 
-If you already have `yarn` installed, do: `yarn setup`. This will complete all required steps.
+If you already have `yarn` installed, do: `yarn setup`. This will complete all the required steps.
 
 If not, do: `npm run setup`, the setup will also install `yarn` for you.
 
@@ -60,7 +60,7 @@ yarn test:update-snapshots
 ### To run code formatter (prettier) run
 
 ```bash
-yarn pretty-lint-fix
+yarn pretty
 ```
 
 ### To run all linters use
