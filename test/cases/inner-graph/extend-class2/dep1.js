@@ -20,7 +20,7 @@ export class C1 extends /*#__PURE__*/ getC() {
 }
 
 // prettier-ignore
-export class D1 extends /*#__PURE__*/ getD() {
+export class D1 extends /*@__PURE__*/ getD() {
 	render() {
 		return new D2();
 	}
