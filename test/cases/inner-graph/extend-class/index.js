@@ -1,9 +1,11 @@
 import {
 	exportsInfoForA,
 	exportsInfoForB,
+	exportsInfoForC,
 	exportsInfoForY,
 	exportsInfoForMixin1,
-	exportsInfoForMixin2
+	exportsInfoForMixin2,
+	exportsInfoForMixin3
 } from "./dep2";
 
 it("should load modules correctly", () => {
@@ -19,8 +21,11 @@ it("A should be used", () => {
 	expect(exportsInfoForA).toBe(true);
 });
 
-it("Pure mixin should be unused, another used", () => {
+it("Pure super expression should be unused, another used", () => {
 	expect(exportsInfoForMixin1).toBe(false);
+
 	expect(exportsInfoForMixin2).toBe(true);
+	expect(exportsInfoForMixin3).toBe(true);
+	expect(exportsInfoForC).toBe(true);
 	expect(exportsInfoForY).toBe(true);
 });

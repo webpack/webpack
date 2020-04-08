@@ -9,4 +9,10 @@ class B1 extends B {
 }
 
 export class C {}
-class D {}
+class D {
+	foo() {
+		class B2 extends B {}
+
+		return B2;
+	}
+}
