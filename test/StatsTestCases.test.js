@@ -190,7 +190,7 @@ describe("StatsTestCases", () => {
 					.replace(/[\t ]*Version:.+\n/g, "")
 					.replace(new RegExp(quotemeta(testPath), "g"), "Xdir/" + testName)
 					.replace(/(\w)\\(\w)/g, "$1/$2")
-					.replace(/, additional resolving: Xms/g, "");
+					.replace(/, additional resolving: X ms/g, "");
 				expect(actual).toMatchSnapshot();
 				if (testConfig.validate) testConfig.validate(stats, stderr.toString());
 				done();
