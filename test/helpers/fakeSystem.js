@@ -12,6 +12,15 @@ const System = {
 			fn = deps;
 			deps = [];
 		}
+
+		let entry = {
+			name,
+			deps,
+			fn,
+			executed: false,
+			exports: undefined
+		};
+
 		const dynamicExport = result => {
 			if (System.registry[name] !== entry) {
 				throw new Error(`Module ${name} calls dynamicExport too late`);
@@ -26,30 +35,25 @@ const System = {
 				return Promise.resolve();
 			}
 		};
+
 		if (name in System.registry) {
 			throw new Error(`Module ${name} is already registered`);
 		}
-		const mod = fn(dynamicExport, systemContext);
+
+		System.registry[name] = entry;
+		entry.mod = fn(dynamicExport, systemContext);
 		if (deps.length > 0) {
-			if (!Array.isArray(mod.setters)) {
+			if (!Array.isArray(entry.mod.setters)) {
 				throw new Error(
 					`Module ${name} must have setters, because it has dependencies`
 				);
 			}
-			if (mod.setters.length !== deps.length) {
+			if (entry.mod.setters.length !== deps.length) {
 				throw new Error(
 					`Module ${name} has incorrect number of setters for the dependencies`
 				);
 			}
 		}
-		const entry = {
-			name,
-			deps,
-			fn,
-			mod,
-			executed: false,
-			exports: undefined
-		};
 		System.registry[name] = entry;
 	},
 	registry: undefined,
@@ -72,6 +76,7 @@ const System = {
 	},
 	ensureExecuted: name => {
 		const m = System.registry[name];
+		console.log(m);
 		if (!m) throw new Error(`Module ${name} not registered`);
 		if (!m.executed) {
 			m.executed = true;

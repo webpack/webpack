@@ -32,19 +32,6 @@ module.exports = {
 				}
 			});
 		});
-		scope.DEF = {
-			get(module) {
-				return new Promise(resolve => {
-					setTimeout(() => {
-						resolve(() => ({
-							__esModule: true,
-							module,
-							default: "def"
-						}));
-					}, 100);
-				});
-			}
-		};
 	},
 	afterExecute: () => {
 		System.execute("(anonym)");
