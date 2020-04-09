@@ -1,5 +1,5 @@
-import { A, B, getC, getD, getE, getF } from "./dep2";
-import { A3, B3, C3, D3, E3, F3 } from "./dep3";
+import { A, B, getC, getD, getE, getF } from "./dep2?decl";
+import { A3, B3, C3, D3, E3, F3 } from "./dep3?decl";
 
 export class A1 extends A {
 	render() {
