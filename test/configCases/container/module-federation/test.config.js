@@ -16,6 +16,19 @@ module.exports = {
 					});
 				}
 			});
+			return {
+				execute() {
+					$__export({
+						get(module) {
+							return new Promise(resolve => {
+								setTimeout(() => {
+									resolve(() => "abc " + module);
+								}, 100);
+							});
+						}
+					});
+				}
+			};
 		});
 		System.register("DEF", [], $__export => {
 			$__export({
@@ -31,6 +44,23 @@ module.exports = {
 					});
 				}
 			});
+			return {
+				execute() {
+					$__export({
+						get(module) {
+							return new Promise(resolve => {
+								setTimeout(() => {
+									resolve(() => ({
+										__esModule: true,
+										module,
+										default: "def"
+									}));
+								}, 100);
+							});
+						}
+					});
+				}
+			};
 		});
 	},
 	afterExecute: () => {
