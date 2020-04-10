@@ -521,7 +521,7 @@
           }
         },
         "managedPaths": {
-          "description": "List of paths that are managed by a package manager and can be trusted to not being modified otherwise.",
+          "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
           "type": "array",
           "items": {
             "description": "A path to a managed directory (usually a node_modules directory).",
@@ -858,7 +858,7 @@
           }
         },
         "managedPaths": {
-          "description": "List of paths that are managed by a package manager and can be trusted to not being modified otherwise.",
+          "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
           "type": "array",
           "items": {
             "description": "A path to a managed directory (usually a node_modules directory).",
