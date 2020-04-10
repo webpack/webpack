@@ -682,7 +682,7 @@ export interface MemoryCacheOptions {
 	 */
 	immutablePaths?: string[];
 	/**
-	 * List of paths that are managed by a package manager and can be trusted to not being modified otherwise.
+	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
 	managedPaths?: string[];
 	/**
@@ -728,7 +728,7 @@ export interface FileCacheOptions {
 	 */
 	immutablePaths?: string[];
 	/**
-	 * List of paths that are managed by a package manager and can be trusted to not being modified otherwise.
+	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
 	managedPaths?: string[];
 	/**
