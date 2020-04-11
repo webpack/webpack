@@ -81,7 +81,8 @@ export type DllReferencePluginOptionsSourceType =
 	| "amd-require"
 	| "umd"
 	| "umd2"
-	| "jsonp";
+	| "jsonp"
+	| "system";
 
 /**
  * An object containing content, name and type.
