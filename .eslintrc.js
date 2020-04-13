@@ -93,6 +93,23 @@ module.exports = {
 			globals: {
 				nsObj: false
 			}
+		},
+		{
+			files: ["polyfills/*.js"],
+			parserOptions: {
+				sourceType: "module",
+				ecmaVersion: 2020
+			},
+			env: {
+				node: false
+			},
+			globals: {
+				"Deno": "readonly"
+			},
+			rules: {
+				"node/no-unsupported-features/es-syntax": "off",
+				"node/no-missing-import": "off"
+			}
 		}
 	]
 };

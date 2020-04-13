@@ -22,3 +22,5 @@ test/*Cases/**/*.js
 examples/**/*.js
 !examples/*/webpack.config.js
 
+# Ignore generated files
+dist
