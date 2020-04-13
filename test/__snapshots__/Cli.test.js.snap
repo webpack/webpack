@@ -163,13 +163,13 @@ Object {
   "cache-managed-paths-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not being modified otherwise.",
+        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
         "multiple": false,
         "path": "cache.managedPaths",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not being modified otherwise.",
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
     "multiple": false,
     "simpleType": "boolean",
   },
