@@ -1959,10 +1959,10 @@ cspell-io@^4.0.20:
     iconv-lite "^0.4.24"
     iterable-to-stream "^1.0.1"
 
-cspell-lib@^4.1.21:
-  version "4.1.21"
-  resolved "https://registry.yarnpkg.com/cspell-lib/-/cspell-lib-4.1.21.tgz#7321652e5bb8d5a1b0a1372d42d125dc275f4161"
-  integrity sha512-mcbYQRO9GeLjUU3fTrJEwD17pF/t4YlgYoEqVQkLgR0kCQ5exMFlj8II4UQHgNevx8GMJGpqQ9+fM6ZhCYKIzQ==
+cspell-lib@^4.1.22:
+  version "4.1.22"
+  resolved "https://registry.yarnpkg.com/cspell-lib/-/cspell-lib-4.1.22.tgz#86437fa61687fbd18932348a92c05e2c2bd7f214"
+  integrity sha512-O+BcCLYce9mKKgzp49cE4hHvIDb3w9GJ0FcoFrERNfxKt0ciPLmNdflnxjEo/lXr9s+aXmjRVFm+BI6sDpDZvw==
   dependencies:
     comment-json "^1.1.3"
     configstore "^5.0.1"
@@ -1992,7 +1992,7 @@ cspell-lib@^4.1.21:
     cspell-dict-typescript "^1.0.3"
     cspell-io "^4.0.20"
     cspell-trie-lib "^4.1.8"
-    cspell-util-bundle "^4.0.9"
+    cspell-util-bundle "^4.0.10"
     fs-extra "^8.1.0"
     gensequence "^3.0.3"
     vscode-uri "^2.1.1"
@@ -2004,21 +2004,21 @@ cspell-trie-lib@^4.1.8:
   dependencies:
     gensequence "^3.0.3"
 
-cspell-util-bundle@^4.0.9:
-  version "4.0.9"
-  resolved "https://registry.yarnpkg.com/cspell-util-bundle/-/cspell-util-bundle-4.0.9.tgz#9e6a7f3dcd4aef1b9c6743d33d09379cf94ecd08"
-  integrity sha512-+xhIGJAkPxD7aKl97S0E34B5dF+HSTSoEL6M2f6Y46tusFGc9VdhA/iIZQooZZx2RQy4WaHw/ABfsRfxtnFVLw==
+cspell-util-bundle@^4.0.10:
+  version "4.0.10"
+  resolved "https://registry.yarnpkg.com/cspell-util-bundle/-/cspell-util-bundle-4.0.10.tgz#22aa483645dc92abbec8829cb5cf20017898cc97"
+  integrity sha512-XpBNIwVfJz9OVLR/ztW4BG75UbqmlBh31R5CpmNFxNF7QeiQwIrU8QMYzjtSnIwmOe6t0Hsx+X1UC2KUqMhRtA==
 
 cspell@^4.0.55:
-  version "4.0.55"
-  resolved "https://registry.yarnpkg.com/cspell/-/cspell-4.0.55.tgz#4295b88c9cb7b1bf7290027212913203be5f3f9d"
-  integrity sha512-LmBk2VNrBSXFPOpmhJalqYGdDF1x68H4wI3c7RDMRLfG/zOaFoZUEuJUYOC07tFXDosczXMu38Qt9cnEVZmrAA==
+  version "4.0.56"
+  resolved "https://registry.yarnpkg.com/cspell/-/cspell-4.0.56.tgz#d26b7da80ff01ee3c8b6fb15d79765fdff302931"
+  integrity sha512-5lbuNnXOdh06+Zi1+p/iZLQDECtC/T4Kr/La3NSWdGIOLKDExA7/g0T6YHlGZnVwdNozo5Dvm0hbiC9qxmSGMQ==
   dependencies:
     chalk "^2.4.2"
     commander "^2.20.3"
     comment-json "^1.1.3"
     cspell-glob "^0.1.17"
-    cspell-lib "^4.1.21"
+    cspell-lib "^4.1.22"
     fs-extra "^8.1.0"
     gensequence "^3.0.3"
     get-stdin "^7.0.0"
