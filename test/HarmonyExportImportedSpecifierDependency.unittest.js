@@ -11,5 +11,23 @@ describe("HarmonyExportImportedSpecifierDependency", () => {
 			expect(instance.getHashValue(undefined)).toBe("");
 			expect(instance.getHashValue(null)).toBe("");
 		});
+
+		it("should sort providedExports", () => {
+			var instance = new HarmonyExportImportedSpecifierDependency();
+
+			expect(
+				instance.getHashValue({
+					used: "",
+					usedExports: "",
+					buildMeta: { providedExports: ["a", "c", "b"] }
+				})
+			).toEqual(
+				instance.getHashValue({
+					used: "",
+					usedExports: "",
+					buildMeta: { providedExports: ["a", "b", "c"] }
+				})
+			);
+		});
 	});
 });
