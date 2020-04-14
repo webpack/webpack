@@ -78,6 +78,19 @@ describe("ProgressPlugin", function () {
 			expect(logs).toEqual(expect.stringMatching(/\d+ active/));
 		});
 	});
+
+	it("should get the custom handler text from the log", () => {
+		const compiler = createSimpleCompilerWithCustomHandler();
+
+		return RunCompilerAsync(compiler).then(() => {
+			const logs = stderr.toString();
+			expect(logs).toEqual(
+				expect.stringMatching(/\d+\/\d+ [custom test logger]/)
+			);
+			expect(logs).toEqual(expect.stringMatching(/\d+ active/));
+			expect(logs).toEqual(expect.stringMatching(/\d+\/\d+ modules/));
+		});
+	});
 });
 
 const createMultiCompiler = () => {
@@ -109,6 +122,23 @@ const createSimpleCompiler = progressOptions => {
 	new webpack.ProgressPlugin({
 		activeModules: true,
 		...progressOptions
+	}).apply(compiler);
+
+	return compiler;
+};
+
+const createSimpleCompilerWithCustomHandler = options => {
+	const compiler = webpack({
+		context: path.join(__dirname, "fixtures"),
+		entry: "./a.js"
+	});
+
+	compiler.outputFileSystem = createFsFromVolume(new Volume());
+	const logger = compiler.getInfrastructureLogger("custom test logger");
+	new webpack.ProgressPlugin({
+		activeModules: true,
+		...options,
+		handler: (...args) => logger.status(args)
 	}).apply(compiler);
 
 	return compiler;
