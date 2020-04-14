@@ -11,11 +11,11 @@ export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 /**
  * Specify which export should be exposed as library.
  */
-export type LibraryExport = string | string[];
+export type LibraryExport = string[] | string;
 /**
  * The name of the library (some types allow unnamed libraries too).
  */
-export type LibraryName = string | string[] | LibraryCustomUmdObject;
+export type LibraryName = string[] | string | LibraryCustomUmdObject;
 /**
  * Type of library.
  */
@@ -50,10 +50,10 @@ export interface ContainerPluginOptions {
 	 * A map of modules you wish to expose.
 	 */
 	exposes?:
+		| any[]
 		| {
 				[k: string]: any;
-		  }
-		| any[];
+		  };
 	/**
 	 * The filename for this container relative path inside the `output.path` directory.
 	 */
@@ -70,10 +70,10 @@ export interface ContainerPluginOptions {
 	 * An object for requests to override from host to this container.
 	 */
 	overridables?:
+		| any[]
 		| {
 				[k: string]: any;
-		  }
-		| any[];
+		  };
 }
 /**
  * Options for library.
@@ -136,5 +136,5 @@ export interface LibraryCustomUmdObject {
 	/**
 	 * Name of the property exposed globally by a UMD library.
 	 */
-	root?: string | string[];
+	root?: string[] | string;
 }

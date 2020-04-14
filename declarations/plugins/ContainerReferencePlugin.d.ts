@@ -4,7 +4,7 @@
  * Run `yarn special-lint-fix` to update
  */
 
-export type ContainerReferencePlugin = {
+export interface ContainerReferencePlugin {
 	/**
 	 * A list of requests that should be overridable by the host container.
 	 */
@@ -25,4 +25,4 @@ export type ContainerReferencePlugin = {
 		| {
 				[k: string]: any;
 		  };
-};
+}
