@@ -5,24 +5,27 @@ function createConfig() {
 		output: {
 			libraryTarget: "system"
 		},
-		//externalsType: "system",
-		module: {
-			rules: [
-				{
-					test: /\.js$/,
-					parser: {
-						system: false
-					}
-				}
-			]
-		},
 		plugins: [
 			new ModuleFederationPlugin({
 				name: "container",
 				filename: "container.js",
+				exposes: ["./other", "./self", "./dep"],
 				remotes: {
 					abc: "ABC",
-					def: "DEF"
+					def: "DEF",
+					self: "./container.js",
+					other: "./container2.js"
+				}
+			}),
+			new ModuleFederationPlugin({
+				name: "container2",
+				filename: "container2.js",
+				exposes: ["./other", "./self", "./dep"],
+				remotes: {
+					abc: "ABC",
+					def: "DEF",
+					self: "./container2.js",
+					other: "./container.js"
 				}
 			})
 		]
