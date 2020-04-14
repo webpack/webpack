@@ -22,7 +22,7 @@ module.exports = {
 							{
 								loader: "./loader",
 								options: {
-									get: function() {
+									get: function () {
 										return "second-3";
 									}
 								}

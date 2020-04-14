@@ -17,7 +17,7 @@ export type DllReferencePluginOptions =
 			/**
 			 * An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.
 			 */
-			manifest: DllReferencePluginOptionsManifest | string;
+			manifest: string | DllReferencePluginOptionsManifest;
 			/**
 			 * The name where the dll is exposed (external name, defaults to manifest.name).
 			 */
@@ -81,7 +81,8 @@ export type DllReferencePluginOptionsSourceType =
 	| "amd-require"
 	| "umd"
 	| "umd2"
-	| "jsonp";
+	| "jsonp"
+	| "system";
 
 /**
  * An object containing content, name and type.
@@ -117,7 +118,7 @@ export interface DllReferencePluginOptionsContent {
 		/**
 		 * Information about the provided exports of the module.
 		 */
-		exports?: true | string[];
+		exports?: string[] | true;
 		/**
 		 * Module ID.
 		 */

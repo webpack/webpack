@@ -1,6 +1,6 @@
 This example shows how to use multiple entry points with a commons chunk.
 
-In this example you have two (HTML) pages `pageA` and `pageB`. You want to create individual bundles for each page. In addition to this you want to create a shared bundle that contains all modules used in both pages (assuming there are many/big modules in common). The pages also use Code Splitting to load a less used part of the features on demand.
+In this example, you have two (HTML) pages `pageA` and `pageB`. You want to create individual bundles for each page. In addition to this, you want to create a shared bundle that contains all the modules used in both pages (assuming there are many/big modules in common). The pages also use Code Splitting to load a less used part of the features on demand.
 
 You can see how to define multiple entry points via the `entry` option.
 
@@ -21,7 +21,7 @@ You can see the output files:
 You can also see the info that is printed to console. It shows among others:
 
 - the generated files
-- the chunks with file, name and id
+- the chunks with file, name, and id
   - see lines starting with `chunk`
 - the modules that are in the chunks
 - the reasons why the modules are included

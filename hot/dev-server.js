@@ -12,7 +12,7 @@ if (module.hot) {
 	var check = function check() {
 		module.hot
 			.check(true)
-			.then(function(updatedModules) {
+			.then(function (updatedModules) {
 				if (!updatedModules) {
 					log("warning", "[HMR] Cannot find update. Need to do a full reload!");
 					log(
@@ -33,7 +33,7 @@ if (module.hot) {
 					log("info", "[HMR] App is up to date.");
 				}
 			})
-			.catch(function(err) {
+			.catch(function (err) {
 				var status = module.hot.status();
 				if (["abort", "fail"].indexOf(status) >= 0) {
 					log(
@@ -48,7 +48,7 @@ if (module.hot) {
 			});
 	};
 	var hotEmitter = require("./emitter");
-	hotEmitter.on("webpackHotUpdate", function(currentHash) {
+	hotEmitter.on("webpackHotUpdate", function (currentHash) {
 		lastHash = currentHash;
 		if (!upToDate() && module.hot.status() === "idle") {
 			log("info", "[HMR] Checking for updates on the server...");

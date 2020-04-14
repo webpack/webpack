@@ -19,6 +19,31 @@ const sortObjectAlphabetically = obj => {
 	return newObj;
 };
 
+const typeOrder = [
+	"array",
+	"enum",
+	"RegExp",
+	"number",
+	"boolean",
+	"string",
+	"object",
+	"Function",
+	undefined
+];
+
+const sortArrayByType = array => {
+	array.sort((a, b) => {
+		const aType = a.type || a.instanceof || (a.enum && "enum");
+		const bType = b.type || b.instanceof || (b.enum && "enum");
+		const aPos = typeOrder.indexOf(aType);
+		const bPos = typeOrder.indexOf(bType);
+		if (aPos === bPos) {
+			return array.indexOf(a) - array.indexOf(b);
+		}
+		return aPos - bPos;
+	});
+};
+
 const sortObjectWithList = (obj, props) => {
 	const keys = Object.keys(obj)
 		.filter(p => !props.includes(p))
@@ -44,6 +69,8 @@ const PROPERTIES = [
 	"title",
 	"description",
 	"type",
+
+	"cli",
 
 	"items",
 	"minItems",
@@ -106,6 +133,7 @@ const processJson = json => {
 			for (let i = 0; i < json[name].length; i++) {
 				json[name][i] = processJson(json[name][i]);
 			}
+			sortArrayByType(json[name]);
 		}
 	}
 

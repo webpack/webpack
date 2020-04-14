@@ -6,7 +6,7 @@ module.exports = {
 		concatenateModules: false
 	},
 	plugins: [
-		function() {
+		function () {
 			this.hooks.compilation.tap("Test", compilation => {
 				compilation.hooks.dependencyReferencedExports.tap(
 					"Test",

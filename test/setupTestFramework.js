@@ -47,7 +47,7 @@ expect.extend({
 if (process.env.ALTERNATIVE_SORT) {
 	const oldSort = Array.prototype.sort;
 
-	Array.prototype.sort = function(cmp) {
+	Array.prototype.sort = function (cmp) {
 		oldSort.call(this, cmp);
 		if (cmp) {
 			for (let i = 1; i < this.length; i++) {

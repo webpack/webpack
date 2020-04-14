@@ -1,6 +1,6 @@
 {
   "title": "IgnorePluginOptions",
-  "oneOf": [
+  "anyOf": [
     {
       "type": "object",
       "additionalProperties": false,

@@ -11,14 +11,14 @@ function shouldLog(level) {
 }
 
 function logGroup(logFn) {
-	return function(level, msg) {
+	return function (level, msg) {
 		if (shouldLog(level)) {
 			logFn(msg);
 		}
 	};
 }
 
-module.exports = function(level, msg) {
+module.exports = function (level, msg) {
 	if (shouldLog(level)) {
 		if (level === "info") {
 			console.log(msg);
@@ -42,11 +42,11 @@ module.exports.groupCollapsed = logGroup(groupCollapsed);
 
 module.exports.groupEnd = logGroup(groupEnd);
 
-module.exports.setLogLevel = function(level) {
+module.exports.setLogLevel = function (level) {
 	logLevel = level;
 };
 
-module.exports.formatError = function(err) {
+module.exports.formatError = function (err) {
 	var message = err.message;
 	var stack = err.stack;
 	if (!stack) {

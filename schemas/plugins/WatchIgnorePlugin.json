@@ -8,13 +8,13 @@
       "type": "array",
       "items": {
         "description": "RegExp or absolute path to directories or files that should be ignored.",
-        "oneOf": [
-          {
-            "type": "string"
-          },
+        "anyOf": [
           {
             "instanceof": "RegExp",
             "tsType": "RegExp"
+          },
+          {
+            "type": "string"
           }
         ]
       },

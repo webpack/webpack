@@ -85,7 +85,7 @@ describe("StatsTestCases", () => {
 			compilers.forEach(c => {
 				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
-				c.inputFileSystem.readFile = function() {
+				c.inputFileSystem.readFile = function () {
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
 					ifs.readFile.apply(
@@ -190,7 +190,7 @@ describe("StatsTestCases", () => {
 					.replace(/[\t ]*Version:.+\n/g, "")
 					.replace(new RegExp(quotemeta(testPath), "g"), "Xdir/" + testName)
 					.replace(/(\w)\\(\w)/g, "$1/$2")
-					.replace(/, additional resolving: Xms/g, "");
+					.replace(/, additional resolving: X ms/g, "");
 				expect(actual).toMatchSnapshot();
 				if (testConfig.validate) testConfig.validate(stats, stderr.toString());
 				done();

@@ -4,7 +4,7 @@ exports[`StatsTestCases should print correct stats for aggressive-splitting-entr
 "Hash: 04643923d1e5b3d9b4e64c2917d507e71f03c5bf
 Child fitting:
     Hash: 04643923d1e5b3d9b4e6
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
     PublicPath: (none)
                               Asset      Size
@@ -32,7 +32,7 @@ Child fitting:
      ./g.js 916 bytes [built]
 Child content-change:
     Hash: 4c2917d507e71f03c5bf
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
     PublicPath: (none)
                                      Asset      Size
@@ -62,7 +62,7 @@ Child content-change:
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-on-demand 1`] = `
 "Hash: 92339c1f044fa965d380
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
                   Asset        Size
@@ -132,7 +132,7 @@ chunk b4a95c5544295741de67.js 899 bytes [rendered]
 
 exports[`StatsTestCases should print correct stats for asset 1`] = `
 "Hash: ccfed10a060986668b48
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
                    Asset      Size
 6eef074bdaf47143a239.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
@@ -448,7 +448,7 @@ Child all:
 
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
 "Hash: f33d111f25cd01c8c3cf
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
    Asset     Size
@@ -474,7 +474,7 @@ chunk main1.js (main1) 136 bytes [entry] [rendered]
 
 exports[`StatsTestCases should print correct stats for chunks 1`] = `
 "Hash: ceb0547564135a0a6c0c
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
         Asset       Size
@@ -488,37 +488,37 @@ chunk bundle.js (main) 73 bytes (javascript) 4.2 KiB (runtime) >{460}< >{996}< [
  ./a.js 22 bytes [built]
      cjs self exports reference ./a.js 1:0-14
      cjs require ./a ./index.js 1:0-14
-     Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+     X ms -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
  ./index.js 51 bytes [built]
      entry ./index main
-     Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+     X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
      + 5 hidden chunk modules
 chunk 460.bundle.js 54 bytes <{179}> >{524}< [rendered]
     > ./c ./index.js 3:0-16
  ./c.js 54 bytes [built]
      amd require ./c ./index.js 3:0-16
-     Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+     X ms -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
 chunk 524.bundle.js 44 bytes <{460}> [rendered]
     > ./c.js 1:0-52
  ./d.js 22 bytes [built]
      require.ensure item ./d ./c.js 1:0-52
      cjs self exports reference ./d.js 1:0-14
-     Xms -> Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+     X ms -> X ms -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
  ./e.js 22 bytes [built]
      require.ensure item ./e ./c.js 1:0-52
      cjs self exports reference ./e.js 1:0-14
-     Xms -> Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+     X ms -> X ms -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
 chunk 996.bundle.js 22 bytes <{179}> [rendered]
     > ./b ./index.js 2:0-16
  ./b.js 22 bytes [built]
      cjs self exports reference ./b.js 1:0-14
      amd require ./b ./index.js 2:0-16
-     Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)"
+     X ms -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)"
 `;
 
 exports[`StatsTestCases should print correct stats for chunks-development 1`] = `
 "Hash: 9a94c2757a36b51de23c
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
               Asset       Size
@@ -532,32 +532,32 @@ chunk b_js.bundle.js 22 bytes <{main}> [rendered]
  ./b.js 22 bytes [built]
      cjs self exports reference ./b.js 1:0-14
      amd require ./b ./index.js 2:0-16
-     Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+     X ms -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
 chunk c_js.bundle.js 54 bytes <{main}> >{d_js-e_js}< [rendered]
     > ./c ./index.js 3:0-16
  ./c.js 54 bytes [built]
      amd require ./c ./index.js 3:0-16
-     Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+     X ms -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
 chunk d_js-e_js.bundle.js 60 bytes <{c_js}> [rendered]
     > ./c.js 1:0-52
  ./d.js 22 bytes [built]
      require.ensure item ./d ./c.js 1:0-52
      cjs self exports reference ./d.js 1:0-14
-     Xms -> Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+     X ms -> X ms -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
  ./e.js 38 bytes [built]
      require.ensure item ./e ./c.js 1:0-52
      cjs self exports reference ./e.js 2:0-14
-     Xms -> Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+     X ms -> X ms -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
 chunk bundle.js (main) 73 bytes (javascript) 4.2 KiB (runtime) >{b_js}< >{c_js}< [entry] [rendered]
     > ./index main
  ./a.js 22 bytes [built]
      cjs self exports reference ./a.js 1:0-14
      cjs require ./a ./e.js 1:0-14
      cjs require ./a ./index.js 1:0-14
-     Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+     X ms -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
  ./index.js 51 bytes [built]
      entry ./index main
-     Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+     X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
      + 5 hidden chunk modules"
 `;
 
@@ -576,7 +576,7 @@ chunk 786.bundle.js (a) 49 bytes <{179}> <{459}> >{459}< [rendered]
 
 exports[`StatsTestCases should print correct stats for color-disabled 1`] = `
 "Hash: 4184968049b5a307616e
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset      Size
 main.js  54 bytes  [emitted]  [name: main]
@@ -586,7 +586,7 @@ Entrypoint main = main.js
 
 exports[`StatsTestCases should print correct stats for color-enabled 1`] = `
 "Hash: <CLR=BOLD>4184968049b5a307616e</CLR>
-Time: <CLR=BOLD>X</CLR>ms
+Time: <CLR=BOLD>X</CLR> ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>      <CLR=BOLD>Size</CLR>
 <CLR=32,BOLD>main.js</CLR>  54 bytes  <CLR=32,BOLD>[emitted]</CLR>  [name: main]
@@ -596,7 +596,7 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 
 exports[`StatsTestCases should print correct stats for color-enabled-custom 1`] = `
 "Hash: <CLR=BOLD>4184968049b5a307616e</CLR>
-Time: <CLR=BOLD>X</CLR>ms
+Time: <CLR=BOLD>X</CLR> ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>      <CLR=BOLD>Size</CLR>
 <CLR=32>main.js</CLR>  54 bytes  <CLR=32>[emitted]</CLR>  [name: main]
@@ -606,7 +606,7 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32>main.js</CLR>
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-0 1`] = `
 "Hash: 9d8341686f0b49af2e8b
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
      Asset       Size
     429.js  278 bytes  [emitted]  [id hint: vendor-1]
@@ -624,7 +624,7 @@ Entrypoint entry-1 = 429.js entry-1.js
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-Infinity 1`] = `
 "Hash: ce2aee6fe5f6a0cf186f
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
       Asset       Size
  entry-1.js   5.59 KiB  [emitted]  [name: entry-1]
@@ -641,26 +641,26 @@ Entrypoint entry-1 = vendor-1.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-plugin-issue-4980 1`] = `
-"Hash: 97b9c00d6fc61229e73bd32d88a9cafb3cfa08af
+"Hash: f2652f529f967f7f2bec5cac904b0fb414d6d93f
 Child
-    Hash: 97b9c00d6fc61229e73b
-    Time: Xms
+    Hash: f2652f529f967f7f2bec
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
        app.73e459ccd7f12100fa78-1.js   6.13 KiB  [emitted] [immutable]  [name: app]
-    vendor.611fd9bad8fe7de29fe7-1.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
-    Entrypoint app = vendor.611fd9bad8fe7de29fe7-1.js app.73e459ccd7f12100fa78-1.js
+    vendor.f0527072691801f43979-1.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
+    Entrypoint app = vendor.f0527072691801f43979-1.js app.73e459ccd7f12100fa78-1.js
     ./entry-1.js + 2 modules 190 bytes [built]
     ./constants.js 87 bytes [built]
         + 3 hidden modules
 Child
-    Hash: d32d88a9cafb3cfa08af
-    Time: Xms
+    Hash: 5cac904b0fb414d6d93f
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
        app.1db34ba9ee5e51d1e813-2.js   6.14 KiB  [emitted] [immutable]  [name: app]
-    vendor.611fd9bad8fe7de29fe7-2.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
-    Entrypoint app = vendor.611fd9bad8fe7de29fe7-2.js app.1db34ba9ee5e51d1e813-2.js
+    vendor.f0527072691801f43979-2.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
+    Entrypoint app = vendor.f0527072691801f43979-2.js app.1db34ba9ee5e51d1e813-2.js
     ./entry-2.js + 2 modules 197 bytes [built]
     ./constants.js 87 bytes [built]
         + 3 hidden modules"
@@ -687,7 +687,7 @@ exports[`StatsTestCases should print correct stats for context-independence 1`] 
 "Hash: 3c59c3d45edbe20ee0af3c59c3d45edbe20ee0af39303b7d3ef1ce28f20139303b7d3ef1ce28f201
 Child
     Hash: 3c59c3d45edbe20ee0af
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
          703-35b05b4f9ece3e5b7253.js  457 bytes  [emitted] [immutable]
@@ -700,7 +700,7 @@ Child
         + 6 hidden modules
 Child
     Hash: 3c59c3d45edbe20ee0af
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
          703-35b05b4f9ece3e5b7253.js  457 bytes  [emitted] [immutable]
@@ -713,7 +713,7 @@ Child
         + 6 hidden modules
 Child
     Hash: 39303b7d3ef1ce28f201
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                            Asset      Size
      703-d460da0006247c80e6fd.js  1.51 KiB  [emitted] [immutable]
@@ -724,7 +724,7 @@ Child
         + 6 hidden modules
 Child
     Hash: 39303b7d3ef1ce28f201
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                            Asset      Size
      703-d460da0006247c80e6fd.js  1.51 KiB  [emitted] [immutable]
@@ -739,7 +739,7 @@ exports[`StatsTestCases should print correct stats for define-plugin 1`] = `
 "Hash: c4dfb63f41372476179f8a83bd0cdb16b7f71a200e0127ecbe2c521924dd
 Child
     Hash: c4dfb63f41372476179f
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
      Asset     Size
     123.js  1.3 KiB  [emitted]  [name: main]
@@ -747,7 +747,7 @@ Child
     ./index.js 24 bytes [built]
 Child
     Hash: 8a83bd0cdb16b7f71a20
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
      Asset     Size
     321.js  1.3 KiB  [emitted]  [name: main]
@@ -755,7 +755,7 @@ Child
     ./index.js 24 bytes [built]
 Child
     Hash: 0e0127ecbe2c521924dd
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
       Asset     Size
     both.js  1.3 KiB  [emitted]  [name: main]
@@ -765,7 +765,7 @@ Child
 
 exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624 1`] = `
 "Hash: fae5c61a7505a388e280
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset      Size
 bundle.js  83 bytes  [emitted]  [name: main]
@@ -775,7 +775,7 @@ Entrypoint main = bundle.js
 
 exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624-error 1`] = `
 "Hash: 71c00b1fca2c93302757
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
 1 asset
 Entrypoint main = bundle.js
@@ -788,7 +788,7 @@ Unexpected end of JSON input while parsing near ''
 
 exports[`StatsTestCases should print correct stats for entry-filename 1`] = `
 "Hash: e0f8f2345bfd152ac522
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
 Asset     Size
@@ -801,18 +801,18 @@ chunk c.js (b) 22 bytes [entry] [rendered]
  ./b.js 22 bytes [built]
      cjs self exports reference ./b.js 1:0-14
      entry ./b.js b
-     Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+     X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
 chunk a.js (a) 22 bytes [entry] [rendered]
     > ./a.js a
  ./a.js 22 bytes [built]
      cjs self exports reference ./a.js 1:0-14
      entry ./a.js a
-     Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)"
+     X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)"
 `;
 
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
 "Hash: 574b1154129671ae12ac
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset      Size
 bundle.js  3.46 KiB  [emitted]  [name: main]
@@ -825,7 +825,7 @@ Entrypoint main = bundle.js (5bcd36918d225eeda398ea3f372b7f16.json)
 
 exports[`StatsTestCases should print correct stats for external 1`] = `
 "Hash: e1259a13508c6d1d1e0c
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset     Size
 main.js  1.2 KiB  [emitted]  [name: main]
@@ -838,7 +838,7 @@ exports[`StatsTestCases should print correct stats for filter-warnings 1`] = `
 "Hash: c7acc7e9d00613f9def9c7acc7e9d00613f9def9c7acc7e9d00613f9def9c7acc7e9d00613f9def9c7acc7e9d00613f9def9c7acc7e9d00613f9def9c7acc7e9d00613f9def9c7acc7e9d00613f9def9c7acc7e9d00613f9def9c7acc7e9d00613f9def9c7acc7e9d00613f9def9c7acc7e9d00613f9def9c7acc7e9d00613f9def9
 Child undefined:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
          Asset       Size
     bundle0.js  556 bytes  [emitted]  [name: main]
@@ -868,49 +868,49 @@ Child undefined:
 
 Child Terser:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
          Asset       Size
     bundle1.js  556 bytes  [emitted]  [name: main]
     Entrypoint main = bundle1.js
 Child /Terser/:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
          Asset       Size
     bundle2.js  556 bytes  [emitted]  [name: main]
     Entrypoint main = bundle2.js
 Child warnings => true:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
          Asset       Size
     bundle3.js  556 bytes  [emitted]  [name: main]
     Entrypoint main = bundle3.js
 Child [Terser]:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
          Asset       Size
     bundle4.js  556 bytes  [emitted]  [name: main]
     Entrypoint main = bundle4.js
 Child [/Terser/]:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
          Asset       Size
     bundle5.js  556 bytes  [emitted]  [name: main]
     Entrypoint main = bundle5.js
 Child [warnings => true]:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
          Asset       Size
     bundle6.js  556 bytes  [emitted]  [name: main]
     Entrypoint main = bundle6.js
 Child should not filter:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
          Asset       Size
     bundle7.js  556 bytes  [emitted]  [name: main]
@@ -940,7 +940,7 @@ Child should not filter:
 
 Child /should not filter/:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
          Asset       Size
     bundle8.js  556 bytes  [emitted]  [name: main]
@@ -970,7 +970,7 @@ Child /should not filter/:
 
 Child warnings => false:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
          Asset       Size
     bundle9.js  556 bytes  [emitted]  [name: main]
@@ -1000,7 +1000,7 @@ Child warnings => false:
 
 Child [should not filter]:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
           Asset       Size
     bundle10.js  556 bytes  [emitted]  [name: main]
@@ -1030,7 +1030,7 @@ Child [should not filter]:
 
 Child [/should not filter/]:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
           Asset       Size
     bundle11.js  556 bytes  [emitted]  [name: main]
@@ -1060,7 +1060,7 @@ Child [/should not filter/]:
 
 Child [warnings => false]:
     Hash: c7acc7e9d00613f9def9
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
           Asset       Size
     bundle12.js  556 bytes  [emitted]  [name: main]
@@ -1190,8 +1190,8 @@ exports[`StatsTestCases should print correct stats for immutable 1`] = `
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
-"Hash: 5e1865f3f46f484bbbaf
-Time: Xms
+"Hash: 781698f35c52fda3a34c
+Time: X ms
 Built at: 1970-04-20 12:42:42
    Asset       Size
   398.js  484 bytes  [emitted]
@@ -1209,7 +1209,7 @@ Entrypoint entry = entry.js
 
 exports[`StatsTestCases should print correct stats for import-weak 1`] = `
 "Hash: 6dbe8fe5e0ca1a6a79c1
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
    Asset       Size
   836.js  142 bytes  [emitted]
@@ -1248,7 +1248,7 @@ exports[`StatsTestCases should print correct stats for issue-7577 1`] = `
 "Hash: 240afdff8e34e13bf7c474666e54b11156c90f600bcb051f063ea4854f5a
 Child
     Hash: 240afdff8e34e13bf7c4
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                                      Asset       Size
         a-all-a_js-a0ca01d3da48ab4385f6.js  144 bytes  [emitted] [immutable]  [id hint: all]
@@ -1259,7 +1259,7 @@ Child
         + 2 hidden modules
 Child
     Hash: 74666e54b11156c90f60
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                                                        Asset       Size
                           b-all-b_js-50bf184dfe57dc2022a6.js  479 bytes  [emitted] [immutable]  [id hint: all]
@@ -1272,7 +1272,7 @@ Child
         + 4 hidden modules
 Child
     Hash: 0bcb051f063ea4854f5a
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                                                        Asset       Size
                           c-all-b_js-50bf184dfe57dc2022a6.js  506 bytes  [emitted] [immutable]  [id hint: all]
@@ -1291,7 +1291,7 @@ exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 
 "Hash: 15b4b06d5bdcf1dbb31716d26c25af9645add63bd15c4ce907e30280da1c7e365bb10ae0bcc4b7e4
 Child 1 chunks:
     Hash: 15b4b06d5bdcf1dbb317
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
          Asset      Size
     bundle1.js  4.14 KiB  [emitted]  [name: main]
@@ -1306,7 +1306,7 @@ Child 1 chunks:
          + 4 hidden chunk modules
 Child 2 chunks:
     Hash: 16d26c25af9645add63b
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
              Asset       Size
     459.bundle2.js  666 bytes  [emitted]  [name: c]
@@ -1323,7 +1323,7 @@ Child 2 chunks:
      ./e.js 22 bytes [built]
 Child 3 chunks:
     Hash: d15c4ce907e30280da1c
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
              Asset       Size
     459.bundle3.js  530 bytes  [emitted]  [name: c]
@@ -1342,7 +1342,7 @@ Child 3 chunks:
      ./e.js 22 bytes [built]
 Child 4 chunks:
     Hash: 7e365bb10ae0bcc4b7e4
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
              Asset       Size
     394.bundle4.js  210 bytes  [emitted]
@@ -1366,7 +1366,7 @@ Child 4 chunks:
 exports[`StatsTestCases should print correct stats for logging 1`] = `
 "<i> <CLR=32,BOLD>[LogTestPlugin] Info</CLR>
 Hash: <CLR=BOLD>28ae5ea37047e81fb76a</CLR>
-Time: <CLR=BOLD>X</CLR>ms
+Time: <CLR=BOLD>X</CLR> ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>      <CLR=BOLD>Size</CLR>
 <CLR=32,BOLD>main.js</CLR>  54 bytes  <CLR=32,BOLD>[emitted]</CLR>  [name: main]
@@ -1391,12 +1391,12 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
   <i> <CLR=32,BOLD>Info message</CLR>
       <CLR=BOLD>Just log</CLR>
       Just debug
-  <t> <CLR=35,BOLD>Measure: Xms</CLR>
+  <t> <CLR=35,BOLD>Measure: X ms</CLR>
   <-> <CLR=36,BOLD>Nested</CLR>
         <CLR=BOLD>Log inside collapsed group</CLR>
       Trace
   |     at Object.module.exports (Xdir/logging/node_modules/custom-loader/index.js:15:9)
-  <t> <CLR=35,BOLD>Measure: Xms</CLR>
+  <t> <CLR=35,BOLD>Measure: X ms</CLR>
       -------
       <CLR=BOLD>After clear</CLR>
 
@@ -1407,7 +1407,7 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 
 exports[`StatsTestCases should print correct stats for max-modules 1`] = `
 "Hash: 896d8a1d7b73a2ef9139
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset      Size
 main.js  5.29 KiB  [emitted]  [name: main]
@@ -1437,7 +1437,7 @@ Entrypoint main = main.js
 
 exports[`StatsTestCases should print correct stats for max-modules-default 1`] = `
 "Hash: 896d8a1d7b73a2ef9139
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset      Size
 main.js  5.29 KiB  [emitted]  [name: main]
@@ -1462,7 +1462,7 @@ Entrypoint main = main.js
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
 "Hash: a0f836f8d11fa3366e14
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset       Size
   1.png     21 KiB  [emitted]  [name: (a)]
@@ -1612,11 +1612,11 @@ If you don't want to include a polyfill, you can use an empty module like this:
 `;
 
 exports[`StatsTestCases should print correct stats for module-reasons 1`] = `
-"Hash: 7ad27c2fa358483a7fdd
-Time: Xms
+"Hash: 6e6b4ee402334fe8ace1
+Time: X ms
 Built at: 1970-04-20 12:42:42
-  Asset     Size
-main.js  1.4 KiB  [emitted]  [name: main]
+  Asset      Size
+main.js  1.32 KiB  [emitted]  [name: main]
 Entrypoint main = main.js
 ./index.js + 2 modules 102 bytes [built]
     entry ./index main
@@ -1626,7 +1626,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for module-trace-disabled-in-error 1`] = `
-"Time: Xms
+"Time: X ms
 Built at: 1970-04-20 12:42:42
 1 asset
 Entrypoint main = main.js
@@ -1650,7 +1650,7 @@ You may need an appropriate loader to handle this file type, currently no loader
 `;
 
 exports[`StatsTestCases should print correct stats for module-trace-enabled-in-error 1`] = `
-"Time: Xms
+"Time: X ms
 Built at: 1970-04-20 12:42:42
 1 asset
 Entrypoint main = main.js
@@ -1734,7 +1734,7 @@ Child
 
 exports[`StatsTestCases should print correct stats for named-chunks-plugin 1`] = `
 "Hash: 21c34fccc4360e29b5db
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset       Size
  entry.js   5.46 KiB  [emitted]  [name: entry]
@@ -1749,7 +1749,7 @@ Entrypoint entry = vendor.js entry.js
 
 exports[`StatsTestCases should print correct stats for named-chunks-plugin-async 1`] = `
 "Hash: 7abbbbb49488363d0624
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
           Asset       Size
        entry.js   9.51 KiB  [emitted]  [name: entry]
@@ -1764,7 +1764,7 @@ Entrypoint entry = entry.js
 
 exports[`StatsTestCases should print correct stats for no-emit-on-errors-plugin-with-child-error 1`] = `
 "Hash: 064f8d72ae4ba04961b9
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
 2 assets
 Entrypoint main = bundle.js
@@ -1778,7 +1778,7 @@ You can also set it to 'none' to disable any default behavior. Learn more: https
 
 exports[`StatsTestCases should print correct stats for optimize-chunks 1`] = `
 "Hash: 7d84007dec272e753c2e
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
             Asset       Size        Chunks
             ab.js  153 bytes          {90}  [emitted]  [name: ab]
@@ -1848,7 +1848,7 @@ exports[`StatsTestCases should print correct stats for performance-different-mod
 "Hash: 604851a4140d08550dd4604851a4140d08550dd4604851a4140d08550dd43304b7ecc28dbd6743963304b7ecc28dbd6743963304b7ecc28dbd674396604851a4140d08550dd4
 Child
     Hash: 604851a4140d08550dd4
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                  Asset     Size
     warning.pro-web.js  294 KiB  [emitted]  [big]  [name: main]
@@ -1871,7 +1871,7 @@ Child
 
 Child
     Hash: 604851a4140d08550dd4
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                        Asset     Size
     warning.pro-webworker.js  294 KiB  [emitted]  [big]  [name: main]
@@ -1894,7 +1894,7 @@ Child
 
 Child
     Hash: 604851a4140d08550dd4
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                      Asset     Size
     no-warning.pro-node.js  294 KiB  [emitted]  [name: main]
@@ -1902,7 +1902,7 @@ Child
     ./index.js 293 KiB [built]
 Child
     Hash: 3304b7ecc28dbd674396
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                     Asset      Size
     no-warning.dev-web.js  1.72 MiB  [emitted]  [name: main]
@@ -1910,7 +1910,7 @@ Child
     ./index.js 293 KiB [built]
 Child
     Hash: 3304b7ecc28dbd674396
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                      Asset      Size
     no-warning.dev-node.js  1.72 MiB  [emitted]  [name: main]
@@ -1918,7 +1918,7 @@ Child
     ./index.js 293 KiB [built]
 Child
     Hash: 3304b7ecc28dbd674396
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                                    Asset      Size
     no-warning.dev-web-with-limit-set.js  1.72 MiB  [emitted]  [big]  [name: main]
@@ -1926,7 +1926,7 @@ Child
     ./index.js 293 KiB [built]
 Child
     Hash: 604851a4140d08550dd4
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
                                  Asset     Size
     warning.pro-node-with-hints-set.js  294 KiB  [emitted]  [big]  [name: main]
@@ -1950,7 +1950,7 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for performance-disabled 1`] = `
-"Time: <CLR=BOLD>X</CLR>ms
+"Time: <CLR=BOLD>X</CLR> ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>
  <CLR=32,BOLD>460.js</CLR>  324 bytes  <CLR=32,BOLD>[emitted]</CLR>
@@ -1968,7 +1968,7 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 `;
 
 exports[`StatsTestCases should print correct stats for performance-error 1`] = `
-"Time: <CLR=BOLD>X</CLR>ms
+"Time: <CLR=BOLD>X</CLR> ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>
  <CLR=32,BOLD>460.js</CLR>  324 bytes  <CLR=32,BOLD>[emitted]</CLR>
@@ -1998,7 +1998,7 @@ Entrypoints:
 `;
 
 exports[`StatsTestCases should print correct stats for performance-no-async-chunks-shown 1`] = `
-"Time: <CLR=BOLD>X</CLR>ms
+"Time: <CLR=BOLD>X</CLR> ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>      <CLR=BOLD>Size</CLR>
 <CLR=33,BOLD>main.js</CLR>   <CLR=33,BOLD>294 KiB</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  [name: main]
@@ -2030,7 +2030,7 @@ For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
 `;
 
 exports[`StatsTestCases should print correct stats for performance-no-hints 1`] = `
-"Time: <CLR=BOLD>X</CLR>ms
+"Time: <CLR=BOLD>X</CLR> ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>
  <CLR=32,BOLD>460.js</CLR>  324 bytes  <CLR=32,BOLD>[emitted]</CLR>
@@ -2048,7 +2048,7 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 `;
 
 exports[`StatsTestCases should print correct stats for performance-oversize-limit-error 1`] = `
-"Time: <CLR=BOLD>X</CLR>ms
+"Time: <CLR=BOLD>X</CLR> ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>     <CLR=BOLD>Size</CLR>
 <CLR=33,BOLD>main.js</CLR>  <CLR=33,BOLD>294 KiB</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  [name: main]
@@ -2141,7 +2141,7 @@ exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
       [LogTestPlugin] Log
     [LogTestPlugin] End
 Hash: 024d57772fd9d4dc8f32
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
   Asset       Size  Chunks
@@ -2261,7 +2261,7 @@ exports[`StatsTestCases should print correct stats for preset-normal 1`] = `
 <w> [LogTestPlugin] Warning
 <i> [LogTestPlugin] Info
 Hash: 024d57772fd9d4dc8f32
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset       Size
  460.js  324 bytes  [emitted]
@@ -2286,7 +2286,7 @@ LOG from LogTestPlugin
 `;
 
 exports[`StatsTestCases should print correct stats for preset-normal-performance 1`] = `
-"Time: <CLR=BOLD>X</CLR>ms
+"Time: <CLR=BOLD>X</CLR> ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>
  <CLR=32,BOLD>460.js</CLR>  324 bytes  <CLR=32,BOLD>[emitted]</CLR>
@@ -2316,7 +2316,7 @@ Entrypoints:
 `;
 
 exports[`StatsTestCases should print correct stats for preset-normal-performance-ensure-filter-sourcemaps 1`] = `
-"Time: <CLR=BOLD>X</CLR>ms
+"Time: <CLR=BOLD>X</CLR> ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
       <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>
      <CLR=32,BOLD>460.js</CLR>  356 bytes  <CLR=32,BOLD>[emitted]</CLR>
@@ -2362,7 +2362,7 @@ exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
       [LogTestPlugin] Log
     [LogTestPlugin] End
 Hash: 024d57772fd9d4dc8f32
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
   Asset       Size  Chunks
@@ -2377,12 +2377,12 @@ chunk {179} main.js (main) 73 bytes (javascript) 4.19 KiB (runtime) >{460}< >{99
        ModuleConcatenation bailout: Module is not an ECMAScript module
        cjs self exports reference [847] ./a.js 1:0-14
        cjs require ./a [10] ./index.js 1:0-14
-       Xms [10] -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+       X ms [10] -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
   [10] ./index.js 51 bytes {179} [depth 0] [built]
        [no exports used]
        ModuleConcatenation bailout: Module is not an ECMAScript module
        entry ./index main
-       Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+       X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
  webpack/runtime/ensure chunk 326 bytes {179} [runtime]
        [no exports]
        [used exports unknown]
@@ -2403,26 +2403,26 @@ chunk {460} 460.js 54 bytes <{179}> >{524}< [rendered]
  [460] ./c.js 54 bytes {460} [depth 1] [built]
        ModuleConcatenation bailout: Module is not an ECMAScript module
        amd require ./c [10] ./index.js 3:0-16
-       Xms [10] -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+       X ms [10] -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
 chunk {524} 524.js 44 bytes <{460}> [rendered]
     > [460] ./c.js 1:0-52
  [767] ./d.js 22 bytes {524} [depth 2] [built]
        ModuleConcatenation bailout: Module is not an ECMAScript module
        require.ensure item ./d [460] ./c.js 1:0-52
        cjs self exports reference [767] ./d.js 1:0-14
-       Xms [10] -> Xms [460] -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+       X ms [10] -> X ms [460] -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
  [390] ./e.js 22 bytes {524} [depth 2] [built]
        ModuleConcatenation bailout: Module is not an ECMAScript module
        require.ensure item ./e [460] ./c.js 1:0-52
        cjs self exports reference [390] ./e.js 1:0-14
-       Xms [10] -> Xms [460] -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+       X ms [10] -> X ms [460] -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
 chunk {996} 996.js 22 bytes <{179}> [rendered]
     > ./b [10] ./index.js 2:0-16
  [996] ./b.js 22 bytes {996} [depth 1] [built]
        ModuleConcatenation bailout: Module is not an ECMAScript module
        cjs self exports reference [996] ./b.js 1:0-14
        amd require ./b [10] ./index.js 2:0-16
-       Xms [10] -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
+       X ms [10] -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
 
 LOG from LogTestPlugin
 <-> Group
@@ -2439,88 +2439,88 @@ LOG from LogTestPlugin
 + 1 hidden lines
 
 LOG from webpack.Compiler
-<t> make hook: Xms
-<t> finish compilation: Xms
-<t> seal compilation: Xms
-<t> afterCompile hook: Xms
-<t> emitAssets: Xms
-<t> emitRecords: Xms
-<t> done hook: Xms
-<t> beginIdle: Xms
+<t> make hook: X ms
+<t> finish compilation: X ms
+<t> seal compilation: X ms
+<t> afterCompile hook: X ms
+<t> emitAssets: X ms
+<t> emitRecords: X ms
+<t> done hook: X ms
+<t> beginIdle: X ms
 
 LOG from webpack.FlagDependencyExportsPlugin
-<t> restore cached provided exports: Xms
-<t> figure out provided exports: Xms
-<t> store provided exports into cache: Xms
+<t> restore cached provided exports: X ms
+<t> figure out provided exports: X ms
+<t> store provided exports into cache: X ms
 
 LOG from webpack.InnerGraphPlugin
-<t> infer dependency usage: Xms
+<t> infer dependency usage: X ms
 
 LOG from webpack.Compilation
-<t> finish modules: Xms
-<t> report dependency errors and warnings: Xms
-<t> optimize dependencies: Xms
-<t> create chunks: Xms
-<t> optimize: Xms
-<t> module hashing: Xms
-<t> code generation: Xms
-<t> runtime requirements: Xms
-<t> hashing: initialize hash: Xms
-<t> hashing: sort chunks: Xms
-<t> hashing: hash runtime modules: Xms
-<t> hashing: hash chunks: Xms
-<t> hashing: hash digest: Xms
-<t> hashing: Xms
-<t> record hash: Xms
-<t> module assets: Xms
-<t> create chunk assets: Xms
-<t> additional assets: Xms
-<t> optimize assets: Xms
-<t> finish assets: Xms
+<t> finish modules: X ms
+<t> report dependency errors and warnings: X ms
+<t> optimize dependencies: X ms
+<t> create chunks: X ms
+<t> optimize: X ms
+<t> module hashing: X ms
+<t> code generation: X ms
+<t> runtime requirements: X ms
+<t> hashing: initialize hash: X ms
+<t> hashing: sort chunks: X ms
+<t> hashing: hash runtime modules: X ms
+<t> hashing: hash chunks: X ms
+<t> hashing: hash digest: X ms
+<t> hashing: X ms
+<t> record hash: X ms
+<t> module assets: X ms
+<t> create chunk assets: X ms
+<t> additional assets: X ms
+<t> optimize assets: X ms
+<t> finish assets: X ms
 
 LOG from webpack.SideEffectsFlagPlugin
-<t> capture reexports from modules: Xms
-<t> flatten reexports: Xms
-<t> update imports: Xms
+<t> capture reexports from modules: X ms
+<t> flatten reexports: X ms
+<t> update imports: X ms
 
 LOG from webpack.FlagDependencyUsagePlugin
-<t> initialize exports usage: Xms
-<t> trace exports usage in graph: Xms
+<t> initialize exports usage: X ms
+<t> trace exports usage in graph: X ms
 
 LOG from webpack.buildChunkGraph
-<t> visitModules: prepare: Xms
-<t> visitModules: visiting: Xms
-<t> visitModules: calculating available modules: Xms
-<t> visitModules: merging available modules: Xms
-<t> visitModules: check modules for revisit: Xms
-<t> visitModules: visiting: Xms
-<t> visitModules: calculating available modules: Xms
-<t> visitModules: merging available modules: Xms
-<t> visitModules: check modules for revisit: Xms
-<t> visitModules: visiting: Xms
-<t> visitModules: Xms
-<t> connectChunkGroups: Xms
-<t> cleanup: Xms
+<t> visitModules: prepare: X ms
+<t> visitModules: visiting: X ms
+<t> visitModules: calculating available modules: X ms
+<t> visitModules: merging available modules: X ms
+<t> visitModules: check modules for revisit: X ms
+<t> visitModules: visiting: X ms
+<t> visitModules: calculating available modules: X ms
+<t> visitModules: merging available modules: X ms
+<t> visitModules: check modules for revisit: X ms
+<t> visitModules: visiting: X ms
+<t> visitModules: X ms
+<t> connectChunkGroups: X ms
+<t> cleanup: X ms
 
 LOG from webpack.SplitChunksPlugin
-<t> prepare: Xms
-<t> modules: Xms
-<t> queue: Xms
-<t> maxSize: Xms
+<t> prepare: X ms
+<t> modules: X ms
+<t> queue: X ms
+<t> maxSize: X ms
 
 LOG from ModuleConcatenationPlugin
-<t> select relevant modules: Xms
-<t> sort relevant modules: Xms
-<t> find modules to concatenate: Xms
-<t> sort concat configurations: Xms
-<t> create concatenated modules: Xms
+<t> select relevant modules: X ms
+<t> sort relevant modules: X ms
+<t> find modules to concatenate: X ms
+<t> sort concat configurations: X ms
+<t> create concatenated modules: X ms
 + 2 hidden lines
 "
 `;
 
 exports[`StatsTestCases should print correct stats for resolve-plugin-context 1`] = `
 "Hash: 2b3ef749cda92d3cfac9
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset     Size
 bundle.js  1.5 KiB  [emitted]  [name: main]
@@ -2534,7 +2534,7 @@ Entrypoint main = bundle.js
 
 exports[`StatsTestCases should print correct stats for reverse-sort-modules 1`] = `
 "Hash: 896d8a1d7b73a2ef9139
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset      Size
 main.js  5.29 KiB  [emitted]  [name: main]
@@ -2606,7 +2606,7 @@ Entrypoint e2 = runtime.js e2.js"
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
 "Hash: 7cfe1ff84c4ec618a2da
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
 Entrypoint index = index.js
 Entrypoint entry = entry.js
@@ -2638,7 +2638,7 @@ exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] 
 "Hash: 7cb360b116ad92cf28c7eecef53ff6803bb3e2c1
 Child
     Hash: 7cb360b116ad92cf28c7
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
     Entrypoint first = a-vendor.js a-first.js
     Entrypoint second = a-vendor.js a-second.js
@@ -2656,7 +2656,7 @@ Child
         + 12 hidden modules
 Child
     Hash: eecef53ff6803bb3e2c1
-    Time: Xms
+    Time: X ms
     Built at: 1970-04-20 12:42:42
     Entrypoint first = b-vendor.js b-first.js
     Entrypoint second = b-vendor.js b-second.js
@@ -2683,7 +2683,7 @@ Child
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
 "Hash: 63afda29824f1a48fef1
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset       Size
    1.js  642 bytes  [emitted]
@@ -2733,8 +2733,8 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
-"Hash: bba4214f926bfb74bb29
-Time: Xms
+"Hash: 4205efc704387d48d033
+Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset       Size
 main.js  322 bytes  [emitted]  [name: main]
@@ -2767,7 +2767,7 @@ Entrypoint main = main.js
 
 exports[`StatsTestCases should print correct stats for simple 1`] = `
 "Hash: 4560573be24f47daafe4
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset       Size
 bundle.js  871 bytes  [emitted]  [name: main]
@@ -2777,7 +2777,7 @@ Entrypoint main = bundle.js
 
 exports[`StatsTestCases should print correct stats for simple-more-info 1`] = `
 "Hash: 4184968049b5a307616e
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
     Asset      Size
@@ -2785,7 +2785,7 @@ bundle.js  54 bytes  [emitted]  [name: main]
 Entrypoint main = bundle.js
 ./index.js 1 bytes [built]
     entry ./index main
-    Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)"
+    X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
@@ -3784,11 +3784,11 @@ chunk default/async-a.js (async-a) 134 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: 06b3690c160b35374c1d
-Time: Xms
+"Hash: 4abb9dd9f28d864fe0ca
+Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset      Size
-bundle.js  7.17 KiB  [emitted]  [name: main]
+bundle.js  7.09 KiB  [emitted]  [name: main]
 Entrypoint main = bundle.js
 ./index.js 316 bytes [built] [1 warning]
     [no exports]
@@ -3828,7 +3828,7 @@ require.include() is deprecated and will be removed soon.
 
 exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
 "Hash: 65ad992aa3bdc02fd512
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset       Size
 bundle.js  823 bytes  [emitted]  [name: main]
@@ -3852,7 +3852,7 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [we
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
 "Hash: 6447a9fca2b71320b7dd
-Time: Xms
+Time: X ms
 Built at: 1970-04-20 12:42:42
                            Asset       Size
 1d55f77c08cd19684f13.module.wasm  154 bytes  [emitted] [immutable]
