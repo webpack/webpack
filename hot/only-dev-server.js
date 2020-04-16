@@ -12,7 +12,7 @@ if (module.hot) {
 	var check = function check() {
 		module.hot
 			.check()
-			.then(function (updatedModules) {
+			.then(function(updatedModules) {
 				if (!updatedModules) {
 					log("warning", "[HMR] Cannot find update. Need to do a full reload!");
 					log(
@@ -27,21 +27,21 @@ if (module.hot) {
 						ignoreUnaccepted: true,
 						ignoreDeclined: true,
 						ignoreErrored: true,
-						onUnaccepted: function (data) {
+						onUnaccepted: function(data) {
 							log(
 								"warning",
 								"Ignored an update to unaccepted module " +
 									data.chain.join(" -> ")
 							);
 						},
-						onDeclined: function (data) {
+						onDeclined: function(data) {
 							log(
 								"warning",
 								"Ignored an update to declined module " +
 									data.chain.join(" -> ")
 							);
 						},
-						onErrored: function (data) {
+						onErrored: function(data) {
 							log("error", data.error);
 							log(
 								"warning",
@@ -53,7 +53,7 @@ if (module.hot) {
 							);
 						}
 					})
-					.then(function (renewedModules) {
+					.then(function(renewedModules) {
 						if (!upToDate()) {
 							check();
 						}
@@ -65,7 +65,7 @@ if (module.hot) {
 						}
 					});
 			})
-			.catch(function (err) {
+			.catch(function(err) {
 				var status = module.hot.status();
 				if (["abort", "fail"].indexOf(status) >= 0) {
 					log(
@@ -79,7 +79,7 @@ if (module.hot) {
 			});
 	};
 	var hotEmitter = require("./emitter");
-	hotEmitter.on("webpackHotUpdate", function (currentHash) {
+	hotEmitter.on("webpackHotUpdate", function(currentHash) {
 		lastHash = currentHash;
 		if (!upToDate()) {
 			var status = module.hot.status();

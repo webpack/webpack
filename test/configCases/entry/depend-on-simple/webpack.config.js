@@ -8,7 +8,7 @@ module.exports = {
 		filename: "[name].js"
 	},
 	plugins: [
-		function () {
+		function() {
 			/**
 			 * @param {Compilation} compilation compilation
 			 * @returns {void}

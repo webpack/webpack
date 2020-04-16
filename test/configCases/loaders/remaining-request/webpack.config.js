@@ -9,7 +9,7 @@ module.exports = {
 						loader: "./loader2",
 						ident: "loader2",
 						options: {
-							f: function () {
+							f: function() {
 								return "ok";
 							}
 						}
@@ -23,7 +23,7 @@ module.exports = {
 					{
 						loader: "./loader2",
 						options: {
-							f: function () {
+							f: function() {
 								return "ok";
 							}
 						}
@@ -38,7 +38,7 @@ module.exports = {
 				test: /c\.js$/,
 				loader: "./loader2",
 				options: {
-					f: function () {
+					f: function() {
 						return "ok";
 					}
 				}

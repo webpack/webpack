@@ -51,7 +51,7 @@ categories = categories.map(cat => {
 const describeCases = config => {
 	describe(config.name, () => {
 		categories.forEach(category => {
-			describe(category.name, function () {
+			describe(category.name, function() {
 				jest.setTimeout(20000);
 
 				category.tests
@@ -160,7 +160,7 @@ const describeCases = config => {
 										}
 									]
 								},
-								plugins: (config.plugins || []).concat(function () {
+								plugins: (config.plugins || []).concat(function() {
 									this.hooks.compilation.tap("TestCasesTest", compilation => {
 										[
 											"optimize",

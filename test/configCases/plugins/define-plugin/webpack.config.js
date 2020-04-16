@@ -18,7 +18,7 @@ module.exports = {
 			NEGATIVE_ZER0: -0,
 			NEGATIVE_NUMBER: -100.25,
 			POSITIVE_NUMBER: +100.25,
-			FUNCTION: /* istanbul ignore next */ function (a) {
+			FUNCTION: /* istanbul ignore next */ function(a) {
 				return a + 1;
 			},
 			CODE: "(1+2)",
@@ -26,7 +26,7 @@ module.exports = {
 			OBJECT: {
 				SUB: {
 					UNDEFINED: undefined,
-					FUNCTION: /* istanbul ignore next */ function (a) {
+					FUNCTION: /* istanbul ignore next */ function(a) {
 						return a + 1;
 					},
 					CODE: "(1+2)",
@@ -42,7 +42,7 @@ module.exports = {
 			wurst: "suppe",
 			suppe: "wurst",
 			RUNTIMEVALUE_CALLBACK_ARGUMENT_IS_A_MODULE: DefinePlugin.runtimeValue(
-				function ({ module }) {
+				function({ module }) {
 					return module instanceof Module;
 				}
 			),

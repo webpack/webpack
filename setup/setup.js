@@ -96,7 +96,11 @@ function execGetOutput(command, args, description) {
 			if (exitCode) {
 				reject(`${description} failed with exit code ${exitCode}`);
 			} else {
-				resolve(Buffer.concat(buffers).toString("utf-8").trim());
+				resolve(
+					Buffer.concat(buffers)
+						.toString("utf-8")
+						.trim()
+				);
 			}
 		});
 		const buffers = [];

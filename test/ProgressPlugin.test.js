@@ -7,7 +7,7 @@ const captureStdio = require("./helpers/captureStdio");
 
 let webpack;
 
-describe("ProgressPlugin", function () {
+describe("ProgressPlugin", function() {
 	let stderr;
 
 	beforeEach(() => {

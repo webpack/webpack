@@ -6,7 +6,7 @@ module.exports = {
 		concatenateModules: true
 	},
 	plugins: [
-		function () {
+		function() {
 			this.hooks.compilation.tap(
 				"Test",
 				/**

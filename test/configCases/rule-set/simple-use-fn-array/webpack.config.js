@@ -1,6 +1,6 @@
 function createFunctionArrayFromUseArray(useArray) {
-	return useArray.map(function (useItem) {
-		return function (data) {
+	return useArray.map(function(useItem) {
+		return function(data) {
 			return useItem;
 		};
 	});
@@ -15,7 +15,7 @@ var useArray = createFunctionArrayFromUseArray([
 	{
 		loader: "./loader",
 		options: {
-			get: function () {
+			get: function() {
 				return "second-3";
 			}
 		}

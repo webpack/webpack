@@ -8,7 +8,7 @@ if (module.hot) {
 	var checkForUpdate = function checkForUpdate(fromUpdate) {
 		module.hot
 			.check()
-			.then(function (updatedModules) {
+			.then(function(updatedModules) {
 				if (!updatedModules) {
 					if (fromUpdate) log("info", "[HMR] Update applied.");
 					else log("warning", "[HMR] Cannot find update.");
@@ -18,7 +18,7 @@ if (module.hot) {
 				return module.hot
 					.apply({
 						ignoreUnaccepted: true,
-						onUnaccepted: function (data) {
+						onUnaccepted: function(data) {
 							log(
 								"warning",
 								"Ignored an update to unaccepted module " +
@@ -26,14 +26,14 @@ if (module.hot) {
 							);
 						}
 					})
-					.then(function (renewedModules) {
+					.then(function(renewedModules) {
 						require("./log-apply-result")(updatedModules, renewedModules);
 
 						checkForUpdate(true);
 						return null;
 					});
 			})
-			.catch(function (err) {
+			.catch(function(err) {
 				var status = module.hot.status();
 				if (["abort", "fail"].indexOf(status) >= 0) {
 					log("warning", "[HMR] Cannot apply update.");
@@ -45,7 +45,7 @@ if (module.hot) {
 			});
 	};
 
-	process.on(__resourceQuery.substr(1) || "SIGUSR2", function () {
+	process.on(__resourceQuery.substr(1) || "SIGUSR2", function() {
 		if (module.hot.status() !== "idle") {
 			log(
 				"warning",

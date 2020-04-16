@@ -13,7 +13,7 @@ const originalDeprecate = util.deprecate;
 util.deprecate = (fn, message, code) => {
 	const original = originalDeprecate(fn, message, code);
 
-	return function (...args) {
+	return function(...args) {
 		if (interception) {
 			interception.set(`${code}: ${message}`, { code, message });
 			return fn.apply(this, args);
