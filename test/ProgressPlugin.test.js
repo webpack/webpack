@@ -9,13 +9,16 @@ let webpack;
 
 describe("ProgressPlugin", function () {
 	let stderr;
+	let stdout;
 
 	beforeEach(() => {
 		stderr = captureStdio(process.stderr, true);
+		stdout = captureStdio(process.stdout, true);
 		webpack = require("..");
 	});
 	afterEach(() => {
 		stderr && stderr.restore();
+		stdout && stdout.restore();
 	});
 
 	it("should not contain NaN as a percentage when it is applied to MultiCompiler", () => {
@@ -24,6 +27,27 @@ describe("ProgressPlugin", function () {
 		return RunCompilerAsync(compiler).then(() => {
 			expect(stderr.toString()).toContain("%");
 			expect(stderr.toString()).not.toContain("NaN");
+		});
+	});
+
+	it("should print profile information", () => {
+		const compiler = createSimpleCompiler({
+			profile: true
+		});
+
+		return RunCompilerAsync(compiler).then(() => {
+			const logs = getLogs(stderr.toString());
+
+			expect(logs).toContainEqual(
+				expect.stringMatching(
+					/^ {4}\[webpack\.Progress\] \d+ ms module ids DeterministicModuleIdsPlugin\n$/
+				)
+			);
+			expect(logs).toContainEqual(
+				expect.stringMatching(
+					/^ {4}\[webpack\.Progress\] \d+ ms(?: \(-\d+ ms\))? module ids\n$/
+				)
+			);
 		});
 	});
 
@@ -114,7 +138,10 @@ const createMultiCompiler = () => {
 const createSimpleCompiler = progressOptions => {
 	const compiler = webpack({
 		context: path.join(__dirname, "fixtures"),
-		entry: "./a.js"
+		entry: "./a.js",
+		infrastructureLogging: {
+			debug: /Progress/
+		}
 	});
 
 	compiler.outputFileSystem = createFsFromVolume(new Volume());

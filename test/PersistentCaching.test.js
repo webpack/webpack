@@ -38,7 +38,7 @@ describe("Persistent Caching", () => {
 		}
 	};
 
-	beforeAll(done => {
+	beforeEach(done => {
 		rimraf(tempPath, done);
 	});
 
@@ -52,9 +52,9 @@ describe("Persistent Caching", () => {
 		}
 	};
 
-	const compile = async () => {
+	const compile = async (configAdditions = {}) => {
 		return new Promise((resolve, reject) => {
-			webpack(config, (err, stats) => {
+			webpack({ ...config, ...configAdditions }, (err, stats) => {
 				if (err) return reject(err);
 				resolve(stats);
 			});
@@ -98,5 +98,29 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 		const cacheFiles = await readdir(cachePath);
 		expect(cacheFiles.length).toBeLessThan(20);
 		expect(cacheFiles.length).toBeGreaterThan(10);
+	}, 60000);
+
+	it("should optimize unused content", async () => {
+		const data = {
+			"a.js": 'import "react-dom";',
+			"b.js": 'import "acorn";',
+			"c.js": 'import "core-js";',
+			"d.js": 'import "date-fns";',
+			"e.js": 'import "lodash";'
+		};
+		const createEntry = items => {
+			const entry = {};
+			for (const item of items.split("")) entry[item] = `./src/${item}.js`;
+			return entry;
+		};
+		await updateSrc(data);
+		await compile({ entry: createEntry("abcde") });
+		await compile({ entry: createEntry("abc") });
+		await compile({ entry: createEntry("cde") });
+		await compile({ entry: createEntry("acd") });
+		await compile({ entry: createEntry("bce") });
+		await compile({ entry: createEntry("abcde") });
+		const cacheFiles = await readdir(cachePath);
+		expect(cacheFiles.length).toBeGreaterThan(4);
 	}, 60000);
 });
