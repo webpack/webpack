@@ -7,7 +7,7 @@ const captureStdio = require("./helpers/captureStdio");
 
 let webpack;
 
-describe("ProgressPlugin", function () {
+describe("ProgressPlugin", function() {
 	let stderr;
 	let stdout;
 
@@ -82,6 +82,18 @@ describe("ProgressPlugin", function () {
 
 			expect(logs.length).toBeGreaterThan(20);
 			expect(_.maxBy(logs, "length").length).toBeGreaterThan(50);
+		});
+	});
+
+	it("should contain the new compiler hooks", () => {
+		const compiler = createSimpleCompiler();
+
+		process.stderr.columns = undefined;
+		return RunCompilerAsync(compiler).then(() => {
+			const logs = getLogs(stderr.toString());
+
+			expect(logs).toContain("3% normal module factory");
+			expect(logs).toContain("3% context module factory");
 		});
 	});
 
