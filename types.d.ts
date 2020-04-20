@@ -5828,16 +5828,7 @@ declare namespace webpack {
 		/**
 		 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML).
 		 */
-		chunks?:
-			| "initial"
-			| "async"
-			| "all"
-			| ((
-					module: webpack.Module
-			  ) =>
-					| void
-					| webpack.OptimizationSplitChunksCacheGroup
-					| Array<webpack.OptimizationSplitChunksCacheGroup>);
+		chunks?: "initial" | "async" | "all" | ((chunk: webpack.Chunk) => boolean);
 
 		/**
 		 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.

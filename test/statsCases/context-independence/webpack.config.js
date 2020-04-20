@@ -20,6 +20,7 @@ const base2 = {
 	devtool: "eval-source-map"
 };
 
+/** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{
 		...base,

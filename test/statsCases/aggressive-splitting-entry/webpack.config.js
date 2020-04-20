@@ -1,4 +1,5 @@
 var webpack = require("../../../");
+/** @type {import("../../../").Configuration[]} */
 module.exports = ["fitting", "content-change"].map(type => ({
 	name: type,
 	mode: "production",

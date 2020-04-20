@@ -10,6 +10,7 @@ process.env.FFF = "fff";
 process.env.GGG = "ggg";
 process.env.III = "";
 
+/** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
 		name: "aaa",

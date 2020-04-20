@@ -29,6 +29,7 @@ const baseConfig = {
 	}
 };
 
+/** @type {import("../../../").Configuration[]} */
 module.exports = [
 	undefined,
 	"Terser",

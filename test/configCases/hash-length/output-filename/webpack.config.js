@@ -1,5 +1,6 @@
 var webpack = require("../../../../");
 /** @type {import("../../../../").Configuration[]} */
+/** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
 		name: "hash with length in publicPath",

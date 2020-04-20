@@ -15,6 +15,7 @@ const base = {
 		}
 	}
 };
+/** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{
 		entry: "./a.js",

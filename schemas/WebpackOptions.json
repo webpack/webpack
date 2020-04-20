@@ -1248,7 +1248,8 @@
               "enum": ["initial", "async", "all"]
             },
             {
-              "$ref": "#/definitions/OptimizationSplitChunksGetCacheGroups"
+              "instanceof": "Function",
+              "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
             }
           ]
         },

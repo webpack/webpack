@@ -302,15 +302,6 @@ export type OptimizationRuntimeChunk =
 			name?: string | Function;
 	  };
 /**
- * A function returning cache groups.
- */
-export type OptimizationSplitChunksGetCacheGroups = (
-	module: import("../lib/Module")
-) =>
-	| OptimizationSplitChunksCacheGroup
-	| OptimizationSplitChunksCacheGroup[]
-	| void;
-/**
  * Size description for limits.
  */
 export type OptimizationSplitChunksSizes =
@@ -548,6 +539,15 @@ export type OptimizationRuntimeChunkNormalized =
 			 */
 			name?: Function;
 	  };
+/**
+ * A function returning cache groups.
+ */
+export type OptimizationSplitChunksGetCacheGroups = (
+	module: import("../lib/Module")
+) =>
+	| OptimizationSplitChunksCacheGroup
+	| OptimizationSplitChunksCacheGroup[]
+	| void;
 
 /**
  * Options object as provided by the user.
@@ -1421,7 +1421,7 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	chunks?:
 		| ("initial" | "async" | "all")
-		| OptimizationSplitChunksGetCacheGroups;
+		| ((chunk: import("../lib/Chunk")) => boolean);
 	/**
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
 	 */
