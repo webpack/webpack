@@ -1,6 +1,7 @@
 /** @typedef {import("../../../../").Compilation} Compilation */
 /** @typedef {import("../../../../").Module} Module */
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
 		entry1: "./entry1",
@@ -22,6 +23,7 @@ module.exports = {
 					for (const [name, group] of compilation.namedChunkGroups) {
 						/** @type {Map<Module, number>} */
 						const modules = new Map();
+						/** @type {Map<Module, number>} */
 						const modules2 = new Map();
 						for (const chunk of group.chunks) {
 							for (const module of compilation.chunkGraph.getChunkModulesIterable(
@@ -75,7 +77,13 @@ module.exports = {
 						asyncIndex2: "0: ./async.js"
 					});
 					const indices = Array.from(compilation.modules)
-						.map(m => [moduleGraph.getPreOrderIndex(m), m])
+						.map(
+							m =>
+								/** @type {[number, Module]} */ ([
+									moduleGraph.getPreOrderIndex(m),
+									m
+								])
+						)
 						.filter(p => typeof p[0] === "number")
 						.sort((a, b) => a[0] - b[0])
 						.map(
@@ -84,7 +92,13 @@ module.exports = {
 						)
 						.join(", ");
 					const indices2 = Array.from(compilation.modules)
-						.map(m => [moduleGraph.getPostOrderIndex(m), m])
+						.map(
+							m =>
+								/** @type {[number, Module]} */ ([
+									moduleGraph.getPostOrderIndex(m),
+									m
+								])
+						)
 						.filter(p => typeof p[0] === "number")
 						.sort((a, b) => a[0] - b[0])
 						.map(

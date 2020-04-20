@@ -12,6 +12,7 @@ var testPlugin = function () {
 	});
 };
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [testPlugin]
 };

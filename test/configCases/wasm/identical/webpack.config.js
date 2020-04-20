@@ -3,6 +3,7 @@ const { AsyncWebAssemblyModulesPlugin } = require("../../../../").wasm;
 
 /** @typedef {import("../../../../").Compiler} Compiler */
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	module: {
 		rules: [

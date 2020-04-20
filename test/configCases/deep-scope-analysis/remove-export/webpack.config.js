@@ -1,5 +1,6 @@
 /** @typedef {import("../../../../").Compilation} Compilation */
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	optimization: {
 		usedExports: true,

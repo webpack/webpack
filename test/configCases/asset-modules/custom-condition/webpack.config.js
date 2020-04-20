@@ -1,6 +1,7 @@
 const path = require("path");
 const NormalModule = require("../../../../").NormalModule;
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
 	module: {

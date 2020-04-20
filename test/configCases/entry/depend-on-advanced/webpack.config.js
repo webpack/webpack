@@ -3,6 +3,7 @@
 /** @typedef {import("../../../../").Configuration} Configuration */
 
 /** @type {Configuration} */
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry() {
 		return Promise.resolve({

@@ -75,7 +75,7 @@ import {
 	SyncWaterfallHook
 } from "tapable";
 
-declare namespace internals {
+declare namespace webpack {
 	export class AbstractLibraryPlugin<T> {
 		constructor(__0: {
 			/**
@@ -107,27 +107,27 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
-		parseOptions(library: internals.LibraryOptions): false | T;
+		apply(compiler: webpack.Compiler): void;
+		parseOptions(library: webpack.LibraryOptions): false | T;
 		finishEntryModule(
-			module: internals.Module,
-			libraryContext: internals.LibraryContext<T>
+			module: webpack.Module,
+			libraryContext: webpack.LibraryContext<T>
 		): void;
 		runtimeRequirements(
-			chunk: internals.Chunk,
+			chunk: webpack.Chunk,
 			set: Set<string>,
-			libraryContext: internals.LibraryContext<T>
+			libraryContext: webpack.LibraryContext<T>
 		): void;
 		render(
-			source: internals.Source,
-			renderContext: internals.RenderContextJavascriptModulesPlugin,
-			libraryContext: internals.LibraryContext<T>
-		): internals.Source;
+			source: webpack.Source,
+			renderContext: webpack.RenderContextJavascriptModulesPlugin,
+			libraryContext: webpack.LibraryContext<T>
+		): webpack.Source;
 		chunkHash(
-			chunk: internals.Chunk,
-			hash: internals.Hash,
-			chunkHashContext: internals.ChunkHashContext,
-			libraryContext: internals.LibraryContext<T>
+			chunk: webpack.Chunk,
+			hash: webpack.Hash,
+			chunkHashContext: webpack.ChunkHashContext,
+			libraryContext: webpack.LibraryContext<T>
 		): void;
 	}
 	export class AggressiveMergingPlugin {
@@ -137,17 +137,17 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export class AggressiveSplittingPlugin {
-		constructor(options?: internals.AggressiveSplittingPluginOptions);
-		options: internals.AggressiveSplittingPluginOptions;
+		constructor(options?: webpack.AggressiveSplittingPluginOptions);
+		options: webpack.AggressiveSplittingPluginOptions;
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
-		static wasChunkRecorded(chunk: internals.Chunk): boolean;
+		apply(compiler: webpack.Compiler): void;
+		static wasChunkRecorded(chunk: webpack.Chunk): boolean;
 	}
 
 	/**
@@ -181,7 +181,7 @@ declare namespace internals {
 		description: string;
 		simpleType: "string" | "number" | "boolean";
 		multiple: boolean;
-		configs: Array<internals.ArgumentConfig>;
+		configs: Array<webpack.ArgumentConfig>;
 	}
 	export interface ArgumentConfig {
 		description: string;
@@ -206,17 +206,17 @@ declare namespace internals {
 		/**
 		 * source of the asset
 		 */
-		source: internals.Source;
+		source: webpack.Source;
 
 		/**
 		 * info about the asset
 		 */
-		info: internals.AssetInfo;
+		info: webpack.AssetInfo;
 	}
 	export interface AssetEmittedInfo {
 		content: Buffer;
-		source: internals.Source;
-		compilation: internals.Compilation;
+		source: webpack.Source;
+		compilation: webpack.Compilation;
 		outputPath: string;
 		targetPath: string;
 	}
@@ -243,21 +243,16 @@ declare namespace internals {
 	}
 	export type AssetModuleFilename =
 		| string
-		| ((
-				pathData: internals.PathData,
-				assetInfo: internals.AssetInfo
-		  ) => string);
-	export abstract class AsyncDependenciesBlock extends internals.DependenciesBlock {
+		| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
+	export abstract class AsyncDependenciesBlock extends webpack.DependenciesBlock {
 		groupOptions: {
 			preloadOrder?: number;
 			prefetchOrder?: number;
 			name: string;
 		};
-		loc:
-			| internals.SyntheticDependencyLocation
-			| internals.RealDependencyLocation;
+		loc: webpack.SyntheticDependencyLocation | webpack.RealDependencyLocation;
 		request: string;
-		parent: internals.DependenciesBlock;
+		parent: webpack.DependenciesBlock;
 		chunkName: string;
 		module: any;
 	}
@@ -269,7 +264,7 @@ declare namespace internals {
 			started: SyncHook<[T], void>;
 			result: SyncHook<[T, Error, R], void>;
 		};
-		add(item: T, callback: internals.CallbackCompiler<R>): void;
+		add(item: T, callback: webpack.CallbackCompiler<R>): void;
 		invalidate(item: T): void;
 		stop(): void;
 		increaseParallelism(): void;
@@ -285,11 +280,11 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 		renderModule(module?: any, renderContext?: any, hooks?: any): any;
 		static getCompilationHooks(
-			compilation: internals.Compilation
-		): internals.CompilationHooksAsyncWebAssemblyModulesPlugin;
+			compilation: webpack.Compilation
+		): webpack.CompilationHooksAsyncWebAssemblyModulesPlugin;
 	}
 	export class AutomaticPrefetchPlugin {
 		constructor();
@@ -297,40 +292,38 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
-	export type AuxiliaryComment =
-		| string
-		| internals.LibraryCustomUmdCommentObject;
+	export type AuxiliaryComment = string | webpack.LibraryCustomUmdCommentObject;
 	export class BannerPlugin {
 		constructor(
 			options:
 				| string
-				| internals.BannerPluginOptions
+				| webpack.BannerPluginOptions
 				| ((data: {
 						hash: string;
-						chunk: internals.Chunk;
+						chunk: webpack.Chunk;
 						filename: string;
 				  }) => string)
 		);
-		options: internals.BannerPluginOptions;
+		options: webpack.BannerPluginOptions;
 		banner: (data: {
 			hash: string;
-			chunk: internals.Chunk;
+			chunk: webpack.Chunk;
 			filename: string;
 		}) => string;
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export type BannerPluginArgument =
 		| string
-		| internals.BannerPluginOptions
+		| webpack.BannerPluginOptions
 		| ((data: {
 				hash: string;
-				chunk: internals.Chunk;
+				chunk: webpack.Chunk;
 				filename: string;
 		  }) => string);
 	export interface BannerPluginOptions {
@@ -341,7 +334,7 @@ declare namespace internals {
 			| string
 			| ((data: {
 					hash: string;
-					chunk: internals.Chunk;
+					chunk: webpack.Chunk;
 					filename: string;
 			  }) => string);
 
@@ -408,38 +401,38 @@ declare namespace internals {
 		isFalsy(): boolean;
 		asBool(): any;
 		asString(): any;
-		setString(string?: any): internals.BasicEvaluatedExpression;
-		setNull(): internals.BasicEvaluatedExpression;
-		setNumber(number?: any): internals.BasicEvaluatedExpression;
-		setBigInt(bigint?: any): internals.BasicEvaluatedExpression;
-		setBoolean(bool?: any): internals.BasicEvaluatedExpression;
-		setRegExp(regExp?: any): internals.BasicEvaluatedExpression;
+		setString(string?: any): webpack.BasicEvaluatedExpression;
+		setNull(): webpack.BasicEvaluatedExpression;
+		setNumber(number?: any): webpack.BasicEvaluatedExpression;
+		setBigInt(bigint?: any): webpack.BasicEvaluatedExpression;
+		setBoolean(bool?: any): webpack.BasicEvaluatedExpression;
+		setRegExp(regExp?: any): webpack.BasicEvaluatedExpression;
 		setIdentifier(
 			identifier?: any,
 			rootInfo?: any,
 			getMembers?: any
-		): internals.BasicEvaluatedExpression;
+		): webpack.BasicEvaluatedExpression;
 		setWrapped(
 			prefix?: any,
 			postfix?: any,
 			innerExpressions?: any
-		): internals.BasicEvaluatedExpression;
-		setOptions(options?: any): internals.BasicEvaluatedExpression;
-		addOptions(options?: any): internals.BasicEvaluatedExpression;
-		setItems(items?: any): internals.BasicEvaluatedExpression;
-		setArray(array?: any): internals.BasicEvaluatedExpression;
+		): webpack.BasicEvaluatedExpression;
+		setOptions(options?: any): webpack.BasicEvaluatedExpression;
+		addOptions(options?: any): webpack.BasicEvaluatedExpression;
+		setItems(items?: any): webpack.BasicEvaluatedExpression;
+		setArray(array?: any): webpack.BasicEvaluatedExpression;
 		setTemplateString(
 			quasis?: any,
 			parts?: any,
 			kind?: any
-		): internals.BasicEvaluatedExpression;
+		): webpack.BasicEvaluatedExpression;
 		templateStringKind: any;
-		setTruthy(): internals.BasicEvaluatedExpression;
-		setFalsy(): internals.BasicEvaluatedExpression;
-		setRange(range?: any): internals.BasicEvaluatedExpression;
-		setExpression(expression?: any): internals.BasicEvaluatedExpression;
+		setTruthy(): webpack.BasicEvaluatedExpression;
+		setFalsy(): webpack.BasicEvaluatedExpression;
+		setRange(range?: any): webpack.BasicEvaluatedExpression;
+		setExpression(expression?: any): webpack.BasicEvaluatedExpression;
 	}
-	export abstract class ByTypeGenerator extends internals.Generator {
+	export abstract class ByTypeGenerator extends webpack.Generator {
 		map: any;
 	}
 	export class Cache {
@@ -448,12 +441,12 @@ declare namespace internals {
 			get: AsyncSeriesBailHook<
 				[
 					string,
-					internals.Etag,
-					Array<(result: any, stats: internals.CallbackCache<void>) => void>
+					webpack.Etag,
+					Array<(result: any, stats: webpack.CallbackCache<void>) => void>
 				],
 				any
 			>;
-			store: AsyncParallelHook<[string, internals.Etag, any]>;
+			store: AsyncParallelHook<[string, webpack.Etag, any]>;
 			storeBuildDependencies: AsyncParallelHook<[Iterable<string>]>;
 			beginIdle: SyncHook<[], void>;
 			endIdle: AsyncParallelHook<[]>;
@@ -461,14 +454,14 @@ declare namespace internals {
 		};
 		get<T>(
 			identifier: string,
-			etag: internals.Etag,
-			callback: internals.CallbackCache<T>
+			etag: webpack.Etag,
+			callback: webpack.CallbackCache<T>
 		): void;
 		store<T>(
 			identifier: string,
-			etag: internals.Etag,
+			etag: webpack.Etag,
 			data: T,
-			callback: internals.CallbackCache<void>
+			callback: webpack.CallbackCache<void>
 		): void;
 
 		/**
@@ -476,11 +469,11 @@ declare namespace internals {
 		 */
 		storeBuildDependencies(
 			dependencies: Iterable<string>,
-			callback: internals.CallbackCache<void>
+			callback: webpack.CallbackCache<void>
 		): void;
 		beginIdle(): void;
-		endIdle(callback: internals.CallbackCache<void>): void;
-		shutdown(callback: internals.CallbackCache<void>): void;
+		endIdle(callback: webpack.CallbackCache<void>): void;
+		shutdown(callback: webpack.CallbackCache<void>): void;
 		static STAGE_MEMORY: number;
 		static STAGE_DEFAULT: number;
 		static STAGE_DISK: number;
@@ -490,11 +483,11 @@ declare namespace internals {
 		key?: string;
 		priority?: number;
 		getName?: (
-			module?: internals.Module,
-			chunks?: Array<internals.Chunk>,
+			module?: webpack.Module,
+			chunks?: Array<webpack.Chunk>,
 			key?: string
 		) => string;
-		chunksFilter?: (chunk: internals.Chunk) => boolean;
+		chunksFilter?: (chunk: webpack.Chunk) => boolean;
 		enforce?: boolean;
 		minSize: Record<string, number>;
 		minRemainingSize: Record<string, number>;
@@ -505,26 +498,26 @@ declare namespace internals {
 		maxInitialRequests?: number;
 		filename?:
 			| string
-			| ((arg0: internals.PathData, arg1: internals.AssetInfo) => string);
+			| ((arg0: webpack.PathData, arg1: webpack.AssetInfo) => string);
 		idHint?: string;
 		automaticNameDelimiter: string;
 		reuseExistingChunk?: boolean;
 	}
 	export interface CacheGroupsContext {
-		moduleGraph: internals.ModuleGraph;
-		chunkGraph: internals.ChunkGraph;
+		moduleGraph: webpack.ModuleGraph;
+		chunkGraph: webpack.ChunkGraph;
 	}
 	export type CacheOptions =
 		| boolean
-		| internals.MemoryCacheOptions
-		| internals.FileCacheOptions;
+		| webpack.MemoryCacheOptions
+		| webpack.FileCacheOptions;
 	export type CacheOptionsNormalized =
 		| false
-		| internals.MemoryCacheOptions
-		| internals.FileCacheOptions;
+		| webpack.MemoryCacheOptions
+		| webpack.FileCacheOptions;
 	export type CallExpression = SimpleCallExpression | NewExpression;
 	export interface CallbackCache<T> {
-		(err?: internals.WebpackError, stats?: T): void;
+		(err?: webpack.WebpackError, stats?: T): void;
 	}
 	export interface CallbackCompiler<T> {
 		(err?: Error, result?: T): any;
@@ -532,16 +525,17 @@ declare namespace internals {
 	export interface CallbackWebpack<T> {
 		(err?: Error, stats?: T): void;
 	}
-	export abstract class Chunk {
+	export class Chunk {
+		constructor(name?: string);
 		id: string | number;
 		ids: Array<string | number>;
 		debugId: number;
 		name: string;
-		idNameHints: internals.SortableSet<string>;
+		idNameHints: webpack.SortableSet<string>;
 		preventIntegration: boolean;
 		filenameTemplate:
 			| string
-			| ((arg0: internals.PathData, arg1: internals.AssetInfo) => string);
+			| ((arg0: webpack.PathData, arg1: webpack.AssetInfo) => string);
 		files: Set<string>;
 		auxiliaryFiles: Set<string>;
 		rendered: boolean;
@@ -550,258 +544,248 @@ declare namespace internals {
 		renderedHash: string;
 		chunkReason: string;
 		extraAsync: boolean;
-		readonly entryModule: internals.Module;
+		readonly entryModule: webpack.Module;
 		hasEntryModule(): boolean;
-		addModule(module: internals.Module): boolean;
-		removeModule(module: internals.Module): void;
+		addModule(module: webpack.Module): boolean;
+		removeModule(module: webpack.Module): void;
 		getNumberOfModules(): number;
-		readonly modulesIterable: Iterable<internals.Module>;
-		compareTo(otherChunk: internals.Chunk): 0 | 1 | -1;
-		containsModule(module: internals.Module): boolean;
-		getModules(): Array<internals.Module>;
+		readonly modulesIterable: Iterable<webpack.Module>;
+		compareTo(otherChunk: webpack.Chunk): 0 | 1 | -1;
+		containsModule(module: webpack.Module): boolean;
+		getModules(): Array<webpack.Module>;
 		remove(): void;
-		moveModule(module: internals.Module, otherChunk: internals.Chunk): void;
-		integrate(otherChunk: internals.Chunk): boolean;
-		canBeIntegrated(otherChunk: internals.Chunk): boolean;
+		moveModule(module: webpack.Module, otherChunk: webpack.Chunk): void;
+		integrate(otherChunk: webpack.Chunk): boolean;
+		canBeIntegrated(otherChunk: webpack.Chunk): boolean;
 		isEmpty(): boolean;
 		modulesSize(): number;
-		size(options?: internals.ChunkSizeOptions): number;
+		size(options?: webpack.ChunkSizeOptions): number;
 		integratedSize(
-			otherChunk: internals.Chunk,
-			options: internals.ChunkSizeOptions
+			otherChunk: webpack.Chunk,
+			options: webpack.ChunkSizeOptions
 		): number;
 		getChunkModuleMaps(
-			filterFn: (m: internals.Module) => boolean
-		): internals.ChunkModuleMaps;
+			filterFn: (m: webpack.Module) => boolean
+		): webpack.ChunkModuleMaps;
 		hasModuleInGraph(
-			filterFn: (m: internals.Module) => boolean,
-			filterChunkFn: (
-				c: internals.Chunk,
-				chunkGraph: internals.ChunkGraph
+			filterFn: (m: webpack.Module) => boolean,
+			filterChunkFn?: (
+				c: webpack.Chunk,
+				chunkGraph: webpack.ChunkGraph
 			) => boolean
 		): boolean;
-		getChunkMaps(realHash: boolean): internals.ChunkMaps;
+		getChunkMaps(realHash: boolean): webpack.ChunkMaps;
 		hasRuntime(): boolean;
 		canBeInitial(): boolean;
 		isOnlyInitial(): boolean;
-		addGroup(chunkGroup: internals.ChunkGroup): void;
-		removeGroup(chunkGroup: internals.ChunkGroup): void;
-		isInGroup(chunkGroup: internals.ChunkGroup): boolean;
+		addGroup(chunkGroup: webpack.ChunkGroup): void;
+		removeGroup(chunkGroup: webpack.ChunkGroup): void;
+		isInGroup(chunkGroup: webpack.ChunkGroup): boolean;
 		getNumberOfGroups(): number;
-		readonly groupsIterable: Iterable<internals.ChunkGroup>;
+		readonly groupsIterable: Iterable<webpack.ChunkGroup>;
 		disconnectFromGroups(): void;
-		split(newChunk: internals.Chunk): void;
-
-		/**
-		 * Update the hash
-		 */
-		updateHash(hash: internals.Hash, chunkGraph: internals.ChunkGraph): void;
-		getAllAsyncChunks(): Set<internals.Chunk>;
-		getAllReferencedChunks(): Set<internals.Chunk>;
+		split(newChunk: webpack.Chunk): void;
+		updateHash(hash: webpack.Hash, chunkGraph: webpack.ChunkGraph): void;
+		getAllAsyncChunks(): Set<webpack.Chunk>;
+		getAllReferencedChunks(): Set<webpack.Chunk>;
 		hasAsyncChunks(): boolean;
 		getChildIdsByOrders(
-			chunkGraph: internals.ChunkGraph,
-			filterFn: (
-				c: internals.Chunk,
-				chunkGraph: internals.ChunkGraph
-			) => boolean
+			chunkGraph: webpack.ChunkGraph,
+			filterFn?: (c: webpack.Chunk, chunkGraph: webpack.ChunkGraph) => boolean
 		): Record<string, Array<string | number>>;
 		getChildIdsByOrdersMap(
-			chunkGraph: internals.ChunkGraph,
-			includeDirectChildren: boolean,
-			filterFn: (
-				c: internals.Chunk,
-				chunkGraph: internals.ChunkGraph
-			) => boolean
+			chunkGraph: webpack.ChunkGraph,
+			includeDirectChildren?: boolean,
+			filterFn?: (c: webpack.Chunk, chunkGraph: webpack.ChunkGraph) => boolean
 		): Record<string | number, Record<string, Array<string | number>>>;
 	}
-	export abstract class ChunkGraph {
-		moduleGraph: internals.ModuleGraph;
-		connectChunkAndModule(
-			chunk: internals.Chunk,
-			module: internals.Module
-		): void;
+	export class ChunkGraph {
+		constructor(moduleGraph: webpack.ModuleGraph);
+		moduleGraph: webpack.ModuleGraph;
+		connectChunkAndModule(chunk: webpack.Chunk, module: webpack.Module): void;
 		disconnectChunkAndModule(
-			chunk: internals.Chunk,
-			module: internals.Module
+			chunk: webpack.Chunk,
+			module: webpack.Module
 		): void;
-		disconnectChunk(chunk: internals.Chunk): void;
+		disconnectChunk(chunk: webpack.Chunk): void;
 		attachModules(
-			chunk: internals.Chunk,
-			modules: Iterable<internals.Module>
+			chunk: webpack.Chunk,
+			modules: Iterable<webpack.Module>
 		): void;
 		attachRuntimeModules(
-			chunk: internals.Chunk,
-			modules: Iterable<internals.RuntimeModule>
+			chunk: webpack.Chunk,
+			modules: Iterable<webpack.RuntimeModule>
 		): void;
-		replaceModule(
-			oldModule: internals.Module,
-			newModule: internals.Module
-		): void;
-		isModuleInChunk(module: internals.Module, chunk: internals.Chunk): boolean;
+		replaceModule(oldModule: webpack.Module, newModule: webpack.Module): void;
+		isModuleInChunk(module: webpack.Module, chunk: webpack.Chunk): boolean;
 		isModuleInChunkGroup(
-			module: internals.Module,
-			chunkGroup: internals.ChunkGroup
+			module: webpack.Module,
+			chunkGroup: webpack.ChunkGroup
 		): boolean;
-		isEntryModule(module: internals.Module): boolean;
-		getModuleChunksIterable(
-			module: internals.Module
-		): Iterable<internals.Chunk>;
+		isEntryModule(module: webpack.Module): boolean;
+		getModuleChunksIterable(module: webpack.Module): Iterable<webpack.Chunk>;
 		getOrderedModuleChunksIterable(
-			module: internals.Module,
-			sortFn: (arg0: internals.Chunk, arg1: internals.Chunk) => 0 | 1 | -1
-		): Iterable<internals.Chunk>;
-		getModuleChunks(module: internals.Module): Array<internals.Chunk>;
-		getNumberOfModuleChunks(module: internals.Module): number;
+			module: webpack.Module,
+			sortFn: (arg0: webpack.Chunk, arg1: webpack.Chunk) => 0 | 1 | -1
+		): Iterable<webpack.Chunk>;
+		getModuleChunks(module: webpack.Module): Array<webpack.Chunk>;
+		getNumberOfModuleChunks(module: webpack.Module): number;
 		haveModulesEqualChunks(
-			moduleA: internals.Module,
-			moduleB: internals.Module
+			moduleA: webpack.Module,
+			moduleB: webpack.Module
 		): boolean;
-		getNumberOfChunkModules(chunk: internals.Chunk): number;
-		getChunkModulesIterable(chunk: internals.Chunk): Iterable<internals.Module>;
+		getNumberOfChunkModules(chunk: webpack.Chunk): number;
+		getChunkModulesIterable(chunk: webpack.Chunk): Iterable<webpack.Module>;
 		getChunkModulesIterableBySourceType(
-			chunk: internals.Chunk,
+			chunk: webpack.Chunk,
 			sourceType: string
-		): Iterable<internals.Module>;
+		): Iterable<webpack.Module>;
 		getOrderedChunkModulesIterable(
-			chunk: internals.Chunk,
-			comparator: (arg0: internals.Module, arg1: internals.Module) => 0 | 1 | -1
-		): Iterable<internals.Module>;
+			chunk: webpack.Chunk,
+			comparator: (arg0: webpack.Module, arg1: webpack.Module) => 0 | 1 | -1
+		): Iterable<webpack.Module>;
 		getOrderedChunkModulesIterableBySourceType(
-			chunk: internals.Chunk,
+			chunk: webpack.Chunk,
 			sourceType: string,
-			comparator: (arg0: internals.Module, arg1: internals.Module) => 0 | 1 | -1
-		): Iterable<internals.Module>;
-		getChunkModules(chunk: internals.Chunk): Array<internals.Module>;
+			comparator: (arg0: webpack.Module, arg1: webpack.Module) => 0 | 1 | -1
+		): Iterable<webpack.Module>;
+		getChunkModules(chunk: webpack.Chunk): Array<webpack.Module>;
 		getOrderedChunkModules(
-			chunk: internals.Chunk,
-			comparator: (arg0: internals.Module, arg1: internals.Module) => 0 | 1 | -1
-		): Array<internals.Module>;
+			chunk: webpack.Chunk,
+			comparator: (arg0: webpack.Module, arg1: webpack.Module) => 0 | 1 | -1
+		): Array<webpack.Module>;
 		getChunkModuleMaps(
-			chunk: internals.Chunk,
-			filterFn: (m: internals.Module) => boolean,
+			chunk: webpack.Chunk,
+			filterFn: (m: webpack.Module) => boolean,
 			includeAllChunks?: boolean
-		): internals.ChunkModuleMaps;
+		): webpack.ChunkModuleMaps;
 		getChunkConditionMap(
-			chunk: internals.Chunk,
-			filterFn: (
-				c: internals.Chunk,
-				chunkGraph: internals.ChunkGraph
-			) => boolean
+			chunk: webpack.Chunk,
+			filterFn: (c: webpack.Chunk, chunkGraph: webpack.ChunkGraph) => boolean
 		): Record<string | number, boolean>;
 		hasModuleInChunk(
-			chunk: internals.Chunk,
-			filterFn: (m: internals.Module) => boolean
+			chunk: webpack.Chunk,
+			filterFn: (m: webpack.Module) => boolean
 		): boolean;
 		hasModuleInGraph(
-			chunk: internals.Chunk,
-			filterFn: (m: internals.Module) => boolean,
-			filterChunkFn: (
-				c: internals.Chunk,
-				chunkGraph: internals.ChunkGraph
+			chunk: webpack.Chunk,
+			filterFn: (m: webpack.Module) => boolean,
+			filterChunkFn?: (
+				c: webpack.Chunk,
+				chunkGraph: webpack.ChunkGraph
 			) => boolean
 		): boolean;
-		compareChunks(chunkA: internals.Chunk, chunkB: internals.Chunk): 0 | 1 | -1;
-		getChunkModulesSize(chunk: internals.Chunk): number;
-		getChunkModulesSizes(chunk: internals.Chunk): Record<string, number>;
-		getChunkRootModules(chunk: internals.Chunk): Array<internals.Module>;
+		compareChunks(chunkA: webpack.Chunk, chunkB: webpack.Chunk): 0 | 1 | -1;
+		getChunkModulesSize(chunk: webpack.Chunk): number;
+		getChunkModulesSizes(chunk: webpack.Chunk): Record<string, number>;
+		getChunkRootModules(chunk: webpack.Chunk): Array<webpack.Module>;
 		getChunkSize(
-			chunk: internals.Chunk,
-			options?: internals.ChunkSizeOptions
+			chunk: webpack.Chunk,
+			options?: webpack.ChunkSizeOptions
 		): number;
 		getIntegratedChunksSize(
-			chunkA: internals.Chunk,
-			chunkB: internals.Chunk,
-			options?: internals.ChunkSizeOptions
+			chunkA: webpack.Chunk,
+			chunkB: webpack.Chunk,
+			options?: webpack.ChunkSizeOptions
 		): number;
 		canChunksBeIntegrated(
-			chunkA: internals.Chunk,
-			chunkB: internals.Chunk
+			chunkA: webpack.Chunk,
+			chunkB: webpack.Chunk
 		): boolean;
-		integrateChunks(chunkA: internals.Chunk, chunkB: internals.Chunk): void;
-		isEntryModuleInChunk(
-			module: internals.Module,
-			chunk: internals.Chunk
-		): boolean;
+		integrateChunks(chunkA: webpack.Chunk, chunkB: webpack.Chunk): void;
+		isEntryModuleInChunk(module: webpack.Module, chunk: webpack.Chunk): boolean;
 		connectChunkAndEntryModule(
-			chunk: internals.Chunk,
-			module: internals.Module,
-			entrypoint: internals.Entrypoint
+			chunk: webpack.Chunk,
+			module: webpack.Module,
+			entrypoint?: webpack.Entrypoint
 		): void;
 		connectChunkAndRuntimeModule(
-			chunk: internals.Chunk,
-			module: internals.RuntimeModule
+			chunk: webpack.Chunk,
+			module: webpack.RuntimeModule
 		): void;
 		disconnectChunkAndEntryModule(
-			chunk: internals.Chunk,
-			module: internals.Module
+			chunk: webpack.Chunk,
+			module: webpack.Module
 		): void;
 		disconnectChunkAndRuntimeModule(
-			chunk: internals.Chunk,
-			module: internals.RuntimeModule
+			chunk: webpack.Chunk,
+			module: webpack.RuntimeModule
 		): void;
-		disconnectEntryModule(module: internals.Module): void;
-		disconnectEntries(chunk: internals.Chunk): void;
-		getNumberOfEntryModules(chunk: internals.Chunk): number;
-		getNumberOfRuntimeModules(chunk: internals.Chunk): number;
+		disconnectEntryModule(module: webpack.Module): void;
+		disconnectEntries(chunk: webpack.Chunk): void;
+		getNumberOfEntryModules(chunk: webpack.Chunk): number;
+		getNumberOfRuntimeModules(chunk: webpack.Chunk): number;
 		getChunkEntryModulesIterable(
-			chunk: internals.Chunk
-		): Iterable<internals.Module>;
+			chunk: webpack.Chunk
+		): Iterable<webpack.Module>;
 		getChunkEntryDependentChunksIterable(
-			chunk: internals.Chunk
-		): Iterable<internals.Chunk>;
-		hasChunkEntryDependentChunks(chunk: internals.Chunk): boolean;
+			chunk: webpack.Chunk
+		): Iterable<webpack.Chunk>;
+		hasChunkEntryDependentChunks(chunk: webpack.Chunk): boolean;
 		getChunkRuntimeModulesIterable(
-			chunk: internals.Chunk
-		): Iterable<internals.RuntimeModule>;
+			chunk: webpack.Chunk
+		): Iterable<webpack.RuntimeModule>;
 		getChunkRuntimeModulesInOrder(
-			chunk: internals.Chunk
-		): Array<internals.RuntimeModule>;
+			chunk: webpack.Chunk
+		): Array<webpack.RuntimeModule>;
 		getChunkEntryModulesWithChunkGroupIterable(
-			chunk: internals.Chunk
-		): Iterable<[internals.Module, internals.Entrypoint]>;
+			chunk: webpack.Chunk
+		): Iterable<[webpack.Module, webpack.Entrypoint]>;
 		getBlockChunkGroup(
-			depBlock: internals.AsyncDependenciesBlock
-		): internals.ChunkGroup;
+			depBlock: webpack.AsyncDependenciesBlock
+		): webpack.ChunkGroup;
 		connectBlockAndChunkGroup(
-			depBlock: internals.AsyncDependenciesBlock,
-			chunkGroup: internals.ChunkGroup
+			depBlock: webpack.AsyncDependenciesBlock,
+			chunkGroup: webpack.ChunkGroup
 		): void;
-		disconnectChunkGroup(chunkGroup: internals.ChunkGroup): void;
-		getModuleId(module: internals.Module): string | number;
-		setModuleId(module: internals.Module, id: string | number): void;
-		getModuleHash(module: internals.Module): string;
-		getRenderedModuleHash(module: internals.Module): string;
+		disconnectChunkGroup(chunkGroup: webpack.ChunkGroup): void;
+		getModuleId(module: webpack.Module): string | number;
+		setModuleId(module: webpack.Module, id: string | number): void;
+		getModuleHash(module: webpack.Module): string;
+		getRenderedModuleHash(module: webpack.Module): string;
 		setModuleHashes(
-			module: internals.Module,
+			module: webpack.Module,
 			hash: string,
 			renderedHash: string
 		): void;
 		addModuleRuntimeRequirements(
-			module: internals.Module,
+			module: webpack.Module,
 			items: Set<string>
 		): void;
-		addChunkRuntimeRequirements(
-			chunk: internals.Chunk,
-			items: Set<string>
-		): void;
+		addChunkRuntimeRequirements(chunk: webpack.Chunk, items: Set<string>): void;
 		addTreeRuntimeRequirements(
-			chunk: internals.Chunk,
+			chunk: webpack.Chunk,
 			items: Iterable<string>
 		): void;
-		getModuleRuntimeRequirements(module: internals.Module): ReadonlySet<string>;
-		getChunkRuntimeRequirements(chunk: internals.Chunk): ReadonlySet<string>;
-		getTreeRuntimeRequirements(chunk: internals.Chunk): ReadonlySet<string>;
+		getModuleRuntimeRequirements(module: webpack.Module): ReadonlySet<string>;
+		getChunkRuntimeRequirements(chunk: webpack.Chunk): ReadonlySet<string>;
+		getTreeRuntimeRequirements(chunk: webpack.Chunk): ReadonlySet<string>;
+		static getChunkGraphForModule(
+			module: webpack.Module,
+			deprecateMessage: string,
+			deprecationCode: string
+		): webpack.ChunkGraph;
+		static setChunkGraphForModule(
+			module: webpack.Module,
+			chunkGraph: webpack.ChunkGraph
+		): void;
+		static getChunkGraphForChunk(
+			chunk: webpack.Chunk,
+			deprecateMessage: string,
+			deprecationCode: string
+		): webpack.ChunkGraph;
+		static setChunkGraphForChunk(
+			chunk: webpack.Chunk,
+			chunkGraph: webpack.ChunkGraph
+		): void;
 	}
 	export abstract class ChunkGroup {
 		groupDebugId: number;
 		options: { preloadOrder?: number; prefetchOrder?: number; name: string };
-		chunks: Array<internals.Chunk>;
+		chunks: Array<webpack.Chunk>;
 		origins: Array<{
-			module: internals.Module;
-			loc:
-				| internals.SyntheticDependencyLocation
-				| internals.RealDependencyLocation;
+			module: webpack.Module;
+			loc: webpack.SyntheticDependencyLocation | webpack.RealDependencyLocation;
 			request: string;
 		}>;
 		index: number;
@@ -836,41 +820,39 @@ declare namespace internals {
 		/**
 		 * Performs an unshift of a specific chunk
 		 */
-		unshiftChunk(chunk: internals.Chunk): boolean;
+		unshiftChunk(chunk: webpack.Chunk): boolean;
 
 		/**
 		 * inserts a chunk before another existing chunk in group
 		 */
-		insertChunk(chunk: internals.Chunk, before: internals.Chunk): boolean;
+		insertChunk(chunk: webpack.Chunk, before: webpack.Chunk): boolean;
 
 		/**
 		 * add a chunk into ChunkGroup. Is pushed on or prepended
 		 */
-		pushChunk(chunk: internals.Chunk): boolean;
-		replaceChunk(oldChunk: internals.Chunk, newChunk: internals.Chunk): boolean;
-		removeChunk(chunk: internals.Chunk): boolean;
+		pushChunk(chunk: webpack.Chunk): boolean;
+		replaceChunk(oldChunk: webpack.Chunk, newChunk: webpack.Chunk): boolean;
+		removeChunk(chunk: webpack.Chunk): boolean;
 		isInitial(): boolean;
-		addChild(group: internals.ChunkGroup): boolean;
-		getChildren(): Array<internals.ChunkGroup>;
+		addChild(group: webpack.ChunkGroup): boolean;
+		getChildren(): Array<webpack.ChunkGroup>;
 		getNumberOfChildren(): number;
-		readonly childrenIterable: internals.SortableSet<internals.ChunkGroup>;
-		removeChild(group: internals.ChunkGroup): boolean;
-		addParent(parentChunk: internals.ChunkGroup): boolean;
-		getParents(): Array<internals.ChunkGroup>;
+		readonly childrenIterable: webpack.SortableSet<webpack.ChunkGroup>;
+		removeChild(group: webpack.ChunkGroup): boolean;
+		addParent(parentChunk: webpack.ChunkGroup): boolean;
+		getParents(): Array<webpack.ChunkGroup>;
 		getNumberOfParents(): number;
-		hasParent(parent: internals.ChunkGroup): boolean;
-		readonly parentsIterable: internals.SortableSet<internals.ChunkGroup>;
-		removeParent(chunkGroup: internals.ChunkGroup): boolean;
+		hasParent(parent: webpack.ChunkGroup): boolean;
+		readonly parentsIterable: webpack.SortableSet<webpack.ChunkGroup>;
+		removeParent(chunkGroup: webpack.ChunkGroup): boolean;
 		getBlocks(): Array<any>;
 		getNumberOfBlocks(): number;
 		hasBlock(block?: any): boolean;
-		readonly blocksIterable: Iterable<internals.AsyncDependenciesBlock>;
-		addBlock(block: internals.AsyncDependenciesBlock): boolean;
+		readonly blocksIterable: Iterable<webpack.AsyncDependenciesBlock>;
+		addBlock(block: webpack.AsyncDependenciesBlock): boolean;
 		addOrigin(
-			module: internals.Module,
-			loc:
-				| internals.SyntheticDependencyLocation
-				| internals.RealDependencyLocation,
+			module: webpack.Module,
+			loc: webpack.SyntheticDependencyLocation | webpack.RealDependencyLocation,
 			request: string
 		): void;
 		getFiles(): Array<string>;
@@ -882,52 +864,52 @@ declare namespace internals {
 		 * Sorting values are based off of number of chunks in ChunkGroup.
 		 */
 		compareTo(
-			chunkGraph: internals.ChunkGraph,
-			otherGroup: internals.ChunkGroup
+			chunkGraph: webpack.ChunkGraph,
+			otherGroup: webpack.ChunkGroup
 		): 0 | 1 | -1;
 		getChildrenByOrders(
-			moduleGraph: internals.ModuleGraph,
-			chunkGraph: internals.ChunkGraph
-		): Record<string, Array<internals.ChunkGroup>>;
+			moduleGraph: webpack.ModuleGraph,
+			chunkGraph: webpack.ChunkGraph
+		): Record<string, Array<webpack.ChunkGroup>>;
 
 		/**
 		 * Sets the top-down index of a module in this ChunkGroup
 		 */
-		setModulePreOrderIndex(module: internals.Module, index: number): void;
+		setModulePreOrderIndex(module: webpack.Module, index: number): void;
 
 		/**
 		 * Gets the top-down index of a module in this ChunkGroup
 		 */
-		getModulePreOrderIndex(module: internals.Module): number;
+		getModulePreOrderIndex(module: webpack.Module): number;
 
 		/**
 		 * Sets the bottom-up index of a module in this ChunkGroup
 		 */
-		setModulePostOrderIndex(module: internals.Module, index: number): void;
+		setModulePostOrderIndex(module: webpack.Module, index: number): void;
 
 		/**
 		 * Gets the bottom-up index of a module in this ChunkGroup
 		 */
-		getModulePostOrderIndex(module: internals.Module): number;
+		getModulePostOrderIndex(module: webpack.Module): number;
 		checkConstraints(): void;
-		getModuleIndex: (module: internals.Module) => number;
-		getModuleIndex2: (module: internals.Module) => number;
+		getModuleIndex: (module: webpack.Module) => number;
+		getModuleIndex2: (module: webpack.Module) => number;
 	}
 	export interface ChunkHashContext {
 		/**
 		 * the runtime template
 		 */
-		runtimeTemplate: internals.RuntimeTemplate;
+		runtimeTemplate: webpack.RuntimeTemplate;
 
 		/**
 		 * the module graph
 		 */
-		moduleGraph: internals.ModuleGraph;
+		moduleGraph: webpack.ModuleGraph;
 
 		/**
 		 * the chunk graph
 		 */
-		chunkGraph: internals.ChunkGraph;
+		chunkGraph: webpack.ChunkGraph;
 	}
 
 	/**
@@ -945,7 +927,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export interface ChunkModuleMaps {
 		id: Record<string | number, Array<string | number>>;
@@ -985,28 +967,28 @@ declare namespace internals {
 		/**
 		 * the dependency templates
 		 */
-		dependencyTemplates: internals.DependencyTemplates;
+		dependencyTemplates: webpack.DependencyTemplates;
 
 		/**
 		 * the runtime template
 		 */
-		runtimeTemplate: internals.RuntimeTemplate;
+		runtimeTemplate: webpack.RuntimeTemplate;
 
 		/**
 		 * the module graph
 		 */
-		moduleGraph: internals.ModuleGraph;
+		moduleGraph: webpack.ModuleGraph;
 
 		/**
 		 * the chunk graph
 		 */
-		chunkGraph: internals.ChunkGraph;
+		chunkGraph: webpack.ChunkGraph;
 	}
 	export interface CodeGenerationResult {
 		/**
 		 * the resulting sources for all source types
 		 */
-		sources: Map<string, internals.Source>;
+		sources: Map<string, webpack.Source>;
 
 		/**
 		 * the runtime requirements
@@ -1017,29 +999,29 @@ declare namespace internals {
 		/**
 		 * Creates an instance of Compilation.
 		 */
-		constructor(compiler: internals.Compiler);
+		constructor(compiler: webpack.Compiler);
 		hooks: Readonly<{
-			buildModule: SyncHook<[internals.Module], void>;
-			rebuildModule: SyncHook<[internals.Module], void>;
-			failedModule: SyncHook<[internals.Module, internals.WebpackError], void>;
-			succeedModule: SyncHook<[internals.Module], void>;
-			stillValidModule: SyncHook<[internals.Module], void>;
+			buildModule: SyncHook<[webpack.Module], void>;
+			rebuildModule: SyncHook<[webpack.Module], void>;
+			failedModule: SyncHook<[webpack.Module, webpack.WebpackError], void>;
+			succeedModule: SyncHook<[webpack.Module], void>;
+			stillValidModule: SyncHook<[webpack.Module], void>;
 			addEntry: SyncHook<
 				[
-					internals.Dependency,
+					webpack.Dependency,
 					{ name: string } & Pick<
-						internals.EntryDescriptionNormalized,
-						"dependOn" | "filename" | "library"
+						webpack.EntryDescriptionNormalized,
+						"filename" | "dependOn" | "library"
 					>
 				],
 				void
 			>;
 			failedEntry: SyncHook<
 				[
-					internals.Dependency,
+					webpack.Dependency,
 					{ name: string } & Pick<
-						internals.EntryDescriptionNormalized,
-						"dependOn" | "filename" | "library"
+						webpack.EntryDescriptionNormalized,
+						"filename" | "dependOn" | "library"
 					>,
 					Error
 				],
@@ -1047,88 +1029,88 @@ declare namespace internals {
 			>;
 			succeedEntry: SyncHook<
 				[
-					internals.Dependency,
+					webpack.Dependency,
 					{ name: string } & Pick<
-						internals.EntryDescriptionNormalized,
-						"dependOn" | "filename" | "library"
+						webpack.EntryDescriptionNormalized,
+						"filename" | "dependOn" | "library"
 					>,
-					internals.Module
+					webpack.Module
 				],
 				void
 			>;
 			dependencyReferencedExports: SyncWaterfallHook<
-				[Array<Array<string>>, internals.Dependency]
+				[Array<Array<string>>, webpack.Dependency]
 			>;
-			finishModules: AsyncSeriesHook<[Iterable<internals.Module>]>;
-			finishRebuildingModule: AsyncSeriesHook<[internals.Module]>;
+			finishModules: AsyncSeriesHook<[Iterable<webpack.Module>]>;
+			finishRebuildingModule: AsyncSeriesHook<[webpack.Module]>;
 			unseal: SyncHook<[], void>;
 			seal: SyncHook<[], void>;
 			beforeChunks: SyncHook<[], void>;
-			afterChunks: SyncHook<[Iterable<internals.Chunk>], void>;
-			optimizeDependencies: SyncBailHook<[Iterable<internals.Module>], any>;
-			afterOptimizeDependencies: SyncHook<[Iterable<internals.Module>], void>;
+			afterChunks: SyncHook<[Iterable<webpack.Chunk>], void>;
+			optimizeDependencies: SyncBailHook<[Iterable<webpack.Module>], any>;
+			afterOptimizeDependencies: SyncHook<[Iterable<webpack.Module>], void>;
 			optimize: SyncHook<[], void>;
-			optimizeModules: SyncBailHook<[Iterable<internals.Module>], any>;
-			afterOptimizeModules: SyncHook<[Iterable<internals.Module>], void>;
+			optimizeModules: SyncBailHook<[Iterable<webpack.Module>], any>;
+			afterOptimizeModules: SyncHook<[Iterable<webpack.Module>], void>;
 			optimizeChunks: SyncBailHook<
-				[Iterable<internals.Chunk>, Array<internals.ChunkGroup>],
+				[Iterable<webpack.Chunk>, Array<webpack.ChunkGroup>],
 				any
 			>;
 			afterOptimizeChunks: SyncHook<
-				[Iterable<internals.Chunk>, Array<internals.ChunkGroup>],
+				[Iterable<webpack.Chunk>, Array<webpack.ChunkGroup>],
 				void
 			>;
 			optimizeTree: AsyncSeriesHook<
-				[Iterable<internals.Chunk>, Iterable<internals.Module>]
+				[Iterable<webpack.Chunk>, Iterable<webpack.Module>]
 			>;
 			afterOptimizeTree: SyncHook<
-				[Iterable<internals.Chunk>, Iterable<internals.Module>],
+				[Iterable<webpack.Chunk>, Iterable<webpack.Module>],
 				void
 			>;
 			optimizeChunkModules: AsyncSeriesBailHook<
-				[Iterable<internals.Chunk>, Iterable<internals.Module>],
+				[Iterable<webpack.Chunk>, Iterable<webpack.Module>],
 				any
 			>;
 			afterOptimizeChunkModules: SyncHook<
-				[Iterable<internals.Chunk>, Iterable<internals.Module>],
+				[Iterable<webpack.Chunk>, Iterable<webpack.Module>],
 				void
 			>;
 			shouldRecord: SyncBailHook<[], boolean>;
 			additionalChunkRuntimeRequirements: SyncHook<
-				[internals.Chunk, Set<string>],
+				[webpack.Chunk, Set<string>],
 				void
 			>;
 			runtimeRequirementInChunk: HookMap<
-				SyncBailHook<[internals.Chunk, Set<string>], any>
+				SyncBailHook<[webpack.Chunk, Set<string>], any>
 			>;
 			additionalModuleRuntimeRequirements: SyncHook<
-				[internals.Module, Set<string>],
+				[webpack.Module, Set<string>],
 				void
 			>;
 			runtimeRequirementInModule: HookMap<
-				SyncBailHook<[internals.Module, Set<string>], any>
+				SyncBailHook<[webpack.Module, Set<string>], any>
 			>;
 			additionalTreeRuntimeRequirements: SyncHook<
-				[internals.Chunk, Set<string>],
+				[webpack.Chunk, Set<string>],
 				void
 			>;
 			runtimeRequirementInTree: HookMap<
-				SyncBailHook<[internals.Chunk, Set<string>], any>
+				SyncBailHook<[webpack.Chunk, Set<string>], any>
 			>;
-			runtimeModule: SyncHook<[internals.RuntimeModule, internals.Chunk], void>;
-			reviveModules: SyncHook<[Iterable<internals.Module>, any], void>;
-			beforeModuleIds: SyncHook<[Iterable<internals.Module>], void>;
-			moduleIds: SyncHook<[Iterable<internals.Module>], void>;
-			optimizeModuleIds: SyncHook<[Iterable<internals.Module>], void>;
-			afterOptimizeModuleIds: SyncHook<[Iterable<internals.Module>], void>;
-			reviveChunks: SyncHook<[Iterable<internals.Chunk>, any], void>;
-			beforeChunkIds: SyncHook<[Iterable<internals.Chunk>], void>;
-			chunkIds: SyncHook<[Iterable<internals.Chunk>], void>;
-			optimizeChunkIds: SyncHook<[Iterable<internals.Chunk>], void>;
-			afterOptimizeChunkIds: SyncHook<[Iterable<internals.Chunk>], void>;
-			recordModules: SyncHook<[Iterable<internals.Module>, any], void>;
-			recordChunks: SyncHook<[Iterable<internals.Chunk>, any], void>;
-			optimizeCodeGeneration: SyncHook<[Iterable<internals.Module>], void>;
+			runtimeModule: SyncHook<[webpack.RuntimeModule, webpack.Chunk], void>;
+			reviveModules: SyncHook<[Iterable<webpack.Module>, any], void>;
+			beforeModuleIds: SyncHook<[Iterable<webpack.Module>], void>;
+			moduleIds: SyncHook<[Iterable<webpack.Module>], void>;
+			optimizeModuleIds: SyncHook<[Iterable<webpack.Module>], void>;
+			afterOptimizeModuleIds: SyncHook<[Iterable<webpack.Module>], void>;
+			reviveChunks: SyncHook<[Iterable<webpack.Chunk>, any], void>;
+			beforeChunkIds: SyncHook<[Iterable<webpack.Chunk>], void>;
+			chunkIds: SyncHook<[Iterable<webpack.Chunk>], void>;
+			optimizeChunkIds: SyncHook<[Iterable<webpack.Chunk>], void>;
+			afterOptimizeChunkIds: SyncHook<[Iterable<webpack.Chunk>], void>;
+			recordModules: SyncHook<[Iterable<webpack.Module>, any], void>;
+			recordChunks: SyncHook<[Iterable<webpack.Chunk>, any], void>;
+			optimizeCodeGeneration: SyncHook<[Iterable<webpack.Module>], void>;
 			beforeModuleHash: SyncHook<[], void>;
 			afterModuleHash: SyncHook<[], void>;
 			beforeCodeGeneration: SyncHook<[], void>;
@@ -1136,93 +1118,83 @@ declare namespace internals {
 			beforeRuntimeRequirements: SyncHook<[], void>;
 			afterRuntimeRequirements: SyncHook<[], void>;
 			beforeHash: SyncHook<[], void>;
-			contentHash: SyncHook<[internals.Chunk], void>;
+			contentHash: SyncHook<[webpack.Chunk], void>;
 			afterHash: SyncHook<[], void>;
 			recordHash: SyncHook<[any], void>;
-			record: SyncHook<[internals.Compilation, any], void>;
+			record: SyncHook<[webpack.Compilation, any], void>;
 			beforeModuleAssets: SyncHook<[], void>;
 			shouldGenerateChunkAssets: SyncBailHook<[], boolean>;
 			beforeChunkAssets: SyncHook<[], void>;
-			additionalChunkAssets: SyncHook<[Iterable<internals.Chunk>], void>;
+			additionalChunkAssets: SyncHook<[Iterable<webpack.Chunk>], void>;
 			additionalAssets: AsyncSeriesHook<[]>;
-			optimizeChunkAssets: AsyncSeriesHook<[Iterable<internals.Chunk>]>;
-			afterOptimizeChunkAssets: SyncHook<[Iterable<internals.Chunk>], void>;
-			optimizeAssets: AsyncSeriesHook<[Record<string, internals.Source>]>;
-			afterOptimizeAssets: SyncHook<[Record<string, internals.Source>], void>;
-			finishAssets: AsyncSeriesHook<[Record<string, internals.Source>]>;
-			afterFinishAssets: SyncHook<[Record<string, internals.Source>], void>;
+			optimizeChunkAssets: AsyncSeriesHook<[Iterable<webpack.Chunk>]>;
+			afterOptimizeChunkAssets: SyncHook<[Iterable<webpack.Chunk>], void>;
+			optimizeAssets: AsyncSeriesHook<[Record<string, webpack.Source>]>;
+			afterOptimizeAssets: SyncHook<[Record<string, webpack.Source>], void>;
+			finishAssets: AsyncSeriesHook<[Record<string, webpack.Source>]>;
+			afterFinishAssets: SyncHook<[Record<string, webpack.Source>], void>;
 			needAdditionalSeal: SyncBailHook<[], boolean>;
 			afterSeal: AsyncSeriesHook<[]>;
 			renderManifest: SyncWaterfallHook<
-				[Array<internals.RenderManifestEntry>, internals.RenderManifestOptions]
+				[Array<webpack.RenderManifestEntry>, webpack.RenderManifestOptions]
 			>;
-			fullHash: SyncHook<[internals.Hash], void>;
+			fullHash: SyncHook<[webpack.Hash], void>;
 			chunkHash: SyncHook<
-				[internals.Chunk, internals.Hash, internals.ChunkHashContext],
+				[webpack.Chunk, webpack.Hash, webpack.ChunkHashContext],
 				void
 			>;
-			moduleAsset: SyncHook<[internals.Module, string], void>;
-			chunkAsset: SyncHook<[internals.Chunk, string], void>;
-			assetPath: SyncWaterfallHook<[string, any, internals.AssetInfo]>;
+			moduleAsset: SyncHook<[webpack.Module, string], void>;
+			chunkAsset: SyncHook<[webpack.Chunk, string], void>;
+			assetPath: SyncWaterfallHook<[string, any, webpack.AssetInfo]>;
 			needAdditionalPass: SyncBailHook<[], boolean>;
-			childCompiler: SyncHook<[internals.Compiler, string, number], void>;
-			log: SyncBailHook<[string, internals.LogEntry], true>;
+			childCompiler: SyncHook<[webpack.Compiler, string, number], void>;
+			log: SyncBailHook<[string, webpack.LogEntry], true>;
 			statsPreset: HookMap<SyncHook<[any, any], void>>;
 			statsNormalize: SyncHook<[any, any], void>;
-			statsFactory: SyncHook<[internals.StatsFactory, any], void>;
-			statsPrinter: SyncHook<[internals.StatsPrinter, any], void>;
-			readonly normalModuleLoader: SyncHook<
-				[any, internals.NormalModule],
-				void
-			>;
+			statsFactory: SyncHook<[webpack.StatsFactory, any], void>;
+			statsPrinter: SyncHook<[webpack.StatsPrinter, any], void>;
+			readonly normalModuleLoader: SyncHook<[any, webpack.NormalModule], void>;
 		}>;
 		name: string;
-		compiler: internals.Compiler;
-		resolverFactory: internals.ResolverFactory;
-		inputFileSystem: internals.InputFileSystem;
-		fileSystemInfo: internals.FileSystemInfo;
-		requestShortener: internals.RequestShortener;
+		compiler: webpack.Compiler;
+		resolverFactory: webpack.ResolverFactory;
+		inputFileSystem: webpack.InputFileSystem;
+		fileSystemInfo: webpack.FileSystemInfo;
+		requestShortener: webpack.RequestShortener;
 		compilerPath: string;
-		cache: internals.Cache;
-		logger: internals.WebpackLogger;
-		options: internals.WebpackOptionsNormalized;
-		outputOptions: internals.OutputNormalized;
+		cache: webpack.Cache;
+		logger: webpack.WebpackLogger;
+		options: webpack.WebpackOptionsNormalized;
+		outputOptions: webpack.OutputNormalized;
 		bail: boolean;
 		profile: boolean;
-		mainTemplate: internals.MainTemplate;
-		chunkTemplate: internals.ChunkTemplate;
-		runtimeTemplate: internals.RuntimeTemplate;
-		moduleTemplates: { javascript: internals.ModuleTemplate };
-		moduleGraph: internals.ModuleGraph;
-		chunkGraph: internals.ChunkGraph;
-		codeGenerationResults: Map<
-			internals.Module,
-			internals.CodeGenerationResult
-		>;
-		factorizeQueue: internals.AsyncQueue<
-			internals.FactorizeModuleOptions,
+		mainTemplate: webpack.MainTemplate;
+		chunkTemplate: webpack.ChunkTemplate;
+		runtimeTemplate: webpack.RuntimeTemplate;
+		moduleTemplates: { javascript: webpack.ModuleTemplate };
+		moduleGraph: webpack.ModuleGraph;
+		chunkGraph: webpack.ChunkGraph;
+		codeGenerationResults: Map<webpack.Module, webpack.CodeGenerationResult>;
+		factorizeQueue: webpack.AsyncQueue<
+			webpack.FactorizeModuleOptions,
 			string,
-			internals.Module
+			webpack.Module
 		>;
-		addModuleQueue: internals.AsyncQueue<
-			internals.Module,
-			string,
-			internals.Module
+		addModuleQueue: webpack.AsyncQueue<webpack.Module, string, webpack.Module>;
+		buildQueue: webpack.AsyncQueue<
+			webpack.Module,
+			webpack.Module,
+			webpack.Module
 		>;
-		buildQueue: internals.AsyncQueue<
-			internals.Module,
-			internals.Module,
-			internals.Module
+		rebuildQueue: webpack.AsyncQueue<
+			webpack.Module,
+			webpack.Module,
+			webpack.Module
 		>;
-		rebuildQueue: internals.AsyncQueue<
-			internals.Module,
-			internals.Module,
-			internals.Module
-		>;
-		processDependenciesQueue: internals.AsyncQueue<
-			internals.Module,
-			internals.Module,
-			internals.Module
+		processDependenciesQueue: webpack.AsyncQueue<
+			webpack.Module,
+			webpack.Module,
+			webpack.Module
 		>;
 
 		/**
@@ -1230,168 +1202,137 @@ declare namespace internals {
 		 * Means value blocking key from finishing.
 		 * Needed to detect build cycles.
 		 */
-		creatingModuleDuringBuild: WeakMap<internals.Module, Set<internals.Module>>;
-		entries: Map<string, internals.EntryData>;
-		entrypoints: Map<string, internals.Entrypoint>;
-		chunks: Set<internals.Chunk>;
-		chunkGroups: Array<internals.ChunkGroup>;
-		namedChunkGroups: Map<string, internals.ChunkGroup>;
-		namedChunks: Map<string, internals.Chunk>;
-		modules: Set<internals.Module>;
+		creatingModuleDuringBuild: WeakMap<webpack.Module, Set<webpack.Module>>;
+		entries: Map<string, webpack.EntryData>;
+		entrypoints: Map<string, webpack.Entrypoint>;
+		chunks: Set<webpack.Chunk>;
+		chunkGroups: Array<webpack.ChunkGroup>;
+		namedChunkGroups: Map<string, webpack.ChunkGroup>;
+		namedChunks: Map<string, webpack.Chunk>;
+		modules: Set<webpack.Module>;
 		records: any;
 		additionalChunkAssets: Array<string>;
-		assets: Record<string, internals.Source>;
-		assetsInfo: Map<string, internals.AssetInfo>;
-		errors: Array<internals.WebpackError>;
-		warnings: Array<internals.WebpackError>;
-		children: Array<internals.Compilation>;
-		logging: Map<string, Array<internals.LogEntry>>;
+		assets: Record<string, webpack.Source>;
+		assetsInfo: Map<string, webpack.AssetInfo>;
+		errors: Array<webpack.WebpackError>;
+		warnings: Array<webpack.WebpackError>;
+		children: Array<webpack.Compilation>;
+		logging: Map<string, Array<webpack.LogEntry>>;
 		dependencyFactories: Map<
-			{ new (...args: Array<any>): internals.Dependency },
-			internals.ModuleFactory
+			{ new (...args: Array<any>): webpack.Dependency },
+			webpack.ModuleFactory
 		>;
-		dependencyTemplates: internals.DependencyTemplates;
+		dependencyTemplates: webpack.DependencyTemplates;
 		childrenCounters: {};
 		usedChunkIds: Set<string | number>;
 		usedModuleIds: Set<number>;
 		needAdditionalPass: boolean;
-		builtModules: WeakSet<internals.Module>;
+		builtModules: WeakSet<webpack.Module>;
 		emittedAssets: Set<string>;
 		comparedForEmitAssets: Set<string>;
-		fileDependencies: internals.LazySet<string>;
-		contextDependencies: internals.LazySet<string>;
-		missingDependencies: internals.LazySet<string>;
-		buildDependencies: internals.LazySet<string>;
-		compilationDependencies: { add: (item?: any) => internals.LazySet<string> };
-		getStats(): internals.Stats;
+		fileDependencies: webpack.LazySet<string>;
+		contextDependencies: webpack.LazySet<string>;
+		missingDependencies: webpack.LazySet<string>;
+		buildDependencies: webpack.LazySet<string>;
+		compilationDependencies: { add: (item?: any) => webpack.LazySet<string> };
+		getStats(): webpack.Stats;
 		createStatsOptions(optionsOrPreset?: any, context?: {}): {};
-		createStatsFactory(options?: any): internals.StatsFactory;
-		createStatsPrinter(options?: any): internals.StatsPrinter;
-		getLogger(name: string | (() => string)): internals.WebpackLogger;
+		createStatsFactory(options?: any): webpack.StatsFactory;
+		createStatsPrinter(options?: any): webpack.StatsPrinter;
+		getLogger(name: string | (() => string)): webpack.WebpackLogger;
 		addModule(
-			module: internals.Module,
-			callback: (
-				err?: internals.WebpackError,
-				result?: internals.Module
-			) => void
+			module: webpack.Module,
+			callback: (err?: webpack.WebpackError, result?: webpack.Module) => void
 		): void;
 
 		/**
 		 * Fetches a module from a compilation by its identifier
 		 */
-		getModule(module: internals.Module): internals.Module;
+		getModule(module: webpack.Module): webpack.Module;
 
 		/**
 		 * Attempts to search for a module by its identifier
 		 */
-		findModule(identifier: string): internals.Module;
+		findModule(identifier: string): webpack.Module;
 
 		/**
 		 * Schedules a build of the module object
 		 */
 		buildModule(
-			module: internals.Module,
-			callback: (
-				err?: internals.WebpackError,
-				result?: internals.Module
-			) => void
+			module: webpack.Module,
+			callback: (err?: webpack.WebpackError, result?: webpack.Module) => void
 		): void;
 		processModuleDependencies(
-			module: internals.Module,
-			callback: (
-				err?: internals.WebpackError,
-				result?: internals.Module
-			) => void
+			module: webpack.Module,
+			callback: (err?: webpack.WebpackError, result?: webpack.Module) => void
 		): void;
 		handleModuleCreation(
-			__0: internals.HandleModuleCreationOptions,
-			callback: (
-				err?: internals.WebpackError,
-				result?: internals.Module
-			) => void
+			__0: webpack.HandleModuleCreationOptions,
+			callback: (err?: webpack.WebpackError, result?: webpack.Module) => void
 		): void;
 		factorizeModule(
-			options: internals.FactorizeModuleOptions,
-			callback: (
-				err?: internals.WebpackError,
-				result?: internals.Module
-			) => void
+			options: webpack.FactorizeModuleOptions,
+			callback: (err?: webpack.WebpackError, result?: webpack.Module) => void
 		): void;
 		addModuleChain(
 			context: string,
-			dependency: internals.Dependency,
-			callback: (
-				err?: internals.WebpackError,
-				result?: internals.Module
-			) => void
+			dependency: webpack.Dependency,
+			callback: (err?: webpack.WebpackError, result?: webpack.Module) => void
 		): void;
 		addEntry(
 			context: string,
-			entry: internals.EntryDependency,
+			entry: webpack.EntryDependency,
 			optionsOrName:
 				| string
 				| ({ name: string } & Pick<
-						internals.EntryDescriptionNormalized,
-						"dependOn" | "filename" | "library"
+						webpack.EntryDescriptionNormalized,
+						"filename" | "dependOn" | "library"
 				  >),
-			callback: (
-				err?: internals.WebpackError,
-				result?: internals.Module
-			) => void
+			callback: (err?: webpack.WebpackError, result?: webpack.Module) => void
 		): void;
 		rebuildModule(
-			module: internals.Module,
-			callback: (
-				err?: internals.WebpackError,
-				result?: internals.Module
-			) => void
+			module: webpack.Module,
+			callback: (err?: webpack.WebpackError, result?: webpack.Module) => void
 		): void;
 		finish(callback?: any): void;
 		unseal(): void;
-		seal(callback: (err?: internals.WebpackError) => void): void;
+		seal(callback: (err?: webpack.WebpackError) => void): void;
 		reportDependencyErrorsAndWarnings(
-			module: internals.Module,
-			blocks: Array<internals.DependenciesBlock>
+			module: webpack.Module,
+			blocks: Array<webpack.DependenciesBlock>
 		): void;
 		codeGeneration(): Map<any, any>;
-		processRuntimeRequirements(
-			entrypoints: Iterable<internals.Entrypoint>
-		): void;
-		addRuntimeModule(
-			chunk: internals.Chunk,
-			module: internals.RuntimeModule
-		): void;
+		processRuntimeRequirements(entrypoints: Iterable<webpack.Entrypoint>): void;
+		addRuntimeModule(chunk: webpack.Chunk, module: webpack.RuntimeModule): void;
 		addChunkInGroup(
 			groupOptions:
 				| string
 				| { preloadOrder?: number; prefetchOrder?: number; name: string },
-			module: internals.Module,
-			loc:
-				| internals.SyntheticDependencyLocation
-				| internals.RealDependencyLocation,
+			module: webpack.Module,
+			loc: webpack.SyntheticDependencyLocation | webpack.RealDependencyLocation,
 			request: string
-		): internals.ChunkGroup;
+		): webpack.ChunkGroup;
 
 		/**
 		 * This method first looks to see if a name is provided for a new chunk,
 		 * and first looks to see if any named chunks already exist and reuse that chunk instead.
 		 */
-		addChunk(name: string): internals.Chunk;
-		assignDepth(module: internals.Module): void;
+		addChunk(name?: string): webpack.Chunk;
+		assignDepth(module: webpack.Module): void;
 		getDependencyReferencedExports(
-			dependency: internals.Dependency
+			dependency: webpack.Dependency
 		): Array<Array<string>>;
 		removeReasonsOfDependencyBlock(
-			module: internals.Module,
-			block: internals.DependenciesBlockLike
+			module: webpack.Module,
+			block: webpack.DependenciesBlockLike
 		): void;
 		patchChunksAfterReasonRemoval(
-			module: internals.Module,
-			chunk: internals.Chunk
+			module: webpack.Module,
+			chunk: webpack.Chunk
 		): void;
 		removeChunkFromDependencies(
-			block: internals.DependenciesBlock,
-			chunk: internals.Chunk
+			block: webpack.DependenciesBlock,
+			chunk: webpack.Chunk
 		): void;
 		sortItemsWithChunkIds(): void;
 		summarizeDependencies(): void;
@@ -1402,50 +1343,50 @@ declare namespace internals {
 		modifyHash(update: string): void;
 		emitAsset(
 			file: string,
-			source: internals.Source,
-			assetInfo?: internals.AssetInfo
+			source: webpack.Source,
+			assetInfo?: webpack.AssetInfo
 		): void;
 		updateAsset(
 			file: string,
 			newSourceOrFunction:
-				| internals.Source
-				| ((arg0: internals.Source) => internals.Source),
+				| webpack.Source
+				| ((arg0: webpack.Source) => webpack.Source),
 			assetInfoUpdateOrFunction?:
-				| internals.AssetInfo
-				| ((arg0: internals.AssetInfo) => internals.AssetInfo)
+				| webpack.AssetInfo
+				| ((arg0: webpack.AssetInfo) => webpack.AssetInfo)
 		): void;
-		getAssets(): Array<internals.Asset>;
-		getAsset(name: string): internals.Asset;
+		getAssets(): Array<webpack.Asset>;
+		getAsset(name: string): webpack.Asset;
 		clearAssets(): void;
 		createModuleAssets(): void;
 		getRenderManifest(
-			options: internals.RenderManifestOptions
-		): Array<internals.RenderManifestEntry>;
-		createChunkAssets(callback: (err?: internals.WebpackError) => void): void;
+			options: webpack.RenderManifestOptions
+		): Array<webpack.RenderManifestEntry>;
+		createChunkAssets(callback: (err?: webpack.WebpackError) => void): void;
 		getPath(
 			filename:
 				| string
-				| ((arg0: internals.PathData, arg1: internals.AssetInfo) => string),
-			data?: internals.PathData
+				| ((arg0: webpack.PathData, arg1: webpack.AssetInfo) => string),
+			data?: webpack.PathData
 		): string;
 		getPathWithInfo(
 			filename:
 				| string
-				| ((arg0: internals.PathData, arg1: internals.AssetInfo) => string),
-			data?: internals.PathData
-		): { path: string; info: internals.AssetInfo };
+				| ((arg0: webpack.PathData, arg1: webpack.AssetInfo) => string),
+			data?: webpack.PathData
+		): { path: string; info: webpack.AssetInfo };
 		getAssetPath(
 			filename:
 				| string
-				| ((arg0: internals.PathData, arg1: internals.AssetInfo) => string),
-			data: internals.PathData
+				| ((arg0: webpack.PathData, arg1: webpack.AssetInfo) => string),
+			data: webpack.PathData
 		): string;
 		getAssetPathWithInfo(
 			filename:
 				| string
-				| ((arg0: internals.PathData, arg1: internals.AssetInfo) => string),
-			data: internals.PathData
-		): { path: string; info: internals.AssetInfo };
+				| ((arg0: webpack.PathData, arg1: webpack.AssetInfo) => string),
+			data: webpack.PathData
+		): { path: string; info: webpack.AssetInfo };
 
 		/**
 		 * This function allows you to run another instance of webpack inside of webpack however as
@@ -1454,119 +1395,117 @@ declare namespace internals {
 		 */
 		createChildCompiler(
 			name: string,
-			outputOptions: internals.OutputNormalized,
-			plugins: Array<internals.Plugin>
-		): internals.Compiler;
+			outputOptions: webpack.OutputNormalized,
+			plugins: Array<webpack.Plugin>
+		): webpack.Compiler;
 		checkConstraints(): void;
 	}
 	export interface CompilationHooksAsyncWebAssemblyModulesPlugin {
 		renderModuleContent: SyncWaterfallHook<
 			[
-				internals.Source,
-				internals.Module,
-				internals.RenderContextAsyncWebAssemblyModulesPlugin
+				webpack.Source,
+				webpack.Module,
+				webpack.RenderContextAsyncWebAssemblyModulesPlugin
 			]
 		>;
 	}
 	export interface CompilationHooksJavascriptModulesPlugin {
 		renderModuleContent: SyncWaterfallHook<
 			[
-				internals.Source,
-				internals.Module,
-				internals.RenderContextJavascriptModulesPlugin
+				webpack.Source,
+				webpack.Module,
+				webpack.RenderContextJavascriptModulesPlugin
 			]
 		>;
 		renderModuleContainer: SyncWaterfallHook<
 			[
-				internals.Source,
-				internals.Module,
-				internals.RenderContextJavascriptModulesPlugin
+				webpack.Source,
+				webpack.Module,
+				webpack.RenderContextJavascriptModulesPlugin
 			]
 		>;
 		renderModulePackage: SyncWaterfallHook<
 			[
-				internals.Source,
-				internals.Module,
-				internals.RenderContextJavascriptModulesPlugin
+				webpack.Source,
+				webpack.Module,
+				webpack.RenderContextJavascriptModulesPlugin
 			]
 		>;
 		renderChunk: SyncWaterfallHook<
-			[internals.Source, internals.RenderContextJavascriptModulesPlugin]
+			[webpack.Source, webpack.RenderContextJavascriptModulesPlugin]
 		>;
 		renderMain: SyncWaterfallHook<
-			[internals.Source, internals.RenderContextJavascriptModulesPlugin]
+			[webpack.Source, webpack.RenderContextJavascriptModulesPlugin]
 		>;
 		render: SyncWaterfallHook<
-			[internals.Source, internals.RenderContextJavascriptModulesPlugin]
+			[webpack.Source, webpack.RenderContextJavascriptModulesPlugin]
 		>;
-		renderRequire: SyncWaterfallHook<
-			[string, internals.RenderBootstrapContext]
-		>;
+		renderRequire: SyncWaterfallHook<[string, webpack.RenderBootstrapContext]>;
 		chunkHash: SyncHook<
-			[internals.Chunk, internals.Hash, internals.ChunkHashContext],
+			[webpack.Chunk, webpack.Hash, webpack.ChunkHashContext],
 			void
 		>;
 	}
 	export interface CompilationParams {
-		normalModuleFactory: internals.NormalModuleFactory;
-		contextModuleFactory: internals.ContextModuleFactory;
+		normalModuleFactory: webpack.NormalModuleFactory;
+		contextModuleFactory: webpack.ContextModuleFactory;
 	}
 	export class Compiler {
 		constructor(context: string);
 		hooks: Readonly<{
 			initialize: SyncHook<[], void>;
-			shouldEmit: SyncBailHook<[internals.Compilation], boolean>;
-			done: AsyncSeriesHook<[internals.Stats]>;
-			afterDone: SyncHook<[internals.Stats], void>;
+			shouldEmit: SyncBailHook<[webpack.Compilation], boolean>;
+			done: AsyncSeriesHook<[webpack.Stats]>;
+			afterDone: SyncHook<[webpack.Stats], void>;
 			additionalPass: AsyncSeriesHook<[]>;
-			beforeRun: AsyncSeriesHook<[internals.Compiler]>;
-			run: AsyncSeriesHook<[internals.Compiler]>;
-			emit: AsyncSeriesHook<[internals.Compilation]>;
-			assetEmitted: AsyncSeriesHook<[string, internals.AssetEmittedInfo]>;
-			afterEmit: AsyncSeriesHook<[internals.Compilation]>;
+			beforeRun: AsyncSeriesHook<[webpack.Compiler]>;
+			run: AsyncSeriesHook<[webpack.Compiler]>;
+			emit: AsyncSeriesHook<[webpack.Compilation]>;
+			assetEmitted: AsyncSeriesHook<[string, webpack.AssetEmittedInfo]>;
+			afterEmit: AsyncSeriesHook<[webpack.Compilation]>;
 			thisCompilation: SyncHook<
-				[internals.Compilation, internals.CompilationParams],
+				[webpack.Compilation, webpack.CompilationParams],
 				void
 			>;
 			compilation: SyncHook<
-				[internals.Compilation, internals.CompilationParams],
+				[webpack.Compilation, webpack.CompilationParams],
 				void
 			>;
-			normalModuleFactory: SyncHook<[internals.NormalModuleFactory], void>;
-			contextModuleFactory: SyncHook<[internals.ContextModuleFactory], void>;
-			beforeCompile: AsyncSeriesHook<[internals.CompilationParams]>;
-			compile: SyncHook<[internals.CompilationParams], void>;
-			make: AsyncParallelHook<[internals.Compilation]>;
-			afterCompile: AsyncSeriesHook<[internals.Compilation]>;
-			watchRun: AsyncSeriesHook<[internals.Compiler]>;
+			normalModuleFactory: SyncHook<[webpack.NormalModuleFactory], void>;
+			contextModuleFactory: SyncHook<[webpack.ContextModuleFactory], void>;
+			beforeCompile: AsyncSeriesHook<[webpack.CompilationParams]>;
+			compile: SyncHook<[webpack.CompilationParams], void>;
+			make: AsyncParallelHook<[webpack.Compilation]>;
+			afterCompile: AsyncSeriesHook<[webpack.Compilation]>;
+			watchRun: AsyncSeriesHook<[webpack.Compiler]>;
 			failed: SyncHook<[Error], void>;
 			invalid: SyncHook<[string, string], void>;
 			watchClose: SyncHook<[], void>;
 			infrastructureLog: SyncBailHook<[string, string, Array<any>], true>;
 			environment: SyncHook<[], void>;
 			afterEnvironment: SyncHook<[], void>;
-			afterPlugins: SyncHook<[internals.Compiler], void>;
-			afterResolvers: SyncHook<[internals.Compiler], void>;
+			afterPlugins: SyncHook<[webpack.Compiler], void>;
+			afterResolvers: SyncHook<[webpack.Compiler], void>;
 			entryOption: SyncBailHook<
 				[
 					string,
 					(
-						| (() => Promise<internals.EntryStaticNormalized>)
-						| internals.EntryStaticNormalized
+						| (() => Promise<webpack.EntryStaticNormalized>)
+						| webpack.EntryStaticNormalized
 					)
 				],
 				boolean
 			>;
 		}>;
 		name: string;
-		parentCompilation: internals.Compilation;
-		root: internals.Compiler;
+		parentCompilation: webpack.Compilation;
+		root: webpack.Compiler;
 		outputPath: string;
-		outputFileSystem: internals.OutputFileSystem;
-		intermediateFileSystem: internals.InputFileSystem &
-			internals.OutputFileSystem &
-			internals.IntermediateFileSystemExtras;
-		inputFileSystem: internals.InputFileSystem;
+		outputFileSystem: webpack.OutputFileSystem;
+		intermediateFileSystem: webpack.InputFileSystem &
+			webpack.OutputFileSystem &
+			webpack.IntermediateFileSystemExtras;
+		inputFileSystem: webpack.InputFileSystem;
 		watchFileSystem: any;
 		recordsInputPath: string;
 		recordsOutputPath: string;
@@ -1575,57 +1514,57 @@ declare namespace internals {
 		immutablePaths: Set<string>;
 		modifiedFiles: Set<string>;
 		removedFiles: Set<string>;
-		fileTimestamps: Map<string, internals.FileSystemInfoEntry>;
-		contextTimestamps: Map<string, internals.FileSystemInfoEntry>;
-		resolverFactory: internals.ResolverFactory;
+		fileTimestamps: Map<string, webpack.FileSystemInfoEntry>;
+		contextTimestamps: Map<string, webpack.FileSystemInfoEntry>;
+		resolverFactory: webpack.ResolverFactory;
 		infrastructureLogger: any;
-		options: internals.WebpackOptionsNormalized;
+		options: webpack.WebpackOptionsNormalized;
 		context: string;
-		requestShortener: internals.RequestShortener;
-		cache: internals.Cache;
+		requestShortener: webpack.RequestShortener;
+		cache: webpack.Cache;
 		compilerPath: string;
 		running: boolean;
 		watchMode: boolean;
 		getInfrastructureLogger(
 			name: string | (() => string)
-		): internals.WebpackLogger;
+		): webpack.WebpackLogger;
 		watch(
-			watchOptions: internals.WatchOptions,
-			handler: internals.CallbackCompiler<internals.Stats>
-		): internals.Watching;
-		run(callback: internals.CallbackCompiler<internals.Stats>): void;
+			watchOptions: webpack.WatchOptions,
+			handler: webpack.CallbackCompiler<webpack.Stats>
+		): webpack.Watching;
+		run(callback: webpack.CallbackCompiler<webpack.Stats>): void;
 		runAsChild(
 			callback: (
 				err?: Error,
-				entries?: Array<internals.Chunk>,
-				compilation?: internals.Compilation
+				entries?: Array<webpack.Chunk>,
+				compilation?: webpack.Compilation
 			) => any
 		): void;
 		purgeInputFileSystem(): void;
 		emitAssets(
-			compilation: internals.Compilation,
-			callback: internals.CallbackCompiler<void>
+			compilation: webpack.Compilation,
+			callback: webpack.CallbackCompiler<void>
 		): void;
-		emitRecords(callback: internals.CallbackCompiler<void>): void;
-		readRecords(callback: internals.CallbackCompiler<void>): void;
+		emitRecords(callback: webpack.CallbackCompiler<void>): void;
+		readRecords(callback: webpack.CallbackCompiler<void>): void;
 		createChildCompiler(
-			compilation: internals.Compilation,
+			compilation: webpack.Compilation,
 			compilerName: string,
 			compilerIndex: number,
-			outputOptions: internals.OutputNormalized,
-			plugins: Array<internals.WebpackPluginInstance>
-		): internals.Compiler;
+			outputOptions: webpack.OutputNormalized,
+			plugins: Array<webpack.WebpackPluginInstance>
+		): webpack.Compiler;
 		isChild(): boolean;
-		createCompilation(): internals.Compilation;
-		newCompilation(params: internals.CompilationParams): internals.Compilation;
-		createNormalModuleFactory(): internals.NormalModuleFactory;
-		createContextModuleFactory(): internals.ContextModuleFactory;
+		createCompilation(): webpack.Compilation;
+		newCompilation(params: webpack.CompilationParams): webpack.Compilation;
+		createNormalModuleFactory(): webpack.NormalModuleFactory;
+		createContextModuleFactory(): webpack.ContextModuleFactory;
 		newCompilationParams(): {
-			normalModuleFactory: internals.NormalModuleFactory;
-			contextModuleFactory: internals.ContextModuleFactory;
+			normalModuleFactory: webpack.NormalModuleFactory;
+			contextModuleFactory: webpack.ContextModuleFactory;
 		};
-		compile(callback: internals.CallbackCompiler<internals.Compilation>): void;
-		close(callback: internals.CallbackCompiler<void>): void;
+		compile(callback: webpack.CallbackCompiler<webpack.Compilation>): void;
+		close(callback: webpack.CallbackCompiler<void>): void;
 	}
 	export class ContextExclusionPlugin {
 		constructor(negativeMatcher: RegExp);
@@ -1634,9 +1573,9 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
-	export abstract class ContextModuleFactory extends internals.ModuleFactory {
+	export abstract class ContextModuleFactory extends webpack.ModuleFactory {
 		hooks: Readonly<{
 			beforeResolve: AsyncSeriesWaterfallHook<[any]>;
 			afterResolve: AsyncSeriesWaterfallHook<[any]>;
@@ -1679,7 +1618,7 @@ declare namespace internals {
 				| boolean
 				| Function
 				| RegExp
-				| internals.RuntimeValue
+				| webpack.RuntimeValue
 				| { [index: string]: RecursiveArrayOrRecordDeclarations }
 				| Array<RecursiveArrayOrRecordDeclarations>
 			>
@@ -1692,7 +1631,7 @@ declare namespace internals {
 			| boolean
 			| Function
 			| RegExp
-			| internals.RuntimeValue
+			| webpack.RuntimeValue
 			| { [index: string]: RecursiveArrayOrRecordDeclarations }
 			| Array<RecursiveArrayOrRecordDeclarations>
 		>;
@@ -1700,11 +1639,8 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
-		static runtimeValue(
-			fn?: any,
-			fileDependencies?: any
-		): internals.RuntimeValue;
+		apply(compiler: webpack.Compiler): void;
+		static runtimeValue(fn?: any, fileDependencies?: any): webpack.RuntimeValue;
 	}
 	export class DelegatedPlugin {
 		constructor(options?: any);
@@ -1713,78 +1649,64 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export abstract class DependenciesBlock {
-		dependencies: Array<internals.Dependency>;
-		blocks: Array<internals.AsyncDependenciesBlock>;
+		dependencies: Array<webpack.Dependency>;
+		blocks: Array<webpack.AsyncDependenciesBlock>;
 
 		/**
 		 * Adds a DependencyBlock to DependencyBlock relationship.
 		 * This is used for when a Module has a AsyncDependencyBlock tie (for code-splitting)
 		 */
-		addBlock(block: internals.AsyncDependenciesBlock): void;
-		addDependency(dependency: internals.Dependency): void;
-		removeDependency(dependency: internals.Dependency): void;
+		addBlock(block: webpack.AsyncDependenciesBlock): void;
+		addDependency(dependency: webpack.Dependency): void;
+		removeDependency(dependency: webpack.Dependency): void;
 
 		/**
 		 * Removes all dependencies and blocks
 		 */
 		clearDependenciesAndBlocks(): void;
-
-		/**
-		 * Update the hash
-		 */
-		updateHash(hash: internals.Hash, chunkGraph: internals.ChunkGraph): void;
+		updateHash(hash: webpack.Hash, chunkGraph: webpack.ChunkGraph): void;
 		serialize(__0: { write: any }): void;
 		deserialize(__0: { read: any }): void;
 	}
 	export interface DependenciesBlockLike {
-		dependencies: Array<internals.Dependency>;
-		blocks: Array<internals.AsyncDependenciesBlock>;
+		dependencies: Array<webpack.Dependency>;
+		blocks: Array<webpack.AsyncDependenciesBlock>;
 	}
 	export class Dependency {
 		constructor();
 		weak: boolean;
 		optional: boolean;
-		loc:
-			| internals.SyntheticDependencyLocation
-			| internals.RealDependencyLocation;
+		loc: webpack.SyntheticDependencyLocation | webpack.RealDependencyLocation;
 		readonly type: string;
 		getResourceIdentifier(): string;
-		getReference(moduleGraph: internals.ModuleGraph): never;
+		getReference(moduleGraph: webpack.ModuleGraph): never;
 
 		/**
 		 * Returns list of exports referenced by this dependency
 		 */
 		getReferencedExports(
-			moduleGraph: internals.ModuleGraph
+			moduleGraph: webpack.ModuleGraph
 		): Array<Array<string>>;
-		getCondition(moduleGraph: internals.ModuleGraph): () => boolean;
+		getCondition(moduleGraph: webpack.ModuleGraph): () => boolean;
 
 		/**
 		 * Returns the exported names
 		 */
-		getExports(moduleGraph: internals.ModuleGraph): internals.ExportsSpec;
+		getExports(moduleGraph: webpack.ModuleGraph): webpack.ExportsSpec;
 
 		/**
 		 * Returns warnings
 		 */
-		getWarnings(
-			moduleGraph: internals.ModuleGraph
-		): Array<internals.WebpackError>;
+		getWarnings(moduleGraph: webpack.ModuleGraph): Array<webpack.WebpackError>;
 
 		/**
 		 * Returns errors
 		 */
-		getErrors(
-			moduleGraph: internals.ModuleGraph
-		): Array<internals.WebpackError>;
-
-		/**
-		 * Update the hash
-		 */
-		updateHash(hash: internals.Hash, chunkGraph: internals.ChunkGraph): void;
+		getErrors(moduleGraph: webpack.ModuleGraph): Array<webpack.WebpackError>;
+		updateHash(hash: webpack.Hash, chunkGraph: webpack.ChunkGraph): void;
 
 		/**
 		 * implement this method to allow the occurrence order plugin to count correctly
@@ -1800,31 +1722,31 @@ declare namespace internals {
 	}
 	export abstract class DependencyTemplate {
 		apply(
-			dependency: internals.Dependency,
-			source: internals.ReplaceSource,
-			templateContext: internals.DependencyTemplateContext
+			dependency: webpack.Dependency,
+			source: webpack.ReplaceSource,
+			templateContext: webpack.DependencyTemplateContext
 		): void;
 	}
 	export interface DependencyTemplateContext {
 		/**
 		 * the runtime template
 		 */
-		runtimeTemplate: internals.RuntimeTemplate;
+		runtimeTemplate: webpack.RuntimeTemplate;
 
 		/**
 		 * the dependency templates
 		 */
-		dependencyTemplates: internals.DependencyTemplates;
+		dependencyTemplates: webpack.DependencyTemplates;
 
 		/**
 		 * the module graph
 		 */
-		moduleGraph: internals.ModuleGraph;
+		moduleGraph: webpack.ModuleGraph;
 
 		/**
 		 * the chunk graph
 		 */
-		chunkGraph: internals.ChunkGraph;
+		chunkGraph: webpack.ChunkGraph;
 
 		/**
 		 * the requirements for runtime
@@ -1834,24 +1756,24 @@ declare namespace internals {
 		/**
 		 * current module
 		 */
-		module: internals.Module;
+		module: webpack.Module;
 
 		/**
 		 * mutable array of init fragments for the current module
 		 */
-		initFragments: Array<internals.InitFragment>;
+		initFragments: Array<webpack.InitFragment>;
 	}
 	export abstract class DependencyTemplates {
 		get(dependency: {
-			new (...args: Array<any>): internals.Dependency;
-		}): internals.DependencyTemplate;
+			new (...args: Array<any>): webpack.Dependency;
+		}): webpack.DependencyTemplate;
 		set(
-			dependency: { new (...args: Array<any>): internals.Dependency },
-			dependencyTemplate: internals.DependencyTemplate
+			dependency: { new (...args: Array<any>): webpack.Dependency },
+			dependencyTemplate: webpack.DependencyTemplate
 		): void;
 		updateHash(part: string): void;
 		getHash(): string;
-		clone(): internals.DependencyTemplates;
+		clone(): webpack.DependencyTemplates;
 	}
 	export class DeterministicModuleIdsPlugin {
 		constructor(options?: any);
@@ -1860,7 +1782,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 
 	/**
@@ -1872,7 +1794,7 @@ declare namespace internals {
 	export type DevTool = string | false;
 	export type DevtoolFallbackModuleFilenameTemplate = string | Function;
 	export class DllPlugin {
-		constructor(options: internals.DllPluginOptions);
+		constructor(options: webpack.DllPluginOptions);
 		options: {
 			entryOnly: boolean;
 			/**
@@ -1900,7 +1822,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 
 	/**
@@ -1954,7 +1876,7 @@ declare namespace internals {
 						/**
 						 * An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.
 						 */
-						manifest: string | internals.DllReferencePluginOptionsManifest;
+						manifest: string | webpack.DllReferencePluginOptionsManifest;
 						/**
 						 * The name where the dll is exposed (external name, defaults to manifest.name).
 						 */
@@ -1990,7 +1912,7 @@ declare namespace internals {
 						/**
 						 * The mappings from request to module info.
 						 */
-						content: internals.DllReferencePluginOptionsContent;
+						content: webpack.DllReferencePluginOptionsContent;
 						/**
 						 * Context of requests in the manifest (or content property) as absolute path.
 						 */
@@ -2044,7 +1966,7 @@ declare namespace internals {
 					/**
 					 * An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.
 					 */
-					manifest: string | internals.DllReferencePluginOptionsManifest;
+					manifest: string | webpack.DllReferencePluginOptionsManifest;
 					/**
 					 * The name where the dll is exposed (external name, defaults to manifest.name).
 					 */
@@ -2080,7 +2002,7 @@ declare namespace internals {
 					/**
 					 * The mappings from request to module info.
 					 */
-					content: internals.DllReferencePluginOptionsContent;
+					content: webpack.DllReferencePluginOptionsContent;
 					/**
 					 * Context of requests in the manifest (or content property) as absolute path.
 					 */
@@ -2135,7 +2057,7 @@ declare namespace internals {
 				/**
 				 * An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.
 				 */
-				manifest: string | internals.DllReferencePluginOptionsManifest;
+				manifest: string | webpack.DllReferencePluginOptionsManifest;
 				/**
 				 * The name where the dll is exposed (external name, defaults to manifest.name).
 				 */
@@ -2171,7 +2093,7 @@ declare namespace internals {
 				/**
 				 * The mappings from request to module info.
 				 */
-				content: internals.DllReferencePluginOptionsContent;
+				content: webpack.DllReferencePluginOptionsContent;
 				/**
 				 * Context of requests in the manifest (or content property) as absolute path.
 				 */
@@ -2239,7 +2161,7 @@ declare namespace internals {
 		/**
 		 * The mappings from request to module info.
 		 */
-		content: internals.DllReferencePluginOptionsContent;
+		content: webpack.DllReferencePluginOptionsContent;
 
 		/**
 		 * The name where the dll is exposed (external name).
@@ -2325,9 +2247,9 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 		static checkEnabled(
-			compiler: internals.Compiler,
+			compiler: webpack.Compiler,
 			type:
 				| "var"
 				| "module"
@@ -2351,26 +2273,26 @@ declare namespace internals {
 		| string
 		| (() =>
 				| string
-				| internals.EntryObject
+				| webpack.EntryObject
 				| [string, string]
-				| Promise<string | internals.EntryObject | [string, string]>)
-		| internals.EntryObject
+				| Promise<string | webpack.EntryObject | [string, string]>)
+		| webpack.EntryObject
 		| [string, string];
 	export interface EntryData {
 		/**
 		 * dependencies of the entrypoint
 		 */
-		dependencies: Array<internals.EntryDependency>;
+		dependencies: Array<webpack.EntryDependency>;
 
 		/**
 		 * options of the entrypoint
 		 */
 		options: { name: string } & Pick<
-			internals.EntryDescriptionNormalized,
-			"dependOn" | "filename" | "library"
+			webpack.EntryDescriptionNormalized,
+			"filename" | "dependOn" | "library"
 		>;
 	}
-	export abstract class EntryDependency extends internals.ModuleDependency {}
+	export abstract class EntryDependency extends webpack.ModuleDependency {}
 
 	/**
 	 * An object with entry point description.
@@ -2386,10 +2308,7 @@ declare namespace internals {
 		 */
 		filename?:
 			| string
-			| ((
-					pathData: internals.PathData,
-					assetInfo: internals.AssetInfo
-			  ) => string);
+			| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
 
 		/**
 		 * Module(s) that are loaded upon startup.
@@ -2399,7 +2318,7 @@ declare namespace internals {
 		/**
 		 * Options for library.
 		 */
-		library?: internals.LibraryOptions;
+		library?: webpack.LibraryOptions;
 	}
 
 	/**
@@ -2416,10 +2335,7 @@ declare namespace internals {
 		 */
 		filename?:
 			| string
-			| ((
-					pathData: internals.PathData,
-					assetInfo: internals.AssetInfo
-			  ) => string);
+			| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
 
 		/**
 		 * Module(s) that are loaded upon startup. The last one is exported.
@@ -2429,18 +2345,18 @@ declare namespace internals {
 		/**
 		 * Options for library.
 		 */
-		library?: internals.LibraryOptions;
+		library?: webpack.LibraryOptions;
 	}
 	export type EntryItem = string | [string, string];
 	export type EntryNormalized =
-		| (() => Promise<internals.EntryStaticNormalized>)
-		| internals.EntryStaticNormalized;
+		| (() => Promise<webpack.EntryStaticNormalized>)
+		| webpack.EntryStaticNormalized;
 
 	/**
 	 * Multiple entry bundles are created. The key is the entry name. The value can be a string, an array or an entry description object.
 	 */
 	export interface EntryObject {
-		[index: string]: string | [string, string] | internals.EntryDescription;
+		[index: string]: string | [string, string] | webpack.EntryDescription;
 	}
 	export class EntryPlugin {
 		/**
@@ -2453,8 +2369,8 @@ declare namespace internals {
 			options:
 				| string
 				| ({ name: string } & Pick<
-						internals.EntryDescriptionNormalized,
-						"dependOn" | "filename" | "library"
+						webpack.EntryDescriptionNormalized,
+						"filename" | "dependOn" | "library"
 				  >)
 		);
 		context: string;
@@ -2462,44 +2378,44 @@ declare namespace internals {
 		options:
 			| string
 			| ({ name: string } & Pick<
-					internals.EntryDescriptionNormalized,
-					"dependOn" | "filename" | "library"
+					webpack.EntryDescriptionNormalized,
+					"filename" | "dependOn" | "library"
 			  >);
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 		static createDependency(
 			entry: string,
 			options:
 				| string
 				| ({ name: string } & Pick<
-						internals.EntryDescriptionNormalized,
-						"dependOn" | "filename" | "library"
+						webpack.EntryDescriptionNormalized,
+						"filename" | "dependOn" | "library"
 				  >)
-		): internals.EntryDependency;
+		): webpack.EntryDependency;
 	}
-	export type EntryStatic = string | internals.EntryObject | [string, string];
+	export type EntryStatic = string | webpack.EntryObject | [string, string];
 
 	/**
 	 * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
 	 */
 	export interface EntryStaticNormalized {
-		[index: string]: internals.EntryDescriptionNormalized;
+		[index: string]: webpack.EntryDescriptionNormalized;
 	}
-	export abstract class Entrypoint extends internals.ChunkGroup {
-		runtimeChunk: internals.Chunk;
+	export abstract class Entrypoint extends webpack.ChunkGroup {
+		runtimeChunk: webpack.Chunk;
 
 		/**
 		 * Sets the runtimeChunk for an entrypoint.
 		 */
-		setRuntimeChunk(chunk: internals.Chunk): void;
+		setRuntimeChunk(chunk: webpack.Chunk): void;
 
 		/**
 		 * Fetches the chunk reference containing the webpack bootstrap code
 		 */
-		getRuntimeChunk(): internals.Chunk;
+		getRuntimeChunk(): webpack.Chunk;
 	}
 	export class EnvironmentPlugin {
 		constructor(...keys: Array<any>);
@@ -2509,7 +2425,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export interface Etag {
 		toString: () => string;
@@ -2523,7 +2439,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export class EvalSourceMapDevToolPlugin {
 		constructor(options?: any);
@@ -2535,7 +2451,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 
 	/**
@@ -2582,9 +2498,10 @@ declare namespace internals {
 		 */
 		topLevelAwait?: boolean;
 	}
-	export abstract class ExportInfo {
+	export class ExportInfo {
+		constructor(name: string, initFrom?: webpack.ExportInfo);
 		name: string;
-		usedName: string | typeof internals.SKIP_OVER_NAME;
+		usedName: string | typeof webpack.SKIP_OVER_NAME;
 		used: 0 | 1 | 2 | 3 | 4;
 
 		/**
@@ -2609,11 +2526,11 @@ declare namespace internals {
 		 */
 		canMangleUse: boolean;
 		exportsInfoOwned: boolean;
-		exportsInfo: internals.ExportsInfo;
+		exportsInfo: webpack.ExportsInfo;
 		readonly canMangle: boolean;
 		getUsedName(fallbackName?: any): any;
-		createNestedExportsInfo(): internals.ExportsInfo;
-		getNestedExportsInfo(): internals.ExportsInfo;
+		createNestedExportsInfo(): webpack.ExportsInfo;
+		getNestedExportsInfo(): webpack.ExportsInfo;
 		getUsedInfo():
 			| "used"
 			| "no usage info"
@@ -2641,30 +2558,31 @@ declare namespace internals {
 		/**
 		 * nested exports
 		 */
-		exports?: Array<string | internals.ExportSpec>;
+		exports?: Array<string | webpack.ExportSpec>;
 
 		/**
 		 * when reexported: from which module
 		 */
-		from?: internals.Module;
+		from?: webpack.Module;
 
 		/**
 		 * when reexported: from which export
 		 */
 		export?: Array<string>;
 	}
-	export abstract class ExportsInfo {
-		readonly ownedExports: Iterable<internals.ExportInfo>;
-		readonly exports: Iterable<internals.ExportInfo>;
-		readonly orderedExports: Iterable<internals.ExportInfo>;
-		readonly otherExportsInfo: internals.ExportInfo;
+	export class ExportsInfo {
+		constructor();
+		readonly ownedExports: Iterable<webpack.ExportInfo>;
+		readonly exports: Iterable<webpack.ExportInfo>;
+		readonly orderedExports: Iterable<webpack.ExportInfo>;
+		readonly otherExportsInfo: webpack.ExportInfo;
 		setRedirectNamedTo(exportsInfo?: any): void;
 		setHasProvideInfo(): void;
 		setHasUseInfo(): void;
-		getExportInfo(name: string): internals.ExportInfo;
-		getReadOnlyExportInfo(name: string): internals.ExportInfo;
-		getNestedExportsInfo(name: Array<string>): internals.ExportsInfo;
-		setUnknownExportsProvided(canMangle: boolean): boolean;
+		getExportInfo(name: string): webpack.ExportInfo;
+		getReadOnlyExportInfo(name: string): webpack.ExportInfo;
+		getNestedExportsInfo(name?: Array<string>): webpack.ExportsInfo;
+		setUnknownExportsProvided(canMangle?: boolean): boolean;
 		setUsedInUnknownWay(): boolean;
 		setAllKnownExportsUsed(): boolean;
 		setUsedForSideEffectsOnly(): boolean;
@@ -2685,7 +2603,7 @@ declare namespace internals {
 		/**
 		 * exported names, true for unknown exports or null for no exports
 		 */
-		exports: true | Array<string | internals.ExportSpec>;
+		exports: true | Array<string | webpack.ExportSpec>;
 
 		/**
 		 * can the export be renamed (defaults to true)
@@ -2695,7 +2613,7 @@ declare namespace internals {
 		/**
 		 * module on which the result depends on
 		 */
-		dependencies?: Array<internals.Module>;
+		dependencies?: Array<webpack.Module>;
 	}
 	export type Expression =
 		| UnaryExpression
@@ -2737,6 +2655,17 @@ declare namespace internals {
 				request: string,
 				callback: (err: Error, result: string) => void
 		  ) => void);
+	export class ExternalModule extends webpack.Module {
+		constructor(request?: any, type?: any, userRequest?: any);
+		request: string | Array<string> | Record<string, string | Array<string>>;
+		externalType: string;
+		userRequest: string;
+		getSourceString(
+			runtimeTemplate?: any,
+			moduleGraph?: any,
+			chunkGraph?: any
+		): string;
+	}
 	export type Externals =
 		| string
 		| RegExp
@@ -2776,7 +2705,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export type ExternalsType =
 		| "var"
@@ -2796,10 +2725,10 @@ declare namespace internals {
 		| "jsonp"
 		| "system";
 	export interface FactorizeModuleOptions {
-		currentProfile: internals.ModuleProfile;
-		factory: internals.ModuleFactory;
-		dependencies: Array<internals.Dependency>;
-		originModule: internals.Module;
+		currentProfile: webpack.ModuleProfile;
+		factory: webpack.ModuleFactory;
+		dependencies: Array<webpack.Dependency>;
+		originModule: webpack.Module;
 		context?: string;
 	}
 	export interface FallbackCacheGroup {
@@ -2815,7 +2744,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 
 	/**
@@ -2883,64 +2812,60 @@ declare namespace internals {
 		version?: string;
 	}
 	export abstract class FileSystemInfo {
-		fs: internals.InputFileSystem;
-		logger: internals.WebpackLogger;
-		fileTimestampQueue: internals.AsyncQueue<
+		fs: webpack.InputFileSystem;
+		logger: webpack.WebpackLogger;
+		fileTimestampQueue: webpack.AsyncQueue<
 			string,
 			string,
-			internals.FileSystemInfoEntry
+			webpack.FileSystemInfoEntry
 		>;
-		fileHashQueue: internals.AsyncQueue<string, string, string>;
-		contextTimestampQueue: internals.AsyncQueue<
+		fileHashQueue: webpack.AsyncQueue<string, string, string>;
+		contextTimestampQueue: webpack.AsyncQueue<
 			string,
 			string,
-			internals.FileSystemInfoEntry
+			webpack.FileSystemInfoEntry
 		>;
-		contextHashQueue: internals.AsyncQueue<string, string, string>;
-		managedItemQueue: internals.AsyncQueue<string, string, string>;
-		managedItemDirectoryQueue: internals.AsyncQueue<
-			string,
-			string,
-			Set<string>
-		>;
+		contextHashQueue: webpack.AsyncQueue<string, string, string>;
+		managedItemQueue: webpack.AsyncQueue<string, string, string>;
+		managedItemDirectoryQueue: webpack.AsyncQueue<string, string, Set<string>>;
 		managedPaths: Array<string>;
 		managedPathsWithSlash: Array<string>;
 		immutablePaths: Array<string>;
 		immutablePathsWithSlash: Array<string>;
 		addFileTimestamps(
-			map: Map<string, internals.FileSystemInfoEntry | "ignore">
+			map: Map<string, webpack.FileSystemInfoEntry | "ignore">
 		): void;
 		addContextTimestamps(
-			map: Map<string, internals.FileSystemInfoEntry | "ignore">
+			map: Map<string, webpack.FileSystemInfoEntry | "ignore">
 		): void;
 		getFileTimestamp(
 			path: string,
 			callback: (
-				arg0: internals.WebpackError,
-				arg1: internals.FileSystemInfoEntry | "ignore"
+				arg0: webpack.WebpackError,
+				arg1: webpack.FileSystemInfoEntry | "ignore"
 			) => void
 		): void;
 		getContextTimestamp(
 			path: string,
 			callback: (
-				arg0: internals.WebpackError,
-				arg1: internals.FileSystemInfoEntry | "ignore"
+				arg0: webpack.WebpackError,
+				arg1: webpack.FileSystemInfoEntry | "ignore"
 			) => void
 		): void;
 		getFileHash(
 			path: string,
-			callback: (arg0: internals.WebpackError, arg1: string) => void
+			callback: (arg0: webpack.WebpackError, arg1: string) => void
 		): void;
 		getContextHash(
 			path: string,
-			callback: (arg0: internals.WebpackError, arg1: string) => void
+			callback: (arg0: webpack.WebpackError, arg1: string) => void
 		): void;
 		resolveBuildDependencies(
 			context: string,
 			deps: Iterable<string>,
 			callback: (
 				arg0: Error,
-				arg1: internals.ResolveBuildDependenciesResult
+				arg1: webpack.ResolveBuildDependenciesResult
 			) => void
 		): void;
 		checkResolveResultsValid(
@@ -2958,15 +2883,15 @@ declare namespace internals {
 				 */
 				hash?: boolean;
 			},
-			callback: (arg0: internals.WebpackError, arg1: internals.Snapshot) => void
+			callback: (arg0: webpack.WebpackError, arg1: webpack.Snapshot) => void
 		): void;
 		mergeSnapshots(
-			snapshot1: internals.Snapshot,
-			snapshot2: internals.Snapshot
-		): internals.Snapshot;
+			snapshot1: webpack.Snapshot,
+			snapshot2: webpack.Snapshot
+		): webpack.Snapshot;
 		checkSnapshotValid(
-			snapshot: internals.Snapshot,
-			callback: (arg0: internals.WebpackError, arg1: boolean) => void
+			snapshot: webpack.Snapshot,
+			callback: (arg0: webpack.WebpackError, arg1: boolean) => void
 		): void;
 		getDeprecatedFileTimestamps(): Map<any, any>;
 		getDeprecatedContextTimestamps(): Map<any, any>;
@@ -2982,10 +2907,7 @@ declare namespace internals {
 	}
 	export type Filename =
 		| string
-		| ((
-				pathData: internals.PathData,
-				assetInfo: internals.AssetInfo
-		  ) => string);
+		| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
 	export type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 	export type FilterTypes =
 		| string
@@ -2996,22 +2918,22 @@ declare namespace internals {
 		/**
 		 * mapping from dependencies to templates
 		 */
-		dependencyTemplates: internals.DependencyTemplates;
+		dependencyTemplates: webpack.DependencyTemplates;
 
 		/**
 		 * the runtime template
 		 */
-		runtimeTemplate: internals.RuntimeTemplate;
+		runtimeTemplate: webpack.RuntimeTemplate;
 
 		/**
 		 * the module graph
 		 */
-		moduleGraph: internals.ModuleGraph;
+		moduleGraph: webpack.ModuleGraph;
 
 		/**
 		 * the chunk graph
 		 */
-		chunkGraph: internals.ChunkGraph;
+		chunkGraph: webpack.ChunkGraph;
 
 		/**
 		 * the requirements for runtime
@@ -3025,23 +2947,23 @@ declare namespace internals {
 	}
 	export class Generator {
 		constructor();
-		getTypes(module: internals.NormalModule): Set<string>;
-		getSize(module: internals.NormalModule, type: string): number;
+		getTypes(module: webpack.NormalModule): Set<string>;
+		getSize(module: webpack.NormalModule, type?: string): number;
 		generate(
-			module: internals.NormalModule,
-			__1: internals.GenerateContext
-		): internals.Source;
-		updateHash(hash: internals.Hash, __1: internals.UpdateHashContext): void;
-		static byType(map?: any): internals.ByTypeGenerator;
+			module: webpack.NormalModule,
+			__1: webpack.GenerateContext
+		): webpack.Source;
+		updateHash(hash: webpack.Hash, __1: webpack.UpdateHashContext): void;
+		static byType(map?: any): webpack.ByTypeGenerator;
 	}
 	export interface HMRJavascriptParserHooks {
 		hotAcceptCallback: SyncBailHook<[any, Array<string>], void>;
 		hotAcceptWithoutCallback: SyncBailHook<[any, Array<string>], void>;
 	}
 	export interface HandleModuleCreationOptions {
-		factory: internals.ModuleFactory;
-		dependencies: Array<internals.Dependency>;
-		originModule: internals.Module;
+		factory: webpack.ModuleFactory;
+		dependencies: Array<webpack.Dependency>;
+		originModule: webpack.Module;
 		context?: string;
 
 		/**
@@ -3051,13 +2973,13 @@ declare namespace internals {
 	}
 	export class Hash {
 		constructor();
-		update(data: string | Buffer, inputEncoding: string): internals.Hash;
-		digest(encoding: string): string | Buffer;
+		update(data: string | Buffer, inputEncoding?: string): webpack.Hash;
+		digest(encoding?: string): string | Buffer;
 	}
-	export type HashFunction = string | typeof internals.Hash;
+	export type HashFunction = string | typeof webpack.Hash;
 	export class HashedModuleIdsPlugin {
-		constructor(options?: internals.HashedModuleIdsPluginOptions);
-		options: internals.HashedModuleIdsPluginOptions;
+		constructor(options?: webpack.HashedModuleIdsPluginOptions);
+		options: webpack.HashedModuleIdsPluginOptions;
 		apply(compiler?: any): void;
 	}
 
@@ -3096,10 +3018,10 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 		static getParserHooks(
-			parser: internals.JavascriptParser
-		): internals.HMRJavascriptParserHooks;
+			parser: webpack.JavascriptParser
+		): webpack.HMRJavascriptParserHooks;
 	}
 	export class IgnorePlugin {
 		constructor(
@@ -3143,12 +3065,12 @@ declare namespace internals {
 		 * Note that if "contextRegExp" is given, both the "resourceRegExp"
 		 * and "contextRegExp" have to match.
 		 */
-		checkIgnore(resolveData: internals.ResolveData): false;
+		checkIgnore(resolveData: webpack.ResolveData): false;
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export type IgnorePluginOptions =
 		| {
@@ -3188,17 +3110,17 @@ declare namespace internals {
 		level?: "none" | "verbose" | "error" | "warn" | "info" | "log";
 	}
 	export abstract class InitFragment {
-		content: string | internals.Source;
+		content: string | webpack.Source;
 		stage: number;
 		position: number;
 		key: string;
-		endContent: string | internals.Source;
+		endContent: string | webpack.Source;
 		getContent(
-			generateContext: internals.GenerateContext
-		): string | internals.Source;
+			generateContext: webpack.GenerateContext
+		): string | webpack.Source;
 		getEndContent(
-			generateContext: internals.GenerateContext
-		): string | internals.Source;
+			generateContext: webpack.GenerateContext
+		): string | webpack.Source;
 		merge: any;
 	}
 	export interface InputFileSystem {
@@ -3239,46 +3161,46 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 		renderModule(
-			module: internals.Module,
-			renderContext: internals.RenderContextJavascriptModulesPlugin,
-			hooks: internals.CompilationHooksJavascriptModulesPlugin,
+			module: webpack.Module,
+			renderContext: webpack.RenderContextJavascriptModulesPlugin,
+			hooks: webpack.CompilationHooksJavascriptModulesPlugin,
 			factory: boolean | "strict"
-		): internals.Source;
+		): webpack.Source;
 		renderChunk(
-			renderContext: internals.RenderContextJavascriptModulesPlugin,
-			hooks: internals.CompilationHooksJavascriptModulesPlugin
-		): internals.Source;
+			renderContext: webpack.RenderContextJavascriptModulesPlugin,
+			hooks: webpack.CompilationHooksJavascriptModulesPlugin
+		): webpack.Source;
 		renderMain(
-			renderContext: internals.MainRenderContext,
-			hooks: internals.CompilationHooksJavascriptModulesPlugin
-		): internals.Source;
+			renderContext: webpack.MainRenderContext,
+			hooks: webpack.CompilationHooksJavascriptModulesPlugin
+		): webpack.Source;
 		renderBootstrap(
-			renderContext: internals.RenderBootstrapContext,
-			hooks: internals.CompilationHooksJavascriptModulesPlugin
+			renderContext: webpack.RenderBootstrapContext,
+			hooks: webpack.CompilationHooksJavascriptModulesPlugin
 		): {
 			header: Array<string>;
 			startup: Array<string>;
 			allowInlineStartup: boolean;
 		};
 		renderRequire(
-			renderContext: internals.RenderBootstrapContext,
-			hooks: internals.CompilationHooksJavascriptModulesPlugin
+			renderContext: webpack.RenderBootstrapContext,
+			hooks: webpack.CompilationHooksJavascriptModulesPlugin
 		): string;
 		static getCompilationHooks(
-			compilation: internals.Compilation
-		): internals.CompilationHooksJavascriptModulesPlugin;
+			compilation: webpack.Compilation
+		): webpack.CompilationHooksJavascriptModulesPlugin;
 		static getChunkFilenameTemplate(chunk?: any, outputOptions?: any): any;
 		static chunkHasJs: (
-			chunk: internals.Chunk,
-			chunkGraph: internals.ChunkGraph
+			chunk: webpack.Chunk,
+			chunkGraph: webpack.ChunkGraph
 		) => boolean;
 	}
-	export abstract class JavascriptParser extends internals.Parser {
+	export abstract class JavascriptParser extends webpack.Parser {
 		hooks: Readonly<{
 			evaluateTypeof: HookMap<
-				SyncBailHook<[UnaryExpression], internals.BasicEvaluatedExpression>
+				SyncBailHook<[UnaryExpression], webpack.BasicEvaluatedExpression>
 			>;
 			evaluate: HookMap<
 				SyncBailHook<
@@ -3308,28 +3230,28 @@ declare namespace internals {
 						| Identifier
 						| AwaitExpression
 					],
-					internals.BasicEvaluatedExpression
+					webpack.BasicEvaluatedExpression
 				>
 			>;
 			evaluateIdentifier: HookMap<
 				SyncBailHook<
 					[ThisExpression | MemberExpression | Identifier],
-					internals.BasicEvaluatedExpression
+					webpack.BasicEvaluatedExpression
 				>
 			>;
 			evaluateDefinedIdentifier: HookMap<
 				SyncBailHook<
 					[ThisExpression | MemberExpression | Identifier],
-					internals.BasicEvaluatedExpression
+					webpack.BasicEvaluatedExpression
 				>
 			>;
 			evaluateCallExpressionMember: HookMap<
 				SyncBailHook<
 					[
 						SimpleCallExpression | NewExpression,
-						internals.BasicEvaluatedExpression
+						webpack.BasicEvaluatedExpression
 					],
-					internals.BasicEvaluatedExpression
+					webpack.BasicEvaluatedExpression
 				>
 			>;
 			preStatement: SyncBailHook<
@@ -4230,8 +4152,8 @@ declare namespace internals {
 		}>;
 		options: any;
 		sourceType: "module" | "script" | "auto";
-		scope: internals.ScopeInfo;
-		state: Record<string, any> & internals.ParserStateBase;
+		scope: webpack.ScopeInfo;
+		state: Record<string, any> & webpack.ParserStateBase;
 		comments: any;
 		semicolons: any;
 		statementEndPos: any;
@@ -4335,7 +4257,7 @@ declare namespace internals {
 			expr: MemberExpression,
 			fallback: (
 				arg0: string,
-				arg1: string | internals.ScopeInfo | internals.VariableInfo,
+				arg1: string | webpack.ScopeInfo | webpack.VariableInfo,
 				arg2: () => Array<string>
 			) => any,
 			defined: (arg0: string) => any,
@@ -4348,12 +4270,12 @@ declare namespace internals {
 		): R;
 		callHooksForInfo<T, R>(
 			hookMap: HookMap<SyncBailHook<T, R>>,
-			info: string | internals.ScopeInfo | internals.VariableInfo,
+			info: string | webpack.ScopeInfo | webpack.VariableInfo,
 			...args: AsArray<T>
 		): R;
 		callHooksForInfoWithFallback<T, R>(
 			hookMap: HookMap<SyncBailHook<T, R>>,
-			info: string | internals.ScopeInfo | internals.VariableInfo,
+			info: string | webpack.ScopeInfo | webpack.VariableInfo,
 			fallback: (arg0: string) => any,
 			defined: () => any,
 			...args: AsArray<T>
@@ -4402,10 +4324,10 @@ declare namespace internals {
 				| MetaProperty
 				| Identifier
 				| AwaitExpression
-		): internals.BasicEvaluatedExpression;
+		): webpack.BasicEvaluatedExpression;
 		parseString(expression?: any): any;
 		parseCalculatedString(expression?: any): any;
-		evaluate(source?: any): internals.BasicEvaluatedExpression;
+		evaluate(source?: any): webpack.BasicEvaluatedExpression;
 		getComments(range?: any): any;
 		isAsiPosition(pos?: any): any;
 		getTagData(name?: any, tag?: any): any;
@@ -4415,10 +4337,10 @@ declare namespace internals {
 		isVariableDefined(name?: any): boolean;
 		getVariableInfo(
 			name: string
-		): string | internals.ScopeInfo | internals.VariableInfo;
+		): string | webpack.ScopeInfo | webpack.VariableInfo;
 		setVariable(
 			name: string,
-			variableInfo: string | internals.ScopeInfo | internals.VariableInfo
+			variableInfo: string | webpack.ScopeInfo | webpack.VariableInfo
 		): void;
 		parseCommentOptions(range?: any): { options: any; errors: any };
 		extractMemberExpressionChain(
@@ -4454,7 +4376,7 @@ declare namespace internals {
 		};
 		getFreeInfoFromVariable(
 			varName: string
-		): { name: string; info: string | internals.VariableInfo };
+		): { name: string; info: string | webpack.VariableInfo };
 		getMemberExpressionInfo(
 			expression: MemberExpression,
 			allowedTypes: Array<"expression" | "call">
@@ -4463,14 +4385,14 @@ declare namespace internals {
 					type: "call";
 					call: SimpleCallExpression | NewExpression;
 					calleeName: string;
-					rootInfo: string | internals.VariableInfo;
+					rootInfo: string | webpack.VariableInfo;
 					getCalleeMembers: () => Array<string>;
 					name: string;
 					getMembers: () => Array<string>;
 			  }
 			| {
 					type: "expression";
-					rootInfo: string | internals.VariableInfo;
+					rootInfo: string | webpack.VariableInfo;
 					name: string;
 					getMembers: () => Array<string>;
 			  };
@@ -4478,14 +4400,14 @@ declare namespace internals {
 			expression: MemberExpression
 		): {
 			name: string;
-			rootInfo: string | internals.ScopeInfo | internals.VariableInfo;
+			rootInfo: string | webpack.ScopeInfo | webpack.VariableInfo;
 			getMembers: () => Array<string>;
 		};
 	}
 	export interface JsonpCompilationPluginHooks {
-		jsonpScript: SyncWaterfallHook<[string, internals.Chunk, string]>;
-		linkPreload: SyncWaterfallHook<[string, internals.Chunk, string]>;
-		linkPrefetch: SyncWaterfallHook<[string, internals.Chunk, string]>;
+		jsonpScript: SyncWaterfallHook<[string, webpack.Chunk, string]>;
+		linkPreload: SyncWaterfallHook<[string, webpack.Chunk, string]>;
+		linkPrefetch: SyncWaterfallHook<[string, webpack.Chunk, string]>;
 	}
 	export type JsonpScriptType = false | "module" | "text/javascript";
 	export class JsonpTemplatePlugin {
@@ -4494,10 +4416,10 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 		static getCompilationHooks(
-			compilation: internals.Compilation
-		): internals.JsonpCompilationPluginHooks;
+			compilation: webpack.Compilation
+		): webpack.JsonpCompilationPluginHooks;
 	}
 	export interface KnownBuildMeta {
 		moduleArgument?: string;
@@ -4511,8 +4433,8 @@ declare namespace internals {
 	}
 	export abstract class LazySet<T> {
 		readonly size: number;
-		add(item: T): internals.LazySet<T>;
-		addAll(iterable: internals.LazySet<T> | Iterable<T>): internals.LazySet<T>;
+		add(item: T): webpack.LazySet<T>;
+		addAll(iterable: webpack.LazySet<T> | Iterable<T>): webpack.LazySet<T>;
 		clear(): void;
 		delete(value: T): boolean;
 		entries(): IterableIterator<[T, T]>;
@@ -4523,6 +4445,8 @@ declare namespace internals {
 		has(item: T): boolean;
 		keys(): IterableIterator<T>;
 		values(): IterableIterator<T>;
+		[Symbol.iterator](): IterableIterator<T>;
+		readonly [Symbol.toStringTag]: string;
 		serialize(__0: { write: any }): void;
 	}
 	export interface LibIdentOptions {
@@ -4543,15 +4467,15 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export type Library =
 		| string
 		| Array<string>
-		| internals.LibraryCustomUmdObject
-		| internals.LibraryOptions;
+		| webpack.LibraryCustomUmdObject
+		| webpack.LibraryOptions;
 	export interface LibraryContext<T> {
-		compilation: internals.Compilation;
+		compilation: webpack.Compilation;
 		options: T;
 	}
 
@@ -4603,7 +4527,7 @@ declare namespace internals {
 	export type LibraryName =
 		| string
 		| Array<string>
-		| internals.LibraryCustomUmdObject;
+		| webpack.LibraryCustomUmdObject;
 
 	/**
 	 * Options for library.
@@ -4612,7 +4536,7 @@ declare namespace internals {
 		/**
 		 * Add a comment in the UMD wrapper.
 		 */
-		auxiliaryComment?: string | internals.LibraryCustomUmdCommentObject;
+		auxiliaryComment?: string | webpack.LibraryCustomUmdCommentObject;
 
 		/**
 		 * Specify which export should be exposed as library.
@@ -4622,7 +4546,7 @@ declare namespace internals {
 		/**
 		 * The name of the library (some types allow unnamed libraries too).
 		 */
-		name?: string | Array<string> | internals.LibraryCustomUmdObject;
+		name?: string | Array<string> | webpack.LibraryCustomUmdObject;
 
 		/**
 		 * Type of library.
@@ -4652,7 +4576,7 @@ declare namespace internals {
 	}
 	export class LibraryTemplatePlugin {
 		constructor(
-			name: string | Array<string> | internals.LibraryCustomUmdObject,
+			name: string | Array<string> | webpack.LibraryCustomUmdObject,
 			target:
 				| "var"
 				| "module"
@@ -4671,7 +4595,7 @@ declare namespace internals {
 				| "jsonp"
 				| "system",
 			umdNamedDefine: boolean,
-			auxiliaryComment: string | internals.LibraryCustomUmdCommentObject,
+			auxiliaryComment: string | webpack.LibraryCustomUmdCommentObject,
 			exportProperty: string | Array<string>
 		);
 		library: {
@@ -4692,25 +4616,25 @@ declare namespace internals {
 				| "umd2"
 				| "jsonp"
 				| "system";
-			name: string | Array<string> | internals.LibraryCustomUmdObject;
+			name: string | Array<string> | webpack.LibraryCustomUmdObject;
 			umdNamedDefine: boolean;
-			auxiliaryComment: string | internals.LibraryCustomUmdCommentObject;
+			auxiliaryComment: string | webpack.LibraryCustomUmdCommentObject;
 			export: string | Array<string>;
 		};
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export class LimitChunkCountPlugin {
-		constructor(options: internals.LimitChunkCountPluginOptions);
-		options: internals.LimitChunkCountPluginOptions;
+		constructor(options?: webpack.LimitChunkCountPluginOptions);
+		options: webpack.LimitChunkCountPluginOptions;
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 
 	/**
@@ -4747,13 +4671,13 @@ declare namespace internals {
 		ident: string;
 	}
 	export class LoaderOptionsPlugin {
-		constructor(options?: internals.LoaderOptionsPluginOptions);
-		options: internals.LoaderOptionsPluginOptions;
+		constructor(options?: webpack.LoaderOptionsPluginOptions);
+		options: webpack.LoaderOptionsPluginOptions;
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 
 	/**
@@ -4792,7 +4716,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export interface LogEntry {
 		type: string;
@@ -4806,35 +4730,32 @@ declare namespace internals {
 		/**
 		 * the chunk
 		 */
-		chunk: internals.Chunk;
+		chunk: webpack.Chunk;
 
 		/**
 		 * the dependency templates
 		 */
-		dependencyTemplates: internals.DependencyTemplates;
+		dependencyTemplates: webpack.DependencyTemplates;
 
 		/**
 		 * the runtime template
 		 */
-		runtimeTemplate: internals.RuntimeTemplate;
+		runtimeTemplate: webpack.RuntimeTemplate;
 
 		/**
 		 * the module graph
 		 */
-		moduleGraph: internals.ModuleGraph;
+		moduleGraph: webpack.ModuleGraph;
 
 		/**
 		 * the chunk graph
 		 */
-		chunkGraph: internals.ChunkGraph;
+		chunkGraph: webpack.ChunkGraph;
 
 		/**
 		 * results of code generation
 		 */
-		codeGenerationResults: Map<
-			internals.Module,
-			internals.CodeGenerationResult
-		>;
+		codeGenerationResults: Map<webpack.Module, webpack.CodeGenerationResult>;
 
 		/**
 		 * hash to be used for render call
@@ -4864,25 +4785,23 @@ declare namespace internals {
 			bootstrap: SyncWaterfallHook<
 				[
 					string,
-					internals.Chunk,
+					webpack.Chunk,
 					string,
-					internals.ModuleTemplate,
-					internals.DependencyTemplates
+					webpack.ModuleTemplate,
+					webpack.DependencyTemplates
 				]
 			>;
-			localVars: SyncWaterfallHook<[string, internals.Chunk, string]>;
-			requireExtensions: SyncWaterfallHook<[string, internals.Chunk, string]>;
-			requireEnsure: SyncWaterfallHook<
-				[string, internals.Chunk, string, string]
-			>;
+			localVars: SyncWaterfallHook<[string, webpack.Chunk, string]>;
+			requireExtensions: SyncWaterfallHook<[string, webpack.Chunk, string]>;
+			requireEnsure: SyncWaterfallHook<[string, webpack.Chunk, string, string]>;
 		}>;
-		renderCurrentHashCode: (hash: string, length: number) => string;
+		renderCurrentHashCode: (hash: string, length?: number) => string;
 		getPublicPath: (options?: any) => string;
 		getAssetPath: (path?: any, options?: any) => string;
 		getAssetPathWithInfo: (
 			path?: any,
 			options?: any
-		) => { path: string; info: internals.AssetInfo };
+		) => { path: string; info: webpack.AssetInfo };
 		readonly requireFn: string;
 		readonly outputOptions: any;
 	}
@@ -4916,16 +4835,16 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export class MinChunkSizePlugin {
-		constructor(options: internals.MinChunkSizePluginOptions);
-		options: internals.MinChunkSizePluginOptions;
+		constructor(options: webpack.MinChunkSizePluginOptions);
+		options: webpack.MinChunkSizePluginOptions;
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 
 	/**
@@ -4950,7 +4869,7 @@ declare namespace internals {
 		minChunkSize: number;
 	}
 	export type Mode = "development" | "production" | "none";
-	export class Module extends internals.DependenciesBlock {
+	export class Module extends webpack.DependenciesBlock {
 		constructor(type: string, context?: string);
 		type: string;
 		context: string;
@@ -4958,29 +4877,29 @@ declare namespace internals {
 		debugId: number;
 		resolveOptions: any;
 		factoryMeta: any;
-		buildMeta: internals.KnownBuildMeta & Record<string, any>;
+		buildMeta: webpack.KnownBuildMeta & Record<string, any>;
 		buildInfo: any;
-		presentationalDependencies: Array<internals.Dependency>;
+		presentationalDependencies: Array<webpack.Dependency>;
 		id: string | number;
 		readonly hash: string;
 		readonly renderedHash: string;
-		profile: internals.ModuleProfile;
+		profile: webpack.ModuleProfile;
 		index: number;
 		index2: number;
 		depth: number;
-		issuer: internals.Module;
-		readonly usedExports: boolean | internals.SortableSet<string>;
+		issuer: webpack.Module;
+		readonly usedExports: boolean | webpack.SortableSet<string>;
 		readonly optimizationBailout: Array<
-			string | ((requestShortener: internals.RequestShortener) => string)
+			string | ((requestShortener: webpack.RequestShortener) => string)
 		>;
 		readonly optional: boolean;
 		addChunk(chunk?: any): boolean;
 		removeChunk(chunk?: any): void;
 		isInChunk(chunk?: any): boolean;
 		isEntryModule(): boolean;
-		getChunks(): Array<internals.Chunk>;
+		getChunks(): Array<webpack.Chunk>;
 		getNumberOfChunks(): number;
-		readonly chunksIterable: Iterable<internals.Chunk>;
+		readonly chunksIterable: Iterable<webpack.Chunk>;
 		isProvided(exportName: string): boolean;
 		readonly exportsArgument: string;
 		readonly moduleArgument: string;
@@ -4993,72 +4912,70 @@ declare namespace internals {
 			| "default-only"
 			| "default-with-named";
 		addPresentationalDependency(
-			presentationalDependency: internals.Dependency
+			presentationalDependency: webpack.Dependency
 		): void;
-		addWarning(warning: internals.WebpackError): void;
-		getWarnings(): Iterable<internals.WebpackError>;
-		addError(error: internals.WebpackError): void;
-		getErrors(): Iterable<internals.WebpackError>;
+		addWarning(warning: webpack.WebpackError): void;
+		getWarnings(): Iterable<webpack.WebpackError>;
+		addError(error: webpack.WebpackError): void;
+		getErrors(): Iterable<webpack.WebpackError>;
 
 		/**
 		 * removes all warnings and errors
 		 */
 		clearWarningsAndErrors(): void;
-		isOptional(moduleGraph: internals.ModuleGraph): boolean;
+		isOptional(moduleGraph: webpack.ModuleGraph): boolean;
 		isAccessibleInChunk(
-			chunkGraph: internals.ChunkGraph,
-			chunk: internals.Chunk,
-			ignoreChunk: internals.Chunk
+			chunkGraph: webpack.ChunkGraph,
+			chunk: webpack.Chunk,
+			ignoreChunk?: webpack.Chunk
 		): boolean;
 		isAccessibleInChunkGroup(
-			chunkGraph: internals.ChunkGraph,
-			chunkGroup: internals.ChunkGroup,
-			ignoreChunk: internals.Chunk
+			chunkGraph: webpack.ChunkGraph,
+			chunkGroup: webpack.ChunkGroup,
+			ignoreChunk?: webpack.Chunk
 		): boolean;
 		hasReasonForChunk(
-			chunk: internals.Chunk,
-			moduleGraph: internals.ModuleGraph,
-			chunkGraph: internals.ChunkGraph
+			chunk: webpack.Chunk,
+			moduleGraph: webpack.ModuleGraph,
+			chunkGraph: webpack.ChunkGraph
 		): boolean;
-		hasReasons(moduleGraph: internals.ModuleGraph): boolean;
-		isModuleUsed(moduleGraph: internals.ModuleGraph): boolean;
+		hasReasons(moduleGraph: webpack.ModuleGraph): boolean;
+		isModuleUsed(moduleGraph: webpack.ModuleGraph): boolean;
 		isExportUsed(
-			moduleGraph: internals.ModuleGraph,
+			moduleGraph: webpack.ModuleGraph,
 			exportName: string | Array<string>
 		): 0 | 1 | 2 | 3 | 4;
 		getUsedName(
-			moduleGraph: internals.ModuleGraph,
+			moduleGraph: webpack.ModuleGraph,
 			exportName: string | Array<string>
 		): string | false | Array<string>;
 		needBuild(
-			context: internals.NeedBuildContext,
-			callback: (arg0: internals.WebpackError, arg1: boolean) => void
+			context: webpack.NeedBuildContext,
+			callback: (arg0: webpack.WebpackError, arg1: boolean) => void
 		): void;
 		needRebuild(fileTimestamps?: any, contextTimestamps?: any): boolean;
 		invalidateBuild(): void;
 		identifier(): string;
-		readableIdentifier(requestShortener: internals.RequestShortener): string;
+		readableIdentifier(requestShortener: webpack.RequestShortener): string;
 		build(
-			options: internals.WebpackOptionsNormalized,
-			compilation: internals.Compilation,
-			resolver: internals.Resolver & internals.WithOptions,
-			fs: internals.InputFileSystem,
-			callback: (arg0: internals.WebpackError) => void
+			options: webpack.WebpackOptionsNormalized,
+			compilation: webpack.Compilation,
+			resolver: webpack.Resolver & webpack.WithOptions,
+			fs: webpack.InputFileSystem,
+			callback: (arg0: webpack.WebpackError) => void
 		): void;
 		getSourceTypes(): Set<string>;
-		source(sourceContext: internals.SourceContext): internals.Source;
-		size(type: string): number;
-		libIdent(options: internals.LibIdentOptions): string;
+		source(sourceContext: webpack.SourceContext): webpack.Source;
+		size(type?: string): number;
+		libIdent(options: webpack.LibIdentOptions): string;
 		nameForCondition(): string;
-		getRuntimeRequirements(
-			context: internals.SourceContext
-		): ReadonlySet<string>;
+		getRuntimeRequirements(context: webpack.SourceContext): ReadonlySet<string>;
 		codeGeneration(
-			context: internals.CodeGenerationContext
-		): internals.CodeGenerationResult;
+			context: webpack.CodeGenerationContext
+		): webpack.CodeGenerationResult;
 		chunkCondition(
-			chunk: internals.Chunk,
-			compilation: internals.Compilation
+			chunk: webpack.Chunk,
+			compilation: webpack.Compilation
 		): boolean;
 
 		/**
@@ -5066,8 +4983,8 @@ declare namespace internals {
 		 * the fresh module from the factory. Usually updates internal references
 		 * and properties.
 		 */
-		updateCacheModule(module: internals.Module): void;
-		originalSource(): internals.Source;
+		updateCacheModule(module: webpack.Module): void;
+		originalSource(): webpack.Source;
 		useSourceMap: any;
 		readonly hasEqualsChunks: any;
 		readonly isUsed: any;
@@ -5082,24 +4999,24 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
-	export abstract class ModuleDependency extends internals.Dependency {
+	export abstract class ModuleDependency extends webpack.Dependency {
 		request: string;
 		userRequest: string;
 		range: any;
 	}
 	export abstract class ModuleFactory {
 		create(
-			data: internals.ModuleFactoryCreateData,
-			callback: (arg0: Error, arg1: internals.ModuleFactoryResult) => void
+			data: webpack.ModuleFactoryCreateData,
+			callback: (arg0: Error, arg1: webpack.ModuleFactoryResult) => void
 		): void;
 	}
 	export interface ModuleFactoryCreateData {
-		contextInfo: internals.ModuleFactoryCreateDataContextInfo;
+		contextInfo: webpack.ModuleFactoryCreateDataContextInfo;
 		resolveOptions?: any;
 		context: string;
-		dependencies: Array<internals.Dependency>;
+		dependencies: Array<webpack.Dependency>;
 	}
 	export interface ModuleFactoryCreateDataContextInfo {
 		issuer: string;
@@ -5109,7 +5026,7 @@ declare namespace internals {
 		/**
 		 * the created module or unset if no module was created
 		 */
-		module?: internals.Module;
+		module?: webpack.Module;
 		fileDependencies?: Set<string>;
 		contextDependencies?: Set<string>;
 		missingDependencies?: Set<string>;
@@ -5150,108 +5067,127 @@ declare namespace internals {
 		export let matchPart: (str?: any, test?: any) => any;
 		export let matchObject: (obj?: any, str?: any) => boolean;
 	}
-	export abstract class ModuleGraph {
+	export class ModuleGraph {
+		constructor();
 		setParents(
-			dependency: internals.Dependency,
-			block: internals.DependenciesBlock,
-			module: internals.Module
+			dependency: webpack.Dependency,
+			block: webpack.DependenciesBlock,
+			module: webpack.Module
 		): void;
-		getParentModule(dependency: internals.Dependency): internals.Module;
-		getParentBlock(
-			dependency: internals.Dependency
-		): internals.DependenciesBlock;
+		getParentModule(dependency: webpack.Dependency): webpack.Module;
+		getParentBlock(dependency: webpack.Dependency): webpack.DependenciesBlock;
 		setResolvedModule(
-			originModule: internals.Module,
-			dependency: internals.Dependency,
-			module: internals.Module
+			originModule: webpack.Module,
+			dependency: webpack.Dependency,
+			module: webpack.Module
 		): void;
-		updateModule(
-			dependency: internals.Dependency,
-			module: internals.Module
-		): void;
-		removeConnection(dependency: internals.Dependency): void;
-		addExplanation(dependency: internals.Dependency, explanation: string): void;
+		updateModule(dependency: webpack.Dependency, module: webpack.Module): void;
+		removeConnection(dependency: webpack.Dependency): void;
+		addExplanation(dependency: webpack.Dependency, explanation: string): void;
 		cloneModuleAttributes(
-			sourceModule: internals.Module,
-			targetModule: internals.Module
+			sourceModule: webpack.Module,
+			targetModule: webpack.Module
 		): void;
-		removeModuleAttributes(module: internals.Module): void;
+		removeModuleAttributes(module: webpack.Module): void;
 		removeAllModuleAttributes(): void;
 		moveModuleConnections(
-			oldModule: internals.Module,
-			newModule: internals.Module,
-			filterConnection: (arg0: internals.ModuleGraphConnection) => boolean
+			oldModule: webpack.Module,
+			newModule: webpack.Module,
+			filterConnection: (arg0: webpack.ModuleGraphConnection) => boolean
 		): void;
-		addExtraReason(module: internals.Module, explanation: string): void;
-		getResolvedModule(dependency: internals.Dependency): internals.Module;
-		finishModule(module: internals.Module): void;
+		addExtraReason(module: webpack.Module, explanation: string): void;
+		getResolvedModule(dependency: webpack.Dependency): webpack.Module;
+		finishModule(module: webpack.Module): void;
 		getConnection(
-			dependency: internals.Dependency
-		): internals.ModuleGraphConnection;
-		getModule(dependency: internals.Dependency): internals.Module;
-		getOrigin(dependency: internals.Dependency): internals.Module;
-		getResolvedOrigin(dependency: internals.Dependency): internals.Module;
+			dependency: webpack.Dependency
+		): webpack.ModuleGraphConnection;
+		getModule(dependency: webpack.Dependency): webpack.Module;
+		getOrigin(dependency: webpack.Dependency): webpack.Module;
+		getResolvedOrigin(dependency: webpack.Dependency): webpack.Module;
 		getIncomingConnections(
-			module: internals.Module
-		): Iterable<internals.ModuleGraphConnection>;
+			module: webpack.Module
+		): Iterable<webpack.ModuleGraphConnection>;
 		getOutgoingConnections(
-			module: internals.Module
-		): Iterable<internals.ModuleGraphConnection>;
-		getProfile(module: internals.Module): internals.ModuleProfile;
-		setProfile(
-			module: internals.Module,
-			profile: internals.ModuleProfile
-		): void;
-		getIssuer(module: internals.Module): internals.Module;
-		setIssuer(module: internals.Module, issuer: internals.Module): void;
-		setIssuerIfUnset(module: internals.Module, issuer: internals.Module): void;
+			module: webpack.Module
+		): Iterable<webpack.ModuleGraphConnection>;
+		getProfile(module: webpack.Module): webpack.ModuleProfile;
+		setProfile(module: webpack.Module, profile: webpack.ModuleProfile): void;
+		getIssuer(module: webpack.Module): webpack.Module;
+		setIssuer(module: webpack.Module, issuer: webpack.Module): void;
+		setIssuerIfUnset(module: webpack.Module, issuer: webpack.Module): void;
 		getOptimizationBailout(
-			module: internals.Module
-		): Array<
-			string | ((requestShortener: internals.RequestShortener) => string)
-		>;
-		getProvidedExports(module: internals.Module): true | Array<string>;
+			module: webpack.Module
+		): Array<string | ((requestShortener: webpack.RequestShortener) => string)>;
+		getProvidedExports(module: webpack.Module): true | Array<string>;
 		isExportProvided(
-			module: internals.Module,
+			module: webpack.Module,
 			exportName: string | Array<string>
 		): boolean;
-		getExportsInfo(module: internals.Module): internals.ExportsInfo;
+		getExportsInfo(module: webpack.Module): webpack.ExportsInfo;
 		getExportInfo(
-			module: internals.Module,
+			module: webpack.Module,
 			exportName: string
-		): internals.ExportInfo;
+		): webpack.ExportInfo;
 		getReadOnlyExportInfo(
-			module: internals.Module,
+			module: webpack.Module,
 			exportName: string
-		): internals.ExportInfo;
+		): webpack.ExportInfo;
 		getUsedExports(
-			module: internals.Module
-		): boolean | internals.SortableSet<string>;
-		getPreOrderIndex(module: internals.Module): number;
-		getPostOrderIndex(module: internals.Module): number;
-		setPreOrderIndex(module: internals.Module, index: number): void;
-		setPreOrderIndexIfUnset(module: internals.Module, index: number): boolean;
-		setPostOrderIndex(module: internals.Module, index: number): void;
-		setPostOrderIndexIfUnset(module: internals.Module, index: number): boolean;
-		getDepth(module: internals.Module): number;
-		setDepth(module: internals.Module, depth: number): void;
-		setDepthIfLower(module: internals.Module, depth: number): boolean;
-		isAsync(module: internals.Module): boolean;
-		setAsync(module: internals.Module): void;
+			module: webpack.Module
+		): boolean | webpack.SortableSet<string>;
+		getPreOrderIndex(module: webpack.Module): number;
+		getPostOrderIndex(module: webpack.Module): number;
+		setPreOrderIndex(module: webpack.Module, index: number): void;
+		setPreOrderIndexIfUnset(module: webpack.Module, index: number): boolean;
+		setPostOrderIndex(module: webpack.Module, index: number): void;
+		setPostOrderIndexIfUnset(module: webpack.Module, index: number): boolean;
+		getDepth(module: webpack.Module): number;
+		setDepth(module: webpack.Module, depth: number): void;
+		setDepthIfLower(module: webpack.Module, depth: number): boolean;
+		isAsync(module: webpack.Module): boolean;
+		setAsync(module: webpack.Module): void;
 		getMeta(thing?: any): any;
+		static getModuleGraphForModule(
+			module: webpack.Module,
+			deprecateMessage: string,
+			deprecationCode: string
+		): webpack.ModuleGraph;
+		static setModuleGraphForModule(
+			module: webpack.Module,
+			moduleGraph: webpack.ModuleGraph
+		): void;
+		static ModuleGraphConnection: typeof webpack.ModuleGraphConnection;
+		static ExportsInfo: typeof webpack.ExportsInfo;
+		static ExportInfo: typeof webpack.ExportInfo;
+		static SKIP_OVER_NAME: typeof webpack.SKIP_OVER_NAME;
+		static UsageState: Readonly<{
+			NoInfo: 0;
+			Unused: 1;
+			Unknown: 2;
+			OnlyPropertiesUsed: 3;
+			Used: 4;
+		}>;
 	}
-	export abstract class ModuleGraphConnection {
-		originModule: internals.Module;
-		resolvedOriginModule: internals.Module;
-		dependency: internals.Dependency;
-		resolvedModule: internals.Module;
-		module: internals.Module;
+	export class ModuleGraphConnection {
+		constructor(
+			originModule: webpack.Module,
+			dependency: webpack.Dependency,
+			module: webpack.Module,
+			explanation?: string,
+			weak?: boolean,
+			condition?: (arg0: webpack.ModuleGraphConnection) => boolean
+		);
+		originModule: webpack.Module;
+		resolvedOriginModule: webpack.Module;
+		dependency: webpack.Dependency;
+		resolvedModule: webpack.Module;
+		module: webpack.Module;
 		weak: boolean;
 		conditional: boolean;
-		condition: (arg0: internals.ModuleGraphConnection) => boolean;
+		condition: (arg0: webpack.ModuleGraphConnection) => boolean;
 		explanations: Set<string>;
 		addCondition(
-			condition: (arg0: internals.ModuleGraphConnection) => boolean
+			condition: (arg0: webpack.ModuleGraphConnection) => boolean
 		): void;
 		addExplanation(explanation: string): void;
 		readonly explanation: string;
@@ -5265,7 +5201,7 @@ declare namespace internals {
 		/**
 		 * An array of rules applied by default for modules.
 		 */
-		defaultRules?: Array<internals.RuleSetRule>;
+		defaultRules?: Array<webpack.RuleSetRule>;
 
 		/**
 		 * Enable warnings for full dynamic dependencies.
@@ -5299,7 +5235,7 @@ declare namespace internals {
 		/**
 		 * An array of rules applied for modules.
 		 */
-		rules?: Array<internals.RuleSetRule>;
+		rules?: Array<webpack.RuleSetRule>;
 
 		/**
 		 * Emit errors instead of warnings when imported names don't exist in imported module.
@@ -5389,7 +5325,7 @@ declare namespace internals {
 		/**
 		 * Merge this profile into another one
 		 */
-		mergeInto(realProfile: internals.ModuleProfile): void;
+		mergeInto(realProfile: webpack.ModuleProfile): void;
 	}
 	export abstract class ModuleTemplate {
 		type: string;
@@ -5404,54 +5340,54 @@ declare namespace internals {
 	}
 	export class MultiCompiler {
 		constructor(
-			compilers: Array<internals.Compiler> | Record<string, internals.Compiler>
+			compilers: Array<webpack.Compiler> | Record<string, webpack.Compiler>
 		);
 		hooks: Readonly<{
-			done: SyncHook<[internals.MultiStats], void>;
+			done: SyncHook<[webpack.MultiStats], void>;
 			invalid: MultiHook<SyncHook<[string, string], void>>;
-			run: MultiHook<AsyncSeriesHook<[internals.Compiler]>>;
+			run: MultiHook<AsyncSeriesHook<[webpack.Compiler]>>;
 			watchClose: SyncHook<[], void>;
-			watchRun: MultiHook<AsyncSeriesHook<[internals.Compiler]>>;
+			watchRun: MultiHook<AsyncSeriesHook<[webpack.Compiler]>>;
 			infrastructureLog: MultiHook<
 				SyncBailHook<[string, string, Array<any>], true>
 			>;
 		}>;
-		compilers: Array<internals.Compiler>;
-		dependencies: WeakMap<internals.Compiler, Array<string>>;
+		compilers: Array<webpack.Compiler>;
+		dependencies: WeakMap<webpack.Compiler, Array<string>>;
 		running: boolean;
-		readonly options: Array<internals.WebpackOptionsNormalized>;
+		readonly options: Array<webpack.WebpackOptionsNormalized>;
 		readonly outputPath: string;
-		inputFileSystem: internals.InputFileSystem;
-		outputFileSystem: internals.OutputFileSystem;
-		intermediateFileSystem: internals.InputFileSystem &
-			internals.OutputFileSystem &
-			internals.IntermediateFileSystemExtras;
-		getInfrastructureLogger(name?: any): internals.WebpackLogger;
+		inputFileSystem: webpack.InputFileSystem;
+		outputFileSystem: webpack.OutputFileSystem;
+		intermediateFileSystem: webpack.InputFileSystem &
+			webpack.OutputFileSystem &
+			webpack.IntermediateFileSystemExtras;
+		getInfrastructureLogger(name?: any): webpack.WebpackLogger;
 		setDependencies(
-			compiler: internals.Compiler,
+			compiler: webpack.Compiler,
 			dependencies: Array<string>
 		): void;
 		validateDependencies(
-			callback: internals.CallbackCompiler<internals.MultiStats>
+			callback: webpack.CallbackCompiler<webpack.MultiStats>
 		): boolean;
 		runWithDependencies(
-			compilers: Array<internals.Compiler>,
+			compilers: Array<webpack.Compiler>,
 			fn: (
-				compiler: internals.Compiler,
-				callback: internals.CallbackCompiler<internals.MultiStats>
+				compiler: webpack.Compiler,
+				callback: webpack.CallbackCompiler<webpack.MultiStats>
 			) => any,
-			callback: internals.CallbackCompiler<internals.MultiStats>
+			callback: webpack.CallbackCompiler<webpack.MultiStats>
 		): void;
 		watch(
-			watchOptions: internals.WatchOptions | Array<internals.WatchOptions>,
-			handler: internals.CallbackCompiler<internals.MultiStats>
-		): internals.MultiWatching;
-		run(callback: internals.CallbackCompiler<internals.MultiStats>): void;
+			watchOptions: webpack.WatchOptions | Array<webpack.WatchOptions>,
+			handler: webpack.CallbackCompiler<webpack.MultiStats>
+		): webpack.MultiWatching;
+		run(callback: webpack.CallbackCompiler<webpack.MultiStats>): void;
 		purgeInputFileSystem(): void;
-		close(callback: internals.CallbackCompiler<void>): void;
+		close(callback: webpack.CallbackCompiler<void>): void;
 	}
 	export abstract class MultiStats {
-		stats: Array<internals.Stats>;
+		stats: Array<webpack.Stats>;
 		hash: string;
 		hasErrors(): boolean;
 		hasWarnings(): boolean;
@@ -5467,12 +5403,12 @@ declare namespace internals {
 		toString(options?: any): string;
 	}
 	export abstract class MultiWatching {
-		watchings: Array<internals.Watching>;
-		compiler: internals.MultiCompiler;
+		watchings: Array<webpack.Watching>;
+		compiler: webpack.MultiCompiler;
 		invalidate(): void;
 		suspend(): void;
 		resume(): void;
-		close(callback: internals.CallbackCompiler<void>): void;
+		close(callback: webpack.CallbackCompiler<void>): void;
 	}
 	export class NamedChunkIdsPlugin {
 		constructor(options?: any);
@@ -5482,7 +5418,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export class NamedModuleIdsPlugin {
 		constructor(options?: any);
@@ -5491,7 +5427,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export class NaturalModuleIdsPlugin {
 		constructor();
@@ -5499,10 +5435,10 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export interface NeedBuildContext {
-		fileSystemInfo: internals.FileSystemInfo;
+		fileSystemInfo: webpack.FileSystemInfo;
 	}
 	export class NoEmitOnErrorsPlugin {
 		constructor();
@@ -5510,9 +5446,9 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
-	export type Node = false | internals.NodeOptions;
+	export type Node = false | webpack.NodeOptions;
 	export class NodeEnvironmentPlugin {
 		constructor(options?: any);
 		options: any;
@@ -5520,7 +5456,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 
 	/**
@@ -5539,9 +5475,9 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
-	export class NormalModule extends internals.Module {
+	export class NormalModule extends webpack.Module {
 		constructor(__0: {
 			/**
 			 * module type
@@ -5562,7 +5498,7 @@ declare namespace internals {
 			/**
 			 * list of loaders
 			 */
-			loaders: Array<internals.LoaderItem>;
+			loaders: Array<webpack.LoaderItem>;
 			/**
 			 * path + query of the real resource
 			 */
@@ -5574,11 +5510,11 @@ declare namespace internals {
 			/**
 			 * the parser used
 			 */
-			parser: internals.Parser;
+			parser: webpack.Parser;
 			/**
 			 * the generator used
 			 */
-			generator: internals.Generator;
+			generator: webpack.Generator;
 			/**
 			 * options used for resolving requests from this module
 			 */
@@ -5588,71 +5524,71 @@ declare namespace internals {
 		userRequest: string;
 		rawRequest: string;
 		binary: boolean;
-		parser: internals.Parser;
-		generator: internals.Generator;
+		parser: webpack.Parser;
+		generator: webpack.Generator;
 		resource: string;
 		matchResource: string;
-		loaders: Array<internals.LoaderItem>;
-		error: internals.WebpackError;
+		loaders: Array<webpack.LoaderItem>;
+		error: webpack.WebpackError;
 		createSourceForAsset(
 			context: string,
 			name: string,
 			content: string,
 			sourceMap?: any,
 			associatedObjectForCache?: any
-		): internals.Source;
+		): webpack.Source;
 		createLoaderContext(
-			resolver: internals.Resolver & internals.WithOptions,
-			options: internals.WebpackOptionsNormalized,
-			compilation: internals.Compilation,
-			fs: internals.InputFileSystem
+			resolver: webpack.Resolver & webpack.WithOptions,
+			options: webpack.WebpackOptionsNormalized,
+			compilation: webpack.Compilation,
+			fs: webpack.InputFileSystem
 		): any;
-		getCurrentLoader(loaderContext?: any, index?: any): internals.LoaderItem;
+		getCurrentLoader(loaderContext?: any, index?: any): webpack.LoaderItem;
 		createSource(
 			context: string,
 			content: string | Buffer,
 			sourceMap?: any,
 			associatedObjectForCache?: any
-		): internals.Source;
+		): webpack.Source;
 		doBuild(
-			options: internals.WebpackOptionsNormalized,
-			compilation: internals.Compilation,
-			resolver: internals.Resolver & internals.WithOptions,
-			fs: internals.InputFileSystem,
-			callback: (arg0: internals.WebpackError) => void
+			options: webpack.WebpackOptionsNormalized,
+			compilation: webpack.Compilation,
+			resolver: webpack.Resolver & webpack.WithOptions,
+			fs: webpack.InputFileSystem,
+			callback: (arg0: webpack.WebpackError) => void
 		): void;
-		markModuleAsErrored(error: internals.WebpackError): void;
+		markModuleAsErrored(error: webpack.WebpackError): void;
 		applyNoParseRule(rule?: any, content?: any): any;
 		shouldPreventParsing(noParseRule?: any, request?: any): any;
 		static getCompilationHooks(
-			compilation: internals.Compilation
-		): internals.NormalModuleCompilationHooks;
-		static deserialize(context?: any): internals.NormalModule;
+			compilation: webpack.Compilation
+		): webpack.NormalModuleCompilationHooks;
+		static deserialize(context?: any): webpack.NormalModule;
 	}
 	export interface NormalModuleCompilationHooks {
-		loader: SyncHook<[any, internals.NormalModule], void>;
+		loader: SyncHook<[any, webpack.NormalModule], void>;
 	}
-	export abstract class NormalModuleFactory extends internals.ModuleFactory {
+	export abstract class NormalModuleFactory extends webpack.ModuleFactory {
 		hooks: Readonly<{
-			resolve: AsyncSeriesBailHook<[internals.ResolveData], any>;
-			factorize: AsyncSeriesBailHook<[internals.ResolveData], any>;
-			beforeResolve: AsyncSeriesBailHook<[internals.ResolveData], any>;
-			afterResolve: AsyncSeriesBailHook<[internals.ResolveData], any>;
-			createModule: SyncBailHook<[internals.ResolveData], any>;
-			module: SyncWaterfallHook<[internals.Module, any, internals.ResolveData]>;
+			resolve: AsyncSeriesBailHook<[webpack.ResolveData], any>;
+			factorize: AsyncSeriesBailHook<[webpack.ResolveData], any>;
+			beforeResolve: AsyncSeriesBailHook<[webpack.ResolveData], any>;
+			afterResolve: AsyncSeriesBailHook<[webpack.ResolveData], any>;
+			createModule: SyncBailHook<[webpack.ResolveData], any>;
+			module: SyncWaterfallHook<[webpack.Module, any, webpack.ResolveData]>;
 			createParser: HookMap<SyncBailHook<any, any>>;
 			parser: HookMap<SyncHook<any, void>>;
 			createGenerator: HookMap<SyncBailHook<any, any>>;
 			generator: HookMap<SyncHook<any, void>>;
 		}>;
 		resolverFactory: any;
-		ruleSet: internals.RuleSet;
+		ruleSet: webpack.RuleSet;
 		unsafeCache: boolean;
 		cachePredicate: any;
 		context: any;
 		fs: any;
 		parserCache: Map<string, WeakMap<any, any>>;
-		generatorCache: Map<string, WeakMap<any, internals.Generator>>;
+		generatorCache: Map<string, WeakMap<any, webpack.Generator>>;
 		resolveRequestArray(
 			contextInfo?: any,
 			context?: any,
@@ -5663,7 +5599,7 @@ declare namespace internals {
 		): any;
 		getParser(type?: any, parserOptions?: {}): any;
 		createParser(type?: any, parserOptions?: {}): any;
-		getGenerator(type?: any, generatorOptions?: {}): internals.Generator;
+		getGenerator(type?: any, generatorOptions?: {}): webpack.Generator;
 		createGenerator(type?: any, generatorOptions?: {}): any;
 		getResolver(type?: any, resolveOptions?: any): any;
 	}
@@ -5681,26 +5617,26 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export interface ObjectDeserializerContext {
 		read: () => any;
 	}
 	export interface ObjectSerializer {
-		serialize: (arg0: any, arg1: internals.ObjectSerializerContext) => void;
-		deserialize: (arg0: internals.ObjectDeserializerContext) => any;
+		serialize: (arg0: any, arg1: webpack.ObjectSerializerContext) => void;
+		deserialize: (arg0: webpack.ObjectDeserializerContext) => any;
 	}
 	export interface ObjectSerializerContext {
 		write: (arg0?: any) => void;
 	}
 	export class OccurrenceChunkIdsPlugin {
-		constructor(options?: internals.OccurrenceChunkIdsPluginOptions);
-		options: internals.OccurrenceChunkIdsPluginOptions;
+		constructor(options?: webpack.OccurrenceChunkIdsPluginOptions);
+		options: webpack.OccurrenceChunkIdsPluginOptions;
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 
 	/**
@@ -5715,13 +5651,13 @@ declare namespace internals {
 		prioritiseInitial?: boolean;
 	}
 	export class OccurrenceModuleIdsPlugin {
-		constructor(options?: internals.OccurrenceModuleIdsPluginOptions);
-		options: internals.OccurrenceModuleIdsPluginOptions;
+		constructor(options?: webpack.OccurrenceModuleIdsPluginOptions);
+		options: webpack.OccurrenceModuleIdsPluginOptions;
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 
 	/**
@@ -5795,7 +5731,8 @@ declare namespace internals {
 		 * Minimizer(s) to use for minimizing the output.
 		 */
 		minimizer?: Array<
-			internals.WebpackPluginInstance | ((compiler: internals.Compiler) => void)
+			| ((this: webpack.Compiler, compiler: webpack.Compiler) => void)
+			| webpack.WebpackPluginInstance
 		>;
 
 		/**
@@ -5861,7 +5798,7 @@ declare namespace internals {
 		/**
 		 * Optimize duplication and caching by splitting chunks by shared modules and cache group.
 		 */
-		splitChunks?: false | internals.OptimizationSplitChunksOptions;
+		splitChunks?: false | webpack.OptimizationSplitChunksOptions;
 
 		/**
 		 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.
@@ -5896,11 +5833,11 @@ declare namespace internals {
 			| "async"
 			| "all"
 			| ((
-					module: internals.Module
+					module: webpack.Module
 			  ) =>
 					| void
-					| internals.OptimizationSplitChunksCacheGroup
-					| Array<internals.OptimizationSplitChunksCacheGroup>);
+					| webpack.OptimizationSplitChunksCacheGroup
+					| Array<webpack.OptimizationSplitChunksCacheGroup>);
 
 		/**
 		 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
@@ -5912,10 +5849,7 @@ declare namespace internals {
 		 */
 		filename?:
 			| string
-			| ((
-					pathData: internals.PathData,
-					assetInfo: internals.AssetInfo
-			  ) => string);
+			| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
 
 		/**
 		 * Sets the hint for chunk id.
@@ -6006,7 +5940,7 @@ declare namespace internals {
 				| false
 				| Function
 				| RegExp
-				| internals.OptimizationSplitChunksCacheGroup;
+				| webpack.OptimizationSplitChunksCacheGroup;
 		};
 
 		/**
@@ -6045,10 +5979,7 @@ declare namespace internals {
 		 */
 		filename?:
 			| string
-			| ((
-					pathData: internals.PathData,
-					assetInfo: internals.AssetInfo
-			  ) => string);
+			| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
 
 		/**
 		 * Prevents exposing path info when creating names for parts splitted by maxSize.
@@ -6116,15 +6047,12 @@ declare namespace internals {
 		 */
 		assetModuleFilename?:
 			| string
-			| ((
-					pathData: internals.PathData,
-					assetInfo: internals.AssetInfo
-			  ) => string);
+			| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
 
 		/**
 		 * Add a comment in the UMD wrapper.
 		 */
-		auxiliaryComment?: string | internals.LibraryCustomUmdCommentObject;
+		auxiliaryComment?: string | webpack.LibraryCustomUmdCommentObject;
 
 		/**
 		 * The callback function name used by webpack for loading of chunks in WebWorkers.
@@ -6198,10 +6126,7 @@ declare namespace internals {
 		 */
 		filename?:
 			| string
-			| ((
-					pathData: internals.PathData,
-					assetInfo: internals.AssetInfo
-			  ) => string);
+			| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
 
 		/**
 		 * An expression which is used to address the global object/scope in runtime code.
@@ -6221,7 +6146,7 @@ declare namespace internals {
 		/**
 		 * Algorithm used for generation the hash (see node.js crypto package).
 		 */
-		hashFunction?: string | typeof internals.Hash;
+		hashFunction?: string | typeof webpack.Hash;
 
 		/**
 		 * Any string which is added to the hash to salt it.
@@ -6264,8 +6189,8 @@ declare namespace internals {
 		library?:
 			| string
 			| Array<string>
-			| internals.LibraryCustomUmdObject
-			| internals.LibraryOptions;
+			| webpack.LibraryCustomUmdObject
+			| webpack.LibraryOptions;
 
 		/**
 		 * Specify which export should be exposed as library.
@@ -6313,10 +6238,7 @@ declare namespace internals {
 		 */
 		publicPath?:
 			| string
-			| ((
-					pathData: internals.PathData,
-					assetInfo: internals.AssetInfo
-			  ) => string);
+			| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
 
 		/**
 		 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
@@ -6377,10 +6299,7 @@ declare namespace internals {
 		 */
 		assetModuleFilename?:
 			| string
-			| ((
-					pathData: internals.PathData,
-					assetInfo: internals.AssetInfo
-			  ) => string);
+			| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
 
 		/**
 		 * The callback function name used by webpack for loading of chunks in WebWorkers.
@@ -6454,10 +6373,7 @@ declare namespace internals {
 		 */
 		filename?:
 			| string
-			| ((
-					pathData: internals.PathData,
-					assetInfo: internals.AssetInfo
-			  ) => string);
+			| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
 
 		/**
 		 * An expression which is used to address the global object/scope in runtime code.
@@ -6477,7 +6393,7 @@ declare namespace internals {
 		/**
 		 * Algorithm used for generation the hash (see node.js crypto package).
 		 */
-		hashFunction?: string | typeof internals.Hash;
+		hashFunction?: string | typeof webpack.Hash;
 
 		/**
 		 * Any string which is added to the hash to salt it.
@@ -6517,7 +6433,7 @@ declare namespace internals {
 		/**
 		 * Options for library.
 		 */
-		library?: internals.LibraryOptions;
+		library?: webpack.LibraryOptions;
 
 		/**
 		 * Output javascript files as module source type.
@@ -6539,10 +6455,7 @@ declare namespace internals {
 		 */
 		publicPath?:
 			| string
-			| ((
-					pathData: internals.PathData,
-					assetInfo: internals.AssetInfo
-			  ) => string);
+			| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
 
 		/**
 		 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
@@ -6572,22 +6485,22 @@ declare namespace internals {
 	export class Parser {
 		constructor();
 		parse(
-			source: string | Buffer | Record<string, any>,
-			state: Record<string, any> & internals.ParserStateBase
-		): Record<string, any> & internals.ParserStateBase;
+			source: string | Record<string, any> | Buffer,
+			state: Record<string, any> & webpack.ParserStateBase
+		): Record<string, any> & webpack.ParserStateBase;
 	}
 	export interface ParserStateBase {
-		current: internals.NormalModule;
-		module: internals.NormalModule;
-		compilation: internals.Compilation;
+		current: webpack.NormalModule;
+		module: webpack.NormalModule;
+		compilation: webpack.Compilation;
 		options: any;
 	}
 	export interface PathData {
-		chunkGraph?: internals.ChunkGraph;
+		chunkGraph?: webpack.ChunkGraph;
 		hash?: string;
 		hashWithLength?: (arg0: number) => string;
-		chunk?: internals.Chunk | internals.ChunkPathData;
-		module?: internals.Module | internals.ModulePathData;
+		chunk?: webpack.Chunk | webpack.ChunkPathData;
+		module?: webpack.Module | webpack.ModulePathData;
 		filename?: string;
 		basename?: string;
 		query?: string;
@@ -6597,7 +6510,7 @@ declare namespace internals {
 		noChunkHash?: boolean;
 		url?: string;
 	}
-	export type Performance = false | internals.PerformanceOptions;
+	export type Performance = false | webpack.PerformanceOptions;
 
 	/**
 	 * Configuration object for web performance recommendations.
@@ -6634,7 +6547,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export interface PrintedElement {
 		element: string;
@@ -6664,10 +6577,10 @@ declare namespace internals {
 		stopProfiling(): Promise<any>;
 	}
 	export class ProfilingPlugin {
-		constructor(options?: internals.ProfilingPluginOptions);
+		constructor(options?: webpack.ProfilingPluginOptions);
 		outputPath: string;
 		apply(compiler?: any): void;
-		static Profiler: typeof internals.Profiler;
+		static Profiler: typeof webpack.Profiler;
 	}
 
 	/**
@@ -6684,7 +6597,7 @@ declare namespace internals {
 	export class ProgressPlugin {
 		constructor(
 			options:
-				| internals.ProgressPluginOptions
+				| webpack.ProgressPluginOptions
 				| ((percentage: number, msg: string, ...args: Array<string>) => void)
 		);
 		profile: boolean;
@@ -6695,11 +6608,11 @@ declare namespace internals {
 		showModules: boolean;
 		showDependencies: boolean;
 		showActiveModules: boolean;
-		percentBy: "dependencies" | "modules" | "entries";
-		apply(compiler: internals.Compiler | internals.MultiCompiler): void;
+		percentBy: "modules" | "dependencies" | "entries";
+		apply(compiler: webpack.Compiler | webpack.MultiCompiler): void;
 		static getReporter(
-			compiler: internals.Compiler
-		): (p: number, args: Array<string>) => void;
+			compiler: webpack.Compiler
+		): (p: number, ...args: Array<string>) => void;
 		static defaultOptions: {
 			profile: boolean;
 			modulesCount: number;
@@ -6711,7 +6624,7 @@ declare namespace internals {
 		};
 	}
 	export type ProgressPluginArgument =
-		| internals.ProgressPluginOptions
+		| webpack.ProgressPluginOptions
 		| ((percentage: number, msg: string, ...args: Array<string>) => void);
 
 	/**
@@ -6756,7 +6669,7 @@ declare namespace internals {
 		/**
 		 * Collect percent algorithm. By default it calculates by a median from modules, entries and dependencies percent.
 		 */
-		percentBy?: "dependencies" | "modules" | "entries";
+		percentBy?: "modules" | "dependencies" | "entries";
 
 		/**
 		 * Collect profile data for progress steps. Default: false.
@@ -6770,14 +6683,11 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export type PublicPath =
 		| string
-		| ((
-				pathData: internals.PathData,
-				assetInfo: internals.AssetInfo
-		  ) => string);
+		| ((pathData: webpack.PathData, assetInfo: webpack.AssetInfo) => string);
 	export interface RawChunkGroupOptions {
 		preloadOrder?: number;
 		prefetchOrder?: number;
@@ -6789,11 +6699,11 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export interface RealDependencyLocation {
-		start: internals.SourcePosition;
-		end?: internals.SourcePosition;
+		start: webpack.SourcePosition;
+		end?: webpack.SourcePosition;
 		index?: number;
 	}
 	export type RecursiveArrayOrRecord =
@@ -6803,7 +6713,7 @@ declare namespace internals {
 		| boolean
 		| Function
 		| RegExp
-		| internals.RuntimeValue
+		| webpack.RuntimeValue
 		| { [index: string]: RecursiveArrayOrRecordDeclarations }
 		| Array<RecursiveArrayOrRecordDeclarations>;
 	type RecursiveArrayOrRecordDeclarations =
@@ -6813,29 +6723,29 @@ declare namespace internals {
 		| boolean
 		| Function
 		| RegExp
-		| internals.RuntimeValue
+		| webpack.RuntimeValue
 		| { [index: string]: RecursiveArrayOrRecordDeclarations }
 		| Array<RecursiveArrayOrRecordDeclarations>;
 	export interface RenderBootstrapContext {
 		/**
 		 * the chunk
 		 */
-		chunk: internals.Chunk;
+		chunk: webpack.Chunk;
 
 		/**
 		 * the runtime template
 		 */
-		runtimeTemplate: internals.RuntimeTemplate;
+		runtimeTemplate: webpack.RuntimeTemplate;
 
 		/**
 		 * the module graph
 		 */
-		moduleGraph: internals.ModuleGraph;
+		moduleGraph: webpack.ModuleGraph;
 
 		/**
 		 * the chunk graph
 		 */
-		chunkGraph: internals.ChunkGraph;
+		chunkGraph: webpack.ChunkGraph;
 
 		/**
 		 * hash to be used for render call
@@ -6871,77 +6781,71 @@ declare namespace internals {
 		/**
 		 * results of code generation
 		 */
-		codeGenerationResults: Map<
-			internals.Module,
-			internals.CodeGenerationResult
-		>;
+		codeGenerationResults: Map<webpack.Module, webpack.CodeGenerationResult>;
 	}
 	export interface RenderContextJavascriptModulesPlugin {
 		/**
 		 * the chunk
 		 */
-		chunk: internals.Chunk;
+		chunk: webpack.Chunk;
 
 		/**
 		 * the dependency templates
 		 */
-		dependencyTemplates: internals.DependencyTemplates;
+		dependencyTemplates: webpack.DependencyTemplates;
 
 		/**
 		 * the runtime template
 		 */
-		runtimeTemplate: internals.RuntimeTemplate;
+		runtimeTemplate: webpack.RuntimeTemplate;
 
 		/**
 		 * the module graph
 		 */
-		moduleGraph: internals.ModuleGraph;
+		moduleGraph: webpack.ModuleGraph;
 
 		/**
 		 * the chunk graph
 		 */
-		chunkGraph: internals.ChunkGraph;
+		chunkGraph: webpack.ChunkGraph;
 
 		/**
 		 * results of code generation
 		 */
-		codeGenerationResults: Map<
-			internals.Module,
-			internals.CodeGenerationResult
-		>;
+		codeGenerationResults: Map<webpack.Module, webpack.CodeGenerationResult>;
 	}
 	export interface RenderContextModuleTemplate {
 		/**
 		 * the chunk
 		 */
-		chunk: internals.Chunk;
+		chunk: webpack.Chunk;
 
 		/**
 		 * the dependency templates
 		 */
-		dependencyTemplates: internals.DependencyTemplates;
+		dependencyTemplates: webpack.DependencyTemplates;
 
 		/**
 		 * the runtime template
 		 */
-		runtimeTemplate: internals.RuntimeTemplate;
+		runtimeTemplate: webpack.RuntimeTemplate;
 
 		/**
 		 * the module graph
 		 */
-		moduleGraph: internals.ModuleGraph;
+		moduleGraph: webpack.ModuleGraph;
 
 		/**
 		 * the chunk graph
 		 */
-		chunkGraph: internals.ChunkGraph;
+		chunkGraph: webpack.ChunkGraph;
 	}
 	export interface RenderManifestEntry {
-		render: () => internals.Source;
+		render: () => webpack.Source;
 		filenameTemplate:
 			| string
-			| ((arg0: internals.PathData, arg1: internals.AssetInfo) => string);
-		pathOptions?: internals.PathData;
+			| ((arg0: webpack.PathData, arg1: webpack.AssetInfo) => string);
+		pathOptions?: webpack.PathData;
 		identifier: string;
 		hash?: string;
 		auxiliary?: boolean;
@@ -6950,21 +6854,18 @@ declare namespace internals {
 		/**
 		 * the chunk used to render
 		 */
-		chunk: internals.Chunk;
+		chunk: webpack.Chunk;
 		hash: string;
 		fullHash: string;
 		outputOptions: any;
-		codeGenerationResults: Map<
-			internals.Module,
-			internals.CodeGenerationResult
-		>;
-		moduleTemplates: { javascript: internals.ModuleTemplate };
-		dependencyTemplates: internals.DependencyTemplates;
-		runtimeTemplate: internals.RuntimeTemplate;
-		moduleGraph: internals.ModuleGraph;
-		chunkGraph: internals.ChunkGraph;
+		codeGenerationResults: Map<webpack.Module, webpack.CodeGenerationResult>;
+		moduleTemplates: { javascript: webpack.ModuleTemplate };
+		dependencyTemplates: webpack.DependencyTemplates;
+		runtimeTemplate: webpack.RuntimeTemplate;
+		moduleGraph: webpack.ModuleGraph;
+		chunkGraph: webpack.ChunkGraph;
 	}
-	export abstract class ReplaceSource extends internals.Source {
+	export abstract class ReplaceSource extends webpack.Source {
 		replace(start: number, end: number, newValue: string, name: string): void;
 		insert(pos: number, newValue: string, name: string): void;
 		getName(): string;
@@ -7026,21 +6927,21 @@ declare namespace internals {
 	}
 	export interface ResolveContext {
 		log?: (message: string) => void;
-		fileDependencies?: internals.WriteOnlySet<string>;
-		contextDependencies?: internals.WriteOnlySet<string>;
-		missingDependencies?: internals.WriteOnlySet<string>;
+		fileDependencies?: webpack.WriteOnlySet<string>;
+		contextDependencies?: webpack.WriteOnlySet<string>;
+		missingDependencies?: webpack.WriteOnlySet<string>;
 		stack?: Set<string>;
 	}
 	export interface ResolveData {
-		contextInfo: internals.ModuleFactoryCreateDataContextInfo;
+		contextInfo: webpack.ModuleFactoryCreateDataContextInfo;
 		resolveOptions: any;
 		context: string;
 		request: string;
-		dependencies: Array<internals.ModuleDependency>;
+		dependencies: Array<webpack.ModuleDependency>;
 		createData: any;
-		fileDependencies: internals.LazySet<string>;
-		missingDependencies: internals.LazySet<string>;
-		contextDependencies: internals.LazySet<string>;
+		fileDependencies: webpack.LazySet<string>;
+		missingDependencies: webpack.LazySet<string>;
+		contextDependencies: webpack.LazySet<string>;
 	}
 
 	/**
@@ -7125,7 +7026,7 @@ declare namespace internals {
 		/**
 		 * Plugins for the resolver.
 		 */
-		plugins?: Array<internals.ResolvePluginInstance>;
+		plugins?: Array<webpack.ResolvePluginInstance>;
 
 		/**
 		 * Custom resolver.
@@ -7164,7 +7065,7 @@ declare namespace internals {
 			context: Object,
 			path: string,
 			request: string,
-			resolveContext: internals.ResolveContext,
+			resolveContext: webpack.ResolveContext,
 			callback: (
 				err: NodeJS.ErrnoException,
 				result: string,
@@ -7173,19 +7074,19 @@ declare namespace internals {
 		): void;
 	}
 	export interface ResolverCache {
-		direct: WeakMap<any, internals.Resolver & internals.WithOptions>;
-		stringified: Map<string, internals.Resolver & internals.WithOptions>;
+		direct: WeakMap<any, webpack.Resolver & webpack.WithOptions>;
+		stringified: Map<string, webpack.Resolver & webpack.WithOptions>;
 	}
 	export abstract class ResolverFactory {
 		hooks: Readonly<{
 			resolveOptions: HookMap<SyncWaterfallHook<[any]>>;
-			resolver: HookMap<SyncHook<[internals.Resolver, any, any], void>>;
+			resolver: HookMap<SyncHook<[webpack.Resolver, any, any], void>>;
 		}>;
-		cache: Map<string, internals.ResolverCache>;
+		cache: Map<string, webpack.ResolverCache>;
 		get(
 			type: string,
 			resolveOptions?: any
-		): internals.Resolver & internals.WithOptions;
+		): webpack.Resolver & webpack.WithOptions;
 	}
 	export interface RuleSet {
 		/**
@@ -7196,7 +7097,7 @@ declare namespace internals {
 		/**
 		 * execute the rule set
 		 */
-		exec: (arg0?: any) => Array<internals.Effect>;
+		exec: (arg0?: any) => Array<webpack.Effect>;
 	}
 	export type RuleSetCondition =
 		| string
@@ -7354,7 +7255,7 @@ declare namespace internals {
 		/**
 		 * Only execute the first matching rule in this array.
 		 */
-		oneOf?: Array<internals.RuleSetRule>;
+		oneOf?: Array<webpack.RuleSetRule>;
 
 		/**
 		 * Shortcut for use.options.
@@ -7374,7 +7275,7 @@ declare namespace internals {
 		/**
 		 * Options for the resolver.
 		 */
-		resolve?: internals.ResolveOptions;
+		resolve?: webpack.ResolveOptions;
 
 		/**
 		 * Match the resource path of the module.
@@ -7389,7 +7290,7 @@ declare namespace internals {
 		/**
 		 * Match and execute these rules when this rule is matched.
 		 */
-		rules?: Array<internals.RuleSetRule>;
+		rules?: Array<webpack.RuleSetRule>;
 
 		/**
 		 * Flags a module as with or without side effects.
@@ -7446,7 +7347,13 @@ declare namespace internals {
 							| __TypeWebpackOptions
 							| Array<RuleSetUseItemWebpackOptions>)
 			  >
-			| ((data: {}) => Array<RuleSetUseItemWebpackOptions>)
+			| ((data: {
+					resource: string;
+					realResource: string;
+					resourceQuery: string;
+					issuer: string;
+					compiler: string;
+			  }) => Array<RuleSetUseItemWebpackOptions>)
 			| {
 					/**
 					 * Unique loader options identifier.
@@ -7500,7 +7407,13 @@ declare namespace internals {
 						| __TypeWebpackOptions
 						| Array<RuleSetUseItemWebpackOptions>)
 		  >
-		| ((data: {}) => Array<RuleSetUseItemWebpackOptions>)
+		| ((data: {
+				resource: string;
+				realResource: string;
+				resourceQuery: string;
+				issuer: string;
+				compiler: string;
+		  }) => Array<RuleSetUseItemWebpackOptions>)
 		| {
 				/**
 				 * Unique loader options identifier.
@@ -7579,7 +7492,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export namespace RuntimeGlobals {
 		export let require: string;
@@ -7631,19 +7544,19 @@ declare namespace internals {
 		export let hasOwnProperty: string;
 		export let systemContext: string;
 	}
-	export class RuntimeModule extends internals.Module {
+	export class RuntimeModule extends webpack.Module {
 		constructor(name: string, stage?: number);
 		name: string;
 		stage: number;
-		compilation: internals.Compilation;
-		chunk: internals.Chunk;
-		attach(compilation: internals.Compilation, chunk: internals.Chunk): void;
+		compilation: webpack.Compilation;
+		chunk: webpack.Chunk;
+		attach(compilation: webpack.Compilation, chunk: webpack.Chunk): void;
 		generate(): string;
 		getGeneratedCode(): string;
 	}
 	export abstract class RuntimeTemplate {
-		outputOptions: internals.Output;
-		requestShortener: internals.RequestShortener;
+		outputOptions: webpack.Output;
+		requestShortener: webpack.RequestShortener;
 		isIIFE(): boolean;
 		supportsConst(): boolean;
 		supportsArrowFunction(): boolean;
@@ -7712,11 +7625,11 @@ declare namespace internals {
 			/**
 			 * the chunk graph
 			 */
-			chunkGraph: internals.ChunkGraph;
+			chunkGraph: webpack.ChunkGraph;
 			/**
 			 * the module
 			 */
-			module: internals.Module;
+			module: webpack.Module;
 			/**
 			 * the request that should be printed as comment
 			 */
@@ -7734,11 +7647,11 @@ declare namespace internals {
 			/**
 			 * the module
 			 */
-			module: internals.Module;
+			module: webpack.Module;
 			/**
 			 * the chunk graph
 			 */
-			chunkGraph: internals.ChunkGraph;
+			chunkGraph: webpack.ChunkGraph;
 			/**
 			 * the request that should be printed as comment
 			 */
@@ -7752,11 +7665,11 @@ declare namespace internals {
 			/**
 			 * the module
 			 */
-			module: internals.Module;
+			module: webpack.Module;
 			/**
 			 * the chunk graph
 			 */
-			chunkGraph: internals.ChunkGraph;
+			chunkGraph: webpack.ChunkGraph;
 			/**
 			 * the request that should be printed as comment
 			 */
@@ -7774,11 +7687,11 @@ declare namespace internals {
 			/**
 			 * the module
 			 */
-			module: internals.Module;
+			module: webpack.Module;
 			/**
 			 * the chunk graph
 			 */
-			chunkGraph: internals.ChunkGraph;
+			chunkGraph: webpack.ChunkGraph;
 			/**
 			 * the request that should be printed as comment
 			 */
@@ -7796,11 +7709,11 @@ declare namespace internals {
 			/**
 			 * the module
 			 */
-			module: internals.Module;
+			module: webpack.Module;
 			/**
 			 * the chunk graph
 			 */
-			chunkGraph: internals.ChunkGraph;
+			chunkGraph: webpack.ChunkGraph;
 			/**
 			 * the request that should be printed as comment
 			 */
@@ -7822,15 +7735,15 @@ declare namespace internals {
 			/**
 			 * the chunk graph
 			 */
-			chunkGraph: internals.ChunkGraph;
+			chunkGraph: webpack.ChunkGraph;
 			/**
 			 * the current dependencies block
 			 */
-			block?: internals.AsyncDependenciesBlock;
+			block?: webpack.AsyncDependenciesBlock;
 			/**
 			 * the module
 			 */
-			module: internals.Module;
+			module: webpack.Module;
 			/**
 			 * the request that should be printed as comment
 			 */
@@ -7860,11 +7773,11 @@ declare namespace internals {
 			/**
 			 * the module
 			 */
-			module: internals.Module;
+			module: webpack.Module;
 			/**
 			 * the chunk graph
 			 */
-			chunkGraph: internals.ChunkGraph;
+			chunkGraph: webpack.ChunkGraph;
 			/**
 			 * the request that should be printed as comment
 			 */
@@ -7876,7 +7789,7 @@ declare namespace internals {
 			/**
 			 * module in which the statement is emitted
 			 */
-			originModule: internals.Module;
+			originModule: webpack.Module;
 			/**
 			 * true, if this is a weak dependency
 			 */
@@ -7890,11 +7803,11 @@ declare namespace internals {
 			/**
 			 * the module graph
 			 */
-			moduleGraph: internals.ModuleGraph;
+			moduleGraph: webpack.ModuleGraph;
 			/**
 			 * the module
 			 */
-			module: internals.Module;
+			module: webpack.Module;
 			/**
 			 * the request
 			 */
@@ -7906,7 +7819,7 @@ declare namespace internals {
 			/**
 			 * the origin module
 			 */
-			originModule: internals.Module;
+			originModule: webpack.Module;
 			/**
 			 * true, if location is safe for ASI, a bracket can be emitted
 			 */
@@ -7930,7 +7843,7 @@ declare namespace internals {
 			/**
 			 * init fragments will be added here
 			 */
-			initFragments: Array<internals.InitFragment>;
+			initFragments: Array<webpack.InitFragment>;
 			/**
 			 * if set, will be filled with runtime requirements
 			 */
@@ -7940,7 +7853,7 @@ declare namespace internals {
 			/**
 			 * the async block
 			 */
-			block: internals.AsyncDependenciesBlock;
+			block: webpack.AsyncDependenciesBlock;
 			/**
 			 * the message
 			 */
@@ -7948,7 +7861,7 @@ declare namespace internals {
 			/**
 			 * the chunk graph
 			 */
-			chunkGraph: internals.ChunkGraph;
+			chunkGraph: webpack.ChunkGraph;
 			/**
 			 * if set, will be filled with runtime requirements
 			 */
@@ -7972,9 +7885,9 @@ declare namespace internals {
 	}
 	export const SKIP_OVER_NAME: unique symbol;
 	export interface ScopeInfo {
-		definitions: internals.StackedMap<
+		definitions: webpack.StackedMap<
 			string,
-			internals.ScopeInfo | internals.VariableInfo
+			webpack.ScopeInfo | webpack.VariableInfo
 		>;
 		topLevelScope: boolean | "arrow";
 		inShorthand: boolean;
@@ -7995,7 +7908,7 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 		static moduleHasSideEffects(
 			moduleName?: any,
 			flagValue?: any,
@@ -8008,13 +7921,13 @@ declare namespace internals {
 	 */
 	export interface Snapshot {
 		startTime?: number;
-		fileTimestamps?: Map<string, internals.FileSystemInfoEntry>;
+		fileTimestamps?: Map<string, webpack.FileSystemInfoEntry>;
 		fileHashes?: Map<string, string>;
-		contextTimestamps?: Map<string, internals.FileSystemInfoEntry>;
+		contextTimestamps?: Map<string, webpack.FileSystemInfoEntry>;
 		contextHashes?: Map<string, string>;
 		missingExistence?: Map<string, boolean>;
 		managedItemInfo?: Map<string, string>;
-		children?: Set<internals.Snapshot>;
+		children?: Set<webpack.Snapshot>;
 	}
 	export abstract class SortableSet<T> extends Set<T> {
 		/**
@@ -8026,21 +7939,27 @@ declare namespace internals {
 		/**
 		 * Get data from cache
 		 */
-		getFromCache<R>(fn: (arg0: internals.SortableSet<T>) => R): R;
+		getFromCache<R>(fn: (arg0: webpack.SortableSet<T>) => R): R;
 
 		/**
 		 * Get data from cache (ignoring sorting)
 		 */
-		getFromUnorderedCache<R>(fn: (arg0: internals.SortableSet<T>) => R): R;
+		getFromUnorderedCache<R>(fn: (arg0: webpack.SortableSet<T>) => R): R;
 		toJSON(): Array<T>;
+
+		/**
+		 * Iterates over values in the set.
+		 */
+		[Symbol.iterator](): IterableIterator<T>;
+		readonly [Symbol.toStringTag]: string;
 	}
 	export abstract class Source {
 		size(): number;
-		map(options: internals.MapOptions): Object;
+		map(options: webpack.MapOptions): Object;
 		sourceAndMap(
-			options: internals.MapOptions
+			options: webpack.MapOptions
 		): { source: string | Buffer; map: Object };
-		updateHash(hash: internals.Hash): void;
+		updateHash(hash: webpack.Hash): void;
 		source(): string | Buffer;
 		buffer(): Buffer;
 	}
@@ -8048,22 +7967,22 @@ declare namespace internals {
 		/**
 		 * the dependency templates
 		 */
-		dependencyTemplates: internals.DependencyTemplates;
+		dependencyTemplates: webpack.DependencyTemplates;
 
 		/**
 		 * the runtime template
 		 */
-		runtimeTemplate: internals.RuntimeTemplate;
+		runtimeTemplate: webpack.RuntimeTemplate;
 
 		/**
 		 * the module graph
 		 */
-		moduleGraph: internals.ModuleGraph;
+		moduleGraph: webpack.ModuleGraph;
 
 		/**
 		 * the chunk graph
 		 */
-		chunkGraph: internals.ChunkGraph;
+		chunkGraph: webpack.ChunkGraph;
 
 		/**
 		 * the type of source that should be generated
@@ -8071,18 +7990,18 @@ declare namespace internals {
 		type?: string;
 	}
 	export class SourceMapDevToolPlugin {
-		constructor(options?: internals.SourceMapDevToolPluginOptions);
+		constructor(options?: webpack.SourceMapDevToolPluginOptions);
 		sourceMapFilename: string | false;
 		sourceMappingURLComment: string | false;
 		moduleFilenameTemplate: string | Function;
 		fallbackModuleFilenameTemplate: string | Function;
 		namespace: string;
-		options: internals.SourceMapDevToolPluginOptions;
+		options: webpack.SourceMapDevToolPluginOptions;
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export interface SourceMapDevToolPluginOptions {
 		/**
@@ -8160,7 +8079,7 @@ declare namespace internals {
 		column?: number;
 	}
 	export interface SplitChunksOptions {
-		chunksFilter: (chunk: internals.Chunk) => boolean;
+		chunksFilter: (chunk: webpack.Chunk) => boolean;
 		minSize: Record<string, number>;
 		minRemainingSize: Record<string, number>;
 		maxInitialSize: Record<string, number>;
@@ -8171,35 +8090,32 @@ declare namespace internals {
 		hidePathInfo: boolean;
 		filename:
 			| string
-			| ((arg0: internals.PathData, arg1: internals.AssetInfo) => string);
+			| ((arg0: webpack.PathData, arg1: webpack.AssetInfo) => string);
 		automaticNameDelimiter: string;
 		getCacheGroups: (
-			module: internals.Module,
-			context: internals.CacheGroupsContext
-		) => Array<internals.CacheGroupSource>;
+			module: webpack.Module,
+			context: webpack.CacheGroupsContext
+		) => Array<webpack.CacheGroupSource>;
 		getName: (
-			module?: internals.Module,
-			chunks?: Array<internals.Chunk>,
+			module?: webpack.Module,
+			chunks?: Array<webpack.Chunk>,
 			key?: string
 		) => string;
-		fallbackCacheGroup: internals.FallbackCacheGroup;
+		fallbackCacheGroup: webpack.FallbackCacheGroup;
 	}
 	export class SplitChunksPlugin {
-		constructor(options?: internals.OptimizationSplitChunksOptions);
-		options: internals.SplitChunksOptions;
+		constructor(options?: webpack.OptimizationSplitChunksOptions);
+		options: webpack.SplitChunksOptions;
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export abstract class StackedMap<K, V> {
-		map: Map<
-			K,
-			V | typeof internals.TOMBSTONE | typeof internals.UNDEFINED_MARKER
-		>;
+		map: Map<K, V | typeof webpack.TOMBSTONE | typeof webpack.UNDEFINED_MARKER>;
 		stack: Array<
-			Map<K, V | typeof internals.TOMBSTONE | typeof internals.UNDEFINED_MARKER>
+			Map<K, V | typeof webpack.TOMBSTONE | typeof webpack.UNDEFINED_MARKER>
 		>;
 		set(item: K, value: V): void;
 		delete(item: K): void;
@@ -8210,7 +8126,7 @@ declare namespace internals {
 		asPairArray(): Array<[K, V]>;
 		asMap(): Map<K, V>;
 		readonly size: number;
-		createChild(): internals.StackedMap<K, V>;
+		createChild(): webpack.StackedMap<K, V>;
 	}
 	export type Statement =
 		| ExpressionStatement
@@ -8235,8 +8151,8 @@ declare namespace internals {
 		| VariableDeclaration
 		| ClassDeclaration;
 	export class Stats {
-		constructor(compilation: internals.Compilation);
-		compilation: internals.Compilation;
+		constructor(compilation: webpack.Compilation);
+		compilation: webpack.Compilation;
 		hash: string;
 		startTime: any;
 		endTime: any;
@@ -8578,7 +8494,7 @@ declare namespace internals {
 		hooks: Readonly<{
 			sortElements: HookMap<SyncBailHook<[Array<string>, any], any>>;
 			printElements: HookMap<
-				SyncBailHook<[Array<internals.PrintedElement>, any], any>
+				SyncBailHook<[Array<webpack.PrintedElement>, any], any>
 			>;
 			sortItems: HookMap<SyncBailHook<[Array<any>, any], any>>;
 			getItemName: HookMap<SyncBailHook<[any, any], any>>;
@@ -8597,7 +8513,7 @@ declare namespace internals {
 		| "detailed"
 		| "verbose"
 		| "errors-warnings"
-		| internals.StatsOptions;
+		| webpack.StatsOptions;
 	export interface SyntheticDependencyLocation {
 		name: string;
 		index?: number;
@@ -8606,7 +8522,7 @@ declare namespace internals {
 	export interface TagInfo {
 		tag: any;
 		data: any;
-		next: internals.TagInfo;
+		next: webpack.TagInfo;
 	}
 	export type Target =
 		| "web"
@@ -8617,7 +8533,7 @@ declare namespace internals {
 		| "electron-main"
 		| "electron-renderer"
 		| "electron-preload"
-		| ((compiler: internals.Compiler) => void);
+		| ((compiler: webpack.Compiler) => void);
 	export class Template {
 		constructor();
 		static getFunctionContent(fn: Function): string;
@@ -8631,22 +8547,22 @@ declare namespace internals {
 		static prefix(s: string | Array<string>, prefix: string): string;
 		static asString(str: string | Array<string>): string;
 		static getModulesArrayBounds(
-			modules: Array<internals.WithId>
+			modules: Array<webpack.WithId>
 		): false | [number, number];
 		static renderChunkModules(
-			renderContext: internals.RenderContextModuleTemplate,
-			modules: Array<internals.Module>,
-			renderModule: (arg0: internals.Module) => internals.Source,
+			renderContext: webpack.RenderContextModuleTemplate,
+			modules: Array<webpack.Module>,
+			renderModule: (arg0: webpack.Module) => webpack.Source,
 			prefix?: string
-		): internals.Source;
+		): webpack.Source;
 		static renderRuntimeModules(
-			runtimeModules: Array<internals.RuntimeModule>,
-			renderContext: internals.RenderContextModuleTemplate
-		): internals.Source;
+			runtimeModules: Array<webpack.RuntimeModule>,
+			renderContext: webpack.RenderContextModuleTemplate
+		): webpack.Source;
 		static renderChunkRuntimeModules(
-			runtimeModules: Array<internals.RuntimeModule>,
-			renderContext: internals.RenderContextModuleTemplate
-		): internals.Source;
+			runtimeModules: Array<webpack.RuntimeModule>,
+			renderContext: webpack.RenderContextModuleTemplate
+		): webpack.Source;
 		static NUMBER_OF_IDENTIFIER_START_CHARS: number;
 		static NUMBER_OF_IDENTIFIER_CONTINUATION_CHARS: number;
 	}
@@ -8655,26 +8571,26 @@ declare namespace internals {
 		/**
 		 * the module
 		 */
-		module: internals.NormalModule;
+		module: webpack.NormalModule;
 
 		/**
 		 * the compilation
 		 */
-		compilation: internals.Compilation;
+		compilation: webpack.Compilation;
 	}
 	export abstract class VariableInfo {
-		declaredScope: internals.ScopeInfo;
+		declaredScope: webpack.ScopeInfo;
 		freeName: string | true;
-		tagInfo: internals.TagInfo;
+		tagInfo: webpack.TagInfo;
 	}
 	export class WatchIgnorePlugin {
-		constructor(options: internals.WatchIgnorePluginOptions);
+		constructor(options: webpack.WatchIgnorePluginOptions);
 		paths: [string | RegExp, string | RegExp];
 
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 
 	/**
@@ -8716,8 +8632,8 @@ declare namespace internals {
 	export abstract class Watching {
 		startTime: number;
 		invalid: boolean;
-		handler: internals.CallbackCompiler<internals.Stats>;
-		callbacks: Array<internals.CallbackCompiler<void>>;
+		handler: webpack.CallbackCompiler<webpack.Stats>;
+		callbacks: Array<webpack.CallbackCompiler<void>>;
 		closed: boolean;
 		suspended: boolean;
 		watchOptions: {
@@ -8738,7 +8654,7 @@ declare namespace internals {
 			 */
 			stdin?: boolean;
 		};
-		compiler: internals.Compiler;
+		compiler: webpack.Compiler;
 		running: boolean;
 		watcher: any;
 		pausedWatcher: any;
@@ -8747,10 +8663,10 @@ declare namespace internals {
 			dirs: Iterable<string>,
 			missing: Iterable<string>
 		): void;
-		invalidate(callback: internals.CallbackCompiler<void>): void;
+		invalidate(callback?: webpack.CallbackCompiler<void>): void;
 		suspend(): void;
 		resume(): void;
-		close(callback: internals.CallbackCompiler<void>): void;
+		close(callback: webpack.CallbackCompiler<void>): void;
 	}
 	export class WebWorkerTemplatePlugin {
 		constructor();
@@ -8758,22 +8674,20 @@ declare namespace internals {
 		/**
 		 * Apply the plugin
 		 */
-		apply(compiler: internals.Compiler): void;
+		apply(compiler: webpack.Compiler): void;
 	}
 	export interface WebpackError extends Error {
 		details: any;
-		module: internals.Module;
-		loc:
-			| internals.SyntheticDependencyLocation
-			| internals.RealDependencyLocation;
+		module: webpack.Module;
+		loc: webpack.SyntheticDependencyLocation | webpack.RealDependencyLocation;
 		hideStack: boolean;
-		chunk: internals.Chunk;
+		chunk: webpack.Chunk;
 		file: string;
 		serialize(__0: { write: any }): void;
 		deserialize(__0: { read: any }): void;
 	}
 	export abstract class WebpackLogger {
-		getChildLogger: (arg0: string | (() => string)) => internals.WebpackLogger;
+		getChildLogger: (arg0: string | (() => string)) => webpack.WebpackLogger;
 		error(...args: Array<any>): void;
 		warn(...args: Array<any>): void;
 		info(...args: Array<any>): void;
@@ -8812,7 +8726,7 @@ declare namespace internals {
 		/**
 		 * Cache generated modules and chunks to improve performance for multiple incremental builds.
 		 */
-		cache?: boolean | internals.MemoryCacheOptions | internals.FileCacheOptions;
+		cache?: boolean | webpack.MemoryCacheOptions | webpack.FileCacheOptions;
 
 		/**
 		 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
@@ -8827,7 +8741,7 @@ declare namespace internals {
 		/**
 		 * Options for the webpack-dev-server.
 		 */
-		devServer?: internals.DevServer;
+		devServer?: webpack.DevServer;
 
 		/**
 		 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
@@ -8841,16 +8755,16 @@ declare namespace internals {
 			| string
 			| (() =>
 					| string
-					| internals.EntryObject
+					| webpack.EntryObject
 					| [string, string]
-					| Promise<string | internals.EntryObject | [string, string]>)
-			| internals.EntryObject
+					| Promise<string | webpack.EntryObject | [string, string]>)
+			| webpack.EntryObject
 			| [string, string];
 
 		/**
 		 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
 		 */
-		experiments?: internals.Experiments;
+		experiments?: webpack.Experiments;
 
 		/**
 		 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
@@ -8911,12 +8825,12 @@ declare namespace internals {
 		/**
 		 * Options for infrastructure level logging.
 		 */
-		infrastructureLogging?: internals.InfrastructureLogging;
+		infrastructureLogging?: webpack.InfrastructureLogging;
 
 		/**
 		 * Custom values available in the loader context.
 		 */
-		loader?: internals.Loader;
+		loader?: webpack.Loader;
 
 		/**
 		 * Enable production optimizations or development hints.
@@ -8926,7 +8840,7 @@ declare namespace internals {
 		/**
 		 * Options affecting the normal modules (`NormalModuleFactory`).
 		 */
-		module?: internals.ModuleOptions;
+		module?: webpack.ModuleOptions;
 
 		/**
 		 * Name of the configuration. Used when loading multiple configurations.
@@ -8936,17 +8850,17 @@ declare namespace internals {
 		/**
 		 * Include polyfills or mocks for various node stuff.
 		 */
-		node?: false | internals.NodeOptions;
+		node?: false | webpack.NodeOptions;
 
 		/**
 		 * Enables/Disables integrated optimizations.
 		 */
-		optimization?: internals.Optimization;
+		optimization?: webpack.Optimization;
 
 		/**
 		 * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
 		 */
-		output?: internals.Output;
+		output?: webpack.Output;
 
 		/**
 		 * The number of parallel processed modules in the compilation.
@@ -8956,13 +8870,14 @@ declare namespace internals {
 		/**
 		 * Configuration for web performance recommendations.
 		 */
-		performance?: false | internals.PerformanceOptions;
+		performance?: false | webpack.PerformanceOptions;
 
 		/**
 		 * Add additional plugins to the compiler.
 		 */
 		plugins?: Array<
-			internals.WebpackPluginInstance | ((compiler: internals.Compiler) => void)
+			| ((this: webpack.Compiler, compiler: webpack.Compiler) => void)
+			| webpack.WebpackPluginInstance
 		>;
 
 		/**
@@ -8988,12 +8903,12 @@ declare namespace internals {
 		/**
 		 * Options for the resolver.
 		 */
-		resolve?: internals.ResolveOptions;
+		resolve?: webpack.ResolveOptions;
 
 		/**
 		 * Options for the resolver when resolving loaders.
 		 */
-		resolveLoader?: internals.ResolveOptions;
+		resolveLoader?: webpack.ResolveOptions;
 
 		/**
 		 * Stats options object or preset name.
@@ -9007,7 +8922,7 @@ declare namespace internals {
 			| "detailed"
 			| "verbose"
 			| "errors-warnings"
-			| internals.StatsOptions;
+			| webpack.StatsOptions;
 
 		/**
 		 * Environment to build for.
@@ -9021,7 +8936,7 @@ declare namespace internals {
 			| "electron-main"
 			| "electron-renderer"
 			| "electron-preload"
-			| ((compiler: internals.Compiler) => void);
+			| ((compiler: webpack.Compiler) => void);
 
 		/**
 		 * Enter watch mode, which rebuilds on file change.
@@ -9031,9 +8946,9 @@ declare namespace internals {
 		/**
 		 * Options for the watcher.
 		 */
-		watchOptions?: internals.WatchOptions;
+		watchOptions?: webpack.WatchOptions;
 	}
-	export class WebpackOptionsApply extends internals.OptionsApply {
+	export class WebpackOptionsApply extends webpack.OptionsApply {
 		constructor();
 	}
 	export class WebpackOptionsDefaulter {
@@ -9058,7 +8973,7 @@ declare namespace internals {
 		/**
 		 * Cache generated modules and chunks to improve performance for multiple incremental builds.
 		 */
-		cache: false | internals.MemoryCacheOptions | internals.FileCacheOptions;
+		cache: false | webpack.MemoryCacheOptions | webpack.FileCacheOptions;
 
 		/**
 		 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
@@ -9073,7 +8988,7 @@ declare namespace internals {
 		/**
 		 * Options for the webpack-dev-server.
 		 */
-		devServer?: internals.DevServer;
+		devServer?: webpack.DevServer;
 
 		/**
 		 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
@@ -9084,13 +8999,13 @@ declare namespace internals {
 		 * The entry point(s) of the compilation.
 		 */
 		entry:
-			| (() => Promise<internals.EntryStaticNormalized>)
-			| internals.EntryStaticNormalized;
+			| (() => Promise<webpack.EntryStaticNormalized>)
+			| webpack.EntryStaticNormalized;
 
 		/**
 		 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
 		 */
-		experiments: internals.Experiments;
+		experiments: webpack.Experiments;
 
 		/**
 		 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
@@ -9151,12 +9066,12 @@ declare namespace internals {
 		/**
 		 * Options for infrastructure level logging.
 		 */
-		infrastructureLogging: internals.InfrastructureLogging;
+		infrastructureLogging: webpack.InfrastructureLogging;
 
 		/**
 		 * Custom values available in the loader context.
 		 */
-		loader?: internals.Loader;
+		loader?: webpack.Loader;
 
 		/**
 		 * Enable production optimizations or development hints.
@@ -9166,7 +9081,7 @@ declare namespace internals {
 		/**
 		 * Options affecting the normal modules (`NormalModuleFactory`).
 		 */
-		module: internals.ModuleOptions;
+		module: webpack.ModuleOptions;
 
 		/**
 		 * Name of the configuration. Used when loading multiple configurations.
@@ -9176,17 +9091,17 @@ declare namespace internals {
 		/**
 		 * Include polyfills or mocks for various node stuff.
 		 */
-		node: false | internals.NodeOptions;
+		node: false | webpack.NodeOptions;
 
 		/**
 		 * Enables/Disables integrated optimizations.
 		 */
-		optimization: internals.Optimization;
+		optimization: webpack.Optimization;
 
 		/**
 		 * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
 		 */
-		output: internals.OutputNormalized;
+		output: webpack.OutputNormalized;
 
 		/**
 		 * The number of parallel processed modules in the compilation.
@@ -9196,13 +9111,14 @@ declare namespace internals {
 		/**
 		 * Configuration for web performance recommendations.
 		 */
-		performance?: false | internals.PerformanceOptions;
+		performance?: false | webpack.PerformanceOptions;
 
 		/**
 		 * Add additional plugins to the compiler.
 		 */
 		plugins: Array<
-			internals.WebpackPluginInstance | ((compiler: internals.Compiler) => void)
+			| ((this: webpack.Compiler, compiler: webpack.Compiler) => void)
+			| webpack.WebpackPluginInstance
 		>;
 
 		/**
@@ -9223,12 +9139,12 @@ declare namespace internals {
 		/**
 		 * Options for the resolver.
 		 */
-		resolve: internals.ResolveOptions;
+		resolve: webpack.ResolveOptions;
 
 		/**
 		 * Options for the resolver when resolving loaders.
 		 */
-		resolveLoader: internals.ResolveOptions;
+		resolveLoader: webpack.ResolveOptions;
 
 		/**
 		 * Stats options object or preset name.
@@ -9242,7 +9158,7 @@ declare namespace internals {
 			| "detailed"
 			| "verbose"
 			| "errors-warnings"
-			| internals.StatsOptions;
+			| webpack.StatsOptions;
 
 		/**
 		 * Environment to build for.
@@ -9256,7 +9172,7 @@ declare namespace internals {
 			| "electron-main"
 			| "electron-renderer"
 			| "electron-preload"
-			| ((compiler: internals.Compiler) => void);
+			| ((compiler: webpack.Compiler) => void);
 
 		/**
 		 * Enter watch mode, which rebuilds on file change.
@@ -9266,7 +9182,7 @@ declare namespace internals {
 		/**
 		 * Options for the watcher.
 		 */
-		watchOptions: internals.WatchOptions;
+		watchOptions: webpack.WatchOptions;
 	}
 
 	/**
@@ -9278,7 +9194,7 @@ declare namespace internals {
 		/**
 		 * The run point of the plugin, required method.
 		 */
-		apply: (compiler: internals.Compiler) => void;
+		apply: (compiler: webpack.Compiler) => void;
 	}
 	export interface WithId {
 		id: string | number;
@@ -9287,29 +9203,28 @@ declare namespace internals {
 		/**
 		 * create a resolver with additional/different options
 		 */
-		withOptions: (arg0?: any) => internals.Resolver & internals.WithOptions;
+		withOptions: (arg0?: any) => webpack.Resolver & webpack.WithOptions;
 	}
 	export interface WriteOnlySet<T> {
 		add(item: T): void;
 	}
 	export namespace __TypeLibIndex {
-		export let webpack: (
-			options: internals.WebpackOptions | Array<internals.WebpackOptions>,
-			callback: internals.CallbackWebpack<
-				internals.Stats | internals.MultiStats
-			>
-		) => internals.Compiler | internals.MultiCompiler;
-		export let validate: any;
-		export let validateSchema: (schema?: any, options?: any) => void;
-		export let version: any;
+		export const webpack: (
+			options: webpack.WebpackOptions | Array<webpack.WebpackOptions>,
+			callback?: webpack.CallbackWebpack<webpack.Stats | webpack.MultiStats>
+		) => webpack.Compiler | webpack.MultiCompiler;
+		export const validate: any;
+		export const validateSchema: (schema?: any, options?: any) => void;
+		export const version: any;
 		export const WebpackOptionsValidationError: ValidationError;
 		export const ValidationError: ValidationError;
 		export {
-			WebpackOptionsApply,
 			cli,
 			AutomaticPrefetchPlugin,
 			BannerPlugin,
 			Cache,
+			Chunk,
+			ChunkGraph,
 			Compilation,
 			Compiler,
 			ContextExclusionPlugin,
@@ -9323,6 +9238,7 @@ declare namespace internals {
 			EnvironmentPlugin,
 			EvalDevToolModulePlugin,
 			EvalSourceMapDevToolPlugin,
+			ExternalModule,
 			ExternalsPlugin,
 			Generator,
 			HotModuleReplacementPlugin,
@@ -9334,6 +9250,7 @@ declare namespace internals {
 			LoaderTargetPlugin,
 			Module,
 			ModuleFilenameHelpers,
+			ModuleGraph,
 			NoEmitOnErrorsPlugin,
 			NormalModule,
 			NormalModuleReplacementPlugin,
@@ -9349,6 +9266,7 @@ declare namespace internals {
 			Stats,
 			Template,
 			WatchIgnorePlugin,
+			WebpackOptionsApply,
 			WebpackOptionsDefaulter,
 			__TypeLiteral_12 as cache,
 			__TypeLiteral_1 as config,
@@ -9366,10 +9284,10 @@ declare namespace internals {
 	}
 	export namespace __TypeLiteral_1 {
 		export const getNormalizedWebpackOptions: (
-			config: internals.WebpackOptions
-		) => internals.WebpackOptionsNormalized;
+			config: webpack.WebpackOptions
+		) => webpack.WebpackOptionsNormalized;
 		export const applyWebpackOptionsDefaults: (
-			options: internals.WebpackOptionsNormalized
+			options: webpack.WebpackOptionsNormalized
 		) => void;
 	}
 	export namespace __TypeLiteral_10 {
@@ -9377,8 +9295,8 @@ declare namespace internals {
 	}
 	export namespace __TypeLiteral_11 {
 		export const createHash: (
-			algorithm: string | typeof internals.Hash
-		) => internals.Hash;
+			algorithm: string | typeof webpack.Hash
+		) => webpack.Hash;
 		export { comparators, serialization };
 	}
 	export namespace __TypeLiteral_12 {
@@ -9449,11 +9367,9 @@ declare namespace internals {
 		| __TypeWebpackOptions
 		| Array<RuleSetUseItemWebpackOptions>;
 	export namespace cli {
-		export let getArguments: (
-			schema?: any
-		) => Record<string, internals.Argument>;
+		export let getArguments: (schema?: any) => Record<string, webpack.Argument>;
 		export let processArguments: (
-			args: Record<string, internals.Argument>,
+			args: Record<string, webpack.Argument>,
 			config: any,
 			values: Record<
 				string,
@@ -9463,41 +9379,41 @@ declare namespace internals {
 				| RegExp
 				| Array<string | number | boolean | RegExp>
 			>
-		) => Array<internals.Problem>;
+		) => Array<webpack.Problem>;
 	}
 	export namespace comparators {
 		export let compareChunksById: (
-			a: internals.Chunk,
-			b: internals.Chunk
+			a: webpack.Chunk,
+			b: webpack.Chunk
 		) => 0 | 1 | -1;
 		export let compareModulesByIdentifier: (
-			a: internals.Module,
-			b: internals.Module
+			a: webpack.Module,
+			b: webpack.Module
 		) => 0 | 1 | -1;
 		export let compareModulesById: (
-			arg0: internals.ChunkGraph
-		) => (arg0: internals.Module, arg1: internals.Module) => 0 | 1 | -1;
+			arg0: webpack.ChunkGraph
+		) => (arg0: webpack.Module, arg1: webpack.Module) => 0 | 1 | -1;
 		export let compareNumbers: (a: number, b: number) => 0 | 1 | -1;
 		export let compareStringsNumeric: (a: string, b: string) => 0 | 1 | -1;
 		export let compareModulesByPostOrderIndexOrIdentifier: (
-			arg0: internals.ModuleGraph
-		) => (arg0: internals.Module, arg1: internals.Module) => 0 | 1 | -1;
+			arg0: webpack.ModuleGraph
+		) => (arg0: webpack.Module, arg1: webpack.Module) => 0 | 1 | -1;
 		export let compareModulesByPreOrderIndexOrIdentifier: (
-			arg0: internals.ModuleGraph
-		) => (arg0: internals.Module, arg1: internals.Module) => 0 | 1 | -1;
+			arg0: webpack.ModuleGraph
+		) => (arg0: webpack.Module, arg1: webpack.Module) => 0 | 1 | -1;
 		export let compareModulesByIdOrIdentifier: (
-			arg0: internals.ChunkGraph
-		) => (arg0: internals.Module, arg1: internals.Module) => 0 | 1 | -1;
+			arg0: webpack.ChunkGraph
+		) => (arg0: webpack.Module, arg1: webpack.Module) => 0 | 1 | -1;
 		export let compareChunks: (
-			arg0: internals.ChunkGraph
-		) => (arg0: internals.Chunk, arg1: internals.Chunk) => 0 | 1 | -1;
+			arg0: webpack.ChunkGraph
+		) => (arg0: webpack.Chunk, arg1: webpack.Chunk) => 0 | 1 | -1;
 		export let compareIds: (
 			a: string | number,
 			b: string | number
 		) => 0 | 1 | -1;
 		export let compareChunkGroupsByIndex: (
-			a: internals.ChunkGroup,
-			b: internals.ChunkGroup
+			a: webpack.ChunkGroup,
+			b: webpack.ChunkGroup
 		) => 0 | 1 | -1;
 		export let concatComparators: <T>(
 			c1: (arg0: T, arg1: T) => 0 | 1 | -1,
@@ -9515,39 +9431,39 @@ declare namespace internals {
 			iterable: Iterable<T>
 		) => (arg0: T, arg1: T) => 0 | 1 | -1;
 		export let compareChunksNatural: (
-			chunkGraph: internals.ChunkGraph
-		) => (arg0: internals.Chunk, arg1: internals.Chunk) => 0 | 1 | -1;
+			chunkGraph: webpack.ChunkGraph
+		) => (arg0: webpack.Chunk, arg1: webpack.Chunk) => 0 | 1 | -1;
 		export let compareLocations: (
-			a:
-				| internals.SyntheticDependencyLocation
-				| internals.RealDependencyLocation,
-			b:
-				| internals.SyntheticDependencyLocation
-				| internals.RealDependencyLocation
+			a: webpack.SyntheticDependencyLocation | webpack.RealDependencyLocation,
+			b: webpack.SyntheticDependencyLocation | webpack.RealDependencyLocation
 		) => 0 | 1 | -1;
 	}
 	export function exports(
-		options: internals.WebpackOptions | Array<internals.WebpackOptions>,
-		callback: internals.CallbackWebpack<internals.Stats | internals.MultiStats>
-	): internals.Compiler | internals.MultiCompiler;
+		options: webpack.WebpackOptions | Array<webpack.WebpackOptions>,
+		callback?: webpack.CallbackWebpack<webpack.Stats | webpack.MultiStats>
+	): webpack.Compiler | webpack.MultiCompiler;
 	export namespace exports {
-		export let webpack: (
-			options: internals.WebpackOptions | Array<internals.WebpackOptions>,
-			callback: internals.CallbackWebpack<
-				internals.Stats | internals.MultiStats
-			>
-		) => internals.Compiler | internals.MultiCompiler;
-		export let validate: any;
-		export let validateSchema: (schema?: any, options?: any) => void;
-		export let version: any;
+		export const webpack: (
+			options: webpack.WebpackOptions | Array<webpack.WebpackOptions>,
+			callback?: webpack.CallbackWebpack<webpack.Stats | webpack.MultiStats>
+		) => webpack.Compiler | webpack.MultiCompiler;
+		export const validate: any;
+		export const validateSchema: (schema?: any, options?: any) => void;
+		export const version: any;
 		export const WebpackOptionsValidationError: ValidationError;
 		export const ValidationError: ValidationError;
+		export type WebpackPluginFunction = (
+			this: webpack.Compiler,
+			compiler: webpack.Compiler
+		) => void;
+		export type ParserState = Record<string, any> & webpack.ParserStateBase;
 		export {
-			WebpackOptionsApply,
 			cli,
 			AutomaticPrefetchPlugin,
 			BannerPlugin,
 			Cache,
+			Chunk,
+			ChunkGraph,
 			Compilation,
 			Compiler,
 			ContextExclusionPlugin,
@@ -9561,6 +9477,7 @@ declare namespace internals {
 			EnvironmentPlugin,
 			EvalDevToolModulePlugin,
 			EvalSourceMapDevToolPlugin,
+			ExternalModule,
 			ExternalsPlugin,
 			Generator,
 			HotModuleReplacementPlugin,
@@ -9572,6 +9489,7 @@ declare namespace internals {
 			LoaderTargetPlugin,
 			Module,
 			ModuleFilenameHelpers,
+			ModuleGraph,
 			NoEmitOnErrorsPlugin,
 			NormalModule,
 			NormalModuleReplacementPlugin,
@@ -9587,6 +9505,7 @@ declare namespace internals {
 			Stats,
 			Template,
 			WatchIgnorePlugin,
+			WebpackOptionsApply,
 			WebpackOptionsDefaulter,
 			__TypeLiteral_12 as cache,
 			__TypeLiteral_1 as config,
@@ -9600,7 +9519,8 @@ declare namespace internals {
 			__TypeLiteral_9 as library,
 			__TypeLiteral_10 as debug,
 			__TypeLiteral_11 as util,
-			WebpackOptions as Configuration
+			WebpackOptions as Configuration,
+			WebpackPluginInstance
 		};
 	}
 	export namespace serialization {
@@ -9608,7 +9528,7 @@ declare namespace internals {
 			Constructor: { new (...params: Array<any>): any },
 			request: string,
 			name: string,
-			serializer: internals.ObjectSerializer
+			serializer: webpack.ObjectSerializer
 		) => void;
 		export let registerLoader: (
 			regExp: RegExp,
@@ -9618,10 +9538,10 @@ declare namespace internals {
 			new (...params: Array<any>): any;
 		}) => void;
 		export let NOT_SERIALIZABLE: {};
-		export let buffersSerializer: internals.Serializer;
-		export let createFileSerializer: (fs?: any) => internals.Serializer;
+		export let buffersSerializer: webpack.Serializer;
+		export let createFileSerializer: (fs?: any) => webpack.Serializer;
 		export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 	}
 }
 
-export = internals.exports;
+export = webpack.exports;

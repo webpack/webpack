@@ -22,6 +22,7 @@ var useArray = createFunctionArrayFromUseArray([
 	}
 ]);
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	module: {
 		rules: [

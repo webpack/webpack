@@ -1,5 +1,6 @@
 var MCEP = require("mini-css-extract-plugin");
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
 		a: "./a",

@@ -242,7 +242,13 @@ export type RuleSetLoaderOptions =
  */
 export type RuleSetUse =
 	| RuleSetUseItem[]
-	| ((data: object) => RuleSetUseItem[])
+	| ((data: {
+			resource: string;
+			realResource: string;
+			resourceQuery: string;
+			issuer: string;
+			compiler: string;
+	  }) => RuleSetUseItem[])
 	| RuleSetUseItem;
 /**
  * A description of an applied loader.

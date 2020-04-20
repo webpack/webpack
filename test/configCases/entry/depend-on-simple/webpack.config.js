@@ -1,6 +1,7 @@
 /** @typedef {import("../../../../").Compiler} Compiler */
 /** @typedef {import("../../../../").Compilation} Compilation */
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
 		app: { import: "./app.js", dependOn: "react-vendors" },

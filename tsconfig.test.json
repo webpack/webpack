@@ -12,5 +12,5 @@
     "types": ["node", "jest"],
     "esModuleInterop": true
   },
-  "include": ["test/**/webpack.config.js", "types.d.ts"]
+  "include": ["test/**/webpack.config.js", "declarations.test.d.ts"]
 }

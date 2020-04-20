@@ -2572,7 +2572,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((data: object) => RuleSetUseItem[])"
+          "tsType": "((data: { resource: string, realResource: string, resourceQuery: string, issuer: string, compiler: string }) => RuleSetUseItem[])"
         },
         {
           "$ref": "#/definitions/RuleSetUseItem"

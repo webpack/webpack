@@ -1,5 +1,5 @@
-const ExternalModule = require("../../../../lib/ExternalModule");
-const ChunkGraph = require("../../../../lib/ChunkGraph");
+const { ChunkGraph, ExternalModule } = require("../../../../");
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
 		compiler => {
@@ -44,7 +44,9 @@ module.exports = {
 					expect(m.issuer).toBe(null);
 					m.issuer = module;
 					expect(m.issuer).toBe(module);
-					expect([...m.usedExports]).toEqual(["testExport"]);
+					expect(
+						typeof m.usedExports === "boolean" ? [] : [...m.usedExports]
+					).toEqual(["testExport"]);
 					expect(m.optimizationBailout).toEqual([]);
 					expect(m.optional).toBe(false);
 					expect(m.isInChunk(chunk)).toBe(true);
