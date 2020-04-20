@@ -85,9 +85,11 @@ jobs:
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn -s run code-lint --format junit > junit.xml
-          yarn jest-lint
-          yarn type-lint
           yarn special-lint
+          yarn type-lint
+          yarn typings-lint
+          yarn pretty-lint
+          yarn spellcheck
         displayName: "Run linting"
       - task: PublishTestResults@2
         inputs:
