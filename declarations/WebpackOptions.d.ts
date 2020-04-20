@@ -1332,7 +1332,9 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 	 */
-	chunks?: ("initial" | "async" | "all") | Function;
+	chunks?:
+		| ("initial" | "async" | "all")
+		| ((chunk: import("../lib/Chunk")) => boolean);
 	/**
 	 * Options for modules not selected by any other cache group.
 	 */

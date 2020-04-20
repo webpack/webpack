@@ -5937,7 +5937,7 @@ declare namespace webpack {
 		/**
 		 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 		 */
-		chunks?: Function | "initial" | "async" | "all";
+		chunks?: "initial" | "async" | "all" | ((chunk: webpack.Chunk) => boolean);
 
 		/**
 		 * Options for modules not selected by any other cache group.

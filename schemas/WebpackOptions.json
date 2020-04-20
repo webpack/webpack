@@ -1460,7 +1460,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
             }
           ]
         },
