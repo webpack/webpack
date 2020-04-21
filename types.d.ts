@@ -7125,17 +7125,24 @@ type __TypeWebpackOptions = (data: {}) =>
 	| __TypeWebpackOptions
 	| Array<RuleSetUseItem>;
 declare function exports(
-	options: Configuration | Array<Configuration>,
-	callback?: CallbackWebpack<Stats | MultiStats>
-): Compiler | MultiCompiler;
+	options: Configuration,
+	callback?: CallbackWebpack<Stats>
+): Compiler;
+declare function exports(
+	options: Array<Configuration>,
+	callback?: CallbackWebpack<MultiStats>
+): MultiCompiler;
 declare namespace exports {
-	export const webpack: (
-		options: Configuration | Array<Configuration>,
-		callback?: CallbackWebpack<Stats | MultiStats>
-	) => Compiler | MultiCompiler;
-	export const validate: any;
+	export const webpack: {
+		(options: Configuration, callback?: CallbackWebpack<Stats>): Compiler;
+		(
+			options: Array<Configuration>,
+			callback?: CallbackWebpack<MultiStats>
+		): MultiCompiler;
+	};
+	export const validate: (options?: any) => void;
 	export const validateSchema: (schema?: any, options?: any) => void;
-	export const version: any;
+	export const version: string;
 	export namespace cli {
 		export let getArguments: (schema?: any) => Record<string, Argument>;
 		export let processArguments: (
