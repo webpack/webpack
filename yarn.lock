@@ -1745,9 +1745,9 @@ cosmiconfig@^6.0.0:
     yaml "^1.7.2"
 
 coveralls@^3.0.2:
-  version "3.0.11"
-  resolved "https://registry.yarnpkg.com/coveralls/-/coveralls-3.0.11.tgz#e141da0922b632fcc66620f334460c3f0026a4ce"
-  integrity sha512-LZPWPR2NyGKyaABnc49dR0fpeP6UqhvGq4B5nUrTQ1UBy55z96+ga7r+/ChMdMJUwBgyJDXBi88UBgz2rs9IiQ==
+  version "3.0.12"
+  resolved "https://registry.yarnpkg.com/coveralls/-/coveralls-3.0.12.tgz#e5417b7ef9170ad92b40f4024fce25d65ad9c24d"
+  integrity sha512-cDOGf4JFb1XKxT811GuLixVgJc3ZFElCLtgxkrdo0hm9Q8lmJ3cP4cZqlQTRE45MvwJNlHYwwzHPuWEv1f4f4Q==
   dependencies:
     js-yaml "^3.13.1"
     lcov-parse "^1.0.0"
