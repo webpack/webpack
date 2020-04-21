@@ -1646,6 +1646,15 @@ declare abstract class DependencyTemplates {
 	getHash(): string;
 	clone(): DependencyTemplates;
 }
+declare class DeterministicChunkIdsPlugin {
+	constructor(options?: any);
+	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 declare class DeterministicModuleIdsPlugin {
 	constructor(options?: any);
 	options: any;
@@ -7263,6 +7272,7 @@ declare namespace exports {
 			NaturalModuleIdsPlugin,
 			OccurrenceModuleIdsPlugin,
 			NamedModuleIdsPlugin,
+			DeterministicChunkIdsPlugin,
 			DeterministicModuleIdsPlugin,
 			NamedChunkIdsPlugin,
 			OccurrenceChunkIdsPlugin,
