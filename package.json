@@ -107,7 +107,6 @@
   "files": [
     "lib/",
     "bin/",
-    "declarations/",
     "hot/",
     "schemas/",
     "SECURITY.md",
