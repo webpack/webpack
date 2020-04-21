@@ -1,5 +1,6 @@
 const path = require("path");
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: "./index",
 	optimization: {

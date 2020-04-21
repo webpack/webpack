@@ -1,5 +1,6 @@
 var DefinePlugin = require("../../../../").DefinePlugin;
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {
 		ecmaVersion: 11

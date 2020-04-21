@@ -385,3 +385,8 @@ declare module "enhanced-resolve" {
 }
 
 type TODO = any;
+
+type RecursiveArrayOrRecord<T> =
+	| { [index: string]: RecursiveArrayOrRecord<T> }
+	| Array<RecursiveArrayOrRecord<T>>
+	| T;

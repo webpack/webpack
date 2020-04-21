@@ -1,4 +1,5 @@
 const TerserPlugin = require("terser-webpack-plugin");
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	node: {
 		__dirname: false,

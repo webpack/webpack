@@ -1,3 +1,9 @@
+/** @typedef {import("../../../../").Compiler} Compiler */
+/** @typedef {import("../../../../").Compilation} Compilation */
+/** @typedef {import("../../../../").Configuration} Configuration */
+
+/** @type {Configuration} */
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry() {
 		return Promise.resolve({
@@ -15,6 +21,9 @@ module.exports = {
 		filename: "[name].js"
 	},
 	plugins: [
+		/**
+		 * @this {Compiler} compiler
+		 */
 		function () {
 			/**
 			 * @param {Compilation} compilation compilation

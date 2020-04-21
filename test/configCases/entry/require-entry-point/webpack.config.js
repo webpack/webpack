@@ -1,3 +1,4 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
 		bundle0: "./require-entry-point",

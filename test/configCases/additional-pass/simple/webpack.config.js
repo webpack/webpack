@@ -1,3 +1,4 @@
+/** @type {import("../../../../").WebpackPluginFunction} */
 var testPlugin = function () {
 	var counter = 1;
 	this.hooks.compilation.tap("TestPlugin", compilation => {
@@ -8,6 +9,7 @@ var testPlugin = function () {
 	});
 };
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [testPlugin]
 };

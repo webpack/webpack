@@ -1,8 +1,10 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
 		compiler => {
 			compiler.hooks.done.tap("Test", ({ compilation }) => {
-				for (const chunk of compilation.chunks) {
+				for (const c of compilation.chunks) {
+					const chunk = /** @type {{ files: string[] } & import("../../../../").Chunk} */ (c);
 					expect(chunk.files.length).toBe(chunk.files.size);
 					expect(chunk.files[0]).toBe(Array.from(chunk.files)[0]);
 					expect(chunk.files.join(",")).toBe(Array.from(chunk.files).join(","));
