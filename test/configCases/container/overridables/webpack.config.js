@@ -1,5 +1,6 @@
-const OverridablesPlugin = require("../../../../lib/container/OverridablesPlugin");
+const { OverridablesPlugin } = require("../../../../").container;
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
 		new OverridablesPlugin([

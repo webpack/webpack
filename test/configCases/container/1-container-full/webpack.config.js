@@ -1,5 +1,6 @@
-const ModuleFederationPlugin = require("../../../../lib/container/ModuleFederationPlugin");
+const { ModuleFederationPlugin } = require("../../../../").container;
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
 		new ModuleFederationPlugin({
