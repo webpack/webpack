@@ -4,4 +4,4 @@ class Test {
     }
 }
 
-exports.default = Test;
+module.exports.default = Test;

@@ -84,5 +84,6 @@ it("should allow to attach exports to arrow function", () => {
 
 
 it("should properly handle export / require `default`", () => {
-	expect(require("./require-default").hello).toBe("hello");
+	expect(require("./require-default").exportsDefaultTest).toBe("hello");
+	expect(require("./require-default").moduleExportsDefault).toBe("hello");
 });
