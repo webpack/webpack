@@ -1588,8 +1588,7 @@ declare class Dependency {
 	module: any;
 	readonly disconnect: any;
 	static NO_EXPORTS_REFERENCED: Array<any>;
-	static NS_OBJECT_REFERENCED: Array<Array<any>>;
-	static DEFAULT_EXPORT_REFERENCED: Array<Array<string>>;
+	static EXPORTS_OBJECT_REFERENCED: Array<Array<any>>;
 }
 declare abstract class DependencyTemplate {
 	apply(
@@ -2175,9 +2174,10 @@ declare class ExportsInfo {
 	readonly exports: Iterable<ExportInfo>;
 	readonly orderedExports: Iterable<ExportInfo>;
 	readonly otherExportsInfo: ExportInfo;
-	setRedirectNamedTo(exportsInfo?: any): void;
+	setRedirectNamedTo(exportsInfo?: any): boolean;
 	setHasProvideInfo(): void;
 	setHasUseInfo(): void;
+	getOwnExportInfo(name: string): ExportInfo;
 	getExportInfo(name: string): ExportInfo;
 	getReadOnlyExportInfo(name: string): ExportInfo;
 	getNestedExportsInfo(name?: Array<string>): ExportsInfo;
@@ -3155,7 +3155,7 @@ declare interface KnownBuildMeta {
 	exportsArgument?: string;
 	strict?: boolean;
 	moduleConcatenationBailout?: string;
-	exportsType?: "default" | "namespace" | "flagged";
+	exportsType?: "namespace" | "default" | "flagged";
 	defaultObject?: boolean | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	async?: boolean;
@@ -3573,12 +3573,7 @@ declare class Module extends DependenciesBlock {
 	readonly moduleArgument: string;
 	getExportsType(
 		strict: boolean
-	):
-		| "dynamic"
-		| "dynamic-default"
-		| "namespace"
-		| "default-only"
-		| "default-with-named";
+	): "namespace" | "default-only" | "default-with-named" | "dynamic";
 	addPresentationalDependency(presentationalDependency: Dependency): void;
 	addWarning(warning: WebpackError): void;
 	getWarnings(): Iterable<WebpackError>;

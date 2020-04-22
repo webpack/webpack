@@ -131,14 +131,14 @@ chunk b4a95c5544295741de67.js 899 bytes [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for asset 1`] = `
-"Hash: ccfed10a060986668b48
+"Hash: 1a86ad44b9f28317d4f7
 Time: X ms
 Built at: 1970-04-20 12:42:42
                    Asset      Size
-6eef074bdaf47143a239.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
                bundle.js  10.9 KiB  [emitted]              [name: main]
+d896afc62bcc5d86ee78.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
         static/file.html  12 bytes  [emitted]              [name: (main)]
-Entrypoint main = bundle.js (6eef074bdaf47143a239.png static/file.html)
+Entrypoint main = bundle.js (d896afc62bcc5d86ee78.png static/file.html)
 ./index.js 150 bytes [built]
 ./images/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
 ./images/file.svg 915 bytes [built]
