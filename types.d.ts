@@ -84,7 +84,7 @@ declare class AbstractLibraryPlugin<T> {
 		/**
 		 * used library type
 		 */
-		type: ExternalsType;
+		type: LibraryType;
 	});
 
 	/**
@@ -1358,7 +1358,7 @@ declare interface Configuration {
 	/**
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
-	externalsType?: ExternalsType;
+	externalsType?: LibraryType;
 
 	/**
 	 * Options for infrastructure level logging.
@@ -1867,14 +1867,14 @@ declare interface Effect {
 	value: any;
 }
 declare class EnableLibraryPlugin {
-	constructor(type: ExternalsType);
-	type: ExternalsType;
+	constructor(type: LibraryType);
+	type: LibraryType;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
-	static checkEnabled(compiler: Compiler, type: ExternalsType): void;
+	static checkEnabled(compiler: Compiler, type: LibraryType): void;
 }
 type Entry =
 	| string
@@ -2292,23 +2292,6 @@ declare class ExternalsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type ExternalsType =
-	| "var"
-	| "module"
-	| "assign"
-	| "this"
-	| "window"
-	| "self"
-	| "global"
-	| "commonjs"
-	| "commonjs2"
-	| "commonjs-module"
-	| "amd"
-	| "amd-require"
-	| "umd"
-	| "umd2"
-	| "jsonp"
-	| "system";
 declare interface FactorizeModuleOptions {
 	currentProfile: ModuleProfile;
 	factory: ModuleFactory;
@@ -3199,7 +3182,7 @@ declare class LibManifestPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type Library = string | Array<string> | LibraryCustomUmdObject | LibraryOptions;
+type Library = string | LibraryOptions | Array<string> | LibraryCustomUmdObject;
 declare interface LibraryContext<T> {
 	compilation: Compilation;
 	options: T;
@@ -3274,7 +3257,7 @@ declare interface LibraryOptions {
 	/**
 	 * Type of library.
 	 */
-	type: ExternalsType;
+	type: LibraryType;
 
 	/**
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
@@ -3284,13 +3267,13 @@ declare interface LibraryOptions {
 declare class LibraryTemplatePlugin {
 	constructor(
 		name: LibraryName,
-		target: ExternalsType,
+		target: LibraryType,
 		umdNamedDefine: boolean,
 		auxiliaryComment: AuxiliaryComment,
 		exportProperty: LibraryExport
 	);
 	library: {
-		type: ExternalsType;
+		type: LibraryType;
 		name: LibraryName;
 		umdNamedDefine: boolean;
 		auxiliaryComment: AuxiliaryComment;
@@ -3302,6 +3285,23 @@ declare class LibraryTemplatePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type LibraryType =
+	| "var"
+	| "module"
+	| "assign"
+	| "this"
+	| "window"
+	| "self"
+	| "global"
+	| "commonjs"
+	| "commonjs2"
+	| "commonjs-module"
+	| "amd"
+	| "amd-require"
+	| "umd"
+	| "umd2"
+	| "jsonp"
+	| "system";
 declare class LimitChunkCountPlugin {
 	constructor(options?: LimitChunkCountPluginOptions);
 	options: LimitChunkCountPluginOptions;
@@ -4658,7 +4658,7 @@ declare interface Output {
 	/**
 	 * List of library types enabled for use by entry points.
 	 */
-	enabledLibraryTypes?: Array<ExternalsType>;
+	enabledLibraryTypes?: Array<LibraryType>;
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -4733,7 +4733,7 @@ declare interface Output {
 	/**
 	 * Type of library.
 	 */
-	libraryTarget?: ExternalsType;
+	libraryTarget?: LibraryType;
 
 	/**
 	 * Output javascript files as module source type.
@@ -4862,7 +4862,7 @@ declare interface OutputNormalized {
 	/**
 	 * List of library types enabled for use by entry points.
 	 */
-	enabledLibraryTypes?: Array<ExternalsType>;
+	enabledLibraryTypes?: Array<LibraryType>;
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -6983,7 +6983,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
-	externalsType?: ExternalsType;
+	externalsType?: LibraryType;
 
 	/**
 	 * Options for infrastructure level logging.
@@ -7440,7 +7440,14 @@ declare namespace exports {
 		WatchIgnorePlugin,
 		WebpackOptionsApply,
 		WebpackOptionsDefaulter,
+		Entry,
+		EntryNormalized,
+		LibraryOptions,
+		ModuleOptions,
+		ResolveOptions,
+		RuleSetRule,
 		Configuration,
+		WebpackOptionsNormalized,
 		WebpackPluginInstance
 	};
 }
