@@ -9,6 +9,7 @@ const stats = {
 	entrypoints: true,
 	modules: false
 };
+/** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{
 		name: "default",

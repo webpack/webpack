@@ -2,6 +2,7 @@
 
 const DefinePlugin = require("../../../../").DefinePlugin;
 
+/** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
 		name: "development",

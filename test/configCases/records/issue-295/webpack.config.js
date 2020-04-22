@@ -1,5 +1,6 @@
 var path = require("path");
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: "./test",
 	recordsPath: path.resolve(

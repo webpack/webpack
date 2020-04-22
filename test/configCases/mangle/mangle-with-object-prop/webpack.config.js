@@ -1,3 +1,4 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	optimization: {
 		mangleExports: true,

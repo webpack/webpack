@@ -1,6 +1,6 @@
 "use strict";
 
-var EntryPlugin = require("../../../lib/EntryPlugin");
+var EntryPlugin = require("../../../").EntryPlugin;
 
 /**
  * Runs a child compilation which produces an error in order to test that NoEmitErrorsPlugin

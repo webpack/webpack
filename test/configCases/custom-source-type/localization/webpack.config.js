@@ -5,12 +5,20 @@ const RuntimeGlobals = require("../../../../").RuntimeGlobals;
 const Parser = require("../../../../").Parser;
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../lib/Compiler")} Compiler */
+/** @typedef {import("../../../../").Compiler} Compiler */
+/** @typedef {import("../../../../").ParserState} ParserState */
 
 class LocalizationParser extends Parser {
-	parse(source, { module }) {
+	/**
+	 * @param {string | Buffer | Record<string, any>} source input source
+	 * @param {ParserState} state state
+	 * @returns {ParserState} state
+	 */
+	parse(source, state) {
+		if (typeof source !== "string") throw new Error("Unexpected input");
+		const { module } = state;
 		module.buildInfo.content = JSON.parse(source);
-		return true;
+		return state;
 	}
 }
 

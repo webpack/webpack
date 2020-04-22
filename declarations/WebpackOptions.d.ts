@@ -19,11 +19,14 @@ export type Bail = boolean;
 /**
  * Cache generated modules and chunks to improve performance for multiple incremental builds.
  */
-export type Cache = true | CacheNormalized;
+export type CacheOptions = true | CacheOptionsNormalized;
 /**
  * Cache generated modules and chunks to improve performance for multiple incremental builds.
  */
-export type CacheNormalized = false | MemoryCacheOptions | FileCacheOptions;
+export type CacheOptionsNormalized =
+	| false
+	| MemoryCacheOptions
+	| FileCacheOptions;
 /**
  * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
  */
@@ -239,7 +242,13 @@ export type RuleSetLoaderOptions =
  */
 export type RuleSetUse =
 	| RuleSetUseItem[]
-	| ((data: object) => RuleSetUseItem[])
+	| ((data: {
+			resource: string;
+			realResource: string;
+			resourceQuery: string;
+			issuer: string;
+			compiler: string;
+	  }) => RuleSetUseItem[])
 	| RuleSetUseItem;
 /**
  * A description of an applied loader.
@@ -292,15 +301,6 @@ export type OptimizationRuntimeChunk =
 			 */
 			name?: string | Function;
 	  };
-/**
- * A function returning cache groups.
- */
-export type OptimizationSplitChunksGetCacheGroups = (
-	module: import("../lib/Module")
-) =>
-	| OptimizationSplitChunksCacheGroup
-	| OptimizationSplitChunksCacheGroup[]
-	| void;
 /**
  * Size description for limits.
  */
@@ -489,7 +489,7 @@ export type ResolveLoader = ResolveOptions;
 /**
  * Stats options object or preset name.
  */
-export type Stats =
+export type StatsValue =
 	| (
 			| "none"
 			| "errors-only"
@@ -539,6 +539,15 @@ export type OptimizationRuntimeChunkNormalized =
 			 */
 			name?: Function;
 	  };
+/**
+ * A function returning cache groups.
+ */
+export type OptimizationSplitChunksGetCacheGroups = (
+	module: import("../lib/Module")
+) =>
+	| OptimizationSplitChunksCacheGroup
+	| OptimizationSplitChunksCacheGroup[]
+	| void;
 
 /**
  * Options object as provided by the user.
@@ -555,7 +564,7 @@ export interface WebpackOptions {
 	/**
 	 * Cache generated modules and chunks to improve performance for multiple incremental builds.
 	 */
-	cache?: Cache;
+	cache?: CacheOptions;
 	/**
 	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
 	 */
@@ -603,7 +612,7 @@ export interface WebpackOptions {
 	/**
 	 * Options affecting the normal modules (`NormalModuleFactory`).
 	 */
-	module?: Module;
+	module?: ModuleOptions;
 	/**
 	 * Name of the configuration. Used when loading multiple configurations.
 	 */
@@ -659,7 +668,7 @@ export interface WebpackOptions {
 	/**
 	 * Stats options object or preset name.
 	 */
-	stats?: Stats;
+	stats?: StatsValue;
 	/**
 	 * Environment to build for.
 	 */
@@ -906,7 +915,7 @@ export interface Loader {
 /**
  * Options affecting the normal modules (`NormalModuleFactory`).
  */
-export interface Module {
+export interface ModuleOptions {
 	/**
 	 * An array of rules applied by default for modules.
 	 */
@@ -1323,7 +1332,9 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 	 */
-	chunks?: ("initial" | "async" | "all") | Function;
+	chunks?:
+		| ("initial" | "async" | "all")
+		| ((chunk: import("../lib/Chunk")) => boolean);
 	/**
 	 * Options for modules not selected by any other cache group.
 	 */
@@ -1412,7 +1423,7 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	chunks?:
 		| ("initial" | "async" | "all")
-		| OptimizationSplitChunksGetCacheGroups;
+		| ((chunk: import("../lib/Chunk")) => boolean);
 	/**
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
 	 */
@@ -2096,7 +2107,7 @@ export interface WebpackOptionsNormalized {
 	/**
 	 * Cache generated modules and chunks to improve performance for multiple incremental builds.
 	 */
-	cache: CacheNormalized;
+	cache: CacheOptionsNormalized;
 	/**
 	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
 	 */
@@ -2144,7 +2155,7 @@ export interface WebpackOptionsNormalized {
 	/**
 	 * Options affecting the normal modules (`NormalModuleFactory`).
 	 */
-	module: Module;
+	module: ModuleOptions;
 	/**
 	 * Name of the configuration. Used when loading multiple configurations.
 	 */
@@ -2196,7 +2207,7 @@ export interface WebpackOptionsNormalized {
 	/**
 	 * Stats options object or preset name.
 	 */
-	stats: Stats;
+	stats: StatsValue;
 	/**
 	 * Environment to build for.
 	 */

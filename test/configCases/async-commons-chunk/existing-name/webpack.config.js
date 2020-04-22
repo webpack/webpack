@@ -1,3 +1,4 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	performance: {
 		hints: false

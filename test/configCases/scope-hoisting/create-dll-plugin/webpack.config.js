@@ -1,5 +1,6 @@
 const path = require("path");
 var webpack = require("../../../../");
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: ["./index.js"],
 	plugins: [
