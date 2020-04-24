@@ -1,4 +1,4 @@
-This example shows how the `sideEffects` flag for library authors works.
+This example shows how the `sideEffects` flag works for library authors.
 
 The example contains a large library, `big-module`. `big-module` contains multiple child modules: `a`, `b` and `c`. The exports from the child modules are re-exported in the entry module (`index.js`) of the library. A consumer uses **some** of the exports, importing them from the library via `import { a, b } from "big-module"`. According to the EcmaScript spec, all child modules _must_ be evaluated because they could contain side effects.
 
