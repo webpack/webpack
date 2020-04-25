@@ -59,6 +59,8 @@ describe("HotTestCases", () => {
 								options.output.filename = "bundle.js";
 							if (options.output.pathinfo === undefined)
 								options.output.pathinfo = true;
+							if (options.output.library === undefined)
+								options.output.library = ["commonjs2"];
 							if (!options.module) options.module = {};
 							if (!options.module.rules) options.module.rules = [];
 							options.module.rules.push({
@@ -170,11 +172,29 @@ describe("HotTestCases", () => {
 										return m.exports;
 									} else return require(module);
 								}
-								_require("./bundle.js");
-								if (getNumberOfTests() < 1)
-									return done(new Error("No tests exported by test case"));
+								let promise = Promise.resolve();
+								const info = stats.toJson({ all: false, entrypoints: true });
+								if (category.target === "web") {
+									for (const file of info.entrypoints.main.assets)
+										_require(`./${file}`);
+								} else {
+									const assets = info.entrypoints.main.assets;
+									const result = _require(`./${assets[assets.length - 1]}`);
+									if (typeof result === "object" && "then" in result)
+										promise = promise.then(() => result);
+								}
+								promise.then(
+									() => {
+										if (getNumberOfTests() < 1)
+											return done(new Error("No tests exported by test case"));
 
-								done();
+										done();
+									},
+									err => {
+										console.log(err);
+										done(err);
+									}
+								);
 							});
 						},
 						10000
