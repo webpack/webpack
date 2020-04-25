@@ -20,7 +20,9 @@ exports[`ConfigTestCases records issue-2991 exported tests should write relative
     \\"byName\\": {
       \\"main\\": 0
     },
-    \\"bySource\\": {},
+    \\"bySource\\": {
+      \\"0 main\\": 179
+    },
     \\"usedIds\\": [
       0
     ]
@@ -52,7 +54,9 @@ exports[`ConfigTestCases records issue-7339 exported tests should write relative
     \\"byName\\": {
       \\"main\\": 0
     },
-    \\"bySource\\": {},
+    \\"bySource\\": {
+      \\"0 main\\": 179
+    },
     \\"usedIds\\": [
       0
     ]
