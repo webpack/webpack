@@ -1076,6 +1076,7 @@ declare class Compilation {
 		module: Module,
 		callback: (err?: WebpackError, result?: Module) => void
 	): void;
+	processModuleDependenciesNonRecursive(module: Module): void;
 	handleModuleCreation(
 		__0: HandleModuleCreationOptions,
 		callback: (err?: WebpackError, result?: Module) => void
