@@ -40,12 +40,12 @@ describe("ProgressPlugin", function () {
 
 			expect(logs).toContainEqual(
 				expect.stringMatching(
-					/^ {4}\[webpack\.Progress\] \d+ ms module ids DeterministicModuleIdsPlugin\n$/
+					/\[webpack\.Progress\] \d+ ms module ids DeterministicModuleIdsPlugin\n$/
 				)
 			);
 			expect(logs).toContainEqual(
 				expect.stringMatching(
-					/^ {4}\[webpack\.Progress\] \d+ ms(?: \(-\d+ ms\))? module ids\n$/
+					/\[webpack\.Progress\] \d+ ms(?: \(-\d+ ms\))? module ids\n$/
 				)
 			);
 		});
