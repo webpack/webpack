@@ -51,6 +51,27 @@ describe("ProgressPlugin", function () {
 		});
 	});
 
+	it("should have monotonic increasing progress", () => {
+		const handlerCalls = [];
+		const compiler = createSimpleCompiler({
+			handler: (p, ...args) => {
+				handlerCalls.push({ value: p, text: `${p}% ${args.join(" ")}` });
+			}
+		});
+
+		return RunCompilerAsync(compiler).then(() => {
+			let lastLine = handlerCalls[0];
+			for (const line of handlerCalls) {
+				if (line.value < lastLine.value) {
+					throw new Error(
+						`Progress value is not monotonic increasing:\n${lastLine.text}\n${line.text}`
+					);
+				}
+				lastLine = line;
+			}
+		});
+	});
+
 	it("should not print lines longer than stderr.columns", () => {
 		const compiler = createSimpleCompiler();
 		process.stderr.columns = 36;
