@@ -13,3 +13,11 @@ it("should load the component from container", () => {
 		});
 	});
 });
+
+import Self from "./Self";
+
+it("should load itself from its own container", () => {
+	return import("self/Self").then(({ default: RemoteSelf }) => {
+		expect(RemoteSelf).toBe(Self);
+	});
+});
