@@ -8,6 +8,7 @@ __webpack_override__({
 				}));
 			}, 100);
 		}),
+	test3: () => () => "overriden3",
 	package: () =>
 		new Promise(resolve => {
 			setTimeout(() => {
@@ -31,6 +32,11 @@ it("should be able to not override a esm overridable", () => {
 	});
 });
 
+import test3 from "./modules/test3";
+it("should be able to use an overridable module in the initial chunk, but it's not overriden", () => {
+	expect(test3).toBe("original3");
+});
+
 it("should be able to override a cjs overridable", () => {
 	return import("./cjs/test1").then(m => {
 		expect(m.default).toBe("overriden1");
@@ -41,6 +47,10 @@ it("should be able to not override a cjs overridable", () => {
 	return import("./cjs/test2").then(m => {
 		expect(m.default).toBe("original2-cjs");
 	});
+});
+
+it("should be able to use an overridable module in the initial chunk, and it's overriden", () => {
+	expect(require("./cjs/test3")).toBe("overriden3");
 });
 
 it("should be able to override with a package name shortcut", () => {

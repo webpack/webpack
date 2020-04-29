@@ -227,6 +227,7 @@ declare abstract class AsyncDependenciesBlock extends DependenciesBlock {
 	request: string;
 	parent: DependenciesBlock;
 	chunkName: string;
+	isAsync(parentChunkGroup: ChunkGroup): boolean;
 	module: any;
 }
 declare abstract class AsyncQueue<T, K, R> {
