@@ -40,14 +40,35 @@ describe("ProgressPlugin", function () {
 
 			expect(logs).toContainEqual(
 				expect.stringMatching(
-					/^ {4}\[webpack\.Progress\] \d+ ms module ids DeterministicModuleIdsPlugin\n$/
+					/\[webpack\.Progress\] \d+ ms module ids DeterministicModuleIdsPlugin\n$/
 				)
 			);
 			expect(logs).toContainEqual(
 				expect.stringMatching(
-					/^ {4}\[webpack\.Progress\] \d+ ms(?: \(-\d+ ms\))? module ids\n$/
+					/\[webpack\.Progress\] \d+ ms(?: \(-\d+ ms\))? module ids\n$/
 				)
 			);
+		});
+	});
+
+	it("should have monotonic increasing progress", () => {
+		const handlerCalls = [];
+		const compiler = createSimpleCompiler({
+			handler: (p, ...args) => {
+				handlerCalls.push({ value: p, text: `${p}% ${args.join(" ")}` });
+			}
+		});
+
+		return RunCompilerAsync(compiler).then(() => {
+			let lastLine = handlerCalls[0];
+			for (const line of handlerCalls) {
+				if (line.value < lastLine.value) {
+					throw new Error(
+						`Progress value is not monotonic increasing:\n${lastLine.text}\n${line.text}`
+					);
+				}
+				lastLine = line;
+			}
 		});
 	});
 
@@ -82,6 +103,18 @@ describe("ProgressPlugin", function () {
 
 			expect(logs.length).toBeGreaterThan(20);
 			expect(_.maxBy(logs, "length").length).toBeGreaterThan(50);
+		});
+	});
+
+	it("should contain the new compiler hooks", () => {
+		const compiler = createSimpleCompiler();
+
+		process.stderr.columns = undefined;
+		return RunCompilerAsync(compiler).then(() => {
+			const logs = getLogs(stderr.toString());
+
+			expect(logs).toContain("3% normal module factory");
+			expect(logs).toContain("3% context module factory");
 		});
 	});
 

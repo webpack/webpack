@@ -84,8 +84,12 @@ declare class AbstractLibraryPlugin<T> {
 		/**
 		 * used library type
 		 */
-		type: ExternalsType;
+		type: LibraryType;
 	});
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 	parseOptions(library: LibraryOptions): false | T;
 	finishEntryModule(module: Module, libraryContext: LibraryContext<T>): void;
@@ -109,11 +113,19 @@ declare class AbstractLibraryPlugin<T> {
 declare class AggressiveMergingPlugin {
 	constructor(options?: any);
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare class AggressiveSplittingPlugin {
 	constructor(options?: AggressiveSplittingPluginOptions);
 	options: AggressiveSplittingPluginOptions;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 	static wasChunkRecorded(chunk: Chunk): boolean;
 }
@@ -225,7 +237,7 @@ declare abstract class AsyncQueue<T, K, R> {
 		started: SyncHook<[T], void>;
 		result: SyncHook<[T, Error, R], void>;
 	};
-	add(item: T, callback: CallbackAsyncQueue<R>): void;
+	add(item: T, callback: CallbackFunction<R>): void;
 	invalidate(item: T): void;
 	stop(): void;
 	increaseParallelism(): void;
@@ -237,6 +249,10 @@ declare abstract class AsyncQueue<T, K, R> {
 declare class AsyncWebAssemblyModulesPlugin {
 	constructor(options?: any);
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 	renderModule(module?: any, renderContext?: any, hooks?: any): any;
 	static getCompilationHooks(
@@ -256,6 +272,10 @@ declare class BannerPlugin {
 	constructor(options: BannerPluginArgument);
 	options: BannerPluginOptions;
 	banner: (data: { hash: string; chunk: Chunk; filename: string }) => string;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 type BannerPluginArgument =
@@ -428,13 +448,6 @@ declare interface CacheGroupsContext {
 type CacheOptions = boolean | MemoryCacheOptions | FileCacheOptions;
 type CacheOptionsNormalized = false | MemoryCacheOptions | FileCacheOptions;
 type CallExpression = SimpleCallExpression | NewExpression;
-
-/**
- * <T>
- */
-declare interface CallbackAsyncQueue<T> {
-	(err?: Error, result?: T): any;
-}
 declare interface CallbackCache<T> {
 	(err?: WebpackError, stats?: T): void;
 }
@@ -761,6 +774,10 @@ declare interface ChunkMaps {
 declare class ChunkModuleIdRangePlugin {
 	constructor(options?: any);
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare interface ChunkModuleMaps {
@@ -1052,6 +1069,7 @@ declare class Compilation {
 		module: Module,
 		callback: (err?: WebpackError, result?: Module) => void
 	): void;
+	processModuleDependenciesNonRecursive(module: Module): void;
 	handleModuleCreation(
 		__0: HandleModuleCreationOptions,
 		callback: (err?: WebpackError, result?: Module) => void
@@ -1329,7 +1347,7 @@ declare interface Configuration {
 	/**
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
-	externalsType?: ExternalsType;
+	externalsType?: LibraryType;
 
 	/**
 	 * Options for infrastructure level logging.
@@ -1609,8 +1627,7 @@ declare class Dependency {
 	module: any;
 	readonly disconnect: any;
 	static NO_EXPORTS_REFERENCED: any[];
-	static NS_OBJECT_REFERENCED: any[][];
-	static DEFAULT_EXPORT_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: any[][];
 }
 declare abstract class DependencyTemplate {
 	apply(
@@ -1668,11 +1685,19 @@ declare abstract class DependencyTemplates {
 declare class DeterministicChunkIdsPlugin {
 	constructor(options?: any);
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare class DeterministicModuleIdsPlugin {
 	constructor(options?: any);
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 
@@ -1709,6 +1734,10 @@ declare class DllPlugin {
 		 */
 		type?: string;
 	};
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 
@@ -1874,10 +1903,14 @@ declare interface Effect {
 	value: any;
 }
 declare class EnableLibraryPlugin {
-	constructor(type: ExternalsType);
-	type: ExternalsType;
+	constructor(type: LibraryType);
+	type: LibraryType;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
-	static checkEnabled(compiler: Compiler, type: ExternalsType): void;
+	static checkEnabled(compiler: Compiler, type: LibraryType): void;
 }
 type Entry =
 	| string
@@ -1983,6 +2016,10 @@ declare class EntryPlugin {
 				EntryDescriptionNormalized,
 				"filename" | "dependOn" | "library"
 		  >);
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 	static createDependency(
 		entry: string,
@@ -2019,6 +2056,10 @@ declare class EnvironmentPlugin {
 	constructor(...keys: any[]);
 	keys: any[];
 	defaultValues: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare interface Etag {
@@ -2029,6 +2070,10 @@ declare class EvalDevToolModulePlugin {
 	namespace: any;
 	sourceUrlComment: any;
 	moduleFilenameTemplate: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare class EvalSourceMapDevToolPlugin {
@@ -2037,6 +2082,10 @@ declare class EvalSourceMapDevToolPlugin {
 	moduleFilenameTemplate: any;
 	namespace: any;
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 
@@ -2162,9 +2211,10 @@ declare class ExportsInfo {
 	readonly exports: Iterable<ExportInfo>;
 	readonly orderedExports: Iterable<ExportInfo>;
 	readonly otherExportsInfo: ExportInfo;
-	setRedirectNamedTo(exportsInfo?: any): void;
+	setRedirectNamedTo(exportsInfo?: any): boolean;
 	setHasProvideInfo(): void;
 	setHasUseInfo(): void;
+	getOwnExportInfo(name: string): ExportInfo;
 	getExportInfo(name: string): ExportInfo;
 	getReadOnlyExportInfo(name: string): ExportInfo;
 	getNestedExportsInfo(name?: string[]): ExportsInfo;
@@ -2260,25 +2310,12 @@ declare class ExternalsPlugin {
 	constructor(type?: any, externals?: any);
 	type: any;
 	externals: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
-type ExternalsType =
-	| "var"
-	| "module"
-	| "assign"
-	| "this"
-	| "window"
-	| "self"
-	| "global"
-	| "commonjs"
-	| "commonjs2"
-	| "commonjs-module"
-	| "amd"
-	| "amd-require"
-	| "umd"
-	| "umd2"
-	| "jsonp"
-	| "system";
 declare interface FactorizeModuleOptions {
 	currentProfile: ModuleProfile;
 	factory: ModuleFactory;
@@ -2295,6 +2332,10 @@ declare interface FallbackCacheGroup {
 declare class FetchCompileWasmPlugin {
 	constructor(options?: any);
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 
@@ -2532,6 +2573,10 @@ declare class HotModuleReplacementPlugin {
 	options: any;
 	multiStep: any;
 	fullBuildTimeout: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 	static getParserHooks(parser: JavascriptParser): HMRJavascriptParserHooks;
 }
@@ -2544,6 +2589,10 @@ declare class IgnorePlugin {
 	 * and "contextRegExp" have to match.
 	 */
 	checkIgnore(resolveData: ResolveData): false;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 type IgnorePluginOptions =
@@ -2627,6 +2676,10 @@ declare interface IntermediateFileSystemExtras {
 declare class JavascriptModulesPlugin {
 	constructor(options?: {});
 	options: {};
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 	renderModule(
 		module: Module,
@@ -3088,6 +3141,10 @@ declare interface JsonpCompilationPluginHooks {
 type JsonpScriptType = false | "module" | "text/javascript";
 declare class JsonpTemplatePlugin {
 	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 	static getCompilationHooks(
 		compilation: Compilation
@@ -3098,7 +3155,7 @@ declare interface KnownBuildMeta {
 	exportsArgument?: string;
 	strict?: boolean;
 	moduleConcatenationBailout?: string;
-	exportsType?: "default" | "namespace" | "flagged";
+	exportsType?: "namespace" | "default" | "flagged";
 	defaultObject?: boolean | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	async?: boolean;
@@ -3135,9 +3192,13 @@ declare interface LibIdentOptions {
 declare class LibManifestPlugin {
 	constructor(options?: any);
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
-type Library = string | string[] | LibraryCustomUmdObject | LibraryOptions;
+type Library = string | LibraryOptions | string[] | LibraryCustomUmdObject;
 declare interface LibraryContext<T> {
 	compilation: Compilation;
 	options: T;
@@ -3212,7 +3273,7 @@ declare interface LibraryOptions {
 	/**
 	 * Type of library.
 	 */
-	type: ExternalsType;
+	type: LibraryType;
 
 	/**
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
@@ -3222,20 +3283,41 @@ declare interface LibraryOptions {
 declare class LibraryTemplatePlugin {
 	constructor(
 		name: LibraryName,
-		target: ExternalsType,
+		target: LibraryType,
 		umdNamedDefine: boolean,
 		auxiliaryComment: AuxiliaryComment,
 		exportProperty: LibraryExport
 	);
 	library: {
-		type: ExternalsType;
+		type: LibraryType;
 		name: LibraryName;
 		umdNamedDefine: boolean;
 		auxiliaryComment: AuxiliaryComment;
 		export: LibraryExport;
 	};
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
+type LibraryType =
+	| "var"
+	| "module"
+	| "assign"
+	| "this"
+	| "window"
+	| "self"
+	| "global"
+	| "commonjs"
+	| "commonjs2"
+	| "commonjs-module"
+	| "amd"
+	| "amd-require"
+	| "umd"
+	| "umd2"
+	| "jsonp"
+	| "system";
 declare class LimitChunkCountPlugin {
 	constructor(options?: LimitChunkCountPluginOptions);
 	options: LimitChunkCountPluginOptions;
@@ -3278,6 +3360,10 @@ declare interface LoaderItem {
 declare class LoaderOptionsPlugin {
 	constructor(options?: LoaderOptionsPluginOptions);
 	options: LoaderOptionsPluginOptions;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 
@@ -3313,6 +3399,10 @@ declare interface LoaderOptionsPluginOptions {
 declare class LoaderTargetPlugin {
 	constructor(target: string);
 	target: string;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare interface LogEntry {
@@ -3422,11 +3512,19 @@ declare interface MemoryCacheOptions {
 }
 declare class MemoryCachePlugin {
 	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare class MinChunkSizePlugin {
 	constructor(options: MinChunkSizePluginOptions);
 	options: MinChunkSizePluginOptions;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 
@@ -3489,12 +3587,7 @@ declare class Module extends DependenciesBlock {
 	readonly moduleArgument: string;
 	getExportsType(
 		strict: boolean
-	):
-		| "dynamic"
-		| "dynamic-default"
-		| "namespace"
-		| "default-only"
-		| "default-with-named";
+	): "namespace" | "default-only" | "default-with-named" | "dynamic";
 	addPresentationalDependency(presentationalDependency: Dependency): void;
 	addWarning(warning: WebpackError): void;
 	getWarnings(): Iterable<WebpackError>;
@@ -3572,6 +3665,10 @@ declare class Module extends DependenciesBlock {
 declare class ModuleConcatenationPlugin {
 	constructor(options?: any);
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare abstract class ModuleDependency extends Dependency {
@@ -3922,15 +4019,27 @@ declare class NamedChunkIdsPlugin {
 	constructor(options?: any);
 	delimiter: any;
 	context: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare class NamedModuleIdsPlugin {
 	constructor(options?: any);
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare class NaturalModuleIdsPlugin {
 	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare interface NeedBuildContext {
@@ -3948,6 +4057,10 @@ type Node = false | NodeOptions;
 declare class NodeEnvironmentPlugin {
 	constructor(options?: any);
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 
@@ -3963,6 +4076,10 @@ declare interface NodeOptions {
 declare class NodeTemplatePlugin {
 	constructor(options?: any);
 	asyncChunkLoading: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare class NormalModule extends Module {
@@ -4120,6 +4237,10 @@ declare interface ObjectSerializerContext {
 declare class OccurrenceChunkIdsPlugin {
 	constructor(options?: OccurrenceChunkIdsPluginOptions);
 	options: OccurrenceChunkIdsPluginOptions;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 
@@ -4137,6 +4258,10 @@ declare interface OccurrenceChunkIdsPluginOptions {
 declare class OccurrenceModuleIdsPlugin {
 	constructor(options?: OccurrenceModuleIdsPluginOptions);
 	options: OccurrenceModuleIdsPluginOptions;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 
@@ -4550,7 +4675,7 @@ declare interface Output {
 	/**
 	 * List of library types enabled for use by entry points.
 	 */
-	enabledLibraryTypes?: ExternalsType[];
+	enabledLibraryTypes?: LibraryType[];
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -4625,7 +4750,7 @@ declare interface Output {
 	/**
 	 * Type of library.
 	 */
-	libraryTarget?: ExternalsType;
+	libraryTarget?: LibraryType;
 
 	/**
 	 * Output javascript files as module source type.
@@ -4754,7 +4879,7 @@ declare interface OutputNormalized {
 	/**
 	 * List of library types enabled for use by entry points.
 	 */
-	enabledLibraryTypes?: ExternalsType[];
+	enabledLibraryTypes?: LibraryType[];
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -5064,6 +5189,10 @@ declare interface ProgressPluginOptions {
 declare class ProvidePlugin {
 	constructor(definitions: Record<string, string | string[]>);
 	definitions: Record<string, string | string[]>;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 type PublicPath =
@@ -5072,6 +5201,10 @@ type PublicPath =
 declare class ReadFileCompileWasmPlugin {
 	constructor(options?: any);
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare interface RealDependencyLocation {
@@ -5655,6 +5788,10 @@ type Rules = string | RegExp | (string | RegExp)[];
 declare class RuntimeChunkPlugin {
 	constructor(options?: any);
 	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare class RuntimeModule extends Module {
@@ -6014,6 +6151,10 @@ declare abstract class Serializer {
 }
 declare class SideEffectsFlagPlugin {
 	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 	static moduleHasSideEffects(
 		moduleName?: any,
@@ -6099,7 +6240,7 @@ declare class SourceMapDevToolPlugin {
 	options: SourceMapDevToolPluginOptions;
 
 	/**
-	 * Apply compiler
+	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
 }
@@ -6200,6 +6341,10 @@ declare interface SplitChunksOptions {
 declare class SplitChunksPlugin {
 	constructor(options?: OptimizationSplitChunksOptions);
 	options: SplitChunksOptions;
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare abstract class StackedMap<K, V> {
@@ -6662,6 +6807,10 @@ declare abstract class VariableInfo {
 declare class WatchIgnorePlugin {
 	constructor(options: WatchIgnorePluginOptions);
 	paths: [string | RegExp, ...(string | RegExp)[]];
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 
@@ -6742,6 +6891,10 @@ declare abstract class Watching {
 }
 declare class WebWorkerTemplatePlugin {
 	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare interface WebpackError extends Error {
@@ -6841,7 +6994,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
-	externalsType?: ExternalsType;
+	externalsType?: LibraryType;
 
 	/**
 	 * Options for infrastructure level logging.
@@ -7308,7 +7461,14 @@ declare namespace exports {
 		WatchIgnorePlugin,
 		WebpackOptionsApply,
 		WebpackOptionsDefaulter,
+		Entry,
+		EntryNormalized,
+		LibraryOptions,
+		ModuleOptions,
+		ResolveOptions,
+		RuleSetRule,
 		Configuration,
+		WebpackOptionsNormalized,
 		WebpackPluginInstance
 	};
 }
