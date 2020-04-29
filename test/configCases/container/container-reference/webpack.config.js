@@ -1,5 +1,6 @@
-const ContainerReferencePlugin = require("../../../../lib/container/ContainerReferencePlugin");
+const { ContainerReferencePlugin } = require("../../../../").container;
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
 		new ContainerReferencePlugin({
