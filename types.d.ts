@@ -1460,20 +1460,17 @@ declare interface Configuration {
 }
 declare class ContainerPlugin {
 	constructor(options: ContainerPluginOptions);
-	options: {
-		overridables: any[] | { [index: string]: any };
-		name: string;
-		library: LibraryOptions;
-		filename: string;
-		exposes: [string, string][];
-	};
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
 declare interface ContainerPluginOptions {
 	/**
-	 * A map of modules you wish to expose.
+	 * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
 	 */
-	exposes?: any[] | { [index: string]: any };
+	exposes: ExposesContainerPlugin;
 
 	/**
 	 * The filename for this container relative path inside the `output.path` directory.
@@ -1491,16 +1488,33 @@ declare interface ContainerPluginOptions {
 	name: string;
 
 	/**
-	 * An object for requests to override from host to this container.
+	 * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
 	 */
-	overridables?: any[] | { [index: string]: any };
+	overridables?: Overridables;
 }
 declare class ContainerReferencePlugin {
-	constructor(options?: any);
-	remoteType: any;
-	remotes: [string, string][];
-	overrides: [string, string][];
+	constructor(options: ContainerReferencePluginOptions);
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
+}
+declare interface ContainerReferencePluginOptions {
+	/**
+	 * Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
+	 */
+	overrides?: Overrides;
+
+	/**
+	 * The external type of the remote containers.
+	 */
+	remoteType: LibraryType;
+
+	/**
+	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
+	 */
+	remotes: RemotesContainerReferencePlugin;
 }
 declare class ContextExclusionPlugin {
 	constructor(negativeMatcher: RegExp);
@@ -2252,6 +2266,14 @@ declare interface ExportsSpec {
 	 */
 	dependencies?: Module[];
 }
+type ExposesContainerPlugin =
+	| string
+	| ExposesContainerPlugin[]
+	| { [index: string]: ExposesContainerPlugin };
+type ExposesModuleFederationPlugin =
+	| string
+	| ExposesModuleFederationPlugin[]
+	| { [index: string]: ExposesModuleFederationPlugin };
 type Expression =
 	| UnaryExpression
 	| ThisExpression
@@ -3703,9 +3725,48 @@ declare interface ModuleFactoryResult {
 	missingDependencies?: Set<string>;
 }
 declare class ModuleFederationPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options: ModuleFederationPluginOptions);
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
+}
+declare interface ModuleFederationPluginOptions {
+	/**
+	 * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
+	 */
+	exposes?: ExposesModuleFederationPlugin;
+
+	/**
+	 * The filename of the container as relative path inside the `output.path` directory.
+	 */
+	filename?: string;
+
+	/**
+	 * Options for library.
+	 */
+	library?: LibraryOptions;
+
+	/**
+	 * The name of the container.
+	 */
+	name?: string;
+
+	/**
+	 * The external type of the remote containers.
+	 */
+	remoteType?: LibraryType;
+
+	/**
+	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
+	 */
+	remotes?: RemotesModuleFederationPlugin;
+
+	/**
+	 * Modules that should be shared with remotes and/or host. When provided, property name is used as shared key, otherwise shared key is automatically inferred from request.
+	 */
+	shared?: Shared;
 }
 declare class ModuleGraph {
 	constructor();
@@ -4992,11 +5053,20 @@ declare interface OutputNormalized {
 	 */
 	webassemblyModuleFilename?: string;
 }
+type Overridables = string | Overridables[] | { [index: string]: Overridables };
 declare class OverridablesPlugin {
-	constructor(options?: any);
-	overridables: [string, string][];
+	constructor(options: OverridablesPluginOptions);
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
 }
+type OverridablesPluginOptions =
+	| string
+	| OverridablesPluginOptions[]
+	| { [index: string]: OverridablesPluginOptions };
+type Overrides = string | Overrides[] | { [index: string]: Overrides };
 declare class Parser {
 	constructor();
 	parse(
@@ -5223,6 +5293,14 @@ type RecursiveArrayOrRecord =
 	| RuntimeValue
 	| { [index: string]: RecursiveArrayOrRecord }
 	| RecursiveArrayOrRecord[];
+type RemotesContainerReferencePlugin =
+	| string
+	| RemotesContainerReferencePlugin[]
+	| { [index: string]: RemotesContainerReferencePlugin };
+type RemotesModuleFederationPlugin =
+	| string
+	| RemotesModuleFederationPlugin[]
+	| { [index: string]: RemotesModuleFederationPlugin };
 declare interface RenderBootstrapContext {
 	/**
 	 * the chunk
@@ -6150,6 +6228,7 @@ declare abstract class Serializer {
 	serialize(obj?: any, context?: any): any;
 	deserialize(value?: any, context?: any): any;
 }
+type Shared = string | Shared[] | { [index: string]: Shared };
 declare class SideEffectsFlagPlugin {
 	constructor();
 
