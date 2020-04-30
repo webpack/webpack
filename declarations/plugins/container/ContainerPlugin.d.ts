@@ -5,6 +5,15 @@
  */
 
 /**
+ * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
+ */
+export type Exposes =
+	| Exposes[]
+	| string
+	| {
+			[k: string]: Exposes;
+	  };
+/**
  * Add a comment in the UMD wrapper.
  */
 export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
@@ -41,19 +50,20 @@ export type LibraryType =
  */
 export type UmdNamedDefine = boolean;
 /**
- * Array of strings.
+ * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
  */
-export type ArrayOfStringValues = string[];
+export type Overridables =
+	| Overridables[]
+	| string
+	| {
+			[k: string]: Overridables;
+	  };
 
 export interface ContainerPluginOptions {
 	/**
-	 * A map of modules you wish to expose.
+	 * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
 	 */
-	exposes?:
-		| any[]
-		| {
-				[k: string]: any;
-		  };
+	exposes: Exposes;
 	/**
 	 * The filename for this container relative path inside the `output.path` directory.
 	 */
@@ -67,13 +77,9 @@ export interface ContainerPluginOptions {
 	 */
 	name: string;
 	/**
-	 * An object for requests to override from host to this container.
+	 * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
 	 */
-	overridables?:
-		| any[]
-		| {
-				[k: string]: any;
-		  };
+	overridables?: Overridables;
 }
 /**
  * Options for library.

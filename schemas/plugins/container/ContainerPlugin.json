@@ -1,14 +1,5 @@
 {
   "definitions": {
-    "ArrayOfStringValues": {
-      "description": "Array of strings.",
-      "type": "array",
-      "items": {
-        "description": "A non-empty string.",
-        "type": "string",
-        "minLength": 1
-      }
-    },
     "AuxiliaryComment": {
       "description": "Add a comment in the UMD wrapper.",
       "anyOf": [
@@ -18,6 +9,29 @@
         },
         {
           "$ref": "#/definitions/LibraryCustomUmdCommentObject"
+        }
+      ]
+    },
+    "Exposes": {
+      "description": "Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Exposes"
+          }
+        },
+        {
+          "description": "Request to a module that should be exposed by this container.",
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "description": "Requests to modules that should be exposed by this container. Property names are used as public names.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Exposes"
+          }
         }
       ]
     },
@@ -159,6 +173,29 @@
         "system"
       ]
     },
+    "Overridables": {
+      "description": "Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Overridables"
+          }
+        },
+        {
+          "description": "Request to a module in this container that should be able to be overridden by the host. Override key is automatically inferred from request.",
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "description": "Requests to modules in this container that should be able to be overridden by the host. Property names are used as override keys.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Overridables"
+          }
+        }
+      ]
+    },
     "UmdNamedDefine": {
       "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
       "type": "boolean"
@@ -169,15 +206,7 @@
   "additionalProperties": false,
   "properties": {
     "exposes": {
-      "description": "A map of modules you wish to expose.",
-      "anyOf": [
-        {
-          "type": "array"
-        },
-        {
-          "type": "object"
-        }
-      ]
+      "$ref": "#/definitions/Exposes"
     },
     "filename": {
       "description": "The filename for this container relative path inside the `output.path` directory.",
@@ -192,16 +221,8 @@
       "type": "string"
     },
     "overridables": {
-      "description": "An object for requests to override from host to this container.",
-      "anyOf": [
-        {
-          "type": "array"
-        },
-        {
-          "type": "object"
-        }
-      ]
+      "$ref": "#/definitions/Overridables"
     }
   },
-  "required": ["name"]
+  "required": ["name", "exposes"]
 }
