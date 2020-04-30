@@ -525,6 +525,7 @@ declare class ChunkGraph {
 	disconnectChunk(chunk: Chunk): void;
 	attachModules(chunk: Chunk, modules: Iterable<Module>): void;
 	attachRuntimeModules(chunk: Chunk, modules: Iterable<RuntimeModule>): void;
+	attachFullHashModules(chunk: Chunk, modules: Iterable<RuntimeModule>): void;
 	replaceModule(oldModule: Module, newModule: Module): void;
 	isModuleInChunk(module: Module, chunk: Chunk): boolean;
 	isModuleInChunkGroup(module: Module, chunkGroup: ChunkGroup): boolean;
@@ -591,6 +592,7 @@ declare class ChunkGraph {
 		entrypoint?: Entrypoint
 	): void;
 	connectChunkAndRuntimeModule(chunk: Chunk, module: RuntimeModule): void;
+	addFullHashModuleToChunk(chunk: Chunk, module: RuntimeModule): void;
 	disconnectChunkAndEntryModule(chunk: Chunk, module: Module): void;
 	disconnectChunkAndRuntimeModule(chunk: Chunk, module: RuntimeModule): void;
 	disconnectEntryModule(module: Module): void;
@@ -602,6 +604,7 @@ declare class ChunkGraph {
 	hasChunkEntryDependentChunks(chunk: Chunk): boolean;
 	getChunkRuntimeModulesIterable(chunk: Chunk): Iterable<RuntimeModule>;
 	getChunkRuntimeModulesInOrder(chunk: Chunk): RuntimeModule[];
+	getChunkFullHashModulesIterable(chunk: Chunk): Iterable<RuntimeModule>;
 	getChunkEntryModulesWithChunkGroupIterable(
 		chunk: Chunk
 	): Iterable<[Module, Entrypoint]>;
