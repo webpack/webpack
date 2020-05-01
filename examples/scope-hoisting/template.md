@@ -1,4 +1,4 @@
-This example demonstrates the Scope Hoisting in combination with Code Splitting.
+This example demonstrates Scope Hoisting in combination with Code Splitting.
 
 This is the dependency graph for the example: (solid lines express sync imports, dashed lines async imports)
 
