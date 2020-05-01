@@ -1185,8 +1185,8 @@ chunk trees.js (trees) 71 bytes [rendered]
 
 exports[`StatsTestCases should print correct stats for immutable 1`] = `
 "                  Asset       Size
-2e5c8e7789add597f0a3.js   10.3 KiB  [emitted] [immutable]  [name: main]
-459e878fcc68e6bc31b5.js  969 bytes  [emitted] [immutable]"
+459e878fcc68e6bc31b5.js  969 bytes  [emitted] [immutable]
+5795a077a79ef29458d2.js   10.3 KiB  [emitted] [immutable]  [name: main]"
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
@@ -2470,6 +2470,7 @@ LOG from webpack.Compilation
 <t> hashing: hash runtime modules: X ms
 <t> hashing: hash chunks: X ms
 <t> hashing: hash digest: X ms
+<t> hashing: process full hash modules: X ms
 <t> hashing: X ms
 <t> record hash: X ms
 <t> module assets: X ms

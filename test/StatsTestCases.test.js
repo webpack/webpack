@@ -183,10 +183,6 @@ describe("StatsTestCases", () => {
 				const testPath = path.join(base, testName);
 				actual = actual
 					.replace(/\r\n?/g, "\n")
-					.replace(
-						/\([^)]+\) (\[[^\]]+\]\s*)?DeprecationWarning.+(\n\s+at .*)*\n?/g,
-						""
-					)
 					.replace(/[\t ]*Version:.+\n/g, "")
 					.replace(new RegExp(quotemeta(testPath), "g"), "Xdir/" + testName)
 					.replace(/(\w)\\(\w)/g, "$1/$2")
