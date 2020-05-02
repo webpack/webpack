@@ -687,7 +687,7 @@ export interface WebpackOptions {
  */
 export interface MemoryCacheOptions {
 	/**
-	 * List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.
+	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
 	immutablePaths?: string[];
 	/**
@@ -733,7 +733,7 @@ export interface FileCacheOptions {
 	 */
 	idleTimeoutForInitialStore?: number;
 	/**
-	 * List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.
+	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
 	immutablePaths?: string[];
 	/**
