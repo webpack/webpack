@@ -137,13 +137,13 @@ Object {
   "cache-immutable-paths-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.",
+        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
         "multiple": false,
         "path": "cache.immutablePaths",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.",
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
     "multiple": false,
     "simpleType": "boolean",
   },

@@ -511,7 +511,7 @@
           "minimum": 0
         },
         "immutablePaths": {
-          "description": "List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.",
+          "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
           "type": "array",
           "items": {
             "description": "A path to a immutable directory (usually a package manager cache directory).",
@@ -848,7 +848,7 @@
       "additionalProperties": false,
       "properties": {
         "immutablePaths": {
-          "description": "List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.",
+          "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
           "type": "array",
           "items": {
             "description": "A path to a immutable directory (usually a package manager cache directory).",

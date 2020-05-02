@@ -2329,7 +2329,7 @@ declare interface FileCacheOptions {
 	idleTimeoutForInitialStore?: number;
 
 	/**
-	 * List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.
+	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
 	immutablePaths?: string[];
 
@@ -3451,7 +3451,7 @@ declare interface MapOptions {
  */
 declare interface MemoryCacheOptions {
 	/**
-	 * List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.
+	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
 	immutablePaths?: string[];
 
