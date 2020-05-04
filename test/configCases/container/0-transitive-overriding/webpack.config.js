@@ -1,0 +1,17 @@
+const { ModuleFederationPlugin } = require("../../../../").container;
+
+/** @type {import("../../../../").Configuration} */
+module.exports = {
+	plugins: [
+		new ModuleFederationPlugin({
+			name: "container-with-shared",
+			library: { type: "commonjs-module" },
+			filename: "container-with-shared.js",
+			exposes: ["./a", "./b"],
+			remotes: {
+				"container-with-shared": "./container-with-shared.js"
+			},
+			shared: ["./shared"]
+		})
+	]
+};
