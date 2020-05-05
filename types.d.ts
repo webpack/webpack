@@ -1086,7 +1086,7 @@ declare class Compilation {
 	): void;
 	addEntry(
 		context: string,
-		entry: EntryDependency,
+		entry: Dependency,
 		optionsOrName:
 			| string
 			| ({ name: string } & Pick<
@@ -1936,7 +1936,7 @@ declare interface EntryData {
 	/**
 	 * dependencies of the entrypoint
 	 */
-	dependencies: EntryDependency[];
+	dependencies: Dependency[];
 
 	/**
 	 * options of the entrypoint
