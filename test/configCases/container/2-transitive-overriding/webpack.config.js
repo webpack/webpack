@@ -2,6 +2,10 @@ const { ModuleFederationPlugin } = require("../../../../").container;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
+	optimization: {
+		chunkIds: "named",
+		moduleIds: "named"
+	},
 	plugins: [
 		new ModuleFederationPlugin({
 			remoteType: "commonjs-module",
