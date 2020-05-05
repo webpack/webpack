@@ -3683,7 +3683,6 @@ declare class ModuleGraph {
 	): void;
 	addExtraReason(module: Module, explanation: string): void;
 	getResolvedModule(dependency: Dependency): Module;
-	finishModule(module: Module): void;
 	getConnection(dependency: Dependency): ModuleGraphConnection;
 	getModule(dependency: Dependency): Module;
 	getOrigin(dependency: Dependency): Module;
