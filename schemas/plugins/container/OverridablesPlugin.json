@@ -1,0 +1,24 @@
+{
+  "title": "OverridablesPluginOptions",
+  "description": "Modules that should be able to be overridden. When provided, property name is used as override key, otherwise override key is automatically inferred from request.",
+  "anyOf": [
+    {
+      "type": "array",
+      "items": {
+        "$ref": "#"
+      }
+    },
+    {
+      "description": "Request to a module that should be able to be overridden.",
+      "type": "string",
+      "minLength": 1
+    },
+    {
+      "description": "Requests to modules that should be able to be overridden. Property names are used as override keys.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#"
+      }
+    }
+  ]
+}

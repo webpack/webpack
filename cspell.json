@@ -168,6 +168,8 @@
     "return'development",
     "datastructures",
     "prewalking",
+    "overridables",
+    "overridable",
 
     "webassemblyjs",
     "fsevents",

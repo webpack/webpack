@@ -218,11 +218,16 @@ type AssetModuleFilename =
 	| string
 	| ((pathData: PathData, assetInfo: AssetInfo) => string);
 declare abstract class AsyncDependenciesBlock extends DependenciesBlock {
-	groupOptions: { preloadOrder?: number; prefetchOrder?: number; name: string };
+	groupOptions: {
+		preloadOrder?: number;
+		prefetchOrder?: number;
+		name?: string;
+	};
 	loc: SyntheticDependencyLocation | RealDependencyLocation;
 	request: string;
 	parent: DependenciesBlock;
 	chunkName: string;
+	isAsync(parentChunkGroup: ChunkGroup): boolean;
 	module: any;
 }
 declare abstract class AsyncQueue<T, K, R> {
@@ -640,7 +645,7 @@ declare class ChunkGraph {
 }
 declare abstract class ChunkGroup {
 	groupDebugId: number;
-	options: { preloadOrder?: number; prefetchOrder?: number; name: string };
+	options: { preloadOrder?: number; prefetchOrder?: number; name?: string };
 	chunks: Chunk[];
 	origins: {
 		module: Module;
@@ -655,7 +660,7 @@ declare abstract class ChunkGroup {
 	addOptions(options: {
 		preloadOrder?: number;
 		prefetchOrder?: number;
-		name: string;
+		name?: string;
 	}): void;
 
 	/**
@@ -1084,7 +1089,7 @@ declare class Compilation {
 	): void;
 	addEntry(
 		context: string,
-		entry: EntryDependency,
+		entry: Dependency,
 		optionsOrName:
 			| string
 			| ({ name: string } & Pick<
@@ -1110,7 +1115,7 @@ declare class Compilation {
 	addChunkInGroup(
 		groupOptions:
 			| string
-			| { preloadOrder?: number; prefetchOrder?: number; name: string },
+			| { preloadOrder?: number; prefetchOrder?: number; name?: string },
 		module: Module,
 		loc: SyntheticDependencyLocation | RealDependencyLocation,
 		request: string
@@ -1455,6 +1460,64 @@ declare interface Configuration {
 	 * Options for the watcher.
 	 */
 	watchOptions?: WatchOptions;
+}
+declare class ContainerPlugin {
+	constructor(options: ContainerPluginOptions);
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface ContainerPluginOptions {
+	/**
+	 * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
+	 */
+	exposes: ExposesContainerPlugin;
+
+	/**
+	 * The filename for this container relative path inside the `output.path` directory.
+	 */
+	filename?: string;
+
+	/**
+	 * Options for library.
+	 */
+	library?: LibraryOptions;
+
+	/**
+	 * The name for this container.
+	 */
+	name: string;
+
+	/**
+	 * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
+	 */
+	overridables?: Overridables;
+}
+declare class ContainerReferencePlugin {
+	constructor(options: ContainerReferencePluginOptions);
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface ContainerReferencePluginOptions {
+	/**
+	 * Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
+	 */
+	overrides?: Overrides;
+
+	/**
+	 * The external type of the remote containers.
+	 */
+	remoteType: LibraryType;
+
+	/**
+	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
+	 */
+	remotes: RemotesContainerReferencePlugin;
 }
 declare class ContextExclusionPlugin {
 	constructor(negativeMatcher: RegExp);
@@ -1876,7 +1939,7 @@ declare interface EntryData {
 	/**
 	 * dependencies of the entrypoint
 	 */
-	dependencies: EntryDependency[];
+	dependencies: Dependency[];
 
 	/**
 	 * options of the entrypoint
@@ -2206,6 +2269,14 @@ declare interface ExportsSpec {
 	 */
 	dependencies?: Module[];
 }
+type ExposesContainerPlugin =
+	| string
+	| ExposesContainerPlugin[]
+	| { [index: string]: ExposesContainerPlugin };
+type ExposesModuleFederationPlugin =
+	| string
+	| ExposesModuleFederationPlugin[]
+	| { [index: string]: ExposesModuleFederationPlugin };
 type Expression =
 	| UnaryExpression
 	| ThisExpression
@@ -3656,6 +3727,50 @@ declare interface ModuleFactoryResult {
 	contextDependencies?: Set<string>;
 	missingDependencies?: Set<string>;
 }
+declare class ModuleFederationPlugin {
+	constructor(options: ModuleFederationPluginOptions);
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface ModuleFederationPluginOptions {
+	/**
+	 * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
+	 */
+	exposes?: ExposesModuleFederationPlugin;
+
+	/**
+	 * The filename of the container as relative path inside the `output.path` directory.
+	 */
+	filename?: string;
+
+	/**
+	 * Options for library.
+	 */
+	library?: LibraryOptions;
+
+	/**
+	 * The name of the container.
+	 */
+	name?: string;
+
+	/**
+	 * The external type of the remote containers.
+	 */
+	remoteType?: LibraryType;
+
+	/**
+	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
+	 */
+	remotes?: RemotesModuleFederationPlugin;
+
+	/**
+	 * Modules that should be shared with remotes and/or host. When provided, property name is used as shared key, otherwise shared key is automatically inferred from request.
+	 */
+	shared?: Shared;
+}
 declare class ModuleGraph {
 	constructor();
 	setParents(
@@ -4940,6 +5055,20 @@ declare interface OutputNormalized {
 	 */
 	webassemblyModuleFilename?: string;
 }
+type Overridables = string | Overridables[] | { [index: string]: Overridables };
+declare class OverridablesPlugin {
+	constructor(options: OverridablesPluginOptions);
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+type OverridablesPluginOptions =
+	| string
+	| OverridablesPluginOptions[]
+	| { [index: string]: OverridablesPluginOptions };
+type Overrides = string | Overrides[] | { [index: string]: Overrides };
 declare class Parser {
 	constructor();
 	parse(
@@ -5166,6 +5295,14 @@ type RecursiveArrayOrRecord =
 	| RuntimeValue
 	| { [index: string]: RecursiveArrayOrRecord }
 	| RecursiveArrayOrRecord[];
+type RemotesContainerReferencePlugin =
+	| string
+	| RemotesContainerReferencePlugin[]
+	| { [index: string]: RemotesContainerReferencePlugin };
+type RemotesModuleFederationPlugin =
+	| string
+	| RemotesModuleFederationPlugin[]
+	| { [index: string]: RemotesModuleFederationPlugin };
 declare interface RenderBootstrapContext {
 	/**
 	 * the chunk
@@ -6093,6 +6230,7 @@ declare abstract class Serializer {
 	serialize(obj?: any, context?: any): any;
 	deserialize(value?: any, context?: any): any;
 }
+type Shared = string | Shared[] | { [index: string]: Shared };
 declare class SideEffectsFlagPlugin {
 	constructor();
 
@@ -7194,6 +7332,7 @@ declare namespace exports {
 		export let startupNoDefault: string;
 		export let interceptModuleExecution: string;
 		export let global: string;
+		export let overrides: string;
 		export let getUpdateManifestFilename: string;
 		export let hmrDownloadManifest: string;
 		export let hmrDownloadUpdateHandlers: string;
@@ -7264,6 +7403,14 @@ declare namespace exports {
 	}
 	export namespace library {
 		export { AbstractLibraryPlugin, EnableLibraryPlugin };
+	}
+	export namespace container {
+		export {
+			ContainerPlugin,
+			ContainerReferencePlugin,
+			ModuleFederationPlugin,
+			OverridablesPlugin
+		};
 	}
 	export namespace debug {
 		export { ProfilingPlugin };

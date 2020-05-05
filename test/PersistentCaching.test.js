@@ -5,7 +5,6 @@ const rimraf = require("rimraf");
 const vm = require("vm");
 const webpack = require("../");
 
-const readFile = util.promisify(fs.readFile);
 const readdir = util.promisify(fs.readdir);
 const writeFile = util.promisify(fs.writeFile);
 const utimes = util.promisify(fs.utimes);
@@ -32,8 +31,7 @@ describe("Persistent Caching", () => {
 		},
 		target: "node",
 		output: {
-			library: "result",
-			libraryExport: "default",
+			library: { type: "commonjs-module", export: "default" },
 			path: outputPath
 		}
 	};
@@ -61,22 +59,34 @@ describe("Persistent Caching", () => {
 		});
 	};
 
-	const execute = async () => {
-		const p = path.resolve(outputPath, "main.js");
-		const source = await readFile(p, "utf-8");
-		const context = {};
-		const fn = vm.runInThisContext(
-			`(function() { ${source}\nreturn result; })`,
-			context,
-			p
-		);
-		return fn();
+	const execute = () => {
+		const cache = {};
+		const require = name => {
+			if (cache[name]) return cache[name].exports;
+			if (!name.endsWith(".js")) name += ".js";
+			const p = path.resolve(outputPath, name);
+			const source = fs.readFileSync(p, "utf-8");
+			const context = {};
+			const fn = vm.runInThisContext(
+				`(function(require, module, exports) { ${source} })`,
+				context,
+				{
+					filename: p
+				}
+			);
+			const m = { exports: {} };
+			cache[name] = m;
+			fn(require, m, m.exports);
+			return m.exports;
+		};
+		return require("./main");
 	};
 
 	it("should merge multiple small files", async () => {
 		const files = Array.from({ length: 30 }).map((_, i) => `file${i}.js`);
 		const data = {
 			"index.js": `
+
 ${files.map((f, i) => `import f${i} from "./${f}";`).join("\n")}
 
 export default ${files.map((_, i) => `f${i}`).join(" + ")};
@@ -87,13 +97,13 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 		}
 		await updateSrc(data);
 		await compile();
-		expect(await execute()).toBe(30);
+		expect(execute()).toBe(30);
 		for (let i = 0; i < 30; i++) {
 			updateSrc({
 				[files[i]]: `export default 2;`
 			});
 			await compile();
-			expect(await execute()).toBe(31 + i);
+			expect(execute()).toBe(31 + i);
 		}
 		const cacheFiles = await readdir(cachePath);
 		expect(cacheFiles.length).toBeLessThan(20);
@@ -123,4 +133,30 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 		const cacheFiles = await readdir(cachePath);
 		expect(cacheFiles.length).toBeGreaterThan(4);
 	}, 60000);
+
+	it("should allow persistent caching of container related objects", async () => {
+		const data = {
+			"index.js":
+				"export default import('container/src/exposed').then(m => m.default);",
+			"exposed.js": "export default 42;"
+		};
+		await updateSrc(data);
+		const configAdditions = {
+			plugins: [
+				new webpack.container.ModuleFederationPlugin({
+					name: "container",
+					library: { type: "commonjs-module" },
+					exposes: ["./src/exposed"],
+					remotes: ["./container"]
+				})
+			]
+		};
+		await compile(configAdditions);
+		await expect(execute()).resolves.toBe(42);
+		await updateSrc({
+			"exposed.js": "module.exports = { ok: true };"
+		});
+		await compile(configAdditions);
+		await expect(execute()).resolves.toEqual({ ok: true });
+	});
 });

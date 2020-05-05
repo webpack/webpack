@@ -1,0 +1,91 @@
+{
+  "definitions": {
+    "LibraryType": {
+      "description": "Type of library.",
+      "enum": [
+        "var",
+        "module",
+        "assign",
+        "this",
+        "window",
+        "self",
+        "global",
+        "commonjs",
+        "commonjs2",
+        "commonjs-module",
+        "amd",
+        "amd-require",
+        "umd",
+        "umd2",
+        "jsonp",
+        "system"
+      ]
+    },
+    "Overrides": {
+      "description": "Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Overrides"
+          }
+        },
+        {
+          "description": "Request to a module in this container that should override overridable modules in the remote container. Override key is automatically inferred from request.",
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "description": "Request to a module in this container that should override overridable modules in the remote container. Property names are used as override keys.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Overrides"
+          }
+        }
+      ]
+    },
+    "Remotes": {
+      "description": "Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Remotes"
+          }
+        },
+        {
+          "description": "Container location from which modules should be resolved and loaded at runtime.",
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "description": "Container locations from which modules should be resolved and loaded at runtime. Property names are used as request scopes.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Remotes"
+          }
+        }
+      ]
+    }
+  },
+  "title": "ContainerReferencePluginOptions",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "overrides": {
+      "$ref": "#/definitions/Overrides"
+    },
+    "remoteType": {
+      "description": "The external type of the remote containers.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/LibraryType"
+        }
+      ]
+    },
+    "remotes": {
+      "$ref": "#/definitions/Remotes"
+    }
+  },
+  "required": ["remoteType", "remotes"]
+}

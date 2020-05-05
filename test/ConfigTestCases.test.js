@@ -196,6 +196,7 @@ describe("ConfigTestCases", () => {
 										}
 									};
 
+									const requireCache = Object.create(null);
 									function _require(currentDirectory, options, module) {
 										if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 											let content;
@@ -211,9 +212,13 @@ describe("ConfigTestCases", () => {
 												p = path.join(currentDirectory, module);
 												content = fs.readFileSync(p, "utf-8");
 											}
+											if (p in requireCache) {
+												return requireCache[p].exports;
+											}
 											const m = {
 												exports: {}
 											};
+											requireCache[p] = m;
 											let runInNewContext = false;
 											const moduleScope = {
 												require: _require.bind(null, path.dirname(p), options),
