@@ -56,7 +56,7 @@ describe("MultiCompiler", function () {
 		});
 	});
 
-	it("should not be run twice at a time (run)", function (done) {
+	it("should not be running twice at a time (run)", function (done) {
 		const compiler = createMultiCompiler();
 		compiler.run((err, stats) => {
 			if (err) return done(err);
@@ -65,7 +65,7 @@ describe("MultiCompiler", function () {
 			if (err) return done();
 		});
 	});
-	it("should not be run twice at a time (watch)", function (done) {
+	it("should not be running twice at a time (watch)", function (done) {
 		const compiler = createMultiCompiler();
 		const watcher = compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
@@ -74,7 +74,7 @@ describe("MultiCompiler", function () {
 			if (err) return watcher.close(done);
 		});
 	});
-	it("should not be run twice at a time (run - watch)", function (done) {
+	it("should not be running twice at a time (run - watch)", function (done) {
 		const compiler = createMultiCompiler();
 		compiler.run((err, stats) => {
 			if (err) return done(err);
@@ -83,7 +83,7 @@ describe("MultiCompiler", function () {
 			if (err) return done();
 		});
 	});
-	it("should not be run twice at a time (watch - run)", function (done) {
+	it("should not be running twice at a time (watch - run)", function (done) {
 		const compiler = createMultiCompiler();
 		let watcher;
 		watcher = compiler.watch({}, (err, stats) => {
@@ -93,7 +93,7 @@ describe("MultiCompiler", function () {
 			if (err) return watcher.close(done);
 		});
 	});
-	it("should not be run twice at a time (instance cb)", function (done) {
+	it("should not be running twice at a time (instance cb)", function (done) {
 		const compiler = webpack(
 			{
 				context: __dirname,
