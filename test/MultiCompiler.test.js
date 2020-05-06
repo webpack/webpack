@@ -33,10 +33,9 @@ describe("MultiCompiler", function () {
 		compiler.run(err => {
 			if (err) {
 				throw err;
-			} else {
-				expect(called).toBe(2);
-				done();
 			}
+			expect(called).toBe(2);
+			done();
 		});
 	});
 
@@ -48,11 +47,10 @@ describe("MultiCompiler", function () {
 		const watcher = compiler.watch(1000, err => {
 			if (err) {
 				throw err;
-			} else {
-				watcher.close();
-				expect(called).toBe(2);
-				done();
 			}
+			watcher.close();
+			expect(called).toBe(2);
+			done();
 		});
 	});
 
