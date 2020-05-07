@@ -100,7 +100,7 @@ declare class AbstractLibraryPlugin<T> {
 	): void;
 	render(
 		source: Source,
-		renderContext: RenderContextJavascriptModulesPlugin,
+		renderContext: RenderContextObject,
 		libraryContext: LibraryContext<T>
 	): Source;
 	chunkHash(
@@ -1183,25 +1183,17 @@ declare class Compilation {
 	checkConstraints(): void;
 }
 declare interface CompilationHooksAsyncWebAssemblyModulesPlugin {
-	renderModuleContent: SyncWaterfallHook<
-		[Source, Module, RenderContextAsyncWebAssemblyModulesPlugin]
-	>;
+	renderModuleContent: SyncWaterfallHook<[Source, Module, RenderContextObject]>;
 }
 declare interface CompilationHooksJavascriptModulesPlugin {
-	renderModuleContent: SyncWaterfallHook<
-		[Source, Module, RenderContextJavascriptModulesPlugin]
-	>;
+	renderModuleContent: SyncWaterfallHook<[Source, Module, RenderContextObject]>;
 	renderModuleContainer: SyncWaterfallHook<
-		[Source, Module, RenderContextJavascriptModulesPlugin]
+		[Source, Module, RenderContextObject]
 	>;
-	renderModulePackage: SyncWaterfallHook<
-		[Source, Module, RenderContextJavascriptModulesPlugin]
-	>;
-	renderChunk: SyncWaterfallHook<
-		[Source, RenderContextJavascriptModulesPlugin]
-	>;
-	renderMain: SyncWaterfallHook<[Source, RenderContextJavascriptModulesPlugin]>;
-	render: SyncWaterfallHook<[Source, RenderContextJavascriptModulesPlugin]>;
+	renderModulePackage: SyncWaterfallHook<[Source, Module, RenderContextObject]>;
+	renderChunk: SyncWaterfallHook<[Source, RenderContextObject]>;
+	renderMain: SyncWaterfallHook<[Source, RenderContextObject]>;
+	render: SyncWaterfallHook<[Source, RenderContextObject]>;
 	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext], void>;
 }
@@ -2713,12 +2705,12 @@ declare class JavascriptModulesPlugin {
 	apply(compiler: Compiler): void;
 	renderModule(
 		module: Module,
-		renderContext: RenderContextJavascriptModulesPlugin,
+		renderContext: RenderContextObject,
 		hooks: CompilationHooksJavascriptModulesPlugin,
 		factory: boolean | "strict"
 	): Source;
 	renderChunk(
-		renderContext: RenderContextJavascriptModulesPlugin,
+		renderContext: RenderContextObject,
 		hooks: CompilationHooksJavascriptModulesPlugin
 	): Source;
 	renderMain(
@@ -5333,68 +5325,6 @@ declare interface RenderBootstrapContext {
 	 */
 	hash: string;
 }
-declare interface RenderContextAsyncWebAssemblyModulesPlugin {
-	/**
-	 * the chunk
-	 */
-	chunk: any;
-
-	/**
-	 * the dependency templates
-	 */
-	dependencyTemplates: any;
-
-	/**
-	 * the runtime template
-	 */
-	runtimeTemplate: any;
-
-	/**
-	 * the module graph
-	 */
-	moduleGraph: any;
-
-	/**
-	 * the chunk graph
-	 */
-	chunkGraph: any;
-
-	/**
-	 * results of code generation
-	 */
-	codeGenerationResults: Map<Module, CodeGenerationResult>;
-}
-declare interface RenderContextJavascriptModulesPlugin {
-	/**
-	 * the chunk
-	 */
-	chunk: Chunk;
-
-	/**
-	 * the dependency templates
-	 */
-	dependencyTemplates: DependencyTemplates;
-
-	/**
-	 * the runtime template
-	 */
-	runtimeTemplate: RuntimeTemplate;
-
-	/**
-	 * the module graph
-	 */
-	moduleGraph: ModuleGraph;
-
-	/**
-	 * the chunk graph
-	 */
-	chunkGraph: ChunkGraph;
-
-	/**
-	 * results of code generation
-	 */
-	codeGenerationResults: Map<Module, CodeGenerationResult>;
-}
 declare interface RenderContextModuleTemplate {
 	/**
 	 * the chunk
@@ -5420,6 +5350,37 @@ declare interface RenderContextModuleTemplate {
 	 * the chunk graph
 	 */
 	chunkGraph: ChunkGraph;
+}
+declare interface RenderContextObject {
+	/**
+	 * the chunk
+	 */
+	chunk: Chunk;
+
+	/**
+	 * the dependency templates
+	 */
+	dependencyTemplates: DependencyTemplates;
+
+	/**
+	 * the runtime template
+	 */
+	runtimeTemplate: RuntimeTemplate;
+
+	/**
+	 * the module graph
+	 */
+	moduleGraph: ModuleGraph;
+
+	/**
+	 * the chunk graph
+	 */
+	chunkGraph: ChunkGraph;
+
+	/**
+	 * results of code generation
+	 */
+	codeGenerationResults: Map<Module, CodeGenerationResult>;
 }
 declare interface RenderManifestEntry {
 	render: () => Source;
@@ -6478,7 +6439,7 @@ declare class Stats {
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
 	toJson(options?: any): any;
-	toString(options?: any): void | "";
+	toString(options?: any): string;
 }
 declare abstract class StatsFactory {
 	hooks: Readonly<{
@@ -6815,7 +6776,7 @@ declare abstract class StatsPrinter {
 	/**
 	 * print
 	 */
-	print(type: string, object?: any, baseContext?: any): void;
+	print(type: string, object?: any, baseContext?: any): string;
 }
 type StatsValue =
 	| boolean
