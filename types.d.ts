@@ -161,14 +161,14 @@ declare interface Argument {
 	description: string;
 	simpleType: "string" | "number" | "boolean";
 	multiple: boolean;
-	configs: Array<ArgumentConfig>;
+	configs: ArgumentConfig[];
 }
 declare interface ArgumentConfig {
 	description: string;
 	path: string;
 	multiple: boolean;
 	type: "string" | "number" | "boolean" | "path" | "enum" | "RegExp" | "reset";
-	values?: Array<any>;
+	values?: any[];
 }
 declare interface Asset {
 	/**
@@ -294,12 +294,12 @@ declare interface BannerPluginOptions {
 	/**
 	 * Exclude all modules matching any of these conditions.
 	 */
-	exclude?: RulesBannerPlugin;
+	exclude?: Rules;
 
 	/**
 	 * Include all modules matching any of these conditions.
 	 */
-	include?: RulesBannerPlugin;
+	include?: Rules;
 
 	/**
 	 * If true, banner will not be wrapped in a comment.
@@ -309,7 +309,7 @@ declare interface BannerPluginOptions {
 	/**
 	 * Include all modules that pass test assertion.
 	 */
-	test?: RulesBannerPlugin;
+	test?: Rules;
 }
 declare abstract class BasicEvaluatedExpression {
 	type: number;
@@ -387,7 +387,7 @@ declare class Cache {
 	constructor();
 	hooks: {
 		get: AsyncSeriesBailHook<
-			[string, Etag, Array<(result: any, stats: CallbackCache<void>) => void>],
+			[string, Etag, ((result: any, stats: CallbackCache<void>) => void)[]],
 			any
 		>;
 		store: AsyncParallelHook<[string, Etag, any]>;
@@ -422,7 +422,7 @@ declare class Cache {
 declare interface CacheGroupSource {
 	key?: string;
 	priority?: number;
-	getName?: (module?: Module, chunks?: Array<Chunk>, key?: string) => string;
+	getName?: (module?: Module, chunks?: Chunk[], key?: string) => string;
 	chunksFilter?: (chunk: Chunk) => boolean;
 	enforce?: boolean;
 	minSize: Record<string, number>;
@@ -456,7 +456,7 @@ declare interface CallbackWebpack<T> {
 declare class Chunk {
 	constructor(name?: string);
 	id: string | number;
-	ids: Array<string | number>;
+	ids: (string | number)[];
 	debugId: number;
 	name: string;
 	idNameHints: SortableSet<string>;
@@ -478,7 +478,7 @@ declare class Chunk {
 	readonly modulesIterable: Iterable<Module>;
 	compareTo(otherChunk: Chunk): 0 | 1 | -1;
 	containsModule(module: Module): boolean;
-	getModules(): Array<Module>;
+	getModules(): Module[];
 	remove(): void;
 	moveModule(module: Module, otherChunk: Chunk): void;
 	integrate(otherChunk: Chunk): boolean;
@@ -510,12 +510,12 @@ declare class Chunk {
 	getChildIdsByOrders(
 		chunkGraph: ChunkGraph,
 		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
-	): Record<string, Array<string | number>>;
+	): Record<string, (string | number)[]>;
 	getChildIdsByOrdersMap(
 		chunkGraph: ChunkGraph,
 		includeDirectChildren?: boolean,
 		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
-	): Record<string | number, Record<string, Array<string | number>>>;
+	): Record<string | number, Record<string, (string | number)[]>>;
 }
 declare class ChunkGraph {
 	constructor(moduleGraph: ModuleGraph);
@@ -535,7 +535,7 @@ declare class ChunkGraph {
 		module: Module,
 		sortFn: (arg0: Chunk, arg1: Chunk) => 0 | 1 | -1
 	): Iterable<Chunk>;
-	getModuleChunks(module: Module): Array<Chunk>;
+	getModuleChunks(module: Module): Chunk[];
 	getNumberOfModuleChunks(module: Module): number;
 	haveModulesEqualChunks(moduleA: Module, moduleB: Module): boolean;
 	getNumberOfChunkModules(chunk: Chunk): number;
@@ -553,11 +553,11 @@ declare class ChunkGraph {
 		sourceType: string,
 		comparator: (arg0: Module, arg1: Module) => 0 | 1 | -1
 	): Iterable<Module>;
-	getChunkModules(chunk: Chunk): Array<Module>;
+	getChunkModules(chunk: Chunk): Module[];
 	getOrderedChunkModules(
 		chunk: Chunk,
 		comparator: (arg0: Module, arg1: Module) => 0 | 1 | -1
-	): Array<Module>;
+	): Module[];
 	getChunkModuleMaps(
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
@@ -576,7 +576,7 @@ declare class ChunkGraph {
 	compareChunks(chunkA: Chunk, chunkB: Chunk): 0 | 1 | -1;
 	getChunkModulesSize(chunk: Chunk): number;
 	getChunkModulesSizes(chunk: Chunk): Record<string, number>;
-	getChunkRootModules(chunk: Chunk): Array<Module>;
+	getChunkRootModules(chunk: Chunk): Module[];
 	getChunkSize(chunk: Chunk, options?: ChunkSizeOptions): number;
 	getIntegratedChunksSize(
 		chunkA: Chunk,
@@ -603,7 +603,7 @@ declare class ChunkGraph {
 	getChunkEntryDependentChunksIterable(chunk: Chunk): Iterable<Chunk>;
 	hasChunkEntryDependentChunks(chunk: Chunk): boolean;
 	getChunkRuntimeModulesIterable(chunk: Chunk): Iterable<RuntimeModule>;
-	getChunkRuntimeModulesInOrder(chunk: Chunk): Array<RuntimeModule>;
+	getChunkRuntimeModulesInOrder(chunk: Chunk): RuntimeModule[];
 	getChunkFullHashModulesIterable(chunk: Chunk): Iterable<RuntimeModule>;
 	getChunkEntryModulesWithChunkGroupIterable(
 		chunk: Chunk
@@ -641,12 +641,12 @@ declare class ChunkGraph {
 declare abstract class ChunkGroup {
 	groupDebugId: number;
 	options: { preloadOrder?: number; prefetchOrder?: number; name: string };
-	chunks: Array<Chunk>;
-	origins: Array<{
+	chunks: Chunk[];
+	origins: {
 		module: Module;
 		loc: SyntheticDependencyLocation | RealDependencyLocation;
 		request: string;
-	}>;
+	}[];
 	index: number;
 
 	/**
@@ -660,8 +660,6 @@ declare abstract class ChunkGroup {
 
 	/**
 	 * returns the name of current ChunkGroup
-	 *
-	 *
 	 * sets a new name for current ChunkGroup
 	 */
 	name: string;
@@ -694,17 +692,17 @@ declare abstract class ChunkGroup {
 	removeChunk(chunk: Chunk): boolean;
 	isInitial(): boolean;
 	addChild(group: ChunkGroup): boolean;
-	getChildren(): Array<ChunkGroup>;
+	getChildren(): ChunkGroup[];
 	getNumberOfChildren(): number;
 	readonly childrenIterable: SortableSet<ChunkGroup>;
 	removeChild(group: ChunkGroup): boolean;
 	addParent(parentChunk: ChunkGroup): boolean;
-	getParents(): Array<ChunkGroup>;
+	getParents(): ChunkGroup[];
 	getNumberOfParents(): number;
 	hasParent(parent: ChunkGroup): boolean;
 	readonly parentsIterable: SortableSet<ChunkGroup>;
 	removeParent(chunkGroup: ChunkGroup): boolean;
-	getBlocks(): Array<any>;
+	getBlocks(): any[];
 	getNumberOfBlocks(): number;
 	hasBlock(block?: any): boolean;
 	readonly blocksIterable: Iterable<AsyncDependenciesBlock>;
@@ -714,7 +712,7 @@ declare abstract class ChunkGroup {
 		loc: SyntheticDependencyLocation | RealDependencyLocation,
 		request: string
 	): void;
-	getFiles(): Array<string>;
+	getFiles(): string[];
 	remove(): void;
 	sortItems(): void;
 
@@ -726,7 +724,7 @@ declare abstract class ChunkGroup {
 	getChildrenByOrders(
 		moduleGraph: ModuleGraph,
 		chunkGraph: ChunkGraph
-	): Record<string, Array<ChunkGroup>>;
+	): Record<string, ChunkGroup[]>;
 
 	/**
 	 * Sets the top-down index of a module in this ChunkGroup
@@ -782,7 +780,7 @@ declare class ChunkModuleIdRangePlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface ChunkModuleMaps {
-	id: Record<string | number, Array<string | number>>;
+	id: Record<string | number, (string | number)[]>;
 	hash: Record<string | number, string>;
 }
 declare interface ChunkPathData {
@@ -890,9 +888,7 @@ declare class Compilation {
 			],
 			void
 		>;
-		dependencyReferencedExports: SyncWaterfallHook<
-			[Array<Array<string>>, Dependency]
-		>;
+		dependencyReferencedExports: SyncWaterfallHook<[string[][], Dependency]>;
 		finishModules: AsyncSeriesHook<[Iterable<Module>]>;
 		finishRebuildingModule: AsyncSeriesHook<[Module]>;
 		unseal: SyncHook<[], void>;
@@ -904,8 +900,8 @@ declare class Compilation {
 		optimize: SyncHook<[], void>;
 		optimizeModules: SyncBailHook<[Iterable<Module>], any>;
 		afterOptimizeModules: SyncHook<[Iterable<Module>], void>;
-		optimizeChunks: SyncBailHook<[Iterable<Chunk>, Array<ChunkGroup>], any>;
-		afterOptimizeChunks: SyncHook<[Iterable<Chunk>, Array<ChunkGroup>], void>;
+		optimizeChunks: SyncBailHook<[Iterable<Chunk>, ChunkGroup[]], any>;
+		afterOptimizeChunks: SyncHook<[Iterable<Chunk>, ChunkGroup[]], void>;
 		optimizeTree: AsyncSeriesHook<[Iterable<Chunk>, Iterable<Module>]>;
 		afterOptimizeTree: SyncHook<[Iterable<Chunk>, Iterable<Module>], void>;
 		optimizeChunkModules: AsyncSeriesBailHook<
@@ -964,7 +960,7 @@ declare class Compilation {
 		needAdditionalSeal: SyncBailHook<[], boolean>;
 		afterSeal: AsyncSeriesHook<[]>;
 		renderManifest: SyncWaterfallHook<
-			[Array<RenderManifestEntry>, RenderManifestOptions]
+			[RenderManifestEntry[], RenderManifestOptions]
 		>;
 		fullHash: SyncHook<[Hash], void>;
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext], void>;
@@ -1015,22 +1011,19 @@ declare class Compilation {
 	entries: Map<string, EntryData>;
 	entrypoints: Map<string, Entrypoint>;
 	chunks: Set<Chunk>;
-	chunkGroups: Array<ChunkGroup>;
+	chunkGroups: ChunkGroup[];
 	namedChunkGroups: Map<string, ChunkGroup>;
 	namedChunks: Map<string, Chunk>;
 	modules: Set<Module>;
 	records: any;
-	additionalChunkAssets: Array<string>;
+	additionalChunkAssets: string[];
 	assets: Record<string, Source>;
 	assetsInfo: Map<string, AssetInfo>;
-	errors: Array<WebpackError>;
-	warnings: Array<WebpackError>;
-	children: Array<Compilation>;
-	logging: Map<string, Array<LogEntry>>;
-	dependencyFactories: Map<
-		{ new (...args: Array<any>): Dependency },
-		ModuleFactory
-	>;
+	errors: WebpackError[];
+	warnings: WebpackError[];
+	children: Compilation[];
+	logging: Map<string, LogEntry[]>;
+	dependencyFactories: Map<{ new (...args: any[]): Dependency }, ModuleFactory>;
 	dependencyTemplates: DependencyTemplates;
 	childrenCounters: {};
 	usedChunkIds: Set<string | number>;
@@ -1109,7 +1102,7 @@ declare class Compilation {
 	seal(callback: (err?: WebpackError) => void): void;
 	reportDependencyErrorsAndWarnings(
 		module: Module,
-		blocks: Array<DependenciesBlock>
+		blocks: DependenciesBlock[]
 	): void;
 	codeGeneration(): Map<any, any>;
 	processRuntimeRequirements(entrypoints: Iterable<Entrypoint>): void;
@@ -1129,7 +1122,7 @@ declare class Compilation {
 	 */
 	addChunk(name?: string): Chunk;
 	assignDepth(module: Module): void;
-	getDependencyReferencedExports(dependency: Dependency): Array<Array<string>>;
+	getDependencyReferencedExports(dependency: Dependency): string[][];
 	removeReasonsOfDependencyBlock(
 		module: Module,
 		block: DependenciesBlockLike
@@ -1149,11 +1142,11 @@ declare class Compilation {
 		newSourceOrFunction: Source | ((arg0: Source) => Source),
 		assetInfoUpdateOrFunction?: AssetInfo | ((arg0: AssetInfo) => AssetInfo)
 	): void;
-	getAssets(): Array<Asset>;
+	getAssets(): Asset[];
 	getAsset(name: string): Asset;
 	clearAssets(): void;
 	createModuleAssets(): void;
-	getRenderManifest(options: RenderManifestOptions): Array<RenderManifestEntry>;
+	getRenderManifest(options: RenderManifestOptions): RenderManifestEntry[];
 	createChunkAssets(callback: (err?: WebpackError) => void): void;
 	getPath(
 		filename: string | ((arg0: PathData, arg1: AssetInfo) => string),
@@ -1180,7 +1173,7 @@ declare class Compilation {
 	createChildCompiler(
 		name: string,
 		outputOptions: OutputNormalized,
-		plugins: Array<Plugin>
+		plugins: Plugin[]
 	): Compiler;
 	checkConstraints(): void;
 }
@@ -1236,7 +1229,7 @@ declare class Compiler {
 		failed: SyncHook<[Error], void>;
 		invalid: SyncHook<[string, string], void>;
 		watchClose: SyncHook<[], void>;
-		infrastructureLog: SyncBailHook<[string, string, Array<any>], true>;
+		infrastructureLog: SyncBailHook<[string, string, any[]], true>;
 		environment: SyncHook<[], void>;
 		afterEnvironment: SyncHook<[], void>;
 		afterPlugins: SyncHook<[Compiler], void>;
@@ -1275,11 +1268,7 @@ declare class Compiler {
 	watch(watchOptions: WatchOptions, handler: CallbackFunction<Stats>): Watching;
 	run(callback: CallbackFunction<Stats>): void;
 	runAsChild(
-		callback: (
-			err?: Error,
-			entries?: Array<Chunk>,
-			compilation?: Compilation
-		) => any
+		callback: (err?: Error, entries?: Chunk[], compilation?: Compilation) => any
 	): void;
 	purgeInputFileSystem(): void;
 	emitAssets(compilation: Compilation, callback: CallbackFunction<void>): void;
@@ -1290,7 +1279,7 @@ declare class Compiler {
 		compilerName: string,
 		compilerIndex: number,
 		outputOptions: OutputNormalized,
-		plugins: Array<WebpackPluginInstance>
+		plugins: WebpackPluginInstance[]
 	): Compiler;
 	isChild(): boolean;
 	createCompilation(): Compilation;
@@ -1332,7 +1321,7 @@ declare interface Configuration {
 	/**
 	 * References to other configurations to depend on.
 	 */
-	dependencies?: Array<string>;
+	dependencies?: string[];
 
 	/**
 	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
@@ -1412,9 +1401,10 @@ declare interface Configuration {
 	/**
 	 * Add additional plugins to the compiler.
 	 */
-	plugins?: Array<
-		((this: Compiler, compiler: Compiler) => void) | WebpackPluginInstance
-	>;
+	plugins?: (
+		| ((this: Compiler, compiler: Compiler) => void)
+		| WebpackPluginInstance
+	)[];
 
 	/**
 	 * Capture timing information for each module.
@@ -1479,8 +1469,8 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		beforeResolve: AsyncSeriesWaterfallHook<[any]>;
 		afterResolve: AsyncSeriesWaterfallHook<[any]>;
-		contextModuleFiles: SyncWaterfallHook<[Array<string>]>;
-		alternatives: AsyncSeriesWaterfallHook<[Array<any>]>;
+		contextModuleFiles: SyncWaterfallHook<[string[]]>;
+		alternatives: AsyncSeriesWaterfallHook<[any[]]>;
 	}>;
 	resolverFactory: any;
 	resolveDependencies(fs?: any, options?: any, callback?: any): any;
@@ -1525,8 +1515,8 @@ declare class DelegatedPlugin {
 	apply(compiler: Compiler): void;
 }
 declare abstract class DependenciesBlock {
-	dependencies: Array<Dependency>;
-	blocks: Array<AsyncDependenciesBlock>;
+	dependencies: Dependency[];
+	blocks: AsyncDependenciesBlock[];
 
 	/**
 	 * Adds a DependencyBlock to DependencyBlock relationship.
@@ -1545,8 +1535,8 @@ declare abstract class DependenciesBlock {
 	deserialize(__0: { read: any }): void;
 }
 declare interface DependenciesBlockLike {
-	dependencies: Array<Dependency>;
-	blocks: Array<AsyncDependenciesBlock>;
+	dependencies: Dependency[];
+	blocks: AsyncDependenciesBlock[];
 }
 declare class Dependency {
 	constructor();
@@ -1560,7 +1550,7 @@ declare class Dependency {
 	/**
 	 * Returns list of exports referenced by this dependency
 	 */
-	getReferencedExports(moduleGraph: ModuleGraph): Array<Array<string>>;
+	getReferencedExports(moduleGraph: ModuleGraph): string[][];
 	getCondition(moduleGraph: ModuleGraph): () => boolean;
 
 	/**
@@ -1571,12 +1561,16 @@ declare class Dependency {
 	/**
 	 * Returns warnings
 	 */
-	getWarnings(moduleGraph: ModuleGraph): Array<WebpackError>;
+	getWarnings(moduleGraph: ModuleGraph): WebpackError[];
 
 	/**
 	 * Returns errors
 	 */
-	getErrors(moduleGraph: ModuleGraph): Array<WebpackError>;
+	getErrors(moduleGraph: ModuleGraph): WebpackError[];
+
+	/**
+	 * Update the hash
+	 */
 	updateHash(hash: Hash, chunkGraph: ChunkGraph): void;
 
 	/**
@@ -1587,8 +1581,8 @@ declare class Dependency {
 	deserialize(__0: { read: any }): void;
 	module: any;
 	readonly disconnect: any;
-	static NO_EXPORTS_REFERENCED: Array<any>;
-	static EXPORTS_OBJECT_REFERENCED: Array<Array<any>>;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: any[][];
 }
 declare abstract class DependencyTemplate {
 	apply(
@@ -1631,14 +1625,12 @@ declare interface DependencyTemplateContext {
 	/**
 	 * mutable array of init fragments for the current module
 	 */
-	initFragments: Array<InitFragment>;
+	initFragments: InitFragment[];
 }
 declare abstract class DependencyTemplates {
-	get(dependency: {
-		new (...args: Array<any>): Dependency;
-	}): DependencyTemplate;
+	get(dependency: { new (...args: any[]): Dependency }): DependencyTemplate;
 	set(
-		dependency: { new (...args: Array<any>): Dependency },
+		dependency: { new (...args: any[]): Dependency },
 		dependencyTemplate: DependencyTemplate
 	): void;
 	updateHash(part: string): void;
@@ -1754,7 +1746,7 @@ type DllReferencePluginOptions =
 			/**
 			 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
 			 */
-			extensions?: Array<string>;
+			extensions?: string[];
 			/**
 			 * An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation.
 			 */
@@ -1788,7 +1780,7 @@ type DllReferencePluginOptions =
 			/**
 			 * Extensions used to resolve modules in the dll bundle (only used when using 'scope').
 			 */
-			extensions?: Array<string>;
+			extensions?: string[];
 			/**
 			 * The name where the dll is exposed (external name).
 			 */
@@ -1819,7 +1811,7 @@ declare interface DllReferencePluginOptionsContent {
 		/**
 		 * Information about the provided exports of the module.
 		 */
-		exports?: true | Array<string>;
+		exports?: true | string[];
 		/**
 		 * Module ID.
 		 */
@@ -1877,14 +1869,14 @@ declare class EnableLibraryPlugin {
 }
 type Entry =
 	| string
-	| (() => string | EntryObject | [string, string] | Promise<EntryStatic>)
+	| (() => string | EntryObject | [string, ...string[]] | Promise<EntryStatic>)
 	| EntryObject
-	| [string, string];
+	| [string, ...string[]];
 declare interface EntryData {
 	/**
 	 * dependencies of the entrypoint
 	 */
-	dependencies: Array<EntryDependency>;
+	dependencies: EntryDependency[];
 
 	/**
 	 * options of the entrypoint
@@ -1903,7 +1895,7 @@ declare interface EntryDescription {
 	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
-	dependOn?: string | [string, string];
+	dependOn?: string | [string, ...string[]];
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -1928,7 +1920,7 @@ declare interface EntryDescriptionNormalized {
 	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
-	dependOn?: [string, string];
+	dependOn?: [string, ...string[]];
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -1938,14 +1930,14 @@ declare interface EntryDescriptionNormalized {
 	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
-	import: [string, string];
+	import: [string, ...string[]];
 
 	/**
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
 }
-type EntryItem = string | [string, string];
+type EntryItem = string | [string, ...string[]];
 type EntryNormalized =
 	| (() => Promise<EntryStaticNormalized>)
 	| EntryStaticNormalized;
@@ -1954,7 +1946,7 @@ type EntryNormalized =
  * Multiple entry bundles are created. The key is the entry name. The value can be a string, an array or an entry description object.
  */
 declare interface EntryObject {
-	[index: string]: string | [string, string] | EntryDescription;
+	[index: string]: string | [string, ...string[]] | EntryDescription;
 }
 declare class EntryPlugin {
 	/**
@@ -1994,7 +1986,7 @@ declare class EntryPlugin {
 			  >)
 	): EntryDependency;
 }
-type EntryStatic = string | EntryObject | [string, string];
+type EntryStatic = string | EntryObject | [string, ...string[]];
 
 /**
  * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
@@ -2016,8 +2008,8 @@ declare abstract class Entrypoint extends ChunkGroup {
 	getRuntimeChunk(): Chunk;
 }
 declare class EnvironmentPlugin {
-	constructor(...keys: Array<any>);
-	keys: Array<any>;
+	constructor(...keys: any[]);
+	keys: any[];
 	defaultValues: any;
 
 	/**
@@ -2156,7 +2148,7 @@ declare interface ExportSpec {
 	/**
 	 * nested exports
 	 */
-	exports?: Array<string | ExportSpec>;
+	exports?: (string | ExportSpec)[];
 
 	/**
 	 * when reexported: from which module
@@ -2166,7 +2158,7 @@ declare interface ExportSpec {
 	/**
 	 * when reexported: from which export
 	 */
-	export?: Array<string>;
+	export?: string[];
 }
 declare class ExportsInfo {
 	constructor();
@@ -2180,17 +2172,17 @@ declare class ExportsInfo {
 	getOwnExportInfo(name: string): ExportInfo;
 	getExportInfo(name: string): ExportInfo;
 	getReadOnlyExportInfo(name: string): ExportInfo;
-	getNestedExportsInfo(name?: Array<string>): ExportsInfo;
+	getNestedExportsInfo(name?: string[]): ExportsInfo;
 	setUnknownExportsProvided(canMangle?: boolean): boolean;
 	setUsedInUnknownWay(): boolean;
 	setAllKnownExportsUsed(): boolean;
 	setUsedForSideEffectsOnly(): boolean;
 	isUsed(): boolean;
 	getUsedExports(): any;
-	getProvidedExports(): true | Array<string>;
-	isExportProvided(name: string | Array<string>): boolean;
-	isExportUsed(name: string | Array<string>): 0 | 1 | 2 | 3 | 4;
-	getUsedName(name: string | Array<string>): string | false | Array<string>;
+	getProvidedExports(): true | string[];
+	isExportProvided(name: string | string[]): boolean;
+	isExportUsed(name: string | string[]): 0 | 1 | 2 | 3 | 4;
+	getUsedName(name: string | string[]): string | false | string[];
 	getRestoreProvidedData(): any;
 	restoreProvided(__0: {
 		otherProvided: any;
@@ -2202,7 +2194,7 @@ declare interface ExportsSpec {
 	/**
 	 * exported names, true for unknown exports or null for no exports
 	 */
-	exports: true | Array<string | ExportSpec>;
+	exports: true | (string | ExportSpec)[];
 
 	/**
 	 * can the export be renamed (defaults to true)
@@ -2212,7 +2204,7 @@ declare interface ExportsSpec {
 	/**
 	 * module on which the result depends on
 	 */
-	dependencies?: Array<Module>;
+	dependencies?: Module[];
 }
 type Expression =
 	| UnaryExpression
@@ -2242,13 +2234,7 @@ type Expression =
 type ExternalItem =
 	| string
 	| RegExp
-	| {
-			[index: string]:
-				| string
-				| boolean
-				| Array<string>
-				| { [index: string]: any };
-	  }
+	| { [index: string]: string | boolean | string[] | { [index: string]: any } }
 	| ((
 			context: string,
 			request: string,
@@ -2256,7 +2242,7 @@ type ExternalItem =
 	  ) => void);
 declare class ExternalModule extends Module {
 	constructor(request?: any, type?: any, userRequest?: any);
-	request: string | Array<string> | Record<string, string | Array<string>>;
+	request: string | string[] | Record<string, string | string[]>;
 	externalType: string;
 	userRequest: string;
 	getSourceString(
@@ -2268,14 +2254,8 @@ declare class ExternalModule extends Module {
 type Externals =
 	| string
 	| RegExp
-	| Array<ExternalItem>
-	| {
-			[index: string]:
-				| string
-				| boolean
-				| Array<string>
-				| { [index: string]: any };
-	  }
+	| ExternalItem[]
+	| { [index: string]: string | boolean | string[] | { [index: string]: any } }
 	| ((
 			context: string,
 			request: string,
@@ -2294,7 +2274,7 @@ declare class ExternalsPlugin {
 declare interface FactorizeModuleOptions {
 	currentProfile: ModuleProfile;
 	factory: ModuleFactory;
-	dependencies: Array<Dependency>;
+	dependencies: Dependency[];
 	originModule: Module;
 	context?: string;
 }
@@ -2321,7 +2301,7 @@ declare interface FileCacheOptions {
 	/**
 	 * Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').
 	 */
-	buildDependencies?: { [index: string]: Array<string> };
+	buildDependencies?: { [index: string]: string[] };
 
 	/**
 	 * Base directory for the cache (defaults to node_modules/.cache/webpack).
@@ -2351,12 +2331,12 @@ declare interface FileCacheOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: Array<string>;
+	immutablePaths?: string[];
 
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: Array<string>;
+	managedPaths?: string[];
 
 	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
@@ -2387,10 +2367,10 @@ declare abstract class FileSystemInfo {
 	contextHashQueue: AsyncQueue<string, string, string>;
 	managedItemQueue: AsyncQueue<string, string, string>;
 	managedItemDirectoryQueue: AsyncQueue<string, string, Set<string>>;
-	managedPaths: Array<string>;
-	managedPathsWithSlash: Array<string>;
-	immutablePaths: Array<string>;
-	immutablePathsWithSlash: Array<string>;
+	managedPaths: string[];
+	managedPathsWithSlash: string[];
+	immutablePaths: string[];
+	immutablePathsWithSlash: string[];
 	addFileTimestamps(map: Map<string, FileSystemInfoEntry | "ignore">): void;
 	addContextTimestamps(map: Map<string, FileSystemInfoEntry | "ignore">): void;
 	getFileTimestamp(
@@ -2449,7 +2429,7 @@ type FilterItemTypes = string | RegExp | ((value: string) => boolean);
 type FilterTypes =
 	| string
 	| RegExp
-	| Array<FilterItemTypes>
+	| FilterItemTypes[]
 	| ((value: string) => boolean);
 declare interface GenerateContext {
 	/**
@@ -2491,12 +2471,12 @@ declare class Generator {
 	static byType(map?: any): ByTypeGenerator;
 }
 declare interface HMRJavascriptParserHooks {
-	hotAcceptCallback: SyncBailHook<[any, Array<string>], void>;
-	hotAcceptWithoutCallback: SyncBailHook<[any, Array<string>], void>;
+	hotAcceptCallback: SyncBailHook<[any, string[]], void>;
+	hotAcceptWithoutCallback: SyncBailHook<[any, string[]], void>;
 }
 declare interface HandleModuleCreationOptions {
 	factory: ModuleFactory;
-	dependencies: Array<Dependency>;
+	dependencies: Dependency[];
 	originModule: Module;
 	context?: string;
 
@@ -2599,7 +2579,7 @@ declare interface InfrastructureLogging {
 		| string
 		| boolean
 		| RegExp
-		| Array<FilterItemTypes>
+		| FilterItemTypes[]
 		| ((value: string) => boolean);
 
 	/**
@@ -2624,7 +2604,7 @@ declare interface InputFileSystem {
 	) => void;
 	readdir: (
 		arg0: string,
-		arg1: (arg0: NodeJS.ErrnoException, arg1: Array<string>) => void
+		arg1: (arg0: NodeJS.ErrnoException, arg1: string[]) => void
 	) => void;
 	stat: (
 		arg0: string,
@@ -2673,11 +2653,7 @@ declare class JavascriptModulesPlugin {
 	renderBootstrap(
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
-	): {
-		header: Array<string>;
-		startup: Array<string>;
-		allowInlineStartup: boolean;
-	};
+	): { header: string[]; startup: string[]; allowInlineStartup: boolean };
 	renderRequire(
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
@@ -2855,36 +2831,36 @@ declare abstract class JavascriptParser extends Parser {
 		rename: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
 		assignMemberChain: HookMap<
-			SyncBailHook<[AssignmentExpression, Array<string>], boolean | void>
+			SyncBailHook<[AssignmentExpression, string[]], boolean | void>
 		>;
 		typeof: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		importCall: SyncBailHook<[Expression], boolean | void>;
 		topLevelAwait: SyncBailHook<[Expression], boolean | void>;
 		call: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		callMemberChain: HookMap<
-			SyncBailHook<[Expression, Array<string>], boolean | void>
+			SyncBailHook<[Expression, string[]], boolean | void>
 		>;
 		memberChainOfCallMemberChain: HookMap<
 			SyncBailHook<
-				[Expression, Array<string>, CallExpression, Array<string>],
+				[Expression, string[], CallExpression, string[]],
 				boolean | void
 			>
 		>;
 		callMemberChainOfCallMemberChain: HookMap<
 			SyncBailHook<
-				[Expression, Array<string>, CallExpression, Array<string>],
+				[Expression, string[], CallExpression, string[]],
 				boolean | void
 			>
 		>;
 		new: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
-			SyncBailHook<[Expression, Array<string>], boolean | void>
+			SyncBailHook<[Expression, string[]], boolean | void>
 		>;
 		expressionConditionalOperator: SyncBailHook<[Expression], boolean | void>;
 		expressionLogicalOperator: SyncBailHook<[Expression], boolean | void>;
-		program: SyncBailHook<[Program, Array<Comment>], boolean | void>;
-		finish: SyncBailHook<[Program, Array<Comment>], boolean | void>;
+		program: SyncBailHook<[Program, Comment[]], boolean | void>;
+		finish: SyncBailHook<[Program, Comment[]], boolean | void>;
 	}>;
 	options: any;
 	sourceType: "module" | "script" | "auto";
@@ -2987,14 +2963,14 @@ declare abstract class JavascriptParser extends Parser {
 	): void;
 	walkThisExpression(expression?: any): void;
 	walkIdentifier(expression?: any): void;
-	callHooksForExpression(hookMap: any, expr: any, ...args: Array<any>): any;
+	callHooksForExpression(hookMap: any, expr: any, ...args: any[]): any;
 	callHooksForExpressionWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		expr: MemberExpression,
 		fallback: (
 			arg0: string,
 			arg1: string | ScopeInfo | VariableInfo,
-			arg2: () => Array<string>
+			arg2: () => string[]
 		) => any,
 		defined: (arg0: string) => any,
 		...args: AsArray<T>
@@ -3054,7 +3030,7 @@ declare abstract class JavascriptParser extends Parser {
 	extractMemberExpressionChain(
 		expression: MemberExpression
 	): {
-		members: Array<string>;
+		members: string[];
 		object:
 			| UnaryExpression
 			| ThisExpression
@@ -3087,29 +3063,29 @@ declare abstract class JavascriptParser extends Parser {
 	): { name: string; info: string | VariableInfo };
 	getMemberExpressionInfo(
 		expression: MemberExpression,
-		allowedTypes: Array<"expression" | "call">
+		allowedTypes: ("expression" | "call")[]
 	):
 		| {
 				type: "call";
 				call: CallExpression;
 				calleeName: string;
 				rootInfo: string | VariableInfo;
-				getCalleeMembers: () => Array<string>;
+				getCalleeMembers: () => string[];
 				name: string;
-				getMembers: () => Array<string>;
+				getMembers: () => string[];
 		  }
 		| {
 				type: "expression";
 				rootInfo: string | VariableInfo;
 				name: string;
-				getMembers: () => Array<string>;
+				getMembers: () => string[];
 		  };
 	getNameForExpression(
 		expression: MemberExpression
 	): {
 		name: string;
 		rootInfo: string | ScopeInfo | VariableInfo;
-		getMembers: () => Array<string>;
+		getMembers: () => string[];
 	};
 }
 declare interface JsonpCompilationPluginHooks {
@@ -3177,7 +3153,7 @@ declare class LibManifestPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type Library = string | LibraryOptions | Array<string> | LibraryCustomUmdObject;
+type Library = string | LibraryOptions | string[] | LibraryCustomUmdObject;
 declare interface LibraryContext<T> {
 	compilation: Compilation;
 	options: T;
@@ -3225,10 +3201,10 @@ declare interface LibraryCustomUmdObject {
 	/**
 	 * Name of the property exposed globally by a UMD library.
 	 */
-	root?: string | Array<string>;
+	root?: string | string[];
 }
-type LibraryExport = string | Array<string>;
-type LibraryName = string | Array<string> | LibraryCustomUmdObject;
+type LibraryExport = string | string[];
+type LibraryName = string | string[] | LibraryCustomUmdObject;
 
 /**
  * Options for library.
@@ -3300,10 +3276,6 @@ type LibraryType =
 declare class LimitChunkCountPlugin {
 	constructor(options?: LimitChunkCountPluginOptions);
 	options: LimitChunkCountPluginOptions;
-
-	/**
-	 * Apply the plugin
-	 */
 	apply(compiler: Compiler): void;
 }
 
@@ -3390,9 +3362,9 @@ declare class LoaderTargetPlugin {
 }
 declare interface LogEntry {
 	type: string;
-	args: Array<any>;
+	args: any[];
 	time: number;
-	trace?: Array<string>;
+	trace?: string[];
 }
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
@@ -3481,12 +3453,12 @@ declare interface MemoryCacheOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: Array<string>;
+	immutablePaths?: string[];
 
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: Array<string>;
+	managedPaths?: string[];
 
 	/**
 	 * In memory caching.
@@ -3543,7 +3515,7 @@ declare class Module extends DependenciesBlock {
 	factoryMeta: any;
 	buildMeta: KnownBuildMeta & Record<string, any>;
 	buildInfo: any;
-	presentationalDependencies: Array<Dependency>;
+	presentationalDependencies: Dependency[];
 	id: string | number;
 	readonly hash: string;
 	readonly renderedHash: string;
@@ -3553,15 +3525,16 @@ declare class Module extends DependenciesBlock {
 	depth: number;
 	issuer: Module;
 	readonly usedExports: boolean | SortableSet<string>;
-	readonly optimizationBailout: Array<
-		string | ((requestShortener: RequestShortener) => string)
-	>;
+	readonly optimizationBailout: (
+		| string
+		| ((requestShortener: RequestShortener) => string)
+	)[];
 	readonly optional: boolean;
 	addChunk(chunk?: any): boolean;
 	removeChunk(chunk?: any): void;
 	isInChunk(chunk?: any): boolean;
 	isEntryModule(): boolean;
-	getChunks(): Array<Chunk>;
+	getChunks(): Chunk[];
 	getNumberOfChunks(): number;
 	readonly chunksIterable: Iterable<Chunk>;
 	isProvided(exportName: string): boolean;
@@ -3600,12 +3573,12 @@ declare class Module extends DependenciesBlock {
 	isModuleUsed(moduleGraph: ModuleGraph): boolean;
 	isExportUsed(
 		moduleGraph: ModuleGraph,
-		exportName: string | Array<string>
+		exportName: string | string[]
 	): 0 | 1 | 2 | 3 | 4;
 	getUsedName(
 		moduleGraph: ModuleGraph,
-		exportName: string | Array<string>
-	): string | false | Array<string>;
+		exportName: string | string[]
+	): string | false | string[];
 	needBuild(
 		context: NeedBuildContext,
 		callback: (arg0: WebpackError, arg1: boolean) => void
@@ -3668,7 +3641,7 @@ declare interface ModuleFactoryCreateData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
 	resolveOptions?: any;
 	context: string;
-	dependencies: Array<Dependency>;
+	dependencies: Dependency[];
 }
 declare interface ModuleFactoryCreateDataContextInfo {
 	issuer: string;
@@ -3724,9 +3697,9 @@ declare class ModuleGraph {
 	setIssuerIfUnset(module: Module, issuer: Module): void;
 	getOptimizationBailout(
 		module: Module
-	): Array<string | ((requestShortener: RequestShortener) => string)>;
-	getProvidedExports(module: Module): true | Array<string>;
-	isExportProvided(module: Module, exportName: string | Array<string>): boolean;
+	): (string | ((requestShortener: RequestShortener) => string))[];
+	getProvidedExports(module: Module): true | string[];
+	isExportProvided(module: Module, exportName: string | string[]): boolean;
 	getExportsInfo(module: Module): ExportsInfo;
 	getExportInfo(module: Module, exportName: string): ExportInfo;
 	getReadOnlyExportInfo(module: Module, exportName: string): ExportInfo;
@@ -3795,7 +3768,7 @@ declare interface ModuleOptions {
 	/**
 	 * An array of rules applied by default for modules.
 	 */
-	defaultRules?: Array<RuleSetRule>;
+	defaultRules?: RuleSetRule[];
 
 	/**
 	 * Enable warnings for full dynamic dependencies.
@@ -3824,12 +3797,12 @@ declare interface ModuleOptions {
 		| string
 		| Function
 		| RegExp
-		| [string | Function | RegExp, string | Function | RegExp];
+		| [string | Function | RegExp, ...(string | Function | RegExp)[]];
 
 	/**
 	 * An array of rules applied for modules.
 	 */
-	rules?: Array<RuleSetRule>;
+	rules?: RuleSetRule[];
 
 	/**
 	 * Emit errors instead of warnings when imported names don't exist in imported module.
@@ -3933,21 +3906,19 @@ declare abstract class ModuleTemplate {
 	readonly runtimeTemplate: any;
 }
 declare class MultiCompiler {
-	constructor(compilers: Array<Compiler> | Record<string, Compiler>);
+	constructor(compilers: Compiler[] | Record<string, Compiler>);
 	hooks: Readonly<{
 		done: SyncHook<[MultiStats], void>;
 		invalid: MultiHook<SyncHook<[string, string], void>>;
 		run: MultiHook<AsyncSeriesHook<[Compiler]>>;
 		watchClose: SyncHook<[], void>;
 		watchRun: MultiHook<AsyncSeriesHook<[Compiler]>>;
-		infrastructureLog: MultiHook<
-			SyncBailHook<[string, string, Array<any>], true>
-		>;
+		infrastructureLog: MultiHook<SyncBailHook<[string, string, any[]], true>>;
 	}>;
-	compilers: Array<Compiler>;
-	dependencies: WeakMap<Compiler, Array<string>>;
+	compilers: Compiler[];
+	dependencies: WeakMap<Compiler, string[]>;
 	running: boolean;
-	readonly options: Array<WebpackOptionsNormalized>;
+	readonly options: WebpackOptionsNormalized[];
 	readonly outputPath: string;
 	inputFileSystem: InputFileSystem;
 	outputFileSystem: OutputFileSystem;
@@ -3955,15 +3926,15 @@ declare class MultiCompiler {
 		OutputFileSystem &
 		IntermediateFileSystemExtras;
 	getInfrastructureLogger(name?: any): WebpackLogger;
-	setDependencies(compiler: Compiler, dependencies: Array<string>): void;
+	setDependencies(compiler: Compiler, dependencies: string[]): void;
 	validateDependencies(callback: CallbackFunction<MultiStats>): boolean;
 	runWithDependencies(
-		compilers: Array<Compiler>,
+		compilers: Compiler[],
 		fn: (compiler: Compiler, callback: CallbackFunction<MultiStats>) => any,
 		callback: CallbackFunction<MultiStats>
 	): void;
 	watch(
-		watchOptions: WatchOptions | Array<WatchOptions>,
+		watchOptions: WatchOptions | WatchOptions[],
 		handler: CallbackFunction<MultiStats>
 	): MultiWatching;
 	run(callback: CallbackFunction<MultiStats>): void;
@@ -3971,23 +3942,23 @@ declare class MultiCompiler {
 	close(callback: CallbackFunction<void>): void;
 }
 declare abstract class MultiStats {
-	stats: Array<Stats>;
+	stats: Stats[];
 	hash: string;
 	hasErrors(): boolean;
 	hasWarnings(): boolean;
 	toJson(
 		options?: any
 	): {
-		children: Array<any>;
+		children: any[];
 		version: any;
 		hash: string;
-		errors: Array<any>;
-		warnings: Array<any>;
+		errors: any[];
+		warnings: any[];
 	};
 	toString(options?: any): string;
 }
 declare abstract class MultiWatching {
-	watchings: Array<Watching>;
+	watchings: Watching[];
 	compiler: MultiCompiler;
 	invalidate(): void;
 	suspend(): void;
@@ -4082,7 +4053,7 @@ declare class NormalModule extends Module {
 		/**
 		 * list of loaders
 		 */
-		loaders: Array<LoaderItem>;
+		loaders: LoaderItem[];
 		/**
 		 * path + query of the real resource
 		 */
@@ -4112,7 +4083,7 @@ declare class NormalModule extends Module {
 	generator: Generator;
 	resource: string;
 	matchResource: string;
-	loaders: Array<LoaderItem>;
+	loaders: LoaderItem[];
 	error: WebpackError;
 	createSourceForAsset(
 		context: string,
@@ -4314,9 +4285,10 @@ declare interface Optimization {
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
-	minimizer?: Array<
-		((this: Compiler, compiler: Compiler) => void) | WebpackPluginInstance
-	>;
+	minimizer?: (
+		| ((this: Compiler, compiler: Compiler) => void)
+		| WebpackPluginInstance
+	)[];
 
 	/**
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
@@ -4653,7 +4625,7 @@ declare interface Output {
 	/**
 	 * List of library types enabled for use by entry points.
 	 */
-	enabledLibraryTypes?: Array<LibraryType>;
+	enabledLibraryTypes?: LibraryType[];
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -4857,7 +4829,7 @@ declare interface OutputNormalized {
 	/**
 	 * List of library types enabled for use by entry points.
 	 */
-	enabledLibraryTypes?: Array<LibraryType>;
+	enabledLibraryTypes?: LibraryType[];
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -5084,7 +5056,7 @@ declare interface ProfilingPluginOptions {
 declare class ProgressPlugin {
 	constructor(options: ProgressPluginArgument);
 	profile: boolean;
-	handler: (percentage: number, msg: string, ...args: Array<string>) => void;
+	handler: (percentage: number, msg: string, ...args: string[]) => void;
 	modulesCount: number;
 	dependenciesCount: number;
 	showEntries: boolean;
@@ -5095,7 +5067,7 @@ declare class ProgressPlugin {
 	apply(compiler: Compiler | MultiCompiler): void;
 	static getReporter(
 		compiler: Compiler
-	): (p: number, ...args: Array<string>) => void;
+	): (p: number, ...args: string[]) => void;
 	static defaultOptions: {
 		profile: boolean;
 		modulesCount: number;
@@ -5108,7 +5080,7 @@ declare class ProgressPlugin {
 }
 type ProgressPluginArgument =
 	| ProgressPluginOptions
-	| ((percentage: number, msg: string, ...args: Array<string>) => void);
+	| ((percentage: number, msg: string, ...args: string[]) => void);
 
 /**
  * Options object for the ProgressPlugin.
@@ -5137,7 +5109,7 @@ declare interface ProgressPluginOptions {
 	/**
 	 * Function that executes for every progress step.
 	 */
-	handler?: (percentage: number, msg: string, ...args: Array<string>) => void;
+	handler?: (percentage: number, msg: string, ...args: string[]) => void;
 
 	/**
 	 * Show modules count in progress message.
@@ -5160,8 +5132,8 @@ declare interface ProgressPluginOptions {
 	profile?: boolean;
 }
 declare class ProvidePlugin {
-	constructor(definitions: Record<string, string | Array<string>>);
-	definitions: Record<string, string | Array<string>>;
+	constructor(definitions: Record<string, string | string[]>);
+	definitions: Record<string, string | string[]>;
 
 	/**
 	 * Apply the plugin
@@ -5194,7 +5166,7 @@ type RecursiveArrayOrRecord =
 	| RegExp
 	| RuntimeValue
 	| { [index: string]: RecursiveArrayOrRecord }
-	| Array<RecursiveArrayOrRecord>;
+	| RecursiveArrayOrRecord[];
 declare interface RenderBootstrapContext {
 	/**
 	 * the chunk
@@ -5337,13 +5309,13 @@ declare abstract class ReplaceSource extends Source {
 	insert(pos: number, newValue: string, name: string): void;
 	getName(): string;
 	original(): string;
-	getReplacements(): Array<{
+	getReplacements(): {
 		start: number;
 		end: number;
 		content: string;
 		insertIndex: number;
 		name: string;
-	}>;
+	}[];
 }
 declare abstract class RequestShortener {
 	contextify: (arg0: string) => string;
@@ -5400,7 +5372,7 @@ declare interface ResolveData {
 	resolveOptions: any;
 	context: string;
 	request: string;
-	dependencies: Array<ModuleDependency>;
+	dependencies: ModuleDependency[];
 	createData: any;
 	fileDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
@@ -5415,11 +5387,11 @@ declare interface ResolveOptions {
 	 * Redirect module requests.
 	 */
 	alias?:
-		| Array<{
+		| {
 				/**
 				 * New request.
 				 */
-				alias: string | false | Array<string>;
+				alias: string | false | string[];
 				/**
 				 * Request to be redirected.
 				 */
@@ -5428,13 +5400,13 @@ declare interface ResolveOptions {
 				 * Redirect only exact matching request.
 				 */
 				onlyModule?: boolean;
-		  }>
-		| { [index: string]: string | false | Array<string> };
+		  }[]
+		| { [index: string]: string | false | string[] };
 
 	/**
 	 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
 	 */
-	aliasFields?: Array<string | Array<string>>;
+	aliasFields?: (string | string[])[];
 
 	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
@@ -5454,7 +5426,7 @@ declare interface ResolveOptions {
 	/**
 	 * Filenames used to find a description file (like a package.json).
 	 */
-	descriptionFiles?: Array<string>;
+	descriptionFiles?: string[];
 
 	/**
 	 * Enforce using one of the extensions from the extensions option.
@@ -5464,7 +5436,7 @@ declare interface ResolveOptions {
 	/**
 	 * Extensions added to the request when trying to find the file.
 	 */
-	extensions?: Array<string>;
+	extensions?: string[];
 
 	/**
 	 * Filesystem for the resolver.
@@ -5474,22 +5446,22 @@ declare interface ResolveOptions {
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point.
 	 */
-	mainFields?: Array<string | Array<string>>;
+	mainFields?: (string | string[])[];
 
 	/**
 	 * Filenames used to find the default entry point if there is no description file or main field.
 	 */
-	mainFiles?: Array<string>;
+	mainFiles?: string[];
 
 	/**
 	 * Folder names or directory paths where to find modules.
 	 */
-	modules?: Array<string>;
+	modules?: string[];
 
 	/**
 	 * Plugins for the resolver.
 	 */
-	plugins?: Array<ResolvePluginInstance>;
+	plugins?: ResolvePluginInstance[];
 
 	/**
 	 * Custom resolver.
@@ -5557,7 +5529,7 @@ declare interface RuleSet {
 	/**
 	 * execute the rule set
 	 */
-	exec: (arg0?: any) => Array<Effect>;
+	exec: (arg0?: any) => Effect[];
 }
 type RuleSetCondition =
 	| string
@@ -5566,18 +5538,18 @@ type RuleSetCondition =
 			/**
 			 * Logical AND.
 			 */
-			and?: Array<RuleSetCondition>;
+			and?: RuleSetCondition[];
 			/**
 			 * Logical NOT.
 			 */
-			not?: Array<RuleSetCondition>;
+			not?: RuleSetCondition[];
 			/**
 			 * Logical OR.
 			 */
-			or?: Array<RuleSetCondition>;
+			or?: RuleSetCondition[];
 	  }
 	| ((value: string) => boolean)
-	| Array<RuleSetCondition>;
+	| RuleSetCondition[];
 type RuleSetConditionAbsolute =
 	| string
 	| RegExp
@@ -5585,18 +5557,18 @@ type RuleSetConditionAbsolute =
 			/**
 			 * Logical AND.
 			 */
-			and?: Array<RuleSetConditionAbsolute>;
+			and?: RuleSetConditionAbsolute[];
 			/**
 			 * Logical NOT.
 			 */
-			not?: Array<RuleSetConditionAbsolute>;
+			not?: RuleSetConditionAbsolute[];
 			/**
 			 * Logical OR.
 			 */
-			or?: Array<RuleSetConditionAbsolute>;
+			or?: RuleSetConditionAbsolute[];
 	  }
 	| ((value: string) => boolean)
-	| Array<RuleSetConditionAbsolute>;
+	| RuleSetConditionAbsolute[];
 type RuleSetLoaderOptions = string | { [index: string]: any };
 
 /**
@@ -5641,7 +5613,7 @@ declare interface RuleSetRule {
 	/**
 	 * Only execute the first matching rule in this array.
 	 */
-	oneOf?: Array<RuleSetRule>;
+	oneOf?: RuleSetRule[];
 
 	/**
 	 * Shortcut for use.options.
@@ -5676,7 +5648,7 @@ declare interface RuleSetRule {
 	/**
 	 * Match and execute these rules when this rule is matched.
 	 */
-	rules?: Array<RuleSetRule>;
+	rules?: RuleSetRule[];
 
 	/**
 	 * Flags a module as with or without side effects.
@@ -5700,14 +5672,14 @@ declare interface RuleSetRule {
 }
 type RuleSetUse =
 	| string
-	| Array<RuleSetUseItem>
+	| RuleSetUseItem[]
 	| ((data: {
 			resource: string;
 			realResource: string;
 			resourceQuery: string;
 			issuer: string;
 			compiler: string;
-	  }) => Array<RuleSetUseItem>)
+	  }) => RuleSetUseItem[])
 	| {
 			/**
 			 * Unique loader options identifier.
@@ -5739,7 +5711,7 @@ type RuleSetUse =
 					options?: RuleSetLoaderOptions;
 			  }
 			| __TypeWebpackOptions
-			| Array<RuleSetUseItem>);
+			| RuleSetUseItem[]);
 type RuleSetUseItem =
 	| string
 	| {
@@ -5757,8 +5729,7 @@ type RuleSetUseItem =
 			options?: RuleSetLoaderOptions;
 	  }
 	| __TypeWebpackOptions;
-type RulesBannerPlugin = string | RegExp | Array<string | RegExp>;
-type RulesSourceMapDevToolPlugin = string | RegExp | Array<string | RegExp>;
+type Rules = string | RegExp | (string | RegExp)[];
 declare class RuntimeChunkPlugin {
 	constructor(options?: any);
 	options: any;
@@ -6039,7 +6010,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the export name
 		 */
-		exportName: string | Array<string>;
+		exportName: string | string[];
 		/**
 		 * the origin module
 		 */
@@ -6067,7 +6038,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * init fragments will be added here
 		 */
-		initFragments: Array<InitFragment>;
+		initFragments: InitFragment[];
 		/**
 		 * if set, will be filled with runtime requirements
 		 */
@@ -6162,7 +6133,7 @@ declare abstract class SortableSet<T> extends Set<T> {
 	 * Get data from cache (ignoring sorting)
 	 */
 	getFromUnorderedCache<R>(fn: (arg0: SortableSet<T>) => R): R;
-	toJSON(): Array<T>;
+	toJSON(): T[];
 
 	/**
 	 * Iterates over values in the set.
@@ -6232,7 +6203,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Exclude modules that match the given value from source map generation.
 	 */
-	exclude?: RulesSourceMapDevToolPlugin;
+	exclude?: Rules;
 
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.
@@ -6252,7 +6223,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for module paths that match the given value.
 	 */
-	include?: RulesSourceMapDevToolPlugin;
+	include?: Rules;
 
 	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true).
@@ -6287,7 +6258,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
-	test?: RulesSourceMapDevToolPlugin;
+	test?: Rules;
 }
 declare interface SourcePosition {
 	line: number;
@@ -6308,8 +6279,8 @@ declare interface SplitChunksOptions {
 	getCacheGroups: (
 		module: Module,
 		context: CacheGroupsContext
-	) => Array<CacheGroupSource>;
-	getName: (module?: Module, chunks?: Array<Chunk>, key?: string) => string;
+	) => CacheGroupSource[];
+	getName: (module?: Module, chunks?: Chunk[], key?: string) => string;
 	fallbackCacheGroup: FallbackCacheGroup;
 }
 declare class SplitChunksPlugin {
@@ -6323,14 +6294,14 @@ declare class SplitChunksPlugin {
 }
 declare abstract class StackedMap<K, V> {
 	map: Map<K, V | typeof TOMBSTONE | typeof UNDEFINED_MARKER>;
-	stack: Array<Map<K, V | typeof TOMBSTONE | typeof UNDEFINED_MARKER>>;
+	stack: Map<K, V | typeof TOMBSTONE | typeof UNDEFINED_MARKER>[];
 	set(item: K, value: V): void;
 	delete(item: K): void;
 	has(item: K): boolean;
 	get(item: K): V;
-	asArray(): Array<K>;
+	asArray(): K[];
 	asSet(): Set<K>;
-	asPairArray(): Array<[K, V]>;
+	asPairArray(): [K, V][];
 	asMap(): Map<K, V>;
 	readonly size: number;
 	createChild(): StackedMap<K, V>;
@@ -6373,15 +6344,15 @@ declare abstract class StatsFactory {
 		extract: HookMap<SyncBailHook<[any, any, any], any>>;
 		filter: HookMap<SyncBailHook<[any, any, number, number], any>>;
 		sort: HookMap<
-			SyncBailHook<[Array<(arg0?: any, arg1?: any) => number>, any], any>
+			SyncBailHook<[((arg0?: any, arg1?: any) => number)[], any], any>
 		>;
 		filterSorted: HookMap<SyncBailHook<[any, any, number, number], any>>;
 		sortResults: HookMap<
-			SyncBailHook<[Array<(arg0?: any, arg1?: any) => number>, any], any>
+			SyncBailHook<[((arg0?: any, arg1?: any) => number)[], any], any>
 		>;
 		filterResults: HookMap<SyncBailHook<any, any>>;
-		merge: HookMap<SyncBailHook<[Array<any>, any], any>>;
-		result: HookMap<SyncBailHook<[Array<any>, any], any>>;
+		merge: HookMap<SyncBailHook<[any[], any], any>>;
+		result: HookMap<SyncBailHook<[any[], any], any>>;
 		getItemName: HookMap<SyncBailHook<[any, any], any>>;
 		getItemFactory: HookMap<SyncBailHook<[any, any], any>>;
 	}>;
@@ -6536,7 +6507,7 @@ declare interface StatsOptions {
 		| string
 		| boolean
 		| RegExp
-		| Array<FilterItemTypes>
+		| FilterItemTypes[]
 		| ((value: string) => boolean);
 
 	/**
@@ -6551,7 +6522,7 @@ declare interface StatsOptions {
 		| string
 		| boolean
 		| RegExp
-		| Array<FilterItemTypes>
+		| FilterItemTypes[]
 		| ((value: string) => boolean);
 
 	/**
@@ -6576,7 +6547,7 @@ declare interface StatsOptions {
 		| string
 		| boolean
 		| RegExp
-		| Array<FilterItemTypes>
+		| FilterItemTypes[]
 		| ((value: string) => boolean);
 
 	/**
@@ -6691,11 +6662,11 @@ declare interface StatsOptions {
 }
 declare abstract class StatsPrinter {
 	hooks: Readonly<{
-		sortElements: HookMap<SyncBailHook<[Array<string>, any], any>>;
-		printElements: HookMap<SyncBailHook<[Array<PrintedElement>, any], any>>;
-		sortItems: HookMap<SyncBailHook<[Array<any>, any], any>>;
+		sortElements: HookMap<SyncBailHook<[string[], any], any>>;
+		printElements: HookMap<SyncBailHook<[PrintedElement[], any], any>>;
+		sortItems: HookMap<SyncBailHook<[any[], any], any>>;
 		getItemName: HookMap<SyncBailHook<[any, any], any>>;
-		printItems: HookMap<SyncBailHook<[Array<string>, any], any>>;
+		printItems: HookMap<SyncBailHook<[string[], any], any>>;
 		print: HookMap<SyncBailHook<[any, any], any>>;
 		result: HookMap<SyncWaterfallHook<[string, any]>>;
 	}>;
@@ -6740,24 +6711,22 @@ declare class Template {
 	static toPath(str: string): string;
 	static numberToIdentifier(n: number): string;
 	static numberToIdentifierContinuation(n: number): string;
-	static indent(s: string | Array<string>): string;
-	static prefix(s: string | Array<string>, prefix: string): string;
-	static asString(str: string | Array<string>): string;
-	static getModulesArrayBounds(
-		modules: Array<WithId>
-	): false | [number, number];
+	static indent(s: string | string[]): string;
+	static prefix(s: string | string[], prefix: string): string;
+	static asString(str: string | string[]): string;
+	static getModulesArrayBounds(modules: WithId[]): false | [number, number];
 	static renderChunkModules(
 		renderContext: RenderContextModuleTemplate,
-		modules: Array<Module>,
+		modules: Module[],
 		renderModule: (arg0: Module) => Source,
 		prefix?: string
 	): Source;
 	static renderRuntimeModules(
-		runtimeModules: Array<RuntimeModule>,
+		runtimeModules: RuntimeModule[],
 		renderContext: RenderContextModuleTemplate
 	): Source;
 	static renderChunkRuntimeModules(
-		runtimeModules: Array<RuntimeModule>,
+		runtimeModules: RuntimeModule[],
 		renderContext: RenderContextModuleTemplate
 	): Source;
 	static NUMBER_OF_IDENTIFIER_START_CHARS: number;
@@ -6782,7 +6751,7 @@ declare abstract class VariableInfo {
 }
 declare class WatchIgnorePlugin {
 	constructor(options: WatchIgnorePluginOptions);
-	paths: [string | RegExp, string | RegExp];
+	paths: [string | RegExp, ...(string | RegExp)[]];
 
 	/**
 	 * Apply the plugin
@@ -6799,7 +6768,7 @@ declare interface WatchIgnorePluginOptions {
 	/**
 	 * A list of RegExps or absolute paths to directories or files that should be ignored.
 	 */
-	paths: [string | RegExp, string | RegExp];
+	paths: [string | RegExp, ...(string | RegExp)[]];
 }
 
 /**
@@ -6814,7 +6783,7 @@ declare interface WatchOptions {
 	/**
 	 * Ignore some files from watching (glob pattern).
 	 */
-	ignored?: string | Array<string>;
+	ignored?: string | string[];
 
 	/**
 	 * Enable polling mode for watching.
@@ -6830,7 +6799,7 @@ declare abstract class Watching {
 	startTime: number;
 	invalid: boolean;
 	handler: CallbackFunction<Stats>;
-	callbacks: Array<CallbackFunction<void>>;
+	callbacks: CallbackFunction<void>[];
 	closed: boolean;
 	suspended: boolean;
 	watchOptions: {
@@ -6841,7 +6810,7 @@ declare abstract class Watching {
 		/**
 		 * Ignore some files from watching (glob pattern).
 		 */
-		ignored?: string | Array<string>;
+		ignored?: string | string[];
 		/**
 		 * Enable polling mode for watching.
 		 */
@@ -6885,18 +6854,18 @@ declare interface WebpackError extends Error {
 }
 declare abstract class WebpackLogger {
 	getChildLogger: (arg0: string | (() => string)) => WebpackLogger;
-	error(...args: Array<any>): void;
-	warn(...args: Array<any>): void;
-	info(...args: Array<any>): void;
-	log(...args: Array<any>): void;
-	debug(...args: Array<any>): void;
-	assert(assertion: any, ...args: Array<any>): void;
+	error(...args: any[]): void;
+	warn(...args: any[]): void;
+	info(...args: any[]): void;
+	log(...args: any[]): void;
+	debug(...args: any[]): void;
+	assert(assertion: any, ...args: any[]): void;
 	trace(): void;
 	clear(): void;
-	status(...args: Array<any>): void;
-	group(...args: Array<any>): void;
-	groupCollapsed(...args: Array<any>): void;
-	groupEnd(...args: Array<any>): void;
+	status(...args: any[]): void;
+	group(...args: any[]): void;
+	groupCollapsed(...args: any[]): void;
+	groupEnd(...args: any[]): void;
 	profile(label?: any): void;
 	profileEnd(label?: any): void;
 	time(label?: any): void;
@@ -6940,7 +6909,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * References to other configurations to depend on.
 	 */
-	dependencies?: Array<string>;
+	dependencies?: string[];
 
 	/**
 	 * Options for the webpack-dev-server.
@@ -7025,9 +6994,10 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Add additional plugins to the compiler.
 	 */
-	plugins: Array<
-		((this: Compiler, compiler: Compiler) => void) | WebpackPluginInstance
-	>;
+	plugins: (
+		| ((this: Compiler, compiler: Compiler) => void)
+		| WebpackPluginInstance
+	)[];
 
 	/**
 	 * Capture timing information for each module.
@@ -7115,20 +7085,20 @@ type __TypeWebpackOptions = (data: {}) =>
 			options?: RuleSetLoaderOptions;
 	  }
 	| __TypeWebpackOptions
-	| Array<RuleSetUseItem>;
+	| RuleSetUseItem[];
 declare function exports(
 	options: Configuration,
 	callback?: CallbackWebpack<Stats>
 ): Compiler;
 declare function exports(
-	options: Array<Configuration>,
+	options: Configuration[],
 	callback?: CallbackWebpack<MultiStats>
 ): MultiCompiler;
 declare namespace exports {
 	export const webpack: {
 		(options: Configuration, callback?: CallbackWebpack<Stats>): Compiler;
 		(
-			options: Array<Configuration>,
+			options: Configuration[],
 			callback?: CallbackWebpack<MultiStats>
 		): MultiCompiler;
 	};
@@ -7146,9 +7116,9 @@ declare namespace exports {
 				| number
 				| boolean
 				| RegExp
-				| Array<string | number | boolean | RegExp>
+				| (string | number | boolean | RegExp)[]
 			>
-		) => Array<Problem>;
+		) => Problem[];
 	}
 	export namespace ModuleFilenameHelpers {
 		export let ALL_LOADERS_RESOURCE: string;
@@ -7335,7 +7305,7 @@ declare namespace exports {
 			export let concatComparators: <T>(
 				c1: (arg0: T, arg1: T) => 0 | 1 | -1,
 				c2: (arg0: T, arg1: T) => 0 | 1 | -1,
-				...cRest: Array<(arg0: T, arg1: T) => 0 | 1 | -1>
+				...cRest: ((arg0: T, arg1: T) => 0 | 1 | -1)[]
 			) => (arg0: T, arg1: T) => 0 | 1 | -1;
 			export let compareSelect: <T, R>(
 				getter: (input: T) => R,
@@ -7357,7 +7327,7 @@ declare namespace exports {
 		}
 		export namespace serialization {
 			export let register: (
-				Constructor: { new (...params: Array<any>): any },
+				Constructor: { new (...params: any[]): any },
 				request: string,
 				name: string,
 				serializer: ObjectSerializer
@@ -7367,7 +7337,7 @@ declare namespace exports {
 				loader: (arg0: string) => boolean
 			) => void;
 			export let registerNotSerializable: (Constructor: {
-				new (...params: Array<any>): any;
+				new (...params: any[]): any;
 			}) => void;
 			export let NOT_SERIALIZABLE: {};
 			export let buffersSerializer: Serializer;
