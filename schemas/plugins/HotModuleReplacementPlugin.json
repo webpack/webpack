@@ -1,0 +1,16 @@
+{
+  "title": "HotModuleReplacementPluginOptions",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "fullBuildTimeout": {
+      "description": "The delay between the two steps when `multiStep` is enabled.",
+      "type": "number",
+      "default": 200
+    },
+    "multiStep": {
+      "description": "If true, the plugin will build in two steps -- first compiling the hot update chunks, and then the remaining normal assets.",
+      "type": "boolean"
+    }
+  }
+}
