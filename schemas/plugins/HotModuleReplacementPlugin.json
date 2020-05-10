@@ -1,7 +1,7 @@
 {
   "title": "HotModuleReplacementPluginOptions",
   "type": "object",
-  "additionalProperties": true,
+  "additionalProperties": false,
   "properties": {
     "fullBuildTimeout": {
       "description": "The delay between the two steps when `multiStep` is enabled.",

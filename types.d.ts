@@ -2613,8 +2613,6 @@ declare class HotModuleReplacementPlugin {
  * Run `yarn special-lint-fix` to update
  */
 declare interface HotModuleReplacementPluginOptions {
-	[index: string]: any;
-
 	/**
 	 * The delay between the two steps when `multiStep` is enabled.
 	 */

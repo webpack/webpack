@@ -13,5 +13,4 @@ export interface HotModuleReplacementPluginOptions {
 	 * If true, the plugin will build in two steps -- first compiling the hot update chunks, and then the remaining normal assets.
 	 */
 	multiStep?: boolean;
-	[k: string]: any;
 }
