@@ -2595,16 +2595,35 @@ declare interface HashedModuleIdsPluginOptions {
 	hashFunction?: string;
 }
 declare class HotModuleReplacementPlugin {
-	constructor(options?: any);
-	options: any;
-	multiStep: any;
-	fullBuildTimeout: any;
+	constructor(options?: HotModuleReplacementPluginOptions);
+	options: HotModuleReplacementPluginOptions;
+	multiStep: boolean;
+	fullBuildTimeout: number;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
 	static getParserHooks(parser: JavascriptParser): HMRJavascriptParserHooks;
+}
+
+/**
+ * This file was automatically generated.
+ * DO NOT MODIFY BY HAND.
+ * Run `yarn special-lint-fix` to update
+ */
+declare interface HotModuleReplacementPluginOptions {
+	[index: string]: any;
+
+	/**
+	 * The delay between the two steps when `multiStep` is enabled.
+	 */
+	fullBuildTimeout?: number;
+
+	/**
+	 * If true, the plugin will build in two steps -- first compiling the hot update chunks, and then the remaining normal assets.
+	 */
+	multiStep?: boolean;
 }
 declare class IgnorePlugin {
 	constructor(options: IgnorePluginOptions);
