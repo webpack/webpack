@@ -15,6 +15,10 @@ export type DllReferencePluginOptions =
 			 */
 			extensions?: string[];
 			/**
+			 * Files used to resolve modules in the dll bundle
+			 */
+			mainFiles?: string[];
+			/**
 			 * An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation
 			 */
 			manifest: DllReferencePluginOptionsManifest | string;
@@ -48,6 +52,10 @@ export type DllReferencePluginOptions =
 			 * Extensions used to resolve modules in the dll bundle (only used when using 'scope')
 			 */
 			extensions?: string[];
+			/**
+			 * Files used to resolve modules in the dll bundle
+			 */
+			mainFiles?: string[];
 			/**
 			 * The name where the dll is exposed (external name)
 			 */

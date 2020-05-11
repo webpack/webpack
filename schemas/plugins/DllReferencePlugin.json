@@ -114,6 +114,14 @@
             "type": "string"
           }
         },
+        "mainFiles": {
+          "description": "Files used to resolve modules in the dll bundle",
+          "type": "array",
+          "items": {
+            "description": "A file",
+            "type": "string"
+          }
+        },
         "manifest": {
           "description": "An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation",
           "oneOf": [
@@ -173,6 +181,14 @@
           "type": "array",
           "items": {
             "description": "An extension",
+            "type": "string"
+          }
+        },
+        "mainFiles": {
+          "description": "Files used to resolve modules in the dll bundle",
+          "type": "array",
+          "items": {
+            "description": "A File",
             "type": "string"
           }
         },
