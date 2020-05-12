@@ -1,4 +1,4 @@
-/**
+/*
  * This file was automatically generated.
  * DO NOT MODIFY BY HAND.
  * Run `yarn special-lint-fix` to update
@@ -129,12 +129,6 @@ declare class AggressiveSplittingPlugin {
 	apply(compiler: Compiler): void;
 	static wasChunkRecorded(chunk: Chunk): boolean;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface AggressiveSplittingPluginOptions {
 	/**
 	 * Extra cost for each chunk (Default: 9.8kiB).
@@ -1750,12 +1744,6 @@ declare class DllPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface DllPluginOptions {
 	/**
 	 * Context of requests in the manifest file (defaults to the webpack context).
@@ -2146,7 +2134,7 @@ declare interface Experiments {
 declare class ExportInfo {
 	constructor(name: string, initFrom?: ExportInfo);
 	name: string;
-	usedName: string | typeof SKIP_OVER_NAME;
+	usedName: string;
 	used: 0 | 1 | 2 | 3 | 4;
 
 	/**
@@ -2177,7 +2165,7 @@ declare class ExportInfo {
 	/**
 	 * get used name
 	 */
-	getUsedName(fallbackName?: string): string | false | typeof SKIP_OVER_NAME;
+	getUsedName(fallbackName?: string): DevTool;
 	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): ExportsInfo;
 	getUsedInfo():
@@ -2563,12 +2551,6 @@ declare class HashedModuleIdsPlugin {
 	options: HashedModuleIdsPluginOptions;
 	apply(compiler?: any): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The context directory for creating names.
@@ -3345,12 +3327,6 @@ declare class LimitChunkCountPlugin {
 	options: LimitChunkCountPluginOptions;
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface LimitChunkCountPluginOptions {
 	/**
 	 * Constant overhead for a chunk.
@@ -3388,12 +3364,6 @@ declare class LoaderOptionsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface LoaderOptionsPluginOptions {
 	[index: string]: any;
 
@@ -3549,12 +3519,6 @@ declare class MinChunkSizePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface MinChunkSizePluginOptions {
 	/**
 	 * Constant overhead for a chunk.
@@ -3838,7 +3802,6 @@ declare class ModuleGraph {
 	static ModuleGraphConnection: typeof ModuleGraphConnection;
 	static ExportsInfo: typeof ExportsInfo;
 	static ExportInfo: typeof ExportInfo;
-	static SKIP_OVER_NAME: typeof SKIP_OVER_NAME;
 	static UsageState: Readonly<{
 		NoInfo: 0;
 		Unused: 1;
@@ -4303,12 +4266,6 @@ declare class OccurrenceChunkIdsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface OccurrenceChunkIdsPluginOptions {
 	/**
 	 * Prioritise initial size over total size.
@@ -4324,12 +4281,6 @@ declare class OccurrenceModuleIdsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface OccurrenceModuleIdsPluginOptions {
 	/**
 	 * Prioritise initial size over total size.
@@ -5165,12 +5116,6 @@ declare class ProfilingPlugin {
 	apply(compiler?: any): void;
 	static Profiler: typeof Profiler;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface ProfilingPluginOptions {
 	/**
 	 * Path to the output file e.g. `path.resolve(__dirname, 'profiling/events.json')`. Defaults to `events.json`.
@@ -6179,7 +6124,6 @@ declare abstract class RuntimeValue {
 	fileDependencies: any;
 	exec(parser?: any): any;
 }
-declare const SKIP_OVER_NAME: unique symbol;
 declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
 	topLevelScope: boolean | "arrow";
@@ -6860,12 +6804,6 @@ declare class WatchIgnorePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface WatchIgnorePluginOptions {
 	/**
 	 * A list of RegExps or absolute paths to directories or files that should be ignored.
