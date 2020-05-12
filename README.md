@@ -294,7 +294,7 @@ and incredibly **fast** on incremental compilations.
 
 ### Module Formats
 
-webpack supports ES2015+, CommonJS and AMD modules **out of the box**. It performs clever static
+webpack supports ES2015+, CommonJS, and AMD modules **out of the box**. It performs clever static
 analysis on the AST of your code. It even has an evaluation engine to evaluate
 simple expressions. This allows you to **support most existing libraries** out of the box.
 
@@ -333,7 +333,7 @@ If you are worried or don't know where to start, you can **always** reach out to
 
 We have also started a series on our [Medium Publication](https://medium.com/webpack) called [The Contributor's Guide to webpack](https://medium.com/webpack/contributors-guide/home). We welcome you to read it and post any questions or responses if you still need help.
 
-_Looking to speak about webpack?_ We'd **love** to review your talk abstract/CFP! You can email it to webpack [at] opencollective [dot] com and we can give pointers or tips!!!
+_Looking to speak about webpack?_ We'd **love** to review your talk abstract/CFP! You can email it to [webpack@opencollective.com](https://opencollective.com/) and we can give pointers or tips!!!
 
 <h3 align="center">Creating your own plugins and loaders</h3>
 
@@ -341,9 +341,9 @@ If you create a loader or plugin, we would <3 for you to open source it, and put
 
 <h2 align="center">Support</h2>
 
-We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of its flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways to improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
+We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of its flexibility, webpack isn't always the _easiest_ entry-level solution however, we do believe it is the most powerful. That said, we're always looking for ways to improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
 
-If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high level overview that is great for beginners!!
+If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high-level overview that is great for beginners!!
 
 Looking for webpack 1 docs? Please check out the old [wiki](https://github.com/webpack/docs/wiki/contents), but note that this deprecated version is no longer supported.
 
@@ -407,7 +407,7 @@ If you have discovered a 🐜 or have a feature suggestion, feel free to create 
 
 <h2 align="center">Sponsoring</h2>
 
-Most of the core team members, webpack contributors and contributors in the ecosystem do this open source work in their free time. If you use webpack for a serious task, and you'd like us to invest more time on it, please donate. This project increases your income/productivity too. It makes development and applications faster and it reduces the required bandwidth.
+Most of the core team members, webpack contributors, and contributors in the ecosystem do this open-source work in their free time. If you use webpack for a serious task, and you'd like us to invest more time on it, please donate. This project increases your income/productivity too. It makes development and applications faster and it reduces the required bandwidth.
 
 This is how we use the donations:
 
@@ -745,7 +745,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 - [@jrburke](https://github.com/jrburke) for [require.js](https://requirejs.org/), which is a similar project and source for many ideas.
 - [@defunctzombie](https://github.com/defunctzombie) for the [browser-field spec](https://github.com/defunctzombie/package-browser-field-spec), which makes modules available for node.js, browserify and webpack.
 - Every early webpack user, which contributed to webpack by writing issues or PRs. You influenced the direction...
-- [@shama](https://github.com/shama), [@jhnns](https://github.com/jhnns) and [@sokra](https://github.com/sokra) for maintaining this project
+- [@shama](https://github.com/shama), [@jhnns](https://github.com/jhnns), and [@sokra](https://github.com/sokra) for maintaining this project
 - Everyone who has written a loader for webpack. You are the ecosystem...
 - Everyone I forgot to mention here, but also influenced webpack.
 
