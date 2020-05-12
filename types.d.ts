@@ -6764,18 +6764,14 @@ declare interface StatsOptions {
 }
 declare abstract class StatsPrinter {
 	hooks: Readonly<{
-		sortElements: HookMap<SyncBailHook<[string[], any], any>>;
-		printElements: HookMap<SyncBailHook<[PrintedElement[], any], any>>;
-		sortItems: HookMap<SyncBailHook<[any[], any], any>>;
-		getItemName: HookMap<SyncBailHook<[any, any], any>>;
-		printItems: HookMap<SyncBailHook<[string[], any], any>>;
-		print: HookMap<SyncBailHook<[any, any], any>>;
-		result: HookMap<SyncWaterfallHook<[string, any]>>;
+		sortElements: HookMap<SyncBailHook<[string[], {}], true>>;
+		printElements: HookMap<SyncBailHook<[PrintedElement[], {}], string>>;
+		sortItems: HookMap<SyncBailHook<[any[], {}], true>>;
+		getItemName: HookMap<SyncBailHook<[any, {}], string>>;
+		printItems: HookMap<SyncBailHook<[string[], {}], string>>;
+		print: HookMap<SyncBailHook<[{}, {}], string>>;
+		result: HookMap<SyncWaterfallHook<[string, {}]>>;
 	}>;
-
-	/**
-	 * print
-	 */
 	print(type: string, object?: any, baseContext?: any): string;
 }
 type StatsValue =
