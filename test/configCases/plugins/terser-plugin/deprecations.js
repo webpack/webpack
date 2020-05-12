@@ -1,0 +1,1 @@
+module.exports = [{ code: /DEP_WEBPACK_COMPILATION_OPTIMIZE_CHUNK_ASSETS/ }];
