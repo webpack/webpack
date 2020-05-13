@@ -333,7 +333,7 @@ If you are worried or don't know where to start, you can **always** reach out to
 
 We have also started a series on our [Medium Publication](https://medium.com/webpack) called [The Contributor's Guide to webpack](https://medium.com/webpack/contributors-guide/home). We welcome you to read it and post any questions or responses if you still need help.
 
-_Looking to speak about webpack?_ We'd **love** to review your talk abstract/CFP! You can email it to [webpack@opencollective.com](https://opencollective.com/) and we can give pointers or tips!!!
+_Looking to speak about webpack?_ We'd **love** to review your talk abstract/CFP! You can email it to [webpack@opencollective.com](mailto:webpack@opencollective.com) and we can give pointers or tips!!!
 
 <h3 align="center">Creating your own plugins and loaders</h3>
 
