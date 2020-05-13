@@ -1,4 +1,4 @@
-/**
+/*
  * This file was automatically generated.
  * DO NOT MODIFY BY HAND.
  * Run `yarn special-lint-fix` to update
@@ -100,7 +100,7 @@ declare class AbstractLibraryPlugin<T> {
 	): void;
 	render(
 		source: Source,
-		renderContext: RenderContextJavascriptModulesPlugin,
+		renderContext: RenderContextObject,
 		libraryContext: LibraryContext<T>
 	): Source;
 	chunkHash(
@@ -129,12 +129,6 @@ declare class AggressiveSplittingPlugin {
 	apply(compiler: Compiler): void;
 	static wasChunkRecorded(chunk: Chunk): boolean;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface AggressiveSplittingPluginOptions {
 	/**
 	 * Extra cost for each chunk (Default: 9.8kiB).
@@ -1183,25 +1177,17 @@ declare class Compilation {
 	checkConstraints(): void;
 }
 declare interface CompilationHooksAsyncWebAssemblyModulesPlugin {
-	renderModuleContent: SyncWaterfallHook<
-		[Source, Module, RenderContextAsyncWebAssemblyModulesPlugin]
-	>;
+	renderModuleContent: SyncWaterfallHook<[Source, Module, RenderContextObject]>;
 }
 declare interface CompilationHooksJavascriptModulesPlugin {
-	renderModuleContent: SyncWaterfallHook<
-		[Source, Module, RenderContextJavascriptModulesPlugin]
-	>;
+	renderModuleContent: SyncWaterfallHook<[Source, Module, RenderContextObject]>;
 	renderModuleContainer: SyncWaterfallHook<
-		[Source, Module, RenderContextJavascriptModulesPlugin]
+		[Source, Module, RenderContextObject]
 	>;
-	renderModulePackage: SyncWaterfallHook<
-		[Source, Module, RenderContextJavascriptModulesPlugin]
-	>;
-	renderChunk: SyncWaterfallHook<
-		[Source, RenderContextJavascriptModulesPlugin]
-	>;
-	renderMain: SyncWaterfallHook<[Source, RenderContextJavascriptModulesPlugin]>;
-	render: SyncWaterfallHook<[Source, RenderContextJavascriptModulesPlugin]>;
+	renderModulePackage: SyncWaterfallHook<[Source, Module, RenderContextObject]>;
+	renderChunk: SyncWaterfallHook<[Source, RenderContextObject]>;
+	renderMain: SyncWaterfallHook<[Source, RenderContextObject]>;
+	render: SyncWaterfallHook<[Source, RenderContextObject]>;
 	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext], void>;
 }
@@ -1758,12 +1744,6 @@ declare class DllPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface DllPluginOptions {
 	/**
 	 * Context of requests in the manifest file (defaults to the webpack context).
@@ -1958,7 +1938,7 @@ declare interface EntryDescription {
 	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
-	dependOn?: string | [string, ...string[]];
+	dependOn?: EntryItem;
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -2154,7 +2134,7 @@ declare interface Experiments {
 declare class ExportInfo {
 	constructor(name: string, initFrom?: ExportInfo);
 	name: string;
-	usedName: string | typeof SKIP_OVER_NAME;
+	usedName: string;
 	used: 0 | 1 | 2 | 3 | 4;
 
 	/**
@@ -2181,7 +2161,11 @@ declare class ExportInfo {
 	exportsInfoOwned: boolean;
 	exportsInfo: ExportsInfo;
 	readonly canMangle: boolean;
-	getUsedName(fallbackName?: any): any;
+
+	/**
+	 * get used name
+	 */
+	getUsedName(fallbackName?: string): DevTool;
 	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): ExportsInfo;
 	getUsedInfo():
@@ -2243,9 +2227,9 @@ declare class ExportsInfo {
 	isUsed(): boolean;
 	getUsedExports(): any;
 	getProvidedExports(): true | string[];
-	isExportProvided(name: string | string[]): boolean;
-	isExportUsed(name: string | string[]): 0 | 1 | 2 | 3 | 4;
-	getUsedName(name: string | string[]): string | false | string[];
+	isExportProvided(name: LibraryExport): boolean;
+	isExportUsed(name: LibraryExport): 0 | 1 | 2 | 3 | 4;
+	getUsedName(name: LibraryExport): string | false | string[];
 	getRestoreProvidedData(): any;
 	restoreProvided(__0: {
 		otherProvided: any;
@@ -2313,7 +2297,7 @@ type ExternalItem =
 	  ) => void);
 declare class ExternalModule extends Module {
 	constructor(request?: any, type?: any, userRequest?: any);
-	request: string | string[] | Record<string, string | string[]>;
+	request: string | string[] | Record<string, LibraryExport>;
 	externalType: string;
 	userRequest: string;
 	getSourceString(
@@ -2567,12 +2551,6 @@ declare class HashedModuleIdsPlugin {
 	options: HashedModuleIdsPluginOptions;
 	apply(compiler?: any): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The context directory for creating names.
@@ -2709,12 +2687,12 @@ declare class JavascriptModulesPlugin {
 	apply(compiler: Compiler): void;
 	renderModule(
 		module: Module,
-		renderContext: RenderContextJavascriptModulesPlugin,
+		renderContext: RenderContextObject,
 		hooks: CompilationHooksJavascriptModulesPlugin,
 		factory: boolean | "strict"
 	): Source;
 	renderChunk(
-		renderContext: RenderContextJavascriptModulesPlugin,
+		renderContext: RenderContextObject,
 		hooks: CompilationHooksJavascriptModulesPlugin
 	): Source;
 	renderMain(
@@ -3224,7 +3202,7 @@ declare class LibManifestPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type Library = string | LibraryOptions | string[] | LibraryCustomUmdObject;
+type Library = string | string[] | LibraryOptions | LibraryCustomUmdObject;
 declare interface LibraryContext<T> {
 	compilation: Compilation;
 	options: T;
@@ -3272,7 +3250,7 @@ declare interface LibraryCustomUmdObject {
 	/**
 	 * Name of the property exposed globally by a UMD library.
 	 */
-	root?: string | string[];
+	root?: LibraryExport;
 }
 type LibraryExport = string | string[];
 type LibraryName = string | string[] | LibraryCustomUmdObject;
@@ -3349,12 +3327,6 @@ declare class LimitChunkCountPlugin {
 	options: LimitChunkCountPluginOptions;
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface LimitChunkCountPluginOptions {
 	/**
 	 * Constant overhead for a chunk.
@@ -3392,12 +3364,6 @@ declare class LoaderOptionsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface LoaderOptionsPluginOptions {
 	[index: string]: any;
 
@@ -3553,12 +3519,6 @@ declare class MinChunkSizePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface MinChunkSizePluginOptions {
 	/**
 	 * Constant overhead for a chunk.
@@ -3644,11 +3604,11 @@ declare class Module extends DependenciesBlock {
 	isModuleUsed(moduleGraph: ModuleGraph): boolean;
 	isExportUsed(
 		moduleGraph: ModuleGraph,
-		exportName: string | string[]
+		exportName: LibraryExport
 	): 0 | 1 | 2 | 3 | 4;
 	getUsedName(
 		moduleGraph: ModuleGraph,
-		exportName: string | string[]
+		exportName: LibraryExport
 	): string | false | string[];
 	needBuild(
 		context: NeedBuildContext,
@@ -3813,7 +3773,7 @@ declare class ModuleGraph {
 		module: Module
 	): (string | ((requestShortener: RequestShortener) => string))[];
 	getProvidedExports(module: Module): true | string[];
-	isExportProvided(module: Module, exportName: string | string[]): boolean;
+	isExportProvided(module: Module, exportName: LibraryExport): boolean;
 	getExportsInfo(module: Module): ExportsInfo;
 	getExportInfo(module: Module, exportName: string): ExportInfo;
 	getReadOnlyExportInfo(module: Module, exportName: string): ExportInfo;
@@ -3842,7 +3802,6 @@ declare class ModuleGraph {
 	static ModuleGraphConnection: typeof ModuleGraphConnection;
 	static ExportsInfo: typeof ExportsInfo;
 	static ExportInfo: typeof ExportInfo;
-	static SKIP_OVER_NAME: typeof SKIP_OVER_NAME;
 	static UsageState: Readonly<{
 		NoInfo: 0;
 		Unused: 1;
@@ -4307,12 +4266,6 @@ declare class OccurrenceChunkIdsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface OccurrenceChunkIdsPluginOptions {
 	/**
 	 * Prioritise initial size over total size.
@@ -4328,12 +4281,6 @@ declare class OccurrenceModuleIdsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface OccurrenceModuleIdsPluginOptions {
 	/**
 	 * Prioritise initial size over total size.
@@ -5169,12 +5116,6 @@ declare class ProfilingPlugin {
 	apply(compiler?: any): void;
 	static Profiler: typeof Profiler;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface ProfilingPluginOptions {
 	/**
 	 * Path to the output file e.g. `path.resolve(__dirname, 'profiling/events.json')`. Defaults to `events.json`.
@@ -5260,8 +5201,8 @@ declare interface ProgressPluginOptions {
 	profile?: boolean;
 }
 declare class ProvidePlugin {
-	constructor(definitions: Record<string, string | string[]>);
-	definitions: Record<string, string | string[]>;
+	constructor(definitions: Record<string, LibraryExport>);
+	definitions: Record<string, LibraryExport>;
 
 	/**
 	 * Apply the plugin
@@ -5329,68 +5270,6 @@ declare interface RenderBootstrapContext {
 	 */
 	hash: string;
 }
-declare interface RenderContextAsyncWebAssemblyModulesPlugin {
-	/**
-	 * the chunk
-	 */
-	chunk: any;
-
-	/**
-	 * the dependency templates
-	 */
-	dependencyTemplates: any;
-
-	/**
-	 * the runtime template
-	 */
-	runtimeTemplate: any;
-
-	/**
-	 * the module graph
-	 */
-	moduleGraph: any;
-
-	/**
-	 * the chunk graph
-	 */
-	chunkGraph: any;
-
-	/**
-	 * results of code generation
-	 */
-	codeGenerationResults: Map<Module, CodeGenerationResult>;
-}
-declare interface RenderContextJavascriptModulesPlugin {
-	/**
-	 * the chunk
-	 */
-	chunk: Chunk;
-
-	/**
-	 * the dependency templates
-	 */
-	dependencyTemplates: DependencyTemplates;
-
-	/**
-	 * the runtime template
-	 */
-	runtimeTemplate: RuntimeTemplate;
-
-	/**
-	 * the module graph
-	 */
-	moduleGraph: ModuleGraph;
-
-	/**
-	 * the chunk graph
-	 */
-	chunkGraph: ChunkGraph;
-
-	/**
-	 * results of code generation
-	 */
-	codeGenerationResults: Map<Module, CodeGenerationResult>;
-}
 declare interface RenderContextModuleTemplate {
 	/**
 	 * the chunk
@@ -5416,6 +5295,37 @@ declare interface RenderContextModuleTemplate {
 	 * the chunk graph
 	 */
 	chunkGraph: ChunkGraph;
+}
+declare interface RenderContextObject {
+	/**
+	 * the chunk
+	 */
+	chunk: Chunk;
+
+	/**
+	 * the dependency templates
+	 */
+	dependencyTemplates: DependencyTemplates;
+
+	/**
+	 * the runtime template
+	 */
+	runtimeTemplate: RuntimeTemplate;
+
+	/**
+	 * the module graph
+	 */
+	moduleGraph: ModuleGraph;
+
+	/**
+	 * the chunk graph
+	 */
+	chunkGraph: ChunkGraph;
+
+	/**
+	 * results of code generation
+	 */
+	codeGenerationResults: Map<Module, CodeGenerationResult>;
 }
 declare interface RenderManifestEntry {
 	render: () => Source;
@@ -5542,7 +5452,7 @@ declare interface ResolveOptions {
 	/**
 	 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
 	 */
-	aliasFields?: (string | string[])[];
+	aliasFields?: LibraryExport[];
 
 	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
@@ -5582,7 +5492,7 @@ declare interface ResolveOptions {
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point.
 	 */
-	mainFields?: (string | string[])[];
+	mainFields?: LibraryExport[];
 
 	/**
 	 * Filenames used to find the default entry point if there is no description file or main field.
@@ -6146,7 +6056,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the export name
 		 */
-		exportName: string | string[];
+		exportName: LibraryExport;
 		/**
 		 * the origin module
 		 */
@@ -6214,7 +6124,6 @@ declare abstract class RuntimeValue {
 	fileDependencies: any;
 	exec(parser?: any): any;
 }
-declare const SKIP_OVER_NAME: unique symbol;
 declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
 	topLevelScope: boolean | "arrow";
@@ -6474,7 +6383,7 @@ declare class Stats {
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
 	toJson(options?: any): any;
-	toString(options?: any): any;
+	toString(options?: any): string;
 }
 declare abstract class StatsFactory {
 	hooks: Readonly<{
@@ -6799,15 +6708,15 @@ declare interface StatsOptions {
 }
 declare abstract class StatsPrinter {
 	hooks: Readonly<{
-		sortElements: HookMap<SyncBailHook<[string[], any], any>>;
-		printElements: HookMap<SyncBailHook<[PrintedElement[], any], any>>;
-		sortItems: HookMap<SyncBailHook<[any[], any], any>>;
-		getItemName: HookMap<SyncBailHook<[any, any], any>>;
-		printItems: HookMap<SyncBailHook<[string[], any], any>>;
-		print: HookMap<SyncBailHook<[any, any], any>>;
-		result: HookMap<SyncWaterfallHook<[string, any]>>;
+		sortElements: HookMap<SyncBailHook<[string[], {}], true>>;
+		printElements: HookMap<SyncBailHook<[PrintedElement[], {}], string>>;
+		sortItems: HookMap<SyncBailHook<[any[], {}], true>>;
+		getItemName: HookMap<SyncBailHook<[any, {}], string>>;
+		printItems: HookMap<SyncBailHook<[string[], {}], string>>;
+		print: HookMap<SyncBailHook<[{}, {}], string>>;
+		result: HookMap<SyncWaterfallHook<[string, {}]>>;
 	}>;
-	print(type?: any, object?: any, baseContext?: any): any;
+	print(type: string, object?: any, baseContext?: any): string;
 }
 type StatsValue =
 	| boolean
@@ -6848,9 +6757,9 @@ declare class Template {
 	static toPath(str: string): string;
 	static numberToIdentifier(n: number): string;
 	static numberToIdentifierContinuation(n: number): string;
-	static indent(s: string | string[]): string;
-	static prefix(s: string | string[], prefix: string): string;
-	static asString(str: string | string[]): string;
+	static indent(s: LibraryExport): string;
+	static prefix(s: LibraryExport, prefix: string): string;
+	static asString(str: LibraryExport): string;
 	static getModulesArrayBounds(modules: WithId[]): false | [number, number];
 	static renderChunkModules(
 		renderContext: RenderContextModuleTemplate,
@@ -6895,12 +6804,6 @@ declare class WatchIgnorePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * This file was automatically generated.
- * DO NOT MODIFY BY HAND.
- * Run `yarn special-lint-fix` to update
- */
 declare interface WatchIgnorePluginOptions {
 	/**
 	 * A list of RegExps or absolute paths to directories or files that should be ignored.
@@ -6920,7 +6823,7 @@ declare interface WatchOptions {
 	/**
 	 * Ignore some files from watching (glob pattern).
 	 */
-	ignored?: string | string[];
+	ignored?: LibraryExport;
 
 	/**
 	 * Enable polling mode for watching.
@@ -6947,7 +6850,7 @@ declare abstract class Watching {
 		/**
 		 * Ignore some files from watching (glob pattern).
 		 */
-		ignored?: string | string[];
+		ignored?: LibraryExport;
 		/**
 		 * Enable polling mode for watching.
 		 */
