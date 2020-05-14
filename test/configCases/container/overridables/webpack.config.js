@@ -8,7 +8,9 @@ module.exports = {
 				{
 					test1: ["./modules/test1.js", "./cjs/test1"],
 					test2: "./modules/test2",
-					test3: "./modules/test3"
+					test3: {
+						import: "./modules/test3"
+					}
 				},
 				{
 					test2: "./cjs/test2.js",

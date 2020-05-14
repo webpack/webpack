@@ -2,6 +2,9 @@ const { ContainerPlugin } = require("../../../../").container;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
+	output: {
+		pathinfo: true
+	},
 	plugins: [
 		new ContainerPlugin({
 			name: "container",
@@ -11,7 +14,7 @@ module.exports = {
 			},
 			exposes: {
 				test: "./test",
-				test2: "./test2"
+				test2: ["./init-module", "./test2"]
 			}
 		})
 	]
