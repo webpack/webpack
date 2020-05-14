@@ -2954,10 +2954,10 @@ fs-minipass@^2.0.0:
   dependencies:
     minipass "^3.0.0"
 
-fs-monkey@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/fs-monkey/-/fs-monkey-1.0.0.tgz#b1fe36b2d8a78463fd0b8fd1463b355952743bd0"
-  integrity sha512-nxkkzQ5Ga+ETriXxIof4TncyMSzrV9jFIF+kGN16nw5CiAdWAnG/2FgM7CHhRenW1EBiDx+r1tf/P78HGKCgnA==
+fs-monkey@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/fs-monkey/-/fs-monkey-1.0.1.tgz#4a82f36944365e619f4454d9fff106553067b781"
+  integrity sha512-fcSa+wyTqZa46iWweI7/ZiUfegOZl0SG8+dltIwFXo7+zYU9J9kpS3NB6pZcSlJdhvIwp81Adx2XhZorncxiaA==
 
 fs-write-stream-atomic@^1.0.8:
   version "1.0.10"
@@ -4593,11 +4593,11 @@ map-visit@^1.0.0:
     object-visit "^1.0.0"
 
 memfs@^3.1.1:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.1.2.tgz#2bb51600dacec67ed35677b1185abb708b7d2ad6"
-  integrity sha512-YubKuE+RGSdpZcRq2Nih8HcHj3LrqndsDFNB9IFjrgwzdM4eq+fImlDMfNm/HdRhYRkLdUecHGIpdz+wyrqlDg==
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.1.3.tgz#69dde8a667c674a3f825c707b6957d9f8fd7c0f3"
+  integrity sha512-XOowyKV/SlR9cpj50mh6dyxcu+aBUKU+Kv1/JvQxXx8MOBQQBds9I9eTvGR0Wc3YFw85Hc11SJc8S0hbX7e9fw==
   dependencies:
-    fs-monkey "1.0.0"
+    fs-monkey "1.0.1"
 
 memoizee@^0.4.14:
   version "0.4.14"
