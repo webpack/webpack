@@ -7,12 +7,15 @@
 /**
  * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
  */
-export type Exposes =
-	| Exposes[]
-	| string
-	| {
-			[k: string]: Exposes;
-	  };
+export type Exposes = (ExposesItem | ExposesObject)[] | ExposesObject;
+/**
+ * Module that should be exposed by this container.
+ */
+export type ExposesItem = string;
+/**
+ * Modules that should be exposed by this container.
+ */
+export type ExposesItems = ExposesItem[];
 /**
  * Add a comment in the UMD wrapper.
  */
@@ -53,11 +56,16 @@ export type UmdNamedDefine = boolean;
  * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
  */
 export type Overridables =
-	| Overridables[]
-	| string
-	| {
-			[k: string]: Overridables;
-	  };
+	| (OverridablesItem | OverridablesObject)[]
+	| OverridablesObject;
+/**
+ * Request to a module in this container that should be able to be overridden by the host.
+ */
+export type OverridablesItem = string;
+/**
+ * Requests to modules in this container that should be able to be overridden by the host.
+ */
+export type OverridablesItems = OverridablesItem[];
 
 export interface ContainerPluginOptions {
 	/**
@@ -80,6 +88,24 @@ export interface ContainerPluginOptions {
 	 * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
 	 */
 	overridables?: Overridables;
+}
+/**
+ * Modules that should be exposed by this container. Property names are used as public paths.
+ */
+export interface ExposesObject {
+	/**
+	 * Modules that should be exposed by this container.
+	 */
+	[k: string]: ExposesConfig | ExposesItem | ExposesItems;
+}
+/**
+ * Advanced configuration for modules that should be exposed by this container.
+ */
+export interface ExposesConfig {
+	/**
+	 * Request to a module that should be exposed by this container.
+	 */
+	import: ExposesItem | ExposesItems;
 }
 /**
  * Options for library.
@@ -143,4 +169,22 @@ export interface LibraryCustomUmdObject {
 	 * Name of the property exposed globally by a UMD library.
 	 */
 	root?: string[] | string;
+}
+/**
+ * Requests to modules in this container that should be able to be overridden by the host. Property names are used as override keys.
+ */
+export interface OverridablesObject {
+	/**
+	 * Requests to modules in this container that should be able to be overridden by the host.
+	 */
+	[k: string]: OverridablesConfig | OverridablesItem | OverridablesItems;
+}
+/**
+ * Advanced configuration for modules in this container that should be able to be overridden by the host.
+ */
+export interface OverridablesConfig {
+	/**
+	 * Requests to modules in this container that should be able to be overridden by the host.
+	 */
+	import: OverridablesItem | OverridablesItems;
 }

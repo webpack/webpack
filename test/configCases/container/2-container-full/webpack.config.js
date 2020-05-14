@@ -8,7 +8,12 @@ module.exports = {
 			library: { type: "commonjs-module" },
 			remotes: {
 				containerB: "../1-container-full/container.js",
-				self: "./bundle0.js"
+				self: [
+					"var undefined",
+					"var (() => { throw new Error(); })()",
+					"var { then: (a, b) => b(new Error()) }",
+					"./bundle0.js"
+				]
 			},
 			exposes: ["./Self"],
 			shared: ["react"]

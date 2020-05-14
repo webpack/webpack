@@ -18,22 +18,70 @@
         {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Exposes"
+            "description": "Modules that should be exposed by this container.",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/ExposesItem"
+              },
+              {
+                "$ref": "#/definitions/ExposesObject"
+              }
+            ]
           }
         },
         {
-          "description": "Request to a module that should be exposed by this container.",
-          "type": "string",
-          "minLength": 1
-        },
-        {
-          "description": "Requests to modules that should be exposed by this container. Property names are used as public names.",
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/Exposes"
-          }
+          "$ref": "#/definitions/ExposesObject"
         }
       ]
+    },
+    "ExposesConfig": {
+      "description": "Advanced configuration for modules that should be exposed by this container.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "import": {
+          "description": "Request to a module that should be exposed by this container.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExposesItem"
+            },
+            {
+              "$ref": "#/definitions/ExposesItems"
+            }
+          ]
+        }
+      },
+      "required": ["import"]
+    },
+    "ExposesItem": {
+      "description": "Module that should be exposed by this container.",
+      "type": "string",
+      "minLength": 1
+    },
+    "ExposesItems": {
+      "description": "Modules that should be exposed by this container.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ExposesItem"
+      }
+    },
+    "ExposesObject": {
+      "description": "Modules that should be exposed by this container. Property names are used as public paths.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "Modules that should be exposed by this container.",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/ExposesConfig"
+          },
+          {
+            "$ref": "#/definitions/ExposesItem"
+          },
+          {
+            "$ref": "#/definitions/ExposesItems"
+          }
+        ]
+      }
     },
     "LibraryCustomUmdCommentObject": {
       "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.",
@@ -179,22 +227,70 @@
         {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Overridables"
+            "description": "Modules in this container that should be able to be overridden by the host.",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/OverridablesItem"
+              },
+              {
+                "$ref": "#/definitions/OverridablesObject"
+              }
+            ]
           }
         },
         {
-          "description": "Request to a module in this container that should be able to be overridden by the host. Override key is automatically inferred from request.",
-          "type": "string",
-          "minLength": 1
-        },
-        {
-          "description": "Requests to modules in this container that should be able to be overridden by the host. Property names are used as override keys.",
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/Overridables"
-          }
+          "$ref": "#/definitions/OverridablesObject"
         }
       ]
+    },
+    "OverridablesConfig": {
+      "description": "Advanced configuration for modules in this container that should be able to be overridden by the host.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "import": {
+          "description": "Requests to modules in this container that should be able to be overridden by the host.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/OverridablesItem"
+            },
+            {
+              "$ref": "#/definitions/OverridablesItems"
+            }
+          ]
+        }
+      },
+      "required": ["import"]
+    },
+    "OverridablesItem": {
+      "description": "Request to a module in this container that should be able to be overridden by the host.",
+      "type": "string",
+      "minLength": 1
+    },
+    "OverridablesItems": {
+      "description": "Requests to modules in this container that should be able to be overridden by the host.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/OverridablesItem"
+      }
+    },
+    "OverridablesObject": {
+      "description": "Requests to modules in this container that should be able to be overridden by the host. Property names are used as override keys.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "Requests to modules in this container that should be able to be overridden by the host.",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/OverridablesConfig"
+          },
+          {
+            "$ref": "#/definitions/OverridablesItem"
+          },
+          {
+            "$ref": "#/definitions/OverridablesItems"
+          }
+        ]
+      }
     },
     "UmdNamedDefine": {
       "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",

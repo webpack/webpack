@@ -27,22 +27,52 @@
         {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Overrides"
+            "description": "Modules in this container that should override overridable modules in the remote container.",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/OverridesItem"
+              },
+              {
+                "$ref": "#/definitions/OverridesObject"
+              }
+            ]
           }
         },
         {
-          "description": "Request to a module in this container that should override overridable modules in the remote container. Override key is automatically inferred from request.",
-          "type": "string",
-          "minLength": 1
-        },
-        {
-          "description": "Request to a module in this container that should override overridable modules in the remote container. Property names are used as override keys.",
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/Overrides"
-          }
+          "$ref": "#/definitions/OverridesObject"
         }
       ]
+    },
+    "OverridesConfig": {
+      "description": "Advanced configuration for modules in this container that should override overridable modules in the remote container.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "import": {
+          "$ref": "#/definitions/OverridesItem"
+        }
+      },
+      "required": ["import"]
+    },
+    "OverridesItem": {
+      "description": "Request to a module in this container that should override overridable modules in the remote container.",
+      "type": "string",
+      "minLength": 1
+    },
+    "OverridesObject": {
+      "description": "Requests to modules in this container that should override overridable modules in the remote container. Property names are used as override keys.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "Requests to modules in this container that should override overridable modules in the remote container.",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/OverridesConfig"
+          },
+          {
+            "$ref": "#/definitions/OverridesItem"
+          }
+        ]
+      }
     },
     "Remotes": {
       "description": "Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.",
@@ -50,22 +80,70 @@
         {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Remotes"
+            "description": "Container locations and request scopes from which modules should be resolved and loaded at runtime.",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/RemotesItem"
+              },
+              {
+                "$ref": "#/definitions/RemotesObject"
+              }
+            ]
           }
         },
         {
-          "description": "Container location from which modules should be resolved and loaded at runtime.",
-          "type": "string",
-          "minLength": 1
-        },
-        {
-          "description": "Container locations from which modules should be resolved and loaded at runtime. Property names are used as request scopes.",
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/Remotes"
-          }
+          "$ref": "#/definitions/RemotesObject"
         }
       ]
+    },
+    "RemotesConfig": {
+      "description": "Advanced configuration for container locations from which modules should be resolved and loaded at runtime.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "external": {
+          "description": "Container locations from which modules should be resolved and loaded at runtime.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RemotesItem"
+            },
+            {
+              "$ref": "#/definitions/RemotesItems"
+            }
+          ]
+        }
+      },
+      "required": ["external"]
+    },
+    "RemotesItem": {
+      "description": "Container location from which modules should be resolved and loaded at runtime.",
+      "type": "string",
+      "minLength": 1
+    },
+    "RemotesItems": {
+      "description": "Container locations from which modules should be resolved and loaded at runtime.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RemotesItem"
+      }
+    },
+    "RemotesObject": {
+      "description": "Container locations from which modules should be resolved and loaded at runtime. Property names are used as request scopes.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "Container locations from which modules should be resolved and loaded at runtime.",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/RemotesConfig"
+          },
+          {
+            "$ref": "#/definitions/RemotesItem"
+          },
+          {
+            "$ref": "#/definitions/RemotesItems"
+          }
+        ]
+      }
     }
   },
   "title": "ContainerReferencePluginOptions",

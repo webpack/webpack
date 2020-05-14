@@ -9,7 +9,9 @@ module.exports = {
 				abc: "ABC"
 			},
 			overrides: {
-				test: "./new-test"
+				test: {
+					import: "./new-test"
+				}
 			}
 		})
 	]
