@@ -1,24 +1,84 @@
 {
-  "title": "OverridablesPluginOptions",
-  "description": "Modules that should be able to be overridden. When provided, property name is used as override key, otherwise override key is automatically inferred from request.",
-  "anyOf": [
-    {
-      "type": "array",
-      "items": {
-        "$ref": "#"
-      }
+  "definitions": {
+    "Overridables": {
+      "description": "Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "description": "Modules in this container that should be able to be overridden by the host.",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/OverridablesItem"
+              },
+              {
+                "$ref": "#/definitions/OverridablesObject"
+              }
+            ]
+          }
+        },
+        {
+          "$ref": "#/definitions/OverridablesObject"
+        }
+      ]
     },
-    {
-      "description": "Request to a module that should be able to be overridden.",
+    "OverridablesConfig": {
+      "description": "Advanced configuration for modules in this container that should be able to be overridden by the host.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "import": {
+          "description": "Requests to modules in this container that should be able to be overridden by the host.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/OverridablesItem"
+            },
+            {
+              "$ref": "#/definitions/OverridablesItems"
+            }
+          ]
+        }
+      },
+      "required": ["import"]
+    },
+    "OverridablesItem": {
+      "description": "Request to a module in this container that should be able to be overridden by the host.",
       "type": "string",
       "minLength": 1
     },
-    {
-      "description": "Requests to modules that should be able to be overridden. Property names are used as override keys.",
+    "OverridablesItems": {
+      "description": "Requests to modules in this container that should be able to be overridden by the host.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/OverridablesItem"
+      }
+    },
+    "OverridablesObject": {
+      "description": "Requests to modules in this container that should be able to be overridden by the host. Property names are used as override keys.",
       "type": "object",
       "additionalProperties": {
-        "$ref": "#"
+        "description": "Requests to modules in this container that should be able to be overridden by the host.",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/OverridablesConfig"
+          },
+          {
+            "$ref": "#/definitions/OverridablesItem"
+          },
+          {
+            "$ref": "#/definitions/OverridablesItems"
+          }
+        ]
       }
     }
-  ]
+  },
+  "title": "OverridablesPluginOptions",
+  "description": "Modules that should be able to be overridden. When provided, property name is used as override key, otherwise override key is automatically inferred from request.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "overridables": {
+      "$ref": "#/definitions/Overridables"
+    }
+  }
 }
