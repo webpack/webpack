@@ -127,8 +127,7 @@ export type ExternalItem =
 				  };
 	  }
 	| ((
-			context: string,
-			request: string,
+			data: {context: string; request: string},
 			callback: (err?: Error, result?: string) => void
 	  ) => void);
 /**
@@ -150,7 +149,9 @@ export type ExternalsType =
 	| "umd"
 	| "umd2"
 	| "jsonp"
-	| "system";
+	| "system"
+	| "promise"
+	| "import";
 /**
  * Filtering values.
  */
@@ -397,6 +398,10 @@ export type HotUpdateMainFilename = string;
  * Wrap javascript code into IIFE's to avoid leaking into global scope.
  */
 export type Iife = boolean;
+/**
+ * The name of the native import() function (can be exchanged for a polyfill).
+ */
+export type ImportFunctionName = string;
 /**
  * The JSONP function used by webpack for async loading of chunks.
  */
@@ -1587,6 +1592,10 @@ export interface Output {
 	 */
 	iife?: Iife;
 	/**
+	 * The name of the native import() function (can be exchanged for a polyfill).
+	 */
+	importFunctionName?: ImportFunctionName;
+	/**
 	 * The JSONP function used by webpack for async loading of chunks.
 	 */
 	jsonpFunction?: JsonpFunction;
@@ -2043,6 +2052,10 @@ export interface OutputNormalized {
 	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
 	 */
 	iife?: Iife;
+	/**
+	 * The name of the native import() function (can be exchanged for a polyfill).
+	 */
+	importFunctionName?: ImportFunctionName;
 	/**
 	 * The JSONP function used by webpack for async loading of chunks.
 	 */
