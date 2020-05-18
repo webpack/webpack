@@ -2733,6 +2733,60 @@ Entrypoint main = main.js
     + 7 hidden modules"
 `;
 
+exports[`StatsTestCases should print correct stats for side-effects-optimization 1`] = `
+"Hash: dc96ef287a5ed67bc624dc96ef287a5ed67bc624
+Child
+    Hash: dc96ef287a5ed67bc624
+    Time: X ms
+    Built at: 1970-04-20 12:42:42
+      Asset      Size
+    main.js  2.34 KiB  [emitted]  [name: main]
+    Entrypoint main = main.js
+    ./index.js 116 bytes [built]
+        [no exports]
+        [no exports used]
+        ModuleConcatenation bailout: Cannot concat with ./node_modules/big-module/index.js (<- Module exports are unknown)
+        ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/index.js (<- Module exports are unknown)
+    ./node_modules/big-module/index.js 44 bytes [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+    ./node_modules/module-with-export/index.js 1.01 KiB [built]
+        ModuleConcatenation bailout: Module exports are unknown
+    ./node_modules/big-module/a.js 58 bytes [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+    ./node_modules/module-with-export/emptyModule.js 43 bytes [built]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+    ./node_modules/big-module/log.js 92 bytes [built]
+        ModuleConcatenation bailout: Module exports are unknown
+        + 5 hidden modules
+Child
+    Hash: dc96ef287a5ed67bc624
+    Time: X ms
+    Built at: 1970-04-20 12:42:42
+              Asset      Size
+    main.no-side.js  2.34 KiB  [emitted]  [name: main]
+    Entrypoint main = main.no-side.js
+    ./index.js 116 bytes [built]
+        [no exports]
+        [no exports used]
+        ModuleConcatenation bailout: Cannot concat with ./node_modules/big-module/index.js (<- Module exports are unknown)
+        ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/index.js (<- Module exports are unknown)
+    ./node_modules/big-module/index.js 44 bytes [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+    ./node_modules/module-with-export/index.js 1.01 KiB [built]
+        ModuleConcatenation bailout: Module exports are unknown
+    ./node_modules/big-module/a.js 58 bytes [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+    ./node_modules/module-with-export/emptyModule.js 43 bytes [built]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+    ./node_modules/big-module/log.js 92 bytes [built]
+        ModuleConcatenation bailout: Module exports are unknown
+        + 5 hidden modules"
+`;
+
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
 "Hash: 4205efc704387d48d033
 Time: X ms
