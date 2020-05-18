@@ -21,3 +21,9 @@ it("should require coffee module from base64 data-uri", function() {
 	expect(mod.number).toBe(42);
 	expect(mod.fn()).toBe("Hello world");
 });
+
+it("should require json module from base64 data-uri", function() {
+	const mod = require('data:application/json;charset=utf-8;base64,ewogICJpdCI6ICJ3b3JrcyIsCiAgIm51bWJlciI6IDQyCn0K');
+	expect(mod.it).toBe("works");
+	expect(mod.number).toBe(42);
+})

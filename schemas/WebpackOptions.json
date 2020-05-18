@@ -2467,6 +2467,10 @@
             }
           ]
         },
+        "mimetype": {
+          "description": "Module mimetype when load from Data URI.",
+          "type": "string"
+        },
         "oneOf": {
           "description": "Only execute the first matching rule in this array.",
           "oneOf": [
