@@ -2481,7 +2481,8 @@ LOG from webpack.Compilation
 
 LOG from webpack.SideEffectsFlagPlugin
 <t> capture reexports from modules: X ms
-<t> flatten reexports: X ms
+<t> flatten dynamic reexports: X ms
+<t> flatten static reexports: X ms
 <t> update imports: X ms
 
 LOG from webpack.FlagDependencyUsagePlugin
@@ -2734,35 +2735,30 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-optimization 1`] = `
-"Hash: f818c1d4637170fbece5f818c1d4637170fbece5
+"Hash: 0f3382fad7d3852c5f71f818c1d4637170fbece5
 Child
-    Hash: f818c1d4637170fbece5
+    Hash: 0f3382fad7d3852c5f71
     Time: X ms
     Built at: 1970-04-20 12:42:42
-      Asset      Size
-    main.js  1.41 KiB  [emitted]  [name: main]
+      Asset       Size
+    main.js  580 bytes  [emitted]  [name: main]
     Entrypoint main = main.js
     ./index.js 116 bytes [built]
         [no exports]
         [no exports used]
-        ModuleConcatenation bailout: Cannot concat with ./node_modules/big-module/index.js (<- Module exports are unknown)
+        ModuleConcatenation bailout: Cannot concat with ./node_modules/big-module/a.js (<- Module exports are unknown)
+        ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/emptyModule.js (<- Module is not an ECMAScript module)
         ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/index.js (<- Module exports are unknown)
-    ./node_modules/big-module/index.js 44 bytes [built]
-        [only some exports used: a, huh]
+    ./node_modules/module-with-export/emptyModule.js 43 bytes [built]
+        [only some exports used: huh]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+    ./node_modules/big-module/a.js 58 bytes [built]
+        [only some exports used: a]
         ModuleConcatenation bailout: Module exports are unknown
     ./node_modules/module-with-export/index.js 1.01 KiB [built]
-        [only some exports used: a, huh, smallVar]
+        [only some exports used: smallVar]
         ModuleConcatenation bailout: Module exports are unknown
-    ./node_modules/big-module/a.js 58 bytes [built]
-        [only some exports used: a, huh]
-        ModuleConcatenation bailout: Module exports are unknown
-    ./node_modules/module-with-export/emptyModule.js 43 bytes [built]
-        [only some exports used: a, huh]
-        ModuleConcatenation bailout: Module is not an ECMAScript module
-    ./node_modules/big-module/log.js 92 bytes [built]
-        [only some exports used: a, huh]
-        ModuleConcatenation bailout: Module exports are unknown
-        + 4 hidden modules
+        + 5 hidden modules
 Child
     Hash: f818c1d4637170fbece5
     Time: X ms
@@ -3888,7 +3884,7 @@ require.include() is deprecated and will be removed soon.
 `;
 
 exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
-"Hash: 403266b01330f8535c18
+"Hash: 07f3df8603085e838fb0
 Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset       Size
