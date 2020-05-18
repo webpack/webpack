@@ -116,6 +116,10 @@ describe("Defaults", () => {
 		        "test": /\\\\\\.json\\$/i,
 		        "type": "json",
 		      },
+		      Object {
+		        "mimetype": "application/json",
+		        "type": "json",
+		      },
 		    ],
 		    "exprContextCritical": true,
 		    "exprContextRecursive": true,
@@ -451,6 +455,10 @@ describe("Defaults", () => {
 		+       Object {
 		+         "test": /\\.wasm$/i,
 		+         "type": "webassembly/sync",
+		+       },
+		+       Object {
+		+         "mimetype": "application/wasm",
+		+         "type": "webassembly/sync",
 	`)
 	);
 	test("mjs", { experiments: { mjs: true } }, e =>
@@ -470,6 +478,10 @@ describe("Defaults", () => {
 		@@ ... @@
 		+         },
 		+         "test": /\\.mjs$/i,
+		+         "type": "javascript/esm",
+		+       },
+		+       Object {
+		+         "mimetype": "javascript/esm",
 		+         "type": "javascript/esm",
 		+       },
 		+     ],
@@ -514,6 +526,10 @@ describe("Defaults", () => {
 		+       Object {
 		+         "test": /\\.wasm$/i,
 		+         "type": "webassembly/async",
+		+       },
+		+       Object {
+		+         "mimetype": "application/wasm",
+		+         "type": "webassembly/async",
 	`)
 	);
 	test(
@@ -534,6 +550,10 @@ describe("Defaults", () => {
 			+       },
 			+       Object {
 			+         "test": /\\.wasm$/i,
+			+         "type": "webassembly/async",
+			+       },
+			+       Object {
+			+         "mimetype": "application/wasm",
 			+         "type": "webassembly/async",
 		`)
 	);

@@ -771,6 +771,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-mimetype": Object {
+    "configs": Array [
+      Object {
+        "description": "Module mimetype when load from Data URI.",
+        "multiple": true,
+        "path": "module.rules[].mimetype",
+        "type": "string",
+      },
+    ],
+    "description": "Module mimetype when load from Data URI.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-options": Object {
     "configs": Array [
       Object {
