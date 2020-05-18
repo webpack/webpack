@@ -2735,13 +2735,13 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-optimization 1`] = `
-"Hash: 0f3382fad7d3852c5f71f818c1d4637170fbece5
+"Hash: 0dabf28a818743b873caa79894f4120790dbe077
 Child
-    Hash: 0f3382fad7d3852c5f71
+    Hash: 0dabf28a818743b873ca
     Time: X ms
     Built at: 1970-04-20 12:42:42
       Asset       Size
-    main.js  580 bytes  [emitted]  [name: main]
+    main.js  568 bytes  [emitted]  [name: main]
     Entrypoint main = main.js
     ./index.js 116 bytes [built]
         [no exports]
@@ -2760,11 +2760,11 @@ Child
         ModuleConcatenation bailout: Module exports are unknown
         + 5 hidden modules
 Child
-    Hash: f818c1d4637170fbece5
+    Hash: a79894f4120790dbe077
     Time: X ms
     Built at: 1970-04-20 12:42:42
               Asset      Size
-    main.no-side.js  1.41 KiB  [emitted]  [name: main]
+    main.no-side.js  1.37 KiB  [emitted]  [name: main]
     Entrypoint main = main.no-side.js
     ./index.js 116 bytes [built]
         [no exports]
@@ -3841,7 +3841,7 @@ chunk default/async-a.js (async-a) 134 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: 4abb9dd9f28d864fe0ca
+"Hash: 0653813b0ee99f2a94bd
 Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset      Size
