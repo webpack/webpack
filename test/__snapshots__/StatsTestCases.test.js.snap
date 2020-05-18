@@ -2462,6 +2462,64 @@ Entrypoint main = main.js
     |     harmony import specifier ./components  ./main.js 4:15-20 (skipped side-effect-free modules)"
 `;
 
+exports[`StatsTestCases should print correct stats for side-effects-optimization 1`] = `
+"Hash: 62f1c52a30620443eef062f1c52a30620443eef0
+Child
+    Hash: 62f1c52a30620443eef0
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+      Asset      Size  Chunks             Chunk Names
+    main.js  2.13 KiB       0  [emitted]  main
+    Entrypoint main = main.js
+    [0] ./node_modules/module-with-export/index.js 1.01 KiB {0} [built]
+        [only some exports used: a, huh, smallVar]
+        ModuleConcatenation bailout: Module exports are unknown
+    [1] ./node_modules/big-module/index.js 44 bytes {0} [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+    [2] ./node_modules/big-module/a.js 58 bytes {0} [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+    [3] ./node_modules/module-with-export/emptyModule.js 43 bytes {0} [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+    [4] ./node_modules/big-module/log.js 92 bytes {0} [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+    [5] ./index.js 116 bytes {0} [built]
+        [no exports]
+        ModuleConcatenation bailout: Module is an entry point
+    [6] (webpack)/buildin/harmony-module.js 573 bytes {0} [built]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+Child
+    Hash: 62f1c52a30620443eef0
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+              Asset      Size  Chunks             Chunk Names
+    main.no-side.js  2.13 KiB       0  [emitted]  main
+    Entrypoint main = main.no-side.js
+    [0] ./node_modules/module-with-export/index.js 1.01 KiB {0} [built]
+        [only some exports used: a, huh, smallVar]
+        ModuleConcatenation bailout: Module exports are unknown
+    [1] ./node_modules/big-module/index.js 44 bytes {0} [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+    [2] ./node_modules/big-module/a.js 58 bytes {0} [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+    [3] ./node_modules/module-with-export/emptyModule.js 43 bytes {0} [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+    [4] ./node_modules/big-module/log.js 92 bytes {0} [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+    [5] ./index.js 116 bytes {0} [built]
+        [no exports]
+        ModuleConcatenation bailout: Module is an entry point
+    [6] (webpack)/buildin/harmony-module.js 573 bytes {0} [built]
+        ModuleConcatenation bailout: Module is not an ECMAScript module"
+`;
+
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
 "Hash: a5866e21e8cfa3ae1a89
 Time: Xms
