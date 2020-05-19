@@ -14,7 +14,8 @@ module.exports = {
 			},
 			exposes: {
 				test: "./test",
-				test2: ["./init-module", "./test2"]
+				test2: ["./init-module", "./test2"],
+				"": "./main"
 			}
 		})
 	]
