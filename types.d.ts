@@ -2230,6 +2230,7 @@ declare class ExportsInfo {
 	isUsed(): boolean;
 	getUsedExports(): any;
 	getProvidedExports(): true | string[];
+	hasStaticExportsList(): boolean;
 	isExportProvided(name: LibraryExport): boolean;
 	isExportUsed(name: LibraryExport): 0 | 1 | 2 | 3 | 4;
 	getUsedName(name: LibraryExport): string | false | string[];

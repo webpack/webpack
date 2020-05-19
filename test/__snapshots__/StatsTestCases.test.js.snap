@@ -2735,30 +2735,29 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-optimization 1`] = `
-"Hash: 0dabf28a818743b873caa79894f4120790dbe077
+"Hash: d0117c2c1b2089facc60a79894f4120790dbe077
 Child
-    Hash: 0dabf28a818743b873ca
+    Hash: d0117c2c1b2089facc60
     Time: X ms
     Built at: 1970-04-20 12:42:42
       Asset       Size
-    main.js  568 bytes  [emitted]  [name: main]
+    main.js  207 bytes  [emitted]  [name: main]
     Entrypoint main = main.js
-    ./index.js 116 bytes [built]
+    ./index.js + 2 modules 1.18 KiB [built]
         [no exports]
         [no exports used]
-        ModuleConcatenation bailout: Cannot concat with ./node_modules/big-module/a.js (<- Module exports are unknown)
         ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/emptyModule.js (<- Module is not an ECMAScript module)
-        ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/index.js (<- Module exports are unknown)
+        | ./node_modules/big-module/a.js 58 bytes [built]
+        |     [only some exports used: a]
+        | ./node_modules/module-with-export/index.js 1.01 KiB [built]
+        |     [only some exports used: smallVar]
+        | ./index.js 116 bytes [built]
+        |     [no exports]
+        |     [no exports used]
     ./node_modules/module-with-export/emptyModule.js 43 bytes [built]
         [only some exports used: huh]
         ModuleConcatenation bailout: Module is not an ECMAScript module
-    ./node_modules/big-module/a.js 58 bytes [built]
-        [only some exports used: a]
-        ModuleConcatenation bailout: Module exports are unknown
-    ./node_modules/module-with-export/index.js 1.01 KiB [built]
-        [only some exports used: smallVar]
-        ModuleConcatenation bailout: Module exports are unknown
-        + 5 hidden modules
+        + 2 hidden modules
 Child
     Hash: a79894f4120790dbe077
     Time: X ms
