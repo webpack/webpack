@@ -2220,7 +2220,10 @@ declare class ExportsInfo {
 	getExportInfo(name: string): ExportInfo;
 	getReadOnlyExportInfo(name: string): ExportInfo;
 	getNestedExportsInfo(name?: string[]): ExportsInfo;
-	setUnknownExportsProvided(canMangle?: boolean): boolean;
+	setUnknownExportsProvided(
+		canMangle?: boolean,
+		excludeExports?: Set<string>
+	): boolean;
 	setUsedInUnknownWay(): boolean;
 	setAllKnownExportsUsed(): boolean;
 	setUsedForSideEffectsOnly(): boolean;
@@ -2242,6 +2245,11 @@ declare interface ExportsSpec {
 	 * exported names, true for unknown exports or null for no exports
 	 */
 	exports: true | (string | ExportSpec)[];
+
+	/**
+	 * when exports = true, list of unaffected exports
+	 */
+	excludeExports?: Set<string>;
 
 	/**
 	 * can the export be renamed (defaults to true)

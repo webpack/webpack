@@ -2481,7 +2481,8 @@ LOG from webpack.Compilation
 
 LOG from webpack.SideEffectsFlagPlugin
 <t> capture reexports from modules: X ms
-<t> flatten reexports: X ms
+<t> flatten dynamic reexports: X ms
+<t> flatten static reexports: X ms
 <t> update imports: X ms
 
 LOG from webpack.FlagDependencyUsagePlugin
@@ -2731,6 +2732,61 @@ Entrypoint main = main.js
     [module unused]
     [inactive] harmony side effect evaluation ./CompC ./components/src/index.js 2:0-43
     + 7 hidden modules"
+`;
+
+exports[`StatsTestCases should print correct stats for side-effects-optimization 1`] = `
+"Hash: 0dabf28a818743b873caa79894f4120790dbe077
+Child
+    Hash: 0dabf28a818743b873ca
+    Time: X ms
+    Built at: 1970-04-20 12:42:42
+      Asset       Size
+    main.js  568 bytes  [emitted]  [name: main]
+    Entrypoint main = main.js
+    ./index.js 116 bytes [built]
+        [no exports]
+        [no exports used]
+        ModuleConcatenation bailout: Cannot concat with ./node_modules/big-module/a.js (<- Module exports are unknown)
+        ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/emptyModule.js (<- Module is not an ECMAScript module)
+        ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/index.js (<- Module exports are unknown)
+    ./node_modules/module-with-export/emptyModule.js 43 bytes [built]
+        [only some exports used: huh]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+    ./node_modules/big-module/a.js 58 bytes [built]
+        [only some exports used: a]
+        ModuleConcatenation bailout: Module exports are unknown
+    ./node_modules/module-with-export/index.js 1.01 KiB [built]
+        [only some exports used: smallVar]
+        ModuleConcatenation bailout: Module exports are unknown
+        + 5 hidden modules
+Child
+    Hash: a79894f4120790dbe077
+    Time: X ms
+    Built at: 1970-04-20 12:42:42
+              Asset      Size
+    main.no-side.js  1.37 KiB  [emitted]  [name: main]
+    Entrypoint main = main.no-side.js
+    ./index.js 116 bytes [built]
+        [no exports]
+        [no exports used]
+        ModuleConcatenation bailout: Cannot concat with ./node_modules/big-module/index.js (<- Module exports are unknown)
+        ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/index.js (<- Module exports are unknown)
+    ./node_modules/big-module/index.js 44 bytes [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+    ./node_modules/module-with-export/index.js 1.01 KiB [built]
+        [only some exports used: a, huh, smallVar]
+        ModuleConcatenation bailout: Module exports are unknown
+    ./node_modules/big-module/a.js 58 bytes [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+    ./node_modules/module-with-export/emptyModule.js 43 bytes [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+    ./node_modules/big-module/log.js 92 bytes [built]
+        [only some exports used: a, huh]
+        ModuleConcatenation bailout: Module exports are unknown
+        + 4 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
@@ -3785,7 +3841,7 @@ chunk default/async-a.js (async-a) 134 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: 4abb9dd9f28d864fe0ca
+"Hash: 0653813b0ee99f2a94bd
 Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset      Size
@@ -3828,7 +3884,7 @@ require.include() is deprecated and will be removed soon.
 `;
 
 exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
-"Hash: 403266b01330f8535c18
+"Hash: 07f3df8603085e838fb0
 Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset       Size
