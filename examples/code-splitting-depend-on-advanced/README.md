@@ -241,8 +241,6 @@ console.log(lodash, isomorphicFetch);
 /******/ 							script.onerror = script.onload = onScriptComplete;
 /******/ 							document.head.appendChild(script);
 /******/ 						} else installedChunks[chunkId] = 0;
-/******/ 		
-/******/ 						// no HMR
 /******/ 					}
 /******/ 				}
 /******/ 		};
@@ -441,8 +439,7 @@ console.log((lodash__WEBPACK_IMPORTED_MODULE_0___default()), (isomorphic_fetch__
   !*** ./node_modules/lodash.js ***!
   \********************************/
 /*! unknown exports (runtime-defined) */
-/*! export default [maybe provided (runtime-defined)] [used] [usage and provision prevents renaming] */
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -455,8 +452,7 @@ module.exports = 'lodash';
   !*** ./node_modules/isomorphic-fetch.js ***!
   \******************************************/
 /*! unknown exports (runtime-defined) */
-/*! export default [maybe provided (runtime-defined)] [used] [usage and provision prevents renaming] */
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -476,8 +472,7 @@ module.exports = "isomorphic-fetch";
   !*** ./node_modules/react.js ***!
   \*******************************/
 /*! unknown exports (runtime-defined) */
-/*! export default [maybe provided (runtime-defined)] [used] [usage and provision prevents renaming] */
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -490,8 +485,7 @@ module.exports = 'react';
   !*** ./node_modules/react-dom.js ***!
   \***********************************/
 /*! unknown exports (runtime-defined) */
-/*! export default [maybe provided (runtime-defined)] [used] [usage and provision prevents renaming] */
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -504,8 +498,7 @@ module.exports = 'react-dom';
   !*** ./node_modules/prop-types.js ***!
   \************************************/
 /*! unknown exports (runtime-defined) */
-/*! export default [maybe provided (runtime-defined)] [used] [usage and provision prevents renaming] */
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -522,13 +515,13 @@ module.exports = 'prop-types';
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.13
+Version: webpack 5.0.0-beta.16
            Asset      Size
           app.js  1.09 KiB  [emitted]  [name: app]
       lazy_js.js  1.13 KiB  [emitted]
-other-vendors.js  2.09 KiB  [emitted]  [name: other-vendors]
+other-vendors.js  1.87 KiB  [emitted]  [name: other-vendors]
         page1.js  1.56 KiB  [emitted]  [name: page1]
-react-vendors.js  1.47 KiB  [emitted]  [name: react-vendors]
+react-vendors.js  1.15 KiB  [emitted]  [name: react-vendors]
       runtime.js  10.4 KiB  [emitted]  [name: runtime]
 Entrypoint app = app.js
 Entrypoint page1 = page1.js
@@ -592,7 +585,7 @@ chunk react-vendors.js (react-vendors) 87 bytes ={runtime}= >{page1}< [initial] 
      harmony side effect evaluation react ./page1.js 2:0-26
      harmony import specifier react ./page1.js 5:29-34
      entry react react-vendors
-chunk runtime.js (runtime) 6.2 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
+chunk runtime.js (runtime) 6.18 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
     > ./other-vendors other-vendors
     > prop-types react-vendors
     > react react-vendors
@@ -604,7 +597,7 @@ chunk runtime.js (runtime) 6.2 KiB ={other-vendors}= ={react-vendors}= >{app}< >
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.13
+Version: webpack 5.0.0-beta.16
            Asset       Size
           app.js  186 bytes  [emitted]  [name: app]
       lazy_js.js  163 bytes  [emitted]
@@ -674,7 +667,7 @@ chunk react-vendors.js (react-vendors) 87 bytes ={runtime}= >{page1}< [initial] 
      harmony side effect evaluation react ./page1.js 2:0-26
      harmony import specifier react ./page1.js 5:29-34
      entry react react-vendors
-chunk runtime.js (runtime) 6.2 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
+chunk runtime.js (runtime) 6.18 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
     > ./other-vendors other-vendors
     > prop-types react-vendors
     > react react-vendors

@@ -14,7 +14,7 @@ Since some of the modules are no longer included in the "public contract" of the
 they can be optimized by merging (concatenating) multiple modules together or removing unused code.
 This allows taking advantage of tree shaking (scope hoisting and dead code removal) optimizations.
 
-In this example, only `example.js` module is exposed since it's the entry point.
+In this example, only `example.js` module is exposed, since it's the entry point.
 Modules `a.js` and `b.js` are concatenated into `example.js`.
 Module `cjs.js` is left as is since it's in CommonJS format.
 
@@ -63,13 +63,14 @@ module.exports = {
 # dist/dll.js
 
 ```javascript
-var dll_5c6269cc746198ce0809 =
+var dll_99b323431ba57419786c;dll_99b323431ba57419786c =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!***************!*\
   !*** dll dll ***!
   \***************/
+/*! unknown exports (runtime-defined) */
 /*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: __webpack_require__, module */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
@@ -82,16 +83,25 @@ module.exports = __webpack_require__;
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
   \********************************/
-/*! export a [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export b [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export c [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.d, __webpack_require__.* */
+/*! namespace exports */
+/*! export a [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! export b [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! export c [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__, __webpack_require__.* */
 /*! ModuleConcatenation bailout: Cannot concat with ./cjs.js (<- Module is not an ECMAScript module) */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
+// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "a": () => /* reexport */ a,
+  "b": () => /* reexport */ b,
+  "c": () => /* reexport */ cjs.c
+});
 
 // CONCATENATED MODULE: ./b.js
 // module b
@@ -108,11 +118,6 @@ var a = "a";
 var cjs = __webpack_require__(2);
 
 // CONCATENATED MODULE: ./example.js
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => /* concated reexport __WEBPACK_MODULE_REFERENCE__1_5b2261225d_asiSafe__ */ a,
-/* harmony export */   "b": () => /* concated reexport __WEBPACK_MODULE_REFERENCE__1_5b2262225d_asiSafe__ */ b,
-/* harmony export */   "c": () => /* concated reexport __WEBPACK_MODULE_REFERENCE__2_5b2263225d_asiSafe__ */ cjs.c
-/* harmony export */ });
 
 
 
@@ -122,7 +127,9 @@ var cjs = __webpack_require__(2);
 /*!****************!*\
   !*** ./cjs.js ***!
   \****************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! default exports */
+/*! export c [provided] [used] [could be renamed] */
+/*! other exports [not provided] [unused] */
 /*! runtime requirements: __webpack_exports__ */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ ((__unused_webpack_module, exports) => {
@@ -150,16 +157,13 @@ exports.c = "c";
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -167,20 +171,24 @@ exports.c = "c";
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
 /******/ 		__webpack_require__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
-/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
@@ -188,7 +196,7 @@ exports.c = "c";
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -207,7 +215,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_5c6269cc746198ce0809","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["a","b","c"]}}}
+{"name":"dll_99b323431ba57419786c","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -216,38 +224,39 @@ exports.c = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
+Version: webpack 5.0.0-beta.16
  Asset      Size
 dll.js  4.59 KiB  [emitted]  [name: dll]
 Entrypoint dll = dll.js
-chunk dll.js (dll) 216 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
+chunk dll.js (dll) 216 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
     > dll
  ./cjs.js 42 bytes [built]
-     [used exports unknown]
+     [exports: c]
+     [all exports used]
      harmony side effect evaluation ./cjs ./example.js + 2 modules ./example.js 2:0-26
      harmony export imported specifier ./cjs ./example.js + 2 modules ./example.js 2:0-26
  ./example.js + 2 modules 162 bytes [built]
      [exports: a, b, c]
-     [used exports unknown]
      entry ./example dll dll dll[0]
  dll dll 12 bytes [built]
      dll entry
-     used a library export
-     + 2 hidden chunk modules
+     used as library export
+     + 3 hidden chunk modules
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
+Version: webpack 5.0.0-beta.16
  Asset       Size
-dll.js  667 bytes  [emitted]  [name: dll]
+dll.js  675 bytes  [emitted]  [name: dll]
 Entrypoint dll = dll.js
-chunk dll.js (dll) 216 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
+chunk dll.js (dll) 216 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
     > dll
  ./cjs.js 42 bytes [built]
-     [only some exports used: c]
+     [exports: c]
+     [all exports used]
      harmony side effect evaluation ./cjs ./example.js + 2 modules ./example.js 2:0-26
      harmony export imported specifier ./cjs ./example.js + 2 modules ./example.js 2:0-26
  ./example.js + 2 modules 162 bytes [built]
@@ -255,6 +264,6 @@ chunk dll.js (dll) 216 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
      entry ./example dll dll dll[0]
  dll dll 12 bytes [built]
      dll entry
-     used a library export
-     + 2 hidden chunk modules
+     used as library export
+     + 3 hidden chunk modules
 ```

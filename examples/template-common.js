@@ -14,7 +14,7 @@ function lessStrict(regExpStr) {
 }
 
 const runtimeModulesRegexp = /(\/\*{72}\/\n(?:\/(?:\*{6}|\*{72})\/.*\n)*\/\*{72}\/\n)/g;
-const timeRegexp = /\s*Time: \d+ms/g;
+const timeRegexp = /\s*Time: \d+ ms/g;
 const buildAtRegexp = /\s*Built at: .+/mg;
 const hashRegexp = /Hash: [a-f0-9]+/g;
 const dataUrlRegexp = /("data:[^"]+")/g;

@@ -71,8 +71,7 @@ console.log((react__WEBPACK_IMPORTED_MODULE_0___default()), (react_dom__WEBPACK_
   !*** ./node_modules/react.js ***!
   \*******************************/
 /*! unknown exports (runtime-defined) */
-/*! export default [maybe provided (runtime-defined)] [used] [usage and provision prevents renaming] */
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -85,8 +84,7 @@ module.exports = 'react';
   !*** ./node_modules/react-dom.js ***!
   \***********************************/
 /*! unknown exports (runtime-defined) */
-/*! export default [maybe provided (runtime-defined)] [used] [usage and provision prevents renaming] */
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -99,8 +97,7 @@ module.exports = 'react-dom';
   !*** ./node_modules/prop-types.js ***!
   \************************************/
 /*! unknown exports (runtime-defined) */
-/*! export default [maybe provided (runtime-defined)] [used] [usage and provision prevents renaming] */
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -288,10 +285,10 @@ module.exports = 'prop-types';
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.13
+Version: webpack 5.0.0-beta.16
            Asset      Size
           app.js  1.35 KiB  [emitted]  [name: app]
-react-vendors.js  7.45 KiB  [emitted]  [name: react-vendors]
+react-vendors.js  7.12 KiB  [emitted]  [name: react-vendors]
 Entrypoint app = app.js
 Entrypoint react-vendors = react-vendors.js
 chunk app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
@@ -326,7 +323,7 @@ chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.17 KiB (runtime) 
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.13
+Version: webpack 5.0.0-beta.16
            Asset       Size
           app.js  197 bytes  [emitted]  [name: app]
 react-vendors.js   1.08 KiB  [emitted]  [name: react-vendors]

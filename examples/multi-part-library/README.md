@@ -4,7 +4,7 @@ When using this library with script tags it exports itself to the namespace `MyL
 
 We are using multiple entry points (`entry` option) to build every part of the library as a separate output file. The `output.filename` option contains `[name]` to give each output file a different name.
 
-We are using the `libraryTarget` option to generate a UMD ([Universal Module Definition](https://github.com/umdjs/umd)) module that is consumable in CommonsJs, AMD and with script tags. The `library` option defines the namespace. We are using `[name]` in the `library` option to give every entry a different namespace.
+We are using the `libraryTarget` option to generate a UMD ([Universal Module Definition](https://github.com/umdjs/umd)) module that is consumable in CommonsJS, AMD and with script tags. The `library` option defines the namespace. We are using `[name]` in the `library` option to give every entry a different namespace.
 
 You can see that webpack automatically wraps your module so that it is consumable in every environment. All you need is this simple config.
 
@@ -40,7 +40,7 @@ module.exports = {
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["alpha"] = factory();
+		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["alpha"] = factory();
 })(window, function() {
@@ -50,6 +50,7 @@ return /******/ (() => { // webpackBootstrap
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
+/*! unknown exports (runtime-defined) */
 /*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
@@ -75,16 +76,13 @@ module.exports = "alpha";
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -114,7 +112,7 @@ module.exports = "alpha";
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["beta"] = factory();
+		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["beta"] = factory();
 })(window, function() {
@@ -125,6 +123,7 @@ return /******/ (() => { // webpackBootstrap
 /*!*****************!*\
   !*** ./beta.js ***!
   \*****************/
+/*! unknown exports (runtime-defined) */
 /*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
@@ -150,16 +149,13 @@ module.exports = "beta";
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -186,42 +182,46 @@ module.exports = "beta";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
+Version: webpack 5.0.0-beta.16
              Asset      Size
 MyLibrary.alpha.js  1.97 KiB  [emitted]  [name: alpha]
- MyLibrary.beta.js  1.98 KiB  [emitted]  [name: beta]
+ MyLibrary.beta.js  1.97 KiB  [emitted]  [name: beta]
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
     > ./alpha alpha
  ./alpha.js 25 bytes [built]
+     cjs self exports reference ./alpha.js 1:0-14
      entry ./alpha alpha
-     used a library export
+     used as library export
 chunk MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     > ./beta beta
  ./beta.js 24 bytes [built]
+     cjs self exports reference ./beta.js 1:0-14
      entry ./beta beta
-     used a library export
+     used as library export
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
+Version: webpack 5.0.0-beta.16
              Asset       Size
-MyLibrary.alpha.js  429 bytes  [emitted]  [name: alpha]
- MyLibrary.beta.js  424 bytes  [emitted]  [name: beta]
+MyLibrary.alpha.js  417 bytes  [emitted]  [name: alpha]
+ MyLibrary.beta.js  413 bytes  [emitted]  [name: beta]
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
     > ./alpha alpha
  ./alpha.js 25 bytes [built]
+     cjs self exports reference ./alpha.js 1:0-14
      entry ./alpha alpha
-     used a library export
+     used as library export
 chunk MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     > ./beta beta
  ./beta.js 24 bytes [built]
+     cjs self exports reference ./beta.js 1:0-14
      entry ./beta beta
-     used a library export
+     used as library export
 ```
