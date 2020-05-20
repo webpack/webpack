@@ -50,46 +50,31 @@ console.log(new square(7));
 ```javascript
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
-/* 0 */
-/*!************************!*\
-  !*** ./example-app.js ***!
-  \************************/
-/*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var example_vendor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! example-vendor */ 1);
-
-
-console.log((0,example_vendor__WEBPACK_IMPORTED_MODULE_0__.square)(7));
-console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
-
-
-/***/ }),
+/* 0 */,
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_02cb05c865a84081bc8b ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c6c2f689b0bad44474d1 ***!
   \******************************************************************************************************/
-/*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
-/*! other exports [not provided] [no usage info] */
+/*! namespace exports */
+/*! export square [provided] [used] [provision prevents renaming] */
+/*! other exports [not provided] [unused] */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_02cb05c865a84081bc8b */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_c6c2f689b0bad44474d1 */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_02cb05c865a84081bc8b" ***!
+  !*** external "vendor_lib_c6c2f689b0bad44474d1" ***!
   \**************************************************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! unknown exports (runtime-defined) */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_02cb05c865a84081bc8b;
+module.exports = vendor_lib_c6c2f689b0bad44474d1;
 
 /***/ })
 /******/ 	]);
@@ -110,32 +95,17 @@ module.exports = vendor_lib_02cb05c865a84081bc8b;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	}();
 /******/ 	
 /************************************************************************/
 ```
@@ -143,10 +113,22 @@ module.exports = vendor_lib_02cb05c865a84081bc8b;
 </details>
 
 ``` js
-/******/ 	// startup
-/******/ 	// Load entry module
-/******/ 	__webpack_require__(0);
-/******/ 	// This entry module used 'exports' so it can't be inlined
+(() => {
+"use strict";
+/*!************************!*\
+  !*** ./example-app.js ***!
+  \************************/
+/*! namespace exports */
+/*! exports [not provided] [unused] */
+/*! runtime requirements: __webpack_require__ */
+/* harmony import */ var example_vendor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! example-vendor */ 1);
+
+
+console.log((0,example_vendor__WEBPACK_IMPORTED_MODULE_0__.square)(7));
+console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
+
+})();
+
 /******/ })()
 ;
 ```
@@ -157,35 +139,9 @@ module.exports = vendor_lib_02cb05c865a84081bc8b;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
- Asset     Size
-app.js  3.5 KiB  [emitted]  [name: main]
-Entrypoint main = app.js
-chunk app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
-    > ./example-app main
- ./example-app.js 94 bytes [built]
-     [no exports]
-     [used exports unknown]
-     entry ./example-app main
- delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_02cb05c865a84081bc8b 42 bytes [built]
-     [exports: square]
-     [used exports unknown]
-     harmony side effect evaluation example-vendor ./example-app.js 1:0-40
-     harmony import specifier example-vendor ./example-app.js 3:12-18
-     harmony import specifier example-vendor ./example-app.js 4:16-22
- external "vendor_lib_02cb05c865a84081bc8b" 42 bytes [built]
-     [used exports unknown]
-     delegated source dll-reference vendor_lib_02cb05c865a84081bc8b delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_02cb05c865a84081bc8b
-     + 1 hidden chunk module
-```
-
-## Production mode
-
-```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
- Asset       Size
-app.js  340 bytes  [emitted]  [name: main]
+Version: webpack 5.0.0-beta.16
+ Asset      Size
+app.js  2.67 KiB  [emitted]  [name: main]
 Entrypoint main = app.js
 chunk app.js (main) 178 bytes [entry] [rendered]
     > ./example-app main
@@ -193,14 +149,38 @@ chunk app.js (main) 178 bytes [entry] [rendered]
      [no exports]
      [no exports used]
      entry ./example-app main
- delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_02cb05c865a84081bc8b 42 bytes [built]
+ delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c6c2f689b0bad44474d1 42 bytes [built]
      [exports: square]
      [all exports used]
      harmony side effect evaluation example-vendor ./example-app.js 1:0-40
      harmony import specifier example-vendor ./example-app.js 3:12-18
      harmony import specifier example-vendor ./example-app.js 4:16-22
- external "vendor_lib_02cb05c865a84081bc8b" 42 bytes [built]
-     delegated source dll-reference vendor_lib_02cb05c865a84081bc8b delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_02cb05c865a84081bc8b
+ external "vendor_lib_c6c2f689b0bad44474d1" 42 bytes [built]
+     delegated source dll-reference vendor_lib_c6c2f689b0bad44474d1 delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c6c2f689b0bad44474d1
+```
+
+## Production mode
+
+```
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 5.0.0-beta.16
+ Asset       Size
+app.js  319 bytes  [emitted]  [name: main]
+Entrypoint main = app.js
+chunk app.js (main) 178 bytes [entry] [rendered]
+    > ./example-app main
+ ./example-app.js 94 bytes [built]
+     [no exports]
+     [no exports used]
+     entry ./example-app main
+ delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c6c2f689b0bad44474d1 42 bytes [built]
+     [exports: square]
+     [all exports used]
+     harmony side effect evaluation example-vendor ./example-app.js 1:0-40
+     harmony import specifier example-vendor ./example-app.js 3:12-18
+     harmony import specifier example-vendor ./example-app.js 4:16-22
+ external "vendor_lib_c6c2f689b0bad44474d1" 42 bytes [built]
+     delegated source dll-reference vendor_lib_c6c2f689b0bad44474d1 delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c6c2f689b0bad44474d1
 ```
 
 <!-- @TODO:

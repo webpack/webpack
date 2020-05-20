@@ -77,15 +77,62 @@ module.exports = {
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
-/* 0 */
+/* 0 */,
+/* 1 */
+/*!*************************!*\
+  !*** ./images/file.svg ***!
+  \*************************/
+/*! default exports */
+/*! exports [not provided] [maybe used (runtime-defined)] */
+/*! runtime requirements: module */
+/***/ ((module) => {
+
+module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e";
+
+/***/ })
+/******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+```
+
+</details>
+
+``` js
+(() => {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
+/*! namespace exports */
+/*! exports [not provided] [unused] */
+/*! runtime requirements: __webpack_require__ */
 /* harmony import */ var _images_file_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images/file.svg */ 1);
 
 
@@ -112,80 +159,12 @@ function createImageElement(title, src) {
 	container.appendChild(div);
 }
 
-[_images_file_svg__WEBPACK_IMPORTED_MODULE_0__/* .default */ ].forEach(src => {
+[_images_file_svg__WEBPACK_IMPORTED_MODULE_0__].forEach(src => {
 	createImageElement(src.split(".").pop(), src);
 });
 
+})();
 
-/***/ }),
-/* 1 */
-/*!*************************!*\
-  !*** ./images/file.svg ***!
-  \*************************/
-/*! export default [not provided] [no usage info] [no name, virtual] */
-/*!   exports [not provided] [no usage info] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: module */
-/***/ ((module) => {
-
-module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e";
-
-/***/ })
-/******/ 	]);
-```
-
-<details><summary><code>/* webpack runtime code */</code></summary>
-
-``` js
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/************************************************************************/
-```
-
-</details>
-
-``` js
-/******/ 	// startup
-/******/ 	// Load entry module
-/******/ 	__webpack_require__(0);
-/******/ 	// This entry module used 'exports' so it can't be inlined
 /******/ })()
 ;
 ```
@@ -196,20 +175,18 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.7
+Version: webpack 5.0.0-beta.16
     Asset      Size
-output.js  4.01 KiB  [emitted]  [name: main]
+output.js  3.02 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
+chunk output.js (main) 1.54 KiB [entry] [rendered]
     > ./example.js main
  ./example.js 658 bytes [built]
      [no exports]
-     [used exports unknown]
+     [no exports used]
      entry ./example.js main
  ./images/file.svg 915 bytes [built]
      [no exports]
-     [used exports unknown]
      harmony side effect evaluation ./images/file.svg ./example.js 1:0-36
      harmony import specifier ./images/file.svg ./example.js 26:1-4
-     + 1 hidden chunk module
 ```

@@ -14,7 +14,7 @@ const extraArgs = "";
 
 const targetArgs = global.NO_TARGET_ARGS ? "" : " ./example.js -o dist/output.js ";
 const displayReasons = global.NO_REASONS ? "" : " --display-reasons --display-used-exports --display-provided-exports";
-const commonArgs = `--display-chunks --no-color --display-max-modules 99999 --display-origins --display-entrypoints --output-public-path "dist/" ${extraArgs} ${targetArgs}`;
+const commonArgs = `--display-chunks --no-color --display-max-modules 99999 --display-origins --output-public-path "dist/" ${extraArgs} ${targetArgs}`;
 
 let readme = fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8");
 

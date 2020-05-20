@@ -4,14 +4,14 @@ We use the `libraryTarget: "umd"` option to build a UMD module that is consumabl
 
 We use the `externals` option to define dependencies that should be resolved in the target environment.
 
-In the simple case, we just need to specify a string (`"add"`). Then it's resolved as `"add"` module in CommonJS and AMD, and as global `add` when used with the script tag.
+In the simple case we just need to specify a string (`"add"`). Then it's resolved as `"add"` module in CommonJS and AMD, and as global `add` when used with the script tag.
 
 In the complex case we specify different values for each environment:
 
 | environment        | config value             | resolved as                  |
 | ------------------ | ------------------------ | ---------------------------- |
-| CommonJs (strict)  | `["./math", "subtract"]` | `require("./math").subtract` |
-| CommonJs (node.js) | `"./subtract"`           | `require("./subtract")`      |
+| CommonJS (strict)  | `["./math", "subtract"]` | `require("./math").subtract` |
+| CommonJS (node.js) | `"./subtract"`           | `require("./subtract")`      |
 | AMD                | `"subtract"`             | `define(["subtract"], ...)`  |
 | script tag         | `"subtract"`             | `this.subtract`              |
 
@@ -65,8 +65,10 @@ return /******/ (() => { // webpackBootstrap
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
-/*! runtime requirements: __webpack_require__, __webpack_exports__ */
+/*! default exports */
+/*! export exampleValue [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! runtime requirements: __webpack_exports__, __webpack_require__ */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 var add = __webpack_require__(/*! add */ 1);
@@ -79,7 +81,8 @@ exports.exampleValue = subtract(add(42, 2), 2);
 /*!**********************!*\
   !*** external "add" ***!
   \**********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! unknown exports (runtime-defined) */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -91,7 +94,8 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 /*!***************************************************************************************************************!*\
   !*** external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} ***!
   \***************************************************************************************************************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! unknown exports (runtime-defined) */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -117,16 +121,13 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -153,20 +154,19 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
+Version: webpack 5.0.0-beta.16
     Asset      Size
-output.js  3.18 KiB  [emitted]  [name: main]
+output.js  3.34 KiB  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk output.js (main) 194 bytes [entry] [rendered]
     > ./example.js main
  ./example.js 110 bytes [built]
+     [exports: exampleValue]
      entry ./example.js main
-     used a library export
+     used as library export
  external "add" 42 bytes [built]
-     [used exports unknown]
      cjs require add ./example.js 1:10-24
  external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes [built]
-     [used exports unknown]
      cjs require subtract ./example.js 2:15-34
 ```
 
@@ -174,15 +174,16 @@ chunk output.js (main) 194 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
+Version: webpack 5.0.0-beta.16
     Asset       Size
-output.js  668 bytes  [emitted]  [name: main]
+output.js  652 bytes  [emitted]  [name: main]
 Entrypoint main = output.js
 chunk output.js (main) 194 bytes [entry] [rendered]
     > ./example.js main
  ./example.js 110 bytes [built]
+     [exports: exampleValue]
      entry ./example.js main
-     used a library export
+     used as library export
  external "add" 42 bytes [built]
      cjs require add ./example.js 1:10-24
  external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes [built]

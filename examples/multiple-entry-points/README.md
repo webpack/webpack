@@ -1,6 +1,6 @@
 This example shows how to use multiple entry points with a commons chunk.
 
-In this example, you have two (HTML) pages `pageA` and `pageB`. You want to create individual bundles for each page. In addition to this, you want to create a shared bundle that contains all modules used in both pages (assuming there are many/big modules in common). The pages also use Code Splitting to load a less used part of the features on demand.
+In this example, you have two (HTML) pages `pageA` and `pageB`. You want to create individual bundles for each page. In addition to this, you want to create a shared bundle that contains all the modules used in both pages (assuming there are many/big modules in common). The pages also use Code Splitting to load a less used part of the features on demand.
 
 You can see how to define multiple entry points via the `entry` option.
 
@@ -93,7 +93,8 @@ module.exports = {
 /*!*******************!*\
   !*** ./common.js ***!
   \*******************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! unknown exports (runtime-defined) */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -112,7 +113,8 @@ module.exports = "Common";
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! unknown exports (runtime-defined) */
+/*! exports [maybe provided (runtime-defined)] [unused] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.oe, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -140,16 +142,13 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -160,7 +159,7 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		__webpack_require__.f = {};
 /******/ 		// This file contains only the entry chunk.
 /******/ 		// The chunk loading function for additional chunks
@@ -170,26 +169,29 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 				return promises;
 /******/ 			}, []));
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".js";
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		__webpack_require__.p = "dist/";
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	!function() {
-/******/ 		
-/******/ 		
+/******/ 	(() => {
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
@@ -200,11 +202,9 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 		var deferredModules = [
 /******/ 			[0,351]
 /******/ 		];
-/******/ 		
-/******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 				// JSONP chunk loading for javascript
-/******/ 				var installedChunkData = Object.prototype.hasOwnProperty.call(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 		
 /******/ 					// a Promise means "currently loading".
@@ -221,7 +221,7 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							var loadingEnded = () => {
-/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId)) {
+/******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
 /******/ 									installedChunkData = installedChunks[chunkId];
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) return installedChunkData[1];
@@ -239,8 +239,10 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 		
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
-/******/ 							onScriptComplete = function (event) {
-/******/ 								onScriptComplete = function() {};
+/******/ 							onScriptComplete = (event) => {
+/******/ 								onScriptComplete = () => {
+/******/ 		
+/******/ 								}
 /******/ 								// avoid mem leaks in IE.
 /******/ 								script.onerror = script.onload = null;
 /******/ 								clearTimeout(timeout);
@@ -254,22 +256,21 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 									error.request = realSrc;
 /******/ 									reportError(error);
 /******/ 								}
-/******/ 							};
-/******/ 							var timeout = setTimeout(function(){
-/******/ 								onScriptComplete({ type: 'timeout', target: script });
+/******/ 							}
+/******/ 							;
+/******/ 							var timeout = setTimeout(() => {
+/******/ 								onScriptComplete({ type: 'timeout', target: script })
 /******/ 							}, 120000);
 /******/ 							script.onerror = script.onload = onScriptComplete;
 /******/ 							document.head.appendChild(script);
 /******/ 						} else installedChunks[chunkId] = 0;
-/******/ 		
-/******/ 						// no HMR
 /******/ 					}
 /******/ 				}
-/******/ 		
-/******/ 				// no chunk preloading needed
 /******/ 		};
 /******/ 		
 /******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
 /******/ 		
 /******/ 		// no HMR
 /******/ 		
@@ -292,10 +293,21 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 					result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
 /******/ 				}
 /******/ 			}
-/******/ 			// no prefetch
+/******/ 			if(deferredModules.length === 0) {
+/******/ 				__webpack_require__.x();
+/******/ 				__webpack_require__.x = () => {
+/******/ 		
+/******/ 				}
+/******/ 			}
 /******/ 			return result;
 /******/ 		}
 /******/ 		__webpack_require__.x = () => {
+/******/ 			// reset startup function so it can be called again when more startup code is added
+/******/ 			__webpack_require__.x = () => {
+/******/ 		
+/******/ 			}
+/******/ 			jsonpArray = jsonpArray.slice();
+/******/ 			for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
 /******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
 /******/ 		};
 /******/ 		
@@ -305,25 +317,23 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 			var moreModules = data[1];
 /******/ 			var executeModules = data[2];
 /******/ 			var runtime = data[3];
-/******/ 		
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
 /******/ 			for(;i < chunkIds.length; i++) {
 /******/ 				chunkId = chunkIds[i];
-/******/ 				if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					resolves.push(installedChunks[chunkId][0]);
 /******/ 				}
 /******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 			for(moduleId in moreModules) {
-/******/ 				if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
 /******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
 /******/ 			if(parentJsonpFunction) parentJsonpFunction(data);
-/******/ 		
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
@@ -338,10 +348,8 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 		var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
 /******/ 		var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 		jsonpArray.push = webpackJsonpCallback;
-/******/ 		jsonpArray = jsonpArray.slice();
-/******/ 		for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
 /******/ 		var parentJsonpFunction = oldJsonpFunction;
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -365,7 +373,8 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! unknown exports (runtime-defined) */
+/*! exports [maybe provided (runtime-defined)] [unused] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -395,16 +404,13 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -415,7 +421,7 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		__webpack_require__.f = {};
 /******/ 		// This file contains only the entry chunk.
 /******/ 		// The chunk loading function for additional chunks
@@ -425,26 +431,29 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 				return promises;
 /******/ 			}, []));
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".js";
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		__webpack_require__.p = "dist/";
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	!function() {
-/******/ 		
-/******/ 		
+/******/ 	(() => {
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
@@ -455,11 +464,9 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 		var deferredModules = [
 /******/ 			[2,351]
 /******/ 		];
-/******/ 		
-/******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 				// JSONP chunk loading for javascript
-/******/ 				var installedChunkData = Object.prototype.hasOwnProperty.call(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 		
 /******/ 					// a Promise means "currently loading".
@@ -476,7 +483,7 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							var loadingEnded = () => {
-/******/ 								if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId)) {
+/******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
 /******/ 									installedChunkData = installedChunks[chunkId];
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) return installedChunkData[1];
@@ -494,8 +501,10 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 		
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
-/******/ 							onScriptComplete = function (event) {
-/******/ 								onScriptComplete = function() {};
+/******/ 							onScriptComplete = (event) => {
+/******/ 								onScriptComplete = () => {
+/******/ 		
+/******/ 								}
 /******/ 								// avoid mem leaks in IE.
 /******/ 								script.onerror = script.onload = null;
 /******/ 								clearTimeout(timeout);
@@ -509,22 +518,21 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 									error.request = realSrc;
 /******/ 									reportError(error);
 /******/ 								}
-/******/ 							};
-/******/ 							var timeout = setTimeout(function(){
-/******/ 								onScriptComplete({ type: 'timeout', target: script });
+/******/ 							}
+/******/ 							;
+/******/ 							var timeout = setTimeout(() => {
+/******/ 								onScriptComplete({ type: 'timeout', target: script })
 /******/ 							}, 120000);
 /******/ 							script.onerror = script.onload = onScriptComplete;
 /******/ 							document.head.appendChild(script);
 /******/ 						} else installedChunks[chunkId] = 0;
-/******/ 		
-/******/ 						// no HMR
 /******/ 					}
 /******/ 				}
-/******/ 		
-/******/ 				// no chunk preloading needed
 /******/ 		};
 /******/ 		
 /******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
 /******/ 		
 /******/ 		// no HMR
 /******/ 		
@@ -547,10 +555,21 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 					result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
 /******/ 				}
 /******/ 			}
-/******/ 			// no prefetch
+/******/ 			if(deferredModules.length === 0) {
+/******/ 				__webpack_require__.x();
+/******/ 				__webpack_require__.x = () => {
+/******/ 		
+/******/ 				}
+/******/ 			}
 /******/ 			return result;
 /******/ 		}
 /******/ 		__webpack_require__.x = () => {
+/******/ 			// reset startup function so it can be called again when more startup code is added
+/******/ 			__webpack_require__.x = () => {
+/******/ 		
+/******/ 			}
+/******/ 			jsonpArray = jsonpArray.slice();
+/******/ 			for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
 /******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
 /******/ 		};
 /******/ 		
@@ -560,25 +579,23 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 			var moreModules = data[1];
 /******/ 			var executeModules = data[2];
 /******/ 			var runtime = data[3];
-/******/ 		
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
 /******/ 			for(;i < chunkIds.length; i++) {
 /******/ 				chunkId = chunkIds[i];
-/******/ 				if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					resolves.push(installedChunks[chunkId][0]);
 /******/ 				}
 /******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 			for(moduleId in moreModules) {
-/******/ 				if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
 /******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
 /******/ 			if(parentJsonpFunction) parentJsonpFunction(data);
-/******/ 		
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
@@ -593,10 +610,8 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 		var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
 /******/ 		var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 		jsonpArray.push = webpackJsonpCallback;
-/******/ 		jsonpArray = jsonpArray.slice();
-/******/ 		for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
 /******/ 		var parentJsonpFunction = oldJsonpFunction;
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -619,8 +634,9 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /*!*******************!*\
   !*** ./shared.js ***!
   \*******************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__, module */
+/*! unknown exports (runtime-defined) */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var common = __webpack_require__(/*! ./common */ 1);
@@ -639,54 +655,54 @@ module.exports = function(msg) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
+Version: webpack 5.0.0-beta.16
      Asset       Size
-     52.js  468 bytes  [emitted]
-commons.js  326 bytes  [emitted]  [name: commons] [id hint: commons]
-  pageA.js   9.41 KiB  [emitted]  [name: pageA]
-  pageB.js   9.34 KiB  [emitted]  [name: pageB]
+     52.js  524 bytes  [emitted]
+commons.js  382 bytes  [emitted]  [name: commons] [id hint: commons]
+  pageA.js   9.73 KiB  [emitted]  [name: pageA]
+  pageB.js   9.66 KiB  [emitted]  [name: pageB]
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 chunk 52.js 88 bytes [rendered]
     > ./shared ./pageA.js 2:0-4:2
     > ./pageB.js 2:0-5:2
  ./shared.js 88 bytes [built]
-     [used exports unknown]
      amd require ./shared ./pageA.js 2:0-4:2
      require.ensure item ./shared ./pageB.js 2:0-5:2
      cjs require ./shared ./pageB.js 3:14-33
-chunk pageB.js (pageB) 148 bytes (javascript) 5.17 KiB (runtime) [entry] [rendered]
+     cjs self exports reference ./shared.js 2:0-14
+chunk pageB.js (pageB) 148 bytes (javascript) 5.36 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
  ./pageB.js 148 bytes [built]
-     [used exports unknown]
+     [no exports used]
      entry ./pageB pageB
-     + 4 hidden chunk modules
+     + 5 hidden chunk modules
 chunk commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
     > ./pageA pageA
     > ./pageB pageB
  ./common.js 26 bytes [built]
-     [used exports unknown]
+     cjs self exports reference ./common.js 1:0-14
      cjs require ./common ./pageA.js 1:13-32
      cjs require ./common ./pageB.js 1:13-32
      cjs require ./common ./shared.js 1:13-32
-chunk pageA.js (pageA) 105 bytes (javascript) 5.17 KiB (runtime) [entry] [rendered]
+chunk pageA.js (pageA) 105 bytes (javascript) 5.36 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
  ./pageA.js 105 bytes [built]
-     [used exports unknown]
+     [no exports used]
      entry ./pageA pageA
-     + 4 hidden chunk modules
+     + 5 hidden chunk modules
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
+Version: webpack 5.0.0-beta.16
      Asset       Size
      52.js  120 bytes  [emitted]
 commons.js   90 bytes  [emitted]  [name: commons] [id hint: commons]
-  pageA.js   1.78 KiB  [emitted]  [name: pageA]
-  pageB.js   1.76 KiB  [emitted]  [name: pageB]
+  pageA.js   1.72 KiB  [emitted]  [name: pageA]
+  pageB.js   1.69 KiB  [emitted]  [name: pageB]
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 chunk 52.js 88 bytes [rendered]
@@ -696,23 +712,25 @@ chunk 52.js 88 bytes [rendered]
      amd require ./shared ./pageA.js 2:0-4:2
      require.ensure item ./shared ./pageB.js 2:0-5:2
      cjs require ./shared ./pageB.js 3:14-33
-chunk pageB.js (pageB) 148 bytes (javascript) 5.17 KiB (runtime) [entry] [rendered]
+     cjs self exports reference ./shared.js 2:0-14
+chunk pageB.js (pageB) 148 bytes (javascript) 5.36 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
  ./pageB.js 148 bytes [built]
      [no exports used]
      entry ./pageB pageB
-     + 4 hidden chunk modules
+     + 5 hidden chunk modules
 chunk commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
     > ./pageA pageA
     > ./pageB pageB
  ./common.js 26 bytes [built]
+     cjs self exports reference ./common.js 1:0-14
      cjs require ./common ./pageA.js 1:13-32
      cjs require ./common ./pageB.js 1:13-32
      cjs require ./common ./shared.js 1:13-32
-chunk pageA.js (pageA) 105 bytes (javascript) 5.17 KiB (runtime) [entry] [rendered]
+chunk pageA.js (pageA) 105 bytes (javascript) 5.36 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
  ./pageA.js 105 bytes [built]
      [no exports used]
      entry ./pageA pageA
-     + 4 hidden chunk modules
+     + 5 hidden chunk modules
 ```
