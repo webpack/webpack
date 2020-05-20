@@ -8,8 +8,8 @@ module.exports = {
 			library: { type: "commonjs-module" },
 			filename: "container.js",
 			exposes: {
-				ComponentB: "./ComponentB",
-				ComponentC: "./ComponentC"
+				"./ComponentB": "./ComponentB",
+				"./ComponentC": "./ComponentC"
 			},
 			remotes: {
 				containerA: "../0-container-full/container.js",

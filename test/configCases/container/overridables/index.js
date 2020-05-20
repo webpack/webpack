@@ -15,7 +15,7 @@ __webpack_override__({
 				resolve(() => "overriden-package");
 			}, 100);
 		}),
-	"options/test1": () => () => "1",
+	"././options/test1": () => () => "1",
 	"nested1/options/test2": () => () => "2",
 	"nested2/deep/deep": () => () => "3"
 });

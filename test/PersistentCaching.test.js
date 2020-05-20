@@ -147,7 +147,9 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 					name: "container",
 					library: { type: "commonjs-module" },
 					exposes: ["./src/exposed"],
-					remotes: ["./container"]
+					remotes: {
+						container: "./container"
+					}
 				})
 			]
 		};

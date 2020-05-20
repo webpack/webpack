@@ -8,7 +8,7 @@ module.exports = {
 			library: { type: "commonjs-module" },
 			filename: "container.js",
 			exposes: {
-				ComponentA: {
+				"./ComponentA": {
 					import: "./ComponentA"
 				}
 			},
