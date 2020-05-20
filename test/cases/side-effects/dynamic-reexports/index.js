@@ -9,6 +9,11 @@ import {
 } from "./dedupe-target-with-side";
 import { value, valueUsed } from "./dedupe-target";
 import * as DefaultExport from "./default-export";
+import { value as valueDirect, value2 as value2Direct } from "./direct-export";
+import {
+	value as valueChecked,
+	value2 as value2Checked
+} from "./checked-export";
 
 it("should dedupe static reexport target", () => {
 	expect(valueStatic).toBe(42);
@@ -35,4 +40,14 @@ it("should optimize dynamic default reexport", () => {
 it("should handle default export when reexporting", () => {
 	const module = Object(require("./reexports-excludes-default"));
 	expect(module.defaultProvided).toBe(unprovided);
+});
+
+it("should handle direct export when reexporting", () => {
+	expect(valueDirect).toBe(42);
+	expect(value2Direct).toBe(42);
+});
+
+it("should handle checked dynamic export when reexporting", () => {
+	expect(valueChecked).toBe(42);
+	expect(value2Checked).toBe(42);
 });
