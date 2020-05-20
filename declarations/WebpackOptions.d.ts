@@ -745,6 +745,10 @@ export interface FileCacheOptions {
 	 */
 	name?: string;
 	/**
+	 * Write relative to cache folder paths instead of absolute.
+	 */
+	portable?: boolean;
+	/**
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
 	store?: "pack";
