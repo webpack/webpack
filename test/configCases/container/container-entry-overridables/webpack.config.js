@@ -10,7 +10,7 @@ module.exports = {
 				type: "commonjs-module"
 			},
 			exposes: {
-				test: "./test"
+				"./test": "./test"
 			},
 			overridables: {
 				value: "./value"

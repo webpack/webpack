@@ -13,7 +13,7 @@ it("should expose modules from the container", async () => {
 				}, 100);
 			})
 	});
-	const testFactory = await container.get("test");
+	const testFactory = await container.get("./test");
 	expect(testFactory).toBeTypeOf("function");
 	expect(testFactory()).toEqual(
 		nsObj({

@@ -13,9 +13,9 @@ module.exports = {
 				type: "commonjs-module"
 			},
 			exposes: {
-				test: "./test",
-				test2: ["./init-module", "./test2"],
-				"": "./main"
+				"./test": "./test",
+				"./test2": ["./init-module", "./test2"],
+				".": "./main"
 			}
 		})
 	]

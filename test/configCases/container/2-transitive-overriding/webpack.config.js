@@ -13,7 +13,9 @@ module.exports = {
 				"container-no-shared":
 					"../1-transitive-overriding/container-no-shared.js"
 			},
-			shared: ["./shared"]
+			shared: {
+				shared: "./shared"
+			}
 		})
 	]
 };
