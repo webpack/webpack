@@ -25,7 +25,7 @@ describe("Defaults", () => {
 		`${quotemeta(escapedCwd)}((?:\\\\\\\\)?(?:[a-zA-Z.\\-_]+\\\\\\\\)*)`,
 		"g"
 	);
-	const normalizeCwd = str => {
+	const normalize = str => {
 		if (cwd.startsWith("/")) {
 			str = str.replace(new RegExp(quotemeta(cwd), "g"), "<cwd>");
 		} else {
@@ -35,6 +35,7 @@ describe("Defaults", () => {
 				(m, g) => `<cwd>${g.replace(/\\\\/g, "/")}`
 			);
 		}
+		str = str.replace(/@@ -\d+,\d+ \+\d+,\d+ @@/g, "@@ ... @@");
 		return str;
 	};
 
@@ -49,7 +50,7 @@ describe("Defaults", () => {
 			return value instanceof Diff;
 		},
 		print(received) {
-			return normalizeCwd(received.value);
+			return normalize(received.value);
 		}
 	});
 
@@ -58,7 +59,7 @@ describe("Defaults", () => {
 			return typeof value === "string";
 		},
 		print(received) {
-			return JSON.stringify(normalizeCwd(received));
+			return JSON.stringify(normalize(received));
 		}
 	});
 
@@ -210,6 +211,7 @@ describe("Defaults", () => {
 		    "hotUpdateFunction": "webpackHotUpdatewebpack",
 		    "hotUpdateMainFilename": "[fullhash].hot-update.json",
 		    "iife": true,
+		    "importFunctionName": "import",
 		    "jsonpFunction": "webpackJsonpwebpack",
 		    "jsonpScriptType": false,
 		    "library": undefined,
@@ -297,10 +299,10 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -33,1 +33,1 @@
+		@@ ... @@
 		-   "mode": "none",
 		+   "mode": undefined,
-		@@ -68,4 +68,4 @@
+		@@ ... @@
 		-     "checkWasmTypes": false,
 		-     "chunkIds": "natural",
 		-     "concatenateModules": false,
@@ -309,30 +311,30 @@ describe("Defaults", () => {
 		+     "chunkIds": "deterministic",
 		+     "concatenateModules": true,
 		+     "flagIncludedChunks": true,
-		@@ -73,1 +73,1 @@
+		@@ ... @@
 		-     "mangleExports": false,
 		+     "mangleExports": true,
-		@@ -76,1 +76,1 @@
+		@@ ... @@
 		-     "minimize": false,
 		+     "minimize": true,
-		@@ -82,3 +82,3 @@
+		@@ ... @@
 		-     "moduleIds": "natural",
 		-     "noEmitOnErrors": false,
 		-     "nodeEnv": false,
 		+     "moduleIds": "deterministic",
 		+     "noEmitOnErrors": true,
 		+     "nodeEnv": "production",
-		@@ -108,3 +108,3 @@
+		@@ ... @@
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
 		-       "maxInitialRequests": Infinity,
 		+       "hidePathInfo": true,
 		+       "maxAsyncRequests": 6,
 		+       "maxInitialRequests": 4,
-		@@ -113,1 +113,1 @@
+		@@ ... @@
 		-       "minSize": 10000,
 		+       "minSize": 30000,
-		@@ -154,1 +154,5 @@
+		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
 		+     "hints": "warning",
@@ -346,10 +348,10 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -33,1 +33,1 @@
+		@@ ... @@
 		-   "mode": "none",
 		+   "mode": "production",
-		@@ -68,4 +68,4 @@
+		@@ ... @@
 		-     "checkWasmTypes": false,
 		-     "chunkIds": "natural",
 		-     "concatenateModules": false,
@@ -358,30 +360,30 @@ describe("Defaults", () => {
 		+     "chunkIds": "deterministic",
 		+     "concatenateModules": true,
 		+     "flagIncludedChunks": true,
-		@@ -73,1 +73,1 @@
+		@@ ... @@
 		-     "mangleExports": false,
 		+     "mangleExports": true,
-		@@ -76,1 +76,1 @@
+		@@ ... @@
 		-     "minimize": false,
 		+     "minimize": true,
-		@@ -82,3 +82,3 @@
+		@@ ... @@
 		-     "moduleIds": "natural",
 		-     "noEmitOnErrors": false,
 		-     "nodeEnv": false,
 		+     "moduleIds": "deterministic",
 		+     "noEmitOnErrors": true,
 		+     "nodeEnv": "production",
-		@@ -108,3 +108,3 @@
+		@@ ... @@
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
 		-       "maxInitialRequests": Infinity,
 		+       "hidePathInfo": true,
 		+       "maxAsyncRequests": 6,
 		+       "maxInitialRequests": 4,
-		@@ -113,1 +113,1 @@
+		@@ ... @@
 		-       "minSize": 10000,
 		+       "minSize": 30000,
-		@@ -154,1 +154,5 @@
+		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
 		+     "hints": "warning",
@@ -395,7 +397,7 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -4,1 +4,7 @@
+		@@ ... @@
 		-   "cache": false,
 		+   "cache": Object {
 		+     "immutablePaths": Array [],
@@ -404,34 +406,34 @@ describe("Defaults", () => {
 		+     ],
 		+     "type": "memory",
 		+   },
-		@@ -8,1 +14,1 @@
+		@@ ... @@
 		-   "devtool": false,
 		+   "devtool": "eval",
-		@@ -33,1 +39,1 @@
+		@@ ... @@
 		-   "mode": "none",
 		+   "mode": "development",
-		@@ -56,1 +62,1 @@
+		@@ ... @@
 		-     "unsafeCache": false,
 		+     "unsafeCache": [Function anonymous],
-		@@ -69,1 +75,1 @@
+		@@ ... @@
 		-     "chunkIds": "natural",
 		+     "chunkIds": "named",
-		@@ -82,1 +88,1 @@
+		@@ ... @@
 		-     "moduleIds": "natural",
 		+     "moduleIds": "named",
-		@@ -84,1 +90,1 @@
+		@@ ... @@
 		-     "nodeEnv": false,
 		+     "nodeEnv": "development",
-		@@ -112,1 +118,1 @@
+		@@ ... @@
 		-       "minRemainingSize": undefined,
 		+       "minRemainingSize": 0,
-		@@ -145,1 +151,1 @@
+		@@ ... @@
 		-     "pathinfo": false,
 		+     "pathinfo": true,
-		@@ -163,1 +169,1 @@
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
-		@@ -182,1 +188,1 @@
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
 	`)
@@ -441,10 +443,10 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -23,1 +23,1 @@
+		@@ ... @@
 		-     "syncWebAssembly": false,
 		+     "syncWebAssembly": true,
-		@@ -43,0 +43,4 @@
+		@@ ... @@
 		+       },
 		+       Object {
 		+         "test": /\\.wasm$/i,
@@ -456,22 +458,22 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -21,1 +21,1 @@
+		@@ ... @@
 		-     "mjs": false,
 		+     "mjs": true,
-		@@ -44,0 +44,5 @@
+		@@ ... @@
 		+       Object {
 		+         "resolve": Object {
 		+           "mainFields": Array [
 		+             "browser",
 		+             "main",
-		@@ -45,0 +50,5 @@
+		@@ ... @@
 		+         },
 		+         "test": /\\.mjs$/i,
 		+         "type": "javascript/esm",
 		+       },
 		+     ],
-		@@ -165,0 +175,1 @@
+		@@ ... @@
 		+       ".mjs",
 	`)
 	);
@@ -480,19 +482,19 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -22,1 +22,1 @@
+		@@ ... @@
 		-     "outputModule": false,
 		+     "outputModule": true,
-		@@ -27,1 +27,1 @@
+		@@ ... @@
 		-   "externalsType": "var",
 		+   "externalsType": "module",
-		@@ -138,1 +138,1 @@
+		@@ ... @@
 		-     "iife": true,
 		+     "iife": false,
-		@@ -140,1 +140,1 @@
+		@@ ... @@
 		-     "jsonpScriptType": false,
 		+     "jsonpScriptType": "module",
-		@@ -142,2 +142,2 @@
+		@@ ... @@
 		-     "libraryTarget": "var",
 		-     "module": false,
 		+     "libraryTarget": "module",
@@ -504,10 +506,10 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -18,1 +18,1 @@
+		@@ ... @@
 		-     "asyncWebAssembly": false,
 		+     "asyncWebAssembly": true,
-		@@ -43,0 +43,4 @@
+		@@ ... @@
 		+       },
 		+       Object {
 		+         "test": /\\.wasm$/i,
@@ -522,13 +524,13 @@ describe("Defaults", () => {
 			- Expected
 			+ Received
 
-			@@ -18,1 +18,1 @@
+			@@ ... @@
 			-     "asyncWebAssembly": false,
 			+     "asyncWebAssembly": true,
-			@@ -23,1 +23,1 @@
+			@@ ... @@
 			-     "syncWebAssembly": false,
 			+     "syncWebAssembly": true,
-			@@ -43,0 +43,4 @@
+			@@ ... @@
 			+       },
 			+       Object {
 			+         "test": /\\.wasm$/i,
@@ -540,10 +542,10 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -120,1 +120,1 @@
+		@@ ... @@
 		-     "chunkFilename": "[name].js",
 		+     "chunkFilename": "[id].bundle.js",
-		@@ -129,1 +129,1 @@
+		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": "bundle.js",
 	`)
@@ -553,10 +555,10 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -120,1 +120,1 @@
+		@@ ... @@
 		-     "chunkFilename": "[name].js",
 		+     "chunkFilename": "[id].js",
-		@@ -129,1 +129,1 @@
+		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": [Function filename],
 	`)
@@ -566,24 +568,24 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -119,1 +119,1 @@
+		@@ ... @@
 		-     "chunkCallbackName": "webpackChunkwebpack",
 		+     "chunkCallbackName": "webpackChunkmyLib_awesome",
-		@@ -126,1 +126,1 @@
+		@@ ... @@
 		-     "devtoolNamespace": "webpack",
 		+     "devtoolNamespace": "myLib.awesome",
-		@@ -128,1 +128,3 @@
+		@@ ... @@
 		-     "enabledLibraryTypes": Array [],
 		+     "enabledLibraryTypes": Array [
 		+       "var",
 		+     ],
-		@@ -136,1 +138,1 @@
+		@@ ... @@
 		-     "hotUpdateFunction": "webpackHotUpdatewebpack",
 		+     "hotUpdateFunction": "webpackHotUpdatemyLib_awesome",
-		@@ -139,1 +141,1 @@
+		@@ ... @@
 		-     "jsonpFunction": "webpackJsonpwebpack",
 		+     "jsonpFunction": "webpackJsonpmyLib_awesome",
-		@@ -141,1 +143,10 @@
+		@@ ... @@
 		-     "library": undefined,
 		+     "library": Object {
 		+       "auxiliaryComment": undefined,
@@ -595,7 +597,7 @@ describe("Defaults", () => {
 		+       "type": "var",
 		+       "umdNamedDefine": undefined,
 		+     },
-		@@ -150,1 +161,1 @@
+		@@ ... @@
 		-     "uniqueName": "webpack",
 		+     "uniqueName": "myLib.awesome",
 	`)
@@ -605,24 +607,24 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -63,3 +63,3 @@
+		@@ ... @@
 		-     "__dirname": "mock",
 		-     "__filename": "mock",
 		-     "global": true,
 		+     "__dirname": false,
 		+     "__filename": false,
 		+     "global": false,
-		@@ -130,1 +130,1 @@
+		@@ ... @@
 		-     "globalObject": "window",
 		+     "globalObject": "global",
-		@@ -160,3 +160,1 @@
+		@@ ... @@
 		-     "aliasFields": Array [
 		-       "browser",
 		-     ],
 		+     "aliasFields": Array [],
-		@@ -170,1 +168,0 @@
+		@@ ... @@
 		-       "browser",
-		@@ -195,1 +192,1 @@
+		@@ ... @@
 		-   "target": "web",
 		+   "target": "node",
 	`)
@@ -632,10 +634,10 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -130,1 +130,1 @@
+		@@ ... @@
 		-     "globalObject": "window",
 		+     "globalObject": "self",
-		@@ -195,1 +195,1 @@
+		@@ ... @@
 		-   "target": "web",
 		+   "target": "webworker",
 	`)
@@ -645,10 +647,10 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -85,1 +85,1 @@
+		@@ ... @@
 		-     "portableRecords": false,
 		+     "portableRecords": true,
-		@@ -157,2 +157,2 @@
+		@@ ... @@
 		-   "recordsInputPath": false,
 		-   "recordsOutputPath": false,
 		+   "recordsInputPath": "some-path",
@@ -660,7 +662,7 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -127,1 +127,1 @@
+		@@ ... @@
 		-     "ecmaVersion": 6,
 		+     "ecmaVersion": 11,
 	`)
@@ -670,7 +672,7 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -89,1 +89,3 @@
+		@@ ... @@
 		-     "runtimeChunk": false,
 		+     "runtimeChunk": Object {
 		+       "name": [Function name],
@@ -685,7 +687,7 @@ describe("Defaults", () => {
 			- Expected
 			+ Received
 
-			@@ -89,1 +89,3 @@
+			@@ ... @@
 			-     "runtimeChunk": false,
 			+     "runtimeChunk": Object {
 			+       "name": [Function name],
@@ -697,7 +699,7 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -89,1 +89,3 @@
+		@@ ... @@
 		-     "runtimeChunk": false,
 		+     "runtimeChunk": Object {
 		+       "name": [Function name],
@@ -709,7 +711,7 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -4,1 +4,7 @@
+		@@ ... @@
 		-   "cache": false,
 		+   "cache": Object {
 		+     "immutablePaths": Array [],
@@ -718,13 +720,13 @@ describe("Defaults", () => {
 		+     ],
 		+     "type": "memory",
 		+   },
-		@@ -56,1 +62,1 @@
+		@@ ... @@
 		-     "unsafeCache": false,
 		+     "unsafeCache": [Function anonymous],
-		@@ -163,1 +169,1 @@
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
-		@@ -182,1 +188,1 @@
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
 	`)
@@ -734,7 +736,7 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -4,1 +4,20 @@
+		@@ ... @@
 		-   "cache": false,
 		+   "cache": Object {
 		+     "buildDependencies": Object {
@@ -756,13 +758,13 @@ describe("Defaults", () => {
 		+     "type": "filesystem",
 		+     "version": "",
 		+   },
-		@@ -56,1 +75,1 @@
+		@@ ... @@
 		-     "unsafeCache": false,
 		+     "unsafeCache": [Function anonymous],
-		@@ -163,1 +182,1 @@
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
-		@@ -182,1 +201,1 @@
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
 	`)
@@ -781,17 +783,17 @@ describe("Defaults", () => {
 			- Expected
 			+ Received
 
-			@@ -2,1 +2,1 @@
+			@@ ... @@
 			-   "amd": undefined,
 			+   "amd": false,
-			@@ -62,5 +62,1 @@
+			@@ ... @@
 			-   "node": Object {
 			-     "__dirname": "mock",
 			-     "__filename": "mock",
 			-     "global": true,
 			-   },
 			+   "node": false,
-			@@ -91,24 +87,1 @@
+			@@ ... @@
 			-     "splitChunks": Object {
 			-       "automaticNameDelimiter": "-",
 			-       "cacheGroups": Object {
@@ -832,19 +834,19 @@ describe("Defaults", () => {
 			- Expected
 			+ Received
 
-			@@ -119,1 +119,1 @@
+			@@ ... @@
 			-     "chunkCallbackName": "webpackChunkwebpack",
 			+     "chunkCallbackName": "webpackChunk_Hello_World_",
-			@@ -126,1 +126,1 @@
+			@@ ... @@
 			-     "devtoolNamespace": "webpack",
 			+     "devtoolNamespace": "@@@Hello World!",
-			@@ -136,1 +136,1 @@
+			@@ ... @@
 			-     "hotUpdateFunction": "webpackHotUpdatewebpack",
 			+     "hotUpdateFunction": "webpackHotUpdate_Hello_World_",
-			@@ -139,1 +139,1 @@
+			@@ ... @@
 			-     "jsonpFunction": "webpackJsonpwebpack",
 			+     "jsonpFunction": "webpackJsonp_Hello_World_",
-			@@ -150,1 +150,1 @@
+			@@ ... @@
 			-     "uniqueName": "webpack",
 			+     "uniqueName": "@@@Hello World!",
 		`)
