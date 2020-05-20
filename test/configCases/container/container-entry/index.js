@@ -5,6 +5,9 @@ it("should expose modules from the container", async () => {
 	const testFactory = await container.get("test");
 	expect(testFactory).toBeTypeOf("function");
 	expect(testFactory()).toBe("test");
+	const mainFactory = await container.get("");
+	expect(mainFactory).toBeTypeOf("function");
+	expect(mainFactory()).toBe("main");
 	const test2Factory = await container.get("test2");
 	expect(test2Factory).toBeTypeOf("function");
 	expect(test2Factory()).toEqual(
