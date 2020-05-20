@@ -429,7 +429,7 @@
         {
           "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
           "instanceof": "Function",
-          "tsType": "((context: string, request: string, callback: (err?: Error, result?: string) => void) => void)"
+          "tsType": "((data: { context: string, request: string }, callback: (err?: Error, result?: string) => void) => void)"
         }
       ]
     },
@@ -465,7 +465,9 @@
         "umd",
         "umd2",
         "jsonp",
-        "system"
+        "system",
+        "promise",
+        "import"
       ]
     },
     "FileCacheOptions": {
@@ -657,6 +659,10 @@
     "Iife": {
       "description": "Wrap javascript code into IIFE's to avoid leaking into global scope.",
       "type": "boolean"
+    },
+    "ImportFunctionName": {
+      "description": "The name of the native import() function (can be exchanged for a polyfill).",
+      "type": "string"
     },
     "InfrastructureLogging": {
       "description": "Options for infrastructure level logging.",
@@ -1694,6 +1700,9 @@
         "iife": {
           "$ref": "#/definitions/Iife"
         },
+        "importFunctionName": {
+          "$ref": "#/definitions/ImportFunctionName"
+        },
         "jsonpFunction": {
           "$ref": "#/definitions/JsonpFunction"
         },
@@ -1833,6 +1842,9 @@
         },
         "iife": {
           "$ref": "#/definitions/Iife"
+        },
+        "importFunctionName": {
+          "$ref": "#/definitions/ImportFunctionName"
         },
         "jsonpFunction": {
           "$ref": "#/definitions/JsonpFunction"

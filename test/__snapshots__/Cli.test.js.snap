@@ -488,6 +488,8 @@ Object {
           "umd2",
           "jsonp",
           "system",
+          "promise",
+          "import",
         ],
       },
     ],
@@ -2038,6 +2040,19 @@ Object {
     "description": "Wrap javascript code into IIFE's to avoid leaking into global scope.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "output-import-function-name": Object {
+    "configs": Array [
+      Object {
+        "description": "The name of the native import() function (can be exchanged for a polyfill).",
+        "multiple": false,
+        "path": "output.importFunctionName",
+        "type": "string",
+      },
+    ],
+    "description": "The name of the native import() function (can be exchanged for a polyfill).",
+    "multiple": false,
+    "simpleType": "string",
   },
   "output-jsonp-function": Object {
     "configs": Array [

@@ -1337,7 +1337,7 @@ declare interface Configuration {
 	/**
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
-	externalsType?: LibraryType;
+	externalsType?: ExternalsType;
 
 	/**
 	 * Options for infrastructure level logging.
@@ -1498,7 +1498,7 @@ declare interface ContainerReferencePluginOptions {
 	/**
 	 * The external type of the remote containers.
 	 */
-	remoteType: LibraryType;
+	remoteType: ExternalsType;
 
 	/**
 	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
@@ -2310,8 +2310,7 @@ type ExternalItem =
 	| RegExp
 	| { [index: string]: string | boolean | string[] | { [index: string]: any } }
 	| ((
-			context: string,
-			request: string,
+			data: { context: string; request: string },
 			callback: (err: Error, result: string) => void
 	  ) => void);
 declare class ExternalModule extends Module {
@@ -2331,20 +2330,38 @@ type Externals =
 	| ExternalItem[]
 	| { [index: string]: string | boolean | string[] | { [index: string]: any } }
 	| ((
-			context: string,
-			request: string,
+			data: { context: string; request: string },
 			callback: (err: Error, result: string) => void
 	  ) => void);
 declare class ExternalsPlugin {
-	constructor(type?: any, externals?: any);
-	type: any;
-	externals: any;
+	constructor(type: string, externals: Externals);
+	type: string;
+	externals: Externals;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
 }
+type ExternalsType =
+	| "var"
+	| "module"
+	| "assign"
+	| "this"
+	| "window"
+	| "self"
+	| "global"
+	| "commonjs"
+	| "commonjs2"
+	| "commonjs-module"
+	| "amd"
+	| "amd-require"
+	| "umd"
+	| "umd2"
+	| "jsonp"
+	| "system"
+	| "promise"
+	| "import";
 declare interface FactorizeModuleOptions {
 	currentProfile: ModuleProfile;
 	factory: ModuleFactory;
@@ -3748,7 +3765,7 @@ declare interface ModuleFederationPluginOptions {
 	/**
 	 * The external type of the remote containers.
 	 */
-	remoteType?: LibraryType;
+	remoteType?: ExternalsType;
 
 	/**
 	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
@@ -4768,6 +4785,11 @@ declare interface Output {
 	iife?: boolean;
 
 	/**
+	 * The name of the native import() function (can be exchanged for a polyfill).
+	 */
+	importFunctionName?: string;
+
+	/**
 	 * The JSONP function used by webpack for async loading of chunks.
 	 */
 	jsonpFunction?: string;
@@ -4970,6 +4992,11 @@ declare interface OutputNormalized {
 	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
 	 */
 	iife?: boolean;
+
+	/**
+	 * The name of the native import() function (can be exchanged for a polyfill).
+	 */
+	importFunctionName?: string;
 
 	/**
 	 * The JSONP function used by webpack for async loading of chunks.
@@ -5875,7 +5902,7 @@ declare class RuntimeModule extends Module {
 	getGeneratedCode(): string;
 }
 declare abstract class RuntimeTemplate {
-	outputOptions: Output;
+	outputOptions: OutputNormalized;
 	requestShortener: RequestShortener;
 	isIIFE(): boolean;
 	supportsConst(): boolean;
@@ -5961,7 +5988,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * which kind of code should be returned
 		 */
-		type: "expression" | "promise" | "statements";
+		type: "promise" | "expression" | "statements";
 	}): string;
 	moduleId(__0: {
 		/**
@@ -6118,7 +6145,7 @@ declare abstract class RuntimeTemplate {
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
-	}): string;
+	}): [string, string];
 	exportFromImport(__0: {
 		/**
 		 * the module graph
@@ -7075,7 +7102,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
-	externalsType?: LibraryType;
+	externalsType?: ExternalsType;
 
 	/**
 	 * Options for infrastructure level logging.

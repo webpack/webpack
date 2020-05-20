@@ -83,6 +83,29 @@
         ]
       }
     },
+    "ExternalsType": {
+      "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
+      "enum": [
+        "var",
+        "module",
+        "assign",
+        "this",
+        "window",
+        "self",
+        "global",
+        "commonjs",
+        "commonjs2",
+        "commonjs-module",
+        "amd",
+        "amd-require",
+        "umd",
+        "umd2",
+        "jsonp",
+        "system",
+        "promise",
+        "import"
+      ]
+    },
     "LibraryCustomUmdCommentObject": {
       "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.",
       "type": "object",
@@ -503,7 +526,7 @@
       "description": "The external type of the remote containers.",
       "oneOf": [
         {
-          "$ref": "#/definitions/LibraryType"
+          "$ref": "#/definitions/ExternalsType"
         }
       ]
     },
