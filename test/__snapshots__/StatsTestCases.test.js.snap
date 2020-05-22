@@ -2475,9 +2475,7 @@ LOG from webpack.Compilation
 <t> record hash: X ms
 <t> module assets: X ms
 <t> create chunk assets: X ms
-<t> additional assets: X ms
-<t> optimize assets: X ms
-<t> finish assets: X ms
+<t> process assets: X ms
 
 LOG from webpack.SideEffectsFlagPlugin
 <t> capture reexports from modules: X ms

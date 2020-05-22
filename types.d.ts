@@ -948,14 +948,30 @@ declare class Compilation {
 		beforeModuleAssets: SyncHook<[], void>;
 		shouldGenerateChunkAssets: SyncBailHook<[], boolean>;
 		beforeChunkAssets: SyncHook<[], void>;
-		additionalChunkAssets: SyncHook<[Iterable<Chunk>], void>;
-		additionalAssets: AsyncSeriesHook<[]>;
-		optimizeChunkAssets: AsyncSeriesHook<[Iterable<Chunk>]>;
-		afterOptimizeChunkAssets: SyncHook<[Iterable<Chunk>], void>;
+		additionalChunkAssets: Pick<
+			AsyncSeriesHook<[Set<Chunk>]>,
+			"tap" | "tapAsync" | "tapPromise" | "name"
+		> &
+			FakeHookMarker;
+		additionalAssets: Pick<
+			AsyncSeriesHook<[]>,
+			"tap" | "tapAsync" | "tapPromise" | "name"
+		> &
+			FakeHookMarker;
+		optimizeChunkAssets: Pick<
+			AsyncSeriesHook<[Set<Chunk>]>,
+			"tap" | "tapAsync" | "tapPromise" | "name"
+		> &
+			FakeHookMarker;
+		afterOptimizeChunkAssets: Pick<
+			AsyncSeriesHook<[Set<Chunk>]>,
+			"tap" | "tapAsync" | "tapPromise" | "name"
+		> &
+			FakeHookMarker;
 		optimizeAssets: AsyncSeriesHook<[Record<string, Source>]>;
 		afterOptimizeAssets: SyncHook<[Record<string, Source>], void>;
-		finishAssets: AsyncSeriesHook<[Record<string, Source>]>;
-		afterFinishAssets: SyncHook<[Record<string, Source>], void>;
+		processAssets: AsyncSeriesHook<[Record<string, Source>]>;
+		afterProcessAssets: SyncHook<[Record<string, Source>], void>;
 		needAdditionalSeal: SyncBailHook<[], boolean>;
 		afterSeal: AsyncSeriesHook<[]>;
 		renderManifest: SyncWaterfallHook<
@@ -1141,8 +1157,8 @@ declare class Compilation {
 		newSourceOrFunction: Source | ((arg0: Source) => Source),
 		assetInfoUpdateOrFunction?: AssetInfo | ((arg0: AssetInfo) => AssetInfo)
 	): void;
-	getAssets(): Asset[];
-	getAsset(name: string): Asset;
+	getAssets(): Readonly<Asset>[];
+	getAsset(name: string): Readonly<Asset>;
 	clearAssets(): void;
 	createModuleAssets(): void;
 	getRenderManifest(options: RenderManifestOptions): RenderManifestEntry[];
@@ -1175,6 +1191,74 @@ declare class Compilation {
 		plugins: Plugin[]
 	): Compiler;
 	checkConstraints(): void;
+
+	/**
+	 * Add additional assets to the compilation.
+	 */
+	static PROCESS_ASSETS_STAGE_ADDITIONAL: number;
+
+	/**
+	 * Basic preprocessing of assets.
+	 */
+	static PROCESS_ASSETS_STAGE_PRE_PROCESS: number;
+
+	/**
+	 * Derive new assets from existing assets.
+	 * Existing assets should not be treated as complete.
+	 */
+	static PROCESS_ASSETS_STAGE_DERIVED: number;
+
+	/**
+	 * Add additional sections to existing assets, like a banner or initialization code.
+	 */
+	static PROCESS_ASSETS_STAGE_ADDITIONS: number;
+
+	/**
+	 * Optimize existing assets in a general way.
+	 */
+	static PROCESS_ASSETS_STAGE_OPTIMIZE: number;
+
+	/**
+	 * Optimize the count of existing assets, e. g. by merging them.
+	 */
+	static PROCESS_ASSETS_STAGE_OPTIMIZE_COUNT: number;
+
+	/**
+	 * Optimize the compatibility of existing assets, e. g. add polyfills or vendor-prefixes.
+	 */
+	static PROCESS_ASSETS_STAGE_OPTIMIZE_COMPATIBILITY: number;
+
+	/**
+	 * Optimize the size of existing assets, e. g. by minimizing or omitting whitespace.
+	 */
+	static PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE: number;
+
+	/**
+	 * Summarize the list of existing assets.
+	 * When creating new assets from this they should be fully optimized.
+	 * e. g. creating an assets manifest of Service Workers.
+	 */
+	static PROCESS_ASSETS_STAGE_SUMMARIZE: number;
+
+	/**
+	 * Add development tooling to assets, e. g. by extracting a SourceMap.
+	 */
+	static PROCESS_ASSETS_STAGE_DEV_TOOLING: number;
+
+	/**
+	 * Optimize the transfer of existing assets, e. g. by preparing a compressed (gzip) file as separate asset.
+	 */
+	static PROCESS_ASSETS_STAGE_OPTIMIZE_TRANSFER: number;
+
+	/**
+	 * Analyse existing assets.
+	 */
+	static PROCESS_ASSETS_STAGE_ANALYSE: number;
+
+	/**
+	 * Creating assets for reporting purposes.
+	 */
+	static PROCESS_ASSETS_STAGE_REPORT: number;
 }
 declare interface CompilationHooksAsyncWebAssemblyModulesPlugin {
 	renderModuleContent: SyncWaterfallHook<[Source, Module, RenderContextObject]>;
@@ -2369,6 +2453,7 @@ declare interface FactorizeModuleOptions {
 	originModule: Module;
 	context?: string;
 }
+declare interface FakeHookMarker {}
 declare interface FallbackCacheGroup {
 	minSize: Record<string, number>;
 	maxAsyncSize: Record<string, number>;
