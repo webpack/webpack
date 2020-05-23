@@ -811,15 +811,15 @@ chunk a.js (a) 22 bytes [entry] [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
-"Hash: 574b1154129671ae12ac
+"Hash: 0871712eb36dbcf2b995
 Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset      Size
-bundle.js  3.46 KiB  [emitted]  [name: main]
+bundle.js  3.73 KiB  [emitted]  [name: main]
  + 1 hidden asset
-Entrypoint main = bundle.js (5bcd36918d225eeda398ea3f372b7f16.json)
+Entrypoint main = bundle.js (89245aae14d2d745f85a29195aa6ffc1.json)
 ./index.js 77 bytes [built]
-./a.txt 41 bytes [built]
+./a.txt 42 bytes [built]
     + 6 hidden modules"
 `;
 
@@ -1461,34 +1461,32 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
-"Hash: 09818c8e8ab4eb5fb372
+"Hash: b528a0ccced767ccc2ed
 Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset       Size
   1.png     21 KiB  [emitted]  [name: (a)]
   2.png     21 KiB  [emitted]  [name: (a, b)]
-   a.js  988 bytes  [emitted]  [name: a]
-   b.js  616 bytes  [emitted]  [name: b]
-main.js   8.94 KiB  [emitted]  [name: main]
+   a.js  753 bytes  [emitted]  [name: a]
+   b.js  571 bytes  [emitted]  [name: b]
+main.js   8.01 KiB  [emitted]  [name: main]
 Entrypoint main = main.js
 Chunk Group a = a.js (1.png 2.png)
 Chunk Group b = b.js (2.png)
-chunk b.js (b) 69 bytes [rendered]
- ./node_modules/a/2.png 51 bytes [built] [1 asset]
+chunk b.js (b) 67 bytes [rendered]
+ ./node_modules/a/2.png 49 bytes [built] [1 asset]
  ./node_modules/b/index.js 18 bytes [built]
-chunk main.js (main) 82 bytes (javascript) 5.03 KiB (runtime) [entry] [rendered]
+chunk main.js (main) 82 bytes (javascript) 4.47 KiB (runtime) [entry] [rendered]
  ./index.js 82 bytes [built]
-     + 8 hidden chunk modules
-chunk a.js (a) 138 bytes [rendered]
- ./node_modules/a/1.png 51 bytes [built] [1 asset]
- ./node_modules/a/2.png 51 bytes [built] [1 asset]
- ./node_modules/a/index.js 36 bytes [built]
+     + 6 hidden chunk modules
+chunk a.js (a) 139 bytes [rendered]
+ ./node_modules/a/2.png 49 bytes [built] [1 asset]
+ ./node_modules/a/index.js + 1 modules 90 bytes [built] [1 asset]
 ./index.js 82 bytes [built]
-./node_modules/a/index.js 36 bytes [built]
+./node_modules/a/index.js + 1 modules 90 bytes [built] [1 asset]
 ./node_modules/b/index.js 18 bytes [built]
-./node_modules/a/1.png 51 bytes [built] [1 asset]
-./node_modules/a/2.png 51 bytes [built] [1 asset]
-    + 8 hidden modules"
+./node_modules/a/2.png 49 bytes [built] [1 asset]
+    + 6 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for module-deduplication 1`] = `
