@@ -504,6 +504,7 @@ declare class Chunk {
 	split(newChunk: Chunk): void;
 	updateHash(hash: Hash, chunkGraph: ChunkGraph): void;
 	getAllAsyncChunks(): Set<Chunk>;
+	getAllInitialChunks(): Set<Chunk>;
 	getAllReferencedChunks(): Set<Chunk>;
 	hasAsyncChunks(): boolean;
 	getChildIdsByOrders(
@@ -1545,6 +1546,67 @@ declare interface Configuration {
 	 * Options for the watcher.
 	 */
 	watchOptions?: WatchOptions;
+}
+declare class ConsumeSharedPlugin {
+	constructor(options: ConsumeSharedPluginOptions);
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+
+/**
+ * Options for consuming shared modules.
+ */
+declare interface ConsumeSharedPluginOptions {
+	/**
+	 * Modules that should be consumed from share scope. When provided, property names are used to match requested modules in this compilation.
+	 */
+	consumes?: Consumes;
+
+	/**
+	 * Share scope name used for all consumed modules (defaults to 'default').
+	 */
+	shareScope?: string;
+}
+type Consumes = (string | ConsumesObject)[] | ConsumesObject;
+
+/**
+ * Advanced configuration for modules that should be consumed from share scope.
+ */
+declare interface ConsumesConfig {
+	/**
+	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
+	 */
+	import?: DevTool;
+
+	/**
+	 * Version requirement from module in share scope.
+	 */
+	requiredVersion?: string | (string | number)[];
+
+	/**
+	 * Module is looked up under this key from the share scope.
+	 */
+	shareKey?: string;
+
+	/**
+	 * Share scope name.
+	 */
+	shareScope?: string;
+
+	/**
+	 * Do not accept shared module if version is not valid (defaults to yes, if local fallback module is available, otherwise no, has no effect if there is not valid version specified).
+	 */
+	strictVersion?: boolean;
+}
+
+/**
+ * Modules that should be consumed from share scope. Property names are used to match requested modules in this compilation. Relative requests are resolved, module requests are matched unresolved, absolute paths will match resolved requests. A trailing slash will match all requests with this prefix. In this case shareKey must also have a trailing slash.
+ */
+declare interface ConsumesObject {
+	[index: string]: string | ConsumesConfig;
 }
 declare class ContainerPlugin {
 	constructor(options: ContainerPluginOptions);
@@ -7619,7 +7681,7 @@ declare namespace exports {
 				| Record<string, string | string[] | T>
 				| (string | Record<string, string | string[] | T>)[]
 		) => Record<string, string | string[] | T>;
-		export { ProvideSharedPlugin };
+		export { ConsumeSharedPlugin, ProvideSharedPlugin };
 	}
 	export namespace debug {
 		export { ProfilingPlugin };
