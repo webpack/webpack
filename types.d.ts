@@ -3838,16 +3838,6 @@ declare interface ModuleFederationPluginOptions {
 	name?: string;
 
 	/**
-	 * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
-	 */
-	overridables?: Overridables;
-
-	/**
-	 * Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
-	 */
-	overrides?: Overrides;
-
-	/**
 	 * The external type of the remote containers.
 	 */
 	remoteType?: ExternalsType;

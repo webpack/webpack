@@ -516,12 +516,6 @@
       "description": "The name of the container.",
       "type": "string"
     },
-    "overridables": {
-      "$ref": "#/definitions/Overridables"
-    },
-    "overrides": {
-      "$ref": "#/definitions/Overrides"
-    },
     "remoteType": {
       "description": "The external type of the remote containers.",
       "oneOf": [

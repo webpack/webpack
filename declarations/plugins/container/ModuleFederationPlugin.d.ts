@@ -53,28 +53,6 @@ export type LibraryType =
  */
 export type UmdNamedDefine = boolean;
 /**
- * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
- */
-export type Overridables =
-	| (OverridablesItem | OverridablesObject)[]
-	| OverridablesObject;
-/**
- * Request to a module in this container that should be able to be overridden by the host.
- */
-export type OverridablesItem = string;
-/**
- * Requests to modules in this container that should be able to be overridden by the host.
- */
-export type OverridablesItems = OverridablesItem[];
-/**
- * Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
- */
-export type Overrides = (OverridesItem | OverridesObject)[] | OverridesObject;
-/**
- * Request to a module in this container that should override overridable modules in the remote container.
- */
-export type OverridesItem = string;
-/**
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
 export type ExternalsType =
@@ -116,6 +94,28 @@ export type Shared = (SharedItem | SharedObject)[] | SharedObject;
  * Module that should be shared with remotes and/or host.
  */
 export type SharedItem = string;
+/**
+ * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
+ */
+export type Overridables =
+	| (OverridablesItem | OverridablesObject)[]
+	| OverridablesObject;
+/**
+ * Request to a module in this container that should be able to be overridden by the host.
+ */
+export type OverridablesItem = string;
+/**
+ * Requests to modules in this container that should be able to be overridden by the host.
+ */
+export type OverridablesItems = OverridablesItem[];
+/**
+ * Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
+ */
+export type Overrides = (OverridesItem | OverridesObject)[] | OverridesObject;
+/**
+ * Request to a module in this container that should override overridable modules in the remote container.
+ */
+export type OverridesItem = string;
 
 export interface ModuleFederationPluginOptions {
 	/**
@@ -134,14 +134,6 @@ export interface ModuleFederationPluginOptions {
 	 * The name of the container.
 	 */
 	name?: string;
-	/**
-	 * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
-	 */
-	overridables?: Overridables;
-	/**
-	 * Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
-	 */
-	overrides?: Overrides;
 	/**
 	 * The external type of the remote containers.
 	 */
@@ -237,42 +229,6 @@ export interface LibraryCustomUmdObject {
 	root?: string[] | string;
 }
 /**
- * Requests to modules in this container that should be able to be overridden by the host. Property names are used as override keys.
- */
-export interface OverridablesObject {
-	/**
-	 * Requests to modules in this container that should be able to be overridden by the host.
-	 */
-	[k: string]: OverridablesConfig | OverridablesItem | OverridablesItems;
-}
-/**
- * Advanced configuration for modules in this container that should be able to be overridden by the host.
- */
-export interface OverridablesConfig {
-	/**
-	 * Requests to modules in this container that should be able to be overridden by the host.
-	 */
-	import: OverridablesItem | OverridablesItems;
-}
-/**
- * Requests to modules in this container that should override overridable modules in the remote container. Property names are used as override keys.
- */
-export interface OverridesObject {
-	/**
-	 * Requests to modules in this container that should override overridable modules in the remote container.
-	 */
-	[k: string]: OverridesConfig | OverridesItem;
-}
-/**
- * Advanced configuration for modules in this container that should override overridable modules in the remote container.
- */
-export interface OverridesConfig {
-	/**
-	 * Request to a module in this container that should override overridable modules in the remote container.
-	 */
-	import: OverridesItem;
-}
-/**
  * Container locations from which modules should be resolved and loaded at runtime. Property names are used as request scopes.
  */
 export interface RemotesObject {
@@ -307,4 +263,40 @@ export interface SharedConfig {
 	 * Module that should be shared with remotes and/or host.
 	 */
 	import: SharedItem;
+}
+/**
+ * Requests to modules in this container that should be able to be overridden by the host. Property names are used as override keys.
+ */
+export interface OverridablesObject {
+	/**
+	 * Requests to modules in this container that should be able to be overridden by the host.
+	 */
+	[k: string]: OverridablesConfig | OverridablesItem | OverridablesItems;
+}
+/**
+ * Advanced configuration for modules in this container that should be able to be overridden by the host.
+ */
+export interface OverridablesConfig {
+	/**
+	 * Requests to modules in this container that should be able to be overridden by the host.
+	 */
+	import: OverridablesItem | OverridablesItems;
+}
+/**
+ * Requests to modules in this container that should override overridable modules in the remote container. Property names are used as override keys.
+ */
+export interface OverridesObject {
+	/**
+	 * Requests to modules in this container that should override overridable modules in the remote container.
+	 */
+	[k: string]: OverridesConfig | OverridesItem;
+}
+/**
+ * Advanced configuration for modules in this container that should override overridable modules in the remote container.
+ */
+export interface OverridesConfig {
+	/**
+	 * Request to a module in this container that should override overridable modules in the remote container.
+	 */
+	import: OverridesItem;
 }
