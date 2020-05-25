@@ -2128,6 +2128,14 @@
           "description": "Include the context information in the cache identifier when caching.",
           "type": "boolean"
         },
+        "conditionNames": {
+          "description": "Condition names for exports field entry point.",
+          "type": "array",
+          "items": {
+            "description": "Condition names for exports field entry point.",
+            "type": "string"
+          }
+        },
         "descriptionFiles": {
           "description": "Filenames used to find a description file (like a package.json).",
           "type": "array",
@@ -2140,6 +2148,14 @@
         "enforceExtension": {
           "description": "Enforce using one of the extensions from the extensions option.",
           "type": "boolean"
+        },
+        "exportsFields": {
+          "description": "Field names from the description file (package.json) which are used to find the exports field entry point.",
+          "type": "array",
+          "items": {
+            "description": "Field names from the description file (package.json) which are used to find the exports field entry point.",
+            "type": "string"
+          }
         },
         "extensions": {
           "description": "Extensions added to the request when trying to find the file.",

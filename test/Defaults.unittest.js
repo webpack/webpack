@@ -237,6 +237,13 @@ describe("Defaults", () => {
 		      "browser",
 		    ],
 		    "cache": false,
+		    "conditionNames": Array [
+		      "webpack",
+		      "browser",
+		    ],
+		    "exportsFields": Array [
+		      "exports",
+		    ],
 		    "extensions": Array [
 		      ".js",
 		      ".json",
@@ -256,6 +263,12 @@ describe("Defaults", () => {
 		  },
 		  "resolveLoader": Object {
 		    "cache": false,
+		    "conditionNames": Array [
+		      "node",
+		    ],
+		    "exportsFields": Array [
+		      "exports",
+		    ],
 		    "extensions": Array [
 		      ".js",
 		    ],
@@ -433,6 +446,8 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
+		@@ ... @@
+		+       "development",
 		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
@@ -624,6 +639,9 @@ describe("Defaults", () => {
 		+     "aliasFields": Array [],
 		@@ ... @@
 		-       "browser",
+		+       "node",
+		@@ ... @@
+		-       "browser",
 		@@ ... @@
 		-   "target": "web",
 		+   "target": "node",
@@ -638,8 +656,65 @@ describe("Defaults", () => {
 		-     "globalObject": "window",
 		+     "globalObject": "self",
 		@@ ... @@
+		+       "worker",
+		@@ ... @@
 		-   "target": "web",
 		+   "target": "webworker",
+	`)
+	);
+	test("target electron-main", { target: "electron-main" }, e =>
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-     "__dirname": "mock",
+		-     "__filename": "mock",
+		-     "global": true,
+		+     "__dirname": false,
+		+     "__filename": false,
+		+     "global": false,
+		@@ ... @@
+		-     "globalObject": "window",
+		+     "globalObject": "global",
+		@@ ... @@
+		-     "aliasFields": Array [
+		-       "browser",
+		-     ],
+		+     "aliasFields": Array [],
+		@@ ... @@
+		-       "browser",
+		+       "node",
+		+       "electron",
+		@@ ... @@
+		-       "browser",
+		@@ ... @@
+		-   "target": "web",
+		+   "target": "electron-main",
+	`)
+	);
+	test("target electron-main", { target: "electron-preload" }, e =>
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-     "globalObject": "window",
+		+     "globalObject": "self",
+		@@ ... @@
+		-     "aliasFields": Array [
+		-       "browser",
+		-     ],
+		+     "aliasFields": Array [],
+		@@ ... @@
+		-       "browser",
+		+       "node",
+		+       "electron",
+		@@ ... @@
+		-       "browser",
+		@@ ... @@
+		-   "target": "web",
+		+   "target": "electron-preload",
 	`)
 	);
 	test("records", { recordsPath: "some-path" }, e =>

@@ -5661,6 +5661,11 @@ declare interface ResolveOptions {
 	cacheWithContext?: boolean;
 
 	/**
+	 * Condition names for exports field entry point.
+	 */
+	conditionNames?: string[];
+
+	/**
 	 * Filenames used to find a description file (like a package.json).
 	 */
 	descriptionFiles?: string[];
@@ -5669,6 +5674,11 @@ declare interface ResolveOptions {
 	 * Enforce using one of the extensions from the extensions option.
 	 */
 	enforceExtension?: boolean;
+
+	/**
+	 * Field names from the description file (package.json) which are used to find the exports field entry point.
+	 */
+	exportsFields?: string[];
 
 	/**
 	 * Extensions added to the request when trying to find the file.

@@ -2758,6 +2758,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-condition-names": Object {
+    "configs": Array [
+      Object {
+        "description": "Condition names for exports field entry point.",
+        "multiple": true,
+        "path": "resolve.conditionNames[]",
+        "type": "string",
+      },
+    ],
+    "description": "Condition names for exports field entry point.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-condition-names-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Condition names for exports field entry point.",
+        "multiple": false,
+        "path": "resolve.conditionNames",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Condition names for exports field entry point.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-description-files": Object {
     "configs": Array [
       Object {
@@ -2794,6 +2820,32 @@ Object {
       },
     ],
     "description": "Enforce using one of the extensions from the extensions option.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-exports-fields": Object {
+    "configs": Array [
+      Object {
+        "description": "Field names from the description file (package.json) which are used to find the exports field entry point.",
+        "multiple": true,
+        "path": "resolve.exportsFields[]",
+        "type": "string",
+      },
+    ],
+    "description": "Field names from the description file (package.json) which are used to find the exports field entry point.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-exports-fields-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the exports field entry point.",
+        "multiple": false,
+        "path": "resolve.exportsFields",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the exports field entry point.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2936,6 +2988,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-loader-condition-names": Object {
+    "configs": Array [
+      Object {
+        "description": "Condition names for exports field entry point.",
+        "multiple": true,
+        "path": "resolveLoader.conditionNames[]",
+        "type": "string",
+      },
+    ],
+    "description": "Condition names for exports field entry point.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-condition-names-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Condition names for exports field entry point.",
+        "multiple": false,
+        "path": "resolveLoader.conditionNames",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Condition names for exports field entry point.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-loader-description-files": Object {
     "configs": Array [
       Object {
@@ -2972,6 +3050,32 @@ Object {
       },
     ],
     "description": "Enforce using one of the extensions from the extensions option.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-exports-fields": Object {
+    "configs": Array [
+      Object {
+        "description": "Field names from the description file (package.json) which are used to find the exports field entry point.",
+        "multiple": true,
+        "path": "resolveLoader.exportsFields[]",
+        "type": "string",
+      },
+    ],
+    "description": "Field names from the description file (package.json) which are used to find the exports field entry point.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-exports-fields-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the exports field entry point.",
+        "multiple": false,
+        "path": "resolveLoader.exportsFields",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the exports field entry point.",
     "multiple": false,
     "simpleType": "boolean",
   },
