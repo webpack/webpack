@@ -840,6 +840,11 @@ declare interface CodeGenerationResult {
 	sources: Map<string, Source>;
 
 	/**
+	 * the resulting data for all source types
+	 */
+	data?: Map<string, any>;
+
+	/**
 	 * the runtime requirements
 	 */
 	runtimeRequirements: ReadonlySet<string>;
@@ -1024,6 +1029,7 @@ declare class Compilation {
 	 */
 	creatingModuleDuringBuild: WeakMap<Module, Set<Module>>;
 	entries: Map<string, EntryData>;
+	globalEntry: EntryData;
 	entrypoints: Map<string, Entrypoint>;
 	chunks: Set<Chunk>;
 	chunkGroups: ChunkGroup[];
@@ -1106,6 +1112,15 @@ declare class Compilation {
 					EntryDescriptionNormalized,
 					"filename" | "dependOn" | "library"
 			  >),
+		callback: (err?: WebpackError, result?: Module) => void
+	): void;
+	addInclude(
+		context: string,
+		dependency: Dependency,
+		options: { name: string } & Pick<
+			EntryDescriptionNormalized,
+			"filename" | "dependOn" | "library"
+		>,
 		callback: (err?: WebpackError, result?: Module) => void
 	): void;
 	rebuildModule(
@@ -2001,9 +2016,14 @@ type Entry =
 	| [string, ...string[]];
 declare interface EntryData {
 	/**
-	 * dependencies of the entrypoint
+	 * dependencies of the entrypoint that should be evaluated at startup
 	 */
 	dependencies: Dependency[];
+
+	/**
+	 * dependencies of the entrypoint that should be included by not evaluated
+	 */
+	includeDependencies: Dependency[];
 
 	/**
 	 * options of the entrypoint
@@ -5390,6 +5410,49 @@ declare class ProvidePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare class ProvideSharedPlugin {
+	constructor(options: ProvideSharedPluginOptions);
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare interface ProvideSharedPluginOptions {
+	/**
+	 * Modules that should be provided as shared modules to the share scope. When provided, property name is used as share key, otherwise share key is automatically inferred from request.
+	 */
+	provides: Provides;
+
+	/**
+	 * Share scope name used for all provided modules (defaults to 'default').
+	 */
+	shareScope?: string;
+}
+type Provides = (string | ProvidesObject)[] | ProvidesObject;
+
+/**
+ * Advanced configuration for modules that should be provided as shared modules to the share scope.
+ */
+declare interface ProvidesConfig {
+	/**
+	 * Request to a module that should be provided as shared module to the share scope.
+	 */
+	import: string;
+
+	/**
+	 * Share scope name.
+	 */
+	shareScope?: string;
+	version?: string | (string | number)[];
+}
+
+/**
+ * Modules that should be provided as shared modules to the share scope. Property names are used as share keys.
+ */
+declare interface ProvidesObject {
+	[index: string]: string | ProvidesConfig;
+}
 type PublicPath =
 	| string
 	| ((pathData: PathData, assetInfo: AssetInfo) => string);
@@ -6298,6 +6361,24 @@ declare abstract class RuntimeTemplate {
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
+	}): string;
+	asyncModuleFactory(__0: {
+		/**
+		 * the async block
+		 */
+		block: AsyncDependenciesBlock;
+		/**
+		 * the chunk graph
+		 */
+		chunkGraph: ChunkGraph;
+		/**
+		 * if set, will be filled with runtime requirements
+		 */
+		runtimeRequirements: Set<string>;
+		/**
+		 * request string used originally
+		 */
+		request?: string;
 	}): string;
 	defineEsModuleFlagStatement(__0: {
 		/**
@@ -7444,6 +7525,8 @@ declare namespace exports {
 		export let interceptModuleExecution: string;
 		export let global: string;
 		export let overrides: string;
+		export let shareScopeMap: string;
+		export let initializeSharing: string;
 		export let getUpdateManifestFilename: string;
 		export let hmrDownloadManifest: string;
 		export let hmrDownloadUpdateHandlers: string;
@@ -7528,6 +7611,15 @@ declare namespace exports {
 			ModuleFederationPlugin,
 			OverridablesPlugin
 		};
+	}
+	export namespace sharing {
+		export const scope: <T>(
+			scope: string,
+			options:
+				| Record<string, string | string[] | T>
+				| (string | Record<string, string | string[] | T>)[]
+		) => Record<string, string | string[] | T>;
+		export { ProvideSharedPlugin };
 	}
 	export namespace debug {
 		export { ProfilingPlugin };

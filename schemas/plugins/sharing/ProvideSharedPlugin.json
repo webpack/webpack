@@ -31,7 +31,7 @@
           "$ref": "#/definitions/ProvidesItem"
         },
         "shareScope": {
-          "description": "Share context name.",
+          "description": "Share scope name.",
           "type": "string",
           "minLength": 1
         },
@@ -90,7 +90,7 @@
       "$ref": "#/definitions/Provides"
     },
     "shareScope": {
-      "description": "Share context name used for all provided modules (defaults to 'default').",
+      "description": "Share scope name used for all provided modules (defaults to 'default').",
       "type": "string",
       "minLength": 1
     }

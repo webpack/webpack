@@ -19,7 +19,7 @@ export interface ProvideSharedPluginOptions {
 	 */
 	provides: Provides;
 	/**
-	 * Share context name used for all provided modules (defaults to 'default').
+	 * Share scope name used for all provided modules (defaults to 'default').
 	 */
 	shareScope?: string;
 }
@@ -41,7 +41,7 @@ export interface ProvidesConfig {
 	 */
 	import: ProvidesItem;
 	/**
-	 * Share context name.
+	 * Share scope name.
 	 */
 	shareScope?: string;
 	version?: (number | string)[] | string;
