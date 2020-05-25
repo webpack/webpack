@@ -1,0 +1,10 @@
+{
+  "name": "@scope/self",
+  "version": "1.0.0",
+  "exports": {
+    "./a.js": {
+      "import": "./lib/b.js",
+      "require": "./lib/c.js"
+    }
+  }
+}
