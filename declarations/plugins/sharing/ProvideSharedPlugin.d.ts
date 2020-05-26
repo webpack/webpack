@@ -12,6 +12,10 @@ export type Provides = (ProvidesItem | ProvidesObject)[] | ProvidesObject;
  * Request to a module that should be provided as shared module to the share scope.
  */
 export type ProvidesItem = string;
+/**
+ * Version number as array. Numbers and strings are accepted. Strings are treated as tags, which only match exactly. Numbers can match higher numbers.
+ */
+export type SharedVersionArray = (number | string)[];
 
 export interface ProvideSharedPluginOptions {
 	/**
@@ -48,5 +52,8 @@ export interface ProvidesConfig {
 	 * Share scope name.
 	 */
 	shareScope?: string;
-	version?: (number | string)[] | string;
+	/**
+	 * Version of the provided module. Will replace lower matching versions, but not higher.
+	 */
+	version?: string | SharedVersionArray;
 }

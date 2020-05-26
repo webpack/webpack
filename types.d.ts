@@ -5493,6 +5493,10 @@ declare interface ProvidesConfig {
 	 * Share scope name.
 	 */
 	shareScope?: string;
+
+	/**
+	 * Version of the provided module. Will replace lower matching versions, but not higher.
+	 */
 	version?: string | (string | number)[];
 }
 

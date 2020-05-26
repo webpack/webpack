@@ -95,8 +95,7 @@ export type Shared = (SharedItem | SharedObject)[] | SharedObject;
  */
 export type SharedItem = string;
 /**
- * This interface was referenced by `ModuleFederationPluginOptions`'s JSON-Schema
- * via the `definition` "SharedVersionArray".
+ * Version number as array. Numbers and strings are accepted. Strings are treated as tags, which only match exactly. Numbers can match higher numbers.
  */
 export type SharedVersionArray = (number | string)[];
 
