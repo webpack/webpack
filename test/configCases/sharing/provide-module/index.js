@@ -25,12 +25,14 @@ it("should add provided modules to the share scope on init", async () => {
 	);
 
 	{
-		const factory = await __webpack_share_scopes__["test-scope"]["test1"].g();
+		const factory = await __webpack_share_scopes__["test-scope"]["test1"].get();
 		expect(factory()).toBe("test1");
 	}
 
 	{
-		const factory = await __webpack_share_scopes__["other-scope"]["test2"].g();
+		const factory = await __webpack_share_scopes__["other-scope"][
+			"test2"
+		].get();
 		expect(factory()).toBe("test2");
 	}
 });
