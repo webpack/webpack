@@ -7691,7 +7691,6 @@ declare namespace exports {
 		export { AbstractLibraryPlugin, EnableLibraryPlugin };
 	}
 	export namespace container {
-		export const OverridablesPlugin: any;
 		export const scope: <T>(
 			scope: string,
 			options:
