@@ -15,7 +15,11 @@ module.exports = {
 				containerA: "../0-container-full/container.js",
 				containerB: "./container.js"
 			},
-			shared: ["react"]
+			shared: {
+				react: {
+					version: "2.1.0"
+				}
+			}
 		})
 	]
 };

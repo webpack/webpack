@@ -12,7 +12,8 @@ module.exports = {
 					import: "lib2",
 					requiredVersion: "^1.0.0",
 					version: "1.3.4",
-					strictVersion: true
+					strictVersion: true,
+					eager: true
 				},
 				"./relative1": "./relative1",
 				"./relative2": {

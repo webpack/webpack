@@ -53,28 +53,6 @@ export type LibraryType =
  */
 export type UmdNamedDefine = boolean;
 /**
- * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
- */
-export type Overridables =
-	| (OverridablesItem | OverridablesObject)[]
-	| OverridablesObject;
-/**
- * Request to a module in this container that should be able to be overridden by the host.
- */
-export type OverridablesItem = string;
-/**
- * Requests to modules in this container that should be able to be overridden by the host.
- */
-export type OverridablesItems = OverridablesItem[];
-/**
- * Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
- */
-export type Overrides = (OverridesItem | OverridesObject)[] | OverridesObject;
-/**
- * Request to a module in this container that should override overridable modules in the remote container.
- */
-export type OverridesItem = string;
-/**
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
 export type ExternalsType =
@@ -109,13 +87,18 @@ export type RemotesItem = string;
  */
 export type RemotesItems = RemotesItem[];
 /**
- * Modules that should be shared with remotes and/or host. When provided, property name is used as shared key, otherwise shared key is automatically inferred from request.
+ * Modules that should be shared in the share scope. When provided, property names are used to match requested modules in this compilation.
  */
 export type Shared = (SharedItem | SharedObject)[] | SharedObject;
 /**
- * Module that should be shared with remotes and/or host.
+ * A module that should be shared in the share scope.
  */
 export type SharedItem = string;
+/**
+ * This interface was referenced by `ModuleFederationPluginOptions`'s JSON-Schema
+ * via the `definition` "SharedVersionArray".
+ */
+export type SharedVersionArray = (number | string)[];
 
 export interface ModuleFederationPluginOptions {
 	/**
@@ -135,14 +118,6 @@ export interface ModuleFederationPluginOptions {
 	 */
 	name?: string;
 	/**
-	 * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
-	 */
-	overridables?: Overridables;
-	/**
-	 * Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
-	 */
-	overrides?: Overrides;
-	/**
 	 * The external type of the remote containers.
 	 */
 	remoteType?: ExternalsType;
@@ -151,7 +126,11 @@ export interface ModuleFederationPluginOptions {
 	 */
 	remotes?: Remotes;
 	/**
-	 * Modules that should be shared with remotes and/or host. When provided, property name is used as shared key, otherwise shared key is automatically inferred from request.
+	 * Share scope name used for all shared modules (defaults to 'default').
+	 */
+	shareScope?: string;
+	/**
+	 * Modules that should be shared in the share scope. When provided, property names are used to match requested modules in this compilation.
 	 */
 	shared?: Shared;
 }
@@ -237,42 +216,6 @@ export interface LibraryCustomUmdObject {
 	root?: string[] | string;
 }
 /**
- * Requests to modules in this container that should be able to be overridden by the host. Property names are used as override keys.
- */
-export interface OverridablesObject {
-	/**
-	 * Requests to modules in this container that should be able to be overridden by the host.
-	 */
-	[k: string]: OverridablesConfig | OverridablesItem | OverridablesItems;
-}
-/**
- * Advanced configuration for modules in this container that should be able to be overridden by the host.
- */
-export interface OverridablesConfig {
-	/**
-	 * Requests to modules in this container that should be able to be overridden by the host.
-	 */
-	import: OverridablesItem | OverridablesItems;
-}
-/**
- * Requests to modules in this container that should override overridable modules in the remote container. Property names are used as override keys.
- */
-export interface OverridesObject {
-	/**
-	 * Requests to modules in this container that should override overridable modules in the remote container.
-	 */
-	[k: string]: OverridesConfig | OverridesItem;
-}
-/**
- * Advanced configuration for modules in this container that should override overridable modules in the remote container.
- */
-export interface OverridesConfig {
-	/**
-	 * Request to a module in this container that should override overridable modules in the remote container.
-	 */
-	import: OverridesItem;
-}
-/**
  * Container locations from which modules should be resolved and loaded at runtime. Property names are used as request scopes.
  */
 export interface RemotesObject {
@@ -289,22 +232,50 @@ export interface RemotesConfig {
 	 * Container locations from which modules should be resolved and loaded at runtime.
 	 */
 	external: RemotesItem | RemotesItems;
+	/**
+	 * The name of the share scope shared with this remote.
+	 */
+	shareScope?: string;
 }
 /**
- * Modules that should be shared with remotes and/or host. Property names are used as shared keys.
+ * Modules that should be shared in the share scope. Property names are used to match requested modules in this compilation. Relative requests are resolved, module requests are matched unresolved, absolute paths will match resolved requests. A trailing slash will match all requests with this prefix. In this case shareKey must also have a trailing slash.
  */
 export interface SharedObject {
 	/**
-	 * Modules that should be shared with remotes and/or host.
+	 * Modules that should be shared in the share scope.
 	 */
 	[k: string]: SharedConfig | SharedItem;
 }
 /**
- * Advanced configuration for modules that should be shared with remotes and/or host.
+ * Advanced configuration for modules that should be shared in the share scope.
  */
 export interface SharedConfig {
 	/**
-	 * Module that should be shared with remotes and/or host.
+	 * Include the provided and fallback module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.
 	 */
-	import: SharedItem;
+	eager?: boolean;
+	/**
+	 * Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.
+	 */
+	import?: false | SharedItem;
+	/**
+	 * Version requirement from module in share scope.
+	 */
+	requiredVersion?: string | SharedVersionArray;
+	/**
+	 * Module is looked up under this key from the share scope.
+	 */
+	shareKey?: string;
+	/**
+	 * Share scope name.
+	 */
+	shareScope?: string;
+	/**
+	 * Do not accept shared module if version is not valid (defaults to yes, if local fallback module is available, otherwise no, has no effect if there is not valid version specified).
+	 */
+	strictVersion?: boolean;
+	/**
+	 * Version of the provided module.
+	 */
+	version?: string | SharedVersionArray;
 }

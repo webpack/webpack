@@ -23,59 +23,6 @@
         "import"
       ]
     },
-    "Overrides": {
-      "description": "Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.",
-      "anyOf": [
-        {
-          "type": "array",
-          "items": {
-            "description": "Modules in this container that should override overridable modules in the remote container.",
-            "anyOf": [
-              {
-                "$ref": "#/definitions/OverridesItem"
-              },
-              {
-                "$ref": "#/definitions/OverridesObject"
-              }
-            ]
-          }
-        },
-        {
-          "$ref": "#/definitions/OverridesObject"
-        }
-      ]
-    },
-    "OverridesConfig": {
-      "description": "Advanced configuration for modules in this container that should override overridable modules in the remote container.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "import": {
-          "$ref": "#/definitions/OverridesItem"
-        }
-      },
-      "required": ["import"]
-    },
-    "OverridesItem": {
-      "description": "Request to a module in this container that should override overridable modules in the remote container.",
-      "type": "string",
-      "minLength": 1
-    },
-    "OverridesObject": {
-      "description": "Requests to modules in this container that should override overridable modules in the remote container. Property names are used as override keys.",
-      "type": "object",
-      "additionalProperties": {
-        "description": "Requests to modules in this container that should override overridable modules in the remote container.",
-        "anyOf": [
-          {
-            "$ref": "#/definitions/OverridesConfig"
-          },
-          {
-            "$ref": "#/definitions/OverridesItem"
-          }
-        ]
-      }
-    },
     "Remotes": {
       "description": "Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.",
       "anyOf": [
@@ -113,6 +60,11 @@
               "$ref": "#/definitions/RemotesItems"
             }
           ]
+        },
+        "shareScope": {
+          "description": "The name of the share scope shared with this remote.",
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": ["external"]
@@ -152,9 +104,6 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "overrides": {
-      "$ref": "#/definitions/Overrides"
-    },
     "remoteType": {
       "description": "The external type of the remote containers.",
       "oneOf": [
@@ -165,6 +114,11 @@
     },
     "remotes": {
       "$ref": "#/definitions/Remotes"
+    },
+    "shareScope": {
+      "description": "The name of the share scope shared with all remotes (defaults to 'default').",
+      "type": "string",
+      "minLength": 1
     }
   },
   "required": ["remoteType", "remotes"]

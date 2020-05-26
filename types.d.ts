@@ -1563,7 +1563,7 @@ declare interface ConsumeSharedPluginOptions {
 	/**
 	 * Modules that should be consumed from share scope. When provided, property names are used to match requested modules in this compilation.
 	 */
-	consumes?: Consumes;
+	consumes: Consumes;
 
 	/**
 	 * Share scope name used for all consumed modules (defaults to 'default').
@@ -1576,6 +1576,11 @@ type Consumes = (string | ConsumesObject)[] | ConsumesObject;
  * Advanced configuration for modules that should be consumed from share scope.
  */
 declare interface ConsumesConfig {
+	/**
+	 * Include the fallback module directly instead behind an async request. This allows to use fallback module in initial load too. All possible shared modules need to be eager too.
+	 */
+	eager?: boolean;
+
 	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
 	 */
@@ -1638,9 +1643,9 @@ declare interface ContainerPluginOptions {
 	name: string;
 
 	/**
-	 * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
+	 * The name of the share scope which is shared with the host (defaults to 'default').
 	 */
-	overridables?: Overridables;
+	shareScope?: string;
 }
 declare class ContainerReferencePlugin {
 	constructor(options: ContainerReferencePluginOptions);
@@ -1652,11 +1657,6 @@ declare class ContainerReferencePlugin {
 }
 declare interface ContainerReferencePluginOptions {
 	/**
-	 * Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
-	 */
-	overrides?: Overrides;
-
-	/**
 	 * The external type of the remote containers.
 	 */
 	remoteType: ExternalsType;
@@ -1665,6 +1665,11 @@ declare interface ContainerReferencePluginOptions {
 	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
 	 */
 	remotes: Remotes;
+
+	/**
+	 * The name of the share scope shared with all remotes (defaults to 'default').
+	 */
+	shareScope?: string;
 }
 declare class ContextExclusionPlugin {
 	constructor(negativeMatcher: RegExp);
@@ -3920,16 +3925,6 @@ declare interface ModuleFederationPluginOptions {
 	name?: string;
 
 	/**
-	 * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
-	 */
-	overridables?: Overridables;
-
-	/**
-	 * Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
-	 */
-	overrides?: Overrides;
-
-	/**
 	 * The external type of the remote containers.
 	 */
 	remoteType?: ExternalsType;
@@ -3940,7 +3935,12 @@ declare interface ModuleFederationPluginOptions {
 	remotes?: Remotes;
 
 	/**
-	 * Modules that should be shared with remotes and/or host. When provided, property name is used as shared key, otherwise shared key is automatically inferred from request.
+	 * Share scope name used for all shared modules (defaults to 'default').
+	 */
+	shareScope?: string;
+
+	/**
+	 * Modules that should be shared in the share scope. When provided, property names are used to match requested modules in this compilation.
 	 */
 	shared?: Shared;
 }
@@ -5261,24 +5261,6 @@ declare interface OverridablesPluginOptions {
 	 */
 	overridables?: Overridables;
 }
-type Overrides = (string | OverridesObject)[] | OverridesObject;
-
-/**
- * Advanced configuration for modules in this container that should override overridable modules in the remote container.
- */
-declare interface OverridesConfig {
-	/**
-	 * Request to a module in this container that should override overridable modules in the remote container.
-	 */
-	import: string;
-}
-
-/**
- * Requests to modules in this container that should override overridable modules in the remote container. Property names are used as override keys.
- */
-declare interface OverridesObject {
-	[index: string]: string | OverridesConfig;
-}
 declare class Parser {
 	constructor();
 	parse(
@@ -5498,6 +5480,11 @@ type Provides = (string | ProvidesObject)[] | ProvidesObject;
  */
 declare interface ProvidesConfig {
 	/**
+	 * Include the provided module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.
+	 */
+	eager?: boolean;
+
+	/**
 	 * Request to a module that should be provided as shared module to the share scope.
 	 */
 	import: string;
@@ -5552,6 +5539,11 @@ declare interface RemotesConfig {
 	 * Container locations from which modules should be resolved and loaded at runtime.
 	 */
 	external: string | string[];
+
+	/**
+	 * The name of the share scope shared with this remote.
+	 */
+	shareScope?: string;
 }
 
 /**
@@ -6442,6 +6434,24 @@ declare abstract class RuntimeTemplate {
 		 */
 		request?: string;
 	}): string;
+	syncModuleFactory(__0: {
+		/**
+		 * the dependency
+		 */
+		dependency: Dependency;
+		/**
+		 * the chunk graph
+		 */
+		chunkGraph: ChunkGraph;
+		/**
+		 * if set, will be filled with runtime requirements
+		 */
+		runtimeRequirements: Set<string>;
+		/**
+		 * request string used originally
+		 */
+		request?: string;
+	}): string;
 	defineEsModuleFlagStatement(__0: {
 		/**
 		 * the name of the exports object
@@ -6473,20 +6483,73 @@ declare abstract class Serializer {
 	serialize(obj?: any, context?: any): any;
 	deserialize(value?: any, context?: any): any;
 }
-type Shared = (string | SharedObject)[] | SharedObject;
+declare class SharePlugin {
+	constructor(options: SharePluginOptions);
 
-/**
- * Advanced configuration for modules that should be shared with remotes and/or host.
- */
-declare interface SharedConfig {
 	/**
-	 * Module that should be shared with remotes and/or host.
+	 * Apply the plugin
 	 */
-	import: string;
+	apply(compiler: Compiler): void;
 }
 
 /**
- * Modules that should be shared with remotes and/or host. Property names are used as shared keys.
+ * Options for shared modules.
+ */
+declare interface SharePluginOptions {
+	/**
+	 * Share scope name used for all shared modules (defaults to 'default').
+	 */
+	shareScope?: string;
+
+	/**
+	 * Modules that should be shared in the share scope. When provided, property names are used to match requested modules in this compilation.
+	 */
+	shared: Shared;
+}
+type Shared = (string | SharedObject)[] | SharedObject;
+
+/**
+ * Advanced configuration for modules that should be shared in the share scope.
+ */
+declare interface SharedConfig {
+	/**
+	 * Include the provided and fallback module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.
+	 */
+	eager?: boolean;
+
+	/**
+	 * Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.
+	 */
+	import?: DevTool;
+
+	/**
+	 * Version requirement from module in share scope.
+	 */
+	requiredVersion?: string | (string | number)[];
+
+	/**
+	 * Module is looked up under this key from the share scope.
+	 */
+	shareKey?: string;
+
+	/**
+	 * Share scope name.
+	 */
+	shareScope?: string;
+
+	/**
+	 * Do not accept shared module if version is not valid (defaults to yes, if local fallback module is available, otherwise no, has no effect if there is not valid version specified).
+	 */
+	strictVersion?: boolean;
+
+	/**
+	 * Version of the provided module.
+	 */
+	version?: string | (string | number)[];
+}
+
+/**
+ * Modules that should be shared in the share scope. Property names are used to match requested modules in this compilation. Relative requests are resolved, module requests are matched unresolved, absolute paths will match resolved requests. A trailing slash will match all requests with this prefix. In this case shareKey must also have a trailing slash.
  */
 declare interface SharedObject {
 	[index: string]: string | SharedConfig;
@@ -7681,7 +7744,7 @@ declare namespace exports {
 				| Record<string, string | string[] | T>
 				| (string | Record<string, string | string[] | T>)[]
 		) => Record<string, string | string[] | T>;
-		export { ConsumeSharedPlugin, ProvideSharedPlugin };
+		export { ConsumeSharedPlugin, ProvideSharedPlugin, SharePlugin };
 	}
 	export namespace debug {
 		export { ProfilingPlugin };

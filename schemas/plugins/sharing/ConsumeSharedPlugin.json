@@ -27,6 +27,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "eager": {
+          "description": "Include the fallback module directly instead behind an async request. This allows to use fallback module in initial load too. All possible shared modules need to be eager too.",
+          "type": "boolean"
+        },
         "import": {
           "description": "Fallback module if no shared module is found in share scope. Defaults to the property name.",
           "anyOf": [
@@ -113,5 +117,6 @@
       "type": "string",
       "minLength": 1
     }
-  }
+  },
+  "required": ["consumes"]
 }

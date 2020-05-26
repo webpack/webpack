@@ -1,4 +1,5 @@
 const { ContainerReferencePlugin } = require("../../../../").container;
+const { ProvideSharedPlugin } = require("../../../../").sharing;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -7,8 +8,10 @@ module.exports = {
 			remoteType: "var",
 			remotes: {
 				abc: "ABC"
-			},
-			overrides: {
+			}
+		}),
+		new ProvideSharedPlugin({
+			provides: {
 				test: {
 					import: "./new-test"
 				}

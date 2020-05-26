@@ -16,7 +16,10 @@ module.exports = {
 				"container-with-shared": "./container-with-shared.js"
 			},
 			shared: {
-				shared: "./shared"
+				"./shared": {
+					shareKey: "shared",
+					version: "1"
+				}
 			}
 		})
 	]

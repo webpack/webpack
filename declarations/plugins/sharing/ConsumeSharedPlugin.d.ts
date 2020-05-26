@@ -20,7 +20,7 @@ export interface ConsumeSharedPluginOptions {
 	/**
 	 * Modules that should be consumed from share scope. When provided, property names are used to match requested modules in this compilation.
 	 */
-	consumes?: Consumes;
+	consumes: Consumes;
 	/**
 	 * Share scope name used for all consumed modules (defaults to 'default').
 	 */
@@ -39,6 +39,10 @@ export interface ConsumesObject {
  * Advanced configuration for modules that should be consumed from share scope.
  */
 export interface ConsumesConfig {
+	/**
+	 * Include the fallback module directly instead behind an async request. This allows to use fallback module in initial load too. All possible shared modules need to be eager too.
+	 */
+	eager?: boolean;
 	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
 	 */

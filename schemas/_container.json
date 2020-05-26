@@ -108,6 +108,11 @@
               "$ref": "#/definitions/RemotesItems"
             }
           ]
+        },
+        "shareScope": {
+          "description": "The name of the share scope shared with this remote.",
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": ["external"]

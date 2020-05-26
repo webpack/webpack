@@ -8,6 +8,7 @@ beforeEach(done => {
 });
 
 afterEach(done => {
+	expectWarning();
 	console.warn = oldWarn;
 	done();
 });
@@ -141,7 +142,6 @@ it("should load the shared modules", async () => {
 			})
 		);
 	}
-	expectWarning();
 });
 
 it("should handle version matching correctly in strict and singleton mode", async () => {

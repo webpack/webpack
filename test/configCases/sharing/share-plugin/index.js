@@ -1,13 +1,13 @@
-it("should provide and consume a normal library sync", () => {
-	expect(require("lib1")).toEqual(
+it("should provide and consume a normal library async", async () => {
+	expect(await import("lib1")).toEqual(
 		expect.objectContaining({
 			default: "lib1"
 		})
 	);
 });
 
-it("should provide and consume a renamed library async", async () => {
-	expect(await import("lib-two")).toEqual(
+it("should provide and consume a renamed library sync", () => {
+	expect(require("lib-two")).toEqual(
 		expect.objectContaining({
 			default: "lib2"
 		})

@@ -67,4 +67,8 @@ export interface RemotesConfig {
 	 * Container locations from which modules should be resolved and loaded at runtime.
 	 */
 	external: RemotesItem | RemotesItems;
+	/**
+	 * The name of the share scope shared with this remote.
+	 */
+	shareScope?: string;
 }

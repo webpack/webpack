@@ -244,130 +244,6 @@
         "system"
       ]
     },
-    "Overridables": {
-      "description": "Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.",
-      "anyOf": [
-        {
-          "type": "array",
-          "items": {
-            "description": "Modules in this container that should be able to be overridden by the host.",
-            "anyOf": [
-              {
-                "$ref": "#/definitions/OverridablesItem"
-              },
-              {
-                "$ref": "#/definitions/OverridablesObject"
-              }
-            ]
-          }
-        },
-        {
-          "$ref": "#/definitions/OverridablesObject"
-        }
-      ]
-    },
-    "OverridablesConfig": {
-      "description": "Advanced configuration for modules in this container that should be able to be overridden by the host.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "import": {
-          "description": "Requests to modules in this container that should be able to be overridden by the host.",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/OverridablesItem"
-            },
-            {
-              "$ref": "#/definitions/OverridablesItems"
-            }
-          ]
-        }
-      },
-      "required": ["import"]
-    },
-    "OverridablesItem": {
-      "description": "Request to a module in this container that should be able to be overridden by the host.",
-      "type": "string",
-      "minLength": 1
-    },
-    "OverridablesItems": {
-      "description": "Requests to modules in this container that should be able to be overridden by the host.",
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/OverridablesItem"
-      }
-    },
-    "OverridablesObject": {
-      "description": "Requests to modules in this container that should be able to be overridden by the host. Property names are used as override keys.",
-      "type": "object",
-      "additionalProperties": {
-        "description": "Requests to modules in this container that should be able to be overridden by the host.",
-        "anyOf": [
-          {
-            "$ref": "#/definitions/OverridablesConfig"
-          },
-          {
-            "$ref": "#/definitions/OverridablesItem"
-          },
-          {
-            "$ref": "#/definitions/OverridablesItems"
-          }
-        ]
-      }
-    },
-    "Overrides": {
-      "description": "Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.",
-      "anyOf": [
-        {
-          "type": "array",
-          "items": {
-            "description": "Modules in this container that should override overridable modules in the remote container.",
-            "anyOf": [
-              {
-                "$ref": "#/definitions/OverridesItem"
-              },
-              {
-                "$ref": "#/definitions/OverridesObject"
-              }
-            ]
-          }
-        },
-        {
-          "$ref": "#/definitions/OverridesObject"
-        }
-      ]
-    },
-    "OverridesConfig": {
-      "description": "Advanced configuration for modules in this container that should override overridable modules in the remote container.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "import": {
-          "$ref": "#/definitions/OverridesItem"
-        }
-      },
-      "required": ["import"]
-    },
-    "OverridesItem": {
-      "description": "Request to a module in this container that should override overridable modules in the remote container.",
-      "type": "string",
-      "minLength": 1
-    },
-    "OverridesObject": {
-      "description": "Requests to modules in this container that should override overridable modules in the remote container. Property names are used as override keys.",
-      "type": "object",
-      "additionalProperties": {
-        "description": "Requests to modules in this container that should override overridable modules in the remote container.",
-        "anyOf": [
-          {
-            "$ref": "#/definitions/OverridesConfig"
-          },
-          {
-            "$ref": "#/definitions/OverridesItem"
-          }
-        ]
-      }
-    },
     "Remotes": {
       "description": "Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.",
       "anyOf": [
@@ -405,6 +281,11 @@
               "$ref": "#/definitions/RemotesItems"
             }
           ]
+        },
+        "shareScope": {
+          "description": "The name of the share scope shared with this remote.",
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": ["external"]
@@ -440,12 +321,12 @@
       }
     },
     "Shared": {
-      "description": "Modules that should be shared with remotes and/or host. When provided, property name is used as shared key, otherwise shared key is automatically inferred from request.",
+      "description": "Modules that should be shared in the share scope. When provided, property names are used to match requested modules in this compilation.",
       "anyOf": [
         {
           "type": "array",
           "items": {
-            "description": "Modules that should be shared with remotes and/or host.",
+            "description": "Modules that should be shared in the share scope.",
             "anyOf": [
               {
                 "$ref": "#/definitions/SharedItem"
@@ -462,32 +343,97 @@
       ]
     },
     "SharedConfig": {
-      "description": "Advanced configuration for modules that should be shared with remotes and/or host.",
+      "description": "Advanced configuration for modules that should be shared in the share scope.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "eager": {
+          "description": "Include the provided and fallback module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.",
+          "type": "boolean"
+        },
         "import": {
-          "$ref": "#/definitions/SharedItem"
+          "description": "Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.",
+          "anyOf": [
+            {
+              "description": "No provided or fallback module.",
+              "enum": [false]
+            },
+            {
+              "$ref": "#/definitions/SharedItem"
+            }
+          ]
+        },
+        "requiredVersion": {
+          "description": "Version requirement from module in share scope.",
+          "anyOf": [
+            {
+              "description": "Version as string. Can be prefixed with '^' or '~' for minimum matches. Each part of the version should be separated by a dot '.'.",
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/SharedVersionArray"
+            }
+          ]
+        },
+        "shareKey": {
+          "description": "Module is looked up under this key from the share scope.",
+          "type": "string",
+          "minLength": 1
+        },
+        "shareScope": {
+          "description": "Share scope name.",
+          "type": "string",
+          "minLength": 1
+        },
+        "strictVersion": {
+          "description": "Do not accept shared module if version is not valid (defaults to yes, if local fallback module is available, otherwise no, has no effect if there is not valid version specified).",
+          "type": "boolean"
+        },
+        "version": {
+          "description": "Version of the provided module.",
+          "anyOf": [
+            {
+              "description": "Version as string. Each part of the version should be separated by a dot '.'.",
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/SharedVersionArray"
+            }
+          ]
         }
-      },
-      "required": ["import"]
+      }
     },
     "SharedItem": {
-      "description": "Module that should be shared with remotes and/or host.",
+      "description": "A module that should be shared in the share scope.",
       "type": "string",
       "minLength": 1
     },
     "SharedObject": {
-      "description": "Modules that should be shared with remotes and/or host. Property names are used as shared keys.",
+      "description": "Modules that should be shared in the share scope. Property names are used to match requested modules in this compilation. Relative requests are resolved, module requests are matched unresolved, absolute paths will match resolved requests. A trailing slash will match all requests with this prefix. In this case shareKey must also have a trailing slash.",
       "type": "object",
       "additionalProperties": {
-        "description": "Modules that should be shared with remotes and/or host.",
+        "description": "Modules that should be shared in the share scope.",
         "anyOf": [
           {
             "$ref": "#/definitions/SharedConfig"
           },
           {
             "$ref": "#/definitions/SharedItem"
+          }
+        ]
+      }
+    },
+    "SharedVersionArray": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "description": "Version number. It's assumed that the module is compatible with any higher version number.",
+            "type": "number"
+          },
+          {
+            "description": "Version tag. The module is only compatible with the exact matching version tag.",
+            "type": "string"
           }
         ]
       }
@@ -516,12 +462,6 @@
       "description": "The name of the container.",
       "type": "string"
     },
-    "overridables": {
-      "$ref": "#/definitions/Overridables"
-    },
-    "overrides": {
-      "$ref": "#/definitions/Overrides"
-    },
     "remoteType": {
       "description": "The external type of the remote containers.",
       "oneOf": [
@@ -532,6 +472,11 @@
     },
     "remotes": {
       "$ref": "#/definitions/Remotes"
+    },
+    "shareScope": {
+      "description": "Share scope name used for all shared modules (defaults to 'default').",
+      "type": "string",
+      "minLength": 1
     },
     "shared": {
       "$ref": "#/definitions/Shared"

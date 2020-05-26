@@ -16,7 +16,11 @@ module.exports = {
 				]
 			},
 			exposes: ["./Self"],
-			shared: ["react"]
+			shared: {
+				react: {
+					version: "8"
+				}
+			}
 		})
 	]
 };
