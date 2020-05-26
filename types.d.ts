@@ -5225,42 +5225,6 @@ declare interface OutputNormalized {
 	 */
 	webassemblyModuleFilename?: string;
 }
-type Overridables = (string | OverridablesObject)[] | OverridablesObject;
-
-/**
- * Advanced configuration for modules in this container that should be able to be overridden by the host.
- */
-declare interface OverridablesConfig {
-	/**
-	 * Requests to modules in this container that should be able to be overridden by the host.
-	 */
-	import: string | string[];
-}
-
-/**
- * Requests to modules in this container that should be able to be overridden by the host. Property names are used as override keys.
- */
-declare interface OverridablesObject {
-	[index: string]: string | OverridablesConfig | string[];
-}
-declare class OverridablesPlugin {
-	constructor(options: OverridablesPluginOptions);
-
-	/**
-	 * Apply the plugin
-	 */
-	apply(compiler: Compiler): void;
-}
-
-/**
- * Modules that should be able to be overridden. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
- */
-declare interface OverridablesPluginOptions {
-	/**
-	 * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
-	 */
-	overridables?: Overridables;
-}
 declare class Parser {
 	constructor();
 	parse(
@@ -7653,7 +7617,6 @@ declare namespace exports {
 		export let startupNoDefault: string;
 		export let interceptModuleExecution: string;
 		export let global: string;
-		export let overrides: string;
 		export let shareScopeMap: string;
 		export let initializeSharing: string;
 		export let getUpdateManifestFilename: string;
@@ -7728,6 +7691,7 @@ declare namespace exports {
 		export { AbstractLibraryPlugin, EnableLibraryPlugin };
 	}
 	export namespace container {
+		export const OverridablesPlugin: any;
 		export const scope: <T>(
 			scope: string,
 			options:
@@ -7737,8 +7701,7 @@ declare namespace exports {
 		export {
 			ContainerPlugin,
 			ContainerReferencePlugin,
-			ModuleFederationPlugin,
-			OverridablesPlugin
+			ModuleFederationPlugin
 		};
 	}
 	export namespace sharing {
