@@ -15,7 +15,10 @@ module.exports = {
 					strictVersion: true,
 					eager: true
 				},
-				"./relative1": "./relative1",
+				"./relative1": {
+					import: "./relative1",
+					version: false
+				},
 				"./relative2": {
 					import: false,
 					shareKey: "store",
