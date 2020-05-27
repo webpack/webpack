@@ -270,6 +270,10 @@ export interface SharedConfig {
 	 */
 	shareScope?: string;
 	/**
+	 * Allow only a single version of the shared module in share scope (disabled by default).
+	 */
+	singleton?: boolean;
+	/**
 	 * Do not accept shared module if version is not valid (defaults to yes, if local fallback module is available, otherwise no, has no effect if there is not valid version specified).
 	 */
 	strictVersion?: boolean;

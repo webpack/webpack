@@ -22,6 +22,12 @@ module.exports = {
 					import: false,
 					shareKey: "react",
 					requiredVersion: "^2"
+				},
+				"old-react-singleton": {
+					import: false,
+					shareKey: "react",
+					requiredVersion: "^2",
+					singleton: true
 				}
 			}
 		})
