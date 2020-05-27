@@ -16,7 +16,14 @@ module.exports = {
 				]
 			},
 			exposes: ["./Self"],
-			shared: ["react"]
+			shared: {
+				react: "react",
+				"old-react": {
+					import: false,
+					shareKey: "react",
+					requiredVersion: "^2"
+				}
+			}
 		})
 	]
 };
