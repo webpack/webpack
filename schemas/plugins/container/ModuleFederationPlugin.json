@@ -390,8 +390,12 @@
           "type": "boolean"
         },
         "version": {
-          "description": "Version of the provided module.",
+          "description": "Version of the provided module. Will replace lower matching versions, but not higher.",
           "anyOf": [
+            {
+              "description": "Don't provide a version.",
+              "enum": [false]
+            },
             {
               "description": "Version as string. Each part of the version should be separated by a dot '.'.",
               "type": "string"

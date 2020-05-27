@@ -8,7 +8,9 @@ module.exports = {
 			remotes: {
 				containerB: "../1-container-full/container.js"
 			},
-			shared: ["react"]
+			shared: {
+				react: "^2.0.1"
+			}
 		})
 	]
 };

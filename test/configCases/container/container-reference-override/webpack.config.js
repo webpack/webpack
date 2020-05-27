@@ -13,7 +13,8 @@ module.exports = {
 		new ProvideSharedPlugin({
 			provides: {
 				test: {
-					import: "./new-test"
+					import: "./new-test",
+					version: false
 				}
 			}
 		})

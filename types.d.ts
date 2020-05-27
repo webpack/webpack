@@ -5461,7 +5461,7 @@ declare interface ProvidesConfig {
 	/**
 	 * Version of the provided module. Will replace lower matching versions, but not higher.
 	 */
-	version?: string | (string | number)[];
+	version?: string | false | (string | number)[];
 }
 
 /**
@@ -6511,9 +6511,9 @@ declare interface SharedConfig {
 	strictVersion?: boolean;
 
 	/**
-	 * Version of the provided module.
+	 * Version of the provided module. Will replace lower matching versions, but not higher.
 	 */
-	version?: string | (string | number)[];
+	version?: string | false | (string | number)[];
 }
 
 /**

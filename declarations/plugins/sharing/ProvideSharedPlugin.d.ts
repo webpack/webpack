@@ -55,5 +55,5 @@ export interface ProvidesConfig {
 	/**
 	 * Version of the provided module. Will replace lower matching versions, but not higher.
 	 */
-	version?: string | SharedVersionArray;
+	version?: false | string | SharedVersionArray;
 }

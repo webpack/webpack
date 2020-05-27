@@ -58,7 +58,7 @@ export interface SharedConfig {
 	 */
 	strictVersion?: boolean;
 	/**
-	 * Version of the provided module.
+	 * Version of the provided module. Will replace lower matching versions, but not higher.
 	 */
-	version?: string | SharedVersionArray;
+	version?: false | string | SharedVersionArray;
 }
