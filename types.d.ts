@@ -4361,7 +4361,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	createParser(type?: any, parserOptions?: {}): any;
 	getGenerator(type?: any, generatorOptions?: {}): Generator;
 	createGenerator(type?: any, generatorOptions?: {}): any;
-	getResolver(type?: any, resolveOptions?: any): any;
+	getResolver(type?: any, resolveOptions?: any, category?: any): any;
 }
 declare class NormalModuleReplacementPlugin {
 	/**
@@ -5647,6 +5647,11 @@ declare interface ResolveOptions {
 	aliasFields?: LibraryExport[];
 
 	/**
+	 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
+	 */
+	byDependency?: { [index: string]: ResolveOptions };
+
+	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
 	 */
 	cache?: boolean;
@@ -5762,11 +5767,15 @@ declare interface ResolverCache {
 }
 declare abstract class ResolverFactory {
 	hooks: Readonly<{
-		resolveOptions: HookMap<SyncWaterfallHook<[any]>>;
-		resolver: HookMap<SyncHook<[Resolver, any, any], void>>;
+		resolveOptions: HookMap<SyncWaterfallHook<[any, string]>>;
+		resolver: HookMap<SyncHook<[Resolver, any, any, string], void>>;
 	}>;
 	cache: Map<string, ResolverCache>;
-	get(type: string, resolveOptions?: any): Resolver & WithOptions;
+	get(
+		type: string,
+		resolveOptions?: any,
+		category?: string
+	): Resolver & WithOptions;
 }
 declare interface RuleSet {
 	/**

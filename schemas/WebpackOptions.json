@@ -2115,6 +2115,18 @@
             ]
           }
         },
+        "byDependency": {
+          "description": "Extra resolve options per dependency category. Typical categories are \"commonjs\", \"amd\", \"esm\".",
+          "type": "object",
+          "additionalProperties": {
+            "description": "Options object for resolving requests.",
+            "oneOf": [
+              {
+                "$ref": "#/definitions/ResolveOptions"
+              }
+            ]
+          }
+        },
         "cache": {
           "description": "Enable caching of successfully resolved requests (cache entries are revalidated).",
           "type": "boolean"

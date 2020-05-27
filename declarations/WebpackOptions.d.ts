@@ -1112,6 +1112,15 @@ export interface ResolveOptions {
 	 */
 	aliasFields?: (string[] | string)[];
 	/**
+	 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
+	 */
+	byDependency?: {
+		/**
+		 * Options object for resolving requests.
+		 */
+		[k: string]: ResolveOptions;
+	};
+	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
 	 */
 	cache?: boolean;
