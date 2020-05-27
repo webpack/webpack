@@ -2150,10 +2150,10 @@
           "type": "boolean"
         },
         "exportsFields": {
-          "description": "Field names from the description file (package.json) which are used to find the exports field entry point.",
+          "description": "Field names from the description file (usually package.json) which are used to provide entry points of a package.",
           "type": "array",
           "items": {
-            "description": "Field names from the description file (package.json) which are used to find the exports field entry point.",
+            "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
             "type": "string"
           }
         },

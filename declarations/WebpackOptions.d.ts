@@ -1136,7 +1136,7 @@ export interface ResolveOptions {
 	 */
 	enforceExtension?: boolean;
 	/**
-	 * Field names from the description file (package.json) which are used to find the exports field entry point.
+	 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
 	 */
 	exportsFields?: string[];
 	/**
