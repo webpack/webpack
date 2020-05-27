@@ -43,7 +43,10 @@ module.exports = {
 		"jsdoc/require-returns-type": "error",
 		"jsdoc/require-returns": "error",
 		// Disallow @ts-ignore directive. Use @ts-expect-error instead
-		"no-warning-comments": ["error", { terms: ["@ts-ignore"], location: "start" }]
+		"no-warning-comments": [
+			"error",
+			{ terms: ["@ts-ignore"], location: "start" }
+		]
 	},
 	settings: {
 		jsdoc: {

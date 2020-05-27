@@ -887,7 +887,9 @@ declare class Compilation {
 			],
 			void
 		>;
-		dependencyReferencedExports: SyncWaterfallHook<[string[][], Dependency]>;
+		dependencyReferencedExports: SyncWaterfallHook<
+			[(string[] | ReferencedExportItem[])[], Dependency]
+		>;
 		finishModules: AsyncSeriesHook<[Iterable<Module>]>;
 		finishRebuildingModule: AsyncSeriesHook<[Module]>;
 		unseal: SyncHook<[], void>;
@@ -1137,7 +1139,9 @@ declare class Compilation {
 	 */
 	addChunk(name?: string): Chunk;
 	assignDepth(module: Module): void;
-	getDependencyReferencedExports(dependency: Dependency): string[][];
+	getDependencyReferencedExports(
+		dependency: Dependency
+	): (string[] | ReferencedExportItem[])[];
 	removeReasonsOfDependencyBlock(
 		module: Module,
 		block: DependenciesBlockLike
@@ -1683,7 +1687,9 @@ declare class Dependency {
 	/**
 	 * Returns list of exports referenced by this dependency
 	 */
-	getReferencedExports(moduleGraph: ModuleGraph): string[][];
+	getReferencedExports(
+		moduleGraph: ModuleGraph
+	): (string[] | ReferencedExportItem[])[];
 	getCondition(moduleGraph: ModuleGraph): () => boolean;
 
 	/**
@@ -5417,6 +5423,17 @@ type RecursiveArrayOrRecord =
 	| RuntimeValue
 	| { [index: string]: RecursiveArrayOrRecord }
 	| RecursiveArrayOrRecord[];
+declare interface ReferencedExportItem {
+	/**
+	 * name of the referenced export
+	 */
+	name: string;
+
+	/**
+	 * when true, referenced export can be mangled
+	 */
+	canMangle?: boolean;
+}
 type Remotes = (string | RemotesObject)[] | RemotesObject;
 
 /**
