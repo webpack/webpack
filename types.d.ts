@@ -1677,7 +1677,7 @@ declare class Dependency {
 	optional: boolean;
 	loc: SyntheticDependencyLocation | RealDependencyLocation;
 	readonly type: string;
-	readonly category: number;
+	readonly category: string;
 	getResourceIdentifier(): string;
 	getReference(moduleGraph: ModuleGraph): never;
 
@@ -1715,12 +1715,6 @@ declare class Dependency {
 	deserialize(__0: { read: any }): void;
 	module: any;
 	readonly disconnect: any;
-	static Categories: {
-		ESM: number;
-		CommonJS: number;
-		AMD: number;
-		Unknown: number;
-	};
 	static NO_EXPORTS_REFERENCED: any[];
 	static EXPORTS_OBJECT_REFERENCED: any[][];
 }
