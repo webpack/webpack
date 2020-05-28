@@ -236,6 +236,20 @@ describe("Defaults", () => {
 		    "aliasFields": Array [
 		      "browser",
 		    ],
+		    "byDependency": Object {
+		      "commonjs": Object {
+		        "conditionNames": Array [
+		          "require",
+		          "...",
+		        ],
+		      },
+		      "esm": Object {
+		        "conditionNames": Array [
+		          "import",
+		          "...",
+		        ],
+		      },
+		    },
 		    "cache": false,
 		    "conditionNames": Array [
 		      "webpack",
@@ -264,6 +278,8 @@ describe("Defaults", () => {
 		  "resolveLoader": Object {
 		    "cache": false,
 		    "conditionNames": Array [
+		      "loader",
+		      "require",
 		      "node",
 		    ],
 		    "exportsFields": Array [

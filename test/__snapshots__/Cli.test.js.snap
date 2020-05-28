@@ -2826,26 +2826,26 @@ Object {
   "resolve-exports-fields": Object {
     "configs": Array [
       Object {
-        "description": "Field names from the description file (package.json) which are used to find the exports field entry point.",
+        "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
         "multiple": true,
         "path": "resolve.exportsFields[]",
         "type": "string",
       },
     ],
-    "description": "Field names from the description file (package.json) which are used to find the exports field entry point.",
+    "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
     "multiple": true,
     "simpleType": "string",
   },
   "resolve-exports-fields-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the exports field entry point.",
+        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
         "multiple": false,
         "path": "resolve.exportsFields",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the exports field entry point.",
+    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3056,26 +3056,26 @@ Object {
   "resolve-loader-exports-fields": Object {
     "configs": Array [
       Object {
-        "description": "Field names from the description file (package.json) which are used to find the exports field entry point.",
+        "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
         "multiple": true,
         "path": "resolveLoader.exportsFields[]",
         "type": "string",
       },
     ],
-    "description": "Field names from the description file (package.json) which are used to find the exports field entry point.",
+    "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
     "multiple": true,
     "simpleType": "string",
   },
   "resolve-loader-exports-fields-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the exports field entry point.",
+        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
         "multiple": false,
         "path": "resolveLoader.exportsFields",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the exports field entry point.",
+    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
     "multiple": false,
     "simpleType": "boolean",
   },
