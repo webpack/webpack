@@ -1,18 +1,16 @@
 module.exports = {
 	moduleScope(scope) {
-		const o = {
-			test: () => () => x => `wrong ${x}`
-		};
+		let ss;
 		scope.ABC = {
 			async get(module) {
-				const testFactory = await o["test"]();
+				const testFactory = await ss.test.get();
 				const test = testFactory();
 				return () => {
 					return test(module);
 				};
 			},
-			override(overrides) {
-				Object.assign(o, overrides);
+			async init(shareScope) {
+				ss = shareScope;
 			}
 		};
 	}

@@ -5,14 +5,6 @@
  */
 
 /**
- * Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
- */
-export type Overrides = (OverridesItem | OverridesObject)[] | OverridesObject;
-/**
- * Request to a module in this container that should override overridable modules in the remote container.
- */
-export type OverridesItem = string;
-/**
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
 export type ExternalsType =
@@ -49,10 +41,6 @@ export type RemotesItems = RemotesItem[];
 
 export interface ContainerReferencePluginOptions {
 	/**
-	 * Modules in this container that should override overridable modules in the remote container. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
-	 */
-	overrides?: Overrides;
-	/**
 	 * The external type of the remote containers.
 	 */
 	remoteType: ExternalsType;
@@ -60,24 +48,10 @@ export interface ContainerReferencePluginOptions {
 	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
 	 */
 	remotes: Remotes;
-}
-/**
- * Requests to modules in this container that should override overridable modules in the remote container. Property names are used as override keys.
- */
-export interface OverridesObject {
 	/**
-	 * Requests to modules in this container that should override overridable modules in the remote container.
+	 * The name of the share scope shared with all remotes (defaults to 'default').
 	 */
-	[k: string]: OverridesConfig | OverridesItem;
-}
-/**
- * Advanced configuration for modules in this container that should override overridable modules in the remote container.
- */
-export interface OverridesConfig {
-	/**
-	 * Request to a module in this container that should override overridable modules in the remote container.
-	 */
-	import: OverridesItem;
+	shareScope?: string;
 }
 /**
  * Container locations from which modules should be resolved and loaded at runtime. Property names are used as request scopes.
@@ -96,4 +70,8 @@ export interface RemotesConfig {
 	 * Container locations from which modules should be resolved and loaded at runtime.
 	 */
 	external: RemotesItem | RemotesItems;
+	/**
+	 * The name of the share scope shared with this remote.
+	 */
+	shareScope?: string;
 }

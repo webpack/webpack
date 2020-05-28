@@ -20,7 +20,7 @@ it("should have good module ids", async () => {
 		"./b.js",
 		"./modules.js",
 		"webpack/container/entry/container-with-shared",
-		"webpack/container/overridable/shared=./shared"
+		"webpack/sharing/consume/default/shared/./shared"
 	]);
 	expect(m1).toEqual([
 		"./a.js",
@@ -29,7 +29,6 @@ it("should have good module ids", async () => {
 		"./modules.js",
 		"webpack/container/entry/container-no-shared",
 		"webpack/container/reference/container-with-shared",
-		"webpack/container/remote-overrides/empty",
 		"webpack/container/remote/container-with-shared/b",
 		"webpack/container/remote/container-with-shared/modules"
 	]);
@@ -37,7 +36,6 @@ it("should have good module ids", async () => {
 		"./index.js",
 		"./shared.js",
 		"webpack/container/reference/container-no-shared",
-		"webpack/container/remote-overrides/7d3b8a",
 		"webpack/container/remote/container-no-shared/a",
 		"webpack/container/remote/container-no-shared/b",
 		"webpack/container/remote/container-no-shared/modules",

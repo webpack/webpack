@@ -52,20 +52,6 @@ export type LibraryType =
  * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
  */
 export type UmdNamedDefine = boolean;
-/**
- * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
- */
-export type Overridables =
-	| (OverridablesItem | OverridablesObject)[]
-	| OverridablesObject;
-/**
- * Request to a module in this container that should be able to be overridden by the host.
- */
-export type OverridablesItem = string;
-/**
- * Requests to modules in this container that should be able to be overridden by the host.
- */
-export type OverridablesItems = OverridablesItem[];
 
 export interface ContainerPluginOptions {
 	/**
@@ -85,9 +71,9 @@ export interface ContainerPluginOptions {
 	 */
 	name: string;
 	/**
-	 * Modules in this container that should be able to be overridden by the host. When provided, property name is used as override key, otherwise override key is automatically inferred from request.
+	 * The name of the share scope which is shared with the host (defaults to 'default').
 	 */
-	overridables?: Overridables;
+	shareScope?: string;
 }
 /**
  * Modules that should be exposed by this container. Property names are used as public paths.
@@ -169,22 +155,4 @@ export interface LibraryCustomUmdObject {
 	 * Name of the property exposed globally by a UMD library.
 	 */
 	root?: string[] | string;
-}
-/**
- * Requests to modules in this container that should be able to be overridden by the host. Property names are used as override keys.
- */
-export interface OverridablesObject {
-	/**
-	 * Requests to modules in this container that should be able to be overridden by the host.
-	 */
-	[k: string]: OverridablesConfig | OverridablesItem | OverridablesItems;
-}
-/**
- * Advanced configuration for modules in this container that should be able to be overridden by the host.
- */
-export interface OverridablesConfig {
-	/**
-	 * Requests to modules in this container that should be able to be overridden by the host.
-	 */
-	import: OverridablesItem | OverridablesItems;
 }
