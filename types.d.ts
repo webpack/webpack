@@ -5774,7 +5774,7 @@ declare abstract class ResolverFactory {
 	get(
 		type: string,
 		resolveOptions?: any,
-		category?: string
+		dependencyType?: string
 	): Resolver & WithOptions;
 }
 declare interface RuleSet {
