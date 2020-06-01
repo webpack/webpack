@@ -9,7 +9,11 @@ module.exports = {
 			exposes: {
 				"./Button": "./Button"
 			},
-			shared: ["react"]
+			shared: {
+				react: {
+					eager: true
+				}
+			}
 		})
 	]
 };

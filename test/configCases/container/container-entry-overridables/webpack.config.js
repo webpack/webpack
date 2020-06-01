@@ -1,4 +1,5 @@
 const { ContainerPlugin } = require("../../../../").container;
+const { ConsumeSharedPlugin } = require("../../../../").sharing;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -11,9 +12,13 @@ module.exports = {
 			},
 			exposes: {
 				"./test": "./test"
-			},
-			overridables: {
-				value: "./value"
+			}
+		}),
+		new ConsumeSharedPlugin({
+			consumes: {
+				"./value": {
+					shareKey: "value"
+				}
 			}
 		})
 	]

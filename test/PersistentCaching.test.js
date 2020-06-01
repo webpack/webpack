@@ -54,6 +54,8 @@ describe("Persistent Caching", () => {
 		return new Promise((resolve, reject) => {
 			webpack({ ...config, ...configAdditions }, (err, stats) => {
 				if (err) return reject(err);
+				if (stats.hasErrors())
+					return reject(stats.toString({ preset: "errors-only" }));
 				resolve(stats);
 			});
 		});
@@ -138,7 +140,8 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 		const data = {
 			"index.js":
 				"export default import('container/src/exposed').then(m => m.default);",
-			"exposed.js": "export default 42;"
+			"exposed.js": "import lib from 'lib'; export default 21 + lib;",
+			"lib.js": "export default 21"
 		};
 		await updateSrc(data);
 		const configAdditions = {
@@ -148,7 +151,15 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 					library: { type: "commonjs-module" },
 					exposes: ["./src/exposed"],
 					remotes: {
-						container: "./container"
+						container: ["./no-container", "./container"]
+					},
+					shared: {
+						lib: {
+							import: "./src/lib",
+							shareKey: "lib",
+							version: "1.2.3",
+							requiredVersion: "^1.0.0"
+						}
 					}
 				})
 			]
