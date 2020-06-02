@@ -4310,6 +4310,16 @@ declare class NodeEnvironmentPlugin {
  */
 declare interface NodeOptions {
 	/**
+	 * Include a polyfill for the '__dirname' variable.
+	 */
+	__dirname?: boolean | "mock";
+
+	/**
+	 * Include a polyfill for the '__filename' variable.
+	 */
+	__filename?: boolean | "mock";
+
+	/**
 	 * Include a polyfill for the 'global' variable.
 	 */
 	global?: boolean;

@@ -80,7 +80,7 @@
     "strip-ansi": "^6.0.0",
     "style-loader": "^1.0.0",
     "toml": "^3.0.0",
-    "tooling": "webpack/tooling#v1.7.0",
+    "tooling": "webpack/tooling#v1.8.0",
     "ts-loader": "^6.0.4",
     "typescript": "^3.9.2",
     "url-loader": "^4.1.0",
