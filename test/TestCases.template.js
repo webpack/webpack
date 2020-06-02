@@ -322,4 +322,4 @@ const describeCases = config => {
 	});
 };
 
-module.exports.describeCases = describeCases;
+exports.describeCases = describeCases;
