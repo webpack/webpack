@@ -42,6 +42,7 @@ const describeCases = config => {
 						const outBaseDir = path.join(__dirname, "js");
 						const testSubPath = path.join(config.name, category.name, testName);
 						const outputDirectory = path.join(outBaseDir, testSubPath);
+						const cacheDirectory = path.join(outBaseDir, ".cache", testSubPath);
 						let options, optionsArr, testConfig;
 						beforeAll(() => {
 							options = prepareOptions(
@@ -63,6 +64,13 @@ const describeCases = config => {
 									options.output.pathinfo = true;
 								if (!options.output.filename)
 									options.output.filename = "bundle" + idx + ".js";
+								if (config.cache) {
+									options.cache = {
+										cacheDirectory,
+										name: `config-${idx}`,
+										...config.cache
+									};
+								}
 							});
 							testConfig = {
 								findBundle: function (i, options) {
@@ -88,34 +96,62 @@ const describeCases = config => {
 							}
 							if (testConfig.timeout) setDefaultTimeout(testConfig.timeout);
 						});
+						beforeAll(() => {
+							rimraf.sync(cacheDirectory);
+						});
+						const handleFatalError = (err, done) => {
+							const fakeStats = {
+								errors: [
+									{
+										message: err.message,
+										stack: err.stack
+									}
+								]
+							};
+							if (
+								checkArrayExpectation(
+									testDirectory,
+									fakeStats,
+									"error",
+									"Error",
+									done
+								)
+							) {
+								return;
+							}
+							// Wait for uncaught errors to occur
+							setTimeout(done, 200);
+							return;
+						};
+						if (config.cache) {
+							it(`${testName} should pre-compile to fill disk cache (1st)`, done => {
+								rimraf.sync(outputDirectory);
+								fs.mkdirSync(outputDirectory, { recursive: true });
+								const deprecationTracker = deprecationTracking.start();
+								webpack(options, err => {
+									deprecationTracker();
+									if (err) return handleFatalError(err, done);
+									done();
+								});
+							}, 60000);
+							it(`${testName} should pre-compile to fill disk cache (2nd)`, done => {
+								rimraf.sync(outputDirectory);
+								fs.mkdirSync(outputDirectory, { recursive: true });
+								const deprecationTracker = deprecationTracking.start();
+								webpack(options, err => {
+									deprecationTracker();
+									if (err) return handleFatalError(err, done);
+									done();
+								});
+							}, 20000);
+						}
 						it(`${testName} should compile`, done => {
 							rimraf.sync(outputDirectory);
 							fs.mkdirSync(outputDirectory, { recursive: true });
 							const deprecationTracker = deprecationTracking.start();
 							webpack(options, (err, stats) => {
-								if (err) {
-									const fakeStats = {
-										errors: [
-											{
-												message: err.message,
-												stack: err.stack
-											}
-										]
-									};
-									if (
-										checkArrayExpectation(
-											testDirectory,
-											fakeStats,
-											"error",
-											"Error",
-											done
-										)
-									) {
-										return;
-									}
-									// Wait for uncaught errors to occur
-									return setTimeout(done, 200);
-								}
+								const deprecations = deprecationTracker();
+								if (err) return handleFatalError(err, done);
 								const statOptions = {
 									preset: "verbose",
 									colors: false
@@ -156,7 +192,6 @@ const describeCases = config => {
 								) {
 									return;
 								}
-								const deprecations = deprecationTracker();
 								if (
 									checkArrayExpectation(
 										testDirectory,
