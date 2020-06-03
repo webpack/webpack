@@ -21,9 +21,9 @@ it("should be able to retry a failed import()", () => {
 
 		const promise = doImport();
 
-		expect(document.head._children).toHaveLength(2);
+		expect(document.head._children).toHaveLength(1);
 
-		const script = document.head._children[1];
+		const script = document.head._children[0];
 		expect(script.onload).toBeTypeOf("function");
 
 		script.onload();
@@ -39,16 +39,17 @@ it("should be able to retry a failed import()", () => {
 
 			const promise = doImport();
 
-			expect(document.head._children).toHaveLength(3);
+			expect(document.head._children).toHaveLength(1);
 
 			__non_webpack_require__("./the-chunk.js");
+			document.head._children[0].onload();
 
 			return promise.then(module => {
 				expect(module).toEqual(nsObj({ default: "ok" }));
 
 				const promise = doImport();
 
-				expect(document.head._children).toHaveLength(3);
+				expect(document.head._children).toHaveLength(0);
 
 				return promise.then(module2 => {
 					expect(module2).toBe(module);
