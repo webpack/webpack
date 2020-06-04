@@ -201,6 +201,94 @@ const App = () => (
 export default App;
 ```
 
+# index.html
+
+```html
+<html>
+	<head>
+		<style>
+			.spinner {
+				font-size: 10px;
+				margin: 50px auto;
+				text-indent: -9999em;
+				width: 11em;
+				height: 11em;
+				border-radius: 50%;
+				background: #595959;
+				background: linear-gradient(
+					to right,
+					#595959 10%,
+					rgba(89, 89, 89, 0) 42%
+				);
+				position: relative;
+				animation: spin 1.4s infinite linear;
+				transform: translateZ(0);
+			}
+			.spinner:before {
+				width: 50%;
+				height: 50%;
+				background: #595959;
+				border-radius: 100% 0 0 0;
+				position: absolute;
+				top: 0;
+				left: 0;
+				content: "";
+			}
+			.spinner:after {
+				background: white;
+				width: 75%;
+				height: 75%;
+				border-radius: 50%;
+				content: "";
+				margin: auto;
+				position: absolute;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+			}
+			@-webkit-keyframes spin {
+				0% {
+					-webkit-transform: rotate(0deg);
+					transform: rotate(0deg);
+				}
+				100% {
+					-webkit-transform: rotate(360deg);
+					transform: rotate(360deg);
+				}
+			}
+			@keyframes spin {
+				0% {
+					-webkit-transform: rotate(0deg);
+					transform: rotate(0deg);
+				}
+				100% {
+					-webkit-transform: rotate(360deg);
+					transform: rotate(360deg);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- A spinner -->
+		<div class="spinner"></div>
+
+		<!-- This script only contains boostrapping logic -->
+		<!-- It will load all other scripts if neccessary -->
+		<script src="/dist/aaa/app.js" async></script>
+
+		<!-- These script tags are optional -->
+		<!-- They improve loading performance -->
+		<!-- Omitting them will add an additional round trip -->
+		<script src="/dist/bbb/mfeBBB.js" async></script>
+		<script src="/dist/ccc/mfeCCC.js" async></script>
+
+		<!-- All these scripts are pretty small ~5kb -->
+		<!-- For optimal performance they can be inlined -->
+	</body>
+</html>
+```
+
 # src-b/Component.js
 
 ```jsx
@@ -1627,8 +1715,8 @@ __webpack_require__.d(exports, {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("lodash", [4,17,15], () => __webpack_require__.e("vendors-node_modules_lodash_lodash_js").then(() => () => __webpack_require__(/*! lodash */ 9)));
-/******/ 					register("react", [16,13,1], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! react */ 10)));
+/******/ 					register("react", [16,13,1], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! react */ 9)));
+/******/ 					register("lodash", [4,17,15], () => __webpack_require__.e("vendors-node_modules_lodash_lodash_js").then(() => () => __webpack_require__(/*! lodash */ 12)));
 /******/ 					register("date-fns", [2,14,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! date-fns */ 13)));
 /******/ 				}
 /******/ 				break;
@@ -1736,9 +1824,9 @@ __webpack_require__.d(exports, {
 /******/ 		};
 /******/ 		var installedModules = {};
 /******/ 		var moduleToHandlerMapping = {
-/******/ 			5: () => loadSingletonVersionCheckFallback("default", "react", ["16",8,0], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! react */ 10))),
+/******/ 			5: () => loadSingletonVersionCheckFallback("default", "react", ["16",8,0], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! react */ 9))),
 /******/ 			6: () => loadStrictVersionCheckFallback("default", "date-fns", ["2",12,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! date-fns */ 13))),
-/******/ 			8: () => loadStrictVersionCheckFallback("default", "lodash", ["4",17,4], () => __webpack_require__.e("vendors-node_modules_lodash_lodash_js").then(() => () => __webpack_require__(/*! lodash */ 9)))
+/******/ 			8: () => loadStrictVersionCheckFallback("default", "lodash", ["4",17,4], () => __webpack_require__.e("vendors-node_modules_lodash_lodash_js").then(() => () => __webpack_require__(/*! lodash */ 12)))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
 /******/ 		var chunkMapping = {

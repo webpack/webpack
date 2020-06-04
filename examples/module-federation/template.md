@@ -22,6 +22,12 @@ _{{src/bootstrap.js}}_
 _{{src/App.js}}_
 ```
 
+# index.html
+
+```html
+_{{index.html}}_
+```
+
 # src-b/Component.js
 
 ```jsx
