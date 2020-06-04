@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
+    "@babel/preset-react": "^7.10.1",
     "@types/jest": "^25.1.5",
     "@types/node": "^12.6.9",
     "babel-loader": "^8.0.6",
