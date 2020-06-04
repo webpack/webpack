@@ -11,7 +11,7 @@ module.exports = {
 		function () {
 			this.hooks.compilation.tap("TestPlugin", function (compilation) {
 				compilation.hooks.processAssets.tap("TestPlugin", function (assets) {
-					delete compilation.assets["b.js"];
+					delete assets["b.js"];
 				});
 			});
 		}
