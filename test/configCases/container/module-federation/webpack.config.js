@@ -9,6 +9,7 @@ function createConfig() {
 			new ModuleFederationPlugin({
 				name: "container",
 				filename: "container.js",
+				library: { type: "system" },
 				exposes: ["./other", "./self", "./dep"],
 				remotes: {
 					abc: "ABC",
@@ -20,6 +21,7 @@ function createConfig() {
 			new ModuleFederationPlugin({
 				name: "container2",
 				filename: "container2.js",
+				library: { type: "system" },
 				exposes: ["./other", "./self", "./dep"],
 				remotes: {
 					abc: "ABC",

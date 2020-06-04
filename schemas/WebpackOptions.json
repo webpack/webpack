@@ -254,8 +254,7 @@
         "library": {
           "$ref": "#/definitions/LibraryOptions"
         }
-      },
-      "required": ["import"]
+      }
     },
     "EntryDynamic": {
       "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
@@ -312,8 +311,7 @@
             "$ref": "#/definitions/EntryDescription"
           }
         ]
-      },
-      "minProperties": 1
+      }
     },
     "EntryStatic": {
       "description": "A static entry description.",
@@ -336,8 +334,7 @@
             "$ref": "#/definitions/EntryDescriptionNormalized"
           }
         ]
-      },
-      "minProperties": 1
+      }
     },
     "EntryUnnamed": {
       "description": "An entry point without name.",
@@ -467,7 +464,8 @@
         "jsonp",
         "system",
         "promise",
-        "import"
+        "import",
+        "script"
       ]
     },
     "FileCacheOptions": {
