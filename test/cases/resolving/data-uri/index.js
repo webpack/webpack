@@ -5,7 +5,7 @@ it("should require js module from base64 data-uri", function() {
 });
 
 it("should require js module from ascii data-uri", function() {
-	const mod = require("data:text/javascript;charset=utf-8;ascii,module.exports={number:42,fn:()=>\"Hello world\"}");
+	const mod = require("data:text/javascript;charset=utf-8,module.exports={number:42,fn:()=>\"Hello world\"}");
 	expect(mod.number).toBe(42);
 	expect(mod.fn()).toBe("Hello world");
 });
