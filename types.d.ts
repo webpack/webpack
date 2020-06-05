@@ -2149,7 +2149,7 @@ declare interface EntryDescriptionNormalized {
 	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
-	import: [string, ...string[]];
+	import?: [string, ...string[]];
 
 	/**
 	 * Options for library.
@@ -2537,7 +2537,8 @@ type ExternalsType =
 	| "jsonp"
 	| "system"
 	| "promise"
-	| "import";
+	| "import"
+	| "script";
 declare interface FactorizeModuleOptions {
 	currentProfile: ModuleProfile;
 	factory: ModuleFactory;
@@ -7630,6 +7631,7 @@ declare namespace exports {
 		export let instantiateWasm: string;
 		export let uncaughtErrorHandler: string;
 		export let scriptNonce: string;
+		export let loadScript: string;
 		export let chunkName: string;
 		export let getChunkScriptFilename: string;
 		export let getChunkUpdateScriptFilename: string;

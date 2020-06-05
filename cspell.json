@@ -170,6 +170,9 @@
     "prewalking",
     "overridables",
     "overridable",
+    "darkblue",
+    "darkgreen",
+    "darkred",
 
     "webassemblyjs",
     "fsevents",
@@ -209,5 +212,5 @@
     "dependabot"
   ],
   "ignoreRegExpList": ["/Author.+/", "/data:.*/", "/\"mappings\":\".+\"/"],
-  "ignorePaths": ["**/dist/**"]
+  "ignorePaths": ["**/dist/**", "examples/**/README.md"]
 }

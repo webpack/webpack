@@ -138,6 +138,11 @@ const describeCases = config => {
 													_attrs: {},
 													setAttribute(name, value) {
 														this._attrs[name] = value;
+													},
+													parentNode: {
+														removeChild(node) {
+															// ok
+														}
 													}
 												};
 											},
@@ -153,6 +158,7 @@ const describeCases = config => {
 											},
 											getElementsByTagName(name) {
 												if (name === "head") return [this.head];
+												if (name === "script") return [];
 												throw new Error("Not supported");
 											}
 										}

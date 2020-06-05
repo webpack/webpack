@@ -103,7 +103,8 @@
         "jsonp",
         "system",
         "promise",
-        "import"
+        "import",
+        "script"
       ]
     },
     "LibraryCustomUmdCommentObject": {
