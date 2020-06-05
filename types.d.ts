@@ -5949,9 +5949,9 @@ declare interface RuleSetRule {
 	loader?: string;
 
 	/**
-	 * Module mimetype when load from Data URI.
+	 * Match module mimetype when load from Data URI.
 	 */
-	mimetype?: string;
+	mimetype?: RuleSetCondition;
 
 	/**
 	 * Only execute the first matching rule in this array.

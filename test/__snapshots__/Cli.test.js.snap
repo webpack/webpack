@@ -774,13 +774,19 @@ Object {
   "module-rules-mimetype": Object {
     "configs": Array [
       Object {
-        "description": "Module mimetype when load from Data URI.",
+        "description": "Match module mimetype when load from Data URI.",
+        "multiple": true,
+        "path": "module.rules[].mimetype",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match module mimetype when load from Data URI.",
         "multiple": true,
         "path": "module.rules[].mimetype",
         "type": "string",
       },
     ],
-    "description": "Module mimetype when load from Data URI.",
+    "description": "Match module mimetype when load from Data URI.",
     "multiple": true,
     "simpleType": "string",
   },

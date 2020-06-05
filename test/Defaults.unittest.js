@@ -481,8 +481,14 @@ describe("Defaults", () => {
 		+         "type": "javascript/esm",
 		+       },
 		+       Object {
-		+         "mimetype": "javascript/esm",
-		+         "type": "javascript/esm",
+		+         "mimetype": Object {
+		+           "or": Array [
+		+             "text/javascript",
+		+             "application/javascript",
+		+             "application/node",
+		+           ],
+		+         },
+		+         "type": "javascript/auto",
 		+       },
 		+     ],
 		@@ ... @@
