@@ -16,7 +16,7 @@ describe("RequestShortener", () => {
 	it("should create RequestShortener and not shorten parent directory neighbor", () => {
 		const shortener = new RequestShortener("/foo/bar");
 		expect(shortener.shorten("/foo_baz/bar/some.js")).toEqual(
-			"/foo_baz/bar/some.js"
+			"../../foo_baz/bar/some.js"
 		);
 	});
 });

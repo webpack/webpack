@@ -3,7 +3,6 @@
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
-const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
 const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
@@ -52,7 +51,7 @@ categories = categories.map(cat => {
 const describeCases = config => {
 	describe(config.name, () => {
 		categories.forEach(category => {
-			describe(category.name, function() {
+			describe(category.name, function () {
 				jest.setTimeout(20000);
 
 				category.tests
@@ -161,7 +160,7 @@ const describeCases = config => {
 										}
 									]
 								},
-								plugins: (config.plugins || []).concat(function() {
+								plugins: (config.plugins || []).concat(function () {
 									this.hooks.compilation.tap("TestCasesTest", compilation => {
 										[
 											"optimize",
@@ -180,7 +179,8 @@ const describeCases = config => {
 									mjs: true,
 									asyncWebAssembly: true,
 									topLevelAwait: true,
-									importAwait: true
+									importAwait: true,
+									importAsync: true
 								}
 							};
 							beforeAll(done => {
@@ -225,7 +225,7 @@ const describeCases = config => {
 													preset: "verbose",
 													colors: false
 												};
-												mkdirp.sync(outputDirectory);
+												fs.mkdirSync(outputDirectory, { recursive: true });
 												fs.writeFileSync(
 													path.join(outputDirectory, "stats.txt"),
 													stats.toString(statOptions),
@@ -322,4 +322,4 @@ const describeCases = config => {
 	});
 };
 
-module.exports.describeCases = describeCases;
+exports.describeCases = describeCases;

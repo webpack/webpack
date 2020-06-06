@@ -1,3 +1,4 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
 		vendor: ["external0", "./a"],

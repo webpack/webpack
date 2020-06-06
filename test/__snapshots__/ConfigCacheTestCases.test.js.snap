@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConfigCacheTestCases custom-modules json-custom exported tests should transform toml to json 1`] = `
+Object {
+  "owner": Object {
+    "bio": "GitHub Cofounder & CEO
+Likes tater tots and beer.",
+    "dob": "1979-05-27T07:32:00.000Z",
+    "name": "Tom Preston-Werner",
+    "organization": "GitHub",
+  },
+  "title": "TOML Example",
+}
+`;
+
+exports[`ConfigCacheTestCases records issue-2991 exported tests should write relative paths to records 1`] = `
+"{
+  \\"chunks\\": {
+    \\"byName\\": {
+      \\"main\\": 179
+    },
+    \\"bySource\\": {
+      \\"0 main\\": 179
+    },
+    \\"usedIds\\": [
+      179
+    ]
+  },
+  \\"modules\\": {
+    \\"byIdentifier\\": {
+      \\"./test.js\\": 393,
+      \\"external \\\\\\"fs\\\\\\"\\": 747,
+      \\"external \\\\\\"path\\\\\\"\\": 622,
+      \\"ignored|pkgs/somepackage/foo\\": 713
+    },
+    \\"usedIds\\": [
+      393,
+      622,
+      713,
+      747
+    ]
+  }
+}"
+`;
+
+exports[`ConfigCacheTestCases records issue-7339 exported tests should write relative dynamic-require paths to records 1`] = `
+"{
+  \\"chunks\\": {
+    \\"byName\\": {
+      \\"main\\": 179
+    },
+    \\"bySource\\": {
+      \\"0 main\\": 179
+    },
+    \\"usedIds\\": [
+      179
+    ]
+  },
+  \\"modules\\": {
+    \\"byIdentifier\\": {
+      \\"./dependencies/bar.js\\": 379,
+      \\"./dependencies/foo.js\\": 117,
+      \\"./dependencies|sync|/^\\\\\\\\.\\\\\\\\/.*$/\\": 412,
+      \\"./test.js\\": 393,
+      \\"external \\\\\\"fs\\\\\\"\\": 747,
+      \\"external \\\\\\"path\\\\\\"\\": 622
+    },
+    \\"usedIds\\": [
+      117,
+      379,
+      393,
+      412,
+      622,
+      747
+    ]
+  }
+}"
+`;

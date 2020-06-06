@@ -1,5 +1,6 @@
+/** @type {import("../../../../").Configuration[]} */
 module.exports = [
-	function() {
+	function () {
 		return {};
 	}
 ];

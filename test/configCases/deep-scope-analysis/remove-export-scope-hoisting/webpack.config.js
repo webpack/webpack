@@ -1,12 +1,13 @@
-/** @typedef {import("../../../../lib/Compilation")} Compilation */
+/** @typedef {import("../../../../").Compilation} Compilation */
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	optimization: {
 		usedExports: true,
 		concatenateModules: true
 	},
 	plugins: [
-		function() {
+		function () {
 			this.hooks.compilation.tap(
 				"Test",
 				/**

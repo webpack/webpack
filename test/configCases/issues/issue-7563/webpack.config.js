@@ -4,6 +4,7 @@
 const testAllButHash = "[chunkhash].[chunkhash:16].[name].[id].[query]";
 const testHash = "[fullhash].[fullhash:16]";
 
+/** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
 		name: "webworker-all",

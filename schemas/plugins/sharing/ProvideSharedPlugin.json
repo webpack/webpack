@@ -1,0 +1,113 @@
+{
+  "definitions": {
+    "Provides": {
+      "description": "Modules that should be provided as shared modules to the share scope. When provided, property name is used as share key, otherwise share key is automatically inferred from request.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "description": "Modules that should be provided as shared modules to the share scope.",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/ProvidesItem"
+              },
+              {
+                "$ref": "#/definitions/ProvidesObject"
+              }
+            ]
+          }
+        },
+        {
+          "$ref": "#/definitions/ProvidesObject"
+        }
+      ]
+    },
+    "ProvidesConfig": {
+      "description": "Advanced configuration for modules that should be provided as shared modules to the share scope.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "eager": {
+          "description": "Include the provided module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.",
+          "type": "boolean"
+        },
+        "import": {
+          "$ref": "#/definitions/ProvidesItem"
+        },
+        "shareScope": {
+          "description": "Share scope name.",
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "description": "Version of the provided module. Will replace lower matching versions, but not higher.",
+          "anyOf": [
+            {
+              "description": "Don't provide a version.",
+              "enum": [false]
+            },
+            {
+              "description": "Version as string. Each part of the version should be separated by a dot '.'.",
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/SharedVersionArray"
+            }
+          ]
+        }
+      },
+      "required": ["import"]
+    },
+    "ProvidesItem": {
+      "description": "Request to a module that should be provided as shared module to the share scope.",
+      "type": "string",
+      "minLength": 1
+    },
+    "ProvidesObject": {
+      "description": "Modules that should be provided as shared modules to the share scope. Property names are used as share keys.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "Modules that should be provided as shared modules to the share scope.",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/ProvidesConfig"
+          },
+          {
+            "$ref": "#/definitions/ProvidesItem"
+          }
+        ]
+      }
+    },
+    "SharedVersionArray": {
+      "description": "Version number as array. Numbers and strings are accepted. Strings are treated as tags, which only match exactly. Numbers can match higher numbers.",
+      "type": "array",
+      "items": {
+        "description": "An item of the version.",
+        "anyOf": [
+          {
+            "description": "Version number. It's assumed that the module is compatible with any higher version number.",
+            "type": "number"
+          },
+          {
+            "description": "Version tag. The module is only compatible with the exact matching version tag.",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  },
+  "title": "ProvideSharedPluginOptions",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "provides": {
+      "$ref": "#/definitions/Provides"
+    },
+    "shareScope": {
+      "description": "Share scope name used for all provided modules (defaults to 'default').",
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": ["provides"]
+}

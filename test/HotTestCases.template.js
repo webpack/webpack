@@ -3,6 +3,7 @@
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
+const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 
@@ -42,8 +43,8 @@ const describeCases = config => {
 									category.name,
 									testName
 								);
+								rimraf.sync(outputDirectory);
 								const recordsPath = path.join(outputDirectory, "records.json");
-								if (fs.existsSync(recordsPath)) fs.unlinkSync(recordsPath);
 								const fakeUpdateLoaderOptions = {
 									updateIndex: 0
 								};
@@ -65,6 +66,8 @@ const describeCases = config => {
 									options.output.chunkFilename = "[name].chunk.[fullhash].js";
 								if (options.output.pathinfo === undefined)
 									options.output.pathinfo = true;
+								if (options.output.library === undefined)
+									options.output.library = { type: "commonjs2" };
 								if (!options.optimization) options.optimization = {};
 								if (!options.optimization.moduleIds)
 									options.optimization.moduleIds = "named";
@@ -135,6 +138,11 @@ const describeCases = config => {
 													_attrs: {},
 													setAttribute(name, value) {
 														this._attrs[name] = value;
+													},
+													parentNode: {
+														removeChild(node) {
+															// ok
+														}
 													}
 												};
 											},
@@ -150,6 +158,7 @@ const describeCases = config => {
 											},
 											getElementsByTagName(name) {
 												if (name === "head") return [this.head];
+												if (name === "script") return [];
 												throw new Error("Not supported");
 											}
 										}
@@ -228,11 +237,31 @@ const describeCases = config => {
 											}
 										} else return require(module);
 									}
-									_require("./bundle.js");
-									if (getNumberOfTests() < 1)
-										return done(new Error("No tests exported by test case"));
+									let promise = Promise.resolve();
+									const info = stats.toJson({ all: false, entrypoints: true });
+									if (config.target === "web") {
+										for (const file of info.entrypoints.main.assets)
+											_require(`./${file}`);
+									} else {
+										const assets = info.entrypoints.main.assets;
+										const result = _require(`./${assets[assets.length - 1]}`);
+										if (typeof result === "object" && "then" in result)
+											promise = promise.then(() => result);
+									}
+									promise.then(
+										() => {
+											if (getNumberOfTests() < 1)
+												return done(
+													new Error("No tests exported by test case")
+												);
 
-									done();
+											done();
+										},
+										err => {
+											console.log(err);
+											done(err);
+										}
+									);
 								});
 							},
 							20000

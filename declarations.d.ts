@@ -1,19 +1,13 @@
 declare module "*.json";
 
-// Deprecated NodeJS API usages in Webpack
+// Deprecated NodeJS API usages in webpack
 declare namespace NodeJS {
 	interface Process {
 		binding(internalModule: string): any;
 	}
-}
-
-// TODO remove when https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38753 is merged
-declare module "util" {
-	function deprecate<T extends Function>(
-		fn: T,
-		message: string,
-		code: string
-	): T;
+	interface ProcessVersions {
+		pnp: "1" | "3";
+	}
 }
 
 declare module "neo-async" {
@@ -120,7 +114,7 @@ declare module "neo-async" {
 	): void;
 
 	export function queue<T, E>(
-		worker: AsyncFunction<T, E>,
+		worker: AsyncIterator<T, E>,
 		concurrency?: number
 	): QueueObject<T, E>;
 
@@ -391,3 +385,8 @@ declare module "enhanced-resolve" {
 }
 
 type TODO = any;
+
+type RecursiveArrayOrRecord<T> =
+	| { [index: string]: RecursiveArrayOrRecord<T> }
+	| Array<RecursiveArrayOrRecord<T>>
+	| T;

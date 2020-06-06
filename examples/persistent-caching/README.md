@@ -9,6 +9,9 @@ import "react-dom";
 import "acorn";
 import "core-js";
 import "date-fns";
+import "lodash";
+import * as _ from "lodash-es";
+console.log(_);
 ```
 
 # webpack.config.js
@@ -49,13 +52,43 @@ module.exports = (env = "development") => ({
 
 # Info
 
+## Unoptimized
+
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-    Asset   Size
-output.js  2 MiB  [emitted]  [name: main]
+Version: webpack 5.0.0-beta.16
+    Asset     Size
+output.js  3.5 MiB  [emitted]  [name: main]
 Entrypoint main = output.js
-chunk output.js (main) 1.74 MiB (javascript) 0 bytes (runtime) [entry]
+chunk output.js (main) 2.55 MiB (javascript) 0 bytes (runtime) [entry]
     > ./example.js main
-    529 chunk modules
+    991 chunk modules
+```
+
+## Production mode
+
+```
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 5.0.0-beta.16
+                Asset      Size
+            output.js   479 KiB  [emitted]  [big]  [name: main]
+output.js.LICENSE.txt  1.49 KiB  [emitted]
+Entrypoint main [big] = output.js
+chunk output.js (main) 1.64 MiB (javascript) 0 bytes (runtime) [entry]
+    > ./example.js main
+    370 chunk modules
+
+WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+This can impact web performance.
+Assets: 
+  output.js (479 KiB)
+
+WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+Entrypoints:
+  main (479 KiB)
+      output.js
+
+WARNING in webpack performance recommendations: 
+You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+For more info visit https://webpack.js.org/guides/code-splitting/
 ```

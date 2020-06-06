@@ -9,10 +9,10 @@ const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
 const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/gm;
 
 function cleanError(err) {
-	const result = Object.getOwnPropertyNames(err).reduce((result, key) => {
+	const result = {};
+	for (const key of Object.getOwnPropertyNames(err)) {
 		result[key] = err[key];
-		return result;
-	}, {});
+	}
 
 	if (result.message) {
 		result.message = err.message.replace(ERROR_STACK_PATTERN, "");
@@ -188,7 +188,7 @@ it("should emit warning for require.main.require", async () => {
 					  "errors": Array [],
 					  "warnings": Array [
 					    Object {
-					      "loc": "1:0-20",
+					      "loc": "1:0-30",
 					      "message": "require.main.require is not supported by webpack.",
 					      "moduleId": 0,
 					      "moduleIdentifier": "<cwd>/test/fixtures/errors/require.main.require.js",
@@ -207,7 +207,7 @@ it("should emit warning for module.parent.require", async () => {
 					  "errors": Array [],
 					  "warnings": Array [
 					    Object {
-					      "loc": "1:0-21",
+					      "loc": "1:0-31",
 					      "message": "module.parent.require is not supported by webpack.",
 					      "moduleId": 0,
 					      "moduleIdentifier": "<cwd>/test/fixtures/errors/module.parent.require.js",
@@ -482,12 +482,12 @@ describe("loaders", () => {
 					Object {
 					  "errors": Array [
 					    Object {
-					      "message": "Module build failed (from (webpack)/node_modules/json-loader/index.js):\\nSyntaxError: Unexpected end of JSON input",
+					      "message": "Module build failed (from ../../../node_modules/json-loader/index.js):\\nSyntaxError: Unexpected end of JSON input",
 					      "moduleId": 0,
 					      "moduleIdentifier": "<cwd>/node_modules/json-loader/index.js!<cwd>/test/fixtures/errors/not-a-json.js",
-					      "moduleName": "(webpack)/node_modules/json-loader!./not-a-json.js",
+					      "moduleName": "../../../node_modules/json-loader/index.js!./not-a-json.js",
 					      "moduleTrace": Array [],
-					      "stack": "ModuleBuildError: Module build failed (from (webpack)/node_modules/json-loader/index.js):\\nSyntaxError: Unexpected end of JSON input",
+					      "stack": "ModuleBuildError: Module build failed (from ../../../node_modules/json-loader/index.js):\\nSyntaxError: Unexpected end of JSON input",
 					    },
 					  ],
 					  "warnings": Array [],

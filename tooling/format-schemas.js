@@ -1,11 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
+const baseSchema = require("../schemas/WebpackOptions.json");
 
 const schemasDir = path.resolve(__dirname, "../schemas");
+const baseDefs = new Map(Object.entries(baseSchema.definitions));
 
 // When --write is set, files will be written in place
-// Elsewise it only prints outdated files
+// Otherwise it only prints outdated files
 const doWrite = process.argv.includes("--write");
 
 const sortObjectAlphabetically = obj => {
@@ -15,6 +17,31 @@ const sortObjectAlphabetically = obj => {
 		newObj[key] = obj[key];
 	}
 	return newObj;
+};
+
+const typeOrder = [
+	"array",
+	"enum",
+	"RegExp",
+	"number",
+	"boolean",
+	"string",
+	"object",
+	"Function",
+	undefined
+];
+
+const sortArrayByType = array => {
+	array.sort((a, b) => {
+		const aType = a.type || a.instanceof || (a.enum && "enum");
+		const bType = b.type || b.instanceof || (b.enum && "enum");
+		const aPos = typeOrder.indexOf(aType);
+		const bPos = typeOrder.indexOf(bType);
+		if (aPos === bPos) {
+			return array.indexOf(a) - array.indexOf(b);
+		}
+		return aPos - bPos;
+	});
 };
 
 const sortObjectWithList = (obj, props) => {
@@ -42,6 +69,8 @@ const PROPERTIES = [
 	"title",
 	"description",
 	"type",
+
+	"cli",
 
 	"items",
 	"minItems",
@@ -76,6 +105,16 @@ const NESTED_ARRAY = ["oneOf", "anyOf", "allOf"];
 const processJson = json => {
 	json = sortObjectWithList(json, PROPERTIES);
 
+	if (json.definitions) {
+		json.definitions = { ...json.definitions };
+		for (const key of Object.keys(json.definitions)) {
+			const baseDef = baseDefs.get(key);
+			if (baseDef) {
+				json.definitions[key] = baseDef;
+			}
+		}
+	}
+
 	for (const name of NESTED_WITH_NAME) {
 		if (name in json && json[name] && typeof json[name] === "object") {
 			json[name] = sortObjectAlphabetically(json[name]);
@@ -94,6 +133,7 @@ const processJson = json => {
 			for (let i = 0; i < json[name].length; i++) {
 				json[name][i] = processJson(json[name][i]);
 			}
+			sortArrayByType(json[name]);
 		}
 	}
 

@@ -1,7 +1,8 @@
 {
   "definitions": {
     "rule": {
-      "oneOf": [
+      "description": "Include source maps for modules based on their extension (defaults to .js and .css).",
+      "anyOf": [
         {
           "instanceof": "RegExp",
           "tsType": "RegExp"
@@ -13,12 +14,13 @@
       ]
     },
     "rules": {
-      "oneOf": [
+      "description": "Include source maps for modules based on their extension (defaults to .js and .css).",
+      "anyOf": [
         {
           "type": "array",
           "items": {
-            "description": "A rule condition",
-            "anyOf": [
+            "description": "A rule condition.",
+            "oneOf": [
               {
                 "$ref": "#/definitions/rule"
               }
@@ -36,10 +38,10 @@
   "additionalProperties": false,
   "properties": {
     "append": {
-      "description": "Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending",
-      "oneOf": [
+      "description": "Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending.",
+      "anyOf": [
         {
-          "description": "Append no SourceMap comment to the bundle, but still generate SourceMaps",
+          "description": "Append no SourceMap comment to the bundle, but still generate SourceMaps.",
           "enum": [false, null]
         },
         {
@@ -49,40 +51,40 @@
       ]
     },
     "columns": {
-      "description": "Indicates whether column mappings should be used (defaults to true)",
+      "description": "Indicates whether column mappings should be used (defaults to true).",
       "type": "boolean"
     },
     "exclude": {
-      "description": "Exclude modules that match the given value from source map generation",
-      "anyOf": [
+      "description": "Exclude modules that match the given value from source map generation.",
+      "oneOf": [
         {
           "$ref": "#/definitions/rules"
         }
       ]
     },
     "fallbackModuleFilenameTemplate": {
-      "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict",
-      "oneOf": [
-        {
-          "description": "Custom function generating the identifier",
-          "instanceof": "Function",
-          "tsType": "Function"
-        },
+      "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict.",
+      "anyOf": [
         {
           "type": "string",
           "minLength": 1
+        },
+        {
+          "description": "Custom function generating the identifier.",
+          "instanceof": "Function",
+          "tsType": "Function"
         }
       ]
     },
     "fileContext": {
-      "description": "Path prefix to which the [file] placeholder is relative to",
+      "description": "Path prefix to which the [file] placeholder is relative to.",
       "type": "string"
     },
     "filename": {
-      "description": "Defines the output filename of the SourceMap (will be inlined if no value is provided)",
-      "oneOf": [
+      "description": "Defines the output filename of the SourceMap (will be inlined if no value is provided).",
+      "anyOf": [
         {
-          "description": "Disable separate SourceMap file and inline SourceMap as DataUrl",
+          "description": "Disable separate SourceMap file and inline SourceMap as DataUrl.",
           "enum": [false, null]
         },
         {
@@ -93,54 +95,49 @@
       ]
     },
     "include": {
-      "description": "Include source maps for module paths that match the given value",
-      "anyOf": [
+      "description": "Include source maps for module paths that match the given value.",
+      "oneOf": [
         {
           "$ref": "#/definitions/rules"
         }
       ]
     },
     "module": {
-      "description": "Indicates whether SourceMaps from loaders should be used (defaults to true)",
+      "description": "Indicates whether SourceMaps from loaders should be used (defaults to true).",
       "type": "boolean"
     },
     "moduleFilenameTemplate": {
-      "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap",
-      "oneOf": [
-        {
-          "description": "Custom function generating the identifier",
-          "instanceof": "Function",
-          "tsType": "Function"
-        },
+      "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap.",
+      "anyOf": [
         {
           "type": "string",
           "minLength": 1
+        },
+        {
+          "description": "Custom function generating the identifier.",
+          "instanceof": "Function",
+          "tsType": "Function"
         }
       ]
     },
     "namespace": {
-      "description": "Namespace prefix to allow multiple webpack roots in the devtools",
+      "description": "Namespace prefix to allow multiple webpack roots in the devtools.",
       "type": "string"
     },
     "noSources": {
-      "description": "Omit the 'sourceContents' array from the SourceMap",
+      "description": "Omit the 'sourceContents' array from the SourceMap.",
       "type": "boolean"
     },
     "publicPath": {
-      "description": "Provide a custom public path for the SourceMapping comment",
+      "description": "Provide a custom public path for the SourceMapping comment.",
       "type": "string"
     },
     "sourceRoot": {
-      "description": "Provide a custom value for the 'sourceRoot' property in the SourceMap",
+      "description": "Provide a custom value for the 'sourceRoot' property in the SourceMap.",
       "type": "string"
     },
     "test": {
-      "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/rules"
-        }
-      ]
+      "$ref": "#/definitions/rules"
     }
   }
 }

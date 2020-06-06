@@ -12,6 +12,14 @@ _{{webpack.config.js}}_
 
 # Info
 
+## Unoptimized
+
 ```
 _{{stdout}}_
+```
+
+## Production mode
+
+```
+_{{production:stdout}}_
 ```

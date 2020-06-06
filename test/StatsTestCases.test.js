@@ -2,7 +2,6 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
-const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
 const captureStdio = require("./helpers/captureStdio");
 
@@ -50,7 +49,7 @@ describe("StatsTestCases", () => {
 			jest.setTimeout(30000);
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
-			mkdirp.sync(outputDirectory);
+			fs.mkdirSync(outputDirectory, { recursive: true });
 			let options = {
 				mode: "development",
 				entry: "./index",
@@ -86,7 +85,7 @@ describe("StatsTestCases", () => {
 			compilers.forEach(c => {
 				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
-				c.inputFileSystem.readFile = function() {
+				c.inputFileSystem.readFile = function () {
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
 					ifs.readFile.apply(
@@ -147,16 +146,16 @@ describe("StatsTestCases", () => {
 					colors: false
 				};
 				let hasColorSetting = false;
-				if (typeof options.stats !== "undefined") {
-					toStringOptions = options.stats;
+				if (typeof c.options.stats !== "undefined") {
+					toStringOptions = c.options.stats;
 					if (toStringOptions === null || typeof toStringOptions !== "object")
 						toStringOptions = { preset: toStringOptions };
 					if (!toStringOptions.context)
 						toStringOptions.context = path.join(base, testName);
 					hasColorSetting = typeof toStringOptions.colors !== "undefined";
 				}
-				if (Array.isArray(options) && !toStringOptions.children) {
-					toStringOptions.children = options.map(o => o.stats);
+				if (Array.isArray(c.options) && !toStringOptions.children) {
+					toStringOptions.children = c.options.map(o => o.stats);
 				}
 				// mock timestamps
 				for (const s of [].concat(stats.stats || stats)) {
@@ -184,14 +183,10 @@ describe("StatsTestCases", () => {
 				const testPath = path.join(base, testName);
 				actual = actual
 					.replace(/\r\n?/g, "\n")
-					.replace(
-						/\([^)]+\) (\[[^\]]+\]\s*)?DeprecationWarning.+(\n\s+at .*)*\n?/g,
-						""
-					)
 					.replace(/[\t ]*Version:.+\n/g, "")
 					.replace(new RegExp(quotemeta(testPath), "g"), "Xdir/" + testName)
 					.replace(/(\w)\\(\w)/g, "$1/$2")
-					.replace(/, additional resolving: Xms/g, "");
+					.replace(/, additional resolving: X ms/g, "");
 				expect(actual).toMatchSnapshot();
 				if (testConfig.validate) testConfig.validate(stats, stderr.toString());
 				done();

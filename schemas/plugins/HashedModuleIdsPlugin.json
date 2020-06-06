@@ -18,7 +18,7 @@
       "minimum": 1
     },
     "hashFunction": {
-      "description": "The hashing algorithm to use, defaults to 'md5'. All functions from Node.JS' crypto.createHash are supported.",
+      "description": "The hashing algorithm to use, defaults to 'md4'. All functions from Node.JS' crypto.createHash are supported.",
       "type": "string",
       "minLength": 1
     }

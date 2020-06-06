@@ -41,13 +41,14 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_02cb05c865a84081bc8b =
+var vendor_lib_c6c2f689b0bad44474d1;vendor_lib_c6c2f689b0bad44474d1 =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!****************!*\
   !*** dll main ***!
   \****************/
+/*! unknown exports (runtime-defined) */
 /*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: __webpack_require__, module */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
@@ -59,9 +60,10 @@ module.exports = __webpack_require__;
 /*!*****************************************!*\
   !*** ../node_modules/example-vendor.js ***!
   \*****************************************/
+/*! namespace exports */
 /*! export square [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
 /*! other exports [not provided] [maybe used (runtime-defined)] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -93,16 +95,13 @@ function square(n) {
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -110,20 +109,24 @@ function square(n) {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
 /******/ 		__webpack_require__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
-/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
@@ -131,7 +134,7 @@ function square(n) {
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -150,7 +153,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_02cb05c865a84081bc8b","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["square"]}}}
+{"name":"vendor_lib_c6c2f689b0bad44474d1","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["square"]}}}
 ```
 
 # Info
@@ -159,40 +162,36 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
+Version: webpack 5.0.0-beta.16
     Asset      Size
-vendor.js  3.48 KiB  [emitted]  [name: main]
+vendor.js  3.65 KiB  [emitted]  [name: main]
 Entrypoint main = vendor.js
-chunk vendor.js (main) 57 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
+chunk vendor.js (main) 57 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
     > main
  ../node_modules/example-vendor.js 45 bytes [built]
      [exports: square]
      entry example-vendor dll main main[0]
-     DllPlugin
  dll main 12 bytes [built]
      dll entry
-     used a library export
-     DllPlugin
-     + 2 hidden chunk modules
+     used as library export
+     + 3 hidden chunk modules
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
+Version: webpack 5.0.0-beta.16
     Asset       Size
-vendor.js  627 bytes  [emitted]  [name: main]
+vendor.js  638 bytes  [emitted]  [name: main]
 Entrypoint main = vendor.js
-chunk vendor.js (main) 57 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
+chunk vendor.js (main) 57 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
     > main
  ../node_modules/example-vendor.js 45 bytes [built]
      [exports: square]
      entry example-vendor dll main main[0]
-     DllPlugin
  dll main 12 bytes [built]
      dll entry
-     used a library export
-     DllPlugin
-     + 2 hidden chunk modules
+     used as library export
+     + 3 hidden chunk modules
 ```

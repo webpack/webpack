@@ -1,9 +1,11 @@
 const path = require("path");
-module.exports = [
+const webpack = require("../../../../");
+/** @type {function(any, any): import("../../../../").Configuration[]} */
+module.exports = (env, { testPath }) => [
 	{
 		output: {
 			filename: "commonjs.js",
-			libraryTarget: "commonjs-module"
+			libraryTarget: "commonjs"
 		},
 		resolve: {
 			alias: {
@@ -47,14 +49,20 @@ module.exports = [
 	},
 	{
 		output: {
-			filename: "global.js",
-			library: "globalName"
+			filename: "var.js",
+			library: ["globalName", "x", "y"]
 		},
 		resolve: {
 			alias: {
 				external: "./non-external"
 			}
-		}
+		},
+		plugins: [
+			new webpack.BannerPlugin({
+				raw: true,
+				banner: "module.exports = () => globalName;\n"
+			})
+		]
 	},
 	{
 		output: {
@@ -66,10 +74,7 @@ module.exports = [
 	{
 		output: {
 			filename: "index.js",
-			path: path.resolve(
-				__dirname,
-				"../../../js/config/library/0-create-library/commonjs2-split-chunks"
-			),
+			path: path.resolve(testPath, "commonjs2-split-chunks"),
 			libraryTarget: "commonjs2"
 		},
 		target: "node",
@@ -84,6 +89,37 @@ module.exports = [
 					}
 				}
 			}
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		}
+	},
+	{
+		entry: {
+			entryA: {
+				import: "./index"
+			},
+			entryB: {
+				import: "./index",
+				library: {
+					type: "umd",
+					name: "umd"
+				}
+			},
+			entryC: {
+				import: "./index",
+				library: {
+					type: "amd"
+				}
+			}
+		},
+		output: {
+			library: {
+				type: "commonjs-module"
+			},
+			filename: "[name].js"
 		},
 		resolve: {
 			alias: {

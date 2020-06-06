@@ -1,12 +1,12 @@
 "use strict";
 
 const webpack = require("..");
-const MemoryFs = require("memory-fs");
+const { createFsFromVolume, Volume } = require("memfs");
 
 const compile = options => {
 	return new Promise((resolve, reject) => {
 		const compiler = webpack(options);
-		compiler.outputFileSystem = new MemoryFs();
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
 			if (err) {
 				reject(err);
@@ -202,10 +202,10 @@ describe("Stats", () => {
 			      "comparedForEmit": false,
 			      "emitted": true,
 			      "info": Object {
-			        "size": 198,
+			        "size": 182,
 			      },
 			      "name": "entryA.js",
-			      "size": 198,
+			      "size": 182,
 			    },
 			    Object {
 			      "auxiliaryChunkIdHints": Array [],
@@ -217,10 +217,10 @@ describe("Stats", () => {
 			      "comparedForEmit": false,
 			      "emitted": true,
 			      "info": Object {
-			        "size": 1881,
+			        "size": 2207,
 			      },
 			      "name": "entryB.js",
-			      "size": 1881,
+			      "size": 2207,
 			    },
 			  ],
 			  "assetsByChunkName": Object {

@@ -1,0 +1,43 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "arg": {
+      "type": "boolean"
+    },
+    "arg1": {
+      "type": "null"
+    },
+    "arg2": {},
+    "arg3": {
+      "type": "number"
+    },
+    "arg4": {
+      "type": "string"
+    },
+    "arg5": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "arg6": {
+      "type": "object",
+      "properties": {
+        "foo": {
+          "type": "string"
+        },
+        "bar": {
+          "type": "object",
+          "properties": {
+            "baz": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "type": "object"
+}

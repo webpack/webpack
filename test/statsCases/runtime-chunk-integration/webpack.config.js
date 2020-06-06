@@ -46,4 +46,5 @@ const withNamedEntry = {
 	}
 };
 
+/** @type {import("../../../").Configuration[]} */
 module.exports = [withoutNamedEntry, withNamedEntry];

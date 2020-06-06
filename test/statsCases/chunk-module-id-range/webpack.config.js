@@ -1,5 +1,6 @@
 const webpack = require("../../../");
 
+/** @type {import("../../../").Configuration} */
 module.exports = {
 	mode: "none",
 	entry: {
