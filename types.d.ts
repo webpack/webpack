@@ -5812,6 +5812,11 @@ declare interface ResolveOptions {
 	resolver?: { [index: string]: any };
 
 	/**
+	 * A list of resolve restrictions.
+	 */
+	restrictions?: (string | RegExp)[];
+
+	/**
 	 * Enable resolving symlinks to the original location.
 	 */
 	symlinks?: boolean;

@@ -2235,6 +2235,22 @@
         "resolver": {
           "description": "Custom resolver."
         },
+        "restrictions": {
+          "description": "A list of resolve restrictions.",
+          "type": "array",
+          "items": {
+            "description": "Resolve restriction.",
+            "oneOf": [
+              {
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
         "symlinks": {
           "description": "Enable resolving symlinks to the original location.",
           "type": "boolean"

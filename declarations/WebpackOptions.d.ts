@@ -1181,6 +1181,10 @@ export interface ResolveOptions {
 		[k: string]: any;
 	};
 	/**
+	 * A list of resolve restrictions.
+	 */
+	restrictions?: (RegExp | string)[];
+	/**
 	 * Enable resolving symlinks to the original location.
 	 */
 	symlinks?: boolean;
