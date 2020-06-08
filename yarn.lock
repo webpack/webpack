@@ -4418,9 +4418,9 @@ less-loader@^6.1.0:
     schema-utils "^2.6.6"
 
 less@^3.11.1, less@^3.9.0:
-  version "3.11.2"
-  resolved "https://registry.yarnpkg.com/less/-/less-3.11.2.tgz#51a484e9017287f5ac3db921cb86970eb7506e81"
-  integrity sha512-ed8Lir98Tu6a+LeU7+8ShpRLSUdk//lWf1sh+5w7tNju4wGItztqDHp03Z+a2o1nzU6pObVxw1n4Gu7VzQYusQ==
+  version "3.11.3"
+  resolved "https://registry.yarnpkg.com/less/-/less-3.11.3.tgz#2d853954fcfe0169a8af869620bcaa16563dcc1c"
+  integrity sha512-VkZiTDdtNEzXA3LgjQiC3D7/ejleBPFVvq+aRI9mIj+Zhmif5TvFPM244bT4rzkvOCvJ9q4zAztok1M7Nygagw==
   dependencies:
     clone "^2.1.2"
     tslib "^1.10.0"
