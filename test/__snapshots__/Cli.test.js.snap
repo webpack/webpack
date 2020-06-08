@@ -3183,6 +3183,38 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-loader-restrictions": Object {
+    "configs": Array [
+      Object {
+        "description": "Resolve restriction.",
+        "multiple": true,
+        "path": "resolveLoader.restrictions[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Resolve restriction.",
+        "multiple": true,
+        "path": "resolveLoader.restrictions[]",
+        "type": "string",
+      },
+    ],
+    "description": "Resolve restriction.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-restrictions-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. A list of resolve restrictions.",
+        "multiple": false,
+        "path": "resolveLoader.restrictions",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. A list of resolve restrictions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-loader-symlinks": Object {
     "configs": Array [
       Object {
@@ -3297,6 +3329,38 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-restrictions": Object {
+    "configs": Array [
+      Object {
+        "description": "Resolve restriction.",
+        "multiple": true,
+        "path": "resolve.restrictions[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Resolve restriction.",
+        "multiple": true,
+        "path": "resolve.restrictions[]",
+        "type": "string",
+      },
+    ],
+    "description": "Resolve restriction.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-restrictions-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. A list of resolve restrictions.",
+        "multiple": false,
+        "path": "resolve.restrictions",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. A list of resolve restrictions.",
     "multiple": false,
     "simpleType": "boolean",
   },

@@ -2240,7 +2240,7 @@
           "type": "array",
           "items": {
             "description": "Resolve restriction.",
-            "oneOf": [
+            "anyOf": [
               {
                 "instanceof": "RegExp",
                 "tsType": "RegExp"

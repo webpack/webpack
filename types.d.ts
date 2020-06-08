@@ -1692,7 +1692,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		contextModuleFiles: SyncWaterfallHook<[string[]]>;
 		alternatives: AsyncSeriesWaterfallHook<[any[]]>;
 	}>;
-	resolverFactory: any;
+	resolverFactory: ResolverFactory;
 	resolveDependencies(fs?: any, options?: any, callback?: any): any;
 }
 declare class ContextReplacementPlugin {
@@ -4428,12 +4428,12 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		createGenerator: HookMap<SyncBailHook<any, any>>;
 		generator: HookMap<SyncHook<any, void>>;
 	}>;
-	resolverFactory: any;
+	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
 	unsafeCache: boolean;
-	cachePredicate: any;
-	context: any;
-	fs: any;
+	cachePredicate: Function;
+	context: string;
+	fs: InputFileSystem;
 	parserCache: Map<string, WeakMap<any, any>>;
 	generatorCache: Map<string, WeakMap<any, Generator>>;
 	resolveRequestArray(
@@ -4448,7 +4448,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	createParser(type?: any, parserOptions?: {}): any;
 	getGenerator(type?: any, generatorOptions?: {}): Generator;
 	createGenerator(type?: any, generatorOptions?: {}): any;
-	getResolver(type?: any, resolveOptions?: any, category?: any): any;
+	getResolver(type?: any, resolveOptions?: any): Resolver & WithOptions;
 }
 declare class NormalModuleReplacementPlugin {
 	/**
@@ -5862,14 +5862,331 @@ declare interface ResolverCache {
 }
 declare abstract class ResolverFactory {
 	hooks: Readonly<{
-		resolveOptions: HookMap<SyncWaterfallHook<[any, string]>>;
-		resolver: HookMap<SyncHook<[Resolver, any, any, string], void>>;
+		resolveOptions: HookMap<
+			SyncWaterfallHook<
+				[
+					{
+						/**
+						 * Redirect module requests.
+						 */
+						alias?:
+							| {
+									/**
+									 * New request.
+									 */
+									alias: string | false | string[];
+									/**
+									 * Request to be redirected.
+									 */
+									name: string;
+									/**
+									 * Redirect only exact matching request.
+									 */
+									onlyModule?: boolean;
+							  }[]
+							| { [index: string]: string | false | string[] };
+						/**
+						 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
+						 */
+						aliasFields?: LibraryExport[];
+						/**
+						 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
+						 */
+						byDependency?: { [index: string]: ResolveOptions };
+						/**
+						 * Enable caching of successfully resolved requests (cache entries are revalidated).
+						 */
+						cache?: boolean;
+						/**
+						 * Predicate function to decide which requests should be cached.
+						 */
+						cachePredicate?: Function;
+						/**
+						 * Include the context information in the cache identifier when caching.
+						 */
+						cacheWithContext?: boolean;
+						/**
+						 * Condition names for exports field entry point.
+						 */
+						conditionNames?: string[];
+						/**
+						 * Filenames used to find a description file (like a package.json).
+						 */
+						descriptionFiles?: string[];
+						/**
+						 * Enforce using one of the extensions from the extensions option.
+						 */
+						enforceExtension?: boolean;
+						/**
+						 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
+						 */
+						exportsFields?: string[];
+						/**
+						 * Extensions added to the request when trying to find the file.
+						 */
+						extensions?: string[];
+						/**
+						 * Filesystem for the resolver.
+						 */
+						fileSystem?: { [index: string]: any };
+						/**
+						 * Field names from the description file (package.json) which are used to find the default entry point.
+						 */
+						mainFields?: LibraryExport[];
+						/**
+						 * Filenames used to find the default entry point if there is no description file or main field.
+						 */
+						mainFiles?: string[];
+						/**
+						 * Folder names or directory paths where to find modules.
+						 */
+						modules?: string[];
+						/**
+						 * Plugins for the resolver.
+						 */
+						plugins?: ResolvePluginInstance[];
+						/**
+						 * Custom resolver.
+						 */
+						resolver?: { [index: string]: any };
+						/**
+						 * A list of resolve restrictions.
+						 */
+						restrictions?: (string | RegExp)[];
+						/**
+						 * Enable resolving symlinks to the original location.
+						 */
+						symlinks?: boolean;
+						/**
+						 * Enable caching of successfully resolved requests (cache entries are not revalidated).
+						 */
+						unsafeCache?: boolean | { [index: string]: any };
+						/**
+						 * Use synchronous filesystem calls for the resolver.
+						 */
+						useSyncFileSystemCalls?: boolean;
+						dependencyType?: string;
+					}
+				]
+			>
+		>;
+		resolver: HookMap<
+			SyncHook<
+				[
+					Resolver,
+					ResolveOptions,
+					{
+						/**
+						 * Redirect module requests.
+						 */
+						alias?:
+							| {
+									/**
+									 * New request.
+									 */
+									alias: string | false | string[];
+									/**
+									 * Request to be redirected.
+									 */
+									name: string;
+									/**
+									 * Redirect only exact matching request.
+									 */
+									onlyModule?: boolean;
+							  }[]
+							| { [index: string]: string | false | string[] };
+						/**
+						 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
+						 */
+						aliasFields?: LibraryExport[];
+						/**
+						 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
+						 */
+						byDependency?: { [index: string]: ResolveOptions };
+						/**
+						 * Enable caching of successfully resolved requests (cache entries are revalidated).
+						 */
+						cache?: boolean;
+						/**
+						 * Predicate function to decide which requests should be cached.
+						 */
+						cachePredicate?: Function;
+						/**
+						 * Include the context information in the cache identifier when caching.
+						 */
+						cacheWithContext?: boolean;
+						/**
+						 * Condition names for exports field entry point.
+						 */
+						conditionNames?: string[];
+						/**
+						 * Filenames used to find a description file (like a package.json).
+						 */
+						descriptionFiles?: string[];
+						/**
+						 * Enforce using one of the extensions from the extensions option.
+						 */
+						enforceExtension?: boolean;
+						/**
+						 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
+						 */
+						exportsFields?: string[];
+						/**
+						 * Extensions added to the request when trying to find the file.
+						 */
+						extensions?: string[];
+						/**
+						 * Filesystem for the resolver.
+						 */
+						fileSystem?: { [index: string]: any };
+						/**
+						 * Field names from the description file (package.json) which are used to find the default entry point.
+						 */
+						mainFields?: LibraryExport[];
+						/**
+						 * Filenames used to find the default entry point if there is no description file or main field.
+						 */
+						mainFiles?: string[];
+						/**
+						 * Folder names or directory paths where to find modules.
+						 */
+						modules?: string[];
+						/**
+						 * Plugins for the resolver.
+						 */
+						plugins?: ResolvePluginInstance[];
+						/**
+						 * Custom resolver.
+						 */
+						resolver?: { [index: string]: any };
+						/**
+						 * A list of resolve restrictions.
+						 */
+						restrictions?: (string | RegExp)[];
+						/**
+						 * Enable resolving symlinks to the original location.
+						 */
+						symlinks?: boolean;
+						/**
+						 * Enable caching of successfully resolved requests (cache entries are not revalidated).
+						 */
+						unsafeCache?: boolean | { [index: string]: any };
+						/**
+						 * Use synchronous filesystem calls for the resolver.
+						 */
+						useSyncFileSystemCalls?: boolean;
+						dependencyType?: string;
+					}
+				],
+				void
+			>
+		>;
 	}>;
 	cache: Map<string, ResolverCache>;
 	get(
 		type: string,
-		resolveOptions?: any,
-		dependencyType?: string
+		resolveOptions?: {
+			/**
+			 * Redirect module requests.
+			 */
+			alias?:
+				| {
+						/**
+						 * New request.
+						 */
+						alias: string | false | string[];
+						/**
+						 * Request to be redirected.
+						 */
+						name: string;
+						/**
+						 * Redirect only exact matching request.
+						 */
+						onlyModule?: boolean;
+				  }[]
+				| { [index: string]: string | false | string[] };
+			/**
+			 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
+			 */
+			aliasFields?: LibraryExport[];
+			/**
+			 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
+			 */
+			byDependency?: { [index: string]: ResolveOptions };
+			/**
+			 * Enable caching of successfully resolved requests (cache entries are revalidated).
+			 */
+			cache?: boolean;
+			/**
+			 * Predicate function to decide which requests should be cached.
+			 */
+			cachePredicate?: Function;
+			/**
+			 * Include the context information in the cache identifier when caching.
+			 */
+			cacheWithContext?: boolean;
+			/**
+			 * Condition names for exports field entry point.
+			 */
+			conditionNames?: string[];
+			/**
+			 * Filenames used to find a description file (like a package.json).
+			 */
+			descriptionFiles?: string[];
+			/**
+			 * Enforce using one of the extensions from the extensions option.
+			 */
+			enforceExtension?: boolean;
+			/**
+			 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
+			 */
+			exportsFields?: string[];
+			/**
+			 * Extensions added to the request when trying to find the file.
+			 */
+			extensions?: string[];
+			/**
+			 * Filesystem for the resolver.
+			 */
+			fileSystem?: { [index: string]: any };
+			/**
+			 * Field names from the description file (package.json) which are used to find the default entry point.
+			 */
+			mainFields?: LibraryExport[];
+			/**
+			 * Filenames used to find the default entry point if there is no description file or main field.
+			 */
+			mainFiles?: string[];
+			/**
+			 * Folder names or directory paths where to find modules.
+			 */
+			modules?: string[];
+			/**
+			 * Plugins for the resolver.
+			 */
+			plugins?: ResolvePluginInstance[];
+			/**
+			 * Custom resolver.
+			 */
+			resolver?: { [index: string]: any };
+			/**
+			 * A list of resolve restrictions.
+			 */
+			restrictions?: (string | RegExp)[];
+			/**
+			 * Enable resolving symlinks to the original location.
+			 */
+			symlinks?: boolean;
+			/**
+			 * Enable caching of successfully resolved requests (cache entries are not revalidated).
+			 */
+			unsafeCache?: boolean | { [index: string]: any };
+			/**
+			 * Use synchronous filesystem calls for the resolver.
+			 */
+			useSyncFileSystemCalls?: boolean;
+			dependencyType?: string;
+		}
 	): Resolver & WithOptions;
 }
 declare interface RuleSet {
