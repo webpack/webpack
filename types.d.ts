@@ -888,7 +888,7 @@ declare class Compilation {
 			void
 		>;
 		dependencyReferencedExports: SyncWaterfallHook<
-			[(string[] | ReferencedExportItem[])[], Dependency]
+			[(string[] | ReferencedExport)[], Dependency]
 		>;
 		finishModules: AsyncSeriesHook<[Iterable<Module>]>;
 		finishRebuildingModule: AsyncSeriesHook<[Module]>;
@@ -1141,7 +1141,7 @@ declare class Compilation {
 	assignDepth(module: Module): void;
 	getDependencyReferencedExports(
 		dependency: Dependency
-	): (string[] | ReferencedExportItem[])[];
+	): (string[] | ReferencedExport)[];
 	removeReasonsOfDependencyBlock(
 		module: Module,
 		block: DependenciesBlockLike
@@ -1593,6 +1593,9 @@ declare interface ContainerReferencePluginOptions {
 	 */
 	remotes: Remotes;
 }
+declare abstract class ContextElementDependency extends ModuleDependency {
+	referencedExports: any;
+}
 declare class ContextExclusionPlugin {
 	constructor(negativeMatcher: RegExp);
 	negativeMatcher: RegExp;
@@ -1610,7 +1613,28 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		alternatives: AsyncSeriesWaterfallHook<[any[]]>;
 	}>;
 	resolverFactory: any;
-	resolveDependencies(fs?: any, options?: any, callback?: any): any;
+	resolveDependencies(
+		fs: InputFileSystem,
+		options: {
+			mode: "sync" | "eager" | "weak" | "async-weak" | "lazy" | "lazy-once";
+			recursive: boolean;
+			regExp: RegExp;
+			namespaceObject?: boolean | "strict";
+			addon?: string;
+			chunkName?: string;
+			include?: RegExp;
+			exclude?: RegExp;
+			groupOptions?: RawChunkGroupOptions;
+			/**
+			 * exports referenced from modules (won't be mangled)
+			 */
+			referencedExports?: string[][];
+			resource: string;
+			resourceQuery?: string;
+			resolveOptions: any;
+		},
+		callback: (err?: Error, dependencies?: ContextElementDependency[]) => any
+	): void;
 }
 declare class ContextReplacementPlugin {
 	constructor(
@@ -1689,7 +1713,7 @@ declare class Dependency {
 	 */
 	getReferencedExports(
 		moduleGraph: ModuleGraph
-	): (string[] | ReferencedExportItem[])[];
+	): (string[] | ReferencedExport)[];
 	getCondition(moduleGraph: ModuleGraph): () => boolean;
 
 	/**
@@ -5399,6 +5423,10 @@ declare class ProvidePlugin {
 type PublicPath =
 	| string
 	| ((pathData: PathData, assetInfo: AssetInfo) => string);
+declare interface RawChunkGroupOptions {
+	preloadOrder?: number;
+	prefetchOrder?: number;
+}
 declare class ReadFileCompileWasmPlugin {
 	constructor(options?: any);
 	options: any;
@@ -5423,14 +5451,14 @@ type RecursiveArrayOrRecord =
 	| RuntimeValue
 	| { [index: string]: RecursiveArrayOrRecord }
 	| RecursiveArrayOrRecord[];
-declare interface ReferencedExportItem {
+declare interface ReferencedExport {
 	/**
 	 * name of the referenced export
 	 */
-	name: string;
+	name: string[];
 
 	/**
-	 * when true, referenced export can be mangled
+	 * when false, referenced export can not be mangled, defaults to true
 	 */
 	canMangle?: boolean;
 }
