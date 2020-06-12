@@ -4408,16 +4408,16 @@ lcov-parse@^1.0.0:
   integrity sha1-6w1GtUER68VhrLTECO+TY73I9+A=
 
 less-loader@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/less-loader/-/less-loader-6.1.0.tgz#59fd591df408ced89a40fce11a2aea449b005631"
-  integrity sha512-/jLzOwLyqJ7Kt3xg5sHHkXtOyShWwFj410K9Si9WO+/h8rmYxxkSR0A3/hFEntWudE20zZnWMtpMYnLzqTVdUA==
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/less-loader/-/less-loader-6.1.1.tgz#cb17cc2b7acba46e5d6932416e0ba8fa5964fcfe"
+  integrity sha512-K8WPJLbQZPszy4RD9Tsruyre4zrvEo8kE4yFfg7Gnr2H4DuYBxmNACul4UOy3wlEMBHeBElLmVLZaxaSGuL5Bw==
   dependencies:
     clone "^2.1.2"
-    less "^3.11.1"
+    less "^3.11.3"
     loader-utils "^2.0.0"
-    schema-utils "^2.6.6"
+    schema-utils "^2.7.0"
 
-less@^3.11.1, less@^3.9.0:
+less@^3.11.3, less@^3.9.0:
   version "3.11.3"
   resolved "https://registry.yarnpkg.com/less/-/less-3.11.3.tgz#2d853954fcfe0169a8af869620bcaa16563dcc1c"
   integrity sha512-VkZiTDdtNEzXA3LgjQiC3D7/ejleBPFVvq+aRI9mIj+Zhmif5TvFPM244bT4rzkvOCvJ9q4zAztok1M7Nygagw==
@@ -6127,7 +6127,7 @@ schema-utils@^1.0.0:
     ajv-errors "^1.0.0"
     ajv-keywords "^3.1.0"
 
-schema-utils@^2.5.0, schema-utils@^2.6.5, schema-utils@^2.6.6:
+schema-utils@^2.5.0, schema-utils@^2.6.5, schema-utils@^2.6.6, schema-utils@^2.7.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-2.7.0.tgz#17151f76d8eae67fbbf77960c33c676ad9f4efc7"
   integrity sha512-0ilKFI6QQF5nxDZLFn2dMjvc4hjg/Wkg7rHd3jK6/A4a1Hl9VFdQWvgB1UMGoU94pad1P/8N7fMcEnLnSiju8A==
