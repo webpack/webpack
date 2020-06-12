@@ -237,6 +237,12 @@ describe("Defaults", () => {
 		      "browser",
 		    ],
 		    "byDependency": Object {
+		      "amd": Object {
+		        "conditionNames": Array [
+		          "require",
+		          "...",
+		        ],
+		      },
 		      "commonjs": Object {
 		        "conditionNames": Array [
 		          "require",
@@ -246,6 +252,13 @@ describe("Defaults", () => {
 		      "esm": Object {
 		        "conditionNames": Array [
 		          "import",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "wasm": Object {
+		        "conditionNames": Array [
+		          "import",
 		          "...",
 		        ],
 		      },
@@ -253,6 +266,7 @@ describe("Defaults", () => {
 		    "cache": false,
 		    "conditionNames": Array [
 		      "webpack",
+		      "production",
 		      "browser",
 		    ],
 		    "exportsFields": Array [
@@ -463,6 +477,7 @@ describe("Defaults", () => {
 		-     "cache": false,
 		+     "cache": true,
 		@@ ... @@
+		-       "production",
 		+       "development",
 		@@ ... @@
 		-     "cache": false,
