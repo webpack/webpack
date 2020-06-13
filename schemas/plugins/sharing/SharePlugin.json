@@ -43,6 +43,11 @@
             }
           ]
         },
+        "packageName": {
+          "description": "Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.",
+          "type": "string",
+          "minLength": 1
+        },
         "requiredVersion": {
           "description": "Version requirement from module in share scope.",
           "anyOf": [

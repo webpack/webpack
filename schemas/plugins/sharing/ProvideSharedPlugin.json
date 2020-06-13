@@ -57,8 +57,7 @@
             }
           ]
         }
-      },
-      "required": ["import"]
+      }
     },
     "ProvidesItem": {
       "description": "Request to a module that should be provided as shared module to the share scope (will be resolved when relative).",

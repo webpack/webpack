@@ -1588,6 +1588,11 @@ declare interface ConsumesConfig {
 	import?: DevTool;
 
 	/**
+	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
+	 */
+	packageName?: string;
+
+	/**
 	 * Version requirement from module in share scope.
 	 */
 	requiredVersion?: string | (string | number)[];
@@ -2865,6 +2870,10 @@ declare interface InputFileSystem {
 	readFile: (
 		arg0: string,
 		arg1: (arg0: NodeJS.ErrnoException, arg1: Buffer) => void
+	) => void;
+	readJson?: (
+		arg0: string,
+		arg1: (arg0: Error | NodeJS.ErrnoException, arg1?: any) => void
 	) => void;
 	readdir: (
 		arg0: string,
@@ -4432,7 +4441,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		factorize: AsyncSeriesBailHook<[ResolveData], any>;
 		beforeResolve: AsyncSeriesBailHook<[ResolveData], any>;
 		afterResolve: AsyncSeriesBailHook<[ResolveData], any>;
-		createModule: SyncBailHook<[ResolveData], any>;
+		createModule: AsyncSeriesBailHook<[any, ResolveData], any>;
 		module: SyncWaterfallHook<[Module, any, ResolveData]>;
 		createParser: HookMap<SyncBailHook<any, any>>;
 		parser: HookMap<SyncHook<any, void>>;
@@ -6506,6 +6515,11 @@ declare interface SharedConfig {
 	 * Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.
 	 */
 	import?: DevTool;
+
+	/**
+	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
+	 */
+	packageName?: string;
 
 	/**
 	 * Version requirement from module in share scope.

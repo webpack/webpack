@@ -52,6 +52,10 @@ export interface ConsumesConfig {
 	 */
 	import?: false | ConsumesItem;
 	/**
+	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
+	 */
+	packageName?: string;
+	/**
 	 * Version requirement from module in share scope.
 	 */
 	requiredVersion?: string | SharedVersionArray;
