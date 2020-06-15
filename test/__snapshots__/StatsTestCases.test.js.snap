@@ -2444,6 +2444,7 @@ LOG from LogTestPlugin
 
 LOG from webpack.Compiler
 <t> make hook: X ms
+<t> finish make hook: X ms
 <t> finish compilation: X ms
 <t> seal compilation: X ms
 <t> afterCompile hook: X ms

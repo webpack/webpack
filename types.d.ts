@@ -1595,7 +1595,7 @@ declare interface ConsumesConfig {
 	/**
 	 * Version requirement from module in share scope.
 	 */
-	requiredVersion?: string | (string | number)[];
+	requiredVersion?: string | false | (string | number)[];
 
 	/**
 	 * Module is looked up under this key from the share scope.
@@ -6524,7 +6524,7 @@ declare interface SharedConfig {
 	/**
 	 * Version requirement from module in share scope.
 	 */
-	requiredVersion?: string | (string | number)[];
+	requiredVersion?: string | false | (string | number)[];
 
 	/**
 	 * Module is looked up under this key from the share scope.

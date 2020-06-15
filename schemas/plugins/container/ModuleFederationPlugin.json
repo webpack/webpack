@@ -373,6 +373,10 @@
           "description": "Version requirement from module in share scope.",
           "anyOf": [
             {
+              "description": "No version requirement check.",
+              "enum": [false]
+            },
+            {
               "description": "Version as string. Can be prefixed with '^' or '~' for minimum matches. Each part of the version should be separated by a dot '.'.",
               "type": "string"
             },

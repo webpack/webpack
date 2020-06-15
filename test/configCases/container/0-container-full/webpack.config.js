@@ -17,7 +17,12 @@ module.exports = {
 					external: "./container.js"
 				}
 			},
-			shared: { react: { version: false } }
+			shared: {
+				react: {
+					version: false,
+					requiredVersion: false
+				}
+			}
 		})
 	]
 };

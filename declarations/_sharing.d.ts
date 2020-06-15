@@ -48,7 +48,7 @@ export interface SharedConfig {
 	/**
 	 * Version requirement from module in share scope.
 	 */
-	requiredVersion?: string | SharedVersionArray;
+	requiredVersion?: false | string | SharedVersionArray;
 	/**
 	 * Module is looked up under this key from the share scope.
 	 */

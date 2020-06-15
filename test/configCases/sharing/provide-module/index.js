@@ -1,8 +1,5 @@
 if (Math.random() < 0) {
 	require("package");
-	require("./test1");
-	require("./test2");
-	require("./test2-wrong");
 }
 
 it("should add provided modules to the share scope on init", async () => {

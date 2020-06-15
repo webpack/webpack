@@ -23,6 +23,7 @@ it("should provide and consume a relative request async", async () => {
 });
 
 it("should consume a remapped relative request async", async () => {
+	if (Math.random() < 0) require("store");
 	expect(await import("./relative2")).toEqual(
 		expect.objectContaining({
 			default: "store"
