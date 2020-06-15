@@ -1,3 +1,7 @@
+if (Math.random() < 0) {
+	require("package");
+}
+
 it("should add provided modules to the share scope on init", async () => {
 	expect(__webpack_share_scopes__).toEqual({});
 	await __webpack_init_sharing__("default");
@@ -16,14 +20,16 @@ it("should add provided modules to the share scope on init", async () => {
 		"package"
 	);
 	expect(Object.keys(__webpack_share_scopes__["test-scope"])).toContain(
-		"test1"
+		"./test1"
 	);
 	expect(Object.keys(__webpack_share_scopes__["other-scope"])).toContain(
 		"test2"
 	);
 
 	{
-		const factory = await __webpack_share_scopes__["test-scope"]["test1"].get();
+		const factory = await __webpack_share_scopes__["test-scope"][
+			"./test1"
+		].get();
 		expect(factory()).toBe("test1");
 	}
 

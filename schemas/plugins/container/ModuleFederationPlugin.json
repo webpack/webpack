@@ -364,9 +364,18 @@
             }
           ]
         },
+        "packageName": {
+          "description": "Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.",
+          "type": "string",
+          "minLength": 1
+        },
         "requiredVersion": {
           "description": "Version requirement from module in share scope.",
           "anyOf": [
+            {
+              "description": "No version requirement check.",
+              "enum": [false]
+            },
             {
               "description": "Version as string. Can be prefixed with '^' or '~' for minimum matches. Each part of the version should be separated by a dot '.'.",
               "type": "string"

@@ -1,5 +1,5 @@
 import React from "react";
-import { random } from "lodash";
+import random from "lodash/random";
 
 const Component = () => (
 	<div style={{ border: "5px solid darkgreen" }}>

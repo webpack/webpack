@@ -3,7 +3,6 @@
 ```javascript
 const path = require("path");
 const { ModuleFederationPlugin } = require("../../").container;
-const devDeps = require("../../package.json").devDependencies;
 const rules = [
 	{
 		test: /\.js$/,
@@ -28,6 +27,12 @@ const stats = {
 	chunkOrigins: true
 };
 module.exports = (env = "development") => [
+	// For this example we have 3 configs in a single file
+	// In practice you probably would have separate config
+	// maybe even separate repos for each build.
+	// For Module Federation there is not compile-time dependency
+	// between the builds.
+	// Each one can have different config options.
 	{
 		name: "app",
 		mode: env,
@@ -54,11 +59,16 @@ module.exports = (env = "development") => [
 					"mfe-c": "mfeCCC@/dist/ccc/mfeCCC.js"
 				},
 
-				// list of shared modules with version requirement and other options
+				// list of shared modules with optional options
 				shared: {
+					// specifying a module request as shared module
+					// will provide all used modules matching this name (version from package.json)
+					// and consume shared modules in the version specified in dependencies from package.json
+					// (or in dev/peer/optionalDependencies)
+					// So it use the highest available version of this package matching the version requirement
+					// from package.json, while providing it's own version to others.
 					react: {
-						singleton: true, // make sure only a single react module is used
-						requiredVersion: devDeps.react // e. g. "^16.8.0"
+						singleton: true // make sure only a single react module is used
 					}
 				}
 			})
@@ -87,15 +97,16 @@ module.exports = (env = "development") => [
 					"./Component": "./src-b/Component"
 				},
 
-				// list of shared modules with version requirement and other options
-				// Here date-fns is shared with the other remote, host doesn't know about that
-				shared: {
-					"date-fns": devDeps["date-fns"], // e. g. "^2.12.0"
-					react: {
-						singleton: true, // must be specified in each config
-						requiredVersion: devDeps.react
+				// list of shared modules
+				shared: [
+					// date-fns is shared with the other remote, app doesn't know about that
+					"date-fns",
+					{
+						react: {
+							singleton: true // must be specified in each config
+						}
 					}
-				}
+				]
 			})
 		],
 		stats
@@ -121,14 +132,21 @@ module.exports = (env = "development") => [
 					"./Component2": "./src-c/LazyComponent"
 				},
 
-				shared: {
-					"date-fns": devDeps["date-fns"],
-					lodash: devDeps["lodash"],
-					react: {
-						singleton: true,
-						requiredVersion: devDeps.react
+				shared: [
+					// All (used) requests within lodash are shared.
+					"lodash/",
+					"date-fns",
+					{
+						react: {
+							// Do not load our own version.
+							// There must be a valid shared module available at runtime.
+							// This improves build time as this module doesn't need to be compiled,
+							// but it opts-out of possible fallbacks and runtime version upgrade.
+							import: false,
+							singleton: true
+						}
 					}
-				}
+				]
 			})
 		],
 		stats
@@ -318,7 +336,7 @@ export default Component;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 11:
+/***/ 12:
 /*!*********************************************!*\
   !*** external "mfeBBB@/dist/bbb/mfeBBB.js" ***!
   \*********************************************/
@@ -345,7 +363,7 @@ module.exports = new Promise((resolve, reject) => {
 
 /***/ }),
 
-/***/ 13:
+/***/ 14:
 /*!*********************************************!*\
   !*** external "mfeCCC@/dist/ccc/mfeCCC.js" ***!
   \*********************************************/
@@ -549,28 +567,28 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		var installedModules = {};
 /******/ 		var chunkMapping = {
 /******/ 			"src_bootstrap_js": [
-/******/ 				10,
-/******/ 				12
+/******/ 				11,
+/******/ 				13
 /******/ 			],
 /******/ 			"webpack_container_remote_mfe-c_Component2": [
-/******/ 				26
+/******/ 				27
 /******/ 			]
 /******/ 		};
 /******/ 		var idToExternalAndNameMapping = {
-/******/ 			"10": [
+/******/ 			"11": [
 /******/ 				"default",
 /******/ 				"./Component",
-/******/ 				11
+/******/ 				12
 /******/ 			],
-/******/ 			"12": [
+/******/ 			"13": [
 /******/ 				"default",
 /******/ 				"./Component",
-/******/ 				13
+/******/ 				14
 /******/ 			],
-/******/ 			"26": [
+/******/ 			"27": [
 /******/ 				"default",
 /******/ 				"./Component2",
-/******/ 				13
+/******/ 				14
 /******/ 			]
 /******/ 		};
 /******/ 		__webpack_require__.f.remotes = (chunkId, promises) => {
@@ -667,9 +685,9 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("react", [16,13,1], () => __webpack_require__.e("node_modules_react_index_js-_11190").then(() => () => __webpack_require__(/*! react */ 24)));
-/******/ 					initExternal(11);
-/******/ 					initExternal(13);
+/******/ 					register("react", [16,13,1], () => __webpack_require__.e("node_modules_react_index_js-_11190").then(() => () => __webpack_require__(/*! ../../node_modules/react/index.js */ 25)));
+/******/ 					initExternal(12);
+/******/ 					initExternal(14);
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -776,12 +794,14 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		};
 /******/ 		var installedModules = {};
 /******/ 		var moduleToHandlerMapping = {
-/******/ 			5: () => loadSingletonVersionCheckFallback("default", "react", ["16",8,0], () => __webpack_require__.e("node_modules_react_index_js-_11191").then(() => () => __webpack_require__(/*! react */ 24)))
+/******/ 			5: () => loadSingletonVersionCheckFallback("default", "react", ["16",13,1], () => __webpack_require__.e("node_modules_react_index_js-_11191").then(() => () => __webpack_require__(/*! react */ 25))),
+/******/ 			9: () => loadSingletonVersionCheckFallback("default", "react", ["16",8,0], () => __webpack_require__.e("node_modules_react_index_js-_11191").then(() => () => __webpack_require__(/*! react */ 25)))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
 /******/ 		var chunkMapping = {
 /******/ 			"src_bootstrap_js": [
-/******/ 				5
+/******/ 				5,
+/******/ 				9
 /******/ 			]
 /******/ 		};
 /******/ 		__webpack_require__.f.consumes = (chunkId, promises) => {
@@ -1184,8 +1204,8 @@ __webpack_require__.d(exports, {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("react", [16,13,1], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! react */ 6)));
-/******/ 					register("date-fns", [2,14,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! date-fns */ 9)));
+/******/ 					register("react", [16,13,1], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/react/index.js */ 6)));
+/******/ 					register("date-fns", [2,14,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/date-fns/esm/index.js */ 9)));
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -1459,10 +1479,10 @@ var mfeCCC;mfeCCC =
 
 var moduleMap = {
 	"./Component": () => {
-		return Promise.all([__webpack_require__.e("webpack_sharing_consume_default_react_react"), __webpack_require__.e("src-c_Component_js")]).then(() => () => (__webpack_require__(/*! ./src-c/Component */ 4)));
+		return Promise.all([__webpack_require__.e("webpack_sharing_consume_default_react"), __webpack_require__.e("src-c_Component_js")]).then(() => () => (__webpack_require__(/*! ./src-c/Component */ 3)));
 	},
 	"./Component2": () => {
-		return Promise.all([__webpack_require__.e("webpack_sharing_consume_default_react_react"), __webpack_require__.e("src-c_LazyComponent_js")]).then(() => () => (__webpack_require__(/*! ./src-c/LazyComponent */ 7)));
+		return Promise.all([__webpack_require__.e("webpack_sharing_consume_default_react"), __webpack_require__.e("src-c_LazyComponent_js")]).then(() => () => (__webpack_require__(/*! ./src-c/LazyComponent */ 6)));
 	}
 };
 var get = (module) => {
@@ -1507,16 +1527,13 @@ __webpack_require__.d(exports, {
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			id: moduleId,
-/******/ 			loaded: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -1648,15 +1665,6 @@ __webpack_require__.d(exports, {
 /******/ 		};
 /******/ 	})();
 /******/ 	
-/******/ 	/* webpack/runtime/node module decorator */
-/******/ 	(() => {
-/******/ 		__webpack_require__.nmd = (module) => {
-/******/ 			module.paths = [];
-/******/ 			if (!module.children) module.children = [];
-/******/ 			return module;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
 /******/ 		__webpack_require__.p = "dist/ccc/";
@@ -1715,9 +1723,8 @@ __webpack_require__.d(exports, {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("react", [16,13,1], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! react */ 9)));
-/******/ 					register("lodash", [4,17,15], () => __webpack_require__.e("vendors-node_modules_lodash_lodash_js").then(() => () => __webpack_require__(/*! lodash */ 12)));
-/******/ 					register("date-fns", [2,14,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! date-fns */ 13)));
+/******/ 					register("lodash/random", [4,17,15], () => __webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => () => __webpack_require__(/*! ../../node_modules/lodash/random.js */ 8)));
+/******/ 					register("date-fns", [2,14,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/date-fns/esm/index.js */ 27)));
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -1824,20 +1831,20 @@ __webpack_require__.d(exports, {
 /******/ 		};
 /******/ 		var installedModules = {};
 /******/ 		var moduleToHandlerMapping = {
-/******/ 			5: () => loadSingletonVersionCheckFallback("default", "react", ["16",8,0], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! react */ 9))),
-/******/ 			6: () => loadStrictVersionCheckFallback("default", "date-fns", ["2",12,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! date-fns */ 13))),
-/******/ 			8: () => loadStrictVersionCheckFallback("default", "lodash", ["4",17,4], () => __webpack_require__.e("vendors-node_modules_lodash_lodash_js").then(() => () => __webpack_require__(/*! lodash */ 12)))
+/******/ 			4: () => loadSingletonVersionCheck("default", "react", ["16",8,0]),
+/******/ 			5: () => loadStrictVersionCheckFallback("default", "date-fns", ["2",12,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! date-fns */ 27))),
+/******/ 			7: () => loadStrictVersionCheckFallback("default", "lodash/random", ["4",17,4], () => __webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => () => __webpack_require__(/*! lodash/random */ 8)))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
 /******/ 		var chunkMapping = {
-/******/ 			"webpack_sharing_consume_default_react_react": [
-/******/ 				5
+/******/ 			"webpack_sharing_consume_default_react": [
+/******/ 				4
 /******/ 			],
 /******/ 			"src-c_Component_js": [
-/******/ 				6
+/******/ 				5
 /******/ 			],
 /******/ 			"src-c_LazyComponent_js": [
-/******/ 				8
+/******/ 				7
 /******/ 			]
 /******/ 		};
 /******/ 		__webpack_require__.f.consumes = (chunkId, promises) => {
@@ -1888,7 +1895,7 @@ __webpack_require__.d(exports, {
 /******/ 					if(installedChunkData) {
 /******/ 						promises.push(installedChunkData[2]);
 /******/ 					} else {
-/******/ 						if("webpack_sharing_consume_default_react_react" != chunkId) {
+/******/ 						if("webpack_sharing_consume_default_react" != chunkId) {
 /******/ 							// setup Promise in chunk cache
 /******/ 							var promise = new Promise((resolve, reject) => {
 /******/ 								installedChunkData = installedChunks[chunkId] = [resolve, reject];
@@ -1989,50 +1996,51 @@ Version: webpack 5.0.0-beta.17
 Child app:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                     Asset      Size
-                                   app.js  26.4 KiB  [emitted]  [name: app]
+                                   app.js  26.7 KiB  [emitted]  [name: app]
     node_modules_react_index_js-_11190.js  12.6 KiB  [emitted]
     node_modules_react_index_js-_11191.js  10.2 KiB  [emitted]
                       src_bootstrap_js.js   157 KiB  [emitted]
     Entrypoint app = app.js
-    chunk app.js (app) 669 bytes (javascript) 42 bytes (share-init) 16 KiB (runtime) [entry] [rendered]
+    chunk app.js (app) 669 bytes (javascript) 42 bytes (share-init) 16.3 KiB (runtime) [entry] [rendered]
         > ./src/index.js app
      ./src/index.js 585 bytes [built]
      external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built]
      external "mfeCCC@/dist/ccc/mfeCCC.js" 42 bytes [built]
-     provide module (default) react@16.13.1 = react 42 bytes [built]
+     provide shared module (default) react@16.13.1 = ../../node_modules/react/index.js 42 bytes [built]
          + 13 hidden root modules
     chunk node_modules_react_index_js-_11190.js 8.76 KiB [rendered]
-        > provide module (default) react@16.13.1 = react
+        > provide shared module (default) react@16.13.1 = ../../node_modules/react/index.js
      ../../node_modules/react/index.js 190 bytes [built]
          + 2 hidden dependent modules
     chunk node_modules_react_index_js-_11191.js 6.7 KiB [rendered]
-        > shared module (default) react@^16.8.0 (singleton) -> react
+        > consume shared module (default) react@^16.13.1 (singleton) (fallback: ../../node_modules/react/index.js)
+        > consume shared module (default) react@^16.8.0 (singleton) (fallback: ../../node_modules/react/index.js)
      ../../node_modules/react/index.js 190 bytes [built]
          + 1 hidden dependent module
-    chunk src_bootstrap_js.js 142 KiB (javascript) 42 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
+    chunk src_bootstrap_js.js 142 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
         > ./bootstrap ./src/index.js 8:0-21
      ./src/bootstrap.js 382 bytes [built]
-         + 19 hidden dependent modules
+         + 20 hidden dependent modules
     chunk 6 bytes (remote) 6 bytes (share-init)
         > mfe-c/Component2 ./src/App.js 8:49-75
      remote mfe-c/Component2 6 bytes (remote) 6 bytes (share-init) [built]
 Child mfe-b:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                             Asset      Size
-                                        mfeBBB.js  21.7 KiB  [emitted]  [name: mfeBBB]
+                                        mfeBBB.js  21.8 KiB  [emitted]  [name: mfeBBB]
                    node_modules_react_index_js.js  12.6 KiB  [emitted]
                             src-b_Component_js.js  2.26 KiB  [emitted]
     vendors-node_modules_date-fns_esm_index_js.js   797 KiB  [emitted]  [id hint: vendors]
     Entrypoint mfeBBB = mfeBBB.js
-    chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 13.9 KiB (runtime) [entry] [rendered]
+    chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 14 KiB (runtime) [entry] [rendered]
         > mfeBBB
      container entry 42 bytes [built]
-     provide module (default) date-fns@2.14.0 = date-fns 42 bytes [built]
-     provide module (default) react@16.13.1 = react 42 bytes [built]
+     provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js 42 bytes [built]
+     provide shared module (default) react@16.13.1 = ../../node_modules/react/index.js 42 bytes [built]
          + 11 hidden root modules
     chunk node_modules_react_index_js.js 8.76 KiB [rendered]
-        > provide module (default) react@16.13.1 = react
-        > shared module (default) react@^16.8.0 (singleton) -> react
+        > provide shared module (default) react@16.13.1 = ../../node_modules/react/index.js
+        > consume shared module (default) react@^16.8.0 (singleton) (fallback: ../../node_modules/react/index.js)
      ../../node_modules/react/index.js 190 bytes [built]
          + 2 hidden dependent modules
     chunk src-b_Component_js.js 753 bytes (javascript) 84 bytes (consume-shared) [rendered]
@@ -2040,53 +2048,47 @@ Child mfe-b:
      ./src-b/Component.js 753 bytes [built]
          + 2 hidden dependent modules
     chunk vendors-node_modules_date-fns_esm_index_js.js (id hint: vendors) 486 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-        > provide module (default) date-fns@2.14.0 = date-fns
-        > shared module (default) date-fns@^2.12.0 (strict) -> date-fns
+        > provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js
+        > consume shared module (default) date-fns@^2.12.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
      ../../node_modules/date-fns/esm/index.js 13.1 KiB [built]
          + 230 hidden dependent modules
 Child mfe-c:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                             Asset      Size
-                                        mfeCCC.js  23.3 KiB  [emitted]  [name: mfeCCC]
-                   node_modules_react_index_js.js  12.6 KiB  [emitted]
+                                        mfeCCC.js  22.7 KiB  [emitted]  [name: mfeCCC]
                             src-c_Component_js.js  1.99 KiB  [emitted]
-                        src-c_LazyComponent_js.js  2.04 KiB  [emitted]
+                        src-c_LazyComponent_js.js  2.08 KiB  [emitted]
     vendors-node_modules_date-fns_esm_index_js.js   797 KiB  [emitted]  [id hint: vendors]
-         vendors-node_modules_lodash_lodash_js.js   529 KiB  [emitted]  [id hint: vendors]
+         vendors-node_modules_lodash_random_js.js  23.3 KiB  [emitted]  [id hint: vendors]
     Entrypoint mfeCCC = mfeCCC.js
-    chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 126 bytes (share-init) 14.7 KiB (runtime) [entry] [rendered]
+    chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 14.4 KiB (runtime) [entry] [rendered]
         > mfeCCC
      container entry 42 bytes [built]
-     provide module (default) date-fns@2.14.0 = date-fns 42 bytes [built]
-     provide module (default) lodash@4.17.15 = lodash 42 bytes [built]
-     provide module (default) react@16.13.1 = react 42 bytes [built]
-         + 13 hidden root modules
-    chunk node_modules_react_index_js.js 8.76 KiB [rendered]
-        > provide module (default) react@16.13.1 = react
-        > shared module (default) react@^16.8.0 (singleton) -> react
-     ../../node_modules/react/index.js 190 bytes [built]
-         + 2 hidden dependent modules
+     provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js 42 bytes [built]
+     provide shared module (default) lodash/random@4.17.15 = ../../node_modules/lodash/random.js 42 bytes [built]
+         + 12 hidden root modules
     chunk src-c_Component_js.js 469 bytes (javascript) 42 bytes (consume-shared) [rendered]
         > ./src-c/Component container entry ./Component
      ./src-c/Component.js 469 bytes [built]
          + 1 hidden dependent module
-    chunk src-c_LazyComponent_js.js 503 bytes (javascript) 42 bytes (consume-shared) [rendered]
+    chunk src-c_LazyComponent_js.js 506 bytes (javascript) 42 bytes (consume-shared) [rendered]
         > ./src-c/LazyComponent container entry ./Component2
-     ./src-c/LazyComponent.js 503 bytes [built]
+     ./src-c/LazyComponent.js 506 bytes [built]
          + 1 hidden dependent module
     chunk vendors-node_modules_date-fns_esm_index_js.js (id hint: vendors) 486 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-        > provide module (default) date-fns@2.14.0 = date-fns
-        > shared module (default) date-fns@^2.12.0 (strict) -> date-fns
+        > provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js
+        > consume shared module (default) date-fns@^2.12.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
      ../../node_modules/date-fns/esm/index.js 13.1 KiB [built]
          + 230 hidden dependent modules
-    chunk vendors-node_modules_lodash_lodash_js.js (id hint: vendors) 528 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-        > provide module (default) lodash@4.17.15 = lodash
-        > shared module (default) lodash@^4.17.4 (strict) -> lodash
-     ../../node_modules/lodash/lodash.js 528 KiB [built]
+    chunk vendors-node_modules_lodash_random_js.js (id hint: vendors) 15.2 KiB [rendered] reused as split chunk (cache group: defaultVendors)
+        > provide shared module (default) lodash/random@4.17.15 = ../../node_modules/lodash/random.js
+        > consume shared module (default) lodash/random@^4.17.4 (strict) (fallback: ../../node_modules/lodash/random.js)
+     ../../node_modules/lodash/random.js 2.32 KiB [built]
+         + 18 hidden dependent modules
     chunk 42 bytes split chunk (cache group: default)
         > ./src-c/Component container entry ./Component
         > ./src-c/LazyComponent container entry ./Component2
-     shared module (default) react@^16.8.0 (singleton) -> react 42 bytes [built]
+     consume shared module (default) react@^16.8.0 (singleton) 42 bytes [built]
 ```
 
 ## Production mode
@@ -2097,7 +2099,7 @@ Version: webpack 5.0.0-beta.17
 Child app:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                                 Asset       Size
-                                               app.js   5.72 KiB  [emitted]  [name: app]
+                                               app.js   5.83 KiB  [emitted]  [name: app]
                 node_modules_react_index_js-_11190.js   7.26 KiB  [emitted]
     node_modules_react_index_js-_11190.js.LICENSE.txt  295 bytes  [emitted]
                 node_modules_react_index_js-_11191.js   6.31 KiB  [emitted]
@@ -2105,25 +2107,26 @@ Child app:
                                   src_bootstrap_js.js    129 KiB  [emitted]
                       src_bootstrap_js.js.LICENSE.txt  546 bytes  [emitted]
     Entrypoint app = app.js
-    chunk app.js (app) 669 bytes (javascript) 42 bytes (share-init) 16 KiB (runtime) [entry] [rendered]
+    chunk app.js (app) 669 bytes (javascript) 42 bytes (share-init) 16.2 KiB (runtime) [entry] [rendered]
         > ./src/index.js app
      ./src/index.js 585 bytes [built]
      external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built]
      external "mfeCCC@/dist/ccc/mfeCCC.js" 42 bytes [built]
-     provide module (default) react@16.13.1 = react 42 bytes [built]
+     provide shared module (default) react@16.13.1 = ../../node_modules/react/index.js 42 bytes [built]
          + 13 hidden root modules
     chunk node_modules_react_index_js-_11190.js 8.76 KiB [rendered]
-        > provide module (default) react@16.13.1 = react
+        > provide shared module (default) react@16.13.1 = ../../node_modules/react/index.js
      ../../node_modules/react/index.js 190 bytes [built]
          + 2 hidden dependent modules
     chunk node_modules_react_index_js-_11191.js 6.7 KiB [rendered]
-        > shared module (default) react@^16.8.0 (singleton) -> react
+        > consume shared module (default) react@^16.13.1 (singleton) (fallback: ../../node_modules/react/index.js)
+        > consume shared module (default) react@^16.8.0 (singleton) (fallback: ../../node_modules/react/index.js)
      ../../node_modules/react/index.js 190 bytes [built]
          + 1 hidden dependent module
-    chunk src_bootstrap_js.js 142 KiB (javascript) 42 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
+    chunk src_bootstrap_js.js 142 KiB (javascript) 84 bytes (consume-shared) 12 bytes (remote) 12 bytes (share-init) [rendered]
         > ./bootstrap ./src/index.js 8:0-21
      ./src/bootstrap.js + 7 modules 14 KiB [built]
-         + 12 hidden dependent modules
+         + 13 hidden dependent modules
     chunk 6 bytes (remote) 6 bytes (share-init)
         > mfe-c/Component2 ./src/App.js 8:49-75
      remote mfe-c/Component2 6 bytes (remote) 6 bytes (share-init) [built]
@@ -2139,12 +2142,12 @@ Child mfe-b:
     chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 13.9 KiB (runtime) [entry] [rendered]
         > mfeBBB
      container entry 42 bytes [built]
-     provide module (default) date-fns@2.14.0 = date-fns 42 bytes [built]
-     provide module (default) react@16.13.1 = react 42 bytes [built]
+     provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js 42 bytes [built]
+     provide shared module (default) react@16.13.1 = ../../node_modules/react/index.js 42 bytes [built]
          + 11 hidden root modules
     chunk node_modules_react_index_js.js 8.76 KiB [rendered]
-        > shared module (default) react@^16.8.0 (singleton) -> react
-        > provide module (default) react@16.13.1 = react
+        > consume shared module (default) react@^16.8.0 (singleton) (fallback: ../../node_modules/react/index.js)
+        > provide shared module (default) react@16.13.1 = ../../node_modules/react/index.js
      ../../node_modules/react/index.js 190 bytes [built]
          + 2 hidden dependent modules
     chunk src-b_Component_js.js 753 bytes (javascript) 84 bytes (consume-shared) [rendered]
@@ -2152,51 +2155,43 @@ Child mfe-b:
      ./src-b/Component.js 753 bytes [built]
          + 2 hidden dependent modules
     chunk vendors-node_modules_date-fns_esm_index_js.js (id hint: vendors) 486 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-        > shared module (default) date-fns@^2.12.0 (strict) -> date-fns
-        > provide module (default) date-fns@2.14.0 = date-fns
+        > consume shared module (default) date-fns@^2.12.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
+        > provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js
      ../../node_modules/date-fns/esm/index.js + 230 modules 486 KiB [built]
 Child mfe-c:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-                                                   Asset       Size
-                                               mfeCCC.js   5.52 KiB  [emitted]  [name: mfeCCC]
-                          node_modules_react_index_js.js   7.21 KiB  [emitted]
-              node_modules_react_index_js.js.LICENSE.txt  295 bytes  [emitted]
-                                   src-c_Component_js.js  493 bytes  [emitted]
-                               src-c_LazyComponent_js.js  537 bytes  [emitted]
-           vendors-node_modules_date-fns_esm_index_js.js   77.4 KiB  [emitted]  [id hint: vendors]
-                vendors-node_modules_lodash_lodash_js.js   70.1 KiB  [emitted]  [id hint: vendors]
-    vendors-node_modules_lodash_lodash_js.js.LICENSE.txt  336 bytes  [emitted]
+                                            Asset       Size
+                                        mfeCCC.js   5.36 KiB  [emitted]  [name: mfeCCC]
+                 node_modules_lodash_random_js.js   2.95 KiB  [emitted]
+                            src-c_Component_js.js  493 bytes  [emitted]
+                        src-c_LazyComponent_js.js  537 bytes  [emitted]
+    vendors-node_modules_date-fns_esm_index_js.js   77.4 KiB  [emitted]  [id hint: vendors]
     Entrypoint mfeCCC = mfeCCC.js
-    chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 126 bytes (share-init) 14.7 KiB (runtime) [entry] [rendered]
+    chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 14.3 KiB (runtime) [entry] [rendered]
         > mfeCCC
      container entry 42 bytes [built]
-     provide module (default) date-fns@2.14.0 = date-fns 42 bytes [built]
-     provide module (default) lodash@4.17.15 = lodash 42 bytes [built]
-     provide module (default) react@16.13.1 = react 42 bytes [built]
-         + 13 hidden root modules
-    chunk node_modules_react_index_js.js 8.76 KiB [rendered]
-        > shared module (default) react@^16.8.0 (singleton) -> react
-        > provide module (default) react@16.13.1 = react
-     ../../node_modules/react/index.js 190 bytes [built]
-         + 2 hidden dependent modules
+     provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js 42 bytes [built]
+     provide shared module (default) lodash/random@4.17.15 = ../../node_modules/lodash/random.js 42 bytes [built]
+         + 12 hidden root modules
+    chunk node_modules_lodash_random_js.js 15.2 KiB [rendered]
+        > provide shared module (default) lodash/random@4.17.15 = ../../node_modules/lodash/random.js
+        > consume shared module (default) lodash/random@^4.17.4 (strict) (fallback: ../../node_modules/lodash/random.js)
+     ../../node_modules/lodash/random.js 2.32 KiB [built]
+         + 18 hidden dependent modules
     chunk src-c_Component_js.js 469 bytes (javascript) 42 bytes (consume-shared) [rendered]
         > ./src-c/Component container entry ./Component
      ./src-c/Component.js 469 bytes [built]
          + 1 hidden dependent module
-    chunk src-c_LazyComponent_js.js 503 bytes (javascript) 42 bytes (consume-shared) [rendered]
+    chunk src-c_LazyComponent_js.js 506 bytes (javascript) 42 bytes (consume-shared) [rendered]
         > ./src-c/LazyComponent container entry ./Component2
-     ./src-c/LazyComponent.js 503 bytes [built]
+     ./src-c/LazyComponent.js 506 bytes [built]
          + 1 hidden dependent module
     chunk vendors-node_modules_date-fns_esm_index_js.js (id hint: vendors) 486 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-        > shared module (default) date-fns@^2.12.0 (strict) -> date-fns
-        > provide module (default) date-fns@2.14.0 = date-fns
+        > consume shared module (default) date-fns@^2.12.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
+        > provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js
      ../../node_modules/date-fns/esm/index.js + 230 modules 486 KiB [built]
-    chunk vendors-node_modules_lodash_lodash_js.js (id hint: vendors) 528 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-        > provide module (default) lodash@4.17.15 = lodash
-        > shared module (default) lodash@^4.17.4 (strict) -> lodash
-     ../../node_modules/lodash/lodash.js 528 KiB [built]
     chunk 42 bytes split chunk (cache group: default)
         > ./src-c/Component container entry ./Component
         > ./src-c/LazyComponent container entry ./Component2
-     shared module (default) react@^16.8.0 (singleton) -> react 42 bytes [built]
+     consume shared module (default) react@^16.8.0 (singleton) 42 bytes [built]
 ```

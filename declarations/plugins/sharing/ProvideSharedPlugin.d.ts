@@ -5,11 +5,11 @@
  */
 
 /**
- * Modules that should be provided as shared modules to the share scope. When provided, property name is used as share key, otherwise share key is automatically inferred from request.
+ * Modules that should be provided as shared modules to the share scope. When provided, property name is used to match modules, otherwise this is automatically inferred from share key.
  */
 export type Provides = (ProvidesItem | ProvidesObject)[] | ProvidesObject;
 /**
- * Request to a module that should be provided as shared module to the share scope.
+ * Request to a module that should be provided as shared module to the share scope (will be resolved when relative).
  */
 export type ProvidesItem = string;
 /**
@@ -19,7 +19,7 @@ export type SharedVersionArray = (number | string)[];
 
 export interface ProvideSharedPluginOptions {
 	/**
-	 * Modules that should be provided as shared modules to the share scope. When provided, property name is used as share key, otherwise share key is automatically inferred from request.
+	 * Modules that should be provided as shared modules to the share scope. When provided, property name is used to match modules, otherwise this is automatically inferred from share key.
 	 */
 	provides: Provides;
 	/**
@@ -45,9 +45,9 @@ export interface ProvidesConfig {
 	 */
 	eager?: boolean;
 	/**
-	 * Request to a module that should be provided as shared module to the share scope.
+	 * Key in the share scope under which the shared modules should be stored.
 	 */
-	import: ProvidesItem;
+	shareKey?: string;
 	/**
 	 * Share scope name.
 	 */
