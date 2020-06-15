@@ -141,7 +141,8 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 			"index.js":
 				"export default import('container/src/exposed').then(m => m.default);",
 			"exposed.js": "import lib from 'lib'; export default 21 + lib;",
-			"lib.js": "export default 21"
+			"lib.js": "export default 20",
+			"lib2.js": "export default 21"
 		};
 		await updateSrc(data);
 		const configAdditions = {
@@ -157,8 +158,12 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 						lib: {
 							import: "./src/lib",
 							shareKey: "lib",
-							version: "1.2.3",
+							version: "1.2.0",
 							requiredVersion: "^1.0.0"
+						},
+						"./src/lib2": {
+							shareKey: "lib",
+							version: "1.2.3"
 						}
 					}
 				})
