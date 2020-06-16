@@ -151,7 +151,8 @@ export type ExternalsType =
 	| "jsonp"
 	| "system"
 	| "promise"
-	| "import";
+	| "import"
+	| "script";
 /**
  * Filtering values.
  */
@@ -1970,7 +1971,7 @@ export interface EntryDescriptionNormalized {
 	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
-	import: [string, ...string[]];
+	import?: [string, ...string[]];
 	/**
 	 * Options for library.
 	 */

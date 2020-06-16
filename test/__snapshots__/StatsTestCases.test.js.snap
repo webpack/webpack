@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-entry 1`] = `
-"Hash: 70451bfc89d3718807c8e248e9e5e0b2dd571a44
+"Hash: 2bdf96f6ffe12fafbeaf04024a25b57ff0d23779
 Child fitting:
-    Hash: 70451bfc89d3718807c8
+    Hash: 2bdf96f6ffe12fafbeaf
     Time: X ms
     Built at: 1970-04-20 12:42:42
     PublicPath: (none)
@@ -11,14 +11,14 @@ Child fitting:
     fitting-1e85d2c6a3bb53369456.js  1.91 KiB  [emitted] [immutable]
     fitting-32fa512a201604f3e8b7.js  1.08 KiB  [emitted] [immutable]
     fitting-64ea4fa3fe9d8c4817d8.js  1.91 KiB  [emitted] [immutable]
-    fitting-8c5036027c59f3e9a4a5.js  13.1 KiB  [emitted] [immutable]
-    Entrypoint main = fitting-1e85d2c6a3bb53369456.js fitting-64ea4fa3fe9d8c4817d8.js fitting-8c5036027c59f3e9a4a5.js
-    chunk fitting-8c5036027c59f3e9a4a5.js 1.87 KiB (javascript) 6.62 KiB (runtime) [entry] [rendered]
+    fitting-c4b649125a47ce23454e.js  14.1 KiB  [emitted] [immutable]
+    Entrypoint main = fitting-1e85d2c6a3bb53369456.js fitting-64ea4fa3fe9d8c4817d8.js fitting-c4b649125a47ce23454e.js
+    chunk fitting-c4b649125a47ce23454e.js 1.87 KiB (javascript) 7.24 KiB (runtime) [entry] [rendered]
         > ./index main
      ./e.js 899 bytes [built]
      ./f.js 900 bytes [built]
      ./index.js 111 bytes [built]
-         + 8 hidden chunk modules
+         + 9 hidden chunk modules
     chunk fitting-64ea4fa3fe9d8c4817d8.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
         > ./index main
      ./c.js 899 bytes [built]
@@ -31,7 +31,7 @@ Child fitting:
         > ./g ./index.js 7:0-13
      ./g.js 916 bytes [built]
 Child content-change:
-    Hash: e248e9e5e0b2dd571a44
+    Hash: 04024a25b57ff0d23779
     Time: X ms
     Built at: 1970-04-20 12:42:42
     PublicPath: (none)
@@ -39,14 +39,14 @@ Child content-change:
     content-change-1e85d2c6a3bb53369456.js  1.91 KiB  [emitted] [immutable]
     content-change-32fa512a201604f3e8b7.js  1.08 KiB  [emitted] [immutable]
     content-change-64ea4fa3fe9d8c4817d8.js  1.91 KiB  [emitted] [immutable]
-    content-change-e66ad755b1c39cc2ae4a.js  13.2 KiB  [emitted] [immutable]
-    Entrypoint main = content-change-1e85d2c6a3bb53369456.js content-change-64ea4fa3fe9d8c4817d8.js content-change-e66ad755b1c39cc2ae4a.js
-    chunk content-change-e66ad755b1c39cc2ae4a.js 1.87 KiB (javascript) 6.62 KiB (runtime) [entry] [rendered]
+    content-change-cd329caeee9ef143c9e2.js  14.1 KiB  [emitted] [immutable]
+    Entrypoint main = content-change-1e85d2c6a3bb53369456.js content-change-64ea4fa3fe9d8c4817d8.js content-change-cd329caeee9ef143c9e2.js
+    chunk content-change-cd329caeee9ef143c9e2.js 1.87 KiB (javascript) 7.24 KiB (runtime) [entry] [rendered]
         > ./index main
      ./e.js 899 bytes [built]
      ./f.js 900 bytes [built]
      ./index.js 111 bytes [built]
-         + 8 hidden chunk modules
+         + 9 hidden chunk modules
     chunk content-change-64ea4fa3fe9d8c4817d8.js 1.76 KiB [initial] [rendered] [recorded] aggressive splitted
         > ./index main
      ./c.js 899 bytes [built]
@@ -61,14 +61,13 @@ Child content-change:
 `;
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-on-demand 1`] = `
-"Hash: 21f9ed5ab7a127d97c1a
+"Hash: 94761e9abb50c07d9e64
 Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
                   Asset        Size
 1c8f0f5fb926b811c0e5.js  1010 bytes  [emitted] [immutable]
 21fd8e73389271e24957.js    1.91 KiB  [emitted] [immutable]
-45ae21726ca0cc660a47.js    9.19 KiB  [emitted] [immutable]  [name: main]
 64ea4fa3fe9d8c4817d8.js    1.91 KiB  [emitted] [immutable]
 6a2a05a9feb43a535129.js    1.91 KiB  [emitted] [immutable]
 ae7ced4135ed4f2282f6.js    1.91 KiB  [emitted] [immutable]
@@ -76,17 +75,18 @@ b4a95c5544295741de67.js  1010 bytes  [emitted] [immutable]
 b63bab94d02c84e0f081.js    1.91 KiB  [emitted] [immutable]
 db9a189ff52c97050941.js    1.91 KiB  [emitted] [immutable]
 de61daf57f7861bbb2f6.js    1.91 KiB  [emitted] [immutable]
+f2f0e43e93439d1de774.js    10.1 KiB  [emitted] [immutable]  [name: main]
 f80243284f4ab491b78e.js    1.91 KiB  [emitted] [immutable]
 fb5a5560e641649a6ed8.js  1010 bytes  [emitted] [immutable]
-Entrypoint main = 45ae21726ca0cc660a47.js
+Entrypoint main = f2f0e43e93439d1de774.js
 chunk 64ea4fa3fe9d8c4817d8.js 1.76 KiB [rendered] [recorded] aggressive splitted
     > ./c ./d ./e ./index.js 3:0-30
  ./c.js 899 bytes [built]
  ./d.js 899 bytes [built]
-chunk 45ae21726ca0cc660a47.js (main) 248 bytes (javascript) 4.49 KiB (runtime) [entry] [rendered]
+chunk f2f0e43e93439d1de774.js (main) 248 bytes (javascript) 5.12 KiB (runtime) [entry] [rendered]
     > ./index main
  ./index.js 248 bytes [built]
-     + 5 hidden chunk modules
+     + 6 hidden chunk modules
 chunk 21fd8e73389271e24957.js 1.76 KiB [rendered]
     > ./f ./g ./h ./i ./j ./k ./index.js 4:0-51
  ./j.js 901 bytes [built]
@@ -149,10 +149,10 @@ Entrypoint main = bundle.js (d896afc62bcc5d86ee78.png static/file.html)
 
 exports[`StatsTestCases should print correct stats for async-commons-chunk 1`] = `
 "Entrypoint main = main.js
-chunk main.js (main) 515 bytes (javascript) 4.18 KiB (runtime) >{460}< >{847}< >{996}< [entry] [rendered]
+chunk main.js (main) 515 bytes (javascript) 4.8 KiB (runtime) >{460}< >{847}< >{996}< [entry] [rendered]
     > ./ main
  ./index.js 515 bytes [built]
-     + 5 hidden root modules
+     + 6 hidden root modules
 chunk 460.js 21 bytes <{179}> ={847}= [rendered]
     > ./index.js 17:1-21:3
  ./c.js 21 bytes [built]
@@ -181,10 +181,10 @@ exports[`StatsTestCases should print correct stats for async-commons-chunk-auto 
         > ./g ./a.js 6:0-47
      ./g.js 34 bytes [built]
          + 1 hidden dependent module
-    chunk disabled/main.js (main) 147 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
+    chunk disabled/main.js (main) 147 bytes (javascript) 5.44 KiB (runtime) [entry] [rendered]
         > ./ main
      ./index.js 147 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk disabled/async-b.js (async-b) 152 bytes [rendered]
         > ./b ./index.js 2:0-47
      ./b.js 72 bytes [built]
@@ -198,10 +198,10 @@ exports[`StatsTestCases should print correct stats for async-commons-chunk-auto 
      ./c.js + 1 modules 107 bytes [built]
          + 3 hidden root modules
          + 3 hidden dependent modules
-    chunk disabled/a.js (a) 216 bytes (javascript) 4.77 KiB (runtime) [entry] [rendered]
+    chunk disabled/a.js (a) 216 bytes (javascript) 5.39 KiB (runtime) [entry] [rendered]
         > ./a a
      ./a.js + 1 modules 156 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
          + 3 hidden dependent modules
     chunk disabled/async-a.js (async-a) 216 bytes [rendered]
         > ./a ./index.js 1:0-47
@@ -220,10 +220,10 @@ Child default:
     chunk default/async-g.js (async-g) 34 bytes [rendered]
         > ./g ./a.js 6:0-47
      ./g.js 34 bytes [built]
-    chunk default/main.js (main) 147 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
+    chunk default/main.js (main) 147 bytes (javascript) 5.46 KiB (runtime) [entry] [rendered]
         > ./ main
      ./index.js 147 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk default/282.js (id hint: vendors) 20 bytes [rendered] split chunk (cache group: defaultVendors)
         > ./a ./index.js 1:0-47
         > ./b ./index.js 2:0-47
@@ -253,10 +253,10 @@ Child default:
     chunk default/769.js (id hint: vendors) 20 bytes [rendered] split chunk (cache group: defaultVendors)
         > ./c ./index.js 3:0-47
      ./node_modules/z.js 20 bytes [built]
-    chunk default/a.js (a) 216 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
+    chunk default/a.js (a) 216 bytes (javascript) 5.44 KiB (runtime) [entry] [rendered]
         > ./a a
      ./a.js + 1 modules 156 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
          + 3 hidden dependent modules
     chunk default/async-a.js (async-a) 156 bytes [rendered]
         > ./a ./index.js 1:0-47
@@ -270,19 +270,19 @@ Child vendors:
     Entrypoint a = vendors/vendors.js vendors/a.js
     Entrypoint b = vendors/vendors.js vendors/b.js
     Entrypoint c = vendors/vendors.js vendors/c.js
-    chunk vendors/b.js (b) 112 bytes (javascript) 3.17 KiB (runtime) [entry] [rendered]
+    chunk vendors/b.js (b) 112 bytes (javascript) 4.45 KiB (runtime) [entry] [rendered]
         > ./b b
      ./b.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 2 hidden dependent modules
     chunk vendors/async-g.js (async-g) 54 bytes [rendered]
         > ./g ./a.js 6:0-47
      ./g.js 34 bytes [built]
          + 1 hidden dependent module
-    chunk vendors/main.js (main) 147 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
+    chunk vendors/main.js (main) 147 bytes (javascript) 5.44 KiB (runtime) [entry] [rendered]
         > ./ main
      ./index.js 147 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk vendors/vendors.js (vendors) (id hint: vendors) 60 bytes [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./a a
         > ./b b
@@ -298,15 +298,15 @@ Child vendors:
         > ./c ./index.js 3:0-47
      ./c.js 72 bytes [built]
          + 4 hidden dependent modules
-    chunk vendors/c.js (c) 112 bytes (javascript) 3.17 KiB (runtime) [entry] [rendered]
+    chunk vendors/c.js (c) 112 bytes (javascript) 4.45 KiB (runtime) [entry] [rendered]
         > ./c c
      ./c.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 2 hidden dependent modules
-    chunk vendors/a.js (a) 176 bytes (javascript) 5.94 KiB (runtime) [entry] [rendered]
+    chunk vendors/a.js (a) 176 bytes (javascript) 6.56 KiB (runtime) [entry] [rendered]
         > ./a a
      ./a.js + 1 modules 156 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
          + 1 hidden dependent module
     chunk vendors/async-a.js (async-a) 216 bytes [rendered]
         > ./a ./index.js 1:0-47
@@ -325,28 +325,28 @@ Child multiple-vendors:
         > ./b b
         > ./c c
      ./node_modules/x.js 20 bytes [built]
-    chunk multiple-vendors/b.js (b) 92 bytes (javascript) 3.19 KiB (runtime) [entry] [rendered]
+    chunk multiple-vendors/b.js (b) 92 bytes (javascript) 4.47 KiB (runtime) [entry] [rendered]
         > ./b b
      ./b.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 1 hidden dependent module
     chunk multiple-vendors/async-g.js (async-g) 34 bytes [rendered]
         > ./g ./a.js 6:0-47
      ./g.js 34 bytes [built]
-    chunk multiple-vendors/main.js (main) 147 bytes (javascript) 4.86 KiB (runtime) [entry] [rendered]
+    chunk multiple-vendors/main.js (main) 147 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
         > ./ main
      ./index.js 147 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk multiple-vendors/async-b.js (async-b) 72 bytes [rendered]
         > ./b ./index.js 2:0-47
      ./b.js 72 bytes [built]
     chunk multiple-vendors/async-c.js (async-c) 72 bytes [rendered]
         > ./c ./index.js 3:0-47
      ./c.js 72 bytes [built]
-    chunk multiple-vendors/c.js (c) 92 bytes (javascript) 3.19 KiB (runtime) [entry] [rendered]
+    chunk multiple-vendors/c.js (c) 92 bytes (javascript) 4.47 KiB (runtime) [entry] [rendered]
         > ./c c
      ./c.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 1 hidden dependent module
     chunk multiple-vendors/568.js 20 bytes [rendered] split chunk (cache group: default)
         > ./b ./index.js 2:0-47
@@ -365,10 +365,10 @@ Child multiple-vendors:
         > ./c ./index.js 3:0-47
         > ./c c
      ./node_modules/z.js 20 bytes [built]
-    chunk multiple-vendors/a.js (a) 156 bytes (javascript) 5.99 KiB (runtime) [entry] [rendered]
+    chunk multiple-vendors/a.js (a) 156 bytes (javascript) 6.61 KiB (runtime) [entry] [rendered]
         > ./a a
      ./a.js + 1 modules 156 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk multiple-vendors/async-a.js (async-a) 156 bytes [rendered]
         > ./a ./index.js 1:0-47
      ./a.js + 1 modules 156 bytes [built]
@@ -383,18 +383,18 @@ Child all:
     Entrypoint a = all/282.js all/954.js all/767.js all/a.js
     Entrypoint b = all/282.js all/954.js all/767.js all/b.js
     Entrypoint c = all/282.js all/769.js all/767.js all/c.js
-    chunk all/b.js (b) 92 bytes (javascript) 3.19 KiB (runtime) [entry] [rendered]
+    chunk all/b.js (b) 92 bytes (javascript) 4.47 KiB (runtime) [entry] [rendered]
         > ./b b
      ./b.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 1 hidden dependent module
     chunk all/async-g.js (async-g) 34 bytes [rendered]
         > ./g ./a.js 6:0-47
      ./g.js 34 bytes [built]
-    chunk all/main.js (main) 147 bytes (javascript) 4.83 KiB (runtime) [entry] [rendered]
+    chunk all/main.js (main) 147 bytes (javascript) 5.45 KiB (runtime) [entry] [rendered]
         > ./ main
      ./index.js 147 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk all/282.js (id hint: vendors) 20 bytes [initial] [rendered] split chunk (cache group: vendors)
         > ./a ./index.js 1:0-47
         > ./b ./index.js 2:0-47
@@ -409,10 +409,10 @@ Child all:
     chunk all/async-c.js (async-c) 72 bytes [rendered]
         > ./c ./index.js 3:0-47
      ./c.js 72 bytes [built]
-    chunk all/c.js (c) 92 bytes (javascript) 3.19 KiB (runtime) [entry] [rendered]
+    chunk all/c.js (c) 92 bytes (javascript) 4.47 KiB (runtime) [entry] [rendered]
         > ./c c
      ./c.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 1 hidden dependent module
     chunk all/568.js 20 bytes [rendered] split chunk (cache group: default)
         > ./b ./index.js 2:0-47
@@ -431,10 +431,10 @@ Child all:
         > ./c ./index.js 3:0-47
         > ./c c
      ./node_modules/z.js 20 bytes [built]
-    chunk all/a.js (a) 156 bytes (javascript) 5.98 KiB (runtime) [entry] [rendered]
+    chunk all/a.js (a) 156 bytes (javascript) 6.6 KiB (runtime) [entry] [rendered]
         > ./a a
      ./a.js + 1 modules 156 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk all/async-a.js (async-a) 156 bytes [rendered]
         > ./a ./index.js 1:0-47
      ./a.js + 1 modules 156 bytes [built]
@@ -473,7 +473,7 @@ chunk main1.js (main1) 136 bytes [entry] [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for chunks 1`] = `
-"Hash: 02575b74aab5a2ac7302
+"Hash: e501a96e1fe55b70642b
 Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
@@ -481,9 +481,9 @@ PublicPath: (none)
 460.bundle.js  324 bytes  [emitted]
 524.bundle.js  210 bytes  [emitted]
 996.bundle.js  142 bytes  [emitted]
-    bundle.js   7.71 KiB  [emitted]  [name: main]
+    bundle.js   8.62 KiB  [emitted]  [name: main]
 Entrypoint main = bundle.js
-chunk bundle.js (main) 73 bytes (javascript) 4.19 KiB (runtime) >{460}< >{996}< [entry] [rendered]
+chunk bundle.js (main) 73 bytes (javascript) 4.81 KiB (runtime) >{460}< >{996}< [entry] [rendered]
     > ./index main
  ./a.js 22 bytes [built]
      cjs self exports reference ./a.js 1:0-14
@@ -492,7 +492,7 @@ chunk bundle.js (main) 73 bytes (javascript) 4.19 KiB (runtime) >{460}< >{996}< 
  ./index.js 51 bytes [built]
      entry ./index main
      X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
-     + 5 hidden chunk modules
+     + 6 hidden chunk modules
 chunk 460.bundle.js 54 bytes <{179}> >{524}< [rendered]
     > ./c ./index.js 3:0-16
  ./c.js 54 bytes [built]
@@ -517,13 +517,13 @@ chunk 996.bundle.js 22 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for chunks-development 1`] = `
-"Hash: 84a61a5e2153e565ad2d
+"Hash: 32e4e47d419198e5391f
 Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
               Asset       Size
      b_js.bundle.js  982 bytes  [emitted]
-          bundle.js   8.92 KiB  [emitted]  [name: main]
+          bundle.js   9.84 KiB  [emitted]  [name: main]
      c_js.bundle.js   1.18 KiB  [emitted]
 d_js-e_js.bundle.js    1.4 KiB  [emitted]
 Entrypoint main = bundle.js
@@ -548,7 +548,7 @@ chunk d_js-e_js.bundle.js 60 bytes <{c_js}> [rendered]
      require.ensure item ./e ./c.js 1:0-52
      cjs self exports reference ./e.js 2:0-14
      X ms -> X ms -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
-chunk bundle.js (main) 73 bytes (javascript) 4.19 KiB (runtime) >{b_js}< >{c_js}< [entry] [rendered]
+chunk bundle.js (main) 73 bytes (javascript) 4.81 KiB (runtime) >{b_js}< >{c_js}< [entry] [rendered]
     > ./index main
  ./a.js 22 bytes [built]
      cjs self exports reference ./a.js 1:0-14
@@ -558,16 +558,16 @@ chunk bundle.js (main) 73 bytes (javascript) 4.19 KiB (runtime) >{b_js}< >{c_js}
  ./index.js 51 bytes [built]
      entry ./index main
      X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
-     + 5 hidden chunk modules"
+     + 6 hidden chunk modules"
 `;
 
 exports[`StatsTestCases should print correct stats for circular-correctness 1`] = `
 "Entrypoint main = bundle.js
 chunk 128.bundle.js (b) 49 bytes <{179}> <{459}> >{459}< [rendered]
  ./module-b.js 49 bytes [built]
-chunk bundle.js (main) 98 bytes (javascript) 5.42 KiB (runtime) >{128}< >{786}< [entry] [rendered]
+chunk bundle.js (main) 98 bytes (javascript) 6.04 KiB (runtime) >{128}< >{786}< [entry] [rendered]
  ./index.js 98 bytes [built]
-     + 8 hidden chunk modules
+     + 9 hidden chunk modules
 chunk 459.bundle.js (c) 98 bytes <{128}> <{786}> >{128}< >{786}< [rendered]
  ./module-c.js 98 bytes [built]
 chunk 786.bundle.js (a) 49 bytes <{179}> <{459}> >{459}< [rendered]
@@ -605,12 +605,12 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32>main.js</CLR>
 `;
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-0 1`] = `
-"Hash: 9d8341686f0b49af2e8b
+"Hash: 21980449634e972d10b9
 Time: X ms
 Built at: 1970-04-20 12:42:42
      Asset       Size
     429.js  278 bytes  [emitted]  [id hint: vendor-1]
-entry-1.js   5.59 KiB  [emitted]  [name: entry-1]
+entry-1.js   7.44 KiB  [emitted]  [name: entry-1]
 Entrypoint entry-1 = 429.js entry-1.js
 ./entry-1.js 145 bytes [built]
 ./modules/a.js 22 bytes [built]
@@ -619,15 +619,15 @@ Entrypoint entry-1 = 429.js entry-1.js
 ./modules/d.js 22 bytes [built]
 ./modules/e.js 22 bytes [built]
 ./modules/f.js 22 bytes [built]
-    + 2 hidden modules"
+    + 3 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-Infinity 1`] = `
-"Hash: ce2aee6fe5f6a0cf186f
+"Hash: 621bf732703090c3ede1
 Time: X ms
 Built at: 1970-04-20 12:42:42
       Asset       Size
- entry-1.js   5.59 KiB  [emitted]  [name: entry-1]
+ entry-1.js   7.44 KiB  [emitted]  [name: entry-1]
 vendor-1.js  278 bytes  [emitted]  [name: vendor-1] [id hint: vendor-1]
 Entrypoint entry-1 = vendor-1.js entry-1.js
 ./entry-1.js 145 bytes [built]
@@ -637,33 +637,33 @@ Entrypoint entry-1 = vendor-1.js entry-1.js
 ./modules/d.js 22 bytes [built]
 ./modules/e.js 22 bytes [built]
 ./modules/f.js 22 bytes [built]
-    + 2 hidden modules"
+    + 3 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for commons-plugin-issue-4980 1`] = `
-"Hash: f2652f529f967f7f2bec5cac904b0fb414d6d93f
+"Hash: 2d4ccec1345261a845af51d8df28b42b7ee6d166
 Child
-    Hash: f2652f529f967f7f2bec
+    Hash: 2d4ccec1345261a845af
     Time: X ms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
-       app.73e459ccd7f12100fa78-1.js   6.13 KiB  [emitted] [immutable]  [name: app]
+       app.dada2299e13f732781e7-1.js   7.97 KiB  [emitted] [immutable]  [name: app]
     vendor.f0527072691801f43979-1.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
-    Entrypoint app = vendor.f0527072691801f43979-1.js app.73e459ccd7f12100fa78-1.js
+    Entrypoint app = vendor.f0527072691801f43979-1.js app.dada2299e13f732781e7-1.js
     ./entry-1.js + 2 modules 190 bytes [built]
     ./constants.js 87 bytes [built]
-        + 3 hidden modules
+        + 4 hidden modules
 Child
-    Hash: 5cac904b0fb414d6d93f
+    Hash: 51d8df28b42b7ee6d166
     Time: X ms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
-       app.1db34ba9ee5e51d1e813-2.js   6.14 KiB  [emitted] [immutable]  [name: app]
+       app.733a3669ae41c4f11229-2.js   7.99 KiB  [emitted] [immutable]  [name: app]
     vendor.f0527072691801f43979-2.js  615 bytes  [emitted] [immutable]  [name: vendor] [id hint: vendor]
-    Entrypoint app = vendor.f0527072691801f43979-2.js app.1db34ba9ee5e51d1e813-2.js
+    Entrypoint app = vendor.f0527072691801f43979-2.js app.733a3669ae41c4f11229-2.js
     ./entry-2.js + 2 modules 197 bytes [built]
     ./constants.js 87 bytes [built]
-        + 3 hidden modules"
+        + 4 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`] = `
@@ -684,55 +684,55 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
 `;
 
 exports[`StatsTestCases should print correct stats for context-independence 1`] = `
-"Hash: cc1c058603d38f2497facc1c058603d38f2497fab87c6ae33adeba417c54b87c6ae33adeba417c54
+"Hash: fa2d8d7eda803a13d4e5fa2d8d7eda803a13d4e53a12956c6176152750a53a12956c6176152750a5
 Child
-    Hash: cc1c058603d38f2497fa
+    Hash: fa2d8d7eda803a13d4e5
     Time: X ms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
          703-35b05b4f9ece3e5b7253.js  457 bytes  [emitted] [immutable]
      703-35b05b4f9ece3e5b7253.js.map  344 bytes  [emitted] [dev]
-        main-cfadecfa45a71360cb9e.js   7.98 KiB  [emitted] [immutable]  [name: main]
-    main-cfadecfa45a71360cb9e.js.map   7.11 KiB  [emitted] [dev]        [name: (main)]
-    Entrypoint main = main-cfadecfa45a71360cb9e.js (main-cfadecfa45a71360cb9e.js.map)
+        main-a7dd5ff58b083eed2825.js    8.9 KiB  [emitted] [immutable]  [name: main]
+    main-a7dd5ff58b083eed2825.js.map   7.91 KiB  [emitted] [dev]        [name: (main)]
+    Entrypoint main = main-a7dd5ff58b083eed2825.js (main-a7dd5ff58b083eed2825.js.map)
     ./a/index.js 40 bytes [built]
     ./a/chunk.js + 1 modules 66 bytes [built]
-        + 6 hidden modules
+        + 7 hidden modules
 Child
-    Hash: cc1c058603d38f2497fa
+    Hash: fa2d8d7eda803a13d4e5
     Time: X ms
     Built at: 1970-04-20 12:42:42
                                Asset       Size
          703-35b05b4f9ece3e5b7253.js  457 bytes  [emitted] [immutable]
      703-35b05b4f9ece3e5b7253.js.map  344 bytes  [emitted] [dev]
-        main-cfadecfa45a71360cb9e.js   7.98 KiB  [emitted] [immutable]  [name: main]
-    main-cfadecfa45a71360cb9e.js.map   7.11 KiB  [emitted] [dev]        [name: (main)]
-    Entrypoint main = main-cfadecfa45a71360cb9e.js (main-cfadecfa45a71360cb9e.js.map)
+        main-a7dd5ff58b083eed2825.js    8.9 KiB  [emitted] [immutable]  [name: main]
+    main-a7dd5ff58b083eed2825.js.map   7.91 KiB  [emitted] [dev]        [name: (main)]
+    Entrypoint main = main-a7dd5ff58b083eed2825.js (main-a7dd5ff58b083eed2825.js.map)
     ./b/index.js 40 bytes [built]
     ./b/chunk.js + 1 modules 66 bytes [built]
-        + 6 hidden modules
+        + 7 hidden modules
 Child
-    Hash: b87c6ae33adeba417c54
+    Hash: 3a12956c6176152750a5
     Time: X ms
     Built at: 1970-04-20 12:42:42
                            Asset      Size
      703-d460da0006247c80e6fd.js  1.51 KiB  [emitted] [immutable]
-    main-cac72fdf6d5096abb062.js  8.87 KiB  [emitted] [immutable]  [name: main]
-    Entrypoint main = main-cac72fdf6d5096abb062.js
+    main-8f5e86ee82f5457eb89a.js  9.78 KiB  [emitted] [immutable]  [name: main]
+    Entrypoint main = main-8f5e86ee82f5457eb89a.js
     ./a/index.js 40 bytes [built]
     ./a/chunk.js + 1 modules 66 bytes [built]
-        + 6 hidden modules
+        + 7 hidden modules
 Child
-    Hash: b87c6ae33adeba417c54
+    Hash: 3a12956c6176152750a5
     Time: X ms
     Built at: 1970-04-20 12:42:42
                            Asset      Size
      703-d460da0006247c80e6fd.js  1.51 KiB  [emitted] [immutable]
-    main-cac72fdf6d5096abb062.js  8.87 KiB  [emitted] [immutable]  [name: main]
-    Entrypoint main = main-cac72fdf6d5096abb062.js
+    main-8f5e86ee82f5457eb89a.js  9.78 KiB  [emitted] [immutable]  [name: main]
+    Entrypoint main = main-8f5e86ee82f5457eb89a.js
     ./b/index.js 40 bytes [built]
     ./b/chunk.js + 1 modules 66 bytes [built]
-        + 6 hidden modules"
+        + 7 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for define-plugin 1`] = `
@@ -1096,18 +1096,18 @@ Entrypoint e2 = e2.js
 chunk b.js (b) 49 bytes <{786}> >{459}< [rendered]
  ./module-b.js 49 bytes [built]
      import() ./module-b ./module-a.js 1:0-47
-chunk e1.js (e1) 49 bytes (javascript) 5.45 KiB (runtime) >{786}< [entry] [rendered]
+chunk e1.js (e1) 49 bytes (javascript) 6.07 KiB (runtime) >{786}< [entry] [rendered]
  ./e1.js 49 bytes [built]
      entry ./e1 e1
-     + 8 hidden chunk modules
+     + 9 hidden chunk modules
 chunk c.js (c) 49 bytes <{128}> <{621}> >{786}< [rendered]
  ./module-c.js 49 bytes [built]
      import() ./module-c ./e2.js 1:0-47
      import() ./module-c ./module-b.js 1:0-47
-chunk e2.js (e2) 49 bytes (javascript) 5.45 KiB (runtime) >{459}< [entry] [rendered]
+chunk e2.js (e2) 49 bytes (javascript) 6.07 KiB (runtime) >{459}< [entry] [rendered]
  ./e2.js 49 bytes [built]
      entry ./e2 e2
-     + 8 hidden chunk modules
+     + 9 hidden chunk modules
 chunk a.js (a) 49 bytes <{257}> <{459}> >{128}< [rendered]
  ./module-a.js 49 bytes [built]
      import() ./module-a ./e1.js 1:0-47
@@ -1120,26 +1120,26 @@ Entrypoint e2 = e2.js
 chunk b.js (b) 179 bytes <{786}> >{459}< [rendered]
  ./module-b.js 179 bytes [built]
      import() ./module-b ./module-a.js 1:0-47
-chunk e1.js (e1) 119 bytes (javascript) 5.71 KiB (runtime) >{786}< >{892}< [entry] [rendered]
+chunk e1.js (e1) 119 bytes (javascript) 6.33 KiB (runtime) >{786}< >{892}< [entry] [rendered]
  ./e1.js 70 bytes [built]
      entry ./e1 e1
  ./module-x.js 49 bytes [built]
      harmony side effect evaluation ./module-x ./e1.js 1:0-20
      harmony side effect evaluation ./module-x ./e2.js 1:0-20
      import() ./module-x ./module-b.js 2:0-20
-     + 9 hidden chunk modules
+     + 10 hidden chunk modules
 chunk c.js (c) 49 bytes <{128}> <{621}> >{786}< [rendered]
  ./module-c.js 49 bytes [built]
      import() ./module-c ./e2.js 2:0-47
      import() ./module-c ./module-b.js 1:0-47
-chunk e2.js (e2) 119 bytes (javascript) 5.71 KiB (runtime) >{459}< >{892}< [entry] [rendered]
+chunk e2.js (e2) 119 bytes (javascript) 6.33 KiB (runtime) >{459}< >{892}< [entry] [rendered]
  ./e2.js 70 bytes [built]
      entry ./e2 e2
  ./module-x.js 49 bytes [built]
      harmony side effect evaluation ./module-x ./e1.js 1:0-20
      harmony side effect evaluation ./module-x ./e2.js 1:0-20
      import() ./module-x ./module-b.js 2:0-20
-     + 9 hidden chunk modules
+     + 10 hidden chunk modules
 chunk a.js (a) 49 bytes <{257}> <{459}> >{128}< [rendered]
  ./module-a.js 49 bytes [built]
      import() ./module-a ./e1.js 2:0-47
@@ -1170,9 +1170,9 @@ chunk id-equals-name_js0.js 1 bytes [rendered]
  ./id-equals-name.js 1 bytes [built]
 chunk id-equals-name_js_3.js 1 bytes [rendered]
  ./id-equals-name.js?3 1 bytes [built]
-chunk main.js (main) 639 bytes (javascript) 5.67 KiB (runtime) [entry] [rendered]
+chunk main.js (main) 639 bytes (javascript) 6.29 KiB (runtime) [entry] [rendered]
  ./index.js 639 bytes [built]
-     + 9 hidden root modules
+     + 10 hidden root modules
 chunk tree.js (tree) 43 bytes [rendered]
  ./tree/index.js 14 bytes [built]
      + 3 hidden dependent modules
@@ -1186,38 +1186,38 @@ chunk trees.js (trees) 71 bytes [rendered]
 exports[`StatsTestCases should print correct stats for immutable 1`] = `
 "                  Asset       Size
 459e878fcc68e6bc31b5.js  969 bytes  [emitted] [immutable]
-5795a077a79ef29458d2.js   10.3 KiB  [emitted] [immutable]  [name: main]"
+69a50874d426f5deb592.js   11.2 KiB  [emitted] [immutable]  [name: main]"
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
-"Hash: f104ca8423b75b3910da
+"Hash: c8b0e6fbef1efeb370a0
 Time: X ms
 Built at: 1970-04-20 12:42:42
    Asset       Size
   398.js  484 bytes  [emitted]
   544.js  484 bytes  [emitted]
   718.js  484 bytes  [emitted]
-entry.js   9.41 KiB  [emitted]  [name: entry]
+entry.js   10.3 KiB  [emitted]  [name: entry]
 Entrypoint entry = entry.js
 ./entry.js 450 bytes [built]
 ./templates lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ namespace object 160 bytes [optional] [built]
 ./templates/bar.js 38 bytes [optional] [built]
 ./templates/baz.js 38 bytes [optional] [built]
 ./templates/foo.js 38 bytes [optional] [built]
-    + 7 hidden modules"
+    + 8 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for import-weak 1`] = `
-"Hash: 9ca01d0b495f60b6f5d4
+"Hash: 81448951ed0122d32968
 Time: X ms
 Built at: 1970-04-20 12:42:42
    Asset       Size
   836.js  142 bytes  [emitted]
-entry.js     10 KiB  [emitted]  [name: entry]
+entry.js   10.9 KiB  [emitted]  [name: entry]
 Entrypoint entry = entry.js
 ./entry.js 120 bytes [built]
 ./modules/b.js 22 bytes [built]
-    + 9 hidden modules"
+    + 10 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for import-with-invalid-options-comments 1`] = `
@@ -1228,7 +1228,7 @@ exports[`StatsTestCases should print correct stats for import-with-invalid-optio
 ./chunk-b.js 27 bytes [built]
 ./chunk-c.js 27 bytes [built]
 ./chunk-d.js 27 bytes [built]
-    + 10 hidden modules
+    + 11 hidden modules
 
 WARNING in ./chunk.js 2:11-84
 Compilation error while processing magic comment(-s): /* webpackPrefetch: true, webpackChunkName: notGoingToCompileChunkName */: notGoingToCompileChunkName is not defined
@@ -1245,50 +1245,50 @@ Compilation error while processing magic comment(-s): /* webpackPrefetch: nope *
 `;
 
 exports[`StatsTestCases should print correct stats for issue-7577 1`] = `
-"Hash: 240afdff8e34e13bf7c474666e54b11156c90f60d38a80cc1def96682e31
+"Hash: 33a3220a29b5fda560f34aec678017926ec76be1f46e79b3e6758a66de27
 Child
-    Hash: 240afdff8e34e13bf7c4
+    Hash: 33a3220a29b5fda560f3
     Time: X ms
     Built at: 1970-04-20 12:42:42
                                      Asset       Size
         a-all-a_js-a0ca01d3da48ab4385f6.js  144 bytes  [emitted] [immutable]  [id hint: all]
             a-main-fa06855251b873131c2c.js  115 bytes  [emitted] [immutable]  [name: main]
-    a-runtime~main-b5b4901f5b6f6f6a4106.js   5.15 KiB  [emitted] [immutable]  [name: runtime~main]
-    Entrypoint main = a-runtime~main-b5b4901f5b6f6f6a4106.js a-all-a_js-a0ca01d3da48ab4385f6.js a-main-fa06855251b873131c2c.js
+    a-runtime~main-61d34efb43ba547b805a.js   6.99 KiB  [emitted] [immutable]  [name: runtime~main]
+    Entrypoint main = a-runtime~main-61d34efb43ba547b805a.js a-all-a_js-a0ca01d3da48ab4385f6.js a-main-fa06855251b873131c2c.js
     ./a.js 18 bytes [built]
-        + 2 hidden modules
+        + 3 hidden modules
 Child
-    Hash: 74666e54b11156c90f60
+    Hash: 4aec678017926ec76be1
     Time: X ms
     Built at: 1970-04-20 12:42:42
                                                        Asset       Size
                           b-all-b_js-50bf184dfe57dc2022a6.js  479 bytes  [emitted] [immutable]  [id hint: all]
                               b-main-ffc8dbdfb8f2c2b16817.js  148 bytes  [emitted] [immutable]  [name: main]
-                      b-runtime~main-12932c2c37401b6a0c84.js   6.08 KiB  [emitted] [immutable]  [name: runtime~main]
+                      b-runtime~main-50818ef54a7d5c56600f.js   7.92 KiB  [emitted] [immutable]  [name: runtime~main]
     b-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js  189 bytes  [emitted] [immutable]  [id hint: vendors]
-    Entrypoint main = b-runtime~main-12932c2c37401b6a0c84.js b-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js b-all-b_js-50bf184dfe57dc2022a6.js b-main-ffc8dbdfb8f2c2b16817.js
+    Entrypoint main = b-runtime~main-50818ef54a7d5c56600f.js b-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js b-all-b_js-50bf184dfe57dc2022a6.js b-main-ffc8dbdfb8f2c2b16817.js
     ./b.js 17 bytes [built]
     ./node_modules/vendor.js 23 bytes [built]
-        + 4 hidden modules
+        + 5 hidden modules
 Child
-    Hash: d38a80cc1def96682e31
+    Hash: f46e79b3e6758a66de27
     Time: X ms
     Built at: 1970-04-20 12:42:42
                                                        Asset       Size
                           c-all-b_js-50bf184dfe57dc2022a6.js  506 bytes  [emitted] [immutable]  [id hint: all]
                           c-all-c_js-6756694a5d280748f5a3.js  397 bytes  [emitted] [immutable]  [id hint: all]
                               c-main-cd09b1722e319798c3c4.js  607 bytes  [emitted] [immutable]  [name: main]
-                      c-runtime~main-22ab6f32a8e9bb9f113b.js   11.4 KiB  [emitted] [immutable]  [name: runtime~main]
+                      c-runtime~main-58d187960bc49d0ef943.js   12.3 KiB  [emitted] [immutable]  [name: runtime~main]
     c-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js  189 bytes  [emitted] [immutable]  [id hint: vendors]
-    Entrypoint main = c-runtime~main-22ab6f32a8e9bb9f113b.js c-all-c_js-6756694a5d280748f5a3.js c-main-cd09b1722e319798c3c4.js (prefetch: c-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js c-all-b_js-50bf184dfe57dc2022a6.js)
+    Entrypoint main = c-runtime~main-58d187960bc49d0ef943.js c-all-c_js-6756694a5d280748f5a3.js c-main-cd09b1722e319798c3c4.js (prefetch: c-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js c-all-b_js-50bf184dfe57dc2022a6.js)
     ./c.js 61 bytes [built]
     ./b.js 17 bytes [built]
     ./node_modules/vendor.js 23 bytes [built]
-        + 10 hidden modules"
+        + 11 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
-"Hash: 15b4b06d5bdcf1dbb3178839e7746418e3b43d364f987317c5f9ca9c6b86c4c3c120d98e5075e490
+"Hash: 15b4b06d5bdcf1dbb317350337dcf6696086d87bb7b68c6f5051c1b26ede7120f54e7daaa7f53530
 Child 1 chunks:
     Hash: 15b4b06d5bdcf1dbb317
     Time: X ms
@@ -1305,16 +1305,16 @@ Child 1 chunks:
      ./index.js 101 bytes [built]
          + 4 hidden chunk modules
 Child 2 chunks:
-    Hash: 8839e7746418e3b43d36
+    Hash: 350337dcf6696086d87b
     Time: X ms
     Built at: 1970-04-20 12:42:42
              Asset       Size
     459.bundle2.js  666 bytes  [emitted]  [name: c]
-        bundle2.js   9.61 KiB  [emitted]  [name: main]
+        bundle2.js   10.5 KiB  [emitted]  [name: main]
     Entrypoint main = bundle2.js
-    chunk bundle2.js (main) 101 bytes (javascript) 5.42 KiB (runtime) >{459}< [entry] [rendered]
+    chunk bundle2.js (main) 101 bytes (javascript) 6.04 KiB (runtime) >{459}< [entry] [rendered]
      ./index.js 101 bytes [built]
-         + 8 hidden chunk modules
+         + 9 hidden chunk modules
     chunk 459.bundle2.js (c) 118 bytes <{179}> <{459}> >{459}< [rendered]
      ./a.js 22 bytes [built]
      ./b.js 22 bytes [built]
@@ -1322,17 +1322,17 @@ Child 2 chunks:
      ./d.js 22 bytes [built]
      ./e.js 22 bytes [built]
 Child 3 chunks:
-    Hash: 4f987317c5f9ca9c6b86
+    Hash: b7b68c6f5051c1b26ede
     Time: X ms
     Built at: 1970-04-20 12:42:42
              Asset       Size
     459.bundle3.js  530 bytes  [emitted]  [name: c]
     524.bundle3.js  210 bytes  [emitted]
-        bundle3.js   9.61 KiB  [emitted]  [name: main]
+        bundle3.js   10.5 KiB  [emitted]  [name: main]
     Entrypoint main = bundle3.js
-    chunk bundle3.js (main) 101 bytes (javascript) 5.42 KiB (runtime) >{459}< [entry] [rendered]
+    chunk bundle3.js (main) 101 bytes (javascript) 6.04 KiB (runtime) >{459}< [entry] [rendered]
      ./index.js 101 bytes [built]
-         + 8 hidden chunk modules
+         + 9 hidden chunk modules
     chunk 459.bundle3.js (c) 74 bytes <{179}> >{524}< [rendered]
      ./a.js 22 bytes [built]
      ./b.js 22 bytes [built]
@@ -1341,18 +1341,18 @@ Child 3 chunks:
      ./d.js 22 bytes [built]
      ./e.js 22 bytes [built]
 Child 4 chunks:
-    Hash: c4c3c120d98e5075e490
+    Hash: 7120f54e7daaa7f53530
     Time: X ms
     Built at: 1970-04-20 12:42:42
              Asset       Size
     394.bundle4.js  210 bytes  [emitted]
     459.bundle4.js  394 bytes  [emitted]  [name: c]
     524.bundle4.js  210 bytes  [emitted]
-        bundle4.js   9.61 KiB  [emitted]  [name: main]
+        bundle4.js   10.5 KiB  [emitted]  [name: main]
     Entrypoint main = bundle4.js
-    chunk bundle4.js (main) 101 bytes (javascript) 5.42 KiB (runtime) >{394}< >{459}< [entry] [rendered]
+    chunk bundle4.js (main) 101 bytes (javascript) 6.04 KiB (runtime) >{394}< >{459}< [entry] [rendered]
      ./index.js 101 bytes [built]
-         + 8 hidden chunk modules
+         + 9 hidden chunk modules
     chunk 394.bundle4.js 44 bytes <{179}> [rendered]
      ./a.js 22 bytes [built]
      ./b.js 22 bytes [built]
@@ -1461,7 +1461,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
-"Hash: b528a0ccced767ccc2ed
+"Hash: 4c7d8af05b764dbbff57
 Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset       Size
@@ -1469,16 +1469,16 @@ Built at: 1970-04-20 12:42:42
   2.png     21 KiB  [emitted]  [name: (a, b)]
    a.js  753 bytes  [emitted]  [name: a]
    b.js  571 bytes  [emitted]  [name: b]
-main.js   8.01 KiB  [emitted]  [name: main]
+main.js   8.92 KiB  [emitted]  [name: main]
 Entrypoint main = main.js
 Chunk Group a = a.js (1.png 2.png)
 Chunk Group b = b.js (2.png)
 chunk b.js (b) 67 bytes [rendered]
  ./node_modules/a/2.png 49 bytes [built] [1 asset]
  ./node_modules/b/index.js 18 bytes [built]
-chunk main.js (main) 82 bytes (javascript) 4.47 KiB (runtime) [entry] [rendered]
+chunk main.js (main) 82 bytes (javascript) 5.09 KiB (runtime) [entry] [rendered]
  ./index.js 82 bytes [built]
-     + 6 hidden chunk modules
+     + 7 hidden chunk modules
 chunk a.js (a) 139 bytes [rendered]
  ./node_modules/a/2.png 49 bytes [built] [1 asset]
  ./node_modules/a/index.js + 1 modules 90 bytes [built] [1 asset]
@@ -1486,7 +1486,7 @@ chunk a.js (a) 139 bytes [rendered]
 ./node_modules/a/index.js + 1 modules 90 bytes [built] [1 asset]
 ./node_modules/b/index.js 18 bytes [built]
 ./node_modules/a/2.png 49 bytes [built] [1 asset]
-    + 6 hidden modules"
+    + 7 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for module-deduplication 1`] = `
@@ -1497,42 +1497,42 @@ exports[`StatsTestCases should print correct stats for module-deduplication 1`] 
 593.js  681 bytes  [emitted]
 716.js  734 bytes  [emitted]
 923.js  734 bytes  [emitted]
- e1.js   10.1 KiB  [emitted]  [name: e1]
- e2.js   10.1 KiB  [emitted]  [name: e2]
- e3.js   10.1 KiB  [emitted]  [name: e3]
+ e1.js     11 KiB  [emitted]  [name: e1]
+ e2.js     11 KiB  [emitted]  [name: e2]
+ e3.js     11 KiB  [emitted]  [name: e3]
 Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
 Entrypoint e3 = e3.js
 chunk 114.js 28 bytes [rendered]
  ./async1.js 28 bytes [built]
-chunk e3.js (e3) 152 bytes (javascript) 5 KiB (runtime) [entry] [rendered]
+chunk e3.js (e3) 152 bytes (javascript) 5.63 KiB (runtime) [entry] [rendered]
  ./a.js 9 bytes [built]
  ./b.js 9 bytes [built]
  ./e3.js 116 bytes [built]
  ./g.js 9 bytes [built]
  ./h.js 9 bytes [built]
-     + 8 hidden chunk modules
+     + 9 hidden chunk modules
 chunk 172.js 28 bytes [rendered]
  ./async2.js 28 bytes [built]
-chunk e1.js (e1) 152 bytes (javascript) 5 KiB (runtime) [entry] [rendered]
+chunk e1.js (e1) 152 bytes (javascript) 5.63 KiB (runtime) [entry] [rendered]
  ./a.js 9 bytes [built]
  ./b.js 9 bytes [built]
  ./c.js 9 bytes [built]
  ./d.js 9 bytes [built]
  ./e1.js 116 bytes [built]
-     + 8 hidden chunk modules
+     + 9 hidden chunk modules
 chunk 326.js 37 bytes [rendered]
  ./async3.js 28 bytes [built]
  ./h.js 9 bytes [built]
 chunk 593.js 28 bytes [rendered]
  ./async3.js 28 bytes [built]
-chunk e2.js (e2) 152 bytes (javascript) 5 KiB (runtime) [entry] [rendered]
+chunk e2.js (e2) 152 bytes (javascript) 5.63 KiB (runtime) [entry] [rendered]
  ./a.js 9 bytes [built]
  ./b.js 9 bytes [built]
  ./e.js 9 bytes [built]
  ./e2.js 116 bytes [built]
  ./f.js 9 bytes [built]
-     + 8 hidden chunk modules
+     + 9 hidden chunk modules
 chunk 716.js 37 bytes [rendered]
  ./async2.js 28 bytes [built]
  ./f.js 9 bytes [built]
@@ -1546,39 +1546,39 @@ exports[`StatsTestCases should print correct stats for module-deduplication-name
 async1.js  839 bytes  [emitted]  [name: async1]
 async2.js  839 bytes  [emitted]  [name: async2]
 async3.js  839 bytes  [emitted]  [name: async3]
-    e1.js   9.97 KiB  [emitted]  [name: e1]
-    e2.js   9.97 KiB  [emitted]  [name: e2]
-    e3.js   9.97 KiB  [emitted]  [name: e3]
+    e1.js   10.9 KiB  [emitted]  [name: e1]
+    e2.js   10.9 KiB  [emitted]  [name: e2]
+    e3.js   10.9 KiB  [emitted]  [name: e3]
 Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
 Entrypoint e3 = e3.js
-chunk e3.js (e3) 144 bytes (javascript) 5.05 KiB (runtime) [entry] [rendered]
+chunk e3.js (e3) 144 bytes (javascript) 5.67 KiB (runtime) [entry] [rendered]
  ./a.js 9 bytes [built]
  ./b.js 9 bytes [built]
  ./e3.js 108 bytes [built]
  ./g.js 9 bytes [built]
  ./h.js 9 bytes [built]
-     + 8 hidden chunk modules
-chunk e1.js (e1) 144 bytes (javascript) 5.05 KiB (runtime) [entry] [rendered]
+     + 9 hidden chunk modules
+chunk e1.js (e1) 144 bytes (javascript) 5.67 KiB (runtime) [entry] [rendered]
  ./a.js 9 bytes [built]
  ./b.js 9 bytes [built]
  ./c.js 9 bytes [built]
  ./d.js 9 bytes [built]
  ./e1.js 108 bytes [built]
-     + 8 hidden chunk modules
+     + 9 hidden chunk modules
 chunk async1.js (async1) 89 bytes [rendered]
  ./async1.js 80 bytes [built]
  ./d.js 9 bytes [built]
 chunk async3.js (async3) 89 bytes [rendered]
  ./async3.js 80 bytes [built]
  ./h.js 9 bytes [built]
-chunk e2.js (e2) 144 bytes (javascript) 5.05 KiB (runtime) [entry] [rendered]
+chunk e2.js (e2) 144 bytes (javascript) 5.67 KiB (runtime) [entry] [rendered]
  ./a.js 9 bytes [built]
  ./b.js 9 bytes [built]
  ./e.js 9 bytes [built]
  ./e2.js 108 bytes [built]
  ./f.js 9 bytes [built]
-     + 8 hidden chunk modules
+     + 9 hidden chunk modules
 chunk async2.js (async2) 89 bytes [rendered]
  ./async2.js 80 bytes [built]
  ./f.js 9 bytes [built]"
@@ -1685,10 +1685,10 @@ exports[`StatsTestCases should print correct stats for named-chunk-groups 1`] = 
         > ./a ./index.js 1:0-47
         > ./b ./index.js 2:0-47
      ./shared.js 133 bytes [built]
-    chunk a-main.js (main) 146 bytes (javascript) 5.08 KiB (runtime) [entry] [rendered]
+    chunk a-main.js (main) 146 bytes (javascript) 5.71 KiB (runtime) [entry] [rendered]
         > ./ main
      ./index.js 146 bytes [built]
-         + 8 hidden root modules
+         + 9 hidden root modules
     chunk a-vendors.js (vendors) (id hint: vendors) 40 bytes [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./c ./index.js 3:0-47
      ./node_modules/x.js 20 bytes [built]
@@ -1711,10 +1711,10 @@ Child
         > ./a ./index.js 1:0-47
         > ./b ./index.js 2:0-47
      ./shared.js 133 bytes [built]
-    chunk b-main.js (main) 146 bytes (javascript) 5.08 KiB (runtime) [entry] [rendered]
+    chunk b-main.js (main) 146 bytes (javascript) 5.71 KiB (runtime) [entry] [rendered]
         > ./ main
      ./index.js 146 bytes [built]
-         + 8 hidden root modules
+         + 9 hidden root modules
     chunk b-vendors.js (vendors) (id hint: vendors) 40 bytes [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./c ./index.js 3:0-47
      ./node_modules/x.js 20 bytes [built]
@@ -1731,33 +1731,33 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for named-chunks-plugin 1`] = `
-"Hash: 21c34fccc4360e29b5db
+"Hash: 2baae4fb49be04307d27
 Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset       Size
- entry.js   5.46 KiB  [emitted]  [name: entry]
+ entry.js    7.3 KiB  [emitted]  [name: entry]
 vendor.js  241 bytes  [emitted]  [name: vendor] [id hint: vendor]
 Entrypoint entry = vendor.js entry.js
 ./entry.js 72 bytes [built]
 ./modules/a.js 22 bytes [built]
 ./modules/b.js 22 bytes [built]
 ./modules/c.js 22 bytes [built]
-    + 2 hidden modules"
+    + 3 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for named-chunks-plugin-async 1`] = `
-"Hash: 13f3946adc937dfdcf61
+"Hash: 67271b5037c42a45943c
 Time: X ms
 Built at: 1970-04-20 12:42:42
           Asset       Size
-       entry.js   9.48 KiB  [emitted]  [name: entry]
+       entry.js   10.4 KiB  [emitted]  [name: entry]
 modules_a_js.js  316 bytes  [emitted]
 modules_b_js.js  153 bytes  [emitted]
 Entrypoint entry = entry.js
 ./entry.js 47 bytes [built]
 ./modules/a.js 37 bytes [built]
 ./modules/b.js 22 bytes [built]
-    + 8 hidden modules"
+    + 9 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for no-emit-on-errors-plugin-with-child-error 1`] = `
@@ -1775,7 +1775,7 @@ You can also set it to 'none' to disable any default behavior. Learn more: https
 `;
 
 exports[`StatsTestCases should print correct stats for optimize-chunks 1`] = `
-"Hash: fa01130d44bca49cd773
+"Hash: f3357e47f51554f1e905
 Time: X ms
 Built at: 1970-04-20 12:42:42
             Asset       Size        Chunks
@@ -1786,17 +1786,17 @@ Built at: 1970-04-20 12:42:42
           cir1.js  334 bytes         {592}  [emitted]  [name: cir1]
 cir2 from cir1.js  378 bytes  {288}, {289}  [emitted]  [name: cir2 from cir1]
           cir2.js  334 bytes         {289}  [emitted]  [name: cir2]
-          main.js   8.51 KiB         {179}  [emitted]  [name: main]
+          main.js   9.42 KiB         {179}  [emitted]  [name: main]
 Entrypoint main = main.js
 chunk {90} ab.js (ab) 2 bytes <{179}> >{753}< [rendered]
     > [10] ./index.js 1:0-6:8
  [839] ./modules/a.js 1 bytes {90} {374} [built]
  [836] ./modules/b.js 1 bytes {90} {374} [built]
-chunk {179} main.js (main) 524 bytes (javascript) 4.28 KiB (runtime) >{90}< >{289}< >{374}< >{592}< [entry] [rendered]
+chunk {179} main.js (main) 524 bytes (javascript) 4.9 KiB (runtime) >{90}< >{289}< >{374}< >{592}< [entry] [rendered]
     > ./index main
   [10] ./index.js 523 bytes {179} [built]
  [544] ./modules/f.js 1 bytes {179} [built]
-     + 5 hidden chunk modules
+     + 6 hidden chunk modules
 chunk {284} chunk.js (chunk) 2 bytes <{374}> <{753}> [rendered]
     > [10] ./index.js 3:2-4:13
     > [10] ./index.js 9:1-10:12
@@ -1954,7 +1954,7 @@ Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
  <CLR=32,BOLD>460.js</CLR>  324 bytes  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>524.js</CLR>  210 bytes  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>996.js</CLR>  142 bytes  <CLR=32,BOLD>[emitted]</CLR>
-<CLR=32,BOLD>main.js</CLR>    301 KiB  <CLR=32,BOLD>[emitted]</CLR>  [name: main]
+<CLR=32,BOLD>main.js</CLR>    302 KiB  <CLR=32,BOLD>[emitted]</CLR>  [name: main]
 Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 <CLR=BOLD>./index.js</CLR> 52 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./a.js</CLR> 293 KiB <CLR=32,BOLD>[built]</CLR>
@@ -1962,7 +1962,7 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 <CLR=BOLD>./c.js</CLR> 54 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./d.js</CLR> 22 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./e.js</CLR> 22 bytes <CLR=32,BOLD>[built]</CLR>
-    + 5 hidden modules"
+    + 6 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for performance-error 1`] = `
@@ -1972,7 +1972,7 @@ Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
  <CLR=32,BOLD>460.js</CLR>  324 bytes  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>524.js</CLR>  210 bytes  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>996.js</CLR>  142 bytes  <CLR=32,BOLD>[emitted]</CLR>
-<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  [name: main]
+<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>302 KiB</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  [name: main]
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 <CLR=BOLD>./index.js</CLR> 52 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./a.js</CLR> 293 KiB <CLR=32,BOLD>[built]</CLR>
@@ -1980,16 +1980,16 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 <CLR=BOLD>./c.js</CLR> 54 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./d.js</CLR> 22 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./e.js</CLR> 22 bytes <CLR=32,BOLD>[built]</CLR>
-    + 5 hidden modules
+    + 6 hidden modules
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  main.js (301 KiB)</CLR>
+  main.js (302 KiB)</CLR>
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (301 KiB)
+  main (302 KiB)
       main.js
 </CLR>
 "
@@ -2034,7 +2034,7 @@ Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
  <CLR=32,BOLD>460.js</CLR>  324 bytes  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>524.js</CLR>  210 bytes  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>996.js</CLR>  142 bytes  <CLR=32,BOLD>[emitted]</CLR>
-<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  [name: main]
+<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>302 KiB</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  [name: main]
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 <CLR=BOLD>./index.js</CLR> 52 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./a.js</CLR> 293 KiB <CLR=32,BOLD>[built]</CLR>
@@ -2042,7 +2042,7 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 <CLR=BOLD>./c.js</CLR> 54 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./d.js</CLR> 22 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./e.js</CLR> 22 bytes <CLR=32,BOLD>[built]</CLR>
-    + 5 hidden modules"
+    + 6 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for performance-oversize-limit-error 1`] = `
@@ -2081,14 +2081,14 @@ exports[`StatsTestCases should print correct stats for prefetch 1`] = `
 "         Asset       Size
       inner.js  114 bytes  [emitted]  [name: inner]
      inner2.js  154 bytes  [emitted]  [name: inner2]
-       main.js   12.9 KiB  [emitted]  [name: main]
+       main.js   13.8 KiB  [emitted]  [name: main]
      normal.js  113 bytes  [emitted]  [name: normal]
  prefetched.js  557 bytes  [emitted]  [name: prefetched]
 prefetched2.js  114 bytes  [emitted]  [name: prefetched2]
 prefetched3.js  114 bytes  [emitted]  [name: prefetched3]
 Entrypoint main = main.js (prefetch: prefetched2.js prefetched.js prefetched3.js)
 chunk normal.js (normal) 1 bytes <{179}> [rendered]
-chunk main.js (main) 436 bytes (javascript) 6.84 KiB (runtime) >{30}< >{220}< >{379}< >{505}< (prefetch: {379} {505} {220}) [entry] [rendered]
+chunk main.js (main) 436 bytes (javascript) 7.46 KiB (runtime) >{30}< >{220}< >{379}< >{505}< (prefetch: {379} {505} {220}) [entry] [rendered]
 chunk prefetched3.js (prefetched3) 1 bytes <{179}> [rendered]
 chunk prefetched2.js (prefetched2) 1 bytes <{179}> [rendered]
 chunk prefetched.js (prefetched) 228 bytes <{179}> >{641}< >{746}< (prefetch: {641} {746}) [rendered]
@@ -2103,7 +2103,7 @@ chunk c1.js (c1) 1 bytes <{459}> [rendered]
 chunk b.js (b) 203 bytes <{179}> >{132}< >{751}< >{978}< (prefetch: {751} {132}) (preload: {978}) [rendered]
 chunk b3.js (b3) 1 bytes <{128}> [rendered]
 chunk a2.js (a2) 1 bytes <{786}> [rendered]
-chunk main.js (main) 195 bytes (javascript) 7.51 KiB (runtime) >{128}< >{459}< >{786}< (prefetch: {786} {128} {459}) [entry] [rendered]
+chunk main.js (main) 195 bytes (javascript) 8.13 KiB (runtime) >{128}< >{459}< >{786}< (prefetch: {786} {128} {459}) [entry] [rendered]
 chunk c.js (c) 134 bytes <{179}> >{3}< >{76}< (preload: {76} {3}) [rendered]
 chunk b1.js (b1) 1 bytes <{128}> [rendered]
 chunk a.js (a) 136 bytes <{179}> >{74}< >{178}< (prefetch: {74} {178}) [rendered]
@@ -2114,14 +2114,14 @@ exports[`StatsTestCases should print correct stats for preload 1`] = `
 "        Asset       Size
      inner.js  114 bytes  [emitted]  [name: inner]
     inner2.js  154 bytes  [emitted]  [name: inner2]
-      main.js   12.2 KiB  [emitted]  [name: main]
+      main.js   13.1 KiB  [emitted]  [name: main]
     normal.js  113 bytes  [emitted]  [name: normal]
  preloaded.js  557 bytes  [emitted]  [name: preloaded]
 preloaded2.js  113 bytes  [emitted]  [name: preloaded2]
 preloaded3.js  112 bytes  [emitted]  [name: preloaded3]
 Entrypoint main = main.js (preload: preloaded2.js preloaded.js preloaded3.js)
 chunk normal.js (normal) 1 bytes [rendered]
-chunk main.js (main) 424 bytes (javascript) 6.65 KiB (runtime) (preload: {363} {851} {355}) [entry] [rendered]
+chunk main.js (main) 424 bytes (javascript) 7.28 KiB (runtime) (preload: {363} {851} {355}) [entry] [rendered]
 chunk preloaded3.js (preloaded3) 1 bytes [rendered]
 chunk preloaded2.js (preloaded2) 1 bytes [rendered]
 chunk inner2.js (inner2) 2 bytes [rendered]
@@ -2138,7 +2138,7 @@ exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
   <+> [LogTestPlugin] Collaped group
       [LogTestPlugin] Log
     [LogTestPlugin] End
-Hash: 925032eb3197675c4411
+Hash: 101410f4733915b43483
 Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
@@ -2146,9 +2146,9 @@ PublicPath: (none)
  460.js  324 bytes   {460}  [emitted]
  524.js  210 bytes   {524}  [emitted]
  996.js  142 bytes   {996}  [emitted]
-main.js    7.7 KiB   {179}  [emitted]  [name: main]
+main.js   8.61 KiB   {179}  [emitted]  [name: main]
 Entrypoint main = main.js
-chunk {179} main.js (main) 73 bytes (javascript) 4.18 KiB (runtime) >{460}< >{996}< [entry] [rendered]
+chunk {179} main.js (main) 73 bytes (javascript) 4.8 KiB (runtime) >{460}< >{996}< [entry] [rendered]
     > ./index main
 chunk {460} 460.js 54 bytes <{179}> >{524}< [rendered]
     > ./c [10] ./index.js 3:0-16
@@ -2178,7 +2178,10 @@ webpack/runtime/get javascript chunk filename 167 bytes {179} [runtime]
 webpack/runtime/hasOwnProperty shorthand 86 bytes {179} [runtime]
       [no exports]
       [used exports unknown]
-webpack/runtime/jsonp chunk loading 3.59 KiB {179} [runtime]
+webpack/runtime/jsonp chunk loading 2.93 KiB {179} [runtime]
+      [no exports]
+      [used exports unknown]
+webpack/runtime/load script 1.28 KiB {179} [runtime]
       [no exports]
       [used exports unknown]
 webpack/runtime/publicPath 27 bytes {179} [runtime]
@@ -2224,7 +2227,7 @@ LOG from LogTestPlugin
 exports[`StatsTestCases should print correct stats for preset-minimal 1`] = `
 "<e> [LogTestPlugin] Error
 <w> [LogTestPlugin] Warning
-   11 modules
+   12 modules
 
 LOG from LogTestPlugin
 <e> Error
@@ -2258,14 +2261,14 @@ exports[`StatsTestCases should print correct stats for preset-normal 1`] = `
 "<e> [LogTestPlugin] Error
 <w> [LogTestPlugin] Warning
 <i> [LogTestPlugin] Info
-Hash: 925032eb3197675c4411
+Hash: 101410f4733915b43483
 Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset       Size
  460.js  324 bytes  [emitted]
  524.js  210 bytes  [emitted]
  996.js  142 bytes  [emitted]
-main.js    7.7 KiB  [emitted]  [name: main]
+main.js   8.61 KiB  [emitted]  [name: main]
 Entrypoint main = main.js
 ./index.js 51 bytes [built]
 ./a.js 22 bytes [built]
@@ -2273,7 +2276,7 @@ Entrypoint main = main.js
 ./c.js 54 bytes [built]
 ./d.js 22 bytes [built]
 ./e.js 22 bytes [built]
-    + 5 hidden modules
+    + 6 hidden modules
 
 LOG from LogTestPlugin
 <e> Error
@@ -2290,7 +2293,7 @@ Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
  <CLR=32,BOLD>460.js</CLR>  324 bytes  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>524.js</CLR>  210 bytes  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>996.js</CLR>  142 bytes  <CLR=32,BOLD>[emitted]</CLR>
-<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  [name: main]
+<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>302 KiB</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  [name: main]
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 <CLR=BOLD>./index.js</CLR> 52 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./a.js</CLR> 293 KiB <CLR=32,BOLD>[built]</CLR>
@@ -2298,16 +2301,16 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 <CLR=BOLD>./c.js</CLR> 54 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./d.js</CLR> 22 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./e.js</CLR> 22 bytes <CLR=32,BOLD>[built]</CLR>
-    + 5 hidden modules
+    + 6 hidden modules
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  main.js (301 KiB)</CLR>
+  main.js (302 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (301 KiB)
+  main (302 KiB)
       main.js
 </CLR>
 "
@@ -2323,7 +2326,7 @@ Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
  <CLR=32,BOLD>524.js.map</CLR>  218 bytes  <CLR=32,BOLD>[emitted]</CLR> <CLR=32,BOLD>[dev]</CLR>
      <CLR=32,BOLD>996.js</CLR>  174 bytes  <CLR=32,BOLD>[emitted]</CLR>
  <CLR=32,BOLD>996.js.map</CLR>  158 bytes  <CLR=32,BOLD>[emitted]</CLR> <CLR=32,BOLD>[dev]</CLR>
-    <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>  <CLR=32,BOLD>[emitted]</CLR>        <CLR=33,BOLD>[big]</CLR>  [name: main]
+    <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>302 KiB</CLR>  <CLR=32,BOLD>[emitted]</CLR>        <CLR=33,BOLD>[big]</CLR>  [name: main]
 <CLR=32,BOLD>main.js.map</CLR>   1.72 MiB  <CLR=32,BOLD>[emitted]</CLR> <CLR=32,BOLD>[dev]</CLR>         [name: (main)]
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR> (<CLR=32,BOLD>main.js.map</CLR>)
 <CLR=BOLD>./index.js</CLR> 52 bytes <CLR=32,BOLD>[built]</CLR>
@@ -2332,16 +2335,16 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 <CLR=BOLD>./c.js</CLR> 54 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./d.js</CLR> 22 bytes <CLR=32,BOLD>[built]</CLR>
 <CLR=BOLD>./e.js</CLR> 22 bytes <CLR=32,BOLD>[built]</CLR>
-    + 5 hidden modules
+    + 6 hidden modules
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  main.js (301 KiB)</CLR>
+  main.js (302 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (301 KiB)
+  main (302 KiB)
       main.js
 </CLR>
 "
@@ -2359,7 +2362,7 @@ exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
           [LogTestPlugin] Inner inner message
       [LogTestPlugin] Log
     [LogTestPlugin] End
-Hash: 925032eb3197675c4411
+Hash: 101410f4733915b43483
 Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
@@ -2367,9 +2370,9 @@ PublicPath: (none)
  460.js  324 bytes   {460}  [emitted]
  524.js  210 bytes   {524}  [emitted]
  996.js  142 bytes   {996}  [emitted]
-main.js    7.7 KiB   {179}  [emitted]  [name: main]
+main.js   8.61 KiB   {179}  [emitted]  [name: main]
 Entrypoint main = main.js
-chunk {179} main.js (main) 73 bytes (javascript) 4.18 KiB (runtime) >{460}< >{996}< [entry] [rendered]
+chunk {179} main.js (main) 73 bytes (javascript) 4.8 KiB (runtime) >{460}< >{996}< [entry] [rendered]
     > ./index main
  [847] ./a.js 22 bytes {179} [depth 1] [built]
        ModuleConcatenation bailout: Module is not an ECMAScript module
@@ -2390,7 +2393,10 @@ chunk {179} main.js (main) 73 bytes (javascript) 4.18 KiB (runtime) >{460}< >{99
  webpack/runtime/hasOwnProperty shorthand 86 bytes {179} [runtime]
        [no exports]
        [used exports unknown]
- webpack/runtime/jsonp chunk loading 3.59 KiB {179} [runtime]
+ webpack/runtime/jsonp chunk loading 2.93 KiB {179} [runtime]
+       [no exports]
+       [used exports unknown]
+ webpack/runtime/load script 1.28 KiB {179} [runtime]
        [no exports]
        [used exports unknown]
  webpack/runtime/publicPath 27 bytes {179} [runtime]
@@ -2438,6 +2444,7 @@ LOG from LogTestPlugin
 
 LOG from webpack.Compiler
 <t> make hook: X ms
+<t> finish make hook: X ms
 <t> finish compilation: X ms
 <t> seal compilation: X ms
 <t> afterCompile hook: X ms
@@ -2570,18 +2577,18 @@ exports[`StatsTestCases should print correct stats for runtime-chunk-integration
                  Asset       Size
         without-505.js   1.22 KiB  [emitted]
       without-main1.js  601 bytes  [emitted]  [name: main1]
-    without-runtime.js   9.96 KiB  [emitted]  [name: runtime]
+    without-runtime.js   10.9 KiB  [emitted]  [name: runtime]
     Entrypoint main1 = without-runtime.js without-main1.js
     ./main1.js 66 bytes [built]
     ./b.js 20 bytes [built]
     ./c.js 20 bytes [built]
     ./d.js 20 bytes [built]
-        + 7 hidden modules
+        + 8 hidden modules
 Child manifest is named entry:
                Asset       Size
          with-505.js   1.22 KiB  [emitted]
        with-main1.js  601 bytes  [emitted]  [name: main1]
-    with-manifest.js   10.1 KiB  [emitted]  [name: manifest]
+    with-manifest.js     11 KiB  [emitted]  [name: manifest]
     Entrypoint main1 = with-manifest.js with-main1.js
     Entrypoint manifest = with-manifest.js
     ./main1.js 66 bytes [built]
@@ -2589,7 +2596,7 @@ Child manifest is named entry:
     ./b.js 20 bytes [built]
     ./c.js 20 bytes [built]
     ./d.js 20 bytes [built]
-        + 7 hidden modules"
+        + 8 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for runtime-chunk-issue-7382 1`] = `
@@ -2603,7 +2610,7 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: c710798c836957d64814
+"Hash: 5cf63466e21e9b9fec72
 Time: X ms
 Built at: 1970-04-20 12:42:42
 Entrypoint index = index.js
@@ -2629,13 +2636,13 @@ Entrypoint entry = entry.js
     ModuleConcatenation bailout: Cannot concat with external \\"external\\" (<- Module is not an ECMAScript module)
 external \\"external\\" 42 bytes [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
-    + 8 hidden modules"
+    + 9 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Hash: 0889473011d0255191769306a1593cdfa11fe6c7
+"Hash: 492e43c2a9a673b6e5ed4a763c05e384dba1e223
 Child
-    Hash: 0889473011d025519176
+    Hash: 492e43c2a9a673b6e5ed
     Time: X ms
     Built at: 1970-04-20 12:42:42
     Entrypoint first = a-vendor.js a-first.js
@@ -2651,9 +2658,9 @@ Child
     ./common2.js 25 bytes [built]
     ./common_lazy.js 25 bytes [built]
     ./common_lazy_shared.js 25 bytes [built]
-        + 12 hidden modules
+        + 14 hidden modules
 Child
-    Hash: 9306a1593cdfa11fe6c7
+    Hash: 4a763c05e384dba1e223
     Time: X ms
     Built at: 1970-04-20 12:42:42
     Entrypoint first = b-vendor.js b-first.js
@@ -2676,16 +2683,16 @@ Child
         ModuleConcatenation bailout: Cannot concat with ./common_lazy_shared.js (<- Module is referenced from different chunks by these modules: ./lazy_first.js, ./lazy_second.js, ./lazy_shared.js)
     ./common_lazy.js 25 bytes [built]
     ./common_lazy_shared.js 25 bytes [built]
-        + 12 hidden modules"
+        + 14 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
-"Hash: 62cf5103264a5d225396
+"Hash: 9d38980950c2a8116e28
 Time: X ms
 Built at: 1970-04-20 12:42:42
   Asset       Size
    1.js  642 bytes  [emitted]
-main.js   9.75 KiB  [emitted]  [name: main]
+main.js   10.7 KiB  [emitted]  [name: main]
 Entrypoint main = main.js
 ./main.js + 1 modules 231 bytes [built]
     [no exports used]
@@ -2727,7 +2734,7 @@ Entrypoint main = main.js
 ./components/src/CompC/index.js 34 bytes [orphan] [built]
     [module unused]
     [inactive] harmony side effect evaluation ./CompC ./components/src/index.js 2:0-43
-    + 7 hidden modules"
+    + 8 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-optimization 1`] = `
@@ -2854,10 +2861,10 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
     chunk default/async-g.js (async-g) 34 bytes <{282}> <{767}> <{786}> <{794}> <{954}> ={568}= [rendered]
         > ./g ./a.js 6:0-47
      ./g.js 34 bytes [built]
-    chunk default/main.js (main) 147 bytes (javascript) 4.83 KiB (runtime) >{282}< >{334}< >{383}< >{568}< >{767}< >{769}< >{794}< >{954}< [entry] [rendered]
+    chunk default/main.js (main) 147 bytes (javascript) 5.46 KiB (runtime) >{282}< >{334}< >{383}< >{568}< >{767}< >{769}< >{794}< >{954}< [entry] [rendered]
         > ./ main
      ./index.js 147 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk default/282.js (id hint: vendors) 20 bytes <{179}> ={334}= ={383}= ={568}= ={767}= ={769}= ={794}= ={954}= >{137}< >{568}< [rendered] split chunk (cache group: defaultVendors)
         > ./a ./index.js 1:0-47
         > ./b ./index.js 2:0-47
@@ -2887,10 +2894,10 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
     chunk default/769.js (id hint: vendors) 20 bytes <{179}> ={282}= ={383}= ={568}= ={767}= [rendered] split chunk (cache group: defaultVendors)
         > ./c ./index.js 3:0-47
      ./node_modules/z.js 20 bytes [built]
-    chunk default/a.js (a) 216 bytes (javascript) 4.82 KiB (runtime) >{137}< >{568}< [entry] [rendered]
+    chunk default/a.js (a) 216 bytes (javascript) 5.44 KiB (runtime) >{137}< >{568}< [entry] [rendered]
         > ./a a
      ./a.js + 1 modules 156 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
          + 3 hidden dependent modules
     chunk default/async-a.js (async-a) 156 bytes <{179}> ={282}= ={767}= ={954}= >{137}< >{568}< [rendered]
         > ./a ./index.js 1:0-47
@@ -2904,18 +2911,18 @@ Child all-chunks:
     Entrypoint a = all-chunks/282.js all-chunks/954.js all-chunks/767.js all-chunks/a.js
     Entrypoint b = all-chunks/282.js all-chunks/954.js all-chunks/767.js all-chunks/b.js
     Entrypoint c = all-chunks/282.js all-chunks/769.js all-chunks/767.js all-chunks/c.js
-    chunk all-chunks/b.js (b) 92 bytes (javascript) 3.19 KiB (runtime) ={282}= ={767}= ={954}= [entry] [rendered]
+    chunk all-chunks/b.js (b) 92 bytes (javascript) 4.47 KiB (runtime) ={282}= ={767}= ={954}= [entry] [rendered]
         > ./b b
      ./b.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 1 hidden dependent module
     chunk all-chunks/async-g.js (async-g) 34 bytes <{282}> <{767}> <{786}> <{794}> <{954}> ={568}= [rendered]
         > ./g ./a.js 6:0-47
      ./g.js 34 bytes [built]
-    chunk all-chunks/main.js (main) 147 bytes (javascript) 4.84 KiB (runtime) >{282}< >{334}< >{383}< >{568}< >{767}< >{769}< >{794}< >{954}< [entry] [rendered]
+    chunk all-chunks/main.js (main) 147 bytes (javascript) 5.46 KiB (runtime) >{282}< >{334}< >{383}< >{568}< >{767}< >{769}< >{794}< >{954}< [entry] [rendered]
         > ./ main
      ./index.js 147 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk all-chunks/282.js (id hint: vendors) 20 bytes <{179}> ={128}= ={334}= ={383}= ={459}= ={568}= ={767}= ={769}= ={786}= ={794}= ={954}= >{137}< >{568}< [initial] [rendered] split chunk (cache group: defaultVendors)
         > ./a ./index.js 1:0-47
         > ./b ./index.js 2:0-47
@@ -2930,10 +2937,10 @@ Child all-chunks:
     chunk all-chunks/async-c.js (async-c) 72 bytes <{179}> ={282}= ={568}= ={767}= ={769}= [rendered]
         > ./c ./index.js 3:0-47
      ./c.js 72 bytes [built]
-    chunk all-chunks/c.js (c) 92 bytes (javascript) 3.19 KiB (runtime) ={282}= ={767}= ={769}= [entry] [rendered]
+    chunk all-chunks/c.js (c) 92 bytes (javascript) 4.47 KiB (runtime) ={282}= ={767}= ={769}= [entry] [rendered]
         > ./c c
      ./c.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 1 hidden dependent module
     chunk all-chunks/568.js 20 bytes <{179}> <{282}> <{767}> <{786}> <{794}> <{954}> ={137}= ={282}= ={334}= ={383}= ={767}= ={769}= ={954}= [rendered] split chunk (cache group: default)
         > ./b ./index.js 2:0-47
@@ -2952,10 +2959,10 @@ Child all-chunks:
         > ./c ./index.js 3:0-47
         > ./c c
      ./node_modules/z.js 20 bytes [built]
-    chunk all-chunks/a.js (a) 156 bytes (javascript) 5.98 KiB (runtime) ={282}= ={767}= ={954}= >{137}< >{568}< [entry] [rendered]
+    chunk all-chunks/a.js (a) 156 bytes (javascript) 6.61 KiB (runtime) ={282}= ={767}= ={954}= >{137}< >{568}< [entry] [rendered]
         > ./a a
      ./a.js + 1 modules 156 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk all-chunks/async-a.js (async-a) 156 bytes <{179}> ={282}= ={767}= ={954}= >{137}< >{568}< [rendered]
         > ./a ./index.js 1:0-47
      ./a.js + 1 modules 156 bytes [built]
@@ -2970,22 +2977,22 @@ Child manual:
     Entrypoint a = manual/vendors.js manual/a.js
     Entrypoint b = manual/vendors.js manual/b.js
     Entrypoint c = manual/vendors.js manual/c.js
-    chunk manual/b.js (b) 112 bytes (javascript) 3.21 KiB (runtime) ={216}= [entry] [rendered]
+    chunk manual/b.js (b) 112 bytes (javascript) 4.49 KiB (runtime) ={216}= [entry] [rendered]
         > ./b b
         > x b
         > y b
         > z b
      ./b.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 2 hidden dependent modules
     chunk manual/async-g.js (async-g) 54 bytes <{216}> <{786}> <{794}> [rendered]
         > ./g ./a.js 6:0-47
      ./g.js 34 bytes [built]
          + 1 hidden dependent module
-    chunk manual/main.js (main) 147 bytes (javascript) 4.84 KiB (runtime) >{216}< >{334}< >{383}< >{794}< [entry] [rendered]
+    chunk manual/main.js (main) 147 bytes (javascript) 5.46 KiB (runtime) >{216}< >{334}< >{383}< >{794}< [entry] [rendered]
         > ./ main
      ./index.js 147 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk manual/vendors.js (vendors) (id hint: vendors) 60 bytes <{179}> ={128}= ={334}= ={383}= ={459}= ={786}= ={794}= >{137}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./a ./index.js 1:0-47
         > ./b ./index.js 2:0-47
@@ -3013,21 +3020,21 @@ Child manual:
         > ./c ./index.js 3:0-47
      ./c.js 72 bytes [built]
          + 2 hidden dependent modules
-    chunk manual/c.js (c) 112 bytes (javascript) 3.21 KiB (runtime) ={216}= [entry] [rendered]
+    chunk manual/c.js (c) 112 bytes (javascript) 4.49 KiB (runtime) ={216}= [entry] [rendered]
         > ./c c
         > x c
         > y c
         > z c
      ./c.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 2 hidden dependent modules
-    chunk manual/a.js (a) 176 bytes (javascript) 5.98 KiB (runtime) ={216}= >{137}< [entry] [rendered]
+    chunk manual/a.js (a) 176 bytes (javascript) 6.6 KiB (runtime) ={216}= >{137}< [entry] [rendered]
         > ./a a
         > x a
         > y a
         > z a
      ./a.js + 1 modules 156 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
          + 1 hidden dependent module
     chunk manual/async-a.js (async-a) 176 bytes <{179}> ={216}= >{137}< [rendered]
         > ./a ./index.js 1:0-47
@@ -3041,10 +3048,10 @@ Child name-too-long:
     chunk name-too-long/async-g.js (async-g) 34 bytes <{282}> <{751}> <{767}> <{794}> <{954}> ={568}= [rendered]
         > ./g ./a.js 6:0-47
      ./g.js 34 bytes [built]
-    chunk name-too-long/main.js (main) 147 bytes (javascript) 4.84 KiB (runtime) >{282}< >{334}< >{383}< >{568}< >{767}< >{769}< >{794}< >{954}< [entry] [rendered]
+    chunk name-too-long/main.js (main) 147 bytes (javascript) 5.46 KiB (runtime) >{282}< >{334}< >{383}< >{568}< >{767}< >{769}< >{794}< >{954}< [entry] [rendered]
         > ./ main
      ./index.js 147 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk name-too-long/282.js (id hint: vendors) 20 bytes <{179}> ={334}= ={383}= ={568}= ={658}= ={751}= ={766}= ={767}= ={769}= ={794}= ={954}= >{137}< >{568}< [initial] [rendered] split chunk (cache group: defaultVendors)
         > ./a ./index.js 1:0-47
         > ./b ./index.js 2:0-47
@@ -3068,15 +3075,15 @@ Child name-too-long:
         > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         > ./c cccccccccccccccccccccccccccccc
      ./f.js 20 bytes [built]
-    chunk name-too-long/cccccccccccccccccccccccccccccc.js (cccccccccccccccccccccccccccccc) 3.18 KiB ={282}= ={383}= ={568}= ={767}= ={769}= [entry] [rendered]
+    chunk name-too-long/cccccccccccccccccccccccccccccc.js (cccccccccccccccccccccccccccccc) 4.46 KiB ={282}= ={383}= ={568}= ={767}= ={769}= [entry] [rendered]
         > ./c cccccccccccccccccccccccccccccc
-        4 root modules
-    chunk name-too-long/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) 5.98 KiB ={282}= ={767}= ={794}= ={954}= >{137}< >{568}< [entry] [rendered]
+        5 root modules
+    chunk name-too-long/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) 6.6 KiB ={282}= ={767}= ={794}= ={954}= >{137}< >{568}< [entry] [rendered]
         > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-        7 root modules
-    chunk name-too-long/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js (bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) 3.18 KiB ={282}= ={334}= ={568}= ={767}= ={954}= [entry] [rendered]
+        8 root modules
+    chunk name-too-long/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js (bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) 4.46 KiB ={282}= ={334}= ={568}= ={767}= ={954}= [entry] [rendered]
         > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-        4 root modules
+        5 root modules
     chunk name-too-long/767.js 20 bytes <{179}> ={282}= ={334}= ={383}= ={568}= ={658}= ={751}= ={766}= ={769}= ={794}= ={954}= >{137}< >{568}< [initial] [rendered] split chunk (cache group: default)
         > ./a ./index.js 1:0-47
         > ./b ./index.js 2:0-47
@@ -3104,18 +3111,18 @@ Child custom-chunks-filter:
     Entrypoint a = custom-chunks-filter/a.js
     Entrypoint b = custom-chunks-filter/282.js custom-chunks-filter/954.js custom-chunks-filter/568.js custom-chunks-filter/b.js
     Entrypoint c = custom-chunks-filter/282.js custom-chunks-filter/769.js custom-chunks-filter/568.js custom-chunks-filter/c.js
-    chunk custom-chunks-filter/b.js (b) 92 bytes (javascript) 3.19 KiB (runtime) ={282}= ={568}= ={954}= [entry] [rendered]
+    chunk custom-chunks-filter/b.js (b) 92 bytes (javascript) 4.47 KiB (runtime) ={282}= ={568}= ={954}= [entry] [rendered]
         > ./b b
      ./b.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 1 hidden dependent module
     chunk custom-chunks-filter/async-g.js (async-g) 34 bytes <{282}> <{767}> <{786}> <{794}> <{954}> ={568}= [rendered]
         > ./g ./a.js 6:0-47
      ./g.js 34 bytes [built]
-    chunk custom-chunks-filter/main.js (main) 147 bytes (javascript) 4.85 KiB (runtime) >{282}< >{334}< >{383}< >{568}< >{767}< >{769}< >{794}< >{954}< [entry] [rendered]
+    chunk custom-chunks-filter/main.js (main) 147 bytes (javascript) 5.47 KiB (runtime) >{282}< >{334}< >{383}< >{568}< >{767}< >{769}< >{794}< >{954}< [entry] [rendered]
         > ./ main
      ./index.js 147 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk custom-chunks-filter/282.js (id hint: vendors) 20 bytes <{179}> ={128}= ={334}= ={383}= ={459}= ={568}= ={767}= ={769}= ={794}= ={954}= >{137}< >{568}< [initial] [rendered] split chunk (cache group: defaultVendors)
         > ./a ./index.js 1:0-47
         > ./b ./index.js 2:0-47
@@ -3129,10 +3136,10 @@ Child custom-chunks-filter:
     chunk custom-chunks-filter/async-c.js (async-c) 72 bytes <{179}> ={282}= ={568}= ={767}= ={769}= [rendered]
         > ./c ./index.js 3:0-47
      ./c.js 72 bytes [built]
-    chunk custom-chunks-filter/c.js (c) 92 bytes (javascript) 3.19 KiB (runtime) ={282}= ={568}= ={769}= [entry] [rendered]
+    chunk custom-chunks-filter/c.js (c) 92 bytes (javascript) 4.47 KiB (runtime) ={282}= ={568}= ={769}= [entry] [rendered]
         > ./c c
      ./c.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 1 hidden dependent module
     chunk custom-chunks-filter/568.js 20 bytes <{179}> <{282}> <{767}> <{786}> <{794}> <{954}> ={128}= ={137}= ={282}= ={334}= ={383}= ={459}= ={767}= ={769}= ={954}= [initial] [rendered] split chunk (cache group: default)
         > ./b ./index.js 2:0-47
@@ -3150,10 +3157,10 @@ Child custom-chunks-filter:
         > ./c ./index.js 3:0-47
         > ./c c
      ./node_modules/z.js 20 bytes [built]
-    chunk custom-chunks-filter/a.js (a) 216 bytes (javascript) 4.83 KiB (runtime) >{137}< >{568}< [entry] [rendered]
+    chunk custom-chunks-filter/a.js (a) 216 bytes (javascript) 5.46 KiB (runtime) >{137}< >{568}< [entry] [rendered]
         > ./a a
      ./a.js + 1 modules 156 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
          + 3 hidden dependent modules
     chunk custom-chunks-filter/async-a.js (async-a) 156 bytes <{179}> ={282}= ={767}= ={954}= >{137}< >{568}< [rendered]
         > ./a ./index.js 1:0-47
@@ -3168,22 +3175,22 @@ Child custom-chunks-filter-in-cache-groups:
     Entrypoint a = custom-chunks-filter-in-cache-groups/a.js
     Entrypoint b = custom-chunks-filter-in-cache-groups/vendors.js custom-chunks-filter-in-cache-groups/b.js
     Entrypoint c = custom-chunks-filter-in-cache-groups/vendors.js custom-chunks-filter-in-cache-groups/c.js
-    chunk custom-chunks-filter-in-cache-groups/b.js (b) 112 bytes (javascript) 3.21 KiB (runtime) ={216}= [entry] [rendered]
+    chunk custom-chunks-filter-in-cache-groups/b.js (b) 112 bytes (javascript) 4.49 KiB (runtime) ={216}= [entry] [rendered]
         > ./b b
         > x b
         > y b
         > z b
      ./b.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 2 hidden dependent modules
     chunk custom-chunks-filter-in-cache-groups/async-g.js (async-g) 54 bytes <{216}> <{786}> <{794}> [rendered]
         > ./g ./a.js 6:0-47
      ./g.js 34 bytes [built]
          + 1 hidden dependent module
-    chunk custom-chunks-filter-in-cache-groups/main.js (main) 147 bytes (javascript) 4.87 KiB (runtime) >{216}< >{334}< >{383}< >{794}< [entry] [rendered]
+    chunk custom-chunks-filter-in-cache-groups/main.js (main) 147 bytes (javascript) 5.49 KiB (runtime) >{216}< >{334}< >{383}< >{794}< [entry] [rendered]
         > ./ main
      ./index.js 147 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
     chunk custom-chunks-filter-in-cache-groups/vendors.js (vendors) (id hint: vendors) 60 bytes <{179}> ={128}= ={334}= ={383}= ={459}= ={794}= >{137}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./a ./index.js 1:0-47
         > ./b ./index.js 2:0-47
@@ -3207,22 +3214,22 @@ Child custom-chunks-filter-in-cache-groups:
         > ./c ./index.js 3:0-47
      ./c.js 72 bytes [built]
          + 2 hidden dependent modules
-    chunk custom-chunks-filter-in-cache-groups/c.js (c) 112 bytes (javascript) 3.21 KiB (runtime) ={216}= [entry] [rendered]
+    chunk custom-chunks-filter-in-cache-groups/c.js (c) 112 bytes (javascript) 4.49 KiB (runtime) ={216}= [entry] [rendered]
         > ./c c
         > x c
         > y c
         > z c
      ./c.js 72 bytes [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
          + 2 hidden dependent modules
-    chunk custom-chunks-filter-in-cache-groups/a.js (a) 236 bytes (javascript) 4.8 KiB (runtime) >{137}< [entry] [rendered]
+    chunk custom-chunks-filter-in-cache-groups/a.js (a) 236 bytes (javascript) 5.42 KiB (runtime) >{137}< [entry] [rendered]
         > ./a a
         > x a
         > y a
         > z a
      ./a.js + 1 modules 156 bytes [built]
      ./node_modules/z.js 20 bytes [built]
-         + 7 hidden root modules
+         + 8 hidden root modules
          + 3 hidden dependent modules
     chunk custom-chunks-filter-in-cache-groups/async-a.js (async-a) 176 bytes <{179}> ={216}= >{137}< [rendered]
         > ./a ./index.js 1:0-47
@@ -3262,18 +3269,18 @@ chunk common-node_modules_y_js.js (id hint: common) 20 bytes <{main}> ={async-a}
 chunk common-node_modules_z_js.js (id hint: common) 20 bytes <{main}> ={async-c}= ={common-d_js}= ={common-f_js}= ={common-node_modules_x_js}= [rendered] split chunk (cache group: b)
     > ./c ./index.js 3:0-47
  ./node_modules/z.js 20 bytes [built]
-chunk main.js (main) 147 bytes (javascript) 4.75 KiB (runtime) >{async-a}< >{async-b}< >{async-c}< >{common-d_js}< >{common-f_js}< >{common-node_modules_x_js}< >{common-node_modules_y_js}< >{common-node_modules_z_js}< [entry] [rendered]
+chunk main.js (main) 147 bytes (javascript) 5.37 KiB (runtime) >{async-a}< >{async-b}< >{async-c}< >{common-d_js}< >{common-f_js}< >{common-node_modules_x_js}< >{common-node_modules_y_js}< >{common-node_modules_z_js}< [entry] [rendered]
     > ./ main
  ./index.js 147 bytes [built]
-     + 7 hidden root modules"
+     + 8 hidden root modules"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-chunk-name 1`] = `
 "Entrypoint main = default/main.js
-chunk default/main.js (main) 192 bytes (javascript) 4.81 KiB (runtime) >{334}< >{709}< >{794}< [entry] [rendered]
+chunk default/main.js (main) 192 bytes (javascript) 5.43 KiB (runtime) >{334}< >{709}< >{794}< [entry] [rendered]
     > ./ main
  ./index.js 192 bytes [built]
-     + 7 hidden chunk modules
+     + 8 hidden chunk modules
 chunk default/async-b.js (async-b) (id hint: vendors) 122 bytes <{179}> [rendered] reused as split chunk (cache group: defaultVendors)
     > b ./index.js 2:0-45
  ./node_modules/b.js 122 bytes [built]
@@ -3296,10 +3303,10 @@ chunk async-g.js (async-g) 101 bytes <{179}> [rendered]
     > ./g ./index.js 7:0-47
  ./g.js 34 bytes [built]
      + 1 hidden dependent module
-chunk main.js (main) 343 bytes (javascript) 5.13 KiB (runtime) >{31}< >{137}< >{206}< >{334}< >{383}< >{449}< >{794}< >{804}< [entry] [rendered]
+chunk main.js (main) 343 bytes (javascript) 5.75 KiB (runtime) >{31}< >{137}< >{206}< >{334}< >{383}< >{449}< >{794}< >{804}< [entry] [rendered]
     > ./ main
  ./index.js 343 bytes [built]
-     + 8 hidden root modules
+     + 9 hidden root modules
 chunk async-f.js (async-f) 101 bytes <{179}> [rendered]
     > ./f ./index.js 6:0-47
  ./f.js 34 bytes [built]
@@ -3327,10 +3334,10 @@ chunk 804.js 134 bytes <{179}> ={334}= ={794}= [rendered] split chunk (cache gro
 
 exports[`StatsTestCases should print correct stats for split-chunks-issue-6413 1`] = `
 "Entrypoint main = main.js
-chunk main.js (main) 147 bytes (javascript) 4.51 KiB (runtime) >{282}< >{334}< >{383}< >{543}< >{794}< [entry] [rendered]
+chunk main.js (main) 147 bytes (javascript) 5.13 KiB (runtime) >{282}< >{334}< >{383}< >{543}< >{794}< [entry] [rendered]
     > ./ main
  ./index.js 147 bytes [built]
-     + 6 hidden root modules
+     + 7 hidden root modules
 chunk 282.js (id hint: vendors) 20 bytes <{179}> ={334}= ={383}= ={543}= ={794}= [rendered] split chunk (cache group: defaultVendors)
     > ./a ./index.js 1:0-47
     > ./b ./index.js 2:0-47
@@ -3354,10 +3361,10 @@ chunk async-a.js (async-a) 19 bytes <{179}> ={282}= ={543}= [rendered]
 
 exports[`StatsTestCases should print correct stats for split-chunks-issue-6696 1`] = `
 "Entrypoint main = vendors.js main.js
-chunk main.js (main) 110 bytes (javascript) 5.66 KiB (runtime) ={216}= >{334}< >{794}< [entry] [rendered]
+chunk main.js (main) 110 bytes (javascript) 6.28 KiB (runtime) ={216}= >{334}< >{794}< [entry] [rendered]
     > ./ main
  ./index.js 110 bytes [built]
-     + 6 hidden root modules
+     + 7 hidden root modules
 chunk vendors.js (vendors) (id hint: vendors) 20 bytes ={179}= >{334}< >{794}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
     > ./ main
  ./node_modules/y.js 20 bytes [built]
@@ -3375,10 +3382,10 @@ exports[`StatsTestCases should print correct stats for split-chunks-issue-7401 1
 "Entrypoint a = 282.js a.js
 Entrypoint b = b.js
 Chunk Group c = 282.js c.js
-chunk b.js (b) 43 bytes (javascript) 4.47 KiB (runtime) >{282}< >{459}< [entry] [rendered]
+chunk b.js (b) 43 bytes (javascript) 5.09 KiB (runtime) >{282}< >{459}< [entry] [rendered]
     > ./b b
  ./b.js 43 bytes [built]
-     + 6 hidden root modules
+     + 7 hidden root modules
 chunk 282.js (id hint: vendors) 20 bytes <{128}> ={459}= ={786}= [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./c ./b.js 1:0-41
     > ./a a
@@ -3386,18 +3393,18 @@ chunk 282.js (id hint: vendors) 20 bytes <{128}> ={459}= ={786}= [initial] [rend
 chunk c.js (c) 12 bytes <{128}> ={282}= [rendered]
     > ./c ./b.js 1:0-41
  ./c.js 12 bytes [built]
-chunk a.js (a) 12 bytes (javascript) 2.6 KiB (runtime) ={282}= [entry] [rendered]
+chunk a.js (a) 12 bytes (javascript) 3.88 KiB (runtime) ={282}= [entry] [rendered]
     > ./a a
  ./a.js 12 bytes [built]
-     + 2 hidden root modules"
+     + 3 hidden root modules"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-keep-remaining-size 1`] = `
 "Entrypoint main = default/main.js
-chunk default/main.js (main) 147 bytes (javascript) 5.08 KiB (runtime) >{334}< >{383}< >{794}< >{821}< [entry] [rendered]
+chunk default/main.js (main) 147 bytes (javascript) 5.7 KiB (runtime) >{334}< >{383}< >{794}< >{821}< [entry] [rendered]
     > ./ main
  ./index.js 147 bytes [built]
-     + 8 hidden chunk modules
+     + 9 hidden chunk modules
 chunk default/async-b.js (async-b) 39 bytes <{179}> ={821}= [rendered]
     > ./b ./index.js 2:0-47
  ./b.js 39 bytes [built]
@@ -3480,10 +3487,10 @@ exports[`StatsTestCases should print correct stats for split-chunks-max-size 1`]
         > ./ main
      ./big.js?1 268 bytes [built]
      ./big.js?2 268 bytes [built]
-    chunk prod-main-12217e1d.js (main-12217e1d) 1.57 KiB (javascript) 3.2 KiB (runtime) ={1}= ={59}= ={198}= ={204}= ={318}= ={358}= ={400}= ={410}= ={490}= ={520}= ={662}= ={869}= [entry] [rendered]
+    chunk prod-main-12217e1d.js (main-12217e1d) 1.57 KiB (javascript) 4.48 KiB (runtime) ={1}= ={59}= ={198}= ={204}= ={318}= ={358}= ={400}= ={410}= ={490}= ={520}= ={662}= ={869}= [entry] [rendered]
         > ./ main
      ./very-big.js?1 1.57 KiB [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
     chunk prod-869.js (id hint: vendors) 402 bytes ={1}= ={59}= ={198}= ={204}= ={318}= ={358}= ={400}= ={410}= ={490}= ={520}= ={662}= ={663}= [initial] [rendered] split chunk (cache group: defaultVendors)
         > ./ main
      ./node_modules/big.js?1 268 bytes [built]
@@ -3551,10 +3558,10 @@ Child development:
     chunk dev-main-very-big_js-4647fb9d.js (main-very-big_js-4647fb9d) 1.57 KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
         > ./ main
      ./very-big.js?3 1.57 KiB [built]
-    chunk dev-main-very-big_js-62f7f644.js (main-very-big_js-62f7f644) 1.57 KiB (javascript) 3.57 KiB (runtime) ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [entry] [rendered]
+    chunk dev-main-very-big_js-62f7f644.js (main-very-big_js-62f7f644) 1.57 KiB (javascript) 4.85 KiB (runtime) ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [entry] [rendered]
         > ./ main
      ./very-big.js?1 1.57 KiB [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
     chunk dev-vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2.js (id hint: vendors) 402 bytes ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered] split chunk (cache group: defaultVendors)
         > ./ main
      ./node_modules/big.js?1 268 bytes [built]
@@ -3601,10 +3608,10 @@ Child switched:
      ./subfolder/small.js?3 67 bytes [built]
      ./subfolder/small.js?4 67 bytes [built]
          + 5 hidden root modules
-    chunk switched-main-12217e1d.js (main-12217e1d) 1.57 KiB (javascript) 3.18 KiB (runtime) ={1}= ={59}= ={247}= ={318}= ={520}= ={581}= ={997}= [entry] [rendered]
+    chunk switched-main-12217e1d.js (main-12217e1d) 1.57 KiB (javascript) 4.46 KiB (runtime) ={1}= ={59}= ={247}= ={318}= ={520}= ={581}= ={997}= [entry] [rendered]
         > ./ main
      ./very-big.js?1 1.57 KiB [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
     chunk switched-main-7aeafcb2.js (main-7aeafcb2) 1.64 KiB ={1}= ={59}= ={247}= ={318}= ={520}= ={581}= ={663}= [initial] [rendered]
         > ./ main
      ./big.js?1 268 bytes [built]
@@ -3699,10 +3706,10 @@ Child zero-min:
         > ./ main
      ./big.js?1 268 bytes [built]
      ./big.js?2 268 bytes [built]
-    chunk zero-min-main-12217e1d.js (main-12217e1d) 1.57 KiB (javascript) 3.2 KiB (runtime) ={1}= ={59}= ={198}= ={204}= ={318}= ={358}= ={400}= ={410}= ={490}= ={520}= ={662}= ={869}= [entry] [rendered]
+    chunk zero-min-main-12217e1d.js (main-12217e1d) 1.57 KiB (javascript) 4.48 KiB (runtime) ={1}= ={59}= ={198}= ={204}= ={318}= ={358}= ={400}= ={410}= ={490}= ={520}= ={662}= ={869}= [entry] [rendered]
         > ./ main
      ./very-big.js?1 1.57 KiB [built]
-         + 4 hidden root modules
+         + 5 hidden root modules
     chunk zero-min-869.js (id hint: vendors) 402 bytes ={1}= ={59}= ={198}= ={204}= ={318}= ={358}= ={400}= ={410}= ={490}= ={520}= ={662}= ={663}= [initial] [rendered] split chunk (cache group: defaultVendors)
         > ./ main
      ./node_modules/big.js?1 268 bytes [built]
@@ -3710,10 +3717,10 @@ Child zero-min:
      ./node_modules/small.js?2 67 bytes [built]
 Child max-async-size:
     Entrypoint main = max-async-size-main.js
-    chunk max-async-size-main.js (main) 2.47 KiB (javascript) 5.12 KiB (runtime) >{342}< >{385}< >{820}< >{920}< [entry] [rendered]
+    chunk max-async-size-main.js (main) 2.47 KiB (javascript) 5.74 KiB (runtime) >{342}< >{385}< >{820}< >{920}< [entry] [rendered]
         > ./async main
      ./async/index.js 386 bytes [built]
-         + 8 hidden root modules
+         + 9 hidden root modules
          + 6 hidden dependent modules
     chunk max-async-size-async-b-77a8c116.js (async-b-77a8c116) 1.57 KiB <{179}> ={385}= ={820}= ={920}= [rendered]
         > ./b ./async/index.js 10:2-49
@@ -3738,9 +3745,9 @@ Child enforce-min-size:
     chunk enforce-min-size-10.js (id hint: all) 1.19 KiB ={179}= ={221}= ={262}= ={410}= ={434}= ={463}= ={519}= ={575}= ={614}= ={692}= ={822}= ={825}= ={869}= [initial] [rendered] split chunk (cache group: all)
         > ./ main
      ./index.js 1.19 KiB [built]
-    chunk enforce-min-size-main.js (main) 3.2 KiB ={10}= ={221}= ={262}= ={410}= ={434}= ={463}= ={519}= ={575}= ={614}= ={692}= ={822}= ={825}= ={869}= [entry] [rendered]
+    chunk enforce-min-size-main.js (main) 4.48 KiB ={10}= ={221}= ={262}= ={410}= ={434}= ={463}= ={519}= ={575}= ={614}= ={692}= ={822}= ={825}= ={869}= [entry] [rendered]
         > ./ main
-        4 root modules
+        5 root modules
     chunk enforce-min-size-221.js (id hint: all) 1.57 KiB ={10}= ={179}= ={262}= ={410}= ={434}= ={463}= ={519}= ={575}= ={614}= ={692}= ={822}= ={825}= ={869}= [initial] [rendered] split chunk (cache group: all)
         > ./ main
      ./very-big.js?3 1.57 KiB [built]
@@ -3818,10 +3825,10 @@ chunk default/118.js 110 bytes <{179}> ={334}= ={383}= [rendered] split chunk (c
     > ./c ./index.js 3:0-47
  ./d.js 43 bytes [built]
  ./f.js 67 bytes [built]
-chunk default/main.js (main) 147 bytes (javascript) 5.08 KiB (runtime) >{118}< >{334}< >{383}< >{794}< [entry] [rendered]
+chunk default/main.js (main) 147 bytes (javascript) 5.7 KiB (runtime) >{118}< >{334}< >{383}< >{794}< [entry] [rendered]
     > ./ main
  ./index.js 147 bytes [built]
-     + 8 hidden root modules
+     + 9 hidden root modules
 chunk default/async-b.js (async-b) 105 bytes <{179}> ={118}= [rendered]
     > ./b ./index.js 2:0-47
  ./b.js 62 bytes [built]
@@ -3903,7 +3910,7 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [we
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"Hash: 426dfe4bd9e569cd2869
+"Hash: 9c77f784cf5eec44e685
 Time: X ms
 Built at: 1970-04-20 12:42:42
                            Asset       Size
@@ -3916,7 +3923,7 @@ Built at: 1970-04-20 12:42:42
                    780.bundle.js  525 bytes  [emitted]
                     99.bundle.js  220 bytes  [emitted]
 a0e9dd97d7ced35a5b2c.module.wasm  154 bytes  [emitted] [immutable]
-                       bundle.js     11 KiB  [emitted]              [name: main-1df31ce3]
+                       bundle.js   11.9 KiB  [emitted]              [name: main-1df31ce3]
 d37b3336426771c2a6e2.module.wasm  531 bytes  [emitted] [immutable]
 ebd3f263522776d85971.module.wasm  156 bytes  [emitted] [immutable]
 Entrypoint main = bundle.js
@@ -3928,9 +3935,9 @@ chunk 325.bundle.js 1.54 KiB (javascript) 274 bytes (webassembly) [rendered]
  ./popcnt.wasm 50 bytes (javascript) 120 bytes (webassembly) [built]
  ./testFunction.wasm 50 bytes (javascript) 154 bytes (webassembly) [built]
  ./tests.js 1.44 KiB [built]
-chunk bundle.js (main-1df31ce3) 586 bytes (javascript) 5.49 KiB (runtime) [entry] [rendered]
+chunk bundle.js (main-1df31ce3) 586 bytes (javascript) 6.11 KiB (runtime) [entry] [rendered]
  ./index.js 586 bytes [built]
-     + 8 hidden chunk modules
+     + 9 hidden chunk modules
 chunk 526.bundle.js (id hint: vendors) 34 bytes [rendered] split chunk (cache group: defaultVendors)
  ./node_modules/env.js 34 bytes [built]
 chunk 780.bundle.js 110 bytes (javascript) 444 bytes (webassembly) [rendered]
@@ -3945,5 +3952,5 @@ chunk 780.bundle.js 110 bytes (javascript) 444 bytes (webassembly) [rendered]
 ./fast-math.wasm 60 bytes (javascript) 290 bytes (webassembly) [built]
 ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) [built]
 ./node_modules/env.js 34 bytes [built]
-    + 8 hidden modules"
+    + 9 hidden modules"
 `;

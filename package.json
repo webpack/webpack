@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.0.0-beta.16",
+  "version": "5.0.0-beta.17",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
+    "@babel/preset-react": "^7.10.1",
     "@types/jest": "^25.1.5",
     "@types/node": "^12.6.9",
     "babel-loader": "^8.0.6",
@@ -80,7 +81,7 @@
     "strip-ansi": "^6.0.0",
     "style-loader": "^1.0.0",
     "toml": "^3.0.0",
-    "tooling": "webpack/tooling#v1.7.0",
+    "tooling": "webpack/tooling#v1.8.0",
     "ts-loader": "^6.0.4",
     "typescript": "^3.9.2",
     "url-loader": "^4.1.0",

@@ -73,7 +73,8 @@ export type ExternalsType =
 	| "jsonp"
 	| "system"
 	| "promise"
-	| "import";
+	| "import"
+	| "script";
 /**
  * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
  */
@@ -258,9 +259,13 @@ export interface SharedConfig {
 	 */
 	import?: false | SharedItem;
 	/**
+	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
+	 */
+	packageName?: string;
+	/**
 	 * Version requirement from module in share scope.
 	 */
-	requiredVersion?: string | SharedVersionArray;
+	requiredVersion?: false | string | SharedVersionArray;
 	/**
 	 * Module is looked up under this key from the share scope.
 	 */

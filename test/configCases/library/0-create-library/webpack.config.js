@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("../../../../");
-/** @type {import("../../../../").Configuration[]} */
-module.exports = [
+/** @type {function(any, any): import("../../../../").Configuration[]} */
+module.exports = (env, { testPath }) => [
 	{
 		output: {
 			filename: "commonjs.js",
@@ -74,10 +74,7 @@ module.exports = [
 	{
 		output: {
 			filename: "index.js",
-			path: path.resolve(
-				__dirname,
-				"../../../js/config/library/0-create-library/commonjs2-split-chunks"
-			),
+			path: path.resolve(testPath, "commonjs2-split-chunks"),
 			libraryTarget: "commonjs2"
 		},
 		target: "node",

@@ -490,6 +490,7 @@ Object {
           "system",
           "promise",
           "import",
+          "script",
         ],
       },
     ],

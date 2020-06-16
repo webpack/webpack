@@ -12,8 +12,8 @@ module.exports = {
 		}),
 		new ProvideSharedPlugin({
 			provides: {
-				test: {
-					import: "./new-test",
+				"./new-test": {
+					shareKey: "test",
 					version: false
 				}
 			}

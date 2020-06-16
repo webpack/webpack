@@ -20,7 +20,8 @@
         "jsonp",
         "system",
         "promise",
-        "import"
+        "import",
+        "script"
       ]
     },
     "Remotes": {

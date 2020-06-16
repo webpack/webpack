@@ -893,7 +893,9 @@ declare class Compilation {
 			],
 			void
 		>;
-		dependencyReferencedExports: SyncWaterfallHook<[string[][], Dependency]>;
+		dependencyReferencedExports: SyncWaterfallHook<
+			[(string[] | ReferencedExport)[], Dependency]
+		>;
 		finishModules: AsyncSeriesHook<[Iterable<Module>]>;
 		finishRebuildingModule: AsyncSeriesHook<[Module]>;
 		unseal: SyncHook<[], void>;
@@ -1153,7 +1155,9 @@ declare class Compilation {
 	 */
 	addChunk(name?: string): Chunk;
 	assignDepth(module: Module): void;
-	getDependencyReferencedExports(dependency: Dependency): string[][];
+	getDependencyReferencedExports(
+		dependency: Dependency
+	): (string[] | ReferencedExport)[];
 	removeReasonsOfDependencyBlock(
 		module: Module,
 		block: DependenciesBlockLike
@@ -1315,6 +1319,7 @@ declare class Compiler {
 		beforeCompile: AsyncSeriesHook<[CompilationParams]>;
 		compile: SyncHook<[CompilationParams], void>;
 		make: AsyncParallelHook<[Compilation]>;
+		finishMake: AsyncParallelHook<[Compilation]>;
 		afterCompile: AsyncSeriesHook<[Compilation]>;
 		watchRun: AsyncSeriesHook<[Compiler]>;
 		failed: SyncHook<[Error], void>;
@@ -1587,9 +1592,14 @@ declare interface ConsumesConfig {
 	import?: DevTool;
 
 	/**
+	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
+	 */
+	packageName?: string;
+
+	/**
 	 * Version requirement from module in share scope.
 	 */
-	requiredVersion?: string | (string | number)[];
+	requiredVersion?: string | false | (string | number)[];
 
 	/**
 	 * Module is looked up under this key from the share scope.
@@ -1676,6 +1686,9 @@ declare interface ContainerReferencePluginOptions {
 	 */
 	shareScope?: string;
 }
+declare abstract class ContextElementDependency extends ModuleDependency {
+	referencedExports: any;
+}
 declare class ContextExclusionPlugin {
 	constructor(negativeMatcher: RegExp);
 	negativeMatcher: RegExp;
@@ -1693,7 +1706,28 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		alternatives: AsyncSeriesWaterfallHook<[any[]]>;
 	}>;
 	resolverFactory: ResolverFactory;
-	resolveDependencies(fs?: any, options?: any, callback?: any): any;
+	resolveDependencies(
+		fs: InputFileSystem,
+		options: {
+			mode: "sync" | "eager" | "weak" | "async-weak" | "lazy" | "lazy-once";
+			recursive: boolean;
+			regExp: RegExp;
+			namespaceObject?: boolean | "strict";
+			addon?: string;
+			chunkName?: string;
+			include?: RegExp;
+			exclude?: RegExp;
+			groupOptions?: RawChunkGroupOptions;
+			/**
+			 * exports referenced from modules (won't be mangled)
+			 */
+			referencedExports?: string[][];
+			resource: string;
+			resourceQuery?: string;
+			resolveOptions: any;
+		},
+		callback: (err?: Error, dependencies?: ContextElementDependency[]) => any
+	): void;
 }
 declare class ContextReplacementPlugin {
 	constructor(
@@ -1771,7 +1805,9 @@ declare class Dependency {
 	/**
 	 * Returns list of exports referenced by this dependency
 	 */
-	getReferencedExports(moduleGraph: ModuleGraph): string[][];
+	getReferencedExports(
+		moduleGraph: ModuleGraph
+	): (string[] | ReferencedExport)[];
 	getCondition(moduleGraph: ModuleGraph): () => boolean;
 
 	/**
@@ -2094,7 +2130,7 @@ declare interface EntryData {
 	dependencies: Dependency[];
 
 	/**
-	 * dependencies of the entrypoint that should be included by not evaluated
+	 * dependencies of the entrypoint that should be included but not evaluated
 	 */
 	includeDependencies: Dependency[];
 
@@ -2150,7 +2186,7 @@ declare interface EntryDescriptionNormalized {
 	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
-	import: [string, ...string[]];
+	import?: [string, ...string[]];
 
 	/**
 	 * Options for library.
@@ -2538,7 +2574,8 @@ type ExternalsType =
 	| "jsonp"
 	| "system"
 	| "promise"
-	| "import";
+	| "import"
+	| "script";
 declare interface FactorizeModuleOptions {
 	currentProfile: ModuleProfile;
 	factory: ModuleFactory;
@@ -2864,6 +2901,10 @@ declare interface InputFileSystem {
 	readFile: (
 		arg0: string,
 		arg1: (arg0: NodeJS.ErrnoException, arg1: Buffer) => void
+	) => void;
+	readJson?: (
+		arg0: string,
+		arg1: (arg0: Error | NodeJS.ErrnoException, arg1?: any) => void
 	) => void;
 	readdir: (
 		arg0: string,
@@ -4311,6 +4352,16 @@ declare class NodeEnvironmentPlugin {
  */
 declare interface NodeOptions {
 	/**
+	 * Include a polyfill for the '__dirname' variable.
+	 */
+	__dirname?: boolean | "mock";
+
+	/**
+	 * Include a polyfill for the '__filename' variable.
+	 */
+	__filename?: boolean | "mock";
+
+	/**
 	 * Include a polyfill for the 'global' variable.
 	 */
 	global?: boolean;
@@ -4421,7 +4472,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		factorize: AsyncSeriesBailHook<[ResolveData], any>;
 		beforeResolve: AsyncSeriesBailHook<[ResolveData], any>;
 		afterResolve: AsyncSeriesBailHook<[ResolveData], any>;
-		createModule: SyncBailHook<[ResolveData], any>;
+		createModule: AsyncSeriesBailHook<[any, ResolveData], any>;
 		module: SyncWaterfallHook<[Module, any, ResolveData]>;
 		createParser: HookMap<SyncBailHook<any, any>>;
 		parser: HookMap<SyncHook<any, void>>;
@@ -5434,7 +5485,7 @@ declare class ProvideSharedPlugin {
 }
 declare interface ProvideSharedPluginOptions {
 	/**
-	 * Modules that should be provided as shared modules to the share scope. When provided, property name is used as share key, otherwise share key is automatically inferred from request.
+	 * Modules that should be provided as shared modules to the share scope. When provided, property name is used to match modules, otherwise this is automatically inferred from share key.
 	 */
 	provides: Provides;
 
@@ -5455,9 +5506,9 @@ declare interface ProvidesConfig {
 	eager?: boolean;
 
 	/**
-	 * Request to a module that should be provided as shared module to the share scope.
+	 * Key in the share scope under which the shared modules should be stored.
 	 */
-	import: string;
+	shareKey?: string;
 
 	/**
 	 * Share scope name.
@@ -5479,6 +5530,10 @@ declare interface ProvidesObject {
 type PublicPath =
 	| string
 	| ((pathData: PathData, assetInfo: AssetInfo) => string);
+declare interface RawChunkGroupOptions {
+	preloadOrder?: number;
+	prefetchOrder?: number;
+}
 declare class ReadFileCompileWasmPlugin {
 	constructor(options?: any);
 	options: any;
@@ -5503,6 +5558,17 @@ type RecursiveArrayOrRecord =
 	| RuntimeValue
 	| { [index: string]: RecursiveArrayOrRecord }
 	| RecursiveArrayOrRecord[];
+declare interface ReferencedExport {
+	/**
+	 * name of the referenced export
+	 */
+	name: string[];
+
+	/**
+	 * when false, referenced export can not be mangled, defaults to true
+	 */
+	canMangle?: boolean;
+}
 type Remotes = (string | RemotesObject)[] | RemotesObject;
 
 /**
@@ -6838,9 +6904,14 @@ declare interface SharedConfig {
 	import?: DevTool;
 
 	/**
+	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
+	 */
+	packageName?: string;
+
+	/**
 	 * Version requirement from module in share scope.
 	 */
-	requiredVersion?: string | (string | number)[];
+	requiredVersion?: string | false | (string | number)[];
 
 	/**
 	 * Module is looked up under this key from the share scope.
@@ -7962,6 +8033,7 @@ declare namespace exports {
 		export let instantiateWasm: string;
 		export let uncaughtErrorHandler: string;
 		export let scriptNonce: string;
+		export let loadScript: string;
 		export let chunkName: string;
 		export let getChunkScriptFilename: string;
 		export let getChunkUpdateScriptFilename: string;
