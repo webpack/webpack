@@ -893,7 +893,9 @@ declare class Compilation {
 			],
 			void
 		>;
-		dependencyReferencedExports: SyncWaterfallHook<[string[][], Dependency]>;
+		dependencyReferencedExports: SyncWaterfallHook<
+			[(string[] | ReferencedExport)[], Dependency]
+		>;
 		finishModules: AsyncSeriesHook<[Iterable<Module>]>;
 		finishRebuildingModule: AsyncSeriesHook<[Module]>;
 		unseal: SyncHook<[], void>;
@@ -1153,7 +1155,9 @@ declare class Compilation {
 	 */
 	addChunk(name?: string): Chunk;
 	assignDepth(module: Module): void;
-	getDependencyReferencedExports(dependency: Dependency): string[][];
+	getDependencyReferencedExports(
+		dependency: Dependency
+	): (string[] | ReferencedExport)[];
 	removeReasonsOfDependencyBlock(
 		module: Module,
 		block: DependenciesBlockLike
@@ -1682,6 +1686,9 @@ declare interface ContainerReferencePluginOptions {
 	 */
 	shareScope?: string;
 }
+declare abstract class ContextElementDependency extends ModuleDependency {
+	referencedExports: any;
+}
 declare class ContextExclusionPlugin {
 	constructor(negativeMatcher: RegExp);
 	negativeMatcher: RegExp;
@@ -1699,7 +1706,28 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		alternatives: AsyncSeriesWaterfallHook<[any[]]>;
 	}>;
 	resolverFactory: any;
-	resolveDependencies(fs?: any, options?: any, callback?: any): any;
+	resolveDependencies(
+		fs: InputFileSystem,
+		options: {
+			mode: "sync" | "eager" | "weak" | "async-weak" | "lazy" | "lazy-once";
+			recursive: boolean;
+			regExp: RegExp;
+			namespaceObject?: boolean | "strict";
+			addon?: string;
+			chunkName?: string;
+			include?: RegExp;
+			exclude?: RegExp;
+			groupOptions?: RawChunkGroupOptions;
+			/**
+			 * exports referenced from modules (won't be mangled)
+			 */
+			referencedExports?: string[][];
+			resource: string;
+			resourceQuery?: string;
+			resolveOptions: any;
+		},
+		callback: (err?: Error, dependencies?: ContextElementDependency[]) => any
+	): void;
 }
 declare class ContextReplacementPlugin {
 	constructor(
@@ -1776,7 +1804,9 @@ declare class Dependency {
 	/**
 	 * Returns list of exports referenced by this dependency
 	 */
-	getReferencedExports(moduleGraph: ModuleGraph): string[][];
+	getReferencedExports(
+		moduleGraph: ModuleGraph
+	): (string[] | ReferencedExport)[];
 	getCondition(moduleGraph: ModuleGraph): () => boolean;
 
 	/**
@@ -5499,6 +5529,10 @@ declare interface ProvidesObject {
 type PublicPath =
 	| string
 	| ((pathData: PathData, assetInfo: AssetInfo) => string);
+declare interface RawChunkGroupOptions {
+	preloadOrder?: number;
+	prefetchOrder?: number;
+}
 declare class ReadFileCompileWasmPlugin {
 	constructor(options?: any);
 	options: any;
@@ -5523,6 +5557,17 @@ type RecursiveArrayOrRecord =
 	| RuntimeValue
 	| { [index: string]: RecursiveArrayOrRecord }
 	| RecursiveArrayOrRecord[];
+declare interface ReferencedExport {
+	/**
+	 * name of the referenced export
+	 */
+	name: string[];
+
+	/**
+	 * when false, referenced export can not be mangled, defaults to true
+	 */
+	canMangle?: boolean;
+}
 type Remotes = (string | RemotesObject)[] | RemotesObject;
 
 /**
