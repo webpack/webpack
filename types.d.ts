@@ -2099,7 +2099,7 @@ declare interface EntryData {
 	dependencies: Dependency[];
 
 	/**
-	 * dependencies of the entrypoint that should be included by not evaluated
+	 * dependencies of the entrypoint that should be included but not evaluated
 	 */
 	includeDependencies: Dependency[];
 
