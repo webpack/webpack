@@ -240,12 +240,14 @@ describe("Defaults", () => {
 		      "amd": Object {
 		        "conditionNames": Array [
 		          "require",
+		          "module",
 		          "...",
 		        ],
 		      },
 		      "commonjs": Object {
 		        "conditionNames": Array [
 		          "require",
+		          "module",
 		          "...",
 		        ],
 		      },
@@ -259,6 +261,7 @@ describe("Defaults", () => {
 		      "wasm": Object {
 		        "conditionNames": Array [
 		          "import",
+		          "module",
 		          "...",
 		        ],
 		      },
