@@ -65,16 +65,13 @@ import { default as ValidationError } from "schema-utils/declarations/Validation
 import {
 	AsArray,
 	AsyncParallelHook,
-	AsyncSeriesBailHook as AsyncSeriesBailHookImportTapableClass_1,
-	AsyncSeriesBailHook as AsyncSeriesBailHookImportTapableClass_2,
-	AsyncSeriesHook as AsyncSeriesHookImportTapableClass_1,
-	AsyncSeriesHook as AsyncSeriesHookImportTapableClass_2,
+	AsyncSeriesBailHook,
+	AsyncSeriesHook,
 	AsyncSeriesWaterfallHook,
 	HookMap,
 	MultiHook,
 	SyncBailHook,
-	SyncHook as SyncHookImportTapableClass_1,
-	SyncHook as SyncHookImportTapableClass_2,
+	SyncHook,
 	SyncWaterfallHook
 } from "tapable";
 
@@ -229,11 +226,11 @@ declare abstract class AsyncDependenciesBlock extends DependenciesBlock {
 }
 declare abstract class AsyncQueue<T, K, R> {
 	hooks: {
-		beforeAdd: AsyncSeriesHookImportTapableClass_1<[T]>;
-		added: SyncHookImportTapableClass_1<[T], void>;
-		beforeStart: AsyncSeriesHookImportTapableClass_1<[T]>;
-		started: SyncHookImportTapableClass_1<[T], void>;
-		result: SyncHookImportTapableClass_1<[T, Error, R], void>;
+		beforeAdd: AsyncSeriesHook<[T]>;
+		added: SyncHook<[T], void>;
+		beforeStart: AsyncSeriesHook<[T]>;
+		started: SyncHook<[T], void>;
+		result: SyncHook<[T, Error, R], void>;
 	};
 	add(item: T, callback: CallbackFunction<R>): void;
 	invalidate(item: T): void;
@@ -388,13 +385,13 @@ declare abstract class ByTypeGenerator extends Generator {
 declare class Cache {
 	constructor();
 	hooks: {
-		get: AsyncSeriesBailHookImportTapableClass_1<
+		get: AsyncSeriesBailHook<
 			[string, Etag, ((result: any, stats: CallbackCache<void>) => void)[]],
 			any
 		>;
 		store: AsyncParallelHook<[string, Etag, any]>;
 		storeBuildDependencies: AsyncParallelHook<[Iterable<string>]>;
-		beginIdle: SyncHookImportTapableClass_1<[], void>;
+		beginIdle: SyncHook<[], void>;
 		endIdle: AsyncParallelHook<[]>;
 		shutdown: AsyncParallelHook<[]>;
 	};
@@ -859,12 +856,12 @@ declare class Compilation {
 	 */
 	constructor(compiler: Compiler);
 	hooks: Readonly<{
-		buildModule: SyncHookImportTapableClass_1<[Module], void>;
-		rebuildModule: SyncHookImportTapableClass_1<[Module], void>;
-		failedModule: SyncHookImportTapableClass_1<[Module, WebpackError], void>;
-		succeedModule: SyncHookImportTapableClass_1<[Module], void>;
-		stillValidModule: SyncHookImportTapableClass_1<[Module], void>;
-		addEntry: SyncHookImportTapableClass_1<
+		buildModule: SyncHook<[Module], void>;
+		rebuildModule: SyncHook<[Module], void>;
+		failedModule: SyncHook<[Module, WebpackError], void>;
+		succeedModule: SyncHook<[Module], void>;
+		stillValidModule: SyncHook<[Module], void>;
+		addEntry: SyncHook<
 			[
 				Dependency,
 				{ name: string } & Pick<
@@ -874,7 +871,7 @@ declare class Compilation {
 			],
 			void
 		>;
-		failedEntry: SyncHookImportTapableClass_1<
+		failedEntry: SyncHook<
 			[
 				Dependency,
 				{ name: string } & Pick<
@@ -885,7 +882,7 @@ declare class Compilation {
 			],
 			void
 		>;
-		succeedEntry: SyncHookImportTapableClass_1<
+		succeedEntry: SyncHook<
 			[
 				Dependency,
 				{ name: string } & Pick<
@@ -899,159 +896,108 @@ declare class Compilation {
 		dependencyReferencedExports: SyncWaterfallHook<
 			[(string[] | ReferencedExport)[], Dependency]
 		>;
-		finishModules: AsyncSeriesHookImportTapableClass_1<[Iterable<Module>]>;
-		finishRebuildingModule: AsyncSeriesHookImportTapableClass_1<[Module]>;
-		unseal: SyncHookImportTapableClass_1<[], void>;
-		seal: SyncHookImportTapableClass_1<[], void>;
-		beforeChunks: SyncHookImportTapableClass_1<[], void>;
-		afterChunks: SyncHookImportTapableClass_1<[Iterable<Chunk>], void>;
+		finishModules: AsyncSeriesHook<[Iterable<Module>]>;
+		finishRebuildingModule: AsyncSeriesHook<[Module]>;
+		unseal: SyncHook<[], void>;
+		seal: SyncHook<[], void>;
+		beforeChunks: SyncHook<[], void>;
+		afterChunks: SyncHook<[Iterable<Chunk>], void>;
 		optimizeDependencies: SyncBailHook<[Iterable<Module>], any>;
-		afterOptimizeDependencies: SyncHookImportTapableClass_1<
-			[Iterable<Module>],
-			void
-		>;
-		optimize: SyncHookImportTapableClass_1<[], void>;
+		afterOptimizeDependencies: SyncHook<[Iterable<Module>], void>;
+		optimize: SyncHook<[], void>;
 		optimizeModules: SyncBailHook<[Iterable<Module>], any>;
-		afterOptimizeModules: SyncHookImportTapableClass_1<
-			[Iterable<Module>],
-			void
-		>;
+		afterOptimizeModules: SyncHook<[Iterable<Module>], void>;
 		optimizeChunks: SyncBailHook<[Iterable<Chunk>, ChunkGroup[]], any>;
-		afterOptimizeChunks: SyncHookImportTapableClass_1<
-			[Iterable<Chunk>, ChunkGroup[]],
-			void
-		>;
-		optimizeTree: AsyncSeriesHookImportTapableClass_1<
-			[Iterable<Chunk>, Iterable<Module>]
-		>;
-		afterOptimizeTree: SyncHookImportTapableClass_1<
-			[Iterable<Chunk>, Iterable<Module>],
-			void
-		>;
-		optimizeChunkModules: AsyncSeriesBailHookImportTapableClass_1<
+		afterOptimizeChunks: SyncHook<[Iterable<Chunk>, ChunkGroup[]], void>;
+		optimizeTree: AsyncSeriesHook<[Iterable<Chunk>, Iterable<Module>]>;
+		afterOptimizeTree: SyncHook<[Iterable<Chunk>, Iterable<Module>], void>;
+		optimizeChunkModules: AsyncSeriesBailHook<
 			[Iterable<Chunk>, Iterable<Module>],
 			any
 		>;
-		afterOptimizeChunkModules: SyncHookImportTapableClass_1<
+		afterOptimizeChunkModules: SyncHook<
 			[Iterable<Chunk>, Iterable<Module>],
 			void
 		>;
 		shouldRecord: SyncBailHook<[], boolean>;
-		additionalChunkRuntimeRequirements: SyncHookImportTapableClass_1<
-			[Chunk, Set<string>],
-			void
-		>;
+		additionalChunkRuntimeRequirements: SyncHook<[Chunk, Set<string>], void>;
 		runtimeRequirementInChunk: HookMap<SyncBailHook<[Chunk, Set<string>], any>>;
-		additionalModuleRuntimeRequirements: SyncHookImportTapableClass_1<
-			[Module, Set<string>],
-			void
-		>;
+		additionalModuleRuntimeRequirements: SyncHook<[Module, Set<string>], void>;
 		runtimeRequirementInModule: HookMap<
 			SyncBailHook<[Module, Set<string>], any>
 		>;
-		additionalTreeRuntimeRequirements: SyncHookImportTapableClass_1<
-			[Chunk, Set<string>],
-			void
-		>;
+		additionalTreeRuntimeRequirements: SyncHook<[Chunk, Set<string>], void>;
 		runtimeRequirementInTree: HookMap<SyncBailHook<[Chunk, Set<string>], any>>;
-		runtimeModule: SyncHookImportTapableClass_1<[RuntimeModule, Chunk], void>;
-		reviveModules: SyncHookImportTapableClass_1<[Iterable<Module>, any], void>;
-		beforeModuleIds: SyncHookImportTapableClass_1<[Iterable<Module>], void>;
-		moduleIds: SyncHookImportTapableClass_1<[Iterable<Module>], void>;
-		optimizeModuleIds: SyncHookImportTapableClass_1<[Iterable<Module>], void>;
-		afterOptimizeModuleIds: SyncHookImportTapableClass_1<
-			[Iterable<Module>],
-			void
-		>;
-		reviveChunks: SyncHookImportTapableClass_1<[Iterable<Chunk>, any], void>;
-		beforeChunkIds: SyncHookImportTapableClass_1<[Iterable<Chunk>], void>;
-		chunkIds: SyncHookImportTapableClass_1<[Iterable<Chunk>], void>;
-		optimizeChunkIds: SyncHookImportTapableClass_1<[Iterable<Chunk>], void>;
-		afterOptimizeChunkIds: SyncHookImportTapableClass_1<
-			[Iterable<Chunk>],
-			void
-		>;
-		recordModules: SyncHookImportTapableClass_1<[Iterable<Module>, any], void>;
-		recordChunks: SyncHookImportTapableClass_1<[Iterable<Chunk>, any], void>;
-		optimizeCodeGeneration: SyncHookImportTapableClass_1<
-			[Iterable<Module>],
-			void
-		>;
-		beforeModuleHash: SyncHookImportTapableClass_1<[], void>;
-		afterModuleHash: SyncHookImportTapableClass_1<[], void>;
-		beforeCodeGeneration: SyncHookImportTapableClass_1<[], void>;
-		afterCodeGeneration: SyncHookImportTapableClass_1<[], void>;
-		beforeRuntimeRequirements: SyncHookImportTapableClass_1<[], void>;
-		afterRuntimeRequirements: SyncHookImportTapableClass_1<[], void>;
-		beforeHash: SyncHookImportTapableClass_1<[], void>;
-		contentHash: SyncHookImportTapableClass_1<[Chunk], void>;
-		afterHash: SyncHookImportTapableClass_1<[], void>;
-		recordHash: SyncHookImportTapableClass_1<[any], void>;
-		record: SyncHookImportTapableClass_1<[Compilation, any], void>;
-		beforeModuleAssets: SyncHookImportTapableClass_1<[], void>;
+		runtimeModule: SyncHook<[RuntimeModule, Chunk], void>;
+		reviveModules: SyncHook<[Iterable<Module>, any], void>;
+		beforeModuleIds: SyncHook<[Iterable<Module>], void>;
+		moduleIds: SyncHook<[Iterable<Module>], void>;
+		optimizeModuleIds: SyncHook<[Iterable<Module>], void>;
+		afterOptimizeModuleIds: SyncHook<[Iterable<Module>], void>;
+		reviveChunks: SyncHook<[Iterable<Chunk>, any], void>;
+		beforeChunkIds: SyncHook<[Iterable<Chunk>], void>;
+		chunkIds: SyncHook<[Iterable<Chunk>], void>;
+		optimizeChunkIds: SyncHook<[Iterable<Chunk>], void>;
+		afterOptimizeChunkIds: SyncHook<[Iterable<Chunk>], void>;
+		recordModules: SyncHook<[Iterable<Module>, any], void>;
+		recordChunks: SyncHook<[Iterable<Chunk>, any], void>;
+		optimizeCodeGeneration: SyncHook<[Iterable<Module>], void>;
+		beforeModuleHash: SyncHook<[], void>;
+		afterModuleHash: SyncHook<[], void>;
+		beforeCodeGeneration: SyncHook<[], void>;
+		afterCodeGeneration: SyncHook<[], void>;
+		beforeRuntimeRequirements: SyncHook<[], void>;
+		afterRuntimeRequirements: SyncHook<[], void>;
+		beforeHash: SyncHook<[], void>;
+		contentHash: SyncHook<[Chunk], void>;
+		afterHash: SyncHook<[], void>;
+		recordHash: SyncHook<[any], void>;
+		record: SyncHook<[Compilation, any], void>;
+		beforeModuleAssets: SyncHook<[], void>;
 		shouldGenerateChunkAssets: SyncBailHook<[], boolean>;
-		beforeChunkAssets: SyncHookImportTapableClass_1<[], void>;
+		beforeChunkAssets: SyncHook<[], void>;
 		additionalChunkAssets: Pick<
-			AsyncSeriesHookImportTapableClass_1<[Set<Chunk>]>,
+			AsyncSeriesHook<[Set<Chunk>]>,
 			"tap" | "tapAsync" | "tapPromise" | "name"
 		> &
 			FakeHookMarker;
 		additionalAssets: Pick<
-			AsyncSeriesHookImportTapableClass_1<[]>,
+			AsyncSeriesHook<[]>,
 			"tap" | "tapAsync" | "tapPromise" | "name"
 		> &
 			FakeHookMarker;
 		optimizeChunkAssets: Pick<
-			AsyncSeriesHookImportTapableClass_1<[Set<Chunk>]>,
+			AsyncSeriesHook<[Set<Chunk>]>,
 			"tap" | "tapAsync" | "tapPromise" | "name"
 		> &
 			FakeHookMarker;
 		afterOptimizeChunkAssets: Pick<
-			AsyncSeriesHookImportTapableClass_1<[Set<Chunk>]>,
+			AsyncSeriesHook<[Set<Chunk>]>,
 			"tap" | "tapAsync" | "tapPromise" | "name"
 		> &
 			FakeHookMarker;
-		optimizeAssets: AsyncSeriesHookImportTapableClass_1<
-			[Record<string, Source>]
-		>;
-		afterOptimizeAssets: SyncHookImportTapableClass_1<
-			[Record<string, Source>],
-			void
-		>;
-		processAssets: AsyncSeriesHookImportTapableClass_1<
-			[Record<string, Source>]
-		>;
-		afterProcessAssets: SyncHookImportTapableClass_1<
-			[Record<string, Source>],
-			void
-		>;
+		optimizeAssets: AsyncSeriesHook<[Record<string, Source>]>;
+		afterOptimizeAssets: SyncHook<[Record<string, Source>], void>;
+		processAssets: AsyncSeriesHook<[Record<string, Source>]>;
+		afterProcessAssets: SyncHook<[Record<string, Source>], void>;
 		needAdditionalSeal: SyncBailHook<[], boolean>;
-		afterSeal: AsyncSeriesHookImportTapableClass_1<[]>;
+		afterSeal: AsyncSeriesHook<[]>;
 		renderManifest: SyncWaterfallHook<
 			[RenderManifestEntry[], RenderManifestOptions]
 		>;
-		fullHash: SyncHookImportTapableClass_1<[Hash], void>;
-		chunkHash: SyncHookImportTapableClass_1<
-			[Chunk, Hash, ChunkHashContext],
-			void
-		>;
-		moduleAsset: SyncHookImportTapableClass_1<[Module, string], void>;
-		chunkAsset: SyncHookImportTapableClass_1<[Chunk, string], void>;
+		fullHash: SyncHook<[Hash], void>;
+		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext], void>;
+		moduleAsset: SyncHook<[Module, string], void>;
+		chunkAsset: SyncHook<[Chunk, string], void>;
 		assetPath: SyncWaterfallHook<[string, any, AssetInfo]>;
 		needAdditionalPass: SyncBailHook<[], boolean>;
-		childCompiler: SyncHookImportTapableClass_1<
-			[Compiler, string, number],
-			void
-		>;
+		childCompiler: SyncHook<[Compiler, string, number], void>;
 		log: SyncBailHook<[string, LogEntry], true>;
-		statsPreset: HookMap<SyncHookImportTapableClass_1<[any, any], void>>;
-		statsNormalize: SyncHookImportTapableClass_1<[any, any], void>;
-		statsFactory: SyncHookImportTapableClass_1<[StatsFactory, any], void>;
-		statsPrinter: SyncHookImportTapableClass_1<[StatsPrinter, any], void>;
-		readonly normalModuleLoader: SyncHookImportTapableClass_1<
-			[any, NormalModule],
-			void
-		>;
+		statsPreset: HookMap<SyncHook<[any, any], void>>;
+		statsNormalize: SyncHook<[any, any], void>;
+		statsFactory: SyncHook<[StatsFactory, any], void>;
+		statsPrinter: SyncHook<[StatsPrinter, any], void>;
+		readonly normalModuleLoader: SyncHook<[any, NormalModule], void>;
 	}>;
 	name: string;
 	compiler: Compiler;
@@ -1347,10 +1293,7 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	renderMain: SyncWaterfallHook<[Source, RenderContextObject]>;
 	render: SyncWaterfallHook<[Source, RenderContextObject]>;
 	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
-	chunkHash: SyncHookImportTapableClass_1<
-		[Chunk, Hash, ChunkHashContext],
-		void
-	>;
+	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext], void>;
 }
 declare interface CompilationParams {
 	normalModuleFactory: NormalModuleFactory;
@@ -1359,48 +1302,34 @@ declare interface CompilationParams {
 declare class Compiler {
 	constructor(context: string);
 	hooks: Readonly<{
-		initialize: SyncHookImportTapableClass_1<[], void>;
+		initialize: SyncHook<[], void>;
 		shouldEmit: SyncBailHook<[Compilation], boolean>;
-		done: AsyncSeriesHookImportTapableClass_1<[Stats]>;
-		afterDone: SyncHookImportTapableClass_1<[Stats], void>;
-		additionalPass: AsyncSeriesHookImportTapableClass_1<[]>;
-		beforeRun: AsyncSeriesHookImportTapableClass_1<[Compiler]>;
-		run: AsyncSeriesHookImportTapableClass_1<[Compiler]>;
-		emit: AsyncSeriesHookImportTapableClass_1<[Compilation]>;
-		assetEmitted: AsyncSeriesHookImportTapableClass_1<
-			[string, AssetEmittedInfo]
-		>;
-		afterEmit: AsyncSeriesHookImportTapableClass_1<[Compilation]>;
-		thisCompilation: SyncHookImportTapableClass_1<
-			[Compilation, CompilationParams],
-			void
-		>;
-		compilation: SyncHookImportTapableClass_1<
-			[Compilation, CompilationParams],
-			void
-		>;
-		normalModuleFactory: SyncHookImportTapableClass_1<
-			[NormalModuleFactory],
-			void
-		>;
-		contextModuleFactory: SyncHookImportTapableClass_1<
-			[ContextModuleFactory],
-			void
-		>;
-		beforeCompile: AsyncSeriesHookImportTapableClass_1<[CompilationParams]>;
-		compile: SyncHookImportTapableClass_1<[CompilationParams], void>;
+		done: AsyncSeriesHook<[Stats]>;
+		afterDone: SyncHook<[Stats], void>;
+		additionalPass: AsyncSeriesHook<[]>;
+		beforeRun: AsyncSeriesHook<[Compiler]>;
+		run: AsyncSeriesHook<[Compiler]>;
+		emit: AsyncSeriesHook<[Compilation]>;
+		assetEmitted: AsyncSeriesHook<[string, AssetEmittedInfo]>;
+		afterEmit: AsyncSeriesHook<[Compilation]>;
+		thisCompilation: SyncHook<[Compilation, CompilationParams], void>;
+		compilation: SyncHook<[Compilation, CompilationParams], void>;
+		normalModuleFactory: SyncHook<[NormalModuleFactory], void>;
+		contextModuleFactory: SyncHook<[ContextModuleFactory], void>;
+		beforeCompile: AsyncSeriesHook<[CompilationParams]>;
+		compile: SyncHook<[CompilationParams], void>;
 		make: AsyncParallelHook<[Compilation]>;
 		finishMake: AsyncParallelHook<[Compilation]>;
-		afterCompile: AsyncSeriesHookImportTapableClass_1<[Compilation]>;
-		watchRun: AsyncSeriesHookImportTapableClass_1<[Compiler]>;
-		failed: SyncHookImportTapableClass_1<[Error], void>;
-		invalid: SyncHookImportTapableClass_1<[string, string], void>;
-		watchClose: SyncHookImportTapableClass_1<[], void>;
+		afterCompile: AsyncSeriesHook<[Compilation]>;
+		watchRun: AsyncSeriesHook<[Compiler]>;
+		failed: SyncHook<[Error], void>;
+		invalid: SyncHook<[string, string], void>;
+		watchClose: SyncHook<[], void>;
 		infrastructureLog: SyncBailHook<[string, string, any[]], true>;
-		environment: SyncHookImportTapableClass_1<[], void>;
-		afterEnvironment: SyncHookImportTapableClass_1<[], void>;
-		afterPlugins: SyncHookImportTapableClass_1<[Compiler], void>;
-		afterResolvers: SyncHookImportTapableClass_1<[Compiler], void>;
+		environment: SyncHook<[], void>;
+		afterEnvironment: SyncHook<[], void>;
+		afterPlugins: SyncHook<[Compiler], void>;
+		afterResolvers: SyncHook<[Compiler], void>;
 		entryOption: SyncBailHook<[string, EntryNormalized], boolean>;
 	}>;
 	name: string;
@@ -4334,11 +4263,11 @@ declare abstract class ModuleTemplate {
 declare class MultiCompiler {
 	constructor(compilers: Compiler[] | Record<string, Compiler>);
 	hooks: Readonly<{
-		done: SyncHookImportTapableClass_1<[MultiStats], void>;
-		invalid: MultiHook<SyncHookImportTapableClass_1<[string, string], void>>;
-		run: MultiHook<AsyncSeriesHookImportTapableClass_1<[Compiler]>>;
-		watchClose: SyncHookImportTapableClass_1<[], void>;
-		watchRun: MultiHook<AsyncSeriesHookImportTapableClass_1<[Compiler]>>;
+		done: SyncHook<[MultiStats], void>;
+		invalid: MultiHook<SyncHook<[string, string], void>>;
+		run: MultiHook<AsyncSeriesHook<[Compiler]>>;
+		watchClose: SyncHook<[], void>;
+		watchRun: MultiHook<AsyncSeriesHook<[Compiler]>>;
 		infrastructureLog: MultiHook<SyncBailHook<[string, string, any[]], true>>;
 	}>;
 	compilers: Compiler[];
@@ -4557,23 +4486,20 @@ declare class NormalModule extends Module {
 	static deserialize(context?: any): NormalModule;
 }
 declare interface NormalModuleCompilationHooks {
-	loader: SyncHookImportTapableClass_1<[any, NormalModule], void>;
+	loader: SyncHook<[any, NormalModule], void>;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
-		resolve: AsyncSeriesBailHookImportTapableClass_1<[ResolveData], any>;
-		factorize: AsyncSeriesBailHookImportTapableClass_1<[ResolveData], any>;
-		beforeResolve: AsyncSeriesBailHookImportTapableClass_1<[ResolveData], any>;
-		afterResolve: AsyncSeriesBailHookImportTapableClass_1<[ResolveData], any>;
-		createModule: AsyncSeriesBailHookImportTapableClass_1<
-			[any, ResolveData],
-			any
-		>;
+		resolve: AsyncSeriesBailHook<[ResolveData], any>;
+		factorize: AsyncSeriesBailHook<[ResolveData], any>;
+		beforeResolve: AsyncSeriesBailHook<[ResolveData], any>;
+		afterResolve: AsyncSeriesBailHook<[ResolveData], any>;
+		createModule: AsyncSeriesBailHook<[any, ResolveData], any>;
 		module: SyncWaterfallHook<[Module, any, ResolveData]>;
 		createParser: HookMap<SyncBailHook<any, any>>;
-		parser: HookMap<SyncHookImportTapableClass_1<any, void>>;
+		parser: HookMap<SyncHook<any, void>>;
 		createGenerator: HookMap<SyncBailHook<any, any>>;
-		generator: HookMap<SyncHookImportTapableClass_1<any, void>>;
+		generator: HookMap<SyncHook<any, void>>;
 	}>;
 	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
@@ -6101,47 +6027,30 @@ declare abstract class Resolver {
 	fileSystem: FileSystem;
 	options: ResolveOptionsTypes;
 	hooks: {
-		resolveStep: SyncHookImportTapableClass_2<
+		resolveStep: SyncHook<
 			[
-				AsyncSeriesBailHookImportTapableClass_2<
-					[ResolveRequest, ResolveContext],
-					ResolveRequest
-				>,
+				AsyncSeriesBailHook<[ResolveRequest, ResolveContext], ResolveRequest>,
 				ResolveRequest
 			],
 			void
 		>;
-		noResolve: SyncHookImportTapableClass_2<[ResolveRequest, Error], void>;
-		resolve: AsyncSeriesBailHookImportTapableClass_2<
+		noResolve: SyncHook<[ResolveRequest, Error], void>;
+		resolve: AsyncSeriesBailHook<
 			[ResolveRequest, ResolveContext],
 			ResolveRequest
 		>;
-		result: AsyncSeriesHookImportTapableClass_2<
-			[ResolveRequest, ResolveContext]
-		>;
+		result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
 	};
 	ensureHook(
 		name:
 			| string
-			| AsyncSeriesBailHookImportTapableClass_2<
-					[ResolveRequest, ResolveContext],
-					ResolveRequest
-			  >
-	): AsyncSeriesBailHookImportTapableClass_2<
-		[ResolveRequest, ResolveContext],
-		ResolveRequest
-	>;
+			| AsyncSeriesBailHook<[ResolveRequest, ResolveContext], ResolveRequest>
+	): AsyncSeriesBailHook<[ResolveRequest, ResolveContext], ResolveRequest>;
 	getHook(
 		name:
 			| string
-			| AsyncSeriesBailHookImportTapableClass_2<
-					[ResolveRequest, ResolveContext],
-					ResolveRequest
-			  >
-	): AsyncSeriesBailHookImportTapableClass_2<
-		[ResolveRequest, ResolveContext],
-		ResolveRequest
-	>;
+			| AsyncSeriesBailHook<[ResolveRequest, ResolveContext], ResolveRequest>
+	): AsyncSeriesBailHook<[ResolveRequest, ResolveContext], ResolveRequest>;
 	resolveSync(context: any, path: string, request: string): DevTool;
 	resolve(
 		context: any,
@@ -6278,7 +6187,7 @@ declare abstract class ResolverFactory {
 			>
 		>;
 		resolver: HookMap<
-			SyncHookImportTapableClass_1<
+			SyncHook<
 				[
 					Resolver,
 					UserResolveOptions,
