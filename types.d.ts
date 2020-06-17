@@ -1718,6 +1718,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 			include?: RegExp;
 			exclude?: RegExp;
 			groupOptions?: RawChunkGroupOptions;
+			category?: string;
 			/**
 			 * exports referenced from modules (won't be mangled)
 			 */
