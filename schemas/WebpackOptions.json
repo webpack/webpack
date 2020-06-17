@@ -2132,7 +2132,7 @@
         "cachePredicate": {
           "description": "Predicate function to decide which requests should be cached.",
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((request: import('enhanced-resolve').ResolveRequest) => boolean)"
         },
         "cacheWithContext": {
           "description": "Include the context information in the cache identifier when caching.",
@@ -2177,7 +2177,8 @@
           }
         },
         "fileSystem": {
-          "description": "Filesystem for the resolver."
+          "description": "Filesystem for the resolver.",
+          "tsType": "(import('../lib/util/fs').InputFileSystem)"
         },
         "mainFields": {
           "description": "Field names from the description file (package.json) which are used to find the default entry point.",
@@ -2231,7 +2232,8 @@
           }
         },
         "resolver": {
-          "description": "Custom resolver."
+          "description": "Custom resolver.",
+          "tsType": "(import('enhanced-resolve').Resolver)"
         },
         "restrictions": {
           "description": "A list of resolve restrictions.",

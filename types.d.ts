@@ -2928,6 +2928,10 @@ declare interface InputFileSystem {
 		arg0: string,
 		arg1: (arg0: Error | NodeJS.ErrnoException, arg1?: any) => void
 	) => void;
+	readlink: (
+		arg0: string,
+		arg1: (arg0: NodeJS.ErrnoException, arg1: string | Buffer) => void
+	) => void;
 	readdir: (
 		arg0: string,
 		arg1: (arg0: NodeJS.ErrnoException, arg1: string[]) => void
@@ -5916,7 +5920,7 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Predicate function to decide which requests should be cached.
 	 */
-	cachePredicate?: Function;
+	cachePredicate?: (request: ResolveRequest) => boolean;
 
 	/**
 	 * Include the context information in the cache identifier when caching.
@@ -5951,7 +5955,7 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Filesystem for the resolver.
 	 */
-	fileSystem?: { [index: string]: any };
+	fileSystem?: InputFileSystem;
 
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point.
@@ -5976,7 +5980,7 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Custom resolver.
 	 */
-	resolver?: { [index: string]: any };
+	resolver?: Resolver;
 
 	/**
 	 * A list of resolve restrictions.
@@ -6116,7 +6120,7 @@ declare abstract class ResolverFactory {
 						/**
 						 * Predicate function to decide which requests should be cached.
 						 */
-						cachePredicate?: Function;
+						cachePredicate?: (request: ResolveRequest) => boolean;
 						/**
 						 * Include the context information in the cache identifier when caching.
 						 */
@@ -6144,7 +6148,7 @@ declare abstract class ResolverFactory {
 						/**
 						 * Filesystem for the resolver.
 						 */
-						fileSystem?: { [index: string]: any };
+						fileSystem?: InputFileSystem;
 						/**
 						 * Field names from the description file (package.json) which are used to find the default entry point.
 						 */
@@ -6164,7 +6168,7 @@ declare abstract class ResolverFactory {
 						/**
 						 * Custom resolver.
 						 */
-						resolver?: { [index: string]: any };
+						resolver?: Resolver;
 						/**
 						 * A list of resolve restrictions.
 						 */
@@ -6182,6 +6186,7 @@ declare abstract class ResolverFactory {
 						 */
 						useSyncFileSystemCalls?: boolean;
 						dependencyType?: string;
+						resolveToContext?: boolean;
 					}
 				]
 			>
@@ -6226,7 +6231,7 @@ declare abstract class ResolverFactory {
 						/**
 						 * Predicate function to decide which requests should be cached.
 						 */
-						cachePredicate?: Function;
+						cachePredicate?: (request: ResolveRequest) => boolean;
 						/**
 						 * Include the context information in the cache identifier when caching.
 						 */
@@ -6254,7 +6259,7 @@ declare abstract class ResolverFactory {
 						/**
 						 * Filesystem for the resolver.
 						 */
-						fileSystem?: { [index: string]: any };
+						fileSystem?: InputFileSystem;
 						/**
 						 * Field names from the description file (package.json) which are used to find the default entry point.
 						 */
@@ -6274,7 +6279,7 @@ declare abstract class ResolverFactory {
 						/**
 						 * Custom resolver.
 						 */
-						resolver?: { [index: string]: any };
+						resolver?: Resolver;
 						/**
 						 * A list of resolve restrictions.
 						 */
@@ -6292,6 +6297,7 @@ declare abstract class ResolverFactory {
 						 */
 						useSyncFileSystemCalls?: boolean;
 						dependencyType?: string;
+						resolveToContext?: boolean;
 					}
 				],
 				void
@@ -6336,7 +6342,7 @@ declare abstract class ResolverFactory {
 			/**
 			 * Predicate function to decide which requests should be cached.
 			 */
-			cachePredicate?: Function;
+			cachePredicate?: (request: ResolveRequest) => boolean;
 			/**
 			 * Include the context information in the cache identifier when caching.
 			 */
@@ -6364,7 +6370,7 @@ declare abstract class ResolverFactory {
 			/**
 			 * Filesystem for the resolver.
 			 */
-			fileSystem?: { [index: string]: any };
+			fileSystem?: InputFileSystem;
 			/**
 			 * Field names from the description file (package.json) which are used to find the default entry point.
 			 */
@@ -6384,7 +6390,7 @@ declare abstract class ResolverFactory {
 			/**
 			 * Custom resolver.
 			 */
-			resolver?: { [index: string]: any };
+			resolver?: Resolver;
 			/**
 			 * A list of resolve restrictions.
 			 */
@@ -6402,6 +6408,7 @@ declare abstract class ResolverFactory {
 			 */
 			useSyncFileSystemCalls?: boolean;
 			dependencyType?: string;
+			resolveToContext?: boolean;
 		}
 	): Resolver & WithOptions;
 }
@@ -8186,7 +8193,111 @@ declare interface WithOptions {
 	/**
 	 * create a resolver with additional/different options
 	 */
-	withOptions: (arg0?: any) => Resolver & WithOptions;
+	withOptions: (
+		arg0: Partial<{
+			/**
+			 * Redirect module requests.
+			 */
+			alias?:
+				| {
+						/**
+						 * New request.
+						 */
+						alias: string | false | string[];
+						/**
+						 * Request to be redirected.
+						 */
+						name: string;
+						/**
+						 * Redirect only exact matching request.
+						 */
+						onlyModule?: boolean;
+				  }[]
+				| { [index: string]: string | false | string[] };
+			/**
+			 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
+			 */
+			aliasFields?: LibraryExport[];
+			/**
+			 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
+			 */
+			byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
+			/**
+			 * Enable caching of successfully resolved requests (cache entries are revalidated).
+			 */
+			cache?: boolean;
+			/**
+			 * Predicate function to decide which requests should be cached.
+			 */
+			cachePredicate?: (request: ResolveRequest) => boolean;
+			/**
+			 * Include the context information in the cache identifier when caching.
+			 */
+			cacheWithContext?: boolean;
+			/**
+			 * Condition names for exports field entry point.
+			 */
+			conditionNames?: string[];
+			/**
+			 * Filenames used to find a description file (like a package.json).
+			 */
+			descriptionFiles?: string[];
+			/**
+			 * Enforce using one of the extensions from the extensions option.
+			 */
+			enforceExtension?: boolean;
+			/**
+			 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
+			 */
+			exportsFields?: string[];
+			/**
+			 * Extensions added to the request when trying to find the file.
+			 */
+			extensions?: string[];
+			/**
+			 * Filesystem for the resolver.
+			 */
+			fileSystem?: InputFileSystem;
+			/**
+			 * Field names from the description file (package.json) which are used to find the default entry point.
+			 */
+			mainFields?: LibraryExport[];
+			/**
+			 * Filenames used to find the default entry point if there is no description file or main field.
+			 */
+			mainFiles?: string[];
+			/**
+			 * Folder names or directory paths where to find modules.
+			 */
+			modules?: string[];
+			/**
+			 * Plugins for the resolver.
+			 */
+			plugins?: ResolvePluginInstance[];
+			/**
+			 * Custom resolver.
+			 */
+			resolver?: Resolver;
+			/**
+			 * A list of resolve restrictions.
+			 */
+			restrictions?: (string | RegExp)[];
+			/**
+			 * Enable resolving symlinks to the original location.
+			 */
+			symlinks?: boolean;
+			/**
+			 * Enable caching of successfully resolved requests (cache entries are not revalidated).
+			 */
+			unsafeCache?: boolean | { [index: string]: any };
+			/**
+			 * Use synchronous filesystem calls for the resolver.
+			 */
+			useSyncFileSystemCalls?: boolean;
+			dependencyType?: string;
+			resolveToContext?: boolean;
+		}>
+	) => Resolver & WithOptions;
 }
 type __TypeWebpackOptions = (data: {}) =>
 	| string

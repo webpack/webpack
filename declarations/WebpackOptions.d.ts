@@ -1128,7 +1128,9 @@ export interface ResolveOptions {
 	/**
 	 * Predicate function to decide which requests should be cached.
 	 */
-	cachePredicate?: Function;
+	cachePredicate?: (
+		request: import("enhanced-resolve").ResolveRequest
+	) => boolean;
 	/**
 	 * Include the context information in the cache identifier when caching.
 	 */
@@ -1156,9 +1158,7 @@ export interface ResolveOptions {
 	/**
 	 * Filesystem for the resolver.
 	 */
-	fileSystem?: {
-		[k: string]: any;
-	};
+	fileSystem?: import("../lib/util/fs").InputFileSystem;
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point.
 	 */
@@ -1178,9 +1178,7 @@ export interface ResolveOptions {
 	/**
 	 * Custom resolver.
 	 */
-	resolver?: {
-		[k: string]: any;
-	};
+	resolver?: import("enhanced-resolve").Resolver;
 	/**
 	 * A list of resolve restrictions.
 	 */
