@@ -65,13 +65,16 @@ import { default as ValidationError } from "schema-utils/declarations/Validation
 import {
 	AsArray,
 	AsyncParallelHook,
-	AsyncSeriesBailHook,
-	AsyncSeriesHook,
+	AsyncSeriesBailHook as AsyncSeriesBailHookImportTapableClass_1,
+	AsyncSeriesBailHook as AsyncSeriesBailHookImportTapableClass_2,
+	AsyncSeriesHook as AsyncSeriesHookImportTapableClass_1,
+	AsyncSeriesHook as AsyncSeriesHookImportTapableClass_2,
 	AsyncSeriesWaterfallHook,
 	HookMap,
 	MultiHook,
 	SyncBailHook,
-	SyncHook,
+	SyncHook as SyncHookImportTapableClass_1,
+	SyncHook as SyncHookImportTapableClass_2,
 	SyncWaterfallHook
 } from "tapable";
 
@@ -226,11 +229,11 @@ declare abstract class AsyncDependenciesBlock extends DependenciesBlock {
 }
 declare abstract class AsyncQueue<T, K, R> {
 	hooks: {
-		beforeAdd: AsyncSeriesHook<[T]>;
-		added: SyncHook<[T], void>;
-		beforeStart: AsyncSeriesHook<[T]>;
-		started: SyncHook<[T], void>;
-		result: SyncHook<[T, Error, R], void>;
+		beforeAdd: AsyncSeriesHookImportTapableClass_1<[T]>;
+		added: SyncHookImportTapableClass_1<[T], void>;
+		beforeStart: AsyncSeriesHookImportTapableClass_1<[T]>;
+		started: SyncHookImportTapableClass_1<[T], void>;
+		result: SyncHookImportTapableClass_1<[T, Error, R], void>;
 	};
 	add(item: T, callback: CallbackFunction<R>): void;
 	invalidate(item: T): void;
@@ -385,13 +388,13 @@ declare abstract class ByTypeGenerator extends Generator {
 declare class Cache {
 	constructor();
 	hooks: {
-		get: AsyncSeriesBailHook<
+		get: AsyncSeriesBailHookImportTapableClass_1<
 			[string, Etag, ((result: any, stats: CallbackCache<void>) => void)[]],
 			any
 		>;
 		store: AsyncParallelHook<[string, Etag, any]>;
 		storeBuildDependencies: AsyncParallelHook<[Iterable<string>]>;
-		beginIdle: SyncHook<[], void>;
+		beginIdle: SyncHookImportTapableClass_1<[], void>;
 		endIdle: AsyncParallelHook<[]>;
 		shutdown: AsyncParallelHook<[]>;
 	};
@@ -856,12 +859,12 @@ declare class Compilation {
 	 */
 	constructor(compiler: Compiler);
 	hooks: Readonly<{
-		buildModule: SyncHook<[Module], void>;
-		rebuildModule: SyncHook<[Module], void>;
-		failedModule: SyncHook<[Module, WebpackError], void>;
-		succeedModule: SyncHook<[Module], void>;
-		stillValidModule: SyncHook<[Module], void>;
-		addEntry: SyncHook<
+		buildModule: SyncHookImportTapableClass_1<[Module], void>;
+		rebuildModule: SyncHookImportTapableClass_1<[Module], void>;
+		failedModule: SyncHookImportTapableClass_1<[Module, WebpackError], void>;
+		succeedModule: SyncHookImportTapableClass_1<[Module], void>;
+		stillValidModule: SyncHookImportTapableClass_1<[Module], void>;
+		addEntry: SyncHookImportTapableClass_1<
 			[
 				Dependency,
 				{ name: string } & Pick<
@@ -871,7 +874,7 @@ declare class Compilation {
 			],
 			void
 		>;
-		failedEntry: SyncHook<
+		failedEntry: SyncHookImportTapableClass_1<
 			[
 				Dependency,
 				{ name: string } & Pick<
@@ -882,7 +885,7 @@ declare class Compilation {
 			],
 			void
 		>;
-		succeedEntry: SyncHook<
+		succeedEntry: SyncHookImportTapableClass_1<
 			[
 				Dependency,
 				{ name: string } & Pick<
@@ -896,108 +899,159 @@ declare class Compilation {
 		dependencyReferencedExports: SyncWaterfallHook<
 			[(string[] | ReferencedExport)[], Dependency]
 		>;
-		finishModules: AsyncSeriesHook<[Iterable<Module>]>;
-		finishRebuildingModule: AsyncSeriesHook<[Module]>;
-		unseal: SyncHook<[], void>;
-		seal: SyncHook<[], void>;
-		beforeChunks: SyncHook<[], void>;
-		afterChunks: SyncHook<[Iterable<Chunk>], void>;
+		finishModules: AsyncSeriesHookImportTapableClass_1<[Iterable<Module>]>;
+		finishRebuildingModule: AsyncSeriesHookImportTapableClass_1<[Module]>;
+		unseal: SyncHookImportTapableClass_1<[], void>;
+		seal: SyncHookImportTapableClass_1<[], void>;
+		beforeChunks: SyncHookImportTapableClass_1<[], void>;
+		afterChunks: SyncHookImportTapableClass_1<[Iterable<Chunk>], void>;
 		optimizeDependencies: SyncBailHook<[Iterable<Module>], any>;
-		afterOptimizeDependencies: SyncHook<[Iterable<Module>], void>;
-		optimize: SyncHook<[], void>;
+		afterOptimizeDependencies: SyncHookImportTapableClass_1<
+			[Iterable<Module>],
+			void
+		>;
+		optimize: SyncHookImportTapableClass_1<[], void>;
 		optimizeModules: SyncBailHook<[Iterable<Module>], any>;
-		afterOptimizeModules: SyncHook<[Iterable<Module>], void>;
+		afterOptimizeModules: SyncHookImportTapableClass_1<
+			[Iterable<Module>],
+			void
+		>;
 		optimizeChunks: SyncBailHook<[Iterable<Chunk>, ChunkGroup[]], any>;
-		afterOptimizeChunks: SyncHook<[Iterable<Chunk>, ChunkGroup[]], void>;
-		optimizeTree: AsyncSeriesHook<[Iterable<Chunk>, Iterable<Module>]>;
-		afterOptimizeTree: SyncHook<[Iterable<Chunk>, Iterable<Module>], void>;
-		optimizeChunkModules: AsyncSeriesBailHook<
+		afterOptimizeChunks: SyncHookImportTapableClass_1<
+			[Iterable<Chunk>, ChunkGroup[]],
+			void
+		>;
+		optimizeTree: AsyncSeriesHookImportTapableClass_1<
+			[Iterable<Chunk>, Iterable<Module>]
+		>;
+		afterOptimizeTree: SyncHookImportTapableClass_1<
+			[Iterable<Chunk>, Iterable<Module>],
+			void
+		>;
+		optimizeChunkModules: AsyncSeriesBailHookImportTapableClass_1<
 			[Iterable<Chunk>, Iterable<Module>],
 			any
 		>;
-		afterOptimizeChunkModules: SyncHook<
+		afterOptimizeChunkModules: SyncHookImportTapableClass_1<
 			[Iterable<Chunk>, Iterable<Module>],
 			void
 		>;
 		shouldRecord: SyncBailHook<[], boolean>;
-		additionalChunkRuntimeRequirements: SyncHook<[Chunk, Set<string>], void>;
+		additionalChunkRuntimeRequirements: SyncHookImportTapableClass_1<
+			[Chunk, Set<string>],
+			void
+		>;
 		runtimeRequirementInChunk: HookMap<SyncBailHook<[Chunk, Set<string>], any>>;
-		additionalModuleRuntimeRequirements: SyncHook<[Module, Set<string>], void>;
+		additionalModuleRuntimeRequirements: SyncHookImportTapableClass_1<
+			[Module, Set<string>],
+			void
+		>;
 		runtimeRequirementInModule: HookMap<
 			SyncBailHook<[Module, Set<string>], any>
 		>;
-		additionalTreeRuntimeRequirements: SyncHook<[Chunk, Set<string>], void>;
+		additionalTreeRuntimeRequirements: SyncHookImportTapableClass_1<
+			[Chunk, Set<string>],
+			void
+		>;
 		runtimeRequirementInTree: HookMap<SyncBailHook<[Chunk, Set<string>], any>>;
-		runtimeModule: SyncHook<[RuntimeModule, Chunk], void>;
-		reviveModules: SyncHook<[Iterable<Module>, any], void>;
-		beforeModuleIds: SyncHook<[Iterable<Module>], void>;
-		moduleIds: SyncHook<[Iterable<Module>], void>;
-		optimizeModuleIds: SyncHook<[Iterable<Module>], void>;
-		afterOptimizeModuleIds: SyncHook<[Iterable<Module>], void>;
-		reviveChunks: SyncHook<[Iterable<Chunk>, any], void>;
-		beforeChunkIds: SyncHook<[Iterable<Chunk>], void>;
-		chunkIds: SyncHook<[Iterable<Chunk>], void>;
-		optimizeChunkIds: SyncHook<[Iterable<Chunk>], void>;
-		afterOptimizeChunkIds: SyncHook<[Iterable<Chunk>], void>;
-		recordModules: SyncHook<[Iterable<Module>, any], void>;
-		recordChunks: SyncHook<[Iterable<Chunk>, any], void>;
-		optimizeCodeGeneration: SyncHook<[Iterable<Module>], void>;
-		beforeModuleHash: SyncHook<[], void>;
-		afterModuleHash: SyncHook<[], void>;
-		beforeCodeGeneration: SyncHook<[], void>;
-		afterCodeGeneration: SyncHook<[], void>;
-		beforeRuntimeRequirements: SyncHook<[], void>;
-		afterRuntimeRequirements: SyncHook<[], void>;
-		beforeHash: SyncHook<[], void>;
-		contentHash: SyncHook<[Chunk], void>;
-		afterHash: SyncHook<[], void>;
-		recordHash: SyncHook<[any], void>;
-		record: SyncHook<[Compilation, any], void>;
-		beforeModuleAssets: SyncHook<[], void>;
+		runtimeModule: SyncHookImportTapableClass_1<[RuntimeModule, Chunk], void>;
+		reviveModules: SyncHookImportTapableClass_1<[Iterable<Module>, any], void>;
+		beforeModuleIds: SyncHookImportTapableClass_1<[Iterable<Module>], void>;
+		moduleIds: SyncHookImportTapableClass_1<[Iterable<Module>], void>;
+		optimizeModuleIds: SyncHookImportTapableClass_1<[Iterable<Module>], void>;
+		afterOptimizeModuleIds: SyncHookImportTapableClass_1<
+			[Iterable<Module>],
+			void
+		>;
+		reviveChunks: SyncHookImportTapableClass_1<[Iterable<Chunk>, any], void>;
+		beforeChunkIds: SyncHookImportTapableClass_1<[Iterable<Chunk>], void>;
+		chunkIds: SyncHookImportTapableClass_1<[Iterable<Chunk>], void>;
+		optimizeChunkIds: SyncHookImportTapableClass_1<[Iterable<Chunk>], void>;
+		afterOptimizeChunkIds: SyncHookImportTapableClass_1<
+			[Iterable<Chunk>],
+			void
+		>;
+		recordModules: SyncHookImportTapableClass_1<[Iterable<Module>, any], void>;
+		recordChunks: SyncHookImportTapableClass_1<[Iterable<Chunk>, any], void>;
+		optimizeCodeGeneration: SyncHookImportTapableClass_1<
+			[Iterable<Module>],
+			void
+		>;
+		beforeModuleHash: SyncHookImportTapableClass_1<[], void>;
+		afterModuleHash: SyncHookImportTapableClass_1<[], void>;
+		beforeCodeGeneration: SyncHookImportTapableClass_1<[], void>;
+		afterCodeGeneration: SyncHookImportTapableClass_1<[], void>;
+		beforeRuntimeRequirements: SyncHookImportTapableClass_1<[], void>;
+		afterRuntimeRequirements: SyncHookImportTapableClass_1<[], void>;
+		beforeHash: SyncHookImportTapableClass_1<[], void>;
+		contentHash: SyncHookImportTapableClass_1<[Chunk], void>;
+		afterHash: SyncHookImportTapableClass_1<[], void>;
+		recordHash: SyncHookImportTapableClass_1<[any], void>;
+		record: SyncHookImportTapableClass_1<[Compilation, any], void>;
+		beforeModuleAssets: SyncHookImportTapableClass_1<[], void>;
 		shouldGenerateChunkAssets: SyncBailHook<[], boolean>;
-		beforeChunkAssets: SyncHook<[], void>;
+		beforeChunkAssets: SyncHookImportTapableClass_1<[], void>;
 		additionalChunkAssets: Pick<
-			AsyncSeriesHook<[Set<Chunk>]>,
+			AsyncSeriesHookImportTapableClass_1<[Set<Chunk>]>,
 			"tap" | "tapAsync" | "tapPromise" | "name"
 		> &
 			FakeHookMarker;
 		additionalAssets: Pick<
-			AsyncSeriesHook<[]>,
+			AsyncSeriesHookImportTapableClass_1<[]>,
 			"tap" | "tapAsync" | "tapPromise" | "name"
 		> &
 			FakeHookMarker;
 		optimizeChunkAssets: Pick<
-			AsyncSeriesHook<[Set<Chunk>]>,
+			AsyncSeriesHookImportTapableClass_1<[Set<Chunk>]>,
 			"tap" | "tapAsync" | "tapPromise" | "name"
 		> &
 			FakeHookMarker;
 		afterOptimizeChunkAssets: Pick<
-			AsyncSeriesHook<[Set<Chunk>]>,
+			AsyncSeriesHookImportTapableClass_1<[Set<Chunk>]>,
 			"tap" | "tapAsync" | "tapPromise" | "name"
 		> &
 			FakeHookMarker;
-		optimizeAssets: AsyncSeriesHook<[Record<string, Source>]>;
-		afterOptimizeAssets: SyncHook<[Record<string, Source>], void>;
-		processAssets: AsyncSeriesHook<[Record<string, Source>]>;
-		afterProcessAssets: SyncHook<[Record<string, Source>], void>;
+		optimizeAssets: AsyncSeriesHookImportTapableClass_1<
+			[Record<string, Source>]
+		>;
+		afterOptimizeAssets: SyncHookImportTapableClass_1<
+			[Record<string, Source>],
+			void
+		>;
+		processAssets: AsyncSeriesHookImportTapableClass_1<
+			[Record<string, Source>]
+		>;
+		afterProcessAssets: SyncHookImportTapableClass_1<
+			[Record<string, Source>],
+			void
+		>;
 		needAdditionalSeal: SyncBailHook<[], boolean>;
-		afterSeal: AsyncSeriesHook<[]>;
+		afterSeal: AsyncSeriesHookImportTapableClass_1<[]>;
 		renderManifest: SyncWaterfallHook<
 			[RenderManifestEntry[], RenderManifestOptions]
 		>;
-		fullHash: SyncHook<[Hash], void>;
-		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext], void>;
-		moduleAsset: SyncHook<[Module, string], void>;
-		chunkAsset: SyncHook<[Chunk, string], void>;
+		fullHash: SyncHookImportTapableClass_1<[Hash], void>;
+		chunkHash: SyncHookImportTapableClass_1<
+			[Chunk, Hash, ChunkHashContext],
+			void
+		>;
+		moduleAsset: SyncHookImportTapableClass_1<[Module, string], void>;
+		chunkAsset: SyncHookImportTapableClass_1<[Chunk, string], void>;
 		assetPath: SyncWaterfallHook<[string, any, AssetInfo]>;
 		needAdditionalPass: SyncBailHook<[], boolean>;
-		childCompiler: SyncHook<[Compiler, string, number], void>;
+		childCompiler: SyncHookImportTapableClass_1<
+			[Compiler, string, number],
+			void
+		>;
 		log: SyncBailHook<[string, LogEntry], true>;
-		statsPreset: HookMap<SyncHook<[any, any], void>>;
-		statsNormalize: SyncHook<[any, any], void>;
-		statsFactory: SyncHook<[StatsFactory, any], void>;
-		statsPrinter: SyncHook<[StatsPrinter, any], void>;
-		readonly normalModuleLoader: SyncHook<[any, NormalModule], void>;
+		statsPreset: HookMap<SyncHookImportTapableClass_1<[any, any], void>>;
+		statsNormalize: SyncHookImportTapableClass_1<[any, any], void>;
+		statsFactory: SyncHookImportTapableClass_1<[StatsFactory, any], void>;
+		statsPrinter: SyncHookImportTapableClass_1<[StatsPrinter, any], void>;
+		readonly normalModuleLoader: SyncHookImportTapableClass_1<
+			[any, NormalModule],
+			void
+		>;
 	}>;
 	name: string;
 	compiler: Compiler;
@@ -1293,7 +1347,10 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	renderMain: SyncWaterfallHook<[Source, RenderContextObject]>;
 	render: SyncWaterfallHook<[Source, RenderContextObject]>;
 	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
-	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext], void>;
+	chunkHash: SyncHookImportTapableClass_1<
+		[Chunk, Hash, ChunkHashContext],
+		void
+	>;
 }
 declare interface CompilationParams {
 	normalModuleFactory: NormalModuleFactory;
@@ -1302,34 +1359,48 @@ declare interface CompilationParams {
 declare class Compiler {
 	constructor(context: string);
 	hooks: Readonly<{
-		initialize: SyncHook<[], void>;
+		initialize: SyncHookImportTapableClass_1<[], void>;
 		shouldEmit: SyncBailHook<[Compilation], boolean>;
-		done: AsyncSeriesHook<[Stats]>;
-		afterDone: SyncHook<[Stats], void>;
-		additionalPass: AsyncSeriesHook<[]>;
-		beforeRun: AsyncSeriesHook<[Compiler]>;
-		run: AsyncSeriesHook<[Compiler]>;
-		emit: AsyncSeriesHook<[Compilation]>;
-		assetEmitted: AsyncSeriesHook<[string, AssetEmittedInfo]>;
-		afterEmit: AsyncSeriesHook<[Compilation]>;
-		thisCompilation: SyncHook<[Compilation, CompilationParams], void>;
-		compilation: SyncHook<[Compilation, CompilationParams], void>;
-		normalModuleFactory: SyncHook<[NormalModuleFactory], void>;
-		contextModuleFactory: SyncHook<[ContextModuleFactory], void>;
-		beforeCompile: AsyncSeriesHook<[CompilationParams]>;
-		compile: SyncHook<[CompilationParams], void>;
+		done: AsyncSeriesHookImportTapableClass_1<[Stats]>;
+		afterDone: SyncHookImportTapableClass_1<[Stats], void>;
+		additionalPass: AsyncSeriesHookImportTapableClass_1<[]>;
+		beforeRun: AsyncSeriesHookImportTapableClass_1<[Compiler]>;
+		run: AsyncSeriesHookImportTapableClass_1<[Compiler]>;
+		emit: AsyncSeriesHookImportTapableClass_1<[Compilation]>;
+		assetEmitted: AsyncSeriesHookImportTapableClass_1<
+			[string, AssetEmittedInfo]
+		>;
+		afterEmit: AsyncSeriesHookImportTapableClass_1<[Compilation]>;
+		thisCompilation: SyncHookImportTapableClass_1<
+			[Compilation, CompilationParams],
+			void
+		>;
+		compilation: SyncHookImportTapableClass_1<
+			[Compilation, CompilationParams],
+			void
+		>;
+		normalModuleFactory: SyncHookImportTapableClass_1<
+			[NormalModuleFactory],
+			void
+		>;
+		contextModuleFactory: SyncHookImportTapableClass_1<
+			[ContextModuleFactory],
+			void
+		>;
+		beforeCompile: AsyncSeriesHookImportTapableClass_1<[CompilationParams]>;
+		compile: SyncHookImportTapableClass_1<[CompilationParams], void>;
 		make: AsyncParallelHook<[Compilation]>;
 		finishMake: AsyncParallelHook<[Compilation]>;
-		afterCompile: AsyncSeriesHook<[Compilation]>;
-		watchRun: AsyncSeriesHook<[Compiler]>;
-		failed: SyncHook<[Error], void>;
-		invalid: SyncHook<[string, string], void>;
-		watchClose: SyncHook<[], void>;
+		afterCompile: AsyncSeriesHookImportTapableClass_1<[Compilation]>;
+		watchRun: AsyncSeriesHookImportTapableClass_1<[Compiler]>;
+		failed: SyncHookImportTapableClass_1<[Error], void>;
+		invalid: SyncHookImportTapableClass_1<[string, string], void>;
+		watchClose: SyncHookImportTapableClass_1<[], void>;
 		infrastructureLog: SyncBailHook<[string, string, any[]], true>;
-		environment: SyncHook<[], void>;
-		afterEnvironment: SyncHook<[], void>;
-		afterPlugins: SyncHook<[Compiler], void>;
-		afterResolvers: SyncHook<[Compiler], void>;
+		environment: SyncHookImportTapableClass_1<[], void>;
+		afterEnvironment: SyncHookImportTapableClass_1<[], void>;
+		afterPlugins: SyncHookImportTapableClass_1<[Compiler], void>;
+		afterResolvers: SyncHookImportTapableClass_1<[Compiler], void>;
 		entryOption: SyncBailHook<[string, EntryNormalized], boolean>;
 	}>;
 	name: string;
@@ -1525,12 +1596,12 @@ declare interface Configuration {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve?: ResolveOptions;
+	resolve?: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Options for the resolver when resolving loaders.
 	 */
-	resolveLoader?: ResolveOptions;
+	resolveLoader?: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Stats options object or preset name.
@@ -2664,6 +2735,24 @@ declare interface FileCacheOptions {
 	 */
 	version?: string;
 }
+declare interface FileSystem {
+	readFile: (
+		arg0: string,
+		arg1: (arg0: PossibleFileSystemError & Error, arg1: string | Buffer) => void
+	) => void;
+	readJson?: (
+		arg0: string,
+		arg1: (arg0: PossibleFileSystemError & Error, arg1?: any) => void
+	) => void;
+	readlink: (
+		arg0: string,
+		arg1: (arg0: PossibleFileSystemError & Error, arg1: string | Buffer) => void
+	) => void;
+	stat: (
+		arg0: string,
+		arg1: (arg0: PossibleFileSystemError & Error, arg1: FileSystemStats) => void
+	) => void;
+}
 declare abstract class FileSystemInfo {
 	fs: InputFileSystem;
 	logger: WebpackLogger;
@@ -2729,6 +2818,10 @@ declare interface FileSystemInfoEntry {
 	safeTime: number;
 	timestamp?: number;
 	timestampHash?: string;
+}
+declare interface FileSystemStats {
+	isDirectory: () => boolean;
+	isFile: () => boolean;
 }
 type Filename = string | ((pathData: PathData, assetInfo: AssetInfo) => string);
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
@@ -4241,11 +4334,11 @@ declare abstract class ModuleTemplate {
 declare class MultiCompiler {
 	constructor(compilers: Compiler[] | Record<string, Compiler>);
 	hooks: Readonly<{
-		done: SyncHook<[MultiStats], void>;
-		invalid: MultiHook<SyncHook<[string, string], void>>;
-		run: MultiHook<AsyncSeriesHook<[Compiler]>>;
-		watchClose: SyncHook<[], void>;
-		watchRun: MultiHook<AsyncSeriesHook<[Compiler]>>;
+		done: SyncHookImportTapableClass_1<[MultiStats], void>;
+		invalid: MultiHook<SyncHookImportTapableClass_1<[string, string], void>>;
+		run: MultiHook<AsyncSeriesHookImportTapableClass_1<[Compiler]>>;
+		watchClose: SyncHookImportTapableClass_1<[], void>;
+		watchRun: MultiHook<AsyncSeriesHookImportTapableClass_1<[Compiler]>>;
 		infrastructureLog: MultiHook<SyncBailHook<[string, string, any[]], true>>;
 	}>;
 	compilers: Compiler[];
@@ -4464,20 +4557,23 @@ declare class NormalModule extends Module {
 	static deserialize(context?: any): NormalModule;
 }
 declare interface NormalModuleCompilationHooks {
-	loader: SyncHook<[any, NormalModule], void>;
+	loader: SyncHookImportTapableClass_1<[any, NormalModule], void>;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
-		resolve: AsyncSeriesBailHook<[ResolveData], any>;
-		factorize: AsyncSeriesBailHook<[ResolveData], any>;
-		beforeResolve: AsyncSeriesBailHook<[ResolveData], any>;
-		afterResolve: AsyncSeriesBailHook<[ResolveData], any>;
-		createModule: AsyncSeriesBailHook<[any, ResolveData], any>;
+		resolve: AsyncSeriesBailHookImportTapableClass_1<[ResolveData], any>;
+		factorize: AsyncSeriesBailHookImportTapableClass_1<[ResolveData], any>;
+		beforeResolve: AsyncSeriesBailHookImportTapableClass_1<[ResolveData], any>;
+		afterResolve: AsyncSeriesBailHookImportTapableClass_1<[ResolveData], any>;
+		createModule: AsyncSeriesBailHookImportTapableClass_1<
+			[any, ResolveData],
+			any
+		>;
 		module: SyncWaterfallHook<[Module, any, ResolveData]>;
 		createParser: HookMap<SyncBailHook<any, any>>;
-		parser: HookMap<SyncHook<any, void>>;
+		parser: HookMap<SyncHookImportTapableClass_1<any, void>>;
 		createGenerator: HookMap<SyncBailHook<any, any>>;
-		generator: HookMap<SyncHook<any, void>>;
+		generator: HookMap<SyncHookImportTapableClass_1<any, void>>;
 	}>;
 	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
@@ -5282,6 +5378,14 @@ declare interface OutputNormalized {
 	 */
 	webassemblyModuleFilename?: string;
 }
+declare interface ParsedIdentifier {
+	request: string;
+	query: string;
+	fragment: string;
+	directory: boolean;
+	module: boolean;
+	file: boolean;
+}
 declare class Parser {
 	constructor();
 	parse(
@@ -5338,6 +5442,15 @@ declare interface PerformanceOptions {
 }
 declare interface Plugin {
 	apply: () => void;
+}
+declare interface PnpApiImpl {
+	resolveToUnqualified: (arg0: string, arg1: string, arg2?: any) => string;
+}
+declare interface PossibleFileSystemError {
+	code?: string;
+	errno?: number;
+	path?: string;
+	syscall?: string;
 }
 declare class PrefetchPlugin {
 	constructor(context?: any, request?: any);
@@ -5754,12 +5867,32 @@ declare interface ResolveBuildDependenciesResult {
 		missing: Set<string>;
 	};
 }
+
+/**
+ * Resolve context
+ */
 declare interface ResolveContext {
-	log?: (message: string) => void;
-	fileDependencies?: WriteOnlySet<string>;
-	contextDependencies?: WriteOnlySet<string>;
-	missingDependencies?: WriteOnlySet<string>;
+	contextDependencies?: { add: (T?: any) => void };
+
+	/**
+	 * files that was found on file system
+	 */
+	fileDependencies?: { add: (T?: any) => void };
+
+	/**
+	 * dependencies that was not found on file system
+	 */
+	missingDependencies?: { add: (T?: any) => void };
+
+	/**
+	 * set of hooks' calls. For instance, `resolve → parsedResolve → describedResolve`,
+	 */
 	stack?: Set<string>;
+
+	/**
+	 * log function
+	 */
+	log?: (arg0: string) => void;
 }
 declare interface ResolveData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
@@ -5772,11 +5905,53 @@ declare interface ResolveData {
 	missingDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
 }
+declare interface ResolveOptionsTypes {
+	alias: {
+		/**
+		 * New request.
+		 */
+		alias: string | false | string[];
+		/**
+		 * Request to be redirected.
+		 */
+		name: string;
+		/**
+		 * Redirect only exact matching request.
+		 */
+		onlyModule?: boolean;
+	}[];
+	aliasFields: Set<LibraryExport>;
+	cachePredicate: (arg0: ResolveRequest) => boolean;
+	cacheWithContext: boolean;
+
+	/**
+	 * A list of exports field condition names.
+	 */
+	conditionNames: Set<string>;
+	descriptionFiles: string[];
+	enforceExtension: boolean;
+	exportsFields: Set<LibraryExport>;
+	extensions: Set<string>;
+	fileSystem: FileSystem;
+	unsafeCache: any;
+	symlinks: boolean;
+	resolver?: Resolver;
+	modules: LibraryExport[];
+	mainFields: { name: string[]; forceRelative: boolean }[];
+	mainFiles: Set<string>;
+	plugins: (
+		| { apply: (arg0: Resolver) => void }
+		| ((this: Resolver, arg1: Resolver) => void)
+	)[];
+	pnpApi: PnpApiImpl;
+	resolveToContext: boolean;
+	restrictions: Set<string | RegExp>;
+}
 
 /**
  * Options object for resolving requests.
  */
-declare interface ResolveOptions {
+declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Redirect module requests.
 	 */
@@ -5805,7 +5980,7 @@ declare interface ResolveOptions {
 	/**
 	 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
 	 */
-	byDependency?: { [index: string]: ResolveOptions };
+	byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
 
 	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
@@ -5909,18 +6084,84 @@ declare interface ResolvePluginInstance {
 	 */
 	apply: (resolver?: any) => void;
 }
+declare interface ResolveRequest {
+	path: DevTool;
+	request?: string;
+	query?: string;
+	fragment?: string;
+	directory?: boolean;
+	module?: boolean;
+	descriptionFilePath?: string;
+	descriptionFileRoot?: string;
+	descriptionFileData?: any;
+	relativePath?: string;
+	ignoreSymlinks?: boolean;
+}
 declare abstract class Resolver {
+	fileSystem: FileSystem;
+	options: ResolveOptionsTypes;
+	hooks: {
+		resolveStep: SyncHookImportTapableClass_2<
+			[
+				AsyncSeriesBailHookImportTapableClass_2<
+					[ResolveRequest, ResolveContext],
+					ResolveRequest
+				>,
+				ResolveRequest
+			],
+			void
+		>;
+		noResolve: SyncHookImportTapableClass_2<[ResolveRequest, Error], void>;
+		resolve: AsyncSeriesBailHookImportTapableClass_2<
+			[ResolveRequest, ResolveContext],
+			ResolveRequest
+		>;
+		result: AsyncSeriesHookImportTapableClass_2<
+			[ResolveRequest, ResolveContext]
+		>;
+	};
+	ensureHook(
+		name:
+			| string
+			| AsyncSeriesBailHookImportTapableClass_2<
+					[ResolveRequest, ResolveContext],
+					ResolveRequest
+			  >
+	): AsyncSeriesBailHookImportTapableClass_2<
+		[ResolveRequest, ResolveContext],
+		ResolveRequest
+	>;
+	getHook(
+		name:
+			| string
+			| AsyncSeriesBailHookImportTapableClass_2<
+					[ResolveRequest, ResolveContext],
+					ResolveRequest
+			  >
+	): AsyncSeriesBailHookImportTapableClass_2<
+		[ResolveRequest, ResolveContext],
+		ResolveRequest
+	>;
+	resolveSync(context: any, path: string, request: string): DevTool;
 	resolve(
-		context: Object,
+		context: any,
 		path: string,
 		request: string,
 		resolveContext: ResolveContext,
-		callback: (
-			err: NodeJS.ErrnoException,
-			result: string,
-			additionalInfo: Object
-		) => void
+		callback: (arg0: Error, arg1: DevTool, arg2: ResolveRequest) => void
 	): void;
+	doResolve(
+		hook?: any,
+		request?: any,
+		message?: any,
+		resolveContext?: any,
+		callback?: any
+	): any;
+	parse(identifier: string): ParsedIdentifier;
+	isModule(path?: any): boolean;
+	isDirectory(path: string): boolean;
+	join(path?: any, request?: any): string;
+	normalize(path?: any): string;
 }
 declare interface ResolverCache {
 	direct: WeakMap<any, Resolver & WithOptions>;
@@ -5958,7 +6199,7 @@ declare abstract class ResolverFactory {
 						/**
 						 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
 						 */
-						byDependency?: { [index: string]: ResolveOptions };
+						byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
 						/**
 						 * Enable caching of successfully resolved requests (cache entries are revalidated).
 						 */
@@ -6037,10 +6278,10 @@ declare abstract class ResolverFactory {
 			>
 		>;
 		resolver: HookMap<
-			SyncHook<
+			SyncHookImportTapableClass_1<
 				[
 					Resolver,
-					ResolveOptions,
+					UserResolveOptions,
 					{
 						/**
 						 * Redirect module requests.
@@ -6068,7 +6309,7 @@ declare abstract class ResolverFactory {
 						/**
 						 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
 						 */
-						byDependency?: { [index: string]: ResolveOptions };
+						byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
 						/**
 						 * Enable caching of successfully resolved requests (cache entries are revalidated).
 						 */
@@ -6178,7 +6419,7 @@ declare abstract class ResolverFactory {
 			/**
 			 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
 			 */
-			byDependency?: { [index: string]: ResolveOptions };
+			byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
 			/**
 			 * Enable caching of successfully resolved requests (cache entries are revalidated).
 			 */
@@ -6368,7 +6609,7 @@ declare interface RuleSetRule {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve?: ResolveOptions;
+	resolve?: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Match the resource path of the module.
@@ -7595,6 +7836,134 @@ declare interface UpdateHashContext {
 	 */
 	compilation: Compilation;
 }
+declare interface UserResolveOptions {
+	/**
+	 * A list of module alias configurations or an object which maps key to value
+	 */
+	alias?:
+		| { [index: string]: string | false | string[] }
+		| {
+				/**
+				 * New request.
+				 */
+				alias: string | false | string[];
+				/**
+				 * Request to be redirected.
+				 */
+				name: string;
+				/**
+				 * Redirect only exact matching request.
+				 */
+				onlyModule?: boolean;
+		  }[];
+
+	/**
+	 * A list of alias fields in description files
+	 */
+	aliasFields?: LibraryExport[];
+
+	/**
+	 * A function which decides whether a request should be cached or not. An object is passed with at least `path` and `request` properties.
+	 */
+	cachePredicate?: (arg0: ResolveRequest) => boolean;
+
+	/**
+	 * Whether or not the unsafeCache should include request context as part of the cache key.
+	 */
+	cacheWithContext?: boolean;
+
+	/**
+	 * A list of description files to read from
+	 */
+	descriptionFiles?: string[];
+
+	/**
+	 * A list of exports field condition names.
+	 */
+	conditionNames?: string[];
+
+	/**
+	 * Enforce that a extension from extensions must be used
+	 */
+	enforceExtension?: boolean;
+
+	/**
+	 * A list of exports fields in description files
+	 */
+	exportsFields?: LibraryExport[];
+
+	/**
+	 * A list of extensions which should be tried for files
+	 */
+	extensions?: string[];
+
+	/**
+	 * The file system which should be used
+	 */
+	fileSystem: FileSystem;
+
+	/**
+	 * Use this cache object to unsafely cache the successful requests
+	 */
+	unsafeCache?: any;
+
+	/**
+	 * Resolve symlinks to their symlinked location
+	 */
+	symlinks?: boolean;
+
+	/**
+	 * A prepared Resolver to which the plugins are attached
+	 */
+	resolver?: Resolver;
+
+	/**
+	 * A list of directories to resolve modules from, can be absolute path or folder name
+	 */
+	modules?: LibraryExport;
+
+	/**
+	 * A list of main fields in description files
+	 */
+	mainFields?: (
+		| string
+		| string[]
+		| { name: LibraryExport; forceRelative: boolean }
+	)[];
+
+	/**
+	 * A list of main files in directories
+	 */
+	mainFiles?: string[];
+
+	/**
+	 * A list of additional resolve plugins which should be applied
+	 */
+	plugins?: (
+		| { apply: (arg0: Resolver) => void }
+		| ((this: Resolver, arg1: Resolver) => void)
+	)[];
+
+	/**
+	 * A PnP API that should be used - null is "never", undefined is "auto"
+	 */
+	pnpApi?: PnpApiImpl;
+
+	/**
+	 * Resolve to a context instead of a file
+	 */
+	resolveToContext?: boolean;
+
+	/**
+	 * A list of resolve restrictions
+	 */
+	restrictions?: (string | RegExp)[];
+
+	/**
+	 * Use only the sync constiants of the file system calls
+	 */
+	useSyncFileSystemCalls?: boolean;
+}
 declare abstract class VariableInfo {
 	declaredScope: ScopeInfo;
 	freeName: string | true;
@@ -7862,12 +8231,12 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve: ResolveOptions;
+	resolve: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Options for the resolver when resolving loaders.
 	 */
-	resolveLoader: ResolveOptions;
+	resolveLoader: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Stats options object or preset name.
@@ -7909,9 +8278,6 @@ declare interface WithOptions {
 	 * create a resolver with additional/different options
 	 */
 	withOptions: (arg0?: any) => Resolver & WithOptions;
-}
-declare interface WriteOnlySet<T> {
-	add(item: T): void;
 }
 type __TypeWebpackOptions = (data: {}) =>
 	| string
@@ -8271,7 +8637,7 @@ declare namespace exports {
 		EntryNormalized,
 		LibraryOptions,
 		ModuleOptions,
-		ResolveOptions,
+		ResolveOptionsWebpackOptions as ResolveOptions,
 		RuleSetRule,
 		Configuration,
 		WebpackOptionsNormalized,
