@@ -1525,12 +1525,12 @@ declare interface Configuration {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve?: ResolveOptions;
+	resolve?: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Options for the resolver when resolving loaders.
 	 */
-	resolveLoader?: ResolveOptions;
+	resolveLoader?: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Stats options object or preset name.
@@ -1705,7 +1705,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		contextModuleFiles: SyncWaterfallHook<[string[]]>;
 		alternatives: AsyncSeriesWaterfallHook<[any[]]>;
 	}>;
-	resolverFactory: any;
+	resolverFactory: ResolverFactory;
 	resolveDependencies(
 		fs: InputFileSystem,
 		options: {
@@ -1718,6 +1718,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 			include?: RegExp;
 			exclude?: RegExp;
 			groupOptions?: RawChunkGroupOptions;
+			category?: string;
 			/**
 			 * exports referenced from modules (won't be mangled)
 			 */
@@ -1798,6 +1799,7 @@ declare class Dependency {
 	optional: boolean;
 	loc: SyntheticDependencyLocation | RealDependencyLocation;
 	readonly type: string;
+	readonly category: string;
 	getResourceIdentifier(): string;
 	getReference(moduleGraph: ModuleGraph): never;
 
@@ -2663,6 +2665,24 @@ declare interface FileCacheOptions {
 	 */
 	version?: string;
 }
+declare interface FileSystem {
+	readFile: (
+		arg0: string,
+		arg1: (arg0: PossibleFileSystemError & Error, arg1: string | Buffer) => void
+	) => void;
+	readJson?: (
+		arg0: string,
+		arg1: (arg0: PossibleFileSystemError & Error, arg1?: any) => void
+	) => void;
+	readlink: (
+		arg0: string,
+		arg1: (arg0: PossibleFileSystemError & Error, arg1: string | Buffer) => void
+	) => void;
+	stat: (
+		arg0: string,
+		arg1: (arg0: PossibleFileSystemError & Error, arg1: FileSystemStats) => void
+	) => void;
+}
 declare abstract class FileSystemInfo {
 	fs: InputFileSystem;
 	logger: WebpackLogger;
@@ -2728,6 +2748,10 @@ declare interface FileSystemInfoEntry {
 	safeTime: number;
 	timestamp?: number;
 	timestampHash?: string;
+}
+declare interface FileSystemStats {
+	isDirectory: () => boolean;
+	isFile: () => boolean;
 }
 type Filename = string | ((pathData: PathData, assetInfo: AssetInfo) => string);
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
@@ -2904,6 +2928,10 @@ declare interface InputFileSystem {
 	readJson?: (
 		arg0: string,
 		arg1: (arg0: Error | NodeJS.ErrnoException, arg1?: any) => void
+	) => void;
+	readlink: (
+		arg0: string,
+		arg1: (arg0: NodeJS.ErrnoException, arg1: string | Buffer) => void
 	) => void;
 	readdir: (
 		arg0: string,
@@ -4478,12 +4506,12 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		createGenerator: HookMap<SyncBailHook<any, any>>;
 		generator: HookMap<SyncHook<any, void>>;
 	}>;
-	resolverFactory: any;
+	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
 	unsafeCache: boolean;
-	cachePredicate: any;
-	context: any;
-	fs: any;
+	cachePredicate: Function;
+	context: string;
+	fs: InputFileSystem;
 	parserCache: Map<string, WeakMap<any, any>>;
 	generatorCache: Map<string, WeakMap<any, Generator>>;
 	resolveRequestArray(
@@ -4498,7 +4526,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	createParser(type?: any, parserOptions?: {}): any;
 	getGenerator(type?: any, generatorOptions?: {}): Generator;
 	createGenerator(type?: any, generatorOptions?: {}): any;
-	getResolver(type?: any, resolveOptions?: any): any;
+	getResolver(type?: any, resolveOptions?: any): Resolver & WithOptions;
 }
 declare class NormalModuleReplacementPlugin {
 	/**
@@ -5281,6 +5309,14 @@ declare interface OutputNormalized {
 	 */
 	webassemblyModuleFilename?: string;
 }
+declare interface ParsedIdentifier {
+	request: string;
+	query: string;
+	fragment: string;
+	directory: boolean;
+	module: boolean;
+	file: boolean;
+}
 declare class Parser {
 	constructor();
 	parse(
@@ -5337,6 +5373,15 @@ declare interface PerformanceOptions {
 }
 declare interface Plugin {
 	apply: () => void;
+}
+declare interface PnpApiImpl {
+	resolveToUnqualified: (arg0: string, arg1: string, arg2?: any) => string;
+}
+declare interface PossibleFileSystemError {
+	code?: string;
+	errno?: number;
+	path?: string;
+	syscall?: string;
 }
 declare class PrefetchPlugin {
 	constructor(context?: any, request?: any);
@@ -5753,12 +5798,32 @@ declare interface ResolveBuildDependenciesResult {
 		missing: Set<string>;
 	};
 }
+
+/**
+ * Resolve context
+ */
 declare interface ResolveContext {
-	log?: (message: string) => void;
-	fileDependencies?: WriteOnlySet<string>;
-	contextDependencies?: WriteOnlySet<string>;
-	missingDependencies?: WriteOnlySet<string>;
+	contextDependencies?: { add: (T?: any) => void };
+
+	/**
+	 * files that was found on file system
+	 */
+	fileDependencies?: { add: (T?: any) => void };
+
+	/**
+	 * dependencies that was not found on file system
+	 */
+	missingDependencies?: { add: (T?: any) => void };
+
+	/**
+	 * set of hooks' calls. For instance, `resolve → parsedResolve → describedResolve`,
+	 */
 	stack?: Set<string>;
+
+	/**
+	 * log function
+	 */
+	log?: (arg0: string) => void;
 }
 declare interface ResolveData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
@@ -5771,11 +5836,53 @@ declare interface ResolveData {
 	missingDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
 }
+declare interface ResolveOptionsTypes {
+	alias: {
+		/**
+		 * New request.
+		 */
+		alias: string | false | string[];
+		/**
+		 * Request to be redirected.
+		 */
+		name: string;
+		/**
+		 * Redirect only exact matching request.
+		 */
+		onlyModule?: boolean;
+	}[];
+	aliasFields: Set<LibraryExport>;
+	cachePredicate: (arg0: ResolveRequest) => boolean;
+	cacheWithContext: boolean;
+
+	/**
+	 * A list of exports field condition names.
+	 */
+	conditionNames: Set<string>;
+	descriptionFiles: string[];
+	enforceExtension: boolean;
+	exportsFields: Set<LibraryExport>;
+	extensions: Set<string>;
+	fileSystem: FileSystem;
+	unsafeCache: any;
+	symlinks: boolean;
+	resolver?: Resolver;
+	modules: LibraryExport[];
+	mainFields: { name: string[]; forceRelative: boolean }[];
+	mainFiles: Set<string>;
+	plugins: (
+		| { apply: (arg0: Resolver) => void }
+		| ((this: Resolver, arg1: Resolver) => void)
+	)[];
+	pnpApi: PnpApiImpl;
+	resolveToContext: boolean;
+	restrictions: Set<string | RegExp>;
+}
 
 /**
  * Options object for resolving requests.
  */
-declare interface ResolveOptions {
+declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Redirect module requests.
 	 */
@@ -5802,6 +5909,11 @@ declare interface ResolveOptions {
 	aliasFields?: LibraryExport[];
 
 	/**
+	 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
+	 */
+	byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
+
+	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
 	 */
 	cache?: boolean;
@@ -5809,12 +5921,17 @@ declare interface ResolveOptions {
 	/**
 	 * Predicate function to decide which requests should be cached.
 	 */
-	cachePredicate?: Function;
+	cachePredicate?: (request: ResolveRequest) => boolean;
 
 	/**
 	 * Include the context information in the cache identifier when caching.
 	 */
 	cacheWithContext?: boolean;
+
+	/**
+	 * Condition names for exports field entry point.
+	 */
+	conditionNames?: string[];
 
 	/**
 	 * Filenames used to find a description file (like a package.json).
@@ -5827,6 +5944,11 @@ declare interface ResolveOptions {
 	enforceExtension?: boolean;
 
 	/**
+	 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
+	 */
+	exportsFields?: string[];
+
+	/**
 	 * Extensions added to the request when trying to find the file.
 	 */
 	extensions?: string[];
@@ -5834,7 +5956,7 @@ declare interface ResolveOptions {
 	/**
 	 * Filesystem for the resolver.
 	 */
-	fileSystem?: { [index: string]: any };
+	fileSystem?: InputFileSystem;
 
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point.
@@ -5859,7 +5981,12 @@ declare interface ResolveOptions {
 	/**
 	 * Custom resolver.
 	 */
-	resolver?: { [index: string]: any };
+	resolver?: Resolver;
+
+	/**
+	 * A list of resolve restrictions.
+	 */
+	restrictions?: (string | RegExp)[];
 
 	/**
 	 * Enable resolving symlinks to the original location.
@@ -5888,18 +6015,67 @@ declare interface ResolvePluginInstance {
 	 */
 	apply: (resolver?: any) => void;
 }
+declare interface ResolveRequest {
+	path: DevTool;
+	request?: string;
+	query?: string;
+	fragment?: string;
+	directory?: boolean;
+	module?: boolean;
+	descriptionFilePath?: string;
+	descriptionFileRoot?: string;
+	descriptionFileData?: any;
+	relativePath?: string;
+	ignoreSymlinks?: boolean;
+}
 declare abstract class Resolver {
+	fileSystem: FileSystem;
+	options: ResolveOptionsTypes;
+	hooks: {
+		resolveStep: SyncHook<
+			[
+				AsyncSeriesBailHook<[ResolveRequest, ResolveContext], ResolveRequest>,
+				ResolveRequest
+			],
+			void
+		>;
+		noResolve: SyncHook<[ResolveRequest, Error], void>;
+		resolve: AsyncSeriesBailHook<
+			[ResolveRequest, ResolveContext],
+			ResolveRequest
+		>;
+		result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
+	};
+	ensureHook(
+		name:
+			| string
+			| AsyncSeriesBailHook<[ResolveRequest, ResolveContext], ResolveRequest>
+	): AsyncSeriesBailHook<[ResolveRequest, ResolveContext], ResolveRequest>;
+	getHook(
+		name:
+			| string
+			| AsyncSeriesBailHook<[ResolveRequest, ResolveContext], ResolveRequest>
+	): AsyncSeriesBailHook<[ResolveRequest, ResolveContext], ResolveRequest>;
+	resolveSync(context: any, path: string, request: string): DevTool;
 	resolve(
-		context: Object,
+		context: any,
 		path: string,
 		request: string,
 		resolveContext: ResolveContext,
-		callback: (
-			err: NodeJS.ErrnoException,
-			result: string,
-			additionalInfo: Object
-		) => void
+		callback: (arg0: Error, arg1: DevTool, arg2: ResolveRequest) => void
 	): void;
+	doResolve(
+		hook?: any,
+		request?: any,
+		message?: any,
+		resolveContext?: any,
+		callback?: any
+	): any;
+	parse(identifier: string): ParsedIdentifier;
+	isModule(path?: any): boolean;
+	isDirectory(path: string): boolean;
+	join(path?: any, request?: any): string;
+	normalize(path?: any): string;
 }
 declare interface ResolverCache {
 	direct: WeakMap<any, Resolver & WithOptions>;
@@ -5907,11 +6083,335 @@ declare interface ResolverCache {
 }
 declare abstract class ResolverFactory {
 	hooks: Readonly<{
-		resolveOptions: HookMap<SyncWaterfallHook<[any]>>;
-		resolver: HookMap<SyncHook<[Resolver, any, any], void>>;
+		resolveOptions: HookMap<
+			SyncWaterfallHook<
+				[
+					{
+						/**
+						 * Redirect module requests.
+						 */
+						alias?:
+							| {
+									/**
+									 * New request.
+									 */
+									alias: string | false | string[];
+									/**
+									 * Request to be redirected.
+									 */
+									name: string;
+									/**
+									 * Redirect only exact matching request.
+									 */
+									onlyModule?: boolean;
+							  }[]
+							| { [index: string]: string | false | string[] };
+						/**
+						 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
+						 */
+						aliasFields?: LibraryExport[];
+						/**
+						 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
+						 */
+						byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
+						/**
+						 * Enable caching of successfully resolved requests (cache entries are revalidated).
+						 */
+						cache?: boolean;
+						/**
+						 * Predicate function to decide which requests should be cached.
+						 */
+						cachePredicate?: (request: ResolveRequest) => boolean;
+						/**
+						 * Include the context information in the cache identifier when caching.
+						 */
+						cacheWithContext?: boolean;
+						/**
+						 * Condition names for exports field entry point.
+						 */
+						conditionNames?: string[];
+						/**
+						 * Filenames used to find a description file (like a package.json).
+						 */
+						descriptionFiles?: string[];
+						/**
+						 * Enforce using one of the extensions from the extensions option.
+						 */
+						enforceExtension?: boolean;
+						/**
+						 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
+						 */
+						exportsFields?: string[];
+						/**
+						 * Extensions added to the request when trying to find the file.
+						 */
+						extensions?: string[];
+						/**
+						 * Filesystem for the resolver.
+						 */
+						fileSystem?: InputFileSystem;
+						/**
+						 * Field names from the description file (package.json) which are used to find the default entry point.
+						 */
+						mainFields?: LibraryExport[];
+						/**
+						 * Filenames used to find the default entry point if there is no description file or main field.
+						 */
+						mainFiles?: string[];
+						/**
+						 * Folder names or directory paths where to find modules.
+						 */
+						modules?: string[];
+						/**
+						 * Plugins for the resolver.
+						 */
+						plugins?: ResolvePluginInstance[];
+						/**
+						 * Custom resolver.
+						 */
+						resolver?: Resolver;
+						/**
+						 * A list of resolve restrictions.
+						 */
+						restrictions?: (string | RegExp)[];
+						/**
+						 * Enable resolving symlinks to the original location.
+						 */
+						symlinks?: boolean;
+						/**
+						 * Enable caching of successfully resolved requests (cache entries are not revalidated).
+						 */
+						unsafeCache?: boolean | { [index: string]: any };
+						/**
+						 * Use synchronous filesystem calls for the resolver.
+						 */
+						useSyncFileSystemCalls?: boolean;
+						dependencyType?: string;
+						resolveToContext?: boolean;
+					}
+				]
+			>
+		>;
+		resolver: HookMap<
+			SyncHook<
+				[
+					Resolver,
+					UserResolveOptions,
+					{
+						/**
+						 * Redirect module requests.
+						 */
+						alias?:
+							| {
+									/**
+									 * New request.
+									 */
+									alias: string | false | string[];
+									/**
+									 * Request to be redirected.
+									 */
+									name: string;
+									/**
+									 * Redirect only exact matching request.
+									 */
+									onlyModule?: boolean;
+							  }[]
+							| { [index: string]: string | false | string[] };
+						/**
+						 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
+						 */
+						aliasFields?: LibraryExport[];
+						/**
+						 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
+						 */
+						byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
+						/**
+						 * Enable caching of successfully resolved requests (cache entries are revalidated).
+						 */
+						cache?: boolean;
+						/**
+						 * Predicate function to decide which requests should be cached.
+						 */
+						cachePredicate?: (request: ResolveRequest) => boolean;
+						/**
+						 * Include the context information in the cache identifier when caching.
+						 */
+						cacheWithContext?: boolean;
+						/**
+						 * Condition names for exports field entry point.
+						 */
+						conditionNames?: string[];
+						/**
+						 * Filenames used to find a description file (like a package.json).
+						 */
+						descriptionFiles?: string[];
+						/**
+						 * Enforce using one of the extensions from the extensions option.
+						 */
+						enforceExtension?: boolean;
+						/**
+						 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
+						 */
+						exportsFields?: string[];
+						/**
+						 * Extensions added to the request when trying to find the file.
+						 */
+						extensions?: string[];
+						/**
+						 * Filesystem for the resolver.
+						 */
+						fileSystem?: InputFileSystem;
+						/**
+						 * Field names from the description file (package.json) which are used to find the default entry point.
+						 */
+						mainFields?: LibraryExport[];
+						/**
+						 * Filenames used to find the default entry point if there is no description file or main field.
+						 */
+						mainFiles?: string[];
+						/**
+						 * Folder names or directory paths where to find modules.
+						 */
+						modules?: string[];
+						/**
+						 * Plugins for the resolver.
+						 */
+						plugins?: ResolvePluginInstance[];
+						/**
+						 * Custom resolver.
+						 */
+						resolver?: Resolver;
+						/**
+						 * A list of resolve restrictions.
+						 */
+						restrictions?: (string | RegExp)[];
+						/**
+						 * Enable resolving symlinks to the original location.
+						 */
+						symlinks?: boolean;
+						/**
+						 * Enable caching of successfully resolved requests (cache entries are not revalidated).
+						 */
+						unsafeCache?: boolean | { [index: string]: any };
+						/**
+						 * Use synchronous filesystem calls for the resolver.
+						 */
+						useSyncFileSystemCalls?: boolean;
+						dependencyType?: string;
+						resolveToContext?: boolean;
+					}
+				],
+				void
+			>
+		>;
 	}>;
 	cache: Map<string, ResolverCache>;
-	get(type: string, resolveOptions?: any): Resolver & WithOptions;
+	get(
+		type: string,
+		resolveOptions?: {
+			/**
+			 * Redirect module requests.
+			 */
+			alias?:
+				| {
+						/**
+						 * New request.
+						 */
+						alias: string | false | string[];
+						/**
+						 * Request to be redirected.
+						 */
+						name: string;
+						/**
+						 * Redirect only exact matching request.
+						 */
+						onlyModule?: boolean;
+				  }[]
+				| { [index: string]: string | false | string[] };
+			/**
+			 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
+			 */
+			aliasFields?: LibraryExport[];
+			/**
+			 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
+			 */
+			byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
+			/**
+			 * Enable caching of successfully resolved requests (cache entries are revalidated).
+			 */
+			cache?: boolean;
+			/**
+			 * Predicate function to decide which requests should be cached.
+			 */
+			cachePredicate?: (request: ResolveRequest) => boolean;
+			/**
+			 * Include the context information in the cache identifier when caching.
+			 */
+			cacheWithContext?: boolean;
+			/**
+			 * Condition names for exports field entry point.
+			 */
+			conditionNames?: string[];
+			/**
+			 * Filenames used to find a description file (like a package.json).
+			 */
+			descriptionFiles?: string[];
+			/**
+			 * Enforce using one of the extensions from the extensions option.
+			 */
+			enforceExtension?: boolean;
+			/**
+			 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
+			 */
+			exportsFields?: string[];
+			/**
+			 * Extensions added to the request when trying to find the file.
+			 */
+			extensions?: string[];
+			/**
+			 * Filesystem for the resolver.
+			 */
+			fileSystem?: InputFileSystem;
+			/**
+			 * Field names from the description file (package.json) which are used to find the default entry point.
+			 */
+			mainFields?: LibraryExport[];
+			/**
+			 * Filenames used to find the default entry point if there is no description file or main field.
+			 */
+			mainFiles?: string[];
+			/**
+			 * Folder names or directory paths where to find modules.
+			 */
+			modules?: string[];
+			/**
+			 * Plugins for the resolver.
+			 */
+			plugins?: ResolvePluginInstance[];
+			/**
+			 * Custom resolver.
+			 */
+			resolver?: Resolver;
+			/**
+			 * A list of resolve restrictions.
+			 */
+			restrictions?: (string | RegExp)[];
+			/**
+			 * Enable resolving symlinks to the original location.
+			 */
+			symlinks?: boolean;
+			/**
+			 * Enable caching of successfully resolved requests (cache entries are not revalidated).
+			 */
+			unsafeCache?: boolean | { [index: string]: any };
+			/**
+			 * Use synchronous filesystem calls for the resolver.
+			 */
+			useSyncFileSystemCalls?: boolean;
+			dependencyType?: string;
+			resolveToContext?: boolean;
+		}
+	): Resolver & WithOptions;
 }
 declare interface RuleSet {
 	/**
@@ -6026,7 +6526,7 @@ declare interface RuleSetRule {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve?: ResolveOptions;
+	resolve?: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Match the resource path of the module.
@@ -7253,6 +7753,134 @@ declare interface UpdateHashContext {
 	 */
 	compilation: Compilation;
 }
+declare interface UserResolveOptions {
+	/**
+	 * A list of module alias configurations or an object which maps key to value
+	 */
+	alias?:
+		| { [index: string]: string | false | string[] }
+		| {
+				/**
+				 * New request.
+				 */
+				alias: string | false | string[];
+				/**
+				 * Request to be redirected.
+				 */
+				name: string;
+				/**
+				 * Redirect only exact matching request.
+				 */
+				onlyModule?: boolean;
+		  }[];
+
+	/**
+	 * A list of alias fields in description files
+	 */
+	aliasFields?: LibraryExport[];
+
+	/**
+	 * A function which decides whether a request should be cached or not. An object is passed with at least `path` and `request` properties.
+	 */
+	cachePredicate?: (arg0: ResolveRequest) => boolean;
+
+	/**
+	 * Whether or not the unsafeCache should include request context as part of the cache key.
+	 */
+	cacheWithContext?: boolean;
+
+	/**
+	 * A list of description files to read from
+	 */
+	descriptionFiles?: string[];
+
+	/**
+	 * A list of exports field condition names.
+	 */
+	conditionNames?: string[];
+
+	/**
+	 * Enforce that a extension from extensions must be used
+	 */
+	enforceExtension?: boolean;
+
+	/**
+	 * A list of exports fields in description files
+	 */
+	exportsFields?: LibraryExport[];
+
+	/**
+	 * A list of extensions which should be tried for files
+	 */
+	extensions?: string[];
+
+	/**
+	 * The file system which should be used
+	 */
+	fileSystem: FileSystem;
+
+	/**
+	 * Use this cache object to unsafely cache the successful requests
+	 */
+	unsafeCache?: any;
+
+	/**
+	 * Resolve symlinks to their symlinked location
+	 */
+	symlinks?: boolean;
+
+	/**
+	 * A prepared Resolver to which the plugins are attached
+	 */
+	resolver?: Resolver;
+
+	/**
+	 * A list of directories to resolve modules from, can be absolute path or folder name
+	 */
+	modules?: LibraryExport;
+
+	/**
+	 * A list of main fields in description files
+	 */
+	mainFields?: (
+		| string
+		| string[]
+		| { name: LibraryExport; forceRelative: boolean }
+	)[];
+
+	/**
+	 * A list of main files in directories
+	 */
+	mainFiles?: string[];
+
+	/**
+	 * A list of additional resolve plugins which should be applied
+	 */
+	plugins?: (
+		| { apply: (arg0: Resolver) => void }
+		| ((this: Resolver, arg1: Resolver) => void)
+	)[];
+
+	/**
+	 * A PnP API that should be used - null is "never", undefined is "auto"
+	 */
+	pnpApi?: PnpApiImpl;
+
+	/**
+	 * Resolve to a context instead of a file
+	 */
+	resolveToContext?: boolean;
+
+	/**
+	 * A list of resolve restrictions
+	 */
+	restrictions?: (string | RegExp)[];
+
+	/**
+	 * Use only the sync constiants of the file system calls
+	 */
+	useSyncFileSystemCalls?: boolean;
+}
 declare abstract class VariableInfo {
 	declaredScope: ScopeInfo;
 	freeName: string | true;
@@ -7520,12 +8148,12 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Options for the resolver.
 	 */
-	resolve: ResolveOptions;
+	resolve: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Options for the resolver when resolving loaders.
 	 */
-	resolveLoader: ResolveOptions;
+	resolveLoader: ResolveOptionsWebpackOptions;
 
 	/**
 	 * Stats options object or preset name.
@@ -7566,10 +8194,111 @@ declare interface WithOptions {
 	/**
 	 * create a resolver with additional/different options
 	 */
-	withOptions: (arg0?: any) => Resolver & WithOptions;
-}
-declare interface WriteOnlySet<T> {
-	add(item: T): void;
+	withOptions: (
+		arg0: Partial<{
+			/**
+			 * Redirect module requests.
+			 */
+			alias?:
+				| {
+						/**
+						 * New request.
+						 */
+						alias: string | false | string[];
+						/**
+						 * Request to be redirected.
+						 */
+						name: string;
+						/**
+						 * Redirect only exact matching request.
+						 */
+						onlyModule?: boolean;
+				  }[]
+				| { [index: string]: string | false | string[] };
+			/**
+			 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
+			 */
+			aliasFields?: LibraryExport[];
+			/**
+			 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
+			 */
+			byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
+			/**
+			 * Enable caching of successfully resolved requests (cache entries are revalidated).
+			 */
+			cache?: boolean;
+			/**
+			 * Predicate function to decide which requests should be cached.
+			 */
+			cachePredicate?: (request: ResolveRequest) => boolean;
+			/**
+			 * Include the context information in the cache identifier when caching.
+			 */
+			cacheWithContext?: boolean;
+			/**
+			 * Condition names for exports field entry point.
+			 */
+			conditionNames?: string[];
+			/**
+			 * Filenames used to find a description file (like a package.json).
+			 */
+			descriptionFiles?: string[];
+			/**
+			 * Enforce using one of the extensions from the extensions option.
+			 */
+			enforceExtension?: boolean;
+			/**
+			 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
+			 */
+			exportsFields?: string[];
+			/**
+			 * Extensions added to the request when trying to find the file.
+			 */
+			extensions?: string[];
+			/**
+			 * Filesystem for the resolver.
+			 */
+			fileSystem?: InputFileSystem;
+			/**
+			 * Field names from the description file (package.json) which are used to find the default entry point.
+			 */
+			mainFields?: LibraryExport[];
+			/**
+			 * Filenames used to find the default entry point if there is no description file or main field.
+			 */
+			mainFiles?: string[];
+			/**
+			 * Folder names or directory paths where to find modules.
+			 */
+			modules?: string[];
+			/**
+			 * Plugins for the resolver.
+			 */
+			plugins?: ResolvePluginInstance[];
+			/**
+			 * Custom resolver.
+			 */
+			resolver?: Resolver;
+			/**
+			 * A list of resolve restrictions.
+			 */
+			restrictions?: (string | RegExp)[];
+			/**
+			 * Enable resolving symlinks to the original location.
+			 */
+			symlinks?: boolean;
+			/**
+			 * Enable caching of successfully resolved requests (cache entries are not revalidated).
+			 */
+			unsafeCache?: boolean | { [index: string]: any };
+			/**
+			 * Use synchronous filesystem calls for the resolver.
+			 */
+			useSyncFileSystemCalls?: boolean;
+			dependencyType?: string;
+			resolveToContext?: boolean;
+		}>
+	) => Resolver & WithOptions;
 }
 type __TypeWebpackOptions = (data: {}) =>
 	| string
@@ -7929,7 +8658,7 @@ declare namespace exports {
 		EntryNormalized,
 		LibraryOptions,
 		ModuleOptions,
-		ResolveOptions,
+		ResolveOptionsWebpackOptions as ResolveOptions,
 		RuleSetRule,
 		Configuration,
 		WebpackOptionsNormalized,

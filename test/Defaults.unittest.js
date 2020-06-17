@@ -236,7 +236,45 @@ describe("Defaults", () => {
 		    "aliasFields": Array [
 		      "browser",
 		    ],
+		    "byDependency": Object {
+		      "amd": Object {
+		        "conditionNames": Array [
+		          "require",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "commonjs": Object {
+		        "conditionNames": Array [
+		          "require",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "esm": Object {
+		        "conditionNames": Array [
+		          "import",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "wasm": Object {
+		        "conditionNames": Array [
+		          "import",
+		          "module",
+		          "...",
+		        ],
+		      },
+		    },
 		    "cache": false,
+		    "conditionNames": Array [
+		      "webpack",
+		      "production",
+		      "browser",
+		    ],
+		    "exportsFields": Array [
+		      "exports",
+		    ],
 		    "extensions": Array [
 		      ".js",
 		      ".json",
@@ -256,6 +294,14 @@ describe("Defaults", () => {
 		  },
 		  "resolveLoader": Object {
 		    "cache": false,
+		    "conditionNames": Array [
+		      "loader",
+		      "require",
+		      "node",
+		    ],
+		    "exportsFields": Array [
+		      "exports",
+		    ],
 		    "extensions": Array [
 		      ".js",
 		    ],
@@ -433,6 +479,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
+		@@ ... @@
+		-       "production",
+		+       "development",
 		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
@@ -624,6 +673,9 @@ describe("Defaults", () => {
 		+     "aliasFields": Array [],
 		@@ ... @@
 		-       "browser",
+		+       "node",
+		@@ ... @@
+		-       "browser",
 		@@ ... @@
 		-   "target": "web",
 		+   "target": "node",
@@ -638,8 +690,65 @@ describe("Defaults", () => {
 		-     "globalObject": "window",
 		+     "globalObject": "self",
 		@@ ... @@
+		+       "worker",
+		@@ ... @@
 		-   "target": "web",
 		+   "target": "webworker",
+	`)
+	);
+	test("target electron-main", { target: "electron-main" }, e =>
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-     "__dirname": "mock",
+		-     "__filename": "mock",
+		-     "global": true,
+		+     "__dirname": false,
+		+     "__filename": false,
+		+     "global": false,
+		@@ ... @@
+		-     "globalObject": "window",
+		+     "globalObject": "global",
+		@@ ... @@
+		-     "aliasFields": Array [
+		-       "browser",
+		-     ],
+		+     "aliasFields": Array [],
+		@@ ... @@
+		-       "browser",
+		+       "node",
+		+       "electron",
+		@@ ... @@
+		-       "browser",
+		@@ ... @@
+		-   "target": "web",
+		+   "target": "electron-main",
+	`)
+	);
+	test("target electron-main", { target: "electron-preload" }, e =>
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-     "globalObject": "window",
+		+     "globalObject": "self",
+		@@ ... @@
+		-     "aliasFields": Array [
+		-       "browser",
+		-     ],
+		+     "aliasFields": Array [],
+		@@ ... @@
+		-       "browser",
+		+       "node",
+		+       "electron",
+		@@ ... @@
+		-       "browser",
+		@@ ... @@
+		-   "target": "web",
+		+   "target": "electron-preload",
 	`)
 	);
 	test("records", { recordsPath: "some-path" }, e =>

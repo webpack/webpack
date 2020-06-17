@@ -339,51 +339,6 @@ declare module "webpack-sources" {
 	}
 }
 
-declare module "enhanced-resolve" {
-	type ResolveFunction = (
-		path: string,
-		request: string,
-		resolveContext: ResolveContext,
-		callback: (
-			err?: NodeJS.ErrnoException,
-			result?: string,
-			additionalInfo?: Object
-		) => void
-	) => void;
-
-	export function create(options: any): ResolveFunction;
-
-	interface WriteOnlySet<T> {
-		add(item: T): void;
-	}
-
-	interface ResolveContext {
-		log?: (message: string) => void;
-		fileDependencies?: WriteOnlySet<string>;
-		contextDependencies?: WriteOnlySet<string>;
-		missingDependencies?: WriteOnlySet<string>;
-		stack?: Set<string>;
-	}
-
-	export class Resolver {
-		resolve(
-			context: Object,
-			path: string,
-			request: string,
-			resolveContext: ResolveContext,
-			callback: (
-				err?: NodeJS.ErrnoException,
-				result?: string,
-				additionalInfo?: Object
-			) => void
-		): void;
-	}
-
-	export class ResolverFactory {
-		static createResolver(options: TODO): Resolver;
-	}
-}
-
 type TODO = any;
 
 type RecursiveArrayOrRecord<T> =

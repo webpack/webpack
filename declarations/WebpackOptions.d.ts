@@ -1113,17 +1113,32 @@ export interface ResolveOptions {
 	 */
 	aliasFields?: (string[] | string)[];
 	/**
+	 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
+	 */
+	byDependency?: {
+		/**
+		 * Options object for resolving requests.
+		 */
+		[k: string]: ResolveOptions;
+	};
+	/**
 	 * Enable caching of successfully resolved requests (cache entries are revalidated).
 	 */
 	cache?: boolean;
 	/**
 	 * Predicate function to decide which requests should be cached.
 	 */
-	cachePredicate?: Function;
+	cachePredicate?: (
+		request: import("enhanced-resolve").ResolveRequest
+	) => boolean;
 	/**
 	 * Include the context information in the cache identifier when caching.
 	 */
 	cacheWithContext?: boolean;
+	/**
+	 * Condition names for exports field entry point.
+	 */
+	conditionNames?: string[];
 	/**
 	 * Filenames used to find a description file (like a package.json).
 	 */
@@ -1133,15 +1148,17 @@ export interface ResolveOptions {
 	 */
 	enforceExtension?: boolean;
 	/**
+	 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
+	 */
+	exportsFields?: string[];
+	/**
 	 * Extensions added to the request when trying to find the file.
 	 */
 	extensions?: string[];
 	/**
 	 * Filesystem for the resolver.
 	 */
-	fileSystem?: {
-		[k: string]: any;
-	};
+	fileSystem?: import("../lib/util/fs").InputFileSystem;
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point.
 	 */
@@ -1161,9 +1178,11 @@ export interface ResolveOptions {
 	/**
 	 * Custom resolver.
 	 */
-	resolver?: {
-		[k: string]: any;
-	};
+	resolver?: import("enhanced-resolve").Resolver;
+	/**
+	 * A list of resolve restrictions.
+	 */
+	restrictions?: (RegExp | string)[];
 	/**
 	 * Enable resolving symlinks to the original location.
 	 */

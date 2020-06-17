@@ -2113,6 +2113,18 @@
             ]
           }
         },
+        "byDependency": {
+          "description": "Extra resolve options per dependency category. Typical categories are \"commonjs\", \"amd\", \"esm\".",
+          "type": "object",
+          "additionalProperties": {
+            "description": "Options object for resolving requests.",
+            "oneOf": [
+              {
+                "$ref": "#/definitions/ResolveOptions"
+              }
+            ]
+          }
+        },
         "cache": {
           "description": "Enable caching of successfully resolved requests (cache entries are revalidated).",
           "type": "boolean"
@@ -2120,11 +2132,19 @@
         "cachePredicate": {
           "description": "Predicate function to decide which requests should be cached.",
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((request: import('enhanced-resolve').ResolveRequest) => boolean)"
         },
         "cacheWithContext": {
           "description": "Include the context information in the cache identifier when caching.",
           "type": "boolean"
+        },
+        "conditionNames": {
+          "description": "Condition names for exports field entry point.",
+          "type": "array",
+          "items": {
+            "description": "Condition names for exports field entry point.",
+            "type": "string"
+          }
         },
         "descriptionFiles": {
           "description": "Filenames used to find a description file (like a package.json).",
@@ -2139,6 +2159,14 @@
           "description": "Enforce using one of the extensions from the extensions option.",
           "type": "boolean"
         },
+        "exportsFields": {
+          "description": "Field names from the description file (usually package.json) which are used to provide entry points of a package.",
+          "type": "array",
+          "items": {
+            "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
+            "type": "string"
+          }
+        },
         "extensions": {
           "description": "Extensions added to the request when trying to find the file.",
           "type": "array",
@@ -2149,7 +2177,8 @@
           }
         },
         "fileSystem": {
-          "description": "Filesystem for the resolver."
+          "description": "Filesystem for the resolver.",
+          "tsType": "(import('../lib/util/fs').InputFileSystem)"
         },
         "mainFields": {
           "description": "Field names from the description file (package.json) which are used to find the default entry point.",
@@ -2203,7 +2232,24 @@
           }
         },
         "resolver": {
-          "description": "Custom resolver."
+          "description": "Custom resolver.",
+          "tsType": "(import('enhanced-resolve').Resolver)"
+        },
+        "restrictions": {
+          "description": "A list of resolve restrictions.",
+          "type": "array",
+          "items": {
+            "description": "Resolve restriction.",
+            "anyOf": [
+              {
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
         },
         "symlinks": {
           "description": "Enable resolving symlinks to the original location.",
