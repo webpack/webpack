@@ -8,8 +8,5 @@ module.exports = (env, { testPath }) => ({
 	optimization: {
 		chunkIds: "size"
 	},
-	target: "node",
-	node: {
-		__dirname: false
-	}
+	target: "node"
 });

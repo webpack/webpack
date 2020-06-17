@@ -5,10 +5,6 @@ module.exports = {
 		library: "NamedLibrary",
 		libraryTarget: "amd"
 	},
-	node: {
-		__dirname: false,
-		__filename: false
-	},
 	plugins: [
 		new webpack.BannerPlugin({
 			raw: true,

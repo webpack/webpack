@@ -6,9 +6,5 @@ module.exports = {
 		devtoolModuleFilenameTemplate: "module",
 		devtoolFallbackModuleFilenameTemplate: "fallback"
 	},
-	node: {
-		__dirname: false,
-		__filename: false
-	},
 	devtool: "source-map"
 };

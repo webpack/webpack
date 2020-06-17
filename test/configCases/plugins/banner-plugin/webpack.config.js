@@ -1,10 +1,6 @@
 var webpack = require("../../../../");
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	node: {
-		__dirname: false,
-		__filename: false
-	},
 	entry: {
 		bundle0: ["./index.js"],
 		vendors: ["./vendors.js"]

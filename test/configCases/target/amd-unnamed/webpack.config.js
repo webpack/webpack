@@ -4,10 +4,6 @@ module.exports = {
 	output: {
 		libraryTarget: "amd"
 	},
-	node: {
-		__dirname: false,
-		__filename: false
-	},
 	plugins: [
 		new webpack.BannerPlugin({
 			raw: true,

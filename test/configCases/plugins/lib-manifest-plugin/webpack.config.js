@@ -11,8 +11,5 @@ module.exports = (env, { testPath }) => ({
 			path: path.resolve(testPath, "[name]-manifest.json"),
 			name: "[name]_[fullhash]"
 		})
-	],
-	node: {
-		__dirname: false
-	}
+	]
 });

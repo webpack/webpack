@@ -4,10 +4,6 @@ const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	node: {
-		__dirname: false,
-		__filename: false
-	},
 	entry: {
 		"dist/banner": ["./index.js"],
 		vendors: ["./vendors.js"]

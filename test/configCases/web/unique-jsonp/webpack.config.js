@@ -6,9 +6,5 @@ module.exports = {
 	},
 	externals: {
 		fs: "commonjs2 fs"
-	},
-	node: {
-		__filename: false,
-		__dirname: false
 	}
 };

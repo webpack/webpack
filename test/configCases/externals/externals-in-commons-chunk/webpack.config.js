@@ -14,10 +14,6 @@ module.exports = {
 	output: {
 		filename: "[name].js"
 	},
-	node: {
-		__dirname: false,
-		__filename: false
-	},
 	optimization: {
 		minimize: false,
 		splitChunks: {

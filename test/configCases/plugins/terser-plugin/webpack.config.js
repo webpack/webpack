@@ -1,10 +1,6 @@
 const TerserPlugin = require("terser-webpack-plugin");
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	node: {
-		__dirname: false,
-		__filename: false
-	},
 	entry: {
 		ie8: ["./ie8.js"],
 		bundle0: ["./index.js"],

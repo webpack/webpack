@@ -6,8 +6,5 @@ module.exports = {
 	},
 	output: {
 		filename: "[name].js"
-	},
-	node: {
-		__dirname: false
 	}
 };

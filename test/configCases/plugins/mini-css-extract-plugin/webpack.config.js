@@ -19,8 +19,5 @@ module.exports = {
 		]
 	},
 	target: "web",
-	node: {
-		__dirname: false
-	},
 	plugins: [new MCEP()]
 };

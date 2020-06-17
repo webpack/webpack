@@ -2,10 +2,6 @@ var webpack = require("../../../../");
 var TerserPlugin = require("terser-webpack-plugin");
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	node: {
-		__dirname: false,
-		__filename: false
-	},
 	entry: {
 		bundle0: ["./index.js"],
 		"public/test": ["./test.js"]

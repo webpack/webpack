@@ -16,9 +16,6 @@ module.exports = {
 	module: {
 		exprContextCritical: false
 	},
-	node: {
-		__dirname: false
-	},
 	plugins: [
 		new webpack.DefinePlugin({
 			CONST_PREFIX0: JSON.stringify("prefix0"),

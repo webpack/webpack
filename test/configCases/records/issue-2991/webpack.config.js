@@ -5,9 +5,6 @@ module.exports = (env, { testPath }) => ({
 	entry: "./test",
 	recordsOutputPath: path.resolve(testPath, "records.json"),
 	target: "node",
-	node: {
-		__dirname: false
-	},
 	resolve: {
 		aliasFields: ["browser"],
 		alias: {

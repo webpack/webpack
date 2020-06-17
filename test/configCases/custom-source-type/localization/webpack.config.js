@@ -189,8 +189,5 @@ module.exports = definitions.map((defs, i) => ({
 				}
 			);
 		}
-	],
-	node: {
-		__dirname: false
-	}
+	]
 }));

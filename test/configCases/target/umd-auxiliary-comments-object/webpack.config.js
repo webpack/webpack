@@ -10,9 +10,5 @@ module.exports = {
 			amd: "test comment amd",
 			root: "test comment root"
 		}
-	},
-	node: {
-		__dirname: false,
-		__filename: false
 	}
 };

@@ -4,10 +4,6 @@ module.exports = {
 	entry: {
 		main: "./index"
 	},
-	node: {
-		__dirname: false,
-		__filename: false
-	},
 	output: {
 		filename: "[name].js",
 		chunkFilename: "[name].bundle.js",

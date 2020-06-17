@@ -135,9 +135,9 @@ describe("Defaults", () => {
 		  },
 		  "name": undefined,
 		  "node": Object {
-		    "__dirname": "mock",
-		    "__filename": "mock",
-		    "global": true,
+		    "__dirname": false,
+		    "__filename": false,
+		    "global": false,
 		  },
 		  "optimization": Object {
 		    "checkWasmTypes": false,
@@ -608,13 +608,6 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ ... @@
-		-     "__dirname": "mock",
-		-     "__filename": "mock",
-		-     "global": true,
-		+     "__dirname": false,
-		+     "__filename": false,
-		+     "global": false,
-		@@ ... @@
 		-     "globalObject": "window",
 		+     "globalObject": "global",
 		@@ ... @@
@@ -788,9 +781,9 @@ describe("Defaults", () => {
 			+   "amd": false,
 			@@ ... @@
 			-   "node": Object {
-			-     "__dirname": "mock",
-			-     "__filename": "mock",
-			-     "global": true,
+			-     "__dirname": false,
+			-     "__filename": false,
+			-     "global": false,
 			-   },
 			+   "node": false,
 			@@ ... @@

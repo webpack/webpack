@@ -4,8 +4,5 @@ var path = require("path");
 module.exports = (env, { testPath }) => ({
 	entry: "./test",
 	recordsPath: path.resolve(testPath, "records.json"),
-	target: "node",
-	node: {
-		__dirname: false
-	}
+	target: "node"
 });
