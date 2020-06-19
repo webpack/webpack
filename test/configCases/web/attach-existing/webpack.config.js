@@ -2,7 +2,8 @@
 module.exports = {
 	target: "web",
 	output: {
-		chunkFilename: "[name].js"
+		chunkFilename: "[name].js",
+		uniqueName: 'my "app"'
 	},
 	performance: {
 		hints: false
