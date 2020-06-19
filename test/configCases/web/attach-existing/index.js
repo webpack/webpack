@@ -2,7 +2,7 @@ const doImport = () => import(/* webpackChunkName: "the-chunk" */ "./chunk");
 
 it("should be able to attach to an existing script tag", () => {
 	const script = document.createElement("script");
-	script.setAttribute("data-webpack", "chunk-the-chunk");
+	script.setAttribute("data-webpack", 'my "app":chunk-the-chunk');
 	script.src = "/somewhere/else.js";
 	document.head.appendChild(script);
 
