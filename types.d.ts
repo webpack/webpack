@@ -3184,6 +3184,7 @@ declare abstract class JavascriptParser extends Parser {
 			>
 		>;
 		new: HookMap<SyncBailHook<[Expression], boolean | void>>;
+		metaProperty: SyncBailHook<[MetaProperty], boolean | void>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
 			SyncBailHook<[Expression, string[]], boolean | void>
@@ -3294,6 +3295,7 @@ declare abstract class JavascriptParser extends Parser {
 	): void;
 	walkThisExpression(expression?: any): void;
 	walkIdentifier(expression?: any): void;
+	walkMetaProperty(metaProperty: MetaProperty): void;
 	callHooksForExpression(hookMap: any, expr: any, ...args: any[]): any;
 	callHooksForExpressionWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
