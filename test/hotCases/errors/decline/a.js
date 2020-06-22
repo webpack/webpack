@@ -2,7 +2,7 @@ import b from "./b";
 
 export default b;
 
-if(module.hot) {
-	module.hot.decline("./b");
-	module.hot.accept();
+if(import.meta.hot) {
+	import.meta.hot.decline("./b");
+	import.meta.hot.accept();
 }
