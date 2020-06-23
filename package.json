@@ -78,6 +78,7 @@
     "react-dom": "^16.8.0",
     "rimraf": "^3.0.0",
     "script-loader": "~0.7.0",
+    "semver": "^7.3.2",
     "simple-git": "^1.65.0",
     "strip-ansi": "^6.0.0",
     "style-loader": "^1.0.0",
