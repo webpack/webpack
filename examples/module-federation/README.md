@@ -292,7 +292,7 @@ export default App;
 		<div class="spinner"></div>
 
 		<!-- This script only contains boostrapping logic -->
-		<!-- It will load all other scripts if neccessary -->
+		<!-- It will load all other scripts if necessary -->
 		<script src="/dist/aaa/app.js" async></script>
 
 		<!-- These script tags are optional -->
