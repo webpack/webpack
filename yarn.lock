@@ -2543,9 +2543,9 @@ eslint-plugin-es@^3.0.0:
     regexpp "^3.0.0"
 
 eslint-plugin-jest@^23.8.1:
-  version "23.16.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-23.16.0.tgz#fada00f765b5e32a1fb10a7490f75ebf673133b3"
-  integrity sha512-51KcQup31S2NBm+Yqg3rxZIPETd+wZ/gU2rb034RpdXLcZYsa2+uwubqbbDAYIpQw3m+wywF/A56OMEouBY/wA==
+  version "23.17.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-23.17.0.tgz#06eece5bd37119ea9680e069d521ae22bff6318f"
+  integrity sha512-vp8WwadIvaz95SamnxL5rAQViA5DBNcG2hpWW3jqt3iCgdc2hIg9qul/pZgcqLULerWAvok70VObXRZGFZEHTQ==
   dependencies:
     "@typescript-eslint/experimental-utils" "^2.5.0"
 
