@@ -9,7 +9,7 @@ it("should expose modules from the container", async () => {
 					setTimeout(() => {
 						resolve(() => ({
 							__esModule: true,
-							default: "overriden-value"
+							default: "overridden-value"
 						}));
 					}, 100);
 				})
@@ -19,7 +19,7 @@ it("should expose modules from the container", async () => {
 	expect(testFactory).toBeTypeOf("function");
 	expect(testFactory()).toEqual(
 		nsObj({
-			default: "test overriden-value"
+			default: "test overridden-value"
 		})
 	);
 });
