@@ -408,10 +408,6 @@ export type ImportFunctionName = string;
  */
 export type JsonpFunction = string;
 /**
- * This option enables loading async chunks via a custom script type, such as script type="module".
- */
-export type JsonpScriptType = false | "text/javascript" | "module";
-/**
  * Make the output files a library, exporting the exports of the entry point.
  */
 export type Library = LibraryName | LibraryOptions;
@@ -436,6 +432,10 @@ export type PublicPath =
 			pathData: import("../lib/Compilation").PathData,
 			assetInfo?: import("../lib/Compilation").AssetInfo
 	  ) => string);
+/**
+ * This option enables loading async chunks via a custom script type, such as script type="module".
+ */
+export type ScriptType = false | "text/javascript" | "module";
 /**
  * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
  */
@@ -1624,10 +1624,6 @@ export interface Output {
 	 */
 	jsonpFunction?: JsonpFunction;
 	/**
-	 * This option enables loading async chunks via a custom script type, such as script type="module".
-	 */
-	jsonpScriptType?: JsonpScriptType;
-	/**
 	 * Make the output files a library, exporting the exports of the entry point.
 	 */
 	library?: Library;
@@ -1655,6 +1651,10 @@ export interface Output {
 	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: PublicPath;
+	/**
+	 * This option enables loading async chunks via a custom script type, such as script type="module".
+	 */
+	scriptType?: ScriptType;
 	/**
 	 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
 	 */
@@ -2085,10 +2085,6 @@ export interface OutputNormalized {
 	 */
 	jsonpFunction?: JsonpFunction;
 	/**
-	 * This option enables loading async chunks via a custom script type, such as script type="module".
-	 */
-	jsonpScriptType?: JsonpScriptType;
-	/**
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
@@ -2108,6 +2104,10 @@ export interface OutputNormalized {
 	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: PublicPath;
+	/**
+	 * This option enables loading async chunks via a custom script type, such as script type="module".
+	 */
+	scriptType?: ScriptType;
 	/**
 	 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
 	 */

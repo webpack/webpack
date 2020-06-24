@@ -689,10 +689,6 @@
       "description": "The JSONP function used by webpack for async loading of chunks.",
       "type": "string"
     },
-    "JsonpScriptType": {
-      "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\".",
-      "enum": [false, "text/javascript", "module"]
-    },
     "Library": {
       "description": "Make the output files a library, exporting the exports of the entry point.",
       "anyOf": [
@@ -1704,9 +1700,6 @@
         "jsonpFunction": {
           "$ref": "#/definitions/JsonpFunction"
         },
-        "jsonpScriptType": {
-          "$ref": "#/definitions/JsonpScriptType"
-        },
         "library": {
           "$ref": "#/definitions/Library"
         },
@@ -1741,6 +1734,9 @@
         },
         "publicPath": {
           "$ref": "#/definitions/PublicPath"
+        },
+        "scriptType": {
+          "$ref": "#/definitions/ScriptType"
         },
         "sourceMapFilename": {
           "$ref": "#/definitions/SourceMapFilename"
@@ -1847,9 +1843,6 @@
         "jsonpFunction": {
           "$ref": "#/definitions/JsonpFunction"
         },
-        "jsonpScriptType": {
-          "$ref": "#/definitions/JsonpScriptType"
-        },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
         },
@@ -1864,6 +1857,9 @@
         },
         "publicPath": {
           "$ref": "#/definitions/PublicPath"
+        },
+        "scriptType": {
+          "$ref": "#/definitions/ScriptType"
         },
         "sourceMapFilename": {
           "$ref": "#/definitions/SourceMapFilename"
@@ -2681,6 +2677,10 @@
           "$ref": "#/definitions/RuleSetLoader"
         }
       ]
+    },
+    "ScriptType": {
+      "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\".",
+      "enum": [false, "text/javascript", "module"]
     },
     "SourceMapFilename": {
       "description": "The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.",

@@ -2087,24 +2087,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-jsonp-script-type": Object {
-    "configs": Array [
-      Object {
-        "description": "This option enables loading async chunks via a custom script type, such as script type=\\"module\\".",
-        "multiple": false,
-        "path": "output.jsonpScriptType",
-        "type": "enum",
-        "values": Array [
-          false,
-          "text/javascript",
-          "module",
-        ],
-      },
-    ],
-    "description": "This option enables loading async chunks via a custom script type, such as script type=\\"module\\".",
-    "multiple": false,
-    "simpleType": "string",
-  },
   "output-library": Object {
     "configs": Array [
       Object {
@@ -2445,6 +2427,24 @@ Object {
       },
     ],
     "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-script-type": Object {
+    "configs": Array [
+      Object {
+        "description": "This option enables loading async chunks via a custom script type, such as script type=\\"module\\".",
+        "multiple": false,
+        "path": "output.scriptType",
+        "type": "enum",
+        "values": Array [
+          false,
+          "text/javascript",
+          "module",
+        ],
+      },
+    ],
+    "description": "This option enables loading async chunks via a custom script type, such as script type=\\"module\\".",
     "multiple": false,
     "simpleType": "string",
   },
