@@ -1,6 +1,6 @@
 import {val} from "./module";
 
-it("should fail import a changed chunk using module.hot.accept API", (done) => {
+it("should fail accept changes", (done) => {
 	expect(val).toBe(1);
 	NEXT(require("../../update")((err) => {
 		try {
