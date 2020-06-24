@@ -1,4 +1,4 @@
-const url = `file://${require("path").resolve("./test/cases/esm/import-meta/index.js")}`;
+const url = `file://${require("path").resolve("./test/cases/esm/import-meta/index.js").replace(/\\/g, "/")}`;
 
 it("typeof import.meta === \"object\"", () => {
 	expect(typeof import.meta).toBe("object");
