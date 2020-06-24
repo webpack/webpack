@@ -379,8 +379,8 @@ describe("Defaults", () => {
 		-       "maxAsyncRequests": Infinity,
 		-       "maxInitialRequests": Infinity,
 		+       "hidePathInfo": true,
-		+       "maxAsyncRequests": 6,
-		+       "maxInitialRequests": 4,
+		+       "maxAsyncRequests": 30,
+		+       "maxInitialRequests": 30,
 		@@ ... @@
 		-       "minSize": 10000,
 		+       "minSize": 30000,
@@ -428,8 +428,8 @@ describe("Defaults", () => {
 		-       "maxAsyncRequests": Infinity,
 		-       "maxInitialRequests": Infinity,
 		+       "hidePathInfo": true,
-		+       "maxAsyncRequests": 6,
-		+       "maxInitialRequests": 4,
+		+       "maxAsyncRequests": 30,
+		+       "maxInitialRequests": 30,
 		@@ ... @@
 		-       "minSize": 10000,
 		+       "minSize": 30000,
