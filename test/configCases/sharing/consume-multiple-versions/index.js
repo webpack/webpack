@@ -70,7 +70,7 @@ it("should be able to consume different shared module version depending on conte
 	expect(require("my-module")).toBe("shared@2.9.9");
 	expect(require("my-module2")).toBe("shared@2.3.9");
 	expect(() => require("my-module3")).toThrowError(
-		"Unsatisfied version of shared module shared@3.0.0 (required shared@3.4.5)"
+		"Unsatisfied version of shared module shared@3.0.0 (required shared@>=3.4.5 <4.0.0)"
 	);
 	expect(require("my-module4")).toBe("shared@9.9.9");
 	expect(require("shared2")).toBe("shared2@9.9.9");

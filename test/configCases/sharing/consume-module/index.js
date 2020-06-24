@@ -183,7 +183,7 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 	{
 		const result = await import("strict1");
 		expect(result.default).toBe("strict");
-		expectWarning(/strict1@1\.1\.1 \(required strict1@1\.2\.0\)/);
+		expectWarning(/strict1@1\.1\.1 \(required strict1@>=1\.2\.0\)/);
 	}
 	{
 		const result = await import("strict2");
@@ -193,12 +193,12 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 	{
 		const result = await import("strict3");
 		expect(result.default).toBe("strict");
-		expectWarning(/strict3@1\.1\.1 \(required strict3@1\.0\.0\)/);
+		expectWarning(/strict3@1\.1\.1 \(required strict3@>=1\.0\.0 <1\.1\.0\)/);
 	}
 	{
 		const result = await import("strict4");
 		expect(result.default).toBe("strict");
-		expectWarning(/strict4@1\.1\.1 \(required strict4@2\.2\.3\)/);
+		expectWarning(/strict4@1\.1\.1 \(required strict4@>=2\.2\.3\ <3\.0\.0\)/);
 	}
 	{
 		await expect(() => import("strict5")).rejects.toEqual(
