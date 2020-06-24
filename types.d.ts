@@ -5835,6 +5835,11 @@ declare interface ResolveData {
 	fileDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
+
+	/**
+	 * allow to use the unsafe cache
+	 */
+	cacheable: boolean;
 }
 declare interface ResolveOptionsTypes {
 	alias: {
