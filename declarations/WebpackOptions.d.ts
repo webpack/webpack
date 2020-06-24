@@ -1030,6 +1030,10 @@ export interface RuleSetRule {
 	 */
 	loader?: RuleSetLoader;
 	/**
+	 * Match module mimetype when load from Data URI.
+	 */
+	mimetype?: RuleSetConditionOrConditions;
+	/**
 	 * Only execute the first matching rule in this array.
 	 */
 	oneOf?: RuleSetRules;

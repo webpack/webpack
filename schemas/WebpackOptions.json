@@ -2513,6 +2513,14 @@
             }
           ]
         },
+        "mimetype": {
+          "description": "Match module mimetype when load from Data URI.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ]
+        },
         "oneOf": {
           "description": "Only execute the first matching rule in this array.",
           "oneOf": [

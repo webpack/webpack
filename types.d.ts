@@ -6504,6 +6504,11 @@ declare interface RuleSetRule {
 	loader?: string;
 
 	/**
+	 * Match module mimetype when load from Data URI.
+	 */
+	mimetype?: RuleSetCondition;
+
+	/**
 	 * Only execute the first matching rule in this array.
 	 */
 	oneOf?: RuleSetRule[];
