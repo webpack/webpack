@@ -18,7 +18,7 @@ module.exports = {
 			shared: {
 				"./shared": {
 					shareKey: "shared",
-					version: "1"
+					version: "1.0.0"
 				}
 			}
 		})

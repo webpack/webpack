@@ -47,7 +47,7 @@ module.exports = {
 				},
 				strict5: {
 					import: false,
-					requiredVersion: "alpha",
+					requiredVersion: "1.1.0",
 					strictVersion: true
 				},
 				singleton: {

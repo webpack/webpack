@@ -22,7 +22,7 @@ module.exports = {
 				"./relative2": {
 					import: false,
 					shareKey: "store",
-					version: "0",
+					version: "0.0.0",
 					requiredVersion: "0",
 					strictVersion: true
 				},
