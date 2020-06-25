@@ -1245,42 +1245,42 @@ Compilation error while processing magic comment(-s): /* webpackPrefetch: nope *
 `;
 
 exports[`StatsTestCases should print correct stats for issue-7577 1`] = `
-"Hash: f381ee1ce58e8a5b457a9b634871706b4d15f1ba763f064d500438807d7b
+"Hash: d44058812ed1d96576653a2f1b274560bf7878abc8c215df72a85ea66fe6
 Child
-    Hash: f381ee1ce58e8a5b457a
+    Hash: d44058812ed1d9657665
     Time: X ms
     Built at: 1970-04-20 12:42:42
                                      Asset       Size
         a-all-a_js-a0ca01d3da48ab4385f6.js  144 bytes  [emitted] [immutable]  [id hint: all]
-            a-main-fa06855251b873131c2c.js  115 bytes  [emitted] [immutable]  [name: main]
+            a-main-00724270cee37c9ee9b7.js  100 bytes  [emitted] [immutable]  [name: main]
     a-runtime~main-5ef63470af3cb8ae42c4.js   6.97 KiB  [emitted] [immutable]  [name: runtime~main]
-    Entrypoint main = a-runtime~main-5ef63470af3cb8ae42c4.js a-all-a_js-a0ca01d3da48ab4385f6.js a-main-fa06855251b873131c2c.js
+    Entrypoint main = a-runtime~main-5ef63470af3cb8ae42c4.js a-all-a_js-a0ca01d3da48ab4385f6.js a-main-00724270cee37c9ee9b7.js
     ./a.js 18 bytes [built]
         + 3 hidden modules
 Child
-    Hash: 9b634871706b4d15f1ba
+    Hash: 3a2f1b274560bf7878ab
     Time: X ms
     Built at: 1970-04-20 12:42:42
                                                        Asset       Size
                           b-all-b_js-50bf184dfe57dc2022a6.js  479 bytes  [emitted] [immutable]  [id hint: all]
-                              b-main-ffc8dbdfb8f2c2b16817.js  148 bytes  [emitted] [immutable]  [name: main]
+                              b-main-ee7706db8ca4e6c5d922.js  133 bytes  [emitted] [immutable]  [name: main]
                       b-runtime~main-2ba48f8fcb179b030e83.js   7.91 KiB  [emitted] [immutable]  [name: runtime~main]
     b-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js  189 bytes  [emitted] [immutable]  [id hint: vendors]
-    Entrypoint main = b-runtime~main-2ba48f8fcb179b030e83.js b-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js b-all-b_js-50bf184dfe57dc2022a6.js b-main-ffc8dbdfb8f2c2b16817.js
+    Entrypoint main = b-runtime~main-2ba48f8fcb179b030e83.js b-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js b-all-b_js-50bf184dfe57dc2022a6.js b-main-ee7706db8ca4e6c5d922.js
     ./b.js 17 bytes [built]
     ./node_modules/vendor.js 23 bytes [built]
         + 5 hidden modules
 Child
-    Hash: 763f064d500438807d7b
+    Hash: c8c215df72a85ea66fe6
     Time: X ms
     Built at: 1970-04-20 12:42:42
                                                        Asset       Size
                           c-all-b_js-50bf184dfe57dc2022a6.js  506 bytes  [emitted] [immutable]  [id hint: all]
                           c-all-c_js-6756694a5d280748f5a3.js  397 bytes  [emitted] [immutable]  [id hint: all]
-                              c-main-cd09b1722e319798c3c4.js  607 bytes  [emitted] [immutable]  [name: main]
+                              c-main-456f1d52971c2c0256d9.js  592 bytes  [emitted] [immutable]  [name: main]
                       c-runtime~main-d71187e8fb3f56c4a96f.js   12.3 KiB  [emitted] [immutable]  [name: runtime~main]
     c-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js  189 bytes  [emitted] [immutable]  [id hint: vendors]
-    Entrypoint main = c-runtime~main-d71187e8fb3f56c4a96f.js c-all-c_js-6756694a5d280748f5a3.js c-main-cd09b1722e319798c3c4.js (prefetch: c-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js c-all-b_js-50bf184dfe57dc2022a6.js)
+    Entrypoint main = c-runtime~main-d71187e8fb3f56c4a96f.js c-all-c_js-6756694a5d280748f5a3.js c-main-456f1d52971c2c0256d9.js (prefetch: c-vendors-node_modules_vendor_js-a51f8ed2c8dc9ce97afd.js c-all-b_js-50bf184dfe57dc2022a6.js)
     ./c.js 61 bytes [built]
     ./b.js 17 bytes [built]
     ./node_modules/vendor.js 23 bytes [built]
@@ -2576,7 +2576,7 @@ exports[`StatsTestCases should print correct stats for runtime-chunk-integration
 "Child base:
                  Asset       Size
         without-505.js   1.22 KiB  [emitted]
-      without-main1.js  601 bytes  [emitted]  [name: main1]
+      without-main1.js  597 bytes  [emitted]  [name: main1]
     without-runtime.js   10.9 KiB  [emitted]  [name: runtime]
     Entrypoint main1 = without-runtime.js without-main1.js
     ./main1.js 66 bytes [built]
