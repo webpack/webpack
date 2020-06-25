@@ -4441,6 +4441,10 @@ declare class NormalModule extends Module {
 		 */
 		generator: Generator;
 		/**
+		 * scheme
+		 */
+		scheme?: string;
+		/**
 		 * options used for resolving requests from this module
 		 */
 		resolveOptions: any;
@@ -4453,6 +4457,7 @@ declare class NormalModule extends Module {
 	generator: Generator;
 	resource: string;
 	matchResource: string;
+	scheme: string;
 	loaders: LoaderItem[];
 	error: WebpackError;
 	createSourceForAsset(
