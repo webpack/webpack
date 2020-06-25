@@ -170,6 +170,18 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 			get: () => () => "shared strict5",
 			version: [1, 1, 1]
 		},
+		strict6: {
+			get: () => () => "shared strict6",
+			version: [1, 1, 1]
+		},
+		strict7: {
+			get: () => () => "shared strict7",
+			version: [1, 1, 1]
+		},
+		strict8: {
+			get: () => () => "shared strict8",
+			version: [1, 1, 1]
+		},
 		singleton: {
 			get: () => () => "shared singleton",
 			version: [1, 1, 1]
@@ -207,6 +219,21 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 			})
 		);
 		expectWarning();
+	}
+	{
+		const result = await import("strict6");
+		expect(result.default).toBe("strict");
+		expectWarning(/strict6@1\.1\.1 \(required strict6@>=2\.0\.0\ <3\.0\.0\)/);
+	}
+	{
+		const result = await import("strict7");
+		expect(result.default).toBe("strict");
+		expectWarning(/strict7@1\.1\.1 \(required strict7@>=2\.0\.0\ <3\.0\.0\)/);
+	}
+	{
+		const result = await import("strict8");
+		expect(result.default).toBe("strict");
+		expectWarning(/strict8@1\.1\.1 \(required strict8@>=2\.1\.0\ <2\.2\.0\)/);
 	}
 	{
 		const result = await import("singleton");
