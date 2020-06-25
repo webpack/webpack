@@ -1,4 +1,8 @@
-const url = `file://${require("path").resolve("./test/cases/esm/import-meta/index.js").replace(/\\/g, "/")}`;
+const { pathToFileURL } = require("url");
+const url =
+	pathToFileURL(
+		require("path").resolve("./test/cases/esm/import-meta/index.js")
+	).toString();
 
 it("typeof import.meta === \"object\"", () => {
 	expect(typeof import.meta).toBe("object");
