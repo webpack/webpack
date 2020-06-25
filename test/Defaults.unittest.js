@@ -986,4 +986,16 @@ describe("Defaults", () => {
 			+     "uniqueName": "@@@Hello World!",
 		`)
 	);
+	test("stats true", { stats: true }, e =>
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-   "stats": Object {},
+		+   "stats": Object {
+		+     "preset": "normal",
+		+   },
+	`)
+	);
 });
