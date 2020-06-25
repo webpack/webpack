@@ -1012,4 +1012,17 @@ describe("Defaults", () => {
 		+   },
 		`)
 	);
+
+	test("stats string", { stats: "minimal" }, e =>
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-   "stats": Object {},
+		+   "stats": Object {
+		+     "preset": "minimal",
+		+   },
+		`)
+	);
 });
