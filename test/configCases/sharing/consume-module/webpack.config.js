@@ -62,6 +62,14 @@ module.exports = {
 					requiredVersion: "2.1.X",
 					strictVersion: true
 				},
+				strict9: {
+					requiredVersion: "1.1.1-alpha.0",
+					strictVersion: true
+				},
+				strict10: {
+					requiredVersion: "1.1.1-alpha.0",
+					strictVersion: true
+				},
 				singleton: {
 					requiredVersion: "1.1.0",
 					strictVersion: false

@@ -48,7 +48,7 @@ it("should load the shared modules", async () => {
 	__webpack_share_scopes__["other-scope"] = {
 		"advanced/123": {
 			get: () => () => "123",
-			version: [1, 3, "0-beta", 1]
+			version: [1, 3, 0, "beta", 1]
 		},
 		"advanced/error1": {
 			get: () => {
@@ -182,6 +182,14 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 			get: () => () => "shared strict8",
 			version: [1, 1, 1]
 		},
+		strict9: {
+			get: () => () => "shared strict9",
+			version: [1, 1, 1]
+		},
+		strict10: {
+			get: () => () => "shared strict10",
+			version: [1, 1, 1, 'alpha', 0]
+		},
 		singleton: {
 			get: () => () => "shared singleton",
 			version: [1, 1, 1]
@@ -234,6 +242,16 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 		const result = await import("strict8");
 		expect(result.default).toBe("strict");
 		expectWarning(/strict8@1\.1\.1 \(required strict8@>=2\.1\.0\ <2\.2\.0\)/);
+	}
+	{
+		const result = await import("strict9");
+		expect(result.default).toBe("strict");
+		expectWarning(/strict9@1\.1\.1 \(required strict9@2\.1\.0-alpha\.0\)/);
+	}
+	{
+		const result = await import("strict10");
+		expect(result.default).toBe("shared strict10");
+		expectWarning();
 	}
 	{
 		const result = await import("singleton");
