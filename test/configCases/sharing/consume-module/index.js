@@ -27,6 +27,25 @@ const expectWarning = regexp => {
 	warnings.length = 0;
 };
 
+const populateScope = scope => {
+	// Populate the shared array with version prefix keys
+	Object.entries(scope).forEach(([key, value]) => {
+		if (value.version === undefined) return;
+		let name = key;
+		if (value.version.length > 3) {
+			scope[name + '`' + value.version.join('`')] = {...value};
+		} else {
+			for (let v of value.version) {
+				name += '`' + v;
+				scope[name] = {...value};
+			}
+		}
+	});
+
+}
+
+
+
 it("should load the shared modules", async () => {
 	__webpack_share_scopes__["test-scope"] = {
 		package: {
@@ -46,9 +65,9 @@ it("should load the shared modules", async () => {
 		}
 	};
 	__webpack_share_scopes__["other-scope"] = {
-		"advanced/123": {
+		"advanced/123`1`2`3`beta`1": {
 			get: () => () => "123",
-			version: [1, 3, 0, "beta", 1]
+			version: [1, 2, 3, "beta", 1]
 		},
 		"advanced/error1": {
 			get: () => {
@@ -75,6 +94,8 @@ it("should load the shared modules", async () => {
 			version: [1, 0, 0]
 		}
 	};
+	populateScope(__webpack_share_scopes__["test-scope"]);
+	populateScope(__webpack_share_scopes__["other-scope"]);
 	{
 		const result = await import("package");
 		expect(result.default).toBe("shared package");
@@ -150,6 +171,10 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 			get: () => () => "shared strict0",
 			version: [1, 1, 1]
 		},
+		strict0: {
+			get: () => () => "shared strict0",
+			version: [1, 1, 1]
+		},
 		strict1: {
 			get: () => () => "shared strict1",
 			version: [1, 1, 1]
@@ -186,7 +211,7 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 			get: () => () => "shared strict9",
 			version: [1, 1, 1]
 		},
-		strict10: {
+		'strict10`1`1`1`alpha`0': {
 			get: () => () => "shared strict10",
 			version: [1, 1, 1, 'alpha', 0]
 		},
@@ -195,6 +220,8 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 			version: [1, 1, 1]
 		}
 	};
+	populateScope(__webpack_share_scopes__["default"]);
+
 	{
 		const result = await import("strict0");
 		expect(result.default).toBe("shared strict0");
@@ -246,7 +273,7 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 	{
 		const result = await import("strict9");
 		expect(result.default).toBe("strict");
-		expectWarning(/strict9@1\.1\.1 \(required strict9@2\.1\.0-alpha\.0\)/);
+		expectWarning(/strict9@1\.1\.1 \(required strict9@1\.1\.1-alpha\.0\)/);
 	}
 	{
 		const result = await import("strict10");

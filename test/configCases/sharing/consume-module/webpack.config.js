@@ -16,7 +16,7 @@ module.exports = {
 				{
 					"advanced/": {
 						import: false,
-						requiredVersion: "^1.2.3",
+						requiredVersion: "1.2.3-beta.1",
 						shareScope: "other-scope",
 						strictVersion: true
 					}
