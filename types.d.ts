@@ -8436,6 +8436,8 @@ declare namespace exports {
 		export let getChunkUpdateScriptFilename: string;
 		export let startup: string;
 		export let startupNoDefault: string;
+		export let startupEntrypoint: string;
+		export let externalInstallChunk: string;
 		export let interceptModuleExecution: string;
 		export let global: string;
 		export let shareScopeMap: string;
