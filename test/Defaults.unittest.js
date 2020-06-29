@@ -217,13 +217,13 @@ describe("Defaults", () => {
 		    "iife": true,
 		    "importFunctionName": "import",
 		    "jsonpFunction": "webpackJsonpwebpack",
-		    "jsonpScriptType": false,
 		    "library": undefined,
 		    "libraryTarget": "var",
 		    "module": false,
 		    "path": "<cwd>/dist",
 		    "pathinfo": false,
 		    "publicPath": "",
+		    "scriptType": false,
 		    "sourceMapFilename": "[file].map[query]",
 		    "sourcePrefix": undefined,
 		    "strictModuleExceptionHandling": false,
@@ -559,13 +559,13 @@ describe("Defaults", () => {
 		-     "iife": true,
 		+     "iife": false,
 		@@ ... @@
-		-     "jsonpScriptType": false,
-		+     "jsonpScriptType": "module",
-		@@ ... @@
 		-     "libraryTarget": "var",
 		-     "module": false,
 		+     "libraryTarget": "module",
 		+     "module": true,
+		@@ ... @@
+		-     "scriptType": false,
+		+     "scriptType": "module",
 	`)
 	);
 	test("async wasm", { experiments: { asyncWebAssembly: true } }, e =>
@@ -659,9 +659,8 @@ describe("Defaults", () => {
 		+     "hotUpdateFunction": "webpackHotUpdatemyLib_awesome",
 		@@ ... @@
 		-     "jsonpFunction": "webpackJsonpwebpack",
-		+     "jsonpFunction": "webpackJsonpmyLib_awesome",
-		@@ ... @@
 		-     "library": undefined,
+		+     "jsonpFunction": "webpackJsonpmyLib_awesome",
 		+     "library": Object {
 		+       "auxiliaryComment": undefined,
 		+       "export": undefined,

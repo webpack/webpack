@@ -3424,7 +3424,6 @@ declare interface JsonpCompilationPluginHooks {
 	linkPreload: SyncWaterfallHook<[string, Chunk, string]>;
 	linkPrefetch: SyncWaterfallHook<[string, Chunk, string]>;
 }
-type JsonpScriptType = false | "module" | "text/javascript";
 declare class JsonpTemplatePlugin {
 	constructor();
 
@@ -5046,11 +5045,6 @@ declare interface Output {
 	jsonpFunction?: string;
 
 	/**
-	 * This option enables loading async chunks via a custom script type, such as script type="module".
-	 */
-	jsonpScriptType?: JsonpScriptType;
-
-	/**
 	 * Make the output files a library, exporting the exports of the entry point.
 	 */
 	library?: Library;
@@ -5084,6 +5078,11 @@ declare interface Output {
 	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: PublicPath;
+
+	/**
+	 * This option enables loading async chunks via a custom script type, such as script type="module".
+	 */
+	scriptType?: ScriptType;
 
 	/**
 	 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
@@ -5255,11 +5254,6 @@ declare interface OutputNormalized {
 	jsonpFunction?: string;
 
 	/**
-	 * This option enables loading async chunks via a custom script type, such as script type="module".
-	 */
-	jsonpScriptType?: JsonpScriptType;
-
-	/**
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
@@ -5283,6 +5277,11 @@ declare interface OutputNormalized {
 	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: PublicPath;
+
+	/**
+	 * This option enables loading async chunks via a custom script type, such as script type="module".
+	 */
+	scriptType?: ScriptType;
 
 	/**
 	 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
@@ -7025,6 +7024,7 @@ declare interface ScopeInfo {
 	isAsmJs: boolean;
 	inTry: boolean;
 }
+type ScriptType = false | "module" | "text/javascript";
 declare abstract class Serializer {
 	serializeMiddlewares: any;
 	deserializeMiddlewares: any;
