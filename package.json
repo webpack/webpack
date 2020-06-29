@@ -155,8 +155,7 @@
     "cover:integration": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
     "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:types": "node node_modules/tooling/type-coverage",
-    "cover:report": "istanbul report",
-    "postinstall": "is-ci || yarn-deduplicate --fail -s highest yarn.lock || yarn install"
+    "cover:report": "istanbul report"
   },
   "husky": {
     "hooks": {
