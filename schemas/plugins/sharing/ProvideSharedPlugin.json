@@ -51,9 +51,6 @@
             {
               "description": "Version as string. Each part of the version should be separated by a dot '.'.",
               "type": "string"
-            },
-            {
-              "$ref": "#/definitions/SharedVersionArray"
             }
           ]
         }
@@ -75,23 +72,6 @@
           },
           {
             "$ref": "#/definitions/ProvidesItem"
-          }
-        ]
-      }
-    },
-    "SharedVersionArray": {
-      "description": "Version number as array. Numbers and strings are accepted. Strings are treated as tags, which only match exactly. Numbers can match higher numbers.",
-      "type": "array",
-      "items": {
-        "description": "An item of the version.",
-        "anyOf": [
-          {
-            "description": "Version number. It's assumed that the module is compatible with any higher version number.",
-            "type": "number"
-          },
-          {
-            "description": "Version tag. The module is only compatible with the exact matching version tag.",
-            "type": "string"
           }
         ]
       }

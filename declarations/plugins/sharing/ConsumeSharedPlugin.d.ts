@@ -12,10 +12,6 @@ export type Consumes = (ConsumesItem | ConsumesObject)[] | ConsumesObject;
  * A module that should be consumed from share scope.
  */
 export type ConsumesItem = string;
-/**
- * Version number as array. Numbers and strings are accepted. Strings are treated as tags, which only match exactly. Numbers can match higher numbers.
- */
-export type SharedVersionArray = (number | string)[];
 
 /**
  * Options for consuming shared modules.
@@ -58,7 +54,7 @@ export interface ConsumesConfig {
 	/**
 	 * Version requirement from module in share scope.
 	 */
-	requiredVersion?: false | string | SharedVersionArray;
+	requiredVersion?: false | string;
 	/**
 	 * Module is looked up under this key from the share scope.
 	 */
