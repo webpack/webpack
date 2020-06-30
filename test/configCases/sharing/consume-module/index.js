@@ -33,6 +33,7 @@ const populateScope = scope => {
 		if (value.version === undefined) return;
 		let name = key;
 		if (value.version.length > 3) {
+			scope[name] = {...value};
 			scope[name + '`' + value.version.join('`')] = {...value};
 		} else {
 			for (let v of value.version) {
@@ -65,7 +66,7 @@ it("should load the shared modules", async () => {
 		}
 	};
 	__webpack_share_scopes__["other-scope"] = {
-		"advanced/123`1`2`3`beta`1": {
+		"advanced/123": {
 			get: () => () => "123",
 			version: [1, 2, 3, "beta", 1]
 		},
