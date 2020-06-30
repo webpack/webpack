@@ -46,7 +46,7 @@ const samples = [
 	},
 	{
 		specifier: "D:\\path\\file.js",
-		expected: "d"
+		expected: undefined
 	}
 ];
 
