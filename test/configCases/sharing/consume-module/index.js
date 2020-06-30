@@ -212,7 +212,7 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 			get: () => () => "shared strict9",
 			version: [1, 1, 1]
 		},
-		'strict10`1`1`1`alpha`0': {
+		strict10: {
 			get: () => () => "shared strict10",
 			version: [1, 1, 1, 'alpha', 0]
 		},
@@ -231,22 +231,22 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 	{
 		const result = await import("strict1");
 		expect(result.default).toBe("strict");
-		expectWarning(/strict1@1\.1\.1 \(required strict1@>=1\.2\.0\)/);
+		expectWarning(/strict1@\[1\.1\.1\] \(required strict1@>=1\.2\.0\)/);
 	}
 	{
 		const result = await import("strict2");
 		expect(result.default).toBe("strict");
-		expectWarning(/strict2@1\.1\.1 \(required strict2@1\.1\.0\)/);
+		expectWarning(/strict2@\[1\.1\.1\] \(required strict2@1\.1\.0\)/);
 	}
 	{
 		const result = await import("strict3");
 		expect(result.default).toBe("strict");
-		expectWarning(/strict3@1\.1\.1 \(required strict3@>=1\.0\.0 <1\.1\.0\)/);
+		expectWarning(/strict3@\[1\.1\.1\] \(required strict3@>=1\.0\.0 <1\.1\.0\)/);
 	}
 	{
 		const result = await import("strict4");
 		expect(result.default).toBe("strict");
-		expectWarning(/strict4@1\.1\.1 \(required strict4@>=2\.2\.3\ <3\.0\.0\)/);
+		expectWarning(/strict4@\[1\.1\.1\] \(required strict4@>=2\.2\.3\ <3\.0\.0\)/);
 	}
 	{
 		await expect(() => import("strict5")).rejects.toEqual(
@@ -259,22 +259,22 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 	{
 		const result = await import("strict6");
 		expect(result.default).toBe("strict");
-		expectWarning(/strict6@1\.1\.1 \(required strict6@>=2\.0\.0\ <3\.0\.0\)/);
+		expectWarning(/strict6@\[1\.1\.1\] \(required strict6@>=2\.0\.0\ <3\.0\.0\)/);
 	}
 	{
 		const result = await import("strict7");
 		expect(result.default).toBe("strict");
-		expectWarning(/strict7@1\.1\.1 \(required strict7@>=2\.0\.0\ <3\.0\.0\)/);
+		expectWarning(/strict7@\[1\.1\.1\] \(required strict7@>=2\.0\.0\ <3\.0\.0\)/);
 	}
 	{
 		const result = await import("strict8");
 		expect(result.default).toBe("strict");
-		expectWarning(/strict8@1\.1\.1 \(required strict8@>=2\.1\.0\ <2\.2\.0\)/);
+		expectWarning(/strict8@\[1\.1\.1\] \(required strict8@>=2\.1\.0\ <2\.2\.0\)/);
 	}
 	{
 		const result = await import("strict9");
 		expect(result.default).toBe("strict");
-		expectWarning(/strict9@1\.1\.1 \(required strict9@1\.1\.1-alpha\.0\)/);
+		expectWarning(/strict9@\[1\.1\.1\] \(required strict9@1\.1\.1-alpha\.0\)/);
 	}
 	{
 		const result = await import("strict10");
@@ -284,6 +284,6 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 	{
 		const result = await import("singleton");
 		expect(result.default).toBe("shared singleton");
-		expectWarning(/singleton@1\.1\.1 \(required singleton@1\.1\.0\)/);
+		expectWarning(/singleton@\[1\.1\.1\] \(required singleton@1\.1\.0\)/);
 	}
 });
