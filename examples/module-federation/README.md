@@ -691,11 +691,11 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		}
 /******/ 		var rangeToString = (range) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(1===range.length)return"*";if(0 in range){var r="",n=range[0];r+=0==n?">=":-1==n?"<":1==n?"^":2==n?"~":n>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){var g=(typeof(o=range[a]))[0];e--,r+="u"==g?"-":"o"==g?"+":(e>0?".":"")+(e=2,o)}return r}var t=[];for(a=1;a<range.length;a++){var o=range[a];t.push(0===o?"not("+p()+")":1===o?"("+p()+" || "+p()+")":2===o?t.pop()+" "+t.pop():rangeToString(o))}return p();function p(){return t.pop().replace(/^\((.+)\)$/,"$1")}
+/******/ 			if(1===range.length)return"*";if(0 in range){var r="",n=range[0];r+=0==n?">=":-1==n?"<":1==n?"^":2==n?"~":n>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){e--,r+="u"==(typeof(t=range[a]))[0]?"-":(e>0?".":"")+(e=2,t)}return r}var g=[];for(a=1;a<range.length;a++){var t=range[a];g.push(0===t?"not("+o()+")":1===t?"("+o()+" || "+o()+")":2===t?g.pop()+" "+g.pop():rangeToString(t))}return o();function o(){return g.pop().replace(/^\((.+)\)$/,"$1")}
 /******/ 		}
 /******/ 		var satisfy = (range, version) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(0 in range){var r=range[0],e=r<0;e&&(r=-r-1);for(var n=0,f=1,i=!0;;f++,n++){var a=f<range.length?(typeof range[f])[0]:"";if(n>=version.length)return!i||("u"==a?f>r&&!e:""==a!=e);var t=version[n],o=(typeof t)[0];if("u"==o){if(!i||"u"!=a)return!1}else if(i)if(a==o){if("o"!=o)if(f<=r){if(t!=range[f])return!1}else{if(e?t>range[f]:t<range[f])return!1;t!=range[f]&&(i=!1)}}else{if("o"==o)return""==a||"u"==a?!e&&f>r:e;if("s"!=a&&"n"!=a){if(e||f<=r)return!1;i=!1,f--}else{if(f<=r)return!1;if(o<a!=e)return!1}}else{if("o"==o)return!0;"s"!=a&&"n"!=a&&(i=!1,f--)}}}var u=[];for(n=1;n<range.length;n++){var g=range[n];u.push(1==g?u.pop()|u.pop():2==g?u.pop()&u.pop():g?satisfy(g,version):!u.pop())}return!!u[0]
+/******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,f=!0;;i++,n++){var a,s,t=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(a=version[n]))[0]))return!f||("u"==t?i>e&&!r:""==t!=r);if("u"==s){if(!f||"u"!=t)return!1}else if(f){if(t==s)if(i<=e){if(a!=range[i])return!1}else{if(r?a>range[i]:a<range[i])return!1;a!=range[i]&&(f=!1)}else if("s"!=t&&"n"!=t){if(r||i<=e)return!1;f=!1,i--}else if(i<=e||s<t!=r)return!1}else"s"!=t&&"n"!=t&&(f=!1,i--)}}var g=[],o=g.pop.bind(g);for(n=1;n<range.length;n++){var u=range[n];g.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o()
 /******/ 		}
 /******/ 		var ensureExistence = (scopeName, key) => {
 /******/ 			var scope = __webpack_require__.S[scopeName];
@@ -1217,11 +1217,11 @@ __webpack_require__.d(exports, {
 /******/ 		}
 /******/ 		var rangeToString = (range) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(1===range.length)return"*";if(0 in range){var r="",n=range[0];r+=0==n?">=":-1==n?"<":1==n?"^":2==n?"~":n>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){var g=(typeof(o=range[a]))[0];e--,r+="u"==g?"-":"o"==g?"+":(e>0?".":"")+(e=2,o)}return r}var t=[];for(a=1;a<range.length;a++){var o=range[a];t.push(0===o?"not("+p()+")":1===o?"("+p()+" || "+p()+")":2===o?t.pop()+" "+t.pop():rangeToString(o))}return p();function p(){return t.pop().replace(/^\((.+)\)$/,"$1")}
+/******/ 			if(1===range.length)return"*";if(0 in range){var r="",n=range[0];r+=0==n?">=":-1==n?"<":1==n?"^":2==n?"~":n>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){e--,r+="u"==(typeof(t=range[a]))[0]?"-":(e>0?".":"")+(e=2,t)}return r}var g=[];for(a=1;a<range.length;a++){var t=range[a];g.push(0===t?"not("+o()+")":1===t?"("+o()+" || "+o()+")":2===t?g.pop()+" "+g.pop():rangeToString(t))}return o();function o(){return g.pop().replace(/^\((.+)\)$/,"$1")}
 /******/ 		}
 /******/ 		var satisfy = (range, version) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(0 in range){var r=range[0],e=r<0;e&&(r=-r-1);for(var n=0,f=1,i=!0;;f++,n++){var a=f<range.length?(typeof range[f])[0]:"";if(n>=version.length)return!i||("u"==a?f>r&&!e:""==a!=e);var t=version[n],o=(typeof t)[0];if("u"==o){if(!i||"u"!=a)return!1}else if(i)if(a==o){if("o"!=o)if(f<=r){if(t!=range[f])return!1}else{if(e?t>range[f]:t<range[f])return!1;t!=range[f]&&(i=!1)}}else{if("o"==o)return""==a||"u"==a?!e&&f>r:e;if("s"!=a&&"n"!=a){if(e||f<=r)return!1;i=!1,f--}else{if(f<=r)return!1;if(o<a!=e)return!1}}else{if("o"==o)return!0;"s"!=a&&"n"!=a&&(i=!1,f--)}}}var u=[];for(n=1;n<range.length;n++){var g=range[n];u.push(1==g?u.pop()|u.pop():2==g?u.pop()&u.pop():g?satisfy(g,version):!u.pop())}return!!u[0]
+/******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,f=!0;;i++,n++){var a,s,t=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(a=version[n]))[0]))return!f||("u"==t?i>e&&!r:""==t!=r);if("u"==s){if(!f||"u"!=t)return!1}else if(f){if(t==s)if(i<=e){if(a!=range[i])return!1}else{if(r?a>range[i]:a<range[i])return!1;a!=range[i]&&(f=!1)}else if("s"!=t&&"n"!=t){if(r||i<=e)return!1;f=!1,i--}else if(i<=e||s<t!=r)return!1}else"s"!=t&&"n"!=t&&(f=!1,i--)}}var g=[],o=g.pop.bind(g);for(n=1;n<range.length;n++){var u=range[n];g.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o()
 /******/ 		}
 /******/ 		var ensureExistence = (scopeName, key) => {
 /******/ 			var scope = __webpack_require__.S[scopeName];
@@ -1744,11 +1744,11 @@ __webpack_require__.d(exports, {
 /******/ 		}
 /******/ 		var rangeToString = (range) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(1===range.length)return"*";if(0 in range){var r="",n=range[0];r+=0==n?">=":-1==n?"<":1==n?"^":2==n?"~":n>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){var g=(typeof(o=range[a]))[0];e--,r+="u"==g?"-":"o"==g?"+":(e>0?".":"")+(e=2,o)}return r}var t=[];for(a=1;a<range.length;a++){var o=range[a];t.push(0===o?"not("+p()+")":1===o?"("+p()+" || "+p()+")":2===o?t.pop()+" "+t.pop():rangeToString(o))}return p();function p(){return t.pop().replace(/^\((.+)\)$/,"$1")}
+/******/ 			if(1===range.length)return"*";if(0 in range){var r="",n=range[0];r+=0==n?">=":-1==n?"<":1==n?"^":2==n?"~":n>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){e--,r+="u"==(typeof(t=range[a]))[0]?"-":(e>0?".":"")+(e=2,t)}return r}var g=[];for(a=1;a<range.length;a++){var t=range[a];g.push(0===t?"not("+o()+")":1===t?"("+o()+" || "+o()+")":2===t?g.pop()+" "+g.pop():rangeToString(t))}return o();function o(){return g.pop().replace(/^\((.+)\)$/,"$1")}
 /******/ 		}
 /******/ 		var satisfy = (range, version) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(0 in range){var r=range[0],e=r<0;e&&(r=-r-1);for(var n=0,f=1,i=!0;;f++,n++){var a=f<range.length?(typeof range[f])[0]:"";if(n>=version.length)return!i||("u"==a?f>r&&!e:""==a!=e);var t=version[n],o=(typeof t)[0];if("u"==o){if(!i||"u"!=a)return!1}else if(i)if(a==o){if("o"!=o)if(f<=r){if(t!=range[f])return!1}else{if(e?t>range[f]:t<range[f])return!1;t!=range[f]&&(i=!1)}}else{if("o"==o)return""==a||"u"==a?!e&&f>r:e;if("s"!=a&&"n"!=a){if(e||f<=r)return!1;i=!1,f--}else{if(f<=r)return!1;if(o<a!=e)return!1}}else{if("o"==o)return!0;"s"!=a&&"n"!=a&&(i=!1,f--)}}}var u=[];for(n=1;n<range.length;n++){var g=range[n];u.push(1==g?u.pop()|u.pop():2==g?u.pop()&u.pop():g?satisfy(g,version):!u.pop())}return!!u[0]
+/******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,f=!0;;i++,n++){var a,s,t=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(a=version[n]))[0]))return!f||("u"==t?i>e&&!r:""==t!=r);if("u"==s){if(!f||"u"!=t)return!1}else if(f){if(t==s)if(i<=e){if(a!=range[i])return!1}else{if(r?a>range[i]:a<range[i])return!1;a!=range[i]&&(f=!1)}else if("s"!=t&&"n"!=t){if(r||i<=e)return!1;f=!1,i--}else if(i<=e||s<t!=r)return!1}else"s"!=t&&"n"!=t&&(f=!1,i--)}}var g=[],o=g.pop.bind(g);for(n=1;n<range.length;n++){var u=range[n];g.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o()
 /******/ 		}
 /******/ 		var ensureExistence = (scopeName, key) => {
 /******/ 			var scope = __webpack_require__.S[scopeName];
@@ -2051,12 +2051,12 @@ Child app:
 Child mfe-b:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                             Asset      Size
-                                        mfeBBB.js  23.9 KiB  [emitted]  [name: mfeBBB]
+                                        mfeBBB.js  23.8 KiB  [emitted]  [name: mfeBBB]
                    node_modules_react_index_js.js  12.6 KiB  [emitted]
                             src-b_Component_js.js  2.26 KiB  [emitted]
     vendors-node_modules_date-fns_esm_index_js.js   796 KiB  [emitted]  [id hint: vendors]
     Entrypoint mfeBBB = mfeBBB.js
-    chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.1 KiB (runtime) [entry] [rendered]
+    chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16 KiB (runtime) [entry] [rendered]
         > mfeBBB
      container entry 42 bytes [built]
      provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js 42 bytes [built]
@@ -2079,13 +2079,13 @@ Child mfe-b:
 Child mfe-c:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                             Asset      Size
-                                        mfeCCC.js  24.9 KiB  [emitted]  [name: mfeCCC]
+                                        mfeCCC.js  24.8 KiB  [emitted]  [name: mfeCCC]
                             src-c_Component_js.js  1.99 KiB  [emitted]
                         src-c_LazyComponent_js.js  2.08 KiB  [emitted]
     vendors-node_modules_date-fns_esm_index_js.js   797 KiB  [emitted]  [id hint: vendors]
          vendors-node_modules_lodash_random_js.js  23.3 KiB  [emitted]  [id hint: vendors]
     Entrypoint mfeCCC = mfeCCC.js
-    chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.5 KiB (runtime) [entry] [rendered]
+    chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.4 KiB (runtime) [entry] [rendered]
         > mfeCCC
      container entry 42 bytes [built]
      provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js 42 bytes [built]
@@ -2123,7 +2123,7 @@ Version: webpack 5.0.0-beta.20
 Child app:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                                 Asset       Size
-                                               app.js    6.8 KiB  [emitted]  [name: app]
+                                               app.js   6.91 KiB  [emitted]  [name: app]
                 node_modules_react_index_js-_11190.js   7.26 KiB  [emitted]
     node_modules_react_index_js-_11190.js.LICENSE.txt  295 bytes  [emitted]
                 node_modules_react_index_js-_11191.js   6.31 KiB  [emitted]
@@ -2131,7 +2131,7 @@ Child app:
                                   src_bootstrap_js.js    129 KiB  [emitted]
                       src_bootstrap_js.js.LICENSE.txt  546 bytes  [emitted]
     Entrypoint app = app.js
-    chunk app.js (app) 669 bytes (javascript) 42 bytes (share-init) 18.3 KiB (runtime) [entry] [rendered]
+    chunk app.js (app) 669 bytes (javascript) 42 bytes (share-init) 18.2 KiB (runtime) [entry] [rendered]
         > ./src/index.js app
      ./src/index.js 585 bytes [built]
      external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built]
@@ -2157,13 +2157,13 @@ Child app:
 Child mfe-b:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                             Asset       Size
-                                        mfeBBB.js   5.42 KiB  [emitted]  [name: mfeBBB]
+                                        mfeBBB.js   5.54 KiB  [emitted]  [name: mfeBBB]
                    node_modules_react_index_js.js   7.21 KiB  [emitted]
        node_modules_react_index_js.js.LICENSE.txt  295 bytes  [emitted]
                             src-b_Component_js.js  493 bytes  [emitted]
     vendors-node_modules_date-fns_esm_index_js.js   77.4 KiB  [emitted]  [id hint: vendors]
     Entrypoint mfeBBB = mfeBBB.js
-    chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16 KiB (runtime) [entry] [rendered]
+    chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 15.9 KiB (runtime) [entry] [rendered]
         > mfeBBB
      container entry 42 bytes [built]
      provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js 42 bytes [built]
@@ -2185,13 +2185,13 @@ Child mfe-b:
 Child mfe-c:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                             Asset       Size
-                                        mfeCCC.js   6.07 KiB  [emitted]  [name: mfeCCC]
+                                        mfeCCC.js   6.18 KiB  [emitted]  [name: mfeCCC]
                  node_modules_lodash_random_js.js   2.95 KiB  [emitted]
                             src-c_Component_js.js  493 bytes  [emitted]
                         src-c_LazyComponent_js.js  537 bytes  [emitted]
     vendors-node_modules_date-fns_esm_index_js.js   77.4 KiB  [emitted]  [id hint: vendors]
     Entrypoint mfeCCC = mfeCCC.js
-    chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.4 KiB (runtime) [entry] [rendered]
+    chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.3 KiB (runtime) [entry] [rendered]
         > mfeCCC
      container entry 42 bytes [built]
      provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js 42 bytes [built]
