@@ -1206,8 +1206,8 @@ __webpack_require__.d(exports, {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("react", [16,13,1], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/react/index.js */ 6)));
-/******/ 					register("date-fns", [2,14,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/date-fns/esm/index.js */ 9)));
+/******/ 					register("date-fns", [2,14,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/date-fns/esm/index.js */ 6)));
+/******/ 					register("react", [16,13,1], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/react/index.js */ 237)));
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -1314,8 +1314,8 @@ __webpack_require__.d(exports, {
 /******/ 		};
 /******/ 		var installedModules = {};
 /******/ 		var moduleToHandlerMapping = {
-/******/ 			5: () => loadStrictVersionCheckFallback("default", "date-fns", ["2",12,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! date-fns */ 9))),
-/******/ 			4: () => loadSingletonVersionCheckFallback("default", "react", ["16",8,0], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! react */ 6)))
+/******/ 			5: () => loadStrictVersionCheckFallback("default", "date-fns", ["2",12,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! date-fns */ 6))),
+/******/ 			4: () => loadSingletonVersionCheckFallback("default", "react", ["16",8,0], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! react */ 237)))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
 /******/ 		var chunkMapping = {
@@ -1726,8 +1726,8 @@ __webpack_require__.d(exports, {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("lodash/random", [4,17,15], () => __webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => () => __webpack_require__(/*! ../../node_modules/lodash/random.js */ 8)));
-/******/ 					register("date-fns", [2,14,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/date-fns/esm/index.js */ 27)));
+/******/ 					register("date-fns", [2,14,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/date-fns/esm/index.js */ 8)));
+/******/ 					register("lodash/random", [4,17,15], () => __webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => () => __webpack_require__(/*! ../../node_modules/lodash/random.js */ 239)));
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -1835,8 +1835,8 @@ __webpack_require__.d(exports, {
 /******/ 		var installedModules = {};
 /******/ 		var moduleToHandlerMapping = {
 /******/ 			4: () => loadSingletonVersionCheck("default", "react", ["16",8,0]),
-/******/ 			5: () => loadStrictVersionCheckFallback("default", "date-fns", ["2",12,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! date-fns */ 27))),
-/******/ 			7: () => loadStrictVersionCheckFallback("default", "lodash/random", ["4",17,4], () => __webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => () => __webpack_require__(/*! lodash/random */ 8)))
+/******/ 			5: () => loadStrictVersionCheckFallback("default", "date-fns", ["2",12,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! date-fns */ 8))),
+/******/ 			7: () => loadStrictVersionCheckFallback("default", "lodash/random", ["4",17,4], () => __webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => () => __webpack_require__(/*! lodash/random */ 239)))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
 /******/ 		var chunkMapping = {
@@ -2033,7 +2033,7 @@ Child mfe-b:
                                         mfeBBB.js  21.9 KiB  [emitted]  [name: mfeBBB]
                    node_modules_react_index_js.js  12.6 KiB  [emitted]
                             src-b_Component_js.js  2.26 KiB  [emitted]
-    vendors-node_modules_date-fns_esm_index_js.js   797 KiB  [emitted]  [id hint: vendors]
+    vendors-node_modules_date-fns_esm_index_js.js   796 KiB  [emitted]  [id hint: vendors]
     Entrypoint mfeBBB = mfeBBB.js
     chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 14.1 KiB (runtime) [entry] [rendered]
         > mfeBBB

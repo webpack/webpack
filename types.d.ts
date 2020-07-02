@@ -8567,6 +8567,7 @@ declare namespace exports {
 				a: string | number,
 				b: string | number
 			) => 0 | 1 | -1;
+			export let compareStrings: (a: string, b: string) => 0 | 1 | -1;
 			export let compareChunkGroupsByIndex: (
 				a: ChunkGroup,
 				b: ChunkGroup
