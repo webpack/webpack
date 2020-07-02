@@ -695,7 +695,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		}
 /******/ 		var satisfy = (range, version) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,f=!0;;i++,n++){var a,s,t=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(a=version[n]))[0]))return!f||("u"==t?i>e&&!r:""==t!=r);if("u"==s){if(!f||"u"!=t)return!1}else if(f){if(t==s)if(i<=e){if(a!=range[i])return!1}else{if(r?a>range[i]:a<range[i])return!1;a!=range[i]&&(f=!1)}else if("s"!=t&&"n"!=t){if(r||i<=e)return!1;f=!1,i--}else if(i<=e||s<t!=r)return!1}else"s"!=t&&"n"!=t&&(f=!1,i--)}}var g=[],o=g.pop.bind(g);for(n=1;n<range.length;n++){var u=range[n];g.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o()
+/******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,f=!0;;i++,n++){var a,s,t=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(a=version[n]))[0]))return!f||("u"==t?i>e&&!r:""==t!=r);if("u"==s){if(!f||"u"!=t)return!1}else if(f)if(t==s)if(i<=e){if(a!=range[i])return!1}else{if(r?a>range[i]:a<range[i])return!1;a!=range[i]&&(f=!1)}else if("s"!=t&&"n"!=t){if(r||i<=e)return!1;f=!1,i--}else{if(i<=e||s<t!=r)return!1;f=!1}else"s"!=t&&"n"!=t&&(f=!1,i--)}}var g=[],o=g.pop.bind(g);for(n=1;n<range.length;n++){var u=range[n];g.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o()
 /******/ 		}
 /******/ 		var ensureExistence = (scopeName, key) => {
 /******/ 			var scope = __webpack_require__.S[scopeName];
@@ -1221,7 +1221,7 @@ __webpack_require__.d(exports, {
 /******/ 		}
 /******/ 		var satisfy = (range, version) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,f=!0;;i++,n++){var a,s,t=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(a=version[n]))[0]))return!f||("u"==t?i>e&&!r:""==t!=r);if("u"==s){if(!f||"u"!=t)return!1}else if(f){if(t==s)if(i<=e){if(a!=range[i])return!1}else{if(r?a>range[i]:a<range[i])return!1;a!=range[i]&&(f=!1)}else if("s"!=t&&"n"!=t){if(r||i<=e)return!1;f=!1,i--}else if(i<=e||s<t!=r)return!1}else"s"!=t&&"n"!=t&&(f=!1,i--)}}var g=[],o=g.pop.bind(g);for(n=1;n<range.length;n++){var u=range[n];g.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o()
+/******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,f=!0;;i++,n++){var a,s,t=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(a=version[n]))[0]))return!f||("u"==t?i>e&&!r:""==t!=r);if("u"==s){if(!f||"u"!=t)return!1}else if(f)if(t==s)if(i<=e){if(a!=range[i])return!1}else{if(r?a>range[i]:a<range[i])return!1;a!=range[i]&&(f=!1)}else if("s"!=t&&"n"!=t){if(r||i<=e)return!1;f=!1,i--}else{if(i<=e||s<t!=r)return!1;f=!1}else"s"!=t&&"n"!=t&&(f=!1,i--)}}var g=[],o=g.pop.bind(g);for(n=1;n<range.length;n++){var u=range[n];g.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o()
 /******/ 		}
 /******/ 		var ensureExistence = (scopeName, key) => {
 /******/ 			var scope = __webpack_require__.S[scopeName];
@@ -1748,7 +1748,7 @@ __webpack_require__.d(exports, {
 /******/ 		}
 /******/ 		var satisfy = (range, version) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,f=!0;;i++,n++){var a,s,t=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(a=version[n]))[0]))return!f||("u"==t?i>e&&!r:""==t!=r);if("u"==s){if(!f||"u"!=t)return!1}else if(f){if(t==s)if(i<=e){if(a!=range[i])return!1}else{if(r?a>range[i]:a<range[i])return!1;a!=range[i]&&(f=!1)}else if("s"!=t&&"n"!=t){if(r||i<=e)return!1;f=!1,i--}else if(i<=e||s<t!=r)return!1}else"s"!=t&&"n"!=t&&(f=!1,i--)}}var g=[],o=g.pop.bind(g);for(n=1;n<range.length;n++){var u=range[n];g.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o()
+/******/ 			if(0 in range){version=parseVersion(version);var e=range[0],r=e<0;r&&(e=-e-1);for(var n=0,i=1,f=!0;;i++,n++){var a,s,t=i<range.length?(typeof range[i])[0]:"";if(n>=version.length||"o"==(s=(typeof(a=version[n]))[0]))return!f||("u"==t?i>e&&!r:""==t!=r);if("u"==s){if(!f||"u"!=t)return!1}else if(f)if(t==s)if(i<=e){if(a!=range[i])return!1}else{if(r?a>range[i]:a<range[i])return!1;a!=range[i]&&(f=!1)}else if("s"!=t&&"n"!=t){if(r||i<=e)return!1;f=!1,i--}else{if(i<=e||s<t!=r)return!1;f=!1}else"s"!=t&&"n"!=t&&(f=!1,i--)}}var g=[],o=g.pop.bind(g);for(n=1;n<range.length;n++){var u=range[n];g.push(1==u?o()|o():2==u?o()&o():u?satisfy(u,version):!o())}return!!o()
 /******/ 		}
 /******/ 		var ensureExistence = (scopeName, key) => {
 /******/ 			var scope = __webpack_require__.S[scopeName];
@@ -2123,7 +2123,7 @@ Version: webpack 5.0.0-beta.20
 Child app:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                                 Asset       Size
-                                               app.js   6.91 KiB  [emitted]  [name: app]
+                                               app.js   6.92 KiB  [emitted]  [name: app]
                 node_modules_react_index_js-_11190.js   7.26 KiB  [emitted]
     node_modules_react_index_js-_11190.js.LICENSE.txt  295 bytes  [emitted]
                 node_modules_react_index_js-_11191.js   6.31 KiB  [emitted]
