@@ -3748,6 +3748,9 @@ declare abstract class MainTemplate {
 		localVars: SyncWaterfallHook<[string, Chunk, string]>;
 		requireExtensions: SyncWaterfallHook<[string, Chunk, string]>;
 		requireEnsure: SyncWaterfallHook<[string, Chunk, string, string]>;
+		readonly jsonpScript: SyncWaterfallHook<[string, Chunk, string]>;
+		readonly linkPrefetch: SyncWaterfallHook<[string, Chunk, string]>;
+		readonly linkPreload: SyncWaterfallHook<[string, Chunk, string]>;
 	}>;
 	renderCurrentHashCode: (hash: string, length?: number) => string;
 	getPublicPath: (options?: any) => string;
@@ -3907,7 +3910,11 @@ declare class Module extends DependenciesBlock {
 		callback: (arg0: WebpackError) => void
 	): void;
 	getSourceTypes(): Set<string>;
-	source(sourceContext: SourceContext): Source;
+	source(
+		dependencyTemplates: DependencyTemplates,
+		runtimeTemplate: RuntimeTemplate,
+		type?: string
+	): Source;
 	size(type?: string): number;
 	libIdent(options: LibIdentOptions): string;
 	nameForCondition(): string;
@@ -6650,6 +6657,7 @@ declare class RuntimeModule extends Module {
 	attach(compilation: Compilation, chunk: Chunk): void;
 	generate(): string;
 	getGeneratedCode(): string;
+	shouldIsolate(): boolean;
 }
 declare abstract class RuntimeTemplate {
 	outputOptions: OutputNormalized;
