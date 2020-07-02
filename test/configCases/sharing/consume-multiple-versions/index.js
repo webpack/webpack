@@ -30,44 +30,35 @@ const expectWarning = regexp => {
 it("should be able to consume different shared module version depending on context", async () => {
 	__webpack_share_scopes__["default"] = {
 		shared: {
-			"9,9,9": {
-				get: () => () => "shared@9.9.9",
-				version: [9, 9, 9]
+			"9.9.9": {
+				get: () => () => "shared@9.9.9"
 			},
-			"1,9,9": {
-				get: () => () => "shared@1.9.9",
-				version: [1, 9, 9]
+			"1.9.9": {
+				get: () => () => "shared@1.9.9"
 			},
-			"1,2,9": {
-				get: () => () => "shared@1.2.9",
-				version: [1, 2, 9]
+			"1.2.9": {
+				get: () => () => "shared@1.2.9"
 			},
-			"1,2,3": {
+			"1.2.3": {
 				get: () => () => "shared@1.2.3",
-				version: [1, 2, 3],
 				from: "mfe1"
 			},
-			"2,9,9": {
-				get: () => () => "shared@2.9.9",
-				version: [2, 9, 9]
+			"2.9.9": {
+				get: () => () => "shared@2.9.9"
 			},
-			"2,3,9": {
-				get: () => () => "shared@2.3.9",
-				version: [2, 3, 9]
+			"2.3.9": {
+				get: () => () => "shared@2.3.9"
 			},
-			"2,3,4": {
-				get: () => () => "shared@2.3.4",
-				version: [2, 3, 4]
+			"2.3.4": {
+				get: () => () => "shared@2.3.4"
 			},
-			"3,0,0": {
-				get: () => () => "shared@3.0.0",
-				version: [3, 0, 0]
+			"3.0.0": {
+				get: () => () => "shared@3.0.0"
 			}
 		},
 		shared2: {
-			"9,9,9": {
-				get: () => () => "shared2@9.9.9",
-				version: [9, 9, 9]
+			"9.9.9": {
+				get: () => () => "shared2@9.9.9"
 			}
 		}
 	};

@@ -2,7 +2,6 @@
 
 const {
 	parseVersion,
-	versionToString,
 	versionLt,
 	parseRange,
 	rangeToString,
@@ -58,31 +57,6 @@ describe("SemVer", () => {
 		]);
 	});
 
-	describe("versionToString", () => {
-		const cases = [
-			"0.0.0",
-			"0.0.1",
-			"0.1.2",
-			"1.2.3",
-			"1.0.0",
-			"1.2.3.4.5.6.7.8",
-			"1.2",
-			"1",
-			"1.2.3-beta",
-			"1.2.3-beta.15",
-			"1.2.3-beta.15+45",
-			"1.2.3-beta.15+45.67",
-			"1.2.3+45",
-			"1.2.3+45.67",
-			"1.2.3-beta-gamma-test+x+y+z"
-		];
-		for (const key of cases) {
-			it(`should ${key} stringify correctly`, () => {
-				expect(versionToString(parseVersion(key))).toEqual(key);
-			});
-		}
-	});
-
 	describe("versionLt", () => {
 		const cases = [
 			"1 < 2",
@@ -109,13 +83,21 @@ describe("SemVer", () => {
 			"1.2.3-0 < 1.2.3-beta",
 			"1.2.3-beta < 1.2.3-beta+123",
 			"1.2.3-beta+123 < 1.2.3-beta+234",
-			"1.2.3-beta+99 < 1.2.3-beta+111"
+			"1.2.3-beta+99 < 1.2.3-beta+111",
+			"1.2.3-beta < 1.2.3+1",
+			"1.0.0-alpha < 1.0.0-alpha.1",
+			"1.0.0-alpha.1 < 1.0.0-alpha.beta",
+			"1.0.0-alpha.beta < 1.0.0-beta",
+			"1.0.0-beta < 1.0.0-beta.2",
+			"1.0.0-beta.2 < 1.0.0-beta.11",
+			"1.0.0-beta.11 < 1.0.0-rc.1",
+			"1.0.0-rc.1 < 1.0.0"
 		];
 		for (const c of cases) {
 			it(c, () => {
 				const parts = c.split(" < ");
-				const a = parseVersion(parts[0]);
-				const b = parseVersion(parts[1]);
+				const a = parts[0];
+				const b = parts[1];
 				expect(versionLt(a, a)).toBe(false);
 				expect(versionLt(b, b)).toBe(false);
 				expect(versionLt(a, b)).toBe(true);
@@ -145,6 +127,7 @@ describe("SemVer", () => {
 
 	describe("rangeToString", () => {
 		const cases = {
+			"*": "*",
 			"1": "^1",
 			"1.2": "~1.2",
 			"1.2.3": "=1.2.3",
@@ -497,13 +480,11 @@ describe("SemVer", () => {
 				for (const item of cases[name]) {
 					if (item.startsWith("!")) {
 						it(`should not be satisfied by ${item.slice(1)}`, () => {
-							expect(
-								satisfy(parseRange(name), parseVersion(item.slice(1)))
-							).toBe(false);
+							expect(satisfy(parseRange(name), item.slice(1))).toBe(false);
 						});
 					} else {
 						it(`should be satisfied by ${item}`, () => {
-							expect(satisfy(parseRange(name), parseVersion(item))).toBe(true);
+							expect(satisfy(parseRange(name), item)).toBe(true);
 						});
 					}
 				}

@@ -648,15 +648,10 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			var scope = __webpack_require__.S[name];
 /******/ 			var warn = (msg) => typeof console !== "undefined" && console.warn && console.warn(msg);;
 /******/ 			var uniqueName = "module-federation-aaa";
-/******/ 			var versionLt = (a, b) => {
-/******/ 				// see webpack/lib/util/semver.js for original code
-/******/ 				for(var r=0;;){if(r>=a.length)return r<b.length&&"u"!=(typeof b[r])[0];var t=a[r],e=(typeof t)[0];if(r>=b.length)return"u"==e;var n=b[r],f=(typeof n)[0];if(e!=f)return"o"==e&&"n"==f||("s"==f||"u"==e);if("o"!=e&&"u"!=e&&t!=n)return t<n;r++}
-/******/ 			}
 /******/ 			var register = (name, version, factory) => {
-/******/ 				version = version || [];
 /******/ 				var versions = scope[name] = scope[name] || {};
 /******/ 				var activeVersion = versions[version];
-/******/ 				if(!activeVersion || uniqueName > activeVersion.from) versions[version] = { get: factory, version: version, from: uniqueName };
+/******/ 				if(!activeVersion || uniqueName > activeVersion.from) versions[version] = { get: factory, from: uniqueName };
 /******/ 			};
 /******/ 			var initExternal = (id) => {
 /******/ 				var handleError = (err) => warn("Initialization of sharing external failed: " + err);
@@ -672,7 +667,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("react", [16,13,1], () => __webpack_require__.e("node_modules_react_index_js-_11190").then(() => () => __webpack_require__(/*! ../../node_modules/react/index.js */ 25)));
+/******/ 					register("react", "16.13.1", () => __webpack_require__.e("node_modules_react_index_js-_11190").then(() => () => __webpack_require__(/*! ../../node_modules/react/index.js */ 25)));
 /******/ 					initExternal(12);
 /******/ 					initExternal(14);
 /******/ 				}
@@ -684,21 +679,23 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	
 /******/ 	/* webpack/runtime/consumes */
 /******/ 	(() => {
-/******/ 		var satisfy = (range, version) => {
+/******/ 		var parseVersion = (str) => {
+/******/ 			var convertNumber = (str) => +str == str ? +str : str;;
+/******/ 			var splitAndConvert = (str) => str.split(".").map(convertNumber);;
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			var r=0,e=1,n=!0;if(0 in range){var f=range[0],i=f<0;for(i&&(f=-f-1);;){var a=e<range.length?(typeof range[e])[0]:"";if(r>=version.length)return!n||("u"==a?e>f&&!i:""==a!=i);var o=version[r],t=(typeof o)[0];if(r++,"u"==t){if(!n||"u"!=a)return!1;e++}else if(n)if("s"!=a&&"n"!=a)if("o"==t){if("o"!=a)return!(e<=f)&&!i;e++}else{if(i||e<=f)return!1;n=!1}else{if("o"==t)return!(e<=f)&&i;if(a!=t)return!1;if("s"==a||e<=f){if(o!=range[e])return!1;e++}else{if(i?o>range[e]:o<range[e])return!1;o!=range[e]&&(n=!1),e++}}else{if("o"==t)return!0;"s"==a||"n"==a?e++:n=!1}}}var u=[];for(r=1;r<range.length;r++){var s=range[r];u.push(1==s?u.pop()|u.pop():2==s?u.pop()&u.pop():s?satisfy(s,version):!u.pop())}return!!u[0]
+/******/ 			var n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(str),p=n[1]?splitAndConvert(n[1]):[];return n[2]&&(p.length++,p.push.apply(p,splitAndConvert(n[2]))),n[3]&&(p.push([]),p.push.apply(p,splitAndConvert(n[3]))),p
 /******/ 		}
 /******/ 		var versionLt = (a, b) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
 /******/ 			for(var r=0;;){if(r>=a.length)return r<b.length&&"u"!=(typeof b[r])[0];var t=a[r],e=(typeof t)[0];if(r>=b.length)return"u"==e;var n=b[r],f=(typeof n)[0];if(e!=f)return"o"==e&&"n"==f||("s"==f||"u"==e);if("o"!=e&&"u"!=e&&t!=n)return t<n;r++}
 /******/ 		}
-/******/ 		var versionToString = (version) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(!version)return"[unknown]";for(var r="",n=1,o=0;o<version.length;o++){var e=version[o],t=(typeof e)[0];n--,r+="u"==t?"-":"o"==t?"+":(n>0?".":"")+(n=2,e)}return r
-/******/ 		}
 /******/ 		var rangeToString = (range) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(0 in range){var r="",n=range[0];r+=0==n?">=":-1==n?"<":1==n?"^":2==n?"~":n>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){var o=(typeof(t=range[a]))[0];e--,r+="u"==o?"-":"o"==o?"+":(e>0?".":"")+(e=2,t)}return r}var g=[];for(a=1;a<range.length;a++){var t=range[a];g.push(0===t?"not("+p()+")":1===t?"("+p()+" || "+p()+")":2===t?g.pop()+" "+g.pop():rangeToString(t))}return p();function p(){return g.pop().replace(/^\((.+)\)$/,"$1")}
+/******/ 			if(1===range.length)return"*";if(0 in range){var r="",n=range[0];r+=0==n?">=":-1==n?"<":1==n?"^":2==n?"~":n>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){var g=(typeof(o=range[a]))[0];e--,r+="u"==g?"-":"o"==g?"+":(e>0?".":"")+(e=2,o)}return r}var t=[];for(a=1;a<range.length;a++){var o=range[a];t.push(0===o?"not("+p()+")":1===o?"("+p()+" || "+p()+")":2===o?t.pop()+" "+t.pop():rangeToString(o))}return p();function p(){return t.pop().replace(/^\((.+)\)$/,"$1")}
+/******/ 		}
+/******/ 		var satisfy = (range, version) => {
+/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			if(0 in range){var r=range[0],e=r<0;e&&(r=-r-1);for(var n=0,f=1,i=!0;;f++,n++){var a=f<range.length?(typeof range[f])[0]:"";if(n>=version.length)return!i||("u"==a?f>r&&!e:""==a!=e);var t=version[n],o=(typeof t)[0];if("u"==o){if(!i||"u"!=a)return!1}else if(i)if(a==o){if("o"!=o)if(f<=r){if(t!=range[f])return!1}else{if(e?t>range[f]:t<range[f])return!1;t!=range[f]&&(i=!1)}}else{if("o"==o)return""==a||"u"==a?!e&&f>r:e;if("s"!=a&&"n"!=a){if(e||f<=r)return!1;i=!1,f--}else{if(f<=r)return!1;if(o<a!=e)return!1}}else{if("o"==o)return!0;"s"!=a&&"n"!=a&&(i=!1,f--)}}}var u=[];for(n=1;n<range.length;n++){var g=range[n];u.push(1==g?u.pop()|u.pop():2==g?u.pop()&u.pop():g?satisfy(g,version):!u.pop())}return!!u[0]
 /******/ 		}
 /******/ 		var ensureExistence = (scopeName, key) => {
 /******/ 			var scope = __webpack_require__.S[scopeName];
@@ -707,43 +704,43 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		};
 /******/ 		var findVersion = (scope, key) => {
 /******/ 			var versions = scope[key];
-/******/ 			return Object.keys(versions).reduce((a, bKey) => {
-/******/ 				return !a || versionLt(a.version, versions[bKey].version) ? versions[bKey] : a;
+/******/ 			var key = Object.keys(versions).reduce((a, b) => {
+/******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
+/******/ 			return key && versions[key]
 /******/ 		};
-/******/ 		var findSingletonVersion = (scope, key) => {
+/******/ 		var findSingletonVersionKey = (scope, key) => {
 /******/ 			var versions = scope[key];
-/******/ 			return Object.keys(versions).reduce((a, bKey) => {
-/******/ 				return !a || (!a.loaded && versionLt(a.version, versions[bKey].version)) ? versions[bKey] : a;
+/******/ 			return Object.keys(versions).reduce((a, b) => {
+/******/ 				return !a || (!versions[a].loaded && versionLt(a, b)) ? b : a;
 /******/ 			}, 0);
 /******/ 		};
-/******/ 		var getInvalidSingletonVersionMessage = (key, entry, requiredVersion) => {
-/******/ 			return "Unsatisfied version " + versionToString(entry.version) + " of shared singleton module " + key + " (required " + rangeToString(requiredVersion) + ")"
+/******/ 		var getInvalidSingletonVersionMessage = (key, version, requiredVersion) => {
+/******/ 			return "Unsatisfied version " + version + " of shared singleton module " + key + " (required " + rangeToString(requiredVersion) + ")"
 /******/ 		};
 /******/ 		var getSingletonVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var entry = findSingletonVersion(scope, key);
-/******/ 			if (!satisfy(requiredVersion, entry.version || [])) typeof console !== "undefined" && console.warn && console.warn(getInvalidSingletonVersionMessage(key, entry, requiredVersion));
-/******/ 			return get(entry);
+/******/ 			var version = findSingletonVersionKey(scope, key);
+/******/ 			if (!satisfy(requiredVersion, version)) typeof console !== "undefined" && console.warn && console.warn(getInvalidSingletonVersionMessage(key, version, requiredVersion));
+/******/ 			return get(scope[key][version]);
 /******/ 		};
 /******/ 		var getStrictSingletonVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var entry = findSingletonVersion(scope, key);
-/******/ 			if (!satisfy(requiredVersion, entry.version || [])) throw new Error(getInvalidSingletonVersionMessage(key, entry, requiredVersion));
-/******/ 			return get(entry);
+/******/ 			var version = findSingletonVersionKey(scope, key);
+/******/ 			if (!satisfy(requiredVersion, version)) throw new Error(getInvalidSingletonVersionMessage(key, version, requiredVersion));
+/******/ 			return get(scope[key][version]);
 /******/ 		};
 /******/ 		var findValidVersion = (scope, key, requiredVersion) => {
 /******/ 			var versions = scope[key];
-/******/ 			return Object.keys(versions).reduce((a, bKey) => {
-/******/ 				var b = versions[bKey];
-/******/ 				if (!satisfy(requiredVersion, b.version || [])) return a;
-/******/ 				return !a || versionLt(a.version, versions[bKey].version) ? versions[bKey] : a;
+/******/ 			var key = Object.keys(versions).reduce((a, b) => {
+/******/ 				if (!satisfy(requiredVersion, b)) return a;
+/******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
+/******/ 			return key && versions[key]
 /******/ 		};
 /******/ 		var getInvalidVersionMessage = (scope, scopeName, key, requiredVersion) => {
 /******/ 			var versions = scope[key];
 /******/ 			return "No satisfying version (" + rangeToString(requiredVersion) + ") of shared module " + key + " found in shared scope " + scopeName + ".\n" +
 /******/ 				"Available versions: " + Object.keys(versions).map((key) => {
-/******/ 				var entry = versions[key];
-/******/ 				return versionToString(entry.version) + " from " + entry.from;
+/******/ 				return key + " from " + versions[key].from;
 /******/ 			}).join(", ");
 /******/ 		};
 /******/ 		var getValidVersion = (scope, scopeName, key, requiredVersion) => {
@@ -1178,15 +1175,10 @@ __webpack_require__.d(exports, {
 /******/ 			var scope = __webpack_require__.S[name];
 /******/ 			var warn = (msg) => typeof console !== "undefined" && console.warn && console.warn(msg);;
 /******/ 			var uniqueName = "module-federation-bbb";
-/******/ 			var versionLt = (a, b) => {
-/******/ 				// see webpack/lib/util/semver.js for original code
-/******/ 				for(var r=0;;){if(r>=a.length)return r<b.length&&"u"!=(typeof b[r])[0];var t=a[r],e=(typeof t)[0];if(r>=b.length)return"u"==e;var n=b[r],f=(typeof n)[0];if(e!=f)return"o"==e&&"n"==f||("s"==f||"u"==e);if("o"!=e&&"u"!=e&&t!=n)return t<n;r++}
-/******/ 			}
 /******/ 			var register = (name, version, factory) => {
-/******/ 				version = version || [];
 /******/ 				var versions = scope[name] = scope[name] || {};
 /******/ 				var activeVersion = versions[version];
-/******/ 				if(!activeVersion || uniqueName > activeVersion.from) versions[version] = { get: factory, version: version, from: uniqueName };
+/******/ 				if(!activeVersion || uniqueName > activeVersion.from) versions[version] = { get: factory, from: uniqueName };
 /******/ 			};
 /******/ 			var initExternal = (id) => {
 /******/ 				var handleError = (err) => warn("Initialization of sharing external failed: " + err);
@@ -1202,8 +1194,8 @@ __webpack_require__.d(exports, {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("date-fns", [2,14,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/date-fns/esm/index.js */ 6)));
-/******/ 					register("react", [16,13,1], () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/react/index.js */ 237)));
+/******/ 					register("date-fns", "2.14.0", () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/date-fns/esm/index.js */ 6)));
+/******/ 					register("react", "16.13.1", () => __webpack_require__.e("node_modules_react_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/react/index.js */ 237)));
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -1213,21 +1205,23 @@ __webpack_require__.d(exports, {
 /******/ 	
 /******/ 	/* webpack/runtime/consumes */
 /******/ 	(() => {
-/******/ 		var satisfy = (range, version) => {
+/******/ 		var parseVersion = (str) => {
+/******/ 			var convertNumber = (str) => +str == str ? +str : str;;
+/******/ 			var splitAndConvert = (str) => str.split(".").map(convertNumber);;
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			var r=0,e=1,n=!0;if(0 in range){var f=range[0],i=f<0;for(i&&(f=-f-1);;){var a=e<range.length?(typeof range[e])[0]:"";if(r>=version.length)return!n||("u"==a?e>f&&!i:""==a!=i);var o=version[r],t=(typeof o)[0];if(r++,"u"==t){if(!n||"u"!=a)return!1;e++}else if(n)if("s"!=a&&"n"!=a)if("o"==t){if("o"!=a)return!(e<=f)&&!i;e++}else{if(i||e<=f)return!1;n=!1}else{if("o"==t)return!(e<=f)&&i;if(a!=t)return!1;if("s"==a||e<=f){if(o!=range[e])return!1;e++}else{if(i?o>range[e]:o<range[e])return!1;o!=range[e]&&(n=!1),e++}}else{if("o"==t)return!0;"s"==a||"n"==a?e++:n=!1}}}var u=[];for(r=1;r<range.length;r++){var s=range[r];u.push(1==s?u.pop()|u.pop():2==s?u.pop()&u.pop():s?satisfy(s,version):!u.pop())}return!!u[0]
+/******/ 			var n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(str),p=n[1]?splitAndConvert(n[1]):[];return n[2]&&(p.length++,p.push.apply(p,splitAndConvert(n[2]))),n[3]&&(p.push([]),p.push.apply(p,splitAndConvert(n[3]))),p
 /******/ 		}
 /******/ 		var versionLt = (a, b) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
 /******/ 			for(var r=0;;){if(r>=a.length)return r<b.length&&"u"!=(typeof b[r])[0];var t=a[r],e=(typeof t)[0];if(r>=b.length)return"u"==e;var n=b[r],f=(typeof n)[0];if(e!=f)return"o"==e&&"n"==f||("s"==f||"u"==e);if("o"!=e&&"u"!=e&&t!=n)return t<n;r++}
 /******/ 		}
-/******/ 		var versionToString = (version) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(!version)return"[unknown]";for(var r="",n=1,o=0;o<version.length;o++){var e=version[o],t=(typeof e)[0];n--,r+="u"==t?"-":"o"==t?"+":(n>0?".":"")+(n=2,e)}return r
-/******/ 		}
 /******/ 		var rangeToString = (range) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(0 in range){var r="",n=range[0];r+=0==n?">=":-1==n?"<":1==n?"^":2==n?"~":n>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){var o=(typeof(t=range[a]))[0];e--,r+="u"==o?"-":"o"==o?"+":(e>0?".":"")+(e=2,t)}return r}var g=[];for(a=1;a<range.length;a++){var t=range[a];g.push(0===t?"not("+p()+")":1===t?"("+p()+" || "+p()+")":2===t?g.pop()+" "+g.pop():rangeToString(t))}return p();function p(){return g.pop().replace(/^\((.+)\)$/,"$1")}
+/******/ 			if(1===range.length)return"*";if(0 in range){var r="",n=range[0];r+=0==n?">=":-1==n?"<":1==n?"^":2==n?"~":n>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){var g=(typeof(o=range[a]))[0];e--,r+="u"==g?"-":"o"==g?"+":(e>0?".":"")+(e=2,o)}return r}var t=[];for(a=1;a<range.length;a++){var o=range[a];t.push(0===o?"not("+p()+")":1===o?"("+p()+" || "+p()+")":2===o?t.pop()+" "+t.pop():rangeToString(o))}return p();function p(){return t.pop().replace(/^\((.+)\)$/,"$1")}
+/******/ 		}
+/******/ 		var satisfy = (range, version) => {
+/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			if(0 in range){var r=range[0],e=r<0;e&&(r=-r-1);for(var n=0,f=1,i=!0;;f++,n++){var a=f<range.length?(typeof range[f])[0]:"";if(n>=version.length)return!i||("u"==a?f>r&&!e:""==a!=e);var t=version[n],o=(typeof t)[0];if("u"==o){if(!i||"u"!=a)return!1}else if(i)if(a==o){if("o"!=o)if(f<=r){if(t!=range[f])return!1}else{if(e?t>range[f]:t<range[f])return!1;t!=range[f]&&(i=!1)}}else{if("o"==o)return""==a||"u"==a?!e&&f>r:e;if("s"!=a&&"n"!=a){if(e||f<=r)return!1;i=!1,f--}else{if(f<=r)return!1;if(o<a!=e)return!1}}else{if("o"==o)return!0;"s"!=a&&"n"!=a&&(i=!1,f--)}}}var u=[];for(n=1;n<range.length;n++){var g=range[n];u.push(1==g?u.pop()|u.pop():2==g?u.pop()&u.pop():g?satisfy(g,version):!u.pop())}return!!u[0]
 /******/ 		}
 /******/ 		var ensureExistence = (scopeName, key) => {
 /******/ 			var scope = __webpack_require__.S[scopeName];
@@ -1236,43 +1230,43 @@ __webpack_require__.d(exports, {
 /******/ 		};
 /******/ 		var findVersion = (scope, key) => {
 /******/ 			var versions = scope[key];
-/******/ 			return Object.keys(versions).reduce((a, bKey) => {
-/******/ 				return !a || versionLt(a.version, versions[bKey].version) ? versions[bKey] : a;
+/******/ 			var key = Object.keys(versions).reduce((a, b) => {
+/******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
+/******/ 			return key && versions[key]
 /******/ 		};
-/******/ 		var findSingletonVersion = (scope, key) => {
+/******/ 		var findSingletonVersionKey = (scope, key) => {
 /******/ 			var versions = scope[key];
-/******/ 			return Object.keys(versions).reduce((a, bKey) => {
-/******/ 				return !a || (!a.loaded && versionLt(a.version, versions[bKey].version)) ? versions[bKey] : a;
+/******/ 			return Object.keys(versions).reduce((a, b) => {
+/******/ 				return !a || (!versions[a].loaded && versionLt(a, b)) ? b : a;
 /******/ 			}, 0);
 /******/ 		};
-/******/ 		var getInvalidSingletonVersionMessage = (key, entry, requiredVersion) => {
-/******/ 			return "Unsatisfied version " + versionToString(entry.version) + " of shared singleton module " + key + " (required " + rangeToString(requiredVersion) + ")"
+/******/ 		var getInvalidSingletonVersionMessage = (key, version, requiredVersion) => {
+/******/ 			return "Unsatisfied version " + version + " of shared singleton module " + key + " (required " + rangeToString(requiredVersion) + ")"
 /******/ 		};
 /******/ 		var getSingletonVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var entry = findSingletonVersion(scope, key);
-/******/ 			if (!satisfy(requiredVersion, entry.version || [])) typeof console !== "undefined" && console.warn && console.warn(getInvalidSingletonVersionMessage(key, entry, requiredVersion));
-/******/ 			return get(entry);
+/******/ 			var version = findSingletonVersionKey(scope, key);
+/******/ 			if (!satisfy(requiredVersion, version)) typeof console !== "undefined" && console.warn && console.warn(getInvalidSingletonVersionMessage(key, version, requiredVersion));
+/******/ 			return get(scope[key][version]);
 /******/ 		};
 /******/ 		var getStrictSingletonVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var entry = findSingletonVersion(scope, key);
-/******/ 			if (!satisfy(requiredVersion, entry.version || [])) throw new Error(getInvalidSingletonVersionMessage(key, entry, requiredVersion));
-/******/ 			return get(entry);
+/******/ 			var version = findSingletonVersionKey(scope, key);
+/******/ 			if (!satisfy(requiredVersion, version)) throw new Error(getInvalidSingletonVersionMessage(key, version, requiredVersion));
+/******/ 			return get(scope[key][version]);
 /******/ 		};
 /******/ 		var findValidVersion = (scope, key, requiredVersion) => {
 /******/ 			var versions = scope[key];
-/******/ 			return Object.keys(versions).reduce((a, bKey) => {
-/******/ 				var b = versions[bKey];
-/******/ 				if (!satisfy(requiredVersion, b.version || [])) return a;
-/******/ 				return !a || versionLt(a.version, versions[bKey].version) ? versions[bKey] : a;
+/******/ 			var key = Object.keys(versions).reduce((a, b) => {
+/******/ 				if (!satisfy(requiredVersion, b)) return a;
+/******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
+/******/ 			return key && versions[key]
 /******/ 		};
 /******/ 		var getInvalidVersionMessage = (scope, scopeName, key, requiredVersion) => {
 /******/ 			var versions = scope[key];
 /******/ 			return "No satisfying version (" + rangeToString(requiredVersion) + ") of shared module " + key + " found in shared scope " + scopeName + ".\n" +
 /******/ 				"Available versions: " + Object.keys(versions).map((key) => {
-/******/ 				var entry = versions[key];
-/******/ 				return versionToString(entry.version) + " from " + entry.from;
+/******/ 				return key + " from " + versions[key].from;
 /******/ 			}).join(", ");
 /******/ 		};
 /******/ 		var getValidVersion = (scope, scopeName, key, requiredVersion) => {
@@ -1708,15 +1702,10 @@ __webpack_require__.d(exports, {
 /******/ 			var scope = __webpack_require__.S[name];
 /******/ 			var warn = (msg) => typeof console !== "undefined" && console.warn && console.warn(msg);;
 /******/ 			var uniqueName = "module-federation-ccc";
-/******/ 			var versionLt = (a, b) => {
-/******/ 				// see webpack/lib/util/semver.js for original code
-/******/ 				for(var r=0;;){if(r>=a.length)return r<b.length&&"u"!=(typeof b[r])[0];var t=a[r],e=(typeof t)[0];if(r>=b.length)return"u"==e;var n=b[r],f=(typeof n)[0];if(e!=f)return"o"==e&&"n"==f||("s"==f||"u"==e);if("o"!=e&&"u"!=e&&t!=n)return t<n;r++}
-/******/ 			}
 /******/ 			var register = (name, version, factory) => {
-/******/ 				version = version || [];
 /******/ 				var versions = scope[name] = scope[name] || {};
 /******/ 				var activeVersion = versions[version];
-/******/ 				if(!activeVersion || uniqueName > activeVersion.from) versions[version] = { get: factory, version: version, from: uniqueName };
+/******/ 				if(!activeVersion || uniqueName > activeVersion.from) versions[version] = { get: factory, from: uniqueName };
 /******/ 			};
 /******/ 			var initExternal = (id) => {
 /******/ 				var handleError = (err) => warn("Initialization of sharing external failed: " + err);
@@ -1732,8 +1721,8 @@ __webpack_require__.d(exports, {
 /******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
-/******/ 					register("date-fns", [2,14,0], () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/date-fns/esm/index.js */ 8)));
-/******/ 					register("lodash/random", [4,17,15], () => __webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => () => __webpack_require__(/*! ../../node_modules/lodash/random.js */ 239)));
+/******/ 					register("date-fns", "2.14.0", () => __webpack_require__.e("vendors-node_modules_date-fns_esm_index_js").then(() => () => __webpack_require__(/*! ../../node_modules/date-fns/esm/index.js */ 8)));
+/******/ 					register("lodash/random", "4.17.15", () => __webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => () => __webpack_require__(/*! ../../node_modules/lodash/random.js */ 239)));
 /******/ 				}
 /******/ 				break;
 /******/ 			}
@@ -1743,21 +1732,23 @@ __webpack_require__.d(exports, {
 /******/ 	
 /******/ 	/* webpack/runtime/consumes */
 /******/ 	(() => {
-/******/ 		var satisfy = (range, version) => {
+/******/ 		var parseVersion = (str) => {
+/******/ 			var convertNumber = (str) => +str == str ? +str : str;;
+/******/ 			var splitAndConvert = (str) => str.split(".").map(convertNumber);;
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			var r=0,e=1,n=!0;if(0 in range){var f=range[0],i=f<0;for(i&&(f=-f-1);;){var a=e<range.length?(typeof range[e])[0]:"";if(r>=version.length)return!n||("u"==a?e>f&&!i:""==a!=i);var o=version[r],t=(typeof o)[0];if(r++,"u"==t){if(!n||"u"!=a)return!1;e++}else if(n)if("s"!=a&&"n"!=a)if("o"==t){if("o"!=a)return!(e<=f)&&!i;e++}else{if(i||e<=f)return!1;n=!1}else{if("o"==t)return!(e<=f)&&i;if(a!=t)return!1;if("s"==a||e<=f){if(o!=range[e])return!1;e++}else{if(i?o>range[e]:o<range[e])return!1;o!=range[e]&&(n=!1),e++}}else{if("o"==t)return!0;"s"==a||"n"==a?e++:n=!1}}}var u=[];for(r=1;r<range.length;r++){var s=range[r];u.push(1==s?u.pop()|u.pop():2==s?u.pop()&u.pop():s?satisfy(s,version):!u.pop())}return!!u[0]
+/******/ 			var n=/^([^-+]+)?(?:-([^+]+))?(?:\+(.+))?$/.exec(str),p=n[1]?splitAndConvert(n[1]):[];return n[2]&&(p.length++,p.push.apply(p,splitAndConvert(n[2]))),n[3]&&(p.push([]),p.push.apply(p,splitAndConvert(n[3]))),p
 /******/ 		}
 /******/ 		var versionLt = (a, b) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
 /******/ 			for(var r=0;;){if(r>=a.length)return r<b.length&&"u"!=(typeof b[r])[0];var t=a[r],e=(typeof t)[0];if(r>=b.length)return"u"==e;var n=b[r],f=(typeof n)[0];if(e!=f)return"o"==e&&"n"==f||("s"==f||"u"==e);if("o"!=e&&"u"!=e&&t!=n)return t<n;r++}
 /******/ 		}
-/******/ 		var versionToString = (version) => {
-/******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(!version)return"[unknown]";for(var r="",n=1,o=0;o<version.length;o++){var e=version[o],t=(typeof e)[0];n--,r+="u"==t?"-":"o"==t?"+":(n>0?".":"")+(n=2,e)}return r
-/******/ 		}
 /******/ 		var rangeToString = (range) => {
 /******/ 			// see webpack/lib/util/semver.js for original code
-/******/ 			if(0 in range){var r="",n=range[0];r+=0==n?">=":-1==n?"<":1==n?"^":2==n?"~":n>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){var o=(typeof(t=range[a]))[0];e--,r+="u"==o?"-":"o"==o?"+":(e>0?".":"")+(e=2,t)}return r}var g=[];for(a=1;a<range.length;a++){var t=range[a];g.push(0===t?"not("+p()+")":1===t?"("+p()+" || "+p()+")":2===t?g.pop()+" "+g.pop():rangeToString(t))}return p();function p(){return g.pop().replace(/^\((.+)\)$/,"$1")}
+/******/ 			if(1===range.length)return"*";if(0 in range){var r="",n=range[0];r+=0==n?">=":-1==n?"<":1==n?"^":2==n?"~":n>0?"=":"!=";for(var e=1,a=1;a<range.length;a++){var g=(typeof(o=range[a]))[0];e--,r+="u"==g?"-":"o"==g?"+":(e>0?".":"")+(e=2,o)}return r}var t=[];for(a=1;a<range.length;a++){var o=range[a];t.push(0===o?"not("+p()+")":1===o?"("+p()+" || "+p()+")":2===o?t.pop()+" "+t.pop():rangeToString(o))}return p();function p(){return t.pop().replace(/^\((.+)\)$/,"$1")}
+/******/ 		}
+/******/ 		var satisfy = (range, version) => {
+/******/ 			// see webpack/lib/util/semver.js for original code
+/******/ 			if(0 in range){var r=range[0],e=r<0;e&&(r=-r-1);for(var n=0,f=1,i=!0;;f++,n++){var a=f<range.length?(typeof range[f])[0]:"";if(n>=version.length)return!i||("u"==a?f>r&&!e:""==a!=e);var t=version[n],o=(typeof t)[0];if("u"==o){if(!i||"u"!=a)return!1}else if(i)if(a==o){if("o"!=o)if(f<=r){if(t!=range[f])return!1}else{if(e?t>range[f]:t<range[f])return!1;t!=range[f]&&(i=!1)}}else{if("o"==o)return""==a||"u"==a?!e&&f>r:e;if("s"!=a&&"n"!=a){if(e||f<=r)return!1;i=!1,f--}else{if(f<=r)return!1;if(o<a!=e)return!1}}else{if("o"==o)return!0;"s"!=a&&"n"!=a&&(i=!1,f--)}}}var u=[];for(n=1;n<range.length;n++){var g=range[n];u.push(1==g?u.pop()|u.pop():2==g?u.pop()&u.pop():g?satisfy(g,version):!u.pop())}return!!u[0]
 /******/ 		}
 /******/ 		var ensureExistence = (scopeName, key) => {
 /******/ 			var scope = __webpack_require__.S[scopeName];
@@ -1766,43 +1757,43 @@ __webpack_require__.d(exports, {
 /******/ 		};
 /******/ 		var findVersion = (scope, key) => {
 /******/ 			var versions = scope[key];
-/******/ 			return Object.keys(versions).reduce((a, bKey) => {
-/******/ 				return !a || versionLt(a.version, versions[bKey].version) ? versions[bKey] : a;
+/******/ 			var key = Object.keys(versions).reduce((a, b) => {
+/******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
+/******/ 			return key && versions[key]
 /******/ 		};
-/******/ 		var findSingletonVersion = (scope, key) => {
+/******/ 		var findSingletonVersionKey = (scope, key) => {
 /******/ 			var versions = scope[key];
-/******/ 			return Object.keys(versions).reduce((a, bKey) => {
-/******/ 				return !a || (!a.loaded && versionLt(a.version, versions[bKey].version)) ? versions[bKey] : a;
+/******/ 			return Object.keys(versions).reduce((a, b) => {
+/******/ 				return !a || (!versions[a].loaded && versionLt(a, b)) ? b : a;
 /******/ 			}, 0);
 /******/ 		};
-/******/ 		var getInvalidSingletonVersionMessage = (key, entry, requiredVersion) => {
-/******/ 			return "Unsatisfied version " + versionToString(entry.version) + " of shared singleton module " + key + " (required " + rangeToString(requiredVersion) + ")"
+/******/ 		var getInvalidSingletonVersionMessage = (key, version, requiredVersion) => {
+/******/ 			return "Unsatisfied version " + version + " of shared singleton module " + key + " (required " + rangeToString(requiredVersion) + ")"
 /******/ 		};
 /******/ 		var getSingletonVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var entry = findSingletonVersion(scope, key);
-/******/ 			if (!satisfy(requiredVersion, entry.version || [])) typeof console !== "undefined" && console.warn && console.warn(getInvalidSingletonVersionMessage(key, entry, requiredVersion));
-/******/ 			return get(entry);
+/******/ 			var version = findSingletonVersionKey(scope, key);
+/******/ 			if (!satisfy(requiredVersion, version)) typeof console !== "undefined" && console.warn && console.warn(getInvalidSingletonVersionMessage(key, version, requiredVersion));
+/******/ 			return get(scope[key][version]);
 /******/ 		};
 /******/ 		var getStrictSingletonVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			var entry = findSingletonVersion(scope, key);
-/******/ 			if (!satisfy(requiredVersion, entry.version || [])) throw new Error(getInvalidSingletonVersionMessage(key, entry, requiredVersion));
-/******/ 			return get(entry);
+/******/ 			var version = findSingletonVersionKey(scope, key);
+/******/ 			if (!satisfy(requiredVersion, version)) throw new Error(getInvalidSingletonVersionMessage(key, version, requiredVersion));
+/******/ 			return get(scope[key][version]);
 /******/ 		};
 /******/ 		var findValidVersion = (scope, key, requiredVersion) => {
 /******/ 			var versions = scope[key];
-/******/ 			return Object.keys(versions).reduce((a, bKey) => {
-/******/ 				var b = versions[bKey];
-/******/ 				if (!satisfy(requiredVersion, b.version || [])) return a;
-/******/ 				return !a || versionLt(a.version, versions[bKey].version) ? versions[bKey] : a;
+/******/ 			var key = Object.keys(versions).reduce((a, b) => {
+/******/ 				if (!satisfy(requiredVersion, b)) return a;
+/******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
+/******/ 			return key && versions[key]
 /******/ 		};
 /******/ 		var getInvalidVersionMessage = (scope, scopeName, key, requiredVersion) => {
 /******/ 			var versions = scope[key];
 /******/ 			return "No satisfying version (" + rangeToString(requiredVersion) + ") of shared module " + key + " found in shared scope " + scopeName + ".\n" +
 /******/ 				"Available versions: " + Object.keys(versions).map((key) => {
-/******/ 				var entry = versions[key];
-/******/ 				return versionToString(entry.version) + " from " + entry.from;
+/******/ 				return key + " from " + versions[key].from;
 /******/ 			}).join(", ");
 /******/ 		};
 /******/ 		var getValidVersion = (scope, scopeName, key, requiredVersion) => {
@@ -2029,12 +2020,12 @@ Version: webpack 5.0.0-beta.20
 Child app:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                     Asset      Size
-                                   app.js  29.2 KiB  [emitted]  [name: app]
+                                   app.js  28.8 KiB  [emitted]  [name: app]
     node_modules_react_index_js-_11190.js  12.6 KiB  [emitted]
     node_modules_react_index_js-_11191.js  10.2 KiB  [emitted]
                       src_bootstrap_js.js   157 KiB  [emitted]
     Entrypoint app = app.js
-    chunk app.js (app) 669 bytes (javascript) 42 bytes (share-init) 18.7 KiB (runtime) [entry] [rendered]
+    chunk app.js (app) 669 bytes (javascript) 42 bytes (share-init) 18.3 KiB (runtime) [entry] [rendered]
         > ./src/index.js app
      ./src/index.js 585 bytes [built]
      external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built]
@@ -2060,12 +2051,12 @@ Child app:
 Child mfe-b:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                             Asset      Size
-                                        mfeBBB.js  24.3 KiB  [emitted]  [name: mfeBBB]
+                                        mfeBBB.js  23.9 KiB  [emitted]  [name: mfeBBB]
                    node_modules_react_index_js.js  12.6 KiB  [emitted]
                             src-b_Component_js.js  2.26 KiB  [emitted]
     vendors-node_modules_date-fns_esm_index_js.js   796 KiB  [emitted]  [id hint: vendors]
     Entrypoint mfeBBB = mfeBBB.js
-    chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.4 KiB (runtime) [entry] [rendered]
+    chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.1 KiB (runtime) [entry] [rendered]
         > mfeBBB
      container entry 42 bytes [built]
      provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js 42 bytes [built]
@@ -2088,13 +2079,13 @@ Child mfe-b:
 Child mfe-c:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                             Asset      Size
-                                        mfeCCC.js  25.2 KiB  [emitted]  [name: mfeCCC]
+                                        mfeCCC.js  24.9 KiB  [emitted]  [name: mfeCCC]
                             src-c_Component_js.js  1.99 KiB  [emitted]
                         src-c_LazyComponent_js.js  2.08 KiB  [emitted]
     vendors-node_modules_date-fns_esm_index_js.js   797 KiB  [emitted]  [id hint: vendors]
          vendors-node_modules_lodash_random_js.js  23.3 KiB  [emitted]  [id hint: vendors]
     Entrypoint mfeCCC = mfeCCC.js
-    chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.8 KiB (runtime) [entry] [rendered]
+    chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.5 KiB (runtime) [entry] [rendered]
         > mfeCCC
      container entry 42 bytes [built]
      provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js 42 bytes [built]
@@ -2132,7 +2123,7 @@ Version: webpack 5.0.0-beta.20
 Child app:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                                 Asset       Size
-                                               app.js   6.98 KiB  [emitted]  [name: app]
+                                               app.js    6.8 KiB  [emitted]  [name: app]
                 node_modules_react_index_js-_11190.js   7.26 KiB  [emitted]
     node_modules_react_index_js-_11190.js.LICENSE.txt  295 bytes  [emitted]
                 node_modules_react_index_js-_11191.js   6.31 KiB  [emitted]
@@ -2140,7 +2131,7 @@ Child app:
                                   src_bootstrap_js.js    129 KiB  [emitted]
                       src_bootstrap_js.js.LICENSE.txt  546 bytes  [emitted]
     Entrypoint app = app.js
-    chunk app.js (app) 669 bytes (javascript) 42 bytes (share-init) 18.6 KiB (runtime) [entry] [rendered]
+    chunk app.js (app) 669 bytes (javascript) 42 bytes (share-init) 18.3 KiB (runtime) [entry] [rendered]
         > ./src/index.js app
      ./src/index.js 585 bytes [built]
      external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built]
@@ -2166,13 +2157,13 @@ Child app:
 Child mfe-b:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                             Asset       Size
-                                        mfeBBB.js   5.64 KiB  [emitted]  [name: mfeBBB]
+                                        mfeBBB.js   5.42 KiB  [emitted]  [name: mfeBBB]
                    node_modules_react_index_js.js   7.21 KiB  [emitted]
        node_modules_react_index_js.js.LICENSE.txt  295 bytes  [emitted]
                             src-b_Component_js.js  493 bytes  [emitted]
     vendors-node_modules_date-fns_esm_index_js.js   77.4 KiB  [emitted]  [id hint: vendors]
     Entrypoint mfeBBB = mfeBBB.js
-    chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.3 KiB (runtime) [entry] [rendered]
+    chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16 KiB (runtime) [entry] [rendered]
         > mfeBBB
      container entry 42 bytes [built]
      provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js 42 bytes [built]
@@ -2194,13 +2185,13 @@ Child mfe-b:
 Child mfe-c:
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                             Asset       Size
-                                        mfeCCC.js   6.29 KiB  [emitted]  [name: mfeCCC]
+                                        mfeCCC.js   6.07 KiB  [emitted]  [name: mfeCCC]
                  node_modules_lodash_random_js.js   2.95 KiB  [emitted]
                             src-c_Component_js.js  493 bytes  [emitted]
                         src-c_LazyComponent_js.js  537 bytes  [emitted]
     vendors-node_modules_date-fns_esm_index_js.js   77.4 KiB  [emitted]  [id hint: vendors]
     Entrypoint mfeCCC = mfeCCC.js
-    chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.7 KiB (runtime) [entry] [rendered]
+    chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.4 KiB (runtime) [entry] [rendered]
         > mfeCCC
      container entry 42 bytes [built]
      provide shared module (default) date-fns@2.14.0 = ../../node_modules/date-fns/esm/index.js 42 bytes [built]

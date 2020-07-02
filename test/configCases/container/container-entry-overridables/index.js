@@ -4,7 +4,7 @@ it("should expose modules from the container", async () => {
 	expect(container.init).toBeTypeOf("function");
 	container.init({
 		value: {
-			"": {
+			"0": {
 				get: () =>
 					new Promise(resolve => {
 						setTimeout(() => {
