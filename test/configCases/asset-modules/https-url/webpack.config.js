@@ -1,3 +1,5 @@
+const { HttpUriPlugin } = require("../../../../").experiments.schemes;
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
@@ -8,5 +10,6 @@ module.exports = {
 				loader: "./loaders/md-loader"
 			}
 		]
-	}
+	},
+	plugins: [new HttpUriPlugin()]
 };

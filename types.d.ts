@@ -2858,6 +2858,14 @@ declare class HotModuleReplacementPlugin {
 	apply(compiler: Compiler): void;
 	static getParserHooks(parser: JavascriptParser): HMRJavascriptParserHooks;
 }
+declare class HttpUriPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 declare class IgnorePlugin {
 	constructor(options: IgnorePluginOptions);
 	options: IgnorePluginOptions;
@@ -4441,10 +4449,6 @@ declare class NormalModule extends Module {
 		 */
 		generator: Generator;
 		/**
-		 * scheme
-		 */
-		scheme?: string;
-		/**
 		 * options used for resolving requests from this module
 		 */
 		resolveOptions: any;
@@ -4457,7 +4461,6 @@ declare class NormalModule extends Module {
 	generator: Generator;
 	resource: string;
 	matchResource: string;
-	scheme: string;
 	loaders: LoaderItem[];
 	error: WebpackError;
 	createSourceForAsset(
@@ -4497,10 +4500,28 @@ declare class NormalModule extends Module {
 }
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[any, NormalModule], void>;
+	readResourceForScheme: HookMap<
+		AsyncSeriesBailHook<[string, NormalModule], string | Buffer>
+	>;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		resolve: AsyncSeriesBailHook<[ResolveData], any>;
+		resolveForScheme: HookMap<
+			AsyncSeriesBailHook<
+				[
+					{
+						resource: string;
+						path: string;
+						query: string;
+						fragment: string;
+						data: Record<string, any>;
+					},
+					ResolveData
+				],
+				true | void
+			>
+		>;
 		factorize: AsyncSeriesBailHook<[ResolveData], any>;
 		beforeResolve: AsyncSeriesBailHook<[ResolveData], any>;
 		afterResolve: AsyncSeriesBailHook<[ResolveData], any>;
@@ -8615,6 +8636,11 @@ declare namespace exports {
 			export let buffersSerializer: Serializer;
 			export let createFileSerializer: (fs?: any) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
+		}
+	}
+	export namespace experiments {
+		export namespace schemes {
+			export { HttpUriPlugin };
 		}
 	}
 	export type WebpackPluginFunction = (

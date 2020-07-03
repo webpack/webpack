@@ -1,3 +1,4 @@
+const { HttpUriPlugin } = require("../../../../").experiments.schemes;
 const ServerPlugin = require("./server");
 
 /** @type {import("../../../../").Configuration} */
@@ -11,5 +12,5 @@ module.exports = {
 			}
 		]
 	},
-	plugins: [new ServerPlugin(9990)]
+	plugins: [new ServerPlugin(9990), new HttpUriPlugin()]
 };
