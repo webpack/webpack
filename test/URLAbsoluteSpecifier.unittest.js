@@ -47,12 +47,28 @@ const samples = [
 	{
 		specifier: "D:\\path\\file.js",
 		expected: undefined
+	},
+	{
+		specifier: "d:/path/file.js",
+		expected: undefined
+	},
+	{
+		specifier: "z:#foo",
+		expected: undefined
+	},
+	{
+		specifier: "Z:?query",
+		expected: undefined
+	},
+	{
+		specifier: "C:",
+		expected: undefined
 	}
 ];
 
 describe("getScheme", () => {
 	samples.forEach(({ specifier, expected }, i) => {
-		it(`sample #${i + 1}`, () => {
+		it(`should handle ${specifier}`, () => {
 			expect(getScheme(specifier)).toBe(expected);
 		});
 	});
@@ -60,8 +76,10 @@ describe("getScheme", () => {
 
 describe("getProtocol", () => {
 	samples.forEach(({ specifier, expected }, i) => {
-		it(`sample #${i + 1}`, () => {
-			expect(getProtocol(specifier)).toBe(expected + ":");
+		it(`should handle ${specifier}`, () => {
+			expect(getProtocol(specifier)).toBe(
+				expected ? expected + ":" : undefined
+			);
 		});
 	});
 });
