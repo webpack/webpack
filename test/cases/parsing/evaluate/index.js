@@ -38,3 +38,14 @@ it("should evaluate __dirname and __resourceQuery with replace and substr", func
 	var result = require("./resourceQuery/index?" + __dirname);
 	expect(result).toEqual("?resourceQuery");
 });
+
+it("should evaluate __dirname and __resourceFragment with replace and substr", function() {
+	var result = require("./resourceFragment/index#" + __dirname);
+	expect(result).toEqual("#resourceFragment");
+});
+
+it("should allow resourceFragment in context", function() {
+	var fn = x => require(`./resourceFragment/${x}#..`);
+	expect(fn("index")).toEqual("#resourceFragment");
+	expect(fn("returnRF")).toBe("#..")
+});

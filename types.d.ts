@@ -1725,6 +1725,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 			referencedExports?: string[][];
 			resource: string;
 			resourceQuery?: string;
+			resourceFragment?: string;
 			resolveOptions: any;
 		},
 		callback: (err?: Error, dependencies?: ContextElementDependency[]) => any
@@ -6568,6 +6569,11 @@ declare interface RuleSetRule {
 	 * Match the resource path of the module.
 	 */
 	resource?: RuleSetConditionAbsolute;
+
+	/**
+	 * Match the resource fragment of the module.
+	 */
+	resourceFragment?: RuleSetCondition;
 
 	/**
 	 * Match the resource query of the module.
