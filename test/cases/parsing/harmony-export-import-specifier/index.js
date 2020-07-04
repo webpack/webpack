@@ -11,7 +11,7 @@ it("namespace export as from commonjs should override named export", function() 
 
 it("named namespace export should work correctly", function () {
 	expect(d2).toBe(2);
-	expect(usedD1).toBe(true); // TODO
+	expect(usedD1).toBe(false);
 	expect(usedD2).toBe(true);
 
 	expect(b1.d2).toBe(2);
