@@ -1603,7 +1603,7 @@ declare interface ConsumesConfig {
 	/**
 	 * Version requirement from module in share scope.
 	 */
-	requiredVersion?: string | false | (string | number)[];
+	requiredVersion?: DevTool;
 
 	/**
 	 * Module is looked up under this key from the share scope.
@@ -5617,7 +5617,7 @@ declare interface ProvidesConfig {
 	/**
 	 * Version of the provided module. Will replace lower matching versions, but not higher.
 	 */
-	version?: string | false | (string | number)[];
+	version?: DevTool;
 }
 
 /**
@@ -7141,7 +7141,7 @@ declare interface SharedConfig {
 	/**
 	 * Version requirement from module in share scope.
 	 */
-	requiredVersion?: string | false | (string | number)[];
+	requiredVersion?: DevTool;
 
 	/**
 	 * Module is looked up under this key from the share scope.
@@ -7166,7 +7166,7 @@ declare interface SharedConfig {
 	/**
 	 * Version of the provided module. Will replace lower matching versions, but not higher.
 	 */
-	version?: string | false | (string | number)[];
+	version?: DevTool;
 }
 
 /**

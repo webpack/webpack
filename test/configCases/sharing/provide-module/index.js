@@ -19,23 +19,35 @@ it("should add provided modules to the share scope on init", async () => {
 	expect(Object.keys(__webpack_share_scopes__["test-scope"])).toContain(
 		"package"
 	);
+	expect(
+		Object.keys(__webpack_share_scopes__["test-scope"]["package"])
+	).toContain("1.0.0");
 	expect(Object.keys(__webpack_share_scopes__["test-scope"])).toContain(
 		"./test1"
 	);
+	expect(
+		Object.keys(__webpack_share_scopes__["test-scope"]["./test1"])
+	).toContain("0");
 	expect(Object.keys(__webpack_share_scopes__["other-scope"])).toContain(
 		"test2"
 	);
+	const test2Versions = Object.keys(
+		__webpack_share_scopes__["other-scope"]["test2"]
+	);
+	expect(test2Versions).toContain("1.3.0");
+	expect(test2Versions).toContain("1.1.9");
+	expect(test2Versions).toContain("1.2.3");
 
 	{
-		const factory = await __webpack_share_scopes__["test-scope"][
-			"./test1"
+		const factory = await __webpack_share_scopes__["test-scope"]["./test1"][
+			"0"
 		].get();
 		expect(factory()).toBe("test1");
 	}
 
 	{
-		const factory = await __webpack_share_scopes__["other-scope"][
-			"test2"
+		const factory = await __webpack_share_scopes__["other-scope"]["test2"][
+			"1.3.0"
 		].get();
 		expect(factory()).toBe("test2");
 	}

@@ -4,15 +4,17 @@ it("should expose modules from the container", async () => {
 	expect(container.init).toBeTypeOf("function");
 	container.init({
 		value: {
-			get: () =>
-				new Promise(resolve => {
-					setTimeout(() => {
-						resolve(() => ({
-							__esModule: true,
-							default: "overridden-value"
-						}));
-					}, 100);
-				})
+			"0": {
+				get: () =>
+					new Promise(resolve => {
+						setTimeout(() => {
+							resolve(() => ({
+								__esModule: true,
+								default: "overridden-value"
+							}));
+						}, 100);
+					})
+			}
 		}
 	});
 	const testFactory = await container.get("./test");

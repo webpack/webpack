@@ -26,7 +26,7 @@ module.exports = {
 			provides: {
 				"./test2": {
 					shareKey: "test2",
-					version: [1, 3, 0]
+					version: "1.3.0"
 				}
 			}
 		}),
@@ -35,7 +35,7 @@ module.exports = {
 				"./test2-wrong": {
 					shareKey: "test2",
 					shareScope: "other-scope",
-					version: [1, 1, 9]
+					version: "1.1.9"
 				}
 			}
 		})
