@@ -333,6 +333,7 @@ declare abstract class BasicEvaluatedExpression {
 	getMembers: any;
 	expression: any;
 	isNull(): boolean;
+	isUndefined(): boolean;
 	isString(): boolean;
 	isNumber(): boolean;
 	isBigInt(): boolean;
@@ -349,6 +350,7 @@ declare abstract class BasicEvaluatedExpression {
 	asBool(): any;
 	asString(): any;
 	setString(string?: any): BasicEvaluatedExpression;
+	setUndefined(): BasicEvaluatedExpression;
 	setNull(): BasicEvaluatedExpression;
 	setNumber(number?: any): BasicEvaluatedExpression;
 	setBigInt(bigint?: any): BasicEvaluatedExpression;
@@ -3184,9 +3186,12 @@ declare abstract class JavascriptParser extends Parser {
 			>
 		>;
 		new: HookMap<SyncBailHook<[Expression], boolean | void>>;
-		metaProperty: SyncBailHook<[MetaProperty, number], boolean | void>;
+		metaProperty: SyncBailHook<[MetaProperty], boolean | void>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
+			SyncBailHook<[Expression, string[]], boolean | void>
+		>;
+		unhandledExpressionMemberChain: HookMap<
 			SyncBailHook<[Expression, string[]], boolean | void>
 		>;
 		expressionConditionalOperator: SyncBailHook<[Expression], boolean | void>;
@@ -3292,11 +3297,11 @@ declare abstract class JavascriptParser extends Parser {
 		name?: any,
 		rootInfo?: any,
 		members?: any,
-		end?: any
+		onUnhandled?: any
 	): void;
 	walkThisExpression(expression?: any): void;
 	walkIdentifier(expression?: any): void;
-	walkMetaProperty(metaProperty: MetaProperty, end?: number): void;
+	walkMetaProperty(metaProperty: MetaProperty): void;
 	callHooksForExpression(hookMap: any, expr: any, ...args: any[]): any;
 	callHooksForExpressionWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
