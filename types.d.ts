@@ -2867,6 +2867,14 @@ declare class HttpUriPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare class HttpsUriPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 declare class IgnorePlugin {
 	constructor(options: IgnorePluginOptions);
 	options: IgnorePluginOptions;
@@ -8646,7 +8654,7 @@ declare namespace exports {
 	}
 	export namespace experiments {
 		export namespace schemes {
-			export { HttpUriPlugin };
+			export { HttpUriPlugin, HttpsUriPlugin };
 		}
 	}
 	export type WebpackPluginFunction = (

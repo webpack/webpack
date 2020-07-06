@@ -1,4 +1,4 @@
-const { HttpUriPlugin } = require("../../../../").experiments.schemes;
+const { HttpsUriPlugin } = require("../../../../").experiments.schemes;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -11,5 +11,5 @@ module.exports = {
 			}
 		]
 	},
-	plugins: [new HttpUriPlugin()]
+	plugins: [new HttpsUriPlugin()]
 };
