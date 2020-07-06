@@ -12,6 +12,7 @@ import {
 	BinaryExpression,
 	BlockStatement,
 	BreakStatement,
+	ChainExpression,
 	ClassDeclaration,
 	ClassExpression,
 	Comment,
@@ -32,6 +33,7 @@ import {
 	Identifier,
 	IfStatement,
 	ImportDeclaration,
+	ImportExpression,
 	LabeledStatement,
 	LogicalExpression,
 	MemberExpression,
@@ -2521,7 +2523,9 @@ type Expression =
 	| ClassExpression
 	| MetaProperty
 	| Identifier
-	| AwaitExpression;
+	| AwaitExpression
+	| ImportExpression
+	| ChainExpression;
 type ExternalItem =
 	| string
 	| RegExp
@@ -3412,6 +3416,8 @@ declare abstract class JavascriptParser extends Parser {
 			| MetaProperty
 			| Identifier
 			| AwaitExpression
+			| ImportExpression
+			| ChainExpression
 			| Super;
 	};
 	getFreeInfoFromVariable(

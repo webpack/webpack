@@ -2738,7 +2738,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-optimization 1`] = `
-"Hash: d7d1b4f45cd90d4abdb64369e7ea517dce8ffb09
+"Hash: d7d1b4f45cd90d4abdb6d61ad7aea717eb8e1363
 Child
     Hash: d7d1b4f45cd90d4abdb6
     Time: X ms
@@ -2762,7 +2762,7 @@ Child
         ModuleConcatenation bailout: Module is not an ECMAScript module
         + 2 hidden modules
 Child
-    Hash: 4369e7ea517dce8ffb09
+    Hash: d61ad7aea717eb8e1363
     Time: X ms
     Built at: 1970-04-20 12:42:42
               Asset      Size
@@ -3843,7 +3843,7 @@ chunk default/async-a.js (async-a) 134 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: 0653813b0ee99f2a94bd
+"Hash: cd2fbd230872570f58af
 Time: X ms
 Built at: 1970-04-20 12:42:42
     Asset      Size
