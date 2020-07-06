@@ -1725,6 +1725,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 			referencedExports?: string[][];
 			resource: string;
 			resourceQuery?: string;
+			resourceFragment?: string;
 			resolveOptions: any;
 		},
 		callback: (err?: Error, dependencies?: ContextElementDependency[]) => any
@@ -2857,6 +2858,22 @@ declare class HotModuleReplacementPlugin {
 	 */
 	apply(compiler: Compiler): void;
 	static getParserHooks(parser: JavascriptParser): HMRJavascriptParserHooks;
+}
+declare class HttpUriPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare class HttpsUriPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
 }
 declare class IgnorePlugin {
 	constructor(options: IgnorePluginOptions);
@@ -4498,10 +4515,28 @@ declare class NormalModule extends Module {
 }
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[any, NormalModule], void>;
+	readResourceForScheme: HookMap<
+		AsyncSeriesBailHook<[string, NormalModule], string | Buffer>
+	>;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		resolve: AsyncSeriesBailHook<[ResolveData], any>;
+		resolveForScheme: HookMap<
+			AsyncSeriesBailHook<
+				[
+					{
+						resource: string;
+						path: string;
+						query: string;
+						fragment: string;
+						data: Record<string, any>;
+					},
+					ResolveData
+				],
+				true | void
+			>
+		>;
 		factorize: AsyncSeriesBailHook<[ResolveData], any>;
 		beforeResolve: AsyncSeriesBailHook<[ResolveData], any>;
 		afterResolve: AsyncSeriesBailHook<[ResolveData], any>;
@@ -6548,6 +6583,11 @@ declare interface RuleSetRule {
 	 * Match the resource path of the module.
 	 */
 	resource?: RuleSetConditionAbsolute;
+
+	/**
+	 * Match the resource fragment of the module.
+	 */
+	resourceFragment?: RuleSetCondition;
 
 	/**
 	 * Match the resource query of the module.
@@ -8621,6 +8661,11 @@ declare namespace exports {
 			export let buffersSerializer: Serializer;
 			export let createFileSerializer: (fs?: any) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
+		}
+	}
+	export namespace experiments {
+		export namespace schemes {
+			export { HttpUriPlugin, HttpsUriPlugin };
 		}
 	}
 	export type WebpackPluginFunction = (

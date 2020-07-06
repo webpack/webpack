@@ -1060,6 +1060,10 @@ export interface RuleSetRule {
 	 */
 	resource?: RuleSetConditionOrConditionsAbsolute;
 	/**
+	 * Match the resource fragment of the module.
+	 */
+	resourceFragment?: RuleSetConditionOrConditions;
+	/**
 	 * Match the resource query of the module.
 	 */
 	resourceQuery?: RuleSetConditionOrConditions;

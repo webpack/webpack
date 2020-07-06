@@ -18,7 +18,7 @@
     "glob-to-regexp": "^0.4.1",
     "graceful-fs": "^4.1.15",
     "json-parse-better-errors": "^1.0.2",
-    "loader-runner": "^3.1.0",
+    "loader-runner": "^4.0.0",
     "mime-types": "^2.1.26",
     "neo-async": "^2.6.1",
     "pkg-dir": "^4.2.0",

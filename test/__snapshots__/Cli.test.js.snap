@@ -854,6 +854,25 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-resource-fragment": Object {
+    "configs": Array [
+      Object {
+        "description": "Match the resource fragment of the module.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match the resource fragment of the module.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment",
+        "type": "string",
+      },
+    ],
+    "description": "Match the resource fragment of the module.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-resource-query": Object {
     "configs": Array [
       Object {

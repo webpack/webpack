@@ -2563,6 +2563,14 @@
             }
           ]
         },
+        "resourceFragment": {
+          "description": "Match the resource fragment of the module.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ]
+        },
         "resourceQuery": {
           "description": "Match the resource query of the module.",
           "oneOf": [
