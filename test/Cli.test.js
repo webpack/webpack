@@ -209,6 +209,7 @@ describe("Cli", () => {
 		"numbers",
 		{
 			"watch-options-aggregate-timeout": 100,
+			"watch-options-poll": "100",
 			"output-ecma-version": "2015"
 		},
 		{},
@@ -220,6 +221,7 @@ describe("Cli", () => {
 			  },
 			  "watchOptions": Object {
 			    "aggregateTimeout": 100,
+			    "poll": 100,
 			  },
 			}
 		`)
