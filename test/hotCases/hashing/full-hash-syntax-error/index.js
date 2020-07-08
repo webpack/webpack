@@ -9,7 +9,7 @@ const getFile = name =>
 it("should generate the main file and change full hash on update", done => {
 	const hash1 = __webpack_hash__;
 	expect(getFile("bundle.js")).toContain(hash1);
-	module.hot.accept("./module", () => {
+	import.meta.webpackHot.accept("./module", () => {
 		const hash2 = __webpack_hash__;
 		expect(hash1).toBeTypeOf("string");
 		expect(hash2).toBeTypeOf("string");
@@ -18,5 +18,12 @@ it("should generate the main file and change full hash on update", done => {
 		expect(getFile("bundle.js")).not.toContain(hash1);
 		done();
 	});
-	NEXT(require("../../update")(done));
+	NEXT(err => {
+		if (err) return done(err);
+		NEXT((err, stats) => {
+			if (err) return done(err);
+			expect(stats.hash).toBe(hash1);
+			NEXT(require("../../update")(done));
+		});
+	});
 });
