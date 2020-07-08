@@ -16,6 +16,9 @@ const createMultiCompiler = () => {
 		}
 	]);
 	compiler.outputFileSystem = createFsFromVolume(new Volume());
+	compiler.watchFileSystem = {
+		watch(a, b, c, d, e, f, g) {}
+	};
 	return compiler;
 };
 
