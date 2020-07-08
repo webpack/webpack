@@ -7,6 +7,7 @@ const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const { remove } = require("./helpers/remove");
+const prepareOptions = require("./helpers/prepareOptions");
 
 const webpack = require("..");
 
@@ -114,7 +115,12 @@ describe("WatchTestCases", () => {
 
 							let options = {};
 							const configPath = path.join(testDirectory, "webpack.config.js");
-							if (fs.existsSync(configPath)) options = require(configPath);
+							if (fs.existsSync(configPath)) {
+								options = prepareOptions(require(configPath), {
+									testPath: outputDirectory,
+									srcPath: tempDirectory
+								});
+							}
 							const applyConfig = options => {
 								if (!options.mode) options.mode = "development";
 								if (!options.context) options.context = tempDirectory;
