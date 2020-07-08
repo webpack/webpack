@@ -447,29 +447,31 @@ Child all:
 `;
 
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
-"Hash: f33d111f25cd01c8c3cf
+"Hash: 024b7b1350be3708ba8e
 Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
-   Asset     Size
-main1.js  1.9 KiB  [emitted]  [name: main1]
-main2.js  1.9 KiB  [emitted]  [name: main2]
+   Asset      Size
+main1.js  4.39 KiB  [emitted]  [name: main1]
+main2.js  4.38 KiB  [emitted]  [name: main2]
 Entrypoint main1 = main1.js
 Entrypoint main2 = main2.js
-chunk main2.js (main2) 136 bytes [entry] [rendered]
+chunk main2.js (main2) 136 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
     > ./main2 main2
  ./a.js 20 bytes [built]
  ./d.js 20 bytes [built]
  ./e.js 20 bytes [built]
  ./f.js 20 bytes [built]
  ./main2.js 56 bytes [built]
-chunk main1.js (main1) 136 bytes [entry] [rendered]
+     + 3 hidden chunk modules
+chunk main1.js (main1) 136 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
     > ./main1 main1
  ./a.js 20 bytes [built]
  ./b.js 20 bytes [built]
  ./c.js 20 bytes [built]
  ./d.js 20 bytes [built]
- ./main1.js 56 bytes [built]"
+ ./main1.js 56 bytes [built]
+     + 3 hidden chunk modules"
 `;
 
 exports[`StatsTestCases should print correct stats for chunks 1`] = `
@@ -3568,10 +3570,10 @@ Child development:
     chunk dev-main-very-big_js-4647fb9d.js (main-very-big_js-4647fb9d) 1.57 KiB ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
         > ./ main
      ./very-big.js?3 1.57 KiB [built]
-    chunk dev-main-very-big_js-62f7f644.js (main-very-big_js-62f7f644) 1.57 KiB (javascript) 4.84 KiB (runtime) ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [entry] [rendered]
+    chunk dev-main-very-big_js-62f7f644.js (main-very-big_js-62f7f644) 1.57 KiB (javascript) 5.11 KiB (runtime) ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [entry] [rendered]
         > ./ main
      ./very-big.js?1 1.57 KiB [built]
-         + 5 hidden root modules
+         + 6 hidden root modules
     chunk dev-vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2.js (id hint: vendors) 402 bytes ={main-big_js-1}= ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered] split chunk (cache group: defaultVendors)
         > ./ main
      ./node_modules/big.js?1 268 bytes [built]

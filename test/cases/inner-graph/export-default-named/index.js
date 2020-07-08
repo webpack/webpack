@@ -21,21 +21,25 @@ it("a should be used", () => {
 	expect(a).toBe(true);
 });
 
-it("b should be unused", () => {
-	expect(b).toBe(false);
-});
+if (process.env.NODE_ENV === "production") {
+	it("b should be unused", () => {
+		expect(b).toBe(false);
+	});
+}
 
 it("c should be used", () => {
 	expect(c).toBe(true);
 });
 
-it("d should be used", () => {
-	expect(d).toBe(true);
-});
+if (process.env.NODE_ENV === "production") {
+	it("d should be used", () => {
+		expect(d).toBe(true);
+	});
 
-it("e should be unused", () => {
-	expect(e).toBe(false);
-});
+	it("e should be unused", () => {
+		expect(e).toBe(false);
+	});
+}
 
 it("f should be used", () => {
 	expect(f).toBe(true);
