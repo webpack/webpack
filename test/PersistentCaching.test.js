@@ -176,5 +176,5 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 		});
 		await compile(configAdditions);
 		await expect(execute()).resolves.toEqual({ ok: true });
-	});
-}, 60000);
+	}, 60000);
+});

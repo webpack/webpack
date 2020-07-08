@@ -1327,7 +1327,7 @@ declare class Compiler {
 		afterCompile: AsyncSeriesHook<[Compilation]>;
 		watchRun: AsyncSeriesHook<[Compiler]>;
 		failed: SyncHook<[Error], void>;
-		invalid: SyncHook<[string, string], void>;
+		invalid: SyncHook<[string, number], void>;
 		watchClose: SyncHook<[], void>;
 		infrastructureLog: SyncBailHook<[string, string, any[]], true>;
 		environment: SyncHook<[], void>;
@@ -1345,7 +1345,7 @@ declare class Compiler {
 		OutputFileSystem &
 		IntermediateFileSystemExtras;
 	inputFileSystem: InputFileSystem;
-	watchFileSystem: any;
+	watchFileSystem: WatchFileSystem;
 	recordsInputPath: string;
 	recordsOutputPath: string;
 	records: {};
@@ -4319,6 +4319,7 @@ declare class MultiCompiler {
 	readonly outputPath: string;
 	inputFileSystem: InputFileSystem;
 	outputFileSystem: OutputFileSystem;
+	watchFileSystem: WatchFileSystem;
 	intermediateFileSystem: InputFileSystem &
 		OutputFileSystem &
 		IntermediateFileSystemExtras;
@@ -7958,6 +7959,23 @@ declare abstract class VariableInfo {
 	freeName: string | true;
 	tagInfo: TagInfo;
 }
+declare interface WatchFileSystem {
+	watch: (
+		files: Iterable<string>,
+		directories: Iterable<string>,
+		missing: Iterable<string>,
+		startTime: number,
+		options: any,
+		callback: (
+			arg0: Error,
+			arg1: Map<string, FileSystemInfoEntry>,
+			arg2: Map<string, FileSystemInfoEntry>,
+			arg3: Set<string>,
+			arg4: Set<string>
+		) => void,
+		callbackUndelayed: (arg0: string, arg1: number) => void
+	) => Watcher;
+}
 declare class WatchIgnorePlugin {
 	constructor(options: WatchIgnorePluginOptions);
 	paths: [string | RegExp, ...(string | RegExp)[]];
@@ -7997,6 +8015,27 @@ declare interface WatchOptions {
 	 * Stop watching when stdin stream has ended.
 	 */
 	stdin?: boolean;
+}
+declare interface Watcher {
+	/**
+	 * closes the watcher and all underlying file watchers
+	 */
+	close: () => void;
+
+	/**
+	 * closes the watcher, but keeps underlying file watchers alive until the next watch call
+	 */
+	pause: () => void;
+
+	/**
+	 * get info about files
+	 */
+	getFileTimeInfoEntries: () => Map<string, FileSystemInfoEntry>;
+
+	/**
+	 * get info about directories
+	 */
+	getContextTimeInfoEntries: () => Map<string, FileSystemInfoEntry>;
 }
 declare abstract class Watching {
 	startTime: number;
