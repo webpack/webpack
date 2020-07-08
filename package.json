@@ -13,7 +13,7 @@
     "ajv": "^6.10.2",
     "ajv-keywords": "^3.4.1",
     "chrome-trace-event": "^1.0.2",
-    "enhanced-resolve": "^4.1.0",
+    "enhanced-resolve": "^4.3.0",
     "eslint-scope": "^4.0.3",
     "json-parse-better-errors": "^1.0.2",
     "loader-runner": "^2.4.0",

@@ -710,6 +710,10 @@ export interface ResolveOptions {
 		[k: string]: any;
 	};
 	/**
+	 * A list of root paths.
+	 */
+	roots?: string[];
+	/**
 	 * Enable resolving symlinks to the original location
 	 */
 	symlinks?: boolean;
