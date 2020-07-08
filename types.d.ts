@@ -2444,6 +2444,7 @@ declare class ExportsInfo {
 		excludeExports?: Set<string>
 	): boolean;
 	setUsedInUnknownWay(): boolean;
+	setUsedWithoutInfo(): boolean;
 	setAllKnownExportsUsed(): boolean;
 	setUsedForSideEffectsOnly(): boolean;
 	isUsed(): boolean;
@@ -3472,7 +3473,7 @@ declare interface KnownBuildMeta {
 	strict?: boolean;
 	moduleConcatenationBailout?: string;
 	exportsType?: "namespace" | "default" | "flagged";
-	defaultObject?: boolean | "redirect" | "redirect-warn";
+	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	async?: boolean;
 }
