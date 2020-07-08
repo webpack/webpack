@@ -295,6 +295,9 @@ describe("Defaults", () => {
 		    "modules": Array [
 		      "node_modules",
 		    ],
+		    "roots": Array [
+		      "<cwd>",
+		    ],
 		  },
 		  "resolveLoader": Object {
 		    "cache": false,

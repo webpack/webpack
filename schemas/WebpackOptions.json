@@ -2247,6 +2247,14 @@
             ]
           }
         },
+        "roots": {
+          "description": "A list of root paths.",
+          "type": "array",
+          "items": {
+            "description": "Root path.",
+            "type": "string"
+          }
+        },
         "symlinks": {
           "description": "Enable resolving symlinks to the original location.",
           "type": "boolean"

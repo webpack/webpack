@@ -5937,6 +5937,7 @@ declare interface ResolveOptionsTypes {
 		| ((this: Resolver, arg1: Resolver) => void)
 	)[];
 	pnpApi: PnpApiImpl;
+	roots: Set<string>;
 	resolveToContext: boolean;
 	restrictions: Set<string | RegExp>;
 }
@@ -6049,6 +6050,11 @@ declare interface ResolveOptionsWebpackOptions {
 	 * A list of resolve restrictions.
 	 */
 	restrictions?: (string | RegExp)[];
+
+	/**
+	 * A list of root paths.
+	 */
+	roots?: string[];
 
 	/**
 	 * Enable resolving symlinks to the original location.
@@ -6237,6 +6243,10 @@ declare abstract class ResolverFactory {
 						 */
 						restrictions?: (string | RegExp)[];
 						/**
+						 * A list of root paths.
+						 */
+						roots?: string[];
+						/**
 						 * Enable resolving symlinks to the original location.
 						 */
 						symlinks?: boolean;
@@ -6348,6 +6358,10 @@ declare abstract class ResolverFactory {
 						 */
 						restrictions?: (string | RegExp)[];
 						/**
+						 * A list of root paths.
+						 */
+						roots?: string[];
+						/**
 						 * Enable resolving symlinks to the original location.
 						 */
 						symlinks?: boolean;
@@ -6458,6 +6472,10 @@ declare abstract class ResolverFactory {
 			 * A list of resolve restrictions.
 			 */
 			restrictions?: (string | RegExp)[];
+			/**
+			 * A list of root paths.
+			 */
+			roots?: string[];
 			/**
 			 * Enable resolving symlinks to the original location.
 			 */
@@ -7941,6 +7959,11 @@ declare interface UserResolveOptions {
 	pnpApi?: PnpApiImpl;
 
 	/**
+	 * A list of root paths
+	 */
+	roots?: string[];
+
+	/**
 	 * Resolve to a context instead of a file
 	 */
 	resolveToContext?: boolean;
@@ -8395,6 +8418,10 @@ declare interface WithOptions {
 			 * A list of resolve restrictions.
 			 */
 			restrictions?: (string | RegExp)[];
+			/**
+			 * A list of root paths.
+			 */
+			roots?: string[];
 			/**
 			 * Enable resolving symlinks to the original location.
 			 */

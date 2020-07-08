@@ -1192,6 +1192,10 @@ export interface ResolveOptions {
 	 */
 	restrictions?: (RegExp | string)[];
 	/**
+	 * A list of root paths.
+	 */
+	roots?: string[];
+	/**
 	 * Enable resolving symlinks to the original location.
 	 */
 	symlinks?: boolean;

@@ -3254,6 +3254,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-loader-roots": Object {
+    "configs": Array [
+      Object {
+        "description": "Root path.",
+        "multiple": true,
+        "path": "resolveLoader.roots[]",
+        "type": "string",
+      },
+    ],
+    "description": "Root path.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-roots-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. A list of root paths.",
+        "multiple": false,
+        "path": "resolveLoader.roots",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. A list of root paths.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-loader-symlinks": Object {
     "configs": Array [
       Object {
@@ -3400,6 +3426,32 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. A list of resolve restrictions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-roots": Object {
+    "configs": Array [
+      Object {
+        "description": "Root path.",
+        "multiple": true,
+        "path": "resolve.roots[]",
+        "type": "string",
+      },
+    ],
+    "description": "Root path.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-roots-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. A list of root paths.",
+        "multiple": false,
+        "path": "resolve.roots",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. A list of root paths.",
     "multiple": false,
     "simpleType": "boolean",
   },
