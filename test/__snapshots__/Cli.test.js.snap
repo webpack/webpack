@@ -3225,58 +3225,58 @@ Object {
   "resolve-loader-restrictions": Object {
     "configs": Array [
       Object {
-        "description": "Resolve restriction.",
+        "description": "Resolve restriction. Resolve result must fulfill this restriction.",
         "multiple": true,
         "path": "resolveLoader.restrictions[]",
         "type": "RegExp",
       },
       Object {
-        "description": "Resolve restriction.",
+        "description": "Resolve restriction. Resolve result must fulfill this restriction.",
         "multiple": true,
         "path": "resolveLoader.restrictions[]",
         "type": "string",
       },
     ],
-    "description": "Resolve restriction.",
+    "description": "Resolve restriction. Resolve result must fulfill this restriction.",
     "multiple": true,
     "simpleType": "string",
   },
   "resolve-loader-restrictions-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. A list of resolve restrictions.",
+        "description": "Clear all items provided in configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
         "multiple": false,
         "path": "resolveLoader.restrictions",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. A list of resolve restrictions.",
+    "description": "Clear all items provided in configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "resolve-loader-roots": Object {
     "configs": Array [
       Object {
-        "description": "Root path.",
+        "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
         "multiple": true,
         "path": "resolveLoader.roots[]",
         "type": "string",
       },
     ],
-    "description": "Root path.",
+    "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
     "multiple": true,
     "simpleType": "string",
   },
   "resolve-loader-roots-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. A list of root paths.",
+        "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.",
         "multiple": false,
         "path": "resolveLoader.roots",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. A list of root paths.",
+    "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3400,58 +3400,58 @@ Object {
   "resolve-restrictions": Object {
     "configs": Array [
       Object {
-        "description": "Resolve restriction.",
+        "description": "Resolve restriction. Resolve result must fulfill this restriction.",
         "multiple": true,
         "path": "resolve.restrictions[]",
         "type": "RegExp",
       },
       Object {
-        "description": "Resolve restriction.",
+        "description": "Resolve restriction. Resolve result must fulfill this restriction.",
         "multiple": true,
         "path": "resolve.restrictions[]",
         "type": "string",
       },
     ],
-    "description": "Resolve restriction.",
+    "description": "Resolve restriction. Resolve result must fulfill this restriction.",
     "multiple": true,
     "simpleType": "string",
   },
   "resolve-restrictions-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. A list of resolve restrictions.",
+        "description": "Clear all items provided in configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
         "multiple": false,
         "path": "resolve.restrictions",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. A list of resolve restrictions.",
+    "description": "Clear all items provided in configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "resolve-roots": Object {
     "configs": Array [
       Object {
-        "description": "Root path.",
+        "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
         "multiple": true,
         "path": "resolve.roots[]",
         "type": "string",
       },
     ],
-    "description": "Root path.",
+    "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
     "multiple": true,
     "simpleType": "string",
   },
   "resolve-roots-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. A list of root paths.",
+        "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.",
         "multiple": false,
         "path": "resolve.roots",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. A list of root paths.",
+    "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.",
     "multiple": false,
     "simpleType": "boolean",
   },

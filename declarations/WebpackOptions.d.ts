@@ -1188,11 +1188,11 @@ export interface ResolveOptions {
 	 */
 	resolver?: import("enhanced-resolve").Resolver;
 	/**
-	 * A list of resolve restrictions.
+	 * A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.
 	 */
 	restrictions?: (RegExp | string)[];
 	/**
-	 * A list of root paths.
+	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.
 	 */
 	roots?: string[];
 	/**
