@@ -148,7 +148,7 @@ describe("Defaults", () => {
 		    "chunkIds": "natural",
 		    "concatenateModules": false,
 		    "flagIncludedChunks": false,
-		    "innerGraph": true,
+		    "innerGraph": false,
 		    "mangleExports": false,
 		    "mangleWasmImports": false,
 		    "mergeDuplicateChunks": true,
@@ -191,7 +191,7 @@ describe("Defaults", () => {
 		      "minRemainingSize": undefined,
 		      "minSize": 10000,
 		    },
-		    "usedExports": true,
+		    "usedExports": false,
 		  },
 		  "output": Object {
 		    "assetModuleFilename": "[hash][ext]",
@@ -357,12 +357,13 @@ describe("Defaults", () => {
 		-     "chunkIds": "natural",
 		-     "concatenateModules": false,
 		-     "flagIncludedChunks": false,
+		-     "innerGraph": false,
+		-     "mangleExports": false,
 		+     "checkWasmTypes": true,
 		+     "chunkIds": "deterministic",
 		+     "concatenateModules": true,
 		+     "flagIncludedChunks": true,
-		@@ ... @@
-		-     "mangleExports": false,
+		+     "innerGraph": true,
 		+     "mangleExports": true,
 		@@ ... @@
 		-     "minimize": false,
@@ -384,6 +385,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		-       "minSize": 10000,
 		+       "minSize": 30000,
+		@@ ... @@
+		-     "usedExports": false,
+		+     "usedExports": true,
 		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
@@ -406,12 +410,13 @@ describe("Defaults", () => {
 		-     "chunkIds": "natural",
 		-     "concatenateModules": false,
 		-     "flagIncludedChunks": false,
+		-     "innerGraph": false,
+		-     "mangleExports": false,
 		+     "checkWasmTypes": true,
 		+     "chunkIds": "deterministic",
 		+     "concatenateModules": true,
 		+     "flagIncludedChunks": true,
-		@@ ... @@
-		-     "mangleExports": false,
+		+     "innerGraph": true,
 		+     "mangleExports": true,
 		@@ ... @@
 		-     "minimize": false,
@@ -433,6 +438,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		-       "minSize": 10000,
 		+       "minSize": 30000,
+		@@ ... @@
+		-     "usedExports": false,
+		+     "usedExports": true,
 		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {

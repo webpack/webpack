@@ -25,20 +25,24 @@ it("A should be used", () => {
 	expect(exprA).toBe(true);
 });
 
-it("B should not be used", () => {
-	expect(declB).toBe(false);
-	expect(exprB).toBe(false);
-});
+if (process.env.NODE_ENV === "production") {
+	it("B should not be used", () => {
+		expect(declB).toBe(false);
+		expect(exprB).toBe(false);
+	});
+}
 
 it("C should be used", () => {
 	expect(declC).toBe(true);
 	expect(exprC).toBe(true);
 });
 
-it("D should not be used", () => {
-	expect(declD).toBe(false);
-	expect(exprD).toBe(false);
-});
+if (process.env.NODE_ENV === "production") {
+	it("D should not be used", () => {
+		expect(declD).toBe(false);
+		expect(exprD).toBe(false);
+	});
+}
 
 it("E should be used", () => {
 	expect(declE).toBe(true);

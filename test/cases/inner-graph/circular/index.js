@@ -5,6 +5,8 @@ it("export should be unused when only unused functions use it", () => {
 	expect(y("a")).toBe("okBAA");
 	expect(exportAUsed).toBe(true);
 	expect(exportBUsed).toBe(true);
-	expect(exportCUsed).toBe(false);
+	if (process.env.NODE_ENV === "production") {
+		expect(exportCUsed).toBe(false);
+	}
 	return import("./chunk");
 });

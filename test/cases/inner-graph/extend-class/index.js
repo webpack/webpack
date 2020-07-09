@@ -14,9 +14,11 @@ it("should load modules correctly", () => {
 	require("./module2");
 });
 
-it("B should not be used", () => {
-	expect(exportsInfoForB).toBe(false);
-});
+if (process.env.NODE_ENV === "production") {
+	it("B should not be used", () => {
+		expect(exportsInfoForB).toBe(false);
+	});
+}
 
 it("A should be used", () => {
 	expect(exportsInfoForA).toBe(true);
@@ -27,7 +29,9 @@ it("Z used, inner graph can not determine const usage", () => {
 });
 
 it("Pure super expression should be unused, another used", () => {
-	expect(exportsInfoForMixin1).toBe(false);
+	if (process.env.NODE_ENV === "production") {
+		expect(exportsInfoForMixin1).toBe(false);
+	}
 
 	expect(exportsInfoForMixin2).toBe(true);
 	expect(exportsInfoForMixin3).toBe(true);
