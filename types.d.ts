@@ -3890,8 +3890,10 @@ declare class Module extends DependenciesBlock {
 	addPresentationalDependency(presentationalDependency: Dependency): void;
 	addWarning(warning: WebpackError): void;
 	getWarnings(): Iterable<WebpackError>;
+	getNumberOfWarnings(): number;
 	addError(error: WebpackError): void;
 	getErrors(): Iterable<WebpackError>;
+	getNumberOfErrors(): number;
 
 	/**
 	 * removes all warnings and errors
