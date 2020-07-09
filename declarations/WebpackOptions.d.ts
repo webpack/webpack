@@ -710,7 +710,7 @@ export interface ResolveOptions {
 		[k: string]: any;
 	};
 	/**
-	 * A list of root paths.
+	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.
 	 */
 	roots?: string[];
 	/**

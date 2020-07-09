@@ -1230,10 +1230,10 @@
           "description": "Custom resolver"
         },
         "roots": {
-          "description": "A list of root paths.",
+          "description": "A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.",
           "type": "array",
           "items": {
-            "description": "Root path.",
+            "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
             "type": "string"
           }
         },
