@@ -1174,7 +1174,6 @@ declare class Compilation {
 	createHash(): void;
 	fullHash: string;
 	hash: string;
-	modifyHash(update: string): void;
 	emitAsset(file: string, source: Source, assetInfo?: AssetInfo): void;
 	updateAsset(
 		file: string,
@@ -2857,8 +2856,6 @@ declare interface HashedModuleIdsPluginOptions {
 declare class HotModuleReplacementPlugin {
 	constructor(options?: any);
 	options: any;
-	multiStep: any;
-	fullBuildTimeout: any;
 
 	/**
 	 * Apply the plugin
