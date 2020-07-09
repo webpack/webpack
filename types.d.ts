@@ -5936,6 +5936,7 @@ declare interface ResolveOptionsTypes {
 		| ((this: Resolver, arg1: Resolver) => void)
 	)[];
 	pnpApi: PnpApiImpl;
+	roots: Set<string>;
 	resolveToContext: boolean;
 	restrictions: Set<string | RegExp>;
 }
@@ -6045,9 +6046,14 @@ declare interface ResolveOptionsWebpackOptions {
 	resolver?: Resolver;
 
 	/**
-	 * A list of resolve restrictions.
+	 * A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.
 	 */
 	restrictions?: (string | RegExp)[];
+
+	/**
+	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.
+	 */
+	roots?: string[];
 
 	/**
 	 * Enable resolving symlinks to the original location.
@@ -6232,9 +6238,13 @@ declare abstract class ResolverFactory {
 						 */
 						resolver?: Resolver;
 						/**
-						 * A list of resolve restrictions.
+						 * A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.
 						 */
 						restrictions?: (string | RegExp)[];
+						/**
+						 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.
+						 */
+						roots?: string[];
 						/**
 						 * Enable resolving symlinks to the original location.
 						 */
@@ -6343,9 +6353,13 @@ declare abstract class ResolverFactory {
 						 */
 						resolver?: Resolver;
 						/**
-						 * A list of resolve restrictions.
+						 * A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.
 						 */
 						restrictions?: (string | RegExp)[];
+						/**
+						 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.
+						 */
+						roots?: string[];
 						/**
 						 * Enable resolving symlinks to the original location.
 						 */
@@ -6454,9 +6468,13 @@ declare abstract class ResolverFactory {
 			 */
 			resolver?: Resolver;
 			/**
-			 * A list of resolve restrictions.
+			 * A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.
 			 */
 			restrictions?: (string | RegExp)[];
+			/**
+			 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.
+			 */
+			roots?: string[];
 			/**
 			 * Enable resolving symlinks to the original location.
 			 */
@@ -7940,6 +7958,11 @@ declare interface UserResolveOptions {
 	pnpApi?: PnpApiImpl;
 
 	/**
+	 * A list of root paths
+	 */
+	roots?: string[];
+
+	/**
 	 * Resolve to a context instead of a file
 	 */
 	resolveToContext?: boolean;
@@ -8391,9 +8414,13 @@ declare interface WithOptions {
 			 */
 			resolver?: Resolver;
 			/**
-			 * A list of resolve restrictions.
+			 * A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.
 			 */
 			restrictions?: (string | RegExp)[];
+			/**
+			 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.
+			 */
+			roots?: string[];
 			/**
 			 * Enable resolving symlinks to the original location.
 			 */

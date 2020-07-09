@@ -2232,10 +2232,10 @@
           "tsType": "(import('enhanced-resolve').Resolver)"
         },
         "restrictions": {
-          "description": "A list of resolve restrictions.",
+          "description": "A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
           "type": "array",
           "items": {
-            "description": "Resolve restriction.",
+            "description": "Resolve restriction. Resolve result must fulfill this restriction.",
             "anyOf": [
               {
                 "instanceof": "RegExp",
@@ -2245,6 +2245,14 @@
                 "type": "string"
               }
             ]
+          }
+        },
+        "roots": {
+          "description": "A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.",
+          "type": "array",
+          "items": {
+            "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
+            "type": "string"
           }
         },
         "symlinks": {
