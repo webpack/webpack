@@ -1116,6 +1116,9 @@
             "description": "Plugin of type object or instanceof Function.",
             "anyOf": [
               {
+                "enum": ["..."]
+              },
+              {
                 "$ref": "#/definitions/WebpackPluginInstance"
               },
               {
@@ -2236,7 +2239,10 @@
           "type": "array",
           "items": {
             "description": "Plugin of type object or instanceof Function.",
-            "oneOf": [
+            "anyOf": [
+              {
+                "enum": ["..."]
+              },
               {
                 "$ref": "#/definitions/ResolvePluginInstance"
               }
@@ -2258,7 +2264,9 @@
                 "tsType": "RegExp"
               },
               {
-                "type": "string"
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
               }
             ]
           }
@@ -2543,11 +2551,15 @@
         },
         "oneOf": {
           "description": "Only execute the first matching rule in this array.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/RuleSetRules"
-            }
-          ]
+          "type": "array",
+          "items": {
+            "description": "A rule.",
+            "oneOf": [
+              {
+                "$ref": "#/definitions/RuleSetRule"
+              }
+            ]
+          }
         },
         "options": {
           "description": "Shortcut for use.options.",
@@ -2605,11 +2617,15 @@
         },
         "rules": {
           "description": "Match and execute these rules when this rule is matched.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/RuleSetRules"
-            }
-          ]
+          "type": "array",
+          "items": {
+            "description": "A rule.",
+            "oneOf": [
+              {
+                "$ref": "#/definitions/RuleSetRule"
+              }
+            ]
+          }
         },
         "sideEffects": {
           "description": "Flags a module as with or without side effects.",
@@ -2642,7 +2658,10 @@
       "type": "array",
       "items": {
         "description": "A rule.",
-        "oneOf": [
+        "anyOf": [
+          {
+            "enum": ["..."]
+          },
           {
             "$ref": "#/definitions/RuleSetRule"
           }
