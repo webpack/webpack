@@ -461,7 +461,7 @@ describe("Validation", () => {
 			       test: ...
 			     }
 			   }.
-			   object { <key>: false | RegExp | string | function | object { automaticNameDelimiter?, chunks?, enforce?, filename?, idHint?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name?, priority?, reuseExistingChunk?, test?, type? } }
+			   object { <key>: false | RegExp | string | function | object { automaticNameDelimiter?, chunks?, enforce?, enforceSizeThreshold?, filename?, idHint?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name?, priority?, reuseExistingChunk?, test?, type? } }
 			   -> Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')."
 		`)
 	);
@@ -715,7 +715,7 @@ describe("Validation", () => {
 				expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.optimization.splitChunks has an unknown property 'automaticNamePrefix'. These properties are valid:
-			   object { automaticNameDelimiter?, cacheGroups?, chunks?, fallbackCacheGroup?, filename?, hidePathInfo?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name? }
+			   object { automaticNameDelimiter?, cacheGroups?, chunks?, enforceSizeThreshold?, fallbackCacheGroup?, filename?, hidePathInfo?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name? }
 			   -> Options object for splitting chunks into smaller chunks."
 		`)
 		);

@@ -1532,6 +1532,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-split-chunks-enforce-size-threshold": Object {
+    "configs": Array [
+      Object {
+        "description": "Size of the javascript part of the chunk.",
+        "multiple": false,
+        "path": "optimization.splitChunks.enforceSizeThreshold",
+        "type": "number",
+      },
+    ],
+    "description": "Size of the javascript part of the chunk.",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "optimization-split-chunks-fallback-cache-group-automatic-name-delimiter": Object {
     "configs": Array [
       Object {

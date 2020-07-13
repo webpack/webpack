@@ -184,6 +184,7 @@ describe("Defaults", () => {
 		        },
 		      },
 		      "chunks": "async",
+		      "enforceSizeThreshold": 30000,
 		      "hidePathInfo": false,
 		      "maxAsyncRequests": Infinity,
 		      "maxInitialRequests": Infinity,
@@ -379,15 +380,17 @@ describe("Defaults", () => {
 		+     "noEmitOnErrors": true,
 		+     "nodeEnv": "production",
 		@@ ... @@
+		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
 		-       "maxInitialRequests": Infinity,
+		+       "enforceSizeThreshold": 50000,
 		+       "hidePathInfo": true,
 		+       "maxAsyncRequests": 30,
 		+       "maxInitialRequests": 30,
 		@@ ... @@
 		-       "minSize": 10000,
-		+       "minSize": 30000,
+		+       "minSize": 20000,
 		@@ ... @@
 		-     "usedExports": false,
 		+     "usedExports": true,
@@ -432,15 +435,17 @@ describe("Defaults", () => {
 		+     "noEmitOnErrors": true,
 		+     "nodeEnv": "production",
 		@@ ... @@
+		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
 		-       "maxInitialRequests": Infinity,
+		+       "enforceSizeThreshold": 50000,
 		+       "hidePathInfo": true,
 		+       "maxAsyncRequests": 30,
 		+       "maxInitialRequests": 30,
 		@@ ... @@
 		-       "minSize": 10000,
-		+       "minSize": 30000,
+		+       "minSize": 20000,
 		@@ ... @@
 		-     "usedExports": false,
 		+     "usedExports": true,
@@ -956,6 +961,7 @@ describe("Defaults", () => {
 			-         },
 			-       },
 			-       "chunks": "async",
+			-       "enforceSizeThreshold": 30000,
 			-       "hidePathInfo": false,
 			-       "maxAsyncRequests": Infinity,
 			-       "maxInitialRequests": Infinity,
