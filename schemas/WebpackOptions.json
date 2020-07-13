@@ -1257,6 +1257,14 @@
           "description": "Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.",
           "type": "boolean"
         },
+        "enforceSizeThreshold": {
+          "description": "Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
+        },
         "filename": {
           "description": "Sets the template for the filename for created chunks.",
           "anyOf": [
@@ -1461,6 +1469,14 @@
             {
               "instanceof": "Function",
               "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+            }
+          ]
+        },
+        "enforceSizeThreshold": {
+          "description": "Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
             }
           ]
         },

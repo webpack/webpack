@@ -430,6 +430,7 @@ declare interface CacheGroupSource {
 	enforce?: boolean;
 	minSize: Record<string, number>;
 	minRemainingSize: Record<string, number>;
+	enforceSizeThreshold: Record<string, number>;
 	maxAsyncSize: Record<string, number>;
 	maxInitialSize: Record<string, number>;
 	minChunks?: number;
@@ -4790,6 +4791,11 @@ declare interface OptimizationSplitChunksCacheGroup {
 	enforce?: boolean;
 
 	/**
+	 * Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.
+	 */
+	enforceSizeThreshold?: OptimizationSplitChunksSizes;
+
+	/**
 	 * Sets the template for the filename for created chunks.
 	 */
 	filename?: string | ((pathData: PathData, assetInfo: AssetInfo) => string);
@@ -4890,6 +4896,11 @@ declare interface OptimizationSplitChunksOptions {
 	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 	 */
 	chunks?: "initial" | "async" | "all" | ((chunk: Chunk) => boolean);
+
+	/**
+	 * Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.
+	 */
+	enforceSizeThreshold?: OptimizationSplitChunksSizes;
 
 	/**
 	 * Options for modules not selected by any other cache group.
@@ -7368,6 +7379,7 @@ declare interface SplitChunksOptions {
 	chunksFilter: (chunk: Chunk) => boolean;
 	minSize: Record<string, number>;
 	minRemainingSize: Record<string, number>;
+	enforceSizeThreshold: Record<string, number>;
 	maxInitialSize: Record<string, number>;
 	maxAsyncSize: Record<string, number>;
 	minChunks: number;
