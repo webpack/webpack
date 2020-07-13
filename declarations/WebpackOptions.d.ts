@@ -1373,6 +1373,10 @@ export interface OptimizationSplitChunksOptions {
 		| ("initial" | "async" | "all")
 		| ((chunk: import("../lib/Chunk")) => boolean);
 	/**
+	 * Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.
+	 */
+	enforceSizeThreshold?: OptimizationSplitChunksSizes;
+	/**
 	 * Options for modules not selected by any other cache group.
 	 */
 	fallbackCacheGroup?: {
@@ -1465,6 +1469,10 @@ export interface OptimizationSplitChunksCacheGroup {
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
 	 */
 	enforce?: boolean;
+	/**
+	 * Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.
+	 */
+	enforceSizeThreshold?: OptimizationSplitChunksSizes;
 	/**
 	 * Sets the template for the filename for created chunks.
 	 */
