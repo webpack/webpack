@@ -238,34 +238,151 @@ describe("Defaults", () => {
 		  "recordsInputPath": false,
 		  "recordsOutputPath": false,
 		  "resolve": Object {
-		    "aliasFields": Array [
-		      "browser",
-		    ],
+		    "aliasFields": Array [],
 		    "byDependency": Object {
 		      "amd": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
 		        "conditionNames": Array [
 		          "require",
+		          "module",
+		          "browser",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
 		          "module",
 		          "...",
 		        ],
 		      },
 		      "commonjs": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
 		        "conditionNames": Array [
 		          "require",
+		          "module",
+		          "browser",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
 		          "module",
 		          "...",
 		        ],
 		      },
 		      "esm": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
 		        "conditionNames": Array [
 		          "import",
+		          "module",
+		          "browser",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "loader": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "require",
+		          "module",
+		          "browser",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "undefined": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "require",
+		          "module",
+		          "browser",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "unknown": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "require",
+		          "module",
+		          "browser",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
 		          "module",
 		          "...",
 		        ],
 		      },
 		      "wasm": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
 		        "conditionNames": Array [
 		          "import",
+		          "module",
+		          "browser",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
 		          "module",
 		          "...",
 		        ],
@@ -275,19 +392,12 @@ describe("Defaults", () => {
 		    "conditionNames": Array [
 		      "webpack",
 		      "production",
-		      "browser",
 		    ],
 		    "exportsFields": Array [
 		      "exports",
 		    ],
-		    "extensions": Array [
-		      ".js",
-		      ".json",
-		      ".wasm",
-		    ],
+		    "extensions": Array [],
 		    "mainFields": Array [
-		      "browser",
-		      "module",
 		      "main",
 		    ],
 		    "mainFiles": Array [
@@ -557,7 +667,19 @@ describe("Defaults", () => {
 		+       },
 		+     ],
 		@@ ... @@
-		+       ".mjs",
+		+           ".mjs",
+		@@ ... @@
+		+           ".mjs",
+		@@ ... @@
+		+           ".mjs",
+		@@ ... @@
+		+           ".mjs",
+		@@ ... @@
+		+           ".mjs",
+		@@ ... @@
+		+           ".mjs",
+		@@ ... @@
+		+           ".mjs",
 	`)
 	);
 	test("output module", { experiments: { outputModule: true } }, e =>
@@ -708,15 +830,70 @@ describe("Defaults", () => {
 		-     "globalObject": "window",
 		+     "globalObject": "global",
 		@@ ... @@
-		-     "aliasFields": Array [
-		-       "browser",
-		-     ],
-		+     "aliasFields": Array [],
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
 		@@ ... @@
-		-       "browser",
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
 		+       "node",
-		@@ ... @@
-		-       "browser",
 		@@ ... @@
 		-   "target": "web",
 		+   "target": "node",
@@ -753,16 +930,71 @@ describe("Defaults", () => {
 		-     "globalObject": "window",
 		+     "globalObject": "global",
 		@@ ... @@
-		-     "aliasFields": Array [
-		-       "browser",
-		-     ],
-		+     "aliasFields": Array [],
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
 		@@ ... @@
-		-       "browser",
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
 		+       "node",
 		+       "electron",
-		@@ ... @@
-		-       "browser",
 		@@ ... @@
 		-   "target": "web",
 		+   "target": "electron-main",
@@ -777,16 +1009,71 @@ describe("Defaults", () => {
 		-     "globalObject": "window",
 		+     "globalObject": "self",
 		@@ ... @@
-		-     "aliasFields": Array [
-		-       "browser",
-		-     ],
-		+     "aliasFields": Array [],
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
 		@@ ... @@
-		-       "browser",
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
 		+       "node",
 		+       "electron",
-		@@ ... @@
-		-       "browser",
 		@@ ... @@
 		-   "target": "web",
 		+   "target": "electron-preload",
