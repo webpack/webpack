@@ -429,7 +429,7 @@ describe("Validation", () => {
 			       test: ...
 			     }
 			   }
-			   object { <key>: false | function | string | RegExp | object { automaticNameDelimiter?, automaticNameMaxLength?, automaticNamePrefix?, chunks?, enforce?, filename?, maxAsyncRequests?, maxInitialRequests?, maxSize?, minChunks?, minSize?, name?, priority?, reuseExistingChunk?, test? } }
+			   object { <key>: false | function | string | RegExp | object { automaticNameDelimiter?, automaticNameMaxLength?, automaticNamePrefix?, chunks?, enforce?, enforceSizeThreshold?, filename?, maxAsyncRequests?, maxInitialRequests?, maxSize?, minChunks?, minSize?, name?, priority?, reuseExistingChunk?, test? } }
 			   -> Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)"
 		`)
 	);
