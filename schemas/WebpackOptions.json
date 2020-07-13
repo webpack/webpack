@@ -612,6 +612,10 @@
                     "description": "Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group",
                     "type": "boolean"
                   },
+                  "enforceSizeThreshold": {
+                    "description": "Size threshold at which splitting is enforced and other restrictions (maxAsyncRequests, maxInitialRequests) are ignored.",
+                    "type": "number"
+                  },
                   "filename": {
                     "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
                     "type": "string",
@@ -721,6 +725,10 @@
               "tsType": "Function"
             }
           ]
+        },
+        "enforceSizeThreshold": {
+          "description": "Size threshold at which splitting is enforced and other restrictions (maxAsyncRequests, maxInitialRequests) are ignored.",
+          "type": "number"
         },
         "fallbackCacheGroup": {
           "description": "Options for modules not selected by any other cache group",
