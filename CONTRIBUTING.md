@@ -35,8 +35,8 @@ If you have created your own loader/plugin please include it on the relevant doc
 
 ## Submitting Changes
 
-After getting some feedbacks, push to your fork and submit a pull request. We
-may suggest some changes or improvements or alternatives, but for small changes
+After getting some feedback, push to your fork and submit a pull request. We
+may suggest some changes or improvements or alternatives but for small changes,
 your pull request should be accepted quickly.
 
 Something that will increase the chance that your pull request is accepted:
@@ -46,7 +46,7 @@ Something that will increase the chance that your pull request is accepted:
 - Write a [good commit message](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 - For a major fix/feature make sure your PR has an issue and if it doesn't, please create one. This would help discussion with the community, and polishing ideas in case of a new feature.
 - Make sure your PR's description contains GitHub's special keyword references that automatically close the related issue when the PR is merged. ([More info](https://github.com/blog/1506-closing-issues-via-pull-requests))
-- When you have lot of commits in your PR, it's good practice to squash all your commits in one single commit. ([Learn how to squash here](https://davidwalsh.name/squash-commits-git))
+- When you have a lot of commits in your PR, it's good practice to squash all your commits in one single commit. ([Learn how to squash here](https://davidwalsh.name/squash-commits-git))
 
 ## Documentation
 
@@ -61,8 +61,8 @@ Gitter is only for small questions. To discuss a subject in detail, please send 
 
 ## Join the development
 
-- Before you join development, please [set up the project](./_SETUP.md) on your local machine, run it and go through the application completely. Use any command you can find and see what it does. Explore.
+- Before you join the development, please [set up the project](./_SETUP.md) on your local machine, run it and go through the application completely. Use any command you can find and see what it does. Explore.
 
-  > Don't worry ... Nothing will happen to the project or to you due to the exploring. Only thing that will happen is, you'll be more familiar with what is where and might even get some cool ideas on how to improve various aspects of the project.
+  > Don't worry ... Nothing will happen to the project or to you due to the exploring. The only thing that will happen is, you'll be more familiar with what is where and might even get some cool ideas on how to improve various aspects of the project.
 
 - If you would like to work on an issue, drop in a comment at the issue. If it is already assigned to someone, but there is no sign of any work being done, please feel free to drop in a comment so that the issue can be assigned to you if the previous assignee has dropped it entirely.
