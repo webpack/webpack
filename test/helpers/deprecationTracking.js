@@ -15,7 +15,11 @@ util.deprecate = (fn, message, code) => {
 
 	return function (...args) {
 		if (interception) {
-			interception.set(`${code}: ${message}`, { code, message });
+			interception.set(`${code}: ${message}`, {
+				code,
+				message,
+				stack: new Error(message).stack
+			});
 			return fn.apply(this, args);
 		} else {
 			return original.apply(this, args);

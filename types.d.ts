@@ -390,7 +390,11 @@ declare class Cache {
 	constructor();
 	hooks: {
 		get: AsyncSeriesBailHook<
-			[string, Etag, ((result: any, stats: CallbackCache<void>) => void)[]],
+			[
+				string,
+				Etag,
+				((result: any, callback: (arg0: Error) => void) => void)[]
+			],
 			any
 		>;
 		store: AsyncParallelHook<[string, Etag, any]>;
@@ -422,6 +426,20 @@ declare class Cache {
 	static STAGE_DISK: number;
 	static STAGE_NETWORK: number;
 }
+declare abstract class CacheFacade {
+	getChildCache(name: string): CacheFacade;
+	getItemCache(identifier: string, etag: Etag): ItemCacheFacade;
+	getLazyHashedEtag(obj: HashableObject): Etag;
+	get<T>(identifier: string, etag: Etag, callback: CallbackCache<T>): void;
+	getPromise<T>(identifier: string, etag: Etag): Promise<T>;
+	store<T>(
+		identifier: string,
+		etag: Etag,
+		data: T,
+		callback: CallbackCache<void>
+	): void;
+	storePromise<T>(identifier: string, etag: Etag, data: T): Promise<void>;
+}
 declare interface CacheGroupSource {
 	key?: string;
 	priority?: number;
@@ -449,7 +467,7 @@ type CacheOptions = boolean | MemoryCacheOptions | FileCacheOptions;
 type CacheOptionsNormalized = false | MemoryCacheOptions | FileCacheOptions;
 type CallExpression = SimpleCallExpression | NewExpression;
 declare interface CallbackCache<T> {
-	(err?: WebpackError, stats?: T): void;
+	(err?: WebpackError, result?: T): void;
 }
 declare interface CallbackFunction<T> {
 	(err?: Error, result?: T): any;
@@ -1011,7 +1029,6 @@ declare class Compilation {
 	fileSystemInfo: FileSystemInfo;
 	requestShortener: RequestShortener;
 	compilerPath: string;
-	cache: Cache;
 	logger: WebpackLogger;
 	options: WebpackOptionsNormalized;
 	outputOptions: OutputNormalized;
@@ -1070,6 +1087,7 @@ declare class Compilation {
 	createStatsOptions(optionsOrPreset?: any, context?: {}): {};
 	createStatsFactory(options?: any): StatsFactory;
 	createStatsPrinter(options?: any): StatsPrinter;
+	getCache(name: string): CacheFacade;
 	getLogger(name: string | (() => string)): WebpackLogger;
 	addModule(
 		module: Module,
@@ -1364,6 +1382,7 @@ declare class Compiler {
 	compilerPath: string;
 	running: boolean;
 	watchMode: boolean;
+	getCache(name: string): CacheFacade;
 	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
 	watch(watchOptions: WatchOptions, handler: CallbackFunction<Stats>): Watching;
 	run(callback: CallbackFunction<Stats>): void;
@@ -2828,6 +2847,9 @@ declare class Hash {
 	digest(encoding?: string): string | Buffer;
 }
 type HashFunction = string | typeof Hash;
+declare interface HashableObject {
+	updateHash: (arg0: Hash) => void;
+}
 declare class HashedModuleIdsPlugin {
 	constructor(options?: HashedModuleIdsPluginOptions);
 	options: HashedModuleIdsPluginOptions;
@@ -2980,6 +3002,12 @@ declare interface IntermediateFileSystemExtras {
 		arg1: string,
 		arg2: (arg0: NodeJS.ErrnoException) => void
 	) => void;
+}
+declare abstract class ItemCacheFacade {
+	get<T>(callback: CallbackCache<T>): void;
+	getPromise<T>(): Promise<T>;
+	store<T>(data: T, callback: CallbackCache<void>): void;
+	storePromise<T>(data: T): Promise<void>;
 }
 declare class JavascriptModulesPlugin {
 	constructor(options?: {});
