@@ -143,12 +143,44 @@ describe("HotTestCases", () => {
 									});
 								}
 
+								class XMLHttpRequest {
+									open(method, path) {
+										this._path = path;
+									}
+									send() {
+										process.nextTick(() => {
+											this.readyState = 4;
+											this.status = 200;
+											this.responseText = fs.readFileSync(
+												path.join(outputDirectory, this._path),
+												"utf-8"
+											);
+											this.onreadystatechange();
+										});
+									}
+								}
+
+								const document = {
+									XMLHttpRequest,
+									createElement(type) {
+										if (type !== "script") throw new Error("not supported");
+										const script = {};
+										process.nextTick(() => {
+											_require(`./${script.src}`);
+										});
+										return script;
+									},
+									head: {
+										appendChild() {}
+									}
+								};
+
 								function _require(module) {
 									if (module.substr(0, 2) === "./") {
 										const p = path.join(outputDirectory, module);
 										const fn = vm.runInThisContext(
-											"(function(require, module, exports, __dirname, __filename, it, expect, NEXT, STATS) {" +
-												"global.expect = expect;" +
+											"(function(require, module, exports, __dirname, __filename, it, expect, document, NEXT, STATS) {" +
+												"global.expect = expect; global.window = global; var XMLHttpRequest = document.XMLHttpRequest;" +
 												'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 												fs.readFileSync(p, "utf-8") +
 												"\n})",
@@ -166,6 +198,7 @@ describe("HotTestCases", () => {
 											p,
 											_it,
 											expect,
+											document,
 											_next,
 											jsonStats
 										);
@@ -174,11 +207,16 @@ describe("HotTestCases", () => {
 								}
 								let promise = Promise.resolve();
 								const info = stats.toJson({ all: false, entrypoints: true });
-								if (category.target === "web") {
+								if (options.target === "web") {
 									for (const file of info.entrypoints.main.assets)
 										_require(`./${file}`);
 								} else {
 									const assets = info.entrypoints.main.assets;
+									if (assets.length > 1) {
+										throw new Error(
+											"webpack 4 doesn't support multiple entries in non-web target"
+										);
+									}
 									const result = _require(`./${assets[assets.length - 1]}`);
 									if (typeof result === "object" && "then" in result)
 										promise = promise.then(() => result);
