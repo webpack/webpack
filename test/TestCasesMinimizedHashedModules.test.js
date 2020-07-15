@@ -7,6 +7,10 @@ describe("TestCases", () => {
 		minimize: true,
 		optimization: {
 			moduleIds: "hashed"
-		}
+		},
+		deprecations: [
+			// TODO update terser-webpack-plugin to use getCache()
+			expect.objectContaining({ code: "DEP_WEBPACK_COMPILATION_CACHE" })
+		]
 	});
 });

@@ -7,6 +7,7 @@ const rimraf = require("rimraf");
 const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
+const deprecationTracking = require("./helpers/deprecationTracking");
 
 const webpack = require("..");
 
@@ -193,7 +194,9 @@ const describeCases = config => {
 										options.output.path,
 										"cache1"
 									);
+									const deprecationTracker = deprecationTracking.start();
 									webpack(options, err => {
+										deprecationTracker();
 										options.output.path = oldPath;
 										if (err) return done(err);
 										done();
@@ -205,7 +208,9 @@ const describeCases = config => {
 										options.output.path,
 										"cache2"
 									);
+									const deprecationTracker = deprecationTracking.start();
 									webpack(options, err => {
+										deprecationTracker();
 										options.output.path = oldPath;
 										if (err) return done(err);
 										done();
@@ -217,7 +222,9 @@ const describeCases = config => {
 								done => {
 									const compiler = webpack(options);
 									const run = () => {
+										const deprecationTracker = deprecationTracking.start();
 										compiler.run((err, stats) => {
+											const deprecations = deprecationTracker();
 											if (err) return done(err);
 											compiler.close(err => {
 												if (err) return done(err);
@@ -242,8 +249,9 @@ const describeCases = config => {
 														"Error",
 														done
 													)
-												)
+												) {
 													return;
+												}
 												if (
 													checkArrayExpectation(
 														testDirectory,
@@ -252,8 +260,10 @@ const describeCases = config => {
 														"Warning",
 														done
 													)
-												)
+												) {
 													return;
+												}
+												expect(deprecations).toEqual(config.deprecations || []);
 
 												Promise.resolve().then(done);
 											});
@@ -261,7 +271,9 @@ const describeCases = config => {
 									};
 									if (config.cache) {
 										// pre-compile to fill memory cache
+										const deprecationTracker = deprecationTracking.start();
 										compiler.run(err => {
+											deprecationTracker();
 											if (err) return done(err);
 											run();
 										});
