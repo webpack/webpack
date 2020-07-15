@@ -1112,6 +1112,9 @@
         "minimizer": {
           "description": "Minimizer(s) to use for minimizing the output.",
           "type": "array",
+          "cli": {
+            "exclude": true
+          },
           "items": {
             "description": "Plugin of type object or instanceof Function.",
             "anyOf": [
@@ -2237,6 +2240,9 @@
         "plugins": {
           "description": "Plugins for the resolver.",
           "type": "array",
+          "cli": {
+            "exclude": true
+          },
           "items": {
             "description": "Plugin of type object or instanceof Function.",
             "anyOf": [
@@ -2660,6 +2666,9 @@
         "description": "A rule.",
         "anyOf": [
           {
+            "cli": {
+              "exclude": true
+            },
             "enum": ["..."]
           },
           {
