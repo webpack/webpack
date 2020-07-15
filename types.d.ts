@@ -1726,7 +1726,36 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		beforeResolve: AsyncSeriesWaterfallHook<[any]>;
 		afterResolve: AsyncSeriesWaterfallHook<[any]>;
 		contextModuleFiles: SyncWaterfallHook<[string[]]>;
-		alternatives: AsyncSeriesWaterfallHook<[any[]]>;
+		alternatives: Pick<
+			AsyncSeriesWaterfallHook<[any[]]>,
+			"tap" | "tapAsync" | "tapPromise" | "name"
+		> &
+			FakeHookMarker;
+		alternativeRequests: AsyncSeriesWaterfallHook<
+			[
+				any[],
+				{
+					mode: "sync" | "eager" | "weak" | "async-weak" | "lazy" | "lazy-once";
+					recursive: boolean;
+					regExp: RegExp;
+					namespaceObject?: boolean | "strict";
+					addon?: string;
+					chunkName?: string;
+					include?: RegExp;
+					exclude?: RegExp;
+					groupOptions?: RawChunkGroupOptions;
+					category?: string;
+					/**
+					 * exports referenced from modules (won't be mangled)
+					 */
+					referencedExports?: string[][];
+					resource: string;
+					resourceQuery?: string;
+					resourceFragment?: string;
+					resolveOptions: any;
+				}
+			]
+		>;
 	}>;
 	resolverFactory: ResolverFactory;
 	resolveDependencies(
@@ -4194,7 +4223,7 @@ declare interface ModuleOptions {
 	/**
 	 * An array of rules applied by default for modules.
 	 */
-	defaultRules?: RuleSetRule[];
+	defaultRules?: (RuleSetRule | "...")[];
 
 	/**
 	 * Enable warnings for full dynamic dependencies.
@@ -4228,7 +4257,7 @@ declare interface ModuleOptions {
 	/**
 	 * An array of rules applied for modules.
 	 */
-	rules?: RuleSetRule[];
+	rules?: (RuleSetRule | "...")[];
 
 	/**
 	 * Emit errors instead of warnings when imported names don't exist in imported module.
@@ -4731,6 +4760,7 @@ declare interface Optimization {
 	minimizer?: (
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance
+		| "..."
 	)[];
 
 	/**
@@ -6077,7 +6107,7 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Plugins for the resolver.
 	 */
-	plugins?: ResolvePluginInstance[];
+	plugins?: ("..." | ResolvePluginInstance)[];
 
 	/**
 	 * Custom resolver.
@@ -6271,7 +6301,7 @@ declare abstract class ResolverFactory {
 						/**
 						 * Plugins for the resolver.
 						 */
-						plugins?: ResolvePluginInstance[];
+						plugins?: ("..." | ResolvePluginInstance)[];
 						/**
 						 * Custom resolver.
 						 */
@@ -6386,7 +6416,7 @@ declare abstract class ResolverFactory {
 						/**
 						 * Plugins for the resolver.
 						 */
-						plugins?: ResolvePluginInstance[];
+						plugins?: ("..." | ResolvePluginInstance)[];
 						/**
 						 * Custom resolver.
 						 */
@@ -6501,7 +6531,7 @@ declare abstract class ResolverFactory {
 			/**
 			 * Plugins for the resolver.
 			 */
-			plugins?: ResolvePluginInstance[];
+			plugins?: ("..." | ResolvePluginInstance)[];
 			/**
 			 * Custom resolver.
 			 */
@@ -8448,7 +8478,7 @@ declare interface WithOptions {
 			/**
 			 * Plugins for the resolver.
 			 */
-			plugins?: ResolvePluginInstance[];
+			plugins?: ("..." | ResolvePluginInstance)[];
 			/**
 			 * Custom resolver.
 			 */

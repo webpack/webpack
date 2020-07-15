@@ -1112,9 +1112,15 @@
         "minimizer": {
           "description": "Minimizer(s) to use for minimizing the output.",
           "type": "array",
+          "cli": {
+            "exclude": true
+          },
           "items": {
             "description": "Plugin of type object or instanceof Function.",
             "anyOf": [
+              {
+                "enum": ["..."]
+              },
               {
                 "$ref": "#/definitions/WebpackPluginInstance"
               },
@@ -2234,9 +2240,15 @@
         "plugins": {
           "description": "Plugins for the resolver.",
           "type": "array",
+          "cli": {
+            "exclude": true
+          },
           "items": {
             "description": "Plugin of type object or instanceof Function.",
-            "oneOf": [
+            "anyOf": [
+              {
+                "enum": ["..."]
+              },
               {
                 "$ref": "#/definitions/ResolvePluginInstance"
               }
@@ -2258,7 +2270,9 @@
                 "tsType": "RegExp"
               },
               {
-                "type": "string"
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
               }
             ]
           }
@@ -2543,11 +2557,15 @@
         },
         "oneOf": {
           "description": "Only execute the first matching rule in this array.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/RuleSetRules"
-            }
-          ]
+          "type": "array",
+          "items": {
+            "description": "A rule.",
+            "oneOf": [
+              {
+                "$ref": "#/definitions/RuleSetRule"
+              }
+            ]
+          }
         },
         "options": {
           "description": "Shortcut for use.options.",
@@ -2605,11 +2623,15 @@
         },
         "rules": {
           "description": "Match and execute these rules when this rule is matched.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/RuleSetRules"
-            }
-          ]
+          "type": "array",
+          "items": {
+            "description": "A rule.",
+            "oneOf": [
+              {
+                "$ref": "#/definitions/RuleSetRule"
+              }
+            ]
+          }
         },
         "sideEffects": {
           "description": "Flags a module as with or without side effects.",
@@ -2642,7 +2664,13 @@
       "type": "array",
       "items": {
         "description": "A rule.",
-        "oneOf": [
+        "anyOf": [
+          {
+            "cli": {
+              "exclude": true
+            },
+            "enum": ["..."]
+          },
           {
             "$ref": "#/definitions/RuleSetRule"
           }

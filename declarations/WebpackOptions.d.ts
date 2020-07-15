@@ -275,7 +275,7 @@ export type RuleSetUseItem =
 /**
  * A list of rules.
  */
-export type RuleSetRules = RuleSetRule[];
+export type RuleSetRules = ("..." | RuleSetRule)[];
 /**
  * Name of the configuration. Used when loading multiple configurations.
  */
@@ -1036,7 +1036,7 @@ export interface RuleSetRule {
 	/**
 	 * Only execute the first matching rule in this array.
 	 */
-	oneOf?: RuleSetRules;
+	oneOf?: RuleSetRule[];
 	/**
 	 * Shortcut for use.options.
 	 */
@@ -1070,7 +1070,7 @@ export interface RuleSetRule {
 	/**
 	 * Match and execute these rules when this rule is matched.
 	 */
-	rules?: RuleSetRules;
+	rules?: RuleSetRule[];
 	/**
 	 * Flags a module as with or without side effects.
 	 */
@@ -1182,7 +1182,7 @@ export interface ResolveOptions {
 	/**
 	 * Plugins for the resolver.
 	 */
-	plugins?: ResolvePluginInstance[];
+	plugins?: ("..." | ResolvePluginInstance)[];
 	/**
 	 * Custom resolver.
 	 */
@@ -1288,7 +1288,7 @@ export interface Optimization {
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
-	minimizer?: (WebpackPluginInstance | WebpackPluginFunction)[];
+	minimizer?: ("..." | WebpackPluginInstance | WebpackPluginFunction)[];
 	/**
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
