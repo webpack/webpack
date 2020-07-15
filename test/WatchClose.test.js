@@ -50,8 +50,12 @@ describe("WatchClose", () => {
 				close(watcher, () => (num += 1)),
 				close(watcher, () => (num += 10))
 			]);
+			await Promise.all([
+				close(watcher, () => (num += 100)),
+				close(watcher, () => (num += 1000))
+			]);
 
-			expect(num).toBe(11);
+			expect(num).toBe(1111);
 
 			done();
 		});
