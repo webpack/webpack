@@ -59,6 +59,8 @@ describe("HotTestCases", () => {
 								options.output.filename = "bundle.js";
 							if (options.output.pathinfo === undefined)
 								options.output.pathinfo = true;
+							if (options.output.library === undefined)
+								options.output.library = ["commonjs2"];
 							if (!options.module) options.module = {};
 							if (!options.module.rules) options.module.rules = [];
 							options.module.rules.push({
@@ -141,12 +143,44 @@ describe("HotTestCases", () => {
 									});
 								}
 
+								class XMLHttpRequest {
+									open(method, path) {
+										this._path = path;
+									}
+									send() {
+										process.nextTick(() => {
+											this.readyState = 4;
+											this.status = 200;
+											this.responseText = fs.readFileSync(
+												path.join(outputDirectory, this._path),
+												"utf-8"
+											);
+											this.onreadystatechange();
+										});
+									}
+								}
+
+								const document = {
+									XMLHttpRequest,
+									createElement(type) {
+										if (type !== "script") throw new Error("not supported");
+										const script = {};
+										process.nextTick(() => {
+											_require(`./${script.src}`);
+										});
+										return script;
+									},
+									head: {
+										appendChild() {}
+									}
+								};
+
 								function _require(module) {
 									if (module.substr(0, 2) === "./") {
 										const p = path.join(outputDirectory, module);
 										const fn = vm.runInThisContext(
-											"(function(require, module, exports, __dirname, __filename, it, expect, NEXT, STATS) {" +
-												"global.expect = expect;" +
+											"(function(require, module, exports, __dirname, __filename, it, expect, document, NEXT, STATS) {" +
+												"global.expect = expect; global.window = global; var XMLHttpRequest = document.XMLHttpRequest;" +
 												'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 												fs.readFileSync(p, "utf-8") +
 												"\n})",
@@ -164,17 +198,41 @@ describe("HotTestCases", () => {
 											p,
 											_it,
 											expect,
+											document,
 											_next,
 											jsonStats
 										);
 										return m.exports;
 									} else return require(module);
 								}
-								_require("./bundle.js");
-								if (getNumberOfTests() < 1)
-									return done(new Error("No tests exported by test case"));
+								let promise = Promise.resolve();
+								const info = stats.toJson({ all: false, entrypoints: true });
+								if (options.target === "web") {
+									for (const file of info.entrypoints.main.assets)
+										_require(`./${file}`);
+								} else {
+									const assets = info.entrypoints.main.assets;
+									if (assets.length > 1) {
+										throw new Error(
+											"webpack 4 doesn't support multiple entries in non-web target"
+										);
+									}
+									const result = _require(`./${assets[assets.length - 1]}`);
+									if (typeof result === "object" && "then" in result)
+										promise = promise.then(() => result);
+								}
+								promise.then(
+									() => {
+										if (getNumberOfTests() < 1)
+											return done(new Error("No tests exported by test case"));
 
-								done();
+										done();
+									},
+									err => {
+										console.log(err);
+										done(err);
+									}
+								);
 							});
 						},
 						10000

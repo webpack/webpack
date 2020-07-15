@@ -1,59 +1,59 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-entry 1`] = `
-"Hash: 73cc73495122bdbc0b5273cc73495122bdbc0b52
+"Hash: 3fa42e1a383311af137e3fa42e1a383311af137e
 Child fitting:
-    Hash: 73cc73495122bdbc0b52
+    Hash: 3fa42e1a383311af137e
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                       Asset      Size  Chunks                         Chunk Names
-    33966214360bbbb31383.js  1.94 KiB       2  [emitted] [immutable]  
-    445d4c6a1d7381d6cb2c.js  1.94 KiB       3  [emitted] [immutable]  
-    89433e8d9a08f7d757d9.js  11.2 KiB       1  [emitted] [immutable]  
+    32ae40712a4fa5d8c55d.js  11.2 KiB       4  [emitted] [immutable]  
+    6dc65963bb7e1b8ebff5.js  1.94 KiB       5  [emitted] [immutable]  
+    8d2cf8a98f386e7dcc25.js  1.94 KiB     444  [emitted] [immutable]  
     d4b551c6319035df2898.js  1.05 KiB       0  [emitted] [immutable]  
-    Entrypoint main = 33966214360bbbb31383.js 445d4c6a1d7381d6cb2c.js 89433e8d9a08f7d757d9.js
-    chunk    {0} d4b551c6319035df2898.js 916 bytes <{1}> <{2}> <{3}>
+    Entrypoint main = 8d2cf8a98f386e7dcc25.js 6dc65963bb7e1b8ebff5.js 32ae40712a4fa5d8c55d.js
+    chunk    {0} d4b551c6319035df2898.js 916 bytes <{4}> <{5}> <{444}>
         > ./g [4] ./index.js 7:0-13
      [7] ./g.js 916 bytes {0} [built]
-    chunk    {1} 89433e8d9a08f7d757d9.js 1.87 KiB ={2}= ={3}= >{0}< [entry] [rendered]
+    chunk    {4} 32ae40712a4fa5d8c55d.js 1.87 KiB ={5}= ={444}= >{0}< [entry]
         > ./index main
-     [3] ./e.js 899 bytes {1} [built]
-     [4] ./index.js 111 bytes {1} [built]
-     [6] ./f.js 900 bytes {1} [built]
-    chunk    {2} 33966214360bbbb31383.js 1.76 KiB ={1}= ={3}= >{0}< [initial] [rendered] [recorded] aggressive splitted
+     [3] ./e.js 899 bytes {4} [built]
+     [4] ./index.js 111 bytes {4} [built]
+     [6] ./f.js 900 bytes {4} [built]
+    chunk    {5} 6dc65963bb7e1b8ebff5.js 1.76 KiB ={4}= ={444}= >{0}< [initial] [rendered] [recorded] aggressive splitted
         > ./index main
-     [0] ./b.js 899 bytes {2} [built]
-     [5] ./a.js 899 bytes {2} [built]
-    chunk    {3} 445d4c6a1d7381d6cb2c.js 1.76 KiB ={1}= ={2}= >{0}< [initial] [rendered] [recorded] aggressive splitted
+     [1] ./c.js 899 bytes {5} [built]
+     [2] ./d.js 899 bytes {5} [built]
+    chunk  {444} 8d2cf8a98f386e7dcc25.js 1.76 KiB ={4}= ={5}= >{0}< [initial] [rendered] [recorded] aggressive splitted
         > ./index main
-     [1] ./c.js 899 bytes {3} [built]
-     [2] ./d.js 899 bytes {3} [built]
+     [0] ./b.js 899 bytes {444} [built]
+     [5] ./a.js 899 bytes {444} [built]
 Child content-change:
-    Hash: 73cc73495122bdbc0b52
+    Hash: 3fa42e1a383311af137e
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                       Asset      Size  Chunks                         Chunk Names
-    33966214360bbbb31383.js  1.94 KiB       2  [emitted] [immutable]  
-    445d4c6a1d7381d6cb2c.js  1.94 KiB       3  [emitted] [immutable]  
-    89433e8d9a08f7d757d9.js  11.2 KiB       1  [emitted] [immutable]  
+    32ae40712a4fa5d8c55d.js  11.2 KiB       4  [emitted] [immutable]  
+    6dc65963bb7e1b8ebff5.js  1.94 KiB       5  [emitted] [immutable]  
+    8d2cf8a98f386e7dcc25.js  1.94 KiB     444  [emitted] [immutable]  
     d4b551c6319035df2898.js  1.05 KiB       0  [emitted] [immutable]  
-    Entrypoint main = 33966214360bbbb31383.js 445d4c6a1d7381d6cb2c.js 89433e8d9a08f7d757d9.js
-    chunk    {0} d4b551c6319035df2898.js 916 bytes <{1}> <{2}> <{3}>
+    Entrypoint main = 8d2cf8a98f386e7dcc25.js 6dc65963bb7e1b8ebff5.js 32ae40712a4fa5d8c55d.js
+    chunk    {0} d4b551c6319035df2898.js 916 bytes <{4}> <{5}> <{444}>
         > ./g [4] ./index.js 7:0-13
      [7] ./g.js 916 bytes {0} [built]
-    chunk    {1} 89433e8d9a08f7d757d9.js 1.87 KiB ={2}= ={3}= >{0}< [entry] [rendered]
+    chunk    {4} 32ae40712a4fa5d8c55d.js 1.87 KiB ={5}= ={444}= >{0}< [entry]
         > ./index main
-     [3] ./e.js 899 bytes {1} [built]
-     [4] ./index.js 111 bytes {1} [built]
-     [6] ./f.js 900 bytes {1} [built]
-    chunk    {2} 33966214360bbbb31383.js 1.76 KiB ={1}= ={3}= >{0}< [initial] [rendered] [recorded] aggressive splitted
+     [3] ./e.js 899 bytes {4} [built]
+     [4] ./index.js 111 bytes {4} [built]
+     [6] ./f.js 900 bytes {4} [built]
+    chunk    {5} 6dc65963bb7e1b8ebff5.js 1.76 KiB ={4}= ={444}= >{0}< [initial] [rendered] [recorded] aggressive splitted
         > ./index main
-     [0] ./b.js 899 bytes {2} [built]
-     [5] ./a.js 899 bytes {2} [built]
-    chunk    {3} 445d4c6a1d7381d6cb2c.js 1.76 KiB ={1}= ={2}= >{0}< [initial] [rendered] [recorded] aggressive splitted
+     [1] ./c.js 899 bytes {5} [built]
+     [2] ./d.js 899 bytes {5} [built]
+    chunk  {444} 8d2cf8a98f386e7dcc25.js 1.76 KiB ={4}= ={5}= >{0}< [initial] [rendered] [recorded] aggressive splitted
         > ./index main
-     [1] ./c.js 899 bytes {3} [built]
-     [2] ./d.js 899 bytes {3} [built]"
+     [0] ./b.js 899 bytes {444} [built]
+     [5] ./a.js 899 bytes {444} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-on-demand 1`] = `
