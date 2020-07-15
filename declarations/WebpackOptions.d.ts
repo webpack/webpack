@@ -928,6 +928,10 @@ export interface OptimizationSplitChunksOptions {
 					 */
 					enforce?: boolean;
 					/**
+					 * Size threshold at which splitting is enforced and other restrictions (maxAsyncRequests, maxInitialRequests) are ignored.
+					 */
+					enforceSizeThreshold?: number;
+					/**
 					 * Sets the template for the filename for created chunks (Only works for initial chunks)
 					 */
 					filename?: string;
@@ -973,6 +977,10 @@ export interface OptimizationSplitChunksOptions {
 	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML)
 	 */
 	chunks?: ("initial" | "async" | "all") | Function;
+	/**
+	 * Size threshold at which splitting is enforced and other restrictions (maxAsyncRequests, maxInitialRequests) are ignored.
+	 */
+	enforceSizeThreshold?: number;
 	/**
 	 * Options for modules not selected by any other cache group
 	 */
