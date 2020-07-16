@@ -623,11 +623,14 @@ describe("Compiler", () => {
 			}
 		});
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		const invalidHookCb = jest.fn();
 		const doneHookCb = jest.fn();
 		const watchCb = jest.fn();
 		const invalidateCb = jest.fn();
+		compiler.hooks.invalid.tap("afterDoneWatchTest", invalidHookCb);
 		compiler.hooks.done.tap("afterDoneWatchTest", doneHookCb);
 		compiler.hooks.afterDone.tap("afterDoneWatchTest", () => {
+			expect(invalidHookCb).toHaveBeenCalled();
 			expect(doneHookCb).toHaveBeenCalled();
 			expect(watchCb).toHaveBeenCalled();
 			expect(invalidateCb).toHaveBeenCalled();
@@ -650,11 +653,14 @@ describe("Compiler", () => {
 			}
 		});
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		const invalidHookCb = jest.fn();
 		const watchCloseCb = jest.fn();
 		const watchCloseHookCb = jest.fn();
 		const invalidateCb = jest.fn();
+		compiler.hooks.invalid.tap("afterDoneWatchTest", invalidHookCb);
 		compiler.hooks.watchClose.tap("afterDoneWatchTest", watchCloseHookCb);
 		compiler.hooks.afterDone.tap("afterDoneWatchTest", () => {
+			expect(invalidHookCb).toHaveBeenCalled();
 			expect(watchCloseCb).toHaveBeenCalled();
 			expect(watchCloseHookCb).toHaveBeenCalled();
 			expect(invalidateCb).toHaveBeenCalled();

@@ -4364,7 +4364,7 @@ declare class MultiCompiler {
 	constructor(compilers: Compiler[] | Record<string, Compiler>);
 	hooks: Readonly<{
 		done: SyncHook<[MultiStats], void>;
-		invalid: MultiHook<SyncHook<[string, string], void>>;
+		invalid: MultiHook<SyncHook<[string, number], void>>;
 		run: MultiHook<AsyncSeriesHook<[Compiler]>>;
 		watchClose: SyncHook<[], void>;
 		watchRun: MultiHook<AsyncSeriesHook<[Compiler]>>;
