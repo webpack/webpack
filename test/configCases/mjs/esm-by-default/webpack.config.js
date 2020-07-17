@@ -1,2 +1,6 @@
 /** @type {import("../../../../").Configuration} */
-module.exports = {};
+module.exports = {
+	experiments: {
+		mjs: true
+	}
+};

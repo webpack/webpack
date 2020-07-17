@@ -1004,6 +1004,12 @@ export interface RuleSetRule {
 	 */
 	compiler?: RuleSetConditionOrConditions;
 	/**
+	 * Match values of properties in the description file (usually package.json).
+	 */
+	descriptionData?: {
+		[k: string]: RuleSetConditionOrConditions;
+	};
+	/**
 	 * Enforce this rule as pre or post step.
 	 */
 	enforce?: "pre" | "post";
@@ -1152,7 +1158,7 @@ export interface ResolveOptions {
 	 */
 	descriptionFiles?: string[];
 	/**
-	 * Enforce using one of the extensions from the extensions option.
+	 * Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).
 	 */
 	enforceExtension?: boolean;
 	/**
@@ -1167,6 +1173,10 @@ export interface ResolveOptions {
 	 * Filesystem for the resolver.
 	 */
 	fileSystem?: import("../lib/util/fs").InputFileSystem;
+	/**
+	 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
+	 */
+	fullySpecified?: boolean;
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point.
 	 */

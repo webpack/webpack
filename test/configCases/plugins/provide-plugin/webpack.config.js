@@ -12,7 +12,10 @@ module.exports = {
 			es2015_alias: ["./harmony", "alias"],
 			es2015_year: ["./harmony", "year"],
 			"this.aaa": "./aaa",
-			esm: "./esm"
+			esm: "./esm.js"
 		})
-	]
+	],
+	experiments: {
+		mjs: true
+	}
 };

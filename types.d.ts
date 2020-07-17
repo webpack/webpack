@@ -2722,22 +2722,41 @@ declare interface FileCacheOptions {
 	version?: string;
 }
 declare interface FileSystem {
-	readFile: (
-		arg0: string,
-		arg1: (arg0: PossibleFileSystemError & Error, arg1: string | Buffer) => void
-	) => void;
-	readJson?: (
-		arg0: string,
-		arg1: (arg0: PossibleFileSystemError & Error, arg1?: any) => void
-	) => void;
-	readlink: (
-		arg0: string,
-		arg1: (arg0: PossibleFileSystemError & Error, arg1: string | Buffer) => void
-	) => void;
-	stat: (
-		arg0: string,
-		arg1: (arg0: PossibleFileSystemError & Error, arg1: FileSystemStats) => void
-	) => void;
+	readFile: {
+		(arg0: string, arg1: FileSystemCallback<string | Buffer>): void;
+		(arg0: string, arg1: any, arg2: FileSystemCallback<string | Buffer>): void;
+	};
+	readdir: {
+		(
+			arg0: string,
+			arg1: FileSystemCallback<(string | Buffer)[] | FileSystemDirent[]>
+		): void;
+		(
+			arg0: string,
+			arg1: any,
+			arg2: FileSystemCallback<(string | Buffer)[] | FileSystemDirent[]>
+		): void;
+	};
+	readJson?: {
+		(arg0: string, arg1: FileSystemCallback<any>): void;
+		(arg0: string, arg1: any, arg2: FileSystemCallback<any>): void;
+	};
+	readlink: {
+		(arg0: string, arg1: FileSystemCallback<string | Buffer>): void;
+		(arg0: string, arg1: any, arg2: FileSystemCallback<string | Buffer>): void;
+	};
+	stat: {
+		(arg0: string, arg1: FileSystemCallback<FileSystemStats>): void;
+		(arg0: string, arg1: any, arg2: FileSystemCallback<string | Buffer>): void;
+	};
+}
+declare interface FileSystemCallback<T> {
+	(err: PossibleFileSystemError & Error, result: T): any;
+}
+declare interface FileSystemDirent {
+	name: string | Buffer;
+	isDirectory: () => boolean;
+	isFile: () => boolean;
 }
 declare abstract class FileSystemInfo {
 	fs: InputFileSystem;
@@ -4047,7 +4066,7 @@ declare abstract class ModuleFactory {
 }
 declare interface ModuleFactoryCreateData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
-	resolveOptions?: any;
+	resolveOptions?: ResolveOptionsWebpackOptions;
 	context: string;
 	dependencies: Dependency[];
 }
@@ -5952,7 +5971,7 @@ declare interface ResolveContext {
 }
 declare interface ResolveData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
-	resolveOptions: any;
+	resolveOptions: ResolveOptionsWebpackOptions;
 	context: string;
 	request: string;
 	dependencies: ModuleDependency[];
@@ -6006,6 +6025,7 @@ declare interface ResolveOptionsTypes {
 	)[];
 	pnpApi: PnpApiImpl;
 	roots: Set<string>;
+	fullySpecified: boolean;
 	resolveToContext: boolean;
 	restrictions: Set<string | RegExp>;
 }
@@ -6070,7 +6090,7 @@ declare interface ResolveOptionsWebpackOptions {
 	descriptionFiles?: string[];
 
 	/**
-	 * Enforce using one of the extensions from the extensions option.
+	 * Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).
 	 */
 	enforceExtension?: boolean;
 
@@ -6088,6 +6108,11 @@ declare interface ResolveOptionsWebpackOptions {
 	 * Filesystem for the resolver.
 	 */
 	fileSystem?: InputFileSystem;
+
+	/**
+	 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
+	 */
+	fullySpecified?: boolean;
 
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point.
@@ -6163,6 +6188,7 @@ declare interface ResolveRequest {
 	descriptionFileData?: any;
 	relativePath?: string;
 	ignoreSymlinks?: boolean;
+	fullySpecified?: boolean;
 }
 declare abstract class Resolver {
 	fileSystem: FileSystem;
@@ -6271,7 +6297,7 @@ declare abstract class ResolverFactory {
 						 */
 						descriptionFiles?: string[];
 						/**
-						 * Enforce using one of the extensions from the extensions option.
+						 * Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).
 						 */
 						enforceExtension?: boolean;
 						/**
@@ -6286,6 +6312,10 @@ declare abstract class ResolverFactory {
 						 * Filesystem for the resolver.
 						 */
 						fileSystem?: InputFileSystem;
+						/**
+						 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
+						 */
+						fullySpecified?: boolean;
 						/**
 						 * Field names from the description file (package.json) which are used to find the default entry point.
 						 */
@@ -6386,7 +6416,7 @@ declare abstract class ResolverFactory {
 						 */
 						descriptionFiles?: string[];
 						/**
-						 * Enforce using one of the extensions from the extensions option.
+						 * Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).
 						 */
 						enforceExtension?: boolean;
 						/**
@@ -6401,6 +6431,10 @@ declare abstract class ResolverFactory {
 						 * Filesystem for the resolver.
 						 */
 						fileSystem?: InputFileSystem;
+						/**
+						 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
+						 */
+						fullySpecified?: boolean;
 						/**
 						 * Field names from the description file (package.json) which are used to find the default entry point.
 						 */
@@ -6501,7 +6535,7 @@ declare abstract class ResolverFactory {
 			 */
 			descriptionFiles?: string[];
 			/**
-			 * Enforce using one of the extensions from the extensions option.
+			 * Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).
 			 */
 			enforceExtension?: boolean;
 			/**
@@ -6516,6 +6550,10 @@ declare abstract class ResolverFactory {
 			 * Filesystem for the resolver.
 			 */
 			fileSystem?: InputFileSystem;
+			/**
+			 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
+			 */
+			fullySpecified?: boolean;
 			/**
 			 * Field names from the description file (package.json) which are used to find the default entry point.
 			 */
@@ -6620,6 +6658,11 @@ declare interface RuleSetRule {
 	 * Match the child compiler name.
 	 */
 	compiler?: RuleSetCondition;
+
+	/**
+	 * Match values of properties in the description file (usually package.json).
+	 */
+	descriptionData?: { [index: string]: RuleSetCondition };
 
 	/**
 	 * Enforce this rule as pre or post step.
@@ -8033,6 +8076,11 @@ declare interface UserResolveOptions {
 	roots?: string[];
 
 	/**
+	 * The request is already fully specified and no extensions or directories are resolved for it
+	 */
+	fullySpecified?: boolean;
+
+	/**
 	 * Resolve to a context instead of a file
 	 */
 	resolveToContext?: boolean;
@@ -8448,7 +8496,7 @@ declare interface WithOptions {
 			 */
 			descriptionFiles?: string[];
 			/**
-			 * Enforce using one of the extensions from the extensions option.
+			 * Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).
 			 */
 			enforceExtension?: boolean;
 			/**
@@ -8463,6 +8511,10 @@ declare interface WithOptions {
 			 * Filesystem for the resolver.
 			 */
 			fileSystem?: InputFileSystem;
+			/**
+			 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
+			 */
+			fullySpecified?: boolean;
 			/**
 			 * Field names from the description file (package.json) which are used to find the default entry point.
 			 */

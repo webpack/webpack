@@ -90,7 +90,7 @@ const describeCases = config => {
 							);
 							const options = {
 								context: casesPath,
-								entry: "./" + category.name + "/" + testName + "/index",
+								entry: "./" + category.name + "/" + testName + "/",
 								target: "async-node",
 								devtool: config.devtool,
 								mode: config.mode || "none",
@@ -127,7 +127,7 @@ const describeCases = config => {
 										"main"
 									],
 									aliasFields: ["browser"],
-									extensions: [".mjs", ".webpack.js", ".web.js", ".js", ".json"]
+									extensions: [".webpack.js", ".web.js", ".js", ".json"]
 								},
 								resolveLoader: {
 									modules: [

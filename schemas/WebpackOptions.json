@@ -2174,7 +2174,7 @@
           }
         },
         "enforceExtension": {
-          "description": "Enforce using one of the extensions from the extensions option.",
+          "description": "Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).",
           "type": "boolean"
         },
         "exportsFields": {
@@ -2197,6 +2197,10 @@
         "fileSystem": {
           "description": "Filesystem for the resolver.",
           "tsType": "(import('../lib/util/fs').InputFileSystem)"
+        },
+        "fullySpecified": {
+          "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
+          "type": "boolean"
         },
         "mainFields": {
           "description": "Field names from the description file (package.json) which are used to find the default entry point.",
@@ -2506,6 +2510,13 @@
               "$ref": "#/definitions/RuleSetConditionOrConditions"
             }
           ]
+        },
+        "descriptionData": {
+          "description": "Match values of properties in the description file (usually package.json).",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/RuleSetConditionOrConditions"
+          }
         },
         "enforce": {
           "description": "Enforce this rule as pre or post step.",
