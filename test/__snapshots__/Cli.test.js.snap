@@ -1250,6 +1250,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-emit-on-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.",
+        "multiple": false,
+        "path": "optimization.emitOnErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-flag-included-chunks": Object {
     "configs": Array [
       Object {
@@ -1348,19 +1361,6 @@ Object {
     "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).",
     "multiple": false,
     "simpleType": "string",
-  },
-  "optimization-no-emit-on-errors": Object {
-    "configs": Array [
-      Object {
-        "description": "Avoid emitting assets when errors occur.",
-        "multiple": false,
-        "path": "optimization.noEmitOnErrors",
-        "type": "boolean",
-      },
-    ],
-    "description": "Avoid emitting assets when errors occur.",
-    "multiple": false,
-    "simpleType": "boolean",
   },
   "optimization-node-env": Object {
     "configs": Array [

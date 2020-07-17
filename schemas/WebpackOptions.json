@@ -1085,6 +1085,10 @@
           "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer.",
           "type": "boolean"
         },
+        "emitOnErrors": {
+          "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.",
+          "type": "boolean"
+        },
         "flagIncludedChunks": {
           "description": "Also flag chunks as loaded which contain a subset of the modules.",
           "type": "boolean"
@@ -1135,8 +1139,11 @@
           "enum": ["natural", "named", "hashed", "deterministic", "size", false]
         },
         "noEmitOnErrors": {
-          "description": "Avoid emitting assets when errors occur.",
-          "type": "boolean"
+          "description": "Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).",
+          "type": "boolean",
+          "cli": {
+            "exclude": true
+          }
         },
         "nodeEnv": {
           "description": "Set process.env.NODE_ENV to a specific value.",

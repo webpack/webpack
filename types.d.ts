@@ -4725,6 +4725,11 @@ declare interface Optimization {
 	concatenateModules?: boolean;
 
 	/**
+	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.
+	 */
+	emitOnErrors?: boolean;
+
+	/**
 	 * Also flag chunks as loaded which contain a subset of the modules.
 	 */
 	flagIncludedChunks?: boolean;
@@ -4769,7 +4774,7 @@ declare interface Optimization {
 	moduleIds?: false | "natural" | "named" | "deterministic" | "size" | "hashed";
 
 	/**
-	 * Avoid emitting assets when errors occur.
+	 * Avoid emitting assets when errors occur (deprecated: use 'emitOnErrors' instead).
 	 */
 	noEmitOnErrors?: boolean;
 
