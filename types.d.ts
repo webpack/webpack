@@ -317,6 +317,7 @@ declare abstract class BasicEvaluatedExpression {
 	range: any;
 	falsy: boolean;
 	truthy: boolean;
+	nullish: any;
 	bool: any;
 	number: any;
 	bigint: any;
@@ -349,7 +350,9 @@ declare abstract class BasicEvaluatedExpression {
 	isTemplateString(): boolean;
 	isTruthy(): boolean;
 	isFalsy(): boolean;
+	isNullish(): any;
 	asBool(): any;
+	asNullish(): boolean;
 	asString(): any;
 	setString(string?: any): BasicEvaluatedExpression;
 	setUndefined(): BasicEvaluatedExpression;
@@ -380,6 +383,7 @@ declare abstract class BasicEvaluatedExpression {
 	templateStringKind: any;
 	setTruthy(): BasicEvaluatedExpression;
 	setFalsy(): BasicEvaluatedExpression;
+	setNullish(value?: any): BasicEvaluatedExpression;
 	setRange(range?: any): BasicEvaluatedExpression;
 	setExpression(expression?: any): BasicEvaluatedExpression;
 }
@@ -3366,6 +3370,7 @@ declare abstract class JavascriptParser extends Parser {
 	walkTemplateLiteral(expression?: any): void;
 	walkTaggedTemplateExpression(expression?: any): void;
 	walkClassExpression(expression?: any): void;
+	walkChainExpression(expression: ChainExpression): void;
 	walkImportExpression(expression?: any): void;
 	walkCallExpression(expression?: any, args?: any): void;
 	walkMemberExpression(expression?: any): void;
