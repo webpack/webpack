@@ -1006,7 +1006,10 @@ declare class Compilation {
 		needAdditionalSeal: SyncBailHook<[], boolean>;
 		afterSeal: AsyncSeriesHook<[]>;
 		renderManifest: SyncWaterfallHook<
-			[RenderManifestEntry[], RenderManifestOptions]
+			[
+				(RenderManifestEntryTemplated | RenderManifestEntryStatic)[],
+				RenderManifestOptions
+			]
 		>;
 		fullHash: SyncHook<[Hash], void>;
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext], void>;
@@ -1203,7 +1206,9 @@ declare class Compilation {
 	getAsset(name: string): Readonly<Asset>;
 	clearAssets(): void;
 	createModuleAssets(): void;
-	getRenderManifest(options: RenderManifestOptions): RenderManifestEntry[];
+	getRenderManifest(
+		options: RenderManifestOptions
+	): (RenderManifestEntryTemplated | RenderManifestEntryStatic)[];
 	createChunkAssets(callback: (err?: WebpackError) => void): void;
 	getPath(
 		filename: string | ((arg0: PathData, arg1: AssetInfo) => string),
@@ -5844,7 +5849,15 @@ declare interface RenderContextObject {
 	 */
 	codeGenerationResults: Map<Module, CodeGenerationResult>;
 }
-declare interface RenderManifestEntry {
+declare interface RenderManifestEntryStatic {
+	render: () => Source;
+	filename: string;
+	info: AssetInfo;
+	identifier: string;
+	hash?: string;
+	auxiliary?: boolean;
+}
+declare interface RenderManifestEntryTemplated {
 	render: () => Source;
 	filenameTemplate: string | ((arg0: PathData, arg1: AssetInfo) => string);
 	pathOptions?: PathData;
