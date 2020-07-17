@@ -29,6 +29,18 @@
     "watchpack": "^1.6.1",
     "webpack-sources": "^1.4.1"
   },
+  "peerDependencies": {
+    "webpack-cli": "*",
+    "webpack-command": "*"
+  },
+  "peerDependenciesMeta": {
+    "webpack-cli": {
+      "optional": true
+    },
+    "webpack-command": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@babel/core": "^7.7.2",
     "@types/node": "^10.12.21",
