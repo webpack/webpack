@@ -12,7 +12,6 @@ import {
 	BinaryExpression,
 	BlockStatement,
 	BreakStatement,
-	ChainExpression,
 	ClassDeclaration,
 	ClassExpression,
 	Comment,
@@ -33,7 +32,6 @@ import {
 	Identifier,
 	IfStatement,
 	ImportDeclaration,
-	ImportExpression,
 	LabeledStatement,
 	LogicalExpression,
 	MemberExpression,
@@ -2572,9 +2570,7 @@ type Expression =
 	| ClassExpression
 	| MetaProperty
 	| Identifier
-	| AwaitExpression
-	| ImportExpression
-	| ChainExpression;
+	| AwaitExpression;
 type ExternalItem =
 	| string
 	| RegExp
@@ -3472,8 +3468,6 @@ declare abstract class JavascriptParser extends Parser {
 			| MetaProperty
 			| Identifier
 			| AwaitExpression
-			| ImportExpression
-			| ChainExpression
 			| Super;
 	};
 	getFreeInfoFromVariable(
@@ -4725,6 +4719,11 @@ declare interface Optimization {
 	concatenateModules?: boolean;
 
 	/**
+	 * Avoid emitting assets when errors occur.
+	 */
+	emitOnErrors?: boolean;
+
+	/**
 	 * Also flag chunks as loaded which contain a subset of the modules.
 	 */
 	flagIncludedChunks?: boolean;
@@ -4767,11 +4766,6 @@ declare interface Optimization {
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
 	moduleIds?: false | "natural" | "named" | "deterministic" | "size" | "hashed";
-
-	/**
-	 * Avoid emitting assets when errors occur.
-	 */
-	noEmitOnErrors?: boolean;
 
 	/**
 	 * Set process.env.NODE_ENV to a specific value.
@@ -6005,7 +5999,6 @@ declare interface ResolveOptionsTypes {
 		| ((this: Resolver, arg1: Resolver) => void)
 	)[];
 	pnpApi: PnpApiImpl;
-	roots: Set<string>;
 	resolveToContext: boolean;
 	restrictions: Set<string | RegExp>;
 }
@@ -8026,11 +8019,6 @@ declare interface UserResolveOptions {
 	 * A PnP API that should be used - null is "never", undefined is "auto"
 	 */
 	pnpApi?: PnpApiImpl;
-
-	/**
-	 * A list of root paths
-	 */
-	roots?: string[];
 
 	/**
 	 * Resolve to a context instead of a file
