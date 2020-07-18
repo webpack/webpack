@@ -348,6 +348,12 @@ declare abstract class BasicEvaluatedExpression {
 	isIdentifier(): boolean;
 	isWrapped(): boolean;
 	isTemplateString(): boolean;
+
+	/**
+	 * check for "simple" types (inlined) only
+	 */
+	isSimpleType(): boolean;
+	isSameType(basicEvaluatedExpression: BasicEvaluatedExpression): boolean;
 	isTruthy(): boolean;
 	isFalsy(): boolean;
 	isNullish(): any;
