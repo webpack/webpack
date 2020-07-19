@@ -3272,6 +3272,7 @@ declare abstract class JavascriptParser extends Parser {
 				boolean | void
 			>
 		>;
+		optionalChaining: SyncBailHook<[ChainExpression], boolean | void>;
 		new: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		metaProperty: SyncBailHook<[MetaProperty], boolean | void>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
