@@ -308,27 +308,29 @@ describe("WatchTestCases", () => {
 												new Error("No tests exported by test case")
 											);
 
-										run.it("should compile the next step", done => {
-											runIdx++;
-											if (runIdx < runs.length) {
-												run = runs[runIdx];
-												waitMode = true;
-												setTimeout(() => {
-													waitMode = false;
-													compilationFinished = done;
-													currentWatchStepModule.step = run.name;
-													copyDiff(
-														path.join(testDirectory, run.name),
-														tempDirectory,
-														false
-													);
-												}, 1500);
-											} else {
-												watching.close();
-
-												done();
-											}
-										});
+										run.it(
+											"should compile the next step",
+											done => {
+												runIdx++;
+												if (runIdx < runs.length) {
+													run = runs[runIdx];
+													waitMode = true;
+													setTimeout(() => {
+														waitMode = false;
+														compilationFinished = done;
+														currentWatchStepModule.step = run.name;
+														copyDiff(
+															path.join(testDirectory, run.name),
+															tempDirectory,
+															false
+														);
+													}, 1500);
+												} else {
+													watching.close(done);
+												}
+											},
+											45000
+										);
 
 										compilationFinished();
 									}
