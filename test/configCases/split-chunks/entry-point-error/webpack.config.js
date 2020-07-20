@@ -9,7 +9,7 @@ module.exports = {
 		filename: "[name].js"
 	},
 	optimization: {
-		noEmitOnErrors: false,
+		emitOnErrors: true,
 		splitChunks: {
 			cacheGroups: {
 				vendors: {
