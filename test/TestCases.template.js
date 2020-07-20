@@ -26,7 +26,7 @@ const DEFAULT_OPTIMIZATIONS = {
 	providedExports: true,
 	usedExports: true,
 	mangleExports: true,
-	noEmitOnErrors: false,
+	emitOnErrors: true,
 	concatenateModules: false,
 	moduleIds: "size",
 	chunkIds: "size",
@@ -34,7 +34,7 @@ const DEFAULT_OPTIMIZATIONS = {
 };
 
 const NO_EMIT_ON_ERRORS_OPTIMIZATIONS = {
-	noEmitOnErrors: false,
+	emitOnErrors: true,
 	minimizer: [terserForTesting]
 };
 
