@@ -135,10 +135,10 @@ exports[`StatsTestCases should print correct stats for asset 1`] = `
 Time: X ms
 Built at: 1970-04-20 12:42:42
                    Asset      Size
+89a353e9c515885abd8e.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
                bundle.js  10.9 KiB  [emitted]              [name: main]
-d896afc62bcc5d86ee78.png  14.6 KiB  [emitted] [immutable]  [name: (main)]
         static/file.html  12 bytes  [emitted]              [name: (main)]
-Entrypoint main = bundle.js (d896afc62bcc5d86ee78.png static/file.html)
+Entrypoint main = bundle.js (89a353e9c515885abd8e.png static/file.html)
 ./index.js 150 bytes [built]
 ./images/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
 ./images/file.svg 915 bytes [built]
