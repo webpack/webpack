@@ -2865,13 +2865,13 @@ Object {
   "resolve-enforce-extension": Object {
     "configs": Array [
       Object {
-        "description": "Enforce using one of the extensions from the extensions option.",
+        "description": "Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).",
         "multiple": false,
         "path": "resolve.enforceExtension",
         "type": "boolean",
       },
     ],
-    "description": "Enforce using one of the extensions from the extensions option.",
+    "description": "Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2924,6 +2924,19 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-fully-specified": Object {
+    "configs": Array [
+      Object {
+        "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
+        "multiple": false,
+        "path": "resolve.fullySpecified",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3095,13 +3108,13 @@ Object {
   "resolve-loader-enforce-extension": Object {
     "configs": Array [
       Object {
-        "description": "Enforce using one of the extensions from the extensions option.",
+        "description": "Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).",
         "multiple": false,
         "path": "resolveLoader.enforceExtension",
         "type": "boolean",
       },
     ],
-    "description": "Enforce using one of the extensions from the extensions option.",
+    "description": "Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3154,6 +3167,19 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-fully-specified": Object {
+    "configs": Array [
+      Object {
+        "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
+        "multiple": false,
+        "path": "resolveLoader.fullySpecified",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
     "multiple": false,
     "simpleType": "boolean",
   },

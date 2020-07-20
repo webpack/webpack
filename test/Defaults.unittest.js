@@ -109,7 +109,10 @@ describe("Defaults", () => {
 		  "module": Object {
 		    "defaultRules": Array [
 		      Object {
-		        "resolve": Object {},
+		        "type": "javascript/auto",
+		      },
+		      Object {
+		        "mimetype": "application/node",
 		        "type": "javascript/auto",
 		      },
 		      Object {
@@ -119,6 +122,15 @@ describe("Defaults", () => {
 		      Object {
 		        "mimetype": "application/json",
 		        "type": "json",
+		      },
+		      Object {
+		        "mimetype": Object {
+		          "or": Array [
+		            "text/javascript",
+		            "application/javascript",
+		          ],
+		        },
+		        "type": "javascript/auto",
 		      },
 		    ],
 		    "exprContextCritical": true,
@@ -644,42 +656,145 @@ describe("Defaults", () => {
 		-     "mjs": false,
 		+     "mjs": true,
 		@@ ... @@
-		+       Object {
 		+         "resolve": Object {
-		+           "mainFields": Array [
-		+             "browser",
-		+             "main",
-		@@ ... @@
+		+           "byDependency": Object {
+		+             "esm": Object {
+		+               "fullySpecified": true,
+		+             },
+		+           },
 		+         },
 		+         "test": /\\.mjs$/i,
 		+         "type": "javascript/esm",
 		+       },
 		+       Object {
-		+         "mimetype": Object {
-		+           "or": Array [
-		+             "text/javascript",
-		+             "application/javascript",
-		+             "application/node",
-		+           ],
+		+         "descriptionData": Object {
+		+           "type": "module",
 		+         },
-		+         "type": "javascript/auto",
+		+         "resolve": Object {
+		+           "byDependency": Object {
+		+             "esm": Object {
+		+               "fullySpecified": true,
+		+             },
+		+           },
+		+         },
+		+         "test": /\\.js$/i,
+		+         "type": "javascript/esm",
 		+       },
-		+     ],
+		+       Object {
+		+         "test": /\\.cjs$/i,
+		+         "type": "javascript/dynamic",
+		+       },
+		+       Object {
+		+         "descriptionData": Object {
+		+           "type": "commonjs",
+		+         },
+		+         "test": /\\.js$/i,
+		+         "type": "javascript/dynamic",
+		+       },
+		+       Object {
 		@@ ... @@
-		+           ".mjs",
-		@@ ... @@
-		+           ".mjs",
-		@@ ... @@
-		+           ".mjs",
-		@@ ... @@
-		+           ".mjs",
-		@@ ... @@
-		+           ".mjs",
-		@@ ... @@
-		+           ".mjs",
-		@@ ... @@
-		+           ".mjs",
+		-         "type": "javascript/auto",
+		+         "resolve": Object {
+		+           "byDependency": Object {
+		+             "esm": Object {
+		+               "fullySpecified": true,
+		+             },
+		+           },
+		+         },
+		+         "type": "javascript/esm",
 	`)
+	);
+	test(
+		"mjs + async wasm",
+		{ experiments: { mjs: true, asyncWebAssembly: true } },
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "asyncWebAssembly": false,
+			+     "asyncWebAssembly": true,
+			@@ ... @@
+			-     "mjs": false,
+			+     "mjs": true,
+			@@ ... @@
+			+       },
+			+       Object {
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "test": /\\.mjs$/i,
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
+			+         "descriptionData": Object {
+			+           "type": "module",
+			+         },
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "test": /\\.js$/i,
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
+			+         "test": /\\.cjs$/i,
+			+         "type": "javascript/dynamic",
+			@@ ... @@
+			+         "descriptionData": Object {
+			+           "type": "commonjs",
+			+         },
+			+         "test": /\\.js$/i,
+			+         "type": "javascript/dynamic",
+			+       },
+			+       Object {
+			@@ ... @@
+			-         "type": "javascript/auto",
+			+         "resolve": Object {
+			+           "byDependency": Object {
+			+             "esm": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         },
+			+         "type": "javascript/esm",
+			+       },
+			+       Object {
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
+			+         "test": /\\.wasm$/i,
+			+         "type": "webassembly/async",
+			+       },
+			+       Object {
+			+         "mimetype": "application/wasm",
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
+			+         "type": "webassembly/async",
+		`)
 	);
 	test("output module", { experiments: { outputModule: true } }, e =>
 		e.toMatchInlineSnapshot(`
