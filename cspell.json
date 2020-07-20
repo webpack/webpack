@@ -175,6 +175,7 @@
     "darkgreen",
     "darkred",
     "eqeqeq",
+    "boolish",
 
     "webassemblyjs",
     "fsevents",

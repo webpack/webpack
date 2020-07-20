@@ -317,21 +317,21 @@ declare abstract class BasicEvaluatedExpression {
 	range: any;
 	falsy: boolean;
 	truthy: boolean;
-	nullish: any;
-	bool: any;
-	number: any;
-	bigint: any;
-	regExp: any;
-	string: any;
-	quasis: any;
-	parts: any;
-	array: any;
-	items: any;
-	options: any;
-	prefix: any;
-	postfix: any;
+	nullish: boolean;
+	bool: boolean;
+	number: number;
+	bigint: bigint;
+	regExp: RegExp;
+	string: string;
+	quasis: BasicEvaluatedExpression[];
+	parts: BasicEvaluatedExpression[];
+	array: any[];
+	items: BasicEvaluatedExpression[];
+	options: BasicEvaluatedExpression[];
+	prefix: BasicEvaluatedExpression;
+	postfix: BasicEvaluatedExpression;
 	wrappedInnerExpressions: any;
-	identifier: any;
+	identifier: string;
 	rootInfo: any;
 	getMembers: any;
 	expression: any;
@@ -350,13 +350,22 @@ declare abstract class BasicEvaluatedExpression {
 	isTemplateString(): boolean;
 
 	/**
-	 * check for "simple" types (inlined) only
+	 * Is expression a primitive or an object type value?
 	 */
-	isSimpleType(): boolean;
-	isSameType(basicEvaluatedExpression: BasicEvaluatedExpression): boolean;
+	isPrimitiveType(): boolean;
+
+	/**
+	 * Is expression a runtime or compile-time value?
+	 */
+	isCompileTimeValue(): boolean;
+
+	/**
+	 * Gets the compile-time value of the expression
+	 */
+	asCompileTimeValue(): any;
 	isTruthy(): boolean;
 	isFalsy(): boolean;
-	isNullish(): any;
+	isNullish(): boolean;
 	asBool(): any;
 	asNullish(): boolean;
 	asString(): any;
@@ -3321,7 +3330,7 @@ declare abstract class JavascriptParser extends Parser {
 	statementStartPos: any;
 	currentTagData: any;
 	initializeEvaluating(): void;
-	getRenameIdentifier(expr?: any): any;
+	getRenameIdentifier(expr?: any): string;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
 	walkMethodDefinition(methodDefinition?: any): void;
 	preWalkStatements(statements?: any): void;

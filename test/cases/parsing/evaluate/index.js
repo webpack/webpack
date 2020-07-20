@@ -17,6 +17,10 @@ it("should evaluate logical expression", function () {
 	const value9 = null === 1 && require("fail");
 	const value91 = [] === [] && require("fail");
 	const value92 = /a/ === /a/ && require("fail");
+	const value93 =
+		`hello${Math.random()}` === `world${Math.random()}` && require("fail");
+	const value94 =
+		`${Math.random()}hello` != `${Math.random()}world` || require("fail");
 
 	expect(value1).toBe("hello");
 	expect(value2).toBe(true);
@@ -29,6 +33,8 @@ it("should evaluate logical expression", function () {
 	expect(value9).toBe(false);
 	expect(value91).toBe(false);
 	expect(value92).toBe(false);
+	expect(value93).toBe(false);
+	expect(value94).toBe(true);
 });
 
 it("shouldn't evaluate expression", function () {
