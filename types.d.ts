@@ -318,6 +318,7 @@ declare abstract class BasicEvaluatedExpression {
 	falsy: boolean;
 	truthy: boolean;
 	nullish: boolean;
+	sideEffects: boolean;
 	bool: boolean;
 	number: number;
 	bigint: bigint;
@@ -335,6 +336,7 @@ declare abstract class BasicEvaluatedExpression {
 	rootInfo: any;
 	getMembers: any;
 	expression: any;
+	isUnknown(): boolean;
 	isNull(): boolean;
 	isUndefined(): boolean;
 	isString(): boolean;
@@ -366,6 +368,11 @@ declare abstract class BasicEvaluatedExpression {
 	isTruthy(): boolean;
 	isFalsy(): boolean;
 	isNullish(): boolean;
+
+	/**
+	 * Can this expression have side effects?
+	 */
+	couldHaveSideEffects(): boolean;
 	asBool(): any;
 	asNullish(): boolean;
 	asString(): any;
@@ -400,6 +407,7 @@ declare abstract class BasicEvaluatedExpression {
 	setFalsy(): BasicEvaluatedExpression;
 	setNullish(value?: any): BasicEvaluatedExpression;
 	setRange(range?: any): BasicEvaluatedExpression;
+	setSideEffects(sideEffects?: boolean): BasicEvaluatedExpression;
 	setExpression(expression?: any): BasicEvaluatedExpression;
 }
 declare abstract class ByTypeGenerator extends Generator {
