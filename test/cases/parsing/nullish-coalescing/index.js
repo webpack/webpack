@@ -11,10 +11,9 @@ it("should parse nullish coalescing correctly", () => {
 });
 
 it("should evaluate module.hot to nullish", () => {
-	if (module.hot ?? true) {
-		if (module.hot) {
-			throw new Error("module.hot should be falsy");
-		}
-		expect(true).toBe(true);
+	if (module.hot) {
+		module.hot ?? require("fail");
+	} else {
+		(module.hot ?? 123) !== 123 && require("fail");
 	}
 });
