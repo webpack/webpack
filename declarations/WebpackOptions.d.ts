@@ -101,6 +101,10 @@ export type LibraryType =
  */
 export type UmdNamedDefine = boolean;
 /**
+ * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+ */
+export type EntryRuntime = string;
+/**
  * An entry point without name.
  */
 export type EntryUnnamed = EntryItem;
@@ -798,6 +802,10 @@ export interface EntryDescription {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: EntryRuntime;
 }
 /**
  * Options for library.
@@ -2008,6 +2016,10 @@ export interface EntryDescriptionNormalized {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: EntryRuntime;
 }
 /**
  * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.

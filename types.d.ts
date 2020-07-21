@@ -935,7 +935,7 @@ declare class Compilation {
 				Dependency,
 				{ name: string } & Pick<
 					EntryDescriptionNormalized,
-					"filename" | "dependOn" | "library"
+					"filename" | "dependOn" | "library" | "runtime"
 				>
 			],
 			void
@@ -945,7 +945,7 @@ declare class Compilation {
 				Dependency,
 				{ name: string } & Pick<
 					EntryDescriptionNormalized,
-					"filename" | "dependOn" | "library"
+					"filename" | "dependOn" | "library" | "runtime"
 				>,
 				Error
 			],
@@ -956,7 +956,7 @@ declare class Compilation {
 				Dependency,
 				{ name: string } & Pick<
 					EntryDescriptionNormalized,
-					"filename" | "dependOn" | "library"
+					"filename" | "dependOn" | "library" | "runtime"
 				>,
 				Module
 			],
@@ -1185,7 +1185,7 @@ declare class Compilation {
 			| string
 			| ({ name: string } & Pick<
 					EntryDescriptionNormalized,
-					"filename" | "dependOn" | "library"
+					"filename" | "dependOn" | "library" | "runtime"
 			  >),
 		callback: (err?: WebpackError, result?: Module) => void
 	): void;
@@ -1194,7 +1194,7 @@ declare class Compilation {
 		dependency: Dependency,
 		options: { name: string } & Pick<
 			EntryDescriptionNormalized,
-			"filename" | "dependOn" | "library"
+			"filename" | "dependOn" | "library" | "runtime"
 		>,
 		callback: (err?: WebpackError, result?: Module) => void
 	): void;
@@ -2244,7 +2244,7 @@ declare interface EntryData {
 	 */
 	options: { name: string } & Pick<
 		EntryDescriptionNormalized,
-		"filename" | "dependOn" | "library"
+		"filename" | "dependOn" | "library" | "runtime"
 	>;
 }
 declare abstract class EntryDependency extends ModuleDependency {}
@@ -2272,6 +2272,11 @@ declare interface EntryDescription {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: string;
 }
 
 /**
@@ -2297,6 +2302,11 @@ declare interface EntryDescriptionNormalized {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: string;
 }
 type EntryItem = string | [string, ...string[]];
 type EntryNormalized =
@@ -2321,7 +2331,7 @@ declare class EntryPlugin {
 			| string
 			| ({ name: string } & Pick<
 					EntryDescriptionNormalized,
-					"filename" | "dependOn" | "library"
+					"filename" | "dependOn" | "library" | "runtime"
 			  >)
 	);
 	context: string;
@@ -2330,7 +2340,7 @@ declare class EntryPlugin {
 		| string
 		| ({ name: string } & Pick<
 				EntryDescriptionNormalized,
-				"filename" | "dependOn" | "library"
+				"filename" | "dependOn" | "library" | "runtime"
 		  >);
 
 	/**
@@ -2343,7 +2353,7 @@ declare class EntryPlugin {
 			| string
 			| ({ name: string } & Pick<
 					EntryDescriptionNormalized,
-					"filename" | "dependOn" | "library"
+					"filename" | "dependOn" | "library" | "runtime"
 			  >)
 	): EntryDependency;
 }
@@ -2356,8 +2366,6 @@ declare interface EntryStaticNormalized {
 	[index: string]: EntryDescriptionNormalized;
 }
 declare abstract class Entrypoint extends ChunkGroup {
-	runtimeChunk: Chunk;
-
 	/**
 	 * Sets the runtimeChunk for an entrypoint.
 	 */
@@ -2367,6 +2375,17 @@ declare abstract class Entrypoint extends ChunkGroup {
 	 * Fetches the chunk reference containing the webpack bootstrap code
 	 */
 	getRuntimeChunk(): Chunk;
+
+	/**
+	 * Sets the chunk with the entrypoint modules for an entrypoint.
+	 */
+	setEntrypointChunk(chunk: Chunk): void;
+
+	/**
+	 * Returns the chunk which contains the entrypoint modules
+	 * (or at least the execution of them)
+	 */
+	getEntrypointChunk(): Chunk;
 }
 declare class EnvironmentPlugin {
 	constructor(...keys: any[]);
