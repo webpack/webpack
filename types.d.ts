@@ -6,13 +6,18 @@
 
 import {
 	ArrayExpression,
+	ArrayPattern,
 	ArrowFunctionExpression,
 	AssignmentExpression,
+	AssignmentPattern,
+	AssignmentProperty,
 	AwaitExpression,
 	BinaryExpression,
 	BlockStatement,
 	BreakStatement,
+	CatchClause,
 	ChainExpression,
+	ClassBody,
 	ClassDeclaration,
 	ClassExpression,
 	Comment,
@@ -24,6 +29,7 @@ import {
 	ExportAllDeclaration,
 	ExportDefaultDeclaration,
 	ExportNamedDeclaration,
+	ExportSpecifier,
 	ExpressionStatement,
 	ForInStatement,
 	ForOfStatement,
@@ -33,7 +39,10 @@ import {
 	Identifier,
 	IfStatement,
 	ImportDeclaration,
+	ImportDefaultSpecifier,
 	ImportExpression,
+	ImportNamespaceSpecifier,
+	ImportSpecifier,
 	LabeledStatement,
 	LogicalExpression,
 	MemberExpression,
@@ -41,15 +50,21 @@ import {
 	MethodDefinition,
 	NewExpression,
 	ObjectExpression,
+	ObjectPattern,
 	Program,
+	Property,
 	RegExpLiteral,
+	RestElement,
 	ReturnStatement,
 	SequenceExpression,
 	SimpleCallExpression,
 	SimpleLiteral,
+	SpreadElement,
 	Super,
+	SwitchCase,
 	SwitchStatement,
 	TaggedTemplateExpression,
+	TemplateElement,
 	TemplateLiteral,
 	ThisExpression,
 	ThrowStatement,
@@ -339,7 +354,7 @@ declare abstract class BasicEvaluatedExpression {
 		tagInfo: TagInfo;
 	};
 	getMembers: () => string[];
-	expression: Expression;
+	expression: NodeEstreeIndex;
 	isUnknown(): boolean;
 	isNull(): boolean;
 	isUndefined(): boolean;
@@ -1531,7 +1546,7 @@ declare interface Configuration {
 	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
-	node?: Node;
+	node?: NodeWebpackOptions;
 
 	/**
 	 * Enables/Disables integrated optimizations.
@@ -4514,7 +4529,6 @@ declare class NoEmitOnErrorsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type Node = false | NodeOptions;
 declare class NodeEnvironmentPlugin {
 	constructor(options?: any);
 	options: any;
@@ -4524,6 +4538,77 @@ declare class NodeEnvironmentPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type NodeEstreeIndex =
+	| UnaryExpression
+	| ThisExpression
+	| ArrayExpression
+	| ObjectExpression
+	| FunctionExpression
+	| ArrowFunctionExpression
+	| YieldExpression
+	| SimpleLiteral
+	| RegExpLiteral
+	| UpdateExpression
+	| BinaryExpression
+	| AssignmentExpression
+	| LogicalExpression
+	| MemberExpression
+	| ConditionalExpression
+	| SimpleCallExpression
+	| NewExpression
+	| SequenceExpression
+	| TemplateLiteral
+	| TaggedTemplateExpression
+	| ClassExpression
+	| MetaProperty
+	| Identifier
+	| AwaitExpression
+	| ImportExpression
+	| ChainExpression
+	| ExpressionStatement
+	| BlockStatement
+	| EmptyStatement
+	| DebuggerStatement
+	| WithStatement
+	| ReturnStatement
+	| LabeledStatement
+	| BreakStatement
+	| ContinueStatement
+	| IfStatement
+	| SwitchStatement
+	| ThrowStatement
+	| TryStatement
+	| WhileStatement
+	| DoWhileStatement
+	| ForStatement
+	| ForInStatement
+	| ForOfStatement
+	| FunctionDeclaration
+	| VariableDeclaration
+	| ClassDeclaration
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportDefaultDeclaration
+	| ExportAllDeclaration
+	| MethodDefinition
+	| VariableDeclarator
+	| Program
+	| SwitchCase
+	| CatchClause
+	| Property
+	| AssignmentProperty
+	| Super
+	| TemplateElement
+	| SpreadElement
+	| ObjectPattern
+	| ArrayPattern
+	| RestElement
+	| AssignmentPattern
+	| ClassBody
+	| ImportSpecifier
+	| ImportDefaultSpecifier
+	| ImportNamespaceSpecifier
+	| ExportSpecifier;
 
 /**
  * Options object for node compatibility features.
@@ -4553,6 +4638,7 @@ declare class NodeTemplatePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type NodeWebpackOptions = false | NodeOptions;
 declare class NormalModule extends Module {
 	constructor(__0: {
 		/**
@@ -8401,7 +8487,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
-	node: Node;
+	node: NodeWebpackOptions;
 
 	/**
 	 * Enables/Disables integrated optimizations.
