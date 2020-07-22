@@ -314,7 +314,7 @@ declare interface BannerPluginOptions {
 }
 declare abstract class BasicEvaluatedExpression {
 	type: number;
-	range: any;
+	range: [number, number];
 	falsy: boolean;
 	truthy: boolean;
 	nullish: boolean;
@@ -333,9 +333,13 @@ declare abstract class BasicEvaluatedExpression {
 	postfix: BasicEvaluatedExpression;
 	wrappedInnerExpressions: any;
 	identifier: string;
-	rootInfo: any;
-	getMembers: any;
-	expression: any;
+	rootInfo: {
+		declaredScope: ScopeInfo;
+		freeName: string | true;
+		tagInfo: TagInfo;
+	};
+	getMembers: () => string[];
+	expression: Expression;
 	isUnknown(): boolean;
 	isNull(): boolean;
 	isUndefined(): boolean;
