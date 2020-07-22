@@ -166,6 +166,16 @@ export type FilterItemTypes = RegExp | string | ((value: string) => boolean);
  */
 export type Mode = "development" | "production" | "none";
 /**
+ * A mode in which to load modules asynchronously.
+ */
+export type ContextMode =
+	| "sync"
+	| "eager"
+	| "weak"
+	| "async-weak"
+	| "lazy"
+	| "lazy-once";
+/**
  * One or multiple rule conditions.
  */
 export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
@@ -922,6 +932,10 @@ export interface Loader {
  * Options affecting the normal modules (`NormalModuleFactory`).
  */
 export interface ModuleOptions {
+	/**
+	 * Sets the default context mode for asynchronously loading modules.
+	 */
+	contextMode?: ContextMode;
 	/**
 	 * An array of rules applied by default for modules.
 	 */

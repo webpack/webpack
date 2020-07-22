@@ -91,6 +91,10 @@
       "type": "string",
       "absolutePath": true
     },
+    "ContextMode": {
+      "description": "A mode in which to load modules asynchronously.",
+      "enum": ["sync", "eager", "weak", "async-weak", "lazy", "lazy-once"]
+    },
     "CrossOriginLoading": {
       "description": "This option enables cross-origin loading of chunks.",
       "enum": [false, "anonymous", "use-credentials"]
@@ -883,6 +887,17 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "contextMode": {
+          "description": "Sets the default context mode for asynchronously loading modules.",
+          "cli": {
+            "exclude": true
+          },
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ContextMode"
+            }
+          ]
+        },
         "defaultRules": {
           "description": "An array of rules applied by default for modules.",
           "cli": {
