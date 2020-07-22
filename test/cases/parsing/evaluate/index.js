@@ -10,9 +10,7 @@ it("should evaluate logical expression", function () {
 	const value4 = typeof require !== "function" && require("fail");
 	const value5 = "hello" && (() => "value5")();
 	const value6 = "" || (() => "value6")();
-	const value7 = (function () {
-		return "value7" === typeof "value7" && "value7";
-	})();
+	const value7 = (function () { return'value7'===typeof 'value7'&&'value7'})();
 	const value8 = [] != [] || require("fail");
 	const value9 = null === 1 && require("fail");
 	const value91 = [] === [] && require("fail");
