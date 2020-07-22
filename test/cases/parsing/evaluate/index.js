@@ -24,6 +24,10 @@ it("should evaluate logical expression", function () {
 	let value95 = 1;
 	const value96 = `${value95++}hello` != `${value95++}world` || require("fail");
 
+	if (`${value95++}hello` === `${value95++}world`) {
+		require("fail");
+	}
+
 	expect(value1).toBe("hello");
 	expect(value2).toBe(true);
 	expect(value3).toBe("");
@@ -37,7 +41,7 @@ it("should evaluate logical expression", function () {
 	expect(value92).toBe(false);
 	expect(value93).toBe(false);
 	expect(value94).toBe(true);
-	expect(value95).toBe(3);
+	expect(value95).toBe(5);
 	expect(value96).toBe(true);
 });
 
