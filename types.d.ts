@@ -6,13 +6,18 @@
 
 import {
 	ArrayExpression,
+	ArrayPattern,
 	ArrowFunctionExpression,
 	AssignmentExpression,
+	AssignmentPattern,
+	AssignmentProperty,
 	AwaitExpression,
 	BinaryExpression,
 	BlockStatement,
 	BreakStatement,
+	CatchClause,
 	ChainExpression,
+	ClassBody,
 	ClassDeclaration,
 	ClassExpression,
 	Comment,
@@ -24,6 +29,7 @@ import {
 	ExportAllDeclaration,
 	ExportDefaultDeclaration,
 	ExportNamedDeclaration,
+	ExportSpecifier,
 	ExpressionStatement,
 	ForInStatement,
 	ForOfStatement,
@@ -33,7 +39,10 @@ import {
 	Identifier,
 	IfStatement,
 	ImportDeclaration,
+	ImportDefaultSpecifier,
 	ImportExpression,
+	ImportNamespaceSpecifier,
+	ImportSpecifier,
 	LabeledStatement,
 	LogicalExpression,
 	MemberExpression,
@@ -41,15 +50,21 @@ import {
 	MethodDefinition,
 	NewExpression,
 	ObjectExpression,
+	ObjectPattern,
 	Program,
+	Property,
 	RegExpLiteral,
+	RestElement,
 	ReturnStatement,
 	SequenceExpression,
 	SimpleCallExpression,
 	SimpleLiteral,
+	SpreadElement,
 	Super,
+	SwitchCase,
 	SwitchStatement,
 	TaggedTemplateExpression,
+	TemplateElement,
 	TemplateLiteral,
 	ThisExpression,
 	ThrowStatement,
@@ -314,26 +329,33 @@ declare interface BannerPluginOptions {
 }
 declare abstract class BasicEvaluatedExpression {
 	type: number;
-	range: any;
+	range: [number, number];
 	falsy: boolean;
 	truthy: boolean;
-	bool: any;
-	number: any;
-	bigint: any;
-	regExp: any;
-	string: any;
-	quasis: any;
-	parts: any;
-	array: any;
-	items: any;
-	options: any;
-	prefix: any;
-	postfix: any;
+	nullish: boolean;
+	sideEffects: boolean;
+	bool: boolean;
+	number: number;
+	bigint: bigint;
+	regExp: RegExp;
+	string: string;
+	quasis: BasicEvaluatedExpression[];
+	parts: BasicEvaluatedExpression[];
+	array: any[];
+	items: BasicEvaluatedExpression[];
+	options: BasicEvaluatedExpression[];
+	prefix: BasicEvaluatedExpression;
+	postfix: BasicEvaluatedExpression;
 	wrappedInnerExpressions: any;
-	identifier: any;
-	rootInfo: any;
-	getMembers: any;
-	expression: any;
+	identifier: string;
+	rootInfo: {
+		declaredScope: ScopeInfo;
+		freeName: string | true;
+		tagInfo: TagInfo;
+	};
+	getMembers: () => string[];
+	expression: NodeEstreeIndex;
+	isUnknown(): boolean;
 	isNull(): boolean;
 	isUndefined(): boolean;
 	isString(): boolean;
@@ -347,9 +369,31 @@ declare abstract class BasicEvaluatedExpression {
 	isIdentifier(): boolean;
 	isWrapped(): boolean;
 	isTemplateString(): boolean;
+
+	/**
+	 * Is expression a primitive or an object type value?
+	 */
+	isPrimitiveType(): boolean;
+
+	/**
+	 * Is expression a runtime or compile-time value?
+	 */
+	isCompileTimeValue(): boolean;
+
+	/**
+	 * Gets the compile-time value of the expression
+	 */
+	asCompileTimeValue(): any;
 	isTruthy(): boolean;
 	isFalsy(): boolean;
+	isNullish(): boolean;
+
+	/**
+	 * Can this expression have side effects?
+	 */
+	couldHaveSideEffects(): boolean;
 	asBool(): any;
+	asNullish(): boolean;
 	asString(): any;
 	setString(string?: any): BasicEvaluatedExpression;
 	setUndefined(): BasicEvaluatedExpression;
@@ -380,7 +424,9 @@ declare abstract class BasicEvaluatedExpression {
 	templateStringKind: any;
 	setTruthy(): BasicEvaluatedExpression;
 	setFalsy(): BasicEvaluatedExpression;
+	setNullish(value?: any): BasicEvaluatedExpression;
 	setRange(range?: any): BasicEvaluatedExpression;
+	setSideEffects(sideEffects?: boolean): BasicEvaluatedExpression;
 	setExpression(expression?: any): BasicEvaluatedExpression;
 }
 declare abstract class ByTypeGenerator extends Generator {
@@ -1500,7 +1546,7 @@ declare interface Configuration {
 	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
-	node?: Node;
+	node?: NodeWebpackOptions;
 
 	/**
 	 * Enables/Disables integrated optimizations.
@@ -3311,7 +3357,7 @@ declare abstract class JavascriptParser extends Parser {
 	statementStartPos: any;
 	currentTagData: any;
 	initializeEvaluating(): void;
-	getRenameIdentifier(expr?: any): any;
+	getRenameIdentifier(expr?: any): string;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
 	walkMethodDefinition(methodDefinition?: any): void;
 	preWalkStatements(statements?: any): void;
@@ -4483,7 +4529,6 @@ declare class NoEmitOnErrorsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type Node = false | NodeOptions;
 declare class NodeEnvironmentPlugin {
 	constructor(options?: any);
 	options: any;
@@ -4493,6 +4538,77 @@ declare class NodeEnvironmentPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type NodeEstreeIndex =
+	| UnaryExpression
+	| ThisExpression
+	| ArrayExpression
+	| ObjectExpression
+	| FunctionExpression
+	| ArrowFunctionExpression
+	| YieldExpression
+	| SimpleLiteral
+	| RegExpLiteral
+	| UpdateExpression
+	| BinaryExpression
+	| AssignmentExpression
+	| LogicalExpression
+	| MemberExpression
+	| ConditionalExpression
+	| SimpleCallExpression
+	| NewExpression
+	| SequenceExpression
+	| TemplateLiteral
+	| TaggedTemplateExpression
+	| ClassExpression
+	| MetaProperty
+	| Identifier
+	| AwaitExpression
+	| ImportExpression
+	| ChainExpression
+	| ExpressionStatement
+	| BlockStatement
+	| EmptyStatement
+	| DebuggerStatement
+	| WithStatement
+	| ReturnStatement
+	| LabeledStatement
+	| BreakStatement
+	| ContinueStatement
+	| IfStatement
+	| SwitchStatement
+	| ThrowStatement
+	| TryStatement
+	| WhileStatement
+	| DoWhileStatement
+	| ForStatement
+	| ForInStatement
+	| ForOfStatement
+	| FunctionDeclaration
+	| VariableDeclaration
+	| ClassDeclaration
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportDefaultDeclaration
+	| ExportAllDeclaration
+	| MethodDefinition
+	| VariableDeclarator
+	| Program
+	| SwitchCase
+	| CatchClause
+	| Property
+	| AssignmentProperty
+	| Super
+	| TemplateElement
+	| SpreadElement
+	| ObjectPattern
+	| ArrayPattern
+	| RestElement
+	| AssignmentPattern
+	| ClassBody
+	| ImportSpecifier
+	| ImportDefaultSpecifier
+	| ImportNamespaceSpecifier
+	| ExportSpecifier;
 
 /**
  * Options object for node compatibility features.
@@ -4522,6 +4638,7 @@ declare class NodeTemplatePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type NodeWebpackOptions = false | NodeOptions;
 declare class NormalModule extends Module {
 	constructor(__0: {
 		/**
@@ -8370,7 +8487,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
-	node: Node;
+	node: NodeWebpackOptions;
 
 	/**
 	 * Enables/Disables integrated optimizations.

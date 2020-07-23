@@ -16,7 +16,7 @@ cache:
   - ".jest-cache"
 
 install:
-  - ps: Install-Product node 12 x64
+  - ps: Install-Product node 14 x64
   - yarn --frozen-lockfile --preferred-cache-folder ..\\.yarn-cache
   - yarn link --frozen-lockfile --preferred-cache-folder ..\\.yarn-cache || yarn link --frozen-lockfile --preferred-cache-folder ..\\.yarn-cache
   - yarn link webpack --frozen-lockfile --preferred-cache-folder ..\\.yarn-cache
