@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "4.43.0",
+  "version": "4.44.0",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "ajv": "^6.10.2",
     "ajv-keywords": "^3.4.1",
     "chrome-trace-event": "^1.0.2",
-    "enhanced-resolve": "^4.1.0",
+    "enhanced-resolve": "^4.3.0",
     "eslint-scope": "^4.0.3",
     "json-parse-better-errors": "^1.0.2",
     "loader-runner": "^2.4.0",
@@ -26,7 +26,7 @@
     "schema-utils": "^1.0.0",
     "tapable": "^1.1.3",
     "terser-webpack-plugin": "^1.4.3",
-    "watchpack": "^1.6.1",
+    "watchpack": "^1.7.4",
     "webpack-sources": "^1.4.1"
   },
   "peerDependenciesMeta": {
