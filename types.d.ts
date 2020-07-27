@@ -951,7 +951,7 @@ declare interface CodeGenerationResult {
 }
 declare abstract class CodeGenerationResults {
 	map: Map<Module, RuntimeSpecMap<CodeGenerationResult>>;
-	getResult(
+	get(
 		module: Module,
 		runtime: string | SortableSet<string>
 	): CodeGenerationResult;
@@ -4191,7 +4191,6 @@ declare class Module extends DependenciesBlock {
 	size(type?: string): number;
 	libIdent(options: LibIdentOptions): string;
 	nameForCondition(): string;
-	getRuntimeRequirements(context: SourceContext): ReadonlySet<string>;
 	codeGeneration(context: CodeGenerationContext): CodeGenerationResult;
 	chunkCondition(chunk: Chunk, compilation: Compilation): boolean;
 
@@ -4373,8 +4372,20 @@ declare class ModuleGraph {
 		module: Module,
 		moduleGraph: ModuleGraph
 	): void;
+	static ModuleGraphConnection: typeof ModuleGraphConnection;
 }
-declare abstract class ModuleGraphConnection {
+declare class ModuleGraphConnection {
+	constructor(
+		originModule: Module,
+		dependency: Dependency,
+		module: Module,
+		explanation?: string,
+		weak?: boolean,
+		condition?: (
+			arg0: ModuleGraphConnection,
+			arg1: string | SortableSet<string>
+		) => boolean
+	);
 	originModule: Module;
 	resolvedOriginModule: Module;
 	dependency: Dependency;
@@ -7639,37 +7650,6 @@ declare abstract class Source {
 	source(): string | Buffer;
 	buffer(): Buffer;
 }
-declare interface SourceContext {
-	/**
-	 * the dependency templates
-	 */
-	dependencyTemplates: DependencyTemplates;
-
-	/**
-	 * the runtime template
-	 */
-	runtimeTemplate: RuntimeTemplate;
-
-	/**
-	 * the module graph
-	 */
-	moduleGraph: ModuleGraph;
-
-	/**
-	 * the chunk graph
-	 */
-	chunkGraph: ChunkGraph;
-
-	/**
-	 * the runtimes code should be generated for
-	 */
-	runtime: string | SortableSet<string>;
-
-	/**
-	 * the type of source that should be generated
-	 */
-	type?: string;
-}
 declare class SourceMapDevToolPlugin {
 	constructor(options?: SourceMapDevToolPluginOptions);
 	sourceMapFilename: DevTool;
@@ -8239,11 +8219,8 @@ declare interface UpdateHashContextGenerator {
 	 * the module
 	 */
 	module: NormalModule;
-
-	/**
-	 * the compilation
-	 */
-	compilation: Compilation;
+	chunkGraph: ChunkGraph;
+	runtime: string | SortableSet<string>;
 }
 declare interface UserResolveOptions {
 	/**
@@ -8991,6 +8968,13 @@ declare namespace exports {
 		export let hasOwnProperty: string;
 		export let systemContext: string;
 	}
+	export const UsageState: Readonly<{
+		Unused: 0;
+		OnlyPropertiesUsed: 1;
+		NoInfo: 2;
+		Unknown: 3;
+		Used: 4;
+	}>;
 	export const WebpackOptionsValidationError: ValidationError;
 	export const ValidationError: ValidationError;
 	export namespace cache {

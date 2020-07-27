@@ -131,7 +131,7 @@ chunk (runtime: main) 786fbfba25c2f3010e51.js 899 bytes [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for asset 1`] = `
-"Hash: b359cbc9ca255606505b
+"Hash: d01313eb91b38a5d67bf
 Time: X ms
 Built at: 1970-04-20 12:42:42
                    Asset      Size
