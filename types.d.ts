@@ -109,7 +109,11 @@ declare class AbstractLibraryPlugin<T> {
 	 */
 	apply(compiler: Compiler): void;
 	parseOptions(library: LibraryOptions): false | T;
-	finishEntryModule(module: Module, libraryContext: LibraryContext<T>): void;
+	finishEntryModule(
+		module: Module,
+		entryName: string,
+		libraryContext: LibraryContext<T>
+	): void;
 	runtimeRequirements(
 		chunk: Chunk,
 		set: Set<string>,
@@ -504,6 +508,7 @@ declare interface CacheGroupSource {
 	idHint?: string;
 	automaticNameDelimiter: string;
 	reuseExistingChunk?: boolean;
+	usedExports?: boolean;
 }
 declare interface CacheGroupsContext {
 	moduleGraph: ModuleGraph;
@@ -530,6 +535,7 @@ declare class Chunk {
 	idNameHints: SortableSet<string>;
 	preventIntegration: boolean;
 	filenameTemplate: string | ((arg0: PathData, arg1: AssetInfo) => string);
+	runtime: string | SortableSet<string>;
 	files: Set<string>;
 	auxiliaryFiles: Set<string>;
 	rendered: boolean;
@@ -606,7 +612,7 @@ declare class ChunkGraph {
 	): Iterable<Chunk>;
 	getModuleChunks(module: Module): Chunk[];
 	getNumberOfModuleChunks(module: Module): number;
-	haveModulesEqualChunks(moduleA: Module, moduleB: Module): boolean;
+	getModuleRuntimes(module: Module): RuntimeSpecSet;
 	getNumberOfChunkModules(chunk: Chunk): number;
 	getChunkModulesIterable(chunk: Chunk): Iterable<Module>;
 	getChunkModulesIterableBySourceType(
@@ -685,13 +691,32 @@ declare class ChunkGraph {
 	disconnectChunkGroup(chunkGroup: ChunkGroup): void;
 	getModuleId(module: Module): string | number;
 	setModuleId(module: Module, id: string | number): void;
-	getModuleHash(module: Module): string;
-	getRenderedModuleHash(module: Module): string;
-	setModuleHashes(module: Module, hash: string, renderedHash: string): void;
-	addModuleRuntimeRequirements(module: Module, items: Set<string>): void;
+	hasModuleHashes(
+		module: Module,
+		runtime: string | SortableSet<string>
+	): boolean;
+	getModuleHash(module: Module, runtime: string | SortableSet<string>): string;
+	getRenderedModuleHash(
+		module: Module,
+		runtime: string | SortableSet<string>
+	): string;
+	setModuleHashes(
+		module: Module,
+		runtime: string | SortableSet<string>,
+		hash: string,
+		renderedHash: string
+	): void;
+	addModuleRuntimeRequirements(
+		module: Module,
+		runtime: string | SortableSet<string>,
+		items: Set<string>
+	): void;
 	addChunkRuntimeRequirements(chunk: Chunk, items: Set<string>): void;
 	addTreeRuntimeRequirements(chunk: Chunk, items: Iterable<string>): void;
-	getModuleRuntimeRequirements(module: Module): ReadonlySet<string>;
+	getModuleRuntimeRequirements(
+		module: Module,
+		runtime: string | SortableSet<string>
+	): ReadonlySet<string>;
 	getChunkRuntimeRequirements(chunk: Chunk): ReadonlySet<string>;
 	getTreeRuntimeRequirements(chunk: Chunk): ReadonlySet<string>;
 	static getChunkGraphForModule(
@@ -902,6 +927,11 @@ declare interface CodeGenerationContext {
 	 * the chunk graph
 	 */
 	chunkGraph: ChunkGraph;
+
+	/**
+	 * the runtimes code should be generated for
+	 */
+	runtime: string | SortableSet<string>;
 }
 declare interface CodeGenerationResult {
 	/**
@@ -918,6 +948,32 @@ declare interface CodeGenerationResult {
 	 * the runtime requirements
 	 */
 	runtimeRequirements: ReadonlySet<string>;
+}
+declare abstract class CodeGenerationResults {
+	map: Map<Module, RuntimeSpecMap<CodeGenerationResult>>;
+	getResult(
+		module: Module,
+		runtime: string | SortableSet<string>
+	): CodeGenerationResult;
+	getSource(
+		module: Module,
+		runtime: string | SortableSet<string>,
+		sourceType: string
+	): Source;
+	getRuntimeRequirements(
+		module: Module,
+		runtime: string | SortableSet<string>
+	): ReadonlySet<string>;
+	getData(
+		module: Module,
+		runtime: string | SortableSet<string>,
+		key: string
+	): any;
+	add(
+		module: Module,
+		runtime: string | SortableSet<string>,
+		result: CodeGenerationResult
+	): void;
 }
 declare class Compilation {
 	/**
@@ -963,7 +1019,11 @@ declare class Compilation {
 			void
 		>;
 		dependencyReferencedExports: SyncWaterfallHook<
-			[(string[] | ReferencedExport)[], Dependency]
+			[
+				(string[] | ReferencedExport)[],
+				Dependency,
+				string | SortableSet<string>
+			]
 		>;
 		finishModules: AsyncSeriesHook<[Iterable<Module>]>;
 		finishRebuildingModule: AsyncSeriesHook<[Module]>;
@@ -1089,7 +1149,7 @@ declare class Compilation {
 	moduleTemplates: { javascript: ModuleTemplate };
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
-	codeGenerationResults: Map<Module, CodeGenerationResult>;
+	codeGenerationResults: CodeGenerationResults;
 	factorizeQueue: AsyncQueue<FactorizeModuleOptions, string, Module>;
 	addModuleQueue: AsyncQueue<Module, string, Module>;
 	buildQueue: AsyncQueue<Module, Module, Module>;
@@ -1209,7 +1269,7 @@ declare class Compilation {
 		module: Module,
 		blocks: DependenciesBlock[]
 	): void;
-	codeGeneration(): Map<any, any>;
+	codeGeneration(callback?: any): void;
 	processRuntimeRequirements(entrypoints: Iterable<Entrypoint>): void;
 	addRuntimeModule(chunk: Chunk, module: RuntimeModule): void;
 	addChunkInGroup(
@@ -1228,7 +1288,8 @@ declare class Compilation {
 	addChunk(name?: string): Chunk;
 	assignDepth(module: Module): void;
 	getDependencyReferencedExports(
-		dependency: Dependency
+		dependency: Dependency,
+		runtime: string | SortableSet<string>
 	): (string[] | ReferencedExport)[];
 	removeReasonsOfDependencyBlock(
 		module: Module,
@@ -1889,7 +1950,7 @@ declare abstract class DependenciesBlock {
 	 * Removes all dependencies and blocks
 	 */
 	clearDependenciesAndBlocks(): void;
-	updateHash(hash: Hash, chunkGraph: ChunkGraph): void;
+	updateHash(hash: Hash, context: UpdateHashContextDependency): void;
 	serialize(__0: { write: any }): void;
 	deserialize(__0: { read: any }): void;
 }
@@ -1911,9 +1972,15 @@ declare class Dependency {
 	 * Returns list of exports referenced by this dependency
 	 */
 	getReferencedExports(
-		moduleGraph: ModuleGraph
+		moduleGraph: ModuleGraph,
+		runtime: string | SortableSet<string>
 	): (string[] | ReferencedExport)[];
-	getCondition(moduleGraph: ModuleGraph): () => boolean;
+	getCondition(
+		moduleGraph: ModuleGraph
+	): (
+		arg0: ModuleGraphConnection,
+		arg1: string | SortableSet<string>
+	) => boolean;
 
 	/**
 	 * Returns the exported names
@@ -1933,7 +2000,7 @@ declare class Dependency {
 	/**
 	 * Update the hash
 	 */
-	updateHash(hash: Hash, chunkGraph: ChunkGraph): void;
+	updateHash(hash: Hash, context: UpdateHashContextDependency): void;
 
 	/**
 	 * implement this method to allow the occurrence order plugin to count correctly
@@ -1983,6 +2050,11 @@ declare interface DependencyTemplateContext {
 	 * current module
 	 */
 	module: Module;
+
+	/**
+	 * current runtimes, for which code is generated
+	 */
+	runtime: string | SortableSet<string>;
 
 	/**
 	 * mutable array of init fragments for the current module
@@ -2468,11 +2540,8 @@ declare interface Experiments {
 	 */
 	topLevelAwait?: boolean;
 }
-declare class ExportInfo {
-	constructor(name: string, initFrom?: ExportInfo);
+declare abstract class ExportInfo {
 	name: string;
-	usedName: string;
-	used: 0 | 1 | 2 | 3 | 4;
 
 	/**
 	 * true: it is provided
@@ -2498,19 +2567,34 @@ declare class ExportInfo {
 	exportsInfoOwned: boolean;
 	exportsInfo: ExportsInfo;
 	readonly canMangle: boolean;
+	setUsedInUnknownWay(runtime?: any): boolean;
+	setUsedWithoutInfo(runtime?: any): boolean;
+	setHasUseInfo(): void;
+	setUsedConditionally(
+		condition: (arg0: 0 | 1 | 2 | 3 | 4) => boolean,
+		newValue: 0 | 1 | 2 | 3 | 4,
+		runtime: string
+	): boolean;
+	setUsed(newValue: 0 | 1 | 2 | 3 | 4, runtime: string): boolean;
+	getUsed(runtime: string | SortableSet<string>): 0 | 1 | 2 | 3 | 4;
 
 	/**
 	 * get used name
 	 */
-	getUsedName(fallbackName?: string): DevTool;
+	getUsedName(
+		fallbackName: string,
+		runtime: string | SortableSet<string>
+	): DevTool;
+	hasUsedName(): boolean;
+
+	/**
+	 * Sets the mangled name of this export
+	 */
+	setUsedName(name: string): void;
 	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): ExportsInfo;
-	getUsedInfo():
-		| "used"
-		| "no usage info"
-		| "maybe used (runtime-defined)"
-		| "unused"
-		| "only properties used";
+	updateHash(hash?: any, runtime?: any): void;
+	getUsedInfo(): string;
 	getProvidedInfo():
 		| "no provided info"
 		| "maybe provided (runtime-defined)"
@@ -2544,9 +2628,9 @@ declare interface ExportSpec {
 	 */
 	export?: string[];
 }
-declare class ExportsInfo {
-	constructor();
+declare abstract class ExportsInfo {
 	readonly ownedExports: Iterable<ExportInfo>;
+	readonly orderedOwnedExports: Iterable<ExportInfo>;
 	readonly exports: Iterable<ExportInfo>;
 	readonly orderedExports: Iterable<ExportInfo>;
 	readonly otherExportsInfo: ExportInfo;
@@ -2561,17 +2645,29 @@ declare class ExportsInfo {
 		canMangle?: boolean,
 		excludeExports?: Set<string>
 	): boolean;
-	setUsedInUnknownWay(): boolean;
-	setUsedWithoutInfo(): boolean;
-	setAllKnownExportsUsed(): boolean;
-	setUsedForSideEffectsOnly(): boolean;
-	isUsed(): boolean;
-	getUsedExports(): any;
+	setUsedInUnknownWay(runtime: string): boolean;
+	setUsedWithoutInfo(runtime: string): boolean;
+	setAllKnownExportsUsed(runtime: string): boolean;
+	setUsedForSideEffectsOnly(runtime: string): boolean;
+	isUsed(runtime?: any): boolean;
+	getUsedExports(runtime?: any): any;
 	getProvidedExports(): true | string[];
-	hasStaticExportsList(): boolean;
+	hasStaticExportsList(runtime?: any): boolean;
 	isExportProvided(name: LibraryExport): boolean;
-	isExportUsed(name: LibraryExport): 0 | 1 | 2 | 3 | 4;
-	getUsedName(name: LibraryExport): string | false | string[];
+	getUsageKey(runtime: string | SortableSet<string>): string;
+	isEquallyUsed(
+		runtimeA: string | SortableSet<string>,
+		runtimeB: string | SortableSet<string>
+	): boolean;
+	getUsed(
+		name: LibraryExport,
+		runtime: string | SortableSet<string>
+	): 0 | 1 | 2 | 3 | 4;
+	getUsedName(
+		name: LibraryExport,
+		runtime: string | SortableSet<string>
+	): string | false | string[];
+	updateHash(hash?: any, runtime?: any): void;
 	getRestoreProvidedData(): any;
 	restoreProvided(__0: {
 		otherProvided: any;
@@ -2932,6 +3028,11 @@ declare interface GenerateContext {
 	runtimeRequirements: Set<string>;
 
 	/**
+	 * the runtime
+	 */
+	runtime: string | SortableSet<string>;
+
+	/**
 	 * which kind of code should be generated
 	 */
 	type: string;
@@ -2941,7 +3042,7 @@ declare class Generator {
 	getTypes(module: NormalModule): Set<string>;
 	getSize(module: NormalModule, type?: string): number;
 	generate(module: NormalModule, __1: GenerateContext): Source;
-	updateHash(hash: Hash, __1: UpdateHashContext): void;
+	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
 	static byType(map?: any): ByTypeGenerator;
 }
 declare interface HMRJavascriptParserHooks {
@@ -3891,7 +3992,7 @@ declare interface MainRenderContext {
 	/**
 	 * results of code generation
 	 */
-	codeGenerationResults: Map<Module, CodeGenerationResult>;
+	codeGenerationResults: CodeGenerationResults;
 
 	/**
 	 * hash to be used for render call
@@ -4062,16 +4163,10 @@ declare class Module extends DependenciesBlock {
 		moduleGraph: ModuleGraph,
 		chunkGraph: ChunkGraph
 	): boolean;
-	hasReasons(moduleGraph: ModuleGraph): boolean;
-	isModuleUsed(moduleGraph: ModuleGraph): boolean;
-	isExportUsed(
+	hasReasons(
 		moduleGraph: ModuleGraph,
-		exportName: LibraryExport
-	): 0 | 1 | 2 | 3 | 4;
-	getUsedName(
-		moduleGraph: ModuleGraph,
-		exportName: LibraryExport
-	): string | false | string[];
+		runtime: string | SortableSet<string>
+	): boolean;
 	needBuild(
 		context: NeedBuildContext,
 		callback: (arg0: WebpackError, arg1: boolean) => void
@@ -4227,6 +4322,11 @@ declare class ModuleGraph {
 		newModule: Module,
 		filterConnection: (arg0: ModuleGraphConnection) => boolean
 	): void;
+	copyOutgoingModuleConnections(
+		oldModule: Module,
+		newModule: Module,
+		filterConnection: (arg0: ModuleGraphConnection) => boolean
+	): void;
 	addExtraReason(module: Module, explanation: string): void;
 	getResolvedModule(dependency: Dependency): Module;
 	getConnection(dependency: Dependency): ModuleGraphConnection;
@@ -4248,7 +4348,10 @@ declare class ModuleGraph {
 	getExportsInfo(module: Module): ExportsInfo;
 	getExportInfo(module: Module, exportName: string): ExportInfo;
 	getReadOnlyExportInfo(module: Module, exportName: string): ExportInfo;
-	getUsedExports(module: Module): boolean | SortableSet<string>;
+	getUsedExports(
+		module: Module,
+		runtime: string | SortableSet<string>
+	): boolean | SortableSet<string>;
 	getPreOrderIndex(module: Module): number;
 	getPostOrderIndex(module: Module): number;
 	setPreOrderIndex(module: Module, index: number): void;
@@ -4270,26 +4373,8 @@ declare class ModuleGraph {
 		module: Module,
 		moduleGraph: ModuleGraph
 	): void;
-	static ModuleGraphConnection: typeof ModuleGraphConnection;
-	static ExportsInfo: typeof ExportsInfo;
-	static ExportInfo: typeof ExportInfo;
-	static UsageState: Readonly<{
-		NoInfo: 0;
-		Unused: 1;
-		Unknown: 2;
-		OnlyPropertiesUsed: 3;
-		Used: 4;
-	}>;
 }
-declare class ModuleGraphConnection {
-	constructor(
-		originModule: Module,
-		dependency: Dependency,
-		module: Module,
-		explanation?: string,
-		weak?: boolean,
-		condition?: (arg0: ModuleGraphConnection) => boolean
-	);
+declare abstract class ModuleGraphConnection {
 	originModule: Module;
 	resolvedOriginModule: Module;
 	dependency: Dependency;
@@ -4297,12 +4382,22 @@ declare class ModuleGraphConnection {
 	module: Module;
 	weak: boolean;
 	conditional: boolean;
-	condition: (arg0: ModuleGraphConnection) => boolean;
+	condition: (
+		arg0: ModuleGraphConnection,
+		arg1: string | SortableSet<string>
+	) => boolean;
 	explanations: Set<string>;
-	addCondition(condition: (arg0: ModuleGraphConnection) => boolean): void;
+	addCondition(
+		condition: (
+			arg0: ModuleGraphConnection,
+			arg1: string | SortableSet<string>
+		) => boolean
+	): void;
 	addExplanation(explanation: string): void;
 	readonly explanation: string;
-	active: any;
+	active: void;
+	isActive(runtime: string | SortableSet<string>): boolean;
+	setActive(value?: any): void;
 }
 
 /**
@@ -4979,9 +5074,9 @@ declare interface Optimization {
 	splitChunks?: false | OptimizationSplitChunksOptions;
 
 	/**
-	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.
+	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, "global": analyse exports globally for all runtimes combined).
 	 */
-	usedExports?: boolean;
+	usedExports?: boolean | "global";
 }
 type OptimizationRuntimeChunk =
 	| boolean
@@ -5092,6 +5187,11 @@ declare interface OptimizationSplitChunksCacheGroup {
 	 * Assign modules to a cache group by module type.
 	 */
 	type?: string | Function | RegExp;
+
+	/**
+	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
+	 */
+	usedExports?: boolean;
 }
 
 /**
@@ -5205,6 +5305,11 @@ declare interface OptimizationSplitChunksOptions {
 	 * Give chunks created a name (chunks with equal name are merged).
 	 */
 	name?: string | false | Function;
+
+	/**
+	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
+	 */
+	usedExports?: boolean;
 }
 type OptimizationSplitChunksSizes = number | { [index: string]: number };
 declare abstract class OptionsApply {
@@ -5626,6 +5731,7 @@ declare interface PathData {
 	hashWithLength?: (arg0: number) => string;
 	chunk?: Chunk | ChunkPathData;
 	module?: Module | ModulePathData;
+	runtime?: string | SortableSet<string>;
 	filename?: string;
 	basename?: string;
 	query?: string;
@@ -6007,7 +6113,7 @@ declare interface RenderContextObject {
 	/**
 	 * results of code generation
 	 */
-	codeGenerationResults: Map<Module, CodeGenerationResult>;
+	codeGenerationResults: CodeGenerationResults;
 }
 declare interface RenderManifestEntryStatic {
 	render: () => Source;
@@ -6033,7 +6139,7 @@ declare interface RenderManifestOptions {
 	hash: string;
 	fullHash: string;
 	outputOptions: any;
-	codeGenerationResults: Map<Module, CodeGenerationResult>;
+	codeGenerationResults: CodeGenerationResults;
 	moduleTemplates: { javascript: ModuleTemplate };
 	dependencyTemplates: DependencyTemplates;
 	runtimeTemplate: RuntimeTemplate;
@@ -6998,6 +7104,20 @@ declare class RuntimeModule extends Module {
 	getGeneratedCode(): string;
 	shouldIsolate(): boolean;
 }
+declare abstract class RuntimeSpecMap<T> {
+	get(runtime: string | SortableSet<string>): T;
+	has(runtime: string | SortableSet<string>): boolean;
+	set(runtime?: any, value?: any): void;
+	delete(runtime?: any): void;
+	update(runtime?: any, fn?: any): void;
+	keys(): (string | SortableSet<string>)[];
+	values(): IterableIterator<T>;
+}
+declare abstract class RuntimeSpecSet {
+	add(runtime?: any): void;
+	[Symbol.iterator](): IterableIterator<string | SortableSet<string>>;
+	readonly size: number;
+}
 declare abstract class RuntimeTemplate {
 	outputOptions: OutputNormalized;
 	requestShortener: RequestShortener;
@@ -7289,6 +7409,10 @@ declare abstract class RuntimeTemplate {
 		 */
 		initFragments: InitFragment[];
 		/**
+		 * runtime for which this code will be generated
+		 */
+		runtime: string | SortableSet<string>;
+		/**
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
@@ -7488,7 +7612,7 @@ declare abstract class SortableSet<T> extends Set<T> {
 	 * Sort with a comparer function
 	 */
 	sortWith(sortFn: (arg0: T, arg1: T) => number): void;
-	sort(): void;
+	sort(): SortableSet<T>;
 
 	/**
 	 * Get data from cache
@@ -7535,6 +7659,11 @@ declare interface SourceContext {
 	 * the chunk graph
 	 */
 	chunkGraph: ChunkGraph;
+
+	/**
+	 * the runtimes code should be generated for
+	 */
+	runtime: string | SortableSet<string>;
 
 	/**
 	 * the type of source that should be generated
@@ -7648,6 +7777,7 @@ declare interface SplitChunksOptions {
 		context: CacheGroupsContext
 	) => CacheGroupSource[];
 	getName: (module?: Module, chunks?: Chunk[], key?: string) => string;
+	usedExports: boolean;
 	fallbackCacheGroup: FallbackCacheGroup;
 }
 declare class SplitChunksPlugin {
@@ -8100,7 +8230,11 @@ declare class Template {
 	static NUMBER_OF_IDENTIFIER_CONTINUATION_CHARS: number;
 }
 declare const UNDEFINED_MARKER: unique symbol;
-declare interface UpdateHashContext {
+declare interface UpdateHashContextDependency {
+	chunkGraph: ChunkGraph;
+	runtime: string | SortableSet<string>;
+}
+declare interface UpdateHashContextGenerator {
 	/**
 	 * the module
 	 */

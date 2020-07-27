@@ -1352,9 +1352,9 @@ export interface Optimization {
 	 */
 	splitChunks?: false | OptimizationSplitChunksOptions;
 	/**
-	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.
+	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, "global": analyse exports globally for all runtimes combined).
 	 */
-	usedExports?: boolean;
+	usedExports?: "global" | boolean;
 }
 /**
  * Plugin instance.
@@ -1472,6 +1472,10 @@ export interface OptimizationSplitChunksOptions {
 	 * Give chunks created a name (chunks with equal name are merged).
 	 */
 	name?: false | string | Function;
+	/**
+	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
+	 */
+	usedExports?: boolean;
 }
 /**
  * Options object for describing behavior of a cache group selecting modules that should be cached together.
@@ -1560,6 +1564,10 @@ export interface OptimizationSplitChunksCacheGroup {
 	 * Assign modules to a cache group by module type.
 	 */
 	type?: RegExp | string | Function;
+	/**
+	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
+	 */
+	usedExports?: boolean;
 }
 /**
  * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.

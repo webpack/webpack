@@ -1202,8 +1202,15 @@
           ]
         },
         "usedExports": {
-          "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.",
-          "type": "boolean"
+          "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \"global\": analyse exports globally for all runtimes combined).",
+          "anyOf": [
+            {
+              "enum": ["global"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         }
       }
     },
@@ -1416,6 +1423,10 @@
               "tsType": "Function"
             }
           ]
+        },
+        "usedExports": {
+          "description": "Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.",
+          "type": "boolean"
         }
       }
     },
@@ -1635,6 +1646,10 @@
               "tsType": "Function"
             }
           ]
+        },
+        "usedExports": {
+          "description": "Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.",
+          "type": "boolean"
         }
       }
     },
