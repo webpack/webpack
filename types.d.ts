@@ -638,6 +638,17 @@ declare class ChunkGraph {
 		filterFn: (m: Module) => boolean,
 		includeAllChunks?: boolean
 	): ChunkModuleMaps;
+	getChunkModuleIdMap(
+		chunk: Chunk,
+		filterFn: (m: Module) => boolean,
+		includeAllChunks?: boolean
+	): Record<string | number, (string | number)[]>;
+	getChunkModuleRenderedHashMap(
+		chunk: Chunk,
+		filterFn: (m: Module) => boolean,
+		hashLength?: number,
+		includeAllChunks?: boolean
+	): Record<string | number, Record<string | number, string>>;
 	getChunkConditionMap(
 		chunk: Chunk,
 		filterFn: (c: Chunk, chunkGraph: ChunkGraph) => boolean

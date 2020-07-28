@@ -4300,26 +4300,26 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [we
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"Hash: 4e2ee68d58cc5e321b71
+"Hash: 2771dd94469a045536ab
 Time: X ms
 Built at: 1970-04-20 12:42:42
                            Asset       Size
 0506579c50fa5de37901.module.wasm  531 bytes  [emitted] [immutable]
-                   230.bundle.js  222 bytes  [emitted]
-                   325.bundle.js   3.74 KiB  [emitted]
+                   230.bundle.js  246 bytes  [emitted]
+                   325.bundle.js   3.79 KiB  [emitted]
 444c8480a2d7f9f35db1.module.wasm  154 bytes  [emitted] [immutable]
 5179c03f2d41e1a5d004.module.wasm  154 bytes  [emitted] [immutable]
                    526.bundle.js  368 bytes  [emitted]              [id hint: vendors]
-                   780.bundle.js  525 bytes  [emitted]
+                   780.bundle.js  573 bytes  [emitted]
 80ffdb4e517728b773b3.module.wasm  156 bytes  [emitted] [immutable]
-                    99.bundle.js  220 bytes  [emitted]
+                    99.bundle.js  244 bytes  [emitted]
 9cbd89d7e2621cc7fd42.module.wasm  120 bytes  [emitted] [immutable]
-                       bundle.js   11.9 KiB  [emitted]              [name: main]
+                       bundle.js   11.7 KiB  [emitted]              [name: main]
 f3b9cec74658e38fcaa0.module.wasm  290 bytes  [emitted] [immutable]
 Entrypoint main = bundle.js
 chunk (runtime: main) 99.bundle.js 50 bytes (javascript) 531 bytes (webassembly) [rendered]
  ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) [built]
-chunk (runtime: main) bundle.js (main) 586 bytes (javascript) 6.1 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) bundle.js (main) 586 bytes (javascript) 5.88 KiB (runtime) [entry] [rendered]
  ./index.js 586 bytes [built]
      + 9 hidden chunk modules
 chunk (runtime: main) 230.bundle.js 50 bytes (javascript) 156 bytes (webassembly) [rendered]
