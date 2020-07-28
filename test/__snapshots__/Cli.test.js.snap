@@ -1762,18 +1762,40 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-split-chunks-used-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.",
+        "multiple": false,
+        "path": "optimization.splitChunks.usedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-used-exports": Object {
     "configs": Array [
       Object {
-        "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.",
+        "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \\"global\\": analyse exports globally for all runtimes combined).",
+        "multiple": false,
+        "path": "optimization.usedExports",
+        "type": "enum",
+        "values": Array [
+          "global",
+        ],
+      },
+      Object {
+        "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \\"global\\": analyse exports globally for all runtimes combined).",
         "multiple": false,
         "path": "optimization.usedExports",
         "type": "boolean",
       },
     ],
-    "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.",
+    "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \\"global\\": analyse exports globally for all runtimes combined).",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "output-asset-module-filename": Object {
     "configs": Array [
