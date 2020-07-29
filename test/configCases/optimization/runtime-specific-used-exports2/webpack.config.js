@@ -7,7 +7,7 @@ module.exports = {
 	optimization: {
 		chunkIds: "named",
 		splitChunks: {
-			chunks: 'all',
+			chunks: "all",
 			cacheGroups: {
 				defaultVendors: {
 					test: /[\\/]node_modules[\\/]/,
