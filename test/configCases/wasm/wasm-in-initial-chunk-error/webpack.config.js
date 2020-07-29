@@ -1,6 +1,9 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: "./index",
+	output: {
+		webassemblyModuleFilename: "[id].[hash:3].wasm"
+	},
 	module: {
 		rules: [
 			{

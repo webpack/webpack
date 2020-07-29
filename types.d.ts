@@ -633,11 +633,6 @@ declare class ChunkGraph {
 		chunk: Chunk,
 		comparator: (arg0: Module, arg1: Module) => 0 | 1 | -1
 	): Module[];
-	getChunkModuleMaps(
-		chunk: Chunk,
-		filterFn: (m: Module) => boolean,
-		includeAllChunks?: boolean
-	): ChunkModuleMaps;
 	getChunkModuleIdMap(
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
@@ -653,7 +648,6 @@ declare class ChunkGraph {
 		chunk: Chunk,
 		filterFn: (c: Chunk, chunkGraph: ChunkGraph) => boolean
 	): Record<string | number, boolean>;
-	hasModuleInChunk(chunk: Chunk, filterFn: (m: Module) => boolean): boolean;
 	hasModuleInGraph(
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
