@@ -2572,15 +2572,18 @@ declare abstract class ExportInfo {
 	exportsInfoOwned: boolean;
 	exportsInfo: ExportsInfo;
 	readonly canMangle: boolean;
-	setUsedInUnknownWay(runtime?: any): boolean;
-	setUsedWithoutInfo(runtime?: any): boolean;
+	setUsedInUnknownWay(runtime: string | SortableSet<string>): boolean;
+	setUsedWithoutInfo(runtime: string | SortableSet<string>): boolean;
 	setHasUseInfo(): void;
 	setUsedConditionally(
 		condition: (arg0: 0 | 1 | 2 | 3 | 4) => boolean,
 		newValue: 0 | 1 | 2 | 3 | 4,
-		runtime: string
+		runtime: string | SortableSet<string>
 	): boolean;
-	setUsed(newValue: 0 | 1 | 2 | 3 | 4, runtime: string): boolean;
+	setUsed(
+		newValue: 0 | 1 | 2 | 3 | 4,
+		runtime: string | SortableSet<string>
+	): boolean;
 	getUsed(runtime: string | SortableSet<string>): 0 | 1 | 2 | 3 | 4;
 
 	/**
@@ -2650,14 +2653,16 @@ declare abstract class ExportsInfo {
 		canMangle?: boolean,
 		excludeExports?: Set<string>
 	): boolean;
-	setUsedInUnknownWay(runtime: string): boolean;
-	setUsedWithoutInfo(runtime: string): boolean;
-	setAllKnownExportsUsed(runtime: string): boolean;
-	setUsedForSideEffectsOnly(runtime: string): boolean;
-	isUsed(runtime?: any): boolean;
-	getUsedExports(runtime?: any): any;
+	setUsedInUnknownWay(runtime: string | SortableSet<string>): boolean;
+	setUsedWithoutInfo(runtime: string | SortableSet<string>): boolean;
+	setAllKnownExportsUsed(runtime: string | SortableSet<string>): boolean;
+	setUsedForSideEffectsOnly(runtime: string | SortableSet<string>): boolean;
+	isUsed(runtime: string | SortableSet<string>): boolean;
+	getUsedExports(
+		runtime: string | SortableSet<string>
+	): boolean | SortableSet<string>;
 	getProvidedExports(): true | string[];
-	hasStaticExportsList(runtime?: any): boolean;
+	hasStaticExportsList(runtime: string | SortableSet<string>): boolean;
 	isExportProvided(name: LibraryExport): boolean;
 	getUsageKey(runtime: string | SortableSet<string>): string;
 	isEquallyUsed(
@@ -2672,7 +2677,7 @@ declare abstract class ExportsInfo {
 		name: LibraryExport,
 		runtime: string | SortableSet<string>
 	): string | false | string[];
-	updateHash(hash?: any, runtime?: any): void;
+	updateHash(hash: Hash, runtime: string | SortableSet<string>): void;
 	getRestoreProvidedData(): any;
 	restoreProvided(__0: {
 		otherProvided: any;
