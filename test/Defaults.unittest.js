@@ -203,6 +203,7 @@ describe("Defaults", () => {
 		      "minChunks": 1,
 		      "minRemainingSize": undefined,
 		      "minSize": 10000,
+		      "usedExports": true,
 		    },
 		    "usedExports": false,
 		  },
@@ -1369,6 +1370,7 @@ describe("Defaults", () => {
 			-       "minChunks": 1,
 			-       "minRemainingSize": undefined,
 			-       "minSize": 10000,
+			-       "usedExports": true,
 			-     },
 			+     "splitChunks": false,
 		`)

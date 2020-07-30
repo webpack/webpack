@@ -14,6 +14,9 @@ module.exports = {
 			}
 		]
 	},
+	output: {
+		webassemblyModuleFilename: "[id].[hash].wasm"
+	},
 	experiments: {
 		asyncWebAssembly: true,
 		importAwait: true

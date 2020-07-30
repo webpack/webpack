@@ -101,6 +101,10 @@ export type LibraryType =
  */
 export type UmdNamedDefine = boolean;
 /**
+ * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+ */
+export type EntryRuntime = string;
+/**
  * An entry point without name.
  */
 export type EntryUnnamed = EntryItem;
@@ -798,6 +802,10 @@ export interface EntryDescription {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: EntryRuntime;
 }
 /**
  * Options for library.
@@ -1344,9 +1352,9 @@ export interface Optimization {
 	 */
 	splitChunks?: false | OptimizationSplitChunksOptions;
 	/**
-	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.
+	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, "global": analyse exports globally for all runtimes combined).
 	 */
-	usedExports?: boolean;
+	usedExports?: "global" | boolean;
 }
 /**
  * Plugin instance.
@@ -1464,6 +1472,10 @@ export interface OptimizationSplitChunksOptions {
 	 * Give chunks created a name (chunks with equal name are merged).
 	 */
 	name?: false | string | Function;
+	/**
+	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
+	 */
+	usedExports?: boolean;
 }
 /**
  * Options object for describing behavior of a cache group selecting modules that should be cached together.
@@ -1552,6 +1564,10 @@ export interface OptimizationSplitChunksCacheGroup {
 	 * Assign modules to a cache group by module type.
 	 */
 	type?: RegExp | string | Function;
+	/**
+	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
+	 */
+	usedExports?: boolean;
 }
 /**
  * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
@@ -2008,6 +2024,10 @@ export interface EntryDescriptionNormalized {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: EntryRuntime;
 }
 /**
  * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
