@@ -1,11 +1,16 @@
 import { value as valueStatic } from "./dedupe-target-static";
 import { value } from "./dedupe-target";
 import * as DefaultExport from "./default-export";
-import { value as valueDirect, value2 as value2Direct } from "./direct-export";
+import {
+	value as valueDirect,
+	value2 as value2Direct,
+	default as Default1
+} from "./direct-export";
 import {
 	value as valueChecked,
 	value2 as value2Checked
 } from "./checked-export";
+import Default2 from "./dynamic-reexport-default";
 
 it("should dedupe static reexport target", () => {
 	expect(valueStatic).toBe(42);
@@ -35,4 +40,9 @@ it("should handle direct export when reexporting", () => {
 it("should handle checked dynamic export when reexporting", () => {
 	expect(valueChecked).toBe(42);
 	expect(value2Checked).toBe(42);
+});
+
+it("should handle default export correctly", () => {
+	expect(Default1).toBe(undefined);
+	expect(Default2).toBe("static");
 });
