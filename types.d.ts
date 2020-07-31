@@ -1498,6 +1498,7 @@ declare class Compiler {
 	cache: Cache;
 	compilerPath: string;
 	running: boolean;
+	idle: boolean;
 	watchMode: boolean;
 	getCache(name: string): CacheFacade;
 	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
@@ -3922,6 +3923,7 @@ declare interface LoaderItem {
 	loader: string;
 	options: any;
 	ident: string;
+	type: string;
 }
 declare class LoaderOptionsPlugin {
 	constructor(options?: LoaderOptionsPluginOptions);
@@ -4621,7 +4623,7 @@ declare abstract class MultiStats {
 declare abstract class MultiWatching {
 	watchings: Watching[];
 	compiler: MultiCompiler;
-	invalidate(): void;
+	invalidate(callback?: any): void;
 	suspend(): void;
 	resume(): void;
 	close(callback: CallbackFunction<void>): void;
@@ -4864,6 +4866,7 @@ declare class NormalModule extends Module {
 }
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[any, NormalModule], void>;
+	beforeLoaders: SyncHook<[LoaderItem[], any, NormalModule], void>;
 	readResourceForScheme: HookMap<
 		AsyncSeriesBailHook<[string, NormalModule], string | Buffer>
 	>;
