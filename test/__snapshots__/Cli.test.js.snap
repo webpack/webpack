@@ -1292,15 +1292,25 @@ Object {
   "optimization-mangle-exports": Object {
     "configs": Array [
       Object {
-        "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports).",
+        "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\\"deterministic\\": generate short deterministic names optimized for caching, \\"size\\": generate the shortest possible names).",
+        "multiple": false,
+        "path": "optimization.mangleExports",
+        "type": "enum",
+        "values": Array [
+          "size",
+          "deterministic",
+        ],
+      },
+      Object {
+        "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\\"deterministic\\": generate short deterministic names optimized for caching, \\"size\\": generate the shortest possible names).",
         "multiple": false,
         "path": "optimization.mangleExports",
         "type": "boolean",
       },
     ],
-    "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports).",
+    "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\\"deterministic\\": generate short deterministic names optimized for caching, \\"size\\": generate the shortest possible names).",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-mangle-wasm-imports": Object {
     "configs": Array [

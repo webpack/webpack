@@ -1292,9 +1292,9 @@ export interface Optimization {
 	 */
 	innerGraph?: boolean;
 	/**
-	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports).
+	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/"deterministic": generate short deterministic names optimized for caching, "size": generate the shortest possible names).
 	 */
-	mangleExports?: boolean;
+	mangleExports?: ("size" | "deterministic") | boolean;
 	/**
 	 * Reduce size of WASM by changing imports to shorter strings.
 	 */
