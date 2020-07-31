@@ -34,10 +34,11 @@ const withNamedEntry = {
 	output: {
 		filename: "with-[name].js"
 	},
-	name: "manifest is named entry",
+	name: "static custom name",
 	entry: {
 		main1: "./main1",
-		manifest: "./f"
+		main2: "./main2",
+		main3: "./main3"
 	},
 	optimization: {
 		runtimeChunk: {
@@ -46,5 +47,23 @@ const withNamedEntry = {
 	}
 };
 
+const withFunctionEntry = {
+	...baseConfig,
+	output: {
+		filename: "func-[name].js"
+	},
+	name: "dynamic custom name",
+	entry: {
+		main1: "./main1",
+		main2: "./main2",
+		main3: "./main3"
+	},
+	optimization: {
+		runtimeChunk: {
+			name: ({ name }) => (name === "main3" ? "a" : "b")
+		}
+	}
+};
+
 /** @type {import("../../../").Configuration[]} */
-module.exports = [withoutNamedEntry, withNamedEntry];
+module.exports = [withoutNamedEntry, withNamedEntry, withFunctionEntry];
