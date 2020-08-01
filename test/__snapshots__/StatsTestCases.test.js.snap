@@ -2604,19 +2604,41 @@ exports[`StatsTestCases should print correct stats for runtime-chunk-integration
     ./c.js 20 bytes [built]
     ./d.js 20 bytes [built]
         + 8 hidden modules
-Child manifest is named entry:
+Child static custom name:
                Asset       Size
          with-505.js   1.22 KiB  [emitted]
-       with-main1.js  601 bytes  [emitted]  [name: main1]
-    with-manifest.js     11 KiB  [emitted]  [name: manifest]
+       with-main1.js  597 bytes  [emitted]  [name: main1]
+       with-main2.js  216 bytes  [emitted]  [name: main2]
+       with-main3.js  216 bytes  [emitted]  [name: main3]
+    with-manifest.js   10.9 KiB  [emitted]  [name: manifest]
     Entrypoint main1 = with-manifest.js with-main1.js
-    Entrypoint manifest = with-manifest.js
+    Entrypoint main2 = with-manifest.js with-main2.js
+    Entrypoint main3 = with-manifest.js with-main3.js
     ./main1.js 66 bytes [built]
-    ./f.js 20 bytes [built]
+    ./main2.js 20 bytes [built]
+    ./main3.js 20 bytes [built]
     ./b.js 20 bytes [built]
     ./c.js 20 bytes [built]
     ./d.js 20 bytes [built]
-        + 8 hidden modules"
+        + 8 hidden modules
+Child dynamic custom name:
+            Asset       Size
+      func-505.js   1.22 KiB  [emitted]
+        func-a.js   5.14 KiB  [emitted]  [name: a]
+        func-b.js   10.9 KiB  [emitted]  [name: b]
+    func-main1.js  597 bytes  [emitted]  [name: main1]
+    func-main2.js  216 bytes  [emitted]  [name: main2]
+    func-main3.js  216 bytes  [emitted]  [name: main3]
+    Entrypoint main1 = func-b.js func-main1.js
+    Entrypoint main2 = func-b.js func-main2.js
+    Entrypoint main3 = func-a.js func-main3.js
+    ./main1.js 66 bytes [built]
+    ./main2.js 20 bytes [built]
+    ./main3.js 20 bytes [built]
+    ./b.js 20 bytes [built]
+    ./c.js 20 bytes [built]
+    ./d.js 20 bytes [built]
+        + 10 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for runtime-chunk-issue-7382 1`] = `
