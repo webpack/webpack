@@ -8121,6 +8121,11 @@ declare interface StatsOptions {
 	reasons?: boolean;
 
 	/**
+	 * Add information about assets that are related to other assets (like SourceMaps for assets).
+	 */
+	relatedAssets?: boolean;
+
+	/**
 	 * Add information about runtime modules.
 	 */
 	runtime?: boolean;
