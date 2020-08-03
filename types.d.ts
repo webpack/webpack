@@ -228,6 +228,11 @@ declare interface AssetInfo {
 	 * true, when asset ships data for updating an existing application (HMR)
 	 */
 	hotModuleReplacement?: boolean;
+
+	/**
+	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
+	 */
+	related?: Record<string, LibraryExport>;
 }
 type AssetModuleFilename =
 	| string
@@ -8114,6 +8119,11 @@ declare interface StatsOptions {
 	 * Add information about the reasons why modules are included.
 	 */
 	reasons?: boolean;
+
+	/**
+	 * Add information about assets that are related to other assets (like SourceMaps for assets).
+	 */
+	relatedAssets?: boolean;
 
 	/**
 	 * Add information about runtime modules.

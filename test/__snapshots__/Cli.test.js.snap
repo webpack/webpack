@@ -4319,6 +4319,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-related-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+        "multiple": false,
+        "path": "stats.relatedAssets",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-runtime": Object {
     "configs": Array [
       Object {

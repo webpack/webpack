@@ -12,6 +12,9 @@ const base = {
 				options: {}
 			}
 		]
+	},
+	stats: {
+		relatedAssets: true
 	}
 };
 

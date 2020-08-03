@@ -3064,6 +3064,10 @@
           "description": "Add information about the reasons why modules are included.",
           "type": "boolean"
         },
+        "relatedAssets": {
+          "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+          "type": "boolean"
+        },
         "runtime": {
           "description": "Add information about runtime modules.",
           "type": "boolean"
