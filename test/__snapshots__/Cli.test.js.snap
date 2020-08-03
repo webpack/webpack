@@ -790,19 +790,6 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
-  "module-rules-options": Object {
-    "configs": Array [
-      Object {
-        "description": "Options passed to a loader.",
-        "multiple": true,
-        "path": "module.rules[].options",
-        "type": "string",
-      },
-    ],
-    "description": "Options passed to a loader.",
-    "multiple": true,
-    "simpleType": "string",
-  },
   "module-rules-real-resource": Object {
     "configs": Array [
       Object {

@@ -2620,6 +2620,9 @@
         },
         "options": {
           "description": "Shortcut for use.options.",
+          "cli": {
+            "exclude": true
+          },
           "oneOf": [
             {
               "$ref": "#/definitions/RuleSetLoaderOptions"
