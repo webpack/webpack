@@ -5009,7 +5009,7 @@ declare interface Optimization {
 	concatenateModules?: boolean;
 
 	/**
-	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.
+	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.
 	 */
 	emitOnErrors?: boolean;
 

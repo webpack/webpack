@@ -1097,7 +1097,7 @@
           "type": "boolean"
         },
         "emitOnErrors": {
-          "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.",
+          "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
           "type": "boolean"
         },
         "flagIncludedChunks": {
