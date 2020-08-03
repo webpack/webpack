@@ -14,7 +14,6 @@ module.exports = {
 		]
 	},
 	experiments: {
-		syncWebAssembly: true,
-		importAwait: true
+		syncWebAssembly: true
 	}
 };

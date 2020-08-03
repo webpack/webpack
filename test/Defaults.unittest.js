@@ -91,8 +91,6 @@ describe("Defaults", () => {
 		  "experiments": Object {
 		    "asset": false,
 		    "asyncWebAssembly": false,
-		    "importAsync": false,
-		    "importAwait": false,
 		    "mjs": false,
 		    "outputModule": false,
 		    "syncWebAssembly": false,
@@ -715,9 +713,8 @@ describe("Defaults", () => {
 
 			@@ ... @@
 			-     "asyncWebAssembly": false,
-			+     "asyncWebAssembly": true,
-			@@ ... @@
 			-     "mjs": false,
+			+     "asyncWebAssembly": true,
 			+     "mjs": true,
 			@@ ... @@
 			+       },

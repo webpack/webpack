@@ -4299,7 +4299,7 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [we
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"Hash: 236a7aafb9e23319b3b2
+"Hash: bcdac54c787768809ad1
 Time: X ms
 Built at: 1970-04-20 12:42:42
 asset 0506579c50fa5de37901.module.wasm 531 bytes [emitted] [immutable]
@@ -4322,17 +4322,17 @@ chunk (runtime: main) bundle.js (main) 586 bytes (javascript) 5.96 KiB (runtime)
      + 9 hidden chunk modules
 chunk (runtime: main) 230.bundle.js 50 bytes (javascript) 156 bytes (webassembly) [rendered]
  ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) [built]
-chunk (runtime: main) 325.bundle.js 1.54 KiB (javascript) 274 bytes (webassembly) [rendered]
+chunk (runtime: main) 325.bundle.js 1.5 KiB (javascript) 274 bytes (webassembly) [rendered]
  ./popcnt.wasm 50 bytes (javascript) 120 bytes (webassembly) [built]
  ./testFunction.wasm 50 bytes (javascript) 154 bytes (webassembly) [built]
- ./tests.js 1.44 KiB [built]
+ ./tests.js 1.4 KiB [built]
 chunk (runtime: main) 526.bundle.js (id hint: vendors) 34 bytes [rendered] split chunk (cache group: defaultVendors)
  ./node_modules/env.js 34 bytes [built]
 chunk (runtime: main) 780.bundle.js 110 bytes (javascript) 444 bytes (webassembly) [rendered]
  ./fact.wasm 50 bytes (javascript) 154 bytes (webassembly) [built]
  ./fast-math.wasm 60 bytes (javascript) 290 bytes (webassembly) [built]
 ./index.js 586 bytes [built]
-./tests.js 1.44 KiB [built]
+./tests.js 1.4 KiB [built]
 ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) [built]
 ./testFunction.wasm 50 bytes (javascript) 154 bytes (webassembly) [built]
 ./fact.wasm 50 bytes (javascript) 154 bytes (webassembly) [built]
