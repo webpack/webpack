@@ -11,7 +11,7 @@ module.exports = {
 			/context-replacement.e$/,
 			"new-context",
 			true,
-			/^replaced$/
+			/^replaced$|^\.\/modules\/rep/
 		)
 	]
 };
