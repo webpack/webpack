@@ -2551,6 +2551,10 @@
             }
           ]
         },
+        "dependency": {
+          "description": "Match dependency type.",
+          "type": "string"
+        },
         "descriptionData": {
           "description": "Match values of properties in the description file (usually package.json).",
           "type": "object",

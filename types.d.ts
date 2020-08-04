@@ -6949,6 +6949,11 @@ declare interface RuleSetRule {
 	compiler?: RuleSetCondition;
 
 	/**
+	 * Match dependency type.
+	 */
+	dependency?: string;
+
+	/**
 	 * Match values of properties in the description file (usually package.json).
 	 */
 	descriptionData?: { [index: string]: RuleSetCondition };
@@ -8990,6 +8995,7 @@ declare namespace exports {
 		export let system: string;
 		export let hasOwnProperty: string;
 		export let systemContext: string;
+		export let baseURI: string;
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
