@@ -883,14 +883,6 @@ export interface Experiments {
 	 */
 	asyncWebAssembly?: boolean;
 	/**
-	 * Allow 'import/export' syntax to import async modules.
-	 */
-	importAsync?: boolean;
-	/**
-	 * Allow 'import/export await' syntax to import async modules.
-	 */
-	importAwait?: boolean;
-	/**
 	 * Support .mjs files as way to define strict ESM file (node.js).
 	 */
 	mjs?: boolean;

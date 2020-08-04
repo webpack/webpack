@@ -354,32 +354,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-import-async": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow 'import/export' syntax to import async modules.",
-        "multiple": false,
-        "path": "experiments.importAsync",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow 'import/export' syntax to import async modules.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "experiments-import-await": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow 'import/export await' syntax to import async modules.",
-        "multiple": false,
-        "path": "experiments.importAwait",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow 'import/export await' syntax to import async modules.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "experiments-mjs": Object {
     "configs": Array [
       Object {
