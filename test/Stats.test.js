@@ -188,6 +188,7 @@ describe("Stats", () => {
 			      "emitted": true,
 			      "filteredRelated": undefined,
 			      "info": Object {
+			        "minimized": true,
 			        "size": 111,
 			      },
 			      "name": "chunkB.js",
@@ -205,6 +206,7 @@ describe("Stats", () => {
 			      "emitted": true,
 			      "filteredRelated": undefined,
 			      "info": Object {
+			        "minimized": true,
 			        "size": 182,
 			      },
 			      "name": "entryA.js",
@@ -222,6 +224,7 @@ describe("Stats", () => {
 			      "emitted": true,
 			      "filteredRelated": undefined,
 			      "info": Object {
+			        "minimized": true,
 			        "size": 2219,
 			      },
 			      "name": "entryB.js",

@@ -823,7 +823,7 @@ Child undefined:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle0.js 556 bytes [emitted] (name: main)
+    asset bundle0.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle0.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
@@ -852,43 +852,43 @@ Child Terser:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle1.js 556 bytes [emitted] (name: main)
+    asset bundle1.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle1.js
 Child /Terser/:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle2.js 556 bytes [emitted] (name: main)
+    asset bundle2.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle2.js
 Child warnings => true:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle3.js 556 bytes [emitted] (name: main)
+    asset bundle3.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle3.js
 Child [Terser]:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle4.js 556 bytes [emitted] (name: main)
+    asset bundle4.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle4.js
 Child [/Terser/]:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle5.js 556 bytes [emitted] (name: main)
+    asset bundle5.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle5.js
 Child [warnings => true]:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle6.js 556 bytes [emitted] (name: main)
+    asset bundle6.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle6.js
 Child should not filter:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle7.js 556 bytes [emitted] (name: main)
+    asset bundle7.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle7.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
@@ -917,7 +917,7 @@ Child /should not filter/:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle8.js 556 bytes [emitted] (name: main)
+    asset bundle8.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle8.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
@@ -946,7 +946,7 @@ Child warnings => false:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle9.js 556 bytes [emitted] (name: main)
+    asset bundle9.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle9.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
@@ -975,7 +975,7 @@ Child [should not filter]:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle10.js 556 bytes [emitted] (name: main)
+    asset bundle10.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle10.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
@@ -1004,7 +1004,7 @@ Child [/should not filter/]:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle11.js 556 bytes [emitted] (name: main)
+    asset bundle11.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle11.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
@@ -1033,7 +1033,7 @@ Child [warnings => false]:
     Hash: ce07045a2e545aaa7cc0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset bundle12.js 556 bytes [emitted] (name: main)
+    asset bundle12.js 556 bytes [emitted] [minimized] (name: main)
     Entrypoint main = bundle12.js
 
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
@@ -3034,7 +3034,7 @@ Child
     Hash: 584bbadef99167e48f78
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset main.js 207 bytes [emitted] (name: main)
+    asset main.js 207 bytes [emitted] [minimized] (name: main)
     Entrypoint main = main.js
     ./index.js + 2 modules 1.18 KiB [built]
         [no exports]
@@ -3055,7 +3055,7 @@ Child
     Hash: 01c4c80354460261d226
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset main.no-side.js 1.37 KiB [emitted] (name: main)
+    asset main.no-side.js 1.37 KiB [emitted] [minimized] (name: main)
     Entrypoint main = main.no-side.js
     ./index.js 116 bytes [built]
         [no exports]
@@ -4278,7 +4278,7 @@ exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
 "Hash: 3edc6fa0be0cae472d04
 Time: X ms
 Built at: 1970-04-20 12:42:42
-asset bundle.js 823 bytes [emitted] (name: main)
+asset bundle.js 823 bytes [emitted] [minimized] (name: main)
 Entrypoint main = bundle.js
 ./index.js 299 bytes [built]
     [no exports used]
