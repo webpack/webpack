@@ -1240,13 +1240,13 @@ Object {
   "optimization-emit-on-errors": Object {
     "configs": Array [
       Object {
-        "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.",
+        "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
         "multiple": false,
         "path": "optimization.emitOnErrors",
         "type": "boolean",
       },
     ],
-    "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.",
+    "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
     "multiple": false,
     "simpleType": "boolean",
   },
