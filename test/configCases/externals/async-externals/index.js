@@ -13,3 +13,9 @@ it("should allow to catch errors of async externals", () => {
 		})
 	);
 });
+
+it("should allow dynamic import promise externals", () => {
+	return import("promise-external").then(module => {
+		expect(module).toMatchObject({ default: value });
+	});
+});
