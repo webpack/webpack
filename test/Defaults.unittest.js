@@ -206,7 +206,7 @@ describe("Defaults", () => {
 		    "usedExports": false,
 		  },
 		  "output": Object {
-		    "assetModuleFilename": "[hash][ext]",
+		    "assetModuleFilename": "[hash][ext][query]",
 		    "chunkCallbackName": "webpackChunkwebpack",
 		    "chunkFilename": "[name].js",
 		    "chunkLoadTimeout": 120000,
