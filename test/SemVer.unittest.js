@@ -2,13 +2,28 @@
 
 const {
 	parseVersion,
+	parseVersionRuntimeCode,
 	versionLt,
+	versionLtRuntimeCode,
 	parseRange,
 	rangeToString,
-	satisfy
+	rangeToStringRuntimeCode,
+	satisfy,
+	satisfyRuntimeCode
 } = require("../lib/util/semver");
 
 describe("SemVer", () => {
+	const createRuntimeFunction = runtimeCodeFunction => {
+		const runtimeFunction = runtimeCodeFunction({
+			basicFunction: (args, body) => `(${args}) => {\n${body.join("\n")}\n}`,
+			supportsArrowFunction: () => true
+		});
+		const functionName = runtimeFunction.match(/^var (\w+)/)[1];
+		return eval(
+			`(function (...args) { ${runtimeFunction}; return ${functionName}(...args); })`
+		);
+	};
+
 	it("should parseVersion correctly", () => {
 		expect(parseVersion("1")).toEqual([1]);
 		expect(parseVersion("1.2.3")).toEqual([1, 2, 3]);
@@ -48,6 +63,64 @@ describe("SemVer", () => {
 			"beta+1"
 		]);
 		expect(parseVersion("1.2.3+5343.beta+1")).toEqual([
+			1,
+			2,
+			3,
+			[],
+			5343,
+			"beta+1"
+		]);
+	});
+
+	it("should parseVersion correctly (runtime)", () => {
+		const parseVersionRuntime = createRuntimeFunction(parseVersionRuntimeCode);
+
+		expect(parseVersionRuntime("1")).toEqual([1]);
+		expect(parseVersionRuntime("1.2.3")).toEqual([1, 2, 3]);
+		expect(parseVersionRuntime("1.2.3.4.999")).toEqual([1, 2, 3, 4, 999]);
+		// eslint-disable-next-line no-sparse-arrays
+		expect(parseVersionRuntime("1.2.3-beta")).toEqual([1, 2, 3, , "beta"]);
+		// eslint-disable-next-line no-sparse-arrays
+		expect(parseVersionRuntime("1.2.3-beta.1.2")).toEqual([
+			1,
+			2,
+			3,
+			,
+			"beta",
+			1,
+			2
+		]);
+		// eslint-disable-next-line no-sparse-arrays
+		expect(parseVersionRuntime("1.2.3-alpha.beta-42")).toEqual([
+			1,
+			2,
+			3,
+			,
+			"alpha",
+			"beta-42"
+		]);
+		// eslint-disable-next-line no-sparse-arrays
+		expect(parseVersionRuntime("1.2.3-beta.1.alpha.0+5343")).toEqual([
+			1,
+			2,
+			3,
+			,
+			"beta",
+			1,
+			"alpha",
+			0,
+			[],
+			5343
+		]);
+		expect(parseVersionRuntime("1.2.3+5343.beta+1")).toEqual([
+			1,
+			2,
+			3,
+			[],
+			5343,
+			"beta+1"
+		]);
+		expect(parseVersionRuntime("1.2.3+5343.beta+1")).toEqual([
 			1,
 			2,
 			3,
@@ -103,14 +176,24 @@ describe("SemVer", () => {
 			"2.alpha < 2.beta.1"
 		];
 		for (const c of cases) {
+			const parts = c.split(" < ");
+			const a = parts[0];
+			const b = parts[1];
+
+			const versionLtRuntime = createRuntimeFunction(versionLtRuntimeCode);
+
 			it(c, () => {
-				const parts = c.split(" < ");
-				const a = parts[0];
-				const b = parts[1];
 				expect(versionLt(a, a)).toBe(false);
 				expect(versionLt(b, b)).toBe(false);
 				expect(versionLt(a, b)).toBe(true);
 				expect(versionLt(b, a)).toBe(false);
+			});
+
+			it(`${c} (runtime)`, () => {
+				expect(versionLtRuntime(a, a)).toBe(false);
+				expect(versionLtRuntime(b, b)).toBe(false);
+				expect(versionLtRuntime(a, b)).toBe(true);
+				expect(versionLtRuntime(b, a)).toBe(false);
 			});
 		}
 	});
@@ -163,10 +246,19 @@ describe("SemVer", () => {
 			"1.2.3 - 3.2.1 || >3 <=4 || 1":
 				">=1.2.3 (<3.2.1 || =3.2.1) || >=3 not(^3) (<4 || ^4) || ^1"
 		};
+
+		const rangeToStringRuntime = createRuntimeFunction(
+			rangeToStringRuntimeCode
+		);
+
 		for (const key of Object.keys(cases)) {
 			const expected = cases[key];
 			it(`should ${key} stringify to ${expected}`, () => {
 				expect(rangeToString(parseRange(key))).toEqual(expected);
+			});
+
+			it(`should ${key} stringify to ${expected} (runtime)`, () => {
+				expect(rangeToStringRuntime(parseRange(key))).toEqual(expected);
 			});
 		}
 	});
@@ -500,6 +592,9 @@ describe("SemVer", () => {
 				"1.0.0+55"
 			]
 		};
+
+		const satisfyRuntime = createRuntimeFunction(satisfyRuntimeCode);
+
 		for (const name of Object.keys(cases)) {
 			describe(name, () => {
 				it(`should be able to parse ${name}`, () => {
@@ -510,9 +605,17 @@ describe("SemVer", () => {
 						it(`should not be satisfied by ${item.slice(1)}`, () => {
 							expect(satisfy(parseRange(name), item.slice(1))).toBe(false);
 						});
+						it(`should not be satisfied by ${item.slice(1)} (runtime)`, () => {
+							expect(satisfyRuntime(parseRange(name), item.slice(1))).toBe(
+								false
+							);
+						});
 					} else {
 						it(`should be satisfied by ${item}`, () => {
 							expect(satisfy(parseRange(name), item)).toBe(true);
+						});
+						it(`should be satisfied by ${item} (runtime)`, () => {
+							expect(satisfyRuntime(parseRange(name), item)).toBe(true);
 						});
 					}
 				}
