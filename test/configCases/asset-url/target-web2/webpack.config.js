@@ -7,14 +7,6 @@ module.exports = {
 		assetModuleFilename: "[name][ext]",
 		publicPath: "/path2/"
 	},
-	module: {
-		rules: [
-			{
-				test: /\.css$/,
-				type: "asset/resource"
-			}
-		]
-	},
 	experiments: {
 		asset: true
 	}
