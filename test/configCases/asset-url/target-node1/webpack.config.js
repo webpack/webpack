@@ -11,7 +11,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.css$/,
-				type: "asset/resource"
+				loader: "url-loader"
 			}
 		]
 	},

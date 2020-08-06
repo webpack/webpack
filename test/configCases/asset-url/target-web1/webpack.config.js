@@ -10,8 +10,8 @@ module.exports = {
 		rules: [
 			{
 				test: /\.css$/,
-				type: "asset/resource",
-				dependency: "url"
+				dependency: "url",
+				loader: "url-loader"
 			}
 		]
 	},

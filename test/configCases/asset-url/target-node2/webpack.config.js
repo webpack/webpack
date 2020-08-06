@@ -6,14 +6,6 @@ module.exports = {
 	output: {
 		assetModuleFilename: "[name][ext]"
 	},
-	module: {
-		rules: [
-			{
-				test: /\.css$/,
-				type: "asset/resource"
-			}
-		]
-	},
 	experiments: {
 		asset: true
 	}
