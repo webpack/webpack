@@ -4883,7 +4883,6 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 			AsyncSeriesBailHook<
 				[
 					{
-						dependencyType?: string;
 						resource: string;
 						path: string;
 						query: string;
