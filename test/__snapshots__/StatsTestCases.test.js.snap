@@ -1212,39 +1212,39 @@ Compilation error while processing magic comment(-s): /* webpackPrefetch: nope *
 `;
 
 exports[`StatsTestCases should print correct stats for issue-7577 1`] = `
-"Hash: 3eae6ad466eee50235234a94310f47a24503d79bd86f511d12b9a09f93af
+"Hash: e9d096534217c2bd59541ed857798a2a54e798c05a2d016ebb3222692be6
 Child
-    Hash: 3eae6ad466eee5023523
+    Hash: e9d096534217c2bd5954
     Time: X ms
     Built at: 1970-04-20 12:42:42
     asset a-all-a_js-f07dda80f0c3fd0769a3.js 144 bytes [emitted] [immutable] (id hint: all)
-    asset a-main-77f459b6cbc51e3f5925.js 100 bytes [emitted] [immutable] (name: main)
+    asset a-main-75ca7c3a6f28dc0e82f6.js 115 bytes [emitted] [immutable] (name: main)
     asset a-runtime~main-0939cac12732288c82c4.js 5.15 KiB [emitted] [immutable] (name: runtime~main)
-    Entrypoint main = a-runtime~main-0939cac12732288c82c4.js a-all-a_js-f07dda80f0c3fd0769a3.js a-main-77f459b6cbc51e3f5925.js
+    Entrypoint main = a-runtime~main-0939cac12732288c82c4.js a-all-a_js-f07dda80f0c3fd0769a3.js a-main-75ca7c3a6f28dc0e82f6.js
     ./a.js 18 bytes [built]
         + 2 hidden modules
 Child
-    Hash: 4a94310f47a24503d79b
+    Hash: 1ed857798a2a54e798c0
     Time: X ms
     Built at: 1970-04-20 12:42:42
     asset b-all-b_js-b9ed42e0a8062ba939ca.js 479 bytes [emitted] [immutable] (id hint: all)
-    asset b-main-c19f05608cd70b4132a5.js 133 bytes [emitted] [immutable] (name: main)
+    asset b-main-cf285fb4c72c0ac8fed9.js 148 bytes [emitted] [immutable] (name: main)
     asset b-runtime~main-d3a58fcead889bd27258.js 6.08 KiB [emitted] [immutable] (name: runtime~main)
     asset b-vendors-node_modules_vendor_js-b5e50d21fb0ad3547860.js 189 bytes [emitted] [immutable] (id hint: vendors)
-    Entrypoint main = b-runtime~main-d3a58fcead889bd27258.js b-vendors-node_modules_vendor_js-b5e50d21fb0ad3547860.js b-all-b_js-b9ed42e0a8062ba939ca.js b-main-c19f05608cd70b4132a5.js
+    Entrypoint main = b-runtime~main-d3a58fcead889bd27258.js b-vendors-node_modules_vendor_js-b5e50d21fb0ad3547860.js b-all-b_js-b9ed42e0a8062ba939ca.js b-main-cf285fb4c72c0ac8fed9.js
     ./b.js 17 bytes [built]
     ./node_modules/vendor.js 23 bytes [built]
         + 4 hidden modules
 Child
-    Hash: d86f511d12b9a09f93af
+    Hash: 5a2d016ebb3222692be6
     Time: X ms
     Built at: 1970-04-20 12:42:42
     asset c-all-b_js-17aadd5e28f79d5d8b74.js 506 bytes [emitted] [immutable] (id hint: all)
     asset c-all-c_js-6ae1d6c960821c92d2f7.js 397 bytes [emitted] [immutable] (id hint: all)
-    asset c-main-089ed20cf4ee2fd7a626.js 592 bytes [emitted] [immutable] (name: main)
+    asset c-main-86a7ab4beaf7df0ef796.js 607 bytes [emitted] [immutable] (name: main)
     asset c-runtime~main-7e4675849a4dd0adc3fc.js 12.4 KiB [emitted] [immutable] (name: runtime~main)
     asset c-vendors-node_modules_vendor_js-b5e50d21fb0ad3547860.js 189 bytes [emitted] [immutable] (id hint: vendors)
-    Entrypoint main = c-runtime~main-7e4675849a4dd0adc3fc.js c-all-c_js-6ae1d6c960821c92d2f7.js c-main-089ed20cf4ee2fd7a626.js (prefetch: c-vendors-node_modules_vendor_js-b5e50d21fb0ad3547860.js c-all-b_js-17aadd5e28f79d5d8b74.js)
+    Entrypoint main = c-runtime~main-7e4675849a4dd0adc3fc.js c-all-c_js-6ae1d6c960821c92d2f7.js c-main-86a7ab4beaf7df0ef796.js (prefetch: c-vendors-node_modules_vendor_js-b5e50d21fb0ad3547860.js c-all-b_js-17aadd5e28f79d5d8b74.js)
     ./c.js 61 bytes [built]
     ./b.js 17 bytes [built]
     ./node_modules/vendor.js 23 bytes [built]
@@ -2589,7 +2589,7 @@ Entrypoint e2 = runtime~e2.js e2.js"
 exports[`StatsTestCases should print correct stats for runtime-chunk-integration 1`] = `
 "Child base:
     asset without-505.js 1.22 KiB [emitted]
-    asset without-main1.js 597 bytes [emitted] (name: main1)
+    asset without-main1.js 601 bytes [emitted] (name: main1)
     asset without-runtime.js 10.9 KiB [emitted] (name: runtime)
     Entrypoint main1 = without-runtime.js without-main1.js
     ./main1.js 66 bytes [built]
@@ -2599,9 +2599,9 @@ exports[`StatsTestCases should print correct stats for runtime-chunk-integration
         + 8 hidden modules
 Child static custom name:
     asset with-505.js 1.22 KiB [emitted]
-    asset with-main1.js 597 bytes [emitted] (name: main1)
-    asset with-main2.js 216 bytes [emitted] (name: main2)
-    asset with-main3.js 216 bytes [emitted] (name: main3)
+    asset with-main1.js 601 bytes [emitted] (name: main1)
+    asset with-main2.js 220 bytes [emitted] (name: main2)
+    asset with-main3.js 220 bytes [emitted] (name: main3)
     asset with-manifest.js 10.9 KiB [emitted] (name: manifest)
     Entrypoint main1 = with-manifest.js with-main1.js
     Entrypoint main2 = with-manifest.js with-main2.js
@@ -2617,9 +2617,9 @@ Child dynamic custom name:
     asset func-505.js 1.22 KiB [emitted]
     asset func-a.js 5.14 KiB [emitted] (name: a)
     asset func-b.js 10.9 KiB [emitted] (name: b)
-    asset func-main1.js 597 bytes [emitted] (name: main1)
-    asset func-main2.js 216 bytes [emitted] (name: main2)
-    asset func-main3.js 216 bytes [emitted] (name: main3)
+    asset func-main1.js 601 bytes [emitted] (name: main1)
+    asset func-main2.js 220 bytes [emitted] (name: main2)
+    asset func-main3.js 220 bytes [emitted] (name: main3)
     Entrypoint main1 = func-b.js func-main1.js
     Entrypoint main2 = func-b.js func-main2.js
     Entrypoint main3 = func-a.js func-main3.js
