@@ -1,6 +1,6 @@
 This is a simple example that shows the usage of WebAssembly.
 
-WebAssembly modules can be imported like other async modules with `import await` or `import()`.
+WebAssembly modules can be imported like other async modules with `import` or `import()`.
 When importing, they are downloaded and instantiated in a streaming way.
 
 # example.js

@@ -368,14 +368,6 @@
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
           "type": "boolean"
         },
-        "importAsync": {
-          "description": "Allow 'import/export' syntax to import async modules.",
-          "type": "boolean"
-        },
-        "importAwait": {
-          "description": "Allow 'import/export await' syntax to import async modules.",
-          "type": "boolean"
-        },
         "mjs": {
           "description": "Support .mjs files as way to define strict ESM file (node.js).",
           "type": "boolean"
@@ -1097,7 +1089,7 @@
           "type": "boolean"
         },
         "emitOnErrors": {
-          "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.",
+          "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
           "type": "boolean"
         },
         "flagIncludedChunks": {
@@ -2620,6 +2612,9 @@
         },
         "options": {
           "description": "Shortcut for use.options.",
+          "cli": {
+            "exclude": true
+          },
           "oneOf": [
             {
               "$ref": "#/definitions/RuleSetLoaderOptions"
@@ -3062,6 +3057,10 @@
         },
         "reasons": {
           "description": "Add information about the reasons why modules are included.",
+          "type": "boolean"
+        },
+        "relatedAssets": {
+          "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
           "type": "boolean"
         },
         "runtime": {

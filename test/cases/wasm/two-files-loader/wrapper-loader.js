@@ -1,8 +1,8 @@
 const stringifyRequest = require("loader-utils").stringifyRequest;
 
-module.exports.pitch = function(remainingRequest) {
+module.exports.pitch = function (remainingRequest) {
 	return `
-	import await { getString as _getString, memory } from ${stringifyRequest(
+	import { getString as _getString, memory } from ${stringifyRequest(
 		this,
 		`${this.resourcePath}.wat!=!${remainingRequest}`
 	)};

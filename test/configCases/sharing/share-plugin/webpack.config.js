@@ -1,3 +1,4 @@
+// eslint-disable-next-line node/no-unpublished-require
 const { SharePlugin } = require("../../../../").sharing;
 
 /** @type {import("../../../../").Configuration} */
@@ -14,6 +15,9 @@ module.exports = {
 					version: "1.3.4",
 					strictVersion: true,
 					eager: true
+				},
+				lib3: {
+					shareScope: "other"
 				},
 				"./relative1": {
 					import: "./relative1",

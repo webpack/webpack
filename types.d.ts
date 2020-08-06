@@ -228,6 +228,11 @@ declare interface AssetInfo {
 	 * true, when asset ships data for updating an existing application (HMR)
 	 */
 	hotModuleReplacement?: boolean;
+
+	/**
+	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
+	 */
+	related?: Record<string, LibraryExport>;
 }
 type AssetModuleFilename =
 	| string
@@ -2515,16 +2520,6 @@ declare interface Experiments {
 	 * Support WebAssembly as asynchronous EcmaScript Module.
 	 */
 	asyncWebAssembly?: boolean;
-
-	/**
-	 * Allow 'import/export' syntax to import async modules.
-	 */
-	importAsync?: boolean;
-
-	/**
-	 * Allow 'import/export await' syntax to import async modules.
-	 */
-	importAwait?: boolean;
 
 	/**
 	 * Support .mjs files as way to define strict ESM file (node.js).
@@ -5007,7 +5002,7 @@ declare interface Optimization {
 	concatenateModules?: boolean;
 
 	/**
-	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.
+	 * Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.
 	 */
 	emitOnErrors?: boolean;
 
@@ -8117,6 +8112,11 @@ declare interface StatsOptions {
 	 * Add information about the reasons why modules are included.
 	 */
 	reasons?: boolean;
+
+	/**
+	 * Add information about assets that are related to other assets (like SourceMaps for assets).
+	 */
+	relatedAssets?: boolean;
 
 	/**
 	 * Add information about runtime modules.

@@ -11,10 +11,6 @@ describe("TestCases", () => {
 			moduleIds: "named",
 			chunkIds: "named"
 		},
-		plugins: [new webpack.HotModuleReplacementPlugin()],
-		deprecations: [
-			// TODO update terser-webpack-plugin to use getCache()
-			expect.objectContaining({ code: "DEP_WEBPACK_COMPILATION_CACHE" })
-		]
+		plugins: [new webpack.HotModuleReplacementPlugin()]
 	});
 });

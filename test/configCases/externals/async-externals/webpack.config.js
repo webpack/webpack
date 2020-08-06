@@ -9,8 +9,5 @@ module.exports = {
 		"failing-promise-external":
 			"promise new Promise((resolve, reject) => setTimeout(() => reject(new Error('external reject')), 100))",
 		"import-external": ["import /hello/world.js", "request"]
-	},
-	experiments: {
-		importAsync: true
 	}
 };

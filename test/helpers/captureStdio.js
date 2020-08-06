@@ -25,7 +25,7 @@ module.exports = (stdio, tty) => {
 
 		toString: () => {
 			return stripAnsi(logs.join("")).replace(
-				/\([^)]+\) (\[[^\]]+\]\s*)?DeprecationWarning.+(\n\(Use .node.+\))?(\n\s+at .*)*\n?/g,
+				/\([^)]+\) (\[[^\]]+\]\s*)?DeprecationWarning.+(\n\(Use .node.+\))?(\n(\s|BREAKING CHANGE).*)*(\n\s+at .*)*\n?/g,
 				""
 			);
 		},

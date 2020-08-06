@@ -12,16 +12,12 @@ It's an **async module** now.
 Async modules have a different evaluation semantics.
 While normal modules evaluate synchronously, async modules evaluate asynchronously.
 
-Async modules can't be imported with a normal `import`.
-They need to be imported with `import await`.
+Async modules can still be imported with a normal `import`.
+But importing an async module makes the importing module also an async module.
 
-The main reason for this is to make the using module aware of the different evaluation semantics.
+The `import`s still hoist and are evaluated in parallel.
 
-Using `import await` in a module also makes the module an async module.
-You can see it as a form of top-level-await, but it's a bit different because imports hoist, so does `import await`.
-All `import`s and `import await`s hoist and are evaluated in parallel.
-
-`import await` doesn't affect tree shaking negatively.
+Tree shaking still works as usual.
 Here the `close` function is never used and will be removed from the output bundle in production mode.
 
 # UserApi.js
@@ -39,7 +35,7 @@ But you as a developer don't want this.
 You want to break the chain at a point in your module graph where it makes sense.
 Luckily there is a nice way to break the chain.
 
-You can use `import("./UserApi.js")` to import the module instead of `import await`.
+You can use `import("./UserApi.js")` to import the module instead of `import`.
 As this returns a Promise it can be awaited to wait for module evaluation (including top-level-awaits) and handle failures.
 
 Handling failures is an important point here.
@@ -52,18 +48,13 @@ In this example connecting to the DB may fail.
 _{{Actions.js}}_
 ```
 
-As `Actions.js` doesn't use any top-level-await nor `import await` it's not an async module.
-It's a normal module and can be used via `import`.
+As `Actions.js` doesn't use any top-level-await nor `import`s an async module directly so it's not an async module.
 
 # example.js
 
 ```javascript
 _{{example.js}}_
 ```
-
-Note that you may `import await` from a normal module too.
-This is legal, but mostly not required.
-`import await` may also be seen by developers as a hint that this dependency does some async actions and may delay evaluation.
 
 As a guideline, you should prevent your application entry point to become an async module when compiling for web targets.
 Doing async actions at application bootstrap will delay your application startup and may be negative for UX.

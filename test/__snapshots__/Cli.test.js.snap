@@ -354,32 +354,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-import-async": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow 'import/export' syntax to import async modules.",
-        "multiple": false,
-        "path": "experiments.importAsync",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow 'import/export' syntax to import async modules.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "experiments-import-await": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow 'import/export await' syntax to import async modules.",
-        "multiple": false,
-        "path": "experiments.importAwait",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow 'import/export await' syntax to import async modules.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "experiments-mjs": Object {
     "configs": Array [
       Object {
@@ -787,19 +761,6 @@ Object {
       },
     ],
     "description": "Match module mimetype when load from Data URI.",
-    "multiple": true,
-    "simpleType": "string",
-  },
-  "module-rules-options": Object {
-    "configs": Array [
-      Object {
-        "description": "Options passed to a loader.",
-        "multiple": true,
-        "path": "module.rules[].options",
-        "type": "string",
-      },
-    ],
-    "description": "Options passed to a loader.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -1253,13 +1214,13 @@ Object {
   "optimization-emit-on-errors": Object {
     "configs": Array [
       Object {
-        "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.",
+        "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
         "multiple": false,
         "path": "optimization.emitOnErrors",
         "type": "boolean",
       },
     ],
-    "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.",
+    "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4316,6 +4277,19 @@ Object {
       },
     ],
     "description": "Add information about the reasons why modules are included.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-related-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+        "multiple": false,
+        "path": "stats.relatedAssets",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
     "multiple": false,
     "simpleType": "boolean",
   },
