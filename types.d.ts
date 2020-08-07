@@ -1319,6 +1319,7 @@ declare class Compilation {
 		newSourceOrFunction: Source | ((arg0: Source) => Source),
 		assetInfoUpdateOrFunction?: AssetInfo | ((arg0: AssetInfo) => AssetInfo)
 	): void;
+	deleteAsset(file: string): void;
 	getAssets(): Readonly<Asset>[];
 	getAsset(name: string): Readonly<Asset>;
 	clearAssets(): void;
