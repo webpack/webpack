@@ -3459,6 +3459,7 @@ declare abstract class JavascriptParser extends Parser {
 				boolean | void
 			>
 		>;
+		optionalChaining: SyncBailHook<[ChainExpression], boolean | void>;
 		new: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		metaProperty: SyncBailHook<[MetaProperty], boolean | void>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
@@ -3563,6 +3564,7 @@ declare abstract class JavascriptParser extends Parser {
 	walkTemplateLiteral(expression?: any): void;
 	walkTaggedTemplateExpression(expression?: any): void;
 	walkClassExpression(expression?: any): void;
+	walkChainExpression(expression: ChainExpression): void;
 	walkImportExpression(expression?: any): void;
 	walkCallExpression(expression?: any, args?: any): void;
 	walkMemberExpression(expression?: any): void;
