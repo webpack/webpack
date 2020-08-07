@@ -5,6 +5,7 @@
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
   "dependencies": {
+    "@types/eslint-scope": "^3.7.0",
     "@types/estree": "^0.0.45",
     "@webassemblyjs/ast": "1.9.0",
     "@webassemblyjs/helper-module-context": "1.9.0",

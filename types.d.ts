@@ -915,7 +915,7 @@ declare abstract class ChunkTemplate {
 		hash: { tap: (options?: any, fn?: any) => void };
 		hashForChunk: { tap: (options?: any, fn?: any) => void };
 	}>;
-	readonly outputOptions: any;
+	readonly outputOptions: Output;
 }
 declare interface CodeGenerationContext {
 	/**
@@ -2496,11 +2496,11 @@ declare class EvalDevToolModulePlugin {
 	apply(compiler: Compiler): void;
 }
 declare class EvalSourceMapDevToolPlugin {
-	constructor(options?: any);
-	sourceMapComment: any;
-	moduleFilenameTemplate: any;
-	namespace: any;
-	options: any;
+	constructor(inputOptions: string | SourceMapDevToolPluginOptions);
+	sourceMapComment: string;
+	moduleFilenameTemplate: DevtoolFallbackModuleFilenameTemplate;
+	namespace: string;
+	options: SourceMapDevToolPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -3474,7 +3474,7 @@ declare abstract class JavascriptParser extends Parser {
 		program: SyncBailHook<[Program, Comment[]], boolean | void>;
 		finish: SyncBailHook<[Program, Comment[]], boolean | void>;
 	}>;
-	options: any;
+	options: { [index: string]: any };
 	sourceType: "module" | "script" | "auto";
 	scope: ScopeInfo;
 	state: Record<string, any> & ParserStateBase;
@@ -4047,7 +4047,7 @@ declare abstract class MainTemplate {
 		options?: any
 	) => { path: string; info: AssetInfo };
 	readonly requireFn: string;
-	readonly outputOptions: any;
+	readonly outputOptions: Output;
 }
 declare interface MapOptions {
 	columns?: boolean;
@@ -4113,7 +4113,7 @@ declare class Module extends DependenciesBlock {
 	context: string;
 	needId: boolean;
 	debugId: number;
-	resolveOptions: any;
+	resolveOptions: ResolveOptionsWebpackOptions;
 	factoryMeta: any;
 	buildMeta: KnownBuildMeta & Record<string, any>;
 	buildInfo: any;
@@ -4181,7 +4181,10 @@ declare class Module extends DependenciesBlock {
 		context: NeedBuildContext,
 		callback: (arg0: WebpackError, arg1: boolean) => void
 	): void;
-	needRebuild(fileTimestamps?: any, contextTimestamps?: any): boolean;
+	needRebuild(
+		fileTimestamps: Map<string, number>,
+		contextTimestamps: Map<string, number>
+	): boolean;
 	invalidateBuild(): void;
 	identifier(): string;
 	readableIdentifier(requestShortener: RequestShortener): string;
@@ -4914,7 +4917,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		callback?: any
 	): any;
 	getParser(type?: any, parserOptions?: {}): any;
-	createParser(type?: any, parserOptions?: {}): any;
+	createParser(type: string, parserOptions?: { [index: string]: any }): Parser;
 	getGenerator(type?: any, generatorOptions?: {}): Generator;
 	createGenerator(type?: any, generatorOptions?: {}): any;
 	getResolver(type?: any, resolveOptions?: any): Resolver & WithOptions;
@@ -5745,7 +5748,7 @@ declare interface ParserStateBase {
 	current: NormalModule;
 	module: NormalModule;
 	compilation: Compilation;
-	options: any;
+	options: { [index: string]: any };
 }
 declare interface PathData {
 	chunkGraph?: ChunkGraph;
@@ -6160,7 +6163,7 @@ declare interface RenderManifestOptions {
 	chunk: Chunk;
 	hash: string;
 	fullHash: string;
-	outputOptions: any;
+	outputOptions: Output;
 	codeGenerationResults: CodeGenerationResults;
 	moduleTemplates: { javascript: ModuleTemplate };
 	dependencyTemplates: DependencyTemplates;
@@ -8387,7 +8390,7 @@ declare interface WatchFileSystem {
 		directories: Iterable<string>,
 		missing: Iterable<string>,
 		startTime: number,
-		options: any,
+		options: WatchOptions,
 		callback: (
 			arg0: Error,
 			arg1: Map<string, FileSystemInfoEntry>,
