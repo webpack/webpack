@@ -2553,7 +2553,11 @@
         },
         "dependency": {
           "description": "Match dependency type.",
-          "type": "string"
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ]
         },
         "descriptionData": {
           "description": "Match values of properties in the description file (usually package.json).",

@@ -11,6 +11,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.css$/,
+				dependency: ["esm", "commonjs"],
 				loader: "url-loader"
 			}
 		]

@@ -6951,7 +6951,7 @@ declare interface RuleSetRule {
 	/**
 	 * Match dependency type.
 	 */
-	dependency?: string;
+	dependency?: RuleSetCondition;
 
 	/**
 	 * Match values of properties in the description file (usually package.json).
