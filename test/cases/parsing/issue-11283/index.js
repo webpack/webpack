@@ -24,3 +24,13 @@ it("should parse switch case properly", () => {
 		}
 	}
 });
+
+it("should share block scope for several cases", () => {
+	switch (1) {
+		case 1:
+			const A = magicA();
+		case 2:
+			expect(A).toBe("A");
+			break;
+	}
+});
