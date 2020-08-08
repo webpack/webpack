@@ -5,7 +5,7 @@ module.exports = {
 	devtool: false,
 	output: {
 		assetModuleFilename: "[name][ext]",
-		publicPath: "/"
+		publicPath: "https://example.com/"
 	},
 	experiments: {
 		asset: true
