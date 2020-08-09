@@ -79,9 +79,12 @@ it("should try to evaluate new RegExp()", function () {
 	}
 
 	expectAOnly(
-		require.context("./regexp", false, new RegExp('(?<!filtered)\\.js$', ""))
+		require.context("./regexp", false, new RegExp("(?<!filtered)\\.js$", ""))
 	);
 	expectAOnly(
 		require.context("./regexp", false, new RegExp(`(?<!${"filtered"})\\.js$`, "i"))
+	);
+	expectAOnly(
+		require.context("./regexp", false, new RegExp("(?<!filtered)\\.js$"))
 	);
 });
