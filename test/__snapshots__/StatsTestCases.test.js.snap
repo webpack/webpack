@@ -601,11 +601,10 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32>main.js</CLR>
 `;
 
 exports[`StatsTestCases should print correct stats for common-libs 1`] = `
-"Hash: cb2d8154f4c30528e43b
+"Hash: 686bee3c38d17272258c
 Time: X ms
 Built at: 1970-04-20 12:42:42
-asset react.js 3.12 KiB [emitted] [minimized] (name: react)
-asset react.js.LICENSE.txt 295 bytes [emitted]
+asset react.js 3.12 KiB [emitted] [minimized] (name: react) 1 related asset
 Entrypoint react = react.js
 ./react.js 69 bytes [built]
 ../../../node_modules/react/index.js 190 bytes [built]
@@ -738,6 +737,18 @@ Child
         + 8 hidden modules"
 `;
 
+exports[`StatsTestCases should print correct stats for custom-terser 1`] = `
+"Hash: e139ba1039e702d107e2
+Time: X ms
+Built at: 1970-04-20 12:42:42
+asset bundle.js 556 bytes [emitted] [minimized] (name: main)
+Entrypoint main = bundle.js
+./index.js 128 bytes [built]
+    [no exports used]
+./a.js 49 bytes [built]
+    [used exports unknown]"
+`;
+
 exports[`StatsTestCases should print correct stats for define-plugin 1`] = `
 "Hash: 1f56b2bd114efda2216fb5147bffa61d4b3a922840b14025738b0f86d581
 Child
@@ -828,249 +839,6 @@ asset main.js 1.2 KiB [emitted] (name: main)
 Entrypoint main = main.js
 ./index.js 17 bytes [built]
 external \\"test\\" 42 bytes [built]"
-`;
-
-exports[`StatsTestCases should print correct stats for filter-warnings 1`] = `
-"Hash: a5b6c739ac29303bf2aaa5b6c739ac29303bf2aaa5b6c739ac29303bf2aaa5b6c739ac29303bf2aaa5b6c739ac29303bf2aaa5b6c739ac29303bf2aaa5b6c739ac29303bf2aaa5b6c739ac29303bf2aaa5b6c739ac29303bf2aaa5b6c739ac29303bf2aaa5b6c739ac29303bf2aaa5b6c739ac29303bf2aaa5b6c739ac29303bf2aa
-Child undefined:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle0.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle0.js
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [webpack://./a.js:4,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [webpack://./a.js:5,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [webpack://./a.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [webpack://./a.js:7,0]
-
-    WARNING in Terser Plugin: Dropping side-effect-free statement [webpack://./index.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [webpack://./index.js:8,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [webpack://./index.js:9,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [webpack://./index.js:10,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [webpack://./index.js:11,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [webpack://./index.js:12,0]
-
-Child Terser:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle1.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle1.js
-Child /Terser/:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle2.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle2.js
-Child warnings => true:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle3.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle3.js
-Child [Terser]:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle4.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle4.js
-Child [/Terser/]:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle5.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle5.js
-Child [warnings => true]:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle6.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle6.js
-Child should not filter:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle7.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle7.js
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [webpack://./a.js:4,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [webpack://./a.js:5,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [webpack://./a.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [webpack://./a.js:7,0]
-
-    WARNING in Terser Plugin: Dropping side-effect-free statement [webpack://./index.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [webpack://./index.js:8,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [webpack://./index.js:9,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [webpack://./index.js:10,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [webpack://./index.js:11,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [webpack://./index.js:12,0]
-
-Child /should not filter/:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle8.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle8.js
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [webpack://./a.js:4,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [webpack://./a.js:5,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [webpack://./a.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [webpack://./a.js:7,0]
-
-    WARNING in Terser Plugin: Dropping side-effect-free statement [webpack://./index.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [webpack://./index.js:8,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [webpack://./index.js:9,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [webpack://./index.js:10,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [webpack://./index.js:11,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [webpack://./index.js:12,0]
-
-Child warnings => false:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle9.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle9.js
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [webpack://./a.js:4,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [webpack://./a.js:5,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [webpack://./a.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [webpack://./a.js:7,0]
-
-    WARNING in Terser Plugin: Dropping side-effect-free statement [webpack://./index.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [webpack://./index.js:8,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [webpack://./index.js:9,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [webpack://./index.js:10,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [webpack://./index.js:11,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [webpack://./index.js:12,0]
-
-Child [should not filter]:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle10.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle10.js
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [webpack://./a.js:4,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [webpack://./a.js:5,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [webpack://./a.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [webpack://./a.js:7,0]
-
-    WARNING in Terser Plugin: Dropping side-effect-free statement [webpack://./index.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [webpack://./index.js:8,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [webpack://./index.js:9,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [webpack://./index.js:10,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [webpack://./index.js:11,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [webpack://./index.js:12,0]
-
-Child [/should not filter/]:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle11.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle11.js
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [webpack://./a.js:4,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [webpack://./a.js:5,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [webpack://./a.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [webpack://./a.js:7,0]
-
-    WARNING in Terser Plugin: Dropping side-effect-free statement [webpack://./index.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [webpack://./index.js:8,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [webpack://./index.js:9,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [webpack://./index.js:10,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [webpack://./index.js:11,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [webpack://./index.js:12,0]
-
-Child [warnings => false]:
-    Hash: a5b6c739ac29303bf2aa
-    Time: X ms
-    Built at: 1970-04-20 12:42:42
-    asset bundle12.js 556 bytes [emitted] [minimized] (name: main)
-    Entrypoint main = bundle12.js
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [webpack://./a.js:3,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [webpack://./a.js:4,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [webpack://./a.js:5,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [webpack://./a.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [webpack://./a.js:7,0]
-
-    WARNING in Terser Plugin: Dropping side-effect-free statement [webpack://./index.js:6,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [webpack://./index.js:8,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [webpack://./index.js:9,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [webpack://./index.js:10,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [webpack://./index.js:11,0]
-
-    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [webpack://./index.js:12,0]
-"
 `;
 
 exports[`StatsTestCases should print correct stats for graph-correctness-entries 1`] = `
@@ -2520,24 +2288,24 @@ LOG from ModuleConcatenationPlugin
 `;
 
 exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
-"Hash: 8981c4ae0cf7803cd21e5c98fdf5155243d584538981c4ae0cf7803cd21e5c98fdf5155243d58453
+"Hash: 8285f2090cc638edc976387393a639df8cda00568285f2090cc638edc976387393a639df8cda0056
 Child a-normal:
-    Hash: 8981c4ae0cf7803cd21e
+    Hash: 8285f2090cc638edc976
     Time: X ms
     Built at: 1970-04-20 12:42:42
     asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
+    asset 7cda531b1ca8ae966481-7cda53.js 2.13 KiB [emitted] [immutable] [minimized] (name: runtime~main)
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
     asset a150563551a333b27471-a15056.js 197 bytes [emitted] [immutable] [minimized] (name: lazy)
-    asset ac0bdef579ae448c9816-ac0bde.js 2.13 KiB [emitted] [immutable] [minimized] (name: runtime~main)
     asset ebb818daaf494d26f4a3-ebb818.js 212 bytes [emitted] [immutable] [minimized] (name: main)
-    Entrypoint main = ac0bdef579ae448c9816-ac0bde.js ebb818daaf494d26f4a3-ebb818.js (7382fad5b015914e0811.jpg)
+    Entrypoint main = 7cda531b1ca8ae966481-7cda53.js ebb818daaf494d26f4a3-ebb818.js (7382fad5b015914e0811.jpg)
     ./a/index.js 150 bytes [built]
     ./a/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built]
     ./a/lazy.js + 1 modules 106 bytes [built]
     ./a/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
         + 8 hidden modules
 Child b-normal:
-    Hash: 5c98fdf5155243d58453
+    Hash: 387393a639df8cda0056
     Time: X ms
     Built at: 1970-04-20 12:42:42
     asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
@@ -2552,25 +2320,25 @@ Child b-normal:
     ./b/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
         + 8 hidden modules
 Child a-source-map:
-    Hash: 8981c4ae0cf7803cd21e
+    Hash: 8285f2090cc638edc976
     Time: X ms
     Built at: 1970-04-20 12:42:42
+    asset 137042fbf41dcdaddad9-137042.js 2.18 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+      sourceMap 137042fbf41dcdaddad9-137042.js.map 12.7 KiB [emitted] [dev]
     asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
     asset 75500a81ed65abaee6f7-75500a.js 268 bytes [emitted] [immutable] [minimized] (name: main)
       sourceMap 75500a81ed65abaee6f7-75500a.js.map 366 bytes [emitted] [dev]
     asset 7d9d0a742118d8263796-7d9d0a.js 253 bytes [emitted] [immutable] [minimized] (name: lazy)
       sourceMap 7d9d0a742118d8263796-7d9d0a.js.map 331 bytes [emitted] [dev]
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
-    asset ac0e4e032b46a3050268-ac0e4e.js 2.18 KiB [emitted] [immutable] [minimized] (name: runtime~main)
-      sourceMap ac0e4e032b46a3050268-ac0e4e.js.map 12.7 KiB [emitted] [dev]
-    Entrypoint main = ac0e4e032b46a3050268-ac0e4e.js 75500a81ed65abaee6f7-75500a.js (7108e55c0e1e5ffc1429-7108e5.js.map 7257cc3b3c344e9bbeb9-7257cc.js.map 7382fad5b015914e0811.jpg)
+    Entrypoint main = 137042fbf41dcdaddad9-137042.js 75500a81ed65abaee6f7-75500a.js (5d44769fe0d394f3c1e4-5d4476.js.map 7382fad5b015914e0811.jpg f164f6f09a78bcf1d2b6-f164f6.js.map)
     ./a/index.js 150 bytes [built]
     ./a/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built]
     ./a/lazy.js + 1 modules 106 bytes [built]
     ./a/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
         + 8 hidden modules
 Child b-source-map:
-    Hash: 5c98fdf5155243d58453
+    Hash: 387393a639df8cda0056
     Time: X ms
     Built at: 1970-04-20 12:42:42
     asset 137042fbf41dcdaddad9-137042.js 2.18 KiB [emitted] [immutable] [minimized] (name: runtime~main)
@@ -2581,7 +2349,7 @@ Child b-source-map:
     asset 7d9d0a742118d8263796-7d9d0a.js 253 bytes [emitted] [immutable] [minimized] (name: lazy)
       sourceMap 7d9d0a742118d8263796-7d9d0a.js.map 327 bytes [emitted] [dev]
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
-    Entrypoint main = 137042fbf41dcdaddad9-137042.js 75500a81ed65abaee6f7-75500a.js (61c15c3165b3503e09ec-61c15c.js.map 7382fad5b015914e0811.jpg e6992d2757cf11c89646-e6992d.js.map)
+    Entrypoint main = 137042fbf41dcdaddad9-137042.js 75500a81ed65abaee6f7-75500a.js (7382fad5b015914e0811.jpg 84e3e17edc0664161925-84e3e1.js.map d94e38a025af308f3141-d94e38.js.map)
     ./b/index.js 109 bytes [built]
     ./b/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built]
     ./b/lazy.js + 1 modules 102 bytes [built]
@@ -3157,9 +2925,9 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-optimization 1`] = `
-"Hash: dfef98e0ef4320bb5e7c18a1362fdec91250a8dc
+"Hash: e56ae23b283bef03a373562edbc000f1181edacd
 Child
-    Hash: dfef98e0ef4320bb5e7c
+    Hash: e56ae23b283bef03a373
     Time: X ms
     Built at: 1970-04-20 12:42:42
     asset main.js 207 bytes [emitted] [minimized] (name: main)
@@ -3180,7 +2948,7 @@ Child
         ModuleConcatenation bailout: Module is not an ECMAScript module
         + 4 hidden modules
 Child
-    Hash: 18a1362fdec91250a8dc
+    Hash: 562edbc000f1181edacd
     Time: X ms
     Built at: 1970-04-20 12:42:42
     asset main.no-side.js 1.24 KiB [emitted] [minimized] (name: main)
@@ -4399,30 +4167,6 @@ Entrypoint main = bundle.js
 
 WARNING in ./index.js 9:0-36
 require.include() is deprecated and will be removed soon.
-"
-`;
-
-exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
-"Hash: e306aedf19a06803f6c7
-Time: X ms
-Built at: 1970-04-20 12:42:42
-asset bundle.js 823 bytes [emitted] [minimized] (name: main)
-Entrypoint main = bundle.js
-./index.js 299 bytes [built]
-    [no exports used]
-./a.js 249 bytes [built]
-    [used exports unknown]
-    + 1 hidden module
-
-WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction1 [webpack://./a.js:3,0]
-
-WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction2 [webpack://./a.js:4,0]
-
-WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction3 [webpack://./a.js:5,0]
-
-WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction4 [webpack://./a.js:6,0]
-
-WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [webpack://./a.js:7,0]
 "
 `;
 
