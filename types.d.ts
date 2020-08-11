@@ -2554,6 +2554,11 @@ declare abstract class ExportInfo {
 	provided: boolean;
 
 	/**
+	 * is the export a terminal binding that should be checked for export star conflicts
+	 */
+	terminalBinding: boolean;
+
+	/**
 	 * true: it can be mangled
 	 * false: is can not be mangled
 	 * undefined: it was not determined if it can be mangled
@@ -2568,6 +2573,7 @@ declare abstract class ExportInfo {
 	canMangleUse: boolean;
 	exportsInfoOwned: boolean;
 	exportsInfo: ExportsInfo;
+	target: { module: Module; export: string[] };
 	readonly canMangle: boolean;
 	setUsedInUnknownWay(runtime: string | SortableSet<string>): boolean;
 	setUsedWithoutInfo(runtime: string | SortableSet<string>): boolean;
@@ -2596,6 +2602,7 @@ declare abstract class ExportInfo {
 	 * Sets the mangled name of this export
 	 */
 	setUsedName(name: string): void;
+	getTerminalExportInfo(moduleGraph: ModuleGraph): ExportInfo;
 	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): ExportsInfo;
 	updateHash(hash?: any, runtime?: any): void;
@@ -2617,6 +2624,11 @@ declare interface ExportSpec {
 	 * can the export be renamed (defaults to true)
 	 */
 	canMangle?: boolean;
+
+	/**
+	 * is the export a terminal binding that should be checked for export star conflicts
+	 */
+	terminalBinding?: boolean;
 
 	/**
 	 * nested exports
@@ -2645,6 +2657,7 @@ declare abstract class ExportsInfo {
 	getOwnExportInfo(name: string): ExportInfo;
 	getExportInfo(name: string): ExportInfo;
 	getReadOnlyExportInfo(name: string): ExportInfo;
+	getReadOnlyExportInfoRecursive(name: string[]): ExportInfo;
 	getNestedExportsInfo(name?: string[]): ExportsInfo;
 	setUnknownExportsProvided(
 		canMangle?: boolean,
@@ -2679,6 +2692,7 @@ declare abstract class ExportsInfo {
 	restoreProvided(__0: {
 		otherProvided: any;
 		otherCanMangleProvide: any;
+		otherTerminalBinding: any;
 		exports: any;
 	}): void;
 }
@@ -2697,6 +2711,11 @@ declare interface ExportsSpec {
 	 * can the export be renamed (defaults to true)
 	 */
 	canMangle?: boolean;
+
+	/**
+	 * are the exports terminal bindings that should be checked for export star conflicts
+	 */
+	terminalBinding?: boolean;
 
 	/**
 	 * module on which the result depends on
