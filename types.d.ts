@@ -2605,7 +2605,10 @@ declare abstract class ExportInfo {
 	getTerminalExportInfo(moduleGraph: ModuleGraph): ExportInfo;
 	getTarget(
 		moduleGraph: ModuleGraph,
-		alreadyVisited?: Set<ExportInfo>
+		resolveTargetFilter?: (arg0: {
+			module: Module;
+			export: string[];
+		}) => boolean
 	): { module: Module; export: string[] };
 	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): ExportsInfo;
