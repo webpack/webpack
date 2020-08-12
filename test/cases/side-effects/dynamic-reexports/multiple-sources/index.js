@@ -1,2 +1,3 @@
 export * from "./module";
-export * from "./b";
+
+throw new Error("Should not be loaded");
