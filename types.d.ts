@@ -2573,7 +2573,6 @@ declare abstract class ExportInfo {
 	canMangleUse: boolean;
 	exportsInfoOwned: boolean;
 	exportsInfo: ExportsInfo;
-	target: { module: Module; export: string[] };
 	readonly canMangle: boolean;
 	setUsedInUnknownWay(runtime: string | SortableSet<string>): boolean;
 	setUsedWithoutInfo(runtime: string | SortableSet<string>): boolean;
@@ -2587,6 +2586,7 @@ declare abstract class ExportInfo {
 		newValue: 0 | 1 | 2 | 3 | 4,
 		runtime: string | SortableSet<string>
 	): boolean;
+	setTarget(key?: any, module?: Module, exportName?: string[]): boolean;
 	getUsed(runtime: string | SortableSet<string>): 0 | 1 | 2 | 3 | 4;
 
 	/**
@@ -2603,6 +2603,10 @@ declare abstract class ExportInfo {
 	 */
 	setUsedName(name: string): void;
 	getTerminalExportInfo(moduleGraph: ModuleGraph): ExportInfo;
+	getTarget(
+		moduleGraph: ModuleGraph,
+		alreadyVisited?: Set<ExportInfo>
+	): { module: Module; export: string[] };
 	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): ExportsInfo;
 	updateHash(hash?: any, runtime?: any): void;
@@ -2661,7 +2665,9 @@ declare abstract class ExportsInfo {
 	getNestedExportsInfo(name?: string[]): ExportsInfo;
 	setUnknownExportsProvided(
 		canMangle?: boolean,
-		excludeExports?: Set<string>
+		excludeExports?: Set<string>,
+		targetKey?: any,
+		targetModule?: Module
 	): boolean;
 	setUsedInUnknownWay(runtime: string | SortableSet<string>): boolean;
 	setUsedWithoutInfo(runtime: string | SortableSet<string>): boolean;
@@ -2706,6 +2712,11 @@ declare interface ExportsSpec {
 	 * when exports = true, list of unaffected exports
 	 */
 	excludeExports?: Set<string>;
+
+	/**
+	 * when reexported: from which module
+	 */
+	from?: Module;
 
 	/**
 	 * can the export be renamed (defaults to true)
