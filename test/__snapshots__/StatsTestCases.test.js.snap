@@ -2422,10 +2422,7 @@ LOG from webpack.Compilation
 <t> process assets: X ms
 
 LOG from webpack.SideEffectsFlagPlugin
-<t> capture reexports from modules: X ms
-<t> flatten dynamic reexports: X ms
-<t> flatten static reexports: X ms
-<t> update imports: X ms
+<t> update dependencies: X ms
 
 LOG from webpack.FlagDependencyUsagePlugin
 <t> initialize exports usage: X ms
@@ -3029,9 +3026,9 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-optimization 1`] = `
-"Hash: c65cfc06b09f927bd96e20487d1e3f0e67d84b50
+"Hash: 84a5d60e0d3be84ee22320487d1e3f0e67d84b50
 Child
-    Hash: c65cfc06b09f927bd96e
+    Hash: 84a5d60e0d3be84ee223
     Time: X ms
     Built at: 1970-04-20 12:42:42
     asset main.js 207 bytes [emitted] [minimized] (name: main)
@@ -4233,7 +4230,7 @@ Child global:
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: 5793d577102de2e8df7d
+"Hash: eabb67f895a2e1692d7b
 Time: X ms
 Built at: 1970-04-20 12:42:42
 asset bundle.js 7.09 KiB [emitted] (name: main)
