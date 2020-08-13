@@ -1361,6 +1361,13 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 
 <CLR=31,BOLD>DEBUG</CLR> <CLR=BOLD>LOG from ./node_modules/custom-loader/index.js Named Logger ./node_modules/custom-loader/index.js!./index.js</CLR>
     Message with named logger
+
+<CLR=BOLD>LOG from webpack.buildChunkGraph</CLR>
+    <CLR=BOLD>Statistics: 2 queue items processed (1 blocks)</CLR>
+    <CLR=BOLD>Statistics: 0 chunk groups connected</CLR>
+    <CLR=BOLD>Statistics: 0 chunk groups processed for merging (0 module sets, 0 forked, 0 + 0 modules forked, 0 + 0 modules merged into fork, 0 resulting modules)</CLR>
+    <CLR=BOLD>Statistics: 0 chunk group info updated (0 already connected chunk groups reconnected)</CLR>
++ 5 hidden lines
 "
 `;
 
@@ -2140,6 +2147,13 @@ LOG from LogTestPlugin
       Log
     End
 + 6 hidden lines
+
+LOG from webpack.buildChunkGraph
+    Statistics: 15 queue items processed (9 blocks)
+    Statistics: 3 chunk groups connected
+    Statistics: 3 chunk groups processed for merging (3 module sets, 0 forked, 0 + 0 modules forked, 0 + 0 modules merged into fork, 0 resulting modules)
+    Statistics: 3 chunk group info updated (0 already connected chunk groups reconnected)
++ 13 hidden lines
 "
 `;
 
@@ -2439,6 +2453,10 @@ LOG from webpack.buildChunkGraph
 <t> visitModules: merging available modules: X ms
 <t> visitModules: check modules for revisit: X ms
 <t> visitModules: visiting: X ms
+    Statistics: 15 queue items processed (9 blocks)
+    Statistics: 3 chunk groups connected
+    Statistics: 3 chunk groups processed for merging (3 module sets, 0 forked, 0 + 0 modules forked, 0 + 0 modules merged into fork, 0 resulting modules)
+    Statistics: 3 chunk group info updated (0 already connected chunk groups reconnected)
 <t> visitModules: X ms
 <t> connectChunkGroups: X ms
 <t> cleanup: X ms
