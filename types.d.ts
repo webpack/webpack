@@ -2602,7 +2602,7 @@ declare abstract class ExportInfo {
 	 * Sets the mangled name of this export
 	 */
 	setUsedName(name: string): void;
-	getTerminalExportInfo(moduleGraph: ModuleGraph): ExportInfo;
+	getTerminalBinding(moduleGraph: ModuleGraph): ExportsInfo | ExportInfo;
 	getTarget(
 		moduleGraph: ModuleGraph,
 		resolveTargetFilter?: (arg0: {
