@@ -1,4 +1,4 @@
-// TODO: Technically this should lead to an error
+// This leads to an error
 export * from "./a?6";
 export * from "./b?6";
 export * from "./c?6";

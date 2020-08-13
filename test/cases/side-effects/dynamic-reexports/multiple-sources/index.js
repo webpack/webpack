@@ -1,3 +1,3 @@
-export { value, value2 } from "./module";
+export * from "./module";
 
 throw new Error("Should not be loaded");

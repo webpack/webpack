@@ -2554,6 +2554,11 @@ declare abstract class ExportInfo {
 	provided: boolean;
 
 	/**
+	 * is the export a terminal binding that should be checked for export star conflicts
+	 */
+	terminalBinding: boolean;
+
+	/**
 	 * true: it can be mangled
 	 * false: is can not be mangled
 	 * undefined: it was not determined if it can be mangled
@@ -2581,6 +2586,7 @@ declare abstract class ExportInfo {
 		newValue: 0 | 1 | 2 | 3 | 4,
 		runtime: string | SortableSet<string>
 	): boolean;
+	setTarget(key?: any, module?: Module, exportName?: string[]): boolean;
 	getUsed(runtime: string | SortableSet<string>): 0 | 1 | 2 | 3 | 4;
 
 	/**
@@ -2596,6 +2602,14 @@ declare abstract class ExportInfo {
 	 * Sets the mangled name of this export
 	 */
 	setUsedName(name: string): void;
+	getTerminalBinding(moduleGraph: ModuleGraph): ExportsInfo | ExportInfo;
+	getTarget(
+		moduleGraph: ModuleGraph,
+		resolveTargetFilter?: (arg0: {
+			module: Module;
+			export: string[];
+		}) => boolean
+	): { module: Module; export: string[] };
 	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): ExportsInfo;
 	updateHash(hash?: any, runtime?: any): void;
@@ -2617,6 +2631,11 @@ declare interface ExportSpec {
 	 * can the export be renamed (defaults to true)
 	 */
 	canMangle?: boolean;
+
+	/**
+	 * is the export a terminal binding that should be checked for export star conflicts
+	 */
+	terminalBinding?: boolean;
 
 	/**
 	 * nested exports
@@ -2645,10 +2664,13 @@ declare abstract class ExportsInfo {
 	getOwnExportInfo(name: string): ExportInfo;
 	getExportInfo(name: string): ExportInfo;
 	getReadOnlyExportInfo(name: string): ExportInfo;
+	getReadOnlyExportInfoRecursive(name: string[]): ExportInfo;
 	getNestedExportsInfo(name?: string[]): ExportsInfo;
 	setUnknownExportsProvided(
 		canMangle?: boolean,
-		excludeExports?: Set<string>
+		excludeExports?: Set<string>,
+		targetKey?: any,
+		targetModule?: Module
 	): boolean;
 	setUsedInUnknownWay(runtime: string | SortableSet<string>): boolean;
 	setUsedWithoutInfo(runtime: string | SortableSet<string>): boolean;
@@ -2679,6 +2701,7 @@ declare abstract class ExportsInfo {
 	restoreProvided(__0: {
 		otherProvided: any;
 		otherCanMangleProvide: any;
+		otherTerminalBinding: any;
 		exports: any;
 	}): void;
 }
@@ -2694,9 +2717,19 @@ declare interface ExportsSpec {
 	excludeExports?: Set<string>;
 
 	/**
+	 * when reexported: from which module
+	 */
+	from?: Module;
+
+	/**
 	 * can the export be renamed (defaults to true)
 	 */
 	canMangle?: boolean;
+
+	/**
+	 * are the exports terminal bindings that should be checked for export star conflicts
+	 */
+	terminalBinding?: boolean;
 
 	/**
 	 * module on which the result depends on
