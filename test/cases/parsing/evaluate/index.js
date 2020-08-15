@@ -88,3 +88,8 @@ it("should try to evaluate new RegExp()", function () {
 		require.context("./regexp", false, new RegExp("(?<!filtered)\\.js$"))
 	);
 });
+
+it("should not evaluate new RegExp for redefined RegExp", () => {
+	const RegExp = function() { return /other/; };
+	expect(require("./regexp/" + ("a".replace(new RegExp("a"), "wrong")))).toBe(1);
+});
