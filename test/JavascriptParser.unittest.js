@@ -710,4 +710,32 @@ describe("JavascriptParser", () => {
 			});
 		});
 	});
+
+	describe("BasicEvaluatedExpression", () => {
+		/** @type [string, boolean][] */
+		const tests = [
+			...["i", "g", "m", "y"].reduce((acc, flag) => {
+				acc.push([flag, true]);
+				acc.push([flag + flag, false]);
+				return acc;
+			}, []),
+			["", true],
+			["igm", true],
+			["igmy", true],
+			["igmyi", false],
+			["igmya", false],
+			["ai", false],
+			["ia", false]
+		];
+
+		tests.forEach(([suite, expected]) => {
+			it(`BasicEvaluatedExpression.isValidRegExpFlags(${JSON.stringify(
+				suite
+			)})`, () => {
+				expect(BasicEvaluatedExpression.isValidRegExpFlags(suite)).toBe(
+					expected
+				);
+			});
+		});
+	});
 });
