@@ -5360,6 +5360,11 @@ declare interface Output {
 	auxiliaryComment?: AuxiliaryComment;
 
 	/**
+	 * An expression which is used for base URI in runtime code.
+	 */
+	baseURI?: string;
+
+	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
 	chunkCallbackName?: string;
@@ -5567,6 +5572,11 @@ declare interface OutputNormalized {
 	 * The filename of asset modules as relative path inside the `output.path` directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
+
+	/**
+	 * An expression which is used for base URI in runtime code.
+	 */
+	baseURI?: string;
 
 	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
@@ -7631,6 +7641,11 @@ declare class SideEffectsFlagPlugin {
 		cache?: any
 	): any;
 }
+declare class SimpleRuntimeModule extends RuntimeModule {
+	constructor(name: string, runtimeGlobal: string, expression: string);
+	runtimeGlobal: string;
+	expression: string;
+}
 declare interface Snapshot {
 	startTime?: number;
 	fileTimestamps?: Map<string, FileSystemInfoEntry>;
@@ -9216,6 +9231,7 @@ declare namespace exports {
 		ProgressPlugin,
 		ProvidePlugin,
 		RuntimeModule,
+		SimpleRuntimeModule,
 		EntryPlugin as SingleEntryPlugin,
 		SourceMapDevToolPlugin,
 		Stats,

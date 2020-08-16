@@ -690,6 +690,12 @@ Object {
         "description": "Match dependency type.",
         "multiple": true,
         "path": "module.rules[].dependency",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match dependency type.",
+        "multiple": true,
+        "path": "module.rules[].dependency",
         "type": "string",
       },
     ],

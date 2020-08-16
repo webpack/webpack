@@ -4,7 +4,8 @@ module.exports = {
 	target: "webworker",
 	devtool: false,
 	output: {
-		assetModuleFilename: "[name][ext]"
+		assetModuleFilename: "[name][ext]",
+		baseURI: "baseURI"
 	},
 	experiments: {
 		asset: true

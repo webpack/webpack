@@ -328,6 +328,10 @@ export type AssetModuleFilename =
 			assetInfo?: import("../lib/Compilation").AssetInfo
 	  ) => string);
 /**
+ * An expression which is used for base URI in runtime code.
+ */
+export type BaseURI = string;
+/**
  * The callback function name used by webpack for loading of chunks in WebWorkers.
  */
 export type ChunkCallbackName = string;
@@ -1586,6 +1590,10 @@ export interface Output {
 	 */
 	auxiliaryComment?: AuxiliaryComment;
 	/**
+	 * An expression which is used for base URI in runtime code.
+	 */
+	baseURI?: BaseURI;
+	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
 	chunkCallbackName?: ChunkCallbackName;
@@ -2054,6 +2062,10 @@ export interface OutputNormalized {
 	 * The filename of asset modules as relative path inside the `output.path` directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
+	/**
+	 * An expression which is used for base URI in runtime code.
+	 */
+	baseURI?: BaseURI;
 	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
