@@ -915,7 +915,7 @@ declare abstract class ChunkTemplate {
 		hash: { tap: (options?: any, fn?: any) => void };
 		hashForChunk: { tap: (options?: any, fn?: any) => void };
 	}>;
-	readonly outputOptions: any;
+	readonly outputOptions: Output;
 }
 declare interface CodeGenerationContext {
 	/**
@@ -1319,6 +1319,7 @@ declare class Compilation {
 		newSourceOrFunction: Source | ((arg0: Source) => Source),
 		assetInfoUpdateOrFunction?: AssetInfo | ((arg0: AssetInfo) => AssetInfo)
 	): void;
+	deleteAsset(file: string): void;
 	getAssets(): Readonly<Asset>[];
 	getAsset(name: string): Readonly<Asset>;
 	clearAssets(): void;
@@ -2495,11 +2496,11 @@ declare class EvalDevToolModulePlugin {
 	apply(compiler: Compiler): void;
 }
 declare class EvalSourceMapDevToolPlugin {
-	constructor(options?: any);
-	sourceMapComment: any;
-	moduleFilenameTemplate: any;
-	namespace: any;
-	options: any;
+	constructor(inputOptions: string | SourceMapDevToolPluginOptions);
+	sourceMapComment: string;
+	moduleFilenameTemplate: DevtoolFallbackModuleFilenameTemplate;
+	namespace: string;
+	options: SourceMapDevToolPluginOptions;
 
 	/**
 	 * Apply the plugin
@@ -2520,16 +2521,6 @@ declare interface Experiments {
 	 * Support WebAssembly as asynchronous EcmaScript Module.
 	 */
 	asyncWebAssembly?: boolean;
-
-	/**
-	 * Allow 'import/export' syntax to import async modules.
-	 */
-	importAsync?: boolean;
-
-	/**
-	 * Allow 'import/export await' syntax to import async modules.
-	 */
-	importAwait?: boolean;
 
 	/**
 	 * Support .mjs files as way to define strict ESM file (node.js).
@@ -2563,6 +2554,11 @@ declare abstract class ExportInfo {
 	provided: boolean;
 
 	/**
+	 * is the export a terminal binding that should be checked for export star conflicts
+	 */
+	terminalBinding: boolean;
+
+	/**
 	 * true: it can be mangled
 	 * false: is can not be mangled
 	 * undefined: it was not determined if it can be mangled
@@ -2590,6 +2586,7 @@ declare abstract class ExportInfo {
 		newValue: 0 | 1 | 2 | 3 | 4,
 		runtime: string | SortableSet<string>
 	): boolean;
+	setTarget(key?: any, module?: Module, exportName?: string[]): boolean;
 	getUsed(runtime: string | SortableSet<string>): 0 | 1 | 2 | 3 | 4;
 
 	/**
@@ -2605,6 +2602,14 @@ declare abstract class ExportInfo {
 	 * Sets the mangled name of this export
 	 */
 	setUsedName(name: string): void;
+	getTerminalBinding(moduleGraph: ModuleGraph): ExportsInfo | ExportInfo;
+	getTarget(
+		moduleGraph: ModuleGraph,
+		resolveTargetFilter?: (arg0: {
+			module: Module;
+			export: string[];
+		}) => boolean
+	): { module: Module; export: string[] };
 	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): ExportsInfo;
 	updateHash(hash?: any, runtime?: any): void;
@@ -2626,6 +2631,11 @@ declare interface ExportSpec {
 	 * can the export be renamed (defaults to true)
 	 */
 	canMangle?: boolean;
+
+	/**
+	 * is the export a terminal binding that should be checked for export star conflicts
+	 */
+	terminalBinding?: boolean;
 
 	/**
 	 * nested exports
@@ -2654,10 +2664,13 @@ declare abstract class ExportsInfo {
 	getOwnExportInfo(name: string): ExportInfo;
 	getExportInfo(name: string): ExportInfo;
 	getReadOnlyExportInfo(name: string): ExportInfo;
+	getReadOnlyExportInfoRecursive(name: string[]): ExportInfo;
 	getNestedExportsInfo(name?: string[]): ExportsInfo;
 	setUnknownExportsProvided(
 		canMangle?: boolean,
-		excludeExports?: Set<string>
+		excludeExports?: Set<string>,
+		targetKey?: any,
+		targetModule?: Module
 	): boolean;
 	setUsedInUnknownWay(runtime: string | SortableSet<string>): boolean;
 	setUsedWithoutInfo(runtime: string | SortableSet<string>): boolean;
@@ -2688,6 +2701,7 @@ declare abstract class ExportsInfo {
 	restoreProvided(__0: {
 		otherProvided: any;
 		otherCanMangleProvide: any;
+		otherTerminalBinding: any;
 		exports: any;
 	}): void;
 }
@@ -2703,9 +2717,19 @@ declare interface ExportsSpec {
 	excludeExports?: Set<string>;
 
 	/**
+	 * when reexported: from which module
+	 */
+	from?: Module;
+
+	/**
 	 * can the export be renamed (defaults to true)
 	 */
 	canMangle?: boolean;
+
+	/**
+	 * are the exports terminal bindings that should be checked for export star conflicts
+	 */
+	terminalBinding?: boolean;
 
 	/**
 	 * module on which the result depends on
@@ -3468,6 +3492,7 @@ declare abstract class JavascriptParser extends Parser {
 				boolean | void
 			>
 		>;
+		optionalChaining: SyncBailHook<[ChainExpression], boolean | void>;
 		new: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		metaProperty: SyncBailHook<[MetaProperty], boolean | void>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
@@ -3482,7 +3507,7 @@ declare abstract class JavascriptParser extends Parser {
 		program: SyncBailHook<[Program, Comment[]], boolean | void>;
 		finish: SyncBailHook<[Program, Comment[]], boolean | void>;
 	}>;
-	options: any;
+	options: { [index: string]: any };
 	sourceType: "module" | "script" | "auto";
 	scope: ScopeInfo;
 	state: Record<string, any> & ParserStateBase;
@@ -3572,6 +3597,7 @@ declare abstract class JavascriptParser extends Parser {
 	walkTemplateLiteral(expression?: any): void;
 	walkTaggedTemplateExpression(expression?: any): void;
 	walkClassExpression(expression?: any): void;
+	walkChainExpression(expression: ChainExpression): void;
 	walkImportExpression(expression?: any): void;
 	walkCallExpression(expression?: any, args?: any): void;
 	walkMemberExpression(expression?: any): void;
@@ -4054,7 +4080,7 @@ declare abstract class MainTemplate {
 		options?: any
 	) => { path: string; info: AssetInfo };
 	readonly requireFn: string;
-	readonly outputOptions: any;
+	readonly outputOptions: Output;
 }
 declare interface MapOptions {
 	columns?: boolean;
@@ -4120,7 +4146,7 @@ declare class Module extends DependenciesBlock {
 	context: string;
 	needId: boolean;
 	debugId: number;
-	resolveOptions: any;
+	resolveOptions: ResolveOptionsWebpackOptions;
 	factoryMeta: any;
 	buildMeta: KnownBuildMeta & Record<string, any>;
 	buildInfo: any;
@@ -4188,7 +4214,10 @@ declare class Module extends DependenciesBlock {
 		context: NeedBuildContext,
 		callback: (arg0: WebpackError, arg1: boolean) => void
 	): void;
-	needRebuild(fileTimestamps?: any, contextTimestamps?: any): boolean;
+	needRebuild(
+		fileTimestamps: Map<string, number>,
+		contextTimestamps: Map<string, number>
+	): boolean;
 	invalidateBuild(): void;
 	identifier(): string;
 	readableIdentifier(requestShortener: RequestShortener): string;
@@ -4921,7 +4950,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		callback?: any
 	): any;
 	getParser(type?: any, parserOptions?: {}): any;
-	createParser(type?: any, parserOptions?: {}): any;
+	createParser(type: string, parserOptions?: { [index: string]: any }): Parser;
 	getGenerator(type?: any, generatorOptions?: {}): Generator;
 	createGenerator(type?: any, generatorOptions?: {}): any;
 	getResolver(type?: any, resolveOptions?: any): Resolver & WithOptions;
@@ -5762,7 +5791,7 @@ declare interface ParserStateBase {
 	current: NormalModule;
 	module: NormalModule;
 	compilation: Compilation;
-	options: any;
+	options: { [index: string]: any };
 }
 declare interface PathData {
 	chunkGraph?: ChunkGraph;
@@ -6177,7 +6206,7 @@ declare interface RenderManifestOptions {
 	chunk: Chunk;
 	hash: string;
 	fullHash: string;
-	outputOptions: any;
+	outputOptions: Output;
 	codeGenerationResults: CodeGenerationResults;
 	moduleTemplates: { javascript: ModuleTemplate };
 	dependencyTemplates: DependencyTemplates;
@@ -8414,7 +8443,7 @@ declare interface WatchFileSystem {
 		directories: Iterable<string>,
 		missing: Iterable<string>,
 		startTime: number,
-		options: any,
+		options: WatchOptions,
 		callback: (
 			arg0: Error,
 			arg1: Map<string, FileSystemInfoEntry>,

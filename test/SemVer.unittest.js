@@ -2,60 +2,66 @@
 
 const {
 	parseVersion,
+	parseVersionRuntimeCode,
 	versionLt,
+	versionLtRuntimeCode,
 	parseRange,
 	rangeToString,
-	satisfy
+	rangeToStringRuntimeCode,
+	satisfy,
+	satisfyRuntimeCode
 } = require("../lib/util/semver");
 
 describe("SemVer", () => {
-	it("should parseVersion correctly", () => {
-		expect(parseVersion("1")).toEqual([1]);
-		expect(parseVersion("1.2.3")).toEqual([1, 2, 3]);
-		expect(parseVersion("1.2.3.4.999")).toEqual([1, 2, 3, 4, 999]);
-		// eslint-disable-next-line no-sparse-arrays
-		expect(parseVersion("1.2.3-beta")).toEqual([1, 2, 3, , "beta"]);
-		// eslint-disable-next-line no-sparse-arrays
-		expect(parseVersion("1.2.3-beta.1.2")).toEqual([1, 2, 3, , "beta", 1, 2]);
-		// eslint-disable-next-line no-sparse-arrays
-		expect(parseVersion("1.2.3-alpha.beta-42")).toEqual([
-			1,
-			2,
-			3,
-			,
-			"alpha",
-			"beta-42"
-		]);
-		// eslint-disable-next-line no-sparse-arrays
-		expect(parseVersion("1.2.3-beta.1.alpha.0+5343")).toEqual([
-			1,
-			2,
-			3,
-			,
-			"beta",
-			1,
-			"alpha",
-			0,
-			[],
-			5343
-		]);
-		expect(parseVersion("1.2.3+5343.beta+1")).toEqual([
-			1,
-			2,
-			3,
-			[],
-			5343,
-			"beta+1"
-		]);
-		expect(parseVersion("1.2.3+5343.beta+1")).toEqual([
-			1,
-			2,
-			3,
-			[],
-			5343,
-			"beta+1"
-		]);
-	});
+	const createRuntimeFunction = runtimeCodeFunction => {
+		const runtimeFunction = runtimeCodeFunction({
+			basicFunction: (args, body) => `(${args}) => {\n${body.join("\n")}\n}`,
+			supportsArrowFunction: () => true
+		});
+		const functionName = runtimeFunction.match(/^var (\w+)/)[1];
+		return eval(
+			`(function (...args) { ${runtimeFunction}; return ${functionName}(...args); })`
+		);
+	};
+
+	for (const [name, fn] of [
+		["normal", parseVersion],
+		["runtime", createRuntimeFunction(parseVersionRuntimeCode)]
+	]) {
+		it(`should parseVersion correctly (${name})`, () => {
+			expect(fn("1")).toEqual([1]);
+			expect(fn("1.2.3")).toEqual([1, 2, 3]);
+			expect(fn("1.2.3.4.999")).toEqual([1, 2, 3, 4, 999]);
+			// eslint-disable-next-line no-sparse-arrays
+			expect(fn("1.2.3-beta")).toEqual([1, 2, 3, , "beta"]);
+			// eslint-disable-next-line no-sparse-arrays
+			expect(fn("1.2.3-beta.1.2")).toEqual([1, 2, 3, , "beta", 1, 2]);
+			// eslint-disable-next-line no-sparse-arrays
+			expect(fn("1.2.3-alpha.beta-42")).toEqual([
+				1,
+				2,
+				3,
+				,
+				"alpha",
+				"beta-42"
+			]);
+			// eslint-disable-next-line no-sparse-arrays
+			expect(fn("1.2.3-beta.1.alpha.0+5343")).toEqual([
+				1,
+				2,
+				3,
+				,
+				"beta",
+				1,
+				"alpha",
+				0,
+				[],
+				5343
+			]);
+			expect(fn("1.2.3+5343.beta+1")).toEqual([1, 2, 3, [], 5343, "beta+1"]);
+			expect(fn("1.2.3+5343.beta+1")).toEqual([1, 2, 3, [], 5343, "beta+1"]);
+		});
+	}
 
 	describe("versionLt", () => {
 		const cases = [
@@ -103,15 +109,21 @@ describe("SemVer", () => {
 			"2.alpha < 2.beta.1"
 		];
 		for (const c of cases) {
-			it(c, () => {
-				const parts = c.split(" < ");
-				const a = parts[0];
-				const b = parts[1];
-				expect(versionLt(a, a)).toBe(false);
-				expect(versionLt(b, b)).toBe(false);
-				expect(versionLt(a, b)).toBe(true);
-				expect(versionLt(b, a)).toBe(false);
-			});
+			const parts = c.split(" < ");
+			const a = parts[0];
+			const b = parts[1];
+
+			for (const [name, fn] of [
+				["normal", versionLt],
+				["runtime", createRuntimeFunction(versionLtRuntimeCode)]
+			]) {
+				it(`${c} (${name})`, () => {
+					expect(fn(a, a)).toBe(false);
+					expect(fn(b, b)).toBe(false);
+					expect(fn(a, b)).toBe(true);
+					expect(fn(b, a)).toBe(false);
+				});
+			}
 		}
 	});
 
@@ -163,11 +175,18 @@ describe("SemVer", () => {
 			"1.2.3 - 3.2.1 || >3 <=4 || 1":
 				">=1.2.3 (<3.2.1 || =3.2.1) || >=3 not(^3) (<4 || ^4) || ^1"
 		};
+
 		for (const key of Object.keys(cases)) {
 			const expected = cases[key];
-			it(`should ${key} stringify to ${expected}`, () => {
-				expect(rangeToString(parseRange(key))).toEqual(expected);
-			});
+
+			for (const [name, fn] of [
+				["normal", rangeToString],
+				["runtime", createRuntimeFunction(rangeToStringRuntimeCode)]
+			]) {
+				it(`should ${key} stringify to ${expected} (${name})`, () => {
+					expect(fn(parseRange(key))).toEqual(expected);
+				});
+			}
 		}
 	});
 
@@ -500,20 +519,28 @@ describe("SemVer", () => {
 				"1.0.0+55"
 			]
 		};
-		for (const name of Object.keys(cases)) {
-			describe(name, () => {
-				it(`should be able to parse ${name}`, () => {
-					parseRange(name);
+
+		for (const range of Object.keys(cases)) {
+			describe(range, () => {
+				it(`should be able to parse ${range}`, () => {
+					parseRange(range);
 				});
-				for (const item of cases[name]) {
-					if (item.startsWith("!")) {
-						it(`should not be satisfied by ${item.slice(1)}`, () => {
-							expect(satisfy(parseRange(name), item.slice(1))).toBe(false);
-						});
-					} else {
-						it(`should be satisfied by ${item}`, () => {
-							expect(satisfy(parseRange(name), item)).toBe(true);
-						});
+				for (const item of cases[range]) {
+					for (const [name, fn] of [
+						["normal", satisfy],
+						["runtime", createRuntimeFunction(satisfyRuntimeCode)]
+					]) {
+						if (item.startsWith("!")) {
+							it(`should not be satisfied by ${item.slice(
+								1
+							)} (${name})`, () => {
+								expect(fn(parseRange(range), item.slice(1))).toBe(false);
+							});
+						} else {
+							it(`should be satisfied by ${item} (${name})`, () => {
+								expect(fn(parseRange(range), item)).toBe(true);
+							});
+						}
 					}
 				}
 			});

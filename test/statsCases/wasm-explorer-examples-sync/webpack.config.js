@@ -19,7 +19,6 @@ module.exports = {
 		modules: true
 	},
 	experiments: {
-		asyncWebAssembly: true,
-		importAwait: true
+		asyncWebAssembly: true
 	}
 };

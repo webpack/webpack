@@ -91,8 +91,6 @@ describe("Defaults", () => {
 		  "experiments": Object {
 		    "asset": false,
 		    "asyncWebAssembly": false,
-		    "importAsync": false,
-		    "importAwait": false,
 		    "mjs": false,
 		    "outputModule": false,
 		    "syncWebAssembly": false,
@@ -208,7 +206,7 @@ describe("Defaults", () => {
 		    "usedExports": false,
 		  },
 		  "output": Object {
-		    "assetModuleFilename": "[hash][ext]",
+		    "assetModuleFilename": "[hash][ext][query]",
 		    "baseURI": undefined,
 		    "chunkCallbackName": "webpackChunkwebpack",
 		    "chunkFilename": "[name].js",
@@ -716,9 +714,8 @@ describe("Defaults", () => {
 
 			@@ ... @@
 			-     "asyncWebAssembly": false,
-			+     "asyncWebAssembly": true,
-			@@ ... @@
 			-     "mjs": false,
+			+     "asyncWebAssembly": true,
 			+     "mjs": true,
 			@@ ... @@
 			+       },

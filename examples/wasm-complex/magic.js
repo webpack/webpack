@@ -1,2 +1,2 @@
 // reexporting
-export await * from "./magic.wat";
+export * from "./magic.wat";

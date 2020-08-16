@@ -373,14 +373,6 @@
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
           "type": "boolean"
         },
-        "importAsync": {
-          "description": "Allow 'import/export' syntax to import async modules.",
-          "type": "boolean"
-        },
-        "importAwait": {
-          "description": "Allow 'import/export await' syntax to import async modules.",
-          "type": "boolean"
-        },
         "mjs": {
           "description": "Support .mjs files as way to define strict ESM file (node.js).",
           "type": "boolean"

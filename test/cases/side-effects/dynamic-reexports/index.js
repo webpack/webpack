@@ -19,6 +19,11 @@ import {
 	value2 as value2Checked
 } from "./checked-export";
 import Default2 from "./dynamic-reexport-default";
+import {
+	value as valueMultipleSources,
+	value2 as value2MultipleSources
+} from "./multiple-sources";
+import { a, b } from "./swapped";
 
 it("should dedupe static reexport target", () => {
 	expect(valueStatic).toBe(42);
@@ -60,4 +65,14 @@ it("should handle checked dynamic export when reexporting", () => {
 it("should handle default export correctly", () => {
 	expect(Default1).toBe(undefined);
 	expect(Default2).toBe("static");
+});
+
+it("should handle multiple dynamic sources correctly", () => {
+	expect(valueMultipleSources).toBe(42);
+	expect(value2MultipleSources).toBe(42);
+});
+
+it("should handle renamed dynamic reexports", () => {
+	expect(a).toBe(43);
+	expect(b).toBe(42);
 });

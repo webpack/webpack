@@ -25,30 +25,26 @@ export const close = () => {
 But `db-connection.js` is no longer a normal module now.
 It's an **async module** now.
 Async modules have a different evaluation semantics.
-While normal modules evaluate synchronously way, async modules evaluate asynchronously.
+While normal modules evaluate synchronously, async modules evaluate asynchronously.
 
-Async modules can't be imported with a normal `import`.
-They need to be imported with `import await`.
+Async modules can still be imported with a normal `import`.
+But importing an async module makes the importing module also an async module.
 
-The main reason for this is to make the using module aware of the different evaluation semantics.
+The `import`s still hoist and are evaluated in parallel.
 
-Using `import await` in a module also makes the module an async module.
-You can see it as a form of top-level-await, but it's a bit different because imports hoist, so does `import await`.
-All `import`s and `import await`s hoist and are evaluated in parallel.
-
-`import await` doesn't affect tree shaking negatively.
+Tree shaking still works as usual.
 Here the `close` function is never used and will be removed from the output bundle in production mode.
 
 # UserApi.js
 
 ```javascript
-import await { dbCall } from "./db-connection.js";
+import { dbCall } from "./db-connection.js";
 
 export const createUser = async name => {
 	command = `CREATE USER ${name}`;
 	// This is a normal await, because it's in an async function
 	await dbCall({ command });
-}
+};
 ```
 
 Now it looks like that this pattern will continue and will infect all using modules as async modules.
@@ -60,7 +56,7 @@ But you as a developer don't want this.
 You want to break the chain at a point in your module graph where it makes sense.
 Luckily there is a nice way to break the chain.
 
-You can use `import("./UserApi.js")` to import the module instead of `import await`.
+You can use `import("./UserApi.js")` to import the module instead of `import`.
 As this returns a Promise it can be awaited to wait for module evaluation (including top-level-awaits) and handle failures.
 
 Handling failures is an important point here.
@@ -99,8 +95,7 @@ export const AlternativeCreateUserAction = async name => {
 //       except in rare cases. It will import modules sequentially.
 ```
 
-As `Actions.js` doesn't use any top-level-await nor `import await` it's not an async module.
-It's a normal module and can be used via `import`.
+As `Actions.js` doesn't use any top-level-await nor `import`s an async module directly so it's not an async module.
 
 # example.js
 
@@ -111,10 +106,6 @@ import { CreateUserAction } from "./Actions.js";
 	await CreateUserAction("John");
 })();
 ```
-
-Note that you may `import await` from a normal module too.
-This is legal, but mostly not required.
-`import await` may also be seen by developers as a hint that this dependency does some async actions and may delay evaluation.
 
 As a guideline, you should prevent your application entry point to become an async module when compiling for web targets.
 Doing async actions at application bootstrap will delay your application startup and may be negative for UX.
@@ -128,22 +119,41 @@ When compiling for other targets like node.js, electron or WebWorkers, it may be
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
-/* 0 */,
+/* 0 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! namespace exports */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Actions_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Actions.js */ 1);
+
+
+(async ()=> {
+	await (0,_Actions_js__WEBPACK_IMPORTED_MODULE_0__.CreateUserAction)("John");
+})();
+
+
+/***/ }),
 /* 1 */
 /*!********************!*\
   !*** ./Actions.js ***!
   \********************/
 /*! namespace exports */
-/*! export AlternativeCreateUserAction [provided] [unused] [could be renamed] */
-/*! export CreateUserAction [provided] [used] [could be renamed] */
-/*! other exports [not provided] [unused] */
-/*! runtime requirements: __webpack_require__.e, __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/*! export AlternativeCreateUserAction [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export CreateUserAction [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+__webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "CreateUserAction": () => /* binding */ CreateUserAction
+/* harmony export */   "CreateUserAction": () => /* binding */ CreateUserAction,
+/* harmony export */   "AlternativeCreateUserAction": () => /* binding */ AlternativeCreateUserAction
 /* harmony export */ });
-/* unused harmony export AlternativeCreateUserAction */
 // import() doesn't care about whether a module is an async module or not
 const UserApi = __webpack_require__.e(/*! import() */ 497).then(__webpack_require__.bind(__webpack_require__, /*! ./UserApi.js */ 2));
 
@@ -247,6 +257,52 @@ const AlternativeCreateUserAction = async name => {
 /******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/load script */
+/******/ 	(() => {
+/******/ 		var inProgress = {};
+/******/ 		// data-webpack is not used as build has no uniqueName
+/******/ 		// loadScript function to load a script via script tag
+/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
+/******/ 			var script, needAttach;
+/******/ 			if(key !== undefined) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				for(var i = 0; i < scripts.length; i++) {
+/******/ 					var s = scripts[i];
+/******/ 					if(s.getAttribute("src") == url) { script = s; break; }
+/******/ 				}
+/******/ 			}
+/******/ 			if(!script) {
+/******/ 				needAttach = true;
+/******/ 				script = document.createElement('script');
+/******/ 		
+/******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120;
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
+/******/ 		
+/******/ 				script.src = url;
+/******/ 			}
+/******/ 			inProgress[url] = [done];
+/******/ 			var onScriptComplete = (prev, event) => {
+/******/ 				// avoid mem leaks in IE.
+/******/ 				script.onerror = script.onload = null;
+/******/ 				clearTimeout(timeout);
+/******/ 				var doneFns = inProgress[url];
+/******/ 				delete inProgress[url];
+/******/ 				script.parentNode && script.parentNode.removeChild(script);
+/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				if(prev) return prev(event);
+/******/ 			}
+/******/ 			;
+/******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			needAttach && document.head.appendChild(script);
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -291,49 +347,24 @@ const AlternativeCreateUserAction = async name => {
 /******/ 		
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
-/******/ 							var loadingEnded = () => {
+/******/ 							// create error before stack unwound to get useful stacktrace later
+/******/ 							var error = new Error();
+/******/ 							var loadingEnded = (event) => {
 /******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
 /******/ 									installedChunkData = installedChunks[chunkId];
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
-/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 									if(installedChunkData) {
+/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 										var realSrc = event && event.target && event.target.src;
+/******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 										error.name = 'ChunkLoadError';
+/******/ 										error.type = errorType;
+/******/ 										error.request = realSrc;
+/******/ 										installedChunkData[1](error);
+/******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							var script = document.createElement('script');
-/******/ 							var onScriptComplete;
-/******/ 		
-/******/ 							script.charset = 'utf-8';
-/******/ 							script.timeout = 120;
-/******/ 							if (__webpack_require__.nc) {
-/******/ 								script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 							}
-/******/ 							script.src = url;
-/******/ 		
-/******/ 							// create error before stack unwound to get useful stacktrace later
-/******/ 							var error = new Error();
-/******/ 							onScriptComplete = (event) => {
-/******/ 								onScriptComplete = () => {
-/******/ 		
-/******/ 								}
-/******/ 								// avoid mem leaks in IE.
-/******/ 								script.onerror = script.onload = null;
-/******/ 								clearTimeout(timeout);
-/******/ 								var reportError = loadingEnded();
-/******/ 								if(reportError) {
-/******/ 									var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 									var realSrc = event && event.target && event.target.src;
-/******/ 									error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
-/******/ 									error.name = 'ChunkLoadError';
-/******/ 									error.type = errorType;
-/******/ 									error.request = realSrc;
-/******/ 									reportError(error);
-/******/ 								}
-/******/ 							}
-/******/ 							;
-/******/ 							var timeout = setTimeout(() => {
-/******/ 								onScriptComplete({ type: 'timeout', target: script })
-/******/ 							}, 120000);
-/******/ 							script.onerror = script.onload = onScriptComplete;
-/******/ 							document.head.appendChild(script);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -390,22 +421,10 @@ const AlternativeCreateUserAction = async name => {
 </details>
 
 ``` js
-(() => {
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! namespace exports */
-/*! exports [not provided] [unused] */
-/*! runtime requirements: __webpack_require__ */
-/* harmony import */ var _Actions_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Actions.js */ 1);
-
-
-(async ()=> {
-	await (0,_Actions_js__WEBPACK_IMPORTED_MODULE_0__.CreateUserAction)("John");
-})();
-
-})();
-
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__(0);
+/******/ 	// This entry module used 'exports' so it can't be inlined
 /******/ })()
 ;
 ```
@@ -421,8 +440,8 @@ const AlternativeCreateUserAction = async name => {
   !*** ./UserApi.js ***!
   \********************/
 /*! namespace exports */
-/*! export createUser [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! export createUser [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, module, __webpack_require__.d, __webpack_require__.* */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
@@ -440,7 +459,7 @@ const createUser = async name => {
 	command = `CREATE USER ${name}`;
 	// This is a normal await, because it's in an async function
 	await (0,_db_connection_js__WEBPACK_IMPORTED_MODULE_0__.dbCall)({ command });
-}
+};
 
 return __webpack_exports__;
 })();
@@ -451,18 +470,19 @@ return __webpack_exports__;
   !*** ./db-connection.js ***!
   \**************************/
 /*! namespace exports */
-/*! export close [provided] [unused] [could be renamed] */
-/*! export dbCall [provided] [used] [could be renamed] */
-/*! other exports [not provided] [unused] */
-/*! runtime requirements: module, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/*! export close [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export dbCall [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__.d, __webpack_require__.* */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 module.exports = (async () => {
+__webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "dbCall": () => /* binding */ dbCall
+/* harmony export */   "dbCall": () => /* binding */ dbCall,
+/* harmony export */   "close": () => /* binding */ close
 /* harmony export */ });
-/* unused harmony export close */
 const connectToDB = async url => {
 	await new Promise(r => setTimeout(r, 1000));
 };
@@ -499,34 +519,34 @@ return __webpack_exports__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-        Asset      Size
-497.output.js  2.39 KiB  [emitted]
-    output.js  10.7 KiB  [emitted]  [name: main]
+Version: webpack 5.0.0-beta.23
+asset 497.output.js 2.53 KiB [emitted]
+asset output.js 12.2 KiB [emitted] (name: main)
 Entrypoint main = output.js
-chunk output.js (main) 1.19 KiB (javascript) 4.76 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 1.19 KiB (javascript) 5.46 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./Actions.js 1.09 KiB [built]
      [exports: AlternativeCreateUserAction, CreateUserAction]
-     [only some exports used: CreateUserAction]
+     [used exports unknown]
      harmony side effect evaluation ./Actions.js ./example.js 1:0-48
      harmony import specifier ./Actions.js ./example.js 4:7-23
  ./example.js 103 bytes [built]
      [no exports]
-     [no exports used]
+     [used exports unknown]
      entry ./example.js main
-     + 7 hidden chunk modules
-chunk 497.output.js 622 bytes [rendered]
+     + 8 hidden chunk modules
+chunk 497.output.js 617 bytes [rendered]
     > ./UserApi.js ./Actions.js 22:30-52
     > ./UserApi.js ./Actions.js 2:16-38
- ./UserApi.js 220 bytes [built]
+ ./UserApi.js 215 bytes [built]
      [exports: createUser]
+     [used exports unknown]
      import() ./UserApi.js ./Actions.js 2:16-38
      import() ./UserApi.js ./Actions.js 22:30-52
  ./db-connection.js 402 bytes [built]
      [exports: close, dbCall]
-     [only some exports used: dbCall]
-     harmony side effect evaluation ./db-connection.js ./UserApi.js 1:0-50
+     [used exports unknown]
+     harmony side effect evaluation ./db-connection.js ./UserApi.js 1:0-44
      harmony import specifier ./db-connection.js ./UserApi.js 6:7-13
 ```
 
@@ -534,28 +554,27 @@ chunk 497.output.js 622 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-        Asset       Size
-497.output.js  475 bytes  [emitted]
-    output.js   1.65 KiB  [emitted]  [name: main]
+Version: webpack 5.0.0-beta.23
+asset 497.output.js 475 bytes [emitted]
+asset output.js 2 KiB [emitted] (name: main)
 Entrypoint main = output.js
-chunk output.js (main) 1.19 KiB (javascript) 4.76 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 5.46 KiB (runtime) [entry] [rendered]
     > ./example.js main
  ./example.js + 1 modules 1.19 KiB [built]
      [no exports]
      [no exports used]
      entry ./example.js main
-     + 7 hidden chunk modules
-chunk 497.output.js 622 bytes [rendered]
+     + 8 hidden chunk modules
+chunk (runtime: main) 497.output.js 617 bytes [rendered]
     > ./UserApi.js ./Actions.js 22:30-52
     > ./UserApi.js ./Actions.js 2:16-38
- ./UserApi.js 220 bytes [built]
+ ./UserApi.js 215 bytes [built]
      [exports: createUser]
      import() ./UserApi.js ./example.js + 1 modules ./Actions.js 2:16-38
      import() ./UserApi.js ./example.js + 1 modules ./Actions.js 22:30-52
  ./db-connection.js 402 bytes [built]
      [exports: close, dbCall]
      [only some exports used: dbCall]
-     harmony side effect evaluation ./db-connection.js ./UserApi.js 1:0-50
+     harmony side effect evaluation ./db-connection.js ./UserApi.js 1:0-44
      harmony import specifier ./db-connection.js ./UserApi.js 6:7-13
 ```
