@@ -4,5 +4,12 @@ module.exports = {
 	output: {
 		chunkFilename: "[name].js",
 		charset: false
+	},
+	performance: {
+		hints: false
+	},
+	optimization: {
+		chunkIds: "named",
+		minimize: false
 	}
 };

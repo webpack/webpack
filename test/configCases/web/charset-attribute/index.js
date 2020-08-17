@@ -1,6 +1,5 @@
-const doImport = () => import(/* webpackChunkName: "chunk1" */ "./chunk1");
 __webpack_public_path__ = "https://example.com/public/path/";
-
+const doImport = () => import(/* webpackChunkName: "chunk1" */ "./chunk1");
 it("should not add charset attribute", () => {
 	const promise = doImport();
 	expect(document.head._children).toHaveLength(1);
