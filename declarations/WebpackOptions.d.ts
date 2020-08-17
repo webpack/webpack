@@ -131,7 +131,7 @@ export type ExternalItem =
 				  };
 	  }
 	| ((
-			data: {context: string; request: string},
+			data: { context: string; request: string },
 			callback: (err?: Error, result?: string) => void
 	  ) => void);
 /**
@@ -1573,6 +1573,10 @@ export interface Output {
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: AuxiliaryComment;
+	/**
+	 * Add charset attribute for script tag
+	 */
+	charset?: boolean;
 	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
