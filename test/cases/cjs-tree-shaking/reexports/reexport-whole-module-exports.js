@@ -1,8 +1,8 @@
-var m2 = require("./module?wme2");
+var module2 = require("./module?wme2" + __resourceQuery);
 module.exports = {
-	m1: require("./module?wme1"),
-	m2
+	module1: require("./module?wme1" + __resourceQuery),
+	module2
 };
-module.exports.m3 = require("./module?wme3");
-var m4 = require("./module?wme4");
-module.exports.m4 = m4;
+module.exports.module3 = require("./module?wme3" + __resourceQuery);
+var m4 = require("./module?wme4" + __resourceQuery);
+module.exports.module4 = m4;
