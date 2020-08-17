@@ -5389,6 +5389,11 @@ declare interface Output {
 	auxiliaryComment?: AuxiliaryComment;
 
 	/**
+	 * Add charset attribute for script tag.
+	 */
+	charset?: boolean;
+
+	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
 	chunkCallbackName?: string;

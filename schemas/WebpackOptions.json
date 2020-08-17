@@ -1688,6 +1688,10 @@
             }
           ]
         },
+        "charset": {
+          "description": "Add charset attribute for script tag.",
+          "type": "boolean"
+        },
         "chunkCallbackName": {
           "$ref": "#/definitions/ChunkCallbackName"
         },

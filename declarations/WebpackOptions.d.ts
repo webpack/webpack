@@ -131,7 +131,7 @@ export type ExternalItem =
 				  };
 	  }
 	| ((
-			data: { context: string; request: string },
+			data: {context: string; request: string},
 			callback: (err?: Error, result?: string) => void
 	  ) => void);
 /**
@@ -1574,7 +1574,7 @@ export interface Output {
 	 */
 	auxiliaryComment?: AuxiliaryComment;
 	/**
-	 * Add charset attribute for script tag
+	 * Add charset attribute for script tag.
 	 */
 	charset?: boolean;
 	/**
