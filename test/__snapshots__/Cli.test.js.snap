@@ -1781,6 +1781,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-charset": Object {
+    "configs": Array [
+      Object {
+        "description": "Add charset attribute for script tag.",
+        "multiple": false,
+        "path": "output.charset",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add charset attribute for script tag.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-chunk-callback-name": Object {
     "configs": Array [
       Object {
