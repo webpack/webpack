@@ -521,10 +521,10 @@ exports[`StatsTestCases should print correct stats for chunks-development 1`] = 
 Time: X ms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
-asset b_js.bundle.js 901 bytes [emitted]
-asset bundle.js 9.75 KiB [emitted] (name: main)
+asset b_js.bundle.js 968 bytes [emitted]
+asset bundle.js 9.82 KiB [emitted] (name: main)
 asset c_js.bundle.js 1.1 KiB [emitted]
-asset d_js-e_js.bundle.js 1.25 KiB [emitted]
+asset d_js-e_js.bundle.js 1.38 KiB [emitted]
 Entrypoint main = bundle.js
 chunk b_js.bundle.js 22 bytes <{main}> [rendered]
     > ./b ./index.js 2:0-16
@@ -598,6 +598,19 @@ Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
 asset <CLR=32>main.js</CLR> 54 bytes <CLR=32>[emitted]</CLR> (name: main)
 Entrypoint <CLR=BOLD>main</CLR> = <CLR=32>main.js</CLR>
 <CLR=BOLD>./index.js</CLR> 1 bytes <CLR=32>[built]</CLR>"
+`;
+
+exports[`StatsTestCases should print correct stats for common-libs 1`] = `
+"Hash: cb2d8154f4c30528e43b
+Time: X ms
+Built at: 1970-04-20 12:42:42
+asset react.js 3.12 KiB [emitted] [minimized] (name: react)
+asset react.js.LICENSE.txt 295 bytes [emitted]
+Entrypoint react = react.js
+./react.js 69 bytes [built]
+../../../node_modules/react/index.js 190 bytes [built]
+../../../node_modules/react/cjs/react.production.min.js 6.52 KiB [built]
+../../../node_modules/object-assign/index.js 2.06 KiB [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-0 1`] = `
@@ -2114,18 +2127,22 @@ chunk {996} (runtime: main) 996.js 22 bytes <{179}> [rendered]
       ModuleConcatenation bailout: Module is not an ECMAScript module
 [847] ./a.js 22 bytes {179} [depth 1] [built]
       [used exports unknown]
+      CommonJS bailout: module.exports is used directly at 1:0-14
       ModuleConcatenation bailout: Module is not an ECMAScript module
 [996] ./b.js 22 bytes {996} [depth 1] [built]
       [used exports unknown]
+      CommonJS bailout: module.exports is used directly at 1:0-14
       ModuleConcatenation bailout: Module is not an ECMAScript module
 [460] ./c.js 54 bytes {460} [depth 1] [built]
       [used exports unknown]
       ModuleConcatenation bailout: Module is not an ECMAScript module
 [767] ./d.js 22 bytes {524} [depth 2] [built]
       [used exports unknown]
+      CommonJS bailout: module.exports is used directly at 1:0-14
       ModuleConcatenation bailout: Module is not an ECMAScript module
 [390] ./e.js 22 bytes {524} [depth 2] [built]
       [used exports unknown]
+      CommonJS bailout: module.exports is used directly at 1:0-14
       ModuleConcatenation bailout: Module is not an ECMAScript module
 webpack/runtime/ensure chunk 326 bytes {179} [runtime]
       [no exports]
@@ -2342,6 +2359,7 @@ chunk {179} (runtime: main) main.js (main) 73 bytes (javascript) 4.88 KiB (runti
     > ./index main
  [847] ./a.js 22 bytes {179} [depth 1] [built]
        [used exports unknown]
+       CommonJS bailout: module.exports is used directly at 1:0-14
        ModuleConcatenation bailout: Module is not an ECMAScript module
        cjs self exports reference [847] ./a.js 1:0-14
        cjs require ./a [10] ./index.js 1:0-14
@@ -2380,12 +2398,14 @@ chunk {524} (runtime: main) 524.js 44 bytes <{460}> [rendered]
     > [460] ./c.js 1:0-52
  [767] ./d.js 22 bytes {524} [depth 2] [built]
        [used exports unknown]
+       CommonJS bailout: module.exports is used directly at 1:0-14
        ModuleConcatenation bailout: Module is not an ECMAScript module
        require.ensure item ./d [460] ./c.js 1:0-52
        cjs self exports reference [767] ./d.js 1:0-14
        X ms [10] -> X ms [460] -> X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
  [390] ./e.js 22 bytes {524} [depth 2] [built]
        [used exports unknown]
+       CommonJS bailout: module.exports is used directly at 1:0-14
        ModuleConcatenation bailout: Module is not an ECMAScript module
        require.ensure item ./e [460] ./c.js 1:0-52
        cjs self exports reference [390] ./e.js 1:0-14
@@ -2394,6 +2414,7 @@ chunk {996} (runtime: main) 996.js 22 bytes <{179}> [rendered]
     > ./b [10] ./index.js 2:0-16
  [996] ./b.js 22 bytes {996} [depth 1] [built]
        [used exports unknown]
+       CommonJS bailout: module.exports is used directly at 1:0-14
        ModuleConcatenation bailout: Module is not an ECMAScript module
        cjs self exports reference [996] ./b.js 1:0-14
        amd require ./b [10] ./index.js 2:0-16
@@ -2944,6 +2965,7 @@ Entrypoint entry = entry.js
     ModuleConcatenation bailout: Cannot concat with ./ref-from-cjs.js: Module ./ref-from-cjs.js is referenced from these modules with unsupported syntax: ./cjs.js (referenced with cjs require)
 ./entry.js 32 bytes [built]
 ./cjs.js 59 bytes [built]
+    CommonJS bailout: module.exports is used directly at 3:0-14
     ModuleConcatenation bailout: Module is not an ECMAScript module
 ./ref-from-cjs.js 45 bytes [built]
 ./eval.js 35 bytes [built]
@@ -3065,9 +3087,9 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-optimization 1`] = `
-"Hash: d26335b5c063fdfc2a88c8cd6c316db9be4953d2
+"Hash: dfef98e0ef4320bb5e7c18a1362fdec91250a8dc
 Child
-    Hash: d26335b5c063fdfc2a88
+    Hash: dfef98e0ef4320bb5e7c
     Time: X ms
     Built at: 1970-04-20 12:42:42
     asset main.js 207 bytes [emitted] [minimized] (name: main)
@@ -3088,7 +3110,7 @@ Child
         ModuleConcatenation bailout: Module is not an ECMAScript module
         + 4 hidden modules
 Child
-    Hash: c8cd6c316db9be4953d2
+    Hash: 18a1362fdec91250a8dc
     Time: X ms
     Built at: 1970-04-20 12:42:42
     asset main.no-side.js 1.24 KiB [emitted] [minimized] (name: main)
@@ -4269,7 +4291,7 @@ Child global:
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: e0f1716012b18c82ad97
+"Hash: 9b742a666c2c28e22fdf
 Time: X ms
 Built at: 1970-04-20 12:42:42
 asset bundle.js 7.09 KiB [emitted] (name: main)

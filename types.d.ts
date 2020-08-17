@@ -3478,7 +3478,7 @@ declare abstract class JavascriptParser extends Parser {
 		topLevelAwait: SyncBailHook<[Expression], boolean | void>;
 		call: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		callMemberChain: HookMap<
-			SyncBailHook<[Expression, string[]], boolean | void>
+			SyncBailHook<[CallExpression, string[]], boolean | void>
 		>;
 		memberChainOfCallMemberChain: HookMap<
 			SyncBailHook<
@@ -3513,9 +3513,56 @@ declare abstract class JavascriptParser extends Parser {
 	state: Record<string, any> & ParserStateBase;
 	comments: any;
 	semicolons: any;
-	statementEndPos: any;
-	lastStatementEndPos: any;
-	statementStartPos: any;
+	statementPath: (
+		| UnaryExpression
+		| ThisExpression
+		| ArrayExpression
+		| ObjectExpression
+		| FunctionExpression
+		| ArrowFunctionExpression
+		| YieldExpression
+		| SimpleLiteral
+		| RegExpLiteral
+		| UpdateExpression
+		| BinaryExpression
+		| AssignmentExpression
+		| LogicalExpression
+		| MemberExpression
+		| ConditionalExpression
+		| SimpleCallExpression
+		| NewExpression
+		| SequenceExpression
+		| TemplateLiteral
+		| TaggedTemplateExpression
+		| ClassExpression
+		| MetaProperty
+		| Identifier
+		| AwaitExpression
+		| ImportExpression
+		| ChainExpression
+		| ExpressionStatement
+		| BlockStatement
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+	)[];
+	prevStatement: any;
 	currentTagData: any;
 	initializeEvaluating(): void;
 	getRenameIdentifier(expr?: any): string;
@@ -3584,7 +3631,7 @@ declare abstract class JavascriptParser extends Parser {
 	walkObjectExpression(expression?: any): void;
 	walkFunctionExpression(expression?: any): void;
 	walkArrowFunctionExpression(expression?: any): void;
-	walkSequenceExpression(expression?: any): void;
+	walkSequenceExpression(expression: SequenceExpression): void;
 	walkUpdateExpression(expression?: any): void;
 	walkUnaryExpression(expression?: any): void;
 	walkLeftRightExpression(expression?: any): void;
@@ -3664,6 +3711,7 @@ declare abstract class JavascriptParser extends Parser {
 	evaluate(source?: any): BasicEvaluatedExpression;
 	getComments(range?: any): any;
 	isAsiPosition(pos?: any): any;
+	isStatementLevelExpression(expr?: any): boolean;
 	getTagData(name?: any, tag?: any): any;
 	tagVariable(name?: any, tag?: any, data?: any): void;
 	defineVariable(name?: any): void;
@@ -3759,7 +3807,7 @@ declare interface KnownBuildMeta {
 	exportsArgument?: string;
 	strict?: boolean;
 	moduleConcatenationBailout?: string;
-	exportsType?: "namespace" | "default" | "flagged";
+	exportsType?: "namespace" | "dynamic" | "default" | "flagged";
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	async?: boolean;
@@ -4176,6 +4224,7 @@ declare class Module extends DependenciesBlock {
 	readonly exportsArgument: string;
 	readonly moduleArgument: string;
 	getExportsType(
+		moduleGraph: ModuleGraph,
 		strict: boolean
 	): "namespace" | "default-only" | "default-with-named" | "dynamic";
 	addPresentationalDependency(presentationalDependency: Dependency): void;
