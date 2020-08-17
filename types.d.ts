@@ -5603,6 +5603,11 @@ declare interface OutputNormalized {
 	assetModuleFilename?: AssetModuleFilename;
 
 	/**
+	 * Add charset attribute for script tag.
+	 */
+	charset?: boolean;
+
+	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
 	chunkCallbackName?: string;

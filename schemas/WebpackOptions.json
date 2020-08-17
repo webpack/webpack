@@ -69,6 +69,10 @@
         }
       ]
     },
+    "Charset": {
+      "description": "Add charset attribute for script tag.",
+      "type": "boolean"
+    },
     "ChunkCallbackName": {
       "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
       "type": "string"
@@ -1689,8 +1693,7 @@
           ]
         },
         "charset": {
-          "description": "Add charset attribute for script tag.",
-          "type": "boolean"
+          "$ref": "#/definitions/Charset"
         },
         "chunkCallbackName": {
           "$ref": "#/definitions/ChunkCallbackName"
@@ -1834,6 +1837,9 @@
       "properties": {
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
+        },
+        "charset": {
+          "$ref": "#/definitions/Charset"
         },
         "chunkCallbackName": {
           "$ref": "#/definitions/ChunkCallbackName"
