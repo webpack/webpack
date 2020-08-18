@@ -215,6 +215,26 @@ declare interface AssetInfo {
 	immutable?: boolean;
 
 	/**
+	 * the value(s) of the full hash used for this asset
+	 */
+	fullhash?: LibraryExport;
+
+	/**
+	 * the value(s) of the chunk hash used for this asset
+	 */
+	chunkhash?: LibraryExport;
+
+	/**
+	 * the value(s) of the module hash used for this asset
+	 */
+	modulehash?: LibraryExport;
+
+	/**
+	 * the value(s) of the content hash used for this asset
+	 */
+	contenthash?: LibraryExport;
+
+	/**
 	 * size in bytes, only set after asset has been emitted
 	 */
 	size?: number;
@@ -1319,6 +1339,7 @@ declare class Compilation {
 		newSourceOrFunction: Source | ((arg0: Source) => Source),
 		assetInfoUpdateOrFunction?: AssetInfo | ((arg0: AssetInfo) => AssetInfo)
 	): void;
+	renameAsset(file?: any, newFile?: any): void;
 	deleteAsset(file: string): void;
 	getAssets(): Readonly<Asset>[];
 	getAsset(name: string): Readonly<Asset>;
@@ -1414,6 +1435,11 @@ declare class Compilation {
 	 * Optimize the transfer of existing assets, e. g. by preparing a compressed (gzip) file as separate asset.
 	 */
 	static PROCESS_ASSETS_STAGE_OPTIMIZE_TRANSFER: number;
+
+	/**
+	 * Optimize the hashes of the assets, e. g. by generating real hashes of the asset content.
+	 */
+	static PROCESS_ASSETS_STAGE_OPTIMIZE_HASH: number;
 
 	/**
 	 * Analyse existing assets.
@@ -5154,6 +5180,11 @@ declare interface Optimization {
 	 * Figure out which exports are provided by modules to generate more efficient code.
 	 */
 	providedExports?: boolean;
+
+	/**
+	 * Use real [contenthash] based on final content of the assets.
+	 */
+	realContentHash?: boolean;
 
 	/**
 	 * Removes modules from chunks when these modules are already included in all parents.
