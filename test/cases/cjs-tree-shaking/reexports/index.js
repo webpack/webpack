@@ -55,8 +55,10 @@ it("should keep executing modules even when unused", () => {
 	exports.unused2 = require("./add-to-counter?2").abc;
 	expect((exports.unused3 = require("./add-to-counter?3").abc)).toBe(42);
 	expect(counter.value).toBe(3);
-	expect(require("./add-to-counter?1").abcUsed).toBe(false);
-	expect(require("./add-to-counter?2").abcUsed).toBe(false);
+	if (process.env.NODE_ENV === "production") {
+		expect(require("./add-to-counter?1").abcUsed).toBe(false);
+		expect(require("./add-to-counter?2").abcUsed).toBe(false);
+	}
 	expect(require("./add-to-counter?3").abcUsed).toBe(true);
 });
 
