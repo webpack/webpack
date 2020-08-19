@@ -3176,6 +3176,7 @@ declare interface HashedModuleIdsPluginOptions {
 	 */
 	hashFunction?: string;
 }
+declare abstract class HelperRuntimeModule extends RuntimeModule {}
 declare class HotModuleReplacementPlugin {
 	constructor(options?: any);
 	options: any;
@@ -3833,7 +3834,6 @@ declare abstract class JavascriptParser extends Parser {
 	};
 }
 declare interface JsonpCompilationPluginHooks {
-	jsonpScript: SyncWaterfallHook<[string, Chunk, string]>;
 	linkPreload: SyncWaterfallHook<[string, Chunk, string]>;
 	linkPrefetch: SyncWaterfallHook<[string, Chunk, string]>;
 }
@@ -4037,6 +4037,15 @@ declare interface LimitChunkCountPluginOptions {
 	 */
 	maxChunks: number;
 }
+declare interface LoadScriptCompilationHooks {
+	createScript: SyncWaterfallHook<[string, Chunk]>;
+}
+declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
+	constructor();
+	static getCompilationHooks(
+		compilation: Compilation
+	): LoadScriptCompilationHooks;
+}
 
 /**
  * Custom values available in the loader context.
@@ -4162,7 +4171,7 @@ declare abstract class MainTemplate {
 		localVars: SyncWaterfallHook<[string, Chunk, string]>;
 		requireExtensions: SyncWaterfallHook<[string, Chunk, string]>;
 		requireEnsure: SyncWaterfallHook<[string, Chunk, string, string]>;
-		readonly jsonpScript: SyncWaterfallHook<[string, Chunk, string]>;
+		readonly jsonpScript: SyncWaterfallHook<[string, Chunk]>;
 		readonly linkPrefetch: SyncWaterfallHook<[string, Chunk, string]>;
 		readonly linkPreload: SyncWaterfallHook<[string, Chunk, string]>;
 	}>;
@@ -9177,6 +9186,9 @@ declare namespace exports {
 			SideEffectsFlagPlugin,
 			SplitChunksPlugin
 		};
+	}
+	export namespace runtime {
+		export { LoadScriptRuntimeModule };
 	}
 	export namespace web {
 		export { FetchCompileWasmPlugin, JsonpTemplatePlugin };
