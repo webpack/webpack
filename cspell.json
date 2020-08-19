@@ -177,6 +177,7 @@
     "eqeqeq",
     "boolish",
     "analysing",
+    "etags",
 
     "webassemblyjs",
     "fsevents",

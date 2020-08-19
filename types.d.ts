@@ -505,6 +505,7 @@ declare abstract class CacheFacade {
 	getChildCache(name: string): CacheFacade;
 	getItemCache(identifier: string, etag: Etag): ItemCacheFacade;
 	getLazyHashedEtag(obj: HashableObject): Etag;
+	mergeEtags(a: Etag, b: Etag): Etag;
 	get<T>(identifier: string, etag: Etag, callback: CallbackCache<T>): void;
 	getPromise<T>(identifier: string, etag: Etag): Promise<T>;
 	store<T>(
@@ -514,6 +515,17 @@ declare abstract class CacheFacade {
 		callback: CallbackCache<void>
 	): void;
 	storePromise<T>(identifier: string, etag: Etag, data: T): Promise<void>;
+	provide<T>(
+		identifier: string,
+		etag: Etag,
+		computer: (arg0: CallbackNormalErrorCache<T>) => void,
+		callback: CallbackNormalErrorCache<T>
+	): void;
+	providePromise<T>(
+		identifier: string,
+		etag: Etag,
+		computer: () => T | Promise<T>
+	): Promise<T>;
 }
 declare interface CacheGroupSource {
 	key?: string;
@@ -547,6 +559,9 @@ declare interface CallbackCache<T> {
 }
 declare interface CallbackFunction<T> {
 	(err?: Error, result?: T): any;
+}
+declare interface CallbackNormalErrorCache<T> {
+	(err?: Error, result?: T): void;
 }
 declare interface CallbackWebpack<T> {
 	(err?: Error, stats?: T): void;
@@ -3293,6 +3308,11 @@ declare abstract class ItemCacheFacade {
 	getPromise<T>(): Promise<T>;
 	store<T>(data: T, callback: CallbackCache<void>): void;
 	storePromise<T>(data: T): Promise<void>;
+	provide<T>(
+		computer: (arg0: CallbackNormalErrorCache<T>) => void,
+		callback: CallbackNormalErrorCache<T>
+	): void;
+	providePromise<T>(computer: () => T | Promise<T>): Promise<T>;
 }
 declare class JavascriptModulesPlugin {
 	constructor(options?: {});
