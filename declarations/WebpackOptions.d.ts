@@ -328,6 +328,10 @@ export type AssetModuleFilename =
 			assetInfo?: import("../lib/Compilation").AssetInfo
 	  ) => string);
 /**
+ * Add charset attribute for script tag.
+ */
+export type Charset = boolean;
+/**
  * The callback function name used by webpack for loading of chunks in WebWorkers.
  */
 export type ChunkCallbackName = string;
@@ -1578,6 +1582,10 @@ export interface Output {
 	 */
 	auxiliaryComment?: AuxiliaryComment;
 	/**
+	 * Add charset attribute for script tag.
+	 */
+	charset?: Charset;
+	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
 	chunkCallbackName?: ChunkCallbackName;
@@ -2046,6 +2054,10 @@ export interface OutputNormalized {
 	 * The filename of asset modules as relative path inside the `output.path` directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
+	/**
+	 * Add charset attribute for script tag.
+	 */
+	charset?: Charset;
 	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
