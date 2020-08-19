@@ -553,6 +553,11 @@ declare interface CacheGroupsContext {
 }
 type CacheOptions = boolean | MemoryCacheOptions | FileCacheOptions;
 type CacheOptionsNormalized = false | MemoryCacheOptions | FileCacheOptions;
+declare class CachedSource extends Source {
+	constructor(source: Source, cachedData?: any);
+	original(): Source;
+	getCachedData(): any;
+}
 type CallExpression = SimpleCallExpression | NewExpression;
 declare interface CallbackCache<T> {
 	(err?: WebpackError, result?: T): void;
@@ -1576,6 +1581,12 @@ declare class Compiler {
 	};
 	compile(callback: CallbackFunction<Compilation>): void;
 	close(callback: CallbackFunction<void>): void;
+}
+declare class ConcatSource extends Source {
+	constructor(...args: (string | Source)[]);
+	getChildren(): Source[];
+	add(item: string | Source): void;
+	addAllSkipOptimizing(items: Source[]): void;
 }
 
 /**
@@ -5482,6 +5493,10 @@ type OptimizationSplitChunksSizes = number | { [index: string]: number };
 declare abstract class OptionsApply {
 	process(options?: any, compiler?: any): void;
 }
+declare class OriginalSource extends Source {
+	constructor(source: string | Buffer, name: string);
+	getName(): string;
+}
 
 /**
  * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
@@ -5966,6 +5981,11 @@ declare class PrefetchPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare class PrefixSource extends Source {
+	constructor(prefix: string, source: string | Source);
+	original(): Source;
+	getPrefix(): string;
+}
 declare interface PrintedElement {
 	element: string;
 	content: string;
@@ -6151,6 +6171,10 @@ declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
 }
+declare class RawSource extends Source {
+	constructor(source: string | Buffer, convertToString: boolean);
+	isBuffer(): boolean;
+}
 declare class ReadFileCompileWasmPlugin {
 	constructor(options?: any);
 	options: any;
@@ -6323,7 +6347,8 @@ declare interface RenderManifestOptions {
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
 }
-declare abstract class ReplaceSource extends Source {
+declare class ReplaceSource extends Source {
+	constructor(source: Source, name: string);
 	replace(start: number, end: number, newValue: string, name: string): void;
 	insert(pos: number, newValue: string, name: string): void;
 	getName(): string;
@@ -7774,6 +7799,9 @@ declare class SideEffectsFlagPlugin {
 		cache?: any
 	): any;
 }
+declare class SizeOnlySource extends Source {
+	constructor(size: number);
+}
 declare interface Snapshot {
 	startTime?: number;
 	fileTimestamps?: Map<string, FileSystemInfoEntry>;
@@ -7808,7 +7836,8 @@ declare abstract class SortableSet<T> extends Set<T> {
 	[Symbol.iterator](): IterableIterator<T>;
 	readonly [Symbol.toStringTag]: string;
 }
-declare abstract class Source {
+declare class Source {
+	constructor();
 	size(): number;
 	map(options: MapOptions): Object;
 	sourceAndMap(options: MapOptions): { source: string | Buffer; map: Object };
@@ -7900,6 +7929,16 @@ declare interface SourceMapDevToolPluginOptions {
 	 * Include source maps for modules based on their extension (defaults to .js and .css).
 	 */
 	test?: Rules;
+}
+declare class SourceMapSource extends Source {
+	constructor(
+		source: string | Buffer,
+		name: string,
+		sourceMap: string | Object | Buffer,
+		originalSource: string | Buffer,
+		innerSourceMap: string | Object | Buffer
+	);
+	getArgsAsBuffers(): [Buffer, string, Buffer, Buffer, Buffer];
 }
 declare interface SourcePosition {
 	line: number;
@@ -9310,6 +9349,19 @@ declare namespace exports {
 			export let createFileSerializer: (fs?: any) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
+	}
+	export namespace sources {
+		export {
+			Source,
+			RawSource,
+			OriginalSource,
+			ReplaceSource,
+			SourceMapSource,
+			ConcatSource,
+			PrefixSource,
+			CachedSource,
+			SizeOnlySource
+		};
 	}
 	export namespace experiments {
 		export namespace schemes {
