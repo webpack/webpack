@@ -2519,6 +2519,46 @@ LOG from ModuleConcatenationPlugin
 "
 `;
 
+exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
+"Hash: 8981c4ae0cf7803cd21e5c98fdf5155243d58453
+Child
+    Hash: 8981c4ae0cf7803cd21e
+    Time: X ms
+    Built at: 1970-04-20 12:42:42
+    asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
+    asset 75500a81ed65abaee6f7-75500a.js 268 bytes [emitted] [immutable] [minimized] (name: main)
+      sourceMap 75500a81ed65abaee6f7-75500a.js.map 366 bytes [emitted] [dev]
+    asset 7d9d0a742118d8263796-7d9d0a.js 253 bytes [emitted] [immutable] [minimized] (name: lazy)
+      sourceMap 7d9d0a742118d8263796-7d9d0a.js.map 331 bytes [emitted] [dev]
+    asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
+    asset ac0e4e032b46a3050268-ac0e4e.js 2.18 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+      sourceMap ac0e4e032b46a3050268-ac0e4e.js.map 12.7 KiB [emitted] [dev]
+    Entrypoint main = ac0e4e032b46a3050268-ac0e4e.js 75500a81ed65abaee6f7-75500a.js (7108e55c0e1e5ffc1429-7108e5.js.map 7257cc3b3c344e9bbeb9-7257cc.js.map 7382fad5b015914e0811.jpg)
+    ./a/index.js 150 bytes [built]
+    ./a/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built]
+    ./a/lazy.js + 1 modules 106 bytes [built]
+    ./a/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
+        + 8 hidden modules
+Child
+    Hash: 5c98fdf5155243d58453
+    Time: X ms
+    Built at: 1970-04-20 12:42:42
+    asset 137042fbf41dcdaddad9-137042.js 2.18 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+      sourceMap 137042fbf41dcdaddad9-137042.js.map 12.7 KiB [emitted] [dev]
+    asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
+    asset 75500a81ed65abaee6f7-75500a.js 268 bytes [emitted] [immutable] [minimized] (name: main)
+      sourceMap 75500a81ed65abaee6f7-75500a.js.map 323 bytes [emitted] [dev]
+    asset 7d9d0a742118d8263796-7d9d0a.js 253 bytes [emitted] [immutable] [minimized] (name: lazy)
+      sourceMap 7d9d0a742118d8263796-7d9d0a.js.map 327 bytes [emitted] [dev]
+    asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
+    Entrypoint main = 137042fbf41dcdaddad9-137042.js 75500a81ed65abaee6f7-75500a.js (61c15c3165b3503e09ec-61c15c.js.map 7382fad5b015914e0811.jpg e6992d2757cf11c89646-e6992d.js.map)
+    ./b/index.js 109 bytes [built]
+    ./b/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built]
+    ./b/lazy.js + 1 modules 102 bytes [built]
+    ./b/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
+        + 8 hidden modules"
+`;
+
 exports[`StatsTestCases should print correct stats for related-assets 1`] = `
 "Child default:
     asset default-chunk_js.css 73 bytes [emitted] 3 related assets

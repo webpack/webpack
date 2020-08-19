@@ -215,6 +215,26 @@ declare interface AssetInfo {
 	immutable?: boolean;
 
 	/**
+	 * the value(s) of the full hash used for this asset
+	 */
+	fullhash?: LibraryExport;
+
+	/**
+	 * the value(s) of the chunk hash used for this asset
+	 */
+	chunkhash?: LibraryExport;
+
+	/**
+	 * the value(s) of the module hash used for this asset
+	 */
+	modulehash?: LibraryExport;
+
+	/**
+	 * the value(s) of the content hash used for this asset
+	 */
+	contenthash?: LibraryExport;
+
+	/**
 	 * size in bytes, only set after asset has been emitted
 	 */
 	size?: number;
@@ -485,6 +505,7 @@ declare abstract class CacheFacade {
 	getChildCache(name: string): CacheFacade;
 	getItemCache(identifier: string, etag: Etag): ItemCacheFacade;
 	getLazyHashedEtag(obj: HashableObject): Etag;
+	mergeEtags(a: Etag, b: Etag): Etag;
 	get<T>(identifier: string, etag: Etag, callback: CallbackCache<T>): void;
 	getPromise<T>(identifier: string, etag: Etag): Promise<T>;
 	store<T>(
@@ -494,6 +515,17 @@ declare abstract class CacheFacade {
 		callback: CallbackCache<void>
 	): void;
 	storePromise<T>(identifier: string, etag: Etag, data: T): Promise<void>;
+	provide<T>(
+		identifier: string,
+		etag: Etag,
+		computer: (arg0: CallbackNormalErrorCache<T>) => void,
+		callback: CallbackNormalErrorCache<T>
+	): void;
+	providePromise<T>(
+		identifier: string,
+		etag: Etag,
+		computer: () => T | Promise<T>
+	): Promise<T>;
 }
 declare interface CacheGroupSource {
 	key?: string;
@@ -527,6 +559,9 @@ declare interface CallbackCache<T> {
 }
 declare interface CallbackFunction<T> {
 	(err?: Error, result?: T): any;
+}
+declare interface CallbackNormalErrorCache<T> {
+	(err?: Error, result?: T): void;
 }
 declare interface CallbackWebpack<T> {
 	(err?: Error, stats?: T): void;
@@ -1319,6 +1354,7 @@ declare class Compilation {
 		newSourceOrFunction: Source | ((arg0: Source) => Source),
 		assetInfoUpdateOrFunction?: AssetInfo | ((arg0: AssetInfo) => AssetInfo)
 	): void;
+	renameAsset(file?: any, newFile?: any): void;
 	deleteAsset(file: string): void;
 	getAssets(): Readonly<Asset>[];
 	getAsset(name: string): Readonly<Asset>;
@@ -1414,6 +1450,11 @@ declare class Compilation {
 	 * Optimize the transfer of existing assets, e. g. by preparing a compressed (gzip) file as separate asset.
 	 */
 	static PROCESS_ASSETS_STAGE_OPTIMIZE_TRANSFER: number;
+
+	/**
+	 * Optimize the hashes of the assets, e. g. by generating real hashes of the asset content.
+	 */
+	static PROCESS_ASSETS_STAGE_OPTIMIZE_HASH: number;
 
 	/**
 	 * Analyse existing assets.
@@ -3267,6 +3308,11 @@ declare abstract class ItemCacheFacade {
 	getPromise<T>(): Promise<T>;
 	store<T>(data: T, callback: CallbackCache<void>): void;
 	storePromise<T>(data: T): Promise<void>;
+	provide<T>(
+		computer: (arg0: CallbackNormalErrorCache<T>) => void,
+		callback: CallbackNormalErrorCache<T>
+	): void;
+	providePromise<T>(computer: () => T | Promise<T>): Promise<T>;
 }
 declare class JavascriptModulesPlugin {
 	constructor(options?: {});
@@ -5154,6 +5200,11 @@ declare interface Optimization {
 	 * Figure out which exports are provided by modules to generate more efficient code.
 	 */
 	providedExports?: boolean;
+
+	/**
+	 * Use real [contenthash] based on final content of the assets.
+	 */
+	realContentHash?: boolean;
 
 	/**
 	 * Removes modules from chunks when these modules are already included in all parents.

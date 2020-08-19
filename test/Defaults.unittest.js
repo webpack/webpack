@@ -173,6 +173,7 @@ describe("Defaults", () => {
 		    "nodeEnv": false,
 		    "portableRecords": false,
 		    "providedExports": true,
+		    "realContentHash": false,
 		    "removeAvailableModules": false,
 		    "removeEmptyChunks": true,
 		    "runtimeChunk": false,
@@ -501,6 +502,9 @@ describe("Defaults", () => {
 		+     "moduleIds": "deterministic",
 		+     "nodeEnv": "production",
 		@@ ... @@
+		-     "realContentHash": false,
+		+     "realContentHash": true,
+		@@ ... @@
 		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
@@ -555,6 +559,9 @@ describe("Defaults", () => {
 		-     "nodeEnv": false,
 		+     "moduleIds": "deterministic",
 		+     "nodeEnv": "production",
+		@@ ... @@
+		-     "realContentHash": false,
+		+     "realContentHash": true,
 		@@ ... @@
 		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,

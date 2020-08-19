@@ -11,6 +11,7 @@ const FakeDocument = require("./helpers/FakeDocument");
 
 const webpack = require("..");
 const prepareOptions = require("./helpers/prepareOptions");
+const { parseResource } = require("../lib/util/identifier");
 
 const casesPath = path.join(__dirname, "configCases");
 const categories = fs.readdirSync(casesPath).map(cat => {
@@ -74,7 +75,9 @@ const describeCases = config => {
 							});
 							testConfig = {
 								findBundle: function (i, options) {
-									const ext = path.extname(options.output.filename);
+									const ext = path.extname(
+										parseResource(options.output.filename).path
+									);
 									if (
 										fs.existsSync(
 											path.join(options.output.path, "bundle" + i + ext)

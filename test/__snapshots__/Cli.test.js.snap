@@ -1381,6 +1381,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-real-content-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use real [contenthash] based on final content of the assets.",
+        "multiple": false,
+        "path": "optimization.realContentHash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use real [contenthash] based on final content of the assets.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-remove-available-modules": Object {
     "configs": Array [
       Object {
