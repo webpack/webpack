@@ -935,6 +935,10 @@ declare interface ChunkPathData {
 	contentHash?: Record<string, string>;
 	contentHashWithLength?: Record<string, (length: number) => string>;
 }
+declare class ChunkPrefetchPreloadPlugin {
+	constructor();
+	apply(compiler: Compiler): void;
+}
 declare interface ChunkSizeOptions {
 	/**
 	 * constant overhead for a chunk
@@ -2349,6 +2353,14 @@ declare interface Effect {
 	type: string;
 	value: any;
 }
+declare class ElectronTargetPlugin {
+	constructor(main: boolean);
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 declare class EnableLibraryPlugin {
 	constructor(type: LibraryType);
 	type: LibraryType;
@@ -2904,6 +2916,14 @@ declare interface FallbackCacheGroup {
 	maxAsyncSize: Record<string, number>;
 	maxInitialSize: Record<string, number>;
 	automaticNameDelimiter: string;
+}
+declare class FetchCompileAsyncWasmPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
 }
 declare class FetchCompileWasmPlugin {
 	constructor(options?: any);
@@ -4914,6 +4934,22 @@ declare interface NodeOptions {
 	 * Include a polyfill for the 'global' variable.
 	 */
 	global?: boolean;
+}
+declare class NodeSourcePlugin {
+	constructor(options: NodeWebpackOptions);
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare class NodeTargetPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
 }
 declare class NodeTemplatePlugin {
 	constructor(options?: any);
@@ -9229,8 +9265,15 @@ declare namespace exports {
 	export namespace runtime {
 		export { LoadScriptRuntimeModule };
 	}
+	export namespace prefetch {
+		export { ChunkPrefetchPreloadPlugin };
+	}
 	export namespace web {
-		export { FetchCompileWasmPlugin, JsonpTemplatePlugin };
+		export {
+			FetchCompileAsyncWasmPlugin,
+			FetchCompileWasmPlugin,
+			JsonpTemplatePlugin
+		};
 	}
 	export namespace webworker {
 		export { WebWorkerTemplatePlugin };
@@ -9238,9 +9281,14 @@ declare namespace exports {
 	export namespace node {
 		export {
 			NodeEnvironmentPlugin,
+			NodeSourcePlugin,
+			NodeTargetPlugin,
 			NodeTemplatePlugin,
 			ReadFileCompileWasmPlugin
 		};
+	}
+	export namespace electron {
+		export { ElectronTargetPlugin };
 	}
 	export namespace wasm {
 		export { AsyncWebAssemblyModulesPlugin };
