@@ -1029,6 +1029,10 @@ declare abstract class CodeGenerationResults {
 		result: CodeGenerationResult
 	): void;
 }
+declare class CompatSource extends Source {
+	constructor(sourceLike: SourceLike);
+	static from(sourceLike: SourceLike): Source;
+}
 declare class Compilation {
 	/**
 	 * Creates an instance of Compilation.
@@ -7881,6 +7885,9 @@ declare class Source {
 	source(): string | Buffer;
 	buffer(): Buffer;
 }
+declare interface SourceLike {
+	source(): string | Buffer;
+}
 declare class SourceMapDevToolPlugin {
 	constructor(options?: SourceMapDevToolPluginOptions);
 	sourceMapFilename: DevTool;
@@ -9408,7 +9415,8 @@ declare namespace exports {
 			ConcatSource,
 			PrefixSource,
 			CachedSource,
-			SizeOnlySource
+			SizeOnlySource,
+			CompatSource
 		};
 	}
 	export namespace experiments {

@@ -337,6 +337,16 @@ declare module "webpack-sources" {
 	export class SizeOnlySource extends Source {
 		constructor(size: number);
 	}
+
+	interface SourceLike {
+		source(): string | Buffer;
+	}
+
+	export class CompatSource extends Source {
+		constructor(sourceLike: SourceLike);
+
+		static from(sourceLike: SourceLike): Source;
+	}
 }
 
 type TODO = any;
