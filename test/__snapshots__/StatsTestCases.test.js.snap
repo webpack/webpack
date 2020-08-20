@@ -2520,8 +2520,38 @@ LOG from ModuleConcatenationPlugin
 `;
 
 exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
-"Hash: 8981c4ae0cf7803cd21e5c98fdf5155243d58453
-Child
+"Hash: 8981c4ae0cf7803cd21e5c98fdf5155243d584538981c4ae0cf7803cd21e5c98fdf5155243d58453
+Child a-normal:
+    Hash: 8981c4ae0cf7803cd21e
+    Time: X ms
+    Built at: 1970-04-20 12:42:42
+    asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
+    asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
+    asset a150563551a333b27471-a15056.js 197 bytes [emitted] [immutable] [minimized] (name: lazy)
+    asset ac0bdef579ae448c9816-ac0bde.js 2.13 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+    asset ebb818daaf494d26f4a3-ebb818.js 212 bytes [emitted] [immutable] [minimized] (name: main)
+    Entrypoint main = ac0bdef579ae448c9816-ac0bde.js ebb818daaf494d26f4a3-ebb818.js (7382fad5b015914e0811.jpg)
+    ./a/index.js 150 bytes [built]
+    ./a/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built]
+    ./a/lazy.js + 1 modules 106 bytes [built]
+    ./a/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
+        + 8 hidden modules
+Child b-normal:
+    Hash: 5c98fdf5155243d58453
+    Time: X ms
+    Built at: 1970-04-20 12:42:42
+    asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
+    asset 7cda531b1ca8ae966481-7cda53.js 2.13 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+    asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
+    asset a150563551a333b27471-a15056.js 197 bytes [emitted] [immutable] [minimized] (name: lazy)
+    asset ebb818daaf494d26f4a3-ebb818.js 212 bytes [emitted] [immutable] [minimized] (name: main)
+    Entrypoint main = 7cda531b1ca8ae966481-7cda53.js ebb818daaf494d26f4a3-ebb818.js (7382fad5b015914e0811.jpg)
+    ./b/index.js 109 bytes [built]
+    ./b/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built]
+    ./b/lazy.js + 1 modules 102 bytes [built]
+    ./b/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
+        + 8 hidden modules
+Child a-source-map:
     Hash: 8981c4ae0cf7803cd21e
     Time: X ms
     Built at: 1970-04-20 12:42:42
@@ -2539,7 +2569,7 @@ Child
     ./a/lazy.js + 1 modules 106 bytes [built]
     ./a/file.png 42 bytes (javascript) 14.6 KiB (asset) [built]
         + 8 hidden modules
-Child
+Child b-source-map:
     Hash: 5c98fdf5155243d58453
     Time: X ms
     Built at: 1970-04-20 12:42:42
