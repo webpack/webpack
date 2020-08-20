@@ -12,18 +12,11 @@ module.exports = {
 			new TerserPlugin({
 				sourceMap: true,
 				terserOptions: {
-					compress: {
-						warnings: true
-					},
 					mangle: false,
 					output: {
 						beautify: true,
 						comments: false
-					},
-					warnings: true
-				},
-				warningsFilter(message, file, filename) {
-					return /a\.js$/.test(filename);
+					}
 				}
 			})
 		]
