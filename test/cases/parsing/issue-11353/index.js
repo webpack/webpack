@@ -1,3 +1,5 @@
+"use strict";
+
 import generator from "./generator_function.js";
 import asyncGenerator from "./async_generator_function";
 
@@ -10,7 +12,7 @@ it('should correctly build the correct function string', () => {
 });
 
 it('should correctly provide the generator function interface', () => {
-	var gen = generator();
+	let gen = generator();
 	expect(gen.next().value).toBe(0);
 	expect(gen.next().value).toBe(1);
 	expect(gen.next().value).toBe(2);
