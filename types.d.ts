@@ -3053,6 +3053,7 @@ declare abstract class FileSystemInfo {
 	managedPathsWithSlash: string[];
 	immutablePaths: string[];
 	immutablePathsWithSlash: string[];
+	logStatistics(): void;
 	addFileTimestamps(map: Map<string, FileSystemInfoEntry | "ignore">): void;
 	addContextTimestamps(map: Map<string, FileSystemInfoEntry | "ignore">): void;
 	getFileTimestamp(
@@ -3090,6 +3091,10 @@ declare abstract class FileSystemInfo {
 			 * should use hash to snapshot
 			 */
 			hash?: boolean;
+			/**
+			 * should use timestamp to snapshot
+			 */
+			timestamp?: boolean;
 		},
 		callback: (arg0: WebpackError, arg1: Snapshot) => void
 	): void;
