@@ -8,7 +8,7 @@ it('should correctly import generator function', () => {
 });
 
 it('should correctly build the correct function string', () => {
-	expect(generator.toString().indexOf('function* ')).toBe(0); // 0
+	expect(generator.toString().indexOf('function*')).toBe(0); // 0
 });
 
 it('should correctly provide the generator function interface', () => {
@@ -23,7 +23,7 @@ it('should correctly import async generator function', () => {
 });
 
 it('should correctly build the correct async function string', () => {
-	expect(asyncGenerator.toString().indexOf('async function* ')).toBe(0);
+	expect(asyncGenerator.toString().indexOf('async function*')).toBe(0);
 });
 
 it('should correctly provide the async generator function interface', async () => {
