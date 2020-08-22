@@ -4391,6 +4391,12 @@ declare class Module extends DependenciesBlock {
 	 */
 	updateCacheModule(module: Module): void;
 	originalSource(): Source;
+	addCacheDependencies(
+		fileDependencies: LazySet<string>,
+		contextDependencies: LazySet<string>,
+		missingDependencies: LazySet<string>,
+		buildDependencies: LazySet<string>
+	): void;
 	useSourceMap: any;
 	readonly hasEqualsChunks: any;
 	readonly isUsed: any;
@@ -7855,6 +7861,9 @@ declare abstract class Snapshot {
 	contextHashes: Map<string, string>;
 	missingExistence: Map<string, boolean>;
 	managedItemInfo: Map<string, string>;
+	managedFiles: Set<string>;
+	managedContexts: Set<string>;
+	managedMissing: Set<string>;
 	children: Set<Snapshot>;
 	hasStartTime(): boolean;
 	setStartTime(value?: any): void;
@@ -7871,11 +7880,20 @@ declare abstract class Snapshot {
 	setMissingExistence(value?: any): void;
 	hasManagedItemInfo(): boolean;
 	setManagedItemInfo(value?: any): void;
+	hasManagedFiles(): boolean;
+	setManagedFiles(value?: any): void;
+	hasManagedContexts(): boolean;
+	setManagedContexts(value?: any): void;
+	hasManagedMissing(): boolean;
+	setManagedMissing(value?: any): void;
 	hasChildren(): boolean;
 	setChildren(value?: any): void;
 	addChild(child?: any): void;
 	serialize(__0: { write: any }): void;
 	deserialize(__0: { read: any }): void;
+	getFileIterable(): Iterable<string>;
+	getContextIterable(): Iterable<string>;
+	getMissingIterable(): Iterable<string>;
 }
 declare abstract class SortableSet<T> extends Set<T> {
 	/**
