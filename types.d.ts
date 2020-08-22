@@ -7847,15 +7847,35 @@ declare class SideEffectsFlagPlugin {
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
 }
-declare interface Snapshot {
-	startTime?: number;
-	fileTimestamps?: Map<string, FileSystemInfoEntry>;
-	fileHashes?: Map<string, string>;
-	contextTimestamps?: Map<string, FileSystemInfoEntry>;
-	contextHashes?: Map<string, string>;
-	missingExistence?: Map<string, boolean>;
-	managedItemInfo?: Map<string, string>;
-	children?: Set<Snapshot>;
+declare abstract class Snapshot {
+	startTime: number;
+	fileTimestamps: Map<string, FileSystemInfoEntry>;
+	fileHashes: Map<string, string>;
+	contextTimestamps: Map<string, FileSystemInfoEntry>;
+	contextHashes: Map<string, string>;
+	missingExistence: Map<string, boolean>;
+	managedItemInfo: Map<string, string>;
+	children: Set<Snapshot>;
+	hasStartTime(): boolean;
+	setStartTime(value?: any): void;
+	setMergedStartTime(value?: any, snapshot?: any): void;
+	hasFileTimestamps(): boolean;
+	setFileTimestamps(value?: any): void;
+	hasFileHashes(): boolean;
+	setFileHashes(value?: any): void;
+	hasContextTimestamps(): boolean;
+	setContextTimestamps(value?: any): void;
+	hasContextHashes(): boolean;
+	setContextHashes(value?: any): void;
+	hasMissingExistence(): boolean;
+	setMissingExistence(value?: any): void;
+	hasManagedItemInfo(): boolean;
+	setManagedItemInfo(value?: any): void;
+	hasChildren(): boolean;
+	setChildren(value?: any): void;
+	addChild(child?: any): void;
+	serialize(__0: { write: any }): void;
+	deserialize(__0: { read: any }): void;
 }
 declare abstract class SortableSet<T> extends Set<T> {
 	/**
