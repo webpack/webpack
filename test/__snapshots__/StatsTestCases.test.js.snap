@@ -1158,6 +1158,16 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
     <CLR=BOLD>0 chunk groups processed for merging (0 module sets, 0 forked, 0 + 0 modules forked, 0 + 0 modules merged into fork, 0 resulting modules)</CLR>
     <CLR=BOLD>0 chunk group info updated (0 already connected chunk groups reconnected)</CLR>
 + 5 hidden lines
+
+<CLR=BOLD>LOG from webpack.FileSystemInfo</CLR>
+    <CLR=BOLD>1 new snapshots created</CLR>
+    <CLR=BOLD>0% root snapshot uncached (0 / 0)</CLR>
+    <CLR=BOLD>0% children snapshot uncached (0 / 0)</CLR>
+    <CLR=BOLD>0 entries tested</CLR>
+    <CLR=BOLD>File info in cache: 1 timestamps 0 hashes</CLR>
+    <CLR=BOLD>File timestamp snapshot optimization: 0% (0/1) entries shared via 0 shared snapshots (0 times referenced)</CLR>
+    <CLR=BOLD>Directory info in cache: 0 timestamps 0 hashes</CLR>
+    <CLR=BOLD>Managed items info in cache: 0 items</CLR>
 "
 `;
 
@@ -1957,6 +1967,16 @@ LOG from webpack.buildChunkGraph
     3 chunk groups processed for merging (3 module sets, 0 forked, 0 + 0 modules forked, 0 + 0 modules merged into fork, 0 resulting modules)
     3 chunk group info updated (0 already connected chunk groups reconnected)
 + 13 hidden lines
+
+LOG from webpack.FileSystemInfo
+    6 new snapshots created
+    0% root snapshot uncached (0 / 0)
+    0% children snapshot uncached (0 / 0)
+    0 entries tested
+    File info in cache: 6 timestamps 0 hashes
+    File timestamp snapshot optimization: 0% (0/6) entries shared via 0 shared snapshots (0 times referenced)
+    Directory info in cache: 0 timestamps 0 hashes
+    Managed items info in cache: 0 items
 "
 `;
 
@@ -2284,6 +2304,16 @@ LOG from ModuleConcatenationPlugin
 <t> sort concat configurations: X ms
 <t> create concatenated modules: X ms
 + 2 hidden lines
+
+LOG from webpack.FileSystemInfo
+    6 new snapshots created
+    0% root snapshot uncached (0 / 0)
+    0% children snapshot uncached (0 / 0)
+    0 entries tested
+    File info in cache: 6 timestamps 0 hashes
+    File timestamp snapshot optimization: 0% (0/6) entries shared via 0 shared snapshots (0 times referenced)
+    Directory info in cache: 0 timestamps 0 hashes
+    Managed items info in cache: 0 items
 "
 `;
 
