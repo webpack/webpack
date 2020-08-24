@@ -3843,7 +3843,7 @@ declare abstract class JavascriptParser extends Parser {
 	): { name: string; info: string | VariableInfo };
 	getMemberExpressionInfo(
 		expression: MemberExpression,
-		allowedTypes: ("expression" | "call")[]
+		allowedTypes: number
 	):
 		| {
 				type: "call";
