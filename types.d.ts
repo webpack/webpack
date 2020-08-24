@@ -554,8 +554,10 @@ declare interface CacheGroupsContext {
 type CacheOptions = boolean | MemoryCacheOptions | FileCacheOptions;
 type CacheOptionsNormalized = false | MemoryCacheOptions | FileCacheOptions;
 declare class CachedSource extends Source {
-	constructor(source: Source, cachedData?: any);
+	constructor(source: Source);
+	constructor(source: Source | (() => Source), cachedData?: any);
 	original(): Source;
+	originalLazy(): Source | (() => Source);
 	getCachedData(): any;
 }
 type CallExpression = SimpleCallExpression | NewExpression;
