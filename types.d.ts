@@ -554,8 +554,10 @@ declare interface CacheGroupsContext {
 type CacheOptions = boolean | MemoryCacheOptions | FileCacheOptions;
 type CacheOptionsNormalized = false | MemoryCacheOptions | FileCacheOptions;
 declare class CachedSource extends Source {
-	constructor(source: Source, cachedData?: any);
+	constructor(source: Source);
+	constructor(source: Source | (() => Source), cachedData?: any);
 	original(): Source;
+	originalLazy(): Source | (() => Source);
 	getCachedData(): any;
 }
 type CallExpression = SimpleCallExpression | NewExpression;
@@ -3053,6 +3055,7 @@ declare abstract class FileSystemInfo {
 	managedPathsWithSlash: string[];
 	immutablePaths: string[];
 	immutablePathsWithSlash: string[];
+	logStatistics(): void;
 	addFileTimestamps(map: Map<string, FileSystemInfoEntry | "ignore">): void;
 	addContextTimestamps(map: Map<string, FileSystemInfoEntry | "ignore">): void;
 	getFileTimestamp(
@@ -3090,6 +3093,10 @@ declare abstract class FileSystemInfo {
 			 * should use hash to snapshot
 			 */
 			hash?: boolean;
+			/**
+			 * should use timestamp to snapshot
+			 */
+			timestamp?: boolean;
 		},
 		callback: (arg0: WebpackError, arg1: Snapshot) => void
 	): void;
@@ -4386,6 +4393,12 @@ declare class Module extends DependenciesBlock {
 	 */
 	updateCacheModule(module: Module): void;
 	originalSource(): Source;
+	addCacheDependencies(
+		fileDependencies: LazySet<string>,
+		contextDependencies: LazySet<string>,
+		missingDependencies: LazySet<string>,
+		buildDependencies: LazySet<string>
+	): void;
 	useSourceMap: any;
 	readonly hasEqualsChunks: any;
 	readonly isUsed: any;
@@ -7842,15 +7855,47 @@ declare class SideEffectsFlagPlugin {
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
 }
-declare interface Snapshot {
-	startTime?: number;
-	fileTimestamps?: Map<string, FileSystemInfoEntry>;
-	fileHashes?: Map<string, string>;
-	contextTimestamps?: Map<string, FileSystemInfoEntry>;
-	contextHashes?: Map<string, string>;
-	missingExistence?: Map<string, boolean>;
-	managedItemInfo?: Map<string, string>;
-	children?: Set<Snapshot>;
+declare abstract class Snapshot {
+	startTime: number;
+	fileTimestamps: Map<string, FileSystemInfoEntry>;
+	fileHashes: Map<string, string>;
+	contextTimestamps: Map<string, FileSystemInfoEntry>;
+	contextHashes: Map<string, string>;
+	missingExistence: Map<string, boolean>;
+	managedItemInfo: Map<string, string>;
+	managedFiles: Set<string>;
+	managedContexts: Set<string>;
+	managedMissing: Set<string>;
+	children: Set<Snapshot>;
+	hasStartTime(): boolean;
+	setStartTime(value?: any): void;
+	setMergedStartTime(value?: any, snapshot?: any): void;
+	hasFileTimestamps(): boolean;
+	setFileTimestamps(value?: any): void;
+	hasFileHashes(): boolean;
+	setFileHashes(value?: any): void;
+	hasContextTimestamps(): boolean;
+	setContextTimestamps(value?: any): void;
+	hasContextHashes(): boolean;
+	setContextHashes(value?: any): void;
+	hasMissingExistence(): boolean;
+	setMissingExistence(value?: any): void;
+	hasManagedItemInfo(): boolean;
+	setManagedItemInfo(value?: any): void;
+	hasManagedFiles(): boolean;
+	setManagedFiles(value?: any): void;
+	hasManagedContexts(): boolean;
+	setManagedContexts(value?: any): void;
+	hasManagedMissing(): boolean;
+	setManagedMissing(value?: any): void;
+	hasChildren(): boolean;
+	setChildren(value?: any): void;
+	addChild(child?: any): void;
+	serialize(__0: { write: any }): void;
+	deserialize(__0: { read: any }): void;
+	getFileIterable(): Iterable<string>;
+	getContextIterable(): Iterable<string>;
+	getMissingIterable(): Iterable<string>;
 }
 declare abstract class SortableSet<T> extends Set<T> {
 	/**
