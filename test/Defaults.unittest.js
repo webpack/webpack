@@ -209,9 +209,9 @@ describe("Defaults", () => {
 		  "output": Object {
 		    "assetModuleFilename": "[hash][ext][query]",
 		    "charset": true,
-		    "chunkCallbackName": "webpackChunkwebpack",
 		    "chunkFilename": "[name].js",
 		    "chunkLoadTimeout": 120000,
+		    "chunkLoadingGlobal": "webpackChunkwebpack",
 		    "compareBeforeEmit": true,
 		    "crossOriginLoading": false,
 		    "devtoolFallbackModuleFilenameTemplate": undefined,
@@ -226,11 +226,10 @@ describe("Defaults", () => {
 		    "hashFunction": "md4",
 		    "hashSalt": undefined,
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
-		    "hotUpdateFunction": "webpackHotUpdatewebpack",
+		    "hotUpdateGlobal": "webpackHotUpdatewebpack",
 		    "hotUpdateMainFilename": "[fullhash].hot-update.json",
 		    "iife": true,
 		    "importFunctionName": "import",
-		    "jsonpFunction": "webpackJsonpwebpack",
 		    "library": undefined,
 		    "libraryTarget": "var",
 		    "module": false,
@@ -926,8 +925,8 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ ... @@
-		-     "chunkCallbackName": "webpackChunkwebpack",
-		+     "chunkCallbackName": "webpackChunkmyLib_awesome",
+		-     "chunkLoadingGlobal": "webpackChunkwebpack",
+		+     "chunkLoadingGlobal": "webpackChunkmyLib_awesome",
 		@@ ... @@
 		-     "devtoolNamespace": "webpack",
 		+     "devtoolNamespace": "myLib.awesome",
@@ -937,12 +936,10 @@ describe("Defaults", () => {
 		+       "var",
 		+     ],
 		@@ ... @@
-		-     "hotUpdateFunction": "webpackHotUpdatewebpack",
-		+     "hotUpdateFunction": "webpackHotUpdatemyLib_awesome",
+		-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+		+     "hotUpdateGlobal": "webpackHotUpdatemyLib_awesome",
 		@@ ... @@
-		-     "jsonpFunction": "webpackJsonpwebpack",
 		-     "library": undefined,
-		+     "jsonpFunction": "webpackJsonpmyLib_awesome",
 		+     "library": Object {
 		+       "auxiliaryComment": undefined,
 		+       "export": undefined,
@@ -1410,17 +1407,14 @@ describe("Defaults", () => {
 			+ Received
 
 			@@ ... @@
-			-     "chunkCallbackName": "webpackChunkwebpack",
-			+     "chunkCallbackName": "webpackChunk_Hello_World_",
+			-     "chunkLoadingGlobal": "webpackChunkwebpack",
+			+     "chunkLoadingGlobal": "webpackChunk_Hello_World_",
 			@@ ... @@
 			-     "devtoolNamespace": "webpack",
 			+     "devtoolNamespace": "@@@Hello World!",
 			@@ ... @@
-			-     "hotUpdateFunction": "webpackHotUpdatewebpack",
-			+     "hotUpdateFunction": "webpackHotUpdate_Hello_World_",
-			@@ ... @@
-			-     "jsonpFunction": "webpackJsonpwebpack",
-			+     "jsonpFunction": "webpackJsonp_Hello_World_",
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": "webpackHotUpdate_Hello_World_",
 			@@ ... @@
 			-     "uniqueName": "webpack",
 			+     "uniqueName": "@@@Hello World!",

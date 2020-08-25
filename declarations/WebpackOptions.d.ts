@@ -344,6 +344,10 @@ export type ChunkFilename = string;
  */
 export type ChunkLoadTimeout = number;
 /**
+ * The global variable used by webpack for loading of chunks.
+ */
+export type ChunkLoadingGlobal = string;
+/**
  * Check if to be emitted file already exists and have the same content before writing to output filesystem.
  */
 export type CompareBeforeEmit = boolean;
@@ -396,9 +400,9 @@ export type HashSalt = string;
  */
 export type HotUpdateChunkFilename = string;
 /**
- * The JSONP function used by webpack for async loading of hot update chunks.
+ * The global variable used by webpack for loading of hot update chunks.
  */
-export type HotUpdateFunction = string;
+export type HotUpdateGlobal = string;
 /**
  * The filename of the Hot Update Main File. It is inside the `output.path` directory.
  */
@@ -411,10 +415,6 @@ export type Iife = boolean;
  * The name of the native import() function (can be exchanged for a polyfill).
  */
 export type ImportFunctionName = string;
-/**
- * The JSONP function used by webpack for async loading of chunks.
- */
-export type JsonpFunction = string;
 /**
  * Make the output files a library, exporting the exports of the entry point.
  */
@@ -1594,6 +1594,10 @@ export interface Output {
 	 */
 	chunkLoadTimeout?: ChunkLoadTimeout;
 	/**
+	 * The global variable used by webpack for loading of chunks.
+	 */
+	chunkLoadingGlobal?: ChunkLoadingGlobal;
+	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: CompareBeforeEmit;
@@ -1650,9 +1654,9 @@ export interface Output {
 	 */
 	hotUpdateChunkFilename?: HotUpdateChunkFilename;
 	/**
-	 * The JSONP function used by webpack for async loading of hot update chunks.
+	 * The global variable used by webpack for loading of hot update chunks.
 	 */
-	hotUpdateFunction?: HotUpdateFunction;
+	hotUpdateGlobal?: HotUpdateGlobal;
 	/**
 	 * The filename of the Hot Update Main File. It is inside the `output.path` directory.
 	 */
@@ -1665,10 +1669,6 @@ export interface Output {
 	 * The name of the native import() function (can be exchanged for a polyfill).
 	 */
 	importFunctionName?: ImportFunctionName;
-	/**
-	 * The JSONP function used by webpack for async loading of chunks.
-	 */
-	jsonpFunction?: JsonpFunction;
 	/**
 	 * Make the output files a library, exporting the exports of the entry point.
 	 */
@@ -2132,6 +2132,10 @@ export interface OutputNormalized {
 	 */
 	chunkLoadTimeout?: ChunkLoadTimeout;
 	/**
+	 * The global variable used by webpack for loading of chunks.
+	 */
+	chunkLoadingGlobal?: ChunkLoadingGlobal;
+	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: CompareBeforeEmit;
@@ -2188,9 +2192,9 @@ export interface OutputNormalized {
 	 */
 	hotUpdateChunkFilename?: HotUpdateChunkFilename;
 	/**
-	 * The JSONP function used by webpack for async loading of hot update chunks.
+	 * The global variable used by webpack for loading of hot update chunks.
 	 */
-	hotUpdateFunction?: HotUpdateFunction;
+	hotUpdateGlobal?: HotUpdateGlobal;
 	/**
 	 * The filename of the Hot Update Main File. It is inside the `output.path` directory.
 	 */
@@ -2203,10 +2207,6 @@ export interface OutputNormalized {
 	 * The name of the native import() function (can be exchanged for a polyfill).
 	 */
 	importFunctionName?: ImportFunctionName;
-	/**
-	 * The JSONP function used by webpack for async loading of chunks.
-	 */
-	jsonpFunction?: JsonpFunction;
 	/**
 	 * Options for library.
 	 */

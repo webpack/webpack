@@ -86,6 +86,10 @@
       "description": "Number of milliseconds before chunk request expires.",
       "type": "number"
     },
+    "ChunkLoadingGlobal": {
+      "description": "The global variable used by webpack for loading of chunks.",
+      "type": "string"
+    },
     "CompareBeforeEmit": {
       "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem.",
       "type": "boolean"
@@ -652,8 +656,8 @@
       "type": "string",
       "absolutePath": false
     },
-    "HotUpdateFunction": {
-      "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+    "HotUpdateGlobal": {
+      "description": "The global variable used by webpack for loading of hot update chunks.",
       "type": "string"
     },
     "HotUpdateMainFilename": {
@@ -691,10 +695,6 @@
           "enum": ["none", "error", "warn", "info", "log", "verbose"]
         }
       }
-    },
-    "JsonpFunction": {
-      "description": "The JSONP function used by webpack for async loading of chunks.",
-      "type": "string"
     },
     "Library": {
       "description": "Make the output files a library, exporting the exports of the entry point.",
@@ -1688,6 +1688,9 @@
         "chunkLoadTimeout": {
           "$ref": "#/definitions/ChunkLoadTimeout"
         },
+        "chunkLoadingGlobal": {
+          "$ref": "#/definitions/ChunkLoadingGlobal"
+        },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"
         },
@@ -1730,8 +1733,8 @@
         "hotUpdateChunkFilename": {
           "$ref": "#/definitions/HotUpdateChunkFilename"
         },
-        "hotUpdateFunction": {
-          "$ref": "#/definitions/HotUpdateFunction"
+        "hotUpdateGlobal": {
+          "$ref": "#/definitions/HotUpdateGlobal"
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
@@ -1741,9 +1744,6 @@
         },
         "importFunctionName": {
           "$ref": "#/definitions/ImportFunctionName"
-        },
-        "jsonpFunction": {
-          "$ref": "#/definitions/JsonpFunction"
         },
         "library": {
           "$ref": "#/definitions/Library"
@@ -1834,6 +1834,9 @@
         "chunkLoadTimeout": {
           "$ref": "#/definitions/ChunkLoadTimeout"
         },
+        "chunkLoadingGlobal": {
+          "$ref": "#/definitions/ChunkLoadingGlobal"
+        },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"
         },
@@ -1876,8 +1879,8 @@
         "hotUpdateChunkFilename": {
           "$ref": "#/definitions/HotUpdateChunkFilename"
         },
-        "hotUpdateFunction": {
-          "$ref": "#/definitions/HotUpdateFunction"
+        "hotUpdateGlobal": {
+          "$ref": "#/definitions/HotUpdateGlobal"
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
@@ -1887,9 +1890,6 @@
         },
         "importFunctionName": {
           "$ref": "#/definitions/ImportFunctionName"
-        },
-        "jsonpFunction": {
-          "$ref": "#/definitions/JsonpFunction"
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"

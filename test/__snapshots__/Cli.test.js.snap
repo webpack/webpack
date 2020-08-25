@@ -1846,6 +1846,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "output-chunk-loading-global": Object {
+    "configs": Array [
+      Object {
+        "description": "The global variable used by webpack for loading of chunks.",
+        "multiple": false,
+        "path": "output.chunkLoadingGlobal",
+        "type": "string",
+      },
+    ],
+    "description": "The global variable used by webpack for loading of chunks.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-compare-before-emit": Object {
     "configs": Array [
       Object {
@@ -2073,16 +2086,16 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-hot-update-function": Object {
+  "output-hot-update-global": Object {
     "configs": Array [
       Object {
-        "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+        "description": "The global variable used by webpack for loading of hot update chunks.",
         "multiple": false,
-        "path": "output.hotUpdateFunction",
+        "path": "output.hotUpdateGlobal",
         "type": "string",
       },
     ],
-    "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+    "description": "The global variable used by webpack for loading of hot update chunks.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2122,19 +2135,6 @@ Object {
       },
     ],
     "description": "The name of the native import() function (can be exchanged for a polyfill).",
-    "multiple": false,
-    "simpleType": "string",
-  },
-  "output-jsonp-function": Object {
-    "configs": Array [
-      Object {
-        "description": "The JSONP function used by webpack for async loading of chunks.",
-        "multiple": false,
-        "path": "output.jsonpFunction",
-        "type": "string",
-      },
-    ],
-    "description": "The JSONP function used by webpack for async loading of chunks.",
     "multiple": false,
     "simpleType": "string",
   },
