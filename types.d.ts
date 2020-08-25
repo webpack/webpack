@@ -3881,9 +3881,15 @@ declare class JavascriptParser extends Parser {
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: number;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: number;
 }
+declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
+	constructor(runtimeRequirements?: any);
+	static getCompilationHooks(
+		compilation: Compilation
+	): JsonpCompilationPluginHooks;
+}
 declare interface JsonpCompilationPluginHooks {
-	linkPreload: SyncWaterfallHook<[string, Chunk, string]>;
-	linkPrefetch: SyncWaterfallHook<[string, Chunk, string]>;
+	linkPreload: SyncWaterfallHook<[string, Chunk]>;
+	linkPrefetch: SyncWaterfallHook<[string, Chunk]>;
 }
 declare class JsonpTemplatePlugin {
 	constructor();
@@ -4220,8 +4226,8 @@ declare abstract class MainTemplate {
 		requireExtensions: SyncWaterfallHook<[string, Chunk, string]>;
 		requireEnsure: SyncWaterfallHook<[string, Chunk, string, string]>;
 		readonly jsonpScript: SyncWaterfallHook<[string, Chunk]>;
-		readonly linkPrefetch: SyncWaterfallHook<[string, Chunk, string]>;
-		readonly linkPreload: SyncWaterfallHook<[string, Chunk, string]>;
+		readonly linkPrefetch: SyncWaterfallHook<[string, Chunk]>;
+		readonly linkPreload: SyncWaterfallHook<[string, Chunk]>;
 	}>;
 	renderCurrentHashCode: (hash: string, length?: number) => string;
 	getPublicPath: (options?: any) => string;
@@ -4966,7 +4972,6 @@ declare class NodeTargetPlugin {
 }
 declare class NodeTemplatePlugin {
 	constructor(options?: any);
-	asyncChunkLoading: any;
 
 	/**
 	 * Apply the plugin
@@ -9408,6 +9413,7 @@ declare namespace exports {
 		export {
 			FetchCompileAsyncWasmPlugin,
 			FetchCompileWasmPlugin,
+			JsonpChunkLoadingRuntimeModule,
 			JsonpTemplatePlugin
 		};
 	}
