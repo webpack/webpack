@@ -56,6 +56,16 @@ export type EntryStatic = EntryObject | EntryUnnamed;
  */
 export type EntryItem = [string, ...string[]] | string;
 /**
+ * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+ */
+export type ChunkLoading = false | ChunkLoadingType;
+/**
+ * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+ */
+export type ChunkLoadingType =
+	| ("jsonp" | "import-scripts" | "require" | "async-node")
+	| string;
+/**
  * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
  */
 export type Filename =
@@ -77,25 +87,28 @@ export type LibraryExport = string[] | string;
  */
 export type LibraryName = string[] | string | LibraryCustomUmdObject;
 /**
- * Type of library.
+ * Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
  */
 export type LibraryType =
-	| "var"
-	| "module"
-	| "assign"
-	| "this"
-	| "window"
-	| "self"
-	| "global"
-	| "commonjs"
-	| "commonjs2"
-	| "commonjs-module"
-	| "amd"
-	| "amd-require"
-	| "umd"
-	| "umd2"
-	| "jsonp"
-	| "system";
+	| (
+			| "var"
+			| "module"
+			| "assign"
+			| "this"
+			| "window"
+			| "self"
+			| "global"
+			| "commonjs"
+			| "commonjs2"
+			| "commonjs-module"
+			| "amd"
+			| "amd-require"
+			| "umd"
+			| "umd2"
+			| "jsonp"
+			| "system"
+	  )
+	| string;
 /**
  * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
  */
@@ -340,13 +353,13 @@ export type ChunkCallbackName = string;
  */
 export type ChunkFilename = string;
 /**
+ * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
+ */
+export type ChunkFormat = ("array-push" | "commonjs" | false) | string;
+/**
  * Number of milliseconds before chunk request expires.
  */
 export type ChunkLoadTimeout = number;
-/**
- * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
- */
-export type ChunkLoading = string;
 /**
  * The global variable used by webpack for loading of chunks.
  */
@@ -375,6 +388,10 @@ export type DevtoolNamespace = string;
  * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
  */
 export type EcmaVersion = 2009 | number;
+/**
+ * List of chunk loading types enabled for use by entry points.
+ */
+export type EnabledChunkLoadingTypes = ChunkLoadingType[];
 /**
  * List of library types enabled for use by entry points.
  */
@@ -791,6 +808,10 @@ export interface EntryObject {
  */
 export interface EntryDescription {
 	/**
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 */
+	chunkLoading?: ChunkLoading;
+	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
 	dependOn?: [string, ...string[]] | string;
@@ -828,7 +849,7 @@ export interface LibraryOptions {
 	 */
 	name?: LibraryName;
 	/**
-	 * Type of library.
+	 * Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
 	 */
 	type: LibraryType;
 	/**
@@ -1594,6 +1615,10 @@ export interface Output {
 	 */
 	chunkFilename?: ChunkFilename;
 	/**
+	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
+	 */
+	chunkFormat?: ChunkFormat;
+	/**
 	 * Number of milliseconds before chunk request expires.
 	 */
 	chunkLoadTimeout?: ChunkLoadTimeout;
@@ -1629,6 +1654,10 @@ export interface Output {
 	 * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
 	 */
 	ecmaVersion?: EcmaVersion;
+	/**
+	 * List of chunk loading types enabled for use by entry points.
+	 */
+	enabledChunkLoadingTypes?: EnabledChunkLoadingTypes;
 	/**
 	 * List of library types enabled for use by entry points.
 	 */
@@ -1686,7 +1715,7 @@ export interface Output {
 	 */
 	libraryExport?: LibraryExport;
 	/**
-	 * Type of library.
+	 * Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
 	 */
 	libraryTarget?: LibraryType;
 	/**
@@ -2086,6 +2115,10 @@ export interface WatchOptions {
  */
 export interface EntryDescriptionNormalized {
 	/**
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 */
+	chunkLoading?: ChunkLoading;
+	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
 	dependOn?: [string, ...string[]];
@@ -2136,6 +2169,10 @@ export interface OutputNormalized {
 	 */
 	chunkFilename?: ChunkFilename;
 	/**
+	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
+	 */
+	chunkFormat?: ChunkFormat;
+	/**
 	 * Number of milliseconds before chunk request expires.
 	 */
 	chunkLoadTimeout?: ChunkLoadTimeout;
@@ -2171,6 +2208,10 @@ export interface OutputNormalized {
 	 * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
 	 */
 	ecmaVersion?: EcmaVersion;
+	/**
+	 * List of chunk loading types enabled for use by entry points.
+	 */
+	enabledChunkLoadingTypes?: EnabledChunkLoadingTypes;
 	/**
 	 * List of library types enabled for use by entry points.
 	 */

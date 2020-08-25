@@ -82,17 +82,46 @@
       "type": "string",
       "absolutePath": false
     },
+    "ChunkFormat": {
+      "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": ["array-push", "commonjs", false]
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
     "ChunkLoadTimeout": {
       "description": "Number of milliseconds before chunk request expires.",
       "type": "number"
     },
     "ChunkLoading": {
       "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
-      "type": "string"
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "$ref": "#/definitions/ChunkLoadingType"
+        }
+      ]
     },
     "ChunkLoadingGlobal": {
       "description": "The global variable used by webpack for loading of chunks.",
       "type": "string"
+    },
+    "ChunkLoadingType": {
+      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": ["jsonp", "import-scripts", "require", "async-node"]
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "CompareBeforeEmit": {
       "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem.",
@@ -177,6 +206,13 @@
         }
       ]
     },
+    "EnabledChunkLoadingTypes": {
+      "description": "List of chunk loading types enabled for use by entry points.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChunkLoadingType"
+      }
+    },
     "EnabledLibraryTypes": {
       "description": "List of library types enabled for use by entry points.",
       "type": "array",
@@ -200,6 +236,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
         "dependOn": {
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
           "anyOf": [
@@ -241,6 +280,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
         "dependOn": {
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
           "type": "array",
@@ -829,24 +871,31 @@
       "required": ["type"]
     },
     "LibraryType": {
-      "description": "Type of library.",
-      "enum": [
-        "var",
-        "module",
-        "assign",
-        "this",
-        "window",
-        "self",
-        "global",
-        "commonjs",
-        "commonjs2",
-        "commonjs-module",
-        "amd",
-        "amd-require",
-        "umd",
-        "umd2",
-        "jsonp",
-        "system"
+      "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": [
+            "var",
+            "module",
+            "assign",
+            "this",
+            "window",
+            "self",
+            "global",
+            "commonjs",
+            "commonjs2",
+            "commonjs-module",
+            "amd",
+            "amd-require",
+            "umd",
+            "umd2",
+            "jsonp",
+            "system"
+          ]
+        },
+        {
+          "type": "string"
+        }
       ]
     },
     "Loader": {
@@ -1689,6 +1738,9 @@
         "chunkFilename": {
           "$ref": "#/definitions/ChunkFilename"
         },
+        "chunkFormat": {
+          "$ref": "#/definitions/ChunkFormat"
+        },
         "chunkLoadTimeout": {
           "$ref": "#/definitions/ChunkLoadTimeout"
         },
@@ -1715,6 +1767,9 @@
         },
         "ecmaVersion": {
           "$ref": "#/definitions/EcmaVersion"
+        },
+        "enabledChunkLoadingTypes": {
+          "$ref": "#/definitions/EnabledChunkLoadingTypes"
         },
         "enabledLibraryTypes": {
           "$ref": "#/definitions/EnabledLibraryTypes"
@@ -1838,6 +1893,9 @@
         "chunkFilename": {
           "$ref": "#/definitions/ChunkFilename"
         },
+        "chunkFormat": {
+          "$ref": "#/definitions/ChunkFormat"
+        },
         "chunkLoadTimeout": {
           "$ref": "#/definitions/ChunkLoadTimeout"
         },
@@ -1864,6 +1922,9 @@
         },
         "ecmaVersion": {
           "$ref": "#/definitions/EcmaVersion"
+        },
+        "enabledChunkLoadingTypes": {
+          "$ref": "#/definitions/EnabledChunkLoadingTypes"
         },
         "enabledLibraryTypes": {
           "$ref": "#/definitions/EnabledLibraryTypes"
