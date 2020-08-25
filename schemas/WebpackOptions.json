@@ -86,6 +86,10 @@
       "description": "Number of milliseconds before chunk request expires.",
       "type": "number"
     },
+    "ChunkLoading": {
+      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "type": "string"
+    },
     "ChunkLoadingGlobal": {
       "description": "The global variable used by webpack for loading of chunks.",
       "type": "string"
@@ -1688,6 +1692,9 @@
         "chunkLoadTimeout": {
           "$ref": "#/definitions/ChunkLoadTimeout"
         },
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
         "chunkLoadingGlobal": {
           "$ref": "#/definitions/ChunkLoadingGlobal"
         },
@@ -1833,6 +1840,9 @@
         },
         "chunkLoadTimeout": {
           "$ref": "#/definitions/ChunkLoadTimeout"
+        },
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
         },
         "chunkLoadingGlobal": {
           "$ref": "#/definitions/ChunkLoadingGlobal"
