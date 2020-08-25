@@ -31,7 +31,9 @@ webpack(
 					__filename,
 					path.resolve(__dirname, "../../../node_modules/.yarn-integrity")
 				]
-			},
+			}
+		},
+		snapshot: {
 			managedPaths: [path.resolve(__dirname, "../../../node_modules")]
 		}
 	},

@@ -444,6 +444,26 @@ describe("Defaults", () => {
 		      "index",
 		    ],
 		  },
+		  "snapshot": Object {
+		    "buildDependencies": Object {
+		      "hash": true,
+		      "timestamp": true,
+		    },
+		    "immutablePaths": Array [],
+		    "managedPaths": Array [
+		      "<cwd>/node_modules",
+		    ],
+		    "module": Object {
+		      "timestamp": true,
+		    },
+		    "resolve": Object {
+		      "timestamp": true,
+		    },
+		    "resolveBuildDependencies": Object {
+		      "hash": true,
+		      "timestamp": true,
+		    },
+		  },
 		  "stats": Object {},
 		  "target": "web",
 		  "watch": false,
@@ -527,6 +547,10 @@ describe("Defaults", () => {
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
 		+   },
+		@@ ... @@
+		+       "hash": true,
+		@@ ... @@
+		+       "hash": true,
 	`)
 	);
 	test("production", { mode: "production" }, e =>
@@ -585,6 +609,10 @@ describe("Defaults", () => {
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
 		+   },
+		@@ ... @@
+		+       "hash": true,
+		@@ ... @@
+		+       "hash": true,
 	`)
 	);
 	test("development", { mode: "development" }, e =>
@@ -595,10 +623,6 @@ describe("Defaults", () => {
 		@@ ... @@
 		-   "cache": false,
 		+   "cache": Object {
-		+     "immutablePaths": Array [],
-		+     "managedPaths": Array [
-		+       "<cwd>/node_modules",
-		+     ],
 		+     "type": "memory",
 		+   },
 		@@ ... @@
@@ -1271,10 +1295,6 @@ describe("Defaults", () => {
 		@@ ... @@
 		-   "cache": false,
 		+   "cache": Object {
-		+     "immutablePaths": Array [],
-		+     "managedPaths": Array [
-		+       "<cwd>/node_modules",
-		+     ],
 		+     "type": "memory",
 		+   },
 		@@ ... @@
@@ -1306,10 +1326,6 @@ describe("Defaults", () => {
 		+     "hashAlgorithm": "md4",
 		+     "idleTimeout": 60000,
 		+     "idleTimeoutForInitialStore": 0,
-		+     "immutablePaths": Array [],
-		+     "managedPaths": Array [
-		+       "<cwd>/node_modules",
-		+     ],
 		+     "name": "default-none",
 		+     "store": "pack",
 		+     "type": "filesystem",

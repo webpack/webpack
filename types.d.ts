@@ -1742,6 +1742,11 @@ declare interface Configuration {
 	resolveLoader?: ResolveOptionsWebpackOptions;
 
 	/**
+	 * Options affecting how file system snapshots are created and validated.
+	 */
+	snapshot?: SnapshotOptions;
+
+	/**
 	 * Stats options object or preset name.
 	 */
 	stats?: StatsValue;
@@ -3090,11 +3095,11 @@ declare abstract class FileSystemInfo {
 		missing: Iterable<string>,
 		options: {
 			/**
-			 * should use hash to snapshot
+			 * Use hashes of the content of the files/directories to determine invalidation.
 			 */
 			hash?: boolean;
 			/**
-			 * should use timestamp to snapshot
+			 * Use timestamps of the files/directories to determine invalidation.
 			 */
 			timestamp?: boolean;
 		},
@@ -4236,16 +4241,6 @@ declare interface MapOptions {
  * Options object for in-memory caching.
  */
 declare interface MemoryCacheOptions {
-	/**
-	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
-	 */
-	immutablePaths?: string[];
-
-	/**
-	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
-	 */
-	managedPaths?: string[];
-
 	/**
 	 * In memory caching.
 	 */
@@ -7859,8 +7854,10 @@ declare abstract class Snapshot {
 	startTime: number;
 	fileTimestamps: Map<string, FileSystemInfoEntry>;
 	fileHashes: Map<string, string>;
+	fileTshs: Map<string, string | TimestampAndHash>;
 	contextTimestamps: Map<string, FileSystemInfoEntry>;
 	contextHashes: Map<string, string>;
+	contextTshs: Map<string, string | TimestampAndHash>;
 	missingExistence: Map<string, boolean>;
 	managedItemInfo: Map<string, string>;
 	managedFiles: Set<string>;
@@ -7874,10 +7871,14 @@ declare abstract class Snapshot {
 	setFileTimestamps(value?: any): void;
 	hasFileHashes(): boolean;
 	setFileHashes(value?: any): void;
+	hasFileTshs(): boolean;
+	setFileTshs(value?: any): void;
 	hasContextTimestamps(): boolean;
 	setContextTimestamps(value?: any): void;
 	hasContextHashes(): boolean;
 	setContextHashes(value?: any): void;
+	hasContextTshs(): boolean;
+	setContextTshs(value?: any): void;
 	hasMissingExistence(): boolean;
 	setMissingExistence(value?: any): void;
 	hasManagedItemInfo(): boolean;
@@ -7896,6 +7897,77 @@ declare abstract class Snapshot {
 	getFileIterable(): Iterable<string>;
 	getContextIterable(): Iterable<string>;
 	getMissingIterable(): Iterable<string>;
+}
+
+/**
+ * Options affecting how file system snapshots are created and validated.
+ */
+declare interface SnapshotOptions {
+	/**
+	 * Options for snapshotting build dependencies to determine if the whole cache need to be invalidated.
+	 */
+	buildDependencies?: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
+
+	/**
+	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
+	 */
+	immutablePaths?: string[];
+
+	/**
+	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
+	 */
+	managedPaths?: string[];
+
+	/**
+	 * Options for snapshotting dependencies of modules to determine if they need to be built again.
+	 */
+	module?: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
+
+	/**
+	 * Options for snapshotting dependencies of request resolving to determine if requests need to be re-resolved.
+	 */
+	resolve?: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
+
+	/**
+	 * Options for snapshotting the resolving of build dependencies to determine if the build dependencies need to be re-resolved.
+	 */
+	resolveBuildDependencies?: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
 }
 declare abstract class SortableSet<T> extends Set<T> {
 	/**
@@ -8507,6 +8579,12 @@ declare class Template {
 	static NUMBER_OF_IDENTIFIER_START_CHARS: number;
 	static NUMBER_OF_IDENTIFIER_CONTINUATION_CHARS: number;
 }
+declare interface TimestampAndHash {
+	safeTime: number;
+	timestamp?: number;
+	timestampHash?: string;
+	hash: string;
+}
 declare const UNDEFINED_MARKER: unique symbol;
 declare interface UpdateHashContextDependency {
 	chunkGraph: ChunkGraph;
@@ -8969,6 +9047,11 @@ declare interface WebpackOptionsNormalized {
 	 * Options for the resolver when resolving loaders.
 	 */
 	resolveLoader: ResolveOptionsWebpackOptions;
+
+	/**
+	 * Options affecting how file system snapshots are created and validated.
+	 */
+	snapshot: SnapshotOptions;
 
 	/**
 	 * Stats options object or preset name.
