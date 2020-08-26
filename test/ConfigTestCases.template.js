@@ -72,6 +72,11 @@ const describeCases = config => {
 										...config.cache
 									};
 								}
+								if (config.snapshot) {
+									options.snapshot = {
+										...config.snapshot
+									};
+								}
 							});
 							testConfig = {
 								findBundle: function (i, options) {

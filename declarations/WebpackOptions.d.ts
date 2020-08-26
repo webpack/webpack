@@ -680,6 +680,10 @@ export interface WebpackOptions {
 	 */
 	resolveLoader?: ResolveLoader;
 	/**
+	 * Options affecting how file system snapshots are created and validated.
+	 */
+	snapshot?: SnapshotOptions;
+	/**
 	 * Stats options object or preset name.
 	 */
 	stats?: StatsValue;
@@ -700,14 +704,6 @@ export interface WebpackOptions {
  * Options object for in-memory caching.
  */
 export interface MemoryCacheOptions {
-	/**
-	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
-	 */
-	immutablePaths?: string[];
-	/**
-	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
-	 */
-	managedPaths?: string[];
 	/**
 	 * In memory caching.
 	 */
@@ -1752,6 +1748,71 @@ export interface PerformanceOptions {
 	maxEntrypointSize?: number;
 }
 /**
+ * Options affecting how file system snapshots are created and validated.
+ */
+export interface SnapshotOptions {
+	/**
+	 * Options for snapshotting build dependencies to determine if the whole cache need to be invalidated.
+	 */
+	buildDependencies?: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
+	/**
+	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
+	 */
+	immutablePaths?: string[];
+	/**
+	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
+	 */
+	managedPaths?: string[];
+	/**
+	 * Options for snapshotting dependencies of modules to determine if they need to be built again.
+	 */
+	module?: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
+	/**
+	 * Options for snapshotting dependencies of request resolving to determine if requests need to be re-resolved.
+	 */
+	resolve?: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
+	/**
+	 * Options for snapshotting the resolving of build dependencies to determine if the build dependencies need to be re-resolved.
+	 */
+	resolveBuildDependencies?: {
+		/**
+		 * Use hashes of the content of the files/directories to determine invalidation.
+		 */
+		hash?: boolean;
+		/**
+		 * Use timestamps of the files/directories to determine invalidation.
+		 */
+		timestamp?: boolean;
+	};
+}
+/**
  * Stats options object.
  */
 export interface StatsOptions {
@@ -2303,6 +2364,10 @@ export interface WebpackOptionsNormalized {
 	 * Options for the resolver when resolving loaders.
 	 */
 	resolveLoader: ResolveLoader;
+	/**
+	 * Options affecting how file system snapshots are created and validated.
+	 */
+	snapshot: SnapshotOptions;
 	/**
 	 * Stats options object or preset name.
 	 */

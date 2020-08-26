@@ -3552,6 +3552,162 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "snapshot-build-dependencies-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.buildDependencies.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-build-dependencies-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.buildDependencies.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-immutable-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "A path to a immutable directory (usually a package manager cache directory).",
+        "multiple": true,
+        "path": "snapshot.immutablePaths[]",
+        "type": "path",
+      },
+    ],
+    "description": "A path to a immutable directory (usually a package manager cache directory).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "snapshot-immutable-paths-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+        "multiple": false,
+        "path": "snapshot.immutablePaths",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-managed-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "A path to a managed directory (usually a node_modules directory).",
+        "multiple": true,
+        "path": "snapshot.managedPaths[]",
+        "type": "path",
+      },
+    ],
+    "description": "A path to a managed directory (usually a node_modules directory).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "snapshot-managed-paths-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+        "multiple": false,
+        "path": "snapshot.managedPaths",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-module-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.module.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-module-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.module.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-build-dependencies-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolveBuildDependencies.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-build-dependencies-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolveBuildDependencies.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolve.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolve.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats": Object {
     "configs": Array [
       Object {

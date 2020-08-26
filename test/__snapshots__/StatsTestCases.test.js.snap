@@ -1164,9 +1164,9 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
     <CLR=BOLD>0% root snapshot uncached (0 / 0)</CLR>
     <CLR=BOLD>0% children snapshot uncached (0 / 0)</CLR>
     <CLR=BOLD>0 entries tested</CLR>
-    <CLR=BOLD>File info in cache: 1 timestamps 0 hashes</CLR>
-    <CLR=BOLD>File timestamp snapshot optimization: 0% (0/1) entries shared via 0 shared snapshots (0 times referenced)</CLR>
-    <CLR=BOLD>Directory info in cache: 0 timestamps 0 hashes</CLR>
+    <CLR=BOLD>File info in cache: 1 timestamps 1 hashes 1 timestamp hash combinations</CLR>
+    <CLR=BOLD>File timestamp hash combination snapshot optimization: 0% (0/1) entries shared via 0 shared snapshots (0 times referenced)</CLR>
+    <CLR=BOLD>Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations</CLR>
     <CLR=BOLD>Managed items info in cache: 0 items</CLR>
 "
 `;
@@ -1973,9 +1973,9 @@ LOG from webpack.FileSystemInfo
     0% root snapshot uncached (0 / 0)
     0% children snapshot uncached (0 / 0)
     0 entries tested
-    File info in cache: 6 timestamps 0 hashes
-    File timestamp snapshot optimization: 0% (0/6) entries shared via 0 shared snapshots (0 times referenced)
-    Directory info in cache: 0 timestamps 0 hashes
+    File info in cache: 6 timestamps 6 hashes 6 timestamp hash combinations
+    File timestamp hash combination snapshot optimization: 0% (0/6) entries shared via 0 shared snapshots (0 times referenced)
+    Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations
     Managed items info in cache: 0 items
 "
 `;
@@ -2310,9 +2310,9 @@ LOG from webpack.FileSystemInfo
     0% root snapshot uncached (0 / 0)
     0% children snapshot uncached (0 / 0)
     0 entries tested
-    File info in cache: 6 timestamps 0 hashes
-    File timestamp snapshot optimization: 0% (0/6) entries shared via 0 shared snapshots (0 times referenced)
-    Directory info in cache: 0 timestamps 0 hashes
+    File info in cache: 6 timestamps 6 hashes 6 timestamp hash combinations
+    File timestamp hash combination snapshot optimization: 0% (0/6) entries shared via 0 shared snapshots (0 times referenced)
+    Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations
     Managed items info in cache: 0 items
 "
 `;

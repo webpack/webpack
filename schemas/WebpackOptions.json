@@ -854,26 +854,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "immutablePaths": {
-          "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
-          "type": "array",
-          "items": {
-            "description": "A path to a immutable directory (usually a package manager cache directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
-          }
-        },
-        "managedPaths": {
-          "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
-          "type": "array",
-          "items": {
-            "description": "A path to a managed directory (usually a node_modules directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
-          }
-        },
         "type": {
           "description": "In memory caching.",
           "enum": ["memory"]
@@ -2802,6 +2782,93 @@
       "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\".",
       "enum": [false, "text/javascript", "module"]
     },
+    "SnapshotOptions": {
+      "description": "Options affecting how file system snapshots are created and validated.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "buildDependencies": {
+          "description": "Options for snapshotting build dependencies to determine if the whole cache need to be invalidated.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        },
+        "immutablePaths": {
+          "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+          "type": "array",
+          "items": {
+            "description": "A path to a immutable directory (usually a package manager cache directory).",
+            "type": "string",
+            "absolutePath": true,
+            "minLength": 1
+          }
+        },
+        "managedPaths": {
+          "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+          "type": "array",
+          "items": {
+            "description": "A path to a managed directory (usually a node_modules directory).",
+            "type": "string",
+            "absolutePath": true,
+            "minLength": 1
+          }
+        },
+        "module": {
+          "description": "Options for snapshotting dependencies of modules to determine if they need to be built again.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        },
+        "resolve": {
+          "description": "Options for snapshotting dependencies of request resolving to determine if requests need to be re-resolved.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        },
+        "resolveBuildDependencies": {
+          "description": "Options for snapshotting the resolving of build dependencies to determine if the build dependencies need to be re-resolved.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
     "SourceMapFilename": {
       "description": "The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.",
       "type": "string",
@@ -3308,6 +3375,9 @@
         "resolveLoader": {
           "$ref": "#/definitions/ResolveLoader"
         },
+        "snapshot": {
+          "$ref": "#/definitions/SnapshotOptions"
+        },
         "stats": {
           "$ref": "#/definitions/StatsValue"
         },
@@ -3323,6 +3393,7 @@
       },
       "required": [
         "cache",
+        "snapshot",
         "entry",
         "experiments",
         "externals",
@@ -3444,6 +3515,9 @@
     },
     "resolveLoader": {
       "$ref": "#/definitions/ResolveLoader"
+    },
+    "snapshot": {
+      "$ref": "#/definitions/SnapshotOptions"
     },
     "stats": {
       "$ref": "#/definitions/StatsValue"
