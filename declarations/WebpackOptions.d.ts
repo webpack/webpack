@@ -345,10 +345,6 @@ export type AssetModuleFilename =
  */
 export type Charset = boolean;
 /**
- * The callback function name used by webpack for loading of chunks in WebWorkers.
- */
-export type ChunkCallbackName = string;
-/**
  * The filename of non-entry chunks as relative path inside the `output.path` directory.
  */
 export type ChunkFilename = string;
@@ -1607,10 +1603,6 @@ export interface Output {
 	 */
 	charset?: Charset;
 	/**
-	 * The callback function name used by webpack for loading of chunks in WebWorkers.
-	 */
-	chunkCallbackName?: ChunkCallbackName;
-	/**
 	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
 	 */
 	chunkFilename?: ChunkFilename;
@@ -2160,10 +2152,6 @@ export interface OutputNormalized {
 	 * Add charset attribute for script tag.
 	 */
 	charset?: Charset;
-	/**
-	 * The callback function name used by webpack for loading of chunks in WebWorkers.
-	 */
-	chunkCallbackName?: ChunkCallbackName;
 	/**
 	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
 	 */

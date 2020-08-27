@@ -210,7 +210,9 @@ describe("Defaults", () => {
 		    "assetModuleFilename": "[hash][ext][query]",
 		    "charset": true,
 		    "chunkFilename": "[name].js",
+		    "chunkFormat": "array-push",
 		    "chunkLoadTimeout": 120000,
+		    "chunkLoading": "jsonp",
 		    "chunkLoadingGlobal": "webpackChunkwebpack",
 		    "compareBeforeEmit": true,
 		    "crossOriginLoading": false,
@@ -218,6 +220,9 @@ describe("Defaults", () => {
 		    "devtoolModuleFilenameTemplate": undefined,
 		    "devtoolNamespace": "webpack",
 		    "ecmaVersion": 6,
+		    "enabledChunkLoadingTypes": Array [
+		      "jsonp",
+		    ],
 		    "enabledLibraryTypes": Array [],
 		    "filename": "[name].js",
 		    "globalObject": "window",
@@ -968,6 +973,15 @@ describe("Defaults", () => {
 		+     "__filename": false,
 		+     "global": false,
 		@@ ... @@
+		-     "chunkFormat": "array-push",
+		+     "chunkFormat": "commonjs",
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "require",
+		@@ ... @@
+		-       "jsonp",
+		+       "require",
+		@@ ... @@
 		-     "globalObject": "window",
 		+     "globalObject": "global",
 		@@ ... @@
@@ -1068,6 +1082,15 @@ describe("Defaults", () => {
 		+     "__filename": false,
 		+     "global": false,
 		@@ ... @@
+		-     "chunkFormat": "array-push",
+		+     "chunkFormat": "commonjs",
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "require",
+		@@ ... @@
+		-       "jsonp",
+		+       "require",
+		@@ ... @@
 		-     "globalObject": "window",
 		+     "globalObject": "global",
 		@@ ... @@
@@ -1147,8 +1170,17 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ ... @@
+		-     "chunkFormat": "array-push",
+		+     "chunkFormat": "commonjs",
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "require",
+		@@ ... @@
+		-       "jsonp",
+		+       "require",
+		@@ ... @@
 		-     "globalObject": "window",
-		+     "globalObject": "self",
+		+     "globalObject": "global",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",

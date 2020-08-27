@@ -73,10 +73,6 @@
       "description": "Add charset attribute for script tag.",
       "type": "boolean"
     },
-    "ChunkCallbackName": {
-      "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
-      "type": "string"
-    },
     "ChunkFilename": {
       "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
       "type": "string",
@@ -1732,9 +1728,6 @@
         "charset": {
           "$ref": "#/definitions/Charset"
         },
-        "chunkCallbackName": {
-          "$ref": "#/definitions/ChunkCallbackName"
-        },
         "chunkFilename": {
           "$ref": "#/definitions/ChunkFilename"
         },
@@ -1886,9 +1879,6 @@
         },
         "charset": {
           "$ref": "#/definitions/Charset"
-        },
-        "chunkCallbackName": {
-          "$ref": "#/definitions/ChunkCallbackName"
         },
         "chunkFilename": {
           "$ref": "#/definitions/ChunkFilename"

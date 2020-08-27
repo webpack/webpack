@@ -1807,19 +1807,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "output-chunk-callback-name": Object {
-    "configs": Array [
-      Object {
-        "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
-        "multiple": false,
-        "path": "output.chunkCallbackName",
-        "type": "string",
-      },
-    ],
-    "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
-    "multiple": false,
-    "simpleType": "string",
-  },
   "output-chunk-filename": Object {
     "configs": Array [
       Object {
@@ -1830,6 +1817,30 @@ Object {
       },
     ],
     "description": "The filename of non-entry chunks as relative path inside the \`output.path\` directory.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-chunk-format": Object {
+    "configs": Array [
+      Object {
+        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkFormat",
+        "type": "enum",
+        "values": Array [
+          "array-push",
+          "commonjs",
+          false,
+        ],
+      },
+      Object {
+        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkFormat",
+        "type": "string",
+      },
+    ],
+    "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -1845,6 +1856,40 @@ Object {
     "description": "Number of milliseconds before chunk request expires.",
     "multiple": false,
     "simpleType": "number",
+  },
+  "output-chunk-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkLoading",
+        "type": "enum",
+        "values": Array [
+          "jsonp",
+          "import-scripts",
+          "require",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
   },
   "output-chunk-loading-global": Object {
     "configs": Array [
@@ -1951,10 +1996,48 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "output-enabled-chunk-loading-types": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledChunkLoadingTypes[]",
+        "type": "enum",
+        "values": Array [
+          "jsonp",
+          "import-scripts",
+          "require",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledChunkLoadingTypes[]",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-enabled-chunk-loading-types-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of chunk loading types enabled for use by entry points.",
+        "multiple": false,
+        "path": "output.enabledChunkLoadingTypes",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of chunk loading types enabled for use by entry points.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-enabled-library-types": Object {
     "configs": Array [
       Object {
-        "description": "Type of library.",
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
         "multiple": true,
         "path": "output.enabledLibraryTypes[]",
         "type": "enum",
@@ -1977,8 +2060,14 @@ Object {
           "system",
         ],
       },
+      Object {
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledLibraryTypes[]",
+        "type": "string",
+      },
     ],
-    "description": "Type of library.",
+    "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2388,7 +2477,7 @@ Object {
   "output-library-type": Object {
     "configs": Array [
       Object {
-        "description": "Type of library.",
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
         "multiple": false,
         "path": "output.library.type",
         "type": "enum",
@@ -2411,8 +2500,14 @@ Object {
           "system",
         ],
       },
+      Object {
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.library.type",
+        "type": "string",
+      },
     ],
-    "description": "Type of library.",
+    "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },

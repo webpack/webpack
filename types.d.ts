@@ -5577,11 +5577,6 @@ declare interface Output {
 	charset?: boolean;
 
 	/**
-	 * The callback function name used by webpack for loading of chunks in WebWorkers.
-	 */
-	chunkCallbackName?: string;
-
-	/**
 	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
 	 */
 	chunkFilename?: string;
@@ -5804,11 +5799,6 @@ declare interface OutputNormalized {
 	 * Add charset attribute for script tag.
 	 */
 	charset?: boolean;
-
-	/**
-	 * The callback function name used by webpack for loading of chunks in WebWorkers.
-	 */
-	chunkCallbackName?: string;
 
 	/**
 	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
