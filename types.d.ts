@@ -3386,7 +3386,8 @@ declare class JavascriptModulesPlugin {
 	static getChunkFilenameTemplate(chunk?: any, outputOptions?: any): any;
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
-declare abstract class JavascriptParser extends Parser {
+declare class JavascriptParser extends Parser {
+	constructor(sourceType?: "module" | "script" | "auto");
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
 			SyncBailHook<[UnaryExpression], BasicEvaluatedExpression>
@@ -3589,7 +3590,6 @@ declare abstract class JavascriptParser extends Parser {
 		program: SyncBailHook<[Program, Comment[]], boolean | void>;
 		finish: SyncBailHook<[Program, Comment[]], boolean | void>;
 	}>;
-	options: { [index: string]: any };
 	sourceType: "module" | "script" | "auto";
 	scope: ScopeInfo;
 	state: Record<string, any> & ParserStateBase;
@@ -3646,7 +3646,6 @@ declare abstract class JavascriptParser extends Parser {
 	)[];
 	prevStatement: any;
 	currentTagData: any;
-	initializeEvaluating(): void;
 	getRenameIdentifier(expr?: any): string;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
 	walkMethodDefinition(methodDefinition?: any): void;
@@ -3867,6 +3866,9 @@ declare abstract class JavascriptParser extends Parser {
 		rootInfo: string | ScopeInfo | VariableInfo;
 		getMembers: () => string[];
 	};
+	static ALLOWED_MEMBER_TYPES_ALL: number;
+	static ALLOWED_MEMBER_TYPES_EXPRESSION: number;
+	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: number;
 }
 declare interface JsonpCompilationPluginHooks {
 	linkPreload: SyncWaterfallHook<[string, Chunk, string]>;
@@ -9255,7 +9257,7 @@ declare namespace exports {
 		};
 	}
 	export namespace javascript {
-		export { JavascriptModulesPlugin };
+		export { JavascriptModulesPlugin, JavascriptParser };
 	}
 	export namespace optimize {
 		export {
