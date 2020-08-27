@@ -178,6 +178,7 @@
     "boolish",
     "analysing",
     "etags",
+    "destructure",
 
     "webassemblyjs",
     "fsevents",

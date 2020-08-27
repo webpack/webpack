@@ -225,10 +225,10 @@ describe("Stats", () => {
 			      "filteredRelated": undefined,
 			      "info": Object {
 			        "minimized": true,
-			        "size": 2207,
+			        "size": 2185,
 			      },
 			      "name": "entryB.js",
-			      "size": 2207,
+			      "size": 2185,
 			      "type": "asset",
 			    },
 			  ],
