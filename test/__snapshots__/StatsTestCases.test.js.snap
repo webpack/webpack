@@ -787,7 +787,7 @@ exports[`StatsTestCases should print correct stats for dll-reference-plugin-issu
 "Hash: b838deba915153e63f86
 Time: X ms
 Built at: 1970-04-20 12:42:42
-1 asset
+assets by status 83 bytes [cached] 1 asset
 Entrypoint main = bundle.js
 ./entry.js 29 bytes [built]
 
@@ -823,8 +823,8 @@ exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] =
 "Hash: 0f9eb63e65113c4a3960
 Time: X ms
 Built at: 1970-04-20 12:42:42
+excluded assets 34 bytes 1 asset
 asset bundle.js 3.73 KiB [emitted] (name: main)
- + 1 hidden asset
 Entrypoint main = bundle.js (89245aae14d2d745f85a29195aa6ffc1.json)
 ./index.js 77 bytes [built]
 ./a.txt 42 bytes [built]
@@ -1020,8 +1020,9 @@ Child
     Hash: 79ce0ce957b373f01199
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset c-all-b_js-5d2ee8f74cbe1c7c24e8.js 502 bytes [emitted] [immutable] (id hint: all)
-    asset c-all-c_js-3f22b3dd1aa1ecb5f45e.js 393 bytes [emitted] [immutable] (id hint: all)
+    assets by chunk 895 bytes (id hint: all)
+      asset c-all-c_js-3f22b3dd1aa1ecb5f45e.js 393 bytes [emitted] [immutable] (id hint: all)
+      asset c-all-b_js-5d2ee8f74cbe1c7c24e8.js 502 bytes [emitted] [immutable] (id hint: all)
     asset c-main-3737497cd09f5bd99fe3.js 603 bytes [emitted] [immutable] (name: main)
     asset c-runtime~main-2769e1f5da93c44c8a70.js 12.4 KiB [emitted] [immutable] (name: runtime~main)
     asset c-vendors-node_modules_vendor_js-93fc2ac2d261c82b4448.js 185 bytes [emitted] [immutable] (id hint: vendors)
@@ -1228,11 +1229,13 @@ exports[`StatsTestCases should print correct stats for module-assets 1`] = `
 "Hash: 7ef32e0d65af21479a68
 Time: X ms
 Built at: 1970-04-20 12:42:42
-asset 1.png 21 KiB [emitted] (auxiliary name: a)
-asset 2.png 21 KiB [emitted] (auxiliary name: a, b)
-asset a.js 749 bytes [emitted] (name: a)
-asset b.js 567 bytes [emitted] (name: b)
-asset main.js 8.92 KiB [emitted] (name: main)
+assets by path ./*.js 10.2 KiB
+  asset main.js 8.92 KiB [emitted] (name: main)
+  asset a.js 749 bytes [emitted] (name: a)
+  asset b.js 567 bytes [emitted] (name: b)
+assets by path ./*.png 42 KiB
+  asset 1.png 21 KiB [emitted] (auxiliary name: a)
+  asset 2.png 21 KiB [emitted] (auxiliary name: a, b)
 Entrypoint main = main.js
 Chunk Group a = a.js (1.png 2.png)
 Chunk Group b = b.js (2.png)
@@ -1387,7 +1390,7 @@ Entrypoint main = main.js
 exports[`StatsTestCases should print correct stats for module-trace-disabled-in-error 1`] = `
 "Time: X ms
 Built at: 1970-04-20 12:42:42
-1 asset
+assets by status 1.83 KiB [cached] 1 asset
 Entrypoint main = main.js
 ./index.js 19 bytes [built]
 ./inner.js 53 bytes [built]
@@ -1411,7 +1414,7 @@ You may need an appropriate loader to handle this file type, currently no loader
 exports[`StatsTestCases should print correct stats for module-trace-enabled-in-error 1`] = `
 "Time: X ms
 Built at: 1970-04-20 12:42:42
-1 asset
+assets by status 1.83 KiB [cached] 1 asset
 Entrypoint main = main.js
 ./index.js 19 bytes [built]
 ./inner.js 53 bytes [built]
@@ -1523,7 +1526,7 @@ exports[`StatsTestCases should print correct stats for no-emit-on-errors-plugin-
 "Hash: f140966bfd98188578d5
 Time: X ms
 Built at: 1970-04-20 12:42:42
-2 assets
+assets by status 108 bytes [cached] 2 assets
 Entrypoint main = bundle.js
 ./index.js 1 bytes [built]
 
@@ -1582,7 +1585,7 @@ chunk {753} (runtime: main) ac in ab.js (ac in ab) 1 bytes <{90}> >{284}< [rende
 `;
 
 exports[`StatsTestCases should print correct stats for parse-error 1`] = `
-"1 asset
+"assets by status 1.53 KiB [cached] 1 asset
 Entrypoint main = main.js
 ./index.js + 1 modules 30 bytes [built]
 ./b.js 55 bytes [built] [failed] [1 error]
@@ -2323,11 +2326,12 @@ Child a-normal:
     Hash: dc13e801b7da230b06ce
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset 3cc8faad16137711c07e-3cc8fa.js 210 bytes [emitted] [immutable] [minimized] (name: main)
-    asset 603191853c81e758567a-603191.js 2.09 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+    assets by path ./*.js 2.48 KiB
+      asset 3cc8faad16137711c07e-3cc8fa.js 210 bytes [emitted] [immutable] [minimized] (name: main)
+      asset 603191853c81e758567a-603191.js 2.09 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+      asset b6f77787a670e97d47b5-b6f777.js 193 bytes [emitted] [immutable] [minimized] (name: lazy)
     asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
-    asset b6f77787a670e97d47b5-b6f777.js 193 bytes [emitted] [immutable] [minimized] (name: lazy)
     Entrypoint main = 603191853c81e758567a-603191.js 3cc8faad16137711c07e-3cc8fa.js (7382fad5b015914e0811.jpg)
     ./a/index.js 150 bytes [built]
     ./a/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built]
@@ -2338,11 +2342,12 @@ Child b-normal:
     Hash: 5782ba854a23a6c889d0
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset 3cc8faad16137711c07e-3cc8fa.js 210 bytes [emitted] [immutable] [minimized] (name: main)
-    asset 724d7409f0fb4e0b3145-724d74.js 2.09 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+    assets by path ./*.js 2.48 KiB
+      asset 3cc8faad16137711c07e-3cc8fa.js 210 bytes [emitted] [immutable] [minimized] (name: main)
+      asset 724d7409f0fb4e0b3145-724d74.js 2.09 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+      asset b6f77787a670e97d47b5-b6f777.js 193 bytes [emitted] [immutable] [minimized] (name: lazy)
     asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
-    asset b6f77787a670e97d47b5-b6f777.js 193 bytes [emitted] [immutable] [minimized] (name: lazy)
     Entrypoint main = 724d7409f0fb4e0b3145-724d74.js 3cc8faad16137711c07e-3cc8fa.js (7382fad5b015914e0811.jpg)
     ./b/index.js 109 bytes [built]
     ./b/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built]
@@ -2353,14 +2358,15 @@ Child a-source-map:
     Hash: dc13e801b7da230b06ce
     Time: X ms
     Built at: 1970-04-20 12:42:42
-    asset 2d2b84d5cc58d8742e65-2d2b84.js 2.14 KiB [emitted] [immutable] [minimized] (name: runtime~main)
-      sourceMap 2d2b84d5cc58d8742e65-2d2b84.js.map 12.6 KiB [emitted] [dev]
+    assets by path ./*.js 2.65 KiB
+      asset b8bfcec62cdd15c9a840-b8bfce.js 266 bytes [emitted] [immutable] [minimized] (name: main)
+        sourceMap b8bfcec62cdd15c9a840-b8bfce.js.map 366 bytes [emitted] [dev]
+      asset 2d2b84d5cc58d8742e65-2d2b84.js 2.14 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+        sourceMap 2d2b84d5cc58d8742e65-2d2b84.js.map 12.6 KiB [emitted] [dev]
+      asset c7c0f8bb2e61b59a89f5-c7c0f8.js 249 bytes [emitted] [immutable] [minimized] (name: lazy)
+        sourceMap c7c0f8bb2e61b59a89f5-c7c0f8.js.map 331 bytes [emitted] [dev]
     asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
-    asset b8bfcec62cdd15c9a840-b8bfce.js 266 bytes [emitted] [immutable] [minimized] (name: main)
-      sourceMap b8bfcec62cdd15c9a840-b8bfce.js.map 366 bytes [emitted] [dev]
-    asset c7c0f8bb2e61b59a89f5-c7c0f8.js 249 bytes [emitted] [immutable] [minimized] (name: lazy)
-      sourceMap c7c0f8bb2e61b59a89f5-c7c0f8.js.map 331 bytes [emitted] [dev]
     Entrypoint main = 2d2b84d5cc58d8742e65-2d2b84.js b8bfcec62cdd15c9a840-b8bfce.js (608a3931b5c0c7b2c21f-608a39.js.map 7382fad5b015914e0811.jpg aff11f17e02d24be34cc-aff11f.js.map)
     ./a/index.js 150 bytes [built]
     ./a/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built]
@@ -2371,14 +2377,15 @@ Child b-source-map:
     Hash: 5782ba854a23a6c889d0
     Time: X ms
     Built at: 1970-04-20 12:42:42
+    assets by path ./*.js 2.65 KiB
+      asset b8bfcec62cdd15c9a840-b8bfce.js 266 bytes [emitted] [immutable] [minimized] (name: main)
+        sourceMap b8bfcec62cdd15c9a840-b8bfce.js.map 323 bytes [emitted] [dev]
+      asset ffe92bc2786746a99419-ffe92b.js 2.14 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+        sourceMap ffe92bc2786746a99419-ffe92b.js.map 12.6 KiB [emitted] [dev]
+      asset c7c0f8bb2e61b59a89f5-c7c0f8.js 249 bytes [emitted] [immutable] [minimized] (name: lazy)
+        sourceMap c7c0f8bb2e61b59a89f5-c7c0f8.js.map 327 bytes [emitted] [dev]
     asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
-    asset b8bfcec62cdd15c9a840-b8bfce.js 266 bytes [emitted] [immutable] [minimized] (name: main)
-      sourceMap b8bfcec62cdd15c9a840-b8bfce.js.map 323 bytes [emitted] [dev]
-    asset c7c0f8bb2e61b59a89f5-c7c0f8.js 249 bytes [emitted] [immutable] [minimized] (name: lazy)
-      sourceMap c7c0f8bb2e61b59a89f5-c7c0f8.js.map 327 bytes [emitted] [dev]
-    asset ffe92bc2786746a99419-ffe92b.js 2.14 KiB [emitted] [immutable] [minimized] (name: runtime~main)
-      sourceMap ffe92bc2786746a99419-ffe92b.js.map 12.6 KiB [emitted] [dev]
     Entrypoint main = ffe92bc2786746a99419-ffe92b.js b8bfcec62cdd15c9a840-b8bfce.js (342ff4b0850c24f24b15-342ff4.js.map 6625d7a5b3c0dfc493c6-6625d7.js.map 7382fad5b015914e0811.jpg)
     ./b/index.js 109 bytes [built]
     ./b/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built]
@@ -2389,79 +2396,102 @@ Child b-source-map:
 
 exports[`StatsTestCases should print correct stats for related-assets 1`] = `
 "Child default:
-    asset default-chunk_js.css 73 bytes [emitted] 3 related assets
-    asset default-chunk_js.js 1.11 KiB [emitted] 3 related assets
-    asset default-main.css 69 bytes [emitted] (name: main) 3 related assets
-    asset default-main.js 13.3 KiB [emitted] (name: main) 3 related assets
+    assets by path ./*.css 142 bytes
+      asset default-main.css 69 bytes [emitted] (name: main) 3 related assets
+      asset default-chunk_js.css 73 bytes [emitted] 3 related assets
+    assets by path ./*.js 14.4 KiB
+      asset default-main.js 13.3 KiB [emitted] (name: main) 3 related assets
+      asset default-chunk_js.js 1.11 KiB [emitted] 3 related assets
 Child relatedAssets:
-    asset relatedAssets-chunk_js.css 79 bytes [emitted]
-      compressed relatedAssets-chunk_js.css.br 79 bytes [emitted]
-      compressed relatedAssets-chunk_js.css.gz 79 bytes [emitted]
-      sourceMap relatedAssets-chunk_js.css.map 197 bytes [emitted] [dev]
-        compressed relatedAssets-chunk_js.css.map.br 197 bytes [emitted]
-        compressed relatedAssets-chunk_js.css.map.gz 197 bytes [emitted]
-    asset relatedAssets-chunk_js.js 1.12 KiB [emitted]
-      compressed relatedAssets-chunk_js.js.br 1.12 KiB [emitted]
-      compressed relatedAssets-chunk_js.js.gz 1.12 KiB [emitted]
-      sourceMap relatedAssets-chunk_js.js.map 295 bytes [emitted] [dev]
-        compressed relatedAssets-chunk_js.js.map.br 295 bytes [emitted]
-        compressed relatedAssets-chunk_js.js.map.gz 295 bytes [emitted]
-    asset relatedAssets-main.css 75 bytes [emitted] (name: main)
-      compressed relatedAssets-main.css.br 75 bytes [emitted]
-      compressed relatedAssets-main.css.gz 75 bytes [emitted]
-      sourceMap relatedAssets-main.css.map 187 bytes [emitted] [dev] (auxiliary name: main)
-        compressed relatedAssets-main.css.map.br 187 bytes [emitted]
-        compressed relatedAssets-main.css.map.gz 187 bytes [emitted]
-    asset relatedAssets-main.js 13.3 KiB [emitted] (name: main)
-      compressed relatedAssets-main.js.br 13.3 KiB [emitted]
-      compressed relatedAssets-main.js.gz 13.3 KiB [emitted]
-      sourceMap relatedAssets-main.js.map 11.3 KiB [emitted] [dev] (auxiliary name: main)
-        compressed relatedAssets-main.js.map.br 11.3 KiB [emitted]
-        compressed relatedAssets-main.js.map.gz 11.3 KiB [emitted]
+    assets by path ./*.css 154 bytes
+      asset relatedAssets-main.css 75 bytes [emitted] (name: main)
+        compressed relatedAssets-main.css.br 75 bytes [emitted]
+        compressed relatedAssets-main.css.gz 75 bytes [emitted]
+        sourceMap relatedAssets-main.css.map 187 bytes [emitted] [dev] (auxiliary name: main)
+          compressed relatedAssets-main.css.map.br 187 bytes [emitted]
+          compressed relatedAssets-main.css.map.gz 187 bytes [emitted]
+      asset relatedAssets-chunk_js.css 79 bytes [emitted]
+        compressed relatedAssets-chunk_js.css.br 79 bytes [emitted]
+        compressed relatedAssets-chunk_js.css.gz 79 bytes [emitted]
+        sourceMap relatedAssets-chunk_js.css.map 197 bytes [emitted] [dev]
+          compressed relatedAssets-chunk_js.css.map.br 197 bytes [emitted]
+          compressed relatedAssets-chunk_js.css.map.gz 197 bytes [emitted]
+    assets by path ./*.js 14.4 KiB
+      asset relatedAssets-main.js 13.3 KiB [emitted] (name: main)
+        compressed relatedAssets-main.js.br 13.3 KiB [emitted]
+        compressed relatedAssets-main.js.gz 13.3 KiB [emitted]
+        sourceMap relatedAssets-main.js.map 11.3 KiB [emitted] [dev] (auxiliary name: main)
+          compressed relatedAssets-main.js.map.br 11.3 KiB [emitted]
+          compressed relatedAssets-main.js.map.gz 11.3 KiB [emitted]
+      asset relatedAssets-chunk_js.js 1.12 KiB [emitted]
+        compressed relatedAssets-chunk_js.js.br 1.12 KiB [emitted]
+        compressed relatedAssets-chunk_js.js.gz 1.12 KiB [emitted]
+        sourceMap relatedAssets-chunk_js.js.map 295 bytes [emitted] [dev]
+          compressed relatedAssets-chunk_js.js.map.br 295 bytes [emitted]
+          compressed relatedAssets-chunk_js.js.map.gz 295 bytes [emitted]
 Child exclude1:
-    asset exclude1-chunk_js.css 74 bytes [emitted]
-      sourceMap exclude1-chunk_js.css.map 192 bytes [emitted] [dev] 2 related assets
-       + 2 hidden related assets
-    asset exclude1-chunk_js.js 1.11 KiB [emitted]
-      sourceMap exclude1-chunk_js.js.map 290 bytes [emitted] [dev] 2 related assets
-       + 2 hidden related assets
-    asset exclude1-main.css 70 bytes [emitted] (name: main)
-      sourceMap exclude1-main.css.map 182 bytes [emitted] [dev] (auxiliary name: main) 2 related assets
-       + 2 hidden related assets
-    asset exclude1-main.js 13.3 KiB [emitted] (name: main)
-      sourceMap exclude1-main.js.map 11.3 KiB [emitted] [dev] (auxiliary name: main) 2 related assets
-       + 2 hidden related assets
+    assets by path ./*.css 144 bytes
+      asset exclude1-main.css 70 bytes [emitted] (name: main)
+        sourceMap exclude1-main.css.map 182 bytes [emitted] [dev] (auxiliary name: main)
+          excluded assets 364 bytes 2 assets
+          1 related asset
+        excluded assets 140 bytes 2 assets
+        1 related asset
+      asset exclude1-chunk_js.css 74 bytes [emitted]
+        sourceMap exclude1-chunk_js.css.map 192 bytes [emitted] [dev]
+          excluded assets 384 bytes 2 assets
+          1 related asset
+        excluded assets 148 bytes 2 assets
+        1 related asset
+    assets by path ./*.js 14.4 KiB
+      asset exclude1-main.js 13.3 KiB [emitted] (name: main)
+        sourceMap exclude1-main.js.map 11.3 KiB [emitted] [dev] (auxiliary name: main)
+          excluded assets 22.7 KiB 2 assets
+          1 related asset
+        excluded assets 26.6 KiB 2 assets
+        1 related asset
+      asset exclude1-chunk_js.js 1.11 KiB [emitted]
+        sourceMap exclude1-chunk_js.js.map 290 bytes [emitted] [dev]
+          excluded assets 580 bytes 2 assets
+          1 related asset
+        excluded assets 2.22 KiB 2 assets
+        1 related asset
 Child exclude2:
-    asset exclude2-chunk_js.css 74 bytes [emitted]
-      compressed exclude2-chunk_js.css.br 74 bytes [emitted]
-      compressed exclude2-chunk_js.css.gz 74 bytes [emitted]
-       + 1 hidden related asset
-    asset exclude2-chunk_js.js 1.11 KiB [emitted]
-      compressed exclude2-chunk_js.js.br 1.11 KiB [emitted]
-      compressed exclude2-chunk_js.js.gz 1.11 KiB [emitted]
-       + 1 hidden related asset
-    asset exclude2-main.css 70 bytes [emitted] (name: main)
-      compressed exclude2-main.css.br 70 bytes [emitted]
-      compressed exclude2-main.css.gz 70 bytes [emitted]
-       + 1 hidden related asset
-    asset exclude2-main.js 13.3 KiB [emitted] (name: main)
-      compressed exclude2-main.js.br 13.3 KiB [emitted]
-      compressed exclude2-main.js.gz 13.3 KiB [emitted]
-       + 1 hidden related asset
+    assets by path ./*.css 144 bytes
+      asset exclude2-main.css 70 bytes [emitted] (name: main)
+        compressed exclude2-main.css.br 70 bytes [emitted]
+        compressed exclude2-main.css.gz 70 bytes [emitted]
+        excluded assets 182 bytes 1 asset
+      asset exclude2-chunk_js.css 74 bytes [emitted]
+        compressed exclude2-chunk_js.css.br 74 bytes [emitted]
+        compressed exclude2-chunk_js.css.gz 74 bytes [emitted]
+        excluded assets 192 bytes 1 asset
+    assets by path ./*.js 14.4 KiB
+      asset exclude2-main.js 13.3 KiB [emitted] (name: main)
+        compressed exclude2-main.js.br 13.3 KiB [emitted]
+        compressed exclude2-main.js.gz 13.3 KiB [emitted]
+        excluded assets 11.3 KiB 1 asset
+      asset exclude2-chunk_js.js 1.11 KiB [emitted]
+        compressed exclude2-chunk_js.js.br 1.11 KiB [emitted]
+        compressed exclude2-chunk_js.js.gz 1.11 KiB [emitted]
+        excluded assets 290 bytes 1 asset
 Child exclude3:
-    asset exclude3-main.css 70 bytes [emitted] (name: main)
-      compressed exclude3-main.css.br 70 bytes [emitted]
-      compressed exclude3-main.css.gz 70 bytes [emitted]
-      sourceMap exclude3-main.css.map 182 bytes [emitted] [dev] (auxiliary name: main)
-        compressed exclude3-main.css.map.br 182 bytes [emitted]
-        compressed exclude3-main.css.map.gz 182 bytes [emitted]
-    asset exclude3-main.js 13.3 KiB [emitted] (name: main)
-      compressed exclude3-main.js.br 13.3 KiB [emitted]
-      compressed exclude3-main.js.gz 13.3 KiB [emitted]
-      sourceMap exclude3-main.js.map 11.3 KiB [emitted] [dev] (auxiliary name: main)
-        compressed exclude3-main.js.map.br 11.3 KiB [emitted]
-        compressed exclude3-main.js.map.gz 11.3 KiB [emitted]
-     + 2 hidden assets"
+    assets by path ./*.css 70 bytes
+      excluded assets 74 bytes 1 asset
+      asset exclude3-main.css 70 bytes [emitted] (name: main)
+        compressed exclude3-main.css.br 70 bytes [emitted]
+        compressed exclude3-main.css.gz 70 bytes [emitted]
+        sourceMap exclude3-main.css.map 182 bytes [emitted] [dev] (auxiliary name: main)
+          compressed exclude3-main.css.map.br 182 bytes [emitted]
+          compressed exclude3-main.css.map.gz 182 bytes [emitted]
+    assets by path ./*.js 13.3 KiB
+      excluded assets 1.11 KiB 1 asset
+      asset exclude3-main.js 13.3 KiB [emitted] (name: main)
+        compressed exclude3-main.js.br 13.3 KiB [emitted]
+        compressed exclude3-main.js.gz 13.3 KiB [emitted]
+        sourceMap exclude3-main.js.map 11.3 KiB [emitted] [dev] (auxiliary name: main)
+          compressed exclude3-main.js.map.br 11.3 KiB [emitted]
+          compressed exclude3-main.js.map.gz 11.3 KiB [emitted]"
 `;
 
 exports[`StatsTestCases should print correct stats for resolve-plugin-context 1`] = `
@@ -4204,18 +4234,20 @@ exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sy
 "Hash: c96673e79f37716c681c
 Time: X ms
 Built at: 1970-04-20 12:42:42
-asset 230.bundle.js 242 bytes [emitted]
-asset 325.bundle.js 3.78 KiB [emitted]
-asset 32796a220f44b00723d7.module.wasm 156 bytes [emitted] [immutable]
-asset 526.bundle.js 364 bytes [emitted] (id hint: vendors)
-asset 52ce624dd5de9c91cd19.module.wasm 531 bytes [emitted] [immutable]
-asset 71ba3c2b7af4ee0e4b5c.module.wasm 120 bytes [emitted] [immutable]
-asset 780.bundle.js 569 bytes [emitted]
-asset 86f222634054d2a3b20f.module.wasm 154 bytes [emitted] [immutable]
-asset 986b1b3cbdd7749989ee.module.wasm 290 bytes [emitted] [immutable]
-asset 99.bundle.js 240 bytes [emitted]
-asset a938d40645ba21696ec8.module.wasm 154 bytes [emitted] [immutable]
-asset bundle.js 11.7 KiB [emitted] (name: main)
+assets by path ./*.js 16.8 KiB
+  asset bundle.js 11.7 KiB [emitted] (name: main)
+  asset 325.bundle.js 3.78 KiB [emitted]
+  asset 526.bundle.js 364 bytes [emitted] (id hint: vendors)
+  asset 230.bundle.js 242 bytes [emitted]
+  asset 99.bundle.js 240 bytes [emitted]
+  asset 780.bundle.js 569 bytes [emitted]
+assets by path ./*.wasm 1.37 KiB
+  asset 71ba3c2b7af4ee0e4b5c.module.wasm 120 bytes [emitted] [immutable]
+  asset a938d40645ba21696ec8.module.wasm 154 bytes [emitted] [immutable]
+  asset 32796a220f44b00723d7.module.wasm 156 bytes [emitted] [immutable]
+  asset 52ce624dd5de9c91cd19.module.wasm 531 bytes [emitted] [immutable]
+  asset 86f222634054d2a3b20f.module.wasm 154 bytes [emitted] [immutable]
+  asset 986b1b3cbdd7749989ee.module.wasm 290 bytes [emitted] [immutable]
 Entrypoint main = bundle.js
 chunk (runtime: main) 99.bundle.js 50 bytes (javascript) 531 bytes (webassembly) [rendered]
  ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) [built]

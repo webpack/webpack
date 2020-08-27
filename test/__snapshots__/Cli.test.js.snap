@@ -3889,6 +3889,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "stats-assets-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display assets (groups will be collapsed to fit this space).",
+        "multiple": false,
+        "path": "stats.assetsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display assets (groups will be collapsed to fit this space).",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "stats-built-at": Object {
     "configs": Array [
       Object {
@@ -4281,6 +4294,71 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-chunk": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by how their are related to chunks.",
+        "multiple": false,
+        "path": "stats.groupAssetsByChunk",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by how their are related to chunks.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-extension": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their extension.",
+        "multiple": false,
+        "path": "stats.groupAssetsByExtension",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their extension.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-info": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+        "multiple": false,
+        "path": "stats.groupAssetsByInfo",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their path.",
+        "multiple": false,
+        "path": "stats.groupAssetsByPath",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their path.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-status": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their status (emitted, compared for emit or cached).",
+        "multiple": false,
+        "path": "stats.groupAssetsByStatus",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their status (emitted, compared for emit or cached).",
     "multiple": false,
     "simpleType": "boolean",
   },

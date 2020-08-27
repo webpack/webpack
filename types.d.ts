@@ -3195,6 +3195,16 @@ declare class Generator {
 	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
 	static byType(map?: any): ByTypeGenerator;
 }
+declare interface GroupConfig<T, R> {
+	getKeys: (arg0: T) => string[];
+	createGroup: (arg0: string, arg1: (T | R)[], arg2: T[]) => R;
+	getOptions?: (arg0: string, arg1: T[]) => GroupOptions;
+}
+declare interface GroupOptions {
+	groupChildren?: boolean;
+	force?: boolean;
+	greedy?: boolean;
+}
 declare interface HMRJavascriptParserHooks {
 	hotAcceptCallback: SyncBailHook<[any, string[]], void>;
 	hotAcceptWithoutCallback: SyncBailHook<[any, string[]], void>;
@@ -8227,6 +8237,7 @@ declare abstract class StatsFactory {
 			SyncBailHook<[((arg0?: any, arg1?: any) => number)[], any], any>
 		>;
 		filterSorted: HookMap<SyncBailHook<[any, any, number, number], any>>;
+		groupResults: HookMap<SyncBailHook<[GroupConfig<any, any>[], any], any>>;
 		sortResults: HookMap<
 			SyncBailHook<[((arg0?: any, arg1?: any) => number)[], any], any>
 		>;
@@ -8257,6 +8268,11 @@ declare interface StatsOptions {
 	 * Sort the assets by that field.
 	 */
 	assetsSort?: string;
+
+	/**
+	 * Space to display assets (groups will be collapsed to fit this space).
+	 */
+	assetsSpace?: number;
 
 	/**
 	 * Add built at time information.
@@ -8404,6 +8420,31 @@ declare interface StatsOptions {
 		| RegExp
 		| FilterItemTypes[]
 		| ((value: string) => boolean);
+
+	/**
+	 * Group assets by how their are related to chunks.
+	 */
+	groupAssetsByChunk?: boolean;
+
+	/**
+	 * Group assets by their extension.
+	 */
+	groupAssetsByExtension?: boolean;
+
+	/**
+	 * Group assets by their asset info (immutable, development, hotModuleReplacement, etc).
+	 */
+	groupAssetsByInfo?: boolean;
+
+	/**
+	 * Group assets by their path.
+	 */
+	groupAssetsByPath?: boolean;
+
+	/**
+	 * Group assets by their status (emitted, compared for emit or cached).
+	 */
+	groupAssetsByStatus?: boolean;
 
 	/**
 	 * Add the hash of the compilation.

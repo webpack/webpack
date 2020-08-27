@@ -2964,6 +2964,10 @@
           "description": "Sort the assets by that field.",
           "type": "string"
         },
+        "assetsSpace": {
+          "description": "Space to display assets (groups will be collapsed to fit this space).",
+          "type": "number"
+        },
         "builtAt": {
           "description": "Add built at time information.",
           "type": "boolean"
@@ -3108,6 +3112,26 @@
               "$ref": "#/definitions/FilterTypes"
             }
           ]
+        },
+        "groupAssetsByChunk": {
+          "description": "Group assets by how their are related to chunks.",
+          "type": "boolean"
+        },
+        "groupAssetsByExtension": {
+          "description": "Group assets by their extension.",
+          "type": "boolean"
+        },
+        "groupAssetsByInfo": {
+          "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+          "type": "boolean"
+        },
+        "groupAssetsByPath": {
+          "description": "Group assets by their path.",
+          "type": "boolean"
+        },
+        "groupAssetsByStatus": {
+          "description": "Group assets by their status (emitted, compared for emit or cached).",
+          "type": "boolean"
         },
         "hash": {
           "description": "Add the hash of the compilation.",

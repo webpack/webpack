@@ -1862,6 +1862,10 @@ export interface StatsOptions {
 	 */
 	assetsSort?: string;
 	/**
+	 * Space to display assets (groups will be collapsed to fit this space).
+	 */
+	assetsSpace?: number;
+	/**
 	 * Add built at time information.
 	 */
 	builtAt?: boolean;
@@ -1976,6 +1980,26 @@ export interface StatsOptions {
 	 * Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.
 	 */
 	excludeModules?: boolean | FilterTypes;
+	/**
+	 * Group assets by how their are related to chunks.
+	 */
+	groupAssetsByChunk?: boolean;
+	/**
+	 * Group assets by their extension.
+	 */
+	groupAssetsByExtension?: boolean;
+	/**
+	 * Group assets by their asset info (immutable, development, hotModuleReplacement, etc).
+	 */
+	groupAssetsByInfo?: boolean;
+	/**
+	 * Group assets by their path.
+	 */
+	groupAssetsByPath?: boolean;
+	/**
+	 * Group assets by their status (emitted, compared for emit or cached).
+	 */
+	groupAssetsByStatus?: boolean;
 	/**
 	 * Add the hash of the compilation.
 	 */
