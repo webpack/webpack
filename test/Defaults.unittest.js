@@ -225,7 +225,7 @@ describe("Defaults", () => {
 		    ],
 		    "enabledLibraryTypes": Array [],
 		    "filename": "[name].js",
-		    "globalObject": "window",
+		    "globalObject": "self",
 		    "hashDigest": "hex",
 		    "hashDigestLength": 20,
 		    "hashFunction": "md4",
@@ -982,7 +982,7 @@ describe("Defaults", () => {
 		-       "jsonp",
 		+       "require",
 		@@ ... @@
-		-     "globalObject": "window",
+		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -1060,8 +1060,11 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ ... @@
-		-     "globalObject": "window",
-		+     "globalObject": "self",
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "import-scripts",
+		@@ ... @@
+		-       "jsonp",
+		+       "import-scripts",
 		@@ ... @@
 		+       "worker",
 		@@ ... @@
@@ -1091,7 +1094,7 @@ describe("Defaults", () => {
 		-       "jsonp",
 		+       "require",
 		@@ ... @@
-		-     "globalObject": "window",
+		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -1179,7 +1182,7 @@ describe("Defaults", () => {
 		-       "jsonp",
 		+       "require",
 		@@ ... @@
-		-     "globalObject": "window",
+		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
 		-         "aliasFields": Array [
