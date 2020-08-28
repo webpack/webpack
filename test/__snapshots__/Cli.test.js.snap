@@ -1813,19 +1813,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-base-uri": Object {
-    "configs": Array [
-      Object {
-        "description": "An expression which is used for base URI in runtime code.",
-        "multiple": false,
-        "path": "output.baseURI",
-        "type": "string",
-      },
-    ],
-    "description": "An expression which is used for base URI in runtime code.",
-    "multiple": false,
-    "simpleType": "string",
-  },
   "output-charset": Object {
     "configs": Array [
       Object {

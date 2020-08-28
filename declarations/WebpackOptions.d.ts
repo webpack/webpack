@@ -341,10 +341,6 @@ export type AssetModuleFilename =
 			assetInfo?: import("../lib/Compilation").AssetInfo
 	  ) => string);
 /**
- * An expression which is used for base URI in runtime code.
- */
-export type BaseURI = string;
-/**
  * Add charset attribute for script tag.
  */
 export type Charset = boolean;
@@ -1607,10 +1603,6 @@ export interface Output {
 	 */
 	auxiliaryComment?: AuxiliaryComment;
 	/**
-	 * An expression which is used for base URI in runtime code.
-	 */
-	baseURI?: BaseURI;
-	/**
 	 * Add charset attribute for script tag.
 	 */
 	charset?: Charset;
@@ -2160,10 +2152,6 @@ export interface OutputNormalized {
 	 * The filename of asset modules as relative path inside the `output.path` directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
-	/**
-	 * An expression which is used for base URI in runtime code.
-	 */
-	baseURI?: BaseURI;
 	/**
 	 * Add charset attribute for script tag.
 	 */

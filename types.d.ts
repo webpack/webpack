@@ -5572,11 +5572,6 @@ declare interface Output {
 	auxiliaryComment?: AuxiliaryComment;
 
 	/**
-	 * An expression which is used for base URI in runtime code.
-	 */
-	baseURI?: string;
-
-	/**
 	 * Add charset attribute for script tag.
 	 */
 	charset?: boolean;
@@ -5799,11 +5794,6 @@ declare interface OutputNormalized {
 	 * The filename of asset modules as relative path inside the `output.path` directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
-
-	/**
-	 * An expression which is used for base URI in runtime code.
-	 */
-	baseURI?: string;
 
 	/**
 	 * Add charset attribute for script tag.
@@ -7895,11 +7885,6 @@ declare class SideEffectsFlagPlugin {
 		cache?: any
 	): any;
 }
-declare class SimpleRuntimeModule extends RuntimeModule {
-	constructor(name: string, runtimeGlobal: string, expression: string);
-	runtimeGlobal: string;
-	expression: string;
-}
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
 }
@@ -9656,7 +9641,6 @@ declare namespace exports {
 		ProgressPlugin,
 		ProvidePlugin,
 		RuntimeModule,
-		SimpleRuntimeModule,
 		EntryPlugin as SingleEntryPlugin,
 		SourceMapDevToolPlugin,
 		Stats,

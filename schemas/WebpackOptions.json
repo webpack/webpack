@@ -42,11 +42,6 @@
       "description": "Report the first error as a hard error instead of tolerating it.",
       "type": "boolean"
     },
-    "BaseURI": {
-      "description": "An expression which is used for base URI in runtime code.",
-      "type": "string",
-      "minLength": 1
-    },
     "CacheOptions": {
       "description": "Cache generated modules and chunks to improve performance for multiple incremental builds.",
       "anyOf": [
@@ -1730,9 +1725,6 @@
             }
           ]
         },
-        "baseURI": {
-          "$ref": "#/definitions/BaseURI"
-        },
         "charset": {
           "$ref": "#/definitions/Charset"
         },
@@ -1884,9 +1876,6 @@
       "properties": {
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
-        },
-        "baseURI": {
-          "$ref": "#/definitions/BaseURI"
         },
         "charset": {
           "$ref": "#/definitions/Charset"
