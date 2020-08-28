@@ -209,28 +209,32 @@ describe("Defaults", () => {
 		  "output": Object {
 		    "assetModuleFilename": "[hash][ext][query]",
 		    "charset": true,
-		    "chunkCallbackName": "webpackChunkwebpack",
 		    "chunkFilename": "[name].js",
+		    "chunkFormat": "array-push",
 		    "chunkLoadTimeout": 120000,
+		    "chunkLoading": "jsonp",
+		    "chunkLoadingGlobal": "webpackChunkwebpack",
 		    "compareBeforeEmit": true,
 		    "crossOriginLoading": false,
 		    "devtoolFallbackModuleFilenameTemplate": undefined,
 		    "devtoolModuleFilenameTemplate": undefined,
 		    "devtoolNamespace": "webpack",
 		    "ecmaVersion": 6,
+		    "enabledChunkLoadingTypes": Array [
+		      "jsonp",
+		    ],
 		    "enabledLibraryTypes": Array [],
 		    "filename": "[name].js",
-		    "globalObject": "window",
+		    "globalObject": "self",
 		    "hashDigest": "hex",
 		    "hashDigestLength": 20,
 		    "hashFunction": "md4",
 		    "hashSalt": undefined,
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
-		    "hotUpdateFunction": "webpackHotUpdatewebpack",
+		    "hotUpdateGlobal": "webpackHotUpdatewebpack",
 		    "hotUpdateMainFilename": "[fullhash].hot-update.json",
 		    "iife": true,
 		    "importFunctionName": "import",
-		    "jsonpFunction": "webpackJsonpwebpack",
 		    "library": undefined,
 		    "libraryTarget": "var",
 		    "module": false,
@@ -926,8 +930,8 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ ... @@
-		-     "chunkCallbackName": "webpackChunkwebpack",
-		+     "chunkCallbackName": "webpackChunkmyLib_awesome",
+		-     "chunkLoadingGlobal": "webpackChunkwebpack",
+		+     "chunkLoadingGlobal": "webpackChunkmyLib_awesome",
 		@@ ... @@
 		-     "devtoolNamespace": "webpack",
 		+     "devtoolNamespace": "myLib.awesome",
@@ -937,12 +941,10 @@ describe("Defaults", () => {
 		+       "var",
 		+     ],
 		@@ ... @@
-		-     "hotUpdateFunction": "webpackHotUpdatewebpack",
-		+     "hotUpdateFunction": "webpackHotUpdatemyLib_awesome",
+		-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+		+     "hotUpdateGlobal": "webpackHotUpdatemyLib_awesome",
 		@@ ... @@
-		-     "jsonpFunction": "webpackJsonpwebpack",
 		-     "library": undefined,
-		+     "jsonpFunction": "webpackJsonpmyLib_awesome",
 		+     "library": Object {
 		+       "auxiliaryComment": undefined,
 		+       "export": undefined,
@@ -971,7 +973,16 @@ describe("Defaults", () => {
 		+     "__filename": false,
 		+     "global": false,
 		@@ ... @@
-		-     "globalObject": "window",
+		-     "chunkFormat": "array-push",
+		+     "chunkFormat": "commonjs",
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "require",
+		@@ ... @@
+		-       "jsonp",
+		+       "require",
+		@@ ... @@
+		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -1049,8 +1060,11 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ ... @@
-		-     "globalObject": "window",
-		+     "globalObject": "self",
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "import-scripts",
+		@@ ... @@
+		-       "jsonp",
+		+       "import-scripts",
 		@@ ... @@
 		+       "worker",
 		@@ ... @@
@@ -1071,7 +1085,16 @@ describe("Defaults", () => {
 		+     "__filename": false,
 		+     "global": false,
 		@@ ... @@
-		-     "globalObject": "window",
+		-     "chunkFormat": "array-push",
+		+     "chunkFormat": "commonjs",
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "require",
+		@@ ... @@
+		-       "jsonp",
+		+       "require",
+		@@ ... @@
+		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -1150,8 +1173,17 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ ... @@
-		-     "globalObject": "window",
-		+     "globalObject": "self",
+		-     "chunkFormat": "array-push",
+		+     "chunkFormat": "commonjs",
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "require",
+		@@ ... @@
+		-       "jsonp",
+		+       "require",
+		@@ ... @@
+		-     "globalObject": "self",
+		+     "globalObject": "global",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
@@ -1410,17 +1442,14 @@ describe("Defaults", () => {
 			+ Received
 
 			@@ ... @@
-			-     "chunkCallbackName": "webpackChunkwebpack",
-			+     "chunkCallbackName": "webpackChunk_Hello_World_",
+			-     "chunkLoadingGlobal": "webpackChunkwebpack",
+			+     "chunkLoadingGlobal": "webpackChunk_Hello_World_",
 			@@ ... @@
 			-     "devtoolNamespace": "webpack",
 			+     "devtoolNamespace": "@@@Hello World!",
 			@@ ... @@
-			-     "hotUpdateFunction": "webpackHotUpdatewebpack",
-			+     "hotUpdateFunction": "webpackHotUpdate_Hello_World_",
-			@@ ... @@
-			-     "jsonpFunction": "webpackJsonpwebpack",
-			+     "jsonpFunction": "webpackJsonp_Hello_World_",
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": "webpackHotUpdate_Hello_World_",
 			@@ ... @@
 			-     "uniqueName": "webpack",
 			+     "uniqueName": "@@@Hello World!",

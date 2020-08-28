@@ -212,97 +212,6 @@ const describeCases = config => {
 									return;
 								}
 
-								const globalContext = {
-									console: console,
-									expect: expect,
-									setTimeout: setTimeout,
-									clearTimeout: clearTimeout,
-									document: new FakeDocument(),
-									location: {
-										href: "https://test.cases/path/index.html",
-										origin: "https://test.cases",
-										toString() {
-											return "https://test.cases/path/index.html";
-										}
-									}
-								};
-
-								const requireCache = Object.create(null);
-								function _require(currentDirectory, options, module) {
-									if (Array.isArray(module) || /^\.\.?\//.test(module)) {
-										let content;
-										let p;
-										if (Array.isArray(module)) {
-											p = path.join(currentDirectory, ".array-require.js");
-											content = `module.exports = (${module
-												.map(arg => {
-													return `require(${JSON.stringify(`./${arg}`)})`;
-												})
-												.join(", ")});`;
-										} else {
-											p = path.join(currentDirectory, module);
-											content = fs.readFileSync(p, "utf-8");
-										}
-										if (p in requireCache) {
-											return requireCache[p].exports;
-										}
-										const m = {
-											exports: {}
-										};
-										requireCache[p] = m;
-										let runInNewContext = false;
-										const moduleScope = {
-											require: _require.bind(null, path.dirname(p), options),
-											importScripts: _require.bind(
-												null,
-												path.dirname(p),
-												options
-											),
-											module: m,
-											exports: m.exports,
-											__dirname: path.dirname(p),
-											__filename: p,
-											it: _it,
-											beforeEach: _beforeEach,
-											afterEach: _afterEach,
-											expect,
-											jest,
-											_globalAssign: { expect },
-											__STATS__: jsonStats,
-											nsObj: m => {
-												Object.defineProperty(m, Symbol.toStringTag, {
-													value: "Module"
-												});
-												return m;
-											}
-										};
-										if (
-											options.target === "web" ||
-											options.target === "webworker"
-										) {
-											moduleScope.window = globalContext;
-											moduleScope.self = globalContext;
-											runInNewContext = true;
-										}
-										if (testConfig.moduleScope) {
-											testConfig.moduleScope(moduleScope);
-										}
-										const args = Object.keys(moduleScope).join(", ");
-										if (!runInNewContext)
-											content = `Object.assign(global, _globalAssign); ${content}`;
-										const code = `(function({${args}}) {${content}\n})`;
-										const fn = runInNewContext
-											? vm.runInNewContext(code, globalContext, p)
-											: vm.runInThisContext(code, p);
-										fn.call(m.exports, moduleScope);
-										return m.exports;
-									} else if (
-										testConfig.modules &&
-										module in testConfig.modules
-									) {
-										return testConfig.modules[module];
-									} else return require(module);
-								}
 								let filesCount = 0;
 
 								if (testConfig.noTests) return process.nextTick(done);
@@ -312,6 +221,101 @@ const describeCases = config => {
 									const bundlePath = testConfig.findBundle(i, optionsArr[i]);
 									if (bundlePath) {
 										filesCount++;
+										const globalContext = {
+											console: console,
+											expect: expect,
+											setTimeout: setTimeout,
+											clearTimeout: clearTimeout,
+											document: new FakeDocument(),
+											location: {
+												href: "https://test.cases/path/index.html",
+												origin: "https://test.cases",
+												toString() {
+													return "https://test.cases/path/index.html";
+												}
+											}
+										};
+
+										const requireCache = Object.create(null);
+										// eslint-disable-next-line no-loop-func
+										const _require = (currentDirectory, options, module) => {
+											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
+												let content;
+												let p;
+												if (Array.isArray(module)) {
+													p = path.join(currentDirectory, ".array-require.js");
+													content = `module.exports = (${module
+														.map(arg => {
+															return `require(${JSON.stringify(`./${arg}`)})`;
+														})
+														.join(", ")});`;
+												} else {
+													p = path.join(currentDirectory, module);
+													content = fs.readFileSync(p, "utf-8");
+												}
+												if (p in requireCache) {
+													return requireCache[p].exports;
+												}
+												const m = {
+													exports: {}
+												};
+												requireCache[p] = m;
+												let runInNewContext = false;
+												const moduleScope = {
+													require: _require.bind(
+														null,
+														path.dirname(p),
+														options
+													),
+													importScripts: url => {
+														_require(path.dirname(p), options, `./${url}`);
+													},
+													module: m,
+													exports: m.exports,
+													__dirname: path.dirname(p),
+													__filename: p,
+													it: _it,
+													beforeEach: _beforeEach,
+													afterEach: _afterEach,
+													expect,
+													jest,
+													_globalAssign: { expect },
+													__STATS__: jsonStats,
+													nsObj: m => {
+														Object.defineProperty(m, Symbol.toStringTag, {
+															value: "Module"
+														});
+														return m;
+													}
+												};
+												if (
+													options.target === "web" ||
+													options.target === "webworker"
+												) {
+													moduleScope.window = globalContext;
+													moduleScope.self = globalContext;
+													runInNewContext = true;
+												}
+												if (testConfig.moduleScope) {
+													testConfig.moduleScope(moduleScope);
+												}
+												const args = Object.keys(moduleScope).join(", ");
+												if (!runInNewContext)
+													content = `Object.assign(global, _globalAssign); ${content}`;
+												const code = `(function({${args}}) {${content}\n})`;
+												const fn = runInNewContext
+													? vm.runInNewContext(code, globalContext, p)
+													: vm.runInThisContext(code, p);
+												fn.call(m.exports, moduleScope);
+												return m.exports;
+											} else if (
+												testConfig.modules &&
+												module in testConfig.modules
+											) {
+												return testConfig.modules[module];
+											} else return require(module);
+										};
+
 										results.push(
 											_require(outputDirectory, optionsArr[i], bundlePath)
 										);

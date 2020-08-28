@@ -164,8 +164,8 @@ describe("Compiler", () => {
 			expect(bundle).not.toMatch("4: function(");
 			expect(bundle).not.toMatch("fixtures");
 			expect(chunk).not.toMatch("fixtures");
-			expect(bundle).toMatch("webpackJsonp");
-			expect(chunk).toMatch('window["webpackJsonp"] || []).push');
+			expect(bundle).toMatch("webpackChunk");
+			expect(chunk).toMatch('self["webpackChunk"] || []).push');
 			done();
 		});
 	});
