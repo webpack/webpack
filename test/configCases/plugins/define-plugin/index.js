@@ -1,4 +1,7 @@
-/* globals it, should */
+function donotcallme() {
+	expect("asi unsafe call happened").toBe(false);
+}
+
 it("should define FALSE", function() {
 	expect(FALSE).toBe(false);
 	expect(typeof FALSE).toBe("boolean");
@@ -126,6 +129,10 @@ it("should define OBJECT", function() {
 	expect(o.SUB.FUNCTION(10)).toBe(11);
 });
 it("should define OBJECT.SUB.CODE", function() {
+	(donotcallme)
+	OBJECT;
+	(donotcallme)
+	OBJECT.SUB;
 	expect(typeof OBJECT.SUB.CODE).toBe("number");
 	expect(OBJECT.SUB.CODE).toBe(3);
 	if (OBJECT.SUB.CODE !== 3) require("fail");
@@ -148,6 +155,8 @@ it("should define OBJECT.SUB.STRING", function() {
 	})(OBJECT.SUB);
 });
 it("should define ARRAY", function() {
+	(donotcallme)
+	ARRAY;
 	expect(Array.isArray(ARRAY)).toBeTruthy();
 	expect(ARRAY).toHaveLength(2);
 });
