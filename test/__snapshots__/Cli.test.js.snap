@@ -1400,6 +1400,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-real-content-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use real [contenthash] based on final content of the assets.",
+        "multiple": false,
+        "path": "optimization.realContentHash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use real [contenthash] based on final content of the assets.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-remove-available-modules": Object {
     "configs": Array [
       Object {
@@ -1813,18 +1826,18 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-chunk-callback-name": Object {
+  "output-charset": Object {
     "configs": Array [
       Object {
-        "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
+        "description": "Add charset attribute for script tag.",
         "multiple": false,
-        "path": "output.chunkCallbackName",
-        "type": "string",
+        "path": "output.charset",
+        "type": "boolean",
       },
     ],
-    "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
+    "description": "Add charset attribute for script tag.",
     "multiple": false,
-    "simpleType": "string",
+    "simpleType": "boolean",
   },
   "output-chunk-filename": Object {
     "configs": Array [
@@ -1836,6 +1849,30 @@ Object {
       },
     ],
     "description": "The filename of non-entry chunks as relative path inside the \`output.path\` directory.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-chunk-format": Object {
+    "configs": Array [
+      Object {
+        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkFormat",
+        "type": "enum",
+        "values": Array [
+          "array-push",
+          "commonjs",
+          false,
+        ],
+      },
+      Object {
+        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkFormat",
+        "type": "string",
+      },
+    ],
+    "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -1851,6 +1888,53 @@ Object {
     "description": "Number of milliseconds before chunk request expires.",
     "multiple": false,
     "simpleType": "number",
+  },
+  "output-chunk-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkLoading",
+        "type": "enum",
+        "values": Array [
+          "jsonp",
+          "import-scripts",
+          "require",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-chunk-loading-global": Object {
+    "configs": Array [
+      Object {
+        "description": "The global variable used by webpack for loading of chunks.",
+        "multiple": false,
+        "path": "output.chunkLoadingGlobal",
+        "type": "string",
+      },
+    ],
+    "description": "The global variable used by webpack for loading of chunks.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "output-compare-before-emit": Object {
     "configs": Array [
@@ -1944,10 +2028,48 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "output-enabled-chunk-loading-types": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledChunkLoadingTypes[]",
+        "type": "enum",
+        "values": Array [
+          "jsonp",
+          "import-scripts",
+          "require",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledChunkLoadingTypes[]",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-enabled-chunk-loading-types-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of chunk loading types enabled for use by entry points.",
+        "multiple": false,
+        "path": "output.enabledChunkLoadingTypes",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of chunk loading types enabled for use by entry points.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-enabled-library-types": Object {
     "configs": Array [
       Object {
-        "description": "Type of library.",
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
         "multiple": true,
         "path": "output.enabledLibraryTypes[]",
         "type": "enum",
@@ -1970,8 +2092,14 @@ Object {
           "system",
         ],
       },
+      Object {
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledLibraryTypes[]",
+        "type": "string",
+      },
     ],
-    "description": "Type of library.",
+    "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -2079,16 +2207,16 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-hot-update-function": Object {
+  "output-hot-update-global": Object {
     "configs": Array [
       Object {
-        "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+        "description": "The global variable used by webpack for loading of hot update chunks.",
         "multiple": false,
-        "path": "output.hotUpdateFunction",
+        "path": "output.hotUpdateGlobal",
         "type": "string",
       },
     ],
-    "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+    "description": "The global variable used by webpack for loading of hot update chunks.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2128,19 +2256,6 @@ Object {
       },
     ],
     "description": "The name of the native import() function (can be exchanged for a polyfill).",
-    "multiple": false,
-    "simpleType": "string",
-  },
-  "output-jsonp-function": Object {
-    "configs": Array [
-      Object {
-        "description": "The JSONP function used by webpack for async loading of chunks.",
-        "multiple": false,
-        "path": "output.jsonpFunction",
-        "type": "string",
-      },
-    ],
-    "description": "The JSONP function used by webpack for async loading of chunks.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2394,7 +2509,7 @@ Object {
   "output-library-type": Object {
     "configs": Array [
       Object {
-        "description": "Type of library.",
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
         "multiple": false,
         "path": "output.library.type",
         "type": "enum",
@@ -2417,8 +2532,14 @@ Object {
           "system",
         ],
       },
+      Object {
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.library.type",
+        "type": "string",
+      },
     ],
-    "description": "Type of library.",
+    "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -3555,6 +3676,162 @@ Object {
       },
     ],
     "description": "Use synchronous filesystem calls for the resolver.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-build-dependencies-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.buildDependencies.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-build-dependencies-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.buildDependencies.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-immutable-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "A path to a immutable directory (usually a package manager cache directory).",
+        "multiple": true,
+        "path": "snapshot.immutablePaths[]",
+        "type": "path",
+      },
+    ],
+    "description": "A path to a immutable directory (usually a package manager cache directory).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "snapshot-immutable-paths-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+        "multiple": false,
+        "path": "snapshot.immutablePaths",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-managed-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "A path to a managed directory (usually a node_modules directory).",
+        "multiple": true,
+        "path": "snapshot.managedPaths[]",
+        "type": "path",
+      },
+    ],
+    "description": "A path to a managed directory (usually a node_modules directory).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "snapshot-managed-paths-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+        "multiple": false,
+        "path": "snapshot.managedPaths",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-module-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.module.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-module-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.module.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-build-dependencies-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolveBuildDependencies.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-build-dependencies-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolveBuildDependencies.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolve.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolve.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
     "multiple": false,
     "simpleType": "boolean",
   },

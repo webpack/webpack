@@ -189,10 +189,10 @@ describe("Stats", () => {
 			      "filteredRelated": undefined,
 			      "info": Object {
 			        "minimized": true,
-			        "size": 111,
+			        "size": 107,
 			      },
 			      "name": "chunkB.js",
-			      "size": 111,
+			      "size": 107,
 			      "type": "asset",
 			    },
 			    Object {
@@ -225,10 +225,10 @@ describe("Stats", () => {
 			      "filteredRelated": undefined,
 			      "info": Object {
 			        "minimized": true,
-			        "size": 2219,
+			        "size": 2185,
 			      },
 			      "name": "entryB.js",
-			      "size": 2219,
+			      "size": 2185,
 			      "type": "asset",
 			    },
 			  ],

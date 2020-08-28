@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.0.0-beta.26",
+  "version": "5.0.0-beta.28",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -26,9 +26,9 @@
     "pkg-dir": "^4.2.0",
     "schema-utils": "^2.7.0",
     "tapable": "^2.0.0-beta.11",
-    "terser-webpack-plugin": "^3.0.2",
-    "watchpack": "2.0.0-beta.14",
-    "webpack-sources": "2.0.0-beta.8"
+    "terser-webpack-plugin": "^4.1.0",
+    "watchpack": "2.0.0-beta.15",
+    "webpack-sources": "2.0.0-beta.10"
   },
   "peerDependenciesMeta": {
     "webpack-cli": {

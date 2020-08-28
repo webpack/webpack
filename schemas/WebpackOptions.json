@@ -74,18 +74,55 @@
         }
       ]
     },
-    "ChunkCallbackName": {
-      "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
-      "type": "string"
+    "Charset": {
+      "description": "Add charset attribute for script tag.",
+      "type": "boolean"
     },
     "ChunkFilename": {
       "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
       "type": "string",
       "absolutePath": false
     },
+    "ChunkFormat": {
+      "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": ["array-push", "commonjs", false]
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
     "ChunkLoadTimeout": {
       "description": "Number of milliseconds before chunk request expires.",
       "type": "number"
+    },
+    "ChunkLoading": {
+      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "$ref": "#/definitions/ChunkLoadingType"
+        }
+      ]
+    },
+    "ChunkLoadingGlobal": {
+      "description": "The global variable used by webpack for loading of chunks.",
+      "type": "string"
+    },
+    "ChunkLoadingType": {
+      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": ["jsonp", "import-scripts", "require", "async-node"]
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "CompareBeforeEmit": {
       "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem.",
@@ -170,6 +207,13 @@
         }
       ]
     },
+    "EnabledChunkLoadingTypes": {
+      "description": "List of chunk loading types enabled for use by entry points.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChunkLoadingType"
+      }
+    },
     "EnabledLibraryTypes": {
       "description": "List of library types enabled for use by entry points.",
       "type": "array",
@@ -193,6 +237,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
         "dependOn": {
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
           "anyOf": [
@@ -234,6 +281,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
         "dependOn": {
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
           "type": "array",
@@ -653,8 +703,8 @@
       "type": "string",
       "absolutePath": false
     },
-    "HotUpdateFunction": {
-      "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+    "HotUpdateGlobal": {
+      "description": "The global variable used by webpack for loading of hot update chunks.",
       "type": "string"
     },
     "HotUpdateMainFilename": {
@@ -692,10 +742,6 @@
           "enum": ["none", "error", "warn", "info", "log", "verbose"]
         }
       }
-    },
-    "JsonpFunction": {
-      "description": "The JSONP function used by webpack for async loading of chunks.",
-      "type": "string"
     },
     "Library": {
       "description": "Make the output files a library, exporting the exports of the entry point.",
@@ -826,24 +872,31 @@
       "required": ["type"]
     },
     "LibraryType": {
-      "description": "Type of library.",
-      "enum": [
-        "var",
-        "module",
-        "assign",
-        "this",
-        "window",
-        "self",
-        "global",
-        "commonjs",
-        "commonjs2",
-        "commonjs-module",
-        "amd",
-        "amd-require",
-        "umd",
-        "umd2",
-        "jsonp",
-        "system"
+      "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": [
+            "var",
+            "module",
+            "assign",
+            "this",
+            "window",
+            "self",
+            "global",
+            "commonjs",
+            "commonjs2",
+            "commonjs-module",
+            "amd",
+            "amd-require",
+            "umd",
+            "umd2",
+            "jsonp",
+            "system"
+          ]
+        },
+        {
+          "type": "string"
+        }
       ]
     },
     "Loader": {
@@ -855,26 +908,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "immutablePaths": {
-          "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
-          "type": "array",
-          "items": {
-            "description": "A path to a immutable directory (usually a package manager cache directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
-          }
-        },
-        "managedPaths": {
-          "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
-          "type": "array",
-          "items": {
-            "description": "A path to a managed directory (usually a node_modules directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
-          }
-        },
         "type": {
           "description": "In memory caching.",
           "enum": ["memory"]
@@ -1177,6 +1210,10 @@
         },
         "providedExports": {
           "description": "Figure out which exports are provided by modules to generate more efficient code.",
+          "type": "boolean"
+        },
+        "realContentHash": {
+          "description": "Use real [contenthash] based on final content of the assets.",
           "type": "boolean"
         },
         "removeAvailableModules": {
@@ -1696,14 +1733,23 @@
         "baseURI": {
           "$ref": "#/definitions/BaseURI"
         },
-        "chunkCallbackName": {
-          "$ref": "#/definitions/ChunkCallbackName"
+        "charset": {
+          "$ref": "#/definitions/Charset"
         },
         "chunkFilename": {
           "$ref": "#/definitions/ChunkFilename"
         },
+        "chunkFormat": {
+          "$ref": "#/definitions/ChunkFormat"
+        },
         "chunkLoadTimeout": {
           "$ref": "#/definitions/ChunkLoadTimeout"
+        },
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
+        "chunkLoadingGlobal": {
+          "$ref": "#/definitions/ChunkLoadingGlobal"
         },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"
@@ -1722,6 +1768,9 @@
         },
         "ecmaVersion": {
           "$ref": "#/definitions/EcmaVersion"
+        },
+        "enabledChunkLoadingTypes": {
+          "$ref": "#/definitions/EnabledChunkLoadingTypes"
         },
         "enabledLibraryTypes": {
           "$ref": "#/definitions/EnabledLibraryTypes"
@@ -1747,8 +1796,8 @@
         "hotUpdateChunkFilename": {
           "$ref": "#/definitions/HotUpdateChunkFilename"
         },
-        "hotUpdateFunction": {
-          "$ref": "#/definitions/HotUpdateFunction"
+        "hotUpdateGlobal": {
+          "$ref": "#/definitions/HotUpdateGlobal"
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
@@ -1758,9 +1807,6 @@
         },
         "importFunctionName": {
           "$ref": "#/definitions/ImportFunctionName"
-        },
-        "jsonpFunction": {
-          "$ref": "#/definitions/JsonpFunction"
         },
         "library": {
           "$ref": "#/definitions/Library"
@@ -1842,14 +1888,23 @@
         "baseURI": {
           "$ref": "#/definitions/BaseURI"
         },
-        "chunkCallbackName": {
-          "$ref": "#/definitions/ChunkCallbackName"
+        "charset": {
+          "$ref": "#/definitions/Charset"
         },
         "chunkFilename": {
           "$ref": "#/definitions/ChunkFilename"
         },
+        "chunkFormat": {
+          "$ref": "#/definitions/ChunkFormat"
+        },
         "chunkLoadTimeout": {
           "$ref": "#/definitions/ChunkLoadTimeout"
+        },
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
+        "chunkLoadingGlobal": {
+          "$ref": "#/definitions/ChunkLoadingGlobal"
         },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"
@@ -1868,6 +1923,9 @@
         },
         "ecmaVersion": {
           "$ref": "#/definitions/EcmaVersion"
+        },
+        "enabledChunkLoadingTypes": {
+          "$ref": "#/definitions/EnabledChunkLoadingTypes"
         },
         "enabledLibraryTypes": {
           "$ref": "#/definitions/EnabledLibraryTypes"
@@ -1893,8 +1951,8 @@
         "hotUpdateChunkFilename": {
           "$ref": "#/definitions/HotUpdateChunkFilename"
         },
-        "hotUpdateFunction": {
-          "$ref": "#/definitions/HotUpdateFunction"
+        "hotUpdateGlobal": {
+          "$ref": "#/definitions/HotUpdateGlobal"
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
@@ -1904,9 +1962,6 @@
         },
         "importFunctionName": {
           "$ref": "#/definitions/ImportFunctionName"
-        },
-        "jsonpFunction": {
-          "$ref": "#/definitions/JsonpFunction"
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
@@ -2807,6 +2862,93 @@
       "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\".",
       "enum": [false, "text/javascript", "module"]
     },
+    "SnapshotOptions": {
+      "description": "Options affecting how file system snapshots are created and validated.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "buildDependencies": {
+          "description": "Options for snapshotting build dependencies to determine if the whole cache need to be invalidated.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        },
+        "immutablePaths": {
+          "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+          "type": "array",
+          "items": {
+            "description": "A path to a immutable directory (usually a package manager cache directory).",
+            "type": "string",
+            "absolutePath": true,
+            "minLength": 1
+          }
+        },
+        "managedPaths": {
+          "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+          "type": "array",
+          "items": {
+            "description": "A path to a managed directory (usually a node_modules directory).",
+            "type": "string",
+            "absolutePath": true,
+            "minLength": 1
+          }
+        },
+        "module": {
+          "description": "Options for snapshotting dependencies of modules to determine if they need to be built again.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        },
+        "resolve": {
+          "description": "Options for snapshotting dependencies of request resolving to determine if requests need to be re-resolved.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        },
+        "resolveBuildDependencies": {
+          "description": "Options for snapshotting the resolving of build dependencies to determine if the build dependencies need to be re-resolved.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
     "SourceMapFilename": {
       "description": "The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.",
       "type": "string",
@@ -3313,6 +3455,9 @@
         "resolveLoader": {
           "$ref": "#/definitions/ResolveLoader"
         },
+        "snapshot": {
+          "$ref": "#/definitions/SnapshotOptions"
+        },
         "stats": {
           "$ref": "#/definitions/StatsValue"
         },
@@ -3328,6 +3473,7 @@
       },
       "required": [
         "cache",
+        "snapshot",
         "entry",
         "experiments",
         "externals",
@@ -3449,6 +3595,9 @@
     },
     "resolveLoader": {
       "$ref": "#/definitions/ResolveLoader"
+    },
+    "snapshot": {
+      "$ref": "#/definitions/SnapshotOptions"
     },
     "stats": {
       "$ref": "#/definitions/StatsValue"

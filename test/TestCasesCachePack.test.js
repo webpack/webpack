@@ -5,7 +5,9 @@ describe("TestCases", () => {
 	describeCases({
 		name: "cache pack",
 		cache: {
-			type: "filesystem",
+			type: "filesystem"
+		},
+		snapshot: {
 			managedPaths: [path.resolve(__dirname, "../node_modules")]
 		},
 		optimization: {

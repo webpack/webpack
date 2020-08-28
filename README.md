@@ -23,8 +23,8 @@
 	<a href="https://npmcharts.com/compare/webpack?minimal=true">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
 	</a>
-	<a href="https://packagephobia.now.sh/result?p=webpack">
-		<img src="https://packagephobia.now.sh/badge?p=webpack" alt="install size">
+	<a href="https://packagephobia.com/result?p=webpack">
+		<img src="https://packagephobia.com/badge?p=webpack" alt="install size">
 	</a>
 	<a href="https://opencollective.com/webpack#backer">
 		<img src="https://opencollective.com/webpack/backers/badge.svg">
@@ -118,22 +118,22 @@ within webpack itself use this plugin interface. This makes webpack very
 [common-npm]: https://img.shields.io/npm/v/webpack.svg
 [extract]: https://github.com/webpack-contrib/extract-text-webpack-plugin
 [extract-npm]: https://img.shields.io/npm/v/extract-text-webpack-plugin.svg
-[extract-size]: https://packagephobia.now.sh/badge?p=extract-text-webpack-plugin
+[extract-size]: https://packagephobia.com/badge?p=extract-text-webpack-plugin
 [mini-css]: https://github.com/webpack-contrib/mini-css-extract-plugin
 [mini-css-npm]: https://img.shields.io/npm/v/mini-css-extract-plugin.svg
-[mini-css-size]: https://packagephobia.now.sh/badge?p=mini-css-extract-plugin
+[mini-css-size]: https://packagephobia.com/badge?p=mini-css-extract-plugin
 [component]: https://github.com/webpack-contrib/component-webpack-plugin
 [component-npm]: https://img.shields.io/npm/v/component-webpack-plugin.svg
-[component-size]: https://packagephobia.now.sh/badge?p=component-webpack-plugin
+[component-size]: https://packagephobia.com/badge?p=component-webpack-plugin
 [compression]: https://github.com/webpack-contrib/compression-webpack-plugin
 [compression-npm]: https://img.shields.io/npm/v/compression-webpack-plugin.svg
-[compression-size]: https://packagephobia.now.sh/badge?p=compression-webpack-plugin
+[compression-size]: https://packagephobia.com/badge?p=compression-webpack-plugin
 [i18n]: https://github.com/webpack-contrib/i18n-webpack-plugin
 [i18n-npm]: https://img.shields.io/npm/v/i18n-webpack-plugin.svg
-[i18n-size]: https://packagephobia.now.sh/badge?p=i18n-webpack-plugin
+[i18n-size]: https://packagephobia.com/badge?p=i18n-webpack-plugin
 [html-plugin]: https://github.com/jantimon/html-webpack-plugin
 [html-plugin-npm]: https://img.shields.io/npm/v/html-webpack-plugin.svg
-[html-plugin-size]: https://packagephobia.now.sh/badge?p=html-webpack-plugin
+[html-plugin-size]: https://packagephobia.com/badge?p=html-webpack-plugin
 
 ### [Loaders](https://webpack.js.org/loaders/)
 
@@ -155,16 +155,16 @@ or are automatically applied via regex from your webpack configuration.
 
 [raw]: https://github.com/webpack-contrib/raw-loader
 [raw-npm]: https://img.shields.io/npm/v/raw-loader.svg
-[raw-size]: https://packagephobia.now.sh/badge?p=raw-loader
+[raw-size]: https://packagephobia.com/badge?p=raw-loader
 [val]: https://github.com/webpack-contrib/val-loader
 [val-npm]: https://img.shields.io/npm/v/val-loader.svg
-[val-size]: https://packagephobia.now.sh/badge?p=val-loader
+[val-size]: https://packagephobia.com/badge?p=val-loader
 [url]: https://github.com/webpack-contrib/url-loader
 [url-npm]: https://img.shields.io/npm/v/url-loader.svg
-[url-size]: https://packagephobia.now.sh/badge?p=url-loader
+[url-size]: https://packagephobia.com/badge?p=url-loader
 [file]: https://github.com/webpack-contrib/file-loader
 [file-npm]: https://img.shields.io/npm/v/file-loader.svg
-[file-size]: https://packagephobia.now.sh/badge?p=file-loader
+[file-size]: https://packagephobia.com/badge?p=file-loader
 
 #### JSON
 
@@ -175,11 +175,11 @@ or are automatically applied via regex from your webpack configuration.
 |             <a href="https://github.com/awnist/cson-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>              | ![cson-npm]  | ![cson-size]  | Loads and transpiles a CSON file        |
 
 [json-npm]: https://img.shields.io/npm/v/json-loader.svg
-[json-size]: https://packagephobia.now.sh/badge?p=json-loader
+[json-size]: https://packagephobia.com/badge?p=json-loader
 [json5-npm]: https://img.shields.io/npm/v/json5-loader.svg
-[json5-size]: https://packagephobia.now.sh/badge?p=json5-loader
+[json5-size]: https://packagephobia.com/badge?p=json5-loader
 [cson-npm]: https://img.shields.io/npm/v/cson-loader.svg
-[cson-size]: https://packagephobia.now.sh/badge?p=cson-loader
+[cson-size]: https://packagephobia.com/badge?p=cson-loader
 
 #### Transpiling
 
@@ -193,17 +193,17 @@ or are automatically applied via regex from your webpack configuration.
 |    <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>    |       ![coffee-npm]       |       ![coffee-size]       | Loads CoffeeScript like JavaScript                                                                   |
 
 [script-npm]: https://img.shields.io/npm/v/script-loader.svg
-[script-size]: https://packagephobia.now.sh/badge?p=script-loader
+[script-size]: https://packagephobia.com/badge?p=script-loader
 [babel-npm]: https://img.shields.io/npm/v/babel-loader.svg
-[babel-size]: https://packagephobia.now.sh/badge?p=babel-loader
+[babel-size]: https://packagephobia.com/badge?p=babel-loader
 [traceur-npm]: https://img.shields.io/npm/v/traceur-loader.svg
-[traceur-size]: https://packagephobia.now.sh/badge?p=traceur-loader
+[traceur-size]: https://packagephobia.com/badge?p=traceur-loader
 [coffee-npm]: https://img.shields.io/npm/v/coffee-loader.svg
-[coffee-size]: https://packagephobia.now.sh/badge?p=coffee-loader
+[coffee-size]: https://packagephobia.com/badge?p=coffee-loader
 [type-npm]: https://img.shields.io/npm/v/ts-loader.svg
-[type-size]: https://packagephobia.now.sh/badge?p=ts-loader
+[type-size]: https://packagephobia.com/badge?p=ts-loader
 [awesome-typescript-npm]: https://img.shields.io/npm/v/awesome-typescript-loader.svg
-[awesome-typescript-size]: https://packagephobia.now.sh/badge?p=awesome-typescript-loader
+[awesome-typescript-size]: https://packagephobia.com/badge?p=awesome-typescript-loader
 
 #### Templating
 
@@ -216,17 +216,17 @@ or are automatically applied via regex from your webpack configuration.
 |           <a href="https://github.com/pcardune/handlebars-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/handlebars-1.svg"></a>           |   ![hbs-npm]    |   ![hbs-size]    | Compiles Handlebars to HTML                                                             |
 
 [html-npm]: https://img.shields.io/npm/v/html-loader.svg
-[html-size]: https://packagephobia.now.sh/badge?p=html-loader
+[html-size]: https://packagephobia.com/badge?p=html-loader
 [pug-npm]: https://img.shields.io/npm/v/pug-loader.svg
-[pug-size]: https://packagephobia.now.sh/badge?p=pug-loader
+[pug-size]: https://packagephobia.com/badge?p=pug-loader
 [jade-npm]: https://img.shields.io/npm/v/jade-loader.svg
-[jade-size]: https://packagephobia.now.sh/badge?p=jade-loader
+[jade-size]: https://packagephobia.com/badge?p=jade-loader
 [md-npm]: https://img.shields.io/npm/v/markdown-loader.svg
-[md-size]: https://packagephobia.now.sh/badge?p=markdown-loader
+[md-size]: https://packagephobia.com/badge?p=markdown-loader
 [posthtml-npm]: https://img.shields.io/npm/v/posthtml-loader.svg
-[posthtml-size]: https://packagephobia.now.sh/badge?p=posthtml-loader
+[posthtml-size]: https://packagephobia.com/badge?p=posthtml-loader
 [hbs-npm]: https://img.shields.io/npm/v/handlebars-loader.svg
-[hbs-size]: https://packagephobia.now.sh/badge?p=handlebars-loader
+[hbs-size]: https://packagephobia.com/badge?p=handlebars-loader
 
 #### Styling
 
@@ -240,17 +240,17 @@ or are automatically applied via regex from your webpack configuration.
 |   <a href="https://github.com/postcss/postcss-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/postcss.svg"></a>    | ![postcss-npm] | ![postcss-size] | Loads and transforms a CSS/SSS file using [PostCSS](https://postcss.org) |
 
 [style-npm]: https://img.shields.io/npm/v/style-loader.svg
-[style-size]: https://packagephobia.now.sh/badge?p=style-loader
+[style-size]: https://packagephobia.com/badge?p=style-loader
 [css-npm]: https://img.shields.io/npm/v/css-loader.svg
-[css-size]: https://packagephobia.now.sh/badge?p=css-loader
+[css-size]: https://packagephobia.com/badge?p=css-loader
 [less-npm]: https://img.shields.io/npm/v/less-loader.svg
-[less-size]: https://packagephobia.now.sh/badge?p=less-loader
+[less-size]: https://packagephobia.com/badge?p=less-loader
 [sass-npm]: https://img.shields.io/npm/v/sass-loader.svg
-[sass-size]: https://packagephobia.now.sh/badge?p=sass-loader
+[sass-size]: https://packagephobia.com/badge?p=sass-loader
 [stylus-npm]: https://img.shields.io/npm/v/stylus-loader.svg
-[stylus-size]: https://packagephobia.now.sh/badge?p=stylus-loader
+[stylus-size]: https://packagephobia.com/badge?p=stylus-loader
 [postcss-npm]: https://img.shields.io/npm/v/postcss-loader.svg
-[postcss-size]: https://packagephobia.now.sh/badge?p=postcss-loader
+[postcss-size]: https://packagephobia.com/badge?p=postcss-loader
 
 #### Linting & Testing
 
@@ -261,13 +261,13 @@ or are automatically applied via regex from your webpack configuration.
 |  <a href="https://github.com/webpack-contrib/jshint-loader"><img width="48" height="20.64" src="https://jshint.com/res/jshint-dark.png"></a>   | ![jshint-npm] | ![jshint-size] | PreLoader for linting code using JSHint |
 
 [mocha-npm]: https://img.shields.io/npm/v/mocha-loader.svg
-[mocha-size]: https://packagephobia.now.sh/badge?p=mocha-loader
+[mocha-size]: https://packagephobia.com/badge?p=mocha-loader
 [eslint-npm]: https://img.shields.io/npm/v/eslint-loader.svg
-[eslint-size]: https://packagephobia.now.sh/badge?p=eslint-loader
+[eslint-size]: https://packagephobia.com/badge?p=eslint-loader
 [jshint-npm]: https://img.shields.io/npm/v/jshint-loader.svg
-[jshint-size]: https://packagephobia.now.sh/badge?p=jshint-loader
+[jshint-size]: https://packagephobia.com/badge?p=jshint-loader
 [jscs-npm]: https://img.shields.io/npm/v/jscs-loader.svg
-[jscs-size]: https://packagephobia.now.sh/badge?p=jscs-loader
+[jscs-size]: https://packagephobia.com/badge?p=jscs-loader
 
 #### Frameworks
 
@@ -279,13 +279,13 @@ or are automatically applied via regex from your webpack configuration.
 |              <a href="https://github.com/riot/webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/riot.svg"></a>              |  ![riot-npm]   |  ![riot-size]   | Riot official webpack loader                                                                           |
 
 [vue-npm]: https://img.shields.io/npm/v/vue-loader.svg
-[vue-size]: https://packagephobia.now.sh/badge?p=vue-loader
+[vue-size]: https://packagephobia.com/badge?p=vue-loader
 [polymer-npm]: https://img.shields.io/npm/v/polymer-webpack-loader.svg
-[polymer-size]: https://packagephobia.now.sh/badge?p=polymer-webpack-loader
+[polymer-size]: https://packagephobia.com/badge?p=polymer-webpack-loader
 [angular-npm]: https://img.shields.io/npm/v/angular2-template-loader.svg
-[angular-size]: https://packagephobia.now.sh/badge?p=angular2-template-loader
+[angular-size]: https://packagephobia.com/badge?p=angular2-template-loader
 [riot-npm]: https://img.shields.io/npm/v/riot-tag-loader.svg
-[riot-size]: https://packagephobia.now.sh/badge?p=riot-tag-loader
+[riot-size]: https://packagephobia.com/badge?p=riot-tag-loader
 
 ### Performance
 
