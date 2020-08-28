@@ -673,7 +673,7 @@ describe("JavascriptParser", () => {
 			Object.keys(cases).forEach(name => {
 				const expr = cases[name];
 				it(name, () => {
-					const actual = JavascriptParser.parse(expr, {});
+					const actual = JavascriptParser._parse(expr, {});
 					expect(typeof actual).toBe("object");
 				});
 			});
@@ -704,7 +704,7 @@ describe("JavascriptParser", () => {
 			Object.keys(cases).forEach(name => {
 				const expr = cases[name];
 				it(name, () => {
-					const actual = JavascriptParser.parse(expr);
+					const actual = JavascriptParser._parse(expr);
 					expect(typeof actual).toBe("object");
 				});
 			});
