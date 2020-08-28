@@ -4,8 +4,8 @@ module.exports = {
 	target: "webworker",
 	devtool: false,
 	output: {
-		assetModuleFilename: "[name][ext]",
-		baseURI: "baseURI"
+		filename: "deep/path/[name].js",
+		assetModuleFilename: "[path][name][ext]"
 	},
 	experiments: {
 		asset: true
