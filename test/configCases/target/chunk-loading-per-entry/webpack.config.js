@@ -6,9 +6,6 @@ const base = {
 			chunkLoading: "import-scripts"
 		}
 	},
-	output: {
-		globalObject: "(typeof self === 'undefined' ? window : self)"
-	},
 	target: "web"
 };
 
