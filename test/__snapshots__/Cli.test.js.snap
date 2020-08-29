@@ -658,6 +658,25 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-dependency": Object {
+    "configs": Array [
+      Object {
+        "description": "Match dependency type.",
+        "multiple": true,
+        "path": "module.rules[].dependency",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match dependency type.",
+        "multiple": true,
+        "path": "module.rules[].dependency",
+        "type": "string",
+      },
+    ],
+    "description": "Match dependency type.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-enforce": Object {
     "configs": Array [
       Object {

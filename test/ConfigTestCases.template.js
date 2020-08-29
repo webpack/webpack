@@ -3,6 +3,7 @@
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
+const { URL } = require("url");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
@@ -294,6 +295,7 @@ const describeCases = config => {
 												) {
 													moduleScope.window = globalContext;
 													moduleScope.self = globalContext;
+													moduleScope.URL = URL;
 													runInNewContext = true;
 												}
 												if (testConfig.moduleScope) {

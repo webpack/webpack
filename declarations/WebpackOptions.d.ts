@@ -1025,6 +1025,10 @@ export interface RuleSetRule {
 	 */
 	compiler?: RuleSetConditionOrConditions;
 	/**
+	 * Match dependency type.
+	 */
+	dependency?: RuleSetConditionOrConditions;
+	/**
 	 * Match values of properties in the description file (usually package.json).
 	 */
 	descriptionData?: {

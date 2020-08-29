@@ -1,6 +1,7 @@
 module.exports = class FakeDocument {
 	constructor() {
 		this.head = this.createElement("head");
+		this.baseURI = "https://test.cases/path/index.html";
 		this._elementsByTagName = new Map([["head", [this.head]]]);
 	}
 
