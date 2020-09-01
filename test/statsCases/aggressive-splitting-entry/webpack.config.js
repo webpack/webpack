@@ -22,6 +22,7 @@ module.exports = ["fitting", "content-change"].map(type => ({
 	stats: {
 		chunks: true,
 		chunkModules: true,
+		dependentModules: true,
 		chunkOrigins: true,
 		entrypoints: true,
 		modules: false,

@@ -10,6 +10,7 @@ module.exports = {
 		reasons: true,
 		chunks: true,
 		chunkModules: true,
+		dependentModules: true,
 		chunkRelations: true,
 		chunkOrigins: true,
 		modules: false,

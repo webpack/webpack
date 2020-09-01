@@ -7,6 +7,7 @@ module.exports = {
 		chunkGroups: true,
 		chunks: true,
 		chunkModules: true,
+		dependentModules: true,
 		modules: true,
 		moduleAssets: true
 	},

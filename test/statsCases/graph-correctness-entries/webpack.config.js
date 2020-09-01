@@ -16,6 +16,7 @@ module.exports = {
 		chunks: true,
 		chunkRelations: true,
 		chunkModules: true,
+		dependentModules: true,
 		modules: false,
 		reasons: true
 	}

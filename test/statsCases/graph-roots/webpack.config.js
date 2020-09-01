@@ -8,6 +8,7 @@ module.exports = {
 	stats: {
 		all: false,
 		chunks: true,
-		chunkRootModules: true
+		chunkModules: true,
+		dependentModules: false
 	}
 };

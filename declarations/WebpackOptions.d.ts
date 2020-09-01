@@ -1878,6 +1878,10 @@ export interface StatsOptions {
 	 */
 	cachedAssets?: boolean;
 	/**
+	 * Add information about cached (not built) modules.
+	 */
+	cachedModules?: boolean;
+	/**
 	 * Add children information.
 	 */
 	children?: boolean;
@@ -1897,10 +1901,6 @@ export interface StatsOptions {
 	 * Add information about parent, children and sibling chunks to chunk information.
 	 */
 	chunkRelations?: boolean;
-	/**
-	 * Add root modules information to chunk information.
-	 */
-	chunkRootModules?: boolean;
 	/**
 	 * Add chunk information.
 	 */
@@ -1944,6 +1944,10 @@ export interface StatsOptions {
 	 * Context directory for request shortening.
 	 */
 	context?: string;
+	/**
+	 * Show chunk modules that are dependencies of other modules of the chunk.
+	 */
+	dependentModules?: boolean;
 	/**
 	 * Add module depth in module graph.
 	 */
@@ -2001,6 +2005,22 @@ export interface StatsOptions {
 	 */
 	groupAssetsByStatus?: boolean;
 	/**
+	 * Group modules by their attributes (errors, warnings, optional, orphan, or dependent).
+	 */
+	groupModulesByAttributes?: boolean;
+	/**
+	 * Group modules by their status (cached or built and cacheable).
+	 */
+	groupModulesByCacheStatus?: boolean;
+	/**
+	 * Group modules by their extension.
+	 */
+	groupModulesByExtension?: boolean;
+	/**
+	 * Group modules by their path.
+	 */
+	groupModulesByPath?: boolean;
+	/**
 	 * Add the hash of the compilation.
 	 */
 	hash?: boolean;
@@ -2021,10 +2041,6 @@ export interface StatsOptions {
 	 */
 	loggingTrace?: boolean;
 	/**
-	 * Set the maximum number of modules to be shown.
-	 */
-	maxModules?: number;
-	/**
 	 * Add information about assets inside modules.
 	 */
 	moduleAssets?: boolean;
@@ -2040,6 +2056,10 @@ export interface StatsOptions {
 	 * Sort the modules by that field.
 	 */
 	modulesSort?: string;
+	/**
+	 * Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).
+	 */
+	modulesSpace?: number;
 	/**
 	 * Add information about modules nested in other modules (like with module concatenation).
 	 */
