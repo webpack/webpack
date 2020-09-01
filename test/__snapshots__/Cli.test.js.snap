@@ -4323,6 +4323,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-group-assets-by-emit-status": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their status (emitted, compared for emit or cached).",
+        "multiple": false,
+        "path": "stats.groupAssetsByEmitStatus",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their status (emitted, compared for emit or cached).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-group-assets-by-extension": Object {
     "configs": Array [
       Object {
@@ -4362,29 +4375,16 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "stats-group-assets-by-status": Object {
-    "configs": Array [
-      Object {
-        "description": "Group assets by their status (emitted, compared for emit or cached).",
-        "multiple": false,
-        "path": "stats.groupAssetsByStatus",
-        "type": "boolean",
-      },
-    ],
-    "description": "Group assets by their status (emitted, compared for emit or cached).",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "stats-group-modules-by-attributes": Object {
     "configs": Array [
       Object {
-        "description": "Group modules by their attributes (errors, warnings, optional, orphan, or dependent).",
+        "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
         "multiple": false,
         "path": "stats.groupModulesByAttributes",
         "type": "boolean",
       },
     ],
-    "description": "Group modules by their attributes (errors, warnings, optional, orphan, or dependent).",
+    "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
     "multiple": false,
     "simpleType": "boolean",
   },

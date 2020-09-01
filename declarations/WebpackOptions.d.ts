@@ -1989,6 +1989,10 @@ export interface StatsOptions {
 	 */
 	groupAssetsByChunk?: boolean;
 	/**
+	 * Group assets by their status (emitted, compared for emit or cached).
+	 */
+	groupAssetsByEmitStatus?: boolean;
+	/**
 	 * Group assets by their extension.
 	 */
 	groupAssetsByExtension?: boolean;
@@ -2000,10 +2004,6 @@ export interface StatsOptions {
 	 * Group assets by their path.
 	 */
 	groupAssetsByPath?: boolean;
-	/**
-	 * Group assets by their status (emitted, compared for emit or cached).
-	 */
-	groupAssetsByStatus?: boolean;
 	/**
 	 * Group modules by their attributes (errors, warnings, optional, orphan, or dependent).
 	 */

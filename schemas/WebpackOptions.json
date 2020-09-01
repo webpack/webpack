@@ -3121,6 +3121,10 @@
           "description": "Group assets by how their are related to chunks.",
           "type": "boolean"
         },
+        "groupAssetsByEmitStatus": {
+          "description": "Group assets by their status (emitted, compared for emit or cached).",
+          "type": "boolean"
+        },
         "groupAssetsByExtension": {
           "description": "Group assets by their extension.",
           "type": "boolean"
@@ -3131,10 +3135,6 @@
         },
         "groupAssetsByPath": {
           "description": "Group assets by their path.",
-          "type": "boolean"
-        },
-        "groupAssetsByStatus": {
-          "description": "Group assets by their status (emitted, compared for emit or cached).",
           "type": "boolean"
         },
         "groupModulesByAttributes": {
