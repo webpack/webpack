@@ -125,7 +125,7 @@ describe("HotModuleReplacementPlugin", () => {
 			mode: "development",
 			cache: false,
 			entry: {
-				"0": entryFile
+				0: entryFile
 			},
 			recordsPath: recordsFile,
 			output: {
