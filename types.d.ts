@@ -8455,7 +8455,7 @@ declare interface StatsOptions {
 	groupAssetsByPath?: boolean;
 
 	/**
-	 * Group modules by their attributes (errors, warnings, optional, orphan, or dependent).
+	 * Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).
 	 */
 	groupModulesByAttributes?: boolean;
 
