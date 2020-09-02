@@ -19,8 +19,7 @@ const optimization = {
 const stats = {
 	chunks: true,
 	modules: false,
-	chunkModules: false,
-	chunkRootModules: true,
+	chunkModules: true,
 	chunkOrigins: true
 };
 module.exports = (env = "development") => [

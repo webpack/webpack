@@ -8,6 +8,7 @@ const stats = {
 	usedExports: true,
 	chunks: true,
 	chunkModules: true,
+	dependentModules: true,
 	modules: true,
 	orphanModules: true,
 	nestedModules: true

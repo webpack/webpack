@@ -9,6 +9,7 @@ module.exports = {
 	stats: {
 		reasons: true,
 		chunkModules: true,
+		dependentModules: true,
 		chunkOrigins: true,
 		modules: true,
 		cached: true,

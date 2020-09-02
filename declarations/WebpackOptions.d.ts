@@ -1862,6 +1862,10 @@ export interface StatsOptions {
 	 */
 	assetsSort?: string;
 	/**
+	 * Space to display assets (groups will be collapsed to fit this space).
+	 */
+	assetsSpace?: number;
+	/**
 	 * Add built at time information.
 	 */
 	builtAt?: boolean;
@@ -1873,6 +1877,10 @@ export interface StatsOptions {
 	 * Show cached assets (setting this to `false` only shows emitted files).
 	 */
 	cachedAssets?: boolean;
+	/**
+	 * Add information about cached (not built) modules.
+	 */
+	cachedModules?: boolean;
 	/**
 	 * Add children information.
 	 */
@@ -1893,10 +1901,6 @@ export interface StatsOptions {
 	 * Add information about parent, children and sibling chunks to chunk information.
 	 */
 	chunkRelations?: boolean;
-	/**
-	 * Add root modules information to chunk information.
-	 */
-	chunkRootModules?: boolean;
 	/**
 	 * Add chunk information.
 	 */
@@ -1941,6 +1945,10 @@ export interface StatsOptions {
 	 */
 	context?: string;
 	/**
+	 * Show chunk modules that are dependencies of other modules of the chunk.
+	 */
+	dependentModules?: boolean;
+	/**
 	 * Add module depth in module graph.
 	 */
 	depth?: boolean;
@@ -1977,6 +1985,42 @@ export interface StatsOptions {
 	 */
 	excludeModules?: boolean | FilterTypes;
 	/**
+	 * Group assets by how their are related to chunks.
+	 */
+	groupAssetsByChunk?: boolean;
+	/**
+	 * Group assets by their status (emitted, compared for emit or cached).
+	 */
+	groupAssetsByEmitStatus?: boolean;
+	/**
+	 * Group assets by their extension.
+	 */
+	groupAssetsByExtension?: boolean;
+	/**
+	 * Group assets by their asset info (immutable, development, hotModuleReplacement, etc).
+	 */
+	groupAssetsByInfo?: boolean;
+	/**
+	 * Group assets by their path.
+	 */
+	groupAssetsByPath?: boolean;
+	/**
+	 * Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).
+	 */
+	groupModulesByAttributes?: boolean;
+	/**
+	 * Group modules by their status (cached or built and cacheable).
+	 */
+	groupModulesByCacheStatus?: boolean;
+	/**
+	 * Group modules by their extension.
+	 */
+	groupModulesByExtension?: boolean;
+	/**
+	 * Group modules by their path.
+	 */
+	groupModulesByPath?: boolean;
+	/**
 	 * Add the hash of the compilation.
 	 */
 	hash?: boolean;
@@ -1997,10 +2041,6 @@ export interface StatsOptions {
 	 */
 	loggingTrace?: boolean;
 	/**
-	 * Set the maximum number of modules to be shown.
-	 */
-	maxModules?: number;
-	/**
 	 * Add information about assets inside modules.
 	 */
 	moduleAssets?: boolean;
@@ -2016,6 +2056,10 @@ export interface StatsOptions {
 	 * Sort the modules by that field.
 	 */
 	modulesSort?: string;
+	/**
+	 * Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).
+	 */
+	modulesSpace?: number;
 	/**
 	 * Add information about modules nested in other modules (like with module concatenation).
 	 */
@@ -2059,7 +2103,7 @@ export interface StatsOptions {
 	/**
 	 * Add information about runtime modules.
 	 */
-	runtime?: boolean;
+	runtimeModules?: boolean;
 	/**
 	 * Add the source code of modules.
 	 */

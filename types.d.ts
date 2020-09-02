@@ -1245,6 +1245,7 @@ declare class Compilation {
 	usedModuleIds: Set<number>;
 	needAdditionalPass: boolean;
 	builtModules: WeakSet<Module>;
+	codeGeneratedModules: WeakSet<Module>;
 	emittedAssets: Set<string>;
 	comparedForEmitAssets: Set<string>;
 	fileDependencies: LazySet<string>;
@@ -3195,6 +3196,16 @@ declare class Generator {
 	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
 	static byType(map?: any): ByTypeGenerator;
 }
+declare interface GroupConfig<T, R> {
+	getKeys: (arg0: T) => string[];
+	createGroup: (arg0: string, arg1: (T | R)[], arg2: T[]) => R;
+	getOptions?: (arg0: string, arg1: T[]) => GroupOptions;
+}
+declare interface GroupOptions {
+	groupChildren?: boolean;
+	force?: boolean;
+	targetGroupCount?: number;
+}
 declare interface HMRJavascriptParserHooks {
 	hotAcceptCallback: SyncBailHook<[any, string[]], void>;
 	hotAcceptWithoutCallback: SyncBailHook<[any, string[]], void>;
@@ -3404,7 +3415,8 @@ declare class JavascriptModulesPlugin {
 	): Source;
 	renderMain(
 		renderContext: MainRenderContext,
-		hooks: CompilationHooksJavascriptModulesPlugin
+		hooks: CompilationHooksJavascriptModulesPlugin,
+		compilation: Compilation
 	): Source;
 	renderBootstrap(
 		renderContext: RenderBootstrapContext,
@@ -7385,6 +7397,7 @@ declare class RuntimeModule extends Module {
 	stage: number;
 	compilation: Compilation;
 	chunk: Chunk;
+	fullHash: boolean;
 	attach(compilation: Compilation, chunk: Chunk): void;
 	generate(): string;
 	getGeneratedCode(): string;
@@ -8227,6 +8240,7 @@ declare abstract class StatsFactory {
 			SyncBailHook<[((arg0?: any, arg1?: any) => number)[], any], any>
 		>;
 		filterSorted: HookMap<SyncBailHook<[any, any, number, number], any>>;
+		groupResults: HookMap<SyncBailHook<[GroupConfig<any, any>[], any], any>>;
 		sortResults: HookMap<
 			SyncBailHook<[((arg0?: any, arg1?: any) => number)[], any], any>
 		>;
@@ -8259,6 +8273,11 @@ declare interface StatsOptions {
 	assetsSort?: string;
 
 	/**
+	 * Space to display assets (groups will be collapsed to fit this space).
+	 */
+	assetsSpace?: number;
+
+	/**
 	 * Add built at time information.
 	 */
 	builtAt?: boolean;
@@ -8272,6 +8291,11 @@ declare interface StatsOptions {
 	 * Show cached assets (setting this to `false` only shows emitted files).
 	 */
 	cachedAssets?: boolean;
+
+	/**
+	 * Add information about cached (not built) modules.
+	 */
+	cachedModules?: boolean;
 
 	/**
 	 * Add children information.
@@ -8297,11 +8321,6 @@ declare interface StatsOptions {
 	 * Add information about parent, children and sibling chunks to chunk information.
 	 */
 	chunkRelations?: boolean;
-
-	/**
-	 * Add root modules information to chunk information.
-	 */
-	chunkRootModules?: boolean;
 
 	/**
 	 * Add chunk information.
@@ -8349,6 +8368,11 @@ declare interface StatsOptions {
 	 * Context directory for request shortening.
 	 */
 	context?: string;
+
+	/**
+	 * Show chunk modules that are dependencies of other modules of the chunk.
+	 */
+	dependentModules?: boolean;
 
 	/**
 	 * Add module depth in module graph.
@@ -8406,6 +8430,51 @@ declare interface StatsOptions {
 		| ((value: string) => boolean);
 
 	/**
+	 * Group assets by how their are related to chunks.
+	 */
+	groupAssetsByChunk?: boolean;
+
+	/**
+	 * Group assets by their status (emitted, compared for emit or cached).
+	 */
+	groupAssetsByEmitStatus?: boolean;
+
+	/**
+	 * Group assets by their extension.
+	 */
+	groupAssetsByExtension?: boolean;
+
+	/**
+	 * Group assets by their asset info (immutable, development, hotModuleReplacement, etc).
+	 */
+	groupAssetsByInfo?: boolean;
+
+	/**
+	 * Group assets by their path.
+	 */
+	groupAssetsByPath?: boolean;
+
+	/**
+	 * Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).
+	 */
+	groupModulesByAttributes?: boolean;
+
+	/**
+	 * Group modules by their status (cached or built and cacheable).
+	 */
+	groupModulesByCacheStatus?: boolean;
+
+	/**
+	 * Group modules by their extension.
+	 */
+	groupModulesByExtension?: boolean;
+
+	/**
+	 * Group modules by their path.
+	 */
+	groupModulesByPath?: boolean;
+
+	/**
 	 * Add the hash of the compilation.
 	 */
 	hash?: boolean;
@@ -8436,11 +8505,6 @@ declare interface StatsOptions {
 	loggingTrace?: boolean;
 
 	/**
-	 * Set the maximum number of modules to be shown.
-	 */
-	maxModules?: number;
-
-	/**
 	 * Add information about assets inside modules.
 	 */
 	moduleAssets?: boolean;
@@ -8459,6 +8523,11 @@ declare interface StatsOptions {
 	 * Sort the modules by that field.
 	 */
 	modulesSort?: string;
+
+	/**
+	 * Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).
+	 */
+	modulesSpace?: number;
 
 	/**
 	 * Add information about modules nested in other modules (like with module concatenation).
@@ -8513,7 +8582,7 @@ declare interface StatsOptions {
 	/**
 	 * Add information about runtime modules.
 	 */
-	runtime?: boolean;
+	runtimeModules?: boolean;
 
 	/**
 	 * Add the source code of modules.

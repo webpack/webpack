@@ -180,6 +180,7 @@ describe("Stats", () => {
 			    Object {
 			      "auxiliaryChunkIdHints": Array [],
 			      "auxiliaryChunkNames": Array [],
+			      "cached": false,
 			      "chunkIdHints": Array [],
 			      "chunkNames": Array [
 			        "chunkB",
@@ -198,6 +199,7 @@ describe("Stats", () => {
 			    Object {
 			      "auxiliaryChunkIdHints": Array [],
 			      "auxiliaryChunkNames": Array [],
+			      "cached": false,
 			      "chunkIdHints": Array [],
 			      "chunkNames": Array [
 			        "entryA",
@@ -216,6 +218,7 @@ describe("Stats", () => {
 			    Object {
 			      "auxiliaryChunkIdHints": Array [],
 			      "auxiliaryChunkNames": Array [],
+			      "cached": false,
 			      "chunkIdHints": Array [],
 			      "chunkNames": Array [
 			        "entryB",
@@ -243,7 +246,7 @@ describe("Stats", () => {
 			      "entryB.js",
 			    ],
 			  },
-			  "filteredAssets": 0,
+			  "filteredAssets": undefined,
 			}
 		`);
 		});

@@ -2964,6 +2964,10 @@
           "description": "Sort the assets by that field.",
           "type": "string"
         },
+        "assetsSpace": {
+          "description": "Space to display assets (groups will be collapsed to fit this space).",
+          "type": "number"
+        },
         "builtAt": {
           "description": "Add built at time information.",
           "type": "boolean"
@@ -2974,6 +2978,10 @@
         },
         "cachedAssets": {
           "description": "Show cached assets (setting this to `false` only shows emitted files).",
+          "type": "boolean"
+        },
+        "cachedModules": {
+          "description": "Add information about cached (not built) modules.",
           "type": "boolean"
         },
         "children": {
@@ -2994,10 +3002,6 @@
         },
         "chunkRelations": {
           "description": "Add information about parent, children and sibling chunks to chunk information.",
-          "type": "boolean"
-        },
-        "chunkRootModules": {
-          "description": "Add root modules information to chunk information.",
           "type": "boolean"
         },
         "chunks": {
@@ -3051,6 +3055,10 @@
           "description": "Context directory for request shortening.",
           "type": "string",
           "absolutePath": true
+        },
+        "dependentModules": {
+          "description": "Show chunk modules that are dependencies of other modules of the chunk.",
+          "type": "boolean"
         },
         "depth": {
           "description": "Add module depth in module graph.",
@@ -3109,6 +3117,42 @@
             }
           ]
         },
+        "groupAssetsByChunk": {
+          "description": "Group assets by how their are related to chunks.",
+          "type": "boolean"
+        },
+        "groupAssetsByEmitStatus": {
+          "description": "Group assets by their status (emitted, compared for emit or cached).",
+          "type": "boolean"
+        },
+        "groupAssetsByExtension": {
+          "description": "Group assets by their extension.",
+          "type": "boolean"
+        },
+        "groupAssetsByInfo": {
+          "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+          "type": "boolean"
+        },
+        "groupAssetsByPath": {
+          "description": "Group assets by their path.",
+          "type": "boolean"
+        },
+        "groupModulesByAttributes": {
+          "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
+          "type": "boolean"
+        },
+        "groupModulesByCacheStatus": {
+          "description": "Group modules by their status (cached or built and cacheable).",
+          "type": "boolean"
+        },
+        "groupModulesByExtension": {
+          "description": "Group modules by their extension.",
+          "type": "boolean"
+        },
+        "groupModulesByPath": {
+          "description": "Group modules by their path.",
+          "type": "boolean"
+        },
         "hash": {
           "description": "Add the hash of the compilation.",
           "type": "boolean"
@@ -3146,10 +3190,6 @@
           "description": "Add stack traces to logging output.",
           "type": "boolean"
         },
-        "maxModules": {
-          "description": "Set the maximum number of modules to be shown.",
-          "type": "number"
-        },
         "moduleAssets": {
           "description": "Add information about assets inside modules.",
           "type": "boolean"
@@ -3165,6 +3205,10 @@
         "modulesSort": {
           "description": "Sort the modules by that field.",
           "type": "string"
+        },
+        "modulesSpace": {
+          "description": "Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).",
+          "type": "number"
         },
         "nestedModules": {
           "description": "Add information about modules nested in other modules (like with module concatenation).",
@@ -3213,7 +3257,7 @@
           "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
           "type": "boolean"
         },
-        "runtime": {
+        "runtimeModules": {
           "description": "Add information about runtime modules.",
           "type": "boolean"
         },

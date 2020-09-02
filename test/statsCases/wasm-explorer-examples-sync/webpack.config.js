@@ -16,6 +16,7 @@ module.exports = {
 	stats: {
 		chunks: true,
 		chunkModules: true,
+		dependentModules: true,
 		modules: true
 	},
 	experiments: {

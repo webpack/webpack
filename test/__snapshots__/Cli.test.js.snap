@@ -3889,6 +3889,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "stats-assets-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display assets (groups will be collapsed to fit this space).",
+        "multiple": false,
+        "path": "stats.assetsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display assets (groups will be collapsed to fit this space).",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "stats-built-at": Object {
     "configs": Array [
       Object {
@@ -3925,6 +3938,19 @@ Object {
       },
     ],
     "description": "Show cached assets (setting this to \`false\` only shows emitted files).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-cached-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about cached (not built) modules.",
+        "multiple": false,
+        "path": "stats.cachedModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about cached (not built) modules.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3990,19 +4016,6 @@ Object {
       },
     ],
     "description": "Add information about parent, children and sibling chunks to chunk information.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "stats-chunk-root-modules": Object {
-    "configs": Array [
-      Object {
-        "description": "Add root modules information to chunk information.",
-        "multiple": false,
-        "path": "stats.chunkRootModules",
-        "type": "boolean",
-      },
-    ],
-    "description": "Add root modules information to chunk information.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4135,6 +4148,19 @@ Object {
     "description": "Context directory for request shortening.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "stats-dependent-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Show chunk modules that are dependencies of other modules of the chunk.",
+        "multiple": false,
+        "path": "stats.dependentModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Show chunk modules that are dependencies of other modules of the chunk.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "stats-depth": Object {
     "configs": Array [
@@ -4284,6 +4310,123 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-group-assets-by-chunk": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by how their are related to chunks.",
+        "multiple": false,
+        "path": "stats.groupAssetsByChunk",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by how their are related to chunks.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-emit-status": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their status (emitted, compared for emit or cached).",
+        "multiple": false,
+        "path": "stats.groupAssetsByEmitStatus",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their status (emitted, compared for emit or cached).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-extension": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their extension.",
+        "multiple": false,
+        "path": "stats.groupAssetsByExtension",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their extension.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-info": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+        "multiple": false,
+        "path": "stats.groupAssetsByInfo",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their path.",
+        "multiple": false,
+        "path": "stats.groupAssetsByPath",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their path.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
+        "multiple": false,
+        "path": "stats.groupModulesByAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-cache-status": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their status (cached or built and cacheable).",
+        "multiple": false,
+        "path": "stats.groupModulesByCacheStatus",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their status (cached or built and cacheable).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-extension": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their extension.",
+        "multiple": false,
+        "path": "stats.groupModulesByExtension",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their extension.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their path.",
+        "multiple": false,
+        "path": "stats.groupModulesByPath",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their path.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-hash": Object {
     "configs": Array [
       Object {
@@ -4388,19 +4531,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "stats-max-modules": Object {
-    "configs": Array [
-      Object {
-        "description": "Set the maximum number of modules to be shown.",
-        "multiple": false,
-        "path": "stats.maxModules",
-        "type": "number",
-      },
-    ],
-    "description": "Set the maximum number of modules to be shown.",
-    "multiple": false,
-    "simpleType": "number",
-  },
   "stats-module-assets": Object {
     "configs": Array [
       Object {
@@ -4452,6 +4582,19 @@ Object {
     "description": "Sort the modules by that field.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "stats-modules-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).",
+        "multiple": false,
+        "path": "stats.modulesSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).",
+    "multiple": false,
+    "simpleType": "number",
   },
   "stats-nested-modules": Object {
     "configs": Array [
@@ -4589,12 +4732,12 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "stats-runtime": Object {
+  "stats-runtime-modules": Object {
     "configs": Array [
       Object {
         "description": "Add information about runtime modules.",
         "multiple": false,
-        "path": "stats.runtime",
+        "path": "stats.runtimeModules",
         "type": "boolean",
       },
     ],
