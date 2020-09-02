@@ -177,7 +177,6 @@ const describeCases = config => {
 									});
 								}),
 								experiments: {
-									mjs: true,
 									asyncWebAssembly: true,
 									topLevelAwait: true
 								}

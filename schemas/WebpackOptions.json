@@ -418,10 +418,6 @@
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
           "type": "boolean"
         },
-        "mjs": {
-          "description": "Support .mjs files as way to define strict ESM file (node.js).",
-          "type": "boolean"
-        },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
           "type": "boolean"
