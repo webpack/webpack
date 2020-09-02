@@ -2103,7 +2103,7 @@ export interface StatsOptions {
 	/**
 	 * Add information about runtime modules.
 	 */
-	runtime?: boolean;
+	runtimeModules?: boolean;
 	/**
 	 * Add the source code of modules.
 	 */

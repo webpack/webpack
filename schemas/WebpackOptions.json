@@ -3257,7 +3257,7 @@
           "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
           "type": "boolean"
         },
-        "runtime": {
+        "runtimeModules": {
           "description": "Add information about runtime modules.",
           "type": "boolean"
         },

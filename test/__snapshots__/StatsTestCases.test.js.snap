@@ -947,9 +947,8 @@ chunk cycle2.js (cycle2) 78 bytes [rendered]
   ./cycle2/index.js 14 bytes [built] [code generated]
 chunk cycles.js (cycles) 156 bytes [rendered]
   dependent modules 128 bytes [dependent] 6 modules
-  javascript modules 28 bytes
-    ./cycles/1/index.js 14 bytes [built] [code generated]
-    ./cycles/2/index.js 14 bytes [built] [code generated]
+  ./cycles/1/index.js 14 bytes [built] [code generated]
+  ./cycles/2/index.js 14 bytes [built] [code generated]
 chunk id-equals-name_js.js (id-equals-name_js) 1 bytes [rendered]
   ./id-equals-name.js?1 1 bytes [built] [code generated]
 chunk id-equals-name_js-_70e2.js (id-equals-name_js-_70e2) 1 bytes [rendered]
@@ -966,10 +965,9 @@ chunk tree.js (tree) 43 bytes [rendered]
   ./tree/index.js 14 bytes [built] [code generated]
 chunk trees.js (trees) 71 bytes [rendered]
   dependent modules 29 bytes [dependent] 3 modules
-  javascript modules 42 bytes
-    ./trees/1.js 14 bytes [built] [code generated]
-    ./trees/2.js 14 bytes [built] [code generated]
-    ./trees/3.js 14 bytes [built] [code generated]"
+  ./trees/1.js 14 bytes [built] [code generated]
+  ./trees/2.js 14 bytes [built] [code generated]
+  ./trees/3.js 14 bytes [built] [code generated]"
 `;
 
 exports[`StatsTestCases should print correct stats for immutable 1`] = `
