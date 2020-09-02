@@ -7,8 +7,5 @@ module.exports = {
 				type: "asset/resource"
 			}
 		]
-	},
-	experiments: {
-		asset: true
 	}
 };

@@ -15,8 +15,5 @@ module.exports = {
 				loader: "url-loader"
 			}
 		]
-	},
-	experiments: {
-		asset: true
 	}
 };

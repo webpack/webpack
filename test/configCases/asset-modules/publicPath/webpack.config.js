@@ -12,8 +12,5 @@ module.exports = {
 				type: "asset"
 			}
 		]
-	},
-	experiments: {
-		asset: true
 	}
 };

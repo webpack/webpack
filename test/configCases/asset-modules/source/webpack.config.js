@@ -8,8 +8,5 @@ module.exports = {
 				type: "asset/source"
 			}
 		]
-	},
-	experiments: {
-		asset: true
 	}
 };

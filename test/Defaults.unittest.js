@@ -89,7 +89,6 @@ describe("Defaults", () => {
 		    },
 		  },
 		  "experiments": Object {
-		    "asset": false,
 		    "asyncWebAssembly": false,
 		    "mjs": false,
 		    "outputModule": false,
@@ -120,6 +119,10 @@ describe("Defaults", () => {
 		      Object {
 		        "mimetype": "application/json",
 		        "type": "json",
+		      },
+		      Object {
+		        "dependency": "url",
+		        "type": "asset/resource",
 		      },
 		      Object {
 		        "mimetype": Object {

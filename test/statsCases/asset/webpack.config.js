@@ -19,8 +19,5 @@ module.exports = {
 	},
 	output: {
 		filename: "bundle.js"
-	},
-	experiments: {
-		asset: true
 	}
 };

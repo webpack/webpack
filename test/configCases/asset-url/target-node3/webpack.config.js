@@ -6,8 +6,5 @@ module.exports = {
 	output: {
 		assetModuleFilename: "[name][ext]",
 		publicPath: "https://example.com/"
-	},
-	experiments: {
-		asset: true
 	}
 };
