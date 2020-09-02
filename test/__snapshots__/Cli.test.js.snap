@@ -4732,12 +4732,12 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "stats-runtime": Object {
+  "stats-runtime-modules": Object {
     "configs": Array [
       Object {
         "description": "Add information about runtime modules.",
         "multiple": false,
-        "path": "stats.runtime",
+        "path": "stats.runtimeModules",
         "type": "boolean",
       },
     ],
