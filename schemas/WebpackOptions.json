@@ -2988,6 +2988,18 @@
           "description": "Add children information.",
           "type": "boolean"
         },
+        "chunkGroupAuxiliary": {
+          "description": "Display auxiliary assets in chunk groups.",
+          "type": "boolean"
+        },
+        "chunkGroupChildren": {
+          "description": "Display children of chunk groups.",
+          "type": "boolean"
+        },
+        "chunkGroupMaxAssets": {
+          "description": "Limit of assets displayed in chunk groups.",
+          "type": "number"
+        },
         "chunkGroups": {
           "description": "Display all chunk groups with the corresponding bundles.",
           "type": "boolean"
@@ -3066,7 +3078,14 @@
         },
         "entrypoints": {
           "description": "Display the entry points with the corresponding bundles.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "enum": ["auto"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "env": {
           "description": "Add --env information.",

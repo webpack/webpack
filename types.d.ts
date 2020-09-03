@@ -8307,6 +8307,21 @@ declare interface StatsOptions {
 	children?: boolean;
 
 	/**
+	 * Display auxiliary assets in chunk groups.
+	 */
+	chunkGroupAuxiliary?: boolean;
+
+	/**
+	 * Display children of chunk groups.
+	 */
+	chunkGroupChildren?: boolean;
+
+	/**
+	 * Limit of assets displayed in chunk groups.
+	 */
+	chunkGroupMaxAssets?: number;
+
+	/**
 	 * Display all chunk groups with the corresponding bundles.
 	 */
 	chunkGroups?: boolean;
@@ -8386,7 +8401,7 @@ declare interface StatsOptions {
 	/**
 	 * Display the entry points with the corresponding bundles.
 	 */
-	entrypoints?: boolean;
+	entrypoints?: boolean | "auto";
 
 	/**
 	 * Add --env information.
