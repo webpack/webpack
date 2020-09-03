@@ -17,9 +17,6 @@ const base = {
 	},
 	stats: {
 		relatedAssets: true
-	},
-	experiments: {
-		asset: true
 	}
 };
 

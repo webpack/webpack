@@ -6,8 +6,5 @@ module.exports = {
 	output: {
 		filename: "deep/path/[name].js",
 		assetModuleFilename: "[path][name][ext]"
-	},
-	experiments: {
-		asset: true
 	}
 };
