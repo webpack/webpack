@@ -3084,6 +3084,10 @@
           "description": "Add errors.",
           "type": "boolean"
         },
+        "errorsCount": {
+          "description": "Add errors count.",
+          "type": "boolean"
+        },
         "exclude": {
           "description": "Please use excludeModules instead.",
           "cli": {
@@ -3281,8 +3285,12 @@
           "description": "Add warnings.",
           "type": "boolean"
         },
+        "warningsCount": {
+          "description": "Add warnings count.",
+          "type": "boolean"
+        },
         "warningsFilter": {
-          "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+          "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
           "oneOf": [
             {
               "$ref": "#/definitions/FilterTypes"
@@ -3297,12 +3305,13 @@
         {
           "enum": [
             "none",
+            "summary",
             "errors-only",
+            "errors-warnings",
             "minimal",
             "normal",
             "detailed",
-            "verbose",
-            "errors-warnings"
+            "verbose"
           ]
         },
         {

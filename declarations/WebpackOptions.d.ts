@@ -523,12 +523,13 @@ export type ResolveLoader = ResolveOptions;
 export type StatsValue =
 	| (
 			| "none"
+			| "summary"
 			| "errors-only"
+			| "errors-warnings"
 			| "minimal"
 			| "normal"
 			| "detailed"
 			| "verbose"
-			| "errors-warnings"
 	  )
 	| boolean
 	| StatsOptions;
@@ -1973,6 +1974,10 @@ export interface StatsOptions {
 	 */
 	errors?: boolean;
 	/**
+	 * Add errors count.
+	 */
+	errorsCount?: boolean;
+	/**
 	 * Please use excludeModules instead.
 	 */
 	exclude?: boolean | FilterTypes;
@@ -2125,7 +2130,11 @@ export interface StatsOptions {
 	 */
 	warnings?: boolean;
 	/**
-	 * Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.
+	 * Add warnings count.
+	 */
+	warningsCount?: boolean;
+	/**
+	 * Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.
 	 */
 	warningsFilter?: FilterTypes;
 }

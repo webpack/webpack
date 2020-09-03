@@ -183,7 +183,7 @@ describe("StatsTestCases", () => {
 				const testPath = path.join(base, testName);
 				actual = actual
 					.replace(/\r\n?/g, "\n")
-					.replace(/[\t ]*Version:.+\n/g, "")
+					.replace(/webpack [^ )]+(\)?) compiled/g, "webpack x.x.x$1 compiled")
 					.replace(new RegExp(quotemeta(testPath), "g"), "Xdir/" + testName)
 					.replace(/(\w)\\(\w)/g, "$1/$2")
 					.replace(/, additional resolving: X ms/g, "");
