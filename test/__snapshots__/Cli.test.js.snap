@@ -3968,6 +3968,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-chunk-group-auxiliary": Object {
+    "configs": Array [
+      Object {
+        "description": "Display auxiliary assets in chunk groups.",
+        "multiple": false,
+        "path": "stats.chunkGroupAuxiliary",
+        "type": "boolean",
+      },
+    ],
+    "description": "Display auxiliary assets in chunk groups.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-chunk-group-children": Object {
+    "configs": Array [
+      Object {
+        "description": "Display children of chunk groups.",
+        "multiple": false,
+        "path": "stats.chunkGroupChildren",
+        "type": "boolean",
+      },
+    ],
+    "description": "Display children of chunk groups.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-chunk-group-max-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Limit of assets displayed in chunk groups.",
+        "multiple": false,
+        "path": "stats.chunkGroupMaxAssets",
+        "type": "number",
+      },
+    ],
+    "description": "Limit of assets displayed in chunk groups.",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "stats-chunk-groups": Object {
     "configs": Array [
       Object {
@@ -4182,12 +4221,21 @@ Object {
         "description": "Display the entry points with the corresponding bundles.",
         "multiple": false,
         "path": "stats.entrypoints",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Display the entry points with the corresponding bundles.",
+        "multiple": false,
+        "path": "stats.entrypoints",
         "type": "boolean",
       },
     ],
     "description": "Display the entry points with the corresponding bundles.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "stats-env": Object {
     "configs": Array [
