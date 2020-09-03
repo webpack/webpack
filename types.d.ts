@@ -1192,6 +1192,8 @@ declare class Compilation {
 		readonly normalModuleLoader: SyncHook<[any, NormalModule], void>;
 	}>;
 	name: string;
+	startTime: any;
+	endTime: any;
 	compiler: Compiler;
 	resolverFactory: ResolverFactory;
 	inputFileSystem: InputFileSystem;
@@ -8225,8 +8227,8 @@ declare class Stats {
 	constructor(compilation: Compilation);
 	compilation: Compilation;
 	hash: string;
-	startTime: any;
-	endTime: any;
+	readonly startTime: any;
+	readonly endTime: any;
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
 	toJson(options?: any): any;

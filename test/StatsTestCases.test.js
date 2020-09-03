@@ -158,7 +158,7 @@ describe("StatsTestCases", () => {
 					toStringOptions.children = c.options.map(o => o.stats);
 				}
 				// mock timestamps
-				for (const s of [].concat(stats.stats || stats)) {
+				for (const { compilation: s } of [].concat(stats.stats || stats)) {
 					expect(s.startTime).toBeGreaterThan(0);
 					expect(s.endTime).toBeGreaterThan(0);
 					s.endTime = new Date("04/20/1970, 12:42:42 PM").getTime();
