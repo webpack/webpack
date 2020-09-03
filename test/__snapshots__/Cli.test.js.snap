@@ -3831,12 +3831,13 @@ Object {
         "type": "enum",
         "values": Array [
           "none",
+          "summary",
           "errors-only",
+          "errors-warnings",
           "minimal",
           "normal",
           "detailed",
           "verbose",
-          "errors-warnings",
         ],
       },
       Object {
@@ -4237,6 +4238,19 @@ Object {
       },
     ],
     "description": "Add errors.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-errors-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add errors count.",
+        "multiple": false,
+        "path": "stats.errorsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add errors count.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4810,35 +4824,48 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-warnings-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add warnings count.",
+        "multiple": false,
+        "path": "stats.warningsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add warnings count.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-warnings-filter": Object {
     "configs": Array [
       Object {
-        "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": true,
         "path": "stats.warningsFilter[]",
         "type": "RegExp",
       },
       Object {
-        "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": true,
         "path": "stats.warningsFilter[]",
         "type": "string",
       },
     ],
-    "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
     "multiple": true,
     "simpleType": "string",
   },
   "stats-warnings-filter-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Clear all items provided in configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": false,
         "path": "stats.warningsFilter",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "description": "Clear all items provided in configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
     "multiple": false,
     "simpleType": "boolean",
   },

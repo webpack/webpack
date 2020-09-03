@@ -1192,6 +1192,8 @@ declare class Compilation {
 		readonly normalModuleLoader: SyncHook<[any, NormalModule], void>;
 	}>;
 	name: string;
+	startTime: any;
+	endTime: any;
 	compiler: Compiler;
 	resolverFactory: ResolverFactory;
 	inputFileSystem: InputFileSystem;
@@ -4811,7 +4813,7 @@ declare class MultiCompiler {
 }
 declare abstract class MultiStats {
 	stats: Stats[];
-	hash: string;
+	readonly hash: string;
 	hasErrors(): boolean;
 	hasWarnings(): boolean;
 	toJson(
@@ -4822,6 +4824,8 @@ declare abstract class MultiStats {
 		hash: string;
 		errors: any[];
 		warnings: any[];
+		errorsCount: number;
+		warningsCount: number;
 	};
 	toString(options?: any): string;
 }
@@ -8224,9 +8228,9 @@ type Statement =
 declare class Stats {
 	constructor(compilation: Compilation);
 	compilation: Compilation;
-	hash: string;
-	startTime: any;
-	endTime: any;
+	readonly hash: string;
+	readonly startTime: any;
+	readonly endTime: any;
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
 	toJson(options?: any): any;
@@ -8403,6 +8407,11 @@ declare interface StatsOptions {
 	 * Add errors.
 	 */
 	errors?: boolean;
+
+	/**
+	 * Add errors count.
+	 */
+	errorsCount?: boolean;
 
 	/**
 	 * Please use excludeModules instead.
@@ -8610,7 +8619,12 @@ declare interface StatsOptions {
 	warnings?: boolean;
 
 	/**
-	 * Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.
+	 * Add warnings count.
+	 */
+	warningsCount?: boolean;
+
+	/**
+	 * Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.
 	 */
 	warningsFilter?: FilterTypes;
 }
@@ -8629,12 +8643,13 @@ declare abstract class StatsPrinter {
 type StatsValue =
 	| boolean
 	| "none"
+	| "summary"
 	| "errors-only"
+	| "errors-warnings"
 	| "minimal"
 	| "normal"
 	| "detailed"
 	| "verbose"
-	| "errors-warnings"
 	| StatsOptions;
 declare interface SyntheticDependencyLocation {
 	name: string;
