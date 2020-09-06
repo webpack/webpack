@@ -1,5 +1,4 @@
-const { Source } = require("webpack-sources");
-const { resolve, join } = require('path');
+const { resolve, join } = require("path");
 
 /**
  * @this {import("../../../../").Compiler} the compiler
@@ -10,12 +9,22 @@ var testPlugin = function () {
 			modules,
 			callback
 		) {
-			const src = resolve(join(__dirname, 'other-file.js'));
-			const module = Array.from(compilation.modules).find(m => m.resource == src)
-			const cachedFileInput = compilation.inputFileSystem._readFileBackend._data.get(src)
+			const src = resolve(join(__dirname, "other-file.js"));
 
-			cachedFileInput.result = `module.exports = { foo: { foo: 'bar' }, doThings: () => { }}`
+			/**
+			 *
+			 * @param {any} m test
+			 * @returns {boolean} test
+			 */
+			function matcher(m) {
+				return m.resource && m.resource === src;
+			}
 
+			const module = Array.from(compilation.modules).find(matcher);
+			/** @type {any} */
+			const inputFileSystem = compilation.inputFileSystem;
+			const cachedFileInput = inputFileSystem._readFileBackend._data.get(src);
+			cachedFileInput.result = `module.exports = { foo: { foo: 'bar' }, doThings: () => { }}`;
 
 			if (!module) {
 				throw new Error("something went wrong");
