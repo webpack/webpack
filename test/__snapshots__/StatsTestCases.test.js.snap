@@ -2987,9 +2987,9 @@ webpack x.x.x compiled successfully in X ms"
 exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
 "default:
   Entrypoint main 9.93 KiB = default/main.js
-  Entrypoint a 10.5 KiB = default/a.js
-  Entrypoint b 2.26 KiB = default/b.js
-  Entrypoint c 2.26 KiB = default/c.js
+  Entrypoint a 10.2 KiB = default/a.js
+  Entrypoint b 1.98 KiB = default/b.js
+  Entrypoint c 1.98 KiB = default/c.js
   chunk (runtime: b) default/b.js (b) 152 bytes [entry] [rendered]
     > ./b b
     dependent modules 80 bytes [dependent] 4 modules
@@ -3259,7 +3259,7 @@ name-too-long:
 
 custom-chunks-filter:
   Entrypoint main 9.94 KiB = custom-chunks-filter/main.js
-  Entrypoint a 10.5 KiB = custom-chunks-filter/a.js
+  Entrypoint a 10.2 KiB = custom-chunks-filter/a.js
   Entrypoint b 6.47 KiB = custom-chunks-filter/282.js 204 bytes custom-chunks-filter/954.js 204 bytes custom-chunks-filter/568.js 204 bytes custom-chunks-filter/767.js 204 bytes custom-chunks-filter/b.js 5.68 KiB
   Entrypoint c 6.47 KiB = custom-chunks-filter/282.js 204 bytes custom-chunks-filter/769.js 204 bytes custom-chunks-filter/568.js 204 bytes custom-chunks-filter/767.js 204 bytes custom-chunks-filter/c.js 5.68 KiB
   chunk (runtime: b) custom-chunks-filter/b.js (b) 72 bytes (javascript) 2.6 KiB (runtime) ={282}= ={568}= ={767}= ={954}= [entry] [rendered]

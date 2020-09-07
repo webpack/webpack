@@ -1759,6 +1759,10 @@ export interface Output {
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
+	/**
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 */
+	workerChunkLoading?: ChunkLoading;
 }
 /**
  * Configuration object for web performance recommendations.
@@ -2361,6 +2365,10 @@ export interface OutputNormalized {
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
+	/**
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 */
+	workerChunkLoading?: ChunkLoading;
 }
 /**
  * Normalized webpack options object.
