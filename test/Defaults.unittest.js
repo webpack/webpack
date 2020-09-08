@@ -225,6 +225,7 @@ describe("Defaults", () => {
 		    "ecmaVersion": 6,
 		    "enabledChunkLoadingTypes": Array [
 		      "jsonp",
+		      "import-scripts",
 		    ],
 		    "enabledLibraryTypes": Array [],
 		    "filename": "[name].js",
@@ -250,6 +251,7 @@ describe("Defaults", () => {
 		    "strictModuleExceptionHandling": false,
 		    "uniqueName": "webpack",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
+		    "workerChunkLoading": "import-scripts",
 		  },
 		  "parallelism": 100,
 		  "performance": false,
@@ -983,10 +985,15 @@ describe("Defaults", () => {
 		+     "chunkLoading": "require",
 		@@ ... @@
 		-       "jsonp",
+		-       "import-scripts",
+		+       "require",
 		+       "require",
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
+		@@ ... @@
+		-     "workerChunkLoading": "import-scripts",
+		+     "workerChunkLoading": "require",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
@@ -1067,7 +1074,9 @@ describe("Defaults", () => {
 		+     "chunkLoading": "import-scripts",
 		@@ ... @@
 		-       "jsonp",
-		+       "import-scripts",
+		@@ ... @@
+		-     "workerChunkLoading": "import-scripts",
+		+     "workerChunkLoading": false,
 		@@ ... @@
 		+       "worker",
 		@@ ... @@
@@ -1095,10 +1104,15 @@ describe("Defaults", () => {
 		+     "chunkLoading": "require",
 		@@ ... @@
 		-       "jsonp",
+		-       "import-scripts",
+		+       "require",
 		+       "require",
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
+		@@ ... @@
+		-     "workerChunkLoading": "import-scripts",
+		+     "workerChunkLoading": "require",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
@@ -1183,10 +1197,15 @@ describe("Defaults", () => {
 		+     "chunkLoading": "require",
 		@@ ... @@
 		-       "jsonp",
+		-       "import-scripts",
+		+       "require",
 		+       "require",
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
+		@@ ... @@
+		-     "workerChunkLoading": "import-scripts",
+		+     "workerChunkLoading": "require",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",

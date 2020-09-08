@@ -2678,6 +2678,40 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-worker-chunk-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerChunkLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerChunkLoading",
+        "type": "enum",
+        "values": Array [
+          "jsonp",
+          "import-scripts",
+          "require",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerChunkLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "parallelism": Object {
     "configs": Array [
       Object {

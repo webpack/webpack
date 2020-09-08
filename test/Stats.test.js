@@ -72,10 +72,12 @@ describe("Stats", () => {
 			expect(
 				stats.toJson({
 					all: false,
+					errorsCount: true,
 					chunkGroups: true
 				})
 			).toMatchInlineSnapshot(`
 			Object {
+			  "errorsCount": 0,
 			  "namedChunkGroups": Object {
 			    "entryA": Object {
 			      "assets": Array [
@@ -126,10 +128,12 @@ describe("Stats", () => {
 			expect(
 				stats.toJson({
 					all: false,
+					errorsCount: true,
 					chunkGroups: true
 				})
 			).toMatchInlineSnapshot(`
 			Object {
+			  "errorsCount": 0,
 			  "namedChunkGroups": Object {
 			    "chunkB": Object {
 			      "assets": Array [
@@ -197,6 +201,7 @@ describe("Stats", () => {
 			expect(
 				stats.toJson({
 					all: false,
+					errorsCount: true,
 					assets: true
 				})
 			).toMatchInlineSnapshot(`
@@ -271,6 +276,7 @@ describe("Stats", () => {
 			      "entryB.js",
 			    ],
 			  },
+			  "errorsCount": 0,
 			  "filteredAssets": undefined,
 			}
 		`);

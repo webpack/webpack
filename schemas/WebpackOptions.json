@@ -1862,6 +1862,9 @@
         },
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
+        },
+        "workerChunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
         }
       }
     },
@@ -1984,6 +1987,9 @@
         },
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
+        },
+        "workerChunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
         }
       }
     },

@@ -296,6 +296,54 @@ const describeCases = config => {
 													moduleScope.window = globalContext;
 													moduleScope.self = globalContext;
 													moduleScope.URL = URL;
+													moduleScope.Worker = class Worker {
+														constructor(url, options) {
+															expect(url).toBeInstanceOf(URL);
+															expect(url.origin).toBe("https://test.cases");
+															expect(url.pathname.startsWith("/path/")).toBe(
+																true
+															);
+															const file = url.pathname.slice(6);
+															const workerBootstrap = `
+															const { parentPort } = require("worker_threads");
+															const { URL } = require("url");
+															const path = require("path");
+															global.self = global;
+															self.URL = URL;
+															self.importScripts = url => {
+																require(path.resolve(${JSON.stringify(outputDirectory)}, \`./\${url}\`));
+															};
+															parentPort.on("message", data => {
+																if(self.onmessage) self.onmessage({
+																	data
+																});
+															});
+															self.postMessage = data => {
+																parentPort.postMessage(data);
+															};
+															require(${JSON.stringify(path.resolve(outputDirectory, file))});
+															`;
+															// eslint-disable-next-line node/no-unsupported-features/node-builtins
+															this.worker = new (require("worker_threads").Worker)(
+																workerBootstrap,
+																{
+																	eval: true
+																}
+															);
+														}
+
+														set onmessage(value) {
+															this.worker.on("message", data => {
+																value({
+																	data
+																});
+															});
+														}
+
+														postMessage(data) {
+															this.worker.postMessage(data);
+														}
+													};
 													runInNewContext = true;
 												}
 												if (testConfig.moduleScope) {
