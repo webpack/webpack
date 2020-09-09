@@ -2103,6 +2103,43 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-enabled-wasm-loading-types": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledWasmLoadingTypes[]",
+        "type": "enum",
+        "values": Array [
+          "fetch-streaming",
+          "fetch",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledWasmLoadingTypes[]",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-enabled-wasm-loading-types-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of wasm loading types enabled for use by entry points.",
+        "multiple": false,
+        "path": "output.enabledWasmLoadingTypes",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of wasm loading types enabled for use by entry points.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-filename": Object {
     "configs": Array [
       Object {
@@ -2665,6 +2702,39 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-wasm-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.wasmLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.wasmLoading",
+        "type": "enum",
+        "values": Array [
+          "fetch-streaming",
+          "fetch",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.wasmLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-webassembly-module-filename": Object {
     "configs": Array [
       Object {
@@ -2709,6 +2779,39 @@ Object {
       },
     ],
     "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-worker-wasm-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerWasmLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerWasmLoading",
+        "type": "enum",
+        "values": Array [
+          "fetch-streaming",
+          "fetch",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerWasmLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
