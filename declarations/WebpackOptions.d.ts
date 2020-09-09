@@ -118,6 +118,16 @@ export type UmdNamedDefine = boolean;
  */
 export type EntryRuntime = string;
 /**
+ * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+ */
+export type WasmLoading = false | WasmLoadingType;
+/**
+ * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+ */
+export type WasmLoadingType =
+	| ("fetch-streaming" | "fetch" | "async-node")
+	| string;
+/**
  * An entry point without name.
  */
 export type EntryUnnamed = EntryItem;
@@ -392,6 +402,10 @@ export type EnabledChunkLoadingTypes = ChunkLoadingType[];
  * List of library types enabled for use by entry points.
  */
 export type EnabledLibraryTypes = LibraryType[];
+/**
+ * List of wasm loading types enabled for use by entry points.
+ */
+export type EnabledWasmLoadingTypes = WasmLoadingType[];
 /**
  * An expression which is used to address the global object/scope in runtime code.
  */
@@ -828,6 +842,10 @@ export interface EntryDescription {
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
 	runtime?: EntryRuntime;
+	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	wasmLoading?: WasmLoading;
 }
 /**
  * Options for library.
@@ -1660,6 +1678,10 @@ export interface Output {
 	 */
 	enabledLibraryTypes?: EnabledLibraryTypes;
 	/**
+	 * List of wasm loading types enabled for use by entry points.
+	 */
+	enabledWasmLoadingTypes?: EnabledWasmLoadingTypes;
+	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
 	filename?: Filename;
@@ -1756,6 +1778,10 @@ export interface Output {
 	 */
 	uniqueName?: UniqueName;
 	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	wasmLoading?: WasmLoading;
+	/**
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
@@ -1763,6 +1789,10 @@ export interface Output {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: ChunkLoading;
+	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	workerWasmLoading?: WasmLoading;
 }
 /**
  * Configuration object for web performance recommendations.
@@ -2203,6 +2233,10 @@ export interface EntryDescriptionNormalized {
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
 	runtime?: EntryRuntime;
+	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	wasmLoading?: WasmLoading;
 }
 /**
  * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
@@ -2277,6 +2311,10 @@ export interface OutputNormalized {
 	 * List of library types enabled for use by entry points.
 	 */
 	enabledLibraryTypes?: EnabledLibraryTypes;
+	/**
+	 * List of wasm loading types enabled for use by entry points.
+	 */
+	enabledWasmLoadingTypes?: EnabledWasmLoadingTypes;
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
@@ -2362,6 +2400,10 @@ export interface OutputNormalized {
 	 */
 	uniqueName?: UniqueName;
 	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	wasmLoading?: WasmLoading;
+	/**
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
@@ -2369,6 +2411,10 @@ export interface OutputNormalized {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: ChunkLoading;
+	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	workerWasmLoading?: WasmLoading;
 }
 /**
  * Normalized webpack options object.

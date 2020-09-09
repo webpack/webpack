@@ -228,6 +228,9 @@ describe("Defaults", () => {
 		      "import-scripts",
 		    ],
 		    "enabledLibraryTypes": Array [],
+		    "enabledWasmLoadingTypes": Array [
+		      "fetch",
+		    ],
 		    "filename": "[name].js",
 		    "globalObject": "self",
 		    "hashDigest": "hex",
@@ -250,8 +253,10 @@ describe("Defaults", () => {
 		    "sourcePrefix": undefined,
 		    "strictModuleExceptionHandling": false,
 		    "uniqueName": "webpack",
+		    "wasmLoading": "fetch",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
 		    "workerChunkLoading": "import-scripts",
+		    "workerWasmLoading": "fetch",
 		  },
 		  "parallelism": 100,
 		  "performance": false,
@@ -987,13 +992,20 @@ describe("Defaults", () => {
 		-       "jsonp",
 		-       "import-scripts",
 		+       "require",
-		+       "require",
+		@@ ... @@
+		-       "fetch",
+		+       "async-node",
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
+		-     "wasmLoading": "fetch",
+		+     "wasmLoading": "async-node",
+		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
+		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
+		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
@@ -1106,13 +1118,20 @@ describe("Defaults", () => {
 		-       "jsonp",
 		-       "import-scripts",
 		+       "require",
-		+       "require",
+		@@ ... @@
+		-       "fetch",
+		+       "async-node",
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
+		-     "wasmLoading": "fetch",
+		+     "wasmLoading": "async-node",
+		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
+		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
+		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
@@ -1199,13 +1218,20 @@ describe("Defaults", () => {
 		-       "jsonp",
 		-       "import-scripts",
 		+       "require",
-		+       "require",
+		@@ ... @@
+		-       "fetch",
+		+       "async-node",
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
+		-     "wasmLoading": "fetch",
+		+     "wasmLoading": "async-node",
+		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
+		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
+		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",

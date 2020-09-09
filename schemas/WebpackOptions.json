@@ -216,6 +216,13 @@
         "$ref": "#/definitions/LibraryType"
       }
     },
+    "EnabledWasmLoadingTypes": {
+      "description": "List of wasm loading types enabled for use by entry points.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WasmLoadingType"
+      }
+    },
     "Entry": {
       "description": "The entry point(s) of the compilation.",
       "anyOf": [
@@ -267,6 +274,9 @@
         },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"
+        },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
         }
       },
       "required": ["import"]
@@ -309,6 +319,9 @@
         },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"
+        },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
         }
       }
     },
@@ -1767,6 +1780,9 @@
         "enabledLibraryTypes": {
           "$ref": "#/definitions/EnabledLibraryTypes"
         },
+        "enabledWasmLoadingTypes": {
+          "$ref": "#/definitions/EnabledWasmLoadingTypes"
+        },
         "filename": {
           "$ref": "#/definitions/Filename"
         },
@@ -1860,11 +1876,17 @@
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
         },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
+        },
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
         },
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
+        },
+        "workerWasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
         }
       }
     },
@@ -1921,6 +1943,9 @@
         },
         "enabledLibraryTypes": {
           "$ref": "#/definitions/EnabledLibraryTypes"
+        },
+        "enabledWasmLoadingTypes": {
+          "$ref": "#/definitions/EnabledWasmLoadingTypes"
         },
         "filename": {
           "$ref": "#/definitions/Filename"
@@ -1985,11 +2010,17 @@
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
         },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
+        },
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
         },
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
+        },
+        "workerWasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
         }
       }
     },
@@ -3380,6 +3411,28 @@
       "description": "A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.",
       "type": "string",
       "minLength": 1
+    },
+    "WasmLoading": {
+      "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "$ref": "#/definitions/WasmLoadingType"
+        }
+      ]
+    },
+    "WasmLoadingType": {
+      "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": ["fetch-streaming", "fetch", "async-node"]
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "Watch": {
       "description": "Enter watch mode, which rebuilds on file change.",

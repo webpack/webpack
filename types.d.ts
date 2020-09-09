@@ -264,7 +264,12 @@ declare abstract class AsyncDependenciesBlock extends DependenciesBlock {
 		name?: string;
 		entryOptions?: { name?: string } & Pick<
 			EntryDescriptionNormalized,
-			"filename" | "chunkLoading" | "dependOn" | "library" | "runtime"
+			| "filename"
+			| "chunkLoading"
+			| "dependOn"
+			| "library"
+			| "runtime"
+			| "wasmLoading"
 		>;
 	};
 	loc: SyntheticDependencyLocation | RealDependencyLocation;
@@ -622,7 +627,12 @@ declare class Chunk {
 	isOnlyInitial(): boolean;
 	getEntryOptions(): { name?: string } & Pick<
 		EntryDescriptionNormalized,
-		"filename" | "chunkLoading" | "dependOn" | "library" | "runtime"
+		| "filename"
+		| "chunkLoading"
+		| "dependOn"
+		| "library"
+		| "runtime"
+		| "wasmLoading"
 	>;
 	addGroup(chunkGroup: ChunkGroup): void;
 	removeGroup(chunkGroup: ChunkGroup): void;
@@ -1061,7 +1071,12 @@ declare class Compilation {
 				Dependency,
 				{ name?: string } & Pick<
 					EntryDescriptionNormalized,
-					"filename" | "chunkLoading" | "dependOn" | "library" | "runtime"
+					| "filename"
+					| "chunkLoading"
+					| "dependOn"
+					| "library"
+					| "runtime"
+					| "wasmLoading"
 				>
 			],
 			void
@@ -1071,7 +1086,12 @@ declare class Compilation {
 				Dependency,
 				{ name?: string } & Pick<
 					EntryDescriptionNormalized,
-					"filename" | "chunkLoading" | "dependOn" | "library" | "runtime"
+					| "filename"
+					| "chunkLoading"
+					| "dependOn"
+					| "library"
+					| "runtime"
+					| "wasmLoading"
 				>,
 				Error
 			],
@@ -1082,7 +1102,12 @@ declare class Compilation {
 				Dependency,
 				{ name?: string } & Pick<
 					EntryDescriptionNormalized,
-					"filename" | "chunkLoading" | "dependOn" | "library" | "runtime"
+					| "filename"
+					| "chunkLoading"
+					| "dependOn"
+					| "library"
+					| "runtime"
+					| "wasmLoading"
 				>,
 				Module
 			],
@@ -1319,7 +1344,12 @@ declare class Compilation {
 			| string
 			| ({ name?: string } & Pick<
 					EntryDescriptionNormalized,
-					"filename" | "chunkLoading" | "dependOn" | "library" | "runtime"
+					| "filename"
+					| "chunkLoading"
+					| "dependOn"
+					| "library"
+					| "runtime"
+					| "wasmLoading"
 			  >),
 		callback: (err?: WebpackError, result?: Module) => void
 	): void;
@@ -1328,7 +1358,12 @@ declare class Compilation {
 		dependency: Dependency,
 		options: { name?: string } & Pick<
 			EntryDescriptionNormalized,
-			"filename" | "chunkLoading" | "dependOn" | "library" | "runtime"
+			| "filename"
+			| "chunkLoading"
+			| "dependOn"
+			| "library"
+			| "runtime"
+			| "wasmLoading"
 		>,
 		callback: (err?: WebpackError, result?: Module) => void
 	): void;
@@ -1357,7 +1392,12 @@ declare class Compilation {
 	addAsyncEntrypoint(
 		options: { name?: string } & Pick<
 			EntryDescriptionNormalized,
-			"filename" | "chunkLoading" | "dependOn" | "library" | "runtime"
+			| "filename"
+			| "chunkLoading"
+			| "dependOn"
+			| "library"
+			| "runtime"
+			| "wasmLoading"
 		>,
 		module: Module,
 		loc: SyntheticDependencyLocation | RealDependencyLocation,
@@ -2438,7 +2478,12 @@ declare interface EntryData {
 	 */
 	options: { name?: string } & Pick<
 		EntryDescriptionNormalized,
-		"filename" | "chunkLoading" | "dependOn" | "library" | "runtime"
+		| "filename"
+		| "chunkLoading"
+		| "dependOn"
+		| "library"
+		| "runtime"
+		| "wasmLoading"
 	>;
 }
 declare abstract class EntryDependency extends ModuleDependency {}
@@ -2476,6 +2521,11 @@ declare interface EntryDescription {
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
 	runtime?: string;
+
+	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	wasmLoading?: DevTool;
 }
 
 /**
@@ -2511,6 +2561,11 @@ declare interface EntryDescriptionNormalized {
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
 	runtime?: string;
+
+	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	wasmLoading?: DevTool;
 }
 type EntryItem = string | [string, ...string[]];
 type EntryNormalized =
@@ -2535,7 +2590,12 @@ declare class EntryPlugin {
 			| string
 			| ({ name?: string } & Pick<
 					EntryDescriptionNormalized,
-					"filename" | "chunkLoading" | "dependOn" | "library" | "runtime"
+					| "filename"
+					| "chunkLoading"
+					| "dependOn"
+					| "library"
+					| "runtime"
+					| "wasmLoading"
 			  >)
 	);
 	context: string;
@@ -2544,7 +2604,12 @@ declare class EntryPlugin {
 		| string
 		| ({ name?: string } & Pick<
 				EntryDescriptionNormalized,
-				"filename" | "chunkLoading" | "dependOn" | "library" | "runtime"
+				| "filename"
+				| "chunkLoading"
+				| "dependOn"
+				| "library"
+				| "runtime"
+				| "wasmLoading"
 		  >);
 
 	/**
@@ -2557,7 +2622,12 @@ declare class EntryPlugin {
 			| string
 			| ({ name?: string } & Pick<
 					EntryDescriptionNormalized,
-					"filename" | "chunkLoading" | "dependOn" | "library" | "runtime"
+					| "filename"
+					| "chunkLoading"
+					| "dependOn"
+					| "library"
+					| "runtime"
+					| "wasmLoading"
 			  >)
 	): EntryDependency;
 }
@@ -5678,6 +5748,11 @@ declare interface Output {
 	enabledLibraryTypes?: string[];
 
 	/**
+	 * List of wasm loading types enabled for use by entry points.
+	 */
+	enabledWasmLoadingTypes?: string[];
+
+	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
 	filename?: Filename;
@@ -5798,6 +5873,11 @@ declare interface Output {
 	uniqueName?: string;
 
 	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	wasmLoading?: DevTool;
+
+	/**
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
 	webassemblyModuleFilename?: string;
@@ -5806,6 +5886,11 @@ declare interface Output {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: DevTool;
+
+	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	workerWasmLoading?: DevTool;
 }
 declare interface OutputFileSystem {
 	writeFile: (
@@ -5905,6 +5990,11 @@ declare interface OutputNormalized {
 	 * List of library types enabled for use by entry points.
 	 */
 	enabledLibraryTypes?: string[];
+
+	/**
+	 * List of wasm loading types enabled for use by entry points.
+	 */
+	enabledWasmLoadingTypes?: string[];
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -6012,6 +6102,11 @@ declare interface OutputNormalized {
 	uniqueName?: string;
 
 	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	wasmLoading?: DevTool;
+
+	/**
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
 	webassemblyModuleFilename?: string;
@@ -6020,6 +6115,11 @@ declare interface OutputNormalized {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: DevTool;
+
+	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	workerWasmLoading?: DevTool;
 }
 declare interface ParsedIdentifier {
 	request: string;
