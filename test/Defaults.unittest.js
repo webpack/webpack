@@ -104,7 +104,9 @@ describe("Defaults", () => {
 		    "debug": false,
 		    "level": "info",
 		  },
-		  "loader": undefined,
+		  "loader": Object {
+		    "target": "web",
+		  },
 		  "mode": "none",
 		  "module": Object {
 		    "defaultRules": Array [
@@ -979,6 +981,9 @@ describe("Defaults", () => {
 		-     "web": true,
 		+     "node": true,
 		@@ ... @@
+		-     "target": "web",
+		+     "target": "node",
+		@@ ... @@
 		-     "__dirname": "mock",
 		-     "__filename": "mock",
 		-     "global": true,
@@ -1085,6 +1090,9 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ ... @@
+		-     "target": "web",
+		+     "target": "webworker",
+		@@ ... @@
 		-     "chunkLoading": "jsonp",
 		+     "chunkLoading": "import-scripts",
 		@@ ... @@
@@ -1108,6 +1116,9 @@ describe("Defaults", () => {
 		-     "web": true,
 		+     "electronMain": true,
 		+     "node": true,
+		@@ ... @@
+		-     "target": "web",
+		+     "target": "electron-main",
 		@@ ... @@
 		-     "__dirname": "mock",
 		-     "__filename": "mock",
@@ -1218,6 +1229,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		+     "electronPreload": true,
 		+     "node": true,
+		@@ ... @@
+		-     "target": "web",
+		+     "target": "electron-preload",
 		@@ ... @@
 		-     "chunkFormat": "array-push",
 		+     "chunkFormat": "commonjs",
