@@ -640,6 +640,10 @@ export interface WebpackOptions {
 	 */
 	externals?: Externals;
 	/**
+	 * Enable presets of externals for specific targets.
+	 */
+	externalsPresets?: ExternalsPresets;
+	/**
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
 	externalsType?: ExternalsType;
@@ -938,6 +942,35 @@ export interface Experiments {
 	 * Allow using top-level-await in EcmaScript Modules.
 	 */
 	topLevelAwait?: boolean;
+}
+/**
+ * Enable presets of externals for specific targets.
+ */
+export interface ExternalsPresets {
+	/**
+	 * Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.
+	 */
+	electronMain?: boolean;
+	/**
+	 * Treat electron built-in modules in the preload context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.
+	 */
+	electronPreload?: boolean;
+	/**
+	 * Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.
+	 */
+	node?: boolean;
+	/**
+	 * Treat node-webkit legacy nw.gui module as external and load it via require() when used.
+	 */
+	nodeWebkit?: boolean;
+	/**
+	 * Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).
+	 */
+	web?: boolean;
+	/**
+	 * Treat references to 'http(s)://...' and 'std:...' as external and load them via async import() when used (Note that this external type is an async module, which has various effects on the execution).
+	 */
+	webAsync?: boolean;
 }
 /**
  * Options for infrastructure level logging.
@@ -2460,6 +2493,10 @@ export interface WebpackOptionsNormalized {
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
 	externals: Externals;
+	/**
+	 * Enable presets of externals for specific targets.
+	 */
+	externalsPresets: ExternalsPresets;
 	/**
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
