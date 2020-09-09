@@ -425,6 +425,84 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "externals-presets-electron-main": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electronMain",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-electron-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat electron built-in modules in the preload context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electronPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat electron built-in modules in the preload context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-node": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.node",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-node-webkit": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat node-webkit legacy nw.gui module as external and load it via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.nodeWebkit",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat node-webkit legacy nw.gui module as external and load it via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-web": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).",
+        "multiple": false,
+        "path": "externalsPresets.web",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-web-async": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via async import() when used (Note that this external type is an async module, which has various effects on the execution).",
+        "multiple": false,
+        "path": "externalsPresets.webAsync",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via async import() when used (Note that this external type is an async module, which has various effects on the execution).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "externals-reset": Object {
     "configs": Array [
       Object {
