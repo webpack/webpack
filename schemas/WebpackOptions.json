@@ -184,24 +184,6 @@
       "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
       "type": "string"
     },
-    "EcmaVersion": {
-      "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-      "anyOf": [
-        {
-          "enum": [2009]
-        },
-        {
-          "type": "number",
-          "minimum": 5,
-          "maximum": 11
-        },
-        {
-          "type": "number",
-          "minimum": 2015,
-          "maximum": 2020
-        }
-      ]
-    },
     "EnabledChunkLoadingTypes": {
       "description": "List of chunk loading types enabled for use by entry points.",
       "type": "array",
@@ -417,6 +399,49 @@
           "$ref": "#/definitions/EntryItem"
         }
       ]
+    },
+    "Environment": {
+      "description": "The abilities of the environment where the webpack generated code should run.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "arrowFunction": {
+          "description": "The environment supports arrow functions ('() => { ... }').",
+          "type": "boolean"
+        },
+        "bigIntLiteral": {
+          "description": "The environment supports BigInt as literal (123n).",
+          "type": "boolean"
+        },
+        "const": {
+          "description": "The environment supports const and let for variable declarations.",
+          "type": "boolean"
+        },
+        "destructing": {
+          "description": "The environment supports destructing ('{ a, b } = obj').",
+          "type": "boolean"
+        },
+        "forOf": {
+          "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+          "type": "boolean"
+        },
+        "global": {
+          "description": "The environment supports a global 'global' variable which points to the global context.",
+          "type": "boolean"
+        },
+        "globalThis": {
+          "description": "The environment supports a global 'globalThis' variable which points to the global context.",
+          "type": "boolean"
+        },
+        "import": {
+          "description": "The environment supports an async import() function to import EcmaScript modules.",
+          "type": "boolean"
+        },
+        "module": {
+          "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
+          "type": "boolean"
+        }
+      }
     },
     "Experiments": {
       "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
@@ -1798,9 +1823,6 @@
         "devtoolNamespace": {
           "$ref": "#/definitions/DevtoolNamespace"
         },
-        "ecmaVersion": {
-          "$ref": "#/definitions/EcmaVersion"
-        },
         "enabledChunkLoadingTypes": {
           "$ref": "#/definitions/EnabledChunkLoadingTypes"
         },
@@ -1809,6 +1831,9 @@
         },
         "enabledWasmLoadingTypes": {
           "$ref": "#/definitions/EnabledWasmLoadingTypes"
+        },
+        "environment": {
+          "$ref": "#/definitions/Environment"
         },
         "filename": {
           "$ref": "#/definitions/Filename"
@@ -1962,9 +1987,6 @@
         "devtoolNamespace": {
           "$ref": "#/definitions/DevtoolNamespace"
         },
-        "ecmaVersion": {
-          "$ref": "#/definitions/EcmaVersion"
-        },
         "enabledChunkLoadingTypes": {
           "$ref": "#/definitions/EnabledChunkLoadingTypes"
         },
@@ -1973,6 +1995,9 @@
         },
         "enabledWasmLoadingTypes": {
           "$ref": "#/definitions/EnabledWasmLoadingTypes"
+        },
+        "environment": {
+          "$ref": "#/definitions/Environment"
         },
         "filename": {
           "$ref": "#/definitions/Filename"

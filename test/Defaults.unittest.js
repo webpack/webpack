@@ -269,7 +269,6 @@ describe("Defaults", () => {
 		    "devtoolFallbackModuleFilenameTemplate": undefined,
 		    "devtoolModuleFilenameTemplate": undefined,
 		    "devtoolNamespace": "webpack",
-		    "ecmaVersion": 6,
 		    "enabledChunkLoadingTypes": Array [
 		      "jsonp",
 		      "import-scripts",
@@ -278,6 +277,15 @@ describe("Defaults", () => {
 		    "enabledWasmLoadingTypes": Array [
 		      "fetch",
 		    ],
+		    "environment": Object {
+		      "arrowFunction": true,
+		      "const": true,
+		      "destructing": true,
+		      "forOf": true,
+		      "global": false,
+		      "import": true,
+		      "module": true,
+		    },
 		    "filename": "[name].js",
 		    "globalObject": "self",
 		    "hashDigest": "hex",
@@ -958,6 +966,9 @@ describe("Defaults", () => {
 		-       "fetch",
 		+       "async-node",
 		@@ ... @@
+		-       "global": false,
+		+       "global": true,
+		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
@@ -1094,6 +1105,9 @@ describe("Defaults", () => {
 		-       "fetch",
 		+       "async-node",
 		@@ ... @@
+		-       "global": false,
+		+       "global": true,
+		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
@@ -1200,6 +1214,9 @@ describe("Defaults", () => {
 		-       "fetch",
 		+       "async-node",
 		@@ ... @@
+		-       "global": false,
+		+       "global": true,
+		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
@@ -1233,14 +1250,7 @@ describe("Defaults", () => {
 	`)
 	);
 	test("ecamVersion", { output: { ecmaVersion: 2020 } }, e =>
-		e.toMatchInlineSnapshot(`
-		- Expected
-		+ Received
-
-		@@ ... @@
-		-     "ecmaVersion": 6,
-		+     "ecmaVersion": 11,
-	`)
+		e.toMatchInlineSnapshot(`Compared values have no visual difference.`)
 	);
 	test("single runtimeChunk", { optimization: { runtimeChunk: "single" } }, e =>
 		e.toMatchInlineSnapshot(`

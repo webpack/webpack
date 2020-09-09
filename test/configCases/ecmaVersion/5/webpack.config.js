@@ -1,6 +1,11 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {
-		ecmaVersion: 5
+		environment: {
+			arrowFunction: false,
+			const: false,
+			destructing: false,
+			forOf: false
+		}
 	}
 };

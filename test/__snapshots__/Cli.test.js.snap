@@ -2058,28 +2058,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-ecma-version": Object {
-    "configs": Array [
-      Object {
-        "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-        "multiple": false,
-        "path": "output.ecmaVersion",
-        "type": "enum",
-        "values": Array [
-          2009,
-        ],
-      },
-      Object {
-        "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-        "multiple": false,
-        "path": "output.ecmaVersion",
-        "type": "number",
-      },
-    ],
-    "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-    "multiple": false,
-    "simpleType": "number",
-  },
   "output-enabled-chunk-loading-types": Object {
     "configs": Array [
       Object {
@@ -2202,6 +2180,123 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. List of wasm loading types enabled for use by entry points.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-arrow-function": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports arrow functions ('() => { ... }').",
+        "multiple": false,
+        "path": "output.environment.arrowFunction",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports arrow functions ('() => { ... }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-big-int-literal": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports BigInt as literal (123n).",
+        "multiple": false,
+        "path": "output.environment.bigIntLiteral",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports BigInt as literal (123n).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-const": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports const and let for variable declarations.",
+        "multiple": false,
+        "path": "output.environment.const",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports const and let for variable declarations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-destructing": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports destructing ('{ a, b } = obj').",
+        "multiple": false,
+        "path": "output.environment.destructing",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports destructing ('{ a, b } = obj').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-for-of": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+        "multiple": false,
+        "path": "output.environment.forOf",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-global": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports a global 'global' variable which points to the global context.",
+        "multiple": false,
+        "path": "output.environment.global",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports a global 'global' variable which points to the global context.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-global-this": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports a global 'globalThis' variable which points to the global context.",
+        "multiple": false,
+        "path": "output.environment.globalThis",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports a global 'globalThis' variable which points to the global context.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-import": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports an async import() function to import EcmaScript modules.",
+        "multiple": false,
+        "path": "output.environment.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports an async import() function to import EcmaScript modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-module": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
+        "multiple": false,
+        "path": "output.environment.module",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
     "multiple": false,
     "simpleType": "boolean",
   },
