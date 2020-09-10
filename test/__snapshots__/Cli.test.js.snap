@@ -412,6 +412,19 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "externals-presets-electron": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electron",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "externals-presets-electron-main": Object {
     "configs": Array [
       Object {
@@ -438,6 +451,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "externals-presets-electron-renderer": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electronRenderer",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "externals-presets-node": Object {
     "configs": Array [
       Object {
@@ -451,16 +477,16 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "externals-presets-node-webkit": Object {
+  "externals-presets-nwjs": Object {
     "configs": Array [
       Object {
-        "description": "Treat node-webkit legacy nw.gui module as external and load it via require() when used.",
+        "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",
         "multiple": false,
-        "path": "externalsPresets.nodeWebkit",
+        "path": "externalsPresets.nwjs",
         "type": "boolean",
       },
     ],
-    "description": "Treat node-webkit legacy nw.gui module as external and load it via require() when used.",
+    "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1210,6 +1236,7 @@ Object {
           false,
           true,
           "mock",
+          "eval-only",
         ],
       },
     ],
@@ -1228,6 +1255,7 @@ Object {
           false,
           true,
           "mock",
+          "eval-only",
         ],
       },
     ],
@@ -2222,16 +2250,16 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "output-environment-destructing": Object {
+  "output-environment-destructuring": Object {
     "configs": Array [
       Object {
-        "description": "The environment supports destructing ('{ a, b } = obj').",
+        "description": "The environment supports destructuring ('{ a, b } = obj').",
         "multiple": false,
-        "path": "output.environment.destructing",
+        "path": "output.environment.destructuring",
         "type": "boolean",
       },
     ],
-    "description": "The environment supports destructing ('{ a, b } = obj').",
+    "description": "The environment supports destructuring ('{ a, b } = obj').",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2245,32 +2273,6 @@ Object {
       },
     ],
     "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "output-environment-global": Object {
-    "configs": Array [
-      Object {
-        "description": "The environment supports a global 'global' variable which points to the global context.",
-        "multiple": false,
-        "path": "output.environment.global",
-        "type": "boolean",
-      },
-    ],
-    "description": "The environment supports a global 'global' variable which points to the global context.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "output-environment-global-this": Object {
-    "configs": Array [
-      Object {
-        "description": "The environment supports a global 'globalThis' variable which points to the global context.",
-        "multiple": false,
-        "path": "output.environment.globalThis",
-        "type": "boolean",
-      },
-    ],
-    "description": "The environment supports a global 'globalThis' variable which points to the global context.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5218,24 +5220,36 @@ Object {
     "configs": Array [
       Object {
         "description": "Environment to build for.",
+        "multiple": true,
+        "path": "target[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Environment to build for. An array of environments to build for all of them when possible.",
         "multiple": false,
         "path": "target",
         "type": "enum",
         "values": Array [
-          "web",
-          "webworker",
-          "node",
-          "async-node",
-          "node-webkit",
-          "electron-main",
-          "electron-renderer",
-          "electron-preload",
+          false,
         ],
       },
     ],
-    "description": "Environment to build for.",
-    "multiple": false,
+    "description": "Environment to build for. Environment to build for. An array of environments to build for all of them when possible.",
+    "multiple": true,
     "simpleType": "string",
+  },
+  "target-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Environment to build for. An array of environments to build for all of them when possible.",
+        "multiple": false,
+        "path": "target",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Environment to build for. An array of environments to build for all of them when possible.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "watch": Object {
     "configs": Array [

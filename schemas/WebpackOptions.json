@@ -417,20 +417,12 @@
           "description": "The environment supports const and let for variable declarations.",
           "type": "boolean"
         },
-        "destructing": {
-          "description": "The environment supports destructing ('{ a, b } = obj').",
+        "destructuring": {
+          "description": "The environment supports destructuring ('{ a, b } = obj').",
           "type": "boolean"
         },
         "forOf": {
           "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
-          "type": "boolean"
-        },
-        "global": {
-          "description": "The environment supports a global 'global' variable which points to the global context.",
-          "type": "boolean"
-        },
-        "globalThis": {
-          "description": "The environment supports a global 'globalThis' variable which points to the global context.",
           "type": "boolean"
         },
         "import": {
@@ -536,6 +528,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "electron": {
+          "description": "Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.",
+          "type": "boolean"
+        },
         "electronMain": {
           "description": "Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.",
           "type": "boolean"
@@ -544,12 +540,16 @@
           "description": "Treat electron built-in modules in the preload context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
           "type": "boolean"
         },
+        "electronRenderer": {
+          "description": "Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+          "type": "boolean"
+        },
         "node": {
           "description": "Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.",
           "type": "boolean"
         },
-        "nodeWebkit": {
-          "description": "Treat node-webkit legacy nw.gui module as external and load it via require() when used.",
+        "nwjs": {
+          "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",
           "type": "boolean"
         },
         "web": {
@@ -1150,11 +1150,11 @@
       "properties": {
         "__dirname": {
           "description": "Include a polyfill for the '__dirname' variable.",
-          "enum": [false, true, "mock"]
+          "enum": [false, true, "mock", "eval-only"]
         },
         "__filename": {
           "description": "Include a polyfill for the '__filename' variable.",
-          "enum": [false, true, "mock"]
+          "enum": [false, true, "mock", "eval-only"]
         },
         "global": {
           "description": "Include a polyfill for the 'global' variable.",
@@ -3435,23 +3435,23 @@
       "type": "boolean"
     },
     "Target": {
-      "description": "Environment to build for.",
+      "description": "Environment to build for. An array of environments to build for all of them when possible.",
       "anyOf": [
         {
-          "enum": [
-            "web",
-            "webworker",
-            "node",
-            "async-node",
-            "node-webkit",
-            "electron-main",
-            "electron-renderer",
-            "electron-preload"
-          ]
+          "type": "array",
+          "items": {
+            "description": "Environment to build for.",
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
         },
         {
-          "instanceof": "Function",
-          "tsType": "((compiler: import('../lib/Compiler')) => void)"
+          "enum": [false]
+        },
+        {
+          "type": "string",
+          "minLength": 1
         }
       ]
     },

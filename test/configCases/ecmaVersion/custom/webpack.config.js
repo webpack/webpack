@@ -3,9 +3,12 @@ module.exports = {
 	output: {
 		environment: {
 			arrowFunction: true,
-			const: true,
-			destructing: true,
-			forOf: true
+			bigIntLiteral: false,
+			const: false,
+			destructuring: false,
+			forOf: false,
+			import: true,
+			module: false
 		}
 	}
 };

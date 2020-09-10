@@ -96,6 +96,12 @@ describe("Defaults", () => {
 		  },
 		  "externals": undefined,
 		  "externalsPresets": Object {
+		    "electron": false,
+		    "electronMain": false,
+		    "electronPreload": false,
+		    "electronRenderer": false,
+		    "node": false,
+		    "nwjs": false,
 		    "web": true,
 		  },
 		  "externalsType": "var",
@@ -279,12 +285,12 @@ describe("Defaults", () => {
 		    ],
 		    "environment": Object {
 		      "arrowFunction": true,
+		      "bigIntLiteral": undefined,
 		      "const": true,
-		      "destructing": true,
+		      "destructuring": true,
 		      "forOf": true,
-		      "global": false,
-		      "import": true,
-		      "module": true,
+		      "import": undefined,
+		      "module": undefined,
 		    },
 		    "filename": "[name].js",
 		    "globalObject": "self",
@@ -328,7 +334,6 @@ describe("Defaults", () => {
 		        "conditionNames": Array [
 		          "require",
 		          "module",
-		          "browser",
 		          "...",
 		        ],
 		        "extensions": Array [
@@ -349,7 +354,6 @@ describe("Defaults", () => {
 		        "conditionNames": Array [
 		          "require",
 		          "module",
-		          "browser",
 		          "...",
 		        ],
 		        "extensions": Array [
@@ -370,7 +374,6 @@ describe("Defaults", () => {
 		        "conditionNames": Array [
 		          "import",
 		          "module",
-		          "browser",
 		          "...",
 		        ],
 		        "extensions": Array [
@@ -391,7 +394,6 @@ describe("Defaults", () => {
 		        "conditionNames": Array [
 		          "require",
 		          "module",
-		          "browser",
 		          "...",
 		        ],
 		        "extensions": Array [
@@ -412,7 +414,6 @@ describe("Defaults", () => {
 		        "conditionNames": Array [
 		          "require",
 		          "module",
-		          "browser",
 		          "...",
 		        ],
 		        "extensions": Array [
@@ -433,7 +434,6 @@ describe("Defaults", () => {
 		        "conditionNames": Array [
 		          "require",
 		          "module",
-		          "browser",
 		          "...",
 		        ],
 		        "extensions": Array [
@@ -454,7 +454,6 @@ describe("Defaults", () => {
 		        "conditionNames": Array [
 		          "import",
 		          "module",
-		          "browser",
 		          "...",
 		        ],
 		        "extensions": Array [
@@ -473,6 +472,7 @@ describe("Defaults", () => {
 		    "conditionNames": Array [
 		      "webpack",
 		      "production",
+		      "browser",
 		    ],
 		    "exportsFields": Array [
 		      "exports",
@@ -940,8 +940,11 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ ... @@
-		-     "web": true,
+		-     "node": false,
 		+     "node": true,
+		@@ ... @@
+		-     "web": true,
+		+     "web": false,
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "node",
@@ -949,8 +952,8 @@ describe("Defaults", () => {
 		-     "__dirname": "mock",
 		-     "__filename": "mock",
 		-     "global": true,
-		+     "__dirname": false,
-		+     "__filename": false,
+		+     "__dirname": "eval-only",
+		+     "__filename": "eval-only",
 		+     "global": false,
 		@@ ... @@
 		-     "chunkFormat": "array-push",
@@ -965,9 +968,6 @@ describe("Defaults", () => {
 		@@ ... @@
 		-       "fetch",
 		+       "async-node",
-		@@ ... @@
-		-       "global": false,
-		+       "global": true,
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
@@ -987,23 +987,10 @@ describe("Defaults", () => {
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
-		-           "browser",
-		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
 		-         ],
 		+         "aliasFields": Array [],
-		@@ ... @@
-		-           "browser",
-		@@ ... @@
-		-           "browser",
-		@@ ... @@
-		-         "aliasFields": Array [
-		-           "browser",
-		-         ],
-		+         "aliasFields": Array [],
-		@@ ... @@
-		-           "browser",
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
@@ -1014,23 +1001,10 @@ describe("Defaults", () => {
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
-		-           "browser",
-		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
 		-         ],
 		+         "aliasFields": Array [],
-		@@ ... @@
-		-           "browser",
-		@@ ... @@
-		-           "browser",
-		@@ ... @@
-		-         "aliasFields": Array [
-		-           "browser",
-		-         ],
-		+         "aliasFields": Array [],
-		@@ ... @@
-		-           "browser",
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
@@ -1041,8 +1015,21 @@ describe("Defaults", () => {
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
 		-           "browser",
 		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-       "browser",
 		+       "node",
 		@@ ... @@
 		-   "target": "web",
@@ -1055,16 +1042,10 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ ... @@
-		-     "target": "web",
-		+     "target": "webworker",
-		@@ ... @@
 		-     "chunkLoading": "jsonp",
 		+     "chunkLoading": "import-scripts",
 		@@ ... @@
 		-       "jsonp",
-		@@ ... @@
-		-     "workerChunkLoading": "import-scripts",
-		+     "workerChunkLoading": false,
 		@@ ... @@
 		+       "worker",
 		@@ ... @@
@@ -1078,9 +1059,16 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ ... @@
-		-     "web": true,
+		-     "electron": false,
+		-     "electronMain": false,
+		+     "electron": true,
 		+     "electronMain": true,
+		@@ ... @@
+		-     "node": false,
 		+     "node": true,
+		@@ ... @@
+		-     "web": true,
+		+     "web": false,
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "electron-main",
@@ -1088,8 +1076,8 @@ describe("Defaults", () => {
 		-     "__dirname": "mock",
 		-     "__filename": "mock",
 		-     "global": true,
-		+     "__dirname": false,
-		+     "__filename": false,
+		+     "__dirname": "eval-only",
+		+     "__filename": "eval-only",
 		+     "global": false,
 		@@ ... @@
 		-     "chunkFormat": "array-push",
@@ -1105,9 +1093,6 @@ describe("Defaults", () => {
 		-       "fetch",
 		+       "async-node",
 		@@ ... @@
-		-       "global": false,
-		+       "global": true,
-		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
@@ -1126,23 +1111,10 @@ describe("Defaults", () => {
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
-		-           "browser",
-		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
 		-         ],
 		+         "aliasFields": Array [],
-		@@ ... @@
-		-           "browser",
-		@@ ... @@
-		-           "browser",
-		@@ ... @@
-		-         "aliasFields": Array [
-		-           "browser",
-		-         ],
-		+         "aliasFields": Array [],
-		@@ ... @@
-		-           "browser",
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
@@ -1153,23 +1125,10 @@ describe("Defaults", () => {
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
-		-           "browser",
-		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
 		-         ],
 		+         "aliasFields": Array [],
-		@@ ... @@
-		-           "browser",
-		@@ ... @@
-		-           "browser",
-		@@ ... @@
-		-         "aliasFields": Array [
-		-           "browser",
-		-         ],
-		+         "aliasFields": Array [],
-		@@ ... @@
-		-           "browser",
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
@@ -1180,8 +1139,21 @@ describe("Defaults", () => {
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
 		-           "browser",
 		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-       "browser",
 		+       "node",
 		+       "electron",
 		@@ ... @@
@@ -1195,11 +1167,24 @@ describe("Defaults", () => {
 		+ Received
 
 		@@ ... @@
+		-     "electron": false,
+		+     "electron": true,
+		@@ ... @@
+		-     "electronPreload": false,
 		+     "electronPreload": true,
+		@@ ... @@
+		-     "node": false,
 		+     "node": true,
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "electron-preload",
+		@@ ... @@
+		-     "__dirname": "mock",
+		-     "__filename": "mock",
+		-     "global": true,
+		+     "__dirname": "eval-only",
+		+     "__filename": "eval-only",
+		+     "global": false,
 		@@ ... @@
 		-     "chunkFormat": "array-push",
 		+     "chunkFormat": "commonjs",
@@ -1214,9 +1199,6 @@ describe("Defaults", () => {
 		-       "fetch",
 		+       "async-node",
 		@@ ... @@
-		-       "global": false,
-		+       "global": true,
-		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
@@ -1227,6 +1209,57 @@ describe("Defaults", () => {
 		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
 		+     "workerWasmLoading": "async-node",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		+       "node",
 		@@ ... @@
 		+       "electron",
 		@@ ... @@

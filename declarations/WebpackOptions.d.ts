@@ -544,20 +544,9 @@ export type StatsValue =
 	| boolean
 	| StatsOptions;
 /**
- * Environment to build for.
+ * Environment to build for. An array of environments to build for all of them when possible.
  */
-export type Target =
-	| (
-			| "web"
-			| "webworker"
-			| "node"
-			| "async-node"
-			| "node-webkit"
-			| "electron-main"
-			| "electron-renderer"
-			| "electron-preload"
-	  )
-	| ((compiler: import("../lib/Compiler")) => void);
+export type Target = [string, ...string[]] | false | string;
 /**
  * Enter watch mode, which rebuilds on file change.
  */
@@ -720,7 +709,7 @@ export interface WebpackOptions {
 	 */
 	stats?: StatsValue;
 	/**
-	 * Environment to build for.
+	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: Target;
 	/**
@@ -940,6 +929,10 @@ export interface Experiments {
  */
 export interface ExternalsPresets {
 	/**
+	 * Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.
+	 */
+	electron?: boolean;
+	/**
 	 * Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.
 	 */
 	electronMain?: boolean;
@@ -948,13 +941,17 @@ export interface ExternalsPresets {
 	 */
 	electronPreload?: boolean;
 	/**
+	 * Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.
+	 */
+	electronRenderer?: boolean;
+	/**
 	 * Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.
 	 */
 	node?: boolean;
 	/**
-	 * Treat node-webkit legacy nw.gui module as external and load it via require() when used.
+	 * Treat NW.js legacy nw.gui module as external and load it via require() when used.
 	 */
-	nodeWebkit?: boolean;
+	nwjs?: boolean;
 	/**
 	 * Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).
 	 */
@@ -1308,11 +1305,11 @@ export interface NodeOptions {
 	/**
 	 * Include a polyfill for the '__dirname' variable.
 	 */
-	__dirname?: false | true | "mock";
+	__dirname?: false | true | "mock" | "eval-only";
 	/**
 	 * Include a polyfill for the '__filename' variable.
 	 */
-	__filename?: false | true | "mock";
+	__filename?: false | true | "mock" | "eval-only";
 	/**
 	 * Include a polyfill for the 'global' variable.
 	 */
@@ -1836,21 +1833,13 @@ export interface Environment {
 	 */
 	const?: boolean;
 	/**
-	 * The environment supports destructing ('{ a, b } = obj').
+	 * The environment supports destructuring ('{ a, b } = obj').
 	 */
-	destructing?: boolean;
+	destructuring?: boolean;
 	/**
 	 * The environment supports 'for of' iteration ('for (const x of array) { ... }').
 	 */
 	forOf?: boolean;
-	/**
-	 * The environment supports a global 'global' variable which points to the global context.
-	 */
-	global?: boolean;
-	/**
-	 * The environment supports a global 'globalThis' variable which points to the global context.
-	 */
-	globalThis?: boolean;
 	/**
 	 * The environment supports an async import() function to import EcmaScript modules.
 	 */
@@ -2607,7 +2596,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	stats: StatsValue;
 	/**
-	 * Environment to build for.
+	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: Target;
 	/**
