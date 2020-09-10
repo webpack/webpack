@@ -14,8 +14,5 @@ module.exports = {
 			"this.aaa": "./aaa",
 			esm: "./esm.js"
 		})
-	],
-	experiments: {
-		mjs: true
-	}
+	]
 };

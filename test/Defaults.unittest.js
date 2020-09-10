@@ -90,7 +90,6 @@ describe("Defaults", () => {
 		  },
 		  "experiments": Object {
 		    "asyncWebAssembly": false,
-		    "mjs": false,
 		    "outputModule": false,
 		    "syncWebAssembly": false,
 		    "topLevelAwait": false,
@@ -126,8 +125,40 @@ describe("Defaults", () => {
 		        "type": "json",
 		      },
 		      Object {
-		        "dependency": "url",
-		        "type": "asset/resource",
+		        "resolve": Object {
+		          "byDependency": Object {
+		            "esm": Object {
+		              "fullySpecified": true,
+		            },
+		          },
+		        },
+		        "test": /\\\\\\.mjs\\$/i,
+		        "type": "javascript/esm",
+		      },
+		      Object {
+		        "descriptionData": Object {
+		          "type": "module",
+		        },
+		        "resolve": Object {
+		          "byDependency": Object {
+		            "esm": Object {
+		              "fullySpecified": true,
+		            },
+		          },
+		        },
+		        "test": /\\\\\\.js\\$/i,
+		        "type": "javascript/esm",
+		      },
+		      Object {
+		        "test": /\\\\\\.cjs\\$/i,
+		        "type": "javascript/dynamic",
+		      },
+		      Object {
+		        "descriptionData": Object {
+		          "type": "commonjs",
+		        },
+		        "test": /\\\\\\.js\\$/i,
+		        "type": "javascript/dynamic",
 		      },
 		      Object {
 		        "mimetype": Object {
@@ -136,7 +167,18 @@ describe("Defaults", () => {
 		            "application/javascript",
 		          ],
 		        },
-		        "type": "javascript/auto",
+		        "resolve": Object {
+		          "byDependency": Object {
+		            "esm": Object {
+		              "fullySpecified": true,
+		            },
+		          },
+		        },
+		        "type": "javascript/esm",
+		      },
+		      Object {
+		        "dependency": "url",
+		        "type": "asset/resource",
 		      },
 		    ],
 		    "exprContextCritical": true,
@@ -688,161 +730,33 @@ describe("Defaults", () => {
 		@@ ... @@
 		+       },
 		+       Object {
+		+         "rules": Array [
+		+           Object {
+		+             "descriptionData": Object {
+		+               "type": "module",
+		+             },
+		+             "resolve": Object {
+		+               "fullySpecified": true,
+		+             },
+		+           },
+		+         ],
 		+         "test": /\\.wasm$/i,
 		+         "type": "webassembly/sync",
 		+       },
 		+       Object {
 		+         "mimetype": "application/wasm",
+		+         "rules": Array [
+		+           Object {
+		+             "descriptionData": Object {
+		+               "type": "module",
+		+             },
+		+             "resolve": Object {
+		+               "fullySpecified": true,
+		+             },
+		+           },
+		+         ],
 		+         "type": "webassembly/sync",
 	`)
-	);
-	test("mjs", { experiments: { mjs: true } }, e =>
-		e.toMatchInlineSnapshot(`
-		- Expected
-		+ Received
-
-		@@ ... @@
-		-     "mjs": false,
-		+     "mjs": true,
-		@@ ... @@
-		+         "resolve": Object {
-		+           "byDependency": Object {
-		+             "esm": Object {
-		+               "fullySpecified": true,
-		+             },
-		+           },
-		+         },
-		+         "test": /\\.mjs$/i,
-		+         "type": "javascript/esm",
-		+       },
-		+       Object {
-		+         "descriptionData": Object {
-		+           "type": "module",
-		+         },
-		+         "resolve": Object {
-		+           "byDependency": Object {
-		+             "esm": Object {
-		+               "fullySpecified": true,
-		+             },
-		+           },
-		+         },
-		+         "test": /\\.js$/i,
-		+         "type": "javascript/esm",
-		+       },
-		+       Object {
-		+         "test": /\\.cjs$/i,
-		+         "type": "javascript/dynamic",
-		+       },
-		+       Object {
-		+         "descriptionData": Object {
-		+           "type": "commonjs",
-		+         },
-		+         "test": /\\.js$/i,
-		+         "type": "javascript/dynamic",
-		+       },
-		+       Object {
-		@@ ... @@
-		-         "type": "javascript/auto",
-		+         "resolve": Object {
-		+           "byDependency": Object {
-		+             "esm": Object {
-		+               "fullySpecified": true,
-		+             },
-		+           },
-		+         },
-		+         "type": "javascript/esm",
-	`)
-	);
-	test(
-		"mjs + async wasm",
-		{ experiments: { mjs: true, asyncWebAssembly: true } },
-		e =>
-			e.toMatchInlineSnapshot(`
-			- Expected
-			+ Received
-
-			@@ ... @@
-			-     "asyncWebAssembly": false,
-			-     "mjs": false,
-			+     "asyncWebAssembly": true,
-			+     "mjs": true,
-			@@ ... @@
-			+       },
-			+       Object {
-			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
-			+         "test": /\\.mjs$/i,
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
-			+         "descriptionData": Object {
-			+           "type": "module",
-			+         },
-			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
-			+         "test": /\\.js$/i,
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
-			+         "test": /\\.cjs$/i,
-			+         "type": "javascript/dynamic",
-			@@ ... @@
-			+         "descriptionData": Object {
-			+           "type": "commonjs",
-			+         },
-			+         "test": /\\.js$/i,
-			+         "type": "javascript/dynamic",
-			+       },
-			+       Object {
-			@@ ... @@
-			-         "type": "javascript/auto",
-			+         "resolve": Object {
-			+           "byDependency": Object {
-			+             "esm": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         },
-			+         "type": "javascript/esm",
-			+       },
-			+       Object {
-			+         "rules": Array [
-			+           Object {
-			+             "descriptionData": Object {
-			+               "type": "module",
-			+             },
-			+             "resolve": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         ],
-			+         "test": /\\.wasm$/i,
-			+         "type": "webassembly/async",
-			+       },
-			+       Object {
-			+         "mimetype": "application/wasm",
-			+         "rules": Array [
-			+           Object {
-			+             "descriptionData": Object {
-			+               "type": "module",
-			+             },
-			+             "resolve": Object {
-			+               "fullySpecified": true,
-			+             },
-			+           },
-			+         ],
-			+         "type": "webassembly/async",
-		`)
 	);
 	test("output module", { experiments: { outputModule: true } }, e =>
 		e.toMatchInlineSnapshot(`
@@ -877,11 +791,31 @@ describe("Defaults", () => {
 		@@ ... @@
 		+       },
 		+       Object {
+		+         "rules": Array [
+		+           Object {
+		+             "descriptionData": Object {
+		+               "type": "module",
+		+             },
+		+             "resolve": Object {
+		+               "fullySpecified": true,
+		+             },
+		+           },
+		+         ],
 		+         "test": /\\.wasm$/i,
 		+         "type": "webassembly/async",
 		+       },
 		+       Object {
 		+         "mimetype": "application/wasm",
+		+         "rules": Array [
+		+           Object {
+		+             "descriptionData": Object {
+		+               "type": "module",
+		+             },
+		+             "resolve": Object {
+		+               "fullySpecified": true,
+		+             },
+		+           },
+		+         ],
 		+         "type": "webassembly/async",
 	`)
 	);
@@ -902,11 +836,31 @@ describe("Defaults", () => {
 			@@ ... @@
 			+       },
 			+       Object {
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
 			+       },
 			+       Object {
 			+         "mimetype": "application/wasm",
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
 			+         "type": "webassembly/async",
 		`)
 	);
