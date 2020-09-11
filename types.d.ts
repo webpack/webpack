@@ -1008,6 +1008,11 @@ declare interface CodeGenerationContext {
 	 * the runtimes code should be generated for
 	 */
 	runtime: string | SortableSet<string>;
+
+	/**
+	 * when in concatenated module, information about other concatenated modules
+	 */
+	concatenationScope?: ConcatenationScope;
 }
 declare interface CodeGenerationResult {
 	/**
@@ -1661,6 +1666,19 @@ declare class ConcatSource extends Source {
 	add(item: string | Source): void;
 	addAllSkipOptimizing(items: Source[]): void;
 }
+declare abstract class ConcatenationScope {
+	isModuleInScope(module?: any): boolean;
+	createModuleReference(
+		module: any,
+		__1: {
+			ids?: any;
+			call?: boolean;
+			directImport?: boolean;
+			strict?: boolean;
+			asiSafe?: boolean;
+		}
+	): string;
+}
 
 /**
  * Options object as provided by the user.
@@ -2207,6 +2225,11 @@ declare interface DependencyTemplateContext {
 	 * mutable array of init fragments for the current module
 	 */
 	initFragments: InitFragment[];
+
+	/**
+	 * when in a concatenated module, information about other concatenated modules
+	 */
+	concatenationScope?: ConcatenationScope;
 }
 declare abstract class DependencyTemplates {
 	get(dependency: { new (...args: any[]): Dependency }): DependencyTemplate;
@@ -3359,6 +3382,11 @@ declare interface GenerateContext {
 	 * the runtime
 	 */
 	runtime: string | SortableSet<string>;
+
+	/**
+	 * when in concatenated module, information about other concatenated modules
+	 */
+	concatenationScope?: ConcatenationScope;
 
 	/**
 	 * which kind of code should be generated
