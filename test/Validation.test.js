@@ -490,68 +490,15 @@ describe("Validation", () => {
 	createTestCase(
 		"ecmaVersion",
 		{
-			output: { ecmaVersion: 2008 }
+			output: { ecmaVersion: 2015 }
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.output.ecmaVersion should be one of these:
-			   2009 | number (should be >= 5 and <= 11) | number (should be >= 2015 and <= 2020)
-			   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
-			   Details:
-			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
-			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
-		`)
-	);
-
-	createTestCase(
-		"ecmaVersion",
-		{
-			output: { ecmaVersion: 20008 }
-		},
-		msg =>
-			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.output.ecmaVersion should be one of these:
-			   2009 | number (should be >= 5 and <= 11) | number (should be >= 2015 and <= 2020)
-			   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
-			   Details:
-			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
-			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
-		`)
-	);
-
-	createTestCase(
-		"ecmaVersion",
-		{
-			output: { ecmaVersion: 4 }
-		},
-		msg =>
-			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.output.ecmaVersion should be one of these:
-			   2009 | number (should be >= 5 and <= 11) | number (should be >= 2015 and <= 2020)
-			   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
-			   Details:
-			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
-			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
-		`)
-	);
-
-	createTestCase(
-		"ecmaVersion",
-		{
-			output: { ecmaVersion: 40 }
-		},
-		msg =>
-			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.output.ecmaVersion should be one of these:
-			   2009 | number (should be >= 5 and <= 11) | number (should be >= 2015 and <= 2020)
-			   -> The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
-			   Details:
-			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
-			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
+			 - configuration.output has an unknown property 'ecmaVersion'. These properties are valid:
+			   object { assetModuleFilename?, auxiliaryComment?, charset?, chunkFilename?, chunkFormat?, chunkLoadTimeout?, chunkLoading?, chunkLoadingGlobal?, compareBeforeEmit?, crossOriginLoading?, devtoolFallbackModuleFilenameTemplate?, devtoolModuleFilenameTemplate?, devtoolNamespace?, enabledChunkLoadingTypes?, enabledLibraryTypes?, enabledWasmLoadingTypes?, environment?, filename?, globalObject?, hashDigest?, hashDigestLength?, hashFunction?, hashSalt?, hotUpdateChunkFilename?, hotUpdateGlobal?, hotUpdateMainFilename?, iife?, importFunctionName?, library?, libraryExport?, libraryTarget?, module?, path?, pathinfo?, publicPath?, scriptType?, sourceMapFilename?, sourcePrefix?, strictModuleExceptionHandling?, umdNamedDefine?, uniqueName?, wasmLoading?, webassemblyModuleFilename?, workerChunkLoading?, workerWasmLoading? }
+			   -> Options affecting the output of the compilation. \`output\` options tell webpack how to write the compiled files to disk.
+			   Did you mean output.environment?"
 		`)
 	);
 

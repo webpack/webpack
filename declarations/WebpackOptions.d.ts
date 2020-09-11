@@ -391,10 +391,6 @@ export type DevtoolModuleFilenameTemplate = string | Function;
  */
 export type DevtoolNamespace = string;
 /**
- * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
- */
-export type EcmaVersion = 2009 | number;
-/**
  * List of chunk loading types enabled for use by entry points.
  */
 export type EnabledChunkLoadingTypes = ChunkLoadingType[];
@@ -548,20 +544,9 @@ export type StatsValue =
 	| boolean
 	| StatsOptions;
 /**
- * Environment to build for.
+ * Environment to build for. An array of environments to build for all of them when possible.
  */
-export type Target =
-	| (
-			| "web"
-			| "webworker"
-			| "node"
-			| "async-node"
-			| "node-webkit"
-			| "electron-main"
-			| "electron-renderer"
-			| "electron-preload"
-	  )
-	| ((compiler: import("../lib/Compiler")) => void);
+export type Target = [string, ...string[]] | false | string;
 /**
  * Enter watch mode, which rebuilds on file change.
  */
@@ -724,7 +709,7 @@ export interface WebpackOptions {
 	 */
 	stats?: StatsValue;
 	/**
-	 * Environment to build for.
+	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: Target;
 	/**
@@ -944,6 +929,10 @@ export interface Experiments {
  */
 export interface ExternalsPresets {
 	/**
+	 * Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.
+	 */
+	electron?: boolean;
+	/**
 	 * Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.
 	 */
 	electronMain?: boolean;
@@ -952,13 +941,17 @@ export interface ExternalsPresets {
 	 */
 	electronPreload?: boolean;
 	/**
+	 * Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.
+	 */
+	electronRenderer?: boolean;
+	/**
 	 * Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.
 	 */
 	node?: boolean;
 	/**
-	 * Treat node-webkit legacy nw.gui module as external and load it via require() when used.
+	 * Treat NW.js legacy nw.gui module as external and load it via require() when used.
 	 */
-	nodeWebkit?: boolean;
+	nwjs?: boolean;
 	/**
 	 * Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).
 	 */
@@ -1312,11 +1305,11 @@ export interface NodeOptions {
 	/**
 	 * Include a polyfill for the '__dirname' variable.
 	 */
-	__dirname?: false | true | "mock";
+	__dirname?: false | true | "mock" | "eval-only";
 	/**
 	 * Include a polyfill for the '__filename' variable.
 	 */
-	__filename?: false | true | "mock";
+	__filename?: false | true | "mock" | "eval-only";
 	/**
 	 * Include a polyfill for the 'global' variable.
 	 */
@@ -1695,10 +1688,6 @@ export interface Output {
 	 */
 	devtoolNamespace?: DevtoolNamespace;
 	/**
-	 * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
-	 */
-	ecmaVersion?: EcmaVersion;
-	/**
 	 * List of chunk loading types enabled for use by entry points.
 	 */
 	enabledChunkLoadingTypes?: EnabledChunkLoadingTypes;
@@ -1710,6 +1699,10 @@ export interface Output {
 	 * List of wasm loading types enabled for use by entry points.
 	 */
 	enabledWasmLoadingTypes?: EnabledWasmLoadingTypes;
+	/**
+	 * The abilities of the environment where the webpack generated code should run.
+	 */
+	environment?: Environment;
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
@@ -1822,6 +1815,39 @@ export interface Output {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	workerWasmLoading?: WasmLoading;
+}
+/**
+ * The abilities of the environment where the webpack generated code should run.
+ */
+export interface Environment {
+	/**
+	 * The environment supports arrow functions ('() => { ... }').
+	 */
+	arrowFunction?: boolean;
+	/**
+	 * The environment supports BigInt as literal (123n).
+	 */
+	bigIntLiteral?: boolean;
+	/**
+	 * The environment supports const and let for variable declarations.
+	 */
+	const?: boolean;
+	/**
+	 * The environment supports destructuring ('{ a, b } = obj').
+	 */
+	destructuring?: boolean;
+	/**
+	 * The environment supports an async import() function to import EcmaScript modules.
+	 */
+	dynamicImport?: boolean;
+	/**
+	 * The environment supports 'for of' iteration ('for (const x of array) { ... }').
+	 */
+	forOf?: boolean;
+	/**
+	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
+	 */
+	module?: boolean;
 }
 /**
  * Configuration object for web performance recommendations.
@@ -2329,10 +2355,6 @@ export interface OutputNormalized {
 	 */
 	devtoolNamespace?: DevtoolNamespace;
 	/**
-	 * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
-	 */
-	ecmaVersion?: EcmaVersion;
-	/**
 	 * List of chunk loading types enabled for use by entry points.
 	 */
 	enabledChunkLoadingTypes?: EnabledChunkLoadingTypes;
@@ -2344,6 +2366,10 @@ export interface OutputNormalized {
 	 * List of wasm loading types enabled for use by entry points.
 	 */
 	enabledWasmLoadingTypes?: EnabledWasmLoadingTypes;
+	/**
+	 * The abilities of the environment where the webpack generated code should run.
+	 */
+	environment?: Environment;
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
@@ -2570,7 +2596,7 @@ export interface WebpackOptionsNormalized {
 	 */
 	stats: StatsValue;
 	/**
-	 * Environment to build for.
+	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: Target;
 	/**

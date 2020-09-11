@@ -1820,7 +1820,7 @@ declare interface Configuration {
 	stats?: StatsValue;
 
 	/**
-	 * Environment to build for.
+	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: Target;
 
@@ -2433,7 +2433,7 @@ declare interface Effect {
 	value: any;
 }
 declare class ElectronTargetPlugin {
-	constructor(main: boolean);
+	constructor(context?: "main" | "preload" | "renderer");
 
 	/**
 	 * Apply the plugin
@@ -2665,6 +2665,46 @@ declare abstract class Entrypoint extends ChunkGroup {
 	 * (or at least the execution of them)
 	 */
 	getEntrypointChunk(): Chunk;
+}
+
+/**
+ * The abilities of the environment where the webpack generated code should run.
+ */
+declare interface Environment {
+	/**
+	 * The environment supports arrow functions ('() => { ... }').
+	 */
+	arrowFunction?: boolean;
+
+	/**
+	 * The environment supports BigInt as literal (123n).
+	 */
+	bigIntLiteral?: boolean;
+
+	/**
+	 * The environment supports const and let for variable declarations.
+	 */
+	const?: boolean;
+
+	/**
+	 * The environment supports destructuring ('{ a, b } = obj').
+	 */
+	destructuring?: boolean;
+
+	/**
+	 * The environment supports an async import() function to import EcmaScript modules.
+	 */
+	dynamicImport?: boolean;
+
+	/**
+	 * The environment supports 'for of' iteration ('for (const x of array) { ... }').
+	 */
+	forOf?: boolean;
+
+	/**
+	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
+	 */
+	module?: boolean;
 }
 declare class EnvironmentPlugin {
 	constructor(...keys: any[]);
@@ -3015,6 +3055,11 @@ declare class ExternalsPlugin {
  */
 declare interface ExternalsPresets {
 	/**
+	 * Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.
+	 */
+	electron?: boolean;
+
+	/**
 	 * Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.
 	 */
 	electronMain?: boolean;
@@ -3025,14 +3070,19 @@ declare interface ExternalsPresets {
 	electronPreload?: boolean;
 
 	/**
+	 * Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.
+	 */
+	electronRenderer?: boolean;
+
+	/**
 	 * Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.
 	 */
 	node?: boolean;
 
 	/**
-	 * Treat node-webkit legacy nw.gui module as external and load it via require() when used.
+	 * Treat NW.js legacy nw.gui module as external and load it via require() when used.
 	 */
-	nodeWebkit?: boolean;
+	nwjs?: boolean;
 
 	/**
 	 * Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).
@@ -5088,12 +5138,12 @@ declare interface NodeOptions {
 	/**
 	 * Include a polyfill for the '__dirname' variable.
 	 */
-	__dirname?: boolean | "mock";
+	__dirname?: boolean | "mock" | "eval-only";
 
 	/**
 	 * Include a polyfill for the '__filename' variable.
 	 */
-	__filename?: boolean | "mock";
+	__filename?: boolean | "mock" | "eval-only";
 
 	/**
 	 * Include a polyfill for the 'global' variable.
@@ -5101,7 +5151,7 @@ declare interface NodeOptions {
 	global?: boolean;
 }
 declare class NodeSourcePlugin {
-	constructor(options: NodeWebpackOptions);
+	constructor();
 
 	/**
 	 * Apply the plugin
@@ -5768,11 +5818,6 @@ declare interface Output {
 	devtoolNamespace?: string;
 
 	/**
-	 * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
-	 */
-	ecmaVersion?: number;
-
-	/**
 	 * List of chunk loading types enabled for use by entry points.
 	 */
 	enabledChunkLoadingTypes?: string[];
@@ -5786,6 +5831,11 @@ declare interface Output {
 	 * List of wasm loading types enabled for use by entry points.
 	 */
 	enabledWasmLoadingTypes?: string[];
+
+	/**
+	 * The abilities of the environment where the webpack generated code should run.
+	 */
+	environment?: Environment;
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -6012,11 +6062,6 @@ declare interface OutputNormalized {
 	devtoolNamespace?: string;
 
 	/**
-	 * The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).
-	 */
-	ecmaVersion?: number;
-
-	/**
 	 * List of chunk loading types enabled for use by entry points.
 	 */
 	enabledChunkLoadingTypes?: string[];
@@ -6030,6 +6075,11 @@ declare interface OutputNormalized {
 	 * List of wasm loading types enabled for use by entry points.
 	 */
 	enabledWasmLoadingTypes?: string[];
+
+	/**
+	 * The abilities of the environment where the webpack generated code should run.
+	 */
+	environment?: Environment;
 
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -7593,7 +7643,10 @@ declare abstract class RuntimeTemplate {
 	supportsConst(): boolean;
 	supportsArrowFunction(): boolean;
 	supportsForOf(): boolean;
-	supportsDestructing(): boolean;
+	supportsDestructuring(): boolean;
+	supportsBigIntLiteral(): boolean;
+	supportsDynamicImport(): boolean;
+	supportsEcmaScriptModuleSyntax(): boolean;
 	returningFunction(returnValue?: any, args?: string): string;
 	basicFunction(args?: any, body?: any): string;
 	destructureArray(items?: any, value?: any): string;
@@ -8841,16 +8894,7 @@ declare interface TagInfo {
 	data: any;
 	next: TagInfo;
 }
-type Target =
-	| "web"
-	| "webworker"
-	| "node"
-	| "async-node"
-	| "node-webkit"
-	| "electron-main"
-	| "electron-renderer"
-	| "electron-preload"
-	| ((compiler: Compiler) => void);
+type Target = string | false | [string, ...string[]];
 declare class Template {
 	constructor();
 	static getFunctionContent(fn: Function): string;
@@ -9366,7 +9410,7 @@ declare interface WebpackOptionsNormalized {
 	stats: StatsValue;
 
 	/**
-	 * Environment to build for.
+	 * Environment to build for. An array of environments to build for all of them when possible.
 	 */
 	target?: Target;
 
