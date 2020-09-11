@@ -7,7 +7,7 @@ module.exports = {
 			const: false,
 			destructuring: false,
 			forOf: false,
-			import: true,
+			dynamicImport: true,
 			module: false
 		}
 	}

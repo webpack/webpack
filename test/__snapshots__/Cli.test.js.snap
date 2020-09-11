@@ -2263,6 +2263,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-dynamic-import": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports an async import() function to import EcmaScript modules.",
+        "multiple": false,
+        "path": "output.environment.dynamicImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports an async import() function to import EcmaScript modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-for-of": Object {
     "configs": Array [
       Object {
@@ -2273,19 +2286,6 @@ Object {
       },
     ],
     "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "output-environment-import": Object {
-    "configs": Array [
-      Object {
-        "description": "The environment supports an async import() function to import EcmaScript modules.",
-        "multiple": false,
-        "path": "output.environment.import",
-        "type": "boolean",
-      },
-    ],
-    "description": "The environment supports an async import() function to import EcmaScript modules.",
     "multiple": false,
     "simpleType": "boolean",
   },

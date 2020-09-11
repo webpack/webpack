@@ -421,12 +421,12 @@
           "description": "The environment supports destructuring ('{ a, b } = obj').",
           "type": "boolean"
         },
-        "forOf": {
-          "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+        "dynamicImport": {
+          "description": "The environment supports an async import() function to import EcmaScript modules.",
           "type": "boolean"
         },
-        "import": {
-          "description": "The environment supports an async import() function to import EcmaScript modules.",
+        "forOf": {
+          "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
           "type": "boolean"
         },
         "module": {

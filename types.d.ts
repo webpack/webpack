@@ -2692,14 +2692,14 @@ declare interface Environment {
 	destructuring?: boolean;
 
 	/**
+	 * The environment supports an async import() function to import EcmaScript modules.
+	 */
+	dynamicImport?: boolean;
+
+	/**
 	 * The environment supports 'for of' iteration ('for (const x of array) { ... }').
 	 */
 	forOf?: boolean;
-
-	/**
-	 * The environment supports an async import() function to import EcmaScript modules.
-	 */
-	import?: boolean;
 
 	/**
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
@@ -7645,7 +7645,7 @@ declare abstract class RuntimeTemplate {
 	supportsForOf(): boolean;
 	supportsDestructuring(): boolean;
 	supportsBigIntLiteral(): boolean;
-	supportsAsyncImport(): boolean;
+	supportsAsyncImport(): any;
 	supportsEcmaScriptModuleSyntax(): boolean;
 	returningFunction(returnValue?: any, args?: string): string;
 	basicFunction(args?: any, body?: any): string;

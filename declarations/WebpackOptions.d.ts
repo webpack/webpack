@@ -1837,13 +1837,13 @@ export interface Environment {
 	 */
 	destructuring?: boolean;
 	/**
+	 * The environment supports an async import() function to import EcmaScript modules.
+	 */
+	dynamicImport?: boolean;
+	/**
 	 * The environment supports 'for of' iteration ('for (const x of array) { ... }').
 	 */
 	forOf?: boolean;
-	/**
-	 * The environment supports an async import() function to import EcmaScript modules.
-	 */
-	import?: boolean;
 	/**
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
