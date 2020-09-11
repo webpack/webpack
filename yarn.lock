@@ -6262,18 +6262,18 @@ terminal-link@^2.0.0:
     supports-hyperlinks "^2.0.0"
 
 terser-webpack-plugin@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-4.1.0.tgz#6e9d6ae4e1a900d88ddce8da6a47507ea61f44bc"
-  integrity sha512-0ZWDPIP8BtEDZdChbufcXUigOYk6dOX/P/X0hWxqDDcVAQLb8Yy/0FAaemSfax3PAA67+DJR778oz8qVbmy4hA==
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-4.2.0.tgz#6240a71101a55c6823d84e11c8fff380b9dfd26f"
+  integrity sha512-Wi0YFbWKG8gBXhbJmrMusRcoXl/C9U5BzIPC2Tn3Si0hejGhhIh0gPf9rEfOCxwigzRPLC8PXv42qDiRTocMXg==
   dependencies:
     cacache "^15.0.5"
     find-cache-dir "^3.3.1"
     jest-worker "^26.3.0"
     p-limit "^3.0.2"
-    schema-utils "^2.6.6"
+    schema-utils "^2.7.1"
     serialize-javascript "^4.0.0"
     source-map "^0.6.1"
-    terser "^5.0.0"
+    terser "^5.3.0"
     webpack-sources "^1.4.3"
 
 terser@^4.8.0:
@@ -6285,10 +6285,10 @@ terser@^4.8.0:
     source-map "~0.6.1"
     source-map-support "~0.5.12"
 
-terser@^5.0.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.2.0.tgz#e547d0b20926b321d3e524bf9e5bc1b10ba2f360"
-  integrity sha512-nZ9TWhBznZdlww3borgJyfQDrxzpgd0RlRNoxR63tMVry01lIH/zKQDTTiaWRMGowydfvSHMgyiGyn6A9PSkCQ==
+terser@^5.3.0:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.3.1.tgz#f50fe20ab48b15234fe9bdd86b10148ad5fca787"
+  integrity sha512-yD80f4hdwCWTH5mojzxe1q8bN1oJbsK/vfJGLcPZM/fl+/jItIVNKhFIHqqR71OipFWMLgj3Kc+GIp6CeIqfnA==
   dependencies:
     commander "^2.20.0"
     source-map "~0.6.1"
