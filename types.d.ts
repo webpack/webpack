@@ -1667,7 +1667,14 @@ declare class ConcatSource extends Source {
 	addAllSkipOptimizing(items: Source[]): void;
 }
 declare abstract class ConcatenationScope {
+	isRoot: any;
 	isModuleInScope(module?: any): boolean;
+	registerExport(exportName?: any, symbol?: any): void;
+	registerReexport(
+		exportName?: any,
+		module?: any,
+		referencedExportName?: any
+	): void;
 	createModuleReference(
 		module: any,
 		__1: {

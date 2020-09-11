@@ -2802,7 +2802,7 @@ cacheable modules 693 bytes
   ./common_lazy_shared.js 25 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-Entrypoint first 11.4 KiB = b-vendor.js 209 bytes b-first.js 11.2 KiB
+Entrypoint first 11.3 KiB = b-vendor.js 209 bytes b-first.js 11.1 KiB
 Entrypoint second 11.2 KiB = b-vendor.js 209 bytes b-second.js 11 KiB
 runtime modules 12.7 KiB 14 modules
 cacheable modules 898 bytes
