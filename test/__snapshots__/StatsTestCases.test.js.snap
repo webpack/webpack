@@ -2775,12 +2775,12 @@ cacheable modules 573 bytes
     ./module-loaded.js 30 bytes [built] [code generated]
       ModuleConcatenation bailout: Module uses module.loaded
     ./concatenated.js + 2 modules 111 bytes [built] [code generated]
-      ModuleConcatenation bailout: Cannot concat with external \\"external\\": Module is not an ECMAScript module
+      ModuleConcatenation bailout: Cannot concat with external \\"external\\": Module Concatenation is not implemented for ExternalModule
   orphan modules 85 bytes [orphan]
     ./concatenated1.js 37 bytes [orphan] [built]
     ./concatenated2.js 48 bytes [orphan] [built]
 external \\"external\\" 42 bytes [built] [code generated]
-  ModuleConcatenation bailout: Module is not an ECMAScript module
+  ModuleConcatenation bailout: Module Concatenation is not implemented for ExternalModule
 webpack x.x.x compiled successfully in X ms"
 `;
 
