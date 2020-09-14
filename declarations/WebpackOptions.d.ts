@@ -1821,7 +1821,7 @@ export interface Output {
  */
 export interface Environment {
 	/**
-	 * The environment supports arrow functions ('() => { ... }').
+	 * The environment supports arrow functions.
 	 */
 	arrowFunction?: boolean;
 	/**
@@ -1833,7 +1833,7 @@ export interface Environment {
 	 */
 	const?: boolean;
 	/**
-	 * The environment supports destructuring ('{ a, b } = obj').
+	 * The environment supports destructuring.
 	 */
 	destructuring?: boolean;
 	/**
@@ -1841,7 +1841,7 @@ export interface Environment {
 	 */
 	dynamicImport?: boolean;
 	/**
-	 * The environment supports 'for of' iteration ('for (const x of array) { ... }').
+	 * The environment supports 'for of' iteration.
 	 */
 	forOf?: boolean;
 	/**

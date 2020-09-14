@@ -406,7 +406,7 @@
       "additionalProperties": false,
       "properties": {
         "arrowFunction": {
-          "description": "The environment supports arrow functions ('() => { ... }').",
+          "description": "The environment supports arrow functions.",
           "type": "boolean"
         },
         "bigIntLiteral": {
@@ -418,7 +418,7 @@
           "type": "boolean"
         },
         "destructuring": {
-          "description": "The environment supports destructuring ('{ a, b } = obj').",
+          "description": "The environment supports destructuring.",
           "type": "boolean"
         },
         "dynamicImport": {
@@ -426,7 +426,7 @@
           "type": "boolean"
         },
         "forOf": {
-          "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+          "description": "The environment supports 'for of' iteration.",
           "type": "boolean"
         },
         "module": {
