@@ -307,7 +307,7 @@ describe("Defaults", () => {
 		    "module": false,
 		    "path": "<cwd>/dist",
 		    "pathinfo": false,
-		    "publicPath": "",
+		    "publicPath": "auto",
 		    "scriptType": false,
 		    "sourceMapFilename": "[file].map[query]",
 		    "sourcePrefix": undefined,
@@ -972,6 +972,9 @@ describe("Defaults", () => {
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
+		-     "publicPath": "auto",
+		+     "publicPath": "",
+		@@ ... @@
 		-     "wasmLoading": "fetch",
 		+     "wasmLoading": "async-node",
 		@@ ... @@
@@ -1095,6 +1098,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
+		@@ ... @@
+		-     "publicPath": "auto",
+		+     "publicPath": "",
 		@@ ... @@
 		-     "wasmLoading": "fetch",
 		+     "wasmLoading": "async-node",

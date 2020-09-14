@@ -462,6 +462,7 @@ export type Pathinfo = boolean;
  * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
  */
 export type PublicPath =
+	| "auto"
 	| string
 	| ((
 			pathData: import("../lib/Compilation").PathData,

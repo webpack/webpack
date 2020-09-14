@@ -5,6 +5,7 @@ module.exports = {
 	devtool: false,
 	output: {
 		filename: "deep/path/[name].js",
-		assetModuleFilename: "[path][name][ext]"
+		assetModuleFilename: "[path][name][ext]",
+		publicPath: ""
 	}
 };

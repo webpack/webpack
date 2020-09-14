@@ -2148,6 +2148,9 @@
       "description": "The `publicPath` specifies the public URL address of the output files when referenced in a browser.",
       "anyOf": [
         {
+          "enum": ["auto"]
+        },
+        {
           "type": "string"
         },
         {

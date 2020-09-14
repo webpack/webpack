@@ -2787,6 +2787,15 @@ Object {
         "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
         "multiple": false,
         "path": "output.publicPath",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
+        "multiple": false,
+        "path": "output.publicPath",
         "type": "string",
       },
     ],
