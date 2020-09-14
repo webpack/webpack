@@ -9,6 +9,7 @@ module.exports = {
 		chunks: true,
 		chunkRelations: true,
 		chunkModules: true,
+		dependentModules: true,
 		chunkOrigins: true
 	}
 };

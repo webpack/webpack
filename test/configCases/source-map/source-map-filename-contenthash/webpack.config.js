@@ -7,6 +7,8 @@ module.exports = {
 	},
 	devtool: "source-map",
 	output: {
-		sourceMapFilename: "[file]-[contenthash].map?[contenthash]-[contenthash]"
+		filename: "bundle0.js?[contenthash]",
+		sourceMapFilename:
+			"[file]-[contenthash].map?[contenthash]-[contenthash:6][query]"
 	}
 };

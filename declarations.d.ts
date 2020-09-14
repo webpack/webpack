@@ -328,14 +328,26 @@ declare module "webpack-sources" {
 	}
 
 	export class CachedSource extends Source {
-		constructor(source: Source, cachedData?: any);
+		constructor(source: Source);
+		constructor(source: Source | (() => Source), cachedData?: any);
 
 		original(): Source;
+		originalLazy(): Source | (() => Source);
 		getCachedData(): any;
 	}
 
 	export class SizeOnlySource extends Source {
 		constructor(size: number);
+	}
+
+	interface SourceLike {
+		source(): string | Buffer;
+	}
+
+	export class CompatSource extends Source {
+		constructor(sourceLike: SourceLike);
+
+		static from(sourceLike: SourceLike): Source;
 	}
 }
 

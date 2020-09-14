@@ -176,6 +176,11 @@
     "darkred",
     "eqeqeq",
     "boolish",
+    "analysing",
+    "etags",
+    "destructure",
+    "onconnect",
+    "nwjs",
 
     "webassemblyjs",
     "fsevents",

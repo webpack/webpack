@@ -3,7 +3,7 @@ const baseConfig = {
 	mode: "production",
 	entry: "./index",
 	stats: {
-		maxModules: Infinity,
+		modulesSpace: Infinity,
 		optimizationBailout: true,
 		nestedModules: true,
 		usedExports: true,

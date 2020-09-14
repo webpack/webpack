@@ -3,6 +3,6 @@ module.exports = {
 		__dirname: false
 	},
 	optimization: {
-		noEmitOnErrors: true
+		emitOnErrors: false
 	}
 };

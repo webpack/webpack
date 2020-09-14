@@ -69,18 +69,55 @@
         }
       ]
     },
-    "ChunkCallbackName": {
-      "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
-      "type": "string"
+    "Charset": {
+      "description": "Add charset attribute for script tag.",
+      "type": "boolean"
     },
     "ChunkFilename": {
       "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
       "type": "string",
       "absolutePath": false
     },
+    "ChunkFormat": {
+      "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": ["array-push", "commonjs", false]
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
     "ChunkLoadTimeout": {
       "description": "Number of milliseconds before chunk request expires.",
       "type": "number"
+    },
+    "ChunkLoading": {
+      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "$ref": "#/definitions/ChunkLoadingType"
+        }
+      ]
+    },
+    "ChunkLoadingGlobal": {
+      "description": "The global variable used by webpack for loading of chunks.",
+      "type": "string"
+    },
+    "ChunkLoadingType": {
+      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": ["jsonp", "import-scripts", "require", "async-node"]
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "CompareBeforeEmit": {
       "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem.",
@@ -147,29 +184,25 @@
       "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
       "type": "string"
     },
-    "EcmaVersion": {
-      "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-      "anyOf": [
-        {
-          "enum": [2009]
-        },
-        {
-          "type": "number",
-          "minimum": 5,
-          "maximum": 11
-        },
-        {
-          "type": "number",
-          "minimum": 2015,
-          "maximum": 2020
-        }
-      ]
+    "EnabledChunkLoadingTypes": {
+      "description": "List of chunk loading types enabled for use by entry points.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChunkLoadingType"
+      }
     },
     "EnabledLibraryTypes": {
       "description": "List of library types enabled for use by entry points.",
       "type": "array",
       "items": {
         "$ref": "#/definitions/LibraryType"
+      }
+    },
+    "EnabledWasmLoadingTypes": {
+      "description": "List of wasm loading types enabled for use by entry points.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WasmLoadingType"
       }
     },
     "Entry": {
@@ -188,6 +221,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
         "dependOn": {
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
           "anyOf": [
@@ -217,6 +253,12 @@
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
+        },
+        "runtime": {
+          "$ref": "#/definitions/EntryRuntime"
+        },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
         }
       },
       "required": ["import"]
@@ -226,6 +268,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
         "dependOn": {
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
           "type": "array",
@@ -253,6 +298,12 @@
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
+        },
+        "runtime": {
+          "$ref": "#/definitions/EntryRuntime"
+        },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
         }
       }
     },
@@ -313,6 +364,11 @@
         ]
       }
     },
+    "EntryRuntime": {
+      "description": "The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.",
+      "type": "string",
+      "minLength": 1
+    },
     "EntryStatic": {
       "description": "A static entry description.",
       "anyOf": [
@@ -344,6 +400,41 @@
         }
       ]
     },
+    "Environment": {
+      "description": "The abilities of the environment where the webpack generated code should run.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "arrowFunction": {
+          "description": "The environment supports arrow functions ('() => { ... }').",
+          "type": "boolean"
+        },
+        "bigIntLiteral": {
+          "description": "The environment supports BigInt as literal (123n).",
+          "type": "boolean"
+        },
+        "const": {
+          "description": "The environment supports const and let for variable declarations.",
+          "type": "boolean"
+        },
+        "destructuring": {
+          "description": "The environment supports destructuring ('{ a, b } = obj').",
+          "type": "boolean"
+        },
+        "dynamicImport": {
+          "description": "The environment supports an async import() function to import EcmaScript modules.",
+          "type": "boolean"
+        },
+        "forOf": {
+          "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+          "type": "boolean"
+        },
+        "module": {
+          "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
+          "type": "boolean"
+        }
+      }
+    },
     "Experiments": {
       "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
       "type": "object",
@@ -355,18 +446,6 @@
         },
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
-          "type": "boolean"
-        },
-        "importAsync": {
-          "description": "Allow 'import/export' syntax to import async modules.",
-          "type": "boolean"
-        },
-        "importAwait": {
-          "description": "Allow 'import/export await' syntax to import async modules.",
-          "type": "boolean"
-        },
-        "mjs": {
-          "description": "Support .mjs files as way to define strict ESM file (node.js).",
           "type": "boolean"
         },
         "outputModule": {
@@ -443,6 +522,45 @@
           "$ref": "#/definitions/ExternalItem"
         }
       ]
+    },
+    "ExternalsPresets": {
+      "description": "Enable presets of externals for specific targets.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "electron": {
+          "description": "Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.",
+          "type": "boolean"
+        },
+        "electronMain": {
+          "description": "Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.",
+          "type": "boolean"
+        },
+        "electronPreload": {
+          "description": "Treat electron built-in modules in the preload context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+          "type": "boolean"
+        },
+        "electronRenderer": {
+          "description": "Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+          "type": "boolean"
+        },
+        "node": {
+          "description": "Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.",
+          "type": "boolean"
+        },
+        "nwjs": {
+          "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",
+          "type": "boolean"
+        },
+        "web": {
+          "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).",
+          "type": "boolean"
+        },
+        "webAsync": {
+          "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via async import() when used (Note that this external type is an async module, which has various effects on the execution).",
+          "type": "boolean"
+        }
+      }
     },
     "ExternalsType": {
       "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
@@ -645,8 +763,8 @@
       "type": "string",
       "absolutePath": false
     },
-    "HotUpdateFunction": {
-      "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+    "HotUpdateGlobal": {
+      "description": "The global variable used by webpack for loading of hot update chunks.",
       "type": "string"
     },
     "HotUpdateMainFilename": {
@@ -684,10 +802,6 @@
           "enum": ["none", "error", "warn", "info", "log", "verbose"]
         }
       }
-    },
-    "JsonpFunction": {
-      "description": "The JSONP function used by webpack for async loading of chunks.",
-      "type": "string"
     },
     "Library": {
       "description": "Make the output files a library, exporting the exports of the entry point.",
@@ -818,24 +932,31 @@
       "required": ["type"]
     },
     "LibraryType": {
-      "description": "Type of library.",
-      "enum": [
-        "var",
-        "module",
-        "assign",
-        "this",
-        "window",
-        "self",
-        "global",
-        "commonjs",
-        "commonjs2",
-        "commonjs-module",
-        "amd",
-        "amd-require",
-        "umd",
-        "umd2",
-        "jsonp",
-        "system"
+      "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": [
+            "var",
+            "module",
+            "assign",
+            "this",
+            "window",
+            "self",
+            "global",
+            "commonjs",
+            "commonjs2",
+            "commonjs-module",
+            "amd",
+            "amd-require",
+            "umd",
+            "umd2",
+            "jsonp",
+            "system"
+          ]
+        },
+        {
+          "type": "string"
+        }
       ]
     },
     "Loader": {
@@ -847,26 +968,6 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "immutablePaths": {
-          "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
-          "type": "array",
-          "items": {
-            "description": "A path to a immutable directory (usually a package manager cache directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
-          }
-        },
-        "managedPaths": {
-          "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
-          "type": "array",
-          "items": {
-            "description": "A path to a managed directory (usually a node_modules directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
-          }
-        },
         "type": {
           "description": "In memory caching.",
           "enum": ["memory"]
@@ -1049,11 +1150,11 @@
       "properties": {
         "__dirname": {
           "description": "Include a polyfill for the '__dirname' variable.",
-          "enum": [false, true, "mock"]
+          "enum": [false, true, "mock", "eval-only"]
         },
         "__filename": {
           "description": "Include a polyfill for the '__filename' variable.",
-          "enum": [false, true, "mock"]
+          "enum": [false, true, "mock", "eval-only"]
         },
         "global": {
           "description": "Include a polyfill for the 'global' variable.",
@@ -1086,7 +1187,7 @@
           "type": "boolean"
         },
         "emitOnErrors": {
-          "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.",
+          "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
           "type": "boolean"
         },
         "flagIncludedChunks": {
@@ -1098,8 +1199,15 @@
           "type": "boolean"
         },
         "mangleExports": {
-          "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports).",
-          "type": "boolean"
+          "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\"deterministic\": generate short deterministic names optimized for caching, \"size\": generate the shortest possible names).",
+          "anyOf": [
+            {
+              "enum": ["size", "deterministic"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "mangleWasmImports": {
           "description": "Reduce size of WASM by changing imports to shorter strings.",
@@ -1164,6 +1272,10 @@
           "description": "Figure out which exports are provided by modules to generate more efficient code.",
           "type": "boolean"
         },
+        "realContentHash": {
+          "description": "Use real [contenthash] based on final content of the assets.",
+          "type": "boolean"
+        },
         "removeAvailableModules": {
           "description": "Removes modules from chunks when these modules are already included in all parents.",
           "type": "boolean"
@@ -1191,8 +1303,15 @@
           ]
         },
         "usedExports": {
-          "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.",
-          "type": "boolean"
+          "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \"global\": analyse exports globally for all runtimes combined).",
+          "anyOf": [
+            {
+              "enum": ["global"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         }
       }
     },
@@ -1405,6 +1524,10 @@
               "tsType": "Function"
             }
           ]
+        },
+        "usedExports": {
+          "description": "Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.",
+          "type": "boolean"
         }
       }
     },
@@ -1624,6 +1747,10 @@
               "tsType": "Function"
             }
           ]
+        },
+        "usedExports": {
+          "description": "Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.",
+          "type": "boolean"
         }
       }
     },
@@ -1663,14 +1790,23 @@
             }
           ]
         },
-        "chunkCallbackName": {
-          "$ref": "#/definitions/ChunkCallbackName"
+        "charset": {
+          "$ref": "#/definitions/Charset"
         },
         "chunkFilename": {
           "$ref": "#/definitions/ChunkFilename"
         },
+        "chunkFormat": {
+          "$ref": "#/definitions/ChunkFormat"
+        },
         "chunkLoadTimeout": {
           "$ref": "#/definitions/ChunkLoadTimeout"
+        },
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
+        "chunkLoadingGlobal": {
+          "$ref": "#/definitions/ChunkLoadingGlobal"
         },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"
@@ -1687,11 +1823,17 @@
         "devtoolNamespace": {
           "$ref": "#/definitions/DevtoolNamespace"
         },
-        "ecmaVersion": {
-          "$ref": "#/definitions/EcmaVersion"
+        "enabledChunkLoadingTypes": {
+          "$ref": "#/definitions/EnabledChunkLoadingTypes"
         },
         "enabledLibraryTypes": {
           "$ref": "#/definitions/EnabledLibraryTypes"
+        },
+        "enabledWasmLoadingTypes": {
+          "$ref": "#/definitions/EnabledWasmLoadingTypes"
+        },
+        "environment": {
+          "$ref": "#/definitions/Environment"
         },
         "filename": {
           "$ref": "#/definitions/Filename"
@@ -1714,8 +1856,8 @@
         "hotUpdateChunkFilename": {
           "$ref": "#/definitions/HotUpdateChunkFilename"
         },
-        "hotUpdateFunction": {
-          "$ref": "#/definitions/HotUpdateFunction"
+        "hotUpdateGlobal": {
+          "$ref": "#/definitions/HotUpdateGlobal"
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
@@ -1725,9 +1867,6 @@
         },
         "importFunctionName": {
           "$ref": "#/definitions/ImportFunctionName"
-        },
-        "jsonpFunction": {
-          "$ref": "#/definitions/JsonpFunction"
         },
         "library": {
           "$ref": "#/definitions/Library"
@@ -1789,8 +1928,17 @@
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
         },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
+        },
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
+        },
+        "workerChunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
+        "workerWasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
         }
       }
     },
@@ -1806,14 +1954,23 @@
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
-        "chunkCallbackName": {
-          "$ref": "#/definitions/ChunkCallbackName"
+        "charset": {
+          "$ref": "#/definitions/Charset"
         },
         "chunkFilename": {
           "$ref": "#/definitions/ChunkFilename"
         },
+        "chunkFormat": {
+          "$ref": "#/definitions/ChunkFormat"
+        },
         "chunkLoadTimeout": {
           "$ref": "#/definitions/ChunkLoadTimeout"
+        },
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
+        "chunkLoadingGlobal": {
+          "$ref": "#/definitions/ChunkLoadingGlobal"
         },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"
@@ -1830,11 +1987,17 @@
         "devtoolNamespace": {
           "$ref": "#/definitions/DevtoolNamespace"
         },
-        "ecmaVersion": {
-          "$ref": "#/definitions/EcmaVersion"
+        "enabledChunkLoadingTypes": {
+          "$ref": "#/definitions/EnabledChunkLoadingTypes"
         },
         "enabledLibraryTypes": {
           "$ref": "#/definitions/EnabledLibraryTypes"
+        },
+        "enabledWasmLoadingTypes": {
+          "$ref": "#/definitions/EnabledWasmLoadingTypes"
+        },
+        "environment": {
+          "$ref": "#/definitions/Environment"
         },
         "filename": {
           "$ref": "#/definitions/Filename"
@@ -1857,8 +2020,8 @@
         "hotUpdateChunkFilename": {
           "$ref": "#/definitions/HotUpdateChunkFilename"
         },
-        "hotUpdateFunction": {
-          "$ref": "#/definitions/HotUpdateFunction"
+        "hotUpdateGlobal": {
+          "$ref": "#/definitions/HotUpdateGlobal"
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
@@ -1868,9 +2031,6 @@
         },
         "importFunctionName": {
           "$ref": "#/definitions/ImportFunctionName"
-        },
-        "jsonpFunction": {
-          "$ref": "#/definitions/JsonpFunction"
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
@@ -1902,8 +2062,17 @@
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
         },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
+        },
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
+        },
+        "workerChunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
+        "workerWasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
         }
       }
     },
@@ -2518,6 +2687,14 @@
             }
           ]
         },
+        "dependency": {
+          "description": "Match dependency type.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ]
+        },
         "descriptionData": {
           "description": "Match values of properties in the description file (usually package.json).",
           "type": "object",
@@ -2587,6 +2764,9 @@
         },
         "options": {
           "description": "Shortcut for use.options.",
+          "cli": {
+            "exclude": true
+          },
           "oneOf": [
             {
               "$ref": "#/definitions/RuleSetLoaderOptions"
@@ -2760,6 +2940,93 @@
       "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\".",
       "enum": [false, "text/javascript", "module"]
     },
+    "SnapshotOptions": {
+      "description": "Options affecting how file system snapshots are created and validated.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "buildDependencies": {
+          "description": "Options for snapshotting build dependencies to determine if the whole cache need to be invalidated.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        },
+        "immutablePaths": {
+          "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+          "type": "array",
+          "items": {
+            "description": "A path to a immutable directory (usually a package manager cache directory).",
+            "type": "string",
+            "absolutePath": true,
+            "minLength": 1
+          }
+        },
+        "managedPaths": {
+          "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+          "type": "array",
+          "items": {
+            "description": "A path to a managed directory (usually a node_modules directory).",
+            "type": "string",
+            "absolutePath": true,
+            "minLength": 1
+          }
+        },
+        "module": {
+          "description": "Options for snapshotting dependencies of modules to determine if they need to be built again.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        },
+        "resolve": {
+          "description": "Options for snapshotting dependencies of request resolving to determine if requests need to be re-resolved.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        },
+        "resolveBuildDependencies": {
+          "description": "Options for snapshotting the resolving of build dependencies to determine if the build dependencies need to be re-resolved.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "hash": {
+              "description": "Use hashes of the content of the files/directories to determine invalidation.",
+              "type": "boolean"
+            },
+            "timestamp": {
+              "description": "Use timestamps of the files/directories to determine invalidation.",
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
     "SourceMapFilename": {
       "description": "The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.",
       "type": "string",
@@ -2786,6 +3053,10 @@
           "description": "Sort the assets by that field.",
           "type": "string"
         },
+        "assetsSpace": {
+          "description": "Space to display assets (groups will be collapsed to fit this space).",
+          "type": "number"
+        },
         "builtAt": {
           "description": "Add built at time information.",
           "type": "boolean"
@@ -2798,9 +3069,25 @@
           "description": "Show cached assets (setting this to `false` only shows emitted files).",
           "type": "boolean"
         },
+        "cachedModules": {
+          "description": "Add information about cached (not built) modules.",
+          "type": "boolean"
+        },
         "children": {
           "description": "Add children information.",
           "type": "boolean"
+        },
+        "chunkGroupAuxiliary": {
+          "description": "Display auxiliary assets in chunk groups.",
+          "type": "boolean"
+        },
+        "chunkGroupChildren": {
+          "description": "Display children of chunk groups.",
+          "type": "boolean"
+        },
+        "chunkGroupMaxAssets": {
+          "description": "Limit of assets displayed in chunk groups.",
+          "type": "number"
         },
         "chunkGroups": {
           "description": "Display all chunk groups with the corresponding bundles.",
@@ -2816,10 +3103,6 @@
         },
         "chunkRelations": {
           "description": "Add information about parent, children and sibling chunks to chunk information.",
-          "type": "boolean"
-        },
-        "chunkRootModules": {
-          "description": "Add root modules information to chunk information.",
           "type": "boolean"
         },
         "chunks": {
@@ -2874,13 +3157,24 @@
           "type": "string",
           "absolutePath": true
         },
+        "dependentModules": {
+          "description": "Show chunk modules that are dependencies of other modules of the chunk.",
+          "type": "boolean"
+        },
         "depth": {
           "description": "Add module depth in module graph.",
           "type": "boolean"
         },
         "entrypoints": {
           "description": "Display the entry points with the corresponding bundles.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "enum": ["auto"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "env": {
           "description": "Add --env information.",
@@ -2896,6 +3190,10 @@
         },
         "errors": {
           "description": "Add errors.",
+          "type": "boolean"
+        },
+        "errorsCount": {
+          "description": "Add errors count.",
           "type": "boolean"
         },
         "exclude": {
@@ -2930,6 +3228,42 @@
               "$ref": "#/definitions/FilterTypes"
             }
           ]
+        },
+        "groupAssetsByChunk": {
+          "description": "Group assets by how their are related to chunks.",
+          "type": "boolean"
+        },
+        "groupAssetsByEmitStatus": {
+          "description": "Group assets by their status (emitted, compared for emit or cached).",
+          "type": "boolean"
+        },
+        "groupAssetsByExtension": {
+          "description": "Group assets by their extension.",
+          "type": "boolean"
+        },
+        "groupAssetsByInfo": {
+          "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+          "type": "boolean"
+        },
+        "groupAssetsByPath": {
+          "description": "Group assets by their path.",
+          "type": "boolean"
+        },
+        "groupModulesByAttributes": {
+          "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
+          "type": "boolean"
+        },
+        "groupModulesByCacheStatus": {
+          "description": "Group modules by their status (cached or built and cacheable).",
+          "type": "boolean"
+        },
+        "groupModulesByExtension": {
+          "description": "Group modules by their extension.",
+          "type": "boolean"
+        },
+        "groupModulesByPath": {
+          "description": "Group modules by their path.",
+          "type": "boolean"
         },
         "hash": {
           "description": "Add the hash of the compilation.",
@@ -2968,10 +3302,6 @@
           "description": "Add stack traces to logging output.",
           "type": "boolean"
         },
-        "maxModules": {
-          "description": "Set the maximum number of modules to be shown.",
-          "type": "number"
-        },
         "moduleAssets": {
           "description": "Add information about assets inside modules.",
           "type": "boolean"
@@ -2987,6 +3317,10 @@
         "modulesSort": {
           "description": "Sort the modules by that field.",
           "type": "string"
+        },
+        "modulesSpace": {
+          "description": "Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).",
+          "type": "number"
         },
         "nestedModules": {
           "description": "Add information about modules nested in other modules (like with module concatenation).",
@@ -3031,7 +3365,11 @@
           "description": "Add information about the reasons why modules are included.",
           "type": "boolean"
         },
-        "runtime": {
+        "relatedAssets": {
+          "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+          "type": "boolean"
+        },
+        "runtimeModules": {
           "description": "Add information about runtime modules.",
           "type": "boolean"
         },
@@ -3055,8 +3393,12 @@
           "description": "Add warnings.",
           "type": "boolean"
         },
+        "warningsCount": {
+          "description": "Add warnings count.",
+          "type": "boolean"
+        },
         "warningsFilter": {
-          "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+          "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
           "oneOf": [
             {
               "$ref": "#/definitions/FilterTypes"
@@ -3071,12 +3413,13 @@
         {
           "enum": [
             "none",
+            "summary",
             "errors-only",
+            "errors-warnings",
             "minimal",
             "normal",
             "detailed",
-            "verbose",
-            "errors-warnings"
+            "verbose"
           ]
         },
         {
@@ -3092,23 +3435,23 @@
       "type": "boolean"
     },
     "Target": {
-      "description": "Environment to build for.",
+      "description": "Environment to build for. An array of environments to build for all of them when possible.",
       "anyOf": [
         {
-          "enum": [
-            "web",
-            "webworker",
-            "node",
-            "async-node",
-            "node-webkit",
-            "electron-main",
-            "electron-renderer",
-            "electron-preload"
-          ]
+          "type": "array",
+          "items": {
+            "description": "Environment to build for.",
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
         },
         {
-          "instanceof": "Function",
-          "tsType": "((compiler: import('../lib/Compiler')) => void)"
+          "enum": [false]
+        },
+        {
+          "type": "string",
+          "minLength": 1
         }
       ]
     },
@@ -3120,6 +3463,28 @@
       "description": "A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.",
       "type": "string",
       "minLength": 1
+    },
+    "WasmLoading": {
+      "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "$ref": "#/definitions/WasmLoadingType"
+        }
+      ]
+    },
+    "WasmLoadingType": {
+      "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": ["fetch-streaming", "fetch", "async-node"]
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "Watch": {
       "description": "Enter watch mode, which rebuilds on file change.",
@@ -3211,6 +3576,9 @@
         "externals": {
           "$ref": "#/definitions/Externals"
         },
+        "externalsPresets": {
+          "$ref": "#/definitions/ExternalsPresets"
+        },
         "externalsType": {
           "$ref": "#/definitions/ExternalsType"
         },
@@ -3262,6 +3630,9 @@
         "resolveLoader": {
           "$ref": "#/definitions/ResolveLoader"
         },
+        "snapshot": {
+          "$ref": "#/definitions/SnapshotOptions"
+        },
         "stats": {
           "$ref": "#/definitions/StatsValue"
         },
@@ -3277,9 +3648,11 @@
       },
       "required": [
         "cache",
+        "snapshot",
         "entry",
         "experiments",
         "externals",
+        "externalsPresets",
         "infrastructureLogging",
         "module",
         "node",
@@ -3345,6 +3718,9 @@
     "externals": {
       "$ref": "#/definitions/Externals"
     },
+    "externalsPresets": {
+      "$ref": "#/definitions/ExternalsPresets"
+    },
     "externalsType": {
       "$ref": "#/definitions/ExternalsType"
     },
@@ -3398,6 +3774,9 @@
     },
     "resolveLoader": {
       "$ref": "#/definitions/ResolveLoader"
+    },
+    "snapshot": {
+      "$ref": "#/definitions/SnapshotOptions"
     },
     "stats": {
       "$ref": "#/definitions/StatsValue"

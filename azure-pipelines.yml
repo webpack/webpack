@@ -204,10 +204,8 @@ jobs:
     pool:
       vmImage: macOS-latest
     strategy:
-      maxParallel: 3
+      maxParallel: 2
       matrix:
-        node-10:
-          node_version: ^10.13.0
         node-12:
           node_version: ^12.4.0
         node-14:

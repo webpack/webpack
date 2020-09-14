@@ -70,3 +70,26 @@ it("should allow resourceFragment in context", function () {
 	expect(fn("index")).toEqual("#resourceFragment");
 	expect(fn("returnRF")).toBe("#..");
 });
+
+it("should try to evaluate new RegExp()", function () {
+	function expectAOnly (r) {
+		r.keys().forEach(key => {
+			expect(r(key)).toBe(1);
+		});
+	}
+
+	expectAOnly(
+		require.context("./regexp", false, new RegExp("(?<!filtered)\\.js$", ""))
+	);
+	expectAOnly(
+		require.context("./regexp", false, new RegExp(`(?<!${"FILTERED"})\\.js$`, "i"))
+	);
+	expectAOnly(
+		require.context("./regexp", false, new RegExp("(?<!filtered)\\.js$"))
+	);
+});
+
+it("should not evaluate new RegExp for redefined RegExp", () => {
+	const RegExp = function() { return /other/; };
+	expect(require("./regexp/" + ("a".replace(new RegExp("a"), "wrong")))).toBe(1);
+});

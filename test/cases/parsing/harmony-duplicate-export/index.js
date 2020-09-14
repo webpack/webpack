@@ -14,22 +14,22 @@ var y5 = require("./cjs/5").x;
 var y6 = require("./cjs/6").x;
 var y7 = require("./cjs/7").x;
 
-it("should not overwrite when using star export (known exports)", function() {
+it("should not overwrite when using star export (known exports)", function () {
 	expect(x1).toBe("1");
 	expect(x2).toBe("1");
 	expect(x3).toBe("a");
 	expect(x4).toBe("b");
 	expect(x5).toBe("c");
 	expect(x6).toBe("a");
-	expect(x7).toBe("d"); // Looks wrong, but is irrelevant as this should be an error anyway
+	expect(x7).toBe("b"); // Looks wrong, but is irrelevant as this is an error anyway
 });
 
-it("should not overwrite when using star export (unknown exports)", function() {
+it("should not overwrite when using star export (unknown exports)", function () {
 	expect(y1).toBe("1");
 	expect(y2).toBe("1");
 	expect(y3).toBe("a");
 	expect(y4).toBe("b");
 	expect(y5).toBe("c");
 	expect(y6).toBe("a");
-	expect(y7).toBe("d"); // Looks wrong, but is irrelevant as this should be an error anyway
+	expect(y7).toBe("b"); // Looks wrong, but is irrelevant as this is an error anyway
 });

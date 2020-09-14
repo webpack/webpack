@@ -5,8 +5,10 @@ module.exports = {
 	stats: {
 		assets: true,
 		chunkGroups: true,
+		chunkGroupAuxiliary: true,
 		chunks: true,
 		chunkModules: true,
+		dependentModules: true,
 		modules: true,
 		moduleAssets: true
 	},

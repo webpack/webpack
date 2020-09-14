@@ -241,10 +241,12 @@ const describeCases = config => {
 									const info = stats.toJson({ all: false, entrypoints: true });
 									if (config.target === "web") {
 										for (const file of info.entrypoints.main.assets)
-											_require(`./${file}`);
+											_require(`./${file.name}`);
 									} else {
 										const assets = info.entrypoints.main.assets;
-										const result = _require(`./${assets[assets.length - 1]}`);
+										const result = _require(
+											`./${assets[assets.length - 1].name}`
+										);
 										if (typeof result === "object" && "then" in result)
 											promise = promise.then(() => result);
 									}

@@ -1,6 +1,4 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	output: {
-		ecmaVersion: 2015
-	}
+	target: ["node", "es2015"]
 };

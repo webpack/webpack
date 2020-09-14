@@ -113,6 +113,8 @@ describe("WatchTestCases", () => {
 								testName
 							);
 
+							rimraf.sync(outputDirectory);
+
 							let options = {};
 							const configPath = path.join(testDirectory, "webpack.config.js");
 							if (fs.existsSync(configPath)) {
@@ -190,11 +192,16 @@ describe("WatchTestCases", () => {
 										if (err) return compilationFinished(err);
 										const statOptions = {
 											preset: "verbose",
+											cached: true,
+											cachedAssets: true,
 											colors: false
 										};
 										fs.mkdirSync(outputDirectory, { recursive: true });
 										fs.writeFileSync(
-											path.join(outputDirectory, "stats.txt"),
+											path.join(
+												outputDirectory,
+												`stats.${runs[runIdx] && runs[runIdx].name}.txt`
+											),
 											stats.toString(statOptions),
 											"utf-8"
 										);
@@ -249,7 +256,7 @@ describe("WatchTestCases", () => {
 													options.target === "webworker"
 												) {
 													fn = vm.runInNewContext(
-														"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect, window) {" +
+														"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect, window, self) {" +
 															'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 															content +
 															"\n})",
@@ -281,6 +288,7 @@ describe("WatchTestCases", () => {
 													jsonStats,
 													state,
 													expect,
+													globalContext,
 													globalContext
 												);
 												return module.exports;

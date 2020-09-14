@@ -4,7 +4,9 @@ const path = require("path");
 module.exports = {
 	mode: "development",
 	cache: {
-		type: "memory",
+		type: "memory"
+	},
+	snapshot: {
 		managedPaths: [
 			path.resolve(
 				__dirname,

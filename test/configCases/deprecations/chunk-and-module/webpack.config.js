@@ -27,8 +27,20 @@ module.exports = {
 					expect(chunk.isEmpty()).toBe(false);
 					expect(chunk.modulesSize()).toBeTypeOf("number");
 					expect(chunk.size()).toBe(chunk.modulesSize() * 10 + 10000);
+					expect(chunk.getChunkModuleMaps(m => true)).toEqual({
+						id: {},
+						hash: {}
+					});
 
 					const m = chunk.entryModule;
+					expect(
+						m
+							.source(
+								compilation.dependencyTemplates,
+								compilation.runtimeTemplate
+							)
+							.source()
+					).toMatch(/should compile with deprecations/);
 					expect(m.hash).toMatch(/^[0-9a-f]{32}$/);
 					expect(m.renderedHash).toMatch(/^[0-9a-f]{20}$/);
 					expect(m.profile).toBe(undefined);

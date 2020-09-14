@@ -1,19 +1,19 @@
 var fs = require("fs");
 
-var findFile = function(files, regex) {
-	return files.find(function(file) {
+var findFile = function (files, regex) {
+	return files.find(function (file) {
 		if (regex.test(file)) {
 			return true;
 		}
 	});
 };
 
-var verifyFilenameLength = function(filename, expectedNameLength) {
+var verifyFilenameLength = function (filename, expectedNameLength) {
 	expect(filename).toMatch(new RegExp("^.{" + expectedNameLength + "}$"));
 };
 
 module.exports = {
-	findBundle: function(i, options) {
+	findBundle: function (i, options) {
 		var files = fs.readdirSync(options.output.path);
 
 		var bundleDetects = [
@@ -39,13 +39,15 @@ module.exports = {
 					}, files: ${files.join(", ")})`
 				);
 			}
-			verifyFilenameLength(filename.replace(/^\d+\./, "X."), bundleDetect.expectedNameLength);
+			verifyFilenameLength(
+				filename.replace(/^\d+\./, "X."),
+				bundleDetect.expectedNameLength
+			);
 		}
 
 		return "./" + filename;
 	},
 	afterExecute: () => {
-		delete global.webpackJsonp;
 		delete global.webpackChunk;
 	}
 };

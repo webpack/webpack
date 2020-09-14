@@ -10,6 +10,9 @@ module.exports = {
 	output: {
 		filename: "[name].js"
 	},
+	optimization: {
+		concatenateModules: false
+	},
 	plugins: [
 		function () {
 			/**

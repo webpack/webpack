@@ -354,45 +354,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-import-async": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow 'import/export' syntax to import async modules.",
-        "multiple": false,
-        "path": "experiments.importAsync",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow 'import/export' syntax to import async modules.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "experiments-import-await": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow 'import/export await' syntax to import async modules.",
-        "multiple": false,
-        "path": "experiments.importAwait",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow 'import/export await' syntax to import async modules.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "experiments-mjs": Object {
-    "configs": Array [
-      Object {
-        "description": "Support .mjs files as way to define strict ESM file (node.js).",
-        "multiple": false,
-        "path": "experiments.mjs",
-        "type": "boolean",
-      },
-    ],
-    "description": "Support .mjs files as way to define strict ESM file (node.js).",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "experiments-output-module": Object {
     "configs": Array [
       Object {
@@ -450,6 +411,110 @@ Object {
     "description": "Every matched dependency becomes external. An exact matched dependency becomes external. The same string is used as external dependency.",
     "multiple": true,
     "simpleType": "string",
+  },
+  "externals-presets-electron": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electron",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-electron-main": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electronMain",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-electron-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat electron built-in modules in the preload context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electronPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat electron built-in modules in the preload context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-electron-renderer": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electronRenderer",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-node": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.node",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-nwjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.nwjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-web": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).",
+        "multiple": false,
+        "path": "externalsPresets.web",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-web-async": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via async import() when used (Note that this external type is an async module, which has various effects on the execution).",
+        "multiple": false,
+        "path": "externalsPresets.webAsync",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via async import() when used (Note that this external type is an async module, which has various effects on the execution).",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "externals-reset": Object {
     "configs": Array [
@@ -684,6 +749,25 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-dependency": Object {
+    "configs": Array [
+      Object {
+        "description": "Match dependency type.",
+        "multiple": true,
+        "path": "module.rules[].dependency",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match dependency type.",
+        "multiple": true,
+        "path": "module.rules[].dependency",
+        "type": "string",
+      },
+    ],
+    "description": "Match dependency type.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-enforce": Object {
     "configs": Array [
       Object {
@@ -787,19 +871,6 @@ Object {
       },
     ],
     "description": "Match module mimetype when load from Data URI.",
-    "multiple": true,
-    "simpleType": "string",
-  },
-  "module-rules-options": Object {
-    "configs": Array [
-      Object {
-        "description": "Options passed to a loader.",
-        "multiple": true,
-        "path": "module.rules[].options",
-        "type": "string",
-      },
-    ],
-    "description": "Options passed to a loader.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -1165,6 +1236,7 @@ Object {
           false,
           true,
           "mock",
+          "eval-only",
         ],
       },
     ],
@@ -1183,6 +1255,7 @@ Object {
           false,
           true,
           "mock",
+          "eval-only",
         ],
       },
     ],
@@ -1253,13 +1326,13 @@ Object {
   "optimization-emit-on-errors": Object {
     "configs": Array [
       Object {
-        "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.",
+        "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
         "multiple": false,
         "path": "optimization.emitOnErrors",
         "type": "boolean",
       },
     ],
-    "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will case errors at runtime.",
+    "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1292,15 +1365,25 @@ Object {
   "optimization-mangle-exports": Object {
     "configs": Array [
       Object {
-        "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports).",
+        "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\\"deterministic\\": generate short deterministic names optimized for caching, \\"size\\": generate the shortest possible names).",
+        "multiple": false,
+        "path": "optimization.mangleExports",
+        "type": "enum",
+        "values": Array [
+          "size",
+          "deterministic",
+        ],
+      },
+      Object {
+        "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\\"deterministic\\": generate short deterministic names optimized for caching, \\"size\\": generate the shortest possible names).",
         "multiple": false,
         "path": "optimization.mangleExports",
         "type": "boolean",
       },
     ],
-    "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports).",
+    "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\\"deterministic\\": generate short deterministic names optimized for caching, \\"size\\": generate the shortest possible names).",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-mangle-wasm-imports": Object {
     "configs": Array [
@@ -1407,6 +1490,19 @@ Object {
       },
     ],
     "description": "Figure out which exports are provided by modules to generate more efficient code.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-real-content-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use real [contenthash] based on final content of the assets.",
+        "multiple": false,
+        "path": "optimization.realContentHash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use real [contenthash] based on final content of the assets.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1762,18 +1858,40 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-split-chunks-used-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.",
+        "multiple": false,
+        "path": "optimization.splitChunks.usedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-used-exports": Object {
     "configs": Array [
       Object {
-        "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.",
+        "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \\"global\\": analyse exports globally for all runtimes combined).",
+        "multiple": false,
+        "path": "optimization.usedExports",
+        "type": "enum",
+        "values": Array [
+          "global",
+        ],
+      },
+      Object {
+        "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \\"global\\": analyse exports globally for all runtimes combined).",
         "multiple": false,
         "path": "optimization.usedExports",
         "type": "boolean",
       },
     ],
-    "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.",
+    "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \\"global\\": analyse exports globally for all runtimes combined).",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "output-asset-module-filename": Object {
     "configs": Array [
@@ -1788,18 +1906,18 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-chunk-callback-name": Object {
+  "output-charset": Object {
     "configs": Array [
       Object {
-        "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
+        "description": "Add charset attribute for script tag.",
         "multiple": false,
-        "path": "output.chunkCallbackName",
-        "type": "string",
+        "path": "output.charset",
+        "type": "boolean",
       },
     ],
-    "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
+    "description": "Add charset attribute for script tag.",
     "multiple": false,
-    "simpleType": "string",
+    "simpleType": "boolean",
   },
   "output-chunk-filename": Object {
     "configs": Array [
@@ -1811,6 +1929,30 @@ Object {
       },
     ],
     "description": "The filename of non-entry chunks as relative path inside the \`output.path\` directory.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-chunk-format": Object {
+    "configs": Array [
+      Object {
+        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkFormat",
+        "type": "enum",
+        "values": Array [
+          "array-push",
+          "commonjs",
+          false,
+        ],
+      },
+      Object {
+        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkFormat",
+        "type": "string",
+      },
+    ],
+    "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -1826,6 +1968,53 @@ Object {
     "description": "Number of milliseconds before chunk request expires.",
     "multiple": false,
     "simpleType": "number",
+  },
+  "output-chunk-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkLoading",
+        "type": "enum",
+        "values": Array [
+          "jsonp",
+          "import-scripts",
+          "require",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-chunk-loading-global": Object {
+    "configs": Array [
+      Object {
+        "description": "The global variable used by webpack for loading of chunks.",
+        "multiple": false,
+        "path": "output.chunkLoadingGlobal",
+        "type": "string",
+      },
+    ],
+    "description": "The global variable used by webpack for loading of chunks.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "output-compare-before-emit": Object {
     "configs": Array [
@@ -1897,32 +2086,48 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-ecma-version": Object {
+  "output-enabled-chunk-loading-types": Object {
     "configs": Array [
       Object {
-        "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-        "multiple": false,
-        "path": "output.ecmaVersion",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledChunkLoadingTypes[]",
         "type": "enum",
         "values": Array [
-          2009,
+          "jsonp",
+          "import-scripts",
+          "require",
+          "async-node",
         ],
       },
       Object {
-        "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-        "multiple": false,
-        "path": "output.ecmaVersion",
-        "type": "number",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledChunkLoadingTypes[]",
+        "type": "string",
       },
     ],
-    "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-enabled-chunk-loading-types-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of chunk loading types enabled for use by entry points.",
+        "multiple": false,
+        "path": "output.enabledChunkLoadingTypes",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of chunk loading types enabled for use by entry points.",
     "multiple": false,
-    "simpleType": "number",
+    "simpleType": "boolean",
   },
   "output-enabled-library-types": Object {
     "configs": Array [
       Object {
-        "description": "Type of library.",
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
         "multiple": true,
         "path": "output.enabledLibraryTypes[]",
         "type": "enum",
@@ -1945,8 +2150,14 @@ Object {
           "system",
         ],
       },
+      Object {
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledLibraryTypes[]",
+        "type": "string",
+      },
     ],
-    "description": "Type of library.",
+    "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -1960,6 +2171,134 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. List of library types enabled for use by entry points.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-enabled-wasm-loading-types": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledWasmLoadingTypes[]",
+        "type": "enum",
+        "values": Array [
+          "fetch-streaming",
+          "fetch",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledWasmLoadingTypes[]",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-enabled-wasm-loading-types-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of wasm loading types enabled for use by entry points.",
+        "multiple": false,
+        "path": "output.enabledWasmLoadingTypes",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of wasm loading types enabled for use by entry points.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-arrow-function": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports arrow functions ('() => { ... }').",
+        "multiple": false,
+        "path": "output.environment.arrowFunction",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports arrow functions ('() => { ... }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-big-int-literal": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports BigInt as literal (123n).",
+        "multiple": false,
+        "path": "output.environment.bigIntLiteral",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports BigInt as literal (123n).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-const": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports const and let for variable declarations.",
+        "multiple": false,
+        "path": "output.environment.const",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports const and let for variable declarations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-destructuring": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports destructuring ('{ a, b } = obj').",
+        "multiple": false,
+        "path": "output.environment.destructuring",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports destructuring ('{ a, b } = obj').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-dynamic-import": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports an async import() function to import EcmaScript modules.",
+        "multiple": false,
+        "path": "output.environment.dynamicImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports an async import() function to import EcmaScript modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-for-of": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+        "multiple": false,
+        "path": "output.environment.forOf",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-module": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
+        "multiple": false,
+        "path": "output.environment.module",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2054,16 +2393,16 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-hot-update-function": Object {
+  "output-hot-update-global": Object {
     "configs": Array [
       Object {
-        "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+        "description": "The global variable used by webpack for loading of hot update chunks.",
         "multiple": false,
-        "path": "output.hotUpdateFunction",
+        "path": "output.hotUpdateGlobal",
         "type": "string",
       },
     ],
-    "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+    "description": "The global variable used by webpack for loading of hot update chunks.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2103,19 +2442,6 @@ Object {
       },
     ],
     "description": "The name of the native import() function (can be exchanged for a polyfill).",
-    "multiple": false,
-    "simpleType": "string",
-  },
-  "output-jsonp-function": Object {
-    "configs": Array [
-      Object {
-        "description": "The JSONP function used by webpack for async loading of chunks.",
-        "multiple": false,
-        "path": "output.jsonpFunction",
-        "type": "string",
-      },
-    ],
-    "description": "The JSONP function used by webpack for async loading of chunks.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2369,7 +2695,7 @@ Object {
   "output-library-type": Object {
     "configs": Array [
       Object {
-        "description": "Type of library.",
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
         "multiple": false,
         "path": "output.library.type",
         "type": "enum",
@@ -2392,8 +2718,14 @@ Object {
           "system",
         ],
       },
+      Object {
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.library.type",
+        "type": "string",
+      },
     ],
-    "description": "Type of library.",
+    "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2532,6 +2864,39 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-wasm-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.wasmLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.wasmLoading",
+        "type": "enum",
+        "values": Array [
+          "fetch-streaming",
+          "fetch",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.wasmLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-webassembly-module-filename": Object {
     "configs": Array [
       Object {
@@ -2542,6 +2907,73 @@ Object {
       },
     ],
     "description": "The filename of WebAssembly modules as relative path inside the \`output.path\` directory.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-worker-chunk-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerChunkLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerChunkLoading",
+        "type": "enum",
+        "values": Array [
+          "jsonp",
+          "import-scripts",
+          "require",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerChunkLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-worker-wasm-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerWasmLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerWasmLoading",
+        "type": "enum",
+        "values": Array [
+          "fetch-streaming",
+          "fetch",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerWasmLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -3533,6 +3965,162 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "snapshot-build-dependencies-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.buildDependencies.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-build-dependencies-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.buildDependencies.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-immutable-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "A path to a immutable directory (usually a package manager cache directory).",
+        "multiple": true,
+        "path": "snapshot.immutablePaths[]",
+        "type": "path",
+      },
+    ],
+    "description": "A path to a immutable directory (usually a package manager cache directory).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "snapshot-immutable-paths-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+        "multiple": false,
+        "path": "snapshot.immutablePaths",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-managed-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "A path to a managed directory (usually a node_modules directory).",
+        "multiple": true,
+        "path": "snapshot.managedPaths[]",
+        "type": "path",
+      },
+    ],
+    "description": "A path to a managed directory (usually a node_modules directory).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "snapshot-managed-paths-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+        "multiple": false,
+        "path": "snapshot.managedPaths",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-module-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.module.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-module-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.module.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-build-dependencies-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolveBuildDependencies.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-build-dependencies-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolveBuildDependencies.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolve.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolve.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats": Object {
     "configs": Array [
       Object {
@@ -3542,12 +4130,13 @@ Object {
         "type": "enum",
         "values": Array [
           "none",
+          "summary",
           "errors-only",
+          "errors-warnings",
           "minimal",
           "normal",
           "detailed",
           "verbose",
-          "errors-warnings",
         ],
       },
       Object {
@@ -3600,6 +4189,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "stats-assets-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display assets (groups will be collapsed to fit this space).",
+        "multiple": false,
+        "path": "stats.assetsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display assets (groups will be collapsed to fit this space).",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "stats-built-at": Object {
     "configs": Array [
       Object {
@@ -3639,6 +4241,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-cached-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about cached (not built) modules.",
+        "multiple": false,
+        "path": "stats.cachedModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about cached (not built) modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-children": Object {
     "configs": Array [
       Object {
@@ -3651,6 +4266,45 @@ Object {
     "description": "Add children information.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "stats-chunk-group-auxiliary": Object {
+    "configs": Array [
+      Object {
+        "description": "Display auxiliary assets in chunk groups.",
+        "multiple": false,
+        "path": "stats.chunkGroupAuxiliary",
+        "type": "boolean",
+      },
+    ],
+    "description": "Display auxiliary assets in chunk groups.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-chunk-group-children": Object {
+    "configs": Array [
+      Object {
+        "description": "Display children of chunk groups.",
+        "multiple": false,
+        "path": "stats.chunkGroupChildren",
+        "type": "boolean",
+      },
+    ],
+    "description": "Display children of chunk groups.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-chunk-group-max-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Limit of assets displayed in chunk groups.",
+        "multiple": false,
+        "path": "stats.chunkGroupMaxAssets",
+        "type": "number",
+      },
+    ],
+    "description": "Limit of assets displayed in chunk groups.",
+    "multiple": false,
+    "simpleType": "number",
   },
   "stats-chunk-groups": Object {
     "configs": Array [
@@ -3701,19 +4355,6 @@ Object {
       },
     ],
     "description": "Add information about parent, children and sibling chunks to chunk information.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "stats-chunk-root-modules": Object {
-    "configs": Array [
-      Object {
-        "description": "Add root modules information to chunk information.",
-        "multiple": false,
-        "path": "stats.chunkRootModules",
-        "type": "boolean",
-      },
-    ],
-    "description": "Add root modules information to chunk information.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3847,6 +4488,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "stats-dependent-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Show chunk modules that are dependencies of other modules of the chunk.",
+        "multiple": false,
+        "path": "stats.dependentModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Show chunk modules that are dependencies of other modules of the chunk.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-depth": Object {
     "configs": Array [
       Object {
@@ -3866,12 +4520,21 @@ Object {
         "description": "Display the entry points with the corresponding bundles.",
         "multiple": false,
         "path": "stats.entrypoints",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Display the entry points with the corresponding bundles.",
+        "multiple": false,
+        "path": "stats.entrypoints",
         "type": "boolean",
       },
     ],
     "description": "Display the entry points with the corresponding bundles.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "stats-env": Object {
     "configs": Array [
@@ -3922,6 +4585,19 @@ Object {
       },
     ],
     "description": "Add errors.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-errors-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add errors count.",
+        "multiple": false,
+        "path": "stats.errorsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add errors count.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3992,6 +4668,123 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-chunk": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by how their are related to chunks.",
+        "multiple": false,
+        "path": "stats.groupAssetsByChunk",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by how their are related to chunks.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-emit-status": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their status (emitted, compared for emit or cached).",
+        "multiple": false,
+        "path": "stats.groupAssetsByEmitStatus",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their status (emitted, compared for emit or cached).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-extension": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their extension.",
+        "multiple": false,
+        "path": "stats.groupAssetsByExtension",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their extension.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-info": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+        "multiple": false,
+        "path": "stats.groupAssetsByInfo",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their path.",
+        "multiple": false,
+        "path": "stats.groupAssetsByPath",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their path.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
+        "multiple": false,
+        "path": "stats.groupModulesByAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-cache-status": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their status (cached or built and cacheable).",
+        "multiple": false,
+        "path": "stats.groupModulesByCacheStatus",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their status (cached or built and cacheable).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-extension": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their extension.",
+        "multiple": false,
+        "path": "stats.groupModulesByExtension",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their extension.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their path.",
+        "multiple": false,
+        "path": "stats.groupModulesByPath",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their path.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4099,19 +4892,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "stats-max-modules": Object {
-    "configs": Array [
-      Object {
-        "description": "Set the maximum number of modules to be shown.",
-        "multiple": false,
-        "path": "stats.maxModules",
-        "type": "number",
-      },
-    ],
-    "description": "Set the maximum number of modules to be shown.",
-    "multiple": false,
-    "simpleType": "number",
-  },
   "stats-module-assets": Object {
     "configs": Array [
       Object {
@@ -4163,6 +4943,19 @@ Object {
     "description": "Sort the modules by that field.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "stats-modules-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).",
+        "multiple": false,
+        "path": "stats.modulesSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).",
+    "multiple": false,
+    "simpleType": "number",
   },
   "stats-nested-modules": Object {
     "configs": Array [
@@ -4287,12 +5080,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "stats-runtime": Object {
+  "stats-related-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+        "multiple": false,
+        "path": "stats.relatedAssets",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-runtime-modules": Object {
     "configs": Array [
       Object {
         "description": "Add information about runtime modules.",
         "multiple": false,
-        "path": "stats.runtime",
+        "path": "stats.runtimeModules",
         "type": "boolean",
       },
     ],
@@ -4365,35 +5171,48 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-warnings-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add warnings count.",
+        "multiple": false,
+        "path": "stats.warningsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add warnings count.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-warnings-filter": Object {
     "configs": Array [
       Object {
-        "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": true,
         "path": "stats.warningsFilter[]",
         "type": "RegExp",
       },
       Object {
-        "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": true,
         "path": "stats.warningsFilter[]",
         "type": "string",
       },
     ],
-    "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
     "multiple": true,
     "simpleType": "string",
   },
   "stats-warnings-filter-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Clear all items provided in configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": false,
         "path": "stats.warningsFilter",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "description": "Clear all items provided in configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4401,24 +5220,36 @@ Object {
     "configs": Array [
       Object {
         "description": "Environment to build for.",
+        "multiple": true,
+        "path": "target[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Environment to build for. An array of environments to build for all of them when possible.",
         "multiple": false,
         "path": "target",
         "type": "enum",
         "values": Array [
-          "web",
-          "webworker",
-          "node",
-          "async-node",
-          "node-webkit",
-          "electron-main",
-          "electron-renderer",
-          "electron-preload",
+          false,
         ],
       },
     ],
-    "description": "Environment to build for.",
-    "multiple": false,
+    "description": "Environment to build for. Environment to build for. An array of environments to build for all of them when possible.",
+    "multiple": true,
     "simpleType": "string",
+  },
+  "target-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Environment to build for. An array of environments to build for all of them when possible.",
+        "multiple": false,
+        "path": "target",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Environment to build for. An array of environments to build for all of them when possible.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "watch": Object {
     "configs": Array [

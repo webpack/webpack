@@ -40,13 +40,24 @@ describe("ProgressPlugin", function () {
 
 			expect(logs).toContainEqual(
 				expect.stringMatching(
-					/\[webpack\.Progress\] \d+ ms module ids DeterministicModuleIdsPlugin\n$/
+					/\[webpack\.Progress\] {2}| {2}| \d+ ms module ids > DeterministicModuleIdsPlugin\n$/
 				)
 			);
 			expect(logs).toContainEqual(
 				expect.stringMatching(
-					/\[webpack\.Progress\] \d+ ms(?: \(-\d+ ms\))? module ids\n$/
+					/\[webpack\.Progress\] {2}| \d+ ms building > \.\.\. entries \.\.\. dependencies \.\.\. modules\n$/
 				)
+			);
+			expect(logs).toContainEqual(
+				expect.stringMatching(/\[webpack\.Progress\] \d+ ms building\n$/)
+			);
+			expect(logs).toContainEqual(
+				expect.stringMatching(
+					/\[webpack\.Progress\] {2}| \d+ ms sealing > module ids\n$/
+				)
+			);
+			expect(logs).toContainEqual(
+				expect.stringMatching(/\[webpack\.Progress\] \d+ ms sealing\n$/)
 			);
 		});
 	});
@@ -82,14 +93,10 @@ describe("ProgressPlugin", function () {
 			expect(logs.length).toBeGreaterThan(20);
 			logs.forEach(log => expect(log.length).toBeLessThanOrEqual(35));
 			expect(logs).toContain(
-				"75% ...optimization ...ChunksPlugin",
+				"75% sealing ...mization ...nsPlugin",
 				"trims each detail string equally"
 			);
-			expect(logs).toContain(
-				"10% ...ding ...ries ...cies ...ules",
-				"remove empty arguments and omit arguments when no space"
-			);
-			expect(logs).toContain("93% after asset optimization");
+			expect(logs).toContain("92% sealing asset processing");
 			expect(logs).toContain("100%");
 		});
 	});
@@ -113,8 +120,8 @@ describe("ProgressPlugin", function () {
 		return RunCompilerAsync(compiler).then(() => {
 			const logs = getLogs(stderr.toString());
 
-			expect(logs).toContain("3% normal module factory");
-			expect(logs).toContain("3% context module factory");
+			expect(logs).toContain("4% setup normal module factory");
+			expect(logs).toContain("5% setup context module factory");
 		});
 	});
 
