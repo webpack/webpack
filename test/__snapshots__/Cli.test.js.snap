@@ -2214,13 +2214,13 @@ Object {
   "output-environment-arrow-function": Object {
     "configs": Array [
       Object {
-        "description": "The environment supports arrow functions ('() => { ... }').",
+        "description": "The environment supports arrow functions.",
         "multiple": false,
         "path": "output.environment.arrowFunction",
         "type": "boolean",
       },
     ],
-    "description": "The environment supports arrow functions ('() => { ... }').",
+    "description": "The environment supports arrow functions.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2253,13 +2253,13 @@ Object {
   "output-environment-destructuring": Object {
     "configs": Array [
       Object {
-        "description": "The environment supports destructuring ('{ a, b } = obj').",
+        "description": "The environment supports destructuring.",
         "multiple": false,
         "path": "output.environment.destructuring",
         "type": "boolean",
       },
     ],
-    "description": "The environment supports destructuring ('{ a, b } = obj').",
+    "description": "The environment supports destructuring.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2279,13 +2279,13 @@ Object {
   "output-environment-for-of": Object {
     "configs": Array [
       Object {
-        "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+        "description": "The environment supports 'for of' iteration.",
         "multiple": false,
         "path": "output.environment.forOf",
         "type": "boolean",
       },
     ],
-    "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+    "description": "The environment supports 'for of' iteration.",
     "multiple": false,
     "simpleType": "boolean",
   },
