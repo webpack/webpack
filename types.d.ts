@@ -1666,15 +1666,22 @@ declare class ConcatSource extends Source {
 	add(item: string | Source): void;
 	addAllSkipOptimizing(items: Source[]): void;
 }
+declare interface ConcatenationBailoutReasonContext {
+	/**
+	 * the module graph
+	 */
+	moduleGraph: ModuleGraph;
+
+	/**
+	 * the chunk graph
+	 */
+	chunkGraph: ChunkGraph;
+}
 declare abstract class ConcatenationScope {
 	isRoot: any;
 	isModuleInScope(module?: any): boolean;
 	registerExport(exportName?: any, symbol?: any): void;
-	registerReexport(
-		exportName?: any,
-		module?: any,
-		referencedExportName?: any
-	): void;
+	registerNamespaceExport(): string;
 	createModuleReference(
 		module: any,
 		__1: {
@@ -2846,7 +2853,11 @@ declare abstract class ExportInfo {
 		newValue: 0 | 1 | 2 | 3 | 4,
 		runtime: string | SortableSet<string>
 	): boolean;
-	setTarget(key?: any, module?: Module, exportName?: string[]): boolean;
+	setTarget(
+		key?: any,
+		connection?: ModuleGraphConnection,
+		exportName?: string[]
+	): boolean;
 	getUsed(runtime: string | SortableSet<string>): 0 | 1 | 2 | 3 | 4;
 
 	/**
@@ -2862,7 +2873,18 @@ declare abstract class ExportInfo {
 	 * Sets the mangled name of this export
 	 */
 	setUsedName(name: string): void;
-	getTerminalBinding(moduleGraph: ModuleGraph): ExportsInfo | ExportInfo;
+	getTerminalBinding(
+		moduleGraph: ModuleGraph,
+		resolveTargetFilter?: (arg0: {
+			module: Module;
+			export: string[];
+		}) => boolean
+	): ExportsInfo | ExportInfo;
+	isReexport(): boolean;
+	findTarget(
+		moduleGraph: ModuleGraph,
+		validTargetModuleFilter: (arg0: Module) => boolean
+	): false | { module: Module; export: string[] };
 	getTarget(
 		moduleGraph: ModuleGraph,
 		resolveTargetFilter?: (arg0: {
@@ -2905,7 +2927,7 @@ declare interface ExportSpec {
 	/**
 	 * when reexported: from which module
 	 */
-	from?: Module;
+	from?: ModuleGraphConnection;
 
 	/**
 	 * when reexported: from which export
@@ -2930,7 +2952,7 @@ declare abstract class ExportsInfo {
 		canMangle?: boolean,
 		excludeExports?: Set<string>,
 		targetKey?: any,
-		targetModule?: Module
+		targetModule?: ModuleGraphConnection
 	): boolean;
 	setUsedInUnknownWay(runtime: string | SortableSet<string>): boolean;
 	setUsedWithoutInfo(runtime: string | SortableSet<string>): boolean;
@@ -2941,7 +2963,7 @@ declare abstract class ExportsInfo {
 		runtime: string | SortableSet<string>
 	): boolean | SortableSet<string>;
 	getProvidedExports(): true | string[];
-	hasStaticExportsList(runtime: string | SortableSet<string>): boolean;
+	getRelevantExports(runtime: string | SortableSet<string>): ExportInfo[];
 	isExportProvided(name: LibraryExport): boolean;
 	getUsageKey(runtime: string | SortableSet<string>): string;
 	isEquallyUsed(
@@ -2979,7 +3001,7 @@ declare interface ExportsSpec {
 	/**
 	 * when reexported: from which module
 	 */
-	from?: Module;
+	from?: ModuleGraphConnection;
 
 	/**
 	 * can the export be renamed (defaults to true)
@@ -3054,11 +3076,11 @@ declare class ExternalModule extends Module {
 	request: string | string[] | Record<string, LibraryExport>;
 	externalType: string;
 	userRequest: string;
-	getSourceString(
+	getSourceData(
 		runtimeTemplate?: any,
 		moduleGraph?: any,
 		chunkGraph?: any
-	): string;
+	): SourceData;
 }
 type Externals =
 	| string
@@ -3405,7 +3427,10 @@ declare class Generator {
 	getTypes(module: NormalModule): Set<string>;
 	getSize(module: NormalModule, type?: string): number;
 	generate(module: NormalModule, __1: GenerateContext): Source;
-	getConcatenationBailoutReason(module: NormalModule): string;
+	getConcatenationBailoutReason(
+		module: NormalModule,
+		context: ConcatenationBailoutReasonContext
+	): string;
 	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
 	static byType(map?: any): ByTypeGenerator;
 }
@@ -4615,7 +4640,9 @@ declare class Module extends DependenciesBlock {
 	size(type?: string): number;
 	libIdent(options: LibIdentOptions): string;
 	nameForCondition(): string;
-	getConcatenationBailoutReason(): string;
+	getConcatenationBailoutReason(
+		context: ConcatenationBailoutReasonContext
+	): string;
 	codeGeneration(context: CodeGenerationContext): CodeGenerationResult;
 	chunkCondition(chunk: Chunk, compilation: Compilation): boolean;
 
@@ -4829,6 +4856,7 @@ declare class ModuleGraphConnection {
 		arg1: string | SortableSet<string>
 	) => boolean;
 	explanations: Set<string>;
+	clone(): ModuleGraphConnection;
 	addCondition(
 		condition: (
 			arg0: ModuleGraphConnection,
@@ -8311,6 +8339,11 @@ declare class Source {
 	updateHash(hash: Hash): void;
 	source(): string | Buffer;
 	buffer(): Buffer;
+}
+declare interface SourceData {
+	iife?: boolean;
+	init?: string;
+	expression: string;
 }
 declare interface SourceLike {
 	source(): string | Buffer;
