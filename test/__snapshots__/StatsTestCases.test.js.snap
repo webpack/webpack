@@ -249,9 +249,9 @@ default:
 
 vendors:
   Entrypoint main 10.2 KiB = vendors/main.js
-  Entrypoint a 12.8 KiB = vendors/vendors.js 472 bytes vendors/a.js 12.3 KiB
-  Entrypoint b 6.34 KiB = vendors/vendors.js 472 bytes vendors/b.js 5.88 KiB
-  Entrypoint c 6.34 KiB = vendors/vendors.js 472 bytes vendors/c.js 5.88 KiB
+  Entrypoint a 12.8 KiB = vendors/vendors.js 460 bytes vendors/a.js 12.3 KiB
+  Entrypoint b 6.32 KiB = vendors/vendors.js 460 bytes vendors/b.js 5.87 KiB
+  Entrypoint c 6.32 KiB = vendors/vendors.js 460 bytes vendors/c.js 5.87 KiB
   chunk (runtime: b) vendors/b.js (b) 112 bytes (javascript) 2.58 KiB (runtime) [entry] [rendered]
     > ./b b
     dependent modules 40 bytes [dependent] 2 modules
@@ -370,9 +370,9 @@ multiple-vendors:
 
 all:
   Entrypoint main 10.6 KiB = all/main.js
-  Entrypoint a 13.1 KiB = all/282.js 204 bytes all/954.js 204 bytes all/767.js 204 bytes all/390.js 204 bytes all/a.js 12.3 KiB
-  Entrypoint b 6.47 KiB = all/282.js 204 bytes all/954.js 204 bytes all/767.js 204 bytes all/568.js 204 bytes all/b.js 5.68 KiB
-  Entrypoint c 6.47 KiB = all/282.js 204 bytes all/769.js 204 bytes all/767.js 204 bytes all/568.js 204 bytes all/c.js 5.68 KiB
+  Entrypoint a 13.1 KiB = all/282.js 200 bytes all/954.js 200 bytes all/767.js 200 bytes all/390.js 200 bytes all/a.js 12.3 KiB
+  Entrypoint b 6.45 KiB = all/282.js 200 bytes all/954.js 200 bytes all/767.js 200 bytes all/568.js 200 bytes all/b.js 5.67 KiB
+  Entrypoint c 6.45 KiB = all/282.js 200 bytes all/769.js 200 bytes all/767.js 200 bytes all/568.js 200 bytes all/c.js 5.67 KiB
   chunk (runtime: b) all/b.js (b) 72 bytes (javascript) 2.6 KiB (runtime) [entry] [rendered]
     > ./b b
     runtime modules 2.6 KiB 2 modules
@@ -1120,15 +1120,15 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
 "assets by path *.js 10.8 KiB
-  asset a.js 749 bytes [emitted] (name: a)
-  asset b.js 567 bytes [emitted] (name: b)
+  asset a.js 744 bytes [emitted] (name: a)
+  asset b.js 563 bytes [emitted] (name: b)
   asset main.js 9.56 KiB [emitted] (name: main)
 assets by path *.png 42 KiB
   asset 1.png 21 KiB [emitted] (auxiliary name: a)
   asset 2.png 21 KiB [emitted] (auxiliary name: a, b)
 Entrypoint main 9.56 KiB = main.js
-Chunk Group a 749 bytes (42 KiB) = a.js 749 bytes (1.png 21 KiB 2.png 21 KiB)
-Chunk Group b 567 bytes (21 KiB) = b.js 567 bytes (2.png 21 KiB)
+Chunk Group a 744 bytes (42 KiB) = a.js 744 bytes (1.png 21 KiB 2.png 21 KiB)
+Chunk Group b 563 bytes (21 KiB) = b.js 563 bytes (2.png 21 KiB)
 chunk (runtime: main) b.js (b) 67 bytes [rendered]
   ./node_modules/a/2.png 49 bytes [dependent] [built] [code generated] [1 asset]
   ./node_modules/b/index.js 18 bytes [built] [code generated]
@@ -1334,7 +1334,7 @@ exports[`StatsTestCases should print correct stats for named-chunk-groups 1`] = 
 "Chunk Group main 10.8 KiB = a-main.js
 Chunk Group async-a 1.05 KiB = a-52.js 241 bytes a-async-a.js 834 bytes
 Chunk Group async-b 1.05 KiB = a-52.js 241 bytes a-async-b.js 834 bytes
-Chunk Group async-c 971 bytes = a-vendors.js 338 bytes a-async-c.js 633 bytes
+Chunk Group async-c 963 bytes = a-vendors.js 330 bytes a-async-c.js 633 bytes
 chunk (runtime: main) a-52.js 133 bytes [rendered] split chunk (cache group: default)
   > ./a ./index.js 1:0-47
   > ./b ./index.js 2:0-47
@@ -1361,7 +1361,7 @@ webpack x.x.x compiled successfully
 Entrypoint main 10.8 KiB = b-main.js
 Chunk Group async-a 1.05 KiB = b-52.js 241 bytes b-async-a.js 834 bytes
 Chunk Group async-b 1.05 KiB = b-52.js 241 bytes b-async-b.js 834 bytes
-Chunk Group async-c 971 bytes = b-vendors.js 338 bytes b-async-c.js 633 bytes
+Chunk Group async-c 963 bytes = b-vendors.js 330 bytes b-async-c.js 633 bytes
 chunk (runtime: main) b-52.js 133 bytes [rendered] split chunk (cache group: default)
   > ./a ./index.js 1:0-47
   > ./b ./index.js 2:0-47
@@ -1494,7 +1494,7 @@ exports[`StatsTestCases should print correct stats for performance-different-mod
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   warning.pro-web.js (294 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1502,7 +1502,7 @@ Entrypoints:
   main (294 KiB)
       warning.pro-web.js
 
-WARNING in webpack performance recommendations: 
+WARNING in webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
@@ -1513,7 +1513,7 @@ asset warning.pro-webworker.js 294 KiB [emitted] [big] (name: main)
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   warning.pro-webworker.js (294 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1521,7 +1521,7 @@ Entrypoints:
   main (294 KiB)
       warning.pro-webworker.js
 
-WARNING in webpack performance recommendations: 
+WARNING in webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
@@ -1548,7 +1548,7 @@ asset warning.pro-node-with-hints-set.js 294 KiB [emitted] [big] (name: main)
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   warning.pro-node-with-hints-set.js (294 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1556,7 +1556,7 @@ Entrypoints:
   main (294 KiB)
       warning.pro-node-with-hints-set.js
 
-WARNING in webpack performance recommendations: 
+WARNING in webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
@@ -1597,7 +1597,7 @@ cacheable modules 293 KiB
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (302 KiB)</CLR>
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1623,7 +1623,7 @@ Entrypoint <CLR=BOLD>sec</CLR> 1.36 KiB = <CLR=32,BOLD>sec.js</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (294 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1632,7 +1632,7 @@ Entrypoints:
       main.js
 </CLR>
 
-<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>webpack performance recommendations: 
+<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
 
@@ -1667,7 +1667,7 @@ Entrypoint <CLR=BOLD>sec</CLR> <CLR=33,BOLD>[big]</CLR> 294 KiB = <CLR=32,BOLD>s
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (294 KiB)
   sec.js (294 KiB)</CLR>
 
@@ -1679,7 +1679,7 @@ Entrypoints:
       sec.js
 </CLR>
 
-<CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>webpack performance recommendations: 
+<CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
 
@@ -1956,7 +1956,7 @@ cacheable modules 293 KiB
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (302 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1984,7 +1984,7 @@ cacheable modules 293 KiB
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (302 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -2074,7 +2074,7 @@ chunk {996} (runtime: main) 996.js 22 bytes <{179}> [rendered]
     amd require ./b [10] ./index.js 2:0-16
     X ms [10] ->
     X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
-  
+
 
 LOG from LogTestPlugin
 <-> Group
@@ -2428,9 +2428,9 @@ webpack x.x.x compiled successfully"
 exports[`StatsTestCases should print correct stats for runtime-chunk-integration 1`] = `
 "base:
   asset without-505.js 1.22 KiB [emitted]
-  asset without-main1.js 600 bytes [emitted] (name: main1)
+  asset without-main1.js 596 bytes [emitted] (name: main1)
   asset without-runtime.js 11.5 KiB [emitted] (name: runtime)
-  Entrypoint main1 12.1 KiB = without-runtime.js 11.5 KiB without-main1.js 600 bytes
+  Entrypoint main1 12.1 KiB = without-runtime.js 11.5 KiB without-main1.js 596 bytes
   runtime modules 7.02 KiB 9 modules
   cacheable modules 126 bytes
     ./main1.js 66 bytes [built] [code generated]
@@ -2441,13 +2441,13 @@ exports[`StatsTestCases should print correct stats for runtime-chunk-integration
 
 static custom name:
   asset with-505.js 1.22 KiB [emitted]
-  asset with-main1.js 600 bytes [emitted] (name: main1)
-  asset with-main2.js 219 bytes [emitted] (name: main2)
-  asset with-main3.js 219 bytes [emitted] (name: main3)
+  asset with-main1.js 596 bytes [emitted] (name: main1)
+  asset with-main2.js 215 bytes [emitted] (name: main2)
+  asset with-main3.js 215 bytes [emitted] (name: main3)
   asset with-manifest.js 11.5 KiB [emitted] (name: manifest)
-  Entrypoint main1 12.1 KiB = with-manifest.js 11.5 KiB with-main1.js 600 bytes
-  Entrypoint main2 11.7 KiB = with-manifest.js 11.5 KiB with-main2.js 219 bytes
-  Entrypoint main3 11.7 KiB = with-manifest.js 11.5 KiB with-main3.js 219 bytes
+  Entrypoint main1 12.1 KiB = with-manifest.js 11.5 KiB with-main1.js 596 bytes
+  Entrypoint main2 11.7 KiB = with-manifest.js 11.5 KiB with-main2.js 215 bytes
+  Entrypoint main3 11.7 KiB = with-manifest.js 11.5 KiB with-main3.js 215 bytes
   runtime modules 7.02 KiB 9 modules
   cacheable modules 166 bytes
     ./main1.js 66 bytes [built] [code generated]
@@ -2462,12 +2462,12 @@ dynamic custom name:
   asset func-505.js 1.22 KiB [emitted]
   asset func-a.js 5.09 KiB [emitted] (name: a)
   asset func-b.js 11.5 KiB [emitted] (name: b)
-  asset func-main1.js 600 bytes [emitted] (name: main1)
-  asset func-main2.js 219 bytes [emitted] (name: main2)
-  asset func-main3.js 219 bytes [emitted] (name: main3)
-  Entrypoint main1 12.1 KiB = func-b.js 11.5 KiB func-main1.js 600 bytes
-  Entrypoint main2 11.7 KiB = func-b.js 11.5 KiB func-main2.js 219 bytes
-  Entrypoint main3 5.31 KiB = func-a.js 5.09 KiB func-main3.js 219 bytes
+  asset func-main1.js 596 bytes [emitted] (name: main1)
+  asset func-main2.js 215 bytes [emitted] (name: main2)
+  asset func-main3.js 215 bytes [emitted] (name: main3)
+  Entrypoint main1 12.1 KiB = func-b.js 11.5 KiB func-main1.js 596 bytes
+  Entrypoint main2 11.7 KiB = func-b.js 11.5 KiB func-main2.js 215 bytes
+  Entrypoint main3 5.3 KiB = func-a.js 5.09 KiB func-main3.js 215 bytes
   runtime modules 9.58 KiB 11 modules
   cacheable modules 166 bytes
     ./main1.js 66 bytes [built] [code generated]
@@ -2753,8 +2753,8 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Entrypoint first 12.4 KiB = a-vendor.js 209 bytes a-first.js 12.2 KiB
-Entrypoint second 12.2 KiB = a-vendor.js 209 bytes a-second.js 12 KiB
+"Entrypoint first 12.4 KiB = a-vendor.js 205 bytes a-first.js 12.2 KiB
+Entrypoint second 12.2 KiB = a-vendor.js 205 bytes a-second.js 12 KiB
 runtime modules 13.5 KiB 16 modules
 cacheable modules 693 bytes
   ./first.js 207 bytes [built] [code generated]
@@ -2770,8 +2770,8 @@ cacheable modules 693 bytes
   ./common_lazy_shared.js 25 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-Entrypoint first 12 KiB = b-vendor.js 209 bytes b-first.js 11.8 KiB
-Entrypoint second 11.9 KiB = b-vendor.js 209 bytes b-second.js 11.7 KiB
+Entrypoint first 12 KiB = b-vendor.js 205 bytes b-first.js 11.8 KiB
+Entrypoint second 11.9 KiB = b-vendor.js 205 bytes b-second.js 11.7 KiB
 runtime modules 13.5 KiB 16 modules
 cacheable modules 898 bytes
   code generated modules 780 bytes [code generated]
@@ -2810,10 +2810,14 @@ cacheable modules 823 bytes
         ./components/src/CompC/index.js 34 bytes [orphan] [built]
           [module unused]
           [inactive] harmony side effect evaluation ./CompC ./components/src/index.js 2:0-43
+          [inactive] harmony export imported specifier ./CompC ./components/src/index.js 2:0-43
       ./components/src/index.js 84 bytes [orphan] [built]
         [module unused]
         [inactive] harmony side effect evaluation ./components ./foo.js 1:0-37
+        [inactive] harmony import specifier ./components ./foo.js 3:20-25
         [inactive] harmony side effect evaluation ./components ./main.js + 1 modules ./main.js 1:0-44
+        [inactive] harmony import specifier ./components ./main.js + 1 modules ./main.js 3:15-20
+        [inactive] harmony import specifier ./components ./main.js + 1 modules ./main.js 4:15-20
     code generated modules 186 bytes [code generated]
       ./components/src/CompAB/CompA.js 89 bytes [built] [code generated]
         [only some exports used: default]
@@ -2865,31 +2869,34 @@ cacheable modules 1.22 KiB
     ModuleConcatenation bailout: Module is not an ECMAScript module
 webpack x.x.x compiled successfully in X ms
 
-asset main.no-side.js 1.24 KiB [emitted] [minimized] (name: main)
+asset main.no-side.js 965 bytes [emitted] [minimized] (name: main)
 runtime modules 1000 bytes 4 modules
+orphan modules 102 bytes [orphan] 2 modules
 cacheable modules 1.35 KiB
-  modules by path ./node_modules/big-module/ 194 bytes
-    ./node_modules/big-module/index.js 44 bytes [built] [code generated]
-      [only some exports used: a, huh]
-      ModuleConcatenation bailout: Module exports are unknown
-    ./node_modules/big-module/a.js 58 bytes [built] [code generated]
-      [only some exports used: a, huh]
-      ModuleConcatenation bailout: Module exports are unknown
-    ./node_modules/big-module/log.js 92 bytes [built] [code generated]
-      [only some exports used: huh]
-      ModuleConcatenation bailout: Module exports are unknown
   modules by path ./node_modules/module-with-export/ 1.05 KiB
     ./node_modules/module-with-export/index.js 1.01 KiB [built] [code generated]
       [only some exports used: huh, smallVar]
-      ModuleConcatenation bailout: Module exports are unknown
+      ModuleConcatenation bailout: List of module exports is dynamic (huh: maybe provided (runtime-defined) and used in main)
     ./node_modules/module-with-export/emptyModule.js 43 bytes [built] [code generated]
       [used exports unknown]
       ModuleConcatenation bailout: Module is not an ECMAScript module
-  ./index.js 116 bytes [built] [code generated]
+  ./index.js + 2 modules 218 bytes [built] [code generated]
     [no exports]
     [no exports used]
-    ModuleConcatenation bailout: Cannot concat with ./node_modules/big-module/index.js: Module exports are unknown
-    ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/index.js: Module exports are unknown
+    ModuleConcatenation bailout: Cannot concat with ./node_modules/big-module/log.js: Module ./node_modules/big-module/log.js is referenced from these modules with unsupported syntax: ./node_modules/big-module/log.js (referenced with module decorator)
+    ModuleConcatenation bailout: Cannot concat with ./node_modules/module-with-export/index.js: Module ./node_modules/big-module/log.js is referenced from these modules with unsupported syntax: ./node_modules/big-module/log.js (referenced with module decorator)
+    | ./index.js 116 bytes [built]
+    |   [no exports]
+    |   [no exports used]
+    | ./node_modules/big-module/index.js 44 bytes [built]
+    |   [only some exports used: a, huh]
+    |   ModuleConcatenation bailout: List of module exports is dynamic (huh: maybe provided (runtime-defined) and used in main)
+    | ./node_modules/big-module/a.js 58 bytes [built]
+    |   [only some exports used: a, huh]
+    |   ModuleConcatenation bailout: List of module exports is dynamic (huh: maybe provided (runtime-defined) and used in main)
+  ./node_modules/big-module/log.js 92 bytes [built] [code generated]
+    [only some exports used: huh]
+    ModuleConcatenation bailout: List of module exports is dynamic (huh: maybe provided (runtime-defined) and used in main)
 webpack x.x.x compiled successfully in X ms"
 `;
 
@@ -2904,6 +2911,7 @@ exports[`StatsTestCases should print correct stats for side-effects-simple-unuse
   |   [only some exports used: default]
   |   [inactive] harmony side effect evaluation pmodule ./index.js 1:0-33
   |   harmony import specifier pmodule ./index.js 3:12-15
+  |   [inactive] harmony import specifier pmodule ./index.js 3:17-18
   | ./node_modules/pmodule/c.js 28 bytes [built]
   |   [only some exports used: z]
   |   harmony import specifier pmodule ./index.js 3:17-18 (skipped side-effect-free modules)
@@ -2914,6 +2922,7 @@ exports[`StatsTestCases should print correct stats for side-effects-simple-unuse
   [only some exports used: default]
   [inactive] harmony side effect evaluation pmodule ./index.js 1:0-33
   harmony import specifier pmodule ./index.js 3:12-15
+  [inactive] harmony import specifier pmodule ./index.js 3:17-18
 ./node_modules/pmodule/c.js 28 bytes [orphan] [built]
   [only some exports used: z]
   harmony import specifier pmodule ./index.js 3:17-18 (skipped side-effect-free modules)
@@ -2931,7 +2940,9 @@ exports[`StatsTestCases should print correct stats for side-effects-simple-unuse
   [inactive] harmony side effect evaluation ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
   [inactive] harmony export imported specifier ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
   [inactive] harmony export imported specifier ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+  [inactive] harmony export imported specifier ./b ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
   [inactive] harmony side effect evaluation ./b ./node_modules/pmodule/index.js 2:0-30
+  [inactive] harmony export imported specifier ./b ./node_modules/pmodule/index.js 2:0-30
   [inactive] harmony export imported specifier ./b ./node_modules/pmodule/index.js 2:0-30
   [inactive] harmony export imported specifier ./b ./node_modules/pmodule/index.js 2:0-30
 webpack x.x.x compiled successfully in X ms"
@@ -2956,8 +2967,8 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
 "default:
   Entrypoint main 10.6 KiB = default/main.js
   Entrypoint a 10.9 KiB = default/a.js
-  Entrypoint b 1.98 KiB = default/b.js
-  Entrypoint c 1.98 KiB = default/c.js
+  Entrypoint b 1.96 KiB = default/b.js
+  Entrypoint c 1.96 KiB = default/c.js
   chunk (runtime: b) default/b.js (b) 152 bytes [entry] [rendered]
     > ./b b
     dependent modules 80 bytes [dependent] 4 modules
@@ -3085,9 +3096,9 @@ all-chunks:
 
 manual:
   Entrypoint main 10.4 KiB = manual/main.js
-  Entrypoint a 12.8 KiB = manual/vendors.js 472 bytes manual/a.js 12.4 KiB
-  Entrypoint b 6.43 KiB = manual/vendors.js 472 bytes manual/b.js 5.97 KiB
-  Entrypoint c 6.43 KiB = manual/vendors.js 472 bytes manual/c.js 5.97 KiB
+  Entrypoint a 12.8 KiB = manual/vendors.js 460 bytes manual/a.js 12.4 KiB
+  Entrypoint b 6.4 KiB = manual/vendors.js 460 bytes manual/b.js 5.96 KiB
+  Entrypoint c 6.4 KiB = manual/vendors.js 460 bytes manual/c.js 5.96 KiB
   chunk (runtime: b) manual/b.js (b) 112 bytes (javascript) 2.62 KiB (runtime) ={216}= [entry] [rendered]
     > ./b b
     > x b
@@ -3228,8 +3239,8 @@ name-too-long:
 custom-chunks-filter:
   Entrypoint main 10.6 KiB = custom-chunks-filter/main.js
   Entrypoint a 10.9 KiB = custom-chunks-filter/a.js
-  Entrypoint b 6.47 KiB = custom-chunks-filter/282.js 204 bytes custom-chunks-filter/954.js 204 bytes custom-chunks-filter/568.js 204 bytes custom-chunks-filter/767.js 204 bytes custom-chunks-filter/b.js 5.68 KiB
-  Entrypoint c 6.47 KiB = custom-chunks-filter/282.js 204 bytes custom-chunks-filter/769.js 204 bytes custom-chunks-filter/568.js 204 bytes custom-chunks-filter/767.js 204 bytes custom-chunks-filter/c.js 5.68 KiB
+  Entrypoint b 6.45 KiB = custom-chunks-filter/282.js 200 bytes custom-chunks-filter/954.js 200 bytes custom-chunks-filter/568.js 200 bytes custom-chunks-filter/767.js 200 bytes custom-chunks-filter/b.js 5.67 KiB
+  Entrypoint c 6.45 KiB = custom-chunks-filter/282.js 200 bytes custom-chunks-filter/769.js 200 bytes custom-chunks-filter/568.js 200 bytes custom-chunks-filter/767.js 200 bytes custom-chunks-filter/c.js 5.67 KiB
   chunk (runtime: b) custom-chunks-filter/b.js (b) 72 bytes (javascript) 2.6 KiB (runtime) ={282}= ={568}= ={767}= ={954}= [entry] [rendered]
     > ./b b
     runtime modules 2.6 KiB 2 modules
@@ -3293,9 +3304,9 @@ custom-chunks-filter:
 
 custom-chunks-filter-in-cache-groups:
   Entrypoint main 10.4 KiB = custom-chunks-filter-in-cache-groups/main.js
-  Entrypoint a 12.9 KiB = custom-chunks-filter-in-cache-groups/176.js 476 bytes custom-chunks-filter-in-cache-groups/a.js 12.4 KiB
-  Entrypoint b 6.43 KiB = custom-chunks-filter-in-cache-groups/vendors.js 476 bytes custom-chunks-filter-in-cache-groups/b.js 5.97 KiB
-  Entrypoint c 6.43 KiB = custom-chunks-filter-in-cache-groups/vendors.js 476 bytes custom-chunks-filter-in-cache-groups/c.js 5.97 KiB
+  Entrypoint a 12.9 KiB = custom-chunks-filter-in-cache-groups/176.js 464 bytes custom-chunks-filter-in-cache-groups/a.js 12.4 KiB
+  Entrypoint b 6.41 KiB = custom-chunks-filter-in-cache-groups/vendors.js 464 bytes custom-chunks-filter-in-cache-groups/b.js 5.96 KiB
+  Entrypoint c 6.41 KiB = custom-chunks-filter-in-cache-groups/vendors.js 464 bytes custom-chunks-filter-in-cache-groups/c.js 5.96 KiB
   chunk (runtime: b) custom-chunks-filter-in-cache-groups/b.js (b) 112 bytes (javascript) 2.62 KiB (runtime) ={216}= [entry] [rendered]
     > ./b b
     > x b
@@ -3493,7 +3504,7 @@ default (webpack x.x.x) compiled successfully"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-issue-6696 1`] = `
-"Entrypoint main 11.7 KiB = vendors.js 204 bytes main.js 11.5 KiB
+"Entrypoint main 11.7 KiB = vendors.js 200 bytes main.js 11.5 KiB
 chunk (runtime: main) main.js (main) 110 bytes (javascript) 6.75 KiB (runtime) ={216}= >{334}< >{794}< [entry] [rendered]
   > ./ main
   runtime modules 6.75 KiB 8 modules
@@ -3513,9 +3524,9 @@ default (webpack x.x.x) compiled successfully"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-issue-7401 1`] = `
-"Entrypoint a 5.52 KiB = 282.js 204 bytes a.js 5.32 KiB
+"Entrypoint a 5.51 KiB = 282.js 200 bytes a.js 5.32 KiB
 Entrypoint b 9.5 KiB = b.js
-Chunk Group c 522 bytes = 282.js 204 bytes c.js 318 bytes
+Chunk Group c 518 bytes = 282.js 200 bytes c.js 318 bytes
 chunk (runtime: b) b.js (b) 43 bytes (javascript) 5.55 KiB (runtime) >{282}< >{459}< [entry] [rendered]
   > ./b b
   runtime modules 5.55 KiB 8 modules
@@ -4043,7 +4054,7 @@ global:
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"asset bundle.js 7.09 KiB [emitted] (name: main)
+"asset bundle.js 7.08 KiB [emitted] (name: main)
 runtime modules 657 bytes 3 modules
 cacheable modules 666 bytes
   ./index.js 316 bytes [built] [code generated] [1 warning]
