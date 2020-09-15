@@ -249,7 +249,7 @@ default:
 
 vendors:
   Entrypoint main 10.2 KiB = vendors/main.js
-  Entrypoint a 12.8 KiB = vendors/vendors.js 460 bytes vendors/a.js 12.3 KiB
+  Entrypoint a 12.7 KiB = vendors/vendors.js 460 bytes vendors/a.js 12.3 KiB
   Entrypoint b 6.32 KiB = vendors/vendors.js 460 bytes vendors/b.js 5.87 KiB
   Entrypoint c 6.32 KiB = vendors/vendors.js 460 bytes vendors/c.js 5.87 KiB
   chunk (runtime: b) vendors/b.js (b) 112 bytes (javascript) 2.58 KiB (runtime) [entry] [rendered]
@@ -298,9 +298,9 @@ vendors:
 
 multiple-vendors:
   Entrypoint main 10.6 KiB = multiple-vendors/main.js
-  Entrypoint a 13.1 KiB = multiple-vendors/libs-x.js 204 bytes multiple-vendors/954.js 204 bytes multiple-vendors/767.js 204 bytes multiple-vendors/390.js 204 bytes multiple-vendors/a.js 12.3 KiB
-  Entrypoint b 6.47 KiB = multiple-vendors/libs-x.js 204 bytes multiple-vendors/954.js 204 bytes multiple-vendors/767.js 204 bytes multiple-vendors/568.js 204 bytes multiple-vendors/b.js 5.68 KiB
-  Entrypoint c 6.47 KiB = multiple-vendors/libs-x.js 204 bytes multiple-vendors/769.js 204 bytes multiple-vendors/767.js 204 bytes multiple-vendors/568.js 204 bytes multiple-vendors/c.js 5.68 KiB
+  Entrypoint a 13.1 KiB = multiple-vendors/libs-x.js 200 bytes multiple-vendors/954.js 200 bytes multiple-vendors/767.js 200 bytes multiple-vendors/390.js 200 bytes multiple-vendors/a.js 12.3 KiB
+  Entrypoint b 6.45 KiB = multiple-vendors/libs-x.js 200 bytes multiple-vendors/954.js 200 bytes multiple-vendors/767.js 200 bytes multiple-vendors/568.js 200 bytes multiple-vendors/b.js 5.67 KiB
+  Entrypoint c 6.45 KiB = multiple-vendors/libs-x.js 200 bytes multiple-vendors/769.js 200 bytes multiple-vendors/767.js 200 bytes multiple-vendors/568.js 200 bytes multiple-vendors/c.js 5.67 KiB
   chunk (runtime: a, b, c, main) multiple-vendors/libs-x.js (libs-x) (id hint: libs) 20 bytes [initial] [rendered] split chunk (cache group: libs) (name: libs-x)
     > ./a ./index.js 1:0-47
     > ./b ./index.js 2:0-47
@@ -1494,7 +1494,7 @@ exports[`StatsTestCases should print correct stats for performance-different-mod
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   warning.pro-web.js (294 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1502,7 +1502,7 @@ Entrypoints:
   main (294 KiB)
       warning.pro-web.js
 
-WARNING in webpack performance recommendations:
+WARNING in webpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
@@ -1513,7 +1513,7 @@ asset warning.pro-webworker.js 294 KiB [emitted] [big] (name: main)
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   warning.pro-webworker.js (294 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1521,7 +1521,7 @@ Entrypoints:
   main (294 KiB)
       warning.pro-webworker.js
 
-WARNING in webpack performance recommendations:
+WARNING in webpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
@@ -1548,7 +1548,7 @@ asset warning.pro-node-with-hints-set.js 294 KiB [emitted] [big] (name: main)
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   warning.pro-node-with-hints-set.js (294 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1556,7 +1556,7 @@ Entrypoints:
   main (294 KiB)
       warning.pro-node-with-hints-set.js
 
-WARNING in webpack performance recommendations:
+WARNING in webpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
@@ -1597,7 +1597,7 @@ cacheable modules 293 KiB
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   main.js (302 KiB)</CLR>
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1623,7 +1623,7 @@ Entrypoint <CLR=BOLD>sec</CLR> 1.36 KiB = <CLR=32,BOLD>sec.js</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   main.js (294 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1632,7 +1632,7 @@ Entrypoints:
       main.js
 </CLR>
 
-<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>webpack performance recommendations:
+<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>webpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
 
@@ -1667,7 +1667,7 @@ Entrypoint <CLR=BOLD>sec</CLR> <CLR=33,BOLD>[big]</CLR> 294 KiB = <CLR=32,BOLD>s
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   main.js (294 KiB)
   sec.js (294 KiB)</CLR>
 
@@ -1679,7 +1679,7 @@ Entrypoints:
       sec.js
 </CLR>
 
-<CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>webpack performance recommendations:
+<CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>webpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
 
@@ -1956,7 +1956,7 @@ cacheable modules 293 KiB
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   main.js (302 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1984,7 +1984,7 @@ cacheable modules 293 KiB
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   main.js (302 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -2074,7 +2074,7 @@ chunk {996} (runtime: main) 996.js 22 bytes <{179}> [rendered]
     amd require ./b [10] ./index.js 2:0-16
     X ms [10] ->
     X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
-
+  
 
 LOG from LogTestPlugin
 <-> Group
@@ -2743,9 +2743,8 @@ built modules 615 bytes [built]
   code generated modules 530 bytes [code generated]
     modules by path ./*.js 377 bytes 7 modules
     ./concatenated.js + 2 modules 111 bytes [built] [code generated]
-      ModuleConcatenation bailout: Cannot concat with external \\"external\\": Module is not an ECMAScript module
+      ModuleConcatenation bailout: Cannot concat with external \\"external\\": Module external \\"external\\" is not in the same chunk(s) (expected in chunk(s) unnamed chunk(s), module is in chunk(s) index)
     external \\"external\\" 42 bytes [built] [code generated]
-      ModuleConcatenation bailout: Module is not an ECMAScript module
   orphan modules 85 bytes [orphan]
     ./concatenated1.js 37 bytes [orphan] [built]
     ./concatenated2.js 48 bytes [orphan] [built]
@@ -2754,7 +2753,7 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
 "Entrypoint first 12.4 KiB = a-vendor.js 205 bytes a-first.js 12.2 KiB
-Entrypoint second 12.2 KiB = a-vendor.js 205 bytes a-second.js 12 KiB
+Entrypoint second 12.1 KiB = a-vendor.js 205 bytes a-second.js 11.9 KiB
 runtime modules 13.5 KiB 16 modules
 cacheable modules 693 bytes
   ./first.js 207 bytes [built] [code generated]
@@ -3024,9 +3023,9 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
 
 all-chunks:
   Entrypoint main 10.6 KiB = all-chunks/main.js
-  Entrypoint a 13.1 KiB = all-chunks/282.js 204 bytes all-chunks/954.js 204 bytes all-chunks/767.js 204 bytes all-chunks/390.js 204 bytes all-chunks/a.js 12.3 KiB
-  Entrypoint b 6.47 KiB = all-chunks/282.js 204 bytes all-chunks/954.js 204 bytes all-chunks/767.js 204 bytes all-chunks/568.js 204 bytes all-chunks/b.js 5.68 KiB
-  Entrypoint c 6.47 KiB = all-chunks/282.js 204 bytes all-chunks/769.js 204 bytes all-chunks/767.js 204 bytes all-chunks/568.js 204 bytes all-chunks/c.js 5.68 KiB
+  Entrypoint a 13.1 KiB = all-chunks/282.js 200 bytes all-chunks/954.js 200 bytes all-chunks/767.js 200 bytes all-chunks/390.js 200 bytes all-chunks/a.js 12.3 KiB
+  Entrypoint b 6.45 KiB = all-chunks/282.js 200 bytes all-chunks/954.js 200 bytes all-chunks/767.js 200 bytes all-chunks/568.js 200 bytes all-chunks/b.js 5.67 KiB
+  Entrypoint c 6.45 KiB = all-chunks/282.js 200 bytes all-chunks/769.js 200 bytes all-chunks/767.js 200 bytes all-chunks/568.js 200 bytes all-chunks/c.js 5.67 KiB
   chunk (runtime: b) all-chunks/b.js (b) 72 bytes (javascript) 2.6 KiB (runtime) ={282}= ={568}= ={767}= ={954}= [entry] [rendered]
     > ./b b
     runtime modules 2.6 KiB 2 modules
@@ -3166,9 +3165,9 @@ manual:
 
 name-too-long:
   Entrypoint main 10.6 KiB = name-too-long/main.js
-  Entrypoint aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 13.1 KiB = name-too-long/282.js 204 bytes name-too-long/954.js 204 bytes name-too-long/767.js 204 bytes name-too-long/390.js 204 bytes name-too-long/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js 12.3 KiB
-  Entrypoint bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb 6.47 KiB = name-too-long/282.js 204 bytes name-too-long/954.js 204 bytes name-too-long/767.js 204 bytes name-too-long/568.js 204 bytes name-too-long/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js 5.68 KiB
-  Entrypoint cccccccccccccccccccccccccccccc 6.47 KiB = name-too-long/282.js 204 bytes name-too-long/769.js 204 bytes name-too-long/767.js 204 bytes name-too-long/568.js 204 bytes name-too-long/cccccccccccccccccccccccccccccc.js 5.68 KiB
+  Entrypoint aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa 13.1 KiB = name-too-long/282.js 200 bytes name-too-long/954.js 200 bytes name-too-long/767.js 200 bytes name-too-long/390.js 200 bytes name-too-long/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js 12.3 KiB
+  Entrypoint bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb 6.45 KiB = name-too-long/282.js 200 bytes name-too-long/954.js 200 bytes name-too-long/767.js 200 bytes name-too-long/568.js 200 bytes name-too-long/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js 5.67 KiB
+  Entrypoint cccccccccccccccccccccccccccccc 6.45 KiB = name-too-long/282.js 200 bytes name-too-long/769.js 200 bytes name-too-long/767.js 200 bytes name-too-long/568.js 200 bytes name-too-long/cccccccccccccccccccccccccccccc.js 5.67 KiB
   chunk (runtime: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa, main) name-too-long/async-g.js (async-g) 34 bytes <{282}> <{390}> <{751}> <{767}> <{794}> <{954}> ={568}= [rendered]
     > ./g ./a.js 6:0-47
     ./g.js 34 bytes [built] [code generated]
