@@ -1666,6 +1666,15 @@ declare class ConcatSource extends Source {
 	add(item: string | Source): void;
 	addAllSkipOptimizing(items: Source[]): void;
 }
+declare interface ConcatenatedModuleInfo {
+	index: number;
+	module: Module;
+
+	/**
+	 * mapping from export name to symbol
+	 */
+	exportMap: Map<string, string>;
+}
 declare interface ConcatenationBailoutReasonContext {
 	/**
 	 * the module graph
@@ -1677,21 +1686,41 @@ declare interface ConcatenationBailoutReasonContext {
 	 */
 	chunkGraph: ChunkGraph;
 }
-declare abstract class ConcatenationScope {
-	isRoot: any;
-	isModuleInScope(module?: any): boolean;
-	registerExport(exportName?: any, symbol?: any): void;
-	registerNamespaceExport(): string;
+declare class ConcatenationScope {
+	constructor(
+		modulesWithInfo: (ConcatenatedModuleInfo | ExternalModuleInfo)[],
+		currentModule: ConcatenatedModuleInfo
+	);
+	isModuleInScope(module: Module): boolean;
+	registerExport(exportName: string, symbol: string): void;
 	createModuleReference(
-		module: any,
-		__1: {
-			ids?: any;
-			call?: boolean;
-			directImport?: boolean;
-			strict?: boolean;
-			asiSafe?: boolean;
-		}
+		module: Module,
+		__1: Partial<ModuleReferenceOptions>
 	): string;
+	static isModuleReference(name: string): boolean;
+	static matchModuleReference(
+		name: string
+	): {
+		/**
+		 * the properties/exports of the module
+		 */
+		ids: string[];
+		/**
+		 * true, when this referenced export is called
+		 */
+		call: boolean;
+		/**
+		 * true, when this referenced export is directly imported (not via property access)
+		 */
+		directImport: boolean;
+		/**
+		 * if the position is ASI safe or unknown
+		 */
+		asiSafe: boolean;
+		index: number;
+	};
+	static DEFAULT_EXPORT: string;
+	static NAMESPACE_OBJECT_EXPORT: string;
 }
 
 /**
@@ -3081,6 +3110,10 @@ declare class ExternalModule extends Module {
 		moduleGraph?: any,
 		chunkGraph?: any
 	): SourceData;
+}
+declare interface ExternalModuleInfo {
+	index: number;
+	module: Module;
 }
 type Externals =
 	| string
@@ -5002,6 +5035,27 @@ declare abstract class ModuleProfile {
 	 * Merge this profile into another one
 	 */
 	mergeInto(realProfile: ModuleProfile): void;
+}
+declare interface ModuleReferenceOptions {
+	/**
+	 * the properties/exports of the module
+	 */
+	ids: string[];
+
+	/**
+	 * true, when this referenced export is called
+	 */
+	call: boolean;
+
+	/**
+	 * true, when this referenced export is directly imported (not via property access)
+	 */
+	directImport: boolean;
+
+	/**
+	 * if the position is ASI safe or unknown
+	 */
+	asiSafe: boolean;
 }
 declare abstract class ModuleTemplate {
 	type: string;
@@ -9992,6 +10046,7 @@ declare namespace exports {
 		ChunkGraph,
 		Compilation,
 		Compiler,
+		ConcatenationScope,
 		ContextExclusionPlugin,
 		ContextReplacementPlugin,
 		DefinePlugin,
