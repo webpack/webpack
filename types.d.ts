@@ -1674,6 +1674,7 @@ declare interface ConcatenatedModuleInfo {
 	 * mapping from export name to symbol
 	 */
 	exportMap: Map<string, string>;
+	namespaceExportSymbol?: string;
 }
 declare interface ConcatenationBailoutReasonContext {
 	/**
@@ -1693,6 +1694,7 @@ declare class ConcatenationScope {
 	);
 	isModuleInScope(module: Module): boolean;
 	registerExport(exportName: string, symbol: string): void;
+	registerNamespaceExport(symbol: string): void;
 	createModuleReference(
 		module: Module,
 		__1: Partial<ModuleReferenceOptions>
