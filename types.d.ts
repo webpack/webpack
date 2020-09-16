@@ -9850,6 +9850,7 @@ declare namespace exports {
 		export let global: string;
 		export let shareScopeMap: string;
 		export let initializeSharing: string;
+		export let currentRemoteGetScope: string;
 		export let getUpdateManifestFilename: string;
 		export let hmrDownloadManifest: string;
 		export let hmrDownloadUpdateHandlers: string;
