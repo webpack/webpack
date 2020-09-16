@@ -3359,6 +3359,67 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-fallback-alias": Object {
+    "configs": Array [
+      Object {
+        "description": "Ignore request (replace with empty module).",
+        "multiple": true,
+        "path": "resolve.fallback[].alias",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "New request.",
+        "multiple": true,
+        "path": "resolve.fallback[].alias",
+        "type": "string",
+      },
+    ],
+    "description": "Ignore request (replace with empty module). New request.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-fallback-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Request to be redirected.",
+        "multiple": true,
+        "path": "resolve.fallback[].name",
+        "type": "string",
+      },
+    ],
+    "description": "Request to be redirected.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-fallback-only-module": Object {
+    "configs": Array [
+      Object {
+        "description": "Redirect only exact matching request.",
+        "multiple": true,
+        "path": "resolve.fallback[].onlyModule",
+        "type": "boolean",
+      },
+    ],
+    "description": "Redirect only exact matching request.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "resolve-fallback-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Redirect module requests.",
+        "multiple": false,
+        "path": "resolve.fallback",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Redirect module requests.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-fully-specified": Object {
     "configs": Array [
       Object {
@@ -3369,6 +3430,32 @@ Object {
       },
     ],
     "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-imports-fields": Object {
+    "configs": Array [
+      Object {
+        "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+        "multiple": true,
+        "path": "resolve.importsFields[]",
+        "type": "string",
+      },
+    ],
+    "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-imports-fields-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+        "multiple": false,
+        "path": "resolve.importsFields",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3602,6 +3689,67 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-loader-fallback-alias": Object {
+    "configs": Array [
+      Object {
+        "description": "Ignore request (replace with empty module).",
+        "multiple": true,
+        "path": "resolveLoader.fallback[].alias",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "New request.",
+        "multiple": true,
+        "path": "resolveLoader.fallback[].alias",
+        "type": "string",
+      },
+    ],
+    "description": "Ignore request (replace with empty module). New request.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-fallback-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Request to be redirected.",
+        "multiple": true,
+        "path": "resolveLoader.fallback[].name",
+        "type": "string",
+      },
+    ],
+    "description": "Request to be redirected.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-fallback-only-module": Object {
+    "configs": Array [
+      Object {
+        "description": "Redirect only exact matching request.",
+        "multiple": true,
+        "path": "resolveLoader.fallback[].onlyModule",
+        "type": "boolean",
+      },
+    ],
+    "description": "Redirect only exact matching request.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-fallback-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Redirect module requests.",
+        "multiple": false,
+        "path": "resolveLoader.fallback",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Redirect module requests.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-loader-fully-specified": Object {
     "configs": Array [
       Object {
@@ -3612,6 +3760,32 @@ Object {
       },
     ],
     "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-imports-fields": Object {
+    "configs": Array [
+      Object {
+        "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+        "multiple": true,
+        "path": "resolveLoader.importsFields[]",
+        "type": "string",
+      },
+    ],
+    "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-imports-fields-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+        "multiple": false,
+        "path": "resolveLoader.importsFields",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
     "multiple": false,
     "simpleType": "boolean",
   },

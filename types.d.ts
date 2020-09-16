@@ -364,6 +364,15 @@ declare interface BannerPluginOptions {
 	 */
 	test?: Rules;
 }
+declare interface BaseResolveRequest {
+	path: DevTool;
+	descriptionFilePath?: string;
+	descriptionFileRoot?: string;
+	descriptionFileData?: any;
+	relativePath?: string;
+	ignoreSymlinks?: boolean;
+	fullySpecified?: boolean;
+}
 declare abstract class BasicEvaluatedExpression {
 	type: number;
 	range: [number, number];
@@ -6348,6 +6357,7 @@ declare interface ParsedIdentifier {
 	directory: boolean;
 	module: boolean;
 	file: boolean;
+	internal: boolean;
 }
 declare class Parser {
 	constructor();
@@ -6810,6 +6820,22 @@ declare abstract class RequestShortener {
 	contextify: (arg0: string) => string;
 	shorten(request: string): string;
 }
+type ResolveAlias =
+	| {
+			/**
+			 * New request.
+			 */
+			alias: string | false | string[];
+			/**
+			 * Request to be redirected.
+			 */
+			name: string;
+			/**
+			 * Redirect only exact matching request.
+			 */
+			onlyModule?: boolean;
+	  }[]
+	| { [index: string]: string | false | string[] };
 declare interface ResolveBuildDependenciesResult {
 	/**
 	 * list of files
@@ -6907,6 +6933,20 @@ declare interface ResolveOptionsTypes {
 		 */
 		onlyModule?: boolean;
 	}[];
+	fallback: {
+		/**
+		 * New request.
+		 */
+		alias: string | false | string[];
+		/**
+		 * Request to be redirected.
+		 */
+		name: string;
+		/**
+		 * Redirect only exact matching request.
+		 */
+		onlyModule?: boolean;
+	}[];
 	aliasFields: Set<LibraryExport>;
 	cachePredicate: (arg0: ResolveRequest) => boolean;
 	cacheWithContext: boolean;
@@ -6918,6 +6958,7 @@ declare interface ResolveOptionsTypes {
 	descriptionFiles: string[];
 	enforceExtension: boolean;
 	exportsFields: Set<LibraryExport>;
+	importsFields: Set<LibraryExport>;
 	extensions: Set<string>;
 	fileSystem: FileSystem;
 	unsafeCache: any;
@@ -6944,22 +6985,7 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Redirect module requests.
 	 */
-	alias?:
-		| {
-				/**
-				 * New request.
-				 */
-				alias: string | false | string[];
-				/**
-				 * Request to be redirected.
-				 */
-				name: string;
-				/**
-				 * Redirect only exact matching request.
-				 */
-				onlyModule?: boolean;
-		  }[]
-		| { [index: string]: string | false | string[] };
+	alias?: ResolveAlias;
 
 	/**
 	 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
@@ -7012,6 +7038,11 @@ declare interface ResolveOptionsWebpackOptions {
 	extensions?: string[];
 
 	/**
+	 * Redirect module requests when normal resolving fails.
+	 */
+	fallback?: ResolveAlias;
+
+	/**
 	 * Filesystem for the resolver.
 	 */
 	fileSystem?: InputFileSystem;
@@ -7020,6 +7051,11 @@ declare interface ResolveOptionsWebpackOptions {
 	 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
 	 */
 	fullySpecified?: boolean;
+
+	/**
+	 * Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).
+	 */
+	importsFields?: string[];
 
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point.
@@ -7083,20 +7119,7 @@ declare interface ResolvePluginInstance {
 	 */
 	apply: (resolver?: any) => void;
 }
-declare interface ResolveRequest {
-	path: DevTool;
-	request?: string;
-	query?: string;
-	fragment?: string;
-	directory?: boolean;
-	module?: boolean;
-	descriptionFilePath?: string;
-	descriptionFileRoot?: string;
-	descriptionFileData?: any;
-	relativePath?: string;
-	ignoreSymlinks?: boolean;
-	fullySpecified?: boolean;
-}
+type ResolveRequest = BaseResolveRequest & Partial<ParsedIdentifier>;
 declare abstract class Resolver {
 	fileSystem: FileSystem;
 	options: ResolveOptionsTypes;
@@ -7142,6 +7165,7 @@ declare abstract class Resolver {
 	): any;
 	parse(identifier: string): ParsedIdentifier;
 	isModule(path?: any): boolean;
+	isPrivate(path?: any): boolean;
 	isDirectory(path: string): boolean;
 	join(path?: any, request?: any): string;
 	normalize(path?: any): string;
@@ -7159,22 +7183,7 @@ declare abstract class ResolverFactory {
 						/**
 						 * Redirect module requests.
 						 */
-						alias?:
-							| {
-									/**
-									 * New request.
-									 */
-									alias: string | false | string[];
-									/**
-									 * Request to be redirected.
-									 */
-									name: string;
-									/**
-									 * Redirect only exact matching request.
-									 */
-									onlyModule?: boolean;
-							  }[]
-							| { [index: string]: string | false | string[] };
+						alias?: ResolveAlias;
 						/**
 						 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
 						 */
@@ -7216,6 +7225,10 @@ declare abstract class ResolverFactory {
 						 */
 						extensions?: string[];
 						/**
+						 * Redirect module requests when normal resolving fails.
+						 */
+						fallback?: ResolveAlias;
+						/**
 						 * Filesystem for the resolver.
 						 */
 						fileSystem?: InputFileSystem;
@@ -7223,6 +7236,10 @@ declare abstract class ResolverFactory {
 						 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
 						 */
 						fullySpecified?: boolean;
+						/**
+						 * Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).
+						 */
+						importsFields?: string[];
 						/**
 						 * Field names from the description file (package.json) which are used to find the default entry point.
 						 */
@@ -7278,22 +7295,7 @@ declare abstract class ResolverFactory {
 						/**
 						 * Redirect module requests.
 						 */
-						alias?:
-							| {
-									/**
-									 * New request.
-									 */
-									alias: string | false | string[];
-									/**
-									 * Request to be redirected.
-									 */
-									name: string;
-									/**
-									 * Redirect only exact matching request.
-									 */
-									onlyModule?: boolean;
-							  }[]
-							| { [index: string]: string | false | string[] };
+						alias?: ResolveAlias;
 						/**
 						 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
 						 */
@@ -7335,6 +7337,10 @@ declare abstract class ResolverFactory {
 						 */
 						extensions?: string[];
 						/**
+						 * Redirect module requests when normal resolving fails.
+						 */
+						fallback?: ResolveAlias;
+						/**
 						 * Filesystem for the resolver.
 						 */
 						fileSystem?: InputFileSystem;
@@ -7342,6 +7348,10 @@ declare abstract class ResolverFactory {
 						 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
 						 */
 						fullySpecified?: boolean;
+						/**
+						 * Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).
+						 */
+						importsFields?: string[];
 						/**
 						 * Field names from the description file (package.json) which are used to find the default entry point.
 						 */
@@ -7397,22 +7407,7 @@ declare abstract class ResolverFactory {
 			/**
 			 * Redirect module requests.
 			 */
-			alias?:
-				| {
-						/**
-						 * New request.
-						 */
-						alias: string | false | string[];
-						/**
-						 * Request to be redirected.
-						 */
-						name: string;
-						/**
-						 * Redirect only exact matching request.
-						 */
-						onlyModule?: boolean;
-				  }[]
-				| { [index: string]: string | false | string[] };
+			alias?: ResolveAlias;
 			/**
 			 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
 			 */
@@ -7454,6 +7449,10 @@ declare abstract class ResolverFactory {
 			 */
 			extensions?: string[];
 			/**
+			 * Redirect module requests when normal resolving fails.
+			 */
+			fallback?: ResolveAlias;
+			/**
 			 * Filesystem for the resolver.
 			 */
 			fileSystem?: InputFileSystem;
@@ -7461,6 +7460,10 @@ declare abstract class ResolverFactory {
 			 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
 			 */
 			fullySpecified?: boolean;
+			/**
+			 * Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).
+			 */
+			importsFields?: string[];
 			/**
 			 * Field names from the description file (package.json) which are used to find the default entry point.
 			 */
@@ -9106,6 +9109,26 @@ declare interface UserResolveOptions {
 		  }[];
 
 	/**
+	 * A list of module alias configurations or an object which maps key to value, applied only after modules option
+	 */
+	fallback?:
+		| { [index: string]: string | false | string[] }
+		| {
+				/**
+				 * New request.
+				 */
+				alias: string | false | string[];
+				/**
+				 * Request to be redirected.
+				 */
+				name: string;
+				/**
+				 * Redirect only exact matching request.
+				 */
+				onlyModule?: boolean;
+		  }[];
+
+	/**
 	 * A list of alias fields in description files
 	 */
 	aliasFields?: LibraryExport[];
@@ -9139,6 +9162,11 @@ declare interface UserResolveOptions {
 	 * A list of exports fields in description files
 	 */
 	exportsFields?: LibraryExport[];
+
+	/**
+	 * A list of imports fields in description files
+	 */
+	importsFields?: LibraryExport[];
 
 	/**
 	 * A list of extensions which should be tried for files
@@ -9588,22 +9616,7 @@ declare interface WithOptions {
 			/**
 			 * Redirect module requests.
 			 */
-			alias?:
-				| {
-						/**
-						 * New request.
-						 */
-						alias: string | false | string[];
-						/**
-						 * Request to be redirected.
-						 */
-						name: string;
-						/**
-						 * Redirect only exact matching request.
-						 */
-						onlyModule?: boolean;
-				  }[]
-				| { [index: string]: string | false | string[] };
+			alias?: ResolveAlias;
 			/**
 			 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
 			 */
@@ -9645,6 +9658,10 @@ declare interface WithOptions {
 			 */
 			extensions?: string[];
 			/**
+			 * Redirect module requests when normal resolving fails.
+			 */
+			fallback?: ResolveAlias;
+			/**
 			 * Filesystem for the resolver.
 			 */
 			fileSystem?: InputFileSystem;
@@ -9652,6 +9669,10 @@ declare interface WithOptions {
 			 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
 			 */
 			fullySpecified?: boolean;
+			/**
+			 * Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).
+			 */
+			importsFields?: string[];
 			/**
 			 * Field names from the description file (package.json) which are used to find the default entry point.
 			 */
