@@ -1253,7 +1253,7 @@ This is no longer the case. Verify if you need this module and configure a polyf
 
 If you want to include a polyfill, you need to install 'buffer'.
 If you don't want to include a polyfill, you can use an empty module like this:
-	resolve.alias: { \\"buffer\\": false }
+	resolve.fallback: { \\"buffer\\": false }
 
 ERROR in ./index.js 2:0-13
 Module not found: Error: Can't resolve 'os' in 'Xdir/module-not-found-error'
@@ -1262,10 +1262,10 @@ BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules 
 This is no longer the case. Verify if you need this module and configure a polyfill for it.
 
 If you want to include a polyfill, you need to:
-	- add an alias 'resolve.alias: { \\"os\\": \\"os-browserify/browser\\" }'
+	- add an fallback 'resolve.fallback: { \\"os\\": \\"os-browserify/browser\\" }'
 	- install 'os-browserify'
 If you don't want to include a polyfill, you can use an empty module like this:
-	resolve.alias: { \\"os\\": false }
+	resolve.fallback: { \\"os\\": false }
 
 webpack compiled with 2 errors"
 `;
