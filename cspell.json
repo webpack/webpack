@@ -179,6 +179,8 @@
     "analysing",
     "etags",
     "destructure",
+    "onconnect",
+    "nwjs",
 
     "webassemblyjs",
     "fsevents",

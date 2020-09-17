@@ -5,8 +5,5 @@ module.exports = {
 	devtool: false,
 	output: {
 		assetModuleFilename: "[name][ext]"
-	},
-	experiments: {
-		asset: true
 	}
 };

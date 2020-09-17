@@ -184,24 +184,6 @@
       "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
       "type": "string"
     },
-    "EcmaVersion": {
-      "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-      "anyOf": [
-        {
-          "enum": [2009]
-        },
-        {
-          "type": "number",
-          "minimum": 5,
-          "maximum": 11
-        },
-        {
-          "type": "number",
-          "minimum": 2015,
-          "maximum": 2020
-        }
-      ]
-    },
     "EnabledChunkLoadingTypes": {
       "description": "List of chunk loading types enabled for use by entry points.",
       "type": "array",
@@ -214,6 +196,13 @@
       "type": "array",
       "items": {
         "$ref": "#/definitions/LibraryType"
+      }
+    },
+    "EnabledWasmLoadingTypes": {
+      "description": "List of wasm loading types enabled for use by entry points.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WasmLoadingType"
       }
     },
     "Entry": {
@@ -267,6 +256,9 @@
         },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"
+        },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
         }
       },
       "required": ["import"]
@@ -309,6 +301,9 @@
         },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"
+        },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
         }
       }
     },
@@ -405,6 +400,41 @@
         }
       ]
     },
+    "Environment": {
+      "description": "The abilities of the environment where the webpack generated code should run.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "arrowFunction": {
+          "description": "The environment supports arrow functions ('() => { ... }').",
+          "type": "boolean"
+        },
+        "bigIntLiteral": {
+          "description": "The environment supports BigInt as literal (123n).",
+          "type": "boolean"
+        },
+        "const": {
+          "description": "The environment supports const and let for variable declarations.",
+          "type": "boolean"
+        },
+        "destructuring": {
+          "description": "The environment supports destructuring ('{ a, b } = obj').",
+          "type": "boolean"
+        },
+        "dynamicImport": {
+          "description": "The environment supports an async import() function to import EcmaScript modules.",
+          "type": "boolean"
+        },
+        "forOf": {
+          "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+          "type": "boolean"
+        },
+        "module": {
+          "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
+          "type": "boolean"
+        }
+      }
+    },
     "Experiments": {
       "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
       "type": "object",
@@ -416,10 +446,6 @@
         },
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
-          "type": "boolean"
-        },
-        "mjs": {
-          "description": "Support .mjs files as way to define strict ESM file (node.js).",
           "type": "boolean"
         },
         "outputModule": {
@@ -496,6 +522,45 @@
           "$ref": "#/definitions/ExternalItem"
         }
       ]
+    },
+    "ExternalsPresets": {
+      "description": "Enable presets of externals for specific targets.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "electron": {
+          "description": "Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.",
+          "type": "boolean"
+        },
+        "electronMain": {
+          "description": "Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.",
+          "type": "boolean"
+        },
+        "electronPreload": {
+          "description": "Treat electron built-in modules in the preload context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+          "type": "boolean"
+        },
+        "electronRenderer": {
+          "description": "Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+          "type": "boolean"
+        },
+        "node": {
+          "description": "Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.",
+          "type": "boolean"
+        },
+        "nwjs": {
+          "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",
+          "type": "boolean"
+        },
+        "web": {
+          "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).",
+          "type": "boolean"
+        },
+        "webAsync": {
+          "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via async import() when used (Note that this external type is an async module, which has various effects on the execution).",
+          "type": "boolean"
+        }
+      }
     },
     "ExternalsType": {
       "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
@@ -1085,11 +1150,11 @@
       "properties": {
         "__dirname": {
           "description": "Include a polyfill for the '__dirname' variable.",
-          "enum": [false, true, "mock"]
+          "enum": [false, true, "mock", "eval-only"]
         },
         "__filename": {
           "description": "Include a polyfill for the '__filename' variable.",
-          "enum": [false, true, "mock"]
+          "enum": [false, true, "mock", "eval-only"]
         },
         "global": {
           "description": "Include a polyfill for the 'global' variable.",
@@ -1758,14 +1823,17 @@
         "devtoolNamespace": {
           "$ref": "#/definitions/DevtoolNamespace"
         },
-        "ecmaVersion": {
-          "$ref": "#/definitions/EcmaVersion"
-        },
         "enabledChunkLoadingTypes": {
           "$ref": "#/definitions/EnabledChunkLoadingTypes"
         },
         "enabledLibraryTypes": {
           "$ref": "#/definitions/EnabledLibraryTypes"
+        },
+        "enabledWasmLoadingTypes": {
+          "$ref": "#/definitions/EnabledWasmLoadingTypes"
+        },
+        "environment": {
+          "$ref": "#/definitions/Environment"
         },
         "filename": {
           "$ref": "#/definitions/Filename"
@@ -1860,8 +1928,17 @@
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
         },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
+        },
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
+        },
+        "workerChunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
+        "workerWasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
         }
       }
     },
@@ -1910,14 +1987,17 @@
         "devtoolNamespace": {
           "$ref": "#/definitions/DevtoolNamespace"
         },
-        "ecmaVersion": {
-          "$ref": "#/definitions/EcmaVersion"
-        },
         "enabledChunkLoadingTypes": {
           "$ref": "#/definitions/EnabledChunkLoadingTypes"
         },
         "enabledLibraryTypes": {
           "$ref": "#/definitions/EnabledLibraryTypes"
+        },
+        "enabledWasmLoadingTypes": {
+          "$ref": "#/definitions/EnabledWasmLoadingTypes"
+        },
+        "environment": {
+          "$ref": "#/definitions/Environment"
         },
         "filename": {
           "$ref": "#/definitions/Filename"
@@ -1982,8 +2062,17 @@
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
         },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
+        },
         "webassemblyModuleFilename": {
           "$ref": "#/definitions/WebassemblyModuleFilename"
+        },
+        "workerChunkLoading": {
+          "$ref": "#/definitions/ChunkLoading"
+        },
+        "workerWasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
         }
       }
     },
@@ -2111,67 +2200,17 @@
         }
       ]
     },
-    "ResolveLoader": {
-      "description": "Options for the resolver when resolving loaders.",
-      "oneOf": [
+    "ResolveAlias": {
+      "description": "Redirect module requests.",
+      "anyOf": [
         {
-          "$ref": "#/definitions/ResolveOptions"
-        }
-      ]
-    },
-    "ResolveOptions": {
-      "description": "Options object for resolving requests.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "alias": {
-          "description": "Redirect module requests.",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "description": "Alias configuration.",
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "alias": {
-                    "description": "New request.",
-                    "anyOf": [
-                      {
-                        "description": "Multiple alternative requests.",
-                        "type": "array",
-                        "items": {
-                          "description": "One choice of request.",
-                          "type": "string",
-                          "minLength": 1
-                        }
-                      },
-                      {
-                        "description": "Ignore request (replace with empty module).",
-                        "enum": [false]
-                      },
-                      {
-                        "description": "New request.",
-                        "type": "string",
-                        "minLength": 1
-                      }
-                    ]
-                  },
-                  "name": {
-                    "description": "Request to be redirected.",
-                    "type": "string"
-                  },
-                  "onlyModule": {
-                    "description": "Redirect only exact matching request.",
-                    "type": "boolean"
-                  }
-                },
-                "required": ["alias", "name"]
-              }
-            },
-            {
-              "type": "object",
-              "additionalProperties": {
+          "type": "array",
+          "items": {
+            "description": "Alias configuration.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "alias": {
                 "description": "New request.",
                 "anyOf": [
                   {
@@ -2193,9 +2232,62 @@
                     "minLength": 1
                   }
                 ]
+              },
+              "name": {
+                "description": "Request to be redirected.",
+                "type": "string"
+              },
+              "onlyModule": {
+                "description": "Redirect only exact matching request.",
+                "type": "boolean"
               }
-            }
-          ]
+            },
+            "required": ["alias", "name"]
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "description": "New request.",
+            "anyOf": [
+              {
+                "description": "Multiple alternative requests.",
+                "type": "array",
+                "items": {
+                  "description": "One choice of request.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              {
+                "description": "Ignore request (replace with empty module).",
+                "enum": [false]
+              },
+              {
+                "description": "New request.",
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "ResolveLoader": {
+      "description": "Options for the resolver when resolving loaders.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/ResolveOptions"
+        }
+      ]
+    },
+    "ResolveOptions": {
+      "description": "Options object for resolving requests.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "alias": {
+          "$ref": "#/definitions/ResolveAlias"
         },
         "aliasFields": {
           "description": "Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
@@ -2281,6 +2373,14 @@
             "minLength": 1
           }
         },
+        "fallback": {
+          "description": "Redirect module requests when normal resolving fails.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ResolveAlias"
+            }
+          ]
+        },
         "fileSystem": {
           "description": "Filesystem for the resolver.",
           "tsType": "(import('../lib/util/fs').InputFileSystem)"
@@ -2288,6 +2388,14 @@
         "fullySpecified": {
           "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
           "type": "boolean"
+        },
+        "importsFields": {
+          "description": "Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+          "type": "array",
+          "items": {
+            "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+            "type": "string"
+          }
         },
         "mainFields": {
           "description": "Field names from the description file (package.json) which are used to find the default entry point.",
@@ -2988,6 +3096,18 @@
           "description": "Add children information.",
           "type": "boolean"
         },
+        "chunkGroupAuxiliary": {
+          "description": "Display auxiliary assets in chunk groups.",
+          "type": "boolean"
+        },
+        "chunkGroupChildren": {
+          "description": "Display children of chunk groups.",
+          "type": "boolean"
+        },
+        "chunkGroupMaxAssets": {
+          "description": "Limit of assets displayed in chunk groups.",
+          "type": "number"
+        },
         "chunkGroups": {
           "description": "Display all chunk groups with the corresponding bundles.",
           "type": "boolean"
@@ -3066,7 +3186,14 @@
         },
         "entrypoints": {
           "description": "Display the entry points with the corresponding bundles.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "enum": ["auto"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "env": {
           "description": "Add --env information.",
@@ -3082,6 +3209,10 @@
         },
         "errors": {
           "description": "Add errors.",
+          "type": "boolean"
+        },
+        "errorsCount": {
+          "description": "Add errors count.",
           "type": "boolean"
         },
         "exclude": {
@@ -3281,8 +3412,12 @@
           "description": "Add warnings.",
           "type": "boolean"
         },
+        "warningsCount": {
+          "description": "Add warnings count.",
+          "type": "boolean"
+        },
         "warningsFilter": {
-          "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+          "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
           "oneOf": [
             {
               "$ref": "#/definitions/FilterTypes"
@@ -3297,12 +3432,13 @@
         {
           "enum": [
             "none",
+            "summary",
             "errors-only",
+            "errors-warnings",
             "minimal",
             "normal",
             "detailed",
-            "verbose",
-            "errors-warnings"
+            "verbose"
           ]
         },
         {
@@ -3318,23 +3454,23 @@
       "type": "boolean"
     },
     "Target": {
-      "description": "Environment to build for.",
+      "description": "Environment to build for. An array of environments to build for all of them when possible.",
       "anyOf": [
         {
-          "enum": [
-            "web",
-            "webworker",
-            "node",
-            "async-node",
-            "node-webkit",
-            "electron-main",
-            "electron-renderer",
-            "electron-preload"
-          ]
+          "type": "array",
+          "items": {
+            "description": "Environment to build for.",
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
         },
         {
-          "instanceof": "Function",
-          "tsType": "((compiler: import('../lib/Compiler')) => void)"
+          "enum": [false]
+        },
+        {
+          "type": "string",
+          "minLength": 1
         }
       ]
     },
@@ -3346,6 +3482,28 @@
       "description": "A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.",
       "type": "string",
       "minLength": 1
+    },
+    "WasmLoading": {
+      "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "$ref": "#/definitions/WasmLoadingType"
+        }
+      ]
+    },
+    "WasmLoadingType": {
+      "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": ["fetch-streaming", "fetch", "async-node"]
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "Watch": {
       "description": "Enter watch mode, which rebuilds on file change.",
@@ -3437,6 +3595,9 @@
         "externals": {
           "$ref": "#/definitions/Externals"
         },
+        "externalsPresets": {
+          "$ref": "#/definitions/ExternalsPresets"
+        },
         "externalsType": {
           "$ref": "#/definitions/ExternalsType"
         },
@@ -3510,6 +3671,7 @@
         "entry",
         "experiments",
         "externals",
+        "externalsPresets",
         "infrastructureLogging",
         "module",
         "node",
@@ -3574,6 +3736,9 @@
     },
     "externals": {
       "$ref": "#/definitions/Externals"
+    },
+    "externalsPresets": {
+      "$ref": "#/definitions/ExternalsPresets"
     },
     "externalsType": {
       "$ref": "#/definitions/ExternalsType"

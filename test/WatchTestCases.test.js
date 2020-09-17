@@ -8,6 +8,8 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const { remove } = require("./helpers/remove");
 const prepareOptions = require("./helpers/prepareOptions");
+const deprecationTracking = require("./helpers/deprecationTracking");
+const FakeDocument = require("./helpers/FakeDocument");
 
 const webpack = require("..");
 
@@ -153,6 +155,7 @@ describe("WatchTestCases", () => {
 							copyDiff(path.join(testDirectory, run.name), tempDirectory, true);
 
 							setTimeout(() => {
+								const deprecationTracker = deprecationTracking.start();
 								const compiler = webpack(options);
 								compiler.hooks.invalid.tap(
 									"WatchTestCasesTest",
@@ -231,7 +234,10 @@ describe("WatchTestCases", () => {
 
 										const globalContext = {
 											console: console,
-											expect: expect
+											expect: expect,
+											setTimeout,
+											clearTimeout,
+											document: new FakeDocument()
 										};
 
 										function _require(currentDirectory, module) {
@@ -341,6 +347,19 @@ describe("WatchTestCases", () => {
 														);
 													}, 1500);
 												} else {
+													const deprecations = deprecationTracker();
+													if (
+														checkArrayExpectation(
+															testDirectory,
+															{ deprecations },
+															"deprecation",
+															"Deprecation",
+															done
+														)
+													) {
+														watching.close();
+														return;
+													}
 													watching.close(done);
 												}
 											},

@@ -210,14 +210,14 @@ describe("Cli", () => {
 		{
 			"watch-options-aggregate-timeout": 100,
 			"watch-options-poll": "100",
-			"output-ecma-version": "2015"
+			"output-chunk-load-timeout": "20000"
 		},
 		{},
 		e =>
 			e.toMatchInlineSnapshot(`
 			Object {
 			  "output": Object {
-			    "ecmaVersion": 2015,
+			    "chunkLoadTimeout": 20000,
 			  },
 			  "watchOptions": Object {
 			    "aggregateTimeout": 100,
@@ -269,7 +269,7 @@ describe("Cli", () => {
 		{
 			"output-library-name": "non-object",
 			"resolve-loader-unsafe-cache": [true, false],
-			"output-ecma-version": "2015x",
+			"output-chunk-load-timeout": "20000x",
 			"cache-type": "filsystem",
 			"entry-reset": false,
 			"module-unknown-context-reg-exp": "ab?c*",
@@ -306,20 +306,12 @@ describe("Cli", () => {
 			    "value": false,
 			  },
 			  Object {
-			    "argument": "output-ecma-version",
-			    "expected": "2009",
-			    "index": undefined,
-			    "path": "output.ecmaVersion",
-			    "type": "invalid-value",
-			    "value": "2015x",
-			  },
-			  Object {
-			    "argument": "output-ecma-version",
+			    "argument": "output-chunk-load-timeout",
 			    "expected": "number",
 			    "index": undefined,
-			    "path": "output.ecmaVersion",
+			    "path": "output.chunkLoadTimeout",
 			    "type": "invalid-value",
-			    "value": "2015x",
+			    "value": "20000x",
 			  },
 			  Object {
 			    "argument": "cache-type",

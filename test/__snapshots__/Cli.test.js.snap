@@ -354,19 +354,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-mjs": Object {
-    "configs": Array [
-      Object {
-        "description": "Support .mjs files as way to define strict ESM file (node.js).",
-        "multiple": false,
-        "path": "experiments.mjs",
-        "type": "boolean",
-      },
-    ],
-    "description": "Support .mjs files as way to define strict ESM file (node.js).",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "experiments-output-module": Object {
     "configs": Array [
       Object {
@@ -424,6 +411,110 @@ Object {
     "description": "Every matched dependency becomes external. An exact matched dependency becomes external. The same string is used as external dependency.",
     "multiple": true,
     "simpleType": "string",
+  },
+  "externals-presets-electron": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electron",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-electron-main": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electronMain",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-electron-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat electron built-in modules in the preload context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electronPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat electron built-in modules in the preload context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-electron-renderer": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electronRenderer",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-node": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.node",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-nwjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.nwjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-web": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).",
+        "multiple": false,
+        "path": "externalsPresets.web",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-web-async": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via async import() when used (Note that this external type is an async module, which has various effects on the execution).",
+        "multiple": false,
+        "path": "externalsPresets.webAsync",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via async import() when used (Note that this external type is an async module, which has various effects on the execution).",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "externals-reset": Object {
     "configs": Array [
@@ -1145,6 +1236,7 @@ Object {
           false,
           true,
           "mock",
+          "eval-only",
         ],
       },
     ],
@@ -1163,6 +1255,7 @@ Object {
           false,
           true,
           "mock",
+          "eval-only",
         ],
       },
     ],
@@ -1993,28 +2086,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-ecma-version": Object {
-    "configs": Array [
-      Object {
-        "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-        "multiple": false,
-        "path": "output.ecmaVersion",
-        "type": "enum",
-        "values": Array [
-          2009,
-        ],
-      },
-      Object {
-        "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-        "multiple": false,
-        "path": "output.ecmaVersion",
-        "type": "number",
-      },
-    ],
-    "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-    "multiple": false,
-    "simpleType": "number",
-  },
   "output-enabled-chunk-loading-types": Object {
     "configs": Array [
       Object {
@@ -2100,6 +2171,134 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. List of library types enabled for use by entry points.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-enabled-wasm-loading-types": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledWasmLoadingTypes[]",
+        "type": "enum",
+        "values": Array [
+          "fetch-streaming",
+          "fetch",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledWasmLoadingTypes[]",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-enabled-wasm-loading-types-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of wasm loading types enabled for use by entry points.",
+        "multiple": false,
+        "path": "output.enabledWasmLoadingTypes",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of wasm loading types enabled for use by entry points.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-arrow-function": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports arrow functions ('() => { ... }').",
+        "multiple": false,
+        "path": "output.environment.arrowFunction",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports arrow functions ('() => { ... }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-big-int-literal": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports BigInt as literal (123n).",
+        "multiple": false,
+        "path": "output.environment.bigIntLiteral",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports BigInt as literal (123n).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-const": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports const and let for variable declarations.",
+        "multiple": false,
+        "path": "output.environment.const",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports const and let for variable declarations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-destructuring": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports destructuring ('{ a, b } = obj').",
+        "multiple": false,
+        "path": "output.environment.destructuring",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports destructuring ('{ a, b } = obj').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-dynamic-import": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports an async import() function to import EcmaScript modules.",
+        "multiple": false,
+        "path": "output.environment.dynamicImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports an async import() function to import EcmaScript modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-for-of": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+        "multiple": false,
+        "path": "output.environment.forOf",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-module": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
+        "multiple": false,
+        "path": "output.environment.module",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2665,6 +2864,39 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-wasm-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.wasmLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.wasmLoading",
+        "type": "enum",
+        "values": Array [
+          "fetch-streaming",
+          "fetch",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.wasmLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-webassembly-module-filename": Object {
     "configs": Array [
       Object {
@@ -2675,6 +2907,73 @@ Object {
       },
     ],
     "description": "The filename of WebAssembly modules as relative path inside the \`output.path\` directory.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-worker-chunk-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerChunkLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerChunkLoading",
+        "type": "enum",
+        "values": Array [
+          "jsonp",
+          "import-scripts",
+          "require",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerChunkLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-worker-wasm-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerWasmLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerWasmLoading",
+        "type": "enum",
+        "values": Array [
+          "fetch-streaming",
+          "fetch",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerWasmLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -3060,6 +3359,67 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-fallback-alias": Object {
+    "configs": Array [
+      Object {
+        "description": "Ignore request (replace with empty module).",
+        "multiple": true,
+        "path": "resolve.fallback[].alias",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "New request.",
+        "multiple": true,
+        "path": "resolve.fallback[].alias",
+        "type": "string",
+      },
+    ],
+    "description": "Ignore request (replace with empty module). New request.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-fallback-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Request to be redirected.",
+        "multiple": true,
+        "path": "resolve.fallback[].name",
+        "type": "string",
+      },
+    ],
+    "description": "Request to be redirected.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-fallback-only-module": Object {
+    "configs": Array [
+      Object {
+        "description": "Redirect only exact matching request.",
+        "multiple": true,
+        "path": "resolve.fallback[].onlyModule",
+        "type": "boolean",
+      },
+    ],
+    "description": "Redirect only exact matching request.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "resolve-fallback-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Redirect module requests.",
+        "multiple": false,
+        "path": "resolve.fallback",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Redirect module requests.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-fully-specified": Object {
     "configs": Array [
       Object {
@@ -3070,6 +3430,32 @@ Object {
       },
     ],
     "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-imports-fields": Object {
+    "configs": Array [
+      Object {
+        "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+        "multiple": true,
+        "path": "resolve.importsFields[]",
+        "type": "string",
+      },
+    ],
+    "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-imports-fields-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+        "multiple": false,
+        "path": "resolve.importsFields",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3303,6 +3689,67 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-loader-fallback-alias": Object {
+    "configs": Array [
+      Object {
+        "description": "Ignore request (replace with empty module).",
+        "multiple": true,
+        "path": "resolveLoader.fallback[].alias",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "New request.",
+        "multiple": true,
+        "path": "resolveLoader.fallback[].alias",
+        "type": "string",
+      },
+    ],
+    "description": "Ignore request (replace with empty module). New request.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-fallback-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Request to be redirected.",
+        "multiple": true,
+        "path": "resolveLoader.fallback[].name",
+        "type": "string",
+      },
+    ],
+    "description": "Request to be redirected.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-fallback-only-module": Object {
+    "configs": Array [
+      Object {
+        "description": "Redirect only exact matching request.",
+        "multiple": true,
+        "path": "resolveLoader.fallback[].onlyModule",
+        "type": "boolean",
+      },
+    ],
+    "description": "Redirect only exact matching request.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-fallback-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Redirect module requests.",
+        "multiple": false,
+        "path": "resolveLoader.fallback",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Redirect module requests.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-loader-fully-specified": Object {
     "configs": Array [
       Object {
@@ -3313,6 +3760,32 @@ Object {
       },
     ],
     "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-imports-fields": Object {
+    "configs": Array [
+      Object {
+        "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+        "multiple": true,
+        "path": "resolveLoader.importsFields[]",
+        "type": "string",
+      },
+    ],
+    "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-imports-fields-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+        "multiple": false,
+        "path": "resolveLoader.importsFields",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3831,12 +4304,13 @@ Object {
         "type": "enum",
         "values": Array [
           "none",
+          "summary",
           "errors-only",
+          "errors-warnings",
           "minimal",
           "normal",
           "detailed",
           "verbose",
-          "errors-warnings",
         ],
       },
       Object {
@@ -3966,6 +4440,45 @@ Object {
     "description": "Add children information.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "stats-chunk-group-auxiliary": Object {
+    "configs": Array [
+      Object {
+        "description": "Display auxiliary assets in chunk groups.",
+        "multiple": false,
+        "path": "stats.chunkGroupAuxiliary",
+        "type": "boolean",
+      },
+    ],
+    "description": "Display auxiliary assets in chunk groups.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-chunk-group-children": Object {
+    "configs": Array [
+      Object {
+        "description": "Display children of chunk groups.",
+        "multiple": false,
+        "path": "stats.chunkGroupChildren",
+        "type": "boolean",
+      },
+    ],
+    "description": "Display children of chunk groups.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-chunk-group-max-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Limit of assets displayed in chunk groups.",
+        "multiple": false,
+        "path": "stats.chunkGroupMaxAssets",
+        "type": "number",
+      },
+    ],
+    "description": "Limit of assets displayed in chunk groups.",
+    "multiple": false,
+    "simpleType": "number",
   },
   "stats-chunk-groups": Object {
     "configs": Array [
@@ -4181,12 +4694,21 @@ Object {
         "description": "Display the entry points with the corresponding bundles.",
         "multiple": false,
         "path": "stats.entrypoints",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Display the entry points with the corresponding bundles.",
+        "multiple": false,
+        "path": "stats.entrypoints",
         "type": "boolean",
       },
     ],
     "description": "Display the entry points with the corresponding bundles.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "stats-env": Object {
     "configs": Array [
@@ -4237,6 +4759,19 @@ Object {
       },
     ],
     "description": "Add errors.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-errors-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add errors count.",
+        "multiple": false,
+        "path": "stats.errorsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add errors count.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4810,35 +5345,48 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-warnings-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add warnings count.",
+        "multiple": false,
+        "path": "stats.warningsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add warnings count.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-warnings-filter": Object {
     "configs": Array [
       Object {
-        "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": true,
         "path": "stats.warningsFilter[]",
         "type": "RegExp",
       },
       Object {
-        "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": true,
         "path": "stats.warningsFilter[]",
         "type": "string",
       },
     ],
-    "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
     "multiple": true,
     "simpleType": "string",
   },
   "stats-warnings-filter-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Clear all items provided in configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": false,
         "path": "stats.warningsFilter",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "description": "Clear all items provided in configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4846,24 +5394,36 @@ Object {
     "configs": Array [
       Object {
         "description": "Environment to build for.",
+        "multiple": true,
+        "path": "target[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Environment to build for. An array of environments to build for all of them when possible.",
         "multiple": false,
         "path": "target",
         "type": "enum",
         "values": Array [
-          "web",
-          "webworker",
-          "node",
-          "async-node",
-          "node-webkit",
-          "electron-main",
-          "electron-renderer",
-          "electron-preload",
+          false,
         ],
       },
     ],
-    "description": "Environment to build for.",
-    "multiple": false,
+    "description": "Environment to build for. Environment to build for. An array of environments to build for all of them when possible.",
+    "multiple": true,
     "simpleType": "string",
+  },
+  "target-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Environment to build for. An array of environments to build for all of them when possible.",
+        "multiple": false,
+        "path": "target",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Environment to build for. An array of environments to build for all of them when possible.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "watch": Object {
     "configs": Array [

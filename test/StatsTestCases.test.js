@@ -158,7 +158,7 @@ describe("StatsTestCases", () => {
 					toStringOptions.children = c.options.map(o => o.stats);
 				}
 				// mock timestamps
-				for (const s of [].concat(stats.stats || stats)) {
+				for (const { compilation: s } of [].concat(stats.stats || stats)) {
 					expect(s.startTime).toBeGreaterThan(0);
 					expect(s.endTime).toBeGreaterThan(0);
 					s.endTime = new Date("04/20/1970, 12:42:42 PM").getTime();
@@ -183,7 +183,7 @@ describe("StatsTestCases", () => {
 				const testPath = path.join(base, testName);
 				actual = actual
 					.replace(/\r\n?/g, "\n")
-					.replace(/[\t ]*Version:.+\n/g, "")
+					.replace(/webpack [^ )]+(\)?) compiled/g, "webpack x.x.x$1 compiled")
 					.replace(new RegExp(quotemeta(testPath), "g"), "Xdir/" + testName)
 					.replace(/(\w)\\(\w)/g, "$1/$2")
 					.replace(/, additional resolving: X ms/g, "");
