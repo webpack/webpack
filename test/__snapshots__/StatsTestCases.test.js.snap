@@ -1639,7 +1639,7 @@ cir2 from cir1.js  359 bytes    6, 5  [emitted]  cir2 from cir1
           cir2.js  299 bytes       5  [emitted]  cir2
           main.js   9.25 KiB       7  [emitted]  main
 Entrypoint main = main.js
-chunk    {0} cir1.js (cir1) 81 bytes <{5}> <{7}> >{6}< [rendered]
+chunk    {0} cir1.js (cir1) 81 bytes <{5}> <{6}> <{7}> >{6}< [rendered]
     > [5] ./index.js 13:0-54
     > [7] ./circular2.js 1:0-79
     > [7] ./circular2.js 1:0-79
@@ -1664,7 +1664,7 @@ chunk    {4} chunk.js (chunk) 0 bytes <{2}> <{3}> [rendered]
 chunk    {5} cir2.js (cir2) 81 bytes <{7}> >{0}< [rendered]
     > [5] ./index.js 14:0-54
  [7] ./circular2.js 81 bytes {5} {6} [built]
-chunk    {6} cir2 from cir1.js (cir2 from cir1) 81 bytes <{0}> [rendered]
+chunk    {6} cir2 from cir1.js (cir2 from cir1) 81 bytes <{0}> >{0}< [rendered]
     > [6] ./circular1.js 1:0-79
     > [6] ./circular1.js 1:0-79
  [7] ./circular2.js 81 bytes {5} {6} [built]
