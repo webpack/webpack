@@ -1446,7 +1446,7 @@ chunk {284} (runtime: main) chunk.js (chunk) 2 bytes <{374}> <{753}> [rendered]
   > [10] ./index.js 9:1-10:12
   ./modules/c.js [115] 1 bytes {284} {753} [built] [code generated]
   ./modules/d.js [928] 1 bytes {284} {374} [built] [code generated]
-chunk {288} (runtime: main) cir2 from cir1.js (cir2 from cir1) 82 bytes <{592}> [rendered]
+chunk {288} (runtime: main) cir2 from cir1.js (cir2 from cir1) 82 bytes <{592}> >{592}< [rendered]
   > [655] ./circular1.js 1:0-79
   ./circular2.js [193] 81 bytes {288} {289} [built] [code generated]
   ./modules/e.js [798] 1 bytes {288} [built] [code generated]
@@ -1458,7 +1458,7 @@ chunk {374} (runtime: main) abd.js (abd) 3 bytes <{179}> >{284}< [rendered]
   ./modules/a.js [839] 1 bytes {90} {374} [built] [code generated]
   ./modules/b.js [836] 1 bytes {90} {374} [built] [code generated]
   ./modules/d.js [928] 1 bytes {284} {374} [built] [code generated]
-chunk {592} (runtime: main) cir1.js (cir1) 81 bytes <{179}> <{289}> >{288}< [rendered]
+chunk {592} (runtime: main) cir1.js (cir1) 81 bytes <{179}> <{288}> <{289}> >{288}< [rendered]
   > [10] ./index.js 13:0-54
   > [193] ./circular2.js 1:0-79
   ./circular1.js [655] 81 bytes {592} [built] [code generated]
