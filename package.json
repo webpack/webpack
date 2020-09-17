@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "4.44.1",
+  "version": "4.44.2",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
