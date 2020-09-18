@@ -9,6 +9,7 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const FakeDocument = require("./helpers/FakeDocument");
+const CurrentScript = require("./helpers/CurrentScript");
 
 const webpack = require("..");
 const prepareOptions = require("./helpers/prepareOptions");
@@ -222,12 +223,13 @@ const describeCases = config => {
 									const bundlePath = testConfig.findBundle(i, optionsArr[i]);
 									if (bundlePath) {
 										filesCount++;
+										const document = new FakeDocument();
 										const globalContext = {
 											console: console,
 											expect: expect,
 											setTimeout: setTimeout,
 											clearTimeout: clearTimeout,
-											document: new FakeDocument(),
+											document,
 											location: {
 												href: "https://test.cases/path/index.html",
 												origin: "https://test.cases",
@@ -243,6 +245,7 @@ const describeCases = config => {
 											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 												let content;
 												let p;
+												let subPath = "";
 												if (Array.isArray(module)) {
 													p = path.join(currentDirectory, ".array-require.js");
 													content = `module.exports = (${module
@@ -253,6 +256,26 @@ const describeCases = config => {
 												} else {
 													p = path.join(currentDirectory, module);
 													content = fs.readFileSync(p, "utf-8");
+													const lastSlash = module.lastIndexOf("/");
+													let firstSlash = module.indexOf("/");
+
+													if (lastSlash !== -1 && firstSlash !== lastSlash) {
+														if (firstSlash !== -1) {
+															let next = module.indexOf("/", firstSlash + 1);
+															let dir = module.slice(firstSlash + 1, next);
+
+															while (dir === ".") {
+																firstSlash = next;
+																next = module.indexOf("/", firstSlash + 1);
+																dir = module.slice(firstSlash + 1, next);
+															}
+														}
+
+														subPath = module.slice(
+															firstSlash + 1,
+															lastSlash + 1
+														);
+													}
 												}
 												if (p in requireCache) {
 													return requireCache[p].exports;
@@ -262,6 +285,9 @@ const describeCases = config => {
 												};
 												requireCache[p] = m;
 												let runInNewContext = false;
+												let oldCurrentScript = document.currentScript;
+												document.currentScript = new CurrentScript(subPath);
+
 												const moduleScope = {
 													require: _require.bind(
 														null,
@@ -357,6 +383,10 @@ const describeCases = config => {
 													? vm.runInNewContext(code, globalContext, p)
 													: vm.runInThisContext(code, p);
 												fn.call(m.exports, moduleScope);
+
+												//restore state
+												document.currentScript = oldCurrentScript;
+
 												return m.exports;
 											} else if (
 												testConfig.modules &&

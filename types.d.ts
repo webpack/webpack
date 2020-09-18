@@ -6037,6 +6037,11 @@ declare interface Output {
 	importFunctionName?: string;
 
 	/**
+	 * The name of the native import.meta object (can be exchanged for a polyfill).
+	 */
+	importMetaName?: string;
+
+	/**
 	 * Make the output files a library, exporting the exports of the entry point.
 	 */
 	library?: Library;
@@ -6279,6 +6284,11 @@ declare interface OutputNormalized {
 	 * The name of the native import() function (can be exchanged for a polyfill).
 	 */
 	importFunctionName?: string;
+
+	/**
+	 * The name of the native import.meta object (can be exchanged for a polyfill).
+	 */
+	importMetaName?: string;
 
 	/**
 	 * Options for library.
@@ -7785,6 +7795,7 @@ declare abstract class RuntimeTemplate {
 	supportsBigIntLiteral(): boolean;
 	supportsDynamicImport(): boolean;
 	supportsEcmaScriptModuleSyntax(): boolean;
+	supportTemplateLiteral(): boolean;
 	returningFunction(returnValue?: any, args?: string): string;
 	basicFunction(args?: any, body?: any): string;
 	destructureArray(items?: any, value?: any): string;

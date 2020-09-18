@@ -2445,6 +2445,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-import-meta-name": Object {
+    "configs": Array [
+      Object {
+        "description": "The name of the native import.meta object (can be exchanged for a polyfill).",
+        "multiple": false,
+        "path": "output.importMetaName",
+        "type": "string",
+      },
+    ],
+    "description": "The name of the native import.meta object (can be exchanged for a polyfill).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-library": Object {
     "configs": Array [
       Object {
@@ -2783,6 +2796,15 @@ Object {
   },
   "output-public-path": Object {
     "configs": Array [
+      Object {
+        "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
+        "multiple": false,
+        "path": "output.publicPath",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
       Object {
         "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
         "multiple": false,

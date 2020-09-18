@@ -66,6 +66,8 @@ const describeCases = config => {
 									options.output.chunkFilename = "[name].chunk.[fullhash].js";
 								if (options.output.pathinfo === undefined)
 									options.output.pathinfo = true;
+								if (options.output.publicPath === undefined)
+									options.output.publicPath = "";
 								if (options.output.library === undefined)
 									options.output.library = { type: "commonjs2" };
 								if (!options.optimization) options.optimization = {};
