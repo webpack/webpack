@@ -13,7 +13,7 @@
     "@webassemblyjs/wasm-parser": "1.9.0",
     "acorn": "^7.4.0",
     "chrome-trace-event": "^1.0.2",
-    "enhanced-resolve": "5.0.0-beta.12",
+    "enhanced-resolve": "^5.0.0",
     "eslint-scope": "^5.1.0",
     "events": "^3.2.0",
     "glob-to-regexp": "^0.4.1",
@@ -24,10 +24,10 @@
     "neo-async": "^2.6.2",
     "pkg-dir": "^4.2.0",
     "schema-utils": "^2.7.0",
-    "tapable": "^2.0.0-beta.11",
+    "tapable": "^2.0.0",
     "terser-webpack-plugin": "^4.1.0",
-    "watchpack": "2.0.0-beta.15",
-    "webpack-sources": "2.0.0-beta.10"
+    "watchpack": "^2.0.0",
+    "webpack-sources": "^2.0.0"
   },
   "peerDependenciesMeta": {
     "webpack-cli": {
