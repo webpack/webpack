@@ -267,6 +267,30 @@ export type RuleSetLoaderOptions =
 			[k: string]: any;
 	  };
 /**
+ * Redirect module requests.
+ */
+export type ResolveAlias =
+	| {
+			/**
+			 * New request.
+			 */
+			alias: string[] | false | string;
+			/**
+			 * Request to be redirected.
+			 */
+			name: string;
+			/**
+			 * Redirect only exact matching request.
+			 */
+			onlyModule?: boolean;
+	  }[]
+	| {
+			/**
+			 * New request.
+			 */
+			[k: string]: string[] | false | string;
+	  };
+/**
  * A list of descriptions of loaders applied.
  */
 export type RuleSetUse =
@@ -1168,27 +1192,7 @@ export interface ResolveOptions {
 	/**
 	 * Redirect module requests.
 	 */
-	alias?:
-		| {
-				/**
-				 * New request.
-				 */
-				alias: string[] | false | string;
-				/**
-				 * Request to be redirected.
-				 */
-				name: string;
-				/**
-				 * Redirect only exact matching request.
-				 */
-				onlyModule?: boolean;
-		  }[]
-		| {
-				/**
-				 * New request.
-				 */
-				[k: string]: string[] | false | string;
-		  };
+	alias?: ResolveAlias;
 	/**
 	 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
 	 */
@@ -1237,6 +1241,10 @@ export interface ResolveOptions {
 	 */
 	extensions?: string[];
 	/**
+	 * Redirect module requests when normal resolving fails.
+	 */
+	fallback?: ResolveAlias;
+	/**
 	 * Filesystem for the resolver.
 	 */
 	fileSystem?: import("../lib/util/fs").InputFileSystem;
@@ -1244,6 +1252,10 @@ export interface ResolveOptions {
 	 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
 	 */
 	fullySpecified?: boolean;
+	/**
+	 * Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).
+	 */
+	importsFields?: string[];
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point.
 	 */

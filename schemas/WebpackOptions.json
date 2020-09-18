@@ -2203,67 +2203,17 @@
         }
       ]
     },
-    "ResolveLoader": {
-      "description": "Options for the resolver when resolving loaders.",
-      "oneOf": [
+    "ResolveAlias": {
+      "description": "Redirect module requests.",
+      "anyOf": [
         {
-          "$ref": "#/definitions/ResolveOptions"
-        }
-      ]
-    },
-    "ResolveOptions": {
-      "description": "Options object for resolving requests.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "alias": {
-          "description": "Redirect module requests.",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "description": "Alias configuration.",
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "alias": {
-                    "description": "New request.",
-                    "anyOf": [
-                      {
-                        "description": "Multiple alternative requests.",
-                        "type": "array",
-                        "items": {
-                          "description": "One choice of request.",
-                          "type": "string",
-                          "minLength": 1
-                        }
-                      },
-                      {
-                        "description": "Ignore request (replace with empty module).",
-                        "enum": [false]
-                      },
-                      {
-                        "description": "New request.",
-                        "type": "string",
-                        "minLength": 1
-                      }
-                    ]
-                  },
-                  "name": {
-                    "description": "Request to be redirected.",
-                    "type": "string"
-                  },
-                  "onlyModule": {
-                    "description": "Redirect only exact matching request.",
-                    "type": "boolean"
-                  }
-                },
-                "required": ["alias", "name"]
-              }
-            },
-            {
-              "type": "object",
-              "additionalProperties": {
+          "type": "array",
+          "items": {
+            "description": "Alias configuration.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "alias": {
                 "description": "New request.",
                 "anyOf": [
                   {
@@ -2285,9 +2235,62 @@
                     "minLength": 1
                   }
                 ]
+              },
+              "name": {
+                "description": "Request to be redirected.",
+                "type": "string"
+              },
+              "onlyModule": {
+                "description": "Redirect only exact matching request.",
+                "type": "boolean"
               }
-            }
-          ]
+            },
+            "required": ["alias", "name"]
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "description": "New request.",
+            "anyOf": [
+              {
+                "description": "Multiple alternative requests.",
+                "type": "array",
+                "items": {
+                  "description": "One choice of request.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              {
+                "description": "Ignore request (replace with empty module).",
+                "enum": [false]
+              },
+              {
+                "description": "New request.",
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "ResolveLoader": {
+      "description": "Options for the resolver when resolving loaders.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/ResolveOptions"
+        }
+      ]
+    },
+    "ResolveOptions": {
+      "description": "Options object for resolving requests.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "alias": {
+          "$ref": "#/definitions/ResolveAlias"
         },
         "aliasFields": {
           "description": "Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
@@ -2373,6 +2376,14 @@
             "minLength": 1
           }
         },
+        "fallback": {
+          "description": "Redirect module requests when normal resolving fails.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ResolveAlias"
+            }
+          ]
+        },
         "fileSystem": {
           "description": "Filesystem for the resolver.",
           "tsType": "(import('../lib/util/fs').InputFileSystem)"
@@ -2380,6 +2391,14 @@
         "fullySpecified": {
           "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
           "type": "boolean"
+        },
+        "importsFields": {
+          "description": "Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+          "type": "array",
+          "items": {
+            "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+            "type": "string"
+          }
         },
         "mainFields": {
           "description": "Field names from the description file (package.json) which are used to find the default entry point.",

@@ -1208,6 +1208,9 @@ describe("Defaults", () => {
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
+		-     "publicPath": "auto",
+		+     "publicPath": "",
+		@@ ... @@
 		-     "wasmLoading": "fetch",
 		+     "wasmLoading": "async-node",
 		@@ ... @@
