@@ -3519,7 +3519,7 @@
           "type": "number"
         },
         "ignored": {
-          "description": "Ignore some files from watching (glob pattern).",
+          "description": "Ignore some files from watching (glob pattern or regexp).",
           "anyOf": [
             {
               "instanceof": "RegExp",
