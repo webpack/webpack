@@ -467,6 +467,10 @@ export type Iife = boolean;
  */
 export type ImportFunctionName = string;
 /**
+ * The name of the native import.meta object (can be exchanged for a polyfill).
+ */
+export type ImportMetaName = string;
+/**
  * Make the output files a library, exporting the exports of the entry point.
  */
 export type Library = LibraryName | LibraryOptions;
@@ -1761,6 +1765,10 @@ export interface Output {
 	 */
 	importFunctionName?: ImportFunctionName;
 	/**
+	 * The name of the native import.meta object (can be exchanged for a polyfill).
+	 */
+	importMetaName?: ImportMetaName;
+	/**
 	 * Make the output files a library, exporting the exports of the entry point.
 	 */
 	library?: Library;
@@ -2427,6 +2435,10 @@ export interface OutputNormalized {
 	 * The name of the native import() function (can be exchanged for a polyfill).
 	 */
 	importFunctionName?: ImportFunctionName;
+	/**
+	 * The name of the native import.meta object (can be exchanged for a polyfill).
+	 */
+	importMetaName?: ImportMetaName;
 	/**
 	 * Options for library.
 	 */

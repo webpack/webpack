@@ -780,6 +780,10 @@
       "description": "The name of the native import() function (can be exchanged for a polyfill).",
       "type": "string"
     },
+    "ImportMetaName": {
+      "description": "The name of the native import.meta object (can be exchanged for a polyfill).",
+      "type": "string"
+    },
     "InfrastructureLogging": {
       "description": "Options for infrastructure level logging.",
       "type": "object",
@@ -1868,6 +1872,9 @@
         "importFunctionName": {
           "$ref": "#/definitions/ImportFunctionName"
         },
+        "importMetaName": {
+          "$ref": "#/definitions/ImportMetaName"
+        },
         "library": {
           "$ref": "#/definitions/Library"
         },
@@ -2031,6 +2038,9 @@
         },
         "importFunctionName": {
           "$ref": "#/definitions/ImportFunctionName"
+        },
+        "importMetaName": {
+          "$ref": "#/definitions/ImportMetaName"
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"

@@ -6037,6 +6037,11 @@ declare interface Output {
 	importFunctionName?: string;
 
 	/**
+	 * The name of the native import.meta object (can be exchanged for a polyfill).
+	 */
+	importMetaName?: string;
+
+	/**
 	 * Make the output files a library, exporting the exports of the entry point.
 	 */
 	library?: Library;
@@ -6279,6 +6284,11 @@ declare interface OutputNormalized {
 	 * The name of the native import() function (can be exchanged for a polyfill).
 	 */
 	importFunctionName?: string;
+
+	/**
+	 * The name of the native import.meta object (can be exchanged for a polyfill).
+	 */
+	importMetaName?: string;
 
 	/**
 	 * Options for library.
