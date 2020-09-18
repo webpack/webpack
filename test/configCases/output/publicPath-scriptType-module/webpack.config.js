@@ -4,7 +4,7 @@ module.exports = {
 	target: "electron-renderer",
 	output: {
 		assetModuleFilename: "[name][ext]",
-		importFunctionName: "pseudoImport",
+		importMetaName: "pseudoImport.meta",
 		scriptType: "module",
 		filename: "index.mjs"
 	},

@@ -303,6 +303,7 @@ describe("Defaults", () => {
 		    "hotUpdateMainFilename": "[fullhash].hot-update.json",
 		    "iife": true,
 		    "importFunctionName": "import",
+		    "importMetaName": "import.meta",
 		    "library": undefined,
 		    "module": false,
 		    "path": "<cwd>/dist",
