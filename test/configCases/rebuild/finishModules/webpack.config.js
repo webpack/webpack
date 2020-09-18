@@ -20,11 +20,17 @@ var testPlugin = function () {
 				return m.resource && m.resource === src;
 			}
 
+			const newSrc = `module.exports = { foo: { foo: 'bar' }, doThings: () => { }}`;
+
 			const module = Array.from(compilation.modules).find(matcher);
 			/** @type {any} */
 			const inputFileSystem = compilation.inputFileSystem;
 			const cachedFileInput = inputFileSystem._readFileBackend._data.get(src);
-			cachedFileInput.result = `module.exports = { foo: { foo: 'bar' }, doThings: () => { }}`;
+			if (!cachedFileInput) {
+				inputFileSystem._readFileBackend._data.set(src, newSrc);
+			} else {
+				cachedFileInput.result = `module.exports = { foo: { foo: 'bar' }, doThings: () => { }}`;
+			}
 
 			if (!module) {
 				throw new Error("something went wrong");
