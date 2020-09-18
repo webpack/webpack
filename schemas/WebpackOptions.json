@@ -3522,6 +3522,10 @@
           "description": "Ignore some files from watching (glob pattern).",
           "anyOf": [
             {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
               "type": "array",
               "items": {
                 "description": "A glob pattern for files that should be ignored from watching.",
