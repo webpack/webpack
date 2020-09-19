@@ -2815,7 +2815,9 @@ declare class EvalDevToolModulePlugin {
 }
 declare class EvalSourceMapDevToolPlugin {
 	constructor(inputOptions: string | SourceMapDevToolPluginOptions);
-	sourceMapComment: string;
+	sourceMapComment:
+		| string
+		| ((pathData: PathData, assetInfo: AssetInfo) => string);
 	moduleFilenameTemplate: DevtoolFallbackModuleFilenameTemplate;
 	namespace: string;
 	options: SourceMapDevToolPluginOptions;
