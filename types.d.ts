@@ -1614,6 +1614,7 @@ declare class Compiler {
 	parentCompilation: Compilation;
 	root: Compiler;
 	outputPath: string;
+	watching: Watching;
 	outputFileSystem: OutputFileSystem;
 	intermediateFileSystem: InputFileSystem &
 		OutputFileSystem &
