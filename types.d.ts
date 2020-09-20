@@ -1804,6 +1804,28 @@ declare interface Configuration {
 	externalsType?: ExternalsType;
 
 	/**
+	 * Ignore specific warnings.
+	 */
+	ignoreWarnings?: (
+		| RegExp
+		| {
+				/**
+				 * A RegExp to select the origin file for the warning.
+				 */
+				file?: RegExp;
+				/**
+				 * A RegExp to select the warning message.
+				 */
+				message?: RegExp;
+				/**
+				 * A RegExp to select the origin module for the warning.
+				 */
+				module?: RegExp;
+		  }
+		| ((warning: WebpackError, compilation: Compilation) => boolean)
+	)[];
+
+	/**
 	 * Options for infrastructure level logging.
 	 */
 	infrastructureLogging?: InfrastructureLogging;
@@ -9498,6 +9520,14 @@ declare interface WebpackOptionsNormalized {
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
 	externalsType?: ExternalsType;
+
+	/**
+	 * Ignore specific warnings.
+	 */
+	ignoreWarnings?: ((
+		warning: WebpackError,
+		compilation: Compilation
+	) => boolean)[];
 
 	/**
 	 * Options for infrastructure level logging.
