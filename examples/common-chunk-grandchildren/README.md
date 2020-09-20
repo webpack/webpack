@@ -168,6 +168,52 @@ module.exports = {
 /******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/load script */
+/******/ 	(() => {
+/******/ 		var inProgress = {};
+/******/ 		// data-webpack is not used as build has no uniqueName
+/******/ 		// loadScript function to load a script via script tag
+/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
+/******/ 			var script, needAttach;
+/******/ 			if(key !== undefined) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				for(var i = 0; i < scripts.length; i++) {
+/******/ 					var s = scripts[i];
+/******/ 					if(s.getAttribute("src") == url) { script = s; break; }
+/******/ 				}
+/******/ 			}
+/******/ 			if(!script) {
+/******/ 				needAttach = true;
+/******/ 				script = document.createElement('script');
+/******/ 		
+/******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120;
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
+/******/ 		
+/******/ 				script.src = url;
+/******/ 			}
+/******/ 			inProgress[url] = [done];
+/******/ 			var onScriptComplete = (prev, event) => {
+/******/ 				// avoid mem leaks in IE.
+/******/ 				script.onerror = script.onload = null;
+/******/ 				clearTimeout(timeout);
+/******/ 				var doneFns = inProgress[url];
+/******/ 				delete inProgress[url];
+/******/ 				script.parentNode && script.parentNode.removeChild(script);
+/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				if(prev) return prev(event);
+/******/ 			}
+/******/ 			;
+/******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			needAttach && document.head.appendChild(script);
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
 /******/ 		__webpack_require__.p = "dist/";
@@ -175,6 +221,8 @@ module.exports = {
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
@@ -201,49 +249,24 @@ module.exports = {
 /******/ 		
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
-/******/ 							var loadingEnded = () => {
+/******/ 							// create error before stack unwound to get useful stacktrace later
+/******/ 							var error = new Error();
+/******/ 							var loadingEnded = (event) => {
 /******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
 /******/ 									installedChunkData = installedChunks[chunkId];
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
-/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 									if(installedChunkData) {
+/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 										var realSrc = event && event.target && event.target.src;
+/******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 										error.name = 'ChunkLoadError';
+/******/ 										error.type = errorType;
+/******/ 										error.request = realSrc;
+/******/ 										installedChunkData[1](error);
+/******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							var script = document.createElement('script');
-/******/ 							var onScriptComplete;
-/******/ 		
-/******/ 							script.charset = 'utf-8';
-/******/ 							script.timeout = 120;
-/******/ 							if (__webpack_require__.nc) {
-/******/ 								script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 							}
-/******/ 							script.src = url;
-/******/ 		
-/******/ 							// create error before stack unwound to get useful stacktrace later
-/******/ 							var error = new Error();
-/******/ 							onScriptComplete = (event) => {
-/******/ 								onScriptComplete = () => {
-/******/ 		
-/******/ 								}
-/******/ 								// avoid mem leaks in IE.
-/******/ 								script.onerror = script.onload = null;
-/******/ 								clearTimeout(timeout);
-/******/ 								var reportError = loadingEnded();
-/******/ 								if(reportError) {
-/******/ 									var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 									var realSrc = event && event.target && event.target.src;
-/******/ 									error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
-/******/ 									error.name = 'ChunkLoadError';
-/******/ 									error.type = errorType;
-/******/ 									error.request = realSrc;
-/******/ 									reportError(error);
-/******/ 								}
-/******/ 							}
-/******/ 							;
-/******/ 							var timeout = setTimeout(() => {
-/******/ 								onScriptComplete({ type: 'timeout', target: script })
-/******/ 							}, 120000);
-/******/ 							script.onerror = script.onload = onScriptComplete;
-/******/ 							document.head.appendChild(script);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -260,11 +283,8 @@ module.exports = {
 /******/ 		// no deferred startup
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		function webpackJsonpCallback(data) {
-/******/ 			var chunkIds = data[0];
-/******/ 			var moreModules = data[1];
-/******/ 		
-/******/ 			var runtime = data[3];
+/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
@@ -281,17 +301,16 @@ module.exports = {
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			if(parentJsonpFunction) parentJsonpFunction(data);
+/******/ 			parentChunkLoadingFunction(data);
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
 /******/ 		
-/******/ 		};
+/******/ 		}
 /******/ 		
-/******/ 		var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 		var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
-/******/ 		jsonpArray.push = webpackJsonpCallback;
-/******/ 		var parentJsonpFunction = oldJsonpFunction;
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -304,7 +323,6 @@ module.exports = {
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [unused] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.* */
 var main = function() {
 	console.log("Main class");
@@ -327,15 +345,15 @@ main();
 # dist/366.output.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[366],[
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[366],[
 /* 0 */,
 /* 1 */
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module, __webpack_require__ */
+/*! CommonJS bailout: module.exports is used directly at 3:0-14 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var reusableComponent = __webpack_require__(/*! ./reusableComponent */ 2);
@@ -353,15 +371,15 @@ module.exports = function() {
 # dist/588.output.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[588],{
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[588],{
 
 /***/ 3:
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module, __webpack_require__, __webpack_require__.e, __webpack_require__.* */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = function() {
@@ -381,15 +399,15 @@ module.exports = function() {
 # dist/145.output.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[145],{
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[145],{
 
 /***/ 4:
 /*!******************!*\
   !*** ./pageC.js ***!
   \******************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module, __webpack_require__ */
+/*! CommonJS bailout: module.exports is used directly at 3:0-14 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 var reusableComponent = __webpack_require__(/*! ./reusableComponent */ 2);
@@ -408,15 +426,15 @@ module.exports = function() {
 # dist/421.output.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[421],{
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[421],{
 
 /***/ 2:
 /*!******************************!*\
   !*** ./reusableComponent.js ***!
   \******************************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = function() {
@@ -434,83 +452,85 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-        Asset       Size
-145.output.js  570 bytes  [emitted]
-366.output.js  576 bytes  [emitted]
-421.output.js  452 bytes  [emitted]
-588.output.js  754 bytes  [emitted]
-    output.js   8.11 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
+asset output.js 8.95 KiB [emitted] (name: main)
+asset 588.output.js 736 bytes [emitted]
+asset 366.output.js 558 bytes [emitted]
+asset 145.output.js 552 bytes [emitted]
+asset 421.output.js 434 bytes [emitted]
 chunk 145.output.js 136 bytes [rendered]
-    > ./pageB.js 3:1-6:3
- ./pageC.js 136 bytes [built]
-     cjs require ./pageC ./pageB.js 4:15-33
-     cjs self exports reference ./pageC.js 3:0-14
-chunk output.js (main) 220 bytes (javascript) 4.19 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js 220 bytes [built]
-     [no exports used]
-     entry ./example.js main
-     + 5 hidden chunk modules
+  > ./pageB.js 3:1-6:3
+  ./pageC.js 136 bytes [built] [code generated]
+    [used exports unknown]
+    cjs require ./pageC ./pageB.js 4:15-33
+    cjs self exports reference ./pageC.js 3:0-14
+chunk output.js (main) 220 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 4.85 KiB 6 modules
+  ./example.js 220 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
 chunk 366.output.js 136 bytes [rendered]
-    > ./example.js 3:1-6:3
- ./pageA.js 136 bytes [built]
-     cjs require ./pageA ./example.js 4:15-33
-     cjs self exports reference ./pageA.js 3:0-14
+  > ./example.js 3:1-6:3
+  ./pageA.js 136 bytes [built] [code generated]
+    [used exports unknown]
+    cjs require ./pageA ./example.js 4:15-33
+    cjs self exports reference ./pageA.js 3:0-14
 chunk 421.output.js 69 bytes [rendered] split chunk (cache group: default)
-    > ./example.js 3:1-6:3
-    > ./pageB.js 3:1-6:3
- ./reusableComponent.js 69 bytes [built]
-     cjs require ./reusableComponent ./pageA.js 1:24-54
-     cjs require ./reusableComponent ./pageC.js 1:24-54
-     cjs self exports reference ./reusableComponent.js 1:0-14
+  > ./example.js 3:1-6:3
+  > ./pageB.js 3:1-6:3
+  ./reusableComponent.js 69 bytes [built] [code generated]
+    [used exports unknown]
+    cjs require ./reusableComponent ./pageA.js 1:24-54
+    cjs require ./reusableComponent ./pageC.js 1:24-54
+    cjs self exports reference ./reusableComponent.js 1:0-14
 chunk 588.output.js 133 bytes [rendered]
-    > ./example.js 7:1-10:3
- ./pageB.js 133 bytes [built]
-     cjs require ./pageB ./example.js 8:15-33
-     cjs self exports reference ./pageB.js 1:0-14
+  > ./example.js 7:1-10:3
+  ./pageB.js 133 bytes [built] [code generated]
+    [used exports unknown]
+    cjs require ./pageB ./example.js 8:15-33
+    cjs self exports reference ./pageB.js 1:0-14
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-        Asset       Size
-145.output.js  138 bytes  [emitted]
-366.output.js  138 bytes  [emitted]
-421.output.js  127 bytes  [emitted]
-588.output.js  202 bytes  [emitted]
-    output.js   1.42 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk 145.output.js 136 bytes [rendered]
-    > ./pageB.js 3:1-6:3
- ./pageC.js 136 bytes [built]
-     cjs require ./pageC ./pageB.js 4:15-33
-     cjs self exports reference ./pageC.js 3:0-14
-chunk output.js (main) 220 bytes (javascript) 4.19 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js 220 bytes [built]
-     [no exports used]
-     entry ./example.js main
-     + 5 hidden chunk modules
-chunk 366.output.js 136 bytes [rendered]
-    > ./example.js 3:1-6:3
- ./pageA.js 136 bytes [built]
-     cjs require ./pageA ./example.js 4:15-33
-     cjs self exports reference ./pageA.js 3:0-14
-chunk 421.output.js 69 bytes [rendered] split chunk (cache group: default)
-    > ./example.js 3:1-6:3
-    > ./pageB.js 3:1-6:3
- ./reusableComponent.js 69 bytes [built]
-     cjs require ./reusableComponent ./pageA.js 1:24-54
-     cjs require ./reusableComponent ./pageC.js 1:24-54
-     cjs self exports reference ./reusableComponent.js 1:0-14
-chunk 588.output.js 133 bytes [rendered]
-    > ./example.js 7:1-10:3
- ./pageB.js 133 bytes [built]
-     cjs require ./pageB ./example.js 8:15-33
-     cjs self exports reference ./pageB.js 1:0-14
+asset output.js 1.74 KiB [emitted] [minimized] (name: main)
+asset 588.output.js 198 bytes [emitted] [minimized]
+asset 145.output.js 134 bytes [emitted] [minimized]
+asset 366.output.js 134 bytes [emitted] [minimized]
+asset 421.output.js 123 bytes [emitted] [minimized]
+chunk (runtime: main) 145.output.js 136 bytes [rendered]
+  > ./pageB.js 3:1-6:3
+  ./pageC.js 136 bytes [built] [code generated]
+    [used exports unknown]
+    cjs require ./pageC ./pageB.js 4:15-33
+    cjs self exports reference ./pageC.js 3:0-14
+chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 4.85 KiB 6 modules
+  ./example.js 220 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+chunk (runtime: main) 366.output.js 136 bytes [rendered]
+  > ./example.js 3:1-6:3
+  ./pageA.js 136 bytes [built] [code generated]
+    [used exports unknown]
+    cjs require ./pageA ./example.js 4:15-33
+    cjs self exports reference ./pageA.js 3:0-14
+chunk (runtime: main) 421.output.js 69 bytes [rendered] split chunk (cache group: default)
+  > ./example.js 3:1-6:3
+  > ./pageB.js 3:1-6:3
+  ./reusableComponent.js 69 bytes [built] [code generated]
+    [used exports unknown]
+    cjs require ./reusableComponent ./pageA.js 1:24-54
+    cjs require ./reusableComponent ./pageC.js 1:24-54
+    cjs self exports reference ./reusableComponent.js 1:0-14
+chunk (runtime: main) 588.output.js 133 bytes [rendered]
+  > ./example.js 7:1-10:3
+  ./pageB.js 133 bytes [built] [code generated]
+    [used exports unknown]
+    cjs require ./pageB ./example.js 8:15-33
+    cjs self exports reference ./pageB.js 1:0-14
+webpack 5.0.0-beta.32 compiled successfully
 ```

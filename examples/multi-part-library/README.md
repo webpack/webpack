@@ -43,7 +43,7 @@ module.exports = {
 		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["alpha"] = factory();
-})(window, function() {
+})(self, function() {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -51,8 +51,8 @@ return /******/ (() => { // webpackBootstrap
   !*** ./alpha.js ***!
   \******************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = "alpha";
@@ -115,7 +115,7 @@ module.exports = "alpha";
 		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["beta"] = factory();
-})(window, function() {
+})(self, function() {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
@@ -124,8 +124,8 @@ return /******/ (() => { // webpackBootstrap
   !*** ./beta.js ***!
   \*****************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = "beta";
@@ -181,47 +181,43 @@ module.exports = "beta";
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-             Asset      Size
-MyLibrary.alpha.js  1.97 KiB  [emitted]  [name: alpha]
- MyLibrary.beta.js  1.97 KiB  [emitted]  [name: beta]
-Entrypoint alpha = MyLibrary.alpha.js
-Entrypoint beta = MyLibrary.beta.js
+asset MyLibrary.beta.js 1.96 KiB [emitted] (name: beta)
+asset MyLibrary.alpha.js 1.95 KiB [emitted] (name: alpha)
 chunk MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
-    > ./alpha alpha
- ./alpha.js 25 bytes [built]
-     cjs self exports reference ./alpha.js 1:0-14
-     entry ./alpha alpha
-     used as library export
+  > ./alpha alpha
+  ./alpha.js 25 bytes [built] [code generated]
+    [used exports unknown]
+    cjs self exports reference ./alpha.js 1:0-14
+    entry ./alpha alpha
+    used as library export
 chunk MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
-    > ./beta beta
- ./beta.js 24 bytes [built]
-     cjs self exports reference ./beta.js 1:0-14
-     entry ./beta beta
-     used as library export
+  > ./beta beta
+  ./beta.js 24 bytes [built] [code generated]
+    [used exports unknown]
+    cjs self exports reference ./beta.js 1:0-14
+    entry ./beta beta
+    used as library export
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-             Asset       Size
-MyLibrary.alpha.js  417 bytes  [emitted]  [name: alpha]
- MyLibrary.beta.js  413 bytes  [emitted]  [name: beta]
-Entrypoint alpha = MyLibrary.alpha.js
-Entrypoint beta = MyLibrary.beta.js
-chunk MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
-    > ./alpha alpha
- ./alpha.js 25 bytes [built]
-     cjs self exports reference ./alpha.js 1:0-14
-     entry ./alpha alpha
-     used as library export
-chunk MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
-    > ./beta beta
- ./beta.js 24 bytes [built]
-     cjs self exports reference ./beta.js 1:0-14
-     entry ./beta beta
-     used as library export
+asset MyLibrary.alpha.js 415 bytes [emitted] [minimized] (name: alpha)
+asset MyLibrary.beta.js 411 bytes [emitted] [minimized] (name: beta)
+chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
+  > ./alpha alpha
+  ./alpha.js 25 bytes [built] [code generated]
+    [used exports unknown]
+    cjs self exports reference ./alpha.js 1:0-14
+    entry ./alpha alpha
+    used as library export
+chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
+  > ./beta beta
+  ./beta.js 24 bytes [built] [code generated]
+    [used exports unknown]
+    cjs self exports reference ./beta.js 1:0-14
+    entry ./beta beta
+    used as library export
+webpack 5.0.0-beta.32 compiled successfully
 ```

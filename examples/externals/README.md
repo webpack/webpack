@@ -58,7 +58,7 @@ module.exports = {
 		var a = typeof exports === 'object' ? factory(require("add"), require("./math")["subtract"]) : factory(root["add"], root["subtract"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(window, function(__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) {
+})(self, function(__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -66,8 +66,8 @@ return /******/ (() => { // webpackBootstrap
   !*** ./example.js ***!
   \********************/
 /*! default exports */
-/*! export exampleValue [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! export exampleValue [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used in main (runtime-defined)] */
 /*! runtime requirements: __webpack_exports__, __webpack_require__ */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -81,8 +81,8 @@ exports.exampleValue = subtract(add(42, 2), 2);
 /*!**********************!*\
   !*** external "add" ***!
   \**********************/
-/*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! dynamic exports */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -94,8 +94,8 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 /*!***************************************************************************************************************!*\
   !*** external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} ***!
   \***************************************************************************************************************/
-/*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! dynamic exports */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -153,39 +153,28 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset      Size
-output.js  3.34 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
+asset output.js 3.29 KiB [emitted] (name: main)
 chunk output.js (main) 194 bytes [entry] [rendered]
-    > ./example.js main
- ./example.js 110 bytes [built]
-     [exports: exampleValue]
-     entry ./example.js main
-     used as library export
- external "add" 42 bytes [built]
-     cjs require add ./example.js 1:10-24
- external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes [built]
-     cjs require subtract ./example.js 2:15-34
+  > ./example.js main
+  dependent modules 84 bytes [dependent] 2 modules
+  ./example.js 110 bytes [built] [code generated]
+    [exports: exampleValue]
+    [used exports unknown]
+    entry ./example.js main
+    used as library export
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset       Size
-output.js  652 bytes  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 194 bytes [entry] [rendered]
-    > ./example.js main
- ./example.js 110 bytes [built]
-     [exports: exampleValue]
-     entry ./example.js main
-     used as library export
- external "add" 42 bytes [built]
-     cjs require add ./example.js 1:10-24
- external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes [built]
-     cjs require subtract ./example.js 2:15-34
+asset output.js 650 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 84 bytes [dependent] 2 modules
+  ./example.js 110 bytes [built] [code generated]
+    [exports: exampleValue]
+    entry ./example.js main
+    used as library export
+webpack 5.0.0-beta.32 compiled successfully
 ```

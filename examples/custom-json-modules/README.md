@@ -101,21 +101,47 @@ module.exports = {
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
-/* 0 */,
+/* 0 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! namespace exports */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _data_toml__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./data.toml */ 1);
+/* harmony import */ var _data_yaml__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./data.yaml */ 2);
+/* harmony import */ var _data_json5__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./data.json5 */ 3);
+
+
+
+
+document.querySelector('#app').innerHTML = [_data_toml__WEBPACK_IMPORTED_MODULE_0__, _data_yaml__WEBPACK_IMPORTED_MODULE_1__, _data_json5__WEBPACK_IMPORTED_MODULE_2__].map(data => `
+  <h1>${data.title}</h1>
+  <div>${data.owner.name}</div>
+  <div>${data.owner.organization}</div>
+  <div>${data.owner.bio}</div>
+  <div>${data.owner.dob}</div>
+`).join('<br><br>');
+
+
+/***/ }),
 /* 1 */
 /*!*******************!*\
   !*** ./data.toml ***!
   \*******************/
 /*! default exports */
-/*! export owner [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*!   export bio [provided] [unused] [could be renamed] */
-/*!   export dob [provided] [unused] [could be renamed] */
-/*!     exports [not provided] [unused] */
-/*!   export name [provided] [unused] [could be renamed] */
-/*!   export organization [provided] [unused] [could be renamed] */
-/*!   other exports [not provided] [unused] */
-/*! export title [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! export owner [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export bio [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export dob [provided] [no usage info] [missing usage info prevents renaming] */
+/*!     exports [not provided] [no usage info] */
+/*!   export name [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export organization [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   other exports [not provided] [no usage info] */
+/*! export title [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -127,15 +153,15 @@ module.exports = JSON.parse("{\"title\":\"TOML Example\",\"owner\":{\"name\":\"T
   !*** ./data.yaml ***!
   \*******************/
 /*! default exports */
-/*! export owner [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*!   export bio [provided] [unused] [could be renamed] */
-/*!   export dob [provided] [unused] [could be renamed] */
-/*!     exports [not provided] [unused] */
-/*!   export name [provided] [unused] [could be renamed] */
-/*!   export organization [provided] [unused] [could be renamed] */
-/*!   other exports [not provided] [unused] */
-/*! export title [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! export owner [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export bio [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export dob [provided] [no usage info] [missing usage info prevents renaming] */
+/*!     exports [not provided] [no usage info] */
+/*!   export name [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export organization [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   other exports [not provided] [no usage info] */
+/*! export title [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -147,14 +173,14 @@ module.exports = JSON.parse("{\"title\":\"YAML Example\",\"owner\":{\"name\":\"T
   !*** ./data.json5 ***!
   \********************/
 /*! default exports */
-/*! export owner [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*!   export bio [provided] [unused] [could be renamed] */
-/*!   export dob [provided] [unused] [could be renamed] */
-/*!   export name [provided] [unused] [could be renamed] */
-/*!   export organization [provided] [unused] [could be renamed] */
-/*!   other exports [not provided] [unused] */
-/*! export title [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! export owner [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export bio [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export dob [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export name [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   export organization [provided] [no usage info] [missing usage info prevents renaming] */
+/*!   other exports [not provided] [no usage info] */
+/*! export title [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -192,35 +218,27 @@ module.exports = JSON.parse("{\"title\":\"JSON5 Example\",\"owner\":{\"name\":\"
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
 ```
 
 </details>
 
 ``` js
-(() => {
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! namespace exports */
-/*! exports [not provided] [unused] */
-/*! runtime requirements: __webpack_require__ */
-/* harmony import */ var _data_toml__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./data.toml */ 1);
-/* harmony import */ var _data_yaml__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./data.yaml */ 2);
-/* harmony import */ var _data_json5__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./data.json5 */ 3);
-
-
-
-
-document.querySelector('#app').innerHTML = [_data_toml__WEBPACK_IMPORTED_MODULE_0__, _data_yaml__WEBPACK_IMPORTED_MODULE_1__, _data_json5__WEBPACK_IMPORTED_MODULE_2__].map(data => `
-  <h1>${data.title}</h1>
-  <div>${data.owner.name}</div>
-  <div>${data.owner.organization}</div>
-  <div>${data.owner.bio}</div>
-  <div>${data.owner.dob}</div>
-`).join('<br><br>');
-
-})();
-
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__(0);
+/******/ 	// This entry module used 'exports' so it can't be inlined
 /******/ })()
 ;
 ```
@@ -230,27 +248,14 @@ document.querySelector('#app').innerHTML = [_data_toml__WEBPACK_IMPORTED_MODULE_
 ## webpack output
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset      Size
-output.js  4.83 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 919 bytes [entry] [rendered]
-    > ./example.js main
- ./data.json5 189 bytes [built]
-     [exports: owner, title]
-     harmony side effect evaluation ./data.json5 ./example.js 3:0-32
-     harmony import specifier ./data.json5 ./example.js 5:56-60
- ./data.toml 188 bytes [built]
-     [exports: owner, title]
-     harmony side effect evaluation ./data.toml ./example.js 1:0-31
-     harmony import specifier ./data.toml ./example.js 5:44-48
- ./data.yaml 188 bytes [built]
-     [exports: owner, title]
-     harmony side effect evaluation ./data.yaml ./example.js 2:0-31
-     harmony import specifier ./data.yaml ./example.js 5:50-54
- ./example.js 354 bytes [built]
-     [no exports]
-     [no exports used]
-     entry ./example.js main
+asset output.js 5.98 KiB [emitted] (name: main)
+chunk output.js (main) 919 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
+  > ./example.js main
+  dependent modules 565 bytes [dependent] 3 modules
+  runtime modules 274 bytes 1 module
+  ./example.js 354 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```

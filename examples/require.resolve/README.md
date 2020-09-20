@@ -33,7 +33,6 @@ module.exports = Math.random();
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [unused] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.c, module.id, module.loaded, __webpack_require__.*, module */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -57,8 +56,8 @@ if(a == a2) throw new Error("Cache clear failed :(");
   !*** ./a.js ***!
   \**************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = Math.random();
@@ -119,39 +118,25 @@ module.exports = Math.random();
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset      Size
-output.js  2.38 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
+asset output.js 2.31 KiB [emitted] (name: main)
 chunk output.js (main) 313 bytes [entry] [rendered]
-    > ./example.js main
- ./a.js 31 bytes [built]
-     cjs self exports reference ./a.js 1:0-14
-     cjs require ./a ./example.js 1:8-22
-     require.resolve ./a.js ./example.js 4:10-35
-     cjs require ./a ./example.js 10:9-23
- ./example.js 282 bytes [built]
-     [no exports used]
-     entry ./example.js main
+  > ./example.js main
+  dependent modules 31 bytes [dependent] 1 module
+  ./example.js 282 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset       Size
-output.js  297 bytes  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 313 bytes [entry] [rendered]
-    > ./example.js main
- ./a.js 31 bytes [built]
-     cjs self exports reference ./a.js 1:0-14
-     cjs require ./a ./example.js 1:8-22
-     require.resolve ./a.js ./example.js 4:10-35
-     cjs require ./a ./example.js 10:9-23
- ./example.js 282 bytes [built]
-     [no exports used]
-     entry ./example.js main
+asset output.js 297 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 313 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 31 bytes [dependent] 1 module
+  ./example.js 282 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```

@@ -50,31 +50,49 @@ console.log(new square(7));
 ```javascript
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
-/* 0 */,
+/* 0 */
+/*!************************!*\
+  !*** ./example-app.js ***!
+  \************************/
+/*! namespace exports */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var example_vendor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! example-vendor */ 1);
+
+
+console.log((0,example_vendor__WEBPACK_IMPORTED_MODULE_0__.square)(7));
+console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
+
+
+/***/ }),
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c6c2f689b0bad44474d1 ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_4d8eacf7030dbe3ec0eb ***!
   \******************************************************************************************************/
 /*! namespace exports */
-/*! export square [provided] [used] [provision prevents renaming] */
-/*! other exports [not provided] [unused] */
+/*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_c6c2f689b0bad44474d1 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_4d8eacf7030dbe3ec0eb */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_c6c2f689b0bad44474d1" ***!
+  !*** external "vendor_lib_4d8eacf7030dbe3ec0eb" ***!
   \**************************************************/
-/*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! dynamic exports */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_c6c2f689b0bad44474d1;
+module.exports = vendor_lib_4d8eacf7030dbe3ec0eb;
 
 /***/ })
 /******/ 	]);
@@ -108,27 +126,27 @@ module.exports = vendor_lib_c6c2f689b0bad44474d1;
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
 ```
 
 </details>
 
 ``` js
-(() => {
-"use strict";
-/*!************************!*\
-  !*** ./example-app.js ***!
-  \************************/
-/*! namespace exports */
-/*! exports [not provided] [unused] */
-/*! runtime requirements: __webpack_require__ */
-/* harmony import */ var example_vendor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! example-vendor */ 1);
-
-
-console.log((0,example_vendor__WEBPACK_IMPORTED_MODULE_0__.square)(7));
-console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
-
-})();
-
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__(0);
+/******/ 	// This entry module used 'exports' so it can't be inlined
 /******/ })()
 ;
 ```
@@ -138,49 +156,30 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
- Asset      Size
-app.js  2.67 KiB  [emitted]  [name: main]
-Entrypoint main = app.js
-chunk app.js (main) 178 bytes [entry] [rendered]
-    > ./example-app main
- ./example-app.js 94 bytes [built]
-     [no exports]
-     [no exports used]
-     entry ./example-app main
- delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c6c2f689b0bad44474d1 42 bytes [built]
-     [exports: square]
-     [all exports used]
-     harmony side effect evaluation example-vendor ./example-app.js 1:0-40
-     harmony import specifier example-vendor ./example-app.js 3:12-18
-     harmony import specifier example-vendor ./example-app.js 4:16-22
- external "vendor_lib_c6c2f689b0bad44474d1" 42 bytes [built]
-     delegated source dll-reference vendor_lib_c6c2f689b0bad44474d1 delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c6c2f689b0bad44474d1
+asset app.js 3.52 KiB [emitted] (name: main)
+chunk app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
+  > ./example-app main
+  dependent modules 84 bytes [dependent] 2 modules
+  runtime modules 274 bytes 1 module
+  ./example-app.js 94 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example-app main
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
- Asset       Size
-app.js  319 bytes  [emitted]  [name: main]
-Entrypoint main = app.js
-chunk app.js (main) 178 bytes [entry] [rendered]
-    > ./example-app main
- ./example-app.js 94 bytes [built]
-     [no exports]
-     [no exports used]
-     entry ./example-app main
- delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c6c2f689b0bad44474d1 42 bytes [built]
-     [exports: square]
-     [all exports used]
-     harmony side effect evaluation example-vendor ./example-app.js 1:0-40
-     harmony import specifier example-vendor ./example-app.js 3:12-18
-     harmony import specifier example-vendor ./example-app.js 4:16-22
- external "vendor_lib_c6c2f689b0bad44474d1" 42 bytes [built]
-     delegated source dll-reference vendor_lib_c6c2f689b0bad44474d1 delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c6c2f689b0bad44474d1
+asset app.js 319 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
+  > ./example-app main
+  dependent modules 84 bytes [dependent] 2 modules
+  ./example-app.js 94 bytes [built] [code generated]
+    [no exports]
+    [no exports used]
+    entry ./example-app main
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 <!-- @TODO:

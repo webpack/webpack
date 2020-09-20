@@ -65,8 +65,8 @@ require(
   !*** ./commonjs.js ***!
   \*********************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module, __webpack_require__, __webpack_require__.oe, __webpack_require__.* */
+/*! CommonJS bailout: module.exports is used directly at 2:0-14 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 // CommonJs Module Format
@@ -84,7 +84,6 @@ Promise.resolve(/*! AMD require */).then(function() { var __WEBPACK_AMD_REQUIRE_
   !*** ./amd.js ***!
   \****************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, module */
 /***/ ((module, exports, __webpack_require__) => {
 
@@ -104,8 +103,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Fo
   !*** ./harmony.js ***!
   \********************/
 /*! namespace exports */
-/*! export default [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -211,6 +210,52 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/load script */
+/******/ 	(() => {
+/******/ 		var inProgress = {};
+/******/ 		// data-webpack is not used as build has no uniqueName
+/******/ 		// loadScript function to load a script via script tag
+/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
+/******/ 			var script, needAttach;
+/******/ 			if(key !== undefined) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				for(var i = 0; i < scripts.length; i++) {
+/******/ 					var s = scripts[i];
+/******/ 					if(s.getAttribute("src") == url) { script = s; break; }
+/******/ 				}
+/******/ 			}
+/******/ 			if(!script) {
+/******/ 				needAttach = true;
+/******/ 				script = document.createElement('script');
+/******/ 		
+/******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120;
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
+/******/ 		
+/******/ 				script.src = url;
+/******/ 			}
+/******/ 			inProgress[url] = [done];
+/******/ 			var onScriptComplete = (prev, event) => {
+/******/ 				// avoid mem leaks in IE.
+/******/ 				script.onerror = script.onload = null;
+/******/ 				clearTimeout(timeout);
+/******/ 				var doneFns = inProgress[url];
+/******/ 				delete inProgress[url];
+/******/ 				script.parentNode && script.parentNode.removeChild(script);
+/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				if(prev) return prev(event);
+/******/ 			}
+/******/ 			;
+/******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			needAttach && document.head.appendChild(script);
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -229,6 +274,8 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
@@ -255,49 +302,24 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
-/******/ 							var loadingEnded = () => {
+/******/ 							// create error before stack unwound to get useful stacktrace later
+/******/ 							var error = new Error();
+/******/ 							var loadingEnded = (event) => {
 /******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
 /******/ 									installedChunkData = installedChunks[chunkId];
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
-/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 									if(installedChunkData) {
+/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 										var realSrc = event && event.target && event.target.src;
+/******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 										error.name = 'ChunkLoadError';
+/******/ 										error.type = errorType;
+/******/ 										error.request = realSrc;
+/******/ 										installedChunkData[1](error);
+/******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							var script = document.createElement('script');
-/******/ 							var onScriptComplete;
-/******/ 		
-/******/ 							script.charset = 'utf-8';
-/******/ 							script.timeout = 120;
-/******/ 							if (__webpack_require__.nc) {
-/******/ 								script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 							}
-/******/ 							script.src = url;
-/******/ 		
-/******/ 							// create error before stack unwound to get useful stacktrace later
-/******/ 							var error = new Error();
-/******/ 							onScriptComplete = (event) => {
-/******/ 								onScriptComplete = () => {
-/******/ 		
-/******/ 								}
-/******/ 								// avoid mem leaks in IE.
-/******/ 								script.onerror = script.onload = null;
-/******/ 								clearTimeout(timeout);
-/******/ 								var reportError = loadingEnded();
-/******/ 								if(reportError) {
-/******/ 									var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 									var realSrc = event && event.target && event.target.src;
-/******/ 									error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
-/******/ 									error.name = 'ChunkLoadError';
-/******/ 									error.type = errorType;
-/******/ 									error.request = realSrc;
-/******/ 									reportError(error);
-/******/ 								}
-/******/ 							}
-/******/ 							;
-/******/ 							var timeout = setTimeout(() => {
-/******/ 								onScriptComplete({ type: 'timeout', target: script })
-/******/ 							}, 120000);
-/******/ 							script.onerror = script.onload = onScriptComplete;
-/******/ 							document.head.appendChild(script);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -314,11 +336,8 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		// no deferred startup
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		function webpackJsonpCallback(data) {
-/******/ 			var chunkIds = data[0];
-/******/ 			var moreModules = data[1];
-/******/ 		
-/******/ 			var runtime = data[3];
+/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
@@ -335,17 +354,16 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			if(parentJsonpFunction) parentJsonpFunction(data);
+/******/ 			parentChunkLoadingFunction(data);
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
 /******/ 		
-/******/ 		};
+/******/ 		}
 /******/ 		
-/******/ 		var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 		var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
-/******/ 		jsonpArray.push = webpackJsonpCallback;
-/******/ 		var parentJsonpFunction = oldJsonpFunction;
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -359,7 +377,6 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [unused] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.oe, __webpack_require__.* */
 // CommonJs-style requires
 var commonjs1 = __webpack_require__(/*! ./commonjs */ 1);
@@ -383,17 +400,17 @@ __webpack_require__.e(/*! AMD require */ 635).then(function() { var __WEBPACK_AM
 # dist/635.output.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[635],[
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[635],[
 /* 0 */,
 /* 1 */,
 /* 2 */,
 /* 3 */,
 /* 4 */
-/*!******************************************************!*\
-  !*** ../require.context/templates sync ^\.\/.*\.js$ ***!
-  \******************************************************/
-/*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*!*******************************************************!*\
+  !*** ../require.context/templates/ sync ^\.\/.*\.js$ ***!
+  \*******************************************************/
+/*! default exports */
+/*! exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__.o, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -429,8 +446,8 @@ webpackContext.id = 4;
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = function() {
@@ -443,8 +460,8 @@ module.exports = function() {
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = function() {
@@ -457,8 +474,8 @@ module.exports = function() {
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = function() {
@@ -474,103 +491,42 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-        Asset      Size
-635.output.js  2.33 KiB  [emitted]
-    output.js  12.8 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 1010 bytes (javascript) 5.02 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./amd.js 298 bytes [built]
-     amd require ./amd ./commonjs.js 5:0-11:1
-     cjs require ./amd ./commonjs.js 8:13-29
-     cjs require ./amd ./example.js 3:11-27
-     amd require ./amd ./example.js 7:0-14:1
-     amd require ./amd ./example.js 7:0-14:1
-     harmony side effect evaluation ./amd ./harmony.js 3:0-24
- ./commonjs.js 223 bytes [built]
-     cjs require ./commonjs ./amd.js 7:18-39
-     amd require ./commonjs ./amd.js
-     cjs self exports reference ./commonjs.js 2:0-14
-     cjs require ./commonjs ./example.js 2:16-37
-     amd require ./commonjs ./example.js 7:0-14:1
-     amd require ./commonjs ./example.js 7:0-14:1
-     harmony side effect evaluation ./commonjs ./harmony.js 2:0-34
- ./example.js 396 bytes [built]
-     [no exports used]
-     entry ./example.js main
- ./harmony.js 96 bytes [built]
-     [exports: default]
-     cjs require ./harmony ./amd.js 8:17-37
-     amd require ./harmony ./amd.js
-     amd require ./harmony ./commonjs.js 5:0-11:1
-     cjs require ./harmony ./commonjs.js 9:17-37
-     cjs require ./harmony ./example.js 4:15-35
-     + 8 hidden chunk modules
+asset output.js 13.6 KiB [emitted] (name: main)
+asset 635.output.js 2.24 KiB [emitted]
+chunk output.js (main) 1010 bytes (javascript) 5.67 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.67 KiB 9 modules
+  dependent modules 617 bytes [dependent] 3 modules
+  ./example.js 396 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
 chunk 635.output.js 433 bytes [rendered]
-    > ./example.js 7:0-14:1
- ../require.context/templates sync ^\.\/.*\.js$ 193 bytes [built]
-     amd require context ../require.context/templates ./example.js 7:0-14:1
- ../require.context/templates/a.js 80 bytes [built]
-     cjs self exports reference ../require.context/templates/a.js 1:0-14
-     context element ./a.js ../require.context/templates sync ^\.\/.*\.js$ ./a.js
- ../require.context/templates/b.js 80 bytes [built]
-     cjs self exports reference ../require.context/templates/b.js 1:0-14
-     context element ./b.js ../require.context/templates sync ^\.\/.*\.js$ ./b.js
- ../require.context/templates/c.js 80 bytes [built]
-     cjs self exports reference ../require.context/templates/c.js 1:0-14
-     context element ./c.js ../require.context/templates sync ^\.\/.*\.js$ ./c.js
+  > ./example.js 7:0-14:1
+  dependent modules 240 bytes [dependent] 3 modules
+  ../require.context/templates/ sync ^\.\/.*\.js$ 193 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    amd require context ./example.js 7:0-14:1
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-        Asset       Size
-635.output.js  584 bytes  [emitted]
-    output.js   2.12 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 1010 bytes (javascript) 5.02 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./amd.js 298 bytes [built]
-     amd require ./amd ./commonjs.js 5:0-11:1
-     cjs require ./amd ./commonjs.js 8:13-29
-     cjs require ./amd ./example.js 3:11-27
-     amd require ./amd ./example.js 7:0-14:1
-     amd require ./amd ./example.js 7:0-14:1
-     harmony side effect evaluation ./amd ./harmony.js 3:0-24
- ./commonjs.js 223 bytes [built]
-     cjs require ./commonjs ./amd.js 7:18-39
-     amd require ./commonjs ./amd.js
-     cjs self exports reference ./commonjs.js 2:0-14
-     cjs require ./commonjs ./example.js 2:16-37
-     amd require ./commonjs ./example.js 7:0-14:1
-     amd require ./commonjs ./example.js 7:0-14:1
-     harmony side effect evaluation ./commonjs ./harmony.js 2:0-34
- ./example.js 396 bytes [built]
-     [no exports used]
-     entry ./example.js main
- ./harmony.js 96 bytes [built]
-     [exports: default]
-     cjs require ./harmony ./amd.js 8:17-37
-     amd require ./harmony ./amd.js
-     amd require ./harmony ./commonjs.js 5:0-11:1
-     cjs require ./harmony ./commonjs.js 9:17-37
-     cjs require ./harmony ./example.js 4:15-35
-     + 8 hidden chunk modules
-chunk 635.output.js 433 bytes [rendered]
-    > ./example.js 7:0-14:1
- ../require.context/templates sync ^\.\/.*\.js$ 193 bytes [built]
-     amd require context ../require.context/templates ./example.js 7:0-14:1
- ../require.context/templates/a.js 80 bytes [built]
-     cjs self exports reference ../require.context/templates/a.js 1:0-14
-     context element ./a.js ../require.context/templates sync ^\.\/.*\.js$ ./a.js
- ../require.context/templates/b.js 80 bytes [built]
-     cjs self exports reference ../require.context/templates/b.js 1:0-14
-     context element ./b.js ../require.context/templates sync ^\.\/.*\.js$ ./b.js
- ../require.context/templates/c.js 80 bytes [built]
-     cjs self exports reference ../require.context/templates/c.js 1:0-14
-     context element ./c.js ../require.context/templates sync ^\.\/.*\.js$ ./c.js
+asset output.js 2.43 KiB [emitted] [minimized] (name: main)
+asset 635.output.js 580 bytes [emitted] [minimized]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.67 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.67 KiB 9 modules
+  dependent modules 617 bytes [dependent] 3 modules
+  ./example.js 396 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+chunk (runtime: main) 635.output.js 433 bytes [rendered]
+  > ./example.js 7:0-14:1
+  dependent modules 240 bytes [dependent] 3 modules
+  ../require.context/templates/ sync ^\.\/.*\.js$ 193 bytes [built] [code generated]
+    [no exports]
+    amd require context ./example.js 7:0-14:1
+webpack 5.0.0-beta.32 compiled successfully
 ```

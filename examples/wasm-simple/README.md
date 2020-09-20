@@ -113,7 +113,7 @@ return __webpack_exports__;
 /*! runtime requirements: module, module.id, __webpack_exports__, __webpack_require__.v, __webpack_require__.* */
 /***/ ((module, exports, __webpack_require__) => {
 
-module.exports = __webpack_require__.v(exports, module.id, "937efcc237fa853c54c5")
+module.exports = __webpack_require__.v(exports, module.id, "ceee125bae475876af47")
 
 /***/ }),
 /* 2 */
@@ -121,10 +121,10 @@ module.exports = __webpack_require__.v(exports, module.id, "937efcc237fa853c54c5
   !*** ./math.js ***!
   \*****************/
 /*! namespace exports */
-/*! export add [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export factorial [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export add [provided] [no usage info] [missing usage info prevents renaming] -> ./add.wasm .add */
+/*! export factorial [provided] [no usage info] [missing usage info prevents renaming] -> ./factorial.wasm .factorial */
 /*! export factorialJavascript [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export fibonacci [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export fibonacci [provided] [no usage info] [missing usage info prevents renaming] -> ./fibonacci.wasm .fibonacci */
 /*! export fibonacciJavascript [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.r, module, __webpack_require__.* */
@@ -173,7 +173,7 @@ return __webpack_exports__;
 /*! runtime requirements: module, module.id, __webpack_exports__, __webpack_require__.v, __webpack_require__.* */
 /***/ ((module, exports, __webpack_require__) => {
 
-module.exports = __webpack_require__.v(exports, module.id, "39f1d275c85dc3f2ce74")
+module.exports = __webpack_require__.v(exports, module.id, "f06646bac0d91cc0583d")
 
 /***/ }),
 /* 4 */
@@ -186,7 +186,7 @@ module.exports = __webpack_require__.v(exports, module.id, "39f1d275c85dc3f2ce74
 /*! runtime requirements: module, module.id, __webpack_exports__, __webpack_require__.v, __webpack_require__.* */
 /***/ ((module, exports, __webpack_require__) => {
 
-module.exports = __webpack_require__.v(exports, module.id, "8daa7a900abbba23d2f2")
+module.exports = __webpack_require__.v(exports, module.id, "0c2b42c68d1cb59a3b24")
 
 /***/ })
 /******/ 	]);
@@ -287,97 +287,35 @@ module.exports = __webpack_require__.v(exports, module.id, "8daa7a900abbba23d2f2
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.23
-asset 39f1d275c85dc3f2ce74.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
-asset 8daa7a900abbba23d2f2.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
-asset 937efcc237fa853c54c5.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-asset output.js 8.97 KiB [emitted] (name: main)
-Entrypoint main = output.js (39f1d275c85dc3f2ce74.wasm 8daa7a900abbba23d2f2.wasm 937efcc237fa853c54c5.wasm)
+asset output.js 9.05 KiB [emitted] (name: main)
+asset 0c2b42c68d1cb59a3b24.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
+asset f06646bac0d91cc0583d.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
+asset ceee125bae475876af47.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
 chunk output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 1.19 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./add.wasm 50 bytes (javascript) 41 bytes (webassembly) [built]
-     [exports: add]
-     [used exports unknown]
-     harmony side effect evaluation ./add.wasm ./example.js 1:0-33
-     harmony import specifier ./add.wasm ./example.js 10:12-15
-     harmony side effect evaluation ./add.wasm ./math.js 1:0-33
-     harmony export imported specifier ./add.wasm ./math.js 5:0-37
- ./example.js 753 bytes [built]
-     [no exports]
-     [used exports unknown]
-     entry ./example.js main
- ./factorial.wasm 50 bytes (javascript) 62 bytes (webassembly) [built]
-     [exports: factorial]
-     [used exports unknown]
-     harmony side effect evaluation ./factorial.wasm ./math.js 2:0-45
-     harmony export imported specifier ./factorial.wasm ./math.js 5:0-37
- ./fibonacci.wasm 50 bytes (javascript) 67 bytes (webassembly) [built]
-     [exports: fibonacci]
-     [used exports unknown]
-     harmony side effect evaluation ./fibonacci.wasm ./math.js 3:0-45
-     harmony export imported specifier ./fibonacci.wasm ./math.js 5:0-37
- ./math.js 402 bytes [built]
-     [exports: add, factorial, factorialJavascript, fibonacci, fibonacciJavascript]
-     [used exports unknown]
-     harmony side effect evaluation ./math ./example.js 2:0-8:16
-     harmony import specifier ./math ./example.js 11:12-19
-     harmony import specifier ./math ./example.js 12:12-21
-     harmony import specifier ./math ./example.js 13:12-31
-     harmony import specifier ./math ./example.js 14:12-21
-     harmony import specifier ./math ./example.js 15:12-31
-     harmony import specifier ./math ./example.js 16:30-39
-     harmony import specifier ./math ./example.js 17:28-47
-     harmony import specifier ./math ./example.js 18:30-39
-     harmony import specifier ./math ./example.js 19:28-47
-     + 5 hidden chunk modules
+  > ./example.js main
+  runtime modules 1.19 KiB 5 modules
+  dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
+  ./example.js 753 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.23
-asset 402d0640d802f4390f09.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-asset 79f27550455ff7b728fb.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
-asset c473e4ed21f109fed4d9.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
-asset output.js 1.58 KiB [emitted] (name: main)
-Entrypoint main = output.js (402d0640d802f4390f09.wasm 79f27550455ff7b728fb.wasm c473e4ed21f109fed4d9.wasm)
+asset output.js 1.57 KiB [emitted] [minimized] (name: main)
+asset 24f7619aa8685820e275.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
+asset fb8c9ac1a90009920ab8.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
+asset ccc0513d2f742a4d8505.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 943 bytes (runtime) [entry] [rendered]
-    > ./example.js main
- ./add.wasm 50 bytes (javascript) 41 bytes (webassembly) [built]
-     [exports: add]
-     [all exports used]
-     harmony side effect evaluation ./add.wasm ./example.js 1:0-33
-     harmony import specifier ./add.wasm ./example.js 10:12-15
-     harmony side effect evaluation ./add.wasm ./math.js 1:0-33
-     harmony export imported specifier ./add.wasm ./math.js 5:0-37
- ./example.js 753 bytes [built]
-     [no exports]
-     [no exports used]
-     entry ./example.js main
- ./factorial.wasm 50 bytes (javascript) 62 bytes (webassembly) [built]
-     [exports: factorial]
-     [all exports used]
-     harmony side effect evaluation ./factorial.wasm ./math.js 2:0-45
-     harmony export imported specifier ./factorial.wasm ./math.js 5:0-37
- ./fibonacci.wasm 50 bytes (javascript) 67 bytes (webassembly) [built]
-     [exports: fibonacci]
-     [all exports used]
-     harmony side effect evaluation ./fibonacci.wasm ./math.js 3:0-45
-     harmony export imported specifier ./fibonacci.wasm ./math.js 5:0-37
- ./math.js 402 bytes [built]
-     [exports: add, factorial, factorialJavascript, fibonacci, fibonacciJavascript]
-     [all exports used]
-     harmony side effect evaluation ./math ./example.js 2:0-8:16
-     harmony import specifier ./math ./example.js 11:12-19
-     harmony import specifier ./math ./example.js 12:12-21
-     harmony import specifier ./math ./example.js 13:12-31
-     harmony import specifier ./math ./example.js 14:12-21
-     harmony import specifier ./math ./example.js 15:12-31
-     harmony import specifier ./math ./example.js 16:30-39
-     harmony import specifier ./math ./example.js 17:28-47
-     harmony import specifier ./math ./example.js 18:30-39
-     harmony import specifier ./math ./example.js 19:28-47
-     + 4 hidden chunk modules
+  > ./example.js main
+  dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
+  runtime modules 943 bytes 4 modules
+  ./example.js 753 bytes [built] [code generated]
+    [no exports]
+    [no exports used]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```

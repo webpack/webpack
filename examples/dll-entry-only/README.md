@@ -63,7 +63,7 @@ module.exports = {
 # dist/dll.js
 
 ```javascript
-var dll_99b323431ba57419786c;dll_99b323431ba57419786c =
+var dll_84b3c692d890d26bb885;dll_84b3c692d890d26bb885 =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -71,9 +71,8 @@ var dll_99b323431ba57419786c;dll_99b323431ba57419786c =
   !*** dll dll ***!
   \***************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: __webpack_require__, module */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
+/*! ModuleConcatenation bailout: Module Concatenation is not implemented for DllModule */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = __webpack_require__;
@@ -84,12 +83,12 @@ module.exports = __webpack_require__;
   !*** ./example.js + 2 modules ***!
   \********************************/
 /*! namespace exports */
-/*! export a [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! export b [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! export c [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! export a [provided] [no usage info] [missing usage info prevents renaming] -> ./a.js .a */
+/*! export b [provided] [no usage info] [missing usage info prevents renaming] -> ./b.js .b */
+/*! export c [provided] [no usage info] [missing usage info prevents renaming] -> ./cjs.js .c */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__, __webpack_require__.* */
-/*! ModuleConcatenation bailout: Cannot concat with ./cjs.js (<- Module is not an ECMAScript module) */
+/*! ModuleConcatenation bailout: Cannot concat with ./cjs.js: Module is not an ECMAScript module */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -116,7 +115,6 @@ var a = "a";
 
 // EXTERNAL MODULE: ./cjs.js
 var cjs = __webpack_require__(2);
-
 // CONCATENATED MODULE: ./example.js
 
 
@@ -128,8 +126,8 @@ var cjs = __webpack_require__(2);
   !*** ./cjs.js ***!
   \****************/
 /*! default exports */
-/*! export c [provided] [used] [could be renamed] */
-/*! other exports [not provided] [unused] */
+/*! export c [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ ((__unused_webpack_module, exports) => {
@@ -215,7 +213,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_99b323431ba57419786c","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["a","b","c"]}}}
+{"name":"dll_84b3c692d890d26bb885","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -223,47 +221,28 @@ exports.c = "c";
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
- Asset      Size
-dll.js  4.59 KiB  [emitted]  [name: dll]
-Entrypoint dll = dll.js
-chunk dll.js (dll) 216 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
-    > dll
- ./cjs.js 42 bytes [built]
-     [exports: c]
-     [all exports used]
-     harmony side effect evaluation ./cjs ./example.js + 2 modules ./example.js 2:0-26
-     harmony export imported specifier ./cjs ./example.js + 2 modules ./example.js 2:0-26
- ./example.js + 2 modules 162 bytes [built]
-     [exports: a, b, c]
-     entry ./example dll dll dll[0]
- dll dll 12 bytes [built]
-     dll entry
-     used as library export
-     + 3 hidden chunk modules
+asset dll.js 4.58 KiB [emitted] (name: dll)
+chunk dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+  > dll
+  runtime modules 668 bytes 3 modules
+  dependent modules 199 bytes [dependent] 2 modules
+  dll dll 12 bytes [built] [code generated]
+    [used exports unknown]
+    dll entry
+    used as library export
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
- Asset       Size
-dll.js  675 bytes  [emitted]  [name: dll]
-Entrypoint dll = dll.js
-chunk dll.js (dll) 216 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
-    > dll
- ./cjs.js 42 bytes [built]
-     [exports: c]
-     [all exports used]
-     harmony side effect evaluation ./cjs ./example.js + 2 modules ./example.js 2:0-26
-     harmony export imported specifier ./cjs ./example.js + 2 modules ./example.js 2:0-26
- ./example.js + 2 modules 162 bytes [built]
-     [exports: a, b, c]
-     entry ./example dll dll dll[0]
- dll dll 12 bytes [built]
-     dll entry
-     used as library export
-     + 3 hidden chunk modules
+asset dll.js 675 bytes [emitted] [minimized] (name: dll)
+chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+  > dll
+  runtime modules 668 bytes 3 modules
+  dependent modules 199 bytes [dependent] 2 modules
+  dll dll 12 bytes [built] [code generated]
+    dll entry
+    used as library export
+webpack 5.0.0-beta.32 compiled successfully
 ```
