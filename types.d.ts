@@ -1234,6 +1234,8 @@ declare class Compilation {
 		needAdditionalPass: SyncBailHook<[], boolean>;
 		childCompiler: SyncHook<[Compiler, string, number], void>;
 		log: SyncBailHook<[string, LogEntry], true>;
+		processWarnings: SyncWaterfallHook<[WebpackError[]]>;
+		processErrors: SyncWaterfallHook<[WebpackError[]]>;
 		statsPreset: HookMap<SyncHook<[any, any], void>>;
 		statsNormalize: SyncHook<[any, any], void>;
 		statsFactory: SyncHook<[StatsFactory, any], void>;
@@ -1472,6 +1474,8 @@ declare class Compilation {
 		filename: string | ((arg0: PathData, arg1: AssetInfo) => string),
 		data: PathData
 	): { path: string; info: AssetInfo };
+	getWarnings(): WebpackError[];
+	getErrors(): WebpackError[];
 
 	/**
 	 * This function allows you to run another instance of webpack inside of webpack however as
