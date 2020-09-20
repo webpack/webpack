@@ -886,6 +886,22 @@ chunk trees.js (trees) 71 bytes [rendered]
   ./trees/3.js 14 bytes [built] [code generated]"
 `;
 
+exports[`StatsTestCases should print correct stats for ignore-warnings 1`] = `
+"asset main.js 943 bytes [emitted] (name: main)
+orphan modules 8.53 KiB [orphan] 9 modules
+./index.js + 9 modules 8.7 KiB [built] [code generated]
+
+WARNING in ./module.js?4 3:12-20
+Should not import the named export 'homepage' (imported as 'homepage') from default-exporting module (only default export is available soon)
+ @ ./index.js 4:0-20
+
+WARNING in ./module2.js?1 3:12-16
+Should not import the named export 'name' (imported as 'name') from default-exporting module (only default export is available soon)
+ @ ./index.js 6:0-21
+
+webpack x.x.x compiled with 2 warnings in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for immutable 1`] = `
 "asset c30341ca2ed860460ce7.js 12.5 KiB [emitted] [immutable] (name: main)
 asset b815a02217b4cae51059.js 884 bytes [emitted] [immutable]"
@@ -1419,7 +1435,8 @@ WARNING in configuration
 The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
 You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/
 
-webpack x.x.x compiled with 1 warning in X ms"
+1 ERROR in child compilations
+webpack x.x.x compiled with 1 error and 1 warning in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for optimize-chunks 1`] = `

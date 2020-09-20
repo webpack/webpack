@@ -1234,6 +1234,8 @@ declare class Compilation {
 		needAdditionalPass: SyncBailHook<[], boolean>;
 		childCompiler: SyncHook<[Compiler, string, number], void>;
 		log: SyncBailHook<[string, LogEntry], true>;
+		processWarnings: SyncWaterfallHook<[WebpackError[]]>;
+		processErrors: SyncWaterfallHook<[WebpackError[]]>;
 		statsPreset: HookMap<SyncHook<[any, any], void>>;
 		statsNormalize: SyncHook<[any, any], void>;
 		statsFactory: SyncHook<[StatsFactory, any], void>;
@@ -1472,6 +1474,8 @@ declare class Compilation {
 		filename: string | ((arg0: PathData, arg1: AssetInfo) => string),
 		data: PathData
 	): { path: string; info: AssetInfo };
+	getWarnings(): WebpackError[];
+	getErrors(): WebpackError[];
 
 	/**
 	 * This function allows you to run another instance of webpack inside of webpack however as
@@ -1798,6 +1802,28 @@ declare interface Configuration {
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
 	externalsType?: ExternalsType;
+
+	/**
+	 * Ignore specific warnings.
+	 */
+	ignoreWarnings?: (
+		| RegExp
+		| {
+				/**
+				 * A RegExp to select the origin file for the warning.
+				 */
+				file?: RegExp;
+				/**
+				 * A RegExp to select the warning message.
+				 */
+				message?: RegExp;
+				/**
+				 * A RegExp to select the origin module for the warning.
+				 */
+				module?: RegExp;
+		  }
+		| ((warning: WebpackError, compilation: Compilation) => boolean)
+	)[];
 
 	/**
 	 * Options for infrastructure level logging.
@@ -9494,6 +9520,14 @@ declare interface WebpackOptionsNormalized {
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
 	externalsType?: ExternalsType;
+
+	/**
+	 * Ignore specific warnings.
+	 */
+	ignoreWarnings?: ((
+		warning: WebpackError,
+		compilation: Compilation
+	) => boolean)[];
 
 	/**
 	 * Options for infrastructure level logging.

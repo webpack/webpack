@@ -105,6 +105,7 @@ describe("Defaults", () => {
 		    "web": true,
 		  },
 		  "externalsType": "var",
+		  "ignoreWarnings": undefined,
 		  "infrastructureLogging": Object {
 		    "debug": false,
 		    "level": "info",

@@ -181,6 +181,30 @@ export type ExternalsType =
 	| "import"
 	| "script";
 /**
+ * Ignore specific warnings.
+ */
+export type IgnoreWarnings = (
+	| RegExp
+	| {
+			/**
+			 * A RegExp to select the origin file for the warning.
+			 */
+			file?: RegExp;
+			/**
+			 * A RegExp to select the warning message.
+			 */
+			message?: RegExp;
+			/**
+			 * A RegExp to select the origin module for the warning.
+			 */
+			module?: RegExp;
+	  }
+	| ((
+			warning: import("../lib/WebpackError"),
+			compilation: import("../lib/Compilation")
+	  ) => boolean)
+)[];
+/**
  * Filtering values.
  */
 export type FilterTypes = FilterItemTypes[] | FilterItemTypes;
@@ -589,6 +613,13 @@ export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
  */
 export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
 /**
+ * Ignore specific warnings.
+ */
+export type IgnoreWarningsNormalized = ((
+	warning: import("../lib/WebpackError"),
+	compilation: import("../lib/Compilation")
+) => boolean)[];
+/**
  * Create an additional chunk which contains only the webpack runtime and chunk hash maps.
  */
 export type OptimizationRuntimeChunkNormalized =
@@ -661,6 +692,10 @@ export interface WebpackOptions {
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
 	externalsType?: ExternalsType;
+	/**
+	 * Ignore specific warnings.
+	 */
+	ignoreWarnings?: IgnoreWarnings;
 	/**
 	 * Options for infrastructure level logging.
 	 */
@@ -2548,6 +2583,10 @@ export interface WebpackOptionsNormalized {
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
 	externalsType?: ExternalsType;
+	/**
+	 * Ignore specific warnings.
+	 */
+	ignoreWarnings?: IgnoreWarningsNormalized;
 	/**
 	 * Options for infrastructure level logging.
 	 */

@@ -772,6 +772,55 @@
       "type": "string",
       "absolutePath": false
     },
+    "IgnoreWarnings": {
+      "description": "Ignore specific warnings.",
+      "type": "array",
+      "items": {
+        "description": "Ignore specific warnings.",
+        "anyOf": [
+          {
+            "description": "A RegExp to select the warning message.",
+            "instanceof": "RegExp",
+            "tsType": "RegExp"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "file": {
+                "description": "A RegExp to select the origin file for the warning.",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              "message": {
+                "description": "A RegExp to select the warning message.",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              "module": {
+                "description": "A RegExp to select the origin module for the warning.",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              }
+            }
+          },
+          {
+            "description": "A custom function to select warnings based on the raw warning instance.",
+            "instanceof": "Function",
+            "tsType": "((warning: import('../lib/WebpackError'), compilation: import('../lib/Compilation')) => boolean)"
+          }
+        ]
+      }
+    },
+    "IgnoreWarningsNormalized": {
+      "description": "Ignore specific warnings.",
+      "type": "array",
+      "items": {
+        "description": "A function to select warnings based on the raw warning instance.",
+        "instanceof": "Function",
+        "tsType": "((warning: import('../lib/WebpackError'), compilation: import('../lib/Compilation')) => boolean)"
+      }
+    },
     "Iife": {
       "description": "Wrap javascript code into IIFE's to avoid leaking into global scope.",
       "type": "boolean"
@@ -3614,6 +3663,9 @@
         "externalsType": {
           "$ref": "#/definitions/ExternalsType"
         },
+        "ignoreWarnings": {
+          "$ref": "#/definitions/IgnoreWarningsNormalized"
+        },
         "infrastructureLogging": {
           "$ref": "#/definitions/InfrastructureLogging"
         },
@@ -3755,6 +3807,9 @@
     },
     "externalsType": {
       "$ref": "#/definitions/ExternalsType"
+    },
+    "ignoreWarnings": {
+      "$ref": "#/definitions/IgnoreWarnings"
     },
     "infrastructureLogging": {
       "$ref": "#/definitions/InfrastructureLogging"
