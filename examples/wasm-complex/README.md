@@ -109,9 +109,9 @@ return __webpack_exports__;
   !*** ./magic.js ***!
   \******************/
 /*! namespace exports */
-/*! export get [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export getNumber [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export set [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export get [provided] [no usage info] [missing usage info prevents renaming] -> ./magic.wat .get */
+/*! export getNumber [provided] [no usage info] [missing usage info prevents renaming] -> ./magic.wat .getNumber */
+/*! export set [provided] [no usage info] [missing usage info prevents renaming] -> ./magic.wat .set */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.r, module, __webpack_require__.* */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
@@ -147,7 +147,7 @@ return __webpack_exports__;
 /* harmony import */ var WEBPACK_IMPORTED_MODULE_0 = __webpack_require__(/*! ./memory.js */ 3);
 /* harmony import */ var WEBPACK_IMPORTED_MODULE_1 = __webpack_require__(/*! ./magic-number.js */ 4);
 module.exports = Promise.resolve(WEBPACK_IMPORTED_MODULE_0).then((WEBPACK_IMPORTED_MODULE_0) => {
-	return __webpack_require__.v(exports, module.id, "493198b38242c233ec44", {
+	return __webpack_require__.v(exports, module.id, "b7db4b0f3af7dad67222", {
 		"./memory.js": {
 			"memory": WEBPACK_IMPORTED_MODULE_0.memory
 		},
@@ -309,83 +309,31 @@ function getRandomNumber() {
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.23
-asset 493198b38242c233ec44.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
-asset output.js 8.8 KiB [emitted] (name: main)
-Entrypoint main = output.js (493198b38242c233ec44.module.wasm)
+asset output.js 8.87 KiB [emitted] (name: main)
+asset b7db4b0f3af7dad67222.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
 chunk output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 1.2 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js 247 bytes [built]
-     [no exports]
-     [used exports unknown]
-     entry ./example.js main
- ./magic-number.js 124 bytes [built]
-     [exports: getNumber, getRandomNumber]
-     [used exports unknown]
-     wasm import ./magic-number.js ./magic.wat
- ./magic.js 44 bytes [built]
-     [exports: get, getNumber, set]
-     [used exports unknown]
-     harmony side effect evaluation ./magic.js ./example.js 1:0-49
-     harmony import specifier ./magic.js ./example.js 4:12-15
-     harmony import specifier ./magic.js ./example.js 5:0-3
-     harmony import specifier ./magic.js ./example.js 6:12-15
-     harmony import specifier ./magic.js ./example.js 7:0-3
-     harmony import specifier ./magic.js ./example.js 8:12-15
-     harmony import specifier ./magic.js ./example.js 11:12-21
-     harmony import specifier ./magic.js ./example.js 12:12-21
-     harmony import specifier ./magic.js ./example.js 13:12-21
- ./magic.wat 70 bytes (javascript) 139 bytes (webassembly) [built]
-     [exports: get, getNumber, set]
-     [used exports unknown]
-     harmony side effect evaluation ./magic.wat ./magic.js 2:0-28
-     harmony export imported specifier ./magic.wat ./magic.js 2:0-28
- ./memory.js 211 bytes [built]
-     [exports: memory]
-     [used exports unknown]
-     wasm import ./memory.js ./magic.wat
-     + 5 hidden chunk modules
+  > ./example.js main
+  runtime modules 1.2 KiB 5 modules
+  dependent modules 449 bytes (javascript) 139 bytes (webassembly) [dependent] 4 modules
+  ./example.js 247 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.23
-asset b873a21e71d2d93bad48.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
-asset output.js 1.43 KiB [emitted] (name: main)
-Entrypoint main = output.js (b873a21e71d2d93bad48.module.wasm)
+asset output.js 1.43 KiB [emitted] [minimized] (name: main)
+asset 3b415f18e7be9a707201.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 950 bytes (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js 247 bytes [built]
-     [no exports]
-     [no exports used]
-     entry ./example.js main
- ./magic-number.js 124 bytes [built]
-     [exports: getNumber, getRandomNumber]
-     [only some exports used: getRandomNumber]
-     wasm import ./magic-number.js ./magic.wat
- ./magic.js 44 bytes [built]
-     [exports: get, getNumber, set]
-     [all exports used]
-     harmony side effect evaluation ./magic.js ./example.js 1:0-49
-     harmony import specifier ./magic.js ./example.js 4:12-15
-     harmony import specifier ./magic.js ./example.js 5:0-3
-     harmony import specifier ./magic.js ./example.js 6:12-15
-     harmony import specifier ./magic.js ./example.js 7:0-3
-     harmony import specifier ./magic.js ./example.js 8:12-15
-     harmony import specifier ./magic.js ./example.js 11:12-21
-     harmony import specifier ./magic.js ./example.js 12:12-21
-     harmony import specifier ./magic.js ./example.js 13:12-21
- ./magic.wat 70 bytes (javascript) 139 bytes (webassembly) [built]
-     [exports: get, getNumber, set]
-     [all exports used]
-     harmony side effect evaluation ./magic.wat ./magic.js 2:0-28
-     harmony export imported specifier ./magic.wat ./magic.js 2:0-28
- ./memory.js 211 bytes [built]
-     [exports: memory]
-     [all exports used]
-     wasm import ./memory.js ./magic.wat
-     + 4 hidden chunk modules
+  > ./example.js main
+  dependent modules 449 bytes (javascript) 139 bytes (webassembly) [dependent] 4 modules
+  runtime modules 950 bytes 4 modules
+  ./example.js 247 bytes [built] [code generated]
+    [no exports]
+    [no exports used]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```

@@ -39,11 +39,11 @@ export default foo;
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
-/*!**************************************************!*\
-  !*** ./templates lazy ^\.\/.*$ namespace object ***!
-  \**************************************************/
-/*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*!***************************************************!*\
+  !*** ./templates/ lazy ^\.\/.*$ namespace object ***!
+  \***************************************************/
+/*! default exports */
+/*! exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__.o, __webpack_require__, __webpack_require__.e, __webpack_require__.* */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -165,6 +165,52 @@ module.exports = webpackAsyncContext;
 /******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/load script */
+/******/ 	(() => {
+/******/ 		var inProgress = {};
+/******/ 		// data-webpack is not used as build has no uniqueName
+/******/ 		// loadScript function to load a script via script tag
+/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
+/******/ 			var script, needAttach;
+/******/ 			if(key !== undefined) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				for(var i = 0; i < scripts.length; i++) {
+/******/ 					var s = scripts[i];
+/******/ 					if(s.getAttribute("src") == url) { script = s; break; }
+/******/ 				}
+/******/ 			}
+/******/ 			if(!script) {
+/******/ 				needAttach = true;
+/******/ 				script = document.createElement('script');
+/******/ 		
+/******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120;
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
+/******/ 		
+/******/ 				script.src = url;
+/******/ 			}
+/******/ 			inProgress[url] = [done];
+/******/ 			var onScriptComplete = (prev, event) => {
+/******/ 				// avoid mem leaks in IE.
+/******/ 				script.onerror = script.onload = null;
+/******/ 				clearTimeout(timeout);
+/******/ 				var doneFns = inProgress[url];
+/******/ 				delete inProgress[url];
+/******/ 				script.parentNode && script.parentNode.removeChild(script);
+/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				if(prev) return prev(event);
+/******/ 			}
+/******/ 			;
+/******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			needAttach && document.head.appendChild(script);
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -183,6 +229,8 @@ module.exports = webpackAsyncContext;
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
@@ -209,49 +257,24 @@ module.exports = webpackAsyncContext;
 /******/ 		
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
-/******/ 							var loadingEnded = () => {
+/******/ 							// create error before stack unwound to get useful stacktrace later
+/******/ 							var error = new Error();
+/******/ 							var loadingEnded = (event) => {
 /******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
 /******/ 									installedChunkData = installedChunks[chunkId];
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
-/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 									if(installedChunkData) {
+/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 										var realSrc = event && event.target && event.target.src;
+/******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 										error.name = 'ChunkLoadError';
+/******/ 										error.type = errorType;
+/******/ 										error.request = realSrc;
+/******/ 										installedChunkData[1](error);
+/******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							var script = document.createElement('script');
-/******/ 							var onScriptComplete;
-/******/ 		
-/******/ 							script.charset = 'utf-8';
-/******/ 							script.timeout = 120;
-/******/ 							if (__webpack_require__.nc) {
-/******/ 								script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 							}
-/******/ 							script.src = url;
-/******/ 		
-/******/ 							// create error before stack unwound to get useful stacktrace later
-/******/ 							var error = new Error();
-/******/ 							onScriptComplete = (event) => {
-/******/ 								onScriptComplete = () => {
-/******/ 		
-/******/ 								}
-/******/ 								// avoid mem leaks in IE.
-/******/ 								script.onerror = script.onload = null;
-/******/ 								clearTimeout(timeout);
-/******/ 								var reportError = loadingEnded();
-/******/ 								if(reportError) {
-/******/ 									var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 									var realSrc = event && event.target && event.target.src;
-/******/ 									error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
-/******/ 									error.name = 'ChunkLoadError';
-/******/ 									error.type = errorType;
-/******/ 									error.request = realSrc;
-/******/ 									reportError(error);
-/******/ 								}
-/******/ 							}
-/******/ 							;
-/******/ 							var timeout = setTimeout(() => {
-/******/ 								onScriptComplete({ type: 'timeout', target: script })
-/******/ 							}, 120000);
-/******/ 							script.onerror = script.onload = onScriptComplete;
-/******/ 							document.head.appendChild(script);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -268,11 +291,8 @@ module.exports = webpackAsyncContext;
 /******/ 		// no deferred startup
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		function webpackJsonpCallback(data) {
-/******/ 			var chunkIds = data[0];
-/******/ 			var moreModules = data[1];
-/******/ 		
-/******/ 			var runtime = data[3];
+/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
@@ -289,17 +309,16 @@ module.exports = webpackAsyncContext;
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			if(parentJsonpFunction) parentJsonpFunction(data);
+/******/ 			parentChunkLoadingFunction(data);
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
 /******/ 		
-/******/ 		};
+/******/ 		}
 /******/ 		
-/******/ 		var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 		var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
-/******/ 		jsonpArray.push = webpackJsonpCallback;
-/******/ 		var parentJsonpFunction = oldJsonpFunction;
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -313,7 +332,6 @@ module.exports = webpackAsyncContext;
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [unused] */
 /*! runtime requirements: __webpack_require__ */
 async function getTemplate(templateName) {
 	try {
@@ -342,83 +360,78 @@ getTemplate("baz");
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-        Asset       Size
-398.output.js  877 bytes  [emitted]
-544.output.js  877 bytes  [emitted]
-718.output.js  877 bytes  [emitted]
-    output.js   9.95 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 441 bytes (javascript) 4.76 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js 281 bytes [built]
-     [no exports used]
-     entry ./example.js main
- ./templates lazy ^\.\/.*$ namespace object 160 bytes [optional] [built]
-     import() context lazy ./templates ./example.js 3:23-60
-     + 7 hidden chunk modules
+asset output.js 10.7 KiB [emitted] (name: main)
+asset 398.output.js 856 bytes [emitted]
+asset 544.output.js 856 bytes [emitted]
+asset 718.output.js 856 bytes [emitted]
+chunk output.js (main) 441 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.42 KiB 8 modules
+  dependent modules 160 bytes [dependent] 1 module
+  ./example.js 281 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
 chunk 398.output.js 38 bytes [rendered]
-    > ./bar ./templates lazy ^\.\/.*$ namespace object ./bar
-    > ./bar.js ./templates lazy ^\.\/.*$ namespace object ./bar.js
- ./templates/bar.js 38 bytes [optional] [built]
-     [exports: default]
-     context element ./bar ./templates lazy ^\.\/.*$ namespace object ./bar
-     context element ./bar.js ./templates lazy ^\.\/.*$ namespace object ./bar.js
+  > ./bar ./templates/ lazy ^\.\/.*$ namespace object ./bar
+  > ./bar.js ./templates/ lazy ^\.\/.*$ namespace object ./bar.js
+  ./templates/bar.js 38 bytes [optional] [built] [code generated]
+    [exports: default]
+    [used exports unknown]
+    context element ./bar ./templates/ lazy ^\.\/.*$ namespace object ./bar
+    context element ./bar.js ./templates/ lazy ^\.\/.*$ namespace object ./bar.js
 chunk 544.output.js 38 bytes [rendered]
-    > ./baz ./templates lazy ^\.\/.*$ namespace object ./baz
-    > ./baz.js ./templates lazy ^\.\/.*$ namespace object ./baz.js
- ./templates/baz.js 38 bytes [optional] [built]
-     [exports: default]
-     context element ./baz ./templates lazy ^\.\/.*$ namespace object ./baz
-     context element ./baz.js ./templates lazy ^\.\/.*$ namespace object ./baz.js
+  > ./baz ./templates/ lazy ^\.\/.*$ namespace object ./baz
+  > ./baz.js ./templates/ lazy ^\.\/.*$ namespace object ./baz.js
+  ./templates/baz.js 38 bytes [optional] [built] [code generated]
+    [exports: default]
+    [used exports unknown]
+    context element ./baz ./templates/ lazy ^\.\/.*$ namespace object ./baz
+    context element ./baz.js ./templates/ lazy ^\.\/.*$ namespace object ./baz.js
 chunk 718.output.js 38 bytes [rendered]
-    > ./foo ./templates lazy ^\.\/.*$ namespace object ./foo
-    > ./foo.js ./templates lazy ^\.\/.*$ namespace object ./foo.js
- ./templates/foo.js 38 bytes [optional] [built]
-     [exports: default]
-     context element ./foo ./templates lazy ^\.\/.*$ namespace object ./foo
-     context element ./foo.js ./templates lazy ^\.\/.*$ namespace object ./foo.js
+  > ./foo ./templates/ lazy ^\.\/.*$ namespace object ./foo
+  > ./foo.js ./templates/ lazy ^\.\/.*$ namespace object ./foo.js
+  ./templates/foo.js 38 bytes [optional] [built] [code generated]
+    [exports: default]
+    [used exports unknown]
+    context element ./foo ./templates/ lazy ^\.\/.*$ namespace object ./foo
+    context element ./foo.js ./templates/ lazy ^\.\/.*$ namespace object ./foo.js
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-        Asset       Size
-398.output.js  134 bytes  [emitted]
-544.output.js  134 bytes  [emitted]
-718.output.js  134 bytes  [emitted]
-    output.js   2.06 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 441 bytes (javascript) 4.76 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js 281 bytes [built]
-     [no exports used]
-     entry ./example.js main
- ./templates lazy ^\.\/.*$ namespace object 160 bytes [optional] [built]
-     import() context lazy ./templates ./example.js 3:23-60
-     + 7 hidden chunk modules
-chunk 398.output.js 38 bytes [rendered]
-    > ./bar ./templates lazy ^\.\/.*$ namespace object ./bar
-    > ./bar.js ./templates lazy ^\.\/.*$ namespace object ./bar.js
- ./templates/bar.js 38 bytes [optional] [built]
-     [exports: default]
-     context element ./bar ./templates lazy ^\.\/.*$ namespace object ./bar
-     context element ./bar.js ./templates lazy ^\.\/.*$ namespace object ./bar.js
-chunk 544.output.js 38 bytes [rendered]
-    > ./baz ./templates lazy ^\.\/.*$ namespace object ./baz
-    > ./baz.js ./templates lazy ^\.\/.*$ namespace object ./baz.js
- ./templates/baz.js 38 bytes [optional] [built]
-     [exports: default]
-     context element ./baz ./templates lazy ^\.\/.*$ namespace object ./baz
-     context element ./baz.js ./templates lazy ^\.\/.*$ namespace object ./baz.js
-chunk 718.output.js 38 bytes [rendered]
-    > ./foo ./templates lazy ^\.\/.*$ namespace object ./foo
-    > ./foo.js ./templates lazy ^\.\/.*$ namespace object ./foo.js
- ./templates/foo.js 38 bytes [optional] [built]
-     [exports: default]
-     context element ./foo ./templates lazy ^\.\/.*$ namespace object ./foo
-     context element ./foo.js ./templates lazy ^\.\/.*$ namespace object ./foo.js
+asset output.js 2.37 KiB [emitted] [minimized] (name: main)
+asset 398.output.js 130 bytes [emitted] [minimized]
+asset 544.output.js 130 bytes [emitted] [minimized]
+asset 718.output.js 130 bytes [emitted] [minimized]
+chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.42 KiB 8 modules
+  dependent modules 160 bytes [dependent] 1 module
+  ./example.js 281 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+chunk (runtime: main) 398.output.js 38 bytes [rendered]
+  > ./bar ./templates/ lazy ^\.\/.*$ namespace object ./bar
+  > ./bar.js ./templates/ lazy ^\.\/.*$ namespace object ./bar.js
+  ./templates/bar.js 38 bytes [optional] [built] [code generated]
+    [exports: default]
+    context element ./bar ./templates/ lazy ^\.\/.*$ namespace object ./bar
+    context element ./bar.js ./templates/ lazy ^\.\/.*$ namespace object ./bar.js
+chunk (runtime: main) 544.output.js 38 bytes [rendered]
+  > ./baz ./templates/ lazy ^\.\/.*$ namespace object ./baz
+  > ./baz.js ./templates/ lazy ^\.\/.*$ namespace object ./baz.js
+  ./templates/baz.js 38 bytes [optional] [built] [code generated]
+    [exports: default]
+    context element ./baz ./templates/ lazy ^\.\/.*$ namespace object ./baz
+    context element ./baz.js ./templates/ lazy ^\.\/.*$ namespace object ./baz.js
+chunk (runtime: main) 718.output.js 38 bytes [rendered]
+  > ./foo ./templates/ lazy ^\.\/.*$ namespace object ./foo
+  > ./foo.js ./templates/ lazy ^\.\/.*$ namespace object ./foo.js
+  ./templates/foo.js 38 bytes [optional] [built] [code generated]
+    [exports: default]
+    context element ./foo ./templates/ lazy ^\.\/.*$ namespace object ./foo
+    context element ./foo.js ./templates/ lazy ^\.\/.*$ namespace object ./foo.js
+webpack 5.0.0-beta.32 compiled successfully
 ```

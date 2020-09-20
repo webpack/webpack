@@ -33,8 +33,8 @@ module.exports = 42
   !*** ./cup1.coffee ***!
   \*********************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module, __webpack_require__ */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = {
@@ -51,8 +51,8 @@ module.exports = {
   !*** ./cup2.coffee ***!
   \*********************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 3:0-14 */
 /***/ ((module) => {
 
 console.log("yeah coffee-script");
@@ -102,7 +102,6 @@ module.exports = 42;
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [unused] */
 /*! runtime requirements: __webpack_require__ */
 console.log(__webpack_require__(/*! ./cup1 */ 1));
 })();
@@ -116,43 +115,25 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset      Size
-output.js  2.18 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
+asset output.js 2.09 KiB [emitted] (name: main)
 chunk output.js (main) 206 bytes [entry] [rendered]
-    > ./example.js main
- ./cup1.coffee 118 bytes [built]
-     cjs require ./cup1 ./example.js 1:12-29
-     cjs self exports reference ./cup1.coffee 1:0-14
- ./cup2.coffee 57 bytes [built]
-     cjs require ./cup2.coffee ./cup1.coffee 4:12-36
-     cjs require ./cup2 ./cup1.coffee 5:9-26
-     cjs self exports reference ./cup2.coffee 3:0-14
- ./example.js 31 bytes [built]
-     [no exports used]
-     entry ./example.js main
+  > ./example.js main
+  dependent modules 175 bytes [dependent] 2 modules
+  ./example.js 31 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset       Size
-output.js  278 bytes  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 206 bytes [entry] [rendered]
-    > ./example.js main
- ./cup1.coffee 118 bytes [built]
-     cjs require ./cup1 ./example.js 1:12-29
-     cjs self exports reference ./cup1.coffee 1:0-14
- ./cup2.coffee 57 bytes [built]
-     cjs require ./cup2.coffee ./cup1.coffee 4:12-36
-     cjs require ./cup2 ./cup1.coffee 5:9-26
-     cjs self exports reference ./cup2.coffee 3:0-14
- ./example.js 31 bytes [built]
-     [no exports used]
-     entry ./example.js main
+asset output.js 280 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 206 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 175 bytes [dependent] 2 modules
+  ./example.js 31 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```

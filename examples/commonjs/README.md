@@ -46,8 +46,8 @@ exports.add = function() {
   !*** ./increment.js ***!
   \**********************/
 /*! default exports */
-/*! export increment [provided] [used] [could be renamed] */
-/*! other exports [not provided] [unused] */
+/*! export increment [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__ */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -63,8 +63,8 @@ exports.increment = function(val) {
   !*** ./math.js ***!
   \*****************/
 /*! default exports */
-/*! export add [provided] [used] [could be renamed] */
-/*! other exports [not provided] [unused] */
+/*! export add [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -118,7 +118,6 @@ exports.add = function() {
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [unused] */
 /*! runtime requirements: __webpack_require__ */
 const inc = __webpack_require__(/*! ./increment */ 1).increment;
 const a = 1;
@@ -135,45 +134,25 @@ inc(a); // 2
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset      Size
-output.js  2.33 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
+asset output.js 2.34 KiB [emitted] (name: main)
 chunk output.js (main) 326 bytes [entry] [rendered]
-    > ./example.js main
- ./example.js 72 bytes [built]
-     [no exports used]
-     entry ./example.js main
- ./increment.js 98 bytes [built]
-     [exports: increment]
-     [all exports used]
-     cjs full require ./increment ./example.js 1:12-44
- ./math.js 156 bytes [built]
-     [exports: add]
-     [all exports used]
-     cjs full require ./math ./increment.js 1:12-33
+  > ./example.js main
+  dependent modules 254 bytes [dependent] 2 modules
+  ./example.js 72 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset       Size
-output.js  297 bytes  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 326 bytes [entry] [rendered]
-    > ./example.js main
- ./example.js 72 bytes [built]
-     [no exports used]
-     entry ./example.js main
- ./increment.js 98 bytes [built]
-     [exports: increment]
-     [all exports used]
-     cjs full require ./increment ./example.js 1:12-44
- ./math.js 156 bytes [built]
-     [exports: add]
-     [all exports used]
-     cjs full require ./math ./increment.js 1:12-33
+asset output.js 296 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 326 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 254 bytes [dependent] 2 modules
+  ./example.js 72 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```

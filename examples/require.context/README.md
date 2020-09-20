@@ -29,11 +29,11 @@ module.exports = function() {
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
-/*!*********************************!*\
-  !*** ./templates sync ^\.\/.*$ ***!
-  \*********************************/
-/*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*!**********************************!*\
+  !*** ./templates/ sync ^\.\/.*$ ***!
+  \**********************************/
+/*! default exports */
+/*! exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__.o, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -72,8 +72,8 @@ webpackContext.id = 1;
   !*** ./templates/a.js ***!
   \************************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = function() {
@@ -86,8 +86,8 @@ module.exports = function() {
   !*** ./templates/b.js ***!
   \************************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = function() {
@@ -100,8 +100,8 @@ module.exports = function() {
   !*** ./templates/c.js ***!
   \************************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = function() {
@@ -156,7 +156,6 @@ module.exports = function() {
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [unused] */
 /*! runtime requirements: __webpack_require__ */
 function getTemplate(templateName) {
 	return __webpack_require__(1)("./"+templateName);
@@ -174,61 +173,29 @@ console.log(getTemplate("b"));
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset      Size
-output.js  3.77 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
+asset output.js 3.62 KiB [emitted] (name: main)
 chunk output.js (main) 603 bytes (javascript) 86 bytes (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js 146 bytes [built]
-     [no exports used]
-     entry ./example.js main
- ./templates sync ^\.\/.*$ 217 bytes [built]
-     cjs require context ./templates ./example.js 2:8-44
- ./templates/a.js 80 bytes [built]
-     cjs self exports reference ./templates/a.js 1:0-14
-     context element ./a ./templates sync ^\.\/.*$ ./a
-     context element ./a.js ./templates sync ^\.\/.*$ ./a.js
- ./templates/b.js 80 bytes [built]
-     cjs self exports reference ./templates/b.js 1:0-14
-     context element ./b ./templates sync ^\.\/.*$ ./b
-     context element ./b.js ./templates sync ^\.\/.*$ ./b.js
- ./templates/c.js 80 bytes [built]
-     cjs self exports reference ./templates/c.js 1:0-14
-     context element ./c ./templates sync ^\.\/.*$ ./c
-     context element ./c.js ./templates sync ^\.\/.*$ ./c.js
-     + 1 hidden chunk module
+  > ./example.js main
+  dependent modules 457 bytes [dependent] 4 modules
+  runtime modules 86 bytes 1 module
+  ./example.js 146 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset       Size
-output.js  819 bytes  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 603 bytes (javascript) 86 bytes (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js 146 bytes [built]
-     [no exports used]
-     entry ./example.js main
- ./templates sync ^\.\/.*$ 217 bytes [built]
-     cjs require context ./templates ./example.js 2:8-44
- ./templates/a.js 80 bytes [built]
-     cjs self exports reference ./templates/a.js 1:0-14
-     context element ./a ./templates sync ^\.\/.*$ ./a
-     context element ./a.js ./templates sync ^\.\/.*$ ./a.js
- ./templates/b.js 80 bytes [built]
-     cjs self exports reference ./templates/b.js 1:0-14
-     context element ./b ./templates sync ^\.\/.*$ ./b
-     context element ./b.js ./templates sync ^\.\/.*$ ./b.js
- ./templates/c.js 80 bytes [built]
-     cjs self exports reference ./templates/c.js 1:0-14
-     context element ./c ./templates sync ^\.\/.*$ ./c
-     context element ./c.js ./templates sync ^\.\/.*$ ./c.js
-     + 1 hidden chunk module
+asset output.js 819 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 603 bytes (javascript) 86 bytes (runtime) [entry] [rendered]
+  > ./example.js main
+  dependent modules 457 bytes [dependent] 4 modules
+  runtime modules 86 bytes 1 module
+  ./example.js 146 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 # Code Splitting
