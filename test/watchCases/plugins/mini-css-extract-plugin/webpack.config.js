@@ -10,6 +10,9 @@ module.exports = {
 			}
 		]
 	},
+	output: {
+		publicPath: ""
+	},
 	target: "web",
 	node: {
 		__dirname: false

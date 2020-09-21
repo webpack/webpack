@@ -105,6 +105,7 @@ describe("Defaults", () => {
 		    "web": true,
 		  },
 		  "externalsType": "var",
+		  "ignoreWarnings": undefined,
 		  "infrastructureLogging": Object {
 		    "debug": false,
 		    "level": "info",
@@ -303,11 +304,12 @@ describe("Defaults", () => {
 		    "hotUpdateMainFilename": "[fullhash].hot-update.json",
 		    "iife": true,
 		    "importFunctionName": "import",
+		    "importMetaName": "import.meta",
 		    "library": undefined,
 		    "module": false,
 		    "path": "<cwd>/dist",
 		    "pathinfo": false,
-		    "publicPath": "",
+		    "publicPath": "auto",
 		    "scriptType": false,
 		    "sourceMapFilename": "[file].map[query]",
 		    "sourcePrefix": undefined,
@@ -972,6 +974,9 @@ describe("Defaults", () => {
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
+		-     "publicPath": "auto",
+		+     "publicPath": "",
+		@@ ... @@
 		-     "wasmLoading": "fetch",
 		+     "wasmLoading": "async-node",
 		@@ ... @@
@@ -1096,6 +1101,9 @@ describe("Defaults", () => {
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
+		-     "publicPath": "auto",
+		+     "publicPath": "",
+		@@ ... @@
 		-     "wasmLoading": "fetch",
 		+     "wasmLoading": "async-node",
 		@@ ... @@
@@ -1201,6 +1209,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
+		@@ ... @@
+		-     "publicPath": "auto",
+		+     "publicPath": "",
 		@@ ... @@
 		-     "wasmLoading": "fetch",
 		+     "wasmLoading": "async-node",

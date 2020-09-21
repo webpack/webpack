@@ -26,17 +26,39 @@ export function increment(val) {
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
-/* 0 */,
+/* 0 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! namespace exports */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _increment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./increment */ 1);
+
+var a = 1;
+(0,_increment__WEBPACK_IMPORTED_MODULE_0__.increment)(a); // 2
+
+// async loading
+__webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(__webpack_require__, /*! ./async-loaded */ 3)).then(function(asyncLoaded) {
+	console.log(asyncLoaded);
+});
+
+
+/***/ }),
 /* 1 */
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
 /*! namespace exports */
-/*! export increment [provided] [used] [could be renamed] */
-/*! other exports [not provided] [unused] */
-/*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/*! export increment [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+__webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "increment": () => /* binding */ increment
 /* harmony export */ });
@@ -53,11 +75,12 @@ function increment(val) {
   !*** ./math.js ***!
   \*****************/
 /*! namespace exports */
-/*! export add [provided] [used] [could be renamed] */
-/*! other exports [not provided] [unused] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/*! export add [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+__webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "add": () => /* binding */ add
 /* harmony export */ });
@@ -144,6 +167,52 @@ function add() {
 /******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/load script */
+/******/ 	(() => {
+/******/ 		var inProgress = {};
+/******/ 		// data-webpack is not used as build has no uniqueName
+/******/ 		// loadScript function to load a script via script tag
+/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
+/******/ 			var script, needAttach;
+/******/ 			if(key !== undefined) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				for(var i = 0; i < scripts.length; i++) {
+/******/ 					var s = scripts[i];
+/******/ 					if(s.getAttribute("src") == url) { script = s; break; }
+/******/ 				}
+/******/ 			}
+/******/ 			if(!script) {
+/******/ 				needAttach = true;
+/******/ 				script = document.createElement('script');
+/******/ 		
+/******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120;
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
+/******/ 		
+/******/ 				script.src = url;
+/******/ 			}
+/******/ 			inProgress[url] = [done];
+/******/ 			var onScriptComplete = (prev, event) => {
+/******/ 				// avoid mem leaks in IE.
+/******/ 				script.onerror = script.onload = null;
+/******/ 				clearTimeout(timeout);
+/******/ 				var doneFns = inProgress[url];
+/******/ 				delete inProgress[url];
+/******/ 				script.parentNode && script.parentNode.removeChild(script);
+/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				if(prev) return prev(event);
+/******/ 			}
+/******/ 			;
+/******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			needAttach && document.head.appendChild(script);
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -162,6 +231,8 @@ function add() {
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
@@ -188,49 +259,24 @@ function add() {
 /******/ 		
 /******/ 							// start chunk loading
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
-/******/ 							var loadingEnded = () => {
+/******/ 							// create error before stack unwound to get useful stacktrace later
+/******/ 							var error = new Error();
+/******/ 							var loadingEnded = (event) => {
 /******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
 /******/ 									installedChunkData = installedChunks[chunkId];
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
-/******/ 									if(installedChunkData) return installedChunkData[1];
+/******/ 									if(installedChunkData) {
+/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 										var realSrc = event && event.target && event.target.src;
+/******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 										error.name = 'ChunkLoadError';
+/******/ 										error.type = errorType;
+/******/ 										error.request = realSrc;
+/******/ 										installedChunkData[1](error);
+/******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							var script = document.createElement('script');
-/******/ 							var onScriptComplete;
-/******/ 		
-/******/ 							script.charset = 'utf-8';
-/******/ 							script.timeout = 120;
-/******/ 							if (__webpack_require__.nc) {
-/******/ 								script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 							}
-/******/ 							script.src = url;
-/******/ 		
-/******/ 							// create error before stack unwound to get useful stacktrace later
-/******/ 							var error = new Error();
-/******/ 							onScriptComplete = (event) => {
-/******/ 								onScriptComplete = () => {
-/******/ 		
-/******/ 								}
-/******/ 								// avoid mem leaks in IE.
-/******/ 								script.onerror = script.onload = null;
-/******/ 								clearTimeout(timeout);
-/******/ 								var reportError = loadingEnded();
-/******/ 								if(reportError) {
-/******/ 									var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 									var realSrc = event && event.target && event.target.src;
-/******/ 									error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
-/******/ 									error.name = 'ChunkLoadError';
-/******/ 									error.type = errorType;
-/******/ 									error.request = realSrc;
-/******/ 									reportError(error);
-/******/ 								}
-/******/ 							}
-/******/ 							;
-/******/ 							var timeout = setTimeout(() => {
-/******/ 								onScriptComplete({ type: 'timeout', target: script })
-/******/ 							}, 120000);
-/******/ 							script.onerror = script.onload = onScriptComplete;
-/******/ 							document.head.appendChild(script);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -247,11 +293,8 @@ function add() {
 /******/ 		// no deferred startup
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		function webpackJsonpCallback(data) {
-/******/ 			var chunkIds = data[0];
-/******/ 			var moreModules = data[1];
-/******/ 		
-/******/ 			var runtime = data[3];
+/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
@@ -268,17 +311,16 @@ function add() {
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			if(parentJsonpFunction) parentJsonpFunction(data);
+/******/ 			parentChunkLoadingFunction(data);
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
 /******/ 		
-/******/ 		};
+/******/ 		}
 /******/ 		
-/******/ 		var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 		var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
-/******/ 		jsonpArray.push = webpackJsonpCallback;
-/******/ 		var parentJsonpFunction = oldJsonpFunction;
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -287,25 +329,10 @@ function add() {
 </details>
 
 ``` js
-(() => {
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! namespace exports */
-/*! exports [not provided] [unused] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.* */
-/* harmony import */ var _increment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./increment */ 1);
-
-var a = 1;
-(0,_increment__WEBPACK_IMPORTED_MODULE_0__.increment)(a); // 2
-
-// async loading
-__webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(__webpack_require__, /*! ./async-loaded */ 3)).then(function(asyncLoaded) {
-	console.log(asyncLoaded);
-});
-
-})();
-
+/******/ 	// startup
+/******/ 	// Load entry module
+/******/ 	__webpack_require__(0);
+/******/ 	// This entry module used 'exports' so it can't be inlined
 /******/ })()
 ;
 ```
@@ -315,55 +342,41 @@ __webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(__webpac
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-       Asset       Size
-35.output.js  793 bytes  [emitted]
-   output.js   10.4 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
+asset output.js 11.8 KiB [emitted] (name: main)
+asset 35.output.js 772 bytes [emitted]
 chunk 35.output.js 24 bytes [rendered]
-    > ./async-loaded ./example.js 6:0-24
- ./async-loaded.js 24 bytes [built]
-     [exports: answer]
-     import() ./async-loaded ./example.js 6:0-24
-chunk output.js (main) 400 bytes (javascript) 4.76 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js 175 bytes [built]
-     [no exports]
-     [no exports used]
-     entry ./example.js main
- ./increment.js 90 bytes [built]
-     [exports: increment]
-     [all exports used]
-     harmony side effect evaluation ./increment ./example.js 1:0-47
-     harmony import specifier ./increment ./example.js 3:0-3
- ./math.js 135 bytes [built]
-     [exports: add]
-     [all exports used]
-     harmony side effect evaluation ./math ./increment.js 1:0-29
-     harmony import specifier ./math ./increment.js 3:11-14
-     + 7 hidden chunk modules
+  > ./async-loaded ./example.js 6:0-24
+  ./async-loaded.js 24 bytes [built] [code generated]
+    [exports: answer]
+    [used exports unknown]
+    import() ./async-loaded ./example.js 6:0-24
+chunk output.js (main) 400 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.42 KiB 8 modules
+  dependent modules 225 bytes [dependent] 2 modules
+  ./example.js 175 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-       Asset       Size
-35.output.js  126 bytes  [emitted]
-   output.js   1.67 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk 35.output.js 24 bytes [rendered]
-    > ./async-loaded ./example.js 6:0-24
- ./async-loaded.js 24 bytes [built]
-     [exports: answer]
-     import() ./async-loaded ./example.js + 2 modules ./example.js 6:0-24
-chunk output.js (main) 400 bytes (javascript) 4.76 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js + 2 modules 400 bytes [built]
-     [no exports]
-     [no exports used]
-     entry ./example.js main
-     + 7 hidden chunk modules
+asset output.js 1.98 KiB [emitted] [minimized] (name: main)
+asset 35.output.js 122 bytes [emitted] [minimized]
+chunk (runtime: main) 35.output.js 24 bytes [rendered]
+  > ./async-loaded ./example.js 6:0-24
+  ./async-loaded.js 24 bytes [built] [code generated]
+    [exports: answer]
+    import() ./async-loaded ./example.js + 2 modules ./example.js 6:0-24
+chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.42 KiB 8 modules
+  ./example.js + 2 modules 400 bytes [built] [code generated]
+    [no exports]
+    [no exports used]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```

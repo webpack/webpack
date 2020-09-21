@@ -321,6 +321,8 @@ const AlternativeCreateUserAction = async name => {
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
 /******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
@@ -381,11 +383,8 @@ const AlternativeCreateUserAction = async name => {
 /******/ 		// no deferred startup
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		function webpackJsonpCallback(data) {
-/******/ 			var chunkIds = data[0];
-/******/ 			var moreModules = data[1];
-/******/ 		
-/******/ 			var runtime = data[3];
+/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
@@ -402,17 +401,16 @@ const AlternativeCreateUserAction = async name => {
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			if(parentJsonpFunction) parentJsonpFunction(data);
+/******/ 			parentChunkLoadingFunction(data);
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
 /******/ 		
-/******/ 		};
+/******/ 		}
 /******/ 		
-/******/ 		var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 		var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
-/******/ 		jsonpArray.push = webpackJsonpCallback;
-/******/ 		var parentJsonpFunction = oldJsonpFunction;
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -432,7 +430,7 @@ const AlternativeCreateUserAction = async name => {
 # dist/497.output.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[497],[
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[497],[
 /* 0 */,
 /* 1 */,
 /* 2 */
@@ -510,7 +508,7 @@ return __webpack_exports__;
 ## in production mode:
 
 ```javascript
-(window.webpackJsonp=window.webpackJsonp||[]).push([[497],{497:(a,e,s)=>{"use strict";a.exports=(async()=>{s.r(e),s.d(e,{createUser:()=>t});var a=s(447);a=await Promise.resolve(a);const t=async e=>{command="CREATE USER "+e,await(0,a.j)({command})};return e})()},447:(a,e,s)=>{"use strict";a.exports=(async()=>{s.d(e,{j:()=>a});await(async a=>{await new Promise(a=>setTimeout(a,1e3))})();const a=async a=>(await new Promise(a=>setTimeout(a,100)),"fake data");return e})()}}]);
+(self.webpackChunk=self.webpackChunk||[]).push([[497],{497:(e,a,s)=>{"use strict";e.exports=(async()=>{s.r(a),s.d(a,{createUser:()=>t});var e=s(447);e=await Promise.resolve(e);const t=async a=>{command="CREATE USER "+a,await(0,e.j)({command})};return a})()},447:(e,a,s)=>{"use strict";e.exports=(async()=>{s.d(a,{j:()=>e}),await(async e=>{await new Promise(e=>setTimeout(e,1e3))})();const e=async e=>(await new Promise(e=>setTimeout(e,100)),"fake data");return a})()}}]);
 ```
 
 # Info
@@ -518,63 +516,47 @@ return __webpack_exports__;
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.23
-asset 497.output.js 2.53 KiB [emitted]
 asset output.js 12.2 KiB [emitted] (name: main)
-Entrypoint main = output.js
-chunk output.js (main) 1.19 KiB (javascript) 5.46 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./Actions.js 1.09 KiB [built]
-     [exports: AlternativeCreateUserAction, CreateUserAction]
-     [used exports unknown]
-     harmony side effect evaluation ./Actions.js ./example.js 1:0-48
-     harmony import specifier ./Actions.js ./example.js 4:7-23
- ./example.js 103 bytes [built]
-     [no exports]
-     [used exports unknown]
-     entry ./example.js main
-     + 8 hidden chunk modules
+asset 497.output.js 2.52 KiB [emitted]
+chunk output.js (main) 1.19 KiB (javascript) 5.42 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.42 KiB 8 modules
+  dependent modules 1.09 KiB [dependent] 1 module
+  ./example.js 103 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example.js main
 chunk 497.output.js 617 bytes [rendered]
-    > ./UserApi.js ./Actions.js 22:30-52
-    > ./UserApi.js ./Actions.js 2:16-38
- ./UserApi.js 215 bytes [built]
-     [exports: createUser]
-     [used exports unknown]
-     import() ./UserApi.js ./Actions.js 2:16-38
-     import() ./UserApi.js ./Actions.js 22:30-52
- ./db-connection.js 402 bytes [built]
-     [exports: close, dbCall]
-     [used exports unknown]
-     harmony side effect evaluation ./db-connection.js ./UserApi.js 1:0-44
-     harmony import specifier ./db-connection.js ./UserApi.js 6:7-13
+  > ./UserApi.js ./Actions.js 22:30-52
+  > ./UserApi.js ./Actions.js 2:16-38
+  dependent modules 402 bytes [dependent] 1 module
+  ./UserApi.js 215 bytes [built] [code generated]
+    [exports: createUser]
+    [used exports unknown]
+    import() ./UserApi.js ./Actions.js 2:16-38
+    import() ./UserApi.js ./Actions.js 22:30-52
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.23
-asset 497.output.js 475 bytes [emitted]
-asset output.js 2 KiB [emitted] (name: main)
-Entrypoint main = output.js
-chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 5.46 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js + 1 modules 1.19 KiB [built]
-     [no exports]
-     [no exports used]
-     entry ./example.js main
-     + 8 hidden chunk modules
+asset output.js 1.96 KiB [emitted] [minimized] (name: main)
+asset 497.output.js 471 bytes [emitted] [minimized]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 5.42 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.42 KiB 8 modules
+  ./example.js + 1 modules 1.19 KiB [built] [code generated]
+    [no exports]
+    [no exports used]
+    entry ./example.js main
 chunk (runtime: main) 497.output.js 617 bytes [rendered]
-    > ./UserApi.js ./Actions.js 22:30-52
-    > ./UserApi.js ./Actions.js 2:16-38
- ./UserApi.js 215 bytes [built]
-     [exports: createUser]
-     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 2:16-38
-     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 22:30-52
- ./db-connection.js 402 bytes [built]
-     [exports: close, dbCall]
-     [only some exports used: dbCall]
-     harmony side effect evaluation ./db-connection.js ./UserApi.js 1:0-44
-     harmony import specifier ./db-connection.js ./UserApi.js 6:7-13
+  > ./UserApi.js ./Actions.js 22:30-52
+  > ./UserApi.js ./Actions.js 2:16-38
+  dependent modules 402 bytes [dependent] 1 module
+  ./UserApi.js 215 bytes [built] [code generated]
+    [exports: createUser]
+    import() ./UserApi.js ./example.js + 1 modules ./Actions.js 2:16-38
+    import() ./UserApi.js ./example.js + 1 modules ./Actions.js 22:30-52
+webpack 5.0.0-beta.32 compiled successfully
 ```

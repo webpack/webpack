@@ -26,7 +26,7 @@ module.exports = {
 		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = factory();
-})(window, function() {
+})(self, function() {
 return /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
@@ -35,10 +35,10 @@ return /******/ (() => { // webpackBootstrap
   !*** ./example.js ***!
   \********************/
 /*! namespace exports */
-/*! export default [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! export increment [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! export value [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! export default [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
+/*! export increment [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
+/*! export value [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used in main (runtime-defined)] */
 /*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -135,33 +135,28 @@ function increment() {
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-           Asset      Size
-MyLibrary.umd.js  3.94 KiB  [emitted]  [name: main]
-Entrypoint main = MyLibrary.umd.js
+asset MyLibrary.umd.js 3.97 KiB [emitted] (name: main)
 chunk MyLibrary.umd.js (main) 92 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
-    > ./example main
- ./example.js 92 bytes [built]
-     [exports: default, increment, value]
-     entry ./example main
-     used as library export
-     + 3 hidden chunk modules
+  > ./example main
+  runtime modules 668 bytes 3 modules
+  ./example.js 92 bytes [built] [code generated]
+    [exports: default, increment, value]
+    [used exports unknown]
+    entry ./example main
+    used as library export
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-           Asset       Size
-MyLibrary.umd.js  819 bytes  [emitted]  [name: main]
-Entrypoint main = MyLibrary.umd.js
-chunk MyLibrary.umd.js (main) 92 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
-    > ./example main
- ./example.js 92 bytes [built]
-     [exports: default, increment, value]
-     entry ./example main
-     used as library export
-     + 3 hidden chunk modules
+asset MyLibrary.umd.js 817 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+  > ./example main
+  runtime modules 668 bytes 3 modules
+  ./example.js 92 bytes [built] [code generated]
+    [exports: default, increment, value]
+    entry ./example main
+    used as library export
+webpack 5.0.0-beta.32 compiled successfully
 ```

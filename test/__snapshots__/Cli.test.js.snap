@@ -563,6 +563,71 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "ignore-warnings": Object {
+    "configs": Array [
+      Object {
+        "description": "A RegExp to select the warning message.",
+        "multiple": true,
+        "path": "ignoreWarnings[]",
+        "type": "RegExp",
+      },
+    ],
+    "description": "A RegExp to select the warning message.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "ignore-warnings-file": Object {
+    "configs": Array [
+      Object {
+        "description": "A RegExp to select the origin file for the warning.",
+        "multiple": true,
+        "path": "ignoreWarnings[].file",
+        "type": "RegExp",
+      },
+    ],
+    "description": "A RegExp to select the origin file for the warning.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "ignore-warnings-message": Object {
+    "configs": Array [
+      Object {
+        "description": "A RegExp to select the warning message.",
+        "multiple": true,
+        "path": "ignoreWarnings[].message",
+        "type": "RegExp",
+      },
+    ],
+    "description": "A RegExp to select the warning message.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "ignore-warnings-module": Object {
+    "configs": Array [
+      Object {
+        "description": "A RegExp to select the origin module for the warning.",
+        "multiple": true,
+        "path": "ignoreWarnings[].module",
+        "type": "RegExp",
+      },
+    ],
+    "description": "A RegExp to select the origin module for the warning.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "ignore-warnings-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Ignore specific warnings.",
+        "multiple": false,
+        "path": "ignoreWarnings",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Ignore specific warnings.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "infrastructure-logging-debug": Object {
     "configs": Array [
       Object {
@@ -2445,6 +2510,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-import-meta-name": Object {
+    "configs": Array [
+      Object {
+        "description": "The name of the native import.meta object (can be exchanged for a polyfill).",
+        "multiple": false,
+        "path": "output.importMetaName",
+        "type": "string",
+      },
+    ],
+    "description": "The name of the native import.meta object (can be exchanged for a polyfill).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-library": Object {
     "configs": Array [
       Object {
@@ -2783,6 +2861,15 @@ Object {
   },
   "output-public-path": Object {
     "configs": Array [
+      Object {
+        "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
+        "multiple": false,
+        "path": "output.publicPath",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
       Object {
         "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
         "multiple": false,

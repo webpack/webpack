@@ -42,9 +42,9 @@ module.exports = function(content) {
   !*** ./loader.js!./file.js ***!
   \*****************************/
 /*! default exports */
-/*! export answer [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! export foo [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! export answer [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export foo [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -57,8 +57,11 @@ exports.foo = "bar";
   !*** ../../node_modules/css-loader/dist/cjs.js!./test.css ***!
   \************************************************************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: __webpack_exports__, module, __webpack_require__, module.id */
+/*! CommonJS bailout: exports is used directly at 3:0-7 */
+/*! CommonJS bailout: exports.push(...) prevents optimization as exports is passed as call context as 5:0-12 */
+/*! CommonJS bailout: exports is used directly at 7:17-24 */
+/*! CommonJS bailout: module.exports is used directly at 7:0-14 */
 /***/ ((module, exports, __webpack_require__) => {
 
 // Imports
@@ -76,8 +79,8 @@ module.exports = exports;
   !*** ../../node_modules/css-loader/dist/runtime/api.js ***!
   \*********************************************************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 9:0-14 */
 /***/ ((module) => {
 
 "use strict";
@@ -218,7 +221,6 @@ function toComment(sourceMap) {
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
-/*! exports [maybe provided (runtime-defined)] [unused] */
 /*! runtime requirements: __webpack_require__ */
 // use our loader
 console.dir(__webpack_require__(/*! ./loader!./file */ 1));
@@ -248,55 +250,25 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset      Size
-output.js  5.66 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
+asset output.js 5.78 KiB [emitted] (name: main)
 chunk output.js (main) 2.96 KiB [entry] [rendered]
-    > ./example.js main
- ../../node_modules/css-loader/dist/cjs.js!./test.css 272 bytes [built]
-     cjs require ./test.css ./example.js 5:12-33
-     cjs require !css-loader!./test.css ./example.js 6:12-45
-     cjs self exports reference ../../node_modules/css-loader/dist/cjs.js!./test.css 3:0-7
-     cjs self exports reference ../../node_modules/css-loader/dist/cjs.js!./test.css 5:0-7
-     cjs self exports reference ../../node_modules/css-loader/dist/cjs.js!./test.css 7:0-14
-     cjs self exports reference ../../node_modules/css-loader/dist/cjs.js!./test.css 7:17-24
- ../../node_modules/css-loader/dist/runtime/api.js 2.46 KiB [built]
-     cjs require ../../node_modules/css-loader/dist/runtime/api.js ../../node_modules/css-loader/dist/cjs.js!./test.css 2:34-94
-     cjs self exports reference ../../node_modules/css-loader/dist/runtime/api.js 9:0-14
- ./example.js 205 bytes [built]
-     [no exports used]
-     entry ./example.js main
- ./loader.js!./file.js 41 bytes [built]
-     [exports: answer, foo]
-     cjs require ./loader!./file ./example.js 2:12-38
+  > ./example.js main
+  dependent modules 2.76 KiB [dependent] 3 modules
+  ./example.js 205 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.16
-    Asset      Size
-output.js  1.18 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 2.96 KiB [entry] [rendered]
-    > ./example.js main
- ../../node_modules/css-loader/dist/cjs.js!./test.css 272 bytes [built]
-     cjs require ./test.css ./example.js 5:12-33
-     cjs require !css-loader!./test.css ./example.js 6:12-45
-     cjs self exports reference ../../node_modules/css-loader/dist/cjs.js!./test.css 3:0-7
-     cjs self exports reference ../../node_modules/css-loader/dist/cjs.js!./test.css 5:0-7
-     cjs self exports reference ../../node_modules/css-loader/dist/cjs.js!./test.css 7:0-14
-     cjs self exports reference ../../node_modules/css-loader/dist/cjs.js!./test.css 7:17-24
- ../../node_modules/css-loader/dist/runtime/api.js 2.46 KiB [built]
-     cjs require ../../node_modules/css-loader/dist/runtime/api.js ../../node_modules/css-loader/dist/cjs.js!./test.css 2:34-94
-     cjs self exports reference ../../node_modules/css-loader/dist/runtime/api.js 9:0-14
- ./example.js 205 bytes [built]
-     [no exports used]
-     entry ./example.js main
- ./loader.js!./file.js 41 bytes [built]
-     [exports: answer, foo]
-     cjs require ./loader!./file ./example.js 2:12-38
+asset output.js 1.17 KiB [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 2.96 KiB [entry] [rendered]
+  > ./example.js main
+  dependent modules 2.76 KiB [dependent] 3 modules
+  ./example.js 205 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```

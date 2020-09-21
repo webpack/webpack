@@ -716,8 +716,8 @@ onmessage = async event => {
   !*** ./fibonacci.js ***!
   \**********************/
 /*! namespace exports */
-/*! export fibonacci [provided] [maybe used in main, fibonacci (runtime-defined)] [usage prevents renaming] */
-/*! other exports [not provided] [maybe used in main, fibonacci (runtime-defined)] */
+/*! export fibonacci [provided] [maybe used in main, ./example.js|79:18-82:2 (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used in main, ./example.js|79:18-82:2 (runtime-defined)] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -741,11 +741,11 @@ function fibonacci(n) {
 ## Unoptimized
 
 ```
-asset 129.js 907 bytes [emitted]
-asset chat.js 879 bytes [emitted] (name: chat)
 asset main.js 12.2 KiB [emitted] (name: main)
 asset workers/fibonacci.js 5.3 KiB [emitted] (name: fibonacci)
-chunk (runtime: fibonacci, main) 129.js 103 bytes [rendered]
+asset 129.js 997 bytes [emitted]
+asset chat.js 879 bytes [emitted] (name: chat)
+chunk (runtime: ./example.js|79:18-82:2, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./example.js 69:30-51
   > ./fibonacci ./fib-worker.js 2:29-50
   ./fibonacci.js 103 bytes [built] [code generated]
@@ -758,29 +758,29 @@ chunk (runtime: main) main.js (main) 2.22 KiB (javascript) 5.59 KiB (runtime) [e
   ./example.js 2.22 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main
-chunk (runtime: chat) chat.js (chat) 527 bytes [entry] [rendered]
+chunk (runtime: ./example.js|25:19-30:1) chat.js (chat) 527 bytes [entry] [rendered]
   > ./example.js 25:19-30:1
   ./chat-worker.js + 1 modules 527 bytes [built] [code generated]
     [no exports]
     [no exports used]
     new Worker() ./chat-worker.js ./example.js 25:19-30:1
-chunk (runtime: fibonacci) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.1 KiB (runtime) [entry] [rendered]
+chunk (runtime: ./example.js|79:18-82:2) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.1 KiB (runtime) [entry] [rendered]
   > ./example.js 79:18-82:2
   runtime modules 2.1 KiB 7 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 79:18-82:2
-webpack 5.0.0-beta.29 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset 129.js 166 bytes [emitted] [minimized]
-asset chat.js 270 bytes [emitted] [minimized] (name: chat)
 asset main.js 3.37 KiB [emitted] [minimized] (name: main)
 asset workers/fibonacci.js 930 bytes [emitted] [minimized] (name: fibonacci)
-chunk (runtime: fibonacci, main) 129.js 103 bytes [rendered]
+asset chat.js 270 bytes [emitted] [minimized] (name: chat)
+asset 129.js 166 bytes [emitted] [minimized]
+chunk (runtime: ./example.js|79:18-82:2, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./example.js 69:30-51
   > ./fibonacci ./fib-worker.js 2:29-50
   ./fibonacci.js 103 bytes [built] [code generated]
@@ -793,17 +793,17 @@ chunk (runtime: main) main.js (main) 2.22 KiB (javascript) 5.59 KiB (runtime) [e
   ./example.js 2.22 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main
-chunk (runtime: chat) chat.js (chat) 527 bytes [entry] [rendered]
+chunk (runtime: ./example.js|25:19-30:1) chat.js (chat) 527 bytes [entry] [rendered]
   > ./example.js 25:19-30:1
   ./chat-worker.js + 1 modules 527 bytes [built] [code generated]
     [no exports]
     [no exports used]
     new Worker() ./chat-worker.js ./example.js 25:19-30:1
-chunk (runtime: fibonacci) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.1 KiB (runtime) [entry] [rendered]
+chunk (runtime: ./example.js|79:18-82:2) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.1 KiB (runtime) [entry] [rendered]
   > ./example.js 79:18-82:2
   runtime modules 2.1 KiB 7 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 79:18-82:2
-webpack 5.0.0-beta.29 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```
