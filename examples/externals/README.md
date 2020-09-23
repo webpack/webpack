@@ -59,7 +59,7 @@ module.exports = {
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
 })(self, function(__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) {
-return /******/ (() => { // webpackBootstrap
+return /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
@@ -69,7 +69,7 @@ return /******/ (() => { // webpackBootstrap
 /*! export exampleValue [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
 /*! other exports [not provided] [maybe used in main (runtime-defined)] */
 /*! runtime requirements: __webpack_exports__, __webpack_require__ */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 var add = __webpack_require__(/*! add */ 1);
 var subtract = __webpack_require__(/*! subtract */ 2);
@@ -84,7 +84,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
@@ -97,7 +97,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
@@ -153,7 +153,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 ## Unoptimized
 
 ```
-asset output.js 3.29 KiB [emitted] (name: main)
+asset output.js 3.31 KiB [emitted] (name: main)
 chunk output.js (main) 194 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 84 bytes [dependent] 2 modules
@@ -162,13 +162,13 @@ chunk output.js (main) 194 bytes [entry] [rendered]
     [used exports unknown]
     entry ./example.js main
     used as library export
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 650 bytes [emitted] [minimized] (name: main)
+asset output.js 672 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 84 bytes [dependent] 2 modules
@@ -176,5 +176,5 @@ chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
     [exports: exampleValue]
     entry ./example.js main
     used as library export
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.0 compiled successfully
 ```

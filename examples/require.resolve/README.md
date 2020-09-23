@@ -26,7 +26,7 @@ module.exports = Math.random();
 # dist/output.js
 
 ``` javascript
-/******/ (() => { // webpackBootstrap
+/******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
@@ -34,7 +34,7 @@ module.exports = Math.random();
   \********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__, __webpack_require__.c, module.id, module.loaded, __webpack_require__.*, module */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 var a = __webpack_require__(/*! ./a */ 1);
 
@@ -58,7 +58,7 @@ if(a == a2) throw new Error("Cache clear failed :(");
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+/***/ (function(module) {
 
 module.exports = Math.random();
 
@@ -118,25 +118,25 @@ module.exports = Math.random();
 ## Unoptimized
 
 ```
-asset output.js 2.31 KiB [emitted] (name: main)
+asset output.js 2.32 KiB [emitted] (name: main)
 chunk output.js (main) 313 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 31 bytes [dependent] 1 module
   ./example.js 282 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 297 bytes [emitted] [minimized] (name: main)
+asset output.js 316 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 313 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 31 bytes [dependent] 1 module
   ./example.js 282 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.0 compiled successfully
 ```

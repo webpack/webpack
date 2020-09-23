@@ -71,7 +71,7 @@ module.exports = {
 # js/output.js
 
 ```javascript
-/******/ (() => { // webpackBootstrap
+/******/ (function() { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -81,7 +81,7 @@ module.exports = {
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _images_file_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images/file.svg */ 1);
@@ -123,7 +123,7 @@ function createImageElement(title, src) {
 /*! default exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: module */
-/***/ ((module) => {
+/***/ (function(module) {
 
 module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e";
 
@@ -160,15 +160,15 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
+/******/ 		__webpack_require__.r = function(exports) {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /************************************************************************/
 ```
@@ -189,14 +189,14 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 ## webpack output
 
 ```
-asset output.js 3.86 KiB [emitted] (name: main)
-chunk output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
+asset output.js 3.89 KiB [emitted] (name: main)
+chunk output.js (main) 1.54 KiB (javascript) 279 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 915 bytes [dependent] 1 module
-  runtime modules 274 bytes 1 module
+  runtime modules 279 bytes 1 module
   ./example.js 658 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.0 compiled successfully
 ```

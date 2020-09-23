@@ -47,7 +47,7 @@ module.exports = [
 
 ```javascript
 var vendor_fef5e13bbb88a32cfed3;vendor_fef5e13bbb88a32cfed3 =
-/******/ (() => { // webpackBootstrap
+/******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!****************!*\
@@ -55,7 +55,7 @@ var vendor_fef5e13bbb88a32cfed3;vendor_fef5e13bbb88a32cfed3 =
   \****************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__, module */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = __webpack_require__;
 
@@ -67,7 +67,7 @@ module.exports = __webpack_require__;
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+/***/ (function(module) {
 
 module.exports = "Vendor";
 
@@ -79,7 +79,7 @@ module.exports = "Vendor";
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+/***/ (function(module) {
 
 module.exports = "Vendor2";
 
@@ -131,7 +131,7 @@ module.exports = "Vendor2";
 # dist/pageA.js
 
 ```javascript
-/******/ (() => { // webpackBootstrap
+/******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!******************!*\
@@ -140,7 +140,7 @@ module.exports = "Vendor2";
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /*! CommonJS bailout: module.exports is used directly at 2:0-14 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 console.log(__webpack_require__(/*! ./vendor */ 1));
 module.exports = "pageA";
@@ -152,7 +152,7 @@ module.exports = "pageA";
   \****************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(/*! dll-reference vendor_fef5e13bbb88a32cfed3 */ 2))(1);
 
@@ -164,7 +164,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_fef5e13bbb88a32cf
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 module.exports = vendor_fef5e13bbb88a32cfed3;
@@ -220,7 +220,7 @@ module.exports = vendor_fef5e13bbb88a32cfed3;
 
 ```
 vendor:
-  asset vendor.js 2.16 KiB [emitted] (name: main)
+  asset vendor.js 2.18 KiB [emitted] (name: main)
   chunk vendor.js (main) 65 bytes [entry] [rendered]
     > main
     dependent modules 53 bytes [dependent] 2 modules
@@ -228,12 +228,12 @@ vendor:
       [used exports unknown]
       dll entry
       used as library export
-  vendor (webpack 5.0.0-beta.32) compiled successfully
+  vendor (webpack 5.0.0-rc.0) compiled successfully
 
 app:
-  asset pageB.js 2.51 KiB [emitted] (name: pageB)
-  asset pageA.js 2.49 KiB [emitted] (name: pageA)
-  asset pageC.js 1.49 KiB [emitted] (name: pageC)
+  asset pageB.js 2.53 KiB [emitted] (name: pageB)
+  asset pageA.js 2.51 KiB [emitted] (name: pageA)
+  asset pageC.js 1.5 KiB [emitted] (name: pageC)
   chunk pageA.js (pageA) 143 bytes [entry] [rendered]
     > ./pageA pageA
     dependent modules 84 bytes [dependent] 2 modules
@@ -254,26 +254,26 @@ app:
       [used exports unknown]
       cjs self exports reference ./pageC.js 1:0-14
       entry ./pageC pageC
-  app (webpack 5.0.0-beta.32) compiled successfully
+  app (webpack 5.0.0-rc.0) compiled successfully
 ```
 
 ## Production mode
 
 ```
 vendor:
-  asset vendor.js 283 bytes [emitted] [minimized] (name: main)
+  asset vendor.js 309 bytes [emitted] [minimized] (name: main)
   chunk (runtime: main) vendor.js (main) 65 bytes [entry] [rendered]
     > main
     dependent modules 53 bytes [dependent] 2 modules
     dll main 12 bytes [built] [code generated]
       dll entry
       used as library export
-  vendor (webpack 5.0.0-beta.32) compiled successfully
+  vendor (webpack 5.0.0-rc.0) compiled successfully
 
 app:
-  asset pageA.js 283 bytes [emitted] [minimized] (name: pageA)
-  asset pageB.js 283 bytes [emitted] [minimized] (name: pageB)
-  asset pageC.js 160 bytes [emitted] [minimized] (name: pageC)
+  asset pageB.js 308 bytes [emitted] [minimized] (name: pageB)
+  asset pageA.js 306 bytes [emitted] [minimized] (name: pageA)
+  asset pageC.js 173 bytes [emitted] [minimized] (name: pageC)
   chunk (runtime: pageB) pageB.js (pageB) 144 bytes [entry] [rendered]
     > ./pageB pageB
     dependent modules 84 bytes [dependent] 2 modules
@@ -294,5 +294,5 @@ app:
       [used exports unknown]
       cjs self exports reference ./pageA.js 2:0-14
       entry ./pageA pageA
-  app (webpack 5.0.0-beta.32) compiled successfully
+  app (webpack 5.0.0-rc.0) compiled successfully
 ```

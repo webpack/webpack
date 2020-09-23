@@ -82,7 +82,7 @@ module.exports = {
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+/***/ (function(module) {
 
 module.exports = "vendor1";
 
@@ -95,7 +95,7 @@ module.exports = "vendor1";
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+/***/ (function(module) {
 
 module.exports = "vendor2";
 
@@ -116,7 +116,7 @@ module.exports = "vendor2";
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+/***/ (function(module) {
 
 module.exports = "utility2";
 
@@ -137,7 +137,7 @@ module.exports = "utility2";
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+/***/ (function(module) {
 
 module.exports = "utility3";
 
@@ -149,7 +149,7 @@ module.exports = "utility3";
 # dist/pageA.js
 
 ```javascript
-/******/ (() => { // webpackBootstrap
+/******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!******************!*\
@@ -158,7 +158,7 @@ module.exports = "utility3";
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /*! CommonJS bailout: module.exports is used directly at 5:0-14 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 var vendor1 = __webpack_require__(/*! vendor1 */ 1);
 var utility1 = __webpack_require__(/*! ./utility1 */ 2);
@@ -176,7 +176,7 @@ module.exports = "pageA";
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ ((module) => {
+/***/ (function(module) {
 
 module.exports = "utility1";
 
@@ -216,12 +216,12 @@ module.exports = "utility1";
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
-/******/ 	})();
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// no baseURI
 /******/ 		
 /******/ 		// object to store loaded and loading chunks
@@ -244,7 +244,7 @@ module.exports = "utility1";
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		var checkDeferredModules = () => {
+/******/ 		var checkDeferredModules = function() {
 /******/ 		
 /******/ 		};
 /******/ 		function checkDeferredModulesImpl() {
@@ -263,15 +263,15 @@ module.exports = "utility1";
 /******/ 			}
 /******/ 			if(deferredModules.length === 0) {
 /******/ 				__webpack_require__.x();
-/******/ 				__webpack_require__.x = () => {
+/******/ 				__webpack_require__.x = function() {
 /******/ 		
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
 /******/ 		}
-/******/ 		__webpack_require__.x = () => {
+/******/ 		__webpack_require__.x = function() {
 /******/ 			// reset startup function so it can be called again when more startup code is added
-/******/ 			__webpack_require__.x = () => {
+/******/ 			__webpack_require__.x = function() {
 /******/ 		
 /******/ 			}
 /******/ 			chunkLoadingGlobal = chunkLoadingGlobal.slice();
@@ -280,8 +280,11 @@ module.exports = "utility1";
 /******/ 		};
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (data) => {
-/******/ 			var [chunkIds, moreModules, runtime, executeModules] = data;
+/******/ 		var webpackJsonpCallback = function(data) {
+/******/ 			var chunkIds = data[0];
+/******/ 			var moreModules = data[1];
+/******/ 			var runtime = data[2];
+/******/ 			var executeModules = data[3];
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
@@ -313,7 +316,7 @@ module.exports = "utility1";
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 /******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /************************************************************************/
 ```
@@ -330,7 +333,7 @@ module.exports = "utility1";
 # dist/pageB.js
 
 ```javascript
-/******/ (() => { // webpackBootstrap
+/******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 4:
@@ -340,7 +343,7 @@ module.exports = "utility1";
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /*! CommonJS bailout: module.exports is used directly at 5:0-14 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 var vendor2 = __webpack_require__(/*! vendor2 */ 5);
 var utility2 = __webpack_require__(/*! ./utility2 */ 3);
@@ -386,12 +389,12 @@ module.exports = "pageB";
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
-/******/ 	})();
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// no baseURI
 /******/ 		
 /******/ 		// object to store loaded and loading chunks
@@ -414,7 +417,7 @@ module.exports = "pageB";
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		var checkDeferredModules = () => {
+/******/ 		var checkDeferredModules = function() {
 /******/ 		
 /******/ 		};
 /******/ 		function checkDeferredModulesImpl() {
@@ -433,15 +436,15 @@ module.exports = "pageB";
 /******/ 			}
 /******/ 			if(deferredModules.length === 0) {
 /******/ 				__webpack_require__.x();
-/******/ 				__webpack_require__.x = () => {
+/******/ 				__webpack_require__.x = function() {
 /******/ 		
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
 /******/ 		}
-/******/ 		__webpack_require__.x = () => {
+/******/ 		__webpack_require__.x = function() {
 /******/ 			// reset startup function so it can be called again when more startup code is added
-/******/ 			__webpack_require__.x = () => {
+/******/ 			__webpack_require__.x = function() {
 /******/ 		
 /******/ 			}
 /******/ 			chunkLoadingGlobal = chunkLoadingGlobal.slice();
@@ -450,8 +453,11 @@ module.exports = "pageB";
 /******/ 		};
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (data) => {
-/******/ 			var [chunkIds, moreModules, runtime, executeModules] = data;
+/******/ 		var webpackJsonpCallback = function(data) {
+/******/ 			var chunkIds = data[0];
+/******/ 			var moreModules = data[1];
+/******/ 			var runtime = data[2];
+/******/ 			var executeModules = data[3];
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
@@ -483,7 +489,7 @@ module.exports = "pageB";
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 /******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /************************************************************************/
 ```
@@ -500,7 +506,7 @@ module.exports = "pageB";
 # dist/pageC.js
 
 ```javascript
-/******/ (() => { // webpackBootstrap
+/******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 7:
@@ -510,7 +516,7 @@ module.exports = "pageB";
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /*! CommonJS bailout: module.exports is used directly at 4:0-14 */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 var utility2 = __webpack_require__(/*! ./utility2 */ 3);
 var utility3 = __webpack_require__(/*! ./utility3 */ 6);
@@ -554,12 +560,12 @@ module.exports = "pageC";
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
-/******/ 	})();
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// no baseURI
 /******/ 		
 /******/ 		// object to store loaded and loading chunks
@@ -582,7 +588,7 @@ module.exports = "pageC";
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		var checkDeferredModules = () => {
+/******/ 		var checkDeferredModules = function() {
 /******/ 		
 /******/ 		};
 /******/ 		function checkDeferredModulesImpl() {
@@ -601,15 +607,15 @@ module.exports = "pageC";
 /******/ 			}
 /******/ 			if(deferredModules.length === 0) {
 /******/ 				__webpack_require__.x();
-/******/ 				__webpack_require__.x = () => {
+/******/ 				__webpack_require__.x = function() {
 /******/ 		
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
 /******/ 		}
-/******/ 		__webpack_require__.x = () => {
+/******/ 		__webpack_require__.x = function() {
 /******/ 			// reset startup function so it can be called again when more startup code is added
-/******/ 			__webpack_require__.x = () => {
+/******/ 			__webpack_require__.x = function() {
 /******/ 		
 /******/ 			}
 /******/ 			chunkLoadingGlobal = chunkLoadingGlobal.slice();
@@ -618,8 +624,11 @@ module.exports = "pageC";
 /******/ 		};
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (data) => {
-/******/ 			var [chunkIds, moreModules, runtime, executeModules] = data;
+/******/ 		var webpackJsonpCallback = function(data) {
+/******/ 			var chunkIds = data[0];
+/******/ 			var moreModules = data[1];
+/******/ 			var runtime = data[2];
+/******/ 			var executeModules = data[3];
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
@@ -651,7 +660,7 @@ module.exports = "pageC";
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 /******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /************************************************************************/
 ```
@@ -670,16 +679,16 @@ module.exports = "pageC";
 ## Unoptimized
 
 ```
-assets by chunk 768 bytes (id hint: commons)
-  asset commons-utility2_js.js 384 bytes [emitted] (id hint: commons)
-  asset commons-utility3_js.js 384 bytes [emitted] (id hint: commons)
-asset pageA.js 5.92 KiB [emitted] (name: pageA)
-asset pageB.js 5.65 KiB [emitted] (name: pageB)
-asset pageC.js 5.59 KiB [emitted] (name: pageC)
-asset vendor.js 737 bytes [emitted] (name: vendor) (id hint: vendor)
-Entrypoint pageA 7.02 KiB = vendor.js 737 bytes commons-utility2_js.js 384 bytes pageA.js 5.92 KiB
-Entrypoint pageB 7.12 KiB = vendor.js 737 bytes commons-utility2_js.js 384 bytes commons-utility3_js.js 384 bytes pageB.js 5.65 KiB
-Entrypoint pageC 6.34 KiB = commons-utility2_js.js 384 bytes commons-utility3_js.js 384 bytes pageC.js 5.59 KiB
+assets by chunk 778 bytes (id hint: commons)
+  asset commons-utility2_js.js 389 bytes [emitted] (id hint: commons)
+  asset commons-utility3_js.js 389 bytes [emitted] (id hint: commons)
+asset pageA.js 6.06 KiB [emitted] (name: pageA)
+asset pageB.js 5.79 KiB [emitted] (name: pageB)
+asset pageC.js 5.72 KiB [emitted] (name: pageC)
+asset vendor.js 747 bytes [emitted] (name: vendor) (id hint: vendor)
+Entrypoint pageA 7.17 KiB = vendor.js 747 bytes commons-utility2_js.js 389 bytes pageA.js 6.06 KiB
+Entrypoint pageB 7.27 KiB = vendor.js 747 bytes commons-utility2_js.js 389 bytes commons-utility3_js.js 389 bytes pageB.js 5.79 KiB
+Entrypoint pageC 6.48 KiB = commons-utility2_js.js 389 bytes commons-utility3_js.js 389 bytes pageC.js 5.72 KiB
 chunk commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageA pageA
   > ./pageB pageB
@@ -698,24 +707,24 @@ chunk commons-utility3_js.js (id hint: commons) 28 bytes [initial] [rendered] sp
     cjs require ./utility3 ./pageB.js 3:15-36
     cjs require ./utility3 ./pageC.js 2:15-36
     cjs self exports reference ./utility3.js 1:0-14
-chunk pageA.js (pageA) 165 bytes (javascript) 2.61 KiB (runtime) [entry] [rendered]
+chunk pageA.js (pageA) 165 bytes (javascript) 2.69 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 2.61 KiB 2 modules
+  runtime modules 2.69 KiB 2 modules
   dependent modules 28 bytes [dependent] 1 module
   ./pageA.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageA.js 5:0-14
     entry ./pageA pageA
-chunk pageB.js (pageB) 137 bytes (javascript) 2.63 KiB (runtime) [entry] [rendered]
+chunk pageB.js (pageB) 137 bytes (javascript) 2.71 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 2.63 KiB 2 modules
+  runtime modules 2.71 KiB 2 modules
   ./pageB.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageB.js 5:0-14
     entry ./pageB pageB
-chunk pageC.js (pageC) 102 bytes (javascript) 2.62 KiB (runtime) [entry] [rendered]
+chunk pageC.js (pageC) 102 bytes (javascript) 2.71 KiB (runtime) [entry] [rendered]
   > ./pageC pageC
-  runtime modules 2.62 KiB 2 modules
+  runtime modules 2.71 KiB 2 modules
   ./pageC.js 102 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageC.js 4:0-14
@@ -731,22 +740,22 @@ chunk vendor.js (vendor) (id hint: vendor) 54 bytes [initial] [rendered] split c
     [used exports unknown]
     cjs self exports reference ./node_modules/vendor2.js 1:0-14
     cjs require vendor2 ./pageB.js 1:14-32
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-assets by chunk 212 bytes (id hint: commons)
-  asset commons-utility2_js.js 106 bytes [emitted] [minimized] (id hint: commons)
-  asset commons-utility3_js.js 106 bytes [emitted] [minimized] (id hint: commons)
-asset pageA.js 900 bytes [emitted] [minimized] (name: pageA)
-asset pageB.js 892 bytes [emitted] [minimized] (name: pageB)
-asset pageC.js 876 bytes [emitted] [minimized] (name: pageC)
-asset vendor.js 121 bytes [emitted] [minimized] (name: vendor) (id hint: vendor)
-Entrypoint pageA 1.1 KiB = vendor.js 121 bytes commons-utility2_js.js 106 bytes pageA.js 900 bytes
-Entrypoint pageB 1.2 KiB = vendor.js 121 bytes commons-utility2_js.js 106 bytes commons-utility3_js.js 106 bytes pageB.js 892 bytes
-Entrypoint pageC 1.06 KiB = commons-utility2_js.js 106 bytes commons-utility3_js.js 106 bytes pageC.js 876 bytes
+assets by chunk 228 bytes (id hint: commons)
+  asset commons-utility2_js.js 114 bytes [emitted] [minimized] (id hint: commons)
+  asset commons-utility3_js.js 114 bytes [emitted] [minimized] (id hint: commons)
+asset pageA.js 986 bytes [emitted] [minimized] (name: pageA)
+asset pageB.js 970 bytes [emitted] [minimized] (name: pageB)
+asset pageC.js 954 bytes [emitted] [minimized] (name: pageC)
+asset vendor.js 137 bytes [emitted] [minimized] (name: vendor) (id hint: vendor)
+Entrypoint pageA 1.21 KiB = vendor.js 137 bytes commons-utility2_js.js 114 bytes pageA.js 986 bytes
+Entrypoint pageB 1.3 KiB = vendor.js 137 bytes commons-utility2_js.js 114 bytes commons-utility3_js.js 114 bytes pageB.js 970 bytes
+Entrypoint pageC 1.15 KiB = commons-utility2_js.js 114 bytes commons-utility3_js.js 114 bytes pageC.js 954 bytes
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageA pageA
   > ./pageB pageB
@@ -765,24 +774,24 @@ chunk (runtime: pageB, pageC) commons-utility3_js.js (id hint: commons) 28 bytes
     cjs require ./utility3 ./pageB.js 3:15-36
     cjs require ./utility3 ./pageC.js 2:15-36
     cjs self exports reference ./utility3.js 1:0-14
-chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.61 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.69 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 2.61 KiB 2 modules
+  runtime modules 2.69 KiB 2 modules
   dependent modules 28 bytes [dependent] 1 module
   ./pageA.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageA.js 5:0-14
     entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.63 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.72 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 2.63 KiB 2 modules
+  runtime modules 2.72 KiB 2 modules
   ./pageB.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageB.js 5:0-14
     entry ./pageB pageB
-chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.62 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.71 KiB (runtime) [entry] [rendered]
   > ./pageC pageC
-  runtime modules 2.62 KiB 2 modules
+  runtime modules 2.71 KiB 2 modules
   ./pageC.js 102 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageC.js 4:0-14
@@ -798,5 +807,5 @@ chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [ini
     [used exports unknown]
     cjs self exports reference ./node_modules/vendor2.js 1:0-14
     cjs require vendor2 ./pageB.js 1:14-32
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.0 compiled successfully
 ```

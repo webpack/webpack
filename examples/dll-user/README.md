@@ -41,7 +41,7 @@ console.log(require("module"));
 # dist/output.js
 
 ```javascript
-/******/ (() => { // webpackBootstrap
+/******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
@@ -50,7 +50,7 @@ console.log(require("module"));
   \**************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(/*! dll-reference alpha_bd6d04da4340c44a8be7 */ 2))(1);
 
@@ -62,7 +62,7 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_bd6d04da4340c44a8b
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 module.exports = alpha_bd6d04da4340c44a8be7;
@@ -74,7 +74,7 @@ module.exports = alpha_bd6d04da4340c44a8be7;
   \**********************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(/*! dll-reference alpha_bd6d04da4340c44a8be7 */ 2))(2);
 
@@ -85,7 +85,7 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_bd6d04da4340c44a8b
   \************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(/*! dll-reference beta_bd6d04da4340c44a8be7 */ 5))(5);
 
@@ -97,7 +97,7 @@ module.exports = (__webpack_require__(/*! dll-reference beta_bd6d04da4340c44a8be
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ ((module) => {
+/***/ (function(module) {
 
 "use strict";
 module.exports = beta_bd6d04da4340c44a8be7;
@@ -109,7 +109,7 @@ module.exports = beta_bd6d04da4340c44a8be7;
   \*********************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(/*! dll-reference beta_bd6d04da4340c44a8be7 */ 5))(6);
 
@@ -120,7 +120,7 @@ module.exports = (__webpack_require__(/*! dll-reference beta_bd6d04da4340c44a8be
   \**********************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(/*! dll-reference beta_bd6d04da4340c44a8be7 */ 5))(7);
 
@@ -131,7 +131,7 @@ module.exports = (__webpack_require__(/*! dll-reference beta_bd6d04da4340c44a8be
   \*****************************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(/*! dll-reference alpha_bd6d04da4340c44a8be7 */ 2))(3);
 
@@ -172,7 +172,7 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_bd6d04da4340c44a8b
 </details>
 
 ``` js
-(() => {
+!function() {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -187,8 +187,7 @@ console.log(__webpack_require__(/*! beta/c */ 7));
 
 console.log(__webpack_require__(/*! module */ 8));
 
-})();
-
+}();
 /******/ })()
 ;
 ```
@@ -198,25 +197,25 @@ console.log(__webpack_require__(/*! module */ 8));
 ## Unoptimized
 
 ```
-asset output.js 5.33 KiB [emitted] (name: main)
+asset output.js 5.38 KiB [emitted] (name: main)
 chunk output.js (main) 541 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 336 bytes [dependent] 8 modules
   ./example.js 205 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 573 bytes [emitted] [minimized] (name: main)
+asset output.js 630 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 541 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 336 bytes [dependent] 8 modules
   ./example.js 205 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.0 compiled successfully
 ```
