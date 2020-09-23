@@ -4,6 +4,7 @@
  * Run `yarn special-lint-fix` to update
  */
 
+import { DataNode, Element, Node as NodeImport } from "domhandler/lib/node";
 import {
 	ArrayExpression,
 	ArrayPattern,
@@ -78,6 +79,7 @@ import {
 	YieldExpression
 } from "estree";
 import { Stats as FsStats, WriteStream } from "fs";
+import { ParserOptions } from "htmlparser2/lib/Parser";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
 import {
 	AsArray,
@@ -3580,6 +3582,73 @@ declare class HotModuleReplacementPlugin {
 	 */
 	apply(compiler: Compiler): void;
 	static getParserHooks(parser: JavascriptParser): HMRJavascriptParserHooks;
+}
+declare class HtmlParser extends Parser {
+	constructor(options?: ParserOptions);
+	hooks: Readonly<{
+		tag: HookMap<
+			SyncBailHook<
+				[
+					Pick<
+						Element,
+						| "type"
+						| "name"
+						| "tagName"
+						| "children"
+						| "firstChild"
+						| "lastChild"
+						| "childNodes"
+						| "parent"
+						| "prev"
+						| "next"
+						| "startIndex"
+						| "endIndex"
+						| "nodeType"
+						| "parentNode"
+						| "previousSibling"
+						| "nextSibling"
+					> & {
+						attribs: {
+							[index: string]: { value: string; range: [number, number] };
+						};
+					}
+				],
+				true | void
+			>
+		>;
+		text: SyncBailHook<[DataNode], void>;
+		directive: SyncBailHook<[DataNode], void>;
+		comment: SyncBailHook<[DataNode], void>;
+	}>;
+	state: Record<string, any> & ParserStateBase;
+	walkNodes(nodes: NodeImport[]): void;
+	walkNode(node: NodeImport): void;
+	walkElement(
+		element: Pick<
+			Element,
+			| "type"
+			| "name"
+			| "tagName"
+			| "children"
+			| "firstChild"
+			| "lastChild"
+			| "childNodes"
+			| "parent"
+			| "prev"
+			| "next"
+			| "startIndex"
+			| "endIndex"
+			| "nodeType"
+			| "parentNode"
+			| "previousSibling"
+			| "nextSibling"
+		> & {
+			attribs: { [index: string]: { value: string; range: [number, number] } };
+		}
+	): void;
+	walkText(node: DataNode): void;
+	walkDirective(node: DataNode): void;
+	walkComment(node: DataNode): void;
 }
 declare class HttpUriPlugin {
 	constructor();
@@ -9940,6 +10009,9 @@ declare namespace exports {
 			OccurrenceChunkIdsPlugin,
 			HashedModuleIdsPlugin
 		};
+	}
+	export namespace html {
+		export { HtmlParser };
 	}
 	export namespace javascript {
 		export {

@@ -217,7 +217,9 @@
     "gitter",
     "codecov",
     "opencollective",
-    "dependabot"
+    "dependabot",
+    "domelementtype",
+    "domhandler"
   ],
   "ignoreRegExpList": ["/Author.+/", "/data:.*/", "/\"mappings\":\".+\"/"],
   "ignorePaths": ["**/dist/**", "examples/**/README.md"]
