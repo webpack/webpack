@@ -98,7 +98,7 @@ module.exports = {
 # js/output.js
 
 ```javascript
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -108,7 +108,7 @@ module.exports = {
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _data_toml__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./data.toml */ 1);
@@ -143,7 +143,7 @@ document.querySelector('#app').innerHTML = [_data_toml__WEBPACK_IMPORTED_MODULE_
 /*! export title [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = JSON.parse("{\"title\":\"TOML Example\",\"owner\":{\"name\":\"Tom Preston-Werner\",\"organization\":\"GitHub\",\"bio\":\"GitHub Cofounder & CEO\\nLikes tater tots and beer.\",\"dob\":\"1979-05-27T07:32:00.000Z\"}}");
 
@@ -163,7 +163,7 @@ module.exports = JSON.parse("{\"title\":\"TOML Example\",\"owner\":{\"name\":\"T
 /*! export title [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = JSON.parse("{\"title\":\"YAML Example\",\"owner\":{\"name\":\"Tom Preston-Werner\",\"organization\":\"GitHub\",\"bio\":\"GitHub Cofounder & CEO\\nLikes tater tots and beer.\",\"dob\":\"1979-05-27T07:32:00.000Z\"}}");
 
@@ -182,7 +182,7 @@ module.exports = JSON.parse("{\"title\":\"YAML Example\",\"owner\":{\"name\":\"T
 /*! export title [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = JSON.parse("{\"title\":\"JSON5 Example\",\"owner\":{\"name\":\"Tom Preston-Werner\",\"organization\":\"GitHub\",\"bio\":\"GitHub Cofounder & CEO\\nLikes tater tots and beer.\",\"dob\":\"1979-05-27T07:32:00.000Z\"}}");
 
@@ -219,15 +219,15 @@ module.exports = JSON.parse("{\"title\":\"JSON5 Example\",\"owner\":{\"name\":\"
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -248,14 +248,14 @@ module.exports = JSON.parse("{\"title\":\"JSON5 Example\",\"owner\":{\"name\":\"
 ## webpack output
 
 ```
-asset output.js 6.01 KiB [emitted] (name: main)
-chunk output.js (main) 919 bytes (javascript) 279 bytes (runtime) [entry] [rendered]
+asset output.js 5.98 KiB [emitted] (name: main)
+chunk output.js (main) 919 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 565 bytes [dependent] 3 modules
-  runtime modules 279 bytes 1 module
+  runtime modules 274 bytes 1 module
   ./example.js 354 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```

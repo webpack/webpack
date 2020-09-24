@@ -25,7 +25,7 @@ module.exports = 42
 # dist/output.js
 
 ```javascript
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
@@ -35,7 +35,7 @@ module.exports = 42
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = {
   cool: "stuff",
@@ -53,7 +53,7 @@ module.exports = {
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 3:0-14 */
-/***/ (function(module) {
+/***/ ((module) => {
 
 console.log("yeah coffee-script");
 
@@ -97,14 +97,15 @@ module.exports = 42;
 </details>
 
 ``` js
-!function() {
+(() => {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__ */
 console.log(__webpack_require__(/*! ./cup1 */ 1));
-}();
+})();
+
 /******/ })()
 ;
 ```
@@ -114,25 +115,25 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
 ## Unoptimized
 
 ```
-asset output.js 2.11 KiB [emitted] (name: main)
+asset output.js 2.09 KiB [emitted] (name: main)
 chunk output.js (main) 206 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 175 bytes [dependent] 2 modules
   ./example.js 31 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 299 bytes [emitted] [minimized] (name: main)
+asset output.js 280 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 206 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 175 bytes [dependent] 2 modules
   ./example.js 31 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```

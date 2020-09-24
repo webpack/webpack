@@ -34,7 +34,7 @@ module.exports = function(content) {
 # dist/output.js
 
 ```javascript
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
@@ -46,7 +46,7 @@ module.exports = function(content) {
 /*! export foo [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
-/***/ (function(__unused_webpack_module, exports) {
+/***/ ((__unused_webpack_module, exports) => {
 
 exports.answer = 42;
 exports.foo = "bar";
@@ -62,7 +62,7 @@ exports.foo = "bar";
 /*! CommonJS bailout: exports.push(...) prevents optimization as exports is passed as call context as 5:0-12 */
 /*! CommonJS bailout: exports is used directly at 7:17-24 */
 /*! CommonJS bailout: module.exports is used directly at 7:0-14 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ ((module, exports, __webpack_require__) => {
 
 // Imports
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ 3);
@@ -81,7 +81,7 @@ module.exports = exports;
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 9:0-14 */
-/***/ (function(module) {
+/***/ ((module) => {
 
 "use strict";
 
@@ -216,7 +216,7 @@ function toComment(sourceMap) {
 </details>
 
 ``` js
-!function() {
+(() => {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -229,7 +229,8 @@ console.dir(__webpack_require__(/*! ./loader!./file */ 1));
 console.dir(__webpack_require__(/*! ./test.css */ 2)); // default by extension
 console.dir(__webpack_require__(/*! !css-loader!./test.css */ 2)); // manual
 
-}();
+})();
+
 /******/ })()
 ;
 ```
@@ -249,25 +250,25 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Unoptimized
 
 ```
-asset output.js 5.81 KiB [emitted] (name: main)
+asset output.js 5.78 KiB [emitted] (name: main)
 chunk output.js (main) 2.96 KiB [entry] [rendered]
   > ./example.js main
   dependent modules 2.76 KiB [dependent] 3 modules
   ./example.js 205 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.2 KiB [emitted] [minimized] (name: main)
+asset output.js 1.17 KiB [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 2.96 KiB [entry] [rendered]
   > ./example.js main
   dependent modules 2.76 KiB [dependent] 3 modules
   ./example.js 205 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```

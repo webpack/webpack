@@ -40,7 +40,7 @@ console.log(react, reactDOM, propTypes);
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -66,7 +66,7 @@ console.log((react__WEBPACK_IMPORTED_MODULE_0___default()), (react_dom__WEBPACK_
 # dist/react-vendors.js
 
 ```javascript
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!*******************************!*\
@@ -75,7 +75,7 @@ console.log((react__WEBPACK_IMPORTED_MODULE_0___default()), (react_dom__WEBPACK_
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = 'react';
 
@@ -88,7 +88,7 @@ module.exports = 'react';
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = 'react-dom';
 
@@ -101,7 +101,7 @@ module.exports = 'react-dom';
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = 'prop-types';
 
@@ -142,47 +142,47 @@ module.exports = 'prop-types';
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = function(module) {
+/******/ 		__webpack_require__.n = (module) => {
 /******/ 			var getter = module && module.__esModule ?
-/******/ 				function() { return module['default']; } :
-/******/ 				function() { return module; };
+/******/ 				() => module['default'] :
+/******/ 				() => module;
 /******/ 			__webpack_require__.d(getter, { a: getter });
 /******/ 			return getter;
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 		__webpack_require__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// no baseURI
 /******/ 		
 /******/ 		// object to store loaded and loading chunks
@@ -207,7 +207,7 @@ module.exports = 'prop-types';
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		var checkDeferredModules = function() {
+/******/ 		var checkDeferredModules = () => {
 /******/ 		
 /******/ 		};
 /******/ 		function checkDeferredModulesImpl() {
@@ -226,15 +226,15 @@ module.exports = 'prop-types';
 /******/ 			}
 /******/ 			if(deferredModules.length === 0) {
 /******/ 				__webpack_require__.x();
-/******/ 				__webpack_require__.x = function() {
+/******/ 				__webpack_require__.x = () => {
 /******/ 		
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
 /******/ 		}
-/******/ 		__webpack_require__.x = function() {
+/******/ 		__webpack_require__.x = () => {
 /******/ 			// reset startup function so it can be called again when more startup code is added
-/******/ 			__webpack_require__.x = function() {
+/******/ 			__webpack_require__.x = () => {
 /******/ 		
 /******/ 			}
 /******/ 			chunkLoadingGlobal = chunkLoadingGlobal.slice();
@@ -243,11 +243,8 @@ module.exports = 'prop-types';
 /******/ 		};
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = function(data) {
-/******/ 			var chunkIds = data[0];
-/******/ 			var moreModules = data[1];
-/******/ 			var runtime = data[2];
-/******/ 			var executeModules = data[3];
+/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 			var [chunkIds, moreModules, runtime, executeModules] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
@@ -279,7 +276,7 @@ module.exports = 'prop-types';
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 /******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -298,7 +295,7 @@ module.exports = 'prop-types';
 ## Unoptimized
 
 ```
-asset react-vendors.js 7.69 KiB [emitted] (name: react-vendors)
+asset react-vendors.js 7.48 KiB [emitted] (name: react-vendors)
 asset app.js 1.43 KiB [emitted] (name: app)
 chunk app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
@@ -306,11 +303,11 @@ chunk app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
     [no exports]
     [used exports unknown]
     entry ./app.js app
-chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.55 KiB (runtime) >{app}< [entry] [rendered]
+chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.42 KiB (runtime) >{app}< [entry] [rendered]
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 3.55 KiB 5 modules
+  runtime modules 3.42 KiB 5 modules
   cacheable modules 87 bytes
     ./node_modules/prop-types.js 31 bytes [built] [code generated]
       [used exports unknown]
@@ -330,25 +327,25 @@ chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.55 KiB (runtime) 
       harmony import specifier react ./app.js 5:12-17
       cjs self exports reference ./node_modules/react.js 1:0-14
       entry react react-vendors
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset react-vendors.js 1.18 KiB [emitted] [minimized] (name: react-vendors)
-asset app.js 201 bytes [emitted] [minimized] (name: app)
+asset react-vendors.js 1.04 KiB [emitted] [minimized] (name: react-vendors)
+asset app.js 195 bytes [emitted] [minimized] (name: app)
 chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
   ./app.js 139 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./app.js app
-chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 3.29 KiB (runtime) >{app}< [entry] [rendered]
+chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 3.16 KiB (runtime) >{app}< [entry] [rendered]
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 3.29 KiB 4 modules
+  runtime modules 3.16 KiB 4 modules
   cacheable modules 87 bytes
     ./node_modules/prop-types.js 31 bytes [built] [code generated]
       [used exports unknown]
@@ -368,5 +365,5 @@ chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javasc
       harmony import specifier react ./app.js 5:12-17
       cjs self exports reference ./node_modules/react.js 1:0-14
       entry react react-vendors
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```

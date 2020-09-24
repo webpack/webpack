@@ -36,7 +36,7 @@ module.exports = {
 
 ```javascript
 var alpha_bd6d04da4340c44a8be7;alpha_bd6d04da4340c44a8be7 =
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!*****************!*\
@@ -44,7 +44,7 @@ var alpha_bd6d04da4340c44a8be7;alpha_bd6d04da4340c44a8be7 =
   \*****************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__, module */
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = __webpack_require__;
 
@@ -56,7 +56,7 @@ module.exports = __webpack_require__;
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "alpha";
 
@@ -68,7 +68,7 @@ module.exports = "alpha";
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "a";
 
@@ -80,7 +80,7 @@ module.exports = "a";
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
 /*! CommonJS bailout: module.exports is used directly at 1:0-14 */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "module";
 
@@ -140,8 +140,8 @@ module.exports = "module";
 ## Unoptimized
 
 ```
-asset MyDll.alpha.js 2.48 KiB [emitted] (name: alpha)
-asset MyDll.beta.js 2.45 KiB [emitted] (name: beta)
+asset MyDll.alpha.js 2.46 KiB [emitted] (name: alpha)
+asset MyDll.beta.js 2.43 KiB [emitted] (name: beta)
 chunk MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
   > alpha
   dependent modules 72 bytes [dependent] 3 modules
@@ -156,14 +156,14 @@ chunk MyDll.beta.js (beta) 80 bytes [entry] [rendered]
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset MyDll.alpha.js 336 bytes [emitted] [minimized] (name: alpha)
-asset MyDll.beta.js 326 bytes [emitted] [minimized] (name: beta)
+asset MyDll.alpha.js 302 bytes [emitted] [minimized] (name: alpha)
+asset MyDll.beta.js 292 bytes [emitted] [minimized] (name: beta)
 chunk (runtime: alpha) MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
   > alpha
   dependent modules 72 bytes [dependent] 3 modules
@@ -176,5 +176,5 @@ chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
   dll beta 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```

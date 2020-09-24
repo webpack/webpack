@@ -38,7 +38,7 @@ exports.add = function() {
 # dist/output.js
 
 ```javascript
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
@@ -49,7 +49,7 @@ exports.add = function() {
 /*! export increment [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__ */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 const add = __webpack_require__(/*! ./math */ 2).add;
 exports.increment = function(val) {
@@ -66,7 +66,7 @@ exports.increment = function(val) {
 /*! export add [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
-/***/ (function(__unused_webpack_module, exports) {
+/***/ ((__unused_webpack_module, exports) => {
 
 exports.add = function() {
     var sum = 0, i = 0, args = arguments, l = args.length;
@@ -113,7 +113,7 @@ exports.add = function() {
 </details>
 
 ``` js
-!function() {
+(() => {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -123,7 +123,8 @@ const inc = __webpack_require__(/*! ./increment */ 1).increment;
 const a = 1;
 inc(a); // 2
 
-}();
+})();
+
 /******/ })()
 ;
 ```
@@ -133,25 +134,25 @@ inc(a); // 2
 ## Unoptimized
 
 ```
-asset output.js 2.36 KiB [emitted] (name: main)
+asset output.js 2.34 KiB [emitted] (name: main)
 chunk output.js (main) 326 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 254 bytes [dependent] 2 modules
   ./example.js 72 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 313 bytes [emitted] [minimized] (name: main)
+asset output.js 296 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 326 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 254 bytes [dependent] 2 modules
   ./example.js 72 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```

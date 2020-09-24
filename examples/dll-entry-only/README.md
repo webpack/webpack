@@ -63,8 +63,8 @@ module.exports = {
 # dist/dll.js
 
 ```javascript
-var dll_8f56046eeeee40b7a24c;dll_8f56046eeeee40b7a24c =
-/******/ (function() { // webpackBootstrap
+var dll_84b3c692d890d26bb885;dll_84b3c692d890d26bb885 =
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!***************!*\
@@ -73,7 +73,7 @@ var dll_8f56046eeeee40b7a24c;dll_8f56046eeeee40b7a24c =
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__, module */
 /*! ModuleConcatenation bailout: Module Concatenation is not implemented for DllModule */
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = __webpack_require__;
 
@@ -89,7 +89,7 @@ module.exports = __webpack_require__;
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__, __webpack_require__.* */
 /*! ModuleConcatenation bailout: Cannot concat with ./cjs.js: Module is not an ECMAScript module */
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 // ESM COMPAT FLAG
@@ -97,9 +97,9 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "a": function() { return /* reexport */ a; },
-  "b": function() { return /* reexport */ b; },
-  "c": function() { return /* reexport */ cjs.c; }
+  "a": () => /* reexport */ a,
+  "b": () => /* reexport */ b,
+  "c": () => /* reexport */ cjs.c
 });
 
 // CONCATENATED MODULE: ./b.js
@@ -130,7 +130,7 @@ var cjs = __webpack_require__(2);
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(__unused_webpack_module, exports) {
+/***/ ((__unused_webpack_module, exports) => {
 
 // module cjs (commonjs)
 exports.c = "c";
@@ -169,32 +169,32 @@ exports.c = "c";
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 		__webpack_require__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -213,7 +213,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_8f56046eeeee40b7a24c","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+{"name":"dll_84b3c692d890d26bb885","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -221,28 +221,28 @@ exports.c = "c";
 ## Unoptimized
 
 ```
-asset dll.js 4.68 KiB [emitted] (name: dll)
-chunk dll.js (dll) 211 bytes (javascript) 695 bytes (runtime) [entry] [rendered]
+asset dll.js 4.58 KiB [emitted] (name: dll)
+chunk dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
   > dll
-  runtime modules 695 bytes 3 modules
+  runtime modules 668 bytes 3 modules
   dependent modules 199 bytes [dependent] 2 modules
   dll dll 12 bytes [built] [code generated]
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset dll.js 771 bytes [emitted] [minimized] (name: dll)
-chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 695 bytes (runtime) [entry] [rendered]
+asset dll.js 675 bytes [emitted] [minimized] (name: dll)
+chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
   > dll
-  runtime modules 695 bytes 3 modules
+  runtime modules 668 bytes 3 modules
   dependent modules 199 bytes [dependent] 2 modules
   dll dll 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```

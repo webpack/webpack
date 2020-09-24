@@ -58,7 +58,7 @@ module.exports = {
 # js/output.js
 
 ```javascript
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -68,7 +68,7 @@ module.exports = {
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _images_file_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images/file.png */ 1);
@@ -114,7 +114,7 @@ function createImageElement(title, src) {
 /*! default exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__.p, __webpack_require__.* */
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = __webpack_require__.p + "images/89a353e9c515885abd8e.png";
 
@@ -126,7 +126,7 @@ module.exports = __webpack_require__.p + "images/89a353e9c515885abd8e.png";
 /*! default exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAA...4CD/9M//Z";
 
@@ -138,7 +138,7 @@ module.exports = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAA...4CD/9M//Z"
 /*! default exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 module.exports = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDo...vc3ZnPgo=";
 
@@ -175,20 +175,20 @@ module.exports = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDo...vc3ZnPgo="
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		__webpack_require__.p = "dist/";
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -210,14 +210,14 @@ module.exports = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDo...vc3ZnPgo="
 
 ```
 asset images/89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: main)
-asset output.js 13.1 KiB [emitted] (name: main)
-chunk output.js (main) 9.58 KiB (javascript) 14.6 KiB (asset) 311 bytes (runtime) [entry] [rendered]
+asset output.js 13 KiB [emitted] (name: main)
+chunk output.js (main) 9.58 KiB (javascript) 14.6 KiB (asset) 306 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 8.86 KiB (javascript) 14.6 KiB (asset) [dependent] 3 modules
-  runtime modules 311 bytes 2 modules
+  runtime modules 306 bytes 2 modules
   ./example.js 742 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```

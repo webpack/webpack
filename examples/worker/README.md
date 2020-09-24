@@ -155,7 +155,7 @@ export const add = (content, from) => {
 # dist/main.js
 
 ```javascript
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({});
 ```
 
@@ -191,52 +191,52 @@ export const add = (content, from) => {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 		__webpack_require__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		__webpack_require__.f = {};
 /******/ 		// This file contains only the entry chunk.
 /******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = function(chunkId) {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce(function(promises, key) {
+/******/ 		__webpack_require__.e = (chunkId) => {
+/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
 /******/ 				__webpack_require__.f[key](chunkId, promises);
 /******/ 				return promises;
 /******/ 			}, []));
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
 /******/ 			if (chunkId === 631) return "workers/fibonacci.js";
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + (chunkId === 348 ? "chat" : chunkId) + ".js";
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		var inProgress = {};
 /******/ 		// data-webpack is not used as build has no uniqueName
 /******/ 		// loadScript function to load a script via script tag
-/******/ 		__webpack_require__.l = function(url, done, key) {
+/******/ 		__webpack_require__.l = (url, done, key) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
 /******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
@@ -259,14 +259,14 @@ export const add = (content, from) => {
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
-/******/ 			var onScriptComplete = function(prev, event) {
+/******/ 			var onScriptComplete = (prev, event) => {
 /******/ 				// avoid mem leaks in IE.
 /******/ 				script.onerror = script.onload = null;
 /******/ 				clearTimeout(timeout);
 /******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach(function(fn) { return fn(event); });
+/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			;
@@ -275,26 +275,26 @@ export const add = (content, from) => {
 /******/ 			script.onload = onScriptComplete.bind(null, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		__webpack_require__.p = "dist/";
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		__webpack_require__.b = document.baseURI || self.location.href;
 /******/ 		
 /******/ 		// object to store loaded and loading chunks
@@ -305,7 +305,7 @@ export const add = (content, from) => {
 /******/ 		};
 /******/ 		
 /******/ 		
-/******/ 		__webpack_require__.f.j = function(chunkId, promises) {
+/******/ 		__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 				// JSONP chunk loading for javascript
 /******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
@@ -316,7 +316,7 @@ export const add = (content, from) => {
 /******/ 					} else {
 /******/ 						if(true) { // all chunks have JS
 /******/ 							// setup Promise in chunk cache
-/******/ 							var promise = new Promise(function(resolve, reject) {
+/******/ 							var promise = new Promise((resolve, reject) => {
 /******/ 								installedChunkData = installedChunks[chunkId] = [resolve, reject];
 /******/ 							});
 /******/ 							promises.push(installedChunkData[2] = promise);
@@ -325,7 +325,7 @@ export const add = (content, from) => {
 /******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
 /******/ 							// create error before stack unwound to get useful stacktrace later
 /******/ 							var error = new Error();
-/******/ 							var loadingEnded = function(event) {
+/******/ 							var loadingEnded = (event) => {
 /******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
 /******/ 									installedChunkData = installedChunks[chunkId];
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
@@ -357,10 +357,8 @@ export const add = (content, from) => {
 /******/ 		// no deferred startup
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = function(data) {
-/******/ 			var chunkIds = data[0];
-/******/ 			var moreModules = data[1];
-/******/ 			var runtime = data[2];
+/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
@@ -387,7 +385,7 @@ export const add = (content, from) => {
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 /******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -504,7 +502,7 @@ fibWorker.onmessage = event => {
 # dist/chat.js
 
 ```javascript
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /*!************************************!*\
   !*** ./chat-worker.js + 1 modules ***!
@@ -547,13 +545,13 @@ onconnect = function (e) {
 ```
 
 ```javascript
-!function(){"use strict";const s=[];onconnect=function(t){for(const o of t.ports)o.onmessage=t=>{const e=t.data;switch(e.type){case"message":n=e.content,c=e.from,s.length>10&&s.shift(),s.push(`${c}: ${n}`);case"history":o.postMessage({type:"history",history:s})}var n,c}}}();
+(()=>{"use strict";const s=[];onconnect=function(t){for(const o of t.ports)o.onmessage=t=>{const e=t.data;switch(e.type){case"message":n=e.content,c=e.from,s.length>10&&s.shift(),s.push(`${c}: ${n}`);case"history":o.postMessage({type:"history",history:s})}var n,c}}})();
 ```
 
 # dist/workers/fibonacci.js
 
 ```javascript
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({});
 ```
 
@@ -589,62 +587,62 @@ onconnect = function (e) {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = function(exports, definition) {
+/******/ 		__webpack_require__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		__webpack_require__.f = {};
 /******/ 		// This file contains only the entry chunk.
 /******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = function(chunkId) {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce(function(promises, key) {
+/******/ 		__webpack_require__.e = (chunkId) => {
+/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
 /******/ 				__webpack_require__.f[key](chunkId, promises);
 /******/ 				return promises;
 /******/ 			}, []));
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".js";
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		__webpack_require__.p = "dist/";
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/importScripts chunk loading */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// no baseURI
 /******/ 		
 /******/ 		// object to store loaded chunks
@@ -654,10 +652,8 @@ onconnect = function (e) {
 /******/ 		};
 /******/ 		
 /******/ 		// importScripts chunk loading
-/******/ 		var chunkLoadingCallback = function(data) {
-/******/ 			var chunkIds = data[0];
-/******/ 			var moreModules = data[1];
-/******/ 			var runtime = data[2];
+/******/ 		var chunkLoadingCallback = (data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			for(var moduleId in moreModules) {
 /******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
 /******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
@@ -668,7 +664,7 @@ onconnect = function (e) {
 /******/ 				installedChunks[chunkIds.pop()] = 1;
 /******/ 			parentChunkLoadingFunction(data);
 /******/ 		};
-/******/ 		__webpack_require__.f.i = function(chunkId, promises) {
+/******/ 		__webpack_require__.f.i = (chunkId, promises) => {
 /******/ 			// "1" is the signal for "already loaded"
 /******/ 			if(!installedChunks[chunkId]) {
 /******/ 				importScripts("../" + __webpack_require__.u(chunkId));
@@ -682,7 +678,7 @@ onconnect = function (e) {
 /******/ 		// no HMR
 /******/ 		
 /******/ 		// no HMR manifest
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -707,7 +703,7 @@ onmessage = async event => {
 ```
 
 ```javascript
-!function(){var e={},n={};function t(r){if(n[r])return n[r].exports;var o=n[r]={exports:{}};return e[r](o,o.exports,t),o.exports}t.m=e,t.d=function(e,n){for(var r in n)t.o(n,r)&&!t.o(e,r)&&Object.defineProperty(e,r,{enumerable:!0,get:n[r]})},t.f={},t.e=function(e){return Promise.all(Object.keys(t.f).reduce((function(n,r){return t.f[r](e,n),n}),[]))},t.u=function(e){return e+".js"},t.o=function(e,n){return Object.prototype.hasOwnProperty.call(e,n)},t.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},t.p="dist/",function(){var e={631:1};t.f.i=function(n,r){e[n]||importScripts("../"+t.u(n))};var n=self.webpackChunk=self.webpackChunk||[],r=n.push.bind(n);n.push=function(n){var o=n[0],i=n[1],u=n[2];for(var f in i)t.o(i,f)&&(t.m[f]=i[f]);for(u&&u(t);o.length;)e[o.pop()]=1;r(n)}}(),onmessage=async e=>{const{fibonacci:n}=await t.e(129).then(t.bind(t,129)),r=JSON.parse(e.data);postMessage(`fib(${r}) = ${n(r)}`)}}();
+(()=>{var e={},r={};function o(t){if(r[t])return r[t].exports;var a=r[t]={exports:{}};return e[t](a,a.exports,o),a.exports}o.m=e,o.d=(e,r)=>{for(var t in r)o.o(r,t)&&!o.o(e,t)&&Object.defineProperty(e,t,{enumerable:!0,get:r[t]})},o.f={},o.e=e=>Promise.all(Object.keys(o.f).reduce((r,t)=>(o.f[t](e,r),r),[])),o.u=e=>e+".js",o.o=(e,r)=>Object.prototype.hasOwnProperty.call(e,r),o.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},o.p="dist/",(()=>{var e={631:1};o.f.i=(r,t)=>{e[r]||importScripts("../"+o.u(r))};var r=self.webpackChunk=self.webpackChunk||[],t=r.push.bind(r);r.push=r=>{var[a,n,s]=r;for(var p in n)o.o(n,p)&&(o.m[p]=n[p]);for(s&&s(o);a.length;)e[a.pop()]=1;t(r)}})(),onmessage=async e=>{const{fibonacci:r}=await o.e(129).then(o.bind(o,129)),t=JSON.parse(e.data);postMessage(`fib(${t}) = ${r(t)}`)}})();
 ```
 
 # dist/129.js
@@ -723,12 +719,12 @@ onmessage = async event => {
 /*! export fibonacci [provided] [maybe used in main, ./example.js|79:18-82:2 (runtime-defined)] [usage prevents renaming] */
 /*! other exports [not provided] [maybe used in main, ./example.js|79:18-82:2 (runtime-defined)] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "fibonacci": function() { return /* binding */ fibonacci; }
+/* harmony export */   "fibonacci": () => /* binding */ fibonacci
 /* harmony export */ });
 function fibonacci(n) {
 	return n < 1 ? 0 : n <= 2 ? 1 : fibonacci(n - 1) + fibonacci(n - 2);
@@ -745,10 +741,10 @@ function fibonacci(n) {
 ## Unoptimized
 
 ```
-asset main.js 12.3 KiB [emitted] (name: main)
-asset workers/fibonacci.js 5.44 KiB [emitted] (name: fibonacci)
-asset 129.js 1.02 KiB [emitted]
-asset chat.js 884 bytes [emitted] (name: chat)
+asset main.js 12.2 KiB [emitted] (name: main)
+asset workers/fibonacci.js 5.3 KiB [emitted] (name: fibonacci)
+asset 129.js 997 bytes [emitted]
+asset chat.js 879 bytes [emitted] (name: chat)
 chunk (runtime: ./example.js|79:18-82:2, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./example.js 69:30-51
   > ./fibonacci ./fib-worker.js 2:29-50
@@ -756,9 +752,9 @@ chunk (runtime: ./example.js|79:18-82:2, main) 129.js 103 bytes [rendered]
     [exports: fibonacci]
     import() ./fibonacci ./example.js 69:30-51
     import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: main) main.js (main) 2.22 KiB (javascript) 5.71 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.22 KiB (javascript) 5.59 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.71 KiB 8 modules
+  runtime modules 5.59 KiB 8 modules
   ./example.js 2.22 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -768,22 +764,22 @@ chunk (runtime: ./example.js|25:19-30:1) chat.js (chat) 527 bytes [entry] [rende
     [no exports]
     [no exports used]
     new Worker() ./chat-worker.js ./example.js 25:19-30:1
-chunk (runtime: ./example.js|79:18-82:2) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.18 KiB (runtime) [entry] [rendered]
+chunk (runtime: ./example.js|79:18-82:2) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.1 KiB (runtime) [entry] [rendered]
   > ./example.js 79:18-82:2
-  runtime modules 2.18 KiB 7 modules
+  runtime modules 2.1 KiB 7 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 79:18-82:2
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset main.js 3.53 KiB [emitted] [minimized] (name: main)
-asset workers/fibonacci.js 1.02 KiB [emitted] [minimized] (name: fibonacci)
-asset chat.js 275 bytes [emitted] [minimized] (name: chat)
-asset 129.js 187 bytes [emitted] [minimized]
+asset main.js 3.37 KiB [emitted] [minimized] (name: main)
+asset workers/fibonacci.js 930 bytes [emitted] [minimized] (name: fibonacci)
+asset chat.js 270 bytes [emitted] [minimized] (name: chat)
+asset 129.js 166 bytes [emitted] [minimized]
 chunk (runtime: ./example.js|79:18-82:2, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./example.js 69:30-51
   > ./fibonacci ./fib-worker.js 2:29-50
@@ -791,9 +787,9 @@ chunk (runtime: ./example.js|79:18-82:2, main) 129.js 103 bytes [rendered]
     [exports: fibonacci]
     import() ./fibonacci ./example.js 69:30-51
     import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: main) main.js (main) 2.22 KiB (javascript) 5.71 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.22 KiB (javascript) 5.59 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.71 KiB 8 modules
+  runtime modules 5.59 KiB 8 modules
   ./example.js 2.22 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -803,11 +799,11 @@ chunk (runtime: ./example.js|25:19-30:1) chat.js (chat) 527 bytes [entry] [rende
     [no exports]
     [no exports used]
     new Worker() ./chat-worker.js ./example.js 25:19-30:1
-chunk (runtime: ./example.js|79:18-82:2) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.18 KiB (runtime) [entry] [rendered]
+chunk (runtime: ./example.js|79:18-82:2) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.1 KiB (runtime) [entry] [rendered]
   > ./example.js 79:18-82:2
-  runtime modules 2.18 KiB 7 modules
+  runtime modules 2.1 KiB 7 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 79:18-82:2
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```

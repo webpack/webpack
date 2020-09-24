@@ -48,7 +48,7 @@ console.log(new square(7));
 # dist/app.js
 
 ```javascript
-/******/ (function() { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!************************!*\
@@ -57,7 +57,7 @@ console.log(new square(7));
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -71,28 +71,28 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 /***/ }),
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_f467a32f98c830f50297 ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_4d8eacf7030dbe3ec0eb ***!
   \******************************************************************************************************/
 /*! namespace exports */
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__ */
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_f467a32f98c830f50297 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_4d8eacf7030dbe3ec0eb */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_f467a32f98c830f50297" ***!
+  !*** external "vendor_lib_4d8eacf7030dbe3ec0eb" ***!
   \**************************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
-/***/ (function(module) {
+/***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_f467a32f98c830f50297;
+module.exports = vendor_lib_4d8eacf7030dbe3ec0eb;
 
 /***/ })
 /******/ 	]);
@@ -127,15 +127,15 @@ module.exports = vendor_lib_f467a32f98c830f50297;
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
+/******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -156,22 +156,22 @@ module.exports = vendor_lib_f467a32f98c830f50297;
 ## Unoptimized
 
 ```
-asset app.js 3.54 KiB [emitted] (name: main)
-chunk app.js (main) 178 bytes (javascript) 279 bytes (runtime) [entry] [rendered]
+asset app.js 3.52 KiB [emitted] (name: main)
+chunk app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules
-  runtime modules 279 bytes 1 module
+  runtime modules 274 bytes 1 module
   ./example-app.js 94 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example-app main
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset app.js 343 bytes [emitted] [minimized] (name: main)
+asset app.js 319 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules
@@ -179,7 +179,7 @@ chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
     [no exports]
     [no exports used]
     entry ./example-app main
-webpack 5.0.0-rc.0 compiled successfully
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 <!-- @TODO:
