@@ -285,13 +285,13 @@ describe("Defaults", () => {
 		      "fetch",
 		    ],
 		    "environment": Object {
-		      "arrowFunction": false,
-		      "bigIntLiteral": false,
-		      "const": false,
-		      "destructuring": false,
-		      "dynamicImport": false,
-		      "forOf": false,
-		      "module": false,
+		      "arrowFunction": true,
+		      "bigIntLiteral": undefined,
+		      "const": true,
+		      "destructuring": true,
+		      "dynamicImport": undefined,
+		      "forOf": true,
+		      "module": undefined,
 		    },
 		    "filename": "[name].js",
 		    "globalObject": "self",
@@ -535,10 +535,7 @@ describe("Defaults", () => {
 		    },
 		  },
 		  "stats": Object {},
-		  "target": Array [
-		    "web",
-		    "browserslist",
-		  ],
+		  "target": "web",
 		  "watch": false,
 		  "watchOptions": Object {},
 		}
@@ -974,21 +971,6 @@ describe("Defaults", () => {
 		-       "fetch",
 		+       "async-node",
 		@@ ... @@
-		-       "arrowFunction": false,
-		-       "bigIntLiteral": false,
-		-       "const": false,
-		-       "destructuring": false,
-		-       "dynamicImport": false,
-		-       "forOf": false,
-		-       "module": false,
-		+       "arrowFunction": true,
-		+       "bigIntLiteral": undefined,
-		+       "const": true,
-		+       "destructuring": true,
-		+       "dynamicImport": undefined,
-		+       "forOf": true,
-		+       "module": undefined,
-		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
@@ -1055,10 +1037,7 @@ describe("Defaults", () => {
 		-       "browser",
 		+       "node",
 		@@ ... @@
-		-   "target": Array [
-		-     "web",
-		-     "browserslist",
-		-   ],
+		-   "target": "web",
 		+   "target": "node",
 	`)
 	);
@@ -1073,27 +1052,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		-       "jsonp",
 		@@ ... @@
-		-       "arrowFunction": false,
-		-       "bigIntLiteral": false,
-		-       "const": false,
-		-       "destructuring": false,
-		-       "dynamicImport": false,
-		-       "forOf": false,
-		-       "module": false,
-		+       "arrowFunction": true,
-		+       "bigIntLiteral": undefined,
-		+       "const": true,
-		+       "destructuring": true,
-		+       "dynamicImport": undefined,
-		+       "forOf": true,
-		+       "module": undefined,
-		@@ ... @@
 		+       "worker",
 		@@ ... @@
-		-   "target": Array [
-		-     "web",
-		-     "browserslist",
-		-   ],
+		-   "target": "web",
 		+   "target": "webworker",
 	`)
 	);
@@ -1137,21 +1098,6 @@ describe("Defaults", () => {
 		-       "fetch",
 		+       "async-node",
 		@@ ... @@
-		-       "arrowFunction": false,
-		-       "bigIntLiteral": false,
-		-       "const": false,
-		-       "destructuring": false,
-		-       "dynamicImport": false,
-		-       "forOf": false,
-		-       "module": false,
-		+       "arrowFunction": true,
-		+       "bigIntLiteral": undefined,
-		+       "const": true,
-		+       "destructuring": true,
-		+       "dynamicImport": undefined,
-		+       "forOf": true,
-		+       "module": undefined,
-		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
 		@@ ... @@
@@ -1219,10 +1165,7 @@ describe("Defaults", () => {
 		+       "node",
 		+       "electron",
 		@@ ... @@
-		-   "target": Array [
-		-     "web",
-		-     "browserslist",
-		-   ],
+		-   "target": "web",
 		+   "target": "electron-main",
 	`)
 	);
@@ -1263,21 +1206,6 @@ describe("Defaults", () => {
 		@@ ... @@
 		-       "fetch",
 		+       "async-node",
-		@@ ... @@
-		-       "arrowFunction": false,
-		-       "bigIntLiteral": false,
-		-       "const": false,
-		-       "destructuring": false,
-		-       "dynamicImport": false,
-		-       "forOf": false,
-		-       "module": false,
-		+       "arrowFunction": true,
-		+       "bigIntLiteral": undefined,
-		+       "const": true,
-		+       "destructuring": true,
-		+       "dynamicImport": undefined,
-		+       "forOf": true,
-		+       "module": undefined,
 		@@ ... @@
 		-     "globalObject": "self",
 		+     "globalObject": "global",
@@ -1346,10 +1274,7 @@ describe("Defaults", () => {
 		@@ ... @@
 		+       "electron",
 		@@ ... @@
-		-   "target": Array [
-		-     "web",
-		-     "browserslist",
-		-   ],
+		-   "target": "web",
 		+   "target": "electron-preload",
 	`)
 	);

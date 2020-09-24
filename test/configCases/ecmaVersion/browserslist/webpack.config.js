@@ -4,9 +4,6 @@ const path = require("path");
 module.exports = {
 	target: [
 		"web",
-		`browserslist://${path.join(
-			__dirname,
-			".browserslistrc"
-		)}>browserslist:modern`
+		`browserslist://${path.join(__dirname, ".browserslistrc")}:modern`
 	]
 };
