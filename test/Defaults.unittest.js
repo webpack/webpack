@@ -535,7 +535,10 @@ describe("Defaults", () => {
 		    },
 		  },
 		  "stats": Object {},
-		  "target": "web",
+		  "target": Array [
+		    "web",
+		    "browserslist",
+		  ],
 		  "watch": false,
 		  "watchOptions": Object {},
 		}
@@ -1052,7 +1055,10 @@ describe("Defaults", () => {
 		-       "browser",
 		+       "node",
 		@@ ... @@
-		-   "target": "web",
+		-   "target": Array [
+		-     "web",
+		-     "browserslist",
+		-   ],
 		+   "target": "node",
 	`)
 	);
@@ -1067,9 +1073,27 @@ describe("Defaults", () => {
 		@@ ... @@
 		-       "jsonp",
 		@@ ... @@
+		-       "arrowFunction": false,
+		-       "bigIntLiteral": false,
+		-       "const": false,
+		-       "destructuring": false,
+		-       "dynamicImport": false,
+		-       "forOf": false,
+		-       "module": false,
+		+       "arrowFunction": true,
+		+       "bigIntLiteral": undefined,
+		+       "const": true,
+		+       "destructuring": true,
+		+       "dynamicImport": undefined,
+		+       "forOf": true,
+		+       "module": undefined,
+		@@ ... @@
 		+       "worker",
 		@@ ... @@
-		-   "target": "web",
+		-   "target": Array [
+		-     "web",
+		-     "browserslist",
+		-   ],
 		+   "target": "webworker",
 	`)
 	);
@@ -1195,7 +1219,10 @@ describe("Defaults", () => {
 		+       "node",
 		+       "electron",
 		@@ ... @@
-		-   "target": "web",
+		-   "target": Array [
+		-     "web",
+		-     "browserslist",
+		-   ],
 		+   "target": "electron-main",
 	`)
 	);
@@ -1319,7 +1346,10 @@ describe("Defaults", () => {
 		@@ ... @@
 		+       "electron",
 		@@ ... @@
-		-   "target": "web",
+		-   "target": Array [
+		-     "web",
+		-     "browserslist",
+		-   ],
 		+   "target": "electron-preload",
 	`)
 	);

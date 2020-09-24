@@ -888,8 +888,8 @@ chunk trees.js (trees) 71 bytes [rendered]
 
 exports[`StatsTestCases should print correct stats for ignore-warnings 1`] = `
 "asset main.js 946 bytes [emitted] (name: main)
-orphan modules 8.58 KiB [orphan] 9 modules
-./index.js + 9 modules 8.75 KiB [built] [code generated]
+orphan modules 8.55 KiB [orphan] 9 modules
+./index.js + 9 modules 8.72 KiB [built] [code generated]
 
 WARNING in ./module.js?4 3:12-20
 Should not import the named export 'homepage' (imported as 'homepage') from default-exporting module (only default export is available soon)
@@ -2444,11 +2444,11 @@ webpack x.x.x compiled successfully"
 
 exports[`StatsTestCases should print correct stats for runtime-chunk-integration 1`] = `
 "base:
-  asset without-runtime.js 12 KiB [emitted] (name: runtime)
-  asset without-505.js 781 bytes [emitted]
-  asset without-main1.js 601 bytes [emitted] (name: main1)
-  Entrypoint main1 12.6 KiB = without-runtime.js 12 KiB without-main1.js 601 bytes
-  runtime modules 7.48 KiB 8 modules
+  asset without-runtime.js 12.3 KiB [emitted] (name: runtime)
+  asset without-505.js 1.22 KiB [emitted]
+  asset without-main1.js 596 bytes [emitted] (name: main1)
+  Entrypoint main1 12.8 KiB = without-runtime.js 12.3 KiB without-main1.js 596 bytes
+  runtime modules 7.63 KiB 9 modules
   cacheable modules 126 bytes
     ./main1.js 66 bytes [built] [code generated]
     ./b.js 20 bytes [built] [code generated]
@@ -2457,15 +2457,15 @@ exports[`StatsTestCases should print correct stats for runtime-chunk-integration
   base (webpack x.x.x) compiled successfully
 
 static custom name:
-  asset with-manifest.js 12 KiB [emitted] (name: manifest)
-  asset with-505.js 781 bytes [emitted]
-  asset with-main1.js 601 bytes [emitted] (name: main1)
-  asset with-main2.js 220 bytes [emitted] (name: main2)
-  asset with-main3.js 220 bytes [emitted] (name: main3)
-  Entrypoint main1 12.6 KiB = with-manifest.js 12 KiB with-main1.js 601 bytes
-  Entrypoint main2 12.2 KiB = with-manifest.js 12 KiB with-main2.js 220 bytes
-  Entrypoint main3 12.2 KiB = with-manifest.js 12 KiB with-main3.js 220 bytes
-  runtime modules 7.48 KiB 8 modules
+  asset with-manifest.js 12.3 KiB [emitted] (name: manifest)
+  asset with-505.js 1.22 KiB [emitted]
+  asset with-main1.js 596 bytes [emitted] (name: main1)
+  asset with-main2.js 215 bytes [emitted] (name: main2)
+  asset with-main3.js 215 bytes [emitted] (name: main3)
+  Entrypoint main1 12.8 KiB = with-manifest.js 12.3 KiB with-main1.js 596 bytes
+  Entrypoint main2 12.5 KiB = with-manifest.js 12.3 KiB with-main2.js 215 bytes
+  Entrypoint main3 12.5 KiB = with-manifest.js 12.3 KiB with-main3.js 215 bytes
+  runtime modules 7.63 KiB 9 modules
   cacheable modules 166 bytes
     ./main1.js 66 bytes [built] [code generated]
     ./main2.js 20 bytes [built] [code generated]
@@ -2476,16 +2476,16 @@ static custom name:
   static custom name (webpack x.x.x) compiled successfully
 
 dynamic custom name:
-  asset func-b.js 12 KiB [emitted] (name: b)
-  asset func-a.js 5.22 KiB [emitted] (name: a)
-  asset func-505.js 781 bytes [emitted]
-  asset func-main1.js 601 bytes [emitted] (name: main1)
-  asset func-main2.js 220 bytes [emitted] (name: main2)
-  asset func-main3.js 220 bytes [emitted] (name: main3)
-  Entrypoint main1 12.6 KiB = func-b.js 12 KiB func-main1.js 601 bytes
-  Entrypoint main2 12.2 KiB = func-b.js 12 KiB func-main2.js 220 bytes
-  Entrypoint main3 5.44 KiB = func-a.js 5.22 KiB func-main3.js 220 bytes
-  runtime modules 10.1 KiB 10 modules
+  asset func-b.js 12.3 KiB [emitted] (name: b)
+  asset func-a.js 5.09 KiB [emitted] (name: a)
+  asset func-505.js 1.22 KiB [emitted]
+  asset func-main1.js 596 bytes [emitted] (name: main1)
+  asset func-main2.js 215 bytes [emitted] (name: main2)
+  asset func-main3.js 215 bytes [emitted] (name: main3)
+  Entrypoint main1 12.8 KiB = func-b.js 12.3 KiB func-main1.js 596 bytes
+  Entrypoint main2 12.5 KiB = func-b.js 12.3 KiB func-main2.js 215 bytes
+  Entrypoint main3 5.3 KiB = func-a.js 5.09 KiB func-main3.js 215 bytes
+  runtime modules 10.2 KiB 11 modules
   cacheable modules 166 bytes
     ./main1.js 66 bytes [built] [code generated]
     ./main2.js 20 bytes [built] [code generated]
@@ -2755,7 +2755,7 @@ global:
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"runtime modules 6.86 KiB 10 modules
+"runtime modules 6.71 KiB 10 modules
 built modules 615 bytes [built]
   code generated modules 530 bytes [code generated]
     modules by path ./*.js 377 bytes 7 modules
@@ -2769,9 +2769,9 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Entrypoint first 13.3 KiB = a-vendor.js 210 bytes a-first.js 13.1 KiB
-Entrypoint second 13.1 KiB = a-vendor.js 210 bytes a-second.js 12.9 KiB
-runtime modules 15 KiB 16 modules
+"Entrypoint first 13.1 KiB = a-vendor.js 205 bytes a-first.js 12.9 KiB
+Entrypoint second 12.9 KiB = a-vendor.js 205 bytes a-second.js 12.7 KiB
+runtime modules 14.8 KiB 16 modules
 cacheable modules 693 bytes
   ./first.js 207 bytes [built] [code generated]
   ./second.js 177 bytes [built] [code generated]
@@ -2786,9 +2786,9 @@ cacheable modules 693 bytes
   ./common_lazy_shared.js 25 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-Entrypoint first 12.9 KiB = b-vendor.js 210 bytes b-first.js 12.7 KiB
-Entrypoint second 12.8 KiB = b-vendor.js 210 bytes b-second.js 12.6 KiB
-runtime modules 15 KiB 16 modules
+Entrypoint first 12.7 KiB = b-vendor.js 205 bytes b-first.js 12.5 KiB
+Entrypoint second 12.6 KiB = b-vendor.js 205 bytes b-second.js 12.4 KiB
+runtime modules 14.8 KiB 16 modules
 cacheable modules 898 bytes
   code generated modules 780 bytes [code generated]
     modules by path ./*.js 81 bytes 3 modules
