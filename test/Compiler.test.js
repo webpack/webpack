@@ -517,6 +517,23 @@ describe("Compiler", () => {
 			});
 		});
 	});
+	it("should set compiler.watching correctly", function (done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/directory",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		const watching = compiler.watch({}, (err, stats) => {
+			if (err) return done(err);
+			done();
+		});
+		expect(compiler.watching).toBe(watching);
+	});
 	it("should watch again correctly after first closed watch", function (done) {
 		const compiler = webpack({
 			context: __dirname,
