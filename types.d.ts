@@ -666,6 +666,9 @@ declare class Chunk {
 		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
 	): Record<string | number, Record<string, (string | number)[]>>;
 }
+type ChunkFilename =
+	| string
+	| ((pathData: PathData, assetInfo: AssetInfo) => string);
 declare class ChunkGraph {
 	constructor(moduleGraph: ModuleGraph);
 	moduleGraph: ModuleGraph;
@@ -5938,9 +5941,9 @@ declare interface Output {
 	charset?: boolean;
 
 	/**
-	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
+	 * The filename of non-initial chunks as relative path inside the `output.path` directory.
 	 */
-	chunkFilename?: string;
+	chunkFilename?: ChunkFilename;
 
 	/**
 	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
@@ -6187,9 +6190,9 @@ declare interface OutputNormalized {
 	charset?: boolean;
 
 	/**
-	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
+	 * The filename of non-initial chunks as relative path inside the `output.path` directory.
 	 */
-	chunkFilename?: string;
+	chunkFilename?: ChunkFilename;
 
 	/**
 	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
