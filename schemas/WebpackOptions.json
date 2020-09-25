@@ -74,9 +74,18 @@
       "type": "boolean"
     },
     "ChunkFilename": {
-      "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
-      "type": "string",
-      "absolutePath": false
+      "description": "The filename of non-initial chunks as relative path inside the `output.path` directory.",
+      "anyOf": [
+        {
+          "type": "string",
+          "absolutePath": false,
+          "minLength": 1
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+        }
+      ]
     },
     "ChunkFormat": {
       "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
