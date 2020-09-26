@@ -403,9 +403,14 @@ export type AssetModuleFilename =
  */
 export type Charset = boolean;
 /**
- * The filename of non-entry chunks as relative path inside the `output.path` directory.
+ * The filename of non-initial chunks as relative path inside the `output.path` directory.
  */
-export type ChunkFilename = string;
+export type ChunkFilename =
+	| string
+	| ((
+			pathData: import("../lib/Compilation").PathData,
+			assetInfo?: import("../lib/Compilation").AssetInfo
+	  ) => string);
 /**
  * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
  */
@@ -1700,7 +1705,7 @@ export interface Output {
 	 */
 	charset?: Charset;
 	/**
-	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
+	 * The filename of non-initial chunks as relative path inside the `output.path` directory.
 	 */
 	chunkFilename?: ChunkFilename;
 	/**
@@ -2371,7 +2376,7 @@ export interface OutputNormalized {
 	 */
 	charset?: Charset;
 	/**
-	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
+	 * The filename of non-initial chunks as relative path inside the `output.path` directory.
 	 */
 	chunkFilename?: ChunkFilename;
 	/**

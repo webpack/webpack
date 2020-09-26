@@ -666,6 +666,9 @@ declare class Chunk {
 		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
 	): Record<string | number, Record<string, (string | number)[]>>;
 }
+type ChunkFilename =
+	| string
+	| ((pathData: PathData, assetInfo: AssetInfo) => string);
 declare class ChunkGraph {
 	constructor(moduleGraph: ModuleGraph);
 	moduleGraph: ModuleGraph;
@@ -1618,6 +1621,7 @@ declare class Compiler {
 	parentCompilation: Compilation;
 	root: Compiler;
 	outputPath: string;
+	watching: Watching;
 	outputFileSystem: OutputFileSystem;
 	intermediateFileSystem: InputFileSystem &
 		OutputFileSystem &
@@ -3510,6 +3514,23 @@ declare class Generator {
 	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
 	static byType(map?: any): ByTypeGenerator;
 }
+declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
+	constructor(
+		contentType: string,
+		name: string,
+		global: string,
+		getFilenameForChunk: (
+			arg0: Chunk
+		) => string | ((arg0: PathData, arg1: AssetInfo) => string),
+		allChunks: boolean
+	);
+	contentType: string;
+	global: string;
+	getFilenameForChunk: (
+		arg0: Chunk
+	) => string | ((arg0: PathData, arg1: AssetInfo) => string);
+	allChunks: boolean;
+}
 declare interface GroupConfig<T, R> {
 	getKeys: (arg0: T) => string[];
 	createGroup: (arg0: string, arg1: (T | R)[], arg2: T[]) => R;
@@ -3580,6 +3601,9 @@ declare class HotModuleReplacementPlugin {
 	 */
 	apply(compiler: Compiler): void;
 	static getParserHooks(parser: JavascriptParser): HMRJavascriptParserHooks;
+}
+declare class HotUpdateChunk extends Chunk {
+	constructor();
 }
 declare class HttpUriPlugin {
 	constructor();
@@ -5938,9 +5962,9 @@ declare interface Output {
 	charset?: boolean;
 
 	/**
-	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
+	 * The filename of non-initial chunks as relative path inside the `output.path` directory.
 	 */
-	chunkFilename?: string;
+	chunkFilename?: ChunkFilename;
 
 	/**
 	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
@@ -6187,9 +6211,9 @@ declare interface OutputNormalized {
 	charset?: boolean;
 
 	/**
-	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
+	 * The filename of non-initial chunks as relative path inside the `output.path` directory.
 	 */
-	chunkFilename?: string;
+	chunkFilename?: ChunkFilename;
 
 	/**
 	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
@@ -9961,7 +9985,7 @@ declare namespace exports {
 		};
 	}
 	export namespace runtime {
-		export { LoadScriptRuntimeModule };
+		export { GetChunkFilenameRuntimeModule, LoadScriptRuntimeModule };
 	}
 	export namespace prefetch {
 		export { ChunkPrefetchPreloadPlugin };
@@ -10144,6 +10168,7 @@ declare namespace exports {
 		ExternalModule,
 		ExternalsPlugin,
 		Generator,
+		HotUpdateChunk,
 		HotModuleReplacementPlugin,
 		IgnorePlugin,
 		JavascriptModulesPlugin,

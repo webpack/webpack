@@ -1987,13 +1987,13 @@ Object {
   "output-chunk-filename": Object {
     "configs": Array [
       Object {
-        "description": "The filename of non-entry chunks as relative path inside the \`output.path\` directory.",
+        "description": "The filename of non-initial chunks as relative path inside the \`output.path\` directory.",
         "multiple": false,
         "path": "output.chunkFilename",
         "type": "string",
       },
     ],
-    "description": "The filename of non-entry chunks as relative path inside the \`output.path\` directory.",
+    "description": "The filename of non-initial chunks as relative path inside the \`output.path\` directory.",
     "multiple": false,
     "simpleType": "string",
   },
