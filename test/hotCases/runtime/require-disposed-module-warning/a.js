@@ -1,4 +1,4 @@
-export default "a1";
+export default module;
 ---
 ---
 export default "a2";
