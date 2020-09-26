@@ -1,6 +1,4 @@
-const expectWarningFactory = require('../../../helpers/expectWarningFactory');
-
-const expectWarning = expectWarningFactory();
+const expectWarning = require("../../../helpers/expectWarningFactory")();
 
 it("should be able to consume different shared module version depending on context", async () => {
 	__webpack_share_scopes__["default"] = {
