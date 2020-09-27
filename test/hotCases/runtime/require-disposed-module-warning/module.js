@@ -1,3 +1,3 @@
-export {default as aModule} from "./a";
+module.exports = () => require("./a");
 ---
-import "./b";
+module.exports = () => require("./b");

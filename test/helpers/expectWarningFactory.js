@@ -14,17 +14,8 @@ module.exports = () => {
 		done();
 	});
 
-	const expectWarning = regexp => {
-		if (!regexp) {
-			expect(warnings).toEqual([]);
-		} else {
-			expect(warnings).toEqual(
-				expect.objectContaining({
-					0: expect.stringMatching(regexp),
-					length: 1
-				})
-			);
-		}
+	const expectWarning = (...regexp) => {
+		expect(warnings).toEqual(regexp.map(r => expect.stringMatching(r)));
 		warnings.length = 0;
 	};
 

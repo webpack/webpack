@@ -1,15 +1,22 @@
 const expectWarning = require("../../../helpers/expectWarningFactory")();
-const {aModule} = require("./module");
+const getInner = require("./module");
 
-it("should print correct warning messages when a disposed module is required", (done) => {
-	NEXT(require("../../update")(done, true, () => {
-		require("./module");
-		__webpack_modules__[aModule.id].call(aModule.exports, aModule);
-		expectWarning(/^\[HMR] unexpected require\(\.\/a.js\) to disposed module$/);
-		done();
-	}));
+it("should print correct warning messages when a disposed module is required", done => {
+	NEXT(
+		require("../../update")(done, true, () => {
+			getInner();
+			expectWarning(
+				/^\[HMR] unexpected require\(\.\/a.js\) from disposed module \.\/module\.js$/,
+				/^\[HMR] unexpected require\(\.\/a.js\) to disposed module$/
+			);
+			const getInnerUpdated = require("./module");
+			getInnerUpdated();
+			expectWarning();
+			done();
+		})
+	);
 });
 
-if(module.hot) {
+if (module.hot) {
 	module.hot.accept("./module");
 }
