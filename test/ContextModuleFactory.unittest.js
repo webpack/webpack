@@ -57,5 +57,67 @@ describe("ContextModuleFactory", () => {
 				}
 			);
 		});
+		it("should return callback with [] if circular symlinks exist", done => {
+			let statDirStatus = 0;
+			memfs.readdir = (dir, callback) => {
+				statDirStatus++;
+				setTimeout(() => callback(null, ["/A"]));
+			};
+			memfs.stat = (file, callback) => {
+				const resolvedValue = {
+					isDirectory: () => statDirStatus === 1,
+					isFile: () => statDirStatus !== 1
+				};
+				setTimeout(() => callback(null, resolvedValue));
+			};
+			memfs.realpath = (dir, callback) => {
+				const realPath = dir.split("/");
+				setTimeout(() => callback(null, realPath[realPath.length - 1]));
+			};
+			factory.resolveDependencies(
+				memfs,
+				{
+					resource: "/A",
+					recursive: true,
+					regExp: /.*/
+				},
+				(err, res) => {
+					expect(res).toStrictEqual([]);
+					done();
+				}
+			);
+		});
+		it("should not return callback with [] if there are no circular symlinks", done => {
+			let statDirStatus = 0;
+			memfs.readdir = (dir, callback) => {
+				statDirStatus++;
+				setTimeout(() => callback(null, ["/B"]));
+			};
+			memfs.stat = (file, callback) => {
+				const resolvedValue = {
+					isDirectory: () => statDirStatus === 1,
+					isFile: () => statDirStatus !== 1
+				};
+				setTimeout(() => callback(null, resolvedValue));
+			};
+			memfs.realpath = (dir, callback) => {
+				const realPath = dir.split("/");
+				setTimeout(() => callback(null, realPath[realPath.length - 1]));
+			};
+			factory.resolveDependencies(
+				memfs,
+				{
+					resource: "/A",
+					recursive: true,
+					regExp: /.*/
+				},
+				(err, res) => {
+					expect(res).not.toStrictEqual([]);
+					expect(Array.isArray(res)).toBe(true);
+					expect(res.length).toBe(1);
+					done();
+				}
+			);
+		});
 	});
 });
