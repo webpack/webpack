@@ -1,3 +1,4 @@
+const path = require("path");
 const jestDiff = require("jest-diff").default;
 const stripAnsi = require("strip-ansi");
 const {
@@ -1508,6 +1509,53 @@ describe("Defaults", () => {
 		+   "stats": Object {
 		+     "preset": "minimal",
 		+   },
+		`)
+	);
+
+	test(
+		"browserslist",
+		{ context: path.resolve(__dirname, "fixtures/browserslist") },
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-   "context": "<cwd>",
+			+   "context": "<cwd>/test/fixtures/browserslist",
+			@@ ... @@
+			-     "chunkLoadingGlobal": "webpackChunkwebpack",
+			+     "chunkLoadingGlobal": "webpackChunkbrowserslist_test",
+			@@ ... @@
+			-     "devtoolNamespace": "webpack",
+			+     "devtoolNamespace": "browserslist-test",
+			@@ ... @@
+			-       "arrowFunction": true,
+			-       "bigIntLiteral": undefined,
+			-       "const": true,
+			-       "destructuring": true,
+			-       "dynamicImport": undefined,
+			-       "forOf": true,
+			-       "module": undefined,
+			+       "arrowFunction": false,
+			+       "bigIntLiteral": false,
+			+       "const": false,
+			+       "destructuring": false,
+			+       "dynamicImport": false,
+			+       "forOf": false,
+			+       "module": false,
+			@@ ... @@
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": "webpackHotUpdatebrowserslist_test",
+			@@ ... @@
+			-     "uniqueName": "webpack",
+			+     "uniqueName": "browserslist-test",
+			@@ ... @@
+			-       "<cwd>",
+			+       "<cwd>/test/fixtures/browserslist",
+			@@ ... @@
+			-   "target": "web",
+			+   "target": "browserslist",
 		`)
 	);
 });
