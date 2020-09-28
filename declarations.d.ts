@@ -351,6 +351,25 @@ declare module "webpack-sources" {
 	}
 }
 
+declare module "browserslist" {
+	function browserslist(query: string): string[] | undefined;
+	namespace browserslist {
+		export function loadConfig(
+			options:
+				| {
+						config: string;
+						env?: string;
+				  }
+				| {
+						path: string;
+						env?: string;
+				  }
+		): string | undefined;
+		export function findConfig(path: string): Record<string, string[]>;
+	}
+	export = browserslist;
+}
+
 type TODO = any;
 
 type RecursiveArrayOrRecord<T> =
