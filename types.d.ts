@@ -3756,6 +3756,11 @@ declare class JavascriptModulesPlugin {
 		hooks: CompilationHooksJavascriptModulesPlugin,
 		compilation: Compilation
 	): Source;
+	updateHashWithBootstrap(
+		hash: Hash,
+		renderContext: RenderBootstrapContext,
+		hooks: CompilationHooksJavascriptModulesPlugin
+	): void;
 	renderBootstrap(
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
