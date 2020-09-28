@@ -450,6 +450,9 @@ describe("Defaults", () => {
 		          "...",
 		        ],
 		      },
+		      "url": Object {
+		        "preferRelative": true,
+		      },
 		      "wasm": Object {
 		        "aliasFields": Array [
 		          "browser",
@@ -469,6 +472,27 @@ describe("Defaults", () => {
 		          "module",
 		          "...",
 		        ],
+		      },
+		      "worker": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "import",
+		          "module",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		        "preferRelative": true,
 		      },
 		    },
 		    "cache": false,
@@ -1035,6 +1059,13 @@ describe("Defaults", () => {
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
 		-       "browser",
 		+       "node",
 		@@ ... @@
@@ -1162,6 +1193,13 @@ describe("Defaults", () => {
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
 		-       "browser",
 		+       "node",
 		+       "electron",
@@ -1221,6 +1259,13 @@ describe("Defaults", () => {
 		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
 		+     "workerWasmLoading": "async-node",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",

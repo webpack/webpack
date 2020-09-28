@@ -2525,6 +2525,10 @@
             ]
           }
         },
+        "preferRelative": {
+          "description": "Prefer to resolve module requests as relative request and fallback to resolving as module.",
+          "type": "boolean"
+        },
         "resolver": {
           "description": "Custom resolver.",
           "tsType": "(import('enhanced-resolve').Resolver)"

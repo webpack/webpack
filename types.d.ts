@@ -7041,6 +7041,7 @@ declare interface ResolveOptionsTypes {
 	fullySpecified: boolean;
 	resolveToContext: boolean;
 	restrictions: Set<string | RegExp>;
+	preferRelative: boolean;
 }
 
 /**
@@ -7141,6 +7142,11 @@ declare interface ResolveOptionsWebpackOptions {
 	 * Plugins for the resolver.
 	 */
 	plugins?: ("..." | ResolvePluginInstance)[];
+
+	/**
+	 * Prefer to resolve module requests as relative request and fallback to resolving as module.
+	 */
+	preferRelative?: boolean;
 
 	/**
 	 * Custom resolver.
@@ -7322,6 +7328,10 @@ declare abstract class ResolverFactory {
 						 */
 						plugins?: ("..." | ResolvePluginInstance)[];
 						/**
+						 * Prefer to resolve module requests as relative request and fallback to resolving as module.
+						 */
+						preferRelative?: boolean;
+						/**
 						 * Custom resolver.
 						 */
 						resolver?: Resolver;
@@ -7434,6 +7444,10 @@ declare abstract class ResolverFactory {
 						 */
 						plugins?: ("..." | ResolvePluginInstance)[];
 						/**
+						 * Prefer to resolve module requests as relative request and fallback to resolving as module.
+						 */
+						preferRelative?: boolean;
+						/**
 						 * Custom resolver.
 						 */
 						resolver?: Resolver;
@@ -7545,6 +7559,10 @@ declare abstract class ResolverFactory {
 			 * Plugins for the resolver.
 			 */
 			plugins?: ("..." | ResolvePluginInstance)[];
+			/**
+			 * Prefer to resolve module requests as relative request and fallback to resolving as module.
+			 */
+			preferRelative?: boolean;
 			/**
 			 * Custom resolver.
 			 */
@@ -9315,6 +9333,11 @@ declare interface UserResolveOptions {
 	 * Use only the sync constiants of the file system calls
 	 */
 	useSyncFileSystemCalls?: boolean;
+
+	/**
+	 * Prefer to resolve module requests as relative requests before falling back to modules
+	 */
+	preferRelative?: boolean;
 }
 declare abstract class VariableInfo {
 	declaredScope: ScopeInfo;
@@ -9763,6 +9786,10 @@ declare interface WithOptions {
 			 * Plugins for the resolver.
 			 */
 			plugins?: ("..." | ResolvePluginInstance)[];
+			/**
+			 * Prefer to resolve module requests as relative request and fallback to resolving as module.
+			 */
+			preferRelative?: boolean;
 			/**
 			 * Custom resolver.
 			 */

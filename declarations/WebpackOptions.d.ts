@@ -1317,6 +1317,10 @@ export interface ResolveOptions {
 	 */
 	plugins?: ("..." | ResolvePluginInstance)[];
 	/**
+	 * Prefer to resolve module requests as relative request and fallback to resolving as module.
+	 */
+	preferRelative?: boolean;
+	/**
 	 * Custom resolver.
 	 */
 	resolver?: import("enhanced-resolve").Resolver;
