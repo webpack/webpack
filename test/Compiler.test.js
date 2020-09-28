@@ -337,8 +337,7 @@ describe("Compiler", () => {
 				output: {
 					path: "/directory",
 					filename: "bundle.js"
-				},
-				watch: true
+				}
 			});
 			expect(compiler).toBeInstanceOf(Stats);
 			done();

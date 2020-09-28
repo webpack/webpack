@@ -887,9 +887,9 @@ chunk trees.js (trees) 71 bytes [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for ignore-warnings 1`] = `
-"asset main.js 943 bytes [emitted] (name: main)
-orphan modules 8.53 KiB [orphan] 9 modules
-./index.js + 9 modules 8.7 KiB [built] [code generated]
+"asset main.js 957 bytes [emitted] (name: main)
+orphan modules 617 bytes [orphan] 9 modules
+./index.js + 9 modules 790 bytes [built] [code generated]
 
 WARNING in ./module.js?4 3:12-20
 Should not import the named export 'homepage' (imported as 'homepage') from default-exporting module (only default export is available soon)
