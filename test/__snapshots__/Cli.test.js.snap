@@ -3954,6 +3954,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-loader-prefer-relative": Object {
+    "configs": Array [
+      Object {
+        "description": "Prefer to resolve module requests as relative request and fallback to resolving as module.",
+        "multiple": false,
+        "path": "resolveLoader.preferRelative",
+        "type": "boolean",
+      },
+    ],
+    "description": "Prefer to resolve module requests as relative request and fallback to resolving as module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-loader-restrictions": Object {
     "configs": Array [
       Object {
@@ -4126,6 +4139,19 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-prefer-relative": Object {
+    "configs": Array [
+      Object {
+        "description": "Prefer to resolve module requests as relative request and fallback to resolving as module.",
+        "multiple": false,
+        "path": "resolve.preferRelative",
+        "type": "boolean",
+      },
+    ],
+    "description": "Prefer to resolve module requests as relative request and fallback to resolving as module.",
     "multiple": false,
     "simpleType": "boolean",
   },

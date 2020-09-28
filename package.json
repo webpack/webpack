@@ -14,7 +14,7 @@
     "acorn": "^7.4.0",
     "browserslist": "^4.14.3",
     "chrome-trace-event": "^1.0.2",
-    "enhanced-resolve": "^5.0.0",
+    "enhanced-resolve": "^5.1.0",
     "eslint-scope": "^5.1.0",
     "events": "^3.2.0",
     "glob-to-regexp": "^0.4.1",
@@ -28,7 +28,7 @@
     "tapable": "^2.0.0",
     "terser-webpack-plugin": "^4.1.0",
     "watchpack": "^2.0.0",
-    "webpack-sources": "^2.0.0"
+    "webpack-sources": "^2.0.1"
   },
   "peerDependenciesMeta": {
     "webpack-cli": {
