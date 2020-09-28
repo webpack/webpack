@@ -9359,9 +9359,9 @@ declare interface WatchOptions {
 	aggregateTimeout?: number;
 
 	/**
-	 * Ignore some files from watching (glob pattern).
+	 * Ignore some files from watching (glob pattern or regexp).
 	 */
-	ignored?: LibraryExport;
+	ignored?: string | RegExp | string[];
 
 	/**
 	 * Enable polling mode for watching.
@@ -9407,9 +9407,9 @@ declare abstract class Watching {
 		 */
 		aggregateTimeout?: number;
 		/**
-		 * Ignore some files from watching (glob pattern).
+		 * Ignore some files from watching (glob pattern or regexp).
 		 */
-		ignored?: LibraryExport;
+		ignored?: string | RegExp | string[];
 		/**
 		 * Enable polling mode for watching.
 		 */

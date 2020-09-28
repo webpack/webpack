@@ -3590,7 +3590,7 @@
           "type": "number"
         },
         "ignored": {
-          "description": "Ignore some files from watching (glob pattern).",
+          "description": "Ignore some files from watching (glob pattern or regexp).",
           "anyOf": [
             {
               "type": "array",
@@ -3599,6 +3599,10 @@
                 "type": "string",
                 "minLength": 1
               }
+            },
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
             },
             {
               "description": "A single glob pattern for files that should be ignored from watching.",

@@ -2309,9 +2309,9 @@ export interface WatchOptions {
 	 */
 	aggregateTimeout?: number;
 	/**
-	 * Ignore some files from watching (glob pattern).
+	 * Ignore some files from watching (glob pattern or regexp).
 	 */
-	ignored?: string[] | string;
+	ignored?: string[] | RegExp | string;
 	/**
 	 * Enable polling mode for watching.
 	 */
