@@ -607,7 +607,7 @@ exports[`StatsTestCases should print correct stats for commons-chunk-min-size-0 
 asset 429.js 274 bytes [emitted] (id hint: vendor-1)
 Entrypoint entry-1 5.82 KiB = 429.js 274 bytes entry-1.js 5.55 KiB
 runtime modules 2.58 KiB 2 modules
-modules by path ./modules/ 132 bytes
+modules by path ./modules/*.js 132 bytes
   ./modules/a.js 22 bytes [built] [code generated]
   ./modules/b.js 22 bytes [built] [code generated]
   ./modules/c.js 22 bytes [built] [code generated]
@@ -623,7 +623,7 @@ exports[`StatsTestCases should print correct stats for commons-chunk-min-size-In
 asset vendor-1.js 274 bytes [emitted] (name: vendor-1) (id hint: vendor-1)
 Entrypoint entry-1 5.82 KiB = vendor-1.js 274 bytes entry-1.js 5.55 KiB
 runtime modules 2.58 KiB 2 modules
-modules by path ./modules/ 132 bytes
+modules by path ./modules/*.js 132 bytes
   ./modules/a.js 22 bytes [built] [code generated]
   ./modules/b.js 22 bytes [built] [code generated]
   ./modules/c.js 22 bytes [built] [code generated]
@@ -2816,8 +2816,8 @@ runtime modules 6.44 KiB 9 modules
 cacheable modules 823 bytes
   modules by path ./components/src/ 501 bytes
     orphan modules 315 bytes [orphan]
-      modules by path ./components/src/CompAB/ 164 bytes 2 modules
-      modules by path ./components/src/CompC/ 67 bytes
+      modules by path ./components/src/CompAB/*.js 164 bytes 2 modules
+      modules by path ./components/src/CompC/*.js 67 bytes
         ./components/src/CompC/CompC.js 33 bytes [orphan] [built]
           [module unused]
           [inactive] harmony side effect evaluation ./CompC ./components/src/CompC/index.js 1:0-34
@@ -2889,7 +2889,7 @@ asset main.no-side.js 965 bytes [emitted] [minimized] (name: main)
 runtime modules 1000 bytes 4 modules
 orphan modules 102 bytes [orphan] 2 modules
 cacheable modules 1.35 KiB
-  modules by path ./node_modules/module-with-export/ 1.05 KiB
+  modules by path ./node_modules/module-with-export/*.js 1.05 KiB
     ./node_modules/module-with-export/index.js 1.01 KiB [built] [code generated]
       [only some exports used: huh, smallVar]
       ModuleConcatenation bailout: List of module exports is dynamic (huh: maybe provided (runtime-defined) and used in main)
@@ -3766,7 +3766,7 @@ switched:
     ./index.js 1.19 KiB [built] [code generated]
   chunk (runtime: main) switched-main-879072e3.js (main-879072e3) 1.7 KiB ={1}= ={59}= ={247}= ={318}= ={520}= ={663}= ={997}= [initial] [rendered]
     > ./ main
-    modules by path ./subfolder/ 1.11 KiB 11 modules
+    modules by path ./subfolder/*.js 1.11 KiB 11 modules
     modules by path ./*.js 603 bytes 9 modules
   chunk (runtime: main) switched-main-12217e1d.js (main-12217e1d) 1.57 KiB (javascript) 3.16 KiB (runtime) ={1}= ={59}= ={247}= ={318}= ={520}= ={581}= ={997}= [entry] [rendered]
     > ./ main
@@ -3774,8 +3774,8 @@ switched:
     ./very-big.js?1 1.57 KiB [built] [code generated]
   chunk (runtime: main) switched-main-7aeafcb2.js (main-7aeafcb2) 1.64 KiB ={1}= ={59}= ={247}= ={318}= ={520}= ={581}= ={663}= [initial] [rendered]
     > ./ main
-    modules by path ./inner-module/ 603 bytes 9 modules
-    modules by path ./in-some-directory/ 536 bytes
+    modules by path ./inner-module/*.js 603 bytes 9 modules
+    modules by path ./in-some-directory/*.js 536 bytes
       ./in-some-directory/big.js?1 268 bytes [built] [code generated]
       ./in-some-directory/small.js?1 67 bytes [built] [code generated]
       ./in-some-directory/small.js?2 67 bytes [built] [code generated]
