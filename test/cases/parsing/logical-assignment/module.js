@@ -1,3 +1,6 @@
 export default function() {
-	a ??= b &&= c ||= d;
+	var x = null;
+	x ??= true;
+	x &&= true;
+	x ||= false;
 }
