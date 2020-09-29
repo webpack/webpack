@@ -7,7 +7,7 @@ module.exports = {
 				use: {
 					loader: "worker-loader",
 					options: {
-						name: "hash.worker.js"
+						filename: "fullhash.worker.js"
 					}
 				}
 			}

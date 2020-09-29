@@ -16,16 +16,28 @@ _{{worker.js}}_
 _{{dist/output.js}}_
 ```
 
-# dist/[hash].worker.js
+# dist/[fullhash].worker.js
 
 ```javascript
-_{{dist/hash.worker.js}}_
+_{{dist/fullhash.worker.js}}_
 ```
 
-# dist/1.[hash].worker.js
+# dist/0.output.worker.js
 
 ```javascript
-_{{dist/0.hash.worker.js}}_
+_{{dist/0.output.worker.js}}_
+```
+
+# dist/1.output.worker.js
+
+```javascript
+_{{dist/1.output.worker.js}}_
+```
+
+# dist/2.output.worker.js
+
+```javascript
+_{{dist/2.output.worker.js}}_
 ```
 
 # Info

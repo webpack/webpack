@@ -1,6 +1,5 @@
-onmessage = function(event) {
-	var template = event.data;
-	require(["../require.context/templates/" + event.data], function(tmpl) {
-		postMessage(tmpl());
-	});
+onmessage = async event => {
+	const template = event.data;
+	const tmpl = await import("../require.context/templates/" + template);
+	postMessage(tmpl());
 }
