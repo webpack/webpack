@@ -1,9 +1,10 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
 	output: {
 		assetModuleFilename: ({ filename }) => {
 			if (/.png$/.test(filename)) {
-				return "images/success-png[ext]";
+				return "images/[\\ext\\]/success-png[ext]";
 			}
 			if (/.svg$/.test(filename)) {
 				return "images/success-svg[ext]";
@@ -15,11 +16,8 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(png|svg)$/,
-				type: "asset"
+				type: "asset/resource"
 			}
 		]
-	},
-	experiments: {
-		asset: true
 	}
 };

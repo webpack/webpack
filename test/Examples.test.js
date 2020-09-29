@@ -18,7 +18,7 @@ describe("Examples", () => {
 		}
 		it(
 			"should compile " + relativePath,
-			function(done) {
+			function (done) {
 				let options = {};
 				let webpackConfigPath = path.join(examplePath, "webpack.config.js");
 				webpackConfigPath =
@@ -56,7 +56,7 @@ describe("Examples", () => {
 					done();
 				});
 			},
-			45000
+			90000
 		);
 	});
 });

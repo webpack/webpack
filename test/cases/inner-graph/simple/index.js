@@ -1,4 +1,11 @@
-import { exportUsed, export2Used, export3Used, export4Used } from "./inner";
+import {
+	exportUsed,
+	export2Used,
+	export3Used,
+	export4Used,
+	export5Used,
+	export6Used
+} from "./inner";
 import { f1, pureUsed, fWithDefault } from "./module";
 
 it("export should be unused when only unused functions use it", () => {
@@ -10,6 +17,8 @@ it("export should be unused when only unused functions use it", () => {
 		expect(export2Used).toBe(true);
 		expect(export3Used).toBe(true);
 		expect(export4Used).toBe(true);
+		expect(export5Used).toBe(true);
+		expect(export6Used).toBe(true);
 	}
 	return import("./chunk");
 });

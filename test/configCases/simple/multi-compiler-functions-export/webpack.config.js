@@ -1,5 +1,5 @@
 exports.default = [
-	function() {
+	function () {
 		return {};
 	}
 ];

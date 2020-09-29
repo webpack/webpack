@@ -5,12 +5,15 @@ describe("TestCases", () => {
 	describeCases({
 		name: "cache pack",
 		cache: {
-			type: "filesystem",
+			type: "filesystem"
+		},
+		snapshot: {
 			managedPaths: [path.resolve(__dirname, "../node_modules")]
 		},
 		optimization: {
 			innerGraph: true,
-			usedExports: true
+			usedExports: true,
+			concatenateModules: true
 		}
 	});
 });

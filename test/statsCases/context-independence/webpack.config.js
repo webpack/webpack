@@ -12,6 +12,9 @@ const base = {
 				options: {}
 			}
 		]
+	},
+	stats: {
+		relatedAssets: true
 	}
 };
 
@@ -20,6 +23,7 @@ const base2 = {
 	devtool: "eval-source-map"
 };
 
+/** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{
 		...base,

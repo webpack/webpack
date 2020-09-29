@@ -6,6 +6,7 @@ branches:
     - webpack-4
     - master
     - next
+    - dev-1
 
 cache:
   yarn: true
@@ -38,7 +39,7 @@ matrix:
     - os: linux
       node_js: "10"
       env:
-        - NODEJS_VERSION=v13.0.0-nightly201910156afed1dc85
+        - NODEJS_VERSION=v15.0.0-nightly2020082003293aa3a1
         - YARN_EXTRA_ARGS="--ignore-engines"
         - NO_WATCH_TESTS=1
         - JEST="--maxWorkers=2 --cacheDirectory .jest-cache"

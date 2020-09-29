@@ -6,10 +6,12 @@ const stats = {
 	chunks: true,
 	chunkRelations: true,
 	chunkModules: true,
+	dependentModules: true,
 	chunkOrigins: true,
 	entrypoints: true,
 	modules: false
 };
+/** @type {import("../../../").Configuration} */
 module.exports = {
 	mode: "production",
 	entry: {
@@ -20,7 +22,8 @@ module.exports = {
 	},
 	optimization: {
 		splitChunks: {
-			minSize: 100
+			minSize: 100,
+			enforceSizeThreshold: 200
 		}
 	},
 	stats

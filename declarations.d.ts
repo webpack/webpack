@@ -1,19 +1,13 @@
 declare module "*.json";
 
-// Deprecated NodeJS API usages in Webpack
+// Deprecated NodeJS API usages in webpack
 declare namespace NodeJS {
 	interface Process {
 		binding(internalModule: string): any;
 	}
-}
-
-// TODO remove when https://github.com/DefinitelyTyped/DefinitelyTyped/pull/38753 is merged
-declare module "util" {
-	function deprecate<T extends Function>(
-		fn: T,
-		message: string,
-		code?: string
-	): T;
+	interface ProcessVersions {
+		pnp: "1" | "3";
+	}
 }
 
 declare module "neo-async" {
@@ -120,7 +114,7 @@ declare module "neo-async" {
 	): void;
 
 	export function queue<T, E>(
-		worker: AsyncFunction<T, E>,
+		worker: AsyncIterator<T, E>,
 		concurrency?: number
 	): QueueObject<T, E>;
 
@@ -334,90 +328,51 @@ declare module "webpack-sources" {
 	}
 
 	export class CachedSource extends Source {
-		constructor(source: Source, cachedData?: any);
+		constructor(source: Source);
+		constructor(source: Source | (() => Source), cachedData?: any);
 
 		original(): Source;
+		originalLazy(): Source | (() => Source);
 		getCachedData(): any;
 	}
 
 	export class SizeOnlySource extends Source {
 		constructor(size: number);
 	}
-}
 
-declare module "enhanced-resolve" {
-	type ResolveFunction = (
-		path: string,
-		request: string,
-		resolveContext: ResolveContext,
-		callback: (
-			err?: NodeJS.ErrnoException,
-			result?: string,
-			additionalInfo?: Object
-		) => void
-	) => void;
-
-	export function create(options: any): ResolveFunction;
-
-	interface ResolveContext {
-		log?: (message: string) => void;
-		fileDependencies?: Set<string>;
-		contextDependencies?: Set<string>;
-		missingDependencies?: Set<string>;
-		stack?: Set<string>;
+	interface SourceLike {
+		source(): string | Buffer;
 	}
 
-	export class Resolver {
-		resolve(
-			context: Object,
-			path: string,
-			request: string,
-			resolveContext: ResolveContext,
-			callback: (
-				err?: NodeJS.ErrnoException,
-				result?: string,
-				additionalInfo?: Object
-			) => void
-		): void;
-	}
+	export class CompatSource extends Source {
+		constructor(sourceLike: SourceLike);
 
-	export class ResolverFactory {
-		static createResolver(options: TODO): Resolver;
+		static from(sourceLike: SourceLike): Source;
 	}
 }
 
-// This "hack" is needed because typescript doesn't support recursive type definitions
-// It's referenced from "ruleSet-conditions" in schemas/WebpackOptions.json
-interface RuleSetConditionsRecursive
-	extends Array<import("./declarations/WebpackOptions").RuleSetCondition> {}
-interface RuleSetConditionsAbsoluteRecursive
-	extends Array<
-		import("./declarations/WebpackOptions").RuleSetConditionAbsolute
-	> {}
-
-/**
- * Global variable declarations
- * @todo Once this issue is resolved, remove these globals and add JSDoc onsite instead
- * https://github.com/Microsoft/TypeScript/issues/15626
- */
-declare const $moduleCache$;
-declare let $getFullHash$;
-declare const $interceptModuleExecution$;
-declare const $hmrDownloadManifest$;
-declare let $hmrDownloadUpdateHandlers$;
-declare let $hmrModuleData$;
-declare const $options$;
-declare const $updateModuleFactories$;
-declare const $updateRuntimeModules$;
-declare const $moduleFactories$;
-declare const $onError$;
-declare const $publicPath$;
-declare const __webpack_require__;
-declare const $hotChunkFilename$;
-declare const $hotMainFilename$;
-declare namespace WebAssembly {}
-declare const importScripts;
-declare const $crossOriginLoading$;
-declare const chunkId;
+declare module "browserslist" {
+	function browserslist(query: string): string[] | undefined;
+	namespace browserslist {
+		export function loadConfig(
+			options:
+				| {
+						config: string;
+						env?: string;
+				  }
+				| {
+						path: string;
+						env?: string;
+				  }
+		): string | undefined;
+		export function findConfig(path: string): Record<string, string[]>;
+	}
+	export = browserslist;
+}
 
 type TODO = any;
+
+type RecursiveArrayOrRecord<T> =
+	| { [index: string]: RecursiveArrayOrRecord<T> }
+	| Array<RecursiveArrayOrRecord<T>>
+	| T;

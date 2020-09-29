@@ -7,7 +7,10 @@ const modules = [{
 	variables: ['bbb', 'ccc']
 }, {
 	name: 'ddd',
-	variables: []
+	variables: [],
+	allowedErrors: [
+		[{compilerPath: /ddd/}, /DDD environment variable is undefined./]
+	]
 }, {
 	name: 'eeefff',
 	variables: ['eee', 'fff']
@@ -31,6 +34,10 @@ modules.forEach(module => {
 			]);
 		}
 	});
+	
+	if (module.allowedErrors) {
+		regex.push(...module.allowedErrors)
+	}
 });
 
 module.exports = regex;

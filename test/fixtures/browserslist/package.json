@@ -1,0 +1,6 @@
+{
+  "name": "browserslist-test",
+  "browserslist": [
+    "ie >= 9"
+  ]
+}

@@ -1,4 +1,5 @@
 var webpack = require("../../../");
+/** @type {import("../../../").Configuration[]} */
 module.exports = ["fitting", "content-change"].map(type => ({
 	name: type,
 	mode: "production",
@@ -21,6 +22,7 @@ module.exports = ["fitting", "content-change"].map(type => ({
 	stats: {
 		chunks: true,
 		chunkModules: true,
+		dependentModules: true,
 		chunkOrigins: true,
 		entrypoints: true,
 		modules: false,

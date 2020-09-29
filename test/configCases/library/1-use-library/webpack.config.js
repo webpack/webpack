@@ -1,13 +1,11 @@
 var webpack = require("../../../../");
 var path = require("path");
-module.exports = [
+/** @type {function(any, any): import("../../../../").Configuration[]} */
+module.exports = (env, { testPath }) => [
 	{
 		resolve: {
 			alias: {
-				library: path.resolve(
-					__dirname,
-					"../../../js/config/library/0-create-library/commonjs.js"
-				)
+				library: path.resolve(testPath, "../0-create-library/commonjs.js")
 			}
 		},
 		plugins: [
@@ -19,10 +17,7 @@ module.exports = [
 	{
 		resolve: {
 			alias: {
-				library: path.resolve(
-					__dirname,
-					"../../../js/config/library/0-create-library/umd.js"
-				)
+				library: path.resolve(testPath, "../0-create-library/umd.js")
 			}
 		},
 		plugins: [
@@ -32,13 +27,10 @@ module.exports = [
 		]
 	},
 	{
-		entry: "./global-test.js",
+		entry: "./this-test.js",
 		resolve: {
 			alias: {
-				library: path.resolve(
-					__dirname,
-					"../../../js/config/library/0-create-library/this.js"
-				)
+				library: path.resolve(testPath, "../0-create-library/this.js")
 			}
 		},
 		plugins: [
@@ -48,11 +40,24 @@ module.exports = [
 		]
 	},
 	{
+		entry: "./var-test.js",
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/var.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("var")
+			})
+		]
+	},
+	{
 		resolve: {
 			alias: {
 				library: path.resolve(
-					__dirname,
-					"../../../js/config/library/0-create-library/commonjs2-external.js"
+					testPath,
+					"../0-create-library/commonjs2-external.js"
 				),
 				external: path.resolve(__dirname, "node_modules/external.js")
 			}
@@ -68,8 +73,8 @@ module.exports = [
 		resolve: {
 			alias: {
 				library: path.resolve(
-					__dirname,
-					"../../../js/config/library/0-create-library/commonjs2-split-chunks/"
+					testPath,
+					"../0-create-library/commonjs2-split-chunks/"
 				),
 				external: path.resolve(__dirname, "node_modules/external.js")
 			}
@@ -84,15 +89,48 @@ module.exports = [
 		entry: "./default-test.js",
 		resolve: {
 			alias: {
-				library: path.resolve(
-					__dirname,
-					"../../../js/config/library/0-create-library/umd-default.js"
-				)
+				library: path.resolve(testPath, "../0-create-library/umd-default.js")
 			}
 		},
 		plugins: [
 			new webpack.DefinePlugin({
 				NAME: JSON.stringify("default")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/entryA.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("entryA")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/entryB.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("entryB")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/entryC.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("entryC")
 			})
 		]
 	}

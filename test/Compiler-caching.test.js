@@ -5,15 +5,14 @@ const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 
 const webpack = require("..");
-const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 let fixtureCount = 0;
 
 describe("Compiler (caching)", () => {
 	jest.setTimeout(15000);
 
 	function compile(entry, options, callback) {
+		options = webpack.config.getNormalizedWebpackOptions(options);
 		options.mode = "none";
-		options = new WebpackOptionsDefaulter().process(options);
 		options.cache = true;
 		options.entry = entry;
 		options.optimization.moduleIds = "natural";
@@ -111,12 +110,8 @@ describe("Compiler (caching)", () => {
 
 		// Copy over file since we"ll be modifying some of them
 		fs.mkdirSync(fixturePath);
-		fs.createReadStream(path.join(__dirname, "fixtures", "a.js")).pipe(
-			fs.createWriteStream(aFilepath)
-		);
-		fs.createReadStream(path.join(__dirname, "fixtures", "c.js")).pipe(
-			fs.createWriteStream(cFilepath)
-		);
+		fs.copyFileSync(path.join(__dirname, "fixtures", "a.js"), aFilepath);
+		fs.copyFileSync(path.join(__dirname, "fixtures", "c.js"), cFilepath);
 
 		fixtureCount++;
 		return {

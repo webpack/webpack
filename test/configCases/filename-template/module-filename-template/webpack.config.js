@@ -1,7 +1,8 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
 	output: {
-		devtoolModuleFilenameTemplate: function(info) {
+		devtoolModuleFilenameTemplate: function (info) {
 			return "dummy:///" + info.resourcePath;
 		}
 	},

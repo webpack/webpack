@@ -2,6 +2,7 @@ var webpack = require("../../../../");
 var path = require("path");
 var os = require("os");
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	node: {
 		__dirname: false,

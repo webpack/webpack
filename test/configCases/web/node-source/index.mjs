@@ -1,4 +1,4 @@
-// Block `require`, but keep Webpack from trying to work around it.
+// Block `require`, but keep webpack from trying to work around it.
 eval("require = undefined")
 
 it("should compile fine", () => {

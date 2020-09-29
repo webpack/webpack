@@ -48,9 +48,9 @@ Stats cases are similar to configCases except specifically focusing on the `expe
 
 By default, the "expected" outcome is a pain to write by hand so instead when statsCases are run, runner is checking output using jest's awesome snapshot functionality.
 
-Basically you don't need to write any expected behaviors your self. The assumption is that the stats output from your test code is what you expect.
+Basically you don't need to write any expected behaviors yourself. The assumption is that the stats output from your test code is what you expect.
 
-Please follow the approach described bellow:
+Please follow the approach described below:
 
 * write your test code in `statsCases/` folder by creating a separate folder for it, for example `statsCases/some-file-import-stats/index.js`
 
@@ -69,4 +69,4 @@ If you are still nervous or don't quite understand, please submit an issue and t
 
 
 ## Footnotes
-<sup>1</sup> webpack's parser supports the use of ES2015 features like arrow functions, harmony exports, etc. However as a library we follow NodeJS's timeline for dropping older versions of node. Because of this we expect your tests on Travis to pass all the way back to NodeJS v0.12; Therefore if you would like specific tests that use these features to be ignored if they are not supported, then you should add a `test.filter.js` file. This allows you to import the syntax needed for that test, meanwhile ignoring it on node versions (during CI) that don't support it. webpack has a variety of helpful examples you can refer to if you are just starting out. See the `./helpers` folder to find a list of the versions.
+<sup>1</sup> webpack's parser supports the use of ES2015 features like arrow functions, harmony exports, etc. However as a library we follow NodeJS's timeline for dropping older versions of node. Because of this we expect your tests on Travis to pass all the way back to NodeJS v10; Therefore if you would like specific tests that use these features to be ignored if they are not supported, then you should add a `test.filter.js` file. This allows you to import the syntax needed for that test, meanwhile ignoring it on node versions (during CI) that don't support it. webpack has a variety of helpful examples you can refer to if you are just starting out. See the `./helpers` folder to find a list of the versions.

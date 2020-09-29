@@ -1,3 +1,4 @@
+/** @type {import("../../../").Configuration} */
 module.exports = {
 	mode: "production",
 	entry: {
@@ -14,6 +15,7 @@ module.exports = {
 		builtAt: false,
 		chunks: true,
 		chunkModules: true,
+		dependentModules: true,
 		modules: false
 	}
 };

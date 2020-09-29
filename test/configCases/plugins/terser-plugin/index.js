@@ -24,7 +24,7 @@ it("should extract comments to separate file", function() {
 	const path = require("path");
 
 	const source = fs.readFileSync(
-		path.join(__dirname, "extract.js.LICENSE"),
+		path.join(__dirname, "extract.js.LICENSE.txt"),
 		"utf-8"
 	);
 
@@ -45,7 +45,7 @@ it("should remove extracted comments and insert a banner", function() {
 	expect(source).not.toMatch("comment should be extracted extract-test.3");
 	expect(source).not.toMatch("comment should be stripped extract-test.4");
 	expect(source).toMatch(
-		"/*! For license information please see extract.js.LICENSE */"
+		"/*! For license information please see extract.js.LICENSE.txt */"
 	);
 });
 

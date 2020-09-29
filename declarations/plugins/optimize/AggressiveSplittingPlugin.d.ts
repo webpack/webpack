@@ -1,4 +1,4 @@
-/**
+/*
  * This file was automatically generated.
  * DO NOT MODIFY BY HAND.
  * Run `yarn special-lint-fix` to update
@@ -6,19 +6,19 @@
 
 export interface AggressiveSplittingPluginOptions {
 	/**
-	 * Default: 0
+	 * Extra cost for each chunk (Default: 9.8kiB).
 	 */
 	chunkOverhead?: number;
 	/**
-	 * Default: 1
+	 * Extra cost multiplicator for entry chunks (Default: 10).
 	 */
 	entryChunkMultiplicator?: number;
 	/**
-	 * Byte, maxsize of per file. Default: 51200
+	 * Byte, max size of per file (Default: 50kiB).
 	 */
 	maxSize?: number;
 	/**
-	 * Byte, split point. Default: 30720
+	 * Byte, split point. (Default: 30kiB).
 	 */
 	minSize?: number;
 }

@@ -1,4 +1,4 @@
-import { EXPORT, EXPORT2, EXPORT3, EXPORT4 } from "./inner";
+import { EXPORT, EXPORT2, EXPORT3, EXPORT4, EXPORT5, EXPORT6 } from "./inner";
 
 export function f1() {
 	// no using EXPORT
@@ -22,6 +22,14 @@ const f5 = () => {
 
 let f6 = () => {
 	return EXPORT;
+};
+
+const f7 = () => {
+	return EXPORT5();
+};
+
+const f8 = () => {
+	return EXPORT6();
 };
 
 export function g2() {
@@ -52,10 +60,22 @@ export class g7 {
 	}
 }
 
-export const pure1 = /*#__PURE__*/ EXPORT;
+export const pure1 = EXPORT;
 export const pure2 = /*#__PURE__*/ f6();
 const pure3 = /*#__PURE__*/ g5();
-export const pureUsed = /*#__PURE__*/ EXPORT3;
+const pure4 = /*#__PURE__*/ f7(f8());
+const pure5 =
+	("fefef", 1123, /*#__PURE__*/ f2("fwefe"), /*#__PURE__*/ f2("efwefa"));
+const pure6 = /*#__PURE__*/ f2(/*#__PURE__*/ f2(), /*#__PURE__*/ f2());
+const pure7 = /*#__PURE__*/ f2(
+	class {
+		f() {
+			return EXPORT;
+		}
+	}
+);
+const pure8 = /*#__PURE__*/ f2(() => EXPORT);
+export const pureUsed = EXPORT3;
 
 function x1() {
 	return EXPORT2;

@@ -2,7 +2,6 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
-const mkdirp = require("mkdirp");
 
 const webpack = require("..");
 
@@ -34,7 +33,9 @@ describe("HotModuleReplacementPlugin", () => {
 			"records.json"
 		);
 		try {
-			mkdirp.sync(path.join(__dirname, "js", "HotModuleReplacementPlugin"));
+			fs.mkdirSync(path.join(__dirname, "js", "HotModuleReplacementPlugin"), {
+				recursive: true
+			});
 		} catch (e) {
 			// empty
 		}
@@ -111,7 +112,7 @@ describe("HotModuleReplacementPlugin", () => {
 		);
 		const recordsFile = path.join(outputPath, "records.json");
 		try {
-			mkdirp.sync(outputPath);
+			fs.mkdirSync(outputPath, { recursive: true });
 		} catch (e) {
 			// empty
 		}
@@ -124,7 +125,7 @@ describe("HotModuleReplacementPlugin", () => {
 			mode: "development",
 			cache: false,
 			entry: {
-				"0": entryFile
+				0: entryFile
 			},
 			recordsPath: recordsFile,
 			output: {
@@ -189,8 +190,11 @@ describe("HotModuleReplacementPlugin", () => {
 			"records.json"
 		);
 		try {
-			mkdirp.sync(
-				path.join(__dirname, "js", "HotModuleReplacementPlugin", "[name]")
+			fs.mkdirSync(
+				path.join(__dirname, "js", "HotModuleReplacementPlugin", "[name]"),
+				{
+					recursive: true
+				}
 			);
 		} catch (e) {
 			// empty

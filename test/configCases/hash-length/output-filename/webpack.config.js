@@ -1,4 +1,5 @@
 var webpack = require("../../../../");
+/** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
 		name: "hash with length in publicPath",
@@ -222,7 +223,7 @@ module.exports = [
 	}
 ];
 
-module.exports.forEach(function(options) {
+module.exports.forEach(function (options) {
 	options.plugins = options.plugins || [];
 	options.plugins.push(
 		new webpack.DefinePlugin({

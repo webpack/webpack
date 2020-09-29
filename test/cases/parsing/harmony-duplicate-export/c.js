@@ -1,1 +1,1 @@
-exports.x = "c";
+Object(exports).x = "c";

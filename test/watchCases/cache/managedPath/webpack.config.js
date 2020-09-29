@@ -1,9 +1,12 @@
 const path = require("path");
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
 	cache: {
-		type: "memory",
+		type: "memory"
+	},
+	snapshot: {
 		managedPaths: [
 			path.resolve(
 				__dirname,

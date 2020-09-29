@@ -3,11 +3,11 @@
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
-const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
 const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
+const deprecationTracking = require("./helpers/deprecationTracking");
 
 const webpack = require("..");
 
@@ -26,7 +26,7 @@ const DEFAULT_OPTIMIZATIONS = {
 	providedExports: true,
 	usedExports: true,
 	mangleExports: true,
-	noEmitOnErrors: false,
+	emitOnErrors: true,
 	concatenateModules: false,
 	moduleIds: "size",
 	chunkIds: "size",
@@ -34,7 +34,7 @@ const DEFAULT_OPTIMIZATIONS = {
 };
 
 const NO_EMIT_ON_ERRORS_OPTIMIZATIONS = {
-	noEmitOnErrors: false,
+	emitOnErrors: true,
 	minimizer: [terserForTesting]
 };
 
@@ -52,7 +52,7 @@ categories = categories.map(cat => {
 const describeCases = config => {
 	describe(config.name, () => {
 		categories.forEach(category => {
-			describe(category.name, function() {
+			describe(category.name, function () {
 				jest.setTimeout(20000);
 
 				category.tests
@@ -90,7 +90,7 @@ const describeCases = config => {
 							);
 							const options = {
 								context: casesPath,
-								entry: "./" + category.name + "/" + testName + "/index",
+								entry: "./" + category.name + "/" + testName + "/",
 								target: "async-node",
 								devtool: config.devtool,
 								mode: config.mode || "none",
@@ -127,7 +127,7 @@ const describeCases = config => {
 										"main"
 									],
 									aliasFields: ["browser"],
-									extensions: [".mjs", ".webpack.js", ".web.js", ".js", ".json"]
+									extensions: [".webpack.js", ".web.js", ".js", ".json"]
 								},
 								resolveLoader: {
 									modules: [
@@ -161,7 +161,7 @@ const describeCases = config => {
 										}
 									]
 								},
-								plugins: (config.plugins || []).concat(function() {
+								plugins: (config.plugins || []).concat(function () {
 									this.hooks.compilation.tap("TestCasesTest", compilation => {
 										[
 											"optimize",
@@ -177,10 +177,8 @@ const describeCases = config => {
 									});
 								}),
 								experiments: {
-									mjs: true,
 									asyncWebAssembly: true,
-									topLevelAwait: true,
-									importAwait: true
+									topLevelAwait: true
 								}
 							};
 							beforeAll(done => {
@@ -193,7 +191,9 @@ const describeCases = config => {
 										options.output.path,
 										"cache1"
 									);
+									const deprecationTracker = deprecationTracking.start();
 									webpack(options, err => {
+										deprecationTracker();
 										options.output.path = oldPath;
 										if (err) return done(err);
 										done();
@@ -205,7 +205,9 @@ const describeCases = config => {
 										options.output.path,
 										"cache2"
 									);
+									const deprecationTracker = deprecationTracking.start();
 									webpack(options, err => {
+										deprecationTracker();
 										options.output.path = oldPath;
 										if (err) return done(err);
 										done();
@@ -217,15 +219,18 @@ const describeCases = config => {
 								done => {
 									const compiler = webpack(options);
 									const run = () => {
+										const deprecationTracker = deprecationTracking.start();
 										compiler.run((err, stats) => {
+											const deprecations = deprecationTracker();
 											if (err) return done(err);
 											compiler.close(err => {
 												if (err) return done(err);
 												const statOptions = {
 													preset: "verbose",
-													colors: false
+													colors: false,
+													modules: true
 												};
-												mkdirp.sync(outputDirectory);
+												fs.mkdirSync(outputDirectory, { recursive: true });
 												fs.writeFileSync(
 													path.join(outputDirectory, "stats.txt"),
 													stats.toString(statOptions),
@@ -242,8 +247,9 @@ const describeCases = config => {
 														"Error",
 														done
 													)
-												)
+												) {
 													return;
+												}
 												if (
 													checkArrayExpectation(
 														testDirectory,
@@ -252,8 +258,10 @@ const describeCases = config => {
 														"Warning",
 														done
 													)
-												)
+												) {
 													return;
+												}
+												expect(deprecations).toEqual(config.deprecations || []);
 
 												Promise.resolve().then(done);
 											});
@@ -261,7 +269,9 @@ const describeCases = config => {
 									};
 									if (config.cache) {
 										// pre-compile to fill memory cache
+										const deprecationTracker = deprecationTracking.start();
 										compiler.run(err => {
+											deprecationTracker();
 											if (err) return done(err);
 											run();
 										});
@@ -322,4 +332,4 @@ const describeCases = config => {
 	});
 };
 
-module.exports.describeCases = describeCases;
+exports.describeCases = describeCases;

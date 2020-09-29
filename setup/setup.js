@@ -17,7 +17,7 @@ function setup() {
 				});
 			}
 		})
-		.then(message => {
+		.then(() => {
 			process.exitCode = 0;
 		})
 		.catch(e => {
@@ -49,7 +49,10 @@ function checkSymlinkExistsAsync() {
 function ensureYarnInstalledAsync() {
 	const semverPattern = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/;
 	return execGetOutput("yarn", ["-v"], "Check yarn version")
-		.then(stdout => semverPattern.test(stdout), () => false)
+		.then(
+			stdout => semverPattern.test(stdout),
+			() => false
+		)
 		.then(hasYarn => hasYarn || installYarnAsync());
 }
 
@@ -70,7 +73,7 @@ function exec(command, args, description) {
 		});
 		cp.on("exit", exitCode => {
 			if (exitCode) {
-				reject(`${description} failed with exitcode ${exitCode}`);
+				reject(`${description} failed with exit code ${exitCode}`);
 			} else {
 				resolve();
 			}
@@ -91,13 +94,9 @@ function execGetOutput(command, args, description) {
 		});
 		cp.on("exit", exitCode => {
 			if (exitCode) {
-				reject(`${description} failed with exitcode ${exitCode}`);
+				reject(`${description} failed with exit code ${exitCode}`);
 			} else {
-				resolve(
-					Buffer.concat(buffers)
-						.toString("utf-8")
-						.trim()
-				);
+				resolve(Buffer.concat(buffers).toString("utf-8").trim());
 			}
 		});
 		const buffers = [];

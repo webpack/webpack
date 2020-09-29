@@ -1,3 +1,4 @@
+/** @type {import("../../../").Configuration} */
 module.exports = {
 	mode: "development",
 	entry: "./index.js",
@@ -7,6 +8,7 @@ module.exports = {
 	stats: {
 		all: false,
 		chunks: true,
-		chunkRootModules: true
+		chunkModules: true,
+		dependentModules: false
 	}
 };

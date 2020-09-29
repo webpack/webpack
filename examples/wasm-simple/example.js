@@ -1,5 +1,11 @@
-import await { add } from "./add.wasm";
-import await { add as mathAdd, factorial, factorialJavascript, fibonacci, fibonacciJavascript } from "./math";
+import { add } from "./add.wasm";
+import {
+	add as mathAdd,
+	factorial,
+	factorialJavascript,
+	fibonacci,
+	fibonacciJavascript
+} from "./math";
 
 console.log(add(22, 2200));
 console.log(mathAdd(10, 101));
@@ -13,13 +19,10 @@ timed("wasm fibonacci", () => fibonacci(22));
 timed("js fibonacci", () => fibonacciJavascript(22));
 
 function timed(name, fn) {
-	if(!console.time || !console.timeEnd)
-		return fn();
+	if (!console.time || !console.timeEnd) return fn();
 	// warmup
-	for(var i = 0; i < 10; i++)
-		fn();
-	console.time(name)
-	for(var i = 0; i < 5000; i++)
-		fn();
-	console.timeEnd(name)
+	for (var i = 0; i < 10; i++) fn();
+	console.time(name);
+	for (var i = 0; i < 5000; i++) fn();
+	console.timeEnd(name);
 }

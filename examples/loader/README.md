@@ -4,7 +4,7 @@
 // use our loader
 console.dir(require("./loader!./file"));
 
-// use buildin css loader
+// use built-in css loader
 console.dir(require("./test.css")); // default by extension
 console.dir(require("!css-loader!./test.css")); // manual
 ```
@@ -41,7 +41,10 @@ module.exports = function(content) {
 /*!*****************************!*\
   !*** ./loader.js!./file.js ***!
   \*****************************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! default exports */
+/*! export answer [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export foo [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -50,25 +53,34 @@ exports.foo = "bar";
 
 /***/ }),
 /* 2 */
-/*!****************************************************************!*\
-  !*** (webpack)/node_modules/css-loader/dist/cjs.js!./test.css ***!
-  \****************************************************************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__, module, __webpack_exports__ */
+/*!************************************************************!*\
+  !*** ../../node_modules/css-loader/dist/cjs.js!./test.css ***!
+  \************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements: __webpack_exports__, module, __webpack_require__, module.id */
+/*! CommonJS bailout: exports is used directly at 3:0-7 */
+/*! CommonJS bailout: exports.push(...) prevents optimization as exports is passed as call context as 5:0-12 */
+/*! CommonJS bailout: exports is used directly at 7:17-24 */
+/*! CommonJS bailout: module.exports is used directly at 7:0-14 */
 /***/ ((module, exports, __webpack_require__) => {
 
-exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ 3)(false);
+// Imports
+var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ 3);
+exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".some-class {\n\tcolor: hotpink;\n}\n", ""]);
+exports.push([module.id, ".some-class {\n\tcolor: hotpink;\n}\n", ""]);
+// Exports
+module.exports = exports;
 
 
 /***/ }),
 /* 3 */
-/*!*************************************************************!*\
-  !*** (webpack)/node_modules/css-loader/dist/runtime/api.js ***!
-  \*************************************************************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*!*********************************************************!*\
+  !*** ../../node_modules/css-loader/dist/runtime/api.js ***!
+  \*********************************************************/
+/*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 9:0-14 */
 /***/ ((module) => {
 
 "use strict";
@@ -88,7 +100,7 @@ module.exports = function (useSourceMap) {
       var content = cssWithMappingToString(item, useSourceMap);
 
       if (item[2]) {
-        return "@media ".concat(item[2], "{").concat(content, "}");
+        return "@media ".concat(item[2], " {").concat(content, "}");
       }
 
       return content;
@@ -97,7 +109,7 @@ module.exports = function (useSourceMap) {
   // eslint-disable-next-line func-names
 
 
-  list.i = function (modules, mediaQuery) {
+  list.i = function (modules, mediaQuery, dedupe) {
     if (typeof modules === 'string') {
       // eslint-disable-next-line no-param-reassign
       modules = [[null, modules, '']];
@@ -105,30 +117,34 @@ module.exports = function (useSourceMap) {
 
     var alreadyImportedModules = {};
 
-    for (var i = 0; i < this.length; i++) {
-      // eslint-disable-next-line prefer-destructuring
-      var id = this[i][0];
+    if (dedupe) {
+      for (var i = 0; i < this.length; i++) {
+        // eslint-disable-next-line prefer-destructuring
+        var id = this[i][0];
 
-      if (id != null) {
-        alreadyImportedModules[id] = true;
+        if (id != null) {
+          alreadyImportedModules[id] = true;
+        }
       }
     }
 
     for (var _i = 0; _i < modules.length; _i++) {
-      var item = modules[_i]; // skip already imported module
-      // this implementation is not 100% perfect for weird media query combinations
-      // when a module is imported multiple times with different media queries.
-      // I hope this will never occur (Hey this way we have smaller bundles)
+      var item = [].concat(modules[_i]);
 
-      if (item[0] == null || !alreadyImportedModules[item[0]]) {
-        if (mediaQuery && !item[2]) {
-          item[2] = mediaQuery;
-        } else if (mediaQuery) {
-          item[2] = "(".concat(item[2], ") and (").concat(mediaQuery, ")");
-        }
-
-        list.push(item);
+      if (dedupe && alreadyImportedModules[item[0]]) {
+        // eslint-disable-next-line no-continue
+        continue;
       }
+
+      if (mediaQuery) {
+        if (!item[2]) {
+          item[2] = mediaQuery;
+        } else {
+          item[2] = "".concat(mediaQuery, " and ").concat(item[2]);
+        }
+      }
+
+      list.push(item);
     }
   };
 
@@ -147,7 +163,7 @@ function cssWithMappingToString(item, useSourceMap) {
   if (useSourceMap && typeof btoa === 'function') {
     var sourceMapping = toComment(cssMapping);
     var sourceURLs = cssMapping.sources.map(function (source) {
-      return "/*# sourceURL=".concat(cssMapping.sourceRoot).concat(source, " */");
+      return "/*# sourceURL=".concat(cssMapping.sourceRoot || '').concat(source, " */");
     });
     return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
   }
@@ -165,6 +181,11 @@ function toComment(sourceMap) {
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -177,36 +198,39 @@ function toComment(sourceMap) {
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			id: moduleId,
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /************************************************************************/
-!function() {
+```
+
+</details>
+
+``` js
+(() => {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__ */
 // use our loader
 console.dir(__webpack_require__(/*! ./loader!./file */ 1));
 
-// use buildin css loader
+// use built-in css loader
 console.dir(__webpack_require__(/*! ./test.css */ 2)); // default by extension
-console.dir(__webpack_require__(/*! css-loader!./test.css */ 2)); // manual
+console.dir(__webpack_require__(/*! !css-loader!./test.css */ 2)); // manual
 
-}();
+})();
+
 /******/ })()
 ;
 ```
@@ -226,46 +250,25 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-    Asset      Size
-output.js  5.46 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 3.03 KiB [entry] [rendered]
-    > ./example.js main
- (webpack)/node_modules/css-loader/dist/cjs.js!./test.css 178 bytes [built]
-     [used exports unknown]
-     cjs require ./test.css ./example.js 5:12-33
-     cjs require !css-loader!./test.css ./example.js 6:12-45
- (webpack)/node_modules/css-loader/dist/runtime/api.js 2.61 KiB [built]
-     [used exports unknown]
-     cjs require ../../node_modules/css-loader/dist/runtime/api.js (webpack)/node_modules/css-loader/dist/cjs.js!./test.css 1:27-87
- ./example.js 204 bytes [built]
-     [used exports unknown]
-     entry ./example.js main
- ./loader.js!./file.js 41 bytes [built]
-     [used exports unknown]
-     cjs require ./loader!./file ./example.js 2:12-38
+asset output.js 5.78 KiB [emitted] (name: main)
+chunk output.js (main) 2.96 KiB [entry] [rendered]
+  > ./example.js main
+  dependent modules 2.76 KiB [dependent] 3 modules
+  ./example.js 205 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-    Asset      Size
-output.js  1.18 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 3.03 KiB [entry] [rendered]
-    > ./example.js main
- (webpack)/node_modules/css-loader/dist/cjs.js!./test.css 178 bytes [built]
-     cjs require ./test.css ./example.js 5:12-33
-     cjs require !css-loader!./test.css ./example.js 6:12-45
- (webpack)/node_modules/css-loader/dist/runtime/api.js 2.61 KiB [built]
-     cjs require ../../node_modules/css-loader/dist/runtime/api.js (webpack)/node_modules/css-loader/dist/cjs.js!./test.css 1:27-87
- ./example.js 204 bytes [built]
-     [no exports used]
-     entry ./example.js main
- ./loader.js!./file.js 41 bytes [built]
-     cjs require ./loader!./file ./example.js 2:12-38
+asset output.js 1.17 KiB [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 2.96 KiB [entry] [rendered]
+  > ./example.js main
+  dependent modules 2.76 KiB [dependent] 3 modules
+  ./example.js 205 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+webpack 5.0.0-beta.32 compiled successfully
 ```

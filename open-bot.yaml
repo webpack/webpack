@@ -448,27 +448,43 @@ rules:
     actions:
       label: "PR: unreviewed"
 
-  # add non-master and next label to pull request to other branch
+  # add non-master, webpack-4 and next label to pull request to other branch
   - filters:
       pull_request:
         base_ref: "^master$"
     actions:
       label:
-        remove: "PR: non-master"
+        remove:
+          - "PR: next"
+          - "PR: webpack-4"
+          - "PR: non-master"
   - filters:
       pull_request:
         base_ref: "^next$"
     actions:
       label:
         add: "PR: next"
-        remove: "PR: non-master"
+        remove:
+          - "PR: webpack-4"
+          - "PR: non-master"
   - filters:
       pull_request:
-        base_ref: "^(?!master$)(?!next$)"
+        base_ref: "^webpack-4$"
+    actions:
+      label:
+        add: "PR: webpack-4"
+        remove:
+          - "PR: next"
+          - "PR: non-master"
+  - filters:
+      pull_request:
+        base_ref: "^(?!master$)(?!webpack-4$)(?!next$)"
     actions:
       label:
         add: "PR: non-master"
-        remove: "PR: next"
+        remove:
+          - "PR: next"
+          - "PR: webpack-4"
 
   # add non-master label to pull request to other branch
   - filters:
@@ -660,9 +676,9 @@ rules:
         title: "Backport to webpack 4: {{{pull_request.title}}}"
         body: |-
           {{{pull_request.html_url}}} needs to be backported to webpack 4.
-          
+
           Send a PR.
-          
+
           cc @{{pull_request.user.login}}
       comment:
         identifier: admin-action-webpack-4-backport-executed

@@ -1,17 +1,17 @@
-This example demonstrates how to build a library with webpack that has dependencies to other libraries which should not be included in the compiled version.
+This example demonstrates how to build a library with webpack that has dependencies on other libraries which should not be included in the compiled version.
 
-We use the `libraryTarget: "umd"` option to build a UMD module that is consumable in CommonJs, AMD and with script tags. We don't specify the `library` option so the library is exported to the root namespace.
+We use the `libraryTarget: "umd"` option to build a UMD module that is consumable in CommonJS, AMD and with script tags. We don't specify the `library` option so the library is exported to the root namespace.
 
 We use the `externals` option to define dependencies that should be resolved in the target environment.
 
-In the simple case we just need to specify a string (`"add"`). Then it's resolved as `"add"` module in CommonJs and AMD, and as global `add` when used with script tag.
+In the simple case we just need to specify a string (`"add"`). Then it's resolved as `"add"` module in CommonJS and AMD, and as global `add` when used with the script tag.
 
 In the complex case we specify different values for each environment:
 
 | environment        | config value             | resolved as                  |
 | ------------------ | ------------------------ | ---------------------------- |
-| CommonJs (strict)  | `["./math", "subtract"]` | `require("./math").subtract` |
-| CommonJs (node.js) | `"./subtract"`           | `require("./subtract")`      |
+| CommonJS (strict)  | `["./math", "subtract"]` | `require("./math").subtract` |
+| CommonJS (node.js) | `"./subtract"`           | `require("./subtract")`      |
 | AMD                | `"subtract"`             | `define(["subtract"], ...)`  |
 | script tag         | `"subtract"`             | `this.subtract`              |
 
@@ -58,15 +58,17 @@ module.exports = {
 		var a = typeof exports === 'object' ? factory(require("add"), require("./math")["subtract"]) : factory(root["add"], root["subtract"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(window, function(__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) {
+})(self, function(__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
-/*! runtime requirements: __webpack_require__, __webpack_exports__ */
+/*! default exports */
+/*! export exampleValue [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used in main (runtime-defined)] */
+/*! runtime requirements: __webpack_exports__, __webpack_require__ */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 var add = __webpack_require__(/*! add */ 1);
@@ -79,6 +81,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 /*!**********************!*\
   !*** external "add" ***!
   \**********************/
+/*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
@@ -91,6 +94,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 /*!***************************************************************************************************************!*\
   !*** external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} ***!
   \***************************************************************************************************************/
+/*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
@@ -100,6 +104,11 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 /***/ })
 /******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
@@ -112,22 +121,24 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /************************************************************************/
+```
+
+</details>
+
+``` js
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
@@ -142,39 +153,28 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
-    Asset      Size
-output.js  3.18 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
+asset output.js 3.29 KiB [emitted] (name: main)
 chunk output.js (main) 194 bytes [entry] [rendered]
-    > ./example.js main
- ./example.js 110 bytes [built]
-     entry ./example.js main
-     used a library export
- external "add" 42 bytes [built]
-     [used exports unknown]
-     cjs require add ./example.js 1:10-24
- external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes [built]
-     [used exports unknown]
-     cjs require subtract ./example.js 2:15-34
+  > ./example.js main
+  dependent modules 84 bytes [dependent] 2 modules
+  ./example.js 110 bytes [built] [code generated]
+    [exports: exampleValue]
+    [used exports unknown]
+    entry ./example.js main
+    used as library export
+webpack 5.0.0-beta.32 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.1
-    Asset       Size
-output.js  668 bytes  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 194 bytes [entry] [rendered]
-    > ./example.js main
- ./example.js 110 bytes [built]
-     entry ./example.js main
-     used a library export
- external "add" 42 bytes [built]
-     cjs require add ./example.js 1:10-24
- external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes [built]
-     cjs require subtract ./example.js 2:15-34
+asset output.js 650 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 84 bytes [dependent] 2 modules
+  ./example.js 110 bytes [built] [code generated]
+    [exports: exampleValue]
+    entry ./example.js main
+    used as library export
+webpack 5.0.0-beta.32 compiled successfully
 ```

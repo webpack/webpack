@@ -1,8 +1,8 @@
 module.exports = [
 	[
-		/Can't import the named export 'a' \(reexported as 'a'\) from JSON module \(only default export is available\)/
+		/Should not import the named export 'a' \(reexported as 'a'\) from default-exporting module \(only default export is available soon\)/
 	],
 	[
-		/Can't import the named export 'b' \(reexported as 'b'\) from JSON module \(only default export is available\)/
+		/Should not import the named export 'b' \(reexported as 'b'\) from default-exporting module \(only default export is available soon\)/
 	]
 ];

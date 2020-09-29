@@ -1,3 +1,4 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	module: {
 		rules: [
@@ -22,7 +23,7 @@ module.exports = {
 							{
 								loader: "./loader",
 								options: {
-									get: function() {
+									get: function () {
 										return "second-3";
 									}
 								}

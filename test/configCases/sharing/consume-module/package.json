@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "package": "*",
+    "@scoped/package": "*",
+    "prefix": "*"
+  }
+}
