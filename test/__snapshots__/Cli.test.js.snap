@@ -1693,6 +1693,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-split-chunks-default-size-types": Object {
+    "configs": Array [
+      Object {
+        "description": "Size type, like 'javascript', 'webassembly'.",
+        "multiple": true,
+        "path": "optimization.splitChunks.defaultSizeTypes[]",
+        "type": "string",
+      },
+    ],
+    "description": "Size type, like 'javascript', 'webassembly'.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "optimization-split-chunks-default-size-types-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Sets the size types which are used when a number is used for sizes.",
+        "multiple": false,
+        "path": "optimization.splitChunks.defaultSizeTypes",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Sets the size types which are used when a number is used for sizes.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-split-chunks-enforce-size-threshold": Object {
     "configs": Array [
       Object {

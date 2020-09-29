@@ -253,6 +253,10 @@ describe("Defaults", () => {
 		        },
 		      },
 		      "chunks": "async",
+		      "defaultSizeTypes": Array [
+		        "javascript",
+		        "unknown",
+		      ],
 		      "enforceSizeThreshold": 30000,
 		      "hidePathInfo": false,
 		      "maxAsyncRequests": Infinity,
@@ -1478,6 +1482,10 @@ describe("Defaults", () => {
 			-         },
 			-       },
 			-       "chunks": "async",
+			-       "defaultSizeTypes": Array [
+			-         "javascript",
+			-         "unknown",
+			-       ],
 			-       "enforceSizeThreshold": 30000,
 			-       "hidePathInfo": false,
 			-       "maxAsyncRequests": Infinity,

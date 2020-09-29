@@ -1670,6 +1670,15 @@
             }
           ]
         },
+        "defaultSizeTypes": {
+          "description": "Sets the size types which are used when a number is used for sizes.",
+          "type": "array",
+          "items": {
+            "description": "Size type, like 'javascript', 'webassembly'.",
+            "type": "string"
+          },
+          "minLength": 1
+        },
         "enforceSizeThreshold": {
           "description": "Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.",
           "oneOf": [
