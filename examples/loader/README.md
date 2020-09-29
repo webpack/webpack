@@ -59,7 +59,7 @@ exports.foo = "bar";
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_exports__, module, __webpack_require__, module.id */
 /*! CommonJS bailout: exports is used directly at 3:0-7 */
-/*! CommonJS bailout: exports.push(...) prevents optimization as exports is passed as call context as 5:0-12 */
+/*! CommonJS bailout: exports.push(...) prevents optimization as exports is passed as call context at 5:0-12 */
 /*! CommonJS bailout: exports is used directly at 7:17-24 */
 /*! CommonJS bailout: module.exports is used directly at 7:0-14 */
 /***/ ((module, exports, __webpack_require__) => {
@@ -257,7 +257,7 @@ chunk output.js (main) 2.96 KiB [entry] [rendered]
   ./example.js 205 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```
 
 ## Production mode
@@ -270,5 +270,5 @@ chunk (runtime: main) output.js (main) 2.96 KiB [entry] [rendered]
   ./example.js 205 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```

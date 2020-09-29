@@ -401,7 +401,7 @@ chunk 885.output.js 22 bytes [rendered]
     [used exports unknown]
     cjs require d ./example.js 10:9-21
     cjs require d ./example.js 19:9-21
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```
 
 ## Production mode
@@ -444,5 +444,5 @@ chunk (runtime: main) 885.output.js 22 bytes [rendered]
     [used exports unknown]
     cjs require d ./example.js 10:9-21
     cjs require d ./example.js 19:9-21
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```

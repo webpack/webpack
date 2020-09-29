@@ -169,7 +169,7 @@ chunk vendor.js (main) 57 bytes (javascript) 668 bytes (runtime) [entry] [render
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```
 
 ## Production mode
@@ -183,5 +183,5 @@ chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 668 bytes (runtime)
   dll main 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```
