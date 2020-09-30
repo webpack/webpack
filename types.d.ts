@@ -995,6 +995,13 @@ declare abstract class ChunkTemplate {
 	}>;
 	readonly outputOptions: Output;
 }
+declare interface CleanPluginArgument {
+	/**
+	 * Log the assets that should be removed instead of delete them.
+	 */
+	dry?: boolean;
+	enabled?: boolean;
+}
 declare interface CodeGenerationContext {
 	/**
 	 * the dependency templates
@@ -5992,6 +5999,11 @@ declare interface Output {
 	chunkLoadingGlobal?: string;
 
 	/**
+	 * Remove non-webpack assets from the output directory.
+	 */
+	clean?: boolean | CleanPluginArgument;
+
+	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: boolean;
@@ -6199,6 +6211,11 @@ declare interface OutputFileSystem {
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
 	dirname?: (arg0: string) => string;
+	rmdir: (arg0: string, arg1: (arg0: NodeJS.ErrnoException) => void) => void;
+	rmdirSync: (arg0: string, arg1: { recursive: boolean }) => void;
+	unlink: (arg0: string, arg1: (arg0: NodeJS.ErrnoException) => void) => void;
+	unlinkSync: (arg0: string) => void;
+	existSync: (arg0: string) => boolean;
 }
 
 /**
@@ -6239,6 +6256,11 @@ declare interface OutputNormalized {
 	 * The global variable used by webpack for loading of chunks.
 	 */
 	chunkLoadingGlobal?: string;
+
+	/**
+	 * Remove non-webpack assets from the output directory.
+	 */
+	clean?: CleanPluginArgument;
 
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.

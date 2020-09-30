@@ -1,0 +1,14 @@
+{
+  "title": "CleanPluginArgument",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "dry": {
+      "description": "Log the assets that should be removed instead of delete them.",
+      "type": "boolean"
+    },
+    "enabled": {
+      "type": "boolean"
+    }
+  }
+}

@@ -1870,6 +1870,17 @@
         "chunkLoadingGlobal": {
           "$ref": "#/definitions/ChunkLoadingGlobal"
         },
+        "clean": {
+          "description": "Remove non-webpack assets from the output directory.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "tsType": "(import('../declarations/plugins/CleanPlugin').CleanPluginArgument)"
+            }
+          ]
+        },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"
         },
@@ -2036,6 +2047,10 @@
         },
         "chunkLoadingGlobal": {
           "$ref": "#/definitions/ChunkLoadingGlobal"
+        },
+        "clean": {
+          "description": "Remove non-webpack assets from the output directory.",
+          "tsType": "(import('../declarations/plugins/CleanPlugin').CleanPluginArgument)"
         },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"

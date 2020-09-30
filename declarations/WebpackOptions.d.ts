@@ -1725,6 +1725,12 @@ export interface Output {
 	 */
 	chunkLoadingGlobal?: ChunkLoadingGlobal;
 	/**
+	 * Remove non-webpack assets from the output directory.
+	 */
+	clean?:
+		| boolean
+		| import("../declarations/plugins/CleanPlugin").CleanPluginArgument;
+	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: CompareBeforeEmit;
@@ -2395,6 +2401,10 @@ export interface OutputNormalized {
 	 * The global variable used by webpack for loading of chunks.
 	 */
 	chunkLoadingGlobal?: ChunkLoadingGlobal;
+	/**
+	 * Remove non-webpack assets from the output directory.
+	 */
+	clean?: import("../declarations/plugins/CleanPlugin").CleanPluginArgument;
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
