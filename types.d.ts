@@ -1000,6 +1000,10 @@ declare interface CleanPluginArgument {
 	 * Log the assets that should be removed instead of delete them.
 	 */
 	dry?: boolean;
+
+	/**
+	 * Is clean enabled.
+	 */
 	enabled?: boolean;
 }
 declare interface CodeGenerationContext {
@@ -6204,6 +6208,7 @@ declare interface OutputFileSystem {
 		arg0: string,
 		arg1: (arg0: NodeJS.ErrnoException, arg1: FsStats) => void
 	) => void;
+	statSync: (arg0: string) => FsStats;
 	readFile: (
 		arg0: string,
 		arg1: (arg0: NodeJS.ErrnoException, arg1: Buffer) => void
@@ -6211,11 +6216,10 @@ declare interface OutputFileSystem {
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
 	dirname?: (arg0: string) => string;
-	rmdir: (arg0: string, arg1: (arg0: NodeJS.ErrnoException) => void) => void;
 	rmdirSync: (arg0: string, arg1: { recursive: boolean }) => void;
-	unlink: (arg0: string, arg1: (arg0: NodeJS.ErrnoException) => void) => void;
 	unlinkSync: (arg0: string) => void;
-	existSync: (arg0: string) => boolean;
+	existsSync: (arg0: string) => boolean;
+	readdirSync: (arg0: string) => string[];
 }
 
 /**
