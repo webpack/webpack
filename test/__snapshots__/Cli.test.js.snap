@@ -2081,6 +2081,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-clean": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove non-webpack assets from the output directory.",
+        "multiple": false,
+        "path": "output.clean",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove non-webpack assets from the output directory.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-compare-before-emit": Object {
     "configs": Array [
       Object {
