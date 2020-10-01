@@ -517,7 +517,6 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -1116,7 +1115,6 @@ __webpack_require__.d(exports, {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -1645,7 +1643,6 @@ __webpack_require__.d(exports, {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -2019,13 +2016,13 @@ __webpack_require__.d(exports, {
 ```
 app:
   asset vendors-node_modules_date-fns_esm_locale_de_index_js-node_modules_react-dom_index_js.js 161 KiB [emitted] (id hint: vendors)
-  asset app.js 28.9 KiB [emitted] (name: app)
+  asset app.js 28.8 KiB [emitted] (name: app)
   asset node_modules_react_index_js-_11190.js 17.1 KiB [emitted]
   asset node_modules_react_index_js-_11191.js 14.7 KiB [emitted]
   asset src_bootstrap_js.js 4.98 KiB [emitted]
-  chunk app.js (app) 669 bytes (javascript) 42 bytes (share-init) 18.4 KiB (runtime) [entry] [rendered]
+  chunk app.js (app) 669 bytes (javascript) 42 bytes (share-init) 18.3 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 18.4 KiB 13 modules
+    runtime modules 18.3 KiB 13 modules
     built modules 669 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 585 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
@@ -2052,11 +2049,11 @@ app:
   chunk 6 bytes (remote) 6 bytes (share-init)
     > mfe-c/Component2 ./src/App.js 8:49-75
     remote mfe-c/Component2 6 bytes (remote) 6 bytes (share-init) [built] [code generated]
-  app (webpack 5.0.0-rc.2) compiled successfully
+  app (webpack 5.0.0-rc.3) compiled successfully
 
 mfe-b:
   asset vendors-node_modules_date-fns_esm_index_js.js 857 KiB [emitted] (id hint: vendors)
-  asset mfeBBB.js 24.2 KiB [emitted] (name: mfeBBB)
+  asset mfeBBB.js 24.1 KiB [emitted] (name: mfeBBB)
   asset node_modules_react_index_js.js 17.1 KiB [emitted]
   asset src-b_Component_js.js 2.24 KiB [emitted]
   chunk mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.2 KiB (runtime) [entry] [rendered]
@@ -2080,7 +2077,7 @@ mfe-b:
     > consume shared module (default) date-fns@^2.15.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
     dependent modules 496 KiB [dependent] 231 modules
     ../../node_modules/date-fns/esm/index.js 13.2 KiB [built] [code generated]
-  mfe-b (webpack 5.0.0-rc.2) compiled successfully
+  mfe-b (webpack 5.0.0-rc.3) compiled successfully
 
 mfe-c:
   assets by chunk 880 KiB (id hint: vendors)
@@ -2089,9 +2086,9 @@ mfe-c:
   asset mfeCCC.js 25.1 KiB [emitted] (name: mfeCCC)
   asset src-c_LazyComponent_js.js 2.05 KiB [emitted]
   asset src-c_Component_js.js 1.97 KiB [emitted]
-  chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.7 KiB (runtime) [entry] [rendered]
+  chunk mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.6 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 16.7 KiB 12 modules
+    runtime modules 16.6 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@2.16.1 = ../../node_modules/date-fns/esm/index.js 42 bytes [built] [code generated]
@@ -2118,7 +2115,7 @@ mfe-c:
     > ./src-c/Component container entry ./Component
     > ./src-c/LazyComponent container entry ./Component2
     consume shared module (default) react@^16.13.1 (singleton) 42 bytes [built] [code generated]
-  mfe-c (webpack 5.0.0-rc.2) compiled successfully
+  mfe-c (webpack 5.0.0-rc.3) compiled successfully
 ```
 
 ## Production mode
@@ -2127,7 +2124,7 @@ mfe-c:
 app:
   asset vendors-node_modules_date-fns_esm_locale_de_index_js-node_modules_react-dom_index_js.js 127 KiB [emitted] [minimized] (id hint: vendors) 1 related asset
   asset node_modules_react_index_js-_11190.js 7.25 KiB [emitted] [minimized] 1 related asset
-  asset app.js 7.04 KiB [emitted] [minimized] (name: app)
+  asset app.js 7.03 KiB [emitted] [minimized] (name: app)
   asset node_modules_react_index_js-_11191.js 6.31 KiB [emitted] [minimized] 1 related asset
   asset src_bootstrap_js.js 1.04 KiB [emitted] [minimized]
   chunk (runtime: app) app.js (app) 669 bytes (javascript) 42 bytes (share-init) 18.3 KiB (runtime) [entry] [rendered]
@@ -2159,12 +2156,12 @@ app:
   chunk (runtime: app) 6 bytes (remote) 6 bytes (share-init)
     > mfe-c/Component2 ./src/App.js 8:49-75
     remote mfe-c/Component2 6 bytes (remote) 6 bytes (share-init) [built] [code generated]
-  app (webpack 5.0.0-rc.2) compiled successfully
+  app (webpack 5.0.0-rc.3) compiled successfully
 
 mfe-b:
   asset vendors-node_modules_date-fns_esm_index_js.js 78 KiB [emitted] [minimized] (id hint: vendors)
   asset node_modules_react_index_js.js 7.2 KiB [emitted] [minimized] 1 related asset
-  asset mfeBBB.js 5.67 KiB [emitted] [minimized] (name: mfeBBB)
+  asset mfeBBB.js 5.66 KiB [emitted] [minimized] (name: mfeBBB)
   asset src-b_Component_js.js 489 bytes [emitted] [minimized]
   chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16.1 KiB (runtime) [entry] [rendered]
     > mfeBBB
@@ -2183,14 +2180,14 @@ mfe-b:
     dependent modules 84 bytes [dependent] 2 modules
     ./src-b/Component.js 753 bytes [built] [code generated]
   chunk (runtime: mfeBBB) vendors-node_modules_date-fns_esm_index_js.js (id hint: vendors) 509 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-    > consume shared module (default) date-fns@^2.15.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
     > provide shared module (default) date-fns@2.16.1 = ../../node_modules/date-fns/esm/index.js
+    > consume shared module (default) date-fns@^2.15.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
     ../../node_modules/date-fns/esm/index.js + 231 modules 509 KiB [built] [code generated]
-  mfe-b (webpack 5.0.0-rc.2) compiled successfully
+  mfe-b (webpack 5.0.0-rc.3) compiled successfully
 
 mfe-c:
   asset vendors-node_modules_date-fns_esm_index_js.js 78 KiB [emitted] [minimized] (id hint: vendors)
-  asset mfeCCC.js 6.32 KiB [emitted] [minimized] (name: mfeCCC)
+  asset mfeCCC.js 6.3 KiB [emitted] [minimized] (name: mfeCCC)
   asset node_modules_lodash_random_js.js 2.95 KiB [emitted] [minimized]
   asset src-c_LazyComponent_js.js 533 bytes [emitted] [minimized]
   asset src-c_Component_js.js 489 bytes [emitted] [minimized]
@@ -2215,12 +2212,12 @@ mfe-c:
     dependent modules 42 bytes [dependent] 1 module
     ./src-c/LazyComponent.js 506 bytes [built] [code generated]
   chunk (runtime: mfeCCC) vendors-node_modules_date-fns_esm_index_js.js (id hint: vendors) 509 KiB [rendered] reused as split chunk (cache group: defaultVendors)
-    > consume shared module (default) date-fns@^2.15.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
     > provide shared module (default) date-fns@2.16.1 = ../../node_modules/date-fns/esm/index.js
+    > consume shared module (default) date-fns@^2.15.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
     ../../node_modules/date-fns/esm/index.js + 231 modules 509 KiB [built] [code generated]
   chunk (runtime: mfeCCC) 42 bytes split chunk (cache group: default)
     > ./src-c/Component container entry ./Component
     > ./src-c/LazyComponent container entry ./Component2
     consume shared module (default) react@^16.13.1 (singleton) 42 bytes [built] [code generated]
-  mfe-c (webpack 5.0.0-rc.2) compiled successfully
+  mfe-c (webpack 5.0.0-rc.3) compiled successfully
 ```

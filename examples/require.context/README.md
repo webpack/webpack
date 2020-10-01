@@ -181,7 +181,7 @@ chunk output.js (main) 603 bytes (javascript) 86 bytes (runtime) [entry] [render
   ./example.js 146 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
@@ -195,7 +195,7 @@ chunk (runtime: main) output.js (main) 603 bytes (javascript) 86 bytes (runtime)
   ./example.js 146 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 # Code Splitting

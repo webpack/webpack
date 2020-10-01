@@ -196,7 +196,6 @@ module.exports = webpackAsyncContext;
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -377,9 +376,9 @@ asset output.js 10.9 KiB [emitted] (name: main)
 asset 398.output.js 856 bytes [emitted]
 asset 544.output.js 856 bytes [emitted]
 asset 718.output.js 856 bytes [emitted]
-chunk output.js (main) 597 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 597 bytes (javascript) 5.39 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.39 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 437 bytes [built] [code generated]
     [used exports unknown]
@@ -408,19 +407,19 @@ chunk 718.output.js 38 bytes [rendered]
     [used exports unknown]
     context element ./foo ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo
     context element ./foo.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo.js
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.41 KiB [emitted] [minimized] (name: main)
+asset output.js 2.4 KiB [emitted] [minimized] (name: main)
 asset 398.output.js 130 bytes [emitted] [minimized]
 asset 544.output.js 130 bytes [emitted] [minimized]
 asset 718.output.js 130 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 597 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 597 bytes (javascript) 5.39 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.39 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 437 bytes [built] [code generated]
     [no exports used]
@@ -446,5 +445,5 @@ chunk (runtime: main) 718.output.js 38 bytes [rendered]
     [exports: default]
     context element ./foo ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo
     context element ./foo.js ./templates/ lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo.js
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

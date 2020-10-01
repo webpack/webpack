@@ -277,7 +277,6 @@ const AlternativeCreateUserAction = async name => {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -516,11 +515,11 @@ return __webpack_exports__;
 ## Unoptimized
 
 ```
-asset output.js 12.2 KiB [emitted] (name: main)
+asset output.js 12.1 KiB [emitted] (name: main)
 asset 497.output.js 2.52 KiB [emitted]
-chunk output.js (main) 1.19 KiB (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 1.19 KiB (javascript) 5.39 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.39 KiB 8 modules
   dependent modules 1.09 KiB [dependent] 1 module
   ./example.js 103 bytes [built] [code generated]
     [no exports]
@@ -535,17 +534,17 @@ chunk 497.output.js 617 bytes [rendered]
     [used exports unknown]
     import() ./UserApi.js ./Actions.js 2:16-38
     import() ./UserApi.js ./Actions.js 22:30-52
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.96 KiB [emitted] [minimized] (name: main)
+asset output.js 1.95 KiB [emitted] [minimized] (name: main)
 asset 497.output.js 471 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 5.39 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.39 KiB 8 modules
   ./example.js + 1 modules 1.19 KiB [built] [code generated]
     [no exports]
     [no exports used]
@@ -558,5 +557,5 @@ chunk (runtime: main) 497.output.js 617 bytes [rendered]
     [exports: createUser]
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 2:16-38
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 22:30-52
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

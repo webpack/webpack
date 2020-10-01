@@ -60,20 +60,20 @@ module.exports = {
 ## Unoptimized
 
 ```
-asset pageA.bundle.js 8.76 KiB [emitted] (name: pageA)
-asset pageB.bundle.js 8.76 KiB [emitted] (name: pageB)
-asset pageC.bundle.js 8.76 KiB [emitted] (name: pageC)
+asset pageA.bundle.js 8.73 KiB [emitted] (name: pageA)
+asset pageB.bundle.js 8.73 KiB [emitted] (name: pageB)
+asset pageC.bundle.js 8.73 KiB [emitted] (name: pageC)
 asset 456.chunk.js 6.28 KiB [emitted]
 asset 394.chunk.js 606 bytes [emitted]
-chunk pageB.bundle.js (pageB) 69 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk pageB.bundle.js (pageB) 69 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   ./pageB.js 69 bytes [built] [code generated]
     [used exports unknown]
     entry ./pageB pageB
-chunk pageC.bundle.js (pageC) 68 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk pageC.bundle.js (pageC) 68 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./pageC pageC
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   ./pageC.js 68 bytes [built] [code generated]
     [used exports unknown]
     entry ./pageC pageC
@@ -89,9 +89,9 @@ chunk 394.chunk.js 42 bytes [rendered]
     cjs self exports reference ./b.js 1:0-14
     cjs require ./b ./pageB.js 2:8-22
     cjs require ./b ./pageC.js 2:17-31
-chunk pageA.bundle.js (pageA) 69 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk pageA.bundle.js (pageA) 69 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   ./pageA.js 69 bytes [built] [code generated]
     [used exports unknown]
     entry ./pageA pageA
@@ -113,26 +113,26 @@ chunk 456.chunk.js 5.45 KiB [rendered]
     cjs self exports reference ./common.js 1:0-14
     amd require ./common ./pageA.js 1:0-3:2
     amd require ./common ./pageB.js 1:0-3:2
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset pageC.bundle.js 1.68 KiB [emitted] [minimized] (name: pageC)
-asset pageA.bundle.js 1.67 KiB [emitted] [minimized] (name: pageA)
-asset pageB.bundle.js 1.67 KiB [emitted] [minimized] (name: pageB)
+asset pageC.bundle.js 1.67 KiB [emitted] [minimized] (name: pageC)
+asset pageA.bundle.js 1.66 KiB [emitted] [minimized] (name: pageA)
+asset pageB.bundle.js 1.66 KiB [emitted] [minimized] (name: pageB)
 asset 456.chunk.js 155 bytes [emitted] [minimized]
 asset 394.chunk.js 104 bytes [emitted] [minimized]
-chunk (runtime: pageB) pageB.bundle.js (pageB) 69 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.bundle.js (pageB) 69 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   ./pageB.js 69 bytes [built] [code generated]
     [no exports used]
     entry ./pageB pageB
-chunk (runtime: pageC) pageC.bundle.js (pageC) 68 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageC) pageC.bundle.js (pageC) 68 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./pageC pageC
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   ./pageC.js 68 bytes [built] [code generated]
     [no exports used]
     entry ./pageC pageC
@@ -148,9 +148,9 @@ chunk (runtime: pageC) 394.chunk.js 42 bytes [rendered]
     cjs self exports reference ./b.js 1:0-14
     cjs require ./b ./pageB.js 2:8-22
     cjs require ./b ./pageC.js 2:17-31
-chunk (runtime: pageA) pageA.bundle.js (pageA) 69 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.bundle.js (pageA) 69 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   ./pageA.js 69 bytes [built] [code generated]
     [no exports used]
     entry ./pageA pageA
@@ -172,5 +172,5 @@ chunk (runtime: pageA, pageB) 456.chunk.js 5.45 KiB [rendered]
     cjs self exports reference ./common.js 1:0-14
     amd require ./common ./pageA.js 1:0-3:2
     amd require ./common ./pageB.js 1:0-3:2
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
