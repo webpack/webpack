@@ -188,7 +188,6 @@ module.exports = {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -452,7 +451,7 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 8.95 KiB [emitted] (name: main)
+asset output.js 8.92 KiB [emitted] (name: main)
 asset 588.output.js 736 bytes [emitted]
 asset 366.output.js 558 bytes [emitted]
 asset 145.output.js 552 bytes [emitted]
@@ -463,9 +462,9 @@ chunk 145.output.js 136 bytes [rendered]
     [used exports unknown]
     cjs require ./pageC ./pageB.js 4:15-33
     cjs self exports reference ./pageC.js 3:0-14
-chunk output.js (main) 220 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 220 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   ./example.js 220 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -489,13 +488,13 @@ chunk 588.output.js 133 bytes [rendered]
     [used exports unknown]
     cjs require ./pageB ./example.js 8:15-33
     cjs self exports reference ./pageB.js 1:0-14
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.74 KiB [emitted] [minimized] (name: main)
+asset output.js 1.72 KiB [emitted] [minimized] (name: main)
 asset 588.output.js 198 bytes [emitted] [minimized]
 asset 145.output.js 134 bytes [emitted] [minimized]
 asset 366.output.js 134 bytes [emitted] [minimized]
@@ -506,9 +505,9 @@ chunk (runtime: main) 145.output.js 136 bytes [rendered]
     [used exports unknown]
     cjs require ./pageC ./pageB.js 4:15-33
     cjs self exports reference ./pageC.js 3:0-14
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   ./example.js 220 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -532,5 +531,5 @@ chunk (runtime: main) 588.output.js 133 bytes [rendered]
     [used exports unknown]
     cjs require ./pageB ./example.js 8:15-33
     cjs self exports reference ./pageB.js 1:0-14
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

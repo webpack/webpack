@@ -230,7 +230,6 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -491,11 +490,11 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 13.6 KiB [emitted] (name: main)
+asset output.js 13.5 KiB [emitted] (name: main)
 asset 635.output.js 2.24 KiB [emitted]
-chunk output.js (main) 1010 bytes (javascript) 5.67 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 1010 bytes (javascript) 5.65 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.67 KiB 9 modules
+  runtime modules 5.65 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [used exports unknown]
@@ -507,17 +506,17 @@ chunk 635.output.js 433 bytes [rendered]
     [no exports]
     [used exports unknown]
     amd require context ./example.js 7:0-14:1
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.43 KiB [emitted] [minimized] (name: main)
+asset output.js 2.42 KiB [emitted] [minimized] (name: main)
 asset 635.output.js 580 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.67 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.65 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.67 KiB 9 modules
+  runtime modules 5.65 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [no exports used]
@@ -528,5 +527,5 @@ chunk (runtime: main) 635.output.js 433 bytes [rendered]
   ../require.context/templates/ sync ^\.\/.*\.js$ 193 bytes [built] [code generated]
     [no exports]
     amd require context ./example.js 7:0-14:1
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

@@ -171,7 +171,6 @@ console.log(lodash, isomorphicFetch);
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -549,7 +548,7 @@ asset react-vendors.js 1.1 KiB [emitted] (name: react-vendors)
 Entrypoint app 1.17 KiB = app.js
 Entrypoint page1 1.64 KiB = page1.js
 Entrypoint react-vendors 12.4 KiB = runtime.js 11.3 KiB react-vendors.js 1.1 KiB
-Entrypoint other-vendors 13.3 KiB = runtime.js 11.3 KiB other-vendors.js 1.92 KiB
+Entrypoint other-vendors 13.2 KiB = runtime.js 11.3 KiB other-vendors.js 1.92 KiB
 chunk app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]
@@ -597,19 +596,19 @@ chunk react-vendors.js (react-vendors) 87 bytes ={runtime}= >{page1}< [initial] 
     harmony side effect evaluation react ./page1.js 2:0-26
     harmony import specifier react ./page1.js 5:29-34
     entry react react-vendors
-chunk runtime.js (runtime) 6.86 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
+chunk runtime.js (runtime) 6.83 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
   > ./other-vendors other-vendors
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 6.86 KiB 9 modules
-webpack 5.0.0-rc.2 compiled successfully
+  runtime modules 6.83 KiB 9 modules
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset runtime.js 2.24 KiB [emitted] [minimized] (name: runtime)
+asset runtime.js 2.23 KiB [emitted] [minimized] (name: runtime)
 asset page1.js 264 bytes [emitted] [minimized] (name: page1)
 asset other-vendors.js 243 bytes [emitted] [minimized] (name: other-vendors)
 asset react-vendors.js 208 bytes [emitted] [minimized] (name: react-vendors)
@@ -617,8 +616,8 @@ asset app.js 184 bytes [emitted] [minimized] (name: app)
 asset lazy_js.js 159 bytes [emitted] [minimized]
 Entrypoint app 184 bytes = app.js
 Entrypoint page1 264 bytes = page1.js
-Entrypoint react-vendors 2.45 KiB = runtime.js 2.24 KiB react-vendors.js 208 bytes
-Entrypoint other-vendors 2.48 KiB = runtime.js 2.24 KiB other-vendors.js 243 bytes
+Entrypoint react-vendors 2.43 KiB = runtime.js 2.23 KiB react-vendors.js 208 bytes
+Entrypoint other-vendors 2.47 KiB = runtime.js 2.23 KiB other-vendors.js 243 bytes
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]
@@ -665,11 +664,11 @@ chunk (runtime: runtime) react-vendors.js (react-vendors) 87 bytes ={runtime}= >
     harmony side effect evaluation react ./page1.js 2:0-26
     harmony import specifier react ./page1.js 5:29-34
     entry react react-vendors
-chunk (runtime: runtime) runtime.js (runtime) 6.86 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
+chunk (runtime: runtime) runtime.js (runtime) 6.83 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
   > ./other-vendors other-vendors
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 6.86 KiB 9 modules
-webpack 5.0.0-rc.2 compiled successfully
+  runtime modules 6.83 KiB 9 modules
+webpack 5.0.0-rc.3 compiled successfully
 ```

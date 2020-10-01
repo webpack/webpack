@@ -308,7 +308,6 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -550,17 +549,17 @@ chunk bPage.bundle.js (bPage) 59 bytes [initial] [rendered] reused as split chun
     cjs require ./bPage ./bEntry.js 3:7-25
     cjs self exports reference ./bPage.js 1:0-14
     context element ./bPage .// lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
-chunk pageA.bundle.js (pageA) 87 bytes (javascript) 7.32 KiB (runtime) [entry] [rendered]
+chunk pageA.bundle.js (pageA) 87 bytes (javascript) 7.3 KiB (runtime) [entry] [rendered]
   > ./aEntry pageA
   > ./router pageA
-  runtime modules 7.32 KiB 9 modules
+  runtime modules 7.3 KiB 9 modules
   ./aEntry.js 87 bytes [built] [code generated]
     [used exports unknown]
     entry ./aEntry pageA
-chunk pageB.bundle.js (pageB) 87 bytes (javascript) 7.32 KiB (runtime) [entry] [rendered]
+chunk pageB.bundle.js (pageB) 87 bytes (javascript) 7.3 KiB (runtime) [entry] [rendered]
   > ./bEntry pageB
   > ./router pageB
-  runtime modules 7.32 KiB 9 modules
+  runtime modules 7.3 KiB 9 modules
   ./bEntry.js 87 bytes [built] [code generated]
     [used exports unknown]
     entry ./bEntry pageB
@@ -574,19 +573,19 @@ chunk router_js.bundle.js 951 bytes [initial] [rendered] split chunk (cache grou
     [used exports unknown]
     entry ./router pageA
     entry ./router pageB
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset pageA.bundle.js 2.48 KiB [emitted] [minimized] (name: pageA)
-asset pageB.bundle.js 2.48 KiB [emitted] [minimized] (name: pageB)
+asset pageA.bundle.js 2.47 KiB [emitted] [minimized] (name: pageA)
+asset pageB.bundle.js 2.47 KiB [emitted] [minimized] (name: pageB)
 asset router_js.bundle.js 537 bytes [emitted] [minimized]
 asset aPage.bundle.js 117 bytes [emitted] [minimized] (name: aPage)
 asset bPage.bundle.js 117 bytes [emitted] [minimized] (name: bPage)
-Entrypoint pageA 3.12 KiB = router_js.bundle.js 537 bytes aPage.bundle.js 117 bytes pageA.bundle.js 2.48 KiB
-Entrypoint pageB 3.12 KiB = router_js.bundle.js 537 bytes bPage.bundle.js 117 bytes pageB.bundle.js 2.48 KiB
+Entrypoint pageA 3.1 KiB = router_js.bundle.js 537 bytes aPage.bundle.js 117 bytes pageA.bundle.js 2.47 KiB
+Entrypoint pageB 3.1 KiB = router_js.bundle.js 537 bytes bPage.bundle.js 117 bytes pageB.bundle.js 2.47 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
   > ./aPage .// lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
@@ -605,17 +604,17 @@ chunk (runtime: pageA, pageB) bPage.bundle.js (bPage) 59 bytes [initial] [render
     cjs require ./bPage ./bEntry.js 3:7-25
     cjs self exports reference ./bPage.js 1:0-14
     context element ./bPage .// lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
-chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 7.32 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 7.3 KiB (runtime) [entry] [rendered]
   > ./aEntry pageA
   > ./router pageA
-  runtime modules 7.32 KiB 9 modules
+  runtime modules 7.3 KiB 9 modules
   ./aEntry.js 87 bytes [built] [code generated]
     [no exports used]
     entry ./aEntry pageA
-chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 7.32 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 7.3 KiB (runtime) [entry] [rendered]
   > ./bEntry pageB
   > ./router pageB
-  runtime modules 7.32 KiB 9 modules
+  runtime modules 7.3 KiB 9 modules
   ./bEntry.js 87 bytes [built] [code generated]
     [no exports used]
     entry ./bEntry pageB
@@ -629,5 +628,5 @@ chunk (runtime: pageA, pageB) router_js.bundle.js 951 bytes [initial] [rendered]
     [no exports used]
     entry ./router pageA
     entry ./router pageB
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

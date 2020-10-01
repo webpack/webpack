@@ -134,5 +134,5 @@ chunk (runtime: pageD, pageE, pageF) 833.js (id hint: vendors) 86 bytes [initial
   > ./pages/f pageF
   ./node_modules/m7.js 43 bytes [built] [code generated]
   ./node_modules/m8.js 43 bytes [built] [code generated]
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

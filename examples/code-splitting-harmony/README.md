@@ -243,7 +243,6 @@ module.exports = webpackAsyncContext;
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -398,7 +397,7 @@ module.exports = webpackAsyncContext;
 ## Unoptimized
 
 ```
-asset output.js 13.1 KiB [emitted] (name: main)
+asset output.js 13 KiB [emitted] (name: main)
 asset 346.output.js 296 bytes [emitted]
 asset 98.output.js 295 bytes [emitted]
 asset 644.output.js 288 bytes [emitted]
@@ -409,9 +408,9 @@ chunk 98.output.js 13 bytes [rendered]
     [used exports unknown]
     context element ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
     context element ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
-chunk output.js (main) 414 bytes (javascript) 6.34 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 414 bytes (javascript) 6.31 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.34 KiB 10 modules
+  runtime modules 6.31 KiB 10 modules
   dependent modules 171 bytes [dependent] 2 modules
   ./example.js 243 bytes [built] [code generated]
     [no exports]
@@ -429,13 +428,13 @@ chunk 644.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.71 KiB [emitted] [minimized] (name: main)
+asset output.js 2.7 KiB [emitted] [minimized] (name: main)
 asset 346.output.js 69 bytes [emitted] [minimized]
 asset 644.output.js 69 bytes [emitted] [minimized]
 asset 98.output.js 67 bytes [emitted] [minimized]
@@ -446,9 +445,9 @@ chunk (runtime: main) 98.output.js 13 bytes [rendered]
     [used exports unknown]
     context element ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
     context element ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
-chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.34 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.31 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.34 KiB 10 modules
+  runtime modules 6.31 KiB 10 modules
   dependent modules 171 bytes [dependent] 2 modules
   ./example.js 243 bytes [built] [code generated]
     [no exports]
@@ -466,5 +465,5 @@ chunk (runtime: main) 644.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

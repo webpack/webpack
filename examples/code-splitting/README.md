@@ -143,7 +143,6 @@ require.ensure(["c"], function(require) {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -335,11 +334,11 @@ Minimized
 ## Unoptimized
 
 ```
-asset output.js 9.23 KiB [emitted] (name: main)
+asset output.js 9.19 KiB [emitted] (name: main)
 asset 796.output.js 528 bytes [emitted]
-chunk output.js (main) 161 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 161 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   dependent modules 22 bytes [dependent] 2 modules
   ./example.js 139 bytes [built] [code generated]
     [used exports unknown]
@@ -352,17 +351,17 @@ chunk 796.output.js 22 bytes [rendered]
   ./node_modules/d.js 11 bytes [built] [code generated]
     [used exports unknown]
     cjs require d ./example.js 5:12-24
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.68 KiB [emitted] [minimized] (name: main)
+asset output.js 1.67 KiB [emitted] [minimized] (name: main)
 asset 796.output.js 80 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 161 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   dependent modules 22 bytes [dependent] 2 modules
   ./example.js 139 bytes [built] [code generated]
     [no exports used]
@@ -375,5 +374,5 @@ chunk (runtime: main) 796.output.js 22 bytes [rendered]
   ./node_modules/d.js 11 bytes [built] [code generated]
     [used exports unknown]
     cjs require d ./example.js 5:12-24
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

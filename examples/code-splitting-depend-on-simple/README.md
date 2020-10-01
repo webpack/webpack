@@ -327,7 +327,7 @@ chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.42 KiB (runtime) 
       harmony import specifier react ./app.js 5:12-17
       cjs self exports reference ./node_modules/react.js 1:0-14
       entry react react-vendors
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
@@ -365,5 +365,5 @@ chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javasc
       harmony import specifier react ./app.js 5:12-17
       cjs self exports reference ./node_modules/react.js 1:0-14
       entry react react-vendors
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

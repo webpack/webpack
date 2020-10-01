@@ -121,7 +121,6 @@ require.ensure(["b"], function(require) {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -364,12 +363,12 @@ __webpack_require__.e(/*! require.ensure */ 885).then((function(require) {
 ## Unoptimized
 
 ```
-asset output.js 9.57 KiB [emitted] (name: main)
+asset output.js 9.54 KiB [emitted] (name: main)
 asset 666.output.js 735 bytes [emitted] (name: my own chunk)
 asset 885.output.js 528 bytes [emitted]
-chunk output.js (main) 432 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 432 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   dependent modules 11 bytes [dependent] 1 module
   ./example.js 421 bytes [built] [code generated]
     [used exports unknown]
@@ -401,18 +400,18 @@ chunk 885.output.js 22 bytes [rendered]
     [used exports unknown]
     cjs require d ./example.js 10:9-21
     cjs require d ./example.js 19:9-21
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.82 KiB [emitted] [minimized] (name: main)
+asset output.js 1.81 KiB [emitted] [minimized] (name: main)
 asset 666.output.js 95 bytes [emitted] [minimized] (name: my own chunk)
 asset 885.output.js 80 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   dependent modules 11 bytes [dependent] 1 module
   ./example.js 421 bytes [built] [code generated]
     [no exports used]
@@ -444,5 +443,5 @@ chunk (runtime: main) 885.output.js 22 bytes [rendered]
     [used exports unknown]
     cjs require d ./example.js 10:9-21
     cjs require d ./example.js 19:9-21
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

@@ -142,7 +142,7 @@ mobile:
     ./example.js 94 bytes [built] [code generated]
       [used exports unknown]
       entry ./example main
-  mobile (webpack 5.0.0-rc.2) compiled successfully
+  mobile (webpack 5.0.0-rc.3) compiled successfully
 
 desktop:
   asset desktop.js 262 bytes [emitted] (name: main)
@@ -151,7 +151,7 @@ desktop:
     ./example.js 94 bytes [built] [code generated]
       [used exports unknown]
       entry ./example main
-  desktop (webpack 5.0.0-rc.2) compiled successfully
+  desktop (webpack 5.0.0-rc.3) compiled successfully
 ```
 
 ## Production mode
@@ -165,7 +165,7 @@ mobile:
     ./example.js 94 bytes [built] [code generated]
       [no exports used]
       entry ./example main
-  mobile (webpack 5.0.0-rc.2) compiled successfully
+  mobile (webpack 5.0.0-rc.3) compiled successfully
 
 desktop:
   asset desktop.js 37 bytes [emitted] [minimized] (name: main)
@@ -174,5 +174,5 @@ desktop:
     ./example.js 94 bytes [built] [code generated]
       [no exports used]
       entry ./example main
-  desktop (webpack 5.0.0-rc.2) compiled successfully
+  desktop (webpack 5.0.0-rc.3) compiled successfully
 ```

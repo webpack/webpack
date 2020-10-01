@@ -230,7 +230,7 @@ chunk dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
@@ -244,5 +244,5 @@ chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [en
   dll dll 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

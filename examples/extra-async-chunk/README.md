@@ -129,7 +129,6 @@ require.ensure(["./a"], function(require) {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -357,13 +356,13 @@ module.exports = "d";
 ## Unoptimized
 
 ```
-asset output.js 9.03 KiB [emitted] (name: main)
+asset output.js 9 KiB [emitted] (name: main)
 asset 394.output.js 610 bytes [emitted]
 asset 460.output.js 338 bytes [emitted]
 asset 767.output.js 338 bytes [emitted]
-chunk output.js (main) 164 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 164 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -392,19 +391,19 @@ chunk 767.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.75 KiB [emitted] [minimized] (name: main)
+asset output.js 1.74 KiB [emitted] [minimized] (name: main)
 asset 394.output.js 104 bytes [emitted] [minimized]
 asset 460.output.js 81 bytes [emitted] [minimized]
 asset 767.output.js 81 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -433,5 +432,5 @@ chunk (runtime: main) 767.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

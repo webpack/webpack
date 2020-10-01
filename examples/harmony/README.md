@@ -187,7 +187,6 @@ function add() {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -342,7 +341,7 @@ function add() {
 ## Unoptimized
 
 ```
-asset output.js 11.8 KiB [emitted] (name: main)
+asset output.js 11.7 KiB [emitted] (name: main)
 asset 35.output.js 772 bytes [emitted]
 chunk 35.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
@@ -350,33 +349,33 @@ chunk 35.output.js 24 bytes [rendered]
     [exports: answer]
     [used exports unknown]
     import() ./async-loaded ./example.js 6:0-24
-chunk output.js (main) 400 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 400 bytes (javascript) 5.39 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.39 KiB 8 modules
   dependent modules 225 bytes [dependent] 2 modules
   ./example.js 175 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.98 KiB [emitted] [minimized] (name: main)
+asset output.js 1.96 KiB [emitted] [minimized] (name: main)
 asset 35.output.js 122 bytes [emitted] [minimized]
 chunk (runtime: main) 35.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
     [exports: answer]
     import() ./async-loaded ./example.js + 2 modules ./example.js 6:0-24
-chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.39 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.39 KiB 8 modules
   ./example.js + 2 modules 400 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```

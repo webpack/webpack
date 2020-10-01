@@ -99,7 +99,6 @@ getTemplate("b", function(b) {
 /******/ 				script = document.createElement('script');
 /******/ 		
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
@@ -344,11 +343,11 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 8.81 KiB [emitted] (name: main)
+asset output.js 8.78 KiB [emitted] (name: main)
 asset 577.output.js 2.23 KiB [emitted]
-chunk output.js (main) 266 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 266 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   ./example.js 266 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -359,17 +358,17 @@ chunk 577.output.js 457 bytes [rendered]
     [no exports]
     [used exports unknown]
     cjs require context ./example.js 3:11-64
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.74 KiB [emitted] [minimized] (name: main)
+asset output.js 1.72 KiB [emitted] [minimized] (name: main)
 asset 577.output.js 609 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 266 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 266 bytes (javascript) 4.82 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.82 KiB 6 modules
   ./example.js 266 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
@@ -379,5 +378,5 @@ chunk (runtime: main) 577.output.js 457 bytes [rendered]
   ../require.context/templates/ sync ^\.\/.*$ 217 bytes [built] [code generated]
     [no exports]
     cjs require context ./example.js 3:11-64
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0-rc.3 compiled successfully
 ```
