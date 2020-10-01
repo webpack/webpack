@@ -1,6 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
+function handlePath(path) {
+	return path.replace(/\\/g, "/");
+}
+
 module.exports = function readDir(from) {
 	const collectedFiles = [];
 	const collectedDirectories = [];
@@ -15,7 +19,7 @@ module.exports = function readDir(from) {
 
 			if (from !== cursor) {
 				const relative = path.relative(from, cursor);
-				collectedDirectories.push(relative);
+				collectedDirectories.push(handlePath(relative));
 			}
 
 			for (let i = 0; i < items.length; i++) {
@@ -23,7 +27,7 @@ module.exports = function readDir(from) {
 			}
 		} else {
 			const relative = path.relative(from, cursor);
-			collectedFiles.push(relative);
+			collectedFiles.push(handlePath(relative));
 		}
 	}
 
