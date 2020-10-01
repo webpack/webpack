@@ -132,7 +132,7 @@
     "test:update-snapshots": "yarn jest -u",
     "test:integration": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\"",
     "test:basic": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/te{st/TestCasesNormal,st/StatsTestCases,st/ConfigTestCases}.test.js\"",
-    "test:unit": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\"",
+    "test:unit": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --detectOpenHandles --testMatch \"<rootDir>/test/*.unittest.js\"",
     "travis:integration": "yarn cover:integration --ci $JEST",
     "travis:basic": "yarn cover:basic --ci $JEST",
     "travis:lintunit": "yarn lint && yarn cover:unit --ci $JEST",
