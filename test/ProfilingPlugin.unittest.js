@@ -29,7 +29,7 @@ describe("Profiling Plugin", () => {
 			}
 		});
 
-		return profiler.startProfiling();
+		return profiler.startProfiling().then(() => profiler.destroy());
 	});
 
 	it("handles sending a profiling message when no session", () => {
