@@ -15,8 +15,8 @@ module.exports = {
 				webpack.CleanPlugin.getCompilationHooks(compilation).ignore.tap(
 					"Test",
 					ignore => {
-						ignore(/\/ignored\/dir\//);
-						ignore(asset => asset.includes("ignored/too"));
+						ignore(/[/\\]ignored[/\\]dir[/\\]/);
+						ignore(asset => asset.includes(`ignored${path.sep}too`));
 					}
 				);
 				compilation.hooks.processAssets.tap("Test", assets => {

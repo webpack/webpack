@@ -7,7 +7,7 @@ const readDir = require("../enabled/readdir");
 module.exports = {
 	output: {
 		clean: {
-			ignore: /\/ignored\/dir\//
+			ignore: /[/\\]ignored[/\\]dir[/\\]/
 		}
 	},
 	plugins: [
