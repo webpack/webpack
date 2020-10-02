@@ -995,6 +995,15 @@ declare abstract class ChunkTemplate {
 	}>;
 	readonly outputOptions: Output;
 }
+declare class CleanPlugin {
+	constructor(options: CleanPluginArgument);
+	options: { enabled: boolean; dry: boolean } & CleanPluginArgument;
+	ignoreList: (RegExp | ((arg0: string) => boolean))[];
+	apply(compiler: Compiler): void;
+	static getCompilationHooks(
+		compilation: Compilation
+	): CleanPluginCompilationHooks;
+}
 declare interface CleanPluginArgument {
 	/**
 	 * Log the assets that should be removed instead of delete them.
@@ -1005,6 +1014,17 @@ declare interface CleanPluginArgument {
 	 * Is clean enabled.
 	 */
 	enabled?: boolean;
+
+	/**
+	 * Not delete the assets, that matches to this regexp or a function.
+	 */
+	ignore?: RegExp | ((asset: string) => boolean);
+}
+declare interface CleanPluginCompilationHooks {
+	ignore: SyncHook<
+		[(arg0: RegExp | ((arg0: string) => boolean)) => void],
+		void
+	>;
 }
 declare interface CodeGenerationContext {
 	/**
@@ -10182,6 +10202,7 @@ declare namespace exports {
 		Cache,
 		Chunk,
 		ChunkGraph,
+		CleanPlugin,
 		Compilation,
 		Compiler,
 		ConcatenationScope,

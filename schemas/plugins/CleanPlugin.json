@@ -10,6 +10,19 @@
     "enabled": {
       "description": "Is clean enabled.",
       "type": "boolean"
+    },
+    "ignore": {
+      "description": "Not delete the assets, that matches to this regexp or a function.",
+      "anyOf": [
+        {
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((asset:string) => boolean)"
+        }
+      ]
     }
   }
 }

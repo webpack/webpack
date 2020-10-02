@@ -13,4 +13,8 @@ export interface CleanPluginArgument {
 	 * Is clean enabled.
 	 */
 	enabled?: boolean;
+	/**
+	 * Not delete the assets, that matches to this regexp or a function.
+	 */
+	ignore?: RegExp | ((asset: string) => boolean);
 }
