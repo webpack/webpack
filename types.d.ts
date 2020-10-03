@@ -9510,6 +9510,7 @@ declare abstract class WebpackLogger {
 	timeEnd(label?: any): void;
 	timeAggregate(label?: any): void;
 	timeAggregateEnd(label?: any): void;
+	raw(logLevel: any, ...args: any[]): void;
 }
 declare class WebpackOptionsApply extends OptionsApply {
 	constructor();
