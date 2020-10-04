@@ -808,16 +808,16 @@ describe("Compiler", () => {
 			compiler.run((err, stats) => {
 				expect(capture.toString().replace(/[\d.]+ ms/, "X ms"))
 					.toMatchInlineSnapshot(`
-"<-> [MyPlugin] Group
-  <e> [MyPlugin] Error
-  <w> [MyPlugin] Warning
-  <i> [MyPlugin] Info
-      [MyPlugin] Log
-  <-> [MyPlugin] Collaped group
-        [MyPlugin] Log inside collapsed group
-<t> [MyPlugin] Time: X ms
-"
-`);
+			"<-> [MyPlugin] Group
+			  <e> Error
+			  <w> Warning
+			  <i> Info
+			      Log
+			  <-> Collaped group
+			        Log inside collapsed group
+			<t> Time: X ms
+			"
+		`);
 				done();
 			});
 		});
@@ -839,17 +839,17 @@ describe("Compiler", () => {
 			compiler.run((err, stats) => {
 				expect(capture.toString().replace(/[\d.]+ ms/, "X ms"))
 					.toMatchInlineSnapshot(`
-"<-> [MyPlugin] Group
-  <e> [MyPlugin] Error
-  <w> [MyPlugin] Warning
-  <i> [MyPlugin] Info
-      [MyPlugin] Log
-      [MyPlugin] Debug
-  <-> [MyPlugin] Collaped group
-        [MyPlugin] Log inside collapsed group
-<t> [MyPlugin] Time: X ms
-"
-`);
+			"<-> [MyPlugin] Group
+			  <e> Error
+			  <w> Warning
+			  <i> Info
+			      Log
+			      Debug
+			  <-> Collaped group
+			        Log inside collapsed group
+			<t> Time: X ms
+			"
+		`);
 				done();
 			});
 		});

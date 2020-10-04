@@ -45,20 +45,14 @@ describe("ProgressPlugin", function () {
 			);
 			expect(logs).toContainEqual(
 				expect.stringMatching(
-					/\[webpack\.Progress\] {2}| \d+ ms building > \.\.\. entries \.\.\. dependencies \.\.\. modules\n$/
+					/ {2}| \d+ ms building > \.\.\. entries \.\.\. dependencies \.\.\. modules\n$/
 				)
 			);
+			expect(logs).toContainEqual(expect.stringMatching(/\d+ ms building\n$/));
 			expect(logs).toContainEqual(
-				expect.stringMatching(/\[webpack\.Progress\] \d+ ms building\n$/)
+				expect.stringMatching(/ {2}| \d+ ms sealing > module ids\n$/)
 			);
-			expect(logs).toContainEqual(
-				expect.stringMatching(
-					/\[webpack\.Progress\] {2}| \d+ ms sealing > module ids\n$/
-				)
-			);
-			expect(logs).toContainEqual(
-				expect.stringMatching(/\[webpack\.Progress\] \d+ ms sealing\n$/)
-			);
+			expect(logs).toContainEqual(expect.stringMatching(/\d+ ms sealing\n$/));
 		});
 	});
 

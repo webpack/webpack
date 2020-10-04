@@ -1757,13 +1757,13 @@ chunk (runtime: main) preloaded.js (preloaded) 226 bytes (preload: {641} {746}) 
 
 exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
 "<-> [LogTestPlugin] Group
-  <e> [LogTestPlugin] Error
-  <w> [LogTestPlugin] Warning
-  <i> [LogTestPlugin] Info
-      [LogTestPlugin] Log
-  <+> [LogTestPlugin] Collaped group
-      [LogTestPlugin] Log
-    [LogTestPlugin] End
+  <e> Error
+  <w> Warning
+  <i> Info
+      Log
+  <+> Collaped group
+      Log
+    End
 PublicPath: auto
 asset main.js 9.97 KiB {179} [emitted] (name: main)
 asset 460.js 320 bytes {460} [emitted]
@@ -1880,7 +1880,7 @@ webpack compiled with 1 error"
 
 exports[`StatsTestCases should print correct stats for preset-errors-warnings 1`] = `
 "<e> [LogTestPlugin] Error
-<w> [LogTestPlugin] Warning
+<w> Warning
 LOG from LogTestPlugin
 <e> Error
 <w> Warning
@@ -1890,7 +1890,7 @@ LOG from LogTestPlugin
 
 exports[`StatsTestCases should print correct stats for preset-minimal 1`] = `
 "<e> [LogTestPlugin] Error
-<w> [LogTestPlugin] Warning
+<w> Warning
 4 assets
 13 modules
 
@@ -1922,8 +1922,8 @@ verbose:
 
 exports[`StatsTestCases should print correct stats for preset-none 1`] = `
 "<e> [LogTestPlugin] Error
-<w> [LogTestPlugin] Warning
-<i> [LogTestPlugin] Info
+<w> Warning
+<i> Info
 "
 `;
 
@@ -1933,8 +1933,8 @@ exports[`StatsTestCases should print correct stats for preset-none-error 1`] = `
 
 exports[`StatsTestCases should print correct stats for preset-normal 1`] = `
 "<e> [LogTestPlugin] Error
-<w> [LogTestPlugin] Warning
-<i> [LogTestPlugin] Info
+<w> Warning
+<i> Info
 asset main.js 9.97 KiB [emitted] (name: main)
 asset 460.js 320 bytes [emitted]
 asset 524.js 206 bytes [emitted]
@@ -2015,23 +2015,23 @@ webpack x.x.x compiled with <CLR=33,BOLD>2 warnings</CLR> in X ms"
 
 exports[`StatsTestCases should print correct stats for preset-summary 1`] = `
 "<e> [LogTestPlugin] Error
-<w> [LogTestPlugin] Warning
-<i> [LogTestPlugin] Info
+<w> Warning
+<i> Info
 webpack x.x.x compiled successfully"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
 "<-> [LogTestPlugin] Group
-  <e> [LogTestPlugin] Error
-  <w> [LogTestPlugin] Warning
-  <i> [LogTestPlugin] Info
-      [LogTestPlugin] Log
-  <-> [LogTestPlugin] Collaped group
-        [LogTestPlugin] Log inside collapsed group
-    <-> [LogTestPlugin] Inner group
-          [LogTestPlugin] Inner inner message
-      [LogTestPlugin] Log
-    [LogTestPlugin] End
+  <e> Error
+  <w> Warning
+  <i> Info
+      Log
+  <-> Collaped group
+        Log inside collapsed group
+    <-> Inner group
+          Inner inner message
+      Log
+    End
 PublicPath: auto
 asset main.js 9.97 KiB {179} [emitted] (name: main)
 asset 460.js 320 bytes {460} [emitted]
