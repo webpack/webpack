@@ -1917,6 +1917,10 @@ export interface Environment {
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
+	/**
+	 * The environment supports ECMAScript Promise.
+	 */
+	promise?: boolean;
 }
 /**
  * Configuration object for web performance recommendations.

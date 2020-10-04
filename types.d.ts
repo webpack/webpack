@@ -2818,6 +2818,11 @@ declare interface Environment {
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
+
+	/**
+	 * The environment supports ECMAScript Promise.
+	 */
+	promise?: boolean;
 }
 declare class EnvironmentPlugin {
 	constructor(...keys: any[]);
@@ -7878,6 +7883,7 @@ declare abstract class RuntimeTemplate {
 	supportsDynamicImport(): boolean;
 	supportsEcmaScriptModuleSyntax(): boolean;
 	supportTemplateLiteral(): boolean;
+	supportsPromise(): boolean;
 	returningFunction(returnValue?: any, args?: string): string;
 	basicFunction(args?: any, body?: any): string;
 	destructureArray(items?: any, value?: any): string;
