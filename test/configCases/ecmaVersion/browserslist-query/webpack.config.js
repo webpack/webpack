@@ -13,6 +13,7 @@ module.exports = {
 			  "dynamicImport": false,
 			  "forOf": false,
 			  "module": false,
+			  "promise": false,
 			}
 		`);
 				expect(compilation.options.externalsPresets).toMatchInlineSnapshot(`
