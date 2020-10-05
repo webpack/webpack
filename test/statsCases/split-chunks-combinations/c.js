@@ -1,2 +1,2 @@
-import "./x";
-export default "c";
+import x from "./x";
+export default "c" + x;

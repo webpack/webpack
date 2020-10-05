@@ -1,4 +1,4 @@
-import "./d";
-import "./e";
-import "./f";
-export default "b";
+import d from "./d";
+import e from "./e";
+import f from "./f";
+export default "b" + d + e + f;
