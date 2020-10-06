@@ -12,6 +12,31 @@ describe("Profiling Plugin", () => {
 		expect(plugin.outputPath).toBe(outputPath);
 	});
 
+	it("should bump output filename on incremental build", () => {
+		const outputPath1 = path.join(__dirname, "invest_in_doge_coin");
+		const outputPath2 = path.join(__dirname, "hello.world.json");
+
+		const plugin1 = new ProfilingPlugin({
+			outputPath: outputPath1
+		});
+
+		expect(plugin1.outputPath).toBe(outputPath1);
+		plugin1.increaseCompilationIndex();
+		expect(plugin1.outputPath).toBe(`${outputPath1}_1`);
+		plugin1.increaseCompilationIndex();
+		expect(plugin1.outputPath).toBe(`${outputPath1}_2`);
+
+		const plugin2 = new ProfilingPlugin({
+			outputPath: outputPath2
+		});
+
+		expect(plugin2.outputPath).toBe(outputPath2);
+		plugin2.increaseCompilationIndex();
+		expect(plugin2.outputPath).toBe(path.join(__dirname, "hello.world_1.json"));
+		plugin2.increaseCompilationIndex();
+		expect(plugin2.outputPath).toBe(path.join(__dirname, "hello.world_2.json"));
+	});
+
 	it("should handle no options", () => {
 		const plugin = new ProfilingPlugin();
 		expect(plugin.outputPath).toBe("events.json");
