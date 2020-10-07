@@ -5057,6 +5057,7 @@ declare class ModuleGraphConnection {
 	readonly explanation: string;
 	active: void;
 	isActive(runtime: string | SortableSet<string>): boolean;
+	isTargetActive(runtime: string | SortableSet<string>): boolean;
 	getActiveState(
 		runtime: string | SortableSet<string>
 	): boolean | typeof TRANSITIVE_ONLY | typeof CIRCULAR_CONNECTION;
