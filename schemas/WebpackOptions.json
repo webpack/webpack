@@ -128,6 +128,34 @@
         }
       ]
     },
+    "CleanPlugin": {
+      "description": "Clean the output directory before emit.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dry": {
+          "description": "Log the assets that should be removed instead of delete them.",
+          "type": "boolean"
+        },
+        "enabled": {
+          "description": "Is clean enabled.",
+          "type": "boolean"
+        },
+        "ignore": {
+          "description": "Not delete the assets, that matches to this regexp or a function.",
+          "anyOf": [
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((asset:string) => boolean)"
+            }
+          ]
+        }
+      }
+    },
     "CompareBeforeEmit": {
       "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem.",
       "type": "boolean"
@@ -1871,13 +1899,13 @@
           "$ref": "#/definitions/ChunkLoadingGlobal"
         },
         "clean": {
-          "description": "Remove non-webpack assets from the output directory.",
+          "description": "Clean the output directory before emit.",
           "anyOf": [
             {
               "type": "boolean"
             },
             {
-              "tsType": "(import('../declarations/plugins/CleanPlugin').CleanPluginArgument)"
+              "$ref": "#/definitions/CleanPlugin"
             }
           ]
         },
@@ -2049,8 +2077,7 @@
           "$ref": "#/definitions/ChunkLoadingGlobal"
         },
         "clean": {
-          "description": "Remove non-webpack assets from the output directory.",
-          "tsType": "(import('../declarations/plugins/CleanPlugin').CleanPluginArgument)"
+          "$ref": "#/definitions/CleanPlugin"
         },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"

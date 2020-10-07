@@ -995,15 +995,6 @@ declare abstract class ChunkTemplate {
 	}>;
 	readonly outputOptions: Output;
 }
-declare class CleanPlugin {
-	constructor(options: CleanPluginArgument);
-	options: { enabled: boolean; dry: boolean } & CleanPluginArgument;
-	ignoreList: (RegExp | ((arg0: string) => boolean))[];
-	apply(compiler: Compiler): void;
-	static getCompilationHooks(
-		compilation: Compilation
-	): CleanPluginCompilationHooks;
-}
 declare interface CleanPluginArgument {
 	/**
 	 * Log the assets that should be removed instead of delete them.
@@ -1020,11 +1011,48 @@ declare interface CleanPluginArgument {
 	 */
 	ignore?: RegExp | ((asset: string) => boolean);
 }
+declare class CleanPluginClass {
+	constructor(options: CleanPluginArgument);
+	options: { enabled: boolean; dry: boolean } & CleanPluginArgument;
+	ignoreList: (RegExp | ((arg0: string) => boolean))[];
+	logger: WebpackLogger;
+	fs: OutputFileSystem;
+	fsState: { files: Set<string>; directories: Set<string> };
+	apply(compiler: Compiler): void;
+	resetFSState(): void;
+	cleanRecursive(
+		p: string,
+		callback: (arg0: NodeJS.ErrnoException) => void
+	): void;
+	static getCompilationHooks(
+		compilation: Compilation
+	): CleanPluginCompilationHooks;
+}
 declare interface CleanPluginCompilationHooks {
 	ignore: SyncHook<
 		[(arg0: RegExp | ((arg0: string) => boolean)) => void],
 		void
 	>;
+}
+
+/**
+ * Clean the output directory before emit.
+ */
+declare interface CleanPluginWebpackOptions {
+	/**
+	 * Log the assets that should be removed instead of delete them.
+	 */
+	dry?: boolean;
+
+	/**
+	 * Is clean enabled.
+	 */
+	enabled?: boolean;
+
+	/**
+	 * Not delete the assets, that matches to this regexp or a function.
+	 */
+	ignore?: RegExp | ((asset: string) => boolean);
 }
 declare interface CodeGenerationContext {
 	/**
@@ -6023,9 +6051,9 @@ declare interface Output {
 	chunkLoadingGlobal?: string;
 
 	/**
-	 * Remove non-webpack assets from the output directory.
+	 * Clean the output directory before emit.
 	 */
-	clean?: boolean | CleanPluginArgument;
+	clean?: boolean | CleanPluginWebpackOptions;
 
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
@@ -6224,11 +6252,16 @@ declare interface OutputFileSystem {
 		arg2: (arg0: NodeJS.ErrnoException) => void
 	) => void;
 	mkdir: (arg0: string, arg1: (arg0: NodeJS.ErrnoException) => void) => void;
+	readdir: (
+		arg0: string,
+		arg1: (arg0: NodeJS.ErrnoException, arg1: string[]) => void
+	) => void;
+	rmdir: (arg0: string, arg1: (arg0: NodeJS.ErrnoException) => void) => void;
+	unlink: (arg0: string, arg1: (arg0: NodeJS.ErrnoException) => void) => void;
 	stat: (
 		arg0: string,
 		arg1: (arg0: NodeJS.ErrnoException, arg1: FsStats) => void
 	) => void;
-	statSync: (arg0: string) => FsStats;
 	readFile: (
 		arg0: string,
 		arg1: (arg0: NodeJS.ErrnoException, arg1: Buffer) => void
@@ -6236,10 +6269,6 @@ declare interface OutputFileSystem {
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
 	dirname?: (arg0: string) => string;
-	rmdirSync: (arg0: string, arg1: { recursive: boolean }) => void;
-	unlinkSync: (arg0: string) => void;
-	existsSync: (arg0: string) => boolean;
-	readdirSync: (arg0: string) => string[];
 }
 
 /**
@@ -6282,9 +6311,9 @@ declare interface OutputNormalized {
 	chunkLoadingGlobal?: string;
 
 	/**
-	 * Remove non-webpack assets from the output directory.
+	 * Clean the output directory before emit.
 	 */
-	clean?: CleanPluginArgument;
+	clean?: CleanPluginWebpackOptions;
 
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
@@ -10202,7 +10231,7 @@ declare namespace exports {
 		Cache,
 		Chunk,
 		ChunkGraph,
-		CleanPlugin,
+		CleanPluginClass as CleanPlugin,
 		Compilation,
 		Compiler,
 		ConcatenationScope,

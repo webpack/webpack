@@ -1725,11 +1725,9 @@ export interface Output {
 	 */
 	chunkLoadingGlobal?: ChunkLoadingGlobal;
 	/**
-	 * Remove non-webpack assets from the output directory.
+	 * Clean the output directory before emit.
 	 */
-	clean?:
-		| boolean
-		| import("../declarations/plugins/CleanPlugin").CleanPluginArgument;
+	clean?: boolean | CleanPlugin;
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
@@ -1882,6 +1880,23 @@ export interface Output {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	workerWasmLoading?: WasmLoading;
+}
+/**
+ * Clean the output directory before emit.
+ */
+export interface CleanPlugin {
+	/**
+	 * Log the assets that should be removed instead of delete them.
+	 */
+	dry?: boolean;
+	/**
+	 * Is clean enabled.
+	 */
+	enabled?: boolean;
+	/**
+	 * Not delete the assets, that matches to this regexp or a function.
+	 */
+	ignore?: RegExp | ((asset: string) => boolean);
 }
 /**
  * The abilities of the environment where the webpack generated code should run.
@@ -2402,9 +2417,9 @@ export interface OutputNormalized {
 	 */
 	chunkLoadingGlobal?: ChunkLoadingGlobal;
 	/**
-	 * Remove non-webpack assets from the output directory.
+	 * Clean the output directory before emit.
 	 */
-	clean?: import("../declarations/plugins/CleanPlugin").CleanPluginArgument;
+	clean?: CleanPlugin;
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */

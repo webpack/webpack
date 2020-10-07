@@ -2084,15 +2084,54 @@ Object {
   "output-clean": Object {
     "configs": Array [
       Object {
-        "description": "Remove non-webpack assets from the output directory.",
+        "description": "Clean the output directory before emit.",
         "multiple": false,
         "path": "output.clean",
         "type": "boolean",
       },
     ],
-    "description": "Remove non-webpack assets from the output directory.",
+    "description": "Clean the output directory before emit.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "output-clean-dry": Object {
+    "configs": Array [
+      Object {
+        "description": "Log the assets that should be removed instead of delete them.",
+        "multiple": false,
+        "path": "output.clean.dry",
+        "type": "boolean",
+      },
+    ],
+    "description": "Log the assets that should be removed instead of delete them.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-clean-enabled": Object {
+    "configs": Array [
+      Object {
+        "description": "Is clean enabled.",
+        "multiple": false,
+        "path": "output.clean.enabled",
+        "type": "boolean",
+      },
+    ],
+    "description": "Is clean enabled.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-clean-ignore": Object {
+    "configs": Array [
+      Object {
+        "description": "Not delete the assets, that matches to this regexp or a function.",
+        "multiple": false,
+        "path": "output.clean.ignore",
+        "type": "RegExp",
+      },
+    ],
+    "description": "Not delete the assets, that matches to this regexp or a function.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "output-compare-before-emit": Object {
     "configs": Array [
