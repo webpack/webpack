@@ -27,10 +27,10 @@ it("should be able to write properties", () => {
 	// object methods
 	expect(data.nested.object.hasOwnProperty("test")).toBe(true);
 	// unknown object property
-	data.nested.object2.MANGLE_ME = 42;
-	expect(data.nested.object2.MANGLE_ME).toBe(42);
-	data.nested.object3.MANGLE_ME = { deep: "deep" };
-	expect(data.nested.object3.MANGLE_ME.deep).toBe("deep");
+	data.nested.object2.unknownProperty = 42;
+	expect(data.nested.object2.unknownProperty).toBe(42);
+	data.nested.object3.unknownProperty = { deep: "deep" };
+	expect(data.nested.object3.unknownProperty.deep).toBe("deep");
 	// number methods
 	expect(data.nested.number.toFixed(1)).toBe("42.0");
 	// nested in array
@@ -44,7 +44,8 @@ it("should not have unused keys in bundle", () => {
 	expect(content).not.toMatch(/\\?"UNUSEDKEY\\?"/);
 	expect(content).not.toMatch(/\\?"UNUSEDVALUE\\?"/);
 	expect(content).not.toMatch(/\\?"nested\\?"/);
-	expect(content).not.toMatch(/\.MANGLE_ME(\.deep)?(\s*=|\))/);
+	expect(content).toMatch(/\.unknownProperty\s*=/);
+	expect(content).toMatch(/\.unknownProperty\.deep\)/);
 	expect(content).not.toMatch(/\\?"dependencies\\?"/);
 	expect(content).not.toMatch(/\\?"scripts\\?"/);
 });

@@ -1,4 +1,4 @@
-import "x";
-import "y";
+import x from "x";
+import y from "y";
 
-export default "c";
+export default "c" + x + y;

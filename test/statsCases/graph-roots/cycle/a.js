@@ -1,1 +1,2 @@
-import "./b";
+import a from "./b";
+export default a;

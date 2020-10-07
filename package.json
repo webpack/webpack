@@ -24,7 +24,7 @@
     "mime-types": "^2.1.27",
     "neo-async": "^2.6.2",
     "pkg-dir": "^4.2.0",
-    "schema-utils": "^2.7.0",
+    "schema-utils": "^3.0.0",
     "tapable": "^2.0.0",
     "terser-webpack-plugin": "^4.1.0",
     "watchpack": "^2.0.0",
