@@ -1317,6 +1317,10 @@ export interface ResolveOptions {
 	 */
 	plugins?: ("..." | ResolvePluginInstance)[];
 	/**
+	 * Prefer to resolve module requests as relative request and fallback to resolving as module.
+	 */
+	preferRelative?: boolean;
+	/**
 	 * Custom resolver.
 	 */
 	resolver?: import("enhanced-resolve").Resolver;
@@ -1513,6 +1517,10 @@ export interface OptimizationSplitChunksOptions {
 	chunks?:
 		| ("initial" | "async" | "all")
 		| ((chunk: import("../lib/Chunk")) => boolean);
+	/**
+	 * Sets the size types which are used when a number is used for sizes.
+	 */
+	defaultSizeTypes?: string[];
 	/**
 	 * Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.
 	 */

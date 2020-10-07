@@ -410,7 +410,7 @@ chunk 3.[chunkhash].js 28 bytes [rendered]
   ./async2.js 28 bytes [built] [code generated]
     [used exports unknown]
     import() ./async2 ./example.js 3:0-18
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```
 
 ## Production mode
@@ -439,5 +439,5 @@ chunk (runtime: runtime~main) main.[chunkhash].js (main) 55 bytes [initial] [ren
 chunk (runtime: runtime~main) runtime~main.[chunkhash].js (runtime~main) 7.27 KiB [entry] [rendered]
   > ./example main
   runtime modules 7.27 KiB 9 modules
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```

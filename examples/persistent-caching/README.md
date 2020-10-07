@@ -56,29 +56,19 @@ module.exports = (env = "development") => ({
 
 ```
 asset output.js 3.92 MiB [emitted] (name: main)
-chunk output.js (main) 2.8 MiB (javascript) 1.58 KiB (runtime) [entry] [rendered]
+chunk output.js (main) 2.8 MiB (javascript) 1.58 KiB (runtime) [entry]
   > ./example.js main
-  dependent modules 2.8 MiB [dependent] 1183 modules
-  runtime modules 1.58 KiB 7 modules
-  ./example.js 214 bytes [built] [code generated]
-    [no exports]
-    [used exports unknown]
-    entry ./example.js main
-webpack 5.0.0-beta.32 compiled successfully
+  cached modules 2.8 MiB (javascript) 1.58 KiB (runtime) [cached] 1191 modules
+webpack 5.0.0-rc.2 compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset output.js 544 KiB [emitted] [minimized] [big] (name: main) 1 related asset
-chunk (runtime: main) output.js (main) 1.89 MiB (javascript) 1.33 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.89 MiB (javascript) 1.33 KiB (runtime) [entry]
   > ./example.js main
-  dependent modules 1.13 MiB [dependent] 563 modules
-  runtime modules 1.33 KiB 6 modules
-  ./example.js + 612 modules 775 KiB [built] [code generated]
-    [no exports]
-    [no exports used]
-    entry ./example.js main
+  cached modules 1.89 MiB (javascript) 1.33 KiB (runtime) [cached] 570 modules
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
@@ -94,5 +84,5 @@ WARNING in webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
-webpack 5.0.0-beta.32 compiled with 3 warnings
+webpack 5.0.0-rc.2 compiled with 3 warnings
 ```

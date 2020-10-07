@@ -146,48 +146,7 @@ chunk output.js (main) 652 bytes [entry] [rendered]
   ./example.js 33 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-
-ERROR in (webpack)/node_modules/@types/babel__core/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__core/index.d.ts(14,20):
-TS2307: Cannot find module '@babel/types' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/babel__core/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__core/index.d.ts(15,31):
-TS2307: Cannot find module '@babel/parser' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/babel__generator/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__generator/index.d.ts(11,20):
-TS2307: Cannot find module '@babel/types' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/babel__template/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__template/index.d.ts(9,31):
-TS2307: Cannot find module '@babel/parser' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/babel__template/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__template/index.d.ts(10,54):
-TS2307: Cannot find module '@babel/types' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/babel__traverse/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__traverse/index.d.ts(12,20):
-TS2307: Cannot find module '@babel/types' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/babel__traverse/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__traverse/index.d.ts(40,5):
-TS2411: Property 'scope' of type 'Scope' is not assignable to string index type '(VisitNodeFunction<S, any> & VisitNodeFunction<S, any>) | (VisitNodeFunction<S, any> & VisitNodeObject<S, any>) | (VisitNodeObject<...> & VisitNodeFunction<...>) | (VisitNodeObject<...> & VisitNodeObject<...>)'.
-
-ERROR in (webpack)/node_modules/@types/babel__traverse/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__traverse/index.d.ts(41,5):
-TS2411: Property 'noScope' of type 'boolean' is not assignable to string index type '(VisitNodeFunction<S, any> & VisitNodeFunction<S, any>) | (VisitNodeFunction<S, any> & VisitNodeObject<S, any>) | (VisitNodeObject<...> & VisitNodeFunction<...>) | (VisitNodeObject<...> & VisitNodeObject<...>)'.
-
-ERROR in (webpack)/node_modules/@types/jest/index.d.ts
-ERROR in (webpack)/node_modules/@types/jest/index.d.ts(486,51):
-TS2307: Cannot find module 'jest-diff' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/jest/index.d.ts
-ERROR in (webpack)/node_modules/@types/jest/index.d.ts(540,44):
-TS2307: Cannot find module 'pretty-format' or its corresponding type declarations.
-
-webpack 5.0.0-beta.32 compiled with 10 errors
+webpack 5.0.0-rc.2 compiled successfully
 ```
 
 ## Production mode
@@ -202,46 +161,5 @@ chunk (runtime: main) output.js (main) 652 bytes [entry] [rendered]
   ./example.js 33 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-
-ERROR in (webpack)/node_modules/@types/babel__core/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__core/index.d.ts(14,20):
-TS2307: Cannot find module '@babel/types' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/babel__core/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__core/index.d.ts(15,31):
-TS2307: Cannot find module '@babel/parser' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/babel__generator/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__generator/index.d.ts(11,20):
-TS2307: Cannot find module '@babel/types' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/babel__template/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__template/index.d.ts(9,31):
-TS2307: Cannot find module '@babel/parser' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/babel__template/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__template/index.d.ts(10,54):
-TS2307: Cannot find module '@babel/types' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/babel__traverse/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__traverse/index.d.ts(12,20):
-TS2307: Cannot find module '@babel/types' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/babel__traverse/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__traverse/index.d.ts(40,5):
-TS2411: Property 'scope' of type 'Scope' is not assignable to string index type '(VisitNodeFunction<S, any> & VisitNodeFunction<S, any>) | (VisitNodeFunction<S, any> & VisitNodeObject<S, any>) | (VisitNodeObject<...> & VisitNodeFunction<...>) | (VisitNodeObject<...> & VisitNodeObject<...>)'.
-
-ERROR in (webpack)/node_modules/@types/babel__traverse/index.d.ts
-ERROR in (webpack)/node_modules/@types/babel__traverse/index.d.ts(41,5):
-TS2411: Property 'noScope' of type 'boolean' is not assignable to string index type '(VisitNodeFunction<S, any> & VisitNodeFunction<S, any>) | (VisitNodeFunction<S, any> & VisitNodeObject<S, any>) | (VisitNodeObject<...> & VisitNodeFunction<...>) | (VisitNodeObject<...> & VisitNodeObject<...>)'.
-
-ERROR in (webpack)/node_modules/@types/jest/index.d.ts
-ERROR in (webpack)/node_modules/@types/jest/index.d.ts(486,51):
-TS2307: Cannot find module 'jest-diff' or its corresponding type declarations.
-
-ERROR in (webpack)/node_modules/@types/jest/index.d.ts
-ERROR in (webpack)/node_modules/@types/jest/index.d.ts(540,44):
-TS2307: Cannot find module 'pretty-format' or its corresponding type declarations.
-
-webpack 5.0.0-beta.32 compiled with 10 errors
+webpack 5.0.0-rc.2 compiled successfully
 ```

@@ -113,7 +113,7 @@ chunk 456.chunk.js 5.45 KiB [rendered]
     cjs self exports reference ./common.js 1:0-14
     amd require ./common ./pageA.js 1:0-3:2
     amd require ./common ./pageB.js 1:0-3:2
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```
 
 ## Production mode
@@ -172,5 +172,5 @@ chunk (runtime: pageA, pageB) 456.chunk.js 5.45 KiB [rendered]
     cjs self exports reference ./common.js 1:0-14
     amd require ./common ./pageA.js 1:0-3:2
     amd require ./common ./pageB.js 1:0-3:2
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```

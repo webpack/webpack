@@ -574,7 +574,7 @@ chunk router_js.bundle.js 951 bytes [initial] [rendered] split chunk (cache grou
     [used exports unknown]
     entry ./router pageA
     entry ./router pageB
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```
 
 ## Production mode
@@ -629,5 +629,5 @@ chunk (runtime: pageA, pageB) router_js.bundle.js 951 bytes [initial] [rendered]
     [no exports used]
     entry ./router pageA
     entry ./router pageB
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```

@@ -165,7 +165,7 @@ chunk app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered
     [no exports]
     [used exports unknown]
     entry ./example-app main
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```
 
 ## Production mode
@@ -179,7 +179,7 @@ chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
     [no exports]
     [no exports used]
     entry ./example-app main
-webpack 5.0.0-beta.32 compiled successfully
+webpack 5.0.0-rc.2 compiled successfully
 ```
 
 <!-- @TODO:

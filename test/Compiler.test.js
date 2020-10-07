@@ -6,6 +6,7 @@ const webpack = require("..");
 const Stats = require("../lib/Stats");
 const { createFsFromVolume, Volume } = require("memfs");
 const captureStdio = require("./helpers/captureStdio");
+const deprecationTracking = require("./helpers/deprecationTracking");
 
 describe("Compiler", () => {
 	jest.setTimeout(20000);
@@ -752,6 +753,18 @@ describe("Compiler", () => {
 			expect(failedSpy).toHaveBeenCalledWith(err);
 			done();
 		});
+	});
+	it("should deprecate when watch option is used without callback", () => {
+		const tracker = deprecationTracking.start();
+		webpack({
+			watch: true
+		});
+		const deprecations = tracker();
+		expect(deprecations).toEqual([
+			expect.objectContaining({
+				code: "DEP_WEBPACK_WATCH_WITHOUT_CALLBACK"
+			})
+		]);
 	});
 	describe("infrastructure logging", () => {
 		let capture;
