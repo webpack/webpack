@@ -478,6 +478,7 @@ declare abstract class BasicEvaluatedExpression {
 declare abstract class ByTypeGenerator extends Generator {
 	map: any;
 }
+declare const CIRCULAR_CONNECTION: unique symbol;
 declare class Cache {
 	constructor();
 	hooks: {
@@ -2235,7 +2236,7 @@ declare class Dependency {
 	): (
 		arg0: ModuleGraphConnection,
 		arg1: string | SortableSet<string>
-	) => boolean;
+	) => boolean | typeof TRANSITIVE_ONLY | typeof CIRCULAR_CONNECTION;
 
 	/**
 	 * Returns the exported names
@@ -2261,6 +2262,9 @@ declare class Dependency {
 	 * implement this method to allow the occurrence order plugin to count correctly
 	 */
 	getNumberOfIdOccurrences(): number;
+	getModuleEvaluationSideEffectsState(
+		moduleGraph: ModuleGraph
+	): boolean | typeof TRANSITIVE_ONLY | typeof CIRCULAR_CONNECTION;
 	serialize(__0: { write: any }): void;
 	deserialize(__0: { read: any }): void;
 	module: any;
@@ -3804,8 +3808,50 @@ declare class JavascriptParser extends Parser {
 				BasicEvaluatedExpression
 			>
 		>;
+		isPure: HookMap<
+			SyncBailHook<
+				[
+					(
+						| UnaryExpression
+						| ThisExpression
+						| ArrayExpression
+						| ObjectExpression
+						| FunctionExpression
+						| ArrowFunctionExpression
+						| YieldExpression
+						| SimpleLiteral
+						| RegExpLiteral
+						| UpdateExpression
+						| BinaryExpression
+						| AssignmentExpression
+						| LogicalExpression
+						| MemberExpression
+						| ConditionalExpression
+						| SimpleCallExpression
+						| NewExpression
+						| SequenceExpression
+						| TemplateLiteral
+						| TaggedTemplateExpression
+						| ClassExpression
+						| MetaProperty
+						| Identifier
+						| AwaitExpression
+						| ImportExpression
+						| ChainExpression
+						| FunctionDeclaration
+						| VariableDeclaration
+						| ClassDeclaration
+					),
+					number
+				],
+				boolean | void
+			>
+		>;
 		preStatement: SyncBailHook<
 			[
+				| FunctionDeclaration
+				| VariableDeclaration
+				| ClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
 				| EmptyStatement
@@ -3824,9 +3870,6 @@ declare class JavascriptParser extends Parser {
 				| ForStatement
 				| ForInStatement
 				| ForOfStatement
-				| FunctionDeclaration
-				| VariableDeclaration
-				| ClassDeclaration
 				| ImportDeclaration
 				| ExportNamedDeclaration
 				| ExportDefaultDeclaration
@@ -3836,6 +3879,9 @@ declare class JavascriptParser extends Parser {
 		>;
 		blockPreStatement: SyncBailHook<
 			[
+				| FunctionDeclaration
+				| VariableDeclaration
+				| ClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
 				| EmptyStatement
@@ -3854,9 +3900,6 @@ declare class JavascriptParser extends Parser {
 				| ForStatement
 				| ForInStatement
 				| ForOfStatement
-				| FunctionDeclaration
-				| VariableDeclaration
-				| ClassDeclaration
 				| ImportDeclaration
 				| ExportNamedDeclaration
 				| ExportDefaultDeclaration
@@ -3866,6 +3909,9 @@ declare class JavascriptParser extends Parser {
 		>;
 		statement: SyncBailHook<
 			[
+				| FunctionDeclaration
+				| VariableDeclaration
+				| ClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
 				| EmptyStatement
@@ -3884,9 +3930,6 @@ declare class JavascriptParser extends Parser {
 				| ForStatement
 				| ForInStatement
 				| ForOfStatement
-				| FunctionDeclaration
-				| VariableDeclaration
-				| ClassDeclaration
 				| ImportDeclaration
 				| ExportNamedDeclaration
 				| ExportDefaultDeclaration
@@ -4014,6 +4057,9 @@ declare class JavascriptParser extends Parser {
 		| AwaitExpression
 		| ImportExpression
 		| ChainExpression
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
 		| ExpressionStatement
 		| BlockStatement
 		| EmptyStatement
@@ -4032,9 +4078,6 @@ declare class JavascriptParser extends Parser {
 		| ForStatement
 		| ForInStatement
 		| ForOfStatement
-		| FunctionDeclaration
-		| VariableDeclaration
-		| ClassDeclaration
 	)[];
 	prevStatement: any;
 	currentTagData: any;
@@ -4182,6 +4225,40 @@ declare class JavascriptParser extends Parser {
 	parseString(expression?: any): any;
 	parseCalculatedString(expression?: any): any;
 	evaluate(source?: any): BasicEvaluatedExpression;
+	isPure(
+		expr:
+			| UnaryExpression
+			| ThisExpression
+			| ArrayExpression
+			| ObjectExpression
+			| FunctionExpression
+			| ArrowFunctionExpression
+			| YieldExpression
+			| SimpleLiteral
+			| RegExpLiteral
+			| UpdateExpression
+			| BinaryExpression
+			| AssignmentExpression
+			| LogicalExpression
+			| MemberExpression
+			| ConditionalExpression
+			| SimpleCallExpression
+			| NewExpression
+			| SequenceExpression
+			| TemplateLiteral
+			| TaggedTemplateExpression
+			| ClassExpression
+			| MetaProperty
+			| Identifier
+			| AwaitExpression
+			| ImportExpression
+			| ChainExpression
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration,
+		commentsStartPos: number,
+		args?: any
+	): boolean;
 	getComments(range?: any): any;
 	isAsiPosition(pos: number): boolean;
 	isStatementLevelExpression(expr?: any): boolean;
@@ -4292,6 +4369,7 @@ declare interface KnownBuildMeta {
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	async?: boolean;
+	sideEffectFree?: boolean;
 }
 declare abstract class LazySet<T> {
 	readonly size: number;
@@ -4752,6 +4830,9 @@ declare class Module extends DependenciesBlock {
 	getConcatenationBailoutReason(
 		context: ConcatenationBailoutReasonContext
 	): string;
+	getSideEffectsConnectionState(
+		moduleGraph: ModuleGraph
+	): boolean | typeof TRANSITIVE_ONLY | typeof CIRCULAR_CONNECTION;
 	codeGeneration(context: CodeGenerationContext): CodeGenerationResult;
 	chunkCondition(chunk: Chunk, compilation: Compilation): boolean;
 
@@ -4951,7 +5032,7 @@ declare class ModuleGraphConnection {
 		condition?: (
 			arg0: ModuleGraphConnection,
 			arg1: string | SortableSet<string>
-		) => boolean
+		) => boolean | typeof TRANSITIVE_ONLY | typeof CIRCULAR_CONNECTION
 	);
 	originModule: Module;
 	resolvedOriginModule: Module;
@@ -4963,20 +5044,30 @@ declare class ModuleGraphConnection {
 	condition: (
 		arg0: ModuleGraphConnection,
 		arg1: string | SortableSet<string>
-	) => boolean;
+	) => boolean | typeof TRANSITIVE_ONLY | typeof CIRCULAR_CONNECTION;
 	explanations: Set<string>;
 	clone(): ModuleGraphConnection;
 	addCondition(
 		condition: (
 			arg0: ModuleGraphConnection,
 			arg1: string | SortableSet<string>
-		) => boolean
+		) => boolean | typeof TRANSITIVE_ONLY | typeof CIRCULAR_CONNECTION
 	): void;
 	addExplanation(explanation: string): void;
 	readonly explanation: string;
 	active: void;
 	isActive(runtime: string | SortableSet<string>): boolean;
-	setActive(value?: any): void;
+	isTargetActive(runtime: string | SortableSet<string>): boolean;
+	getActiveState(
+		runtime: string | SortableSet<string>
+	): boolean | typeof TRANSITIVE_ONLY | typeof CIRCULAR_CONNECTION;
+	setActive(value: boolean): void;
+	static addConnectionStates: (
+		a: boolean | typeof TRANSITIVE_ONLY | typeof CIRCULAR_CONNECTION,
+		b: boolean | typeof TRANSITIVE_ONLY | typeof CIRCULAR_CONNECTION
+	) => boolean | typeof TRANSITIVE_ONLY | typeof CIRCULAR_CONNECTION;
+	static TRANSITIVE_ONLY: typeof TRANSITIVE_ONLY;
+	static CIRCULAR_CONNECTION: typeof CIRCULAR_CONNECTION;
 }
 
 /**
@@ -5281,6 +5372,9 @@ type NodeEstreeIndex =
 	| AwaitExpression
 	| ImportExpression
 	| ChainExpression
+	| FunctionDeclaration
+	| VariableDeclaration
+	| ClassDeclaration
 	| ExpressionStatement
 	| BlockStatement
 	| EmptyStatement
@@ -5299,9 +5393,6 @@ type NodeEstreeIndex =
 	| ForStatement
 	| ForInStatement
 	| ForOfStatement
-	| FunctionDeclaration
-	| VariableDeclaration
-	| ClassDeclaration
 	| ImportDeclaration
 	| ExportNamedDeclaration
 	| ExportDefaultDeclaration
@@ -8659,6 +8750,9 @@ declare abstract class StackedMap<K, V> {
 	createChild(): StackedMap<K, V>;
 }
 type Statement =
+	| FunctionDeclaration
+	| VariableDeclaration
+	| ClassDeclaration
 	| ExpressionStatement
 	| BlockStatement
 	| EmptyStatement
@@ -8676,10 +8770,7 @@ type Statement =
 	| DoWhileStatement
 	| ForStatement
 	| ForInStatement
-	| ForOfStatement
-	| FunctionDeclaration
-	| VariableDeclaration
-	| ClassDeclaration;
+	| ForOfStatement;
 declare class Stats {
 	constructor(compilation: Compilation);
 	compilation: Compilation;
@@ -9126,6 +9217,7 @@ declare interface SyntheticDependencyLocation {
 	index?: number;
 }
 declare const TOMBSTONE: unique symbol;
+declare const TRANSITIVE_ONLY: unique symbol;
 declare interface TagInfo {
 	tag: any;
 	data: any;
@@ -10220,6 +10312,7 @@ declare namespace exports {
 		LoaderTargetPlugin,
 		Module,
 		ModuleGraph,
+		ModuleGraphConnection,
 		NoEmitOnErrorsPlugin,
 		NormalModule,
 		NormalModuleReplacementPlugin,
