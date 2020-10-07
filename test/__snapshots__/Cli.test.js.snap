@@ -2133,19 +2133,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "output-clean-enabled": Object {
-    "configs": Array [
-      Object {
-        "description": "Is clean enabled.",
-        "multiple": false,
-        "path": "output.clean.enabled",
-        "type": "boolean",
-      },
-    ],
-    "description": "Is clean enabled.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "output-clean-ignore": Object {
     "configs": Array [
       Object {

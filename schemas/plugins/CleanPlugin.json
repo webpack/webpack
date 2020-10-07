@@ -7,10 +7,6 @@
       "description": "Log the assets that should be removed instead of delete them.",
       "type": "boolean"
     },
-    "enabled": {
-      "description": "Is clean enabled.",
-      "type": "boolean"
-    },
     "ignore": {
       "description": "Not delete the assets, that matches to this regexp or a function.",
       "anyOf": [

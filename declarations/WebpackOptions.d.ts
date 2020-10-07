@@ -424,6 +424,21 @@ export type ChunkLoadTimeout = number;
  */
 export type ChunkLoadingGlobal = string;
 /**
+ * Clean the output directory before emit.
+ */
+export type CleanPlugin =
+	| boolean
+	| {
+			/**
+			 * Log the assets that should be removed instead of delete them.
+			 */
+			dry?: boolean;
+			/**
+			 * Not delete the assets, that matches to this regexp or a function.
+			 */
+			ignore?: RegExp | ((asset: string) => boolean);
+	  };
+/**
  * Check if to be emitted file already exists and have the same content before writing to output filesystem.
  */
 export type CompareBeforeEmit = boolean;
@@ -1735,7 +1750,7 @@ export interface Output {
 	/**
 	 * Clean the output directory before emit.
 	 */
-	clean?: boolean | CleanPlugin;
+	clean?: CleanPlugin;
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
@@ -1888,23 +1903,6 @@ export interface Output {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	workerWasmLoading?: WasmLoading;
-}
-/**
- * Clean the output directory before emit.
- */
-export interface CleanPlugin {
-	/**
-	 * Log the assets that should be removed instead of delete them.
-	 */
-	dry?: boolean;
-	/**
-	 * Is clean enabled.
-	 */
-	enabled?: boolean;
-	/**
-	 * Not delete the assets, that matches to this regexp or a function.
-	 */
-	ignore?: RegExp | ((asset: string) => boolean);
 }
 /**
  * The abilities of the environment where the webpack generated code should run.

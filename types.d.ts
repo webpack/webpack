@@ -1003,18 +1003,22 @@ declare interface CleanPluginArgument {
 	dry?: boolean;
 
 	/**
-	 * Is clean enabled.
-	 */
-	enabled?: boolean;
-
-	/**
 	 * Not delete the assets, that matches to this regexp or a function.
 	 */
 	ignore?: RegExp | ((asset: string) => boolean);
 }
 declare class CleanPluginClass {
-	constructor(options: CleanPluginArgument);
-	options: { enabled: boolean; dry: boolean } & CleanPluginArgument;
+	constructor(options?: CleanPluginArgument);
+	options: {
+		/**
+		 * Log the assets that should be removed instead of delete them.
+		 */
+		dry: boolean;
+		/**
+		 * Not delete the assets, that matches to this regexp or a function.
+		 */
+		ignore?: RegExp | ((asset: string) => boolean);
+	};
 	ignoreList: (RegExp | ((arg0: string) => boolean))[];
 	logger: WebpackLogger;
 	fs: OutputFileSystem;
@@ -1035,26 +1039,18 @@ declare interface CleanPluginCompilationHooks {
 		void
 	>;
 }
-
-/**
- * Clean the output directory before emit.
- */
-declare interface CleanPluginWebpackOptions {
-	/**
-	 * Log the assets that should be removed instead of delete them.
-	 */
-	dry?: boolean;
-
-	/**
-	 * Is clean enabled.
-	 */
-	enabled?: boolean;
-
-	/**
-	 * Not delete the assets, that matches to this regexp or a function.
-	 */
-	ignore?: RegExp | ((asset: string) => boolean);
-}
+type CleanPluginWebpackOptions =
+	| boolean
+	| {
+			/**
+			 * Log the assets that should be removed instead of delete them.
+			 */
+			dry?: boolean;
+			/**
+			 * Not delete the assets, that matches to this regexp or a function.
+			 */
+			ignore?: RegExp | ((asset: string) => boolean);
+	  };
 declare interface CodeGenerationContext {
 	/**
 	 * the dependency templates
@@ -6153,7 +6149,7 @@ declare interface Output {
 	/**
 	 * Clean the output directory before emit.
 	 */
-	clean?: boolean | CleanPluginWebpackOptions;
+	clean?: CleanPluginWebpackOptions;
 
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
