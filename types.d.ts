@@ -10338,6 +10338,7 @@ declare namespace exports {
 		RuleSetConditionAbsolute,
 		RuleSetRule,
 		RuleSetUse,
+		RuleSetUseItem,
 		Configuration,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance
