@@ -10335,6 +10335,7 @@ declare namespace exports {
 		ModuleOptions,
 		ResolveOptionsWebpackOptions as ResolveOptions,
 		RuleSetCondition,
+		RuleSetConditionAbsolute,
 		RuleSetRule,
 		Configuration,
 		WebpackOptionsNormalized,
