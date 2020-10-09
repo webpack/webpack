@@ -1,5 +1,5 @@
-import "./d";
-import "./f";
-import "x";
-import "y";
-export default "b";
+import d from "./d";
+import f from "./f";
+import x from "x";
+import y from "y";
+export default "b" + d + f + x + y;
