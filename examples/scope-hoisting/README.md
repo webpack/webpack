@@ -524,7 +524,7 @@ chunk (runtime: main) 872.output.js 263 bytes [rendered]
   ./lazy.js + 2 modules 221 bytes [built] [code generated]
     [exports: c, d, x, y]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
 
 ## Production mode
@@ -546,5 +546,5 @@ chunk (runtime: main) 872.output.js 263 bytes [rendered]
   ./lazy.js + 2 modules 221 bytes [built] [code generated]
     [exports: c, d, x, y]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```

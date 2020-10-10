@@ -347,7 +347,7 @@ chunk 996.output.js 21 bytes [rendered] split chunk (cache group: default)
     cjs require ./b ./example.js 4:1-15
     require.ensure item ./b ./example.js 10:1-12:3
     require.ensure item ./b ./example.js 13:1-15:3
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
 
 ## Production mode
@@ -420,5 +420,5 @@ chunk (runtime: main) 996.output.js 21 bytes [rendered] split chunk (cache group
     cjs require ./b ./example.js 4:1-15
     require.ensure item ./b ./example.js 10:1-12:3
     require.ensure item ./b ./example.js 13:1-15:3
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```

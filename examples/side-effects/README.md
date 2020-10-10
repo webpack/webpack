@@ -287,18 +287,18 @@ chunk output.js (main) 325 bytes (javascript) 668 bytes (runtime) [entry] [rende
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset output.js 52 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 325 bytes [entry] [rendered]
+chunk (runtime: main) output.js (main) 303 bytes [entry] [rendered]
   > ./example.js main
-  ./example.js + 6 modules 325 bytes [built] [code generated]
+  ./example.js + 5 modules 303 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```

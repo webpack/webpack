@@ -63,7 +63,7 @@ module.exports = {
 # dist/dll.js
 
 ```javascript
-var dll_84b3c692d890d26bb885;dll_84b3c692d890d26bb885 =
+var dll_845506e3d5fbeffab985;dll_845506e3d5fbeffab985 =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -213,7 +213,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_84b3c692d890d26bb885","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+{"name":"dll_845506e3d5fbeffab985","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -230,7 +230,7 @@ chunk dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
 
 ## Production mode
@@ -244,5 +244,5 @@ chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [en
   dll dll 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```

@@ -770,7 +770,7 @@ chunk (runtime: ./example.js|79:18-82:2) workers/fibonacci.js (fibonacci) 176 by
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 79:18-82:2
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
 
 ## Production mode
@@ -805,5 +805,5 @@ chunk (runtime: ./example.js|79:18-82:2) workers/fibonacci.js (fibonacci) 176 by
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 79:18-82:2
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
