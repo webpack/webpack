@@ -2716,7 +2716,7 @@ declare class EntryOptionPlugin {
 	static applyEntryOption(
 		compiler: Compiler,
 		context: string,
-		entry: string
+		entry: EntryNormalized
 	): void;
 	static entryDescriptionToOptions(
 		compiler: Compiler,
