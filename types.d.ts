@@ -2700,6 +2700,28 @@ type EntryNormalized =
 declare interface EntryObject {
 	[index: string]: string | [string, ...string[]] | EntryDescription;
 }
+declare class EntryOptionPlugin {
+	constructor();
+	apply(compiler: Compiler): void;
+	static applyEntryOption(
+		compiler: Compiler,
+		context: string,
+		entry: string
+	): void;
+	static entryDescriptionToOptions(
+		compiler: Compiler,
+		name: string,
+		desc: EntryDescriptionNormalized
+	): { name?: string } & Pick<
+		EntryDescriptionNormalized,
+		| "filename"
+		| "chunkLoading"
+		| "dependOn"
+		| "library"
+		| "runtime"
+		| "wasmLoading"
+	>;
+}
 declare class EntryPlugin {
 	/**
 	 * An entry plugin which will handle
@@ -10295,6 +10317,7 @@ declare namespace exports {
 		Dependency,
 		DllPlugin,
 		DllReferencePlugin,
+		EntryOptionPlugin,
 		EntryPlugin,
 		EnvironmentPlugin,
 		EvalDevToolModulePlugin,
