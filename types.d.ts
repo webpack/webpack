@@ -2545,6 +2545,16 @@ type DllReferencePluginOptionsSourceType =
 	| "umd2"
 	| "jsonp"
 	| "system";
+declare class DynamicEntryPlugin {
+	constructor(context: string, entry: () => Promise<EntryStaticNormalized>);
+	context: string;
+	entry: () => Promise<EntryStaticNormalized>;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 declare interface Effect {
 	type: string;
 	value: any;
@@ -10317,6 +10327,7 @@ declare namespace exports {
 		Dependency,
 		DllPlugin,
 		DllReferencePlugin,
+		DynamicEntryPlugin,
 		EntryOptionPlugin,
 		EntryPlugin,
 		EnvironmentPlugin,
