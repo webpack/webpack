@@ -466,6 +466,26 @@ Child all:
      [8] ./index.js 147 bytes {12} [built]"
 `;
 
+exports[`StatsTestCases should print correct stats for child-compiler-apply-entry-option 1`] = `
+"Hash: d2bc3b9cbb271a83f842
+Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+    Asset      Size  Chunks             Chunk Names
+ child.js  3.57 KiB          [emitted]  
+parent.js  3.57 KiB       0  [emitted]  parent
+Entrypoint parent = parent.js
+[0] ./parent.js 0 bytes {0} [built]
+
+WARNING in configuration
+The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
+You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/
+Child TestApplyEntryOptionPlugin:
+       Asset      Size  Chunks             Chunk Names
+    child.js  3.57 KiB       0  [emitted]  child
+    Entrypoint child = child.js
+    [0] ./child.js 0 bytes {0} [built]"
+`;
+
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
 "Hash: 88889d87c9bc8eba9a2b
 Time: Xms
