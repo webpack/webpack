@@ -448,7 +448,12 @@ all:
 exports[`StatsTestCases should print correct stats for child-compiler-apply-entry-option 1`] = `
 "asset child.js 54 bytes [emitted]
 asset parent.js 54 bytes [emitted] (name: parent)
+Entrypoint parent 54 bytes = parent.js
 ./parent.js 1 bytes [built] [code generated]
+  assets by status 54 bytes [cached] 1 asset
+  Entrypoint child = child.js
+  ./child.js 1 bytes [built] [code generated]
+    
 
 WARNING in configuration
 The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.

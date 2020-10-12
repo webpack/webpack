@@ -1,7 +1,7 @@
 "use strict";
 
 var EntryOptionPlugin = require("../../../").EntryOptionPlugin;
-var WebpackOptionsDefaulter = require("../../../").WebpackOptionsDefaulter;
+var getNormalizedWebpackOptions = require("../../../").config.getNormalizedWebpackOptions;
 
 /**
  * Use the static method in EntryOptionPlugin to
@@ -10,9 +10,7 @@ var WebpackOptionsDefaulter = require("../../../").WebpackOptionsDefaulter;
 
 module.exports = class TestApplyEntryOptionPlugin {
   constructor(options) {
-    this.options = new WebpackOptionsDefaulter().process({
-      ...options
-    });
+    this.options = getNormalizedWebpackOptions(options);
   }
 
   apply(compiler) {

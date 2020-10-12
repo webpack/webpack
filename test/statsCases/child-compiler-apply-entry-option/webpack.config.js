@@ -16,5 +16,9 @@ module.exports = {
 				child: "./child"
 			}
 		})
-	]
+	],
+	stats: {
+		children: true,
+		entrypoints: true
+	}
 };
