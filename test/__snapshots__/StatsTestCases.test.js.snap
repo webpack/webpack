@@ -445,6 +445,18 @@ all:
   all (webpack x.x.x) compiled successfully"
 `;
 
+exports[`StatsTestCases should print correct stats for child-compiler-apply-entry-option 1`] = `
+"asset child.js 54 bytes [emitted]
+asset parent.js 54 bytes [emitted] (name: parent)
+./parent.js 1 bytes [built] [code generated]
+
+WARNING in configuration
+The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
+You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/
+
+webpack x.x.x compiled with 1 warning in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
 "PublicPath: auto
 asset main1.js 4.56 KiB [emitted] (name: main1)
