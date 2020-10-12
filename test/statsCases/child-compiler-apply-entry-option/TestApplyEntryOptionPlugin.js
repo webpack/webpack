@@ -10,9 +10,9 @@ var WebpackOptionsDefaulter = require("../../../").WebpackOptionsDefaulter;
 
 module.exports = class TestApplyEntryOptionPlugin {
   constructor(options) {
-    this.options = new WebpackOptionsDefaulter().process({
-      ...options
-    });
+    this.options = new WebpackOptionsDefaulter().process(
+      Object.assign({}, options)
+    );
   }
 
   apply(compiler) {
