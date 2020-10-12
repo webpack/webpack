@@ -1618,6 +1618,7 @@ declare class Compiler {
 		afterResolvers: SyncHook<[Compiler], void>;
 		entryOption: SyncBailHook<[string, EntryNormalized], boolean>;
 	}>;
+	webpack: typeof exports;
 	name: string;
 	parentCompilation: Compilation;
 	root: Compiler;
@@ -2222,6 +2223,10 @@ declare class Dependency {
 	readonly type: string;
 	readonly category: string;
 	getResourceIdentifier(): string;
+
+	/**
+	 * Returns the referenced module and export
+	 */
 	getReference(moduleGraph: ModuleGraph): never;
 
 	/**
@@ -3566,7 +3571,15 @@ declare interface HandleModuleCreationOptions {
 }
 declare class Hash {
 	constructor();
+
+	/**
+	 * Update hash {@link https://nodejs.org/api/crypto.html#crypto_hash_update_data_inputencoding}
+	 */
 	update(data: string | Buffer, inputEncoding?: string): Hash;
+
+	/**
+	 * Calculates the digest {@link https://nodejs.org/api/crypto.html#crypto_hash_digest_encoding}
+	 */
 	digest(encoding?: string): string | Buffer;
 }
 type HashFunction = string | typeof Hash;
@@ -10254,6 +10267,7 @@ declare namespace exports {
 			export let createFileSerializer: (fs?: any) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
+		export const cleverMerge: <T, O>(first: T, second: O) => T & O;
 	}
 	export namespace sources {
 		export {
