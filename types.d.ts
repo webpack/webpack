@@ -2550,6 +2550,16 @@ type DllReferencePluginOptionsSourceType =
 	| "umd2"
 	| "jsonp"
 	| "system";
+declare class DynamicEntryPlugin {
+	constructor(context: string, entry: () => Promise<EntryStaticNormalized>);
+	context: string;
+	entry: () => Promise<EntryStaticNormalized>;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 declare interface Effect {
 	type: string;
 	value: any;
@@ -2704,6 +2714,28 @@ type EntryNormalized =
  */
 declare interface EntryObject {
 	[index: string]: string | [string, ...string[]] | EntryDescription;
+}
+declare class EntryOptionPlugin {
+	constructor();
+	apply(compiler: Compiler): void;
+	static applyEntryOption(
+		compiler: Compiler,
+		context: string,
+		entry: EntryNormalized
+	): void;
+	static entryDescriptionToOptions(
+		compiler: Compiler,
+		name: string,
+		desc: EntryDescriptionNormalized
+	): { name?: string } & Pick<
+		EntryDescriptionNormalized,
+		| "filename"
+		| "chunkLoading"
+		| "dependOn"
+		| "library"
+		| "runtime"
+		| "wasmLoading"
+	>;
 }
 declare class EntryPlugin {
 	/**
@@ -10309,6 +10341,8 @@ declare namespace exports {
 		Dependency,
 		DllPlugin,
 		DllReferencePlugin,
+		DynamicEntryPlugin,
+		EntryOptionPlugin,
 		EntryPlugin,
 		EnvironmentPlugin,
 		EvalDevToolModulePlugin,
