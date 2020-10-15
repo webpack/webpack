@@ -2216,13 +2216,13 @@ LOG from webpack.FileSystemInfo
 
 exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
 "a-normal:
-  assets by path *.js 2.98 KiB
-    asset b768a44cfaaf934110aa-b768a4.js 2.59 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+  assets by path *.js 2.99 KiB
+    asset 92a0a394f8459d57eed5-92a0a3.js 2.6 KiB [emitted] [immutable] [minimized] (name: runtime~main)
     asset 3cc8faad16137711c07e-3cc8fa.js 210 bytes [emitted] [immutable] [minimized] (name: main)
     asset b6f77787a670e97d47b5-b6f777.js 193 bytes [emitted] [immutable] [minimized] (name: lazy)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
-  Entrypoint main 2.8 KiB (5.89 KiB) = b768a44cfaaf934110aa-b768a4.js 2.59 KiB 3cc8faad16137711c07e-3cc8fa.js 210 bytes 1 auxiliary asset
+  Entrypoint main 2.8 KiB (5.89 KiB) = 92a0a394f8459d57eed5-92a0a3.js 2.6 KiB 3cc8faad16137711c07e-3cc8fa.js 210 bytes 1 auxiliary asset
   runtime modules 7.36 KiB 8 modules
   orphan modules 23 bytes [orphan] 1 module
   cacheable modules 340 bytes (javascript) 20.4 KiB (asset)
@@ -2235,13 +2235,13 @@ exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
   a-normal (webpack x.x.x) compiled successfully in X ms
 
 b-normal:
-  assets by path *.js 2.98 KiB
-    asset b768a44cfaaf934110aa-b768a4.js 2.59 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+  assets by path *.js 2.99 KiB
+    asset a2c7bddec46d4afc817c-a2c7bd.js 2.6 KiB [emitted] [immutable] [minimized] (name: runtime~main)
     asset 3cc8faad16137711c07e-3cc8fa.js 210 bytes [emitted] [immutable] [minimized] (name: main)
     asset b6f77787a670e97d47b5-b6f777.js 193 bytes [emitted] [immutable] [minimized] (name: lazy)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
-  Entrypoint main 2.8 KiB (5.89 KiB) = b768a44cfaaf934110aa-b768a4.js 2.59 KiB 3cc8faad16137711c07e-3cc8fa.js 210 bytes 1 auxiliary asset
+  Entrypoint main 2.8 KiB (5.89 KiB) = a2c7bddec46d4afc817c-a2c7bd.js 2.6 KiB 3cc8faad16137711c07e-3cc8fa.js 210 bytes 1 auxiliary asset
   runtime modules 7.36 KiB 8 modules
   orphan modules 19 bytes [orphan] 1 module
   cacheable modules 295 bytes (javascript) 20.4 KiB (asset)
@@ -2254,16 +2254,16 @@ b-normal:
   b-normal (webpack x.x.x) compiled successfully in X ms
 
 a-source-map:
-  assets by path *.js 3.15 KiB
-    asset 3456a8e52fa6e5564833-3456a8.js 2.65 KiB [emitted] [immutable] [minimized] (name: runtime~main)
-      sourceMap 3456a8e52fa6e5564833-3456a8.js.map 14.3 KiB [emitted] [dev] (auxiliary name: runtime~main)
+  assets by path *.js 3.16 KiB
+    asset 6d482476dfc44d9f4352-6d4824.js 2.65 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+      sourceMap 6d482476dfc44d9f4352-6d4824.js.map 14.3 KiB [emitted] [dev] (auxiliary name: runtime~main)
     asset b8bfcec62cdd15c9a840-b8bfce.js 266 bytes [emitted] [immutable] [minimized] (name: main)
       sourceMap b8bfcec62cdd15c9a840-b8bfce.js.map 366 bytes [emitted] [dev] (auxiliary name: main)
     asset c7c0f8bb2e61b59a89f5-c7c0f8.js 249 bytes [emitted] [immutable] [minimized] (name: lazy)
       sourceMap c7c0f8bb2e61b59a89f5-c7c0f8.js.map 331 bytes [emitted] [dev] (auxiliary name: lazy)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
-  Entrypoint main 2.91 KiB (20.5 KiB) = 3456a8e52fa6e5564833-3456a8.js 2.65 KiB b8bfcec62cdd15c9a840-b8bfce.js 266 bytes 3 auxiliary assets
+  Entrypoint main 2.91 KiB (20.5 KiB) = 6d482476dfc44d9f4352-6d4824.js 2.65 KiB b8bfcec62cdd15c9a840-b8bfce.js 266 bytes 3 auxiliary assets
   runtime modules 7.36 KiB 8 modules
   orphan modules 23 bytes [orphan] 1 module
   cacheable modules 340 bytes (javascript) 20.4 KiB (asset)
@@ -2276,16 +2276,16 @@ a-source-map:
   a-source-map (webpack x.x.x) compiled successfully in X ms
 
 b-source-map:
-  assets by path *.js 3.15 KiB
-    asset 3456a8e52fa6e5564833-3456a8.js 2.65 KiB [emitted] [immutable] [minimized] (name: runtime~main)
-      sourceMap 3456a8e52fa6e5564833-3456a8.js.map 14.3 KiB [emitted] [dev] (auxiliary name: runtime~main)
+  assets by path *.js 3.16 KiB
+    asset 34a1f137ab6013192ef7-34a1f1.js 2.65 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+      sourceMap 34a1f137ab6013192ef7-34a1f1.js.map 14.3 KiB [emitted] [dev] (auxiliary name: runtime~main)
     asset b8bfcec62cdd15c9a840-b8bfce.js 266 bytes [emitted] [immutable] [minimized] (name: main)
       sourceMap b8bfcec62cdd15c9a840-b8bfce.js.map 323 bytes [emitted] [dev] (auxiliary name: main)
     asset c7c0f8bb2e61b59a89f5-c7c0f8.js 249 bytes [emitted] [immutable] [minimized] (name: lazy)
       sourceMap c7c0f8bb2e61b59a89f5-c7c0f8.js.map 327 bytes [emitted] [dev] (auxiliary name: lazy)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] (auxiliary name: main)
-  Entrypoint main 2.91 KiB (20.5 KiB) = 3456a8e52fa6e5564833-3456a8.js 2.65 KiB b8bfcec62cdd15c9a840-b8bfce.js 266 bytes 3 auxiliary assets
+  Entrypoint main 2.91 KiB (20.5 KiB) = 34a1f137ab6013192ef7-34a1f1.js 2.65 KiB b8bfcec62cdd15c9a840-b8bfce.js 266 bytes 3 auxiliary assets
   runtime modules 7.36 KiB 8 modules
   orphan modules 19 bytes [orphan] 1 module
   cacheable modules 295 bytes (javascript) 20.4 KiB (asset)

@@ -12,9 +12,7 @@ const deprecationTracking = require("./helpers/deprecationTracking");
 const webpack = require("..");
 
 const terserForTesting = new TerserPlugin({
-	cache: false,
-	parallel: false,
-	sourceMap: true
+	parallel: false
 });
 
 const DEFAULT_OPTIMIZATIONS = {

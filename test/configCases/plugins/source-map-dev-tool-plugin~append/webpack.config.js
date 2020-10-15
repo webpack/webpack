@@ -14,11 +14,7 @@ module.exports = {
 		filename: "[name].js"
 	},
 	optimization: {
-		minimizer: [
-			new TerserPlugin({
-				sourceMap: true
-			})
-		]
+		minimizer: [new TerserPlugin()]
 	},
 	plugins: [
 		new webpack.SourceMapDevToolPlugin({
