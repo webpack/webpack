@@ -5597,7 +5597,7 @@ declare class NormalModule extends Module {
 }
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[any, NormalModule], void>;
-	beforeLoaders: SyncHook<[LoaderItem[], any, NormalModule], void>;
+	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, any], void>;
 	readResourceForScheme: HookMap<
 		AsyncSeriesBailHook<[string, NormalModule], string | Buffer>
 	>;
