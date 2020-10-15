@@ -287,7 +287,7 @@ const describeCases = config => {
 										if (module.substr(0, 2) === "./") {
 											const p = path.join(outputDirectory, module);
 											const fn = vm.runInThisContext(
-												"(function(require, module, exports, __dirname, __filename, it, expect) {" +
+												"(function(require, module, exports, __dirname, it, expect) {" +
 													"global.expect = expect;" +
 													'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 													fs.readFileSync(p, "utf-8") +
@@ -304,7 +304,6 @@ const describeCases = config => {
 												m,
 												m.exports,
 												outputDirectory,
-												p,
 												_it,
 												expect
 											);
