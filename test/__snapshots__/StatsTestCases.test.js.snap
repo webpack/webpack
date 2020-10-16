@@ -2300,27 +2300,27 @@ b-source-map:
 
 exports[`StatsTestCases should print correct stats for related-assets 1`] = `
 "default:
-  assets by path *.js 15.8 KiB
-    asset default-main.js 14.6 KiB [emitted] (name: main) 3 related assets
-    asset default-chunk_js.js 1.11 KiB [emitted] 3 related assets
+  assets by path *.js 14.5 KiB
+    asset default-main.js 14 KiB [emitted] (name: main) 3 related assets
+    asset default-chunk_js.js 532 bytes [emitted] 3 related assets
   assets by path *.css 142 bytes
     asset default-chunk_js.css 73 bytes [emitted] 3 related assets
     asset default-main.css 69 bytes [emitted] (name: main) 3 related assets
 
 relatedAssets:
-  assets by path *.js 15.8 KiB
-    asset relatedAssets-main.js 14.7 KiB [emitted] (name: main)
-      compressed relatedAssets-main.js.br 14.7 KiB [emitted]
-      compressed relatedAssets-main.js.gz 14.7 KiB [emitted]
-      sourceMap relatedAssets-main.js.map 12.6 KiB [emitted] [dev] (auxiliary name: main)
-        compressed relatedAssets-main.js.map.br 12.6 KiB [emitted]
-        compressed relatedAssets-main.js.map.gz 12.6 KiB [emitted]
-    asset relatedAssets-chunk_js.js 1.12 KiB [emitted]
-      compressed relatedAssets-chunk_js.js.br 1.12 KiB [emitted]
-      compressed relatedAssets-chunk_js.js.gz 1.12 KiB [emitted]
-      sourceMap relatedAssets-chunk_js.js.map 295 bytes [emitted] [dev]
-        compressed relatedAssets-chunk_js.js.map.br 295 bytes [emitted]
-        compressed relatedAssets-chunk_js.js.map.gz 295 bytes [emitted]
+  assets by path *.js 14.5 KiB
+    asset relatedAssets-main.js 14 KiB [emitted] (name: main)
+      compressed relatedAssets-main.js.br 14 KiB [emitted]
+      compressed relatedAssets-main.js.gz 14 KiB [emitted]
+      sourceMap relatedAssets-main.js.map 12.2 KiB [emitted] [dev] (auxiliary name: main)
+        compressed relatedAssets-main.js.map.br 12.2 KiB [emitted]
+        compressed relatedAssets-main.js.map.gz 12.2 KiB [emitted]
+    asset relatedAssets-chunk_js.js 538 bytes [emitted]
+      compressed relatedAssets-chunk_js.js.br 538 bytes [emitted]
+      compressed relatedAssets-chunk_js.js.gz 538 bytes [emitted]
+      sourceMap relatedAssets-chunk_js.js.map 196 bytes [emitted] [dev]
+        compressed relatedAssets-chunk_js.js.map.br 196 bytes [emitted]
+        compressed relatedAssets-chunk_js.js.map.gz 196 bytes [emitted]
   assets by path *.css 154 bytes
     asset relatedAssets-chunk_js.css 79 bytes [emitted]
       sourceMap relatedAssets-chunk_js.css.map 197 bytes [emitted] [dev]
@@ -2336,17 +2336,17 @@ relatedAssets:
       compressed relatedAssets-main.css.gz 75 bytes [emitted]
 
 exclude1:
-  assets by path *.js 15.8 KiB
-    asset exclude1-main.js 14.6 KiB [emitted] (name: main)
-      hidden assets 29.3 KiB 2 assets
-      sourceMap exclude1-main.js.map 12.6 KiB [emitted] [dev] (auxiliary name: main)
-        hidden assets 25.2 KiB 2 assets
+  assets by path *.js 14.5 KiB
+    asset exclude1-main.js 14 KiB [emitted] (name: main)
+      hidden assets 27.9 KiB 2 assets
+      sourceMap exclude1-main.js.map 12.2 KiB [emitted] [dev] (auxiliary name: main)
+        hidden assets 24.3 KiB 2 assets
         1 related asset
       1 related asset
-    asset exclude1-chunk_js.js 1.11 KiB [emitted]
-      hidden assets 2.22 KiB 2 assets
-      sourceMap exclude1-chunk_js.js.map 290 bytes [emitted] [dev]
-        hidden assets 580 bytes 2 assets
+    asset exclude1-chunk_js.js 533 bytes [emitted]
+      hidden assets 1.04 KiB 2 assets
+      sourceMap exclude1-chunk_js.js.map 191 bytes [emitted] [dev]
+        hidden assets 382 bytes 2 assets
         1 related asset
       1 related asset
   assets by path *.css 144 bytes
@@ -2364,15 +2364,15 @@ exclude1:
       1 related asset
 
 exclude2:
-  assets by path *.js 15.8 KiB
-    asset exclude2-main.js 14.6 KiB [emitted] (name: main)
-      hidden assets 12.6 KiB 1 asset
-      compressed exclude2-main.js.br 14.6 KiB [emitted]
-      compressed exclude2-main.js.gz 14.6 KiB [emitted]
-    asset exclude2-chunk_js.js 1.11 KiB [emitted]
-      hidden assets 290 bytes 1 asset
-      compressed exclude2-chunk_js.js.br 1.11 KiB [emitted]
-      compressed exclude2-chunk_js.js.gz 1.11 KiB [emitted]
+  assets by path *.js 14.5 KiB
+    asset exclude2-main.js 14 KiB [emitted] (name: main)
+      hidden assets 12.2 KiB 1 asset
+      compressed exclude2-main.js.br 14 KiB [emitted]
+      compressed exclude2-main.js.gz 14 KiB [emitted]
+    asset exclude2-chunk_js.js 533 bytes [emitted]
+      hidden assets 191 bytes 1 asset
+      compressed exclude2-chunk_js.js.br 533 bytes [emitted]
+      compressed exclude2-chunk_js.js.gz 533 bytes [emitted]
   assets by path *.css 144 bytes
     asset exclude2-chunk_js.css 74 bytes [emitted]
       hidden assets 192 bytes 1 asset
@@ -2384,14 +2384,14 @@ exclude2:
       compressed exclude2-main.css.gz 70 bytes [emitted]
 
 exclude3:
-  hidden assets 1.18 KiB 2 assets
-  assets by status 14.7 KiB [emitted]
-    asset exclude3-main.js 14.6 KiB [emitted] (name: main)
-      compressed exclude3-main.js.br 14.6 KiB [emitted]
-      compressed exclude3-main.js.gz 14.6 KiB [emitted]
-      sourceMap exclude3-main.js.map 12.6 KiB [emitted] [dev] (auxiliary name: main)
-        compressed exclude3-main.js.map.br 12.6 KiB [emitted]
-        compressed exclude3-main.js.map.gz 12.6 KiB [emitted]
+  hidden assets 607 bytes 2 assets
+  assets by status 14 KiB [emitted]
+    asset exclude3-main.js 14 KiB [emitted] (name: main)
+      compressed exclude3-main.js.br 14 KiB [emitted]
+      compressed exclude3-main.js.gz 14 KiB [emitted]
+      sourceMap exclude3-main.js.map 12.2 KiB [emitted] [dev] (auxiliary name: main)
+        compressed exclude3-main.js.map.br 12.2 KiB [emitted]
+        compressed exclude3-main.js.map.gz 12.2 KiB [emitted]
     asset exclude3-main.css 70 bytes [emitted] (name: main)
       sourceMap exclude3-main.css.map 182 bytes [emitted] [dev] (auxiliary name: main)
         compressed exclude3-main.css.map.br 182 bytes [emitted]
