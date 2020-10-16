@@ -1547,14 +1547,14 @@ declare class Compilation {
 	static PROCESS_ASSETS_STAGE_DEV_TOOLING: number;
 
 	/**
-	 * Optimize the transfer of existing assets, e. g. by preparing a compressed (gzip) file as separate asset.
-	 */
-	static PROCESS_ASSETS_STAGE_OPTIMIZE_TRANSFER: number;
-
-	/**
 	 * Optimize the hashes of the assets, e. g. by generating real hashes of the asset content.
 	 */
 	static PROCESS_ASSETS_STAGE_OPTIMIZE_HASH: number;
+
+	/**
+	 * Optimize the transfer of existing assets, e. g. by preparing a compressed (gzip) file as separate asset.
+	 */
+	static PROCESS_ASSETS_STAGE_OPTIMIZE_TRANSFER: number;
 
 	/**
 	 * Analyse existing assets.
