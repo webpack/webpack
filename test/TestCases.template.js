@@ -93,7 +93,10 @@ const describeCases = config => {
 								devtool: config.devtool,
 								mode: config.mode || "none",
 								optimization: config.mode
-									? NO_EMIT_ON_ERRORS_OPTIMIZATIONS
+									? {
+											...NO_EMIT_ON_ERRORS_OPTIMIZATIONS,
+											...config.optimization
+									  }
 									: {
 											...DEFAULT_OPTIMIZATIONS,
 											...config.optimization
