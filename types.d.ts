@@ -3076,6 +3076,7 @@ declare abstract class ExportsInfo {
 	setAllKnownExportsUsed(runtime: string | SortableSet<string>): boolean;
 	setUsedForSideEffectsOnly(runtime: string | SortableSet<string>): boolean;
 	isUsed(runtime: string | SortableSet<string>): boolean;
+	isModuleUsed(runtime: string | SortableSet<string>): boolean;
 	getUsedExports(
 		runtime: string | SortableSet<string>
 	): boolean | SortableSet<string>;
