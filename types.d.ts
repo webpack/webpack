@@ -5638,6 +5638,15 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	fs: InputFileSystem;
 	parserCache: Map<string, WeakMap<any, any>>;
 	generatorCache: Map<string, WeakMap<any, Generator>>;
+	tryResolvingWithLeadingExtensionDot(
+		contextInfo?: any,
+		context?: any,
+		unresolvedResource?: any,
+		resolver?: any,
+		resolveContext?: any,
+		callback?: any,
+		err?: any
+	): void;
 	resolveResource(
 		contextInfo?: any,
 		context?: any,
