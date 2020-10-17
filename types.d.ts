@@ -1611,7 +1611,7 @@ declare class Compiler {
 		failed: SyncHook<[Error], void>;
 		invalid: SyncHook<[string, number], void>;
 		watchClose: SyncHook<[], void>;
-		infrastructureLog: SyncBailHook<[string, string, any[]], true>;
+		infrastructureLog: SyncBailHook<[string, any, string, any[]], true>;
 		environment: SyncHook<[], void>;
 		afterEnvironment: SyncHook<[], void>;
 		afterPlugins: SyncHook<[Compiler], void>;
@@ -1650,7 +1650,10 @@ declare class Compiler {
 	idle: boolean;
 	watchMode: boolean;
 	getCache(name: string): CacheFacade;
-	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
+	getInfrastructureLogger(
+		name: string | (() => string),
+		options?: any
+	): WebpackLogger;
 	watch(watchOptions: WatchOptions, handler: CallbackFunction<Stats>): Watching;
 	run(callback: CallbackFunction<Stats>): void;
 	runAsChild(
@@ -5302,7 +5305,7 @@ declare class MultiCompiler {
 	intermediateFileSystem: InputFileSystem &
 		OutputFileSystem &
 		IntermediateFileSystemExtras;
-	getInfrastructureLogger(name?: any): WebpackLogger;
+	getInfrastructureLogger(name?: any, options?: any): WebpackLogger;
 	setDependencies(compiler: Compiler, dependencies: string[]): void;
 	validateDependencies(callback: CallbackFunction<MultiStats>): boolean;
 	runWithDependencies(

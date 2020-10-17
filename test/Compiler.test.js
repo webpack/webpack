@@ -9,6 +9,14 @@ const captureStdio = require("./helpers/captureStdio");
 const deprecationTracking = require("./helpers/deprecationTracking");
 
 describe("Compiler", () => {
+	let capture;
+	beforeEach(() => {
+		capture = captureStdio(process.stderr, true);
+	});
+	afterEach(() => {
+		capture.restore();
+	});
+
 	jest.setTimeout(20000);
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
@@ -767,13 +775,6 @@ describe("Compiler", () => {
 		]);
 	});
 	describe("infrastructure logging", () => {
-		let capture;
-		beforeEach(() => {
-			capture = captureStdio(process.stderr);
-		});
-		afterEach(() => {
-			capture.restore();
-		});
 		class MyPlugin {
 			apply(compiler) {
 				const logger = compiler.getInfrastructureLogger("MyPlugin");
@@ -808,16 +809,16 @@ describe("Compiler", () => {
 			compiler.run((err, stats) => {
 				expect(capture.toString().replace(/[\d.]+ ms/, "X ms"))
 					.toMatchInlineSnapshot(`
-"<-> [MyPlugin] Group
-  <e> [MyPlugin] Error
-  <w> [MyPlugin] Warning
-  <i> [MyPlugin] Info
-      [MyPlugin] Log
-  <-> [MyPlugin] Collaped group
-        [MyPlugin] Log inside collapsed group
-<t> [MyPlugin] Time: X ms
-"
-`);
+			"<-> [MyPlugin] Group
+			  <e> [MyPlugin] Error
+			  <w> [MyPlugin] Warning
+			  <i> [MyPlugin] Info
+			      [MyPlugin] Log
+			  <-> [MyPlugin] Collaped group
+			        [MyPlugin] Log inside collapsed group
+			<t> [MyPlugin] Time: X ms
+			"
+		`);
 				done();
 			});
 		});
@@ -839,17 +840,17 @@ describe("Compiler", () => {
 			compiler.run((err, stats) => {
 				expect(capture.toString().replace(/[\d.]+ ms/, "X ms"))
 					.toMatchInlineSnapshot(`
-"<-> [MyPlugin] Group
-  <e> [MyPlugin] Error
-  <w> [MyPlugin] Warning
-  <i> [MyPlugin] Info
-      [MyPlugin] Log
-      [MyPlugin] Debug
-  <-> [MyPlugin] Collaped group
-        [MyPlugin] Log inside collapsed group
-<t> [MyPlugin] Time: X ms
-"
-`);
+			"<-> [MyPlugin] Group
+			  <e> [MyPlugin] Error
+			  <w> [MyPlugin] Warning
+			  <i> [MyPlugin] Info
+			      [MyPlugin] Log
+			      [MyPlugin] Debug
+			  <-> [MyPlugin] Collaped group
+			        [MyPlugin] Log inside collapsed group
+			<t> [MyPlugin] Time: X ms
+			"
+		`);
 				done();
 			});
 		});
@@ -869,6 +870,56 @@ describe("Compiler", () => {
 			compiler.outputFileSystem = createFsFromVolume(new Volume());
 			compiler.run((err, stats) => {
 				expect(capture.toString()).toMatchInlineSnapshot(`""`);
+				done();
+			});
+		});
+		it("should allow to override default", done => {
+			class FooPlugin {
+				apply(compiler) {
+					const getLogger = options =>
+						compiler.getInfrastructureLogger("FooPlugin", options);
+
+					let logger = getLogger();
+					logger.info("default");
+
+					logger = getLogger({ info: null });
+					logger.info("without default");
+
+					logger = getLogger({
+						info: {
+							colorPrefix: "\u001b[1m\u001b[31m",
+							colorSuffix: "\u001b[39m\u001b[22m"
+						}
+					});
+					logger.info("in red");
+
+					logger = getLogger({
+						info: {
+							prefix: "<foo> "
+						}
+					});
+					logger.info("not allowed to override prefix");
+				}
+			}
+
+			const compiler = webpack({
+				context: path.join(__dirname, "fixtures"),
+				entry: "./a",
+				output: {
+					path: "/directory",
+					filename: "bundle.js"
+				},
+				plugins: [new FooPlugin()]
+			});
+			compiler.outputFileSystem = createFsFromVolume(new Volume());
+			compiler.run((err, stats) => {
+				expect(capture.toStringRaw()).toMatchInlineSnapshot(`
+			"<i> [1m[32m[FooPlugin] default[39m[22m
+			<i> [FooPlugin] without default
+			<i> [1m[31m[FooPlugin] in red[39m[22m
+			<i> [FooPlugin] not allowed to override prefix
+			"
+		`);
 				done();
 			});
 		});
