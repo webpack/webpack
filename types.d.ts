@@ -1611,7 +1611,7 @@ declare class Compiler {
 		failed: SyncHook<[Error], void>;
 		invalid: SyncHook<[string, number], void>;
 		watchClose: SyncHook<[], void>;
-		infrastructureLog: SyncBailHook<[string, any, string, any[]], true>;
+		infrastructureLog: SyncBailHook<[string, string, any[], any], true>;
 		environment: SyncHook<[], void>;
 		afterEnvironment: SyncHook<[], void>;
 		afterPlugins: SyncHook<[Compiler], void>;
