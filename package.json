@@ -134,7 +134,7 @@
         "test:basic": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/te{st/TestCasesNormal,st/StatsTestCases,st/ConfigTestCases}.test.js\"",
         "test:unit": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\"",
         "travis:integration": "yarn cover:integration --ci $JEST",
-        "travis:basic": "yarn cover:basic --ci $JEST",
+        "travis:basic": "yarn run cover:basic -u --detectOpenHandles",
         "travis:lintunit": "yarn lint && yarn cover:unit --ci $JEST",
         "travis:benchmark": "yarn benchmark --ci",
         "appveyor:integration": "yarn cover:integration --ci %JEST%",
