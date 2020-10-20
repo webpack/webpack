@@ -8644,6 +8644,7 @@ declare class Source {
 	buffer(): Buffer;
 }
 declare interface SourceData {
+	iife?: boolean;
 	init?: string;
 	expression: string;
 }
