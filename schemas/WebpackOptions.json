@@ -3395,7 +3395,7 @@
                     "type": "number"
                 },
                 "followSymlinks": {
-                    "description": "Enables you to have a symlink in your webroot pointing to some other file/dir.",
+                    "description": "Enables you to have a symlink pointing to some other file/dir.",
                     "type": "boolean"
                 },
                 "ignored": {
