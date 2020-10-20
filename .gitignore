@@ -15,4 +15,5 @@
 .cache
 .eslintcache
 package-lock.json
-.eslintrc.js
+/.eslintrc.js
+/package.json
