@@ -26,3 +26,6 @@ const class2 = class {
 if ("") {
 	console.log("test");
 }
+for (; false; ) {}
+for (var i = 0; false; ) {}
+while (false) {}

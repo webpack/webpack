@@ -489,7 +489,7 @@ chunk 588.output.js 133 bytes [rendered]
     [used exports unknown]
     cjs require ./pageB ./example.js 8:15-33
     cjs self exports reference ./pageB.js 1:0-14
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
 
 ## Production mode
@@ -532,5 +532,5 @@ chunk (runtime: main) 588.output.js 133 bytes [rendered]
     [used exports unknown]
     cjs require ./pageB ./example.js 8:15-33
     cjs self exports reference ./pageB.js 1:0-14
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```

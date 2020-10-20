@@ -219,5 +219,5 @@ chunk output.js (main) 9.58 KiB (javascript) 14.6 KiB (asset) 306 bytes (runtime
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```

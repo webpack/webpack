@@ -359,7 +359,7 @@ chunk 577.output.js 457 bytes [rendered]
     [no exports]
     [used exports unknown]
     amd require context ./example.js 2:1-4:3
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
 
 ## Production mode
@@ -379,5 +379,5 @@ chunk (runtime: main) 577.output.js 457 bytes [rendered]
   ../require.context/templates/ sync ^\.\/.*$ 217 bytes [built] [code generated]
     [no exports]
     amd require context ./example.js 2:1-4:3
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
