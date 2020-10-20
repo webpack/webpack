@@ -71,7 +71,7 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 /***/ }),
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_4d8eacf7030dbe3ec0eb ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_ebb1a24c629010ce31fa ***!
   \******************************************************************************************************/
 /*! namespace exports */
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
@@ -79,12 +79,12 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_4d8eacf7030dbe3ec0eb */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_ebb1a24c629010ce31fa */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_4d8eacf7030dbe3ec0eb" ***!
+  !*** external "vendor_lib_ebb1a24c629010ce31fa" ***!
   \**************************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -92,7 +92,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_lib_4d8eacf7030db
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_4d8eacf7030dbe3ec0eb;
+module.exports = vendor_lib_ebb1a24c629010ce31fa;
 
 /***/ })
 /******/ 	]);
@@ -165,7 +165,7 @@ chunk app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered
     [no exports]
     [used exports unknown]
     entry ./example-app main
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
 
 ## Production mode
@@ -179,7 +179,7 @@ chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
     [no exports]
     [no exports used]
     entry ./example-app main
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
 
 <!-- @TODO:

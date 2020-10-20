@@ -1547,14 +1547,14 @@ declare class Compilation {
 	static PROCESS_ASSETS_STAGE_DEV_TOOLING: number;
 
 	/**
-	 * Optimize the transfer of existing assets, e. g. by preparing a compressed (gzip) file as separate asset.
-	 */
-	static PROCESS_ASSETS_STAGE_OPTIMIZE_TRANSFER: number;
-
-	/**
 	 * Optimize the hashes of the assets, e. g. by generating real hashes of the asset content.
 	 */
 	static PROCESS_ASSETS_STAGE_OPTIMIZE_HASH: number;
+
+	/**
+	 * Optimize the transfer of existing assets, e. g. by preparing a compressed (gzip) file as separate asset.
+	 */
+	static PROCESS_ASSETS_STAGE_OPTIMIZE_TRANSFER: number;
 
 	/**
 	 * Analyse existing assets.
@@ -1618,6 +1618,7 @@ declare class Compiler {
 		afterResolvers: SyncHook<[Compiler], void>;
 		entryOption: SyncBailHook<[string, EntryNormalized], boolean>;
 	}>;
+	webpack: typeof exports;
 	name: string;
 	parentCompilation: Compilation;
 	root: Compiler;
@@ -2222,6 +2223,10 @@ declare class Dependency {
 	readonly type: string;
 	readonly category: string;
 	getResourceIdentifier(): string;
+
+	/**
+	 * Returns the referenced module and export
+	 */
 	getReference(moduleGraph: ModuleGraph): never;
 
 	/**
@@ -2545,6 +2550,16 @@ type DllReferencePluginOptionsSourceType =
 	| "umd2"
 	| "jsonp"
 	| "system";
+declare class DynamicEntryPlugin {
+	constructor(context: string, entry: () => Promise<EntryStaticNormalized>);
+	context: string;
+	entry: () => Promise<EntryStaticNormalized>;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 declare interface Effect {
 	type: string;
 	value: any;
@@ -2699,6 +2714,28 @@ type EntryNormalized =
  */
 declare interface EntryObject {
 	[index: string]: string | [string, ...string[]] | EntryDescription;
+}
+declare class EntryOptionPlugin {
+	constructor();
+	apply(compiler: Compiler): void;
+	static applyEntryOption(
+		compiler: Compiler,
+		context: string,
+		entry: EntryNormalized
+	): void;
+	static entryDescriptionToOptions(
+		compiler: Compiler,
+		name: string,
+		desc: EntryDescriptionNormalized
+	): { name?: string } & Pick<
+		EntryDescriptionNormalized,
+		| "filename"
+		| "chunkLoading"
+		| "dependOn"
+		| "library"
+		| "runtime"
+		| "wasmLoading"
+	>;
 }
 declare class EntryPlugin {
 	/**
@@ -3039,6 +3076,7 @@ declare abstract class ExportsInfo {
 	setAllKnownExportsUsed(runtime: string | SortableSet<string>): boolean;
 	setUsedForSideEffectsOnly(runtime: string | SortableSet<string>): boolean;
 	isUsed(runtime: string | SortableSet<string>): boolean;
+	isModuleUsed(runtime: string | SortableSet<string>): boolean;
 	getUsedExports(
 		runtime: string | SortableSet<string>
 	): boolean | SortableSet<string>;
@@ -3566,7 +3604,15 @@ declare interface HandleModuleCreationOptions {
 }
 declare class Hash {
 	constructor();
+
+	/**
+	 * Update hash {@link https://nodejs.org/api/crypto.html#crypto_hash_update_data_inputencoding}
+	 */
 	update(data: string | Buffer, inputEncoding?: string): Hash;
+
+	/**
+	 * Calculates the digest {@link https://nodejs.org/api/crypto.html#crypto_hash_digest_encoding}
+	 */
 	digest(encoding?: string): string | Buffer;
 }
 type HashFunction = string | typeof Hash;
@@ -5551,7 +5597,7 @@ declare class NormalModule extends Module {
 }
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[any, NormalModule], void>;
-	beforeLoaders: SyncHook<[LoaderItem[], any, NormalModule], void>;
+	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, any], void>;
 	readResourceForScheme: HookMap<
 		AsyncSeriesBailHook<[string, NormalModule], string | Buffer>
 	>;
@@ -10254,6 +10300,7 @@ declare namespace exports {
 			export let createFileSerializer: (fs?: any) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
+		export const cleverMerge: <T, O>(first: T, second: O) => T & O;
 	}
 	export namespace sources {
 		export {
@@ -10295,6 +10342,8 @@ declare namespace exports {
 		Dependency,
 		DllPlugin,
 		DllReferencePlugin,
+		DynamicEntryPlugin,
+		EntryOptionPlugin,
 		EntryPlugin,
 		EnvironmentPlugin,
 		EvalDevToolModulePlugin,
@@ -10334,7 +10383,11 @@ declare namespace exports {
 		LibraryOptions,
 		ModuleOptions,
 		ResolveOptionsWebpackOptions as ResolveOptions,
+		RuleSetCondition,
+		RuleSetConditionAbsolute,
 		RuleSetRule,
+		RuleSetUse,
+		RuleSetUseItem,
 		Configuration,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance

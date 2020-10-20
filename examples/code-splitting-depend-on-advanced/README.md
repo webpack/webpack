@@ -603,7 +603,7 @@ chunk runtime.js (runtime) 6.86 KiB ={other-vendors}= ={react-vendors}= >{app}< 
   > react react-vendors
   > react-dom react-vendors
   runtime modules 6.86 KiB 9 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
 
 ## Production mode
@@ -671,5 +671,5 @@ chunk (runtime: runtime) runtime.js (runtime) 6.86 KiB ={other-vendors}= ={react
   > react react-vendors
   > react-dom react-vendors
   runtime modules 6.86 KiB 9 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```

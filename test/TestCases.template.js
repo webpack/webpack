@@ -12,9 +12,7 @@ const deprecationTracking = require("./helpers/deprecationTracking");
 const webpack = require("..");
 
 const terserForTesting = new TerserPlugin({
-	cache: false,
-	parallel: false,
-	sourceMap: true
+	parallel: false
 });
 
 const DEFAULT_OPTIMIZATIONS = {
@@ -95,7 +93,10 @@ const describeCases = config => {
 								devtool: config.devtool,
 								mode: config.mode || "none",
 								optimization: config.mode
-									? NO_EMIT_ON_ERRORS_OPTIMIZATIONS
+									? {
+											...NO_EMIT_ON_ERRORS_OPTIMIZATIONS,
+											...config.optimization
+									  }
 									: {
 											...DEFAULT_OPTIMIZATIONS,
 											...config.optimization
@@ -289,7 +290,7 @@ const describeCases = config => {
 										if (module.substr(0, 2) === "./") {
 											const p = path.join(outputDirectory, module);
 											const fn = vm.runInThisContext(
-												"(function(require, module, exports, __dirname, it, expect) {" +
+												"(function(require, module, exports, __dirname, __filename, it, expect) {" +
 													"global.expect = expect;" +
 													'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 													fs.readFileSync(p, "utf-8") +
@@ -306,6 +307,7 @@ const describeCases = config => {
 												m,
 												m.exports,
 												outputDirectory,
+												p,
 												_it,
 												expect
 											);

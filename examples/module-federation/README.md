@@ -2052,7 +2052,7 @@ app:
   chunk 6 bytes (remote) 6 bytes (share-init)
     > mfe-c/Component2 ./src/App.js 8:49-75
     remote mfe-c/Component2 6 bytes (remote) 6 bytes (share-init) [built] [code generated]
-  app (webpack 5.0.0-rc.2) compiled successfully
+  app (webpack 5.0.0) compiled successfully
 
 mfe-b:
   asset vendors-node_modules_date-fns_esm_index_js.js 857 KiB [emitted] (id hint: vendors)
@@ -2080,7 +2080,7 @@ mfe-b:
     > consume shared module (default) date-fns@^2.15.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
     dependent modules 496 KiB [dependent] 231 modules
     ../../node_modules/date-fns/esm/index.js 13.2 KiB [built] [code generated]
-  mfe-b (webpack 5.0.0-rc.2) compiled successfully
+  mfe-b (webpack 5.0.0) compiled successfully
 
 mfe-c:
   assets by chunk 880 KiB (id hint: vendors)
@@ -2118,7 +2118,7 @@ mfe-c:
     > ./src-c/Component container entry ./Component
     > ./src-c/LazyComponent container entry ./Component2
     consume shared module (default) react@^16.13.1 (singleton) 42 bytes [built] [code generated]
-  mfe-c (webpack 5.0.0-rc.2) compiled successfully
+  mfe-c (webpack 5.0.0) compiled successfully
 ```
 
 ## Production mode
@@ -2159,7 +2159,7 @@ app:
   chunk (runtime: app) 6 bytes (remote) 6 bytes (share-init)
     > mfe-c/Component2 ./src/App.js 8:49-75
     remote mfe-c/Component2 6 bytes (remote) 6 bytes (share-init) [built] [code generated]
-  app (webpack 5.0.0-rc.2) compiled successfully
+  app (webpack 5.0.0) compiled successfully
 
 mfe-b:
   asset vendors-node_modules_date-fns_esm_index_js.js 78 KiB [emitted] [minimized] (id hint: vendors)
@@ -2186,7 +2186,7 @@ mfe-b:
     > consume shared module (default) date-fns@^2.15.0 (strict) (fallback: ../../node_modules/date-fns/esm/index.js)
     > provide shared module (default) date-fns@2.16.1 = ../../node_modules/date-fns/esm/index.js
     ../../node_modules/date-fns/esm/index.js + 231 modules 509 KiB [built] [code generated]
-  mfe-b (webpack 5.0.0-rc.2) compiled successfully
+  mfe-b (webpack 5.0.0) compiled successfully
 
 mfe-c:
   asset vendors-node_modules_date-fns_esm_index_js.js 78 KiB [emitted] [minimized] (id hint: vendors)
@@ -2222,5 +2222,5 @@ mfe-c:
     > ./src-c/Component container entry ./Component
     > ./src-c/LazyComponent container entry ./Component2
     consume shared module (default) react@^16.13.1 (singleton) 42 bytes [built] [code generated]
-  mfe-c (webpack 5.0.0-rc.2) compiled successfully
+  mfe-c (webpack 5.0.0) compiled successfully
 ```

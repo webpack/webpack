@@ -62,7 +62,7 @@ chunk 5526ff367fe4665c9c7e.js 6.45 KiB [rendered]
 chunk 47ea1b166a82a1b5f43d.js (id hint: vendors) 116 KiB [rendered] [recorded] aggressive splitted, reused as split chunk (cache group: defaultVendors)
   > react-dom ./example.js 2:0-22
   ../../node_modules/react-dom/cjs/react-dom.production.min.js 116 KiB [built] [code generated]
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
 
 ## Production mode
@@ -84,7 +84,7 @@ chunk (runtime: main) b0b6aefd6d463ae1bef1.js 6.45 KiB [rendered]
 chunk (runtime: main) 72aa363ce76bb633931d.js (id hint: vendors) 116 KiB [rendered] [recorded] aggressive splitted, reused as split chunk (cache group: defaultVendors)
   > react-dom ./example.js 2:0-22
   ../../node_modules/react-dom/cjs/react-dom.production.min.js 116 KiB [built] [code generated]
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
 
 ## Records

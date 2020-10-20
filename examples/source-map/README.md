@@ -310,7 +310,7 @@ chunk ./bundle-eval.js (bundle) 256 bytes [initial] [rendered]
 chunk ./runtime~bundle-eval.js (runtime~bundle) 2.57 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
   runtime modules 2.57 KiB 2 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 
 asset ./runtime~bundle-eval-cheap-source-map.js 5.64 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-eval-cheap-source-map.js 1.98 KiB [emitted] (name: bundle)
@@ -323,7 +323,7 @@ chunk ./bundle-eval-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
 chunk ./runtime~bundle-eval-cheap-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
   runtime modules 2.57 KiB 2 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 
 asset ./runtime~bundle-eval-cheap-module-source-map.js 5.64 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-eval-cheap-module-source-map.js 2.12 KiB [emitted] (name: bundle)
@@ -336,7 +336,7 @@ chunk ./bundle-eval-cheap-module-source-map.js (bundle) 256 bytes [initial] [ren
 chunk ./runtime~bundle-eval-cheap-module-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
   runtime modules 2.57 KiB 2 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 
 asset ./runtime~bundle-eval-source-map.js 5.64 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-eval-source-map.js 2.12 KiB [emitted] (name: bundle)
@@ -349,7 +349,7 @@ chunk ./bundle-eval-source-map.js (bundle) 256 bytes [initial] [rendered]
 chunk ./runtime~bundle-eval-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
   runtime modules 2.57 KiB 2 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 
 asset ./runtime~bundle-cheap-source-map.js 5.15 KiB [emitted] (name: runtime~bundle) 1 related asset
 asset ./bundle-cheap-source-map.js 717 bytes [emitted] (name: bundle) 1 related asset
@@ -362,7 +362,7 @@ chunk ./bundle-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
 chunk ./runtime~bundle-cheap-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
   runtime modules 2.57 KiB 2 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 
 asset ./runtime~bundle-cheap-module-source-map.js 5.16 KiB [emitted] (name: runtime~bundle) 1 related asset
 asset ./bundle-cheap-module-source-map.js 724 bytes [emitted] (name: bundle) 1 related asset
@@ -375,7 +375,7 @@ chunk ./bundle-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered
 chunk ./runtime~bundle-cheap-module-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
   runtime modules 2.57 KiB 2 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 
 asset ./runtime~bundle-inline-cheap-source-map.js 11 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-inline-cheap-source-map.js 1.41 KiB [emitted] (name: bundle)
@@ -388,7 +388,7 @@ chunk ./bundle-inline-cheap-source-map.js (bundle) 256 bytes [initial] [rendered
 chunk ./runtime~bundle-inline-cheap-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
   runtime modules 2.57 KiB 2 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 
 asset ./runtime~bundle-inline-cheap-module-source-map.js 11 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-inline-cheap-module-source-map.js 1.31 KiB [emitted] (name: bundle)
@@ -401,7 +401,7 @@ chunk ./bundle-inline-cheap-module-source-map.js (bundle) 256 bytes [initial] [r
 chunk ./runtime~bundle-inline-cheap-module-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
   runtime modules 2.57 KiB 2 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 
 asset ./runtime~bundle-source-map.js 5.14 KiB [emitted] (name: runtime~bundle) 1 related asset
 asset ./bundle-source-map.js 711 bytes [emitted] (name: bundle) 1 related asset
@@ -414,7 +414,7 @@ chunk ./bundle-source-map.js (bundle) 256 bytes [initial] [rendered]
 chunk ./runtime~bundle-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
   runtime modules 2.57 KiB 2 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 
 asset ./runtime~bundle-inline-source-map.js 11 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-inline-source-map.js 1.42 KiB [emitted] (name: bundle)
@@ -427,7 +427,7 @@ chunk ./bundle-inline-source-map.js (bundle) 256 bytes [initial] [rendered]
 chunk ./runtime~bundle-inline-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
   runtime modules 2.57 KiB 2 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 
 asset ./runtime~bundle-hidden-source-map.js 5.09 KiB [emitted] (name: runtime~bundle) 1 related asset
 asset ./bundle-hidden-source-map.js 665 bytes [emitted] (name: bundle) 1 related asset
@@ -440,7 +440,7 @@ chunk ./bundle-hidden-source-map.js (bundle) 256 bytes [initial] [rendered]
 chunk ./runtime~bundle-hidden-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
   runtime modules 2.57 KiB 2 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 
 asset ./runtime~bundle-nosources-source-map.js 5.15 KiB [emitted] (name: runtime~bundle) 1 related asset
 asset ./bundle-nosources-source-map.js 721 bytes [emitted] (name: bundle) 1 related asset
@@ -453,5 +453,5 @@ chunk ./bundle-nosources-source-map.js (bundle) 256 bytes [initial] [rendered]
 chunk ./runtime~bundle-nosources-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
   runtime modules 2.57 KiB 2 modules
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.0.0 compiled successfully
 ```
