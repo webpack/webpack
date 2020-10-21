@@ -5599,9 +5599,9 @@ Object {
         "type": "boolean",
       },
     ],
-    "description": "Delay the rebuilt after the first change. Value is a time in ms.",
+    "description": "Enables you to have a symlink pointing to some other file/dir.",
     "multiple": false,
-    "simpleType": "number",
+    "simpleType": "boolean",
   }
   "watch-options-ignored": Object {
     "configs": Array [
