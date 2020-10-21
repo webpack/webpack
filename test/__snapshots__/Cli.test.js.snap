@@ -5590,6 +5590,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "watch-options-followSymlinks": Object {
+    "configs": Array [
+      Object {
+        "description": "Enables you to have a symlink pointing to some other file/dir.",
+        "multiple": false,
+        "path": "watchOptions.followSymlinks",
+        "type": "boolean",
+      },
+    ],
+    "description": "Delay the rebuilt after the first change. Value is a time in ms.",
+    "multiple": false,
+    "simpleType": "number",
+  }
   "watch-options-ignored": Object {
     "configs": Array [
       Object {
