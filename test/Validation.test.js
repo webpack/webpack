@@ -539,7 +539,7 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.watchOptions should be an object:
-			   object { aggregateTimeout?, ignored?, poll?, stdin? }
+			   object { aggregateTimeout?, followSymlinks?, ignored?, poll?, stdin? }
 			   -> Options for the watcher."
 		`)
 	);
