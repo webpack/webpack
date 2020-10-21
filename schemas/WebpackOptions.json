@@ -3602,6 +3602,10 @@
           "description": "Delay the rebuilt after the first change. Value is a time in ms.",
           "type": "number"
         },
+        "followSymlinks": {
+          "description": "Enables you to have a symlink pointing to some other file/dir.",
+          "type": "boolean"
+        },
         "ignored": {
           "description": "Ignore some files from watching (glob pattern or regexp).",
           "anyOf": [

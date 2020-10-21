@@ -5590,6 +5590,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "watch-options-follow-symlinks": Object {
+    "configs": Array [
+      Object {
+        "description": "Enables you to have a symlink pointing to some other file/dir.",
+        "multiple": false,
+        "path": "watchOptions.followSymlinks",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enables you to have a symlink pointing to some other file/dir.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "watch-options-ignored": Object {
     "configs": Array [
       Object {

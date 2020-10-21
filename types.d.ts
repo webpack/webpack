@@ -9535,6 +9535,11 @@ declare interface WatchOptions {
 	aggregateTimeout?: number;
 
 	/**
+	 * Enables you to have a symlink pointing to some other file/dir.
+	 */
+	followSymlinks?: boolean;
+
+	/**
 	 * Ignore some files from watching (glob pattern or regexp).
 	 */
 	ignored?: string | RegExp | string[];
@@ -9582,6 +9587,10 @@ declare abstract class Watching {
 		 * Delay the rebuilt after the first change. Value is a time in ms.
 		 */
 		aggregateTimeout?: number;
+		/**
+		 * Enables you to have a symlink pointing to some other file/dir.
+		 */
+		followSymlinks?: boolean;
 		/**
 		 * Ignore some files from watching (glob pattern or regexp).
 		 */

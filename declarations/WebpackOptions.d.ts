@@ -2317,6 +2317,10 @@ export interface WatchOptions {
 	 */
 	aggregateTimeout?: number;
 	/**
+	 * Enables you to have a symlink pointing to some other file/dir.
+	 */
+	followSymlinks?: boolean;
+	/**
 	 * Ignore some files from watching (glob pattern or regexp).
 	 */
 	ignored?: string[] | RegExp | string;
