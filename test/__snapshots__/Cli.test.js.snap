@@ -5593,13 +5593,13 @@ Object {
   "watch-options-follow-symlinks": Object {
     "configs": Array [
       Object {
-        "description": "Enables you to have a symlink pointing to some other file/dir.",
+        "description": "Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').",
         "multiple": false,
         "path": "watchOptions.followSymlinks",
         "type": "boolean",
       },
     ],
-    "description": "Enables you to have a symlink pointing to some other file/dir.",
+    "description": "Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').",
     "multiple": false,
     "simpleType": "boolean",
   },

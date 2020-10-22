@@ -9535,7 +9535,7 @@ declare interface WatchOptions {
 	aggregateTimeout?: number;
 
 	/**
-	 * Enables you to have a symlink pointing to some other file/dir.
+	 * Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').
 	 */
 	followSymlinks?: boolean;
 
@@ -9588,7 +9588,7 @@ declare abstract class Watching {
 		 */
 		aggregateTimeout?: number;
 		/**
-		 * Enables you to have a symlink pointing to some other file/dir.
+		 * Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').
 		 */
 		followSymlinks?: boolean;
 		/**

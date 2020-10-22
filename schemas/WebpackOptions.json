@@ -3603,7 +3603,7 @@
           "type": "number"
         },
         "followSymlinks": {
-          "description": "Enables you to have a symlink pointing to some other file/dir.",
+          "description": "Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').",
           "type": "boolean"
         },
         "ignored": {
