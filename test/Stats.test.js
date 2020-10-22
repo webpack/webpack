@@ -219,6 +219,7 @@ describe("Stats", () => {
 			      "emitted": true,
 			      "filteredRelated": undefined,
 			      "info": Object {
+			        "javascriptModule": false,
 			        "minimized": true,
 			        "size": 2706,
 			      },
@@ -238,6 +239,7 @@ describe("Stats", () => {
 			      "emitted": true,
 			      "filteredRelated": undefined,
 			      "info": Object {
+			        "javascriptModule": false,
 			        "minimized": true,
 			        "size": 182,
 			      },
@@ -257,6 +259,7 @@ describe("Stats", () => {
 			      "emitted": true,
 			      "filteredRelated": undefined,
 			      "info": Object {
+			        "javascriptModule": false,
 			        "minimized": true,
 			        "size": 107,
 			      },
