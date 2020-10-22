@@ -235,6 +235,11 @@ declare interface AssetInfo {
 	contenthash?: LibraryExport;
 
 	/**
+	 * when asset was created from a source file (potentially transformed), the original filename relative to compilation context
+	 */
+	sourceFilename?: string;
+
+	/**
 	 * size in bytes, only set after asset has been emitted
 	 */
 	size?: number;
@@ -248,6 +253,11 @@ declare interface AssetInfo {
 	 * true, when asset ships data for updating an existing application (HMR)
 	 */
 	hotModuleReplacement?: boolean;
+
+	/**
+	 * true, when asset is javascript and an ESM
+	 */
+	javascriptModule?: boolean;
 
 	/**
 	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
@@ -6994,6 +7004,7 @@ declare interface RenderManifestEntryTemplated {
 	render: () => Source;
 	filenameTemplate: string | ((arg0: PathData, arg1: AssetInfo) => string);
 	pathOptions?: PathData;
+	info?: AssetInfo;
 	identifier: string;
 	hash?: string;
 	auxiliary?: boolean;
@@ -8007,6 +8018,7 @@ declare abstract class RuntimeTemplate {
 	outputOptions: OutputNormalized;
 	requestShortener: RequestShortener;
 	isIIFE(): boolean;
+	isModule(): boolean;
 	supportsConst(): boolean;
 	supportsArrowFunction(): boolean;
 	supportsForOf(): boolean;
