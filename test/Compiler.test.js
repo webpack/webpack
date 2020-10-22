@@ -377,9 +377,7 @@ describe("Compiler", () => {
 			}
 		});
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
-		compiler.run((err, stats) => {
-			if (err) return done(err);
-		});
+		compiler.run((err, stats) => {});
 		compiler.run((err, stats) => {
 			if (err) return done();
 		});
@@ -395,9 +393,7 @@ describe("Compiler", () => {
 			}
 		});
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
-		compiler.watch({}, (err, stats) => {
-			if (err) return done(err);
-		});
+		compiler.watch({}, (err, stats) => {});
 		compiler.watch({}, (err, stats) => {
 			if (err) return done();
 		});
@@ -452,6 +448,7 @@ describe("Compiler", () => {
 			() => {}
 		);
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.run((err, stats) => {});
 		compiler.run((err, stats) => {
 			if (err) return done();
 		});

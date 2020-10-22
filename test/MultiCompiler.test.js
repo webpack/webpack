@@ -107,6 +107,7 @@ describe("MultiCompiler", function () {
 			() => {}
 		);
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
+		compiler.run((err, stats) => {});
 		compiler.run((err, stats) => {
 			if (err) return done();
 		});
