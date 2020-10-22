@@ -14,6 +14,9 @@ module.exports = async function () {
 	const resolved3 = await overrideResolve(this.context, "./package");
 	const resolved4 = await customKnownResolve(this.context, "package2");
 	const resolved5 = await customUnknownResolve(this.context, "package2");
+	const resolved6 = await this.getResolve()(this.context, undefined);
+	const resolved7 = await this.getResolve()(undefined, "package2");
+	const resolved8 = await this.getResolve()(undefined);
 	return `
 export { default as a } from ${JSON.stringify(resolved1)};
 export { default as b } from ${JSON.stringify(resolved2)};
