@@ -2317,6 +2317,10 @@ export interface WatchOptions {
 	 */
 	aggregateTimeout?: number;
 	/**
+	 * Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').
+	 */
+	followSymlinks?: boolean;
+	/**
 	 * Ignore some files from watching (glob pattern or regexp).
 	 */
 	ignored?: string[] | RegExp | string;

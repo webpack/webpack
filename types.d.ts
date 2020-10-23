@@ -9547,6 +9547,11 @@ declare interface WatchOptions {
 	aggregateTimeout?: number;
 
 	/**
+	 * Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').
+	 */
+	followSymlinks?: boolean;
+
+	/**
 	 * Ignore some files from watching (glob pattern or regexp).
 	 */
 	ignored?: string | RegExp | string[];
@@ -9594,6 +9599,10 @@ declare abstract class Watching {
 		 * Delay the rebuilt after the first change. Value is a time in ms.
 		 */
 		aggregateTimeout?: number;
+		/**
+		 * Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').
+		 */
+		followSymlinks?: boolean;
 		/**
 		 * Ignore some files from watching (glob pattern or regexp).
 		 */
