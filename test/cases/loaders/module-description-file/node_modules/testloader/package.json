@@ -1,4 +1,0 @@
-{
-	"name": "testloader",
-	"webpackLoader": "lib/loader.webpack-loader.js"
-}

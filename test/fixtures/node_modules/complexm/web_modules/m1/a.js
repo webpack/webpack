@@ -1,1 +1,0 @@
-module.exports = "the correct a.js";

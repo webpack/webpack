@@ -1,1 +1,0 @@
-console.log("a module installed from npm");

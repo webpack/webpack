@@ -1,1 +1,0 @@
-module.exports = " :) " + require("m2/b.js");

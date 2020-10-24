@@ -1,1 +1,0 @@
-module.exports = require("m1/a") + require("m1");
