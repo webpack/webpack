@@ -1636,15 +1636,24 @@ Object {
   "optimization-side-effects": Object {
     "configs": Array [
       Object {
-        "description": "Skip over modules which are flagged to contain no side effects when exports are not used.",
+        "description": "Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).",
+        "multiple": false,
+        "path": "optimization.sideEffects",
+        "type": "enum",
+        "values": Array [
+          "flag",
+        ],
+      },
+      Object {
+        "description": "Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).",
         "multiple": false,
         "path": "optimization.sideEffects",
         "type": "boolean",
       },
     ],
-    "description": "Skip over modules which are flagged to contain no side effects when exports are not used.",
+    "description": "Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-split-chunks": Object {
     "configs": Array [
