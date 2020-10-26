@@ -1,16 +1,11 @@
+"use strict";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
-	entry: {
-		a: "./a",
-		b: "./b",
-		c: "./c"
-	},
-	target: "web",
-	output: {
-		filename: "[name].js"
-	},
 	optimization: {
+		sideEffects: true,
 		usedExports: true,
+		innerGraph: true,
 		splitChunks: {
 			cacheGroups: {
 				forceMerge: {
@@ -29,8 +24,5 @@ module.exports = {
 				sideEffects: false
 			}
 		]
-	},
-	experiments: {
-		topLevelAwait: true
 	}
 };
