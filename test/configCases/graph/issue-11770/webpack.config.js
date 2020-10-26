@@ -7,7 +7,8 @@ module.exports = {
 	},
 	target: "web",
 	output: {
-		filename: "[name].js"
+		filename: "[name].js",
+		library: { type: "commonjs-module" }
 	},
 	optimization: {
 		usedExports: true,
