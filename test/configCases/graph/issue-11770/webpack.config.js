@@ -3,7 +3,8 @@ module.exports = {
 	entry: {
 		a: "./a",
 		b: "./b",
-		c: "./c"
+		c1: "./c",
+		c2: "./c"
 	},
 	target: "web",
 	output: {
