@@ -28,7 +28,7 @@
     "tapable": "^2.0.0",
     "terser-webpack-plugin": "^5.0.0",
     "watchpack": "^2.0.0",
-    "webpack-sources": "^2.0.1"
+    "webpack-sources": "^2.1.0"
   },
   "peerDependenciesMeta": {
     "webpack-cli": {
