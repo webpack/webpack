@@ -4,10 +4,12 @@
  * Run `yarn special-lint-fix` to update
  */
 
+import { type } from "os";
+
 /**
  * Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.
  */
-export type Exposes = (ExposesItem | ExposesObject)[] | ExposesObject;
+export type Exposes = (ExposesItem | ExposesObject)[] | ExposesObject | ExposesRuntimeRequirements;
 /**
  * Module that should be exposed by this container.
  */
@@ -16,6 +18,10 @@ export type ExposesItem = string;
  * Modules that should be exposed by this container.
  */
 export type ExposesItems = ExposesItem[];
+/**
+ *  Exposes the RuntimeRequirements of the container
+ */
+export type ExposesRuntimeRequirements = string[];
 /**
  * Add a comment in the UMD wrapper.
  */

@@ -58,6 +58,13 @@
       "type": "string",
       "minLength": 1
     },
+    "ExposesRuntimeRequirements": {
+      "description": "Exposes the RuntimeRequirements of the container",
+      "type": "array",
+      "items": {
+        "$ref": "#definitions/ExposesRuntimeRequirements"
+      }
+    },
     "ExposesItems": {
       "description": "Modules that should be exposed by this container.",
       "type": "array",
