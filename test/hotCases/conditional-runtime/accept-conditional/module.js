@@ -1,11 +1,9 @@
 import { f } from "./shared";
 
-export function test(done) {
+export function test(next, done) {
 	expect(f()).toBe(42);
-	NEXT(
-		require("../../update")(done, undefined, () => {
-			expect(f()).toBe(43);
-			done();
-		})
-	);
+	next(() => {
+		expect(f()).toBe(43);
+		done();
+	});
 }
