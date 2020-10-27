@@ -1,1 +1,1 @@
-export default await 42;
+module.exports = 42;
