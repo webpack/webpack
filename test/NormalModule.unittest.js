@@ -36,6 +36,7 @@ describe("NormalModule", () => {
 		normalModule.buildInfo = {
 			cacheable: true
 		};
+		normalModule.useSimpleSourceMap = true;
 	});
 	describe("#identifier", () => {
 		it("returns an identifier for this module", () => {
@@ -157,9 +158,31 @@ describe("NormalModule", () => {
 				).toBeInstanceOf(OriginalSource);
 			});
 		});
-		describe("given a some other kind of sourcemap", () => {
+		describe("given a some other kind of sourcemap (source maps disabled)", () => {
 			beforeEach(() => {
 				sourceMap = () => {};
+				normalModule.useSimpleSourceMap = false;
+			});
+			it("returns a SourceMapSource", () => {
+				expect(
+					normalModule.createSourceForAsset("/", name, content, sourceMap)
+				).toBeInstanceOf(RawSource);
+			});
+		});
+		describe("given a some other kind of sourcemap (simple source maps enabled)", () => {
+			beforeEach(() => {
+				sourceMap = () => {};
+			});
+			it("returns a SourceMapSource", () => {
+				expect(
+					normalModule.createSourceForAsset("/", name, content, sourceMap)
+				).toBeInstanceOf(RawSource);
+			});
+		});
+		describe("given a some other kind of sourcemap (source maps enabled)", () => {
+			beforeEach(() => {
+				sourceMap = () => {};
+				normalModule.useSourceMap = true;
 			});
 			it("returns a SourceMapSource", () => {
 				expect(

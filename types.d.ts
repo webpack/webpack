@@ -1590,6 +1590,7 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	render: SyncWaterfallHook<[Source, RenderContextObject]>;
 	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext], void>;
+	useSourceMap: SyncBailHook<[Chunk, RenderContextObject], boolean>;
 }
 declare interface CompilationParams {
 	normalModuleFactory: NormalModuleFactory;
@@ -4793,6 +4794,8 @@ declare class Module extends DependenciesBlock {
 	debugId: number;
 	resolveOptions: ResolveOptionsWebpackOptions;
 	factoryMeta: any;
+	useSourceMap: boolean;
+	useSimpleSourceMap: boolean;
 	buildMeta: KnownBuildMeta & Record<string, any>;
 	buildInfo: any;
 	presentationalDependencies: Dependency[];
@@ -4905,7 +4908,6 @@ declare class Module extends DependenciesBlock {
 		missingDependencies: LazySet<string>,
 		buildDependencies: LazySet<string>
 	): void;
-	useSourceMap: any;
 	readonly hasEqualsChunks: any;
 	readonly isUsed: any;
 	readonly errors: any;

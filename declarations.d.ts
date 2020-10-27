@@ -243,7 +243,7 @@ declare module "@webassemblyjs/ast" {
 }
 
 declare module "webpack-sources" {
-	type MapOptions = { columns?: boolean; module?: boolean };
+	export type MapOptions = { columns?: boolean; module?: boolean };
 
 	export abstract class Source {
 		size(): number;
