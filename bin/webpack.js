@@ -31,14 +31,10 @@ const runCommand = (command, args) => {
  * @param {string} packageName name of the package
  * @returns {boolean} is the package installed?
  */
-const isInstalled = packageName => {
-	try {
-		require.resolve(packageName);
-
-		return true;
-	} catch (err) {
-		return false;
-	}
+const isInstalled = (packageName) => {
+	const cp = require("child_process");
+	const r = cp.spawnSync('npm', ['list', '--depth=0', packageName])
+  return r.stdout.toString().indexOf('empty') === -1
 };
 
 /**
