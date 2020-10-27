@@ -784,6 +784,8 @@ declare class ChunkGraph {
 	disconnectChunkGroup(chunkGroup: ChunkGroup): void;
 	getModuleId(module: Module): string | number;
 	setModuleId(module: Module, id: string | number): void;
+	getRuntimeId(runtime: string): string | number;
+	setRuntimeId(runtime: string, id: string | number): void;
 	hasModuleHashes(
 		module: Module,
 		runtime: string | SortableSet<string>
@@ -1450,6 +1452,7 @@ declare class Compilation {
 	): void;
 	patchChunksAfterReasonRemoval(module: Module, chunk: Chunk): void;
 	removeChunkFromDependencies(block: DependenciesBlock, chunk: Chunk): void;
+	assignRuntimeIds(): void;
 	sortItemsWithChunkIds(): void;
 	summarizeDependencies(): void;
 	createModuleHashes(): void;
@@ -5844,9 +5847,9 @@ declare interface Optimization {
 	runtimeChunk?: OptimizationRuntimeChunk;
 
 	/**
-	 * Skip over modules which are flagged to contain no side effects when exports are not used.
+	 * Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).
 	 */
-	sideEffects?: boolean;
+	sideEffects?: boolean | "flag";
 
 	/**
 	 * Optimize duplication and caching by splitting chunks by shared modules and cache group.
@@ -8234,6 +8237,24 @@ declare abstract class RuntimeTemplate {
 		 */
 		runtimeRequirements: Set<string>;
 	}): string;
+	runtimeConditionExpression(__0: {
+		/**
+		 * the chunk graph
+		 */
+		chunkGraph: ChunkGraph;
+		/**
+		 * runtime for which this code will be generated
+		 */
+		runtime?: string | SortableSet<string>;
+		/**
+		 * only execute the statement in some runtimes
+		 */
+		runtimeCondition?: string | boolean | SortableSet<string>;
+		/**
+		 * if set, will be filled with runtime requirements
+		 */
+		runtimeRequirements: Set<string>;
+	}): string;
 	importStatement(__0: {
 		/**
 		 * whether a new variable should be created or the existing one updated
@@ -8263,6 +8284,14 @@ declare abstract class RuntimeTemplate {
 		 * true, if this is a weak dependency
 		 */
 		weak?: boolean;
+		/**
+		 * runtime for which this code will be generated
+		 */
+		runtime?: string | SortableSet<string>;
+		/**
+		 * only execute the statement in some runtimes
+		 */
+		runtimeCondition?: string | boolean | SortableSet<string>;
 		/**
 		 * if set, will be filled with runtime requirements
 		 */
@@ -8490,7 +8519,7 @@ declare interface SharedObject {
 	[index: string]: string | SharedConfig;
 }
 declare class SideEffectsFlagPlugin {
-	constructor();
+	constructor(analyseSource?: boolean);
 
 	/**
 	 * Apply the plugin
@@ -9324,6 +9353,7 @@ declare const UNDEFINED_MARKER: unique symbol;
 declare interface UpdateHashContextDependency {
 	chunkGraph: ChunkGraph;
 	runtime: string | SortableSet<string>;
+	runtimeTemplate?: RuntimeTemplate;
 }
 declare interface UpdateHashContextGenerator {
 	/**
@@ -10112,6 +10142,7 @@ declare namespace exports {
 		export let scriptNonce: string;
 		export let loadScript: string;
 		export let chunkName: string;
+		export let runtimeId: string;
 		export let getChunkScriptFilename: string;
 		export let getChunkUpdateScriptFilename: string;
 		export let startup: string;
