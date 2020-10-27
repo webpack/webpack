@@ -34,7 +34,7 @@ const runCommand = (command, args) => {
 const isInstalled = (packageName) => {
 	const cp = require("child_process");
 	const r = cp.spawnSync('npm', ['list', '--depth=0', packageName])
-    return r.stdout.toString().indexOf('empty') === -1
+  return r.stdout.toString().indexOf('empty') === -1
 };
 
 /**
