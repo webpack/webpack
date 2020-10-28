@@ -54,7 +54,7 @@ export type EntryStatic = EntryObject | EntryUnnamed;
 /**
  * Module(s) that are loaded upon startup.
  */
-export type EntryItem = [string, ...string[]] | string;
+export type EntryItem = string[] | string;
 /**
  * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
  */
@@ -883,7 +883,7 @@ export interface EntryDescription {
 	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
-	dependOn?: [string, ...string[]] | string;
+	dependOn?: string[] | string;
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
@@ -1076,11 +1076,7 @@ export interface ModuleOptions {
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
-	noParse?:
-		| [RegExp | string | Function, ...(RegExp | string | Function)[]]
-		| RegExp
-		| string
-		| Function;
+	noParse?: (RegExp | string | Function)[] | RegExp | string | Function;
 	/**
 	 * An array of rules applied for modules.
 	 */
@@ -2344,15 +2340,15 @@ export interface EntryDescriptionNormalized {
 	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
-	dependOn?: [string, ...string[]];
+	dependOn?: string[];
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
 	filename?: Filename;
 	/**
-	 * Module(s) that are loaded upon startup. The last one is exported.
+	 * Module(s) that are loaded upon startup. Only the last one is exported.
 	 */
-	import?: [string, ...string[]];
+	import?: string[];
 	/**
 	 * Options for library.
 	 */

@@ -244,7 +244,6 @@
                 "type": "string",
                 "minLength": 1
               },
-              "minItems": 1,
               "uniqueItems": true
             },
             {
@@ -288,21 +287,19 @@
             "type": "string",
             "minLength": 1
           },
-          "minItems": 1,
           "uniqueItems": true
         },
         "filename": {
           "$ref": "#/definitions/Filename"
         },
         "import": {
-          "description": "Module(s) that are loaded upon startup. The last one is exported.",
+          "description": "Module(s) that are loaded upon startup. Only the last one is exported.",
           "type": "array",
           "items": {
             "description": "Module that is loaded upon startup. Only the last one is exported.",
             "type": "string",
             "minLength": 1
           },
-          "minItems": 1,
           "uniqueItems": true
         },
         "library": {
@@ -337,7 +334,6 @@
             "type": "string",
             "minLength": 1
           },
-          "minItems": 1,
           "uniqueItems": true
         },
         {
@@ -1104,8 +1100,7 @@
                     "tsType": "Function"
                   }
                 ]
-              },
-              "minItems": 1
+              }
             },
             {
               "description": "A regular expression, when matched the module is not parsed.",

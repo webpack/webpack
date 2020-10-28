@@ -52,21 +52,6 @@ describe("Validation", () => {
 	);
 
 	createTestCase(
-		"empty entry bundle array",
-		{
-			entry: {
-				bundle: []
-			}
-		},
-		msg =>
-			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.entry['bundle'] should be an non-empty array.
-			   -> All modules are loaded upon startup. The last one is exported."
-		`)
-	);
-
-	createTestCase(
 		"invalid instanceof",
 		{
 			entry: "a",
