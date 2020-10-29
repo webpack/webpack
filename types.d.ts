@@ -1727,7 +1727,9 @@ declare interface ConcatenationBailoutReasonContext {
 }
 declare class ConcatenationScope {
 	constructor(
-		modulesWithInfo: (ConcatenatedModuleInfo | ExternalModuleInfo)[],
+		modulesMap:
+			| (ConcatenatedModuleInfo | ExternalModuleInfo)[]
+			| Map<Module, ConcatenatedModuleInfo | ExternalModuleInfo>,
 		currentModule: ConcatenatedModuleInfo
 	);
 	isModuleInScope(module: Module): boolean;
