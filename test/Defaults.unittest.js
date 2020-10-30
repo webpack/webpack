@@ -344,6 +344,7 @@ describe("Defaults", () => {
 		          "...",
 		        ],
 		        "extensions": Array [
+		          ".cjs",
 		          ".js",
 		          ".json",
 		          ".wasm",
@@ -364,6 +365,7 @@ describe("Defaults", () => {
 		          "...",
 		        ],
 		        "extensions": Array [
+		          ".cjs",
 		          ".js",
 		          ".json",
 		          ".wasm",
@@ -384,6 +386,8 @@ describe("Defaults", () => {
 		          "...",
 		        ],
 		        "extensions": Array [
+		          ".mjs",
+		          ".cjs",
 		          ".js",
 		          ".json",
 		          ".wasm",
@@ -404,6 +408,7 @@ describe("Defaults", () => {
 		          "...",
 		        ],
 		        "extensions": Array [
+		          ".cjs",
 		          ".js",
 		          ".json",
 		          ".wasm",
@@ -424,6 +429,7 @@ describe("Defaults", () => {
 		          "...",
 		        ],
 		        "extensions": Array [
+		          ".cjs",
 		          ".js",
 		          ".json",
 		          ".wasm",
@@ -444,6 +450,7 @@ describe("Defaults", () => {
 		          "...",
 		        ],
 		        "extensions": Array [
+		          ".cjs",
 		          ".js",
 		          ".json",
 		          ".wasm",
@@ -467,6 +474,8 @@ describe("Defaults", () => {
 		          "...",
 		        ],
 		        "extensions": Array [
+		          ".mjs",
+		          ".cjs",
 		          ".js",
 		          ".json",
 		          ".wasm",
@@ -487,6 +496,8 @@ describe("Defaults", () => {
 		          "...",
 		        ],
 		        "extensions": Array [
+		          ".mjs",
+		          ".cjs",
 		          ".js",
 		          ".json",
 		          ".wasm",
