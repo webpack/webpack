@@ -12,7 +12,9 @@ describe("browserslist target", () => {
 		["safari 10"],
 		["safari TP"],
 		["safari 11"],
+		["safari 12.0"],
 		["safari 12.1"],
+		["safari 13"],
 		["firefox 80 ", "chrome 80"]
 	];
 

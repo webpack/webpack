@@ -270,7 +270,61 @@ Object {
 }
 `;
 
+exports[`browserslist target ["safari 12.0"] 1`] = `
+Object {
+  "arrowFunction": false,
+  "bigIntLiteral": false,
+  "browser": true,
+  "const": false,
+  "destructuring": true,
+  "document": true,
+  "dynamicImport": false,
+  "dynamicImportInWorker": false,
+  "electron": false,
+  "fetchWasm": true,
+  "forOf": true,
+  "global": false,
+  "globalThis": false,
+  "importScripts": false,
+  "importScriptsInWorker": true,
+  "module": false,
+  "node": false,
+  "nodeBuiltins": false,
+  "nwjs": false,
+  "require": false,
+  "web": true,
+  "webworker": false,
+}
+`;
+
 exports[`browserslist target ["safari 12.1"] 1`] = `
+Object {
+  "arrowFunction": true,
+  "bigIntLiteral": false,
+  "browser": true,
+  "const": true,
+  "destructuring": true,
+  "document": true,
+  "dynamicImport": true,
+  "dynamicImportInWorker": true,
+  "electron": false,
+  "fetchWasm": true,
+  "forOf": true,
+  "global": false,
+  "globalThis": true,
+  "importScripts": false,
+  "importScriptsInWorker": true,
+  "module": true,
+  "node": false,
+  "nodeBuiltins": false,
+  "nwjs": false,
+  "require": false,
+  "web": true,
+  "webworker": false,
+}
+`;
+
+exports[`browserslist target ["safari 13"] 1`] = `
 Object {
   "arrowFunction": true,
   "bigIntLiteral": false,
