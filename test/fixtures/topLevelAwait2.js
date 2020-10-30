@@ -1,1 +1,3 @@
-export default await Promise.resolve(1);
+const value = await Promise.resolve(1);
+
+export default value;
