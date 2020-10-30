@@ -81,7 +81,7 @@ Object {
 }
 `;
 
-exports[`browserslist target ["node 0.10"] 1`] = `
+exports[`browserslist target ["node 0.10.0"] 1`] = `
 Object {
   "arrowFunction": false,
   "bigIntLiteral": false,
@@ -108,67 +108,13 @@ Object {
 }
 `;
 
-exports[`browserslist target ["node 0.12"] 1`] = `
+exports[`browserslist target ["node 0.12.0"] 1`] = `
 Object {
   "arrowFunction": false,
   "bigIntLiteral": false,
   "browser": false,
   "const": false,
   "destructuring": false,
-  "document": false,
-  "dynamicImport": false,
-  "dynamicImportInWorker": false,
-  "electron": false,
-  "fetchWasm": false,
-  "forOf": true,
-  "global": true,
-  "globalThis": false,
-  "importScripts": false,
-  "importScriptsInWorker": true,
-  "module": false,
-  "node": true,
-  "nodeBuiltins": true,
-  "nwjs": false,
-  "require": true,
-  "web": false,
-  "webworker": false,
-}
-`;
-
-exports[`browserslist target ["node 10"] 1`] = `
-Object {
-  "arrowFunction": true,
-  "bigIntLiteral": true,
-  "browser": false,
-  "const": true,
-  "destructuring": true,
-  "document": false,
-  "dynamicImport": true,
-  "dynamicImportInWorker": true,
-  "electron": false,
-  "fetchWasm": false,
-  "forOf": true,
-  "global": true,
-  "globalThis": false,
-  "importScripts": false,
-  "importScriptsInWorker": true,
-  "module": true,
-  "node": true,
-  "nodeBuiltins": true,
-  "nwjs": false,
-  "require": true,
-  "web": false,
-  "webworker": false,
-}
-`;
-
-exports[`browserslist target ["node 10.0"] 1`] = `
-Object {
-  "arrowFunction": true,
-  "bigIntLiteral": false,
-  "browser": false,
-  "const": true,
-  "destructuring": true,
   "document": false,
   "dynamicImport": false,
   "dynamicImportInWorker": false,
@@ -198,33 +144,6 @@ Object {
   "destructuring": true,
   "document": false,
   "dynamicImport": false,
-  "dynamicImportInWorker": false,
-  "electron": false,
-  "fetchWasm": false,
-  "forOf": true,
-  "global": true,
-  "globalThis": false,
-  "importScripts": false,
-  "importScriptsInWorker": true,
-  "module": false,
-  "node": true,
-  "nodeBuiltins": true,
-  "nwjs": false,
-  "require": true,
-  "web": false,
-  "webworker": false,
-}
-`;
-
-exports[`browserslist target ["node 10.17"] 1`] = `
-Object {
-  "arrowFunction": true,
-  "bigIntLiteral": true,
-  "browser": false,
-  "const": true,
-  "destructuring": true,
-  "document": false,
-  "dynamicImport": true,
   "dynamicImportInWorker": false,
   "electron": false,
   "fetchWasm": false,
@@ -351,16 +270,16 @@ Object {
 }
 `;
 
-exports[`browserslist target ["safari 12.4"] 1`] = `
+exports[`browserslist target ["safari 12.1"] 1`] = `
 Object {
-  "arrowFunction": false,
+  "arrowFunction": true,
   "bigIntLiteral": false,
   "browser": true,
-  "const": false,
+  "const": true,
   "destructuring": true,
   "document": true,
-  "dynamicImport": false,
-  "dynamicImportInWorker": false,
+  "dynamicImport": true,
+  "dynamicImportInWorker": true,
   "electron": false,
   "fetchWasm": true,
   "forOf": true,
@@ -368,7 +287,7 @@ Object {
   "globalThis": true,
   "importScripts": false,
   "importScriptsInWorker": true,
-  "module": false,
+  "module": true,
   "node": false,
   "nodeBuiltins": false,
   "nwjs": false,
