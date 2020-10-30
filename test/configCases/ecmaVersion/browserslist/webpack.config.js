@@ -7,10 +7,10 @@ module.exports = {
 				expect(compilation.outputOptions.environment).toMatchInlineSnapshot(`
 			Object {
 			  "arrowFunction": true,
-			  "bigIntLiteral": false,
+			  "bigIntLiteral": true,
 			  "const": true,
 			  "destructuring": true,
-			  "dynamicImport": false,
+			  "dynamicImport": true,
 			  "forOf": true,
 			  "module": false,
 			}
