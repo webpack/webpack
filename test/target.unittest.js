@@ -5,8 +5,6 @@ describe("browserslist target", () => {
 		["ie 11"],
 		["chrome 80"],
 		["chrome 80.0"],
-		["CHROME 80"],
-		["CHROME 80.0"],
 		["node 6"],
 		["node 6.0"],
 		["node 6.0.0"],
