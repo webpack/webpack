@@ -1,5 +1,5 @@
 import b from "./b.cjs";
 
-it("should resolve both alternatives", () => {
+it("should load cjs from mjs", () => {
 	expect(b.foo).toEqual("bar");
 });
