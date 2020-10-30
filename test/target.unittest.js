@@ -4,6 +4,7 @@ describe("browserslist target", () => {
 	const tests = [
 		["ie 11"],
 		["chrome 80"],
+		["node 0.10"],
 		["node 0.12"],
 		["node 10"],
 		["node 10.0"],

@@ -81,6 +81,33 @@ Object {
 }
 `;
 
+exports[`browserslist target ["node 0.10"] 1`] = `
+Object {
+  "arrowFunction": false,
+  "bigIntLiteral": false,
+  "browser": false,
+  "const": false,
+  "destructuring": false,
+  "document": false,
+  "dynamicImport": false,
+  "dynamicImportInWorker": false,
+  "electron": false,
+  "fetchWasm": false,
+  "forOf": false,
+  "global": true,
+  "globalThis": false,
+  "importScripts": false,
+  "importScriptsInWorker": true,
+  "module": false,
+  "node": true,
+  "nodeBuiltins": true,
+  "nwjs": false,
+  "require": true,
+  "web": false,
+  "webworker": false,
+}
+`;
+
 exports[`browserslist target ["node 0.12"] 1`] = `
 Object {
   "arrowFunction": false,
