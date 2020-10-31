@@ -1,5 +1,32 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`browserslist target ["chrome 80","node 12.19.0"] 1`] = `
+Object {
+  "arrowFunction": true,
+  "bigIntLiteral": true,
+  "browser": null,
+  "const": true,
+  "destructuring": true,
+  "document": null,
+  "dynamicImport": false,
+  "dynamicImportInWorker": false,
+  "electron": false,
+  "fetchWasm": null,
+  "forOf": true,
+  "global": null,
+  "globalThis": true,
+  "importScripts": false,
+  "importScriptsInWorker": true,
+  "module": false,
+  "node": null,
+  "nodeBuiltins": null,
+  "nwjs": false,
+  "require": null,
+  "web": null,
+  "webworker": false,
+}
+`;
+
 exports[`browserslist target ["chrome 80"] 1`] = `
 Object {
   "arrowFunction": true,
@@ -27,16 +54,16 @@ Object {
 }
 `;
 
-exports[`browserslist target ["firefox 80 ","chrome 80"] 1`] = `
+exports[`browserslist target ["firefox 80","chrome 80"] 1`] = `
 Object {
-  "arrowFunction": false,
-  "bigIntLiteral": false,
+  "arrowFunction": true,
+  "bigIntLiteral": true,
   "browser": true,
-  "const": false,
+  "const": true,
   "destructuring": true,
   "document": true,
-  "dynamicImport": false,
-  "dynamicImportInWorker": false,
+  "dynamicImport": true,
+  "dynamicImportInWorker": true,
   "electron": false,
   "fetchWasm": true,
   "forOf": true,
@@ -44,7 +71,7 @@ Object {
   "globalThis": true,
   "importScripts": false,
   "importScriptsInWorker": true,
-  "module": false,
+  "module": true,
   "node": false,
   "nodeBuiltins": false,
   "nwjs": false,
@@ -170,7 +197,7 @@ Object {
   "const": true,
   "destructuring": true,
   "document": false,
-  "dynamicImport": true,
+  "dynamicImport": false,
   "dynamicImportInWorker": false,
   "electron": false,
   "fetchWasm": false,
@@ -189,7 +216,7 @@ Object {
 }
 `;
 
-exports[`browserslist target ["node 12"] 1`] = `
+exports[`browserslist target ["node 12.19.0"] 1`] = `
 Object {
   "arrowFunction": true,
   "bigIntLiteral": true,
@@ -197,8 +224,8 @@ Object {
   "const": true,
   "destructuring": true,
   "document": false,
-  "dynamicImport": true,
-  "dynamicImportInWorker": true,
+  "dynamicImport": false,
+  "dynamicImportInWorker": false,
   "electron": false,
   "fetchWasm": false,
   "forOf": true,
@@ -206,7 +233,7 @@ Object {
   "globalThis": true,
   "importScripts": false,
   "importScriptsInWorker": true,
-  "module": true,
+  "module": false,
   "node": true,
   "nodeBuiltins": true,
   "nwjs": false,
@@ -272,14 +299,14 @@ Object {
 
 exports[`browserslist target ["safari 12.0"] 1`] = `
 Object {
-  "arrowFunction": false,
+  "arrowFunction": true,
   "bigIntLiteral": false,
   "browser": true,
-  "const": false,
+  "const": true,
   "destructuring": true,
   "document": true,
-  "dynamicImport": false,
-  "dynamicImportInWorker": false,
+  "dynamicImport": true,
+  "dynamicImportInWorker": true,
   "electron": false,
   "fetchWasm": true,
   "forOf": true,
@@ -287,7 +314,7 @@ Object {
   "globalThis": false,
   "importScripts": false,
   "importScriptsInWorker": true,
-  "module": false,
+  "module": true,
   "node": false,
   "nodeBuiltins": false,
   "nwjs": false,
@@ -353,14 +380,14 @@ Object {
 
 exports[`browserslist target ["safari TP"] 1`] = `
 Object {
-  "arrowFunction": true,
-  "bigIntLiteral": true,
+  "arrowFunction": false,
+  "bigIntLiteral": false,
   "browser": true,
-  "const": true,
+  "const": false,
   "destructuring": false,
   "document": true,
-  "dynamicImport": true,
-  "dynamicImportInWorker": true,
+  "dynamicImport": false,
+  "dynamicImportInWorker": false,
   "electron": false,
   "fetchWasm": true,
   "forOf": false,
@@ -368,7 +395,7 @@ Object {
   "globalThis": false,
   "importScripts": false,
   "importScriptsInWorker": true,
-  "module": true,
+  "module": false,
   "node": false,
   "nodeBuiltins": false,
   "nwjs": false,
