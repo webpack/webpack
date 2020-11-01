@@ -1594,7 +1594,7 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Give chunks created a name (chunks with equal name are merged).
 	 */
-	name?: false | string | Function;
+	name?: boolean | string | Function;
 	/**
 	 * Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.
 	 */

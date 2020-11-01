@@ -1815,7 +1815,7 @@
           "description": "Give chunks created a name (chunks with equal name are merged).",
           "anyOf": [
             {
-              "enum": [false]
+              "type": "boolean"
             },
             {
               "type": "string"

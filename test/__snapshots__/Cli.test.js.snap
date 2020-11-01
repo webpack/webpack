@@ -1942,10 +1942,7 @@ Object {
         "description": "Give chunks created a name (chunks with equal name are merged).",
         "multiple": false,
         "path": "optimization.splitChunks.name",
-        "type": "enum",
-        "values": Array [
-          false,
-        ],
+        "type": "boolean",
       },
       Object {
         "description": "Give chunks created a name (chunks with equal name are merged).",
