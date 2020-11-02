@@ -3620,8 +3620,16 @@
               "type": "array",
               "items": {
                 "description": "A glob pattern for files that should be ignored from watching.",
-                "type": "string",
-                "minLength": 1
+                "anyOf": [
+                  {
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
+                  },
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                ]
               }
             },
             {
