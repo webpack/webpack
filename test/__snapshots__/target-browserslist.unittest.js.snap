@@ -189,6 +189,33 @@ Object {
 }
 `;
 
+exports[`browserslist target ["android 81"] 1`] = `
+Object {
+  "arrowFunction": true,
+  "bigIntLiteral": true,
+  "browser": true,
+  "const": true,
+  "destructuring": true,
+  "document": true,
+  "dynamicImport": true,
+  "dynamicImportInWorker": true,
+  "electron": false,
+  "fetchWasm": true,
+  "forOf": true,
+  "global": false,
+  "globalThis": true,
+  "importScripts": false,
+  "importScriptsInWorker": true,
+  "module": false,
+  "node": false,
+  "nodeBuiltins": false,
+  "nwjs": false,
+  "require": false,
+  "web": true,
+  "webworker": false,
+}
+`;
+
 exports[`browserslist target ["baidu 7.12"] 1`] = `
 Object {
   "arrowFunction": false,

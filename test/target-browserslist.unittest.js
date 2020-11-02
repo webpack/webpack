@@ -13,6 +13,7 @@ describe("browserslist target", () => {
 		["android 4"],
 		["android 4.1"],
 		["android 4.4.3-4.4.4"],
+		["android 81"],
 
 		// Chrome
 		// Browserslist return `chrome` versions for `electron 11.0` query
