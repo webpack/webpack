@@ -4,6 +4,7 @@ describe("browserslist target", () => {
 	const tests = [
 		// IE
 		["ie 11"],
+		["ie_mob 11"],
 
 		// Edge
 		["edge 79"],
@@ -11,10 +12,10 @@ describe("browserslist target", () => {
 		// Android
 		["android 4"],
 		["android 4.1"],
-		// TODO fix
-		// ["android 4.4.3-4.4.4"],
+		["android 4.4.3-4.4.4"],
 
 		// Chrome
+		// Browserslist return `chrome` versions for `electron 11.0` query
 		["chrome 80"],
 		["and_chr 80"],
 
@@ -27,27 +28,25 @@ describe("browserslist target", () => {
 		["op_mob 54"],
 
 		// Safari
+		// Browserslist return `safari` versions for `phantomjs 2.1` query
 		["safari 10"],
 		["safari TP"],
 		["safari 11"],
 		["safari 12.0"],
 		["safari 12.1"],
 		["safari 13"],
+		["ios_saf 12.0-12.1"],
 
 		// Samsung
 		["samsung 4"],
 		["samsung 9.2"],
-		// TODO ["samsung 11.1-11.2"]
+		["samsung 11.1-11.2"],
 
-		// TODO Electron
-		// TODO ie_mob
-		// TODO Baidu
-		// TODO bb
-		// TODO op_mini
-		// TODO and_uc
-		// TODO and_qq
-		// TODO kaios
-		// TODO unknown for future new browsers
+		// Opera mini
+		["op_mini all"],
+
+		// BlackBerry
+		["bb 10"],
 
 		// Node
 		["node 0.10.0"],
@@ -56,9 +55,24 @@ describe("browserslist target", () => {
 		["node 10.17.0"],
 		["node 12.19.0"],
 
+		// UC browsers for Android
+		["and_uc 12.12"],
+
+		// QQ browser
+		["and_qq 10.4"],
+
+		// Kaios
+		["kaios 2.5"],
+
+		// Baidu
+		["baidu 7.12"],
+
 		// Multiple
 		["firefox 80", "chrome 80"],
-		["chrome 80", "node 12.19.0"]
+		["chrome 80", "node 12.19.0"],
+
+		// Unknown
+		["unknown 50"]
 	];
 
 	for (const test of tests) {
