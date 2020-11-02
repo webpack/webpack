@@ -10,7 +10,7 @@ module.exports = {
 			  "bigIntLiteral": true,
 			  "const": true,
 			  "destructuring": true,
-			  "dynamicImport": true,
+			  "dynamicImport": false,
 			  "forOf": true,
 			  "module": false,
 			}
