@@ -56,14 +56,14 @@ Object {
 
 exports[`browserslist target ["and_qq 10.4"] 1`] = `
 Object {
-  "arrowFunction": false,
+  "arrowFunction": true,
   "bigIntLiteral": false,
   "browser": true,
-  "const": false,
+  "const": true,
   "destructuring": false,
   "document": true,
-  "dynamicImport": false,
-  "dynamicImportInWorker": false,
+  "dynamicImport": true,
+  "dynamicImportInWorker": true,
   "electron": false,
   "fetchWasm": true,
   "forOf": false,
@@ -71,7 +71,7 @@ Object {
   "globalThis": false,
   "importScripts": false,
   "importScriptsInWorker": true,
-  "module": false,
+  "module": true,
   "node": false,
   "nodeBuiltins": false,
   "nwjs": false,
@@ -83,10 +83,10 @@ Object {
 
 exports[`browserslist target ["and_uc 12.12"] 1`] = `
 Object {
-  "arrowFunction": false,
+  "arrowFunction": true,
   "bigIntLiteral": false,
   "browser": true,
-  "const": false,
+  "const": true,
   "destructuring": false,
   "document": true,
   "dynamicImport": false,
@@ -206,7 +206,7 @@ Object {
   "globalThis": true,
   "importScripts": false,
   "importScriptsInWorker": true,
-  "module": false,
+  "module": true,
   "node": false,
   "nodeBuiltins": false,
   "nwjs": false,
@@ -218,7 +218,7 @@ Object {
 
 exports[`browserslist target ["baidu 7.12"] 1`] = `
 Object {
-  "arrowFunction": false,
+  "arrowFunction": true,
   "bigIntLiteral": false,
   "browser": true,
   "const": false,
@@ -488,10 +488,10 @@ Object {
 
 exports[`browserslist target ["kaios 2.5"] 1`] = `
 Object {
-  "arrowFunction": false,
+  "arrowFunction": true,
   "bigIntLiteral": false,
   "browser": true,
-  "const": false,
+  "const": true,
   "destructuring": false,
   "document": true,
   "dynamicImport": false,
@@ -734,7 +734,7 @@ Object {
   "arrowFunction": true,
   "bigIntLiteral": false,
   "browser": true,
-  "const": true,
+  "const": false,
   "destructuring": true,
   "document": true,
   "dynamicImport": false,

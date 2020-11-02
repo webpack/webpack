@@ -182,6 +182,7 @@
     "onconnect",
     "nwjs",
     "redeclaration",
+    "kaios",
 
     "webassemblyjs",
     "fsevents",
