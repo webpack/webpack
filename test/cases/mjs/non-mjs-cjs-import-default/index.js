@@ -1,13 +1,8 @@
 import { data } from "./cjs.js";
 import * as star from "./cjs.js";
 import def from "./cjs.js";
-import {
-	ns,
-	default as def1,
-	def as def2,
-	data as data2
-} from "./reexport.mjs";
-import * as reexport from "./reexport.mjs";
+import { ns, default as def1, def as def2, data as data2 } from "./reexport.js";
+import * as reexport from "./reexport.js";
 
 import { data as dynamicData } from "./dynamic.js";
 import * as dynamicStar from "./dynamic.js";
@@ -24,7 +19,7 @@ import dynamicFlaggedDef from "./dynamicFlagged.js";
 import * as jsonStar from "./data.json";
 import jsonDef from "./data.json";
 
-it("should get correct values when importing named exports from a CommonJs module from mjs", function () {
+it("should get correct values when importing named exports from a CommonJs module from non-mjs", function () {
 	expect(typeof data).toBe("string");
 	expect({ data }).toEqual({ data: "ok" });
 	expect(def).toEqual({
@@ -37,37 +32,24 @@ it("should get correct values when importing named exports from a CommonJs modul
 			default: "default"
 		}
 	});
-	expect(star).toEqual(
-		nsObj({
-			default: {
-				data: "ok",
-				default: "default"
-			},
-			data: "ok"
-		})
-	);
+	expect(star).toEqual({
+		data: "ok",
+		default: "default"
+	});
 	expect({ star }).toEqual({
-		star: nsObj({
-			default: {
-				data: "ok",
-				default: "default"
-			},
-			data: "ok"
-		})
+		star: {
+			data: "ok",
+			default: "default"
+		}
 	});
 	expect(star.default).toEqual({
 		data: "ok",
 		default: "default"
 	});
-	expect(ns).toEqual(
-		nsObj({
-			default: {
-				data: "ok",
-				default: "default"
-			},
-			data: "ok"
-		})
-	);
+	expect(ns).toEqual({
+		data: "ok",
+		default: "default"
+	});
 	expect(def1).toEqual({
 		data: "ok",
 		default: "default"
@@ -80,13 +62,10 @@ it("should get correct values when importing named exports from a CommonJs modul
 	expect({ data2 }).toEqual({ data2: "ok" });
 	expect(reexport).toEqual(
 		nsObj({
-			ns: nsObj({
-				default: {
-					data: "ok",
-					default: "default"
-				},
-				data: "ok"
-			}),
+			ns: {
+				data: "ok",
+				default: "default"
+			},
 			default: {
 				data: "ok",
 				default: "default"
@@ -100,49 +79,29 @@ it("should get correct values when importing named exports from a CommonJs modul
 	);
 });
 
-it("should get correct values when importing named exports from a flagged module from mjs", function () {
+it("should get correct values when importing named exports from a flagged module from non-mjs", function () {
 	expect(typeof flaggedData).toBe("string");
 	expect({ flaggedData }).toEqual({ flaggedData: "ok" });
-	expect(flaggedDef).toEqual({
-		__esModule: true,
-		data: "ok",
-		default: "default"
-	});
+	expect(flaggedDef).toBe("default");
 	expect({ flaggedDef }).toEqual({
-		flaggedDef: {
+		flaggedDef: "default"
+	});
+	expect(flaggedStar).toEqual({
+		__esModule: true,
+		default: "default",
+		data: "ok"
+	});
+	expect({ flaggedStar }).toEqual({
+		flaggedStar: {
 			__esModule: true,
-			data: "ok",
-			default: "default"
+			default: "default",
+			data: "ok"
 		}
 	});
-	expect(flaggedStar).toEqual(
-		nsObj({
-			default: {
-				__esModule: true,
-				data: "ok",
-				default: "default"
-			},
-			data: "ok"
-		})
-	);
-	expect({ flaggedStar }).toEqual({
-		flaggedStar: nsObj({
-			default: {
-				__esModule: true,
-				data: "ok",
-				default: "default"
-			},
-			data: "ok"
-		})
-	});
-	expect(flaggedStar.default).toEqual({
-		__esModule: true,
-		data: "ok",
-		default: "default"
-	});
+	expect(flaggedStar.default).toBe("default");
 });
 
-it("should get correct values when importing named exports from a dynamic (non-flagged) module from mjs", function () {
+it("should get correct values when importing named exports from a dynamic (non-flagged) module from non-mjs", function () {
 	expect(typeof dynamicData).toBe("string");
 	expect({ dynamicData }).toEqual({ dynamicData: "ok" });
 	expect(dynamicDef).toEqual({
@@ -157,25 +116,17 @@ it("should get correct values when importing named exports from a dynamic (non-f
 			default: "default"
 		}
 	});
-	expect(dynamicStar).toEqual(
-		nsObj({
-			default: {
-				__esModule: false,
-				data: "ok",
-				default: "default"
-			},
-			data: "ok"
-		})
-	);
+	expect(dynamicStar).toEqual({
+		__esModule: false,
+		data: "ok",
+		default: "default"
+	});
 	expect({ dynamicStar }).toEqual({
-		dynamicStar: nsObj({
-			default: {
-				__esModule: false,
-				data: "ok",
-				default: "default"
-			},
-			data: "ok"
-		})
+		dynamicStar: {
+			__esModule: false,
+			data: "ok",
+			default: "default"
+		}
 	});
 	expect(dynamicStar.default).toEqual({
 		__esModule: false,
@@ -184,49 +135,29 @@ it("should get correct values when importing named exports from a dynamic (non-f
 	});
 });
 
-it("should get correct values when importing named exports from a dynamic (flagged) module from mjs", function () {
+it("should get correct values when importing named exports from a dynamic (flagged) module from non-mjs", function () {
 	expect(typeof dynamicFlaggedData).toBe("string");
 	expect({ dynamicFlaggedData }).toEqual({ dynamicFlaggedData: "ok" });
-	expect(dynamicFlaggedDef).toEqual({
-		__esModule: true,
-		data: "ok",
-		default: "default"
-	});
+	expect(dynamicFlaggedDef).toBe("default");
 	expect({ dynamicFlaggedDef }).toEqual({
-		dynamicFlaggedDef: {
+		dynamicFlaggedDef: "default"
+	});
+	expect(dynamicFlaggedStar).toEqual({
+		__esModule: true,
+		default: "default",
+		data: "ok"
+	});
+	expect({ dynamicFlaggedStar }).toEqual({
+		dynamicFlaggedStar: {
 			__esModule: true,
-			data: "ok",
-			default: "default"
+			default: "default",
+			data: "ok"
 		}
 	});
-	expect(dynamicFlaggedStar).toEqual(
-		nsObj({
-			default: {
-				__esModule: true,
-				data: "ok",
-				default: "default"
-			},
-			data: "ok"
-		})
-	);
-	expect({ dynamicFlaggedStar }).toEqual({
-		dynamicFlaggedStar: nsObj({
-			default: {
-				__esModule: true,
-				data: "ok",
-				default: "default"
-			},
-			data: "ok"
-		})
-	});
-	expect(dynamicFlaggedStar.default).toEqual({
-		__esModule: true,
-		data: "ok",
-		default: "default"
-	});
+	expect(dynamicFlaggedStar.default).toBe("default");
 });
 
-it("should get correct values when importing named exports from a default-only module from mjs", function () {
+it("should get correct values when importing named exports from a default-only module from non-mjs", function () {
 	expect(jsonDef).toEqual({
 		__esModule: true,
 		data: "ok",
@@ -241,6 +172,7 @@ it("should get correct values when importing named exports from a default-only m
 	});
 	expect(jsonStar).toEqual(
 		nsObj({
+			data: "ok",
 			default: {
 				__esModule: true,
 				data: "ok",
@@ -250,6 +182,7 @@ it("should get correct values when importing named exports from a default-only m
 	);
 	expect({ jsonStar }).toEqual({
 		jsonStar: nsObj({
+			data: "ok",
 			default: {
 				__esModule: true,
 				data: "ok",
