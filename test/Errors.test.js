@@ -871,4 +871,19 @@ describe("loaders", () => {
 					}
 				`);
 	});
+
+	it("should throw error for invalid library name", async () => {
+		await expect(
+			compile({
+				output: {
+					libraryTarget: "var"
+				}
+			})
+		).rejects.toMatchInlineSnapshot(`
+					Object {
+					  "message": "output.library.name must be a string or string array",
+					  "stack": "Error: output.library.name must be a string or string array",
+					}
+				`);
+	});
 });
