@@ -4320,6 +4320,7 @@ declare class JavascriptParser extends Parser {
 	): boolean;
 	getComments(range?: any): any;
 	isAsiPosition(pos: number): boolean;
+	unsetAsiPosition(pos: number): void;
 	isStatementLevelExpression(expr?: any): boolean;
 	getTagData(name?: any, tag?: any): any;
 	tagVariable(name?: any, tag?: any, data?: any): void;
