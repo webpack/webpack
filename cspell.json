@@ -181,6 +181,8 @@
     "destructure",
     "onconnect",
     "nwjs",
+    "redeclaration",
+    "kaios",
 
     "webassemblyjs",
     "fsevents",
@@ -218,7 +220,8 @@
     "codecov",
     "opencollective",
     "dependabot",
-    "browserslist"
+    "browserslist",
+    "samsunginternet"
   ],
   "ignoreRegExpList": ["/Author.+/", "/data:.*/", "/\"mappings\":\".+\"/"],
   "ignorePaths": ["**/dist/**", "examples/**/README.md"]
