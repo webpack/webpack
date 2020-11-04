@@ -26,3 +26,7 @@ it("should import multiple process.env var with default values", () => {
 it("should import process.env var with empty value", () => {
 	if (process.env.III !== "") if (never) require("iii");
 });
+
+it("should import process.env var with default value functions", () => {
+	if (process.env.JJJ !== "jjj-default") if (never) require("jjj");
+});

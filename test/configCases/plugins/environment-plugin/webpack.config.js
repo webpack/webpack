@@ -64,5 +64,17 @@ module.exports = [
 			unknownContextCritical: false
 		},
 		plugins: [new EnvironmentPlugin("III")]
+	},
+	{
+		name: "jjj",
+		module: {
+			unknownContextRegExp: /$^/,
+			unknownContextCritical: false
+		},
+		plugins: [
+			new EnvironmentPlugin({
+				JJJ: () => "jjj-default"
+			})
+		]
 	}
 ];
