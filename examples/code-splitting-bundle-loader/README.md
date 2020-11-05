@@ -303,26 +303,26 @@ module.exports = "It works";
 ```
 asset output.js 9.44 KiB [emitted] (name: main)
 asset 929.output.js 354 bytes [emitted]
-chunk output.js (main) 375 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.85 KiB 6 modules
   dependent modules 281 bytes [dependent] 1 module
   ./example.js 94 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk 929.output.js 28 bytes [rendered]
+chunk (runtime: main) 929.output.js 28 bytes [rendered]
   > ../../node_modules/bundle-loader/index.js!./file.js 7:0-14:2
   ./file.js 28 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./file.js 1:0-14
     cjs require !!./file.js ../../node_modules/bundle-loader/index.js!./file.js 8:8-30
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.79 KiB [emitted] [minimized] (name: main)
+asset output.js 1.8 KiB [emitted] [minimized] (name: main)
 asset 929.output.js 88 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
   > ./example.js main
@@ -337,5 +337,5 @@ chunk (runtime: main) 929.output.js 28 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./file.js 1:0-14
     cjs require !!./file.js ../../node_modules/bundle-loader/index.js!./file.js 8:8-30
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

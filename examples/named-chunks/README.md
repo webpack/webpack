@@ -367,14 +367,14 @@ __webpack_require__.e(/*! require.ensure */ 885).then((function(require) {
 asset output.js 9.57 KiB [emitted] (name: main)
 asset 666.output.js 735 bytes [emitted] (name: my own chunk)
 asset 885.output.js 528 bytes [emitted]
-chunk output.js (main) 432 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.85 KiB 6 modules
   dependent modules 11 bytes [dependent] 1 module
   ./example.js 421 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk 666.output.js (my own chunk) 33 bytes [rendered]
+chunk (runtime: main) 666.output.js (my own chunk) 33 bytes [rendered]
   > ./example.js 13:0-15:18
   > ./example.js 3:0-6:18
   > ./example.js 8:0-11:18
@@ -390,7 +390,7 @@ chunk 666.output.js (my own chunk) 33 bytes [rendered]
     [used exports unknown]
     cjs require d ./example.js 10:9-21
     cjs require d ./example.js 19:9-21
-chunk 885.output.js 22 bytes [rendered]
+chunk (runtime: main) 885.output.js 22 bytes [rendered]
   > ./example.js 17:0-20:2
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
@@ -401,13 +401,13 @@ chunk 885.output.js 22 bytes [rendered]
     [used exports unknown]
     cjs require d ./example.js 10:9-21
     cjs require d ./example.js 19:9-21
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.82 KiB [emitted] [minimized] (name: main)
+asset output.js 1.83 KiB [emitted] [minimized] (name: main)
 asset 666.output.js 95 bytes [emitted] [minimized] (name: my own chunk)
 asset 885.output.js 80 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 432 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
@@ -444,5 +444,5 @@ chunk (runtime: main) 885.output.js 22 bytes [rendered]
     [used exports unknown]
     cjs require d ./example.js 10:9-21
     cjs require d ./example.js 19:9-21
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

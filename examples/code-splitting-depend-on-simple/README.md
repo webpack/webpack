@@ -297,13 +297,13 @@ module.exports = 'prop-types';
 ```
 asset react-vendors.js 7.48 KiB [emitted] (name: react-vendors)
 asset app.js 1.43 KiB [emitted] (name: app)
-chunk app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
+chunk (runtime: react-vendors) app.js (app) 139 bytes <{react-vendors}> [initial] [rendered]
   > ./app.js app
   ./app.js 139 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./app.js app
-chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.42 KiB (runtime) >{app}< [entry] [rendered]
+chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javascript) 3.42 KiB (runtime) >{app}< [entry] [rendered]
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
@@ -327,7 +327,7 @@ chunk react-vendors.js (react-vendors) 87 bytes (javascript) 3.42 KiB (runtime) 
       harmony import specifier react ./app.js 5:12-17
       cjs self exports reference ./node_modules/react.js 1:0-14
       entry react react-vendors
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
@@ -365,5 +365,5 @@ chunk (runtime: react-vendors) react-vendors.js (react-vendors) 87 bytes (javasc
       harmony import specifier react ./app.js 5:12-17
       cjs self exports reference ./node_modules/react.js 1:0-14
       entry react react-vendors
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

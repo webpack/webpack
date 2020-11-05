@@ -346,20 +346,20 @@ module.exports = function() {
 ```
 asset output.js 8.81 KiB [emitted] (name: main)
 asset 577.output.js 2.23 KiB [emitted]
-chunk output.js (main) 266 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 266 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.85 KiB 6 modules
   ./example.js 266 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk 577.output.js 457 bytes [rendered]
+chunk (runtime: main) 577.output.js 457 bytes [rendered]
   > ./example.js 2:1-4:3
   dependent modules 240 bytes [dependent] 3 modules
   ../require.context/templates/ sync ^\.\/.*$ 217 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     cjs require context ./example.js 3:11-64
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
@@ -379,5 +379,5 @@ chunk (runtime: main) 577.output.js 457 bytes [rendered]
   ../require.context/templates/ sync ^\.\/.*$ 217 bytes [built] [code generated]
     [no exports]
     cjs require context ./example.js 3:11-64
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

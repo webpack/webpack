@@ -185,42 +185,30 @@ inc(a); // 2
 
 ```
 asset output.js 2.76 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
-  > ./example.js main
-  dependent modules 564 bytes [dependent] 2 modules
-  ./example.js 70 bytes [built] [code generated]
-    [no exports used]
-    entry ./example.js main
-webpack 5.0.0 compiled successfully
+./example.js 70 bytes [built] [code generated]
+./increment.js 251 bytes [built] [code generated]
+./math.js 313 bytes [built] [code generated]
+webpack 5.4.0 compiled successfully
 
 asset without.js 2.91 KiB [emitted] (name: main)
-chunk without.js (main) 634 bytes [entry] [rendered]
-  > ./example.js main
-  dependent modules 564 bytes [dependent] 2 modules
-  ./example.js 70 bytes [built] [code generated]
-    [used exports unknown]
-    entry ./example.js main
-webpack 5.0.0 compiled successfully
+./example.js 70 bytes [built] [code generated]
+./increment.js 251 bytes [built] [code generated]
+./math.js 313 bytes [built] [code generated]
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset output.js 351 bytes [emitted] [minimized] (name: main) 1 related asset
-chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
-  > ./example.js main
-  dependent modules 564 bytes [dependent] 2 modules
-  ./example.js 70 bytes [built] [code generated]
-    [no exports used]
-    entry ./example.js main
-webpack 5.0.0 compiled successfully
+./example.js 70 bytes [built] [code generated]
+./increment.js 251 bytes [built] [code generated]
+./math.js 313 bytes [built] [code generated]
+webpack 5.4.0 compiled successfully
 
 asset without.js 537 bytes [emitted] [minimized] (name: main) 1 related asset
-chunk without.js (main) 634 bytes [entry] [rendered]
-  > ./example.js main
-  dependent modules 564 bytes [dependent] 2 modules
-  ./example.js 70 bytes [built] [code generated]
-    [used exports unknown]
-    entry ./example.js main
-webpack 5.0.0 compiled successfully
+./example.js 70 bytes [built] [code generated]
+./increment.js 251 bytes [built] [code generated]
+./math.js 313 bytes [built] [code generated]
+webpack 5.4.0 compiled successfully
 ```

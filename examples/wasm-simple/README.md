@@ -291,7 +291,7 @@ asset output.js 9.05 KiB [emitted] (name: main)
 asset 0c2b42c68d1cb59a3b24.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset f06646bac0d91cc0583d.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset ceee125bae475876af47.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 1.19 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 1.19 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 1.19 KiB 5 modules
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
@@ -299,13 +299,13 @@ chunk output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 1.19 KiB (r
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.57 KiB [emitted] [minimized] (name: main)
+asset output.js 1.59 KiB [emitted] [minimized] (name: main)
 asset 24f7619aa8685820e275.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset fb8c9ac1a90009920ab8.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset ccc0513d2f742a4d8505.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
@@ -317,5 +317,5 @@ chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassem
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

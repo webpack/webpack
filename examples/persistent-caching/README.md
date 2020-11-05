@@ -56,10 +56,10 @@ module.exports = (env = "development") => ({
 
 ```
 asset output.js 3.92 MiB [emitted] (name: main)
-chunk output.js (main) 2.8 MiB (javascript) 1.58 KiB (runtime) [entry]
+chunk (runtime: main) output.js (main) 2.8 MiB (javascript) 1.58 KiB (runtime) [entry]
   > ./example.js main
   cached modules 2.8 MiB (javascript) 1.58 KiB (runtime) [cached] 1191 modules
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
@@ -84,5 +84,5 @@ WARNING in webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
-webpack 5.0.0 compiled with 3 warnings
+webpack 5.4.0 compiled with 3 warnings
 ```

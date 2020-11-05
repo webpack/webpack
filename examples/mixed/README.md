@@ -493,27 +493,27 @@ module.exports = function() {
 ```
 asset output.js 13.6 KiB [emitted] (name: main)
 asset 635.output.js 2.24 KiB [emitted]
-chunk output.js (main) 1010 bytes (javascript) 5.67 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.67 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 5.67 KiB 9 modules
   dependent modules 617 bytes [dependent] 3 modules
   ./example.js 396 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk 635.output.js 433 bytes [rendered]
+chunk (runtime: main) 635.output.js 433 bytes [rendered]
   > ./example.js 7:0-14:1
   dependent modules 240 bytes [dependent] 3 modules
   ../require.context/templates/ sync ^\.\/.*\.js$ 193 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     amd require context ./example.js 7:0-14:1
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.43 KiB [emitted] [minimized] (name: main)
+asset output.js 2.44 KiB [emitted] [minimized] (name: main)
 asset 635.output.js 580 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 1010 bytes (javascript) 5.67 KiB (runtime) [entry] [rendered]
   > ./example.js main
@@ -528,5 +528,5 @@ chunk (runtime: main) 635.output.js 433 bytes [rendered]
   ../require.context/templates/ sync ^\.\/.*\.js$ 193 bytes [built] [code generated]
     [no exports]
     amd require context ./example.js 7:0-14:1
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

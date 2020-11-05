@@ -279,7 +279,7 @@ const b = "b";
 
 ```
 asset output.js 8.39 KiB [emitted] (name: main)
-chunk output.js (main) 325 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 325 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 185 bytes [dependent] 6 modules
   runtime modules 668 bytes 3 modules
@@ -287,7 +287,7 @@ chunk output.js (main) 325 bytes (javascript) 668 bytes (runtime) [entry] [rende
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
@@ -300,5 +300,5 @@ chunk (runtime: main) output.js (main) 303 bytes [entry] [rendered]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

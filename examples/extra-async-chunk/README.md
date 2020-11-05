@@ -361,13 +361,13 @@ asset output.js 9.03 KiB [emitted] (name: main)
 asset 394.output.js 610 bytes [emitted]
 asset 460.output.js 338 bytes [emitted]
 asset 767.output.js 338 bytes [emitted]
-chunk output.js (main) 164 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 164 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 4.85 KiB 6 modules
   ./example.js 164 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk 394.output.js 42 bytes [rendered] split chunk (cache group: default)
+chunk (runtime: main) 394.output.js 42 bytes [rendered] split chunk (cache group: default)
   > ./a ./b ./c ./example.js 2:0-30
   > ./example.js 5:0-8:2
   ./a.js 21 bytes [built] [code generated]
@@ -380,25 +380,25 @@ chunk 394.output.js 42 bytes [rendered] split chunk (cache group: default)
     cjs self exports reference ./b.js 1:0-14
     amd require ./b ./example.js 2:0-30
     cjs require ./b ./example.js 6:1-15
-chunk 460.output.js 21 bytes [rendered]
+chunk (runtime: main) 460.output.js 21 bytes [rendered]
   > ./a ./b ./c ./example.js 2:0-30
   ./c.js 21 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./c.js 1:0-14
     amd require ./c ./example.js 2:0-30
-chunk 767.output.js 21 bytes [rendered]
+chunk (runtime: main) 767.output.js 21 bytes [rendered]
   > ./example.js 5:0-8:2
   ./d.js 21 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.75 KiB [emitted] [minimized] (name: main)
+asset output.js 1.76 KiB [emitted] [minimized] (name: main)
 asset 394.output.js 104 bytes [emitted] [minimized]
 asset 460.output.js 81 bytes [emitted] [minimized]
 asset 767.output.js 81 bytes [emitted] [minimized]
@@ -433,5 +433,5 @@ chunk (runtime: main) 767.output.js 21 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./d.js 1:0-14
     cjs require ./d ./example.js 7:1-15
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

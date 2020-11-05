@@ -508,7 +508,7 @@ return __webpack_exports__;
 ## in production mode:
 
 ```javascript
-(self.webpackChunk=self.webpackChunk||[]).push([[497],{497:(e,a,s)=>{"use strict";e.exports=(async()=>{s.r(a),s.d(a,{createUser:()=>t});var e=s(447);e=await Promise.resolve(e);const t=async a=>{command="CREATE USER "+a,await(0,e.j)({command})};return a})()},447:(e,a,s)=>{"use strict";e.exports=(async()=>{s.d(a,{j:()=>e}),await(async e=>{await new Promise(e=>setTimeout(e,1e3))})();const e=async e=>(await new Promise(e=>setTimeout(e,100)),"fake data");return a})()}}]);
+(self.webpackChunk=self.webpackChunk||[]).push([[497],{497:(e,a,s)=>{"use strict";e.exports=(async()=>{s.r(a),s.d(a,{createUser:()=>t});var e=s(447);e=await Promise.resolve(e);const t=async a=>{command="CREATE USER "+a,await(0,e.j)({command})};return a})()},447:(e,a,s)=>{"use strict";e.exports=(async()=>{s.d(a,{j:()=>e}),await(async e=>{await new Promise((e=>setTimeout(e,1e3)))})();const e=async e=>(await new Promise((e=>setTimeout(e,100))),"fake data");return a})()}}]);
 ```
 
 # Info
@@ -518,7 +518,7 @@ return __webpack_exports__;
 ```
 asset output.js 12.2 KiB [emitted] (name: main)
 asset 497.output.js 2.52 KiB [emitted]
-chunk output.js (main) 1.19 KiB (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 5.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 5.42 KiB 8 modules
   dependent modules 1.09 KiB [dependent] 1 module
@@ -526,7 +526,7 @@ chunk output.js (main) 1.19 KiB (javascript) 5.42 KiB (runtime) [entry] [rendere
     [no exports]
     [used exports unknown]
     entry ./example.js main
-chunk 497.output.js 617 bytes [rendered]
+chunk (runtime: main) 497.output.js 617 bytes [rendered]
   > ./UserApi.js ./Actions.js 22:30-52
   > ./UserApi.js ./Actions.js 2:16-38
   dependent modules 402 bytes [dependent] 1 module
@@ -535,14 +535,14 @@ chunk 497.output.js 617 bytes [rendered]
     [used exports unknown]
     import() ./UserApi.js ./Actions.js 2:16-38
     import() ./UserApi.js ./Actions.js 22:30-52
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.96 KiB [emitted] [minimized] (name: main)
-asset 497.output.js 471 bytes [emitted] [minimized]
+asset output.js 1.97 KiB [emitted] [minimized] (name: main)
+asset 497.output.js 475 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 1.19 KiB (javascript) 5.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 5.42 KiB 8 modules
@@ -558,5 +558,5 @@ chunk (runtime: main) 497.output.js 617 bytes [rendered]
     [exports: createUser]
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 2:16-38
     import() ./UserApi.js ./example.js + 1 modules ./Actions.js 22:30-52
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

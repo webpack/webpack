@@ -344,13 +344,13 @@ function add() {
 ```
 asset output.js 11.8 KiB [emitted] (name: main)
 asset 35.output.js 772 bytes [emitted]
-chunk 35.output.js 24 bytes [rendered]
+chunk (runtime: main) 35.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
     [exports: answer]
     [used exports unknown]
     import() ./async-loaded ./example.js 6:0-24
-chunk output.js (main) 400 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 5.42 KiB 8 modules
   dependent modules 225 bytes [dependent] 2 modules
@@ -358,7 +358,7 @@ chunk output.js (main) 400 bytes (javascript) 5.42 KiB (runtime) [entry] [render
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
@@ -378,5 +378,5 @@ chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.42 KiB (runtime)
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

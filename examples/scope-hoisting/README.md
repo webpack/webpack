@@ -133,11 +133,11 @@ __webpack_require__.d(__webpack_exports__, {
   "y": () => /* reexport */ y
 });
 
-// CONCATENATED MODULE: ./node_modules/shared2.js
+;// CONCATENATED MODULE: ./node_modules/shared2.js
 // shared2 module
 var y = "y";
 
-// CONCATENATED MODULE: ./node_modules/shared.js
+;// CONCATENATED MODULE: ./node_modules/shared.js
 // shared module
 var x = "x";
 
@@ -389,18 +389,18 @@ var x = "x";
 
 // EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
 var shared = __webpack_require__(1);
-// CONCATENATED MODULE: ./node_modules/a.js
+;// CONCATENATED MODULE: ./node_modules/a.js
 // module a
 var a = "a";
 
 
-// CONCATENATED MODULE: ./node_modules/b.js
+;// CONCATENATED MODULE: ./node_modules/b.js
 // module b
 function b_a() {
 	return "b";
 };
 
-// CONCATENATED MODULE: ./example.js
+;// CONCATENATED MODULE: ./example.js
 
 
 
@@ -460,7 +460,7 @@ __webpack_require__.d(d_namespaceObject, {
 var cjs = __webpack_require__(3);
 // EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
 var shared = __webpack_require__(1);
-// CONCATENATED MODULE: ./node_modules/c.js
+;// CONCATENATED MODULE: ./node_modules/c.js
 // module c
 
 
@@ -468,11 +468,11 @@ var c = String.fromCharCode(cjs.c.charCodeAt(0) - 2);
 
 
 
-// CONCATENATED MODULE: ./node_modules/d.js
+;// CONCATENATED MODULE: ./node_modules/d.js
 // module d
 var a = "d";
 
-// CONCATENATED MODULE: ./lazy.js
+;// CONCATENATED MODULE: ./lazy.js
 
 
 
@@ -508,7 +508,7 @@ Minimized
 ## Unoptimized
 
 ```
-asset output.js 10.9 KiB [emitted] (name: main)
+asset output.js 11 KiB [emitted] (name: main)
 asset 872.output.js 2.73 KiB [emitted]
 chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
@@ -524,13 +524,13 @@ chunk (runtime: main) 872.output.js 263 bytes [rendered]
   ./lazy.js + 2 modules 221 bytes [built] [code generated]
     [exports: c, d, x, y]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.01 KiB [emitted] [minimized] (name: main)
+asset output.js 2.02 KiB [emitted] [minimized] (name: main)
 asset 872.output.js 261 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
@@ -546,5 +546,5 @@ chunk (runtime: main) 872.output.js 263 bytes [rendered]
   ./lazy.js + 2 modules 221 bytes [built] [code generated]
     [exports: c, d, x, y]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

@@ -680,7 +680,7 @@ asset vendor.js 737 bytes [emitted] (name: vendor) (id hint: vendor)
 Entrypoint pageA 7.02 KiB = vendor.js 737 bytes commons-utility2_js.js 384 bytes pageA.js 5.92 KiB
 Entrypoint pageB 7.12 KiB = vendor.js 737 bytes commons-utility2_js.js 384 bytes commons-utility3_js.js 384 bytes pageB.js 5.65 KiB
 Entrypoint pageC 6.34 KiB = commons-utility2_js.js 384 bytes commons-utility3_js.js 384 bytes pageC.js 5.59 KiB
-chunk commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
+chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageA pageA
   > ./pageB pageB
   > ./pageC pageC
@@ -690,7 +690,7 @@ chunk commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] sp
     cjs require ./utility2 ./pageB.js 2:15-36
     cjs require ./utility2 ./pageC.js 1:15-36
     cjs self exports reference ./utility2.js 1:0-14
-chunk commons-utility3_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
+chunk (runtime: pageB, pageC) commons-utility3_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageB pageB
   > ./pageC pageC
   ./utility3.js 28 bytes [built] [code generated]
@@ -698,7 +698,7 @@ chunk commons-utility3_js.js (id hint: commons) 28 bytes [initial] [rendered] sp
     cjs require ./utility3 ./pageB.js 3:15-36
     cjs require ./utility3 ./pageC.js 2:15-36
     cjs self exports reference ./utility3.js 1:0-14
-chunk pageA.js (pageA) 165 bytes (javascript) 2.61 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.61 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
   runtime modules 2.61 KiB 2 modules
   dependent modules 28 bytes [dependent] 1 module
@@ -706,21 +706,21 @@ chunk pageA.js (pageA) 165 bytes (javascript) 2.61 KiB (runtime) [entry] [render
     [used exports unknown]
     cjs self exports reference ./pageA.js 5:0-14
     entry ./pageA pageA
-chunk pageB.js (pageB) 137 bytes (javascript) 2.63 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.63 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
   runtime modules 2.63 KiB 2 modules
   ./pageB.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageB.js 5:0-14
     entry ./pageB pageB
-chunk pageC.js (pageC) 102 bytes (javascript) 2.62 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.62 KiB (runtime) [entry] [rendered]
   > ./pageC pageC
   runtime modules 2.62 KiB 2 modules
   ./pageC.js 102 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageC.js 4:0-14
     entry ./pageC pageC
-chunk vendor.js (vendor) (id hint: vendor) 54 bytes [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
+chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
   > ./pageA pageA
   > ./pageB pageB
   ./node_modules/vendor1.js 27 bytes [built] [code generated]
@@ -731,7 +731,7 @@ chunk vendor.js (vendor) (id hint: vendor) 54 bytes [initial] [rendered] split c
     [used exports unknown]
     cjs self exports reference ./node_modules/vendor2.js 1:0-14
     cjs require vendor2 ./pageB.js 1:14-32
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
@@ -798,5 +798,5 @@ chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [ini
     [used exports unknown]
     cjs self exports reference ./node_modules/vendor2.js 1:0-14
     cjs require vendor2 ./pageB.js 1:14-32
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

@@ -49,11 +49,6 @@ module.exports = [
 
 ```javascript
 /******/ (() => { // webpackBootstrap
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! unknown exports (runtime-defined) */
-/*! runtime requirements:  */
 if(false) {}
 console.log("Running " + "desktop" + " build");
 /******/ })()
@@ -67,11 +62,6 @@ console.log("Running " + "desktop" + " build");
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
-/*!*************************!*\
-  !*** ./mobile-stuff.js ***!
-  \*************************/
-/*! unknown exports (runtime-defined) */
-/*! runtime requirements:  */
 /***/ (() => {
 
 // mobile only stuff
@@ -114,13 +104,8 @@ console.log("Running " + "desktop" + " build");
 
 ``` js
 (() => {
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! unknown exports (runtime-defined) */
-/*! runtime requirements: __webpack_require__ */
 if(true) {
-	__webpack_require__(/*! ./mobile-stuff */ 1);
+	__webpack_require__(1);
 }
 console.log("Running " + "mobile" + " build");
 })();
@@ -135,23 +120,15 @@ console.log("Running " + "mobile" + " build");
 
 ```
 mobile:
-  asset mobile.js 1.57 KiB [emitted] (name: main)
-  chunk mobile.js (main) 114 bytes [entry] [rendered]
-    > ./example main
-    dependent modules 20 bytes [dependent] 1 module
-    ./example.js 94 bytes [built] [code generated]
-      [used exports unknown]
-      entry ./example main
-  mobile (webpack 5.0.0) compiled successfully
+  asset mobile.js 1.22 KiB [emitted] (name: main)
+  ./example.js 94 bytes [built] [code generated]
+  ./mobile-stuff.js 20 bytes [built] [code generated]
+  mobile (webpack 5.4.0) compiled successfully
 
 desktop:
-  asset desktop.js 262 bytes [emitted] (name: main)
-  chunk desktop.js (main) 94 bytes [entry] [rendered]
-    > ./example main
-    ./example.js 94 bytes [built] [code generated]
-      [used exports unknown]
-      entry ./example main
-  desktop (webpack 5.0.0) compiled successfully
+  asset desktop.js 114 bytes [emitted] (name: main)
+  ./example.js 94 bytes [built] [code generated]
+  desktop (webpack 5.4.0) compiled successfully
 ```
 
 ## Production mode
@@ -159,20 +136,12 @@ desktop:
 ```
 mobile:
   asset mobile.js 181 bytes [emitted] [minimized] (name: main)
-  chunk (runtime: main) mobile.js (main) 114 bytes [entry] [rendered]
-    > ./example main
-    dependent modules 20 bytes [dependent] 1 module
-    ./example.js 94 bytes [built] [code generated]
-      [no exports used]
-      entry ./example main
-  mobile (webpack 5.0.0) compiled successfully
+  ./example.js 94 bytes [built] [code generated]
+  ./mobile-stuff.js 20 bytes [built] [code generated]
+  mobile (webpack 5.4.0) compiled successfully
 
 desktop:
   asset desktop.js 37 bytes [emitted] [minimized] (name: main)
-  chunk (runtime: main) desktop.js (main) 94 bytes [entry] [rendered]
-    > ./example main
-    ./example.js 94 bytes [built] [code generated]
-      [no exports used]
-      entry ./example main
-  desktop (webpack 5.0.0) compiled successfully
+  ./example.js 94 bytes [built] [code generated]
+  desktop (webpack 5.4.0) compiled successfully
 ```

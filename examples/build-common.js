@@ -12,9 +12,9 @@ const async = require("neo-async");
 
 const extraArgs = "";
 
-const targetArgs = global.NO_TARGET_ARGS ? "" : "./example.js -o dist/output.js ";
-const displayReasons = global.NO_REASONS ? "" : "--display-reasons --display-used-exports --display-provided-exports";
-const statsArgs = global.NO_STATS_OPTIONS ? "" : "--display-chunks  --display-max-modules 99999 --display-origins";
+const targetArgs = global.NO_TARGET_ARGS ? "" : "--entry ./example.js --output-path dist --output-filename output.js";
+const displayReasons = global.NO_REASONS ? "" : "--stats-reasons --stats-used-exports --stats-provided-exports";
+const statsArgs = global.NO_STATS_OPTIONS ? "" : "--stats-chunks --stats-modules-space 99999  --stats-chunk-origins";
 const publicPathArgs = global.NO_PUBLIC_PATH ? "" : '--output-public-path "dist/"';
 const commonArgs = `--no-color ${statsArgs} ${publicPathArgs} ${extraArgs} ${targetArgs}`;
 

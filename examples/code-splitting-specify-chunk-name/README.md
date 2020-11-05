@@ -356,14 +356,14 @@ asset output.js 11.1 KiB [emitted] (name: main)
 asset 548.output.js 856 bytes [emitted] (name: chunk-bar-baz2)
 asset 791.output.js 856 bytes [emitted] (name: chunk-bar-baz0)
 asset 930.output.js 856 bytes [emitted] (name: chunk-foo)
-chunk output.js (main) 565 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 5.42 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 405 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk 548.output.js (chunk-bar-baz2) 38 bytes [rendered]
+chunk (runtime: main) 548.output.js (chunk-bar-baz2) 38 bytes [rendered]
   > ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
   > ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
   ./templates/baz.js 38 bytes [optional] [built] [code generated]
@@ -371,7 +371,7 @@ chunk 548.output.js (chunk-bar-baz2) 38 bytes [rendered]
     [used exports unknown]
     context element ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
     context element ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
-chunk 791.output.js (chunk-bar-baz0) 38 bytes [rendered]
+chunk (runtime: main) 791.output.js (chunk-bar-baz0) 38 bytes [rendered]
   > ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
   > ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
   ./templates/bar.js 38 bytes [optional] [built] [code generated]
@@ -379,7 +379,7 @@ chunk 791.output.js (chunk-bar-baz0) 38 bytes [rendered]
     [used exports unknown]
     context element ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
     context element ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
-chunk 930.output.js (chunk-foo) 38 bytes [rendered]
+chunk (runtime: main) 930.output.js (chunk-foo) 38 bytes [rendered]
   > ./templates/foo ./example.js 1:0-62
   > ./example.js 5:0-8:16
   ./templates/foo.js 38 bytes [built] [code generated]
@@ -387,13 +387,13 @@ chunk 930.output.js (chunk-foo) 38 bytes [rendered]
     [used exports unknown]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.39 KiB [emitted] [minimized] (name: main)
+asset output.js 2.4 KiB [emitted] [minimized] (name: main)
 asset 548.output.js 130 bytes [emitted] [minimized] (name: chunk-bar-baz2)
 asset 791.output.js 130 bytes [emitted] [minimized] (name: chunk-bar-baz0)
 asset 930.output.js 130 bytes [emitted] [minimized] (name: chunk-foo)
@@ -425,5 +425,5 @@ chunk (runtime: main) 930.output.js (chunk-foo) 38 bytes [rendered]
     [exports: default]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

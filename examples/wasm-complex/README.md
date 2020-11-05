@@ -311,7 +311,7 @@ function getRandomNumber() {
 ```
 asset output.js 8.87 KiB [emitted] (name: main)
 asset b7db4b0f3af7dad67222.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
-chunk output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 1.2 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 1.2 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 1.2 KiB 5 modules
   dependent modules 449 bytes (javascript) 139 bytes (webassembly) [dependent] 4 modules
@@ -319,13 +319,13 @@ chunk output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 1.2 KiB (r
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.43 KiB [emitted] [minimized] (name: main)
+asset output.js 1.44 KiB [emitted] [minimized] (name: main)
 asset 3b415f18e7be9a707201.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 950 bytes (runtime) [entry] [rendered]
   > ./example.js main
@@ -335,5 +335,5 @@ chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webasse
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```

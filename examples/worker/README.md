@@ -510,7 +510,7 @@ fibWorker.onmessage = event => {
 /*! namespace exports */
 /*! runtime requirements:  */
 
-// CONCATENATED MODULE: ./chat-module.js
+;// CONCATENATED MODULE: ./chat-module.js
 const chat_module_history = [];
 
 const add = (content, from) => {
@@ -518,7 +518,7 @@ const add = (content, from) => {
 	chat_module_history.push(`${from}: ${content}`);
 };
 
-// CONCATENATED MODULE: ./chat-worker.js
+;// CONCATENATED MODULE: ./chat-worker.js
 
 
 onconnect = function (e) {
@@ -703,7 +703,7 @@ onmessage = async event => {
 ```
 
 ```javascript
-(()=>{var e={},r={};function o(t){if(r[t])return r[t].exports;var a=r[t]={exports:{}};return e[t](a,a.exports,o),a.exports}o.m=e,o.d=(e,r)=>{for(var t in r)o.o(r,t)&&!o.o(e,t)&&Object.defineProperty(e,t,{enumerable:!0,get:r[t]})},o.f={},o.e=e=>Promise.all(Object.keys(o.f).reduce((r,t)=>(o.f[t](e,r),r),[])),o.u=e=>e+".js",o.o=(e,r)=>Object.prototype.hasOwnProperty.call(e,r),o.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},o.p="dist/",(()=>{var e={631:1};o.f.i=(r,t)=>{e[r]||importScripts("../"+o.u(r))};var r=self.webpackChunk=self.webpackChunk||[],t=r.push.bind(r);r.push=r=>{var[a,n,s]=r;for(var p in n)o.o(n,p)&&(o.m[p]=n[p]);for(s&&s(o);a.length;)e[a.pop()]=1;t(r)}})(),onmessage=async e=>{const{fibonacci:r}=await o.e(129).then(o.bind(o,129)),t=JSON.parse(e.data);postMessage(`fib(${t}) = ${r(t)}`)}})();
+(()=>{var e={},r={};function o(t){if(r[t])return r[t].exports;var a=r[t]={exports:{}};return e[t](a,a.exports,o),a.exports}o.m=e,o.d=(e,r)=>{for(var t in r)o.o(r,t)&&!o.o(e,t)&&Object.defineProperty(e,t,{enumerable:!0,get:r[t]})},o.f={},o.e=e=>Promise.all(Object.keys(o.f).reduce(((r,t)=>(o.f[t](e,r),r)),[])),o.u=e=>e+".js",o.o=(e,r)=>Object.prototype.hasOwnProperty.call(e,r),o.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},o.p="dist/",(()=>{var e={631:1};o.f.i=(r,t)=>{e[r]||importScripts("../"+o.u(r))};var r=self.webpackChunk=self.webpackChunk||[],t=r.push.bind(r);r.push=r=>{var[a,n,s]=r;for(var p in n)o.o(n,p)&&(o.m[p]=n[p]);for(s&&s(o);a.length;)e[a.pop()]=1;t(r)}})(),onmessage=async e=>{const{fibonacci:r}=await o.e(129).then(o.bind(o,129)),t=JSON.parse(e.data);postMessage(`fib(${t}) = ${r(t)}`)}})();
 ```
 
 # dist/129.js
@@ -743,8 +743,8 @@ function fibonacci(n) {
 ```
 asset main.js 12.2 KiB [emitted] (name: main)
 asset workers/fibonacci.js 5.3 KiB [emitted] (name: fibonacci)
-asset 129.js 997 bytes [emitted]
-asset chat.js 879 bytes [emitted] (name: chat)
+asset 129.js 935 bytes [emitted]
+asset chat.js 881 bytes [emitted] (name: chat)
 chunk (runtime: ./example.js|79:18-82:2, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./example.js 69:30-51
   > ./fibonacci ./fib-worker.js 2:29-50
@@ -770,14 +770,14 @@ chunk (runtime: ./example.js|79:18-82:2) workers/fibonacci.js (fibonacci) 176 by
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 79:18-82:2
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset main.js 3.37 KiB [emitted] [minimized] (name: main)
-asset workers/fibonacci.js 930 bytes [emitted] [minimized] (name: fibonacci)
+asset main.js 3.38 KiB [emitted] [minimized] (name: main)
+asset workers/fibonacci.js 932 bytes [emitted] [minimized] (name: fibonacci)
 asset chat.js 270 bytes [emitted] [minimized] (name: chat)
 asset 129.js 166 bytes [emitted] [minimized]
 chunk (runtime: ./example.js|79:18-82:2, main) 129.js 103 bytes [rendered]
@@ -805,5 +805,5 @@ chunk (runtime: ./example.js|79:18-82:2) workers/fibonacci.js (fibonacci) 176 by
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 79:18-82:2
-webpack 5.0.0 compiled successfully
+webpack 5.4.0 compiled successfully
 ```
