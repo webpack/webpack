@@ -66,6 +66,18 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			filename: "commonjs2-named.js",
+			libraryTarget: "commonjs2",
+			library: "MyLibrary"
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		}
+	},
+	{
+		output: {
 			filename: "commonjs2-external.js",
 			libraryTarget: "commonjs2"
 		},
