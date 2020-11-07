@@ -83,8 +83,18 @@ if (!cli.installed) {
 	console.error(notify);
 
 	const isYarn = fs.existsSync(path.resolve(process.cwd(), "yarn.lock"));
+	const isPnpm = fs.existsSync(path.resolve(process.cwd(), "pnpm-lock.yaml"));
 
-	const packageManager = isYarn ? "yarn" : "npm";
+	let packageManager;
+
+	if (isYarn) {
+		packageManager = "yarn";
+	} else if (isPnpm) {
+		packageManager = "pnpm";
+	} else {
+		packageManager = "npm";
+	}
+
 	const installOptions = [isYarn ? "add" : "install", "-D"];
 
 	console.error(
