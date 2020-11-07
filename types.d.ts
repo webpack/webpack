@@ -4537,7 +4537,7 @@ declare class JavascriptParser extends Parser {
 			| ClassDeclaration,
 		commentsStartPos: number
 	): boolean;
-	getComments(range?: any): any;
+	getComments(range?: any): any[];
 	isAsiPosition(pos: number): boolean;
 	unsetAsiPosition(pos: number): void;
 	isStatementLevelExpression(expr?: any): boolean;
