@@ -1229,10 +1229,17 @@ declare class Compilation {
 			"tap" | "tapAsync" | "tapPromise" | "name"
 		> &
 			FakeHookMarker;
-		optimizeAssets: AsyncSeriesHook<[Record<string, Source>]>;
+		optimizeAssets: AsyncSeriesHook<
+			[Record<string, Source>],
+			{ additionalAssets?: true | Function }
+		>;
 		afterOptimizeAssets: SyncHook<[Record<string, Source>]>;
-		processAssets: AsyncSeriesHook<[Record<string, Source>]>;
+		processAssets: AsyncSeriesHook<
+			[Record<string, Source>],
+			{ additionalAssets?: true | Function }
+		>;
 		afterProcessAssets: SyncHook<[Record<string, Source>]>;
+		processAdditionalAssets: AsyncSeriesHook<[Record<string, Source>]>;
 		needAdditionalSeal: SyncBailHook<[], boolean>;
 		afterSeal: AsyncSeriesHook<[]>;
 		renderManifest: SyncWaterfallHook<
@@ -1536,6 +1543,8 @@ declare class Compilation {
 
 	/**
 	 * Optimize the count of existing assets, e. g. by merging them.
+	 * Only assets of the same type should be merged.
+	 * For assets of different types see PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE.
 	 */
 	static PROCESS_ASSETS_STAGE_OPTIMIZE_COUNT: number;
 
@@ -1550,16 +1559,22 @@ declare class Compilation {
 	static PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE: number;
 
 	/**
-	 * Summarize the list of existing assets.
-	 * When creating new assets from this they should be fully optimized.
-	 * e. g. creating an assets manifest of Service Workers.
-	 */
-	static PROCESS_ASSETS_STAGE_SUMMARIZE: number;
-
-	/**
 	 * Add development tooling to assets, e. g. by extracting a SourceMap.
 	 */
 	static PROCESS_ASSETS_STAGE_DEV_TOOLING: number;
+
+	/**
+	 * Optimize the count of existing assets, e. g. by inlining assets of into other assets.
+	 * Only assets of different types should be inlined.
+	 * For assets of the same type see PROCESS_ASSETS_STAGE_OPTIMIZE_COUNT.
+	 */
+	static PROCESS_ASSETS_STAGE_OPTIMIZE_INLINE: number;
+
+	/**
+	 * Summarize the list of existing assets
+	 * e. g. creating an assets manifest of Service Workers.
+	 */
+	static PROCESS_ASSETS_STAGE_SUMMARIZE: number;
 
 	/**
 	 * Optimize the hashes of the assets, e. g. by generating real hashes of the asset content.
@@ -1596,6 +1611,9 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 	useSourceMap: SyncBailHook<[Chunk, RenderContextObject], boolean>;
+}
+declare interface CompilationHooksRealContentHashPlugin {
+	updateHash: SyncBailHook<[Buffer[], string], string>;
 }
 declare interface CompilationParams {
 	normalModuleFactory: NormalModuleFactory;
@@ -5665,7 +5683,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		beforeResolve: AsyncSeriesBailHook<[ResolveData], any>;
 		afterResolve: AsyncSeriesBailHook<[ResolveData], any>;
 		createModule: AsyncSeriesBailHook<[any, ResolveData], any>;
-		module: SyncWaterfallHook<[Module, any, ResolveData]>;
+		module: SyncWaterfallHook<[Module, any, ResolveData], any>;
 		createParser: HookMap<SyncBailHook<any, any>>;
 		parser: HookMap<SyncHook<any>>;
 		createGenerator: HookMap<SyncBailHook<any, any>>;
@@ -6887,6 +6905,17 @@ declare class ReadFileCompileWasmPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare class RealContentHashPlugin {
+	constructor(__0: { hashFunction: any; hashDigest: any });
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+	static getCompilationHooks(
+		compilation: Compilation
+	): CompilationHooksRealContentHashPlugin;
 }
 declare interface RealDependencyLocation {
 	start: SourcePosition;
@@ -10220,6 +10249,7 @@ declare namespace exports {
 			LimitChunkCountPlugin,
 			MinChunkSizePlugin,
 			ModuleConcatenationPlugin,
+			RealContentHashPlugin,
 			RuntimeChunkPlugin,
 			SideEffectsFlagPlugin,
 			SplitChunksPlugin
