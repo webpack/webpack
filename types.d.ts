@@ -1502,7 +1502,10 @@ declare class Compilation {
 	createChildCompiler(
 		name: string,
 		outputOptions: OutputNormalized,
-		plugins: Plugin[]
+		plugins: (
+			| ((this: Compiler, compiler: Compiler) => void)
+			| WebpackPluginInstance
+		)[]
 	): Compiler;
 	checkConstraints(): void;
 
@@ -6634,9 +6637,6 @@ declare interface PerformanceOptions {
 	 * Total size of an entry point (in bytes).
 	 */
 	maxEntrypointSize?: number;
-}
-declare interface Plugin {
-	apply: () => void;
 }
 declare interface PnpApiImpl {
 	resolveToUnqualified: (arg0: string, arg1: string, arg2?: any) => string;
