@@ -10436,6 +10436,7 @@ declare namespace exports {
 		EntryNormalized,
 		LibraryOptions,
 		ModuleOptions,
+		Optimization,
 		ResolveOptionsWebpackOptions as ResolveOptions,
 		RuleSetCondition,
 		RuleSetConditionAbsolute,
