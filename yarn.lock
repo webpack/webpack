@@ -6185,9 +6185,9 @@ tapable@^1.0.0:
   integrity sha512-4WK/bYZmj8xLr+HUCODHGF1ZFzsYffasLUgEiMBY4fgtltdO6B4WJtlSbPaDTLpYTcGVwM2qLnFTICEcNxs3kA==
 
 tapable@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.0.0.tgz#a49c3d6a8a2bb606e7db372b82904c970d537a08"
-  integrity sha512-bjzn0C0RWoffnNdTzNi7rNDhs1Zlwk2tRXgk8EiHKAOX1Mag3d6T0Y5zNa7l9CJ+EoUne/0UHdwS8tMbkh9zDg==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.1.0.tgz#5a9701fe2ce5602c9899f41f6bfbc944c8b2f209"
+  integrity sha512-J89ZFmbrfc/qQ5xkAo5EOCaEQ+2vzPRqS/KjUThzcneD1ipIZ9M9z/nWRwUxK2elHr3REYANoivNDHcBDrjshQ==
 
 temp-dir@^1.0.0:
   version "1.0.0"
