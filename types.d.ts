@@ -215,6 +215,11 @@ declare interface AssetInfo {
 	immutable?: boolean;
 
 	/**
+	 * whether the asset is minimized
+	 */
+	minimized?: boolean;
+
+	/**
 	 * the value(s) of the full hash used for this asset
 	 */
 	fullhash?: EntryItem;
