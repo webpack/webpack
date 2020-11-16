@@ -3030,6 +3030,14 @@ declare abstract class ExportInfo {
 			export: string[];
 		}) => boolean
 	): { module: Module; export: string[] };
+
+	/**
+	 * Move the target forward as long resolveTargetFilter is fulfilled
+	 */
+	moveTarget(
+		moduleGraph: ModuleGraph,
+		resolveTargetFilter: (arg0: { module: Module; export: string[] }) => boolean
+	): { module: Module; export: string[] };
 	createNestedExportsInfo(): ExportsInfo;
 	getNestedExportsInfo(): ExportsInfo;
 	updateHash(hash?: any, runtime?: any): void;
