@@ -1,4 +1,4 @@
-import {a as b} from "./a";
+import {a as b, callme, getCount} from "./a";
 import * as c from "./b";
 
 function donotcallme() {
@@ -12,4 +12,16 @@ it("should respect asi flag", () => {
 	b();
 	(donotcallme)
 	c;
+
+	let i = 0;
+	for (;i < 1;i++) callme()
+	for (;i < 2;i++) {
+		(donotcallme)
+		b();
+	}
+	if (i++) callme()
+	if (false) {} else callme()
+	while (i++ < 4) callme()
+
+	expect(getCount()).toBe(4)
 });
