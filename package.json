@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.4.0",
+  "version": "5.5.0",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -115,7 +115,9 @@
   },
   "homepage": "https://github.com/webpack/webpack",
   "main": "lib/index.js",
-  "bin": "./bin/webpack.js",
+  "bin": {
+    "webpack": "bin/webpack.js"
+  },
   "types": "types.d.ts",
   "files": [
     "lib/",
