@@ -319,6 +319,21 @@ describe("Defaults", () => {
 		    "sourceMapFilename": "[file].map[query]",
 		    "sourcePrefix": undefined,
 		    "strictModuleExceptionHandling": false,
+		    "targetProperties": Object {
+		      "browser": true,
+		      "document": true,
+		      "electron": false,
+		      "fetchWasm": true,
+		      "global": false,
+		      "importScripts": false,
+		      "importScriptsInWorker": true,
+		      "node": false,
+		      "nodeBuiltins": false,
+		      "nwjs": false,
+		      "require": false,
+		      "web": true,
+		      "webworker": null,
+		    },
 		    "uniqueName": "webpack",
 		    "wasmLoading": "fetch",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
@@ -565,21 +580,6 @@ describe("Defaults", () => {
 		  },
 		  "stats": Object {},
 		  "target": "web",
-		  "targetProperties": Object {
-		    "browser": true,
-		    "document": true,
-		    "electron": false,
-		    "fetchWasm": true,
-		    "global": false,
-		    "importScripts": false,
-		    "importScriptsInWorker": true,
-		    "node": false,
-		    "nodeBuiltins": false,
-		    "nwjs": false,
-		    "require": false,
-		    "web": true,
-		    "webworker": null,
-		  },
 		  "watch": false,
 		  "watchOptions": Object {},
 		}
@@ -1027,6 +1027,39 @@ describe("Defaults", () => {
 		-     "publicPath": "auto",
 		+     "publicPath": "",
 		@@ ... @@
+		-       "browser": true,
+		-       "document": true,
+		+       "arrowFunction": undefined,
+		+       "bigIntLiteral": undefined,
+		+       "browser": false,
+		+       "const": undefined,
+		+       "destructuring": undefined,
+		+       "document": false,
+		+       "dynamicImport": undefined,
+		+       "dynamicImportInWorker": undefined,
+		@@ ... @@
+		-       "fetchWasm": true,
+		-       "global": false,
+		+       "fetchWasm": false,
+		+       "forOf": undefined,
+		+       "global": true,
+		+       "globalThis": undefined,
+		@@ ... @@
+		-       "importScriptsInWorker": true,
+		-       "node": false,
+		-       "nodeBuiltins": false,
+		+       "importScriptsInWorker": false,
+		+       "module": undefined,
+		+       "node": true,
+		+       "nodeBuiltins": true,
+		@@ ... @@
+		-       "require": false,
+		-       "web": true,
+		-       "webworker": null,
+		+       "require": true,
+		+       "web": false,
+		+       "webworker": false,
+		@@ ... @@
 		-     "wasmLoading": "fetch",
 		+     "wasmLoading": "async-node",
 		@@ ... @@
@@ -1096,39 +1129,6 @@ describe("Defaults", () => {
 		@@ ... @@
 		-   "target": "web",
 		+   "target": "node",
-		@@ ... @@
-		-     "browser": true,
-		-     "document": true,
-		+     "arrowFunction": undefined,
-		+     "bigIntLiteral": undefined,
-		+     "browser": false,
-		+     "const": undefined,
-		+     "destructuring": undefined,
-		+     "document": false,
-		+     "dynamicImport": undefined,
-		+     "dynamicImportInWorker": undefined,
-		@@ ... @@
-		-     "fetchWasm": true,
-		-     "global": false,
-		+     "fetchWasm": false,
-		+     "forOf": undefined,
-		+     "global": true,
-		+     "globalThis": undefined,
-		@@ ... @@
-		-     "importScriptsInWorker": true,
-		-     "node": false,
-		-     "nodeBuiltins": false,
-		+     "importScriptsInWorker": false,
-		+     "module": undefined,
-		+     "node": true,
-		+     "nodeBuiltins": true,
-		@@ ... @@
-		-     "require": false,
-		-     "web": true,
-		-     "webworker": null,
-		+     "require": true,
-		+     "web": false,
-		+     "webworker": false,
 	`)
 	);
 	test("target webworker", { target: "webworker" }, e =>
@@ -1142,19 +1142,19 @@ describe("Defaults", () => {
 		@@ ... @@
 		-       "jsonp",
 		@@ ... @@
+		-       "document": true,
+		+       "document": false,
+		@@ ... @@
+		-       "importScripts": false,
+		+       "importScripts": true,
+		@@ ... @@
+		-       "webworker": null,
+		+       "webworker": true,
+		@@ ... @@
 		+       "worker",
 		@@ ... @@
 		-   "target": "web",
 		+   "target": "webworker",
-		@@ ... @@
-		-     "document": true,
-		+     "document": false,
-		@@ ... @@
-		-     "importScripts": false,
-		+     "importScripts": true,
-		@@ ... @@
-		-     "webworker": null,
-		+     "webworker": true,
 	`)
 	);
 	test("target electron-main", { target: "electron-main" }, e =>
@@ -1202,6 +1202,43 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "publicPath": "auto",
 		+     "publicPath": "",
+		@@ ... @@
+		-       "browser": true,
+		-       "document": true,
+		-       "electron": false,
+		-       "fetchWasm": true,
+		-       "global": false,
+		+       "arrowFunction": undefined,
+		+       "bigIntLiteral": undefined,
+		+       "browser": false,
+		+       "const": undefined,
+		+       "destructuring": undefined,
+		+       "document": false,
+		+       "dynamicImport": undefined,
+		+       "dynamicImportInWorker": undefined,
+		+       "electron": true,
+		+       "electronMain": true,
+		+       "electronPreload": false,
+		+       "electronRenderer": false,
+		+       "fetchWasm": false,
+		+       "forOf": undefined,
+		+       "global": true,
+		+       "globalThis": undefined,
+		@@ ... @@
+		-       "importScriptsInWorker": true,
+		-       "node": false,
+		-       "nodeBuiltins": false,
+		+       "importScriptsInWorker": false,
+		+       "module": undefined,
+		+       "node": true,
+		+       "nodeBuiltins": true,
+		@@ ... @@
+		-       "require": false,
+		-       "web": true,
+		-       "webworker": null,
+		+       "require": true,
+		+       "web": false,
+		+       "webworker": false,
 		@@ ... @@
 		-     "wasmLoading": "fetch",
 		+     "wasmLoading": "async-node",
@@ -1273,43 +1310,6 @@ describe("Defaults", () => {
 		@@ ... @@
 		-   "target": "web",
 		+   "target": "electron-main",
-		@@ ... @@
-		-     "browser": true,
-		-     "document": true,
-		-     "electron": false,
-		-     "fetchWasm": true,
-		-     "global": false,
-		+     "arrowFunction": undefined,
-		+     "bigIntLiteral": undefined,
-		+     "browser": false,
-		+     "const": undefined,
-		+     "destructuring": undefined,
-		+     "document": false,
-		+     "dynamicImport": undefined,
-		+     "dynamicImportInWorker": undefined,
-		+     "electron": true,
-		+     "electronMain": true,
-		+     "electronPreload": false,
-		+     "electronRenderer": false,
-		+     "fetchWasm": false,
-		+     "forOf": undefined,
-		+     "global": true,
-		+     "globalThis": undefined,
-		@@ ... @@
-		-     "importScriptsInWorker": true,
-		-     "node": false,
-		-     "nodeBuiltins": false,
-		+     "importScriptsInWorker": false,
-		+     "module": undefined,
-		+     "node": true,
-		+     "nodeBuiltins": true,
-		@@ ... @@
-		-     "require": false,
-		-     "web": true,
-		-     "webworker": null,
-		+     "require": true,
-		+     "web": false,
-		+     "webworker": false,
 	`)
 	);
 	test("target electron-main", { target: "electron-preload" }, e =>
@@ -1355,6 +1355,42 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "publicPath": "auto",
 		+     "publicPath": "",
+		@@ ... @@
+		-       "browser": true,
+		-       "document": true,
+		-       "electron": false,
+		-       "fetchWasm": true,
+		-       "global": false,
+		+       "arrowFunction": undefined,
+		+       "bigIntLiteral": undefined,
+		+       "browser": false,
+		+       "const": undefined,
+		+       "destructuring": undefined,
+		+       "document": false,
+		+       "dynamicImport": undefined,
+		+       "dynamicImportInWorker": undefined,
+		+       "electron": true,
+		+       "electronMain": false,
+		+       "electronPreload": true,
+		+       "electronRenderer": false,
+		+       "fetchWasm": false,
+		+       "forOf": undefined,
+		+       "global": true,
+		+       "globalThis": undefined,
+		@@ ... @@
+		-       "importScriptsInWorker": true,
+		-       "node": false,
+		-       "nodeBuiltins": false,
+		+       "importScriptsInWorker": false,
+		+       "module": undefined,
+		+       "node": true,
+		+       "nodeBuiltins": true,
+		@@ ... @@
+		-       "require": false,
+		+       "require": true,
+		@@ ... @@
+		-       "webworker": null,
+		+       "webworker": false,
 		@@ ... @@
 		-     "wasmLoading": "fetch",
 		+     "wasmLoading": "async-node",
@@ -1426,42 +1462,6 @@ describe("Defaults", () => {
 		@@ ... @@
 		-   "target": "web",
 		+   "target": "electron-preload",
-		@@ ... @@
-		-     "browser": true,
-		-     "document": true,
-		-     "electron": false,
-		-     "fetchWasm": true,
-		-     "global": false,
-		+     "arrowFunction": undefined,
-		+     "bigIntLiteral": undefined,
-		+     "browser": false,
-		+     "const": undefined,
-		+     "destructuring": undefined,
-		+     "document": false,
-		+     "dynamicImport": undefined,
-		+     "dynamicImportInWorker": undefined,
-		+     "electron": true,
-		+     "electronMain": false,
-		+     "electronPreload": true,
-		+     "electronRenderer": false,
-		+     "fetchWasm": false,
-		+     "forOf": undefined,
-		+     "global": true,
-		+     "globalThis": undefined,
-		@@ ... @@
-		-     "importScriptsInWorker": true,
-		-     "node": false,
-		-     "nodeBuiltins": false,
-		+     "importScriptsInWorker": false,
-		+     "module": undefined,
-		+     "node": true,
-		+     "nodeBuiltins": true,
-		@@ ... @@
-		-     "require": false,
-		+     "require": true,
-		@@ ... @@
-		-     "webworker": null,
-		+     "webworker": false,
 	`)
 	);
 	test("records", { recordsPath: "some-path" }, e =>
@@ -1737,6 +1737,24 @@ describe("Defaults", () => {
 			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
 			+     "hotUpdateGlobal": "webpackHotUpdatebrowserslist_test",
 			@@ ... @@
+			+       "arrowFunction": false,
+			+       "bigIntLiteral": false,
+			@@ ... @@
+			+       "const": false,
+			+       "destructuring": false,
+			@@ ... @@
+			+       "dynamicImport": false,
+			+       "dynamicImportInWorker": false,
+			@@ ... @@
+			+       "forOf": false,
+			@@ ... @@
+			+       "globalThis": false,
+			@@ ... @@
+			+       "module": false,
+			@@ ... @@
+			-       "webworker": null,
+			+       "webworker": false,
+			@@ ... @@
 			-     "uniqueName": "webpack",
 			+     "uniqueName": "browserslist-test",
 			@@ ... @@
@@ -1745,24 +1763,6 @@ describe("Defaults", () => {
 			@@ ... @@
 			-   "target": "web",
 			+   "target": "browserslist",
-			@@ ... @@
-			+     "arrowFunction": false,
-			+     "bigIntLiteral": false,
-			@@ ... @@
-			+     "const": false,
-			+     "destructuring": false,
-			@@ ... @@
-			+     "dynamicImport": false,
-			+     "dynamicImportInWorker": false,
-			@@ ... @@
-			+     "forOf": false,
-			@@ ... @@
-			+     "globalThis": false,
-			@@ ... @@
-			+     "module": false,
-			@@ ... @@
-			-     "webworker": null,
-			+     "webworker": false,
 		`)
 	);
 });
