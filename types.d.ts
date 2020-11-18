@@ -6560,7 +6560,7 @@ declare interface OutputNormalized {
 	strictModuleExceptionHandling?: boolean;
 
 	/**
-	 * Properties of target
+	 * Properties of target.
 	 */
 	targetProperties?: false | { [index: string]: any };
 

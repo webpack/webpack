@@ -2144,7 +2144,7 @@
           "$ref": "#/definitions/StrictModuleExceptionHandling"
         },
         "targetProperties": {
-          "description": "Properties of target",
+          "description": "Properties of target.",
           "anyOf": [
             {
               "enum": [false]

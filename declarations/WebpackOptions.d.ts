@@ -2524,7 +2524,7 @@ export interface OutputNormalized {
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
-	 * Properties of target
+	 * Properties of target.
 	 */
 	targetProperties?:
 		| false
