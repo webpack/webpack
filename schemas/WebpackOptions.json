@@ -2143,6 +2143,17 @@
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
         },
+        "targetProperties": {
+          "description": "Properties of target",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "object"
+            }
+          ]
+        },
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
         },

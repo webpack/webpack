@@ -2524,6 +2524,14 @@ export interface OutputNormalized {
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
+	 * Properties of target
+	 */
+	targetProperties?:
+		| false
+		| {
+				[k: string]: any;
+		  };
+	/**
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
 	 */
 	uniqueName?: UniqueName;
