@@ -13,7 +13,7 @@ it("a should load a chunk with css", () => {
 
 	expect(links.length).toBe(1);
 	expect(scripts.length).toBe(1);
-	links[0].onload();
+	links[0].onload({ type: "load" });
 	__non_webpack_require__(
 		scripts[0].src.replace("https://test.cases/path", ".")
 	);

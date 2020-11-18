@@ -1636,15 +1636,24 @@ Object {
   "optimization-side-effects": Object {
     "configs": Array [
       Object {
-        "description": "Skip over modules which are flagged to contain no side effects when exports are not used.",
+        "description": "Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).",
+        "multiple": false,
+        "path": "optimization.sideEffects",
+        "type": "enum",
+        "values": Array [
+          "flag",
+        ],
+      },
+      Object {
+        "description": "Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).",
         "multiple": false,
         "path": "optimization.sideEffects",
         "type": "boolean",
       },
     ],
-    "description": "Skip over modules which are flagged to contain no side effects when exports are not used.",
+    "description": "Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-split-chunks": Object {
     "configs": Array [
@@ -5589,6 +5598,19 @@ Object {
     "description": "Delay the rebuilt after the first change. Value is a time in ms.",
     "multiple": false,
     "simpleType": "number",
+  },
+  "watch-options-follow-symlinks": Object {
+    "configs": Array [
+      Object {
+        "description": "Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').",
+        "multiple": false,
+        "path": "watchOptions.followSymlinks",
+        "type": "boolean",
+      },
+    ],
+    "description": "Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "watch-options-ignored": Object {
     "configs": Array [

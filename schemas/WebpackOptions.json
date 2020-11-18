@@ -1350,8 +1350,15 @@
           "$ref": "#/definitions/OptimizationRuntimeChunk"
         },
         "sideEffects": {
-          "description": "Skip over modules which are flagged to contain no side effects when exports are not used.",
-          "type": "boolean"
+          "description": "Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).",
+          "anyOf": [
+            {
+              "enum": ["flag"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "splitChunks": {
           "description": "Optimize duplication and caching by splitting chunks by shared modules and cache group.",
@@ -3601,6 +3608,10 @@
         "aggregateTimeout": {
           "description": "Delay the rebuilt after the first change. Value is a time in ms.",
           "type": "number"
+        },
+        "followSymlinks": {
+          "description": "Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').",
+          "type": "boolean"
         },
         "ignored": {
           "description": "Ignore some files from watching (glob pattern or regexp).",

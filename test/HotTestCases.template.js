@@ -163,6 +163,13 @@ const describeCases = config => {
 												if (name === "script") return [];
 												throw new Error("Not supported");
 											}
+										},
+										location: {
+											href: "https://test.cases/path/index.html",
+											origin: "https://test.cases",
+											toString() {
+												return "https://test.cases/path/index.html";
+											}
 										}
 									};
 

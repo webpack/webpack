@@ -235,7 +235,7 @@ describe("Defaults", () => {
 		    "removeAvailableModules": false,
 		    "removeEmptyChunks": true,
 		    "runtimeChunk": false,
-		    "sideEffects": true,
+		    "sideEffects": "flag",
 		    "splitChunks": Object {
 		      "automaticNameDelimiter": "-",
 		      "cacheGroups": Object {
@@ -625,6 +625,9 @@ describe("Defaults", () => {
 		-     "realContentHash": false,
 		+     "realContentHash": true,
 		@@ ... @@
+		-     "sideEffects": "flag",
+		+     "sideEffects": true,
+		@@ ... @@
 		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
@@ -686,6 +689,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "realContentHash": false,
 		+     "realContentHash": true,
+		@@ ... @@
+		-     "sideEffects": "flag",
+		+     "sideEffects": true,
 		@@ ... @@
 		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,

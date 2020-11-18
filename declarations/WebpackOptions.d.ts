@@ -54,7 +54,7 @@ export type EntryStatic = EntryObject | EntryUnnamed;
 /**
  * Module(s) that are loaded upon startup.
  */
-export type EntryItem = [string, ...string[]] | string;
+export type EntryItem = string[] | string;
 /**
  * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
  */
@@ -604,7 +604,7 @@ export type StatsValue =
 /**
  * Environment to build for. An array of environments to build for all of them when possible.
  */
-export type Target = [string, ...string[]] | false | string;
+export type Target = string[] | false | string;
 /**
  * Enter watch mode, which rebuilds on file change.
  */
@@ -883,7 +883,7 @@ export interface EntryDescription {
 	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
-	dependOn?: [string, ...string[]] | string;
+	dependOn?: string[] | string;
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
@@ -1076,11 +1076,7 @@ export interface ModuleOptions {
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
-	noParse?:
-		| [RegExp | string | Function, ...(RegExp | string | Function)[]]
-		| RegExp
-		| string
-		| Function;
+	noParse?: (RegExp | string | Function)[] | RegExp | string | Function;
 	/**
 	 * An array of rules applied for modules.
 	 */
@@ -1467,9 +1463,9 @@ export interface Optimization {
 	 */
 	runtimeChunk?: OptimizationRuntimeChunk;
 	/**
-	 * Skip over modules which are flagged to contain no side effects when exports are not used.
+	 * Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).
 	 */
-	sideEffects?: boolean;
+	sideEffects?: "flag" | boolean;
 	/**
 	 * Optimize duplication and caching by splitting chunks by shared modules and cache group.
 	 */
@@ -2317,6 +2313,10 @@ export interface WatchOptions {
 	 */
 	aggregateTimeout?: number;
 	/**
+	 * Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').
+	 */
+	followSymlinks?: boolean;
+	/**
 	 * Ignore some files from watching (glob pattern or regexp).
 	 */
 	ignored?: string[] | RegExp | string;
@@ -2340,7 +2340,7 @@ export interface EntryDescriptionNormalized {
 	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
-	dependOn?: [string, ...string[]];
+	dependOn?: string[];
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
@@ -2348,7 +2348,7 @@ export interface EntryDescriptionNormalized {
 	/**
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
-	import?: [string, ...string[]];
+	import?: string[];
 	/**
 	 * Options for library.
 	 */
