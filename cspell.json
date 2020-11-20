@@ -221,7 +221,8 @@
     "opencollective",
     "dependabot",
     "browserslist",
-    "samsunginternet"
+    "samsunginternet",
+    "pnpm"
   ],
   "ignoreRegExpList": ["/Author.+/", "/data:.*/", "/\"mappings\":\".+\"/"],
   "ignorePaths": ["**/dist/**", "examples/**/README.md"]
