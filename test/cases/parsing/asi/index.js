@@ -35,6 +35,11 @@ it("should respect asi flag", () => {
 	while (i++ < 4) callme()
 	do (donotcallme)
 	while (i++ < 4) callme()
+	var i = 0
+	while (i++ < 4) (function () {
+		var i = 4
+		return callme()
+	})()
 
-	expect(getCount()).toBe(25)
+	expect(getCount()).toBe(29)
 });
