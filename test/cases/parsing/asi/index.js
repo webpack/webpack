@@ -13,15 +13,28 @@ it("should respect asi flag", () => {
 	(donotcallme)
 	c;
 
-	let i = 0;
-	for (;i < 1;i++) callme()
+	var i = 0
+	for (;i < 10;i++) callme()
+	var i = 0
+	for (;i < 10;(function() {
+		i++
+	})()) callme()
+	var i = 0
 	for (;i < 2;i++) {
 		(donotcallme)
 		b();
 	}
+	var i = 0
 	if (i++) callme()
-	if (false) {} else callme()
+	var i = 1
+	if (i)
+		(donotcallme)
+	else
+		callme()
+	var i = 0
+	while (i++ < 4) callme()
+	do (donotcallme)
 	while (i++ < 4) callme()
 
-	expect(getCount()).toBe(4)
+	expect(getCount()).toBe(25)
 });

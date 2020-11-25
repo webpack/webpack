@@ -4162,6 +4162,13 @@ declare class JavascriptParser extends Parser {
 	preWalkStatement(statement?: any): void;
 	blockPreWalkStatement(statement?: any): void;
 	walkStatement(statement?: any): void;
+
+	/**
+	 * Walks a statements that is nested within a parent statement
+	 * and can potentially be a non-block statement.
+	 * This enforces the nested statement to never be in ASI position.
+	 */
+	walkNestedStatement(statement: Statement): void;
 	preWalkBlockStatement(statement?: any): void;
 	walkBlockStatement(statement?: any): void;
 	walkExpressionStatement(statement?: any): void;
