@@ -5632,14 +5632,7 @@ run-async@^2.4.0:
   resolved "https://registry.yarnpkg.com/run-async/-/run-async-2.4.1.tgz#8440eccf99ea3e70bd409d49aab88e10c189a455"
   integrity sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==
 
-rxjs@^6.6.0:
-  version "6.6.2"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.2.tgz#8096a7ac03f2cc4fe5860ef6e572810d9e01c0d2"
-  integrity sha512-BHdBMVoWC2sL26w//BCu3YzKT4s2jip/WhwsGEDmeKYBhKDZeYezVUnHatYB7L85v5xs0BAQmg6BEYJEKxBabg==
-  dependencies:
-    tslib "^1.9.0"
-
-rxjs@^6.6.3:
+rxjs@^6.6.0, rxjs@^6.6.3:
   version "6.6.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.3.tgz#8ca84635c4daa900c0d3967a6ee7ac60271ee552"
   integrity sha512-trsQc+xYYXZ3urjOiJOuCOa5N3jAZ3eiSpQB5hIT8zGlL2QfnHLJ2r7GMkBGuIausdJN1OneaI6gQlsqNHHmZQ==
