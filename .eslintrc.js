@@ -96,7 +96,8 @@ module.exports = {
 				"jest/globals": true
 			},
 			globals: {
-				nsObj: false
+				nsObj: false,
+				jasmine: false
 			}
 		}
 	]

@@ -8300,14 +8300,6 @@ declare abstract class RuntimeTemplate {
 		 */
 		weak?: boolean;
 		/**
-		 * runtime for which this code will be generated
-		 */
-		runtime?: string | SortableSet<string>;
-		/**
-		 * only execute the statement in some runtimes
-		 */
-		runtimeCondition?: string | boolean | SortableSet<string>;
-		/**
 		 * if set, will be filled with runtime requirements
 		 */
 		runtimeRequirements: Set<string>;
