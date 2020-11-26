@@ -47,11 +47,14 @@ class HtmlPlugin {
 					};
 					compilation.emitAsset(
 						"index.html",
-						new OriginalSource(`<html>
+						new OriginalSource(
+							`<html>
 	<body>
 ${files.map(file => `		${toScriptTag(file)}`).join("\n")}
 	</body>
-</html>`)
+</html>`,
+							"index.html"
+						)
 					);
 				}
 			);
