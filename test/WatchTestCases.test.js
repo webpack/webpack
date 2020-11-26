@@ -303,7 +303,7 @@ describe("WatchTestCases", () => {
 												module in testConfig.modules
 											) {
 												return testConfig.modules[module];
-											} else return require.requireActual(module);
+											} else return jest.requireActual(module);
 										}
 
 										let testConfig = {};

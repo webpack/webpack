@@ -76,7 +76,7 @@ describe("BenchmarkTestCases", function () {
 					}
 
 					function doLoadWebpack() {
-						const baselineWebpack = require.requireActual(
+						const baselineWebpack = jest.requireActual(
 							path.resolve(baselinePath, "lib/index.js")
 						);
 						baselines.push({
@@ -289,7 +289,7 @@ describe("BenchmarkTestCases", function () {
 						);
 						const config =
 							Object.create(
-								require.requireActual(
+								jest.requireActual(
 									path.join(testDirectory, "webpack.config.js")
 								)
 							) || {};
@@ -314,7 +314,7 @@ describe("BenchmarkTestCases", function () {
 							testName
 						);
 						const config =
-							require.requireActual(
+							jest.requireActual(
 								path.join(testDirectory, "webpack.config.js")
 							) || {};
 						config.output = config.output || {};
