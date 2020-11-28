@@ -116,6 +116,7 @@ describe("Defaults", () => {
 		  },
 		  "mode": "none",
 		  "module": Object {
+		    "contextMode": "lazy",
 		    "defaultRules": Array [
 		      Object {
 		        "type": "javascript/auto",

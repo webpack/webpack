@@ -2126,6 +2126,13 @@ declare class ContextExclusionPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type ContextMode =
+	| "sync"
+	| "eager"
+	| "weak"
+	| "async-weak"
+	| "lazy"
+	| "lazy-once";
 declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		beforeResolve: AsyncSeriesWaterfallHook<[any]>;
@@ -2140,7 +2147,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 			[
 				any[],
 				{
-					mode: "sync" | "eager" | "weak" | "async-weak" | "lazy" | "lazy-once";
+					mode: ContextMode;
 					recursive: boolean;
 					regExp: RegExp;
 					namespaceObject?: boolean | "strict";
@@ -2166,7 +2173,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 	resolveDependencies(
 		fs: InputFileSystem,
 		options: {
-			mode: "sync" | "eager" | "weak" | "async-weak" | "lazy" | "lazy-once";
+			mode: ContextMode;
 			recursive: boolean;
 			regExp: RegExp;
 			namespaceObject?: boolean | "strict";
@@ -5183,6 +5190,11 @@ declare class ModuleGraphConnection {
  * Options affecting the normal modules (`NormalModuleFactory`).
  */
 declare interface ModuleOptions {
+	/**
+	 * Sets the default context mode for asynchronously loading modules.
+	 */
+	contextMode?: ContextMode;
+
 	/**
 	 * An array of rules applied by default for modules.
 	 */
