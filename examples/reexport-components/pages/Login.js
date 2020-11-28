@@ -1,6 +1,6 @@
 import { Button, Dialog } from "../components";
 
-const Dashboard = () => {
+const Login = () => {
 	return (
 		<>
 			<Button />
@@ -8,4 +8,4 @@ const Dashboard = () => {
 		</>
 	);
 };
-export default Dashboard;
+export default Login;
