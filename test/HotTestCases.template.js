@@ -27,15 +27,18 @@ const describeCases = config => {
 		categories.forEach(category => {
 			describe(category.name, () => {
 				category.tests.forEach(testName => {
+					const testDirectory = path.join(casesPath, category.name, testName);
+					const filterPath = path.join(testDirectory, "test.filter.js");
+					if (fs.existsSync(filterPath) && !require(filterPath)()) {
+						describe.skip(testName, () => {
+							it("filtered", () => {});
+						});
+						return;
+					}
 					describe(testName, () => {
 						it(
 							testName + " should compile",
 							done => {
-								const testDirectory = path.join(
-									casesPath,
-									category.name,
-									testName
-								);
 								const outputDirectory = path.join(
 									__dirname,
 									"js",
