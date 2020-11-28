@@ -8060,6 +8060,7 @@ declare abstract class RuntimeSpecMap<T> {
 }
 declare abstract class RuntimeSpecSet {
 	add(runtime?: any): void;
+	has(runtime?: any): boolean;
 	[Symbol.iterator](): IterableIterator<string | SortableSet<string>>;
 	readonly size: number;
 }

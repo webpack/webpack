@@ -67,7 +67,7 @@ const describeCases = config => {
 								if (options.output.pathinfo === undefined)
 									options.output.pathinfo = true;
 								if (options.output.publicPath === undefined)
-									options.output.publicPath = "";
+									options.output.publicPath = "https://test.cases/path/";
 								if (options.output.library === undefined)
 									options.output.library = { type: "commonjs2" };
 								if (!options.optimization) options.optimization = {};
@@ -119,16 +119,38 @@ const describeCases = config => {
 										return;
 									}
 
+									const urlToPath = url => {
+										if (url.startsWith("https://test.cases/path/"))
+											url = url.slice(24);
+										return path.resolve(outputDirectory, `./${url}`);
+									};
+									const urlToRelativePath = url => {
+										if (url.startsWith("https://test.cases/path/"))
+											url = url.slice(24);
+										return `./${url}`;
+									};
 									const window = {
-										fetch: url => {
-											return Promise.resolve({
-												ok: true,
-												json() {
-													return Promise.resolve(
-														require(path.resolve(outputDirectory, url))
-													);
+										fetch: async url => {
+											try {
+												const buffer = await new Promise((resolve, reject) =>
+													fs.readFile(urlToPath(url), (err, b) =>
+														err ? reject(err) : resolve(b)
+													)
+												);
+												return {
+													status: 200,
+													ok: true,
+													json: async () => JSON.parse(buffer.toString("utf-8"))
+												};
+											} catch (err) {
+												if (err.code === "ENOENT") {
+													return {
+														status: 404,
+														ok: false
+													};
 												}
-											});
+												throw err;
+											}
 										},
 										importScripts: url => {
 											_require("./" + url);
@@ -153,7 +175,7 @@ const describeCases = config => {
 													if (element._type === "script") {
 														// run it
 														Promise.resolve().then(() => {
-															_require("./" + element.src);
+															_require(urlToRelativePath(element.src));
 														});
 													}
 												}
@@ -164,6 +186,9 @@ const describeCases = config => {
 												throw new Error("Not supported");
 											}
 										},
+										Worker: require("./helpers/createFakeWorker")({
+											outputDirectory
+										}),
 										location: {
 											href: "https://test.cases/path/index.html",
 											origin: "https://test.cases",
@@ -215,7 +240,7 @@ const describeCases = config => {
 												return JSON.parse(fs.readFileSync(p, "utf-8"));
 											} else {
 												const fn = vm.runInThisContext(
-													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, self, window, fetch, document, importScripts, NEXT, STATS) {" +
+													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, self, window, fetch, document, importScripts, Worker, NEXT, STATS) {" +
 														"global.expect = expect;" +
 														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 														fs.readFileSync(p, "utf-8") +
@@ -241,6 +266,7 @@ const describeCases = config => {
 													window.fetch,
 													window.document,
 													window.importScripts,
+													window.Worker,
 													_next,
 													jsonStats
 												);

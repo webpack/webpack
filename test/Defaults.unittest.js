@@ -306,7 +306,7 @@ describe("Defaults", () => {
 		    "hashSalt": undefined,
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 		    "hotUpdateGlobal": "webpackHotUpdatewebpack",
-		    "hotUpdateMainFilename": "[fullhash].hot-update.json",
+		    "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
 		    "iife": true,
 		    "importFunctionName": "import",
 		    "importMetaName": "import.meta",
