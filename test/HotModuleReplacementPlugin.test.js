@@ -152,7 +152,7 @@ describe("HotModuleReplacementPlugin", () => {
 					fs.writeFileSync(statsFile3, stats.toString());
 					const result = JSON.parse(
 						fs.readFileSync(
-							path.join(outputPath, `${hash}.hot-update.json`),
+							path.join(outputPath, `0.${hash}.hot-update.json`),
 							"utf-8"
 						)
 					)["c"];
