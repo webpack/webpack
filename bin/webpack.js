@@ -47,7 +47,14 @@ const isInstalled = packageName => {
  */
 const runCli = cli => {
 	const path = require("path");
-	const pkgPath = require.resolve(`${cli.package}/package.json`);
+	let pkgPath;
+	try {
+		pkgPath = require.resolve(`${cli.package}/package.json`);
+	} catch (error) {
+		console.error(`Cannot find module ${cli.package}/package.json`);
+		process.exitCode = 1;
+		return;
+	}
 	// eslint-disable-next-line node/no-missing-require
 	const pkg = require(pkgPath);
 	// eslint-disable-next-line node/no-missing-require
