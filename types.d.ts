@@ -10482,7 +10482,8 @@ declare namespace exports {
 		RuleSetUseItem,
 		Configuration,
 		WebpackOptionsNormalized,
-		WebpackPluginInstance
+		WebpackPluginInstance,
+		WebpackPluginInstance as Plugin
 	};
 }
 
