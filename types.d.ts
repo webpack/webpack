@@ -5189,17 +5189,7 @@ declare abstract class MultiStats {
 	readonly hash: string;
 	hasErrors(): boolean;
 	hasWarnings(): boolean;
-	toJson(
-		options?: any
-	): {
-		children: any[];
-		version: any;
-		hash: string;
-		errors: any[];
-		warnings: any[];
-		errorsCount: number;
-		warningsCount: number;
-	};
+	toJson(options?: any): ToJsonOutput;
 	toString(options?: any): string;
 }
 declare abstract class MultiWatching {
@@ -8535,7 +8525,7 @@ declare class Stats {
 	readonly endTime: any;
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
-	toJson(options?: any): any;
+	toJson(options?: string | boolean | StatsOptions): ToJsonOutput;
 	toString(options?: any): string;
 }
 declare abstract class StatsFactory {
@@ -9015,6 +9005,23 @@ declare interface TimestampAndHash {
 	timestamp?: number;
 	timestampHash?: string;
 	hash: string;
+}
+declare interface ToJsonOutput {
+	version?: string;
+	name?: string;
+	hash?: string;
+	time?: number;
+	filteredModules?: number;
+	outputPath?: string;
+	assetsByChunkName?: Record<string, string[]>;
+	assets?: Asset[];
+	chunks?: Chunk[];
+	modules?: Module[];
+	errors?: WebpackError[];
+	errorsCount?: number;
+	warnings?: WebpackError[];
+	warningsCount?: number;
+	children?: ToJsonOutput[];
 }
 declare const UNDEFINED_MARKER: unique symbol;
 declare interface UpdateHashContextDependency {
