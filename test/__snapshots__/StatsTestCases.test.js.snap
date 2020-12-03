@@ -2228,12 +2228,12 @@ LOG from webpack.FileSystemInfo
 exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
 "a-normal:
   assets by path *.js 2.99 KiB
-    asset b91fe81d9da1269a285f-b91fe8.js 2.6 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+    asset 92a0a394f8459d57eed5-92a0a3.js 2.6 KiB [emitted] [immutable] [minimized] (name: runtime~main)
     asset 3cc8faad16137711c07e-3cc8fa.js 210 bytes [emitted] [immutable] [minimized] (name: main)
     asset b6f77787a670e97d47b5-b6f777.js 193 bytes [emitted] [immutable] [minimized] (name: lazy)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: main)
-  Entrypoint main 2.8 KiB (5.89 KiB) = b91fe81d9da1269a285f-b91fe8.js 2.6 KiB 3cc8faad16137711c07e-3cc8fa.js 210 bytes 1 auxiliary asset
+  Entrypoint main 2.8 KiB (5.89 KiB) = 92a0a394f8459d57eed5-92a0a3.js 2.6 KiB 3cc8faad16137711c07e-3cc8fa.js 210 bytes 1 auxiliary asset
   runtime modules 7.36 KiB 8 modules
   orphan modules 23 bytes [orphan] 1 module
   cacheable modules 340 bytes (javascript) 20.4 KiB (asset)
@@ -2266,15 +2266,15 @@ b-normal:
 
 a-source-map:
   assets by path *.js 3.16 KiB
-    asset 1faadf70e8b4376ef06a-1faadf.js 2.65 KiB [emitted] [immutable] [minimized] (name: runtime~main)
-      sourceMap 1faadf70e8b4376ef06a-1faadf.js.map 14.3 KiB [emitted] [dev] (auxiliary name: runtime~main)
+    asset 6d482476dfc44d9f4352-6d4824.js 2.65 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+      sourceMap 6d482476dfc44d9f4352-6d4824.js.map 14.3 KiB [emitted] [dev] (auxiliary name: runtime~main)
     asset b8bfcec62cdd15c9a840-b8bfce.js 266 bytes [emitted] [immutable] [minimized] (name: main)
       sourceMap b8bfcec62cdd15c9a840-b8bfce.js.map 366 bytes [emitted] [dev] (auxiliary name: main)
     asset c7c0f8bb2e61b59a89f5-c7c0f8.js 249 bytes [emitted] [immutable] [minimized] (name: lazy)
       sourceMap c7c0f8bb2e61b59a89f5-c7c0f8.js.map 331 bytes [emitted] [dev] (auxiliary name: lazy)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: main)
-  Entrypoint main 2.91 KiB (20.5 KiB) = 1faadf70e8b4376ef06a-1faadf.js 2.65 KiB b8bfcec62cdd15c9a840-b8bfce.js 266 bytes 3 auxiliary assets
+  Entrypoint main 2.91 KiB (20.5 KiB) = 6d482476dfc44d9f4352-6d4824.js 2.65 KiB b8bfcec62cdd15c9a840-b8bfce.js 266 bytes 3 auxiliary assets
   runtime modules 7.36 KiB 8 modules
   orphan modules 23 bytes [orphan] 1 module
   cacheable modules 340 bytes (javascript) 20.4 KiB (asset)
@@ -2288,15 +2288,15 @@ a-source-map:
 
 b-source-map:
   assets by path *.js 3.16 KiB
-    asset df1717060760bf22714c-df1717.js 2.65 KiB [emitted] [immutable] [minimized] (name: runtime~main)
-      sourceMap df1717060760bf22714c-df1717.js.map 14.3 KiB [emitted] [dev] (auxiliary name: runtime~main)
+    asset 34a1f137ab6013192ef7-34a1f1.js 2.65 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+      sourceMap 34a1f137ab6013192ef7-34a1f1.js.map 14.3 KiB [emitted] [dev] (auxiliary name: runtime~main)
     asset b8bfcec62cdd15c9a840-b8bfce.js 266 bytes [emitted] [immutable] [minimized] (name: main)
       sourceMap b8bfcec62cdd15c9a840-b8bfce.js.map 323 bytes [emitted] [dev] (auxiliary name: main)
     asset c7c0f8bb2e61b59a89f5-c7c0f8.js 249 bytes [emitted] [immutable] [minimized] (name: lazy)
       sourceMap c7c0f8bb2e61b59a89f5-c7c0f8.js.map 327 bytes [emitted] [dev] (auxiliary name: lazy)
   asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: main)
-  Entrypoint main 2.91 KiB (20.5 KiB) = df1717060760bf22714c-df1717.js 2.65 KiB b8bfcec62cdd15c9a840-b8bfce.js 266 bytes 3 auxiliary assets
+  Entrypoint main 2.91 KiB (20.5 KiB) = 34a1f137ab6013192ef7-34a1f1.js 2.65 KiB b8bfcec62cdd15c9a840-b8bfce.js 266 bytes 3 auxiliary assets
   runtime modules 7.36 KiB 8 modules
   orphan modules 19 bytes [orphan] 1 module
   cacheable modules 295 bytes (javascript) 20.4 KiB (asset)
