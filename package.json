@@ -10,7 +10,7 @@
     "@webassemblyjs/ast": "1.9.0",
     "@webassemblyjs/helper-module-context": "1.9.0",
     "@webassemblyjs/wasm-edit": "1.9.0",
-    "@webassemblyjs/wasm-parser": "1.9.0",
+    "@webassemblyjs/wasm-parser": "1.9.1",
     "acorn": "^8.0.4",
     "browserslist": "^4.14.5",
     "chrome-trace-event": "^1.0.2",
