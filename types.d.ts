@@ -6129,7 +6129,7 @@ declare interface Output {
 	/**
 	 * Include comments with information about the modules.
 	 */
-	pathinfo?: boolean;
+	pathinfo?: Pathinfo;
 
 	/**
 	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
@@ -6368,7 +6368,7 @@ declare interface OutputNormalized {
 	/**
 	 * Include comments with information about the modules.
 	 */
-	pathinfo?: boolean;
+	pathinfo?: Pathinfo;
 
 	/**
 	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
@@ -6462,6 +6462,7 @@ declare interface PathData {
 	noChunkHash?: boolean;
 	url?: string;
 }
+type Pathinfo = boolean | "verbose";
 type Performance = false | PerformanceOptions;
 
 /**

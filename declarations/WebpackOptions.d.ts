@@ -514,7 +514,7 @@ export type Path = string;
 /**
  * Include comments with information about the modules.
  */
-export type Pathinfo = boolean;
+export type Pathinfo = "verbose" | boolean;
 /**
  * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
  */
