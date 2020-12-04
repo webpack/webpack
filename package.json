@@ -9,7 +9,7 @@
     "@types/estree": "^0.0.45",
     "@webassemblyjs/ast": "1.9.0",
     "@webassemblyjs/helper-module-context": "1.9.0",
-    "@webassemblyjs/wasm-edit": "1.9.0",
+    "@webassemblyjs/wasm-edit": "1.9.1",
     "@webassemblyjs/wasm-parser": "1.9.0",
     "acorn": "^8.0.4",
     "browserslist": "^4.14.5",
