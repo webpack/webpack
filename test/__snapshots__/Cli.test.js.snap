@@ -186,6 +186,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "cache-non-managed-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "A list of paths not to be managed (usually some package inside a node_modules directory).",
+        "multiple": true,
+        "path": "cache.nonManagedPaths[]",
+        "type": "path",
+      },
+    ],
+    "description": "A list of paths not to be managed (usually some package inside a node_modules directory).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "cache-non-managed-paths-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of paths that are not managed by a package manager and can not be trusted to be modified otherwise.",
+        "multiple": false,
+        "path": "cache.nonManagedPaths",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of paths that are not managed by a package manager and can not be trusted to be modified otherwise.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "cache-store": Object {
     "configs": Array [
       Object {
@@ -4388,6 +4414,32 @@ Object {
       },
     ],
     "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-non-managed-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "A list of paths not to be managed (usually some package inside a node_modules directory).",
+        "multiple": true,
+        "path": "snapshot.nonManagedPaths[]",
+        "type": "path",
+      },
+    ],
+    "description": "A list of paths not to be managed (usually some package inside a node_modules directory).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "snapshot-non-managed-paths-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of paths that are not managed by a package manager and can not be trusted to be modified otherwise.",
+        "multiple": false,
+        "path": "snapshot.nonManagedPaths",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of paths that are not managed by a package manager and can not be trusted to be modified otherwise.",
     "multiple": false,
     "simpleType": "boolean",
   },

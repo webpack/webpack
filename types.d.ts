@@ -1555,6 +1555,7 @@ declare class Compiler {
 	recordsOutputPath: string;
 	records: {};
 	managedPaths: Set<string>;
+	nonManagedPaths: Set<string>;
 	immutablePaths: Set<string>;
 	modifiedFiles: Set<string>;
 	removedFiles: Set<string>;
@@ -3264,6 +3265,11 @@ declare interface FileCacheOptions {
 	name?: string;
 
 	/**
+	 * List of paths that are not managed by a package manager and can not be trusted to be modified otherwise.
+	 */
+	nonManagedPaths?: string[];
+
+	/**
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
 	store?: "pack";
@@ -3330,6 +3336,8 @@ declare abstract class FileSystemInfo {
 	managedItemDirectoryQueue: AsyncQueue<string, string, Set<string>>;
 	managedPaths: string[];
 	managedPathsWithSlash: string[];
+	nonManagedPaths: string[];
+	nonManagedPathsWithSlash: string[];
 	immutablePaths: string[];
 	immutablePathsWithSlash: string[];
 	logStatistics(): void;
@@ -8291,6 +8299,11 @@ declare interface SnapshotOptions {
 		 */
 		timestamp?: boolean;
 	};
+
+	/**
+	 * List of paths that are not managed by a package manager and can not be trusted to be modified otherwise.
+	 */
+	nonManagedPaths?: string[];
 
 	/**
 	 * Options for snapshotting dependencies of request resolving to determine if requests need to be re-resolved.

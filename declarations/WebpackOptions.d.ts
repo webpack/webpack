@@ -845,6 +845,10 @@ export interface FileCacheOptions {
 	 */
 	name?: string;
 	/**
+	 * List of paths that are not managed by a package manager and can not be trusted to be modified otherwise.
+	 */
+	nonManagedPaths?: string[];
+	/**
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
 	store?: "pack";
@@ -1973,6 +1977,10 @@ export interface SnapshotOptions {
 		 */
 		timestamp?: boolean;
 	};
+	/**
+	 * List of paths that are not managed by a package manager and can not be trusted to be modified otherwise.
+	 */
+	nonManagedPaths?: string[];
 	/**
 	 * Options for snapshotting dependencies of request resolving to determine if requests need to be re-resolved.
 	 */

@@ -661,6 +661,16 @@
           "description": "Name for the cache. Different names will lead to different coexisting caches.",
           "type": "string"
         },
+        "nonManagedPaths": {
+          "description": "List of paths that are not managed by a package manager and can not be trusted to be modified otherwise.",
+          "type": "array",
+          "items": {
+            "description": "A list of paths not to be managed (usually some package inside a node_modules directory).",
+            "type": "string",
+            "absolutePath": true,
+            "minLength": 1
+          }
+        },
         "store": {
           "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
           "enum": ["pack"]
@@ -3103,6 +3113,16 @@
               "description": "Use timestamps of the files/directories to determine invalidation.",
               "type": "boolean"
             }
+          }
+        },
+        "nonManagedPaths": {
+          "description": "List of paths that are not managed by a package manager and can not be trusted to be modified otherwise.",
+          "type": "array",
+          "items": {
+            "description": "A list of paths not to be managed (usually some package inside a node_modules directory).",
+            "type": "string",
+            "absolutePath": true,
+            "minLength": 1
           }
         },
         "resolve": {
