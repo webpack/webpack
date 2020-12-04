@@ -614,10 +614,10 @@ webpack x.x.x compiled <CLR=32>successfully</CLR> in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for common-libs 1`] = `
-"asset react.js 3.12 KiB [emitted] [minimized] (name: react) 1 related asset
-modules by path ../../../node_modules/react/ 6.7 KiB
+"asset react.js 3.01 KiB [emitted] [minimized] (name: react) 1 related asset
+modules by path ../../../node_modules/react/ 6.48 KiB
   ../../../node_modules/react/index.js 190 bytes [built] [code generated]
-  ../../../node_modules/react/cjs/react.production.min.js 6.52 KiB [built] [code generated]
+  ../../../node_modules/react/cjs/react.production.min.js 6.3 KiB [built] [code generated]
 ./react.js 69 bytes [built] [code generated]
 ../../../node_modules/object-assign/index.js 2.06 KiB [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
