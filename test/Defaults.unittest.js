@@ -555,6 +555,7 @@ describe("Defaults", () => {
 		    "module": Object {
 		      "timestamp": true,
 		    },
+		    "nonManagedPaths": Array [],
 		    "resolve": Object {
 		      "timestamp": true,
 		    },
