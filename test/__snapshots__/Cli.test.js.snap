@@ -2887,12 +2887,21 @@ Object {
         "description": "Include comments with information about the modules.",
         "multiple": false,
         "path": "output.pathinfo",
+        "type": "enum",
+        "values": Array [
+          "verbose",
+        ],
+      },
+      Object {
+        "description": "Include comments with information about the modules.",
+        "multiple": false,
+        "path": "output.pathinfo",
         "type": "boolean",
       },
     ],
     "description": "Include comments with information about the modules.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "output-public-path": Object {
     "configs": Array [

@@ -2172,7 +2172,14 @@
     },
     "Pathinfo": {
       "description": "Include comments with information about the modules.",
-      "type": "boolean"
+      "anyOf": [
+        {
+          "enum": ["verbose"]
+        },
+        {
+          "type": "boolean"
+        }
+      ]
     },
     "Performance": {
       "description": "Configuration for web performance recommendations.",
