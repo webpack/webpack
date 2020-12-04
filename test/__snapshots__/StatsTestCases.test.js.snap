@@ -540,7 +540,7 @@ exports[`StatsTestCases should print correct stats for chunks-development 1`] = 
 asset bundle.js 11 KiB [emitted] (name: main)
 asset d_js-e_js.bundle.js 1.07 KiB [emitted]
 asset c_js.bundle.js 1010 bytes [emitted]
-asset b_js.bundle.js 819 bytes [emitted]
+asset b_js.bundle.js 820 bytes [emitted]
 chunk (runtime: main) b_js.bundle.js 22 bytes <{main}> [rendered]
   > ./b ./index.js 2:0-16
   ./b.js 22 bytes [built] [code generated]
@@ -926,7 +926,7 @@ webpack x.x.x compiled with 2 warnings in X ms"
 
 exports[`StatsTestCases should print correct stats for immutable 1`] = `
 "asset e5bd4a2fa3f73dde8018.js 13 KiB [emitted] [immutable] (name: main)
-asset cd9e349e4fe2a6d0d4d0.js 812 bytes [emitted] [immutable]"
+asset cd9e349e4fe2a6d0d4d0.js 813 bytes [emitted] [immutable]"
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
@@ -2326,7 +2326,7 @@ exports[`StatsTestCases should print correct stats for related-assets 1`] = `
 "default:
   assets by path *.js 15.4 KiB
     asset default-main.js 14.6 KiB [emitted] (name: main) 3 related assets
-    asset default-chunk_js.js 815 bytes [emitted] 3 related assets
+    asset default-chunk_js.js 817 bytes [emitted] 3 related assets
   assets by path *.css 142 bytes
     asset default-chunk_js.css 73 bytes [emitted] 3 related assets
     asset default-main.css 69 bytes [emitted] (name: main) 3 related assets
@@ -2339,9 +2339,9 @@ relatedAssets:
       sourceMap relatedAssets-main.js.map 12.7 KiB [emitted] [dev] (auxiliary name: main)
         compressed relatedAssets-main.js.map.br 12.7 KiB [emitted]
         compressed relatedAssets-main.js.map.gz 12.7 KiB [emitted]
-    asset relatedAssets-chunk_js.js 821 bytes [emitted]
-      compressed relatedAssets-chunk_js.js.br 821 bytes [emitted]
-      compressed relatedAssets-chunk_js.js.gz 821 bytes [emitted]
+    asset relatedAssets-chunk_js.js 823 bytes [emitted]
+      compressed relatedAssets-chunk_js.js.br 823 bytes [emitted]
+      compressed relatedAssets-chunk_js.js.gz 823 bytes [emitted]
       sourceMap relatedAssets-chunk_js.js.map 296 bytes [emitted] [dev]
         compressed relatedAssets-chunk_js.js.map.br 296 bytes [emitted]
         compressed relatedAssets-chunk_js.js.map.gz 296 bytes [emitted]
@@ -2367,8 +2367,8 @@ exclude1:
         hidden assets 25.4 KiB 2 assets
         1 related asset
       1 related asset
-    asset exclude1-chunk_js.js 816 bytes [emitted]
-      hidden assets 1.59 KiB 2 assets
+    asset exclude1-chunk_js.js 818 bytes [emitted]
+      hidden assets 1.6 KiB 2 assets
       sourceMap exclude1-chunk_js.js.map 291 bytes [emitted] [dev]
         hidden assets 582 bytes 2 assets
         1 related asset
@@ -2393,10 +2393,10 @@ exclude2:
       hidden assets 12.7 KiB 1 asset
       compressed exclude2-main.js.br 14.6 KiB [emitted]
       compressed exclude2-main.js.gz 14.6 KiB [emitted]
-    asset exclude2-chunk_js.js 816 bytes [emitted]
+    asset exclude2-chunk_js.js 818 bytes [emitted]
       hidden assets 291 bytes 1 asset
-      compressed exclude2-chunk_js.js.br 816 bytes [emitted]
-      compressed exclude2-chunk_js.js.gz 816 bytes [emitted]
+      compressed exclude2-chunk_js.js.br 818 bytes [emitted]
+      compressed exclude2-chunk_js.js.gz 818 bytes [emitted]
   assets by path *.css 144 bytes
     asset exclude2-chunk_js.css 74 bytes [emitted]
       hidden assets 195 bytes 1 asset
@@ -2408,7 +2408,7 @@ exclude2:
       compressed exclude2-main.css.gz 70 bytes [emitted]
 
 exclude3:
-  hidden assets 890 bytes 2 assets
+  hidden assets 892 bytes 2 assets
   assets by status 14.7 KiB [emitted]
     asset exclude3-main.js 14.6 KiB [emitted] (name: main)
       compressed exclude3-main.js.br 14.6 KiB [emitted]
@@ -2472,8 +2472,8 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for runtime-chunk 1`] = `
-"Entrypoint e1 6.57 KiB = runtime~e1.js 5.74 KiB e1.js 857 bytes
-Entrypoint e2 6.57 KiB = runtime~e2.js 5.74 KiB e2.js 857 bytes
+"Entrypoint e1 6.57 KiB = runtime~e1.js 5.74 KiB e1.js 858 bytes
+Entrypoint e2 6.57 KiB = runtime~e2.js 5.74 KiB e2.js 858 bytes
 webpack x.x.x compiled successfully"
 `;
 
@@ -2538,8 +2538,8 @@ webpack x.x.x compiled successfully"
 `;
 
 exports[`StatsTestCases should print correct stats for runtime-chunk-single 1`] = `
-"Entrypoint e1 6.57 KiB = runtime.js 5.73 KiB e1.js 854 bytes
-Entrypoint e2 6.57 KiB = runtime.js 5.73 KiB e2.js 854 bytes
+"Entrypoint e1 6.57 KiB = runtime.js 5.73 KiB e1.js 855 bytes
+Entrypoint e2 6.57 KiB = runtime.js 5.73 KiB e2.js 855 bytes
 webpack x.x.x compiled successfully"
 `;
 
@@ -2633,7 +2633,7 @@ development:
   asset development-dx_js.js 2.12 KiB [emitted]
   asset development-dy_js.js 2.12 KiB [emitted]
   asset development-dz_js.js 2.12 KiB [emitted]
-  asset development-c.js 734 bytes [emitted] (name: c)
+  asset development-c.js 735 bytes [emitted] (name: c)
   chunk (runtime: a) development-a.js (a) 605 bytes (javascript) 6.57 KiB (runtime) [entry] [rendered]
     runtime modules 6.57 KiB 9 modules
     cacheable modules 605 bytes
@@ -3002,7 +3002,7 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for simple 1`] = `
-"asset bundle.js 740 bytes [emitted] (name: main)
+"asset bundle.js 741 bytes [emitted] (name: main)
 ./index.js 1 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
@@ -3707,7 +3707,7 @@ exports[`StatsTestCases should print correct stats for split-chunks-max-size 1`]
   production (webpack x.x.x) compiled successfully
 
 development:
-  Entrypoint main 50.3 KiB = 13 assets
+  Entrypoint main 50.4 KiB = 13 assets
   chunk (runtime: main) dev-main-big_js-1.js (main-big_js-1) 534 bytes ={main-in-some-directory_b}= ={main-in-some-directory_very-big_js-8d76cf03}= ={main-index_js-41f5a26e}= ={main-inner-module_small_js-3}= ={main-small_js-1}= ={main-subfolder_big_js-b}= ={main-subfolder_small_js-1}= ={main-very-big_js-08cf55cf}= ={main-very-big_js-4647fb9d}= ={main-very-big_js-62f7f644}= ={vendors-node_modules_big_js_1-node_modules_small_js_1-node_modules_small_js_2}= ={vendors-node_modules_very-big_js_1}= [initial] [rendered]
     > ./ main
     ./big.js?1 267 bytes [built] [code generated]
