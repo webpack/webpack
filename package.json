@@ -89,7 +89,7 @@
     "script-loader": "^0.7.2",
     "simple-git": "^2.17.0",
     "strip-ansi": "^6.0.0",
-    "style-loader": "^1.1.4",
+    "style-loader": "^2.0.0",
     "terser": "^5.5.0",
     "toml": "^3.0.0",
     "tooling": "webpack/tooling#v1.10.0",
