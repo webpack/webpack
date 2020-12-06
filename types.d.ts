@@ -860,7 +860,7 @@ declare abstract class ChunkGroup {
 	pushChunk(chunk: Chunk): boolean;
 	replaceChunk(oldChunk: Chunk, newChunk: Chunk): boolean;
 	removeChunk(chunk: Chunk): boolean;
-	isInitial(): boolean;
+	isInitial(): this is Entrypoint;
 	addChild(group: ChunkGroup): boolean;
 	getChildren(): ChunkGroup[];
 	getNumberOfChildren(): number;
