@@ -9,5 +9,5 @@ it("should not override an already loaded shared module version", async () => {
 		}
 	};
 	await __webpack_init_sharing__("default");
-	expect(require("package")).toBe(42);
+	await expect(import("package")).resolves.toHaveProperty("default", 42);
 });
