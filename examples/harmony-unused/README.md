@@ -63,69 +63,17 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 3);
-/* harmony import */ var _library__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./library */ 1);
+/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */ 1);
+/* harmony import */ var _library__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./library */ 2);
 
 
 
-(0,_math__WEBPACK_IMPORTED_MODULE_1__.add)(1, 2);
-_library__WEBPACK_IMPORTED_MODULE_0__.reexportedMultiply(1, 2);
+(0,_math__WEBPACK_IMPORTED_MODULE_0__.add)(1, 2);
+_library__WEBPACK_IMPORTED_MODULE_1__.reexportedMultiply(1, 2);
 
 
 /***/ }),
 /* 1 */
-/*!********************!*\
-  !*** ./library.js ***!
-  \********************/
-/*! namespace exports */
-/*! export a [provided] [no usage info] [missing usage info prevents renaming] -> ./abc.js .a */
-/*! export b [provided] [no usage info] [missing usage info prevents renaming] -> ./abc.js .b */
-/*! export c [provided] [no usage info] [missing usage info prevents renaming] -> ./abc.js .c */
-/*! export reexportedAdd [provided] [no usage info] [missing usage info prevents renaming] -> ./math.js .add */
-/*! export reexportedMultiply [provided] [no usage info] [missing usage info prevents renaming] -> ./math.js .multiply */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => /* reexport safe */ _abc__WEBPACK_IMPORTED_MODULE_0__.a,
-/* harmony export */   "b": () => /* reexport safe */ _abc__WEBPACK_IMPORTED_MODULE_0__.b,
-/* harmony export */   "c": () => /* reexport safe */ _abc__WEBPACK_IMPORTED_MODULE_0__.c,
-/* harmony export */   "reexportedAdd": () => /* reexport safe */ _math__WEBPACK_IMPORTED_MODULE_1__.add,
-/* harmony export */   "reexportedMultiply": () => /* reexport safe */ _math__WEBPACK_IMPORTED_MODULE_1__.multiply
-/* harmony export */ });
-/* harmony import */ var _abc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abc */ 2);
-/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 3);
-
-
-
-/***/ }),
-/* 2 */
-/*!****************!*\
-  !*** ./abc.js ***!
-  \****************/
-/*! namespace exports */
-/*! export a [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export b [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export c [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => /* binding */ a,
-/* harmony export */   "b": () => /* binding */ b,
-/* harmony export */   "c": () => /* binding */ c
-/* harmony export */ });
-function a() { console.log("a"); }
-function b() { console.log("b"); }
-function c() { console.log("c"); }
-
-
-/***/ }),
-/* 3 */
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
@@ -162,6 +110,58 @@ function multiply() {
 function list() {
 	return Array.from(arguments);
 }
+
+
+/***/ }),
+/* 2 */
+/*!********************!*\
+  !*** ./library.js ***!
+  \********************/
+/*! namespace exports */
+/*! export a [provided] [no usage info] [missing usage info prevents renaming] -> ./abc.js .a */
+/*! export b [provided] [no usage info] [missing usage info prevents renaming] -> ./abc.js .b */
+/*! export c [provided] [no usage info] [missing usage info prevents renaming] -> ./abc.js .c */
+/*! export reexportedAdd [provided] [no usage info] [missing usage info prevents renaming] -> ./math.js .add */
+/*! export reexportedMultiply [provided] [no usage info] [missing usage info prevents renaming] -> ./math.js .multiply */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "a": () => /* reexport safe */ _abc__WEBPACK_IMPORTED_MODULE_0__.a,
+/* harmony export */   "b": () => /* reexport safe */ _abc__WEBPACK_IMPORTED_MODULE_0__.b,
+/* harmony export */   "c": () => /* reexport safe */ _abc__WEBPACK_IMPORTED_MODULE_0__.c,
+/* harmony export */   "reexportedAdd": () => /* reexport safe */ _math__WEBPACK_IMPORTED_MODULE_1__.add,
+/* harmony export */   "reexportedMultiply": () => /* reexport safe */ _math__WEBPACK_IMPORTED_MODULE_1__.multiply
+/* harmony export */ });
+/* harmony import */ var _abc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abc */ 3);
+/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 1);
+
+
+
+/***/ }),
+/* 3 */
+/*!****************!*\
+  !*** ./abc.js ***!
+  \****************/
+/*! namespace exports */
+/*! export a [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export b [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export c [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "a": () => /* binding */ a,
+/* harmony export */   "b": () => /* binding */ b,
+/* harmony export */   "c": () => /* binding */ c
+/* harmony export */ });
+function a() { console.log("a"); }
+function b() { console.log("b"); }
+function c() { console.log("c"); }
 
 
 /***/ })
@@ -241,7 +241,7 @@ function list() {
 # dist/output.js
 
 ```javascript
-(()=>{"use strict";var r,e,t={345:(r,e,t)=>{t.d(e,{n:()=>n.Jp});var n=t(451)},451:(r,e,t)=>{function n(){for(var r=0,e=0,t=arguments,n=t.length;e<n;)r+=t[e++];return r}function o(){for(var r=1,e=0,t=arguments,n=t.length;e<n;)r*=t[e++];return r}t.d(e,{IH:()=>n,Jp:()=>o})}},n={};function o(r){if(n[r])return n[r].exports;var e=n[r]={exports:{}};return t[r](e,e.exports,o),e.exports}o.d=(r,e)=>{for(var t in e)o.o(e,t)&&!o.o(r,t)&&Object.defineProperty(r,t,{enumerable:!0,get:e[t]})},o.o=(r,e)=>Object.prototype.hasOwnProperty.call(r,e),r=o(451),e=o(345),(0,r.IH)(1,2),e.n(1,2)})();
+(()=>{"use strict";var r,e={451:(r,e,t)=>{function o(){for(var r=0,e=0,t=arguments,o=t.length;e<o;)r+=t[e++];return r}function n(){for(var r=1,e=0,t=arguments,o=t.length;e<o;)r*=t[e++];return r}t.d(e,{IH:()=>o,Jp:()=>n})}},t={};function o(r){if(t[r])return t[r].exports;var n=t[r]={exports:{}};return e[r](n,n.exports,o),n.exports}o.d=(r,e)=>{for(var t in e)o.o(e,t)&&!o.o(r,t)&&Object.defineProperty(r,t,{enumerable:!0,get:e[t]})},o.o=(r,e)=>Object.prototype.hasOwnProperty.call(r,e),(0,(r=o(451)).IH)(1,2),r.Jp(1,2)})();
 ```
 
 # Info
@@ -250,7 +250,7 @@ function list() {
 
 ```
 asset output.js 7.06 KiB [emitted] (name: main)
-chunk output.js (main) 698 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 698 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 584 bytes [dependent] 3 modules
   runtime modules 668 bytes 3 modules
@@ -258,20 +258,20 @@ chunk output.js (main) 698 bytes (javascript) 668 bytes (runtime) [entry] [rende
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 580 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 572 bytes (javascript) 394 bytes (runtime) [entry] [rendered]
+asset output.js 522 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 461 bytes (javascript) 394 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  dependent modules 458 bytes [dependent] 2 modules
   runtime modules 394 bytes 2 modules
+  dependent modules 347 bytes [dependent] 1 module
   ./example.js 114 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

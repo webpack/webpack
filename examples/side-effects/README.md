@@ -50,6 +50,8 @@ console.log(
 export { a } from "./a";
 export { b } from "./b";
 export { c } from "./c";
+
+console.log("side effect");
 ```
 
 # dist/output.js
@@ -65,6 +67,7 @@ export { c } from "./c";
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
+/*! Statement (ExpressionStatement) with side effects in source code at 4:0-9:2 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -93,6 +96,7 @@ console.log(
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] -> ./node_modules/big-module/c.js .c */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__.* */
+/*! Statement (ExpressionStatement) with side effects in source code at 5:0-27 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -107,6 +111,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+console.log("side effect");
 
 
 /***/ }),
@@ -278,27 +284,27 @@ const b = "b";
 ## Unoptimized
 
 ```
-asset output.js 8.39 KiB [emitted] (name: main)
-chunk output.js (main) 325 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+asset output.js 8.58 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 354 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  dependent modules 185 bytes [dependent] 6 modules
+  dependent modules 214 bytes [dependent] 6 modules
   runtime modules 668 bytes 3 modules
   ./example.js 140 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 52 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 303 bytes [entry] [rendered]
+asset output.js 79 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 332 bytes [entry] [rendered]
   > ./example.js main
-  ./example.js + 5 modules 303 bytes [built] [code generated]
+  ./example.js + 5 modules 332 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

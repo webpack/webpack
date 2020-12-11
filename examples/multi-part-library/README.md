@@ -183,21 +183,21 @@ module.exports = "beta";
 ```
 asset MyLibrary.beta.js 1.96 KiB [emitted] (name: beta)
 asset MyLibrary.alpha.js 1.95 KiB [emitted] (name: alpha)
-chunk MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
+chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
   > ./alpha alpha
   ./alpha.js 25 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./alpha.js 1:0-14
     entry ./alpha alpha
     used as library export
-chunk MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
+chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
   > ./beta beta
   ./beta.js 24 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./beta.js 1:0-14
     entry ./beta beta
     used as library export
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
@@ -219,5 +219,5 @@ chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     cjs self exports reference ./beta.js 1:0-14
     entry ./beta beta
     used as library export
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
