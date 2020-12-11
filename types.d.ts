@@ -3472,6 +3472,26 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 		arg0: Chunk
 	) => string | ((arg0: PathData, arg1: AssetInfo) => string);
 	allChunks: boolean;
+
+	/**
+	 * Runtime modules without any dependencies to other runtime modules
+	 */
+	static STAGE_NORMAL: number;
+
+	/**
+	 * Runtime modules with simple dependencies on other runtime modules
+	 */
+	static STAGE_BASIC: number;
+
+	/**
+	 * Runtime modules which attach to handlers of other runtime modules
+	 */
+	static STAGE_ATTACH: number;
+
+	/**
+	 * Runtime modules which trigger actions on bootstrap
+	 */
+	static STAGE_TRIGGER: number;
 }
 declare interface GroupConfig<T, R> {
 	getKeys: (arg0: T) => string[];
@@ -3719,7 +3739,13 @@ declare class JavascriptModulesPlugin {
 	renderBootstrap(
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
-	): { header: string[]; startup: string[]; allowInlineStartup: boolean };
+	): {
+		header: string[];
+		beforeStartup: string[];
+		startup: string[];
+		afterStartup: string[];
+		allowInlineStartup: boolean;
+	};
 	renderRequire(
 		renderContext: RenderBootstrapContext,
 		hooks: CompilationHooksJavascriptModulesPlugin
@@ -4268,6 +4294,26 @@ declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	static getCompilationHooks(
 		compilation: Compilation
 	): JsonpCompilationPluginHooks;
+
+	/**
+	 * Runtime modules without any dependencies to other runtime modules
+	 */
+	static STAGE_NORMAL: number;
+
+	/**
+	 * Runtime modules with simple dependencies on other runtime modules
+	 */
+	static STAGE_BASIC: number;
+
+	/**
+	 * Runtime modules which attach to handlers of other runtime modules
+	 */
+	static STAGE_ATTACH: number;
+
+	/**
+	 * Runtime modules which trigger actions on bootstrap
+	 */
+	static STAGE_TRIGGER: number;
 }
 declare interface JsonpCompilationPluginHooks {
 	linkPreload: SyncWaterfallHook<[string, Chunk]>;
@@ -4464,6 +4510,26 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 	static getCompilationHooks(
 		compilation: Compilation
 	): LoadScriptCompilationHooks;
+
+	/**
+	 * Runtime modules without any dependencies to other runtime modules
+	 */
+	static STAGE_NORMAL: number;
+
+	/**
+	 * Runtime modules with simple dependencies on other runtime modules
+	 */
+	static STAGE_BASIC: number;
+
+	/**
+	 * Runtime modules which attach to handlers of other runtime modules
+	 */
+	static STAGE_ATTACH: number;
+
+	/**
+	 * Runtime modules which trigger actions on bootstrap
+	 */
+	static STAGE_TRIGGER: number;
 }
 
 /**
@@ -7675,6 +7741,26 @@ declare class RuntimeModule extends Module {
 	generate(): string;
 	getGeneratedCode(): string;
 	shouldIsolate(): boolean;
+
+	/**
+	 * Runtime modules without any dependencies to other runtime modules
+	 */
+	static STAGE_NORMAL: number;
+
+	/**
+	 * Runtime modules with simple dependencies on other runtime modules
+	 */
+	static STAGE_BASIC: number;
+
+	/**
+	 * Runtime modules which attach to handlers of other runtime modules
+	 */
+	static STAGE_ATTACH: number;
+
+	/**
+	 * Runtime modules which trigger actions on bootstrap
+	 */
+	static STAGE_TRIGGER: number;
 }
 type RuntimeSpec = string | SortableSet<string>;
 declare abstract class RuntimeSpecMap<T> {
@@ -7707,6 +7793,7 @@ declare abstract class RuntimeTemplate {
 	supportTemplateLiteral(): boolean;
 	returningFunction(returnValue?: any, args?: string): string;
 	basicFunction(args?: any, body?: any): string;
+	emptyFunction(): "x => {}" | "function() {}";
 	destructureArray(items?: any, value?: any): string;
 	iife(args?: any, body?: any): string;
 	forEach(variable?: any, array?: any, body?: any): string;
@@ -9714,6 +9801,8 @@ declare namespace exports {
 		export let getChunkUpdateScriptFilename: string;
 		export let startup: string;
 		export let startupNoDefault: string;
+		export let startupOnlyAfter: string;
+		export let startupOnlyBefore: string;
 		export let startupEntrypoint: string;
 		export let externalInstallChunk: string;
 		export let interceptModuleExecution: string;
