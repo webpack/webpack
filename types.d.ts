@@ -77,7 +77,7 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import { Stats as FsStats, WriteStream } from "fs";
+import { ReadStream, Stats as FsStats, WriteStream } from "fs";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
 import {
 	AsArray,
@@ -3690,6 +3690,10 @@ type IntermediateFileSystem = InputFileSystem &
 declare interface IntermediateFileSystemExtras {
 	mkdirSync: (arg0: string) => void;
 	createWriteStream: (arg0: string) => WriteStream;
+	createReadStream: (
+		arg0: string,
+		arg1: { highWaterMark?: number }
+	) => ReadStream;
 	rename: (
 		arg0: string,
 		arg1: string,
