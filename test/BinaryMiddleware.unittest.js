@@ -9,20 +9,28 @@ const cont = (base, count) => {
 };
 
 describe("BinaryMiddleware", () => {
+	const items = [
+		undefined,
+		true,
+		false,
+		null,
+		"",
+		"hi",
+		"hi".repeat(200),
+		"😀",
+		"😀".repeat(200),
+		Buffer.from("hello"),
+		1,
+		11,
+		0x100,
+		-1,
+		-11,
+		-0x100,
+		-1.25
+	];
+
 	const cases = [
-		[true],
-		[false],
-		[null],
-		[""],
-		["hi"],
-		[Buffer.from("hello")],
-		[1],
-		[11],
-		[0x100],
-		[-1],
-		[-11],
-		[-0x100],
-		[-1.25],
+		...items.map(item => [item]),
 		[true, true],
 		[false, true],
 		[true, false],
@@ -44,24 +52,16 @@ describe("BinaryMiddleware", () => {
 		cont([false, true, false, true], 133),
 		cont([false, true, false, true], 134),
 		cont([false, true, false, true], 135),
-		cont([true], 135)
-	];
-
-	const items = [
-		undefined,
-		true,
-		false,
-		null,
-		"",
-		"hi",
-		Buffer.from("hello"),
-		1,
-		11,
-		0x100,
-		-1,
-		-11,
-		-0x100,
-		-1.25
+		cont([true], 135),
+		[null],
+		[null, null],
+		[null, null, null],
+		cont([null], 4),
+		cont([null], 100),
+		cont([null], 300),
+		cont([-20], 20),
+		cont([400], 20),
+		cont([5.5], 20)
 	];
 
 	for (const caseData of cases) {
@@ -70,6 +70,7 @@ describe("BinaryMiddleware", () => {
 				const data = [prepend, ...caseData, append].filter(
 					x => x !== undefined
 				);
+				if (data.length === 0) continue;
 				const key = JSON.stringify(data);
 				it(`should serialize ${key} (${data.length}) correctly`, () => {
 					const mw = new BinaryMiddleware();
