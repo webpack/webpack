@@ -3692,7 +3692,7 @@ declare interface IntermediateFileSystemExtras {
 	createWriteStream: (arg0: string) => WriteStream;
 	createReadStream: (
 		arg0: string,
-		arg1: { highWaterMark?: number }
+		arg1: { highWaterMark?: number; end?: number }
 	) => ReadStream;
 	rename: (
 		arg0: string,
