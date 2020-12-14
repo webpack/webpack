@@ -1,4 +1,5 @@
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
+const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware");
 
 const cont = (base, count) => {
 	const result = [];
@@ -8,9 +9,22 @@ const cont = (base, count) => {
 	return result;
 };
 
+const mw = new BinaryMiddleware();
+const other = { other: true };
+
+const resolveLazy = item => {
+	if (SerializerMiddleware.isLazy(item)) {
+		// console.log("resolve lazy", item);
+		const data = item();
+		// console.log("resolve lazy done", data);
+		if (Array.isArray(data)) return { resolvesTo: data.map(resolveLazy) };
+		return { resolvesTo: resolveLazy(data) };
+	}
+	return item;
+};
+
 describe("BinaryMiddleware", () => {
 	const items = [
-		undefined,
 		true,
 		false,
 		null,
@@ -26,12 +40,29 @@ describe("BinaryMiddleware", () => {
 		-1,
 		-11,
 		-0x100,
-		-1.25
+		-1.25,
+		SerializerMiddleware.createLazy([5], other),
+		SerializerMiddleware.createLazy(
+			[SerializerMiddleware.createLazy([5], other)],
+			mw
+		),
+		SerializerMiddleware.createLazy(
+			[
+				1,
+				SerializerMiddleware.createLazy([2], mw),
+				SerializerMiddleware.createLazy([5], other),
+				4
+			],
+			mw
+		)
 	];
+	items.push(SerializerMiddleware.createLazy(items.slice(), mw));
+	items.push(SerializerMiddleware.createLazy(items.slice(), other));
+	items.push(undefined);
 
 	const cases = [
 		...items.map(item => [item]),
-		[true, true],
+		[(true, true)],
 		[false, true],
 		[true, false],
 		[false, false],
@@ -71,12 +102,11 @@ describe("BinaryMiddleware", () => {
 					x => x !== undefined
 				);
 				if (data.length === 0) continue;
-				const key = JSON.stringify(data);
+				const key = JSON.stringify(data.map(resolveLazy));
 				it(`should serialize ${key} (${data.length}) correctly`, () => {
-					const mw = new BinaryMiddleware();
 					const serialized = mw.serialize(data, {});
 					const newData = mw.deserialize(serialized, {});
-					expect(newData).toEqual(data);
+					expect(newData.map(resolveLazy)).toEqual(data.map(resolveLazy));
 				});
 			}
 		}
