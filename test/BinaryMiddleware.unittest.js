@@ -14,9 +14,7 @@ const other = { other: true };
 
 const resolveLazy = item => {
 	if (SerializerMiddleware.isLazy(item)) {
-		// console.log("resolve lazy", item);
 		const data = item();
-		// console.log("resolve lazy done", data);
 		if (Array.isArray(data)) return { resolvesTo: data.map(resolveLazy) };
 		return { resolvesTo: resolveLazy(data) };
 	}
