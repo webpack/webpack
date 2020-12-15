@@ -3690,6 +3690,20 @@ type IntermediateFileSystem = InputFileSystem &
 declare interface IntermediateFileSystemExtras {
 	mkdirSync: (arg0: string) => void;
 	createWriteStream: (arg0: string) => WriteStream;
+	open: (
+		arg0: string,
+		arg1: string,
+		arg2: (arg0: NodeJS.ErrnoException, arg1: number) => void
+	) => void;
+	read: (
+		arg0: number,
+		arg1: Buffer,
+		arg2: number,
+		arg3: number,
+		arg4: number,
+		arg5: (arg0: NodeJS.ErrnoException, arg1: number) => void
+	) => void;
+	close: (arg0: number, arg1: (arg0: NodeJS.ErrnoException) => void) => void;
 	rename: (
 		arg0: string,
 		arg1: string,
