@@ -5,7 +5,9 @@ const value = require("../../js/buildDepsInput/config-dependency");
 
 process.exitCode = 1;
 
-webpack(
+const options = JSON.parse(process.argv[3]);
+
+const compiler = webpack(
 	{
 		mode: "development",
 		context: __dirname,
@@ -23,6 +25,9 @@ webpack(
 				)
 			})
 		],
+		infrastructureLogging: {
+			level: "verbose"
+		},
 		cache: {
 			type: "filesystem",
 			cacheDirectory: path.resolve(__dirname, "../../js/buildDepsCache"),
@@ -30,7 +35,8 @@ webpack(
 				config: [
 					__filename,
 					path.resolve(__dirname, "../../../node_modules/.yarn-integrity")
-				]
+				],
+				invalid: options.invalidBuildDepdencies ? ["should-fail-resolving"] : []
 			}
 		},
 		snapshot: {
@@ -44,7 +50,20 @@ webpack(
 		if (stats.hasErrors()) {
 			return console.log(stats.toString({ all: false, errors: true }));
 		}
-		process.exitCode = 0;
-		console.log("OK");
+		if (options.buildTwice) {
+			compiler.run((err, stats) => {
+				if (err) {
+					return console.log(err);
+				}
+				if (stats.hasErrors()) {
+					return console.log(stats.toString({ all: false, errors: true }));
+				}
+				process.exitCode = 0;
+				console.log("OK");
+			});
+		} else {
+			process.exitCode = 0;
+			console.log("OK");
+		}
 	}
 );
