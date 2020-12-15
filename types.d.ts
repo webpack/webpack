@@ -79,6 +79,7 @@ import {
 } from "estree";
 import { Stats as FsStats, WriteStream } from "fs";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
+import { validate } from "schema-utils/declarations/validate";
 import {
 	AsArray,
 	AsyncParallelHook,
@@ -9742,6 +9743,10 @@ declare namespace exports {
 	}>;
 	export const WebpackOptionsValidationError: ValidationError;
 	export const ValidationError: ValidationError;
+	export namespace schemaUtils {
+		export let validate: validate;
+		export let ValidationError: ValidationError;
+	}
 	export namespace cache {
 		export { MemoryCachePlugin };
 	}
