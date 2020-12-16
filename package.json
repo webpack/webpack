@@ -47,7 +47,7 @@
     "coffeescript": "^2.5.1",
     "core-js": "^3.6.5",
     "coveralls": "^3.1.0",
-    "cspell": "^4.0.63",
+    "cspell": "^5.0.7",
     "css-loader": "^3.6.0",
     "date-fns": "^2.15.0",
     "es5-ext": "^0.10.53",
