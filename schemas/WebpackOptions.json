@@ -2663,7 +2663,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((value: string) => boolean)"
+          "tsType": "((value: string | undefined) => boolean)"
         },
         {
           "$ref": "#/definitions/RuleSetConditions"
@@ -2716,7 +2716,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((value: string) => boolean)"
+          "tsType": "((value: string | undefined) => boolean)"
         },
         {
           "$ref": "#/definitions/RuleSetConditionsAbsolute"
