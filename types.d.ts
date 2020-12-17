@@ -7729,7 +7729,7 @@ type RuleSetCondition =
 			 */
 			or?: RuleSetCondition[];
 	  }
-	| ((value?: string) => boolean)
+	| ((value: string) => boolean)
 	| RuleSetCondition[];
 type RuleSetConditionAbsolute =
 	| string
@@ -7748,7 +7748,7 @@ type RuleSetConditionAbsolute =
 			 */
 			or?: RuleSetConditionAbsolute[];
 	  }
-	| ((value?: string) => boolean)
+	| ((value: string) => boolean)
 	| RuleSetConditionAbsolute[];
 
 /**
@@ -7775,7 +7775,7 @@ declare interface RuleSetRule {
 				 */
 				or?: RuleSetCondition[];
 		  }
-		| ((value?: string) => boolean)
+		| ((value: string) => boolean)
 		| RuleSetCondition[];
 
 	/**
@@ -7798,7 +7798,7 @@ declare interface RuleSetRule {
 				 */
 				or?: RuleSetCondition[];
 		  }
-		| ((value?: string) => boolean)
+		| ((value: string) => boolean)
 		| RuleSetCondition[];
 
 	/**
@@ -7831,7 +7831,7 @@ declare interface RuleSetRule {
 				 */
 				or?: RuleSetConditionAbsolute[];
 		  }
-		| ((value?: string) => boolean)
+		| ((value: string) => boolean)
 		| RuleSetConditionAbsolute[];
 
 	/**
@@ -7859,7 +7859,7 @@ declare interface RuleSetRule {
 				 */
 				or?: RuleSetConditionAbsolute[];
 		  }
-		| ((value?: string) => boolean)
+		| ((value: string) => boolean)
 		| RuleSetConditionAbsolute[];
 
 	/**
@@ -7882,7 +7882,7 @@ declare interface RuleSetRule {
 				 */
 				or?: RuleSetConditionAbsolute[];
 		  }
-		| ((value?: string) => boolean)
+		| ((value: string) => boolean)
 		| RuleSetConditionAbsolute[];
 
 	/**
@@ -7910,7 +7910,7 @@ declare interface RuleSetRule {
 				 */
 				or?: RuleSetCondition[];
 		  }
-		| ((value?: string) => boolean)
+		| ((value: string) => boolean)
 		| RuleSetCondition[];
 
 	/**
@@ -7948,7 +7948,7 @@ declare interface RuleSetRule {
 				 */
 				or?: RuleSetConditionAbsolute[];
 		  }
-		| ((value?: string) => boolean)
+		| ((value: string) => boolean)
 		| RuleSetConditionAbsolute[];
 
 	/**
@@ -7976,7 +7976,7 @@ declare interface RuleSetRule {
 				 */
 				or?: RuleSetConditionAbsolute[];
 		  }
-		| ((value?: string) => boolean)
+		| ((value: string) => boolean)
 		| RuleSetConditionAbsolute[];
 
 	/**
@@ -7999,7 +7999,7 @@ declare interface RuleSetRule {
 				 */
 				or?: RuleSetCondition[];
 		  }
-		| ((value?: string) => boolean)
+		| ((value: string) => boolean)
 		| RuleSetCondition[];
 
 	/**
@@ -8022,7 +8022,7 @@ declare interface RuleSetRule {
 				 */
 				or?: RuleSetCondition[];
 		  }
-		| ((value?: string) => boolean)
+		| ((value: string) => boolean)
 		| RuleSetCondition[];
 
 	/**
@@ -8055,7 +8055,7 @@ declare interface RuleSetRule {
 				 */
 				or?: RuleSetConditionAbsolute[];
 		  }
-		| ((value?: string) => boolean)
+		| ((value: string) => boolean)
 		| RuleSetConditionAbsolute[];
 
 	/**
