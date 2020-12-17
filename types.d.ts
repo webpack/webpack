@@ -78,7 +78,12 @@ import {
 	YieldExpression
 } from "estree";
 import { Stats as FsStats, WriteStream } from "fs";
+import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
+import {
+	Extend,
+	ValidationErrorConfiguration
+} from "schema-utils/declarations/validate";
 import {
 	AsArray,
 	AsyncParallelHook,
@@ -8604,6 +8609,10 @@ declare abstract class RuntimeValue {
 	fileDependencies: any;
 	exec(parser?: any): any;
 }
+type Schema =
+	| (JSONSchema4 & Extend)
+	| (JSONSchema6 & Extend)
+	| (JSONSchema7 & Extend);
 declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
 	topLevelScope: boolean | "arrow";
@@ -9568,7 +9577,7 @@ declare interface UpdateHashContextGenerator {
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
 }
-type UsageStateType = 0 | 1 | 2 | 3 | 4;
+type UsageStateType = 0 | 2 | 3 | 1 | 4;
 declare interface UserResolveOptions {
 	/**
 	 * A list of module alias configurations or an object which maps key to value
@@ -10196,7 +10205,11 @@ declare namespace exports {
 		): MultiCompiler;
 	};
 	export const validate: (options?: any) => void;
-	export const validateSchema: (schema?: any, options?: any) => void;
+	export const validateSchema: (
+		schema: Schema,
+		options: {} | {}[],
+		validationConfiguration?: ValidationErrorConfiguration
+	) => void;
 	export const version: string;
 	export namespace cli {
 		export let getArguments: (schema?: any) => Record<string, Argument>;
