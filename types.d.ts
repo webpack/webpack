@@ -9879,7 +9879,11 @@ declare class WebWorkerTemplatePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-declare interface WebpackError extends Error {
+declare class WebpackError extends Error {
+	/**
+	 * Creates an instance of WebpackError.
+	 */
+	constructor(message?: string);
 	details: any;
 	module: Module;
 	loc: DependencyLocation;
@@ -9888,6 +9892,20 @@ declare interface WebpackError extends Error {
 	file: string;
 	serialize(__0: { write: any }): void;
 	deserialize(__0: { read: any }): void;
+
+	/**
+	 * Create .stack property on a target object
+	 */
+	static captureStackTrace(targetObject: {}, constructorOpt?: Function): void;
+
+	/**
+	 * Optional override for formatting stack traces
+	 */
+	static prepareStackTrace?: (
+		err: Error,
+		stackTraces: NodeJS.CallSite[]
+	) => any;
+	static stackTraceLimit: number;
 }
 declare abstract class WebpackLogger {
 	getChildLogger: (arg0: string | (() => string)) => WebpackLogger;
@@ -10547,6 +10565,7 @@ declare namespace exports {
 		Stats,
 		Template,
 		WatchIgnorePlugin,
+		WebpackError,
 		WebpackOptionsApply,
 		WebpackOptionsDefaulter,
 		Entry,
