@@ -2025,7 +2025,7 @@ export interface StatsOptions {
 	 */
 	builtAt?: boolean;
 	/**
-	 * Add information about cached (not built) modules.
+	 * Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).
 	 */
 	cached?: boolean;
 	/**
@@ -2271,6 +2271,10 @@ export interface StatsOptions {
 	 * Add information about assets that are related to other assets (like SourceMaps for assets).
 	 */
 	relatedAssets?: boolean;
+	/**
+	 * Add information about runtime modules (deprecated: use 'runtimeModules' instead).
+	 */
+	runtime?: boolean;
 	/**
 	 * Add information about runtime modules.
 	 */
