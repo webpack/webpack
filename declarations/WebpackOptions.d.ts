@@ -240,7 +240,7 @@ export type RuleSetCondition =
 			 */
 			or?: RuleSetConditions;
 	  }
-	| ((value: string) => boolean)
+	| ((value: string | undefined) => boolean)
 	| RuleSetConditions;
 /**
  * A list of rule conditions.
@@ -272,7 +272,7 @@ export type RuleSetConditionAbsolute =
 			 */
 			or?: RuleSetConditionsAbsolute;
 	  }
-	| ((value: string) => boolean)
+	| ((value: string | undefined) => boolean)
 	| RuleSetConditionsAbsolute;
 /**
  * A list of rule conditions matching an absolute path.
