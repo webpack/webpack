@@ -207,67 +207,7 @@ declare interface AssetEmittedInfo {
 	outputPath: string;
 	targetPath: string;
 }
-declare interface AssetInfo {
-	/**
-	 * true, if the asset can be long term cached forever (contains a hash)
-	 */
-	immutable?: boolean;
-
-	/**
-	 * whether the asset is minimized
-	 */
-	minimized?: boolean;
-
-	/**
-	 * the value(s) of the full hash used for this asset
-	 */
-	fullhash?: string | string[];
-
-	/**
-	 * the value(s) of the chunk hash used for this asset
-	 */
-	chunkhash?: string | string[];
-
-	/**
-	 * the value(s) of the module hash used for this asset
-	 */
-	modulehash?: string | string[];
-
-	/**
-	 * the value(s) of the content hash used for this asset
-	 */
-	contenthash?: string | string[];
-
-	/**
-	 * when asset was created from a source file (potentially transformed), the original filename relative to compilation context
-	 */
-	sourceFilename?: string;
-
-	/**
-	 * size in bytes, only set after asset has been emitted
-	 */
-	size?: number;
-
-	/**
-	 * true, when asset is only used for development and doesn't count towards user-facing assets
-	 */
-	development?: boolean;
-
-	/**
-	 * true, when asset ships data for updating an existing application (HMR)
-	 */
-	hotModuleReplacement?: boolean;
-
-	/**
-	 * true, when asset is javascript and an ESM
-	 */
-	javascriptModule?: boolean;
-
-	/**
-	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
-	 */
-	related?: Record<string, EntryItem>;
-}
+type AssetInfo = KnownAssetInfo & Record<string, any>;
 declare abstract class AsyncDependenciesBlock extends DependenciesBlock {
 	groupOptions: {
 		preloadOrder?: number;
@@ -4458,6 +4398,67 @@ declare class JsonpTemplatePlugin {
 	static getCompilationHooks(
 		compilation: Compilation
 	): JsonpCompilationPluginHooks;
+}
+declare interface KnownAssetInfo {
+	/**
+	 * true, if the asset can be long term cached forever (contains a hash)
+	 */
+	immutable?: boolean;
+
+	/**
+	 * whether the asset is minimized
+	 */
+	minimized?: boolean;
+
+	/**
+	 * the value(s) of the full hash used for this asset
+	 */
+	fullhash?: string | string[];
+
+	/**
+	 * the value(s) of the chunk hash used for this asset
+	 */
+	chunkhash?: string | string[];
+
+	/**
+	 * the value(s) of the module hash used for this asset
+	 */
+	modulehash?: string | string[];
+
+	/**
+	 * the value(s) of the content hash used for this asset
+	 */
+	contenthash?: string | string[];
+
+	/**
+	 * when asset was created from a source file (potentially transformed), the original filename relative to compilation context
+	 */
+	sourceFilename?: string;
+
+	/**
+	 * size in bytes, only set after asset has been emitted
+	 */
+	size?: number;
+
+	/**
+	 * true, when asset is only used for development and doesn't count towards user-facing assets
+	 */
+	development?: boolean;
+
+	/**
+	 * true, when asset ships data for updating an existing application (HMR)
+	 */
+	hotModuleReplacement?: boolean;
+
+	/**
+	 * true, when asset is javascript and an ESM
+	 */
+	javascriptModule?: boolean;
+
+	/**
+	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
+	 */
+	related?: Record<string, EntryItem>;
 }
 declare interface KnownBuildMeta {
 	moduleArgument?: string;
@@ -10561,6 +10562,8 @@ declare namespace exports {
 		Configuration,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance,
+		Asset,
+		AssetInfo,
 		ParserState
 	};
 }
