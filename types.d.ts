@@ -8970,14 +8970,16 @@ declare class SourceMapSource extends Source {
 		name: string,
 		sourceMap: string | Object | Buffer,
 		originalSource?: string | Buffer,
-		innerSourceMap?: string | Object | Buffer
+		innerSourceMap?: string | Object | Buffer,
+		removeOriginalSource?: boolean
 	);
 	getArgsAsBuffers(): [
 		Buffer,
 		string,
 		Buffer,
 		undefined | Buffer,
-		undefined | Buffer
+		undefined | Buffer,
+		boolean
 	];
 }
 declare interface SourcePosition {
