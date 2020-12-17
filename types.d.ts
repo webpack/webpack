@@ -78,7 +78,12 @@ import {
 	YieldExpression
 } from "estree";
 import { Stats as FsStats, WriteStream } from "fs";
+import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
+import {
+	Extend,
+	ValidationErrorConfiguration
+} from "schema-utils/declarations/validate";
 import {
 	AsArray,
 	AsyncParallelHook,
@@ -207,67 +212,7 @@ declare interface AssetEmittedInfo {
 	outputPath: string;
 	targetPath: string;
 }
-declare interface AssetInfo {
-	/**
-	 * true, if the asset can be long term cached forever (contains a hash)
-	 */
-	immutable?: boolean;
-
-	/**
-	 * whether the asset is minimized
-	 */
-	minimized?: boolean;
-
-	/**
-	 * the value(s) of the full hash used for this asset
-	 */
-	fullhash?: string | string[];
-
-	/**
-	 * the value(s) of the chunk hash used for this asset
-	 */
-	chunkhash?: string | string[];
-
-	/**
-	 * the value(s) of the module hash used for this asset
-	 */
-	modulehash?: string | string[];
-
-	/**
-	 * the value(s) of the content hash used for this asset
-	 */
-	contenthash?: string | string[];
-
-	/**
-	 * when asset was created from a source file (potentially transformed), the original filename relative to compilation context
-	 */
-	sourceFilename?: string;
-
-	/**
-	 * size in bytes, only set after asset has been emitted
-	 */
-	size?: number;
-
-	/**
-	 * true, when asset is only used for development and doesn't count towards user-facing assets
-	 */
-	development?: boolean;
-
-	/**
-	 * true, when asset ships data for updating an existing application (HMR)
-	 */
-	hotModuleReplacement?: boolean;
-
-	/**
-	 * true, when asset is javascript and an ESM
-	 */
-	javascriptModule?: boolean;
-
-	/**
-	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
-	 */
-	related?: Record<string, EntryItem>;
-}
+type AssetInfo = KnownAssetInfo & Record<string, any>;
 declare abstract class AsyncDependenciesBlock extends DependenciesBlock {
 	groupOptions: {
 		preloadOrder?: number;
@@ -4459,6 +4404,67 @@ declare class JsonpTemplatePlugin {
 		compilation: Compilation
 	): JsonpCompilationPluginHooks;
 }
+declare interface KnownAssetInfo {
+	/**
+	 * true, if the asset can be long term cached forever (contains a hash)
+	 */
+	immutable?: boolean;
+
+	/**
+	 * whether the asset is minimized
+	 */
+	minimized?: boolean;
+
+	/**
+	 * the value(s) of the full hash used for this asset
+	 */
+	fullhash?: string | string[];
+
+	/**
+	 * the value(s) of the chunk hash used for this asset
+	 */
+	chunkhash?: string | string[];
+
+	/**
+	 * the value(s) of the module hash used for this asset
+	 */
+	modulehash?: string | string[];
+
+	/**
+	 * the value(s) of the content hash used for this asset
+	 */
+	contenthash?: string | string[];
+
+	/**
+	 * when asset was created from a source file (potentially transformed), the original filename relative to compilation context
+	 */
+	sourceFilename?: string;
+
+	/**
+	 * size in bytes, only set after asset has been emitted
+	 */
+	size?: number;
+
+	/**
+	 * true, when asset is only used for development and doesn't count towards user-facing assets
+	 */
+	development?: boolean;
+
+	/**
+	 * true, when asset ships data for updating an existing application (HMR)
+	 */
+	hotModuleReplacement?: boolean;
+
+	/**
+	 * true, when asset is javascript and an ESM
+	 */
+	javascriptModule?: boolean;
+
+	/**
+	 * object of pointers to other assets, keyed by type of relation (only points from parent to child)
+	 */
+	related?: Record<string, EntryItem>;
+}
 declare interface KnownBuildMeta {
 	moduleArgument?: string;
 	exportsArgument?: string;
@@ -8603,6 +8609,10 @@ declare abstract class RuntimeValue {
 	fileDependencies: any;
 	exec(parser?: any): any;
 }
+type Schema =
+	| (JSONSchema4 & Extend)
+	| (JSONSchema6 & Extend)
+	| (JSONSchema7 & Extend);
 declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
 	topLevelScope: boolean | "arrow";
@@ -8969,14 +8979,16 @@ declare class SourceMapSource extends Source {
 		name: string,
 		sourceMap: string | Object | Buffer,
 		originalSource?: string | Buffer,
-		innerSourceMap?: string | Object | Buffer
+		innerSourceMap?: string | Object | Buffer,
+		removeOriginalSource?: boolean
 	);
 	getArgsAsBuffers(): [
 		Buffer,
 		string,
 		Buffer,
 		undefined | Buffer,
-		undefined | Buffer
+		undefined | Buffer,
+		boolean
 	];
 }
 declare interface SourcePosition {
@@ -9565,7 +9577,7 @@ declare interface UpdateHashContextGenerator {
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
 }
-type UsageStateType = 0 | 1 | 2 | 3 | 4;
+type UsageStateType = 0 | 2 | 3 | 1 | 4;
 declare interface UserResolveOptions {
 	/**
 	 * A list of module alias configurations or an object which maps key to value
@@ -9878,7 +9890,11 @@ declare class WebWorkerTemplatePlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-declare interface WebpackError extends Error {
+declare class WebpackError extends Error {
+	/**
+	 * Creates an instance of WebpackError.
+	 */
+	constructor(message?: string);
 	details: any;
 	module: Module;
 	loc: DependencyLocation;
@@ -9887,6 +9903,20 @@ declare interface WebpackError extends Error {
 	file: string;
 	serialize(__0: { write: any }): void;
 	deserialize(__0: { read: any }): void;
+
+	/**
+	 * Create .stack property on a target object
+	 */
+	static captureStackTrace(targetObject: {}, constructorOpt?: Function): void;
+
+	/**
+	 * Optional override for formatting stack traces
+	 */
+	static prepareStackTrace?: (
+		err: Error,
+		stackTraces: NodeJS.CallSite[]
+	) => any;
+	static stackTraceLimit: number;
 }
 declare abstract class WebpackLogger {
 	getChildLogger: (arg0: string | (() => string)) => WebpackLogger;
@@ -10175,7 +10205,11 @@ declare namespace exports {
 		): MultiCompiler;
 	};
 	export const validate: (options?: any) => void;
-	export const validateSchema: (schema?: any, options?: any) => void;
+	export const validateSchema: (
+		schema: Schema,
+		options: {} | {}[],
+		validationConfiguration?: ValidationErrorConfiguration
+	) => void;
 	export const version: string;
 	export namespace cli {
 		export let getArguments: (schema?: any) => Record<string, Argument>;
@@ -10546,6 +10580,7 @@ declare namespace exports {
 		Stats,
 		Template,
 		WatchIgnorePlugin,
+		WebpackError,
 		WebpackOptionsApply,
 		WebpackOptionsDefaulter,
 		Entry,
@@ -10561,6 +10596,8 @@ declare namespace exports {
 		Configuration,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance,
+		Asset,
+		AssetInfo,
 		ParserState
 	};
 }

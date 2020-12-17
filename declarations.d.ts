@@ -299,7 +299,8 @@ declare module "webpack-sources" {
 			name: string,
 			sourceMap: Object | string | Buffer,
 			originalSource?: string | Buffer,
-			innerSourceMap?: Object | string | Buffer
+			innerSourceMap?: Object | string | Buffer,
+			removeOriginalSource?: boolean
 		);
 
 		getArgsAsBuffers(): [
@@ -307,7 +308,8 @@ declare module "webpack-sources" {
 			string,
 			Buffer,
 			Buffer | undefined,
-			Buffer | undefined
+			Buffer | undefined,
+			boolean
 		];
 	}
 
