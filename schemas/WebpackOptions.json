@@ -2612,7 +2612,7 @@
         "apply": {
           "description": "The run point of the plugin, required method.",
           "instanceof": "Function",
-          "tsType": "(resolver: import('enhanced-resolve/lib/Resolver')) => void"
+          "tsType": "(resolver: import('enhanced-resolve').Resolver) => void"
         }
       },
       "required": ["apply"]
@@ -3179,7 +3179,7 @@
           "type": "boolean"
         },
         "cached": {
-          "description": "Add information about cached (not built) modules.",
+          "description": "Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).",
           "type": "boolean"
         },
         "cachedAssets": {
@@ -3484,6 +3484,10 @@
         },
         "relatedAssets": {
           "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+          "type": "boolean"
+        },
+        "runtime": {
+          "description": "Add information about runtime modules (deprecated: use 'runtimeModules' instead).",
           "type": "boolean"
         },
         "runtimeModules": {

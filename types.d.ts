@@ -1130,17 +1130,21 @@ declare class Compilation {
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 		moduleAsset: SyncHook<[Module, string]>;
 		chunkAsset: SyncHook<[Chunk, string]>;
-		assetPath: SyncWaterfallHook<[string, {}, AssetInfo]>;
+		assetPath: SyncWaterfallHook<[string, object, AssetInfo]>;
 		needAdditionalPass: SyncBailHook<[], boolean>;
 		childCompiler: SyncHook<[Compiler, string, number]>;
 		log: SyncBailHook<[string, LogEntry], true>;
 		processWarnings: SyncWaterfallHook<[WebpackError[]]>;
 		processErrors: SyncWaterfallHook<[WebpackError[]]>;
-		statsPreset: HookMap<SyncHook<[Object, Object]>>;
-		statsNormalize: SyncHook<[Object, Object]>;
-		statsFactory: SyncHook<[StatsFactory, Object]>;
-		statsPrinter: SyncHook<[StatsPrinter, Object]>;
-		readonly normalModuleLoader: SyncHook<[{}, NormalModule]>;
+		statsPreset: HookMap<
+			SyncHook<[Partial<NormalizedStatsOptions>, CreateStatsOptionsContext]>
+		>;
+		statsNormalize: SyncHook<
+			[Partial<NormalizedStatsOptions>, CreateStatsOptionsContext]
+		>;
+		statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>;
+		statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]>;
+		readonly normalModuleLoader: SyncHook<[object, NormalModule]>;
 	}>;
 	name?: string;
 	startTime: any;
@@ -1194,7 +1198,7 @@ declare class Compilation {
 	logging: Map<string, LogEntry[]>;
 	dependencyFactories: Map<DepConstructor, ModuleFactory>;
 	dependencyTemplates: DependencyTemplates;
-	childrenCounters: {};
+	childrenCounters: object;
 	usedChunkIds: Set<string | number>;
 	usedModuleIds: Set<number>;
 	needAdditionalPass: boolean;
@@ -1208,7 +1212,10 @@ declare class Compilation {
 	buildDependencies: LazySet<string>;
 	compilationDependencies: { add: (item?: any) => LazySet<string> };
 	getStats(): Stats;
-	createStatsOptions(optionsOrPreset?: any, context?: {}): {};
+	createStatsOptions(
+		optionsOrPreset: string | StatsOptions,
+		context?: CreateStatsOptionsContext
+	): NormalizedStatsOptions;
 	createStatsFactory(options?: any): StatsFactory;
 	createStatsPrinter(options?: any): StatsPrinter;
 	getCache(name: string): CacheFacade;
@@ -1512,7 +1519,7 @@ declare class Compiler {
 	watchFileSystem: WatchFileSystem;
 	recordsInputPath: null | string;
 	recordsOutputPath: null | string;
-	records: {};
+	records: object;
 	managedPaths: Set<string>;
 	immutablePaths: Set<string>;
 	modifiedFiles: Set<string>;
@@ -2089,6 +2096,8 @@ declare class ContextReplacementPlugin {
 	newContentRegExp: any;
 	apply(compiler?: any): void;
 }
+type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
+	Record<string, any>;
 type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
 declare class DefinePlugin {
 	/**
@@ -3772,8 +3781,8 @@ declare abstract class ItemCacheFacade {
 	providePromise<T>(computer: () => T | Promise<T>): Promise<T>;
 }
 declare class JavascriptModulesPlugin {
-	constructor(options?: {});
-	options: {};
+	constructor(options?: object);
+	options: object;
 
 	/**
 	 * Apply the plugin
@@ -4311,7 +4320,7 @@ declare class JavascriptParser extends Parser {
 	setVariable(name: string, variableInfo: ExportedVariableInfo): void;
 	parseCommentOptions(
 		range?: any
-	): { options: null; errors: null } | { options: {}; errors: any[] };
+	): { options: null; errors: null } | { options: object; errors: any[] };
 	extractMemberExpressionChain(
 		expression: MemberExpression
 	): {
@@ -4475,6 +4484,84 @@ declare interface KnownBuildMeta {
 	strictHarmonyModule?: boolean;
 	async?: boolean;
 	sideEffectFree?: boolean;
+}
+declare interface KnownCreateStatsOptionsContext {
+	forToString?: boolean;
+}
+declare interface KnownNormalizedStatsOptions {
+	context: string;
+	requestShortener: RequestShortener;
+	chunksSort: string;
+	modulesSort: string;
+	chunkModulesSort: string;
+	nestedModulesSort: string;
+	assetsSort: string;
+	ids: boolean;
+	cachedAssets: boolean;
+	groupAssetsByEmitStatus: boolean;
+	groupAssetsByPath: boolean;
+	groupAssetsByExtension: boolean;
+	assetsSpace: number;
+	excludeAssets: Function[];
+	excludeModules: Function[];
+	warningsFilter: Function[];
+	cachedModules: boolean;
+	orphanModules: boolean;
+	dependentModules: boolean;
+	runtimeModules: boolean;
+	groupModulesByCacheStatus: boolean;
+	groupModulesByAttributes: boolean;
+	groupModulesByPath: boolean;
+	groupModulesByExtension: boolean;
+	groupModulesByType: boolean;
+	entrypoints: boolean | "auto";
+	chunkGroups: boolean;
+	chunkGroupAuxiliary: boolean;
+	chunkGroupChildren: boolean;
+	chunkGroupMaxAssets: number;
+	modulesSpace: number;
+	chunkModulesSpace: number;
+	nestedModulesSpace: number;
+	logging: false | "none" | "verbose" | "error" | "warn" | "info" | "log";
+	loggingDebug: Function[];
+	loggingTrace: boolean;
+}
+declare interface KnownStatsFactoryContext {
+	type: string;
+	makePathsRelative?: (arg0: string) => string;
+	compilation?: Compilation;
+	rootModules?: Set<Module>;
+	compilationFileToChunks?: Map<string, Chunk[]>;
+	compilationAuxiliaryFileToChunks?: Map<string, Chunk[]>;
+	runtime?: RuntimeSpec;
+	cachedGetErrors?: (arg0: Compilation) => WebpackError[];
+	cachedGetWarnings?: (arg0: Compilation) => WebpackError[];
+}
+declare interface KnownStatsPrinterContext {
+	type?: string;
+	compilation?: Object;
+	chunkGroup?: Object;
+	asset?: Object;
+	module?: Object;
+	chunk?: Object;
+	moduleReason?: Object;
+	bold?: (str: string) => string;
+	yellow?: (str: string) => string;
+	red?: (str: string) => string;
+	green?: (str: string) => string;
+	magenta?: (str: string) => string;
+	cyan?: (str: string) => string;
+	formatFilename?: (file: string, oversize?: boolean) => string;
+	formatModuleId?: (id: string) => string;
+	formatChunkId?: (
+		id: string,
+		direction?: "parent" | "child" | "sibling"
+	) => string;
+	formatSize?: (size: number) => string;
+	formatDateTime?: (dateTime: number) => string;
+	formatFlag?: (flag: string) => string;
+	formatTime?: (time: number, boldQuantity?: boolean) => string;
+	chunkGroupKind?: string;
 }
 declare abstract class LazySet<T> {
 	readonly size: number;
@@ -4795,7 +4882,7 @@ declare abstract class MainTemplate {
 		readonly linkPreload: SyncWaterfallHook<[string, Chunk]>;
 	}>;
 	renderCurrentHashCode: (hash: string, length?: number) => string;
-	getPublicPath: (options: {}) => string;
+	getPublicPath: (options: object) => string;
 	getAssetPath: (path?: any, options?: any) => string;
 	getAssetPathWithInfo: (
 		path?: any,
@@ -4858,7 +4945,7 @@ declare class Module extends DependenciesBlock {
 	needId: boolean;
 	debugId: number;
 	resolveOptions: ResolveOptionsWebpackOptions;
-	factoryMeta?: {};
+	factoryMeta?: object;
 	useSourceMap: boolean;
 	useSimpleSourceMap: boolean;
 	buildMeta: BuildMeta;
@@ -5680,8 +5767,8 @@ declare class NormalModule extends Module {
 	static deserialize(context?: any): NormalModule;
 }
 declare interface NormalModuleCompilationHooks {
-	loader: SyncHook<[{}, NormalModule]>;
-	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, {}]>;
+	loader: SyncHook<[object, NormalModule]>;
+	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, object]>;
 	readResourceForScheme: HookMap<
 		AsyncSeriesBailHook<[string, NormalModule], string | Buffer>
 	>;
@@ -5726,10 +5813,10 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		resolveContext?: any,
 		callback?: any
 	): any;
-	getParser(type?: any, parserOptions?: {}): any;
+	getParser(type?: any, parserOptions?: object): any;
 	createParser(type: string, parserOptions?: { [index: string]: any }): Parser;
-	getGenerator(type?: any, generatorOptions?: {}): undefined | Generator;
-	createGenerator(type?: any, generatorOptions?: {}): any;
+	getGenerator(type?: any, generatorOptions?: object): undefined | Generator;
+	createGenerator(type?: any, generatorOptions?: object): any;
 	getResolver(type?: any, resolveOptions?: any): ResolverWithOptions;
 }
 declare class NormalModuleReplacementPlugin {
@@ -5748,6 +5835,9 @@ declare class NormalModuleReplacementPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type NormalizedStatsOptions = KnownNormalizedStatsOptions &
+	StatsOptions &
+	Record<string, any>;
 declare interface ObjectDeserializerContext {
 	read: () => any;
 }
@@ -7608,7 +7698,7 @@ declare interface ResolvePluginInstance {
 	/**
 	 * The run point of the plugin, required method.
 	 */
-	apply: (resolver?: any) => void;
+	apply: (resolver: Resolver) => void;
 }
 type ResolveRequest = BaseResolveRequest & Partial<ParsedIdentifier>;
 declare abstract class Resolver {
@@ -7716,7 +7806,7 @@ declare interface RuleSet {
 	/**
 	 * execute the rule set
 	 */
-	exec: (arg0: {}) => Effect[];
+	exec: (arg0: object) => Effect[];
 }
 type RuleSetCondition =
 	| string
@@ -8096,7 +8186,9 @@ declare interface RuleSetRule {
 				 */
 				options?: string | { [index: string]: any };
 		  }
-		| ((data: {}) =>
+		| ((
+				data: object
+		  ) =>
 				| string
 				| {
 						/**
@@ -9079,24 +9171,43 @@ declare class Stats {
 }
 declare abstract class StatsFactory {
 	hooks: Readonly<{
-		extract: HookMap<SyncBailHook<[Object, any, Object], any>>;
-		filter: HookMap<SyncBailHook<[any, Object, number, number], any>>;
+		extract: HookMap<SyncBailHook<[Object, any, StatsFactoryContext], any>>;
+		filter: HookMap<
+			SyncBailHook<[any, StatsFactoryContext, number, number], any>
+		>;
 		sort: HookMap<
-			SyncBailHook<[((arg0?: any, arg1?: any) => number)[], Object], any>
+			SyncBailHook<
+				[((arg0?: any, arg1?: any) => number)[], StatsFactoryContext],
+				any
+			>
 		>;
-		filterSorted: HookMap<SyncBailHook<[any, Object, number, number], any>>;
-		groupResults: HookMap<SyncBailHook<[GroupConfig<any, {}>[], Object], any>>;
+		filterSorted: HookMap<
+			SyncBailHook<[any, StatsFactoryContext, number, number], any>
+		>;
+		groupResults: HookMap<
+			SyncBailHook<[GroupConfig<any, object>[], StatsFactoryContext], any>
+		>;
 		sortResults: HookMap<
-			SyncBailHook<[((arg0?: any, arg1?: any) => number)[], Object], any>
+			SyncBailHook<
+				[((arg0?: any, arg1?: any) => number)[], StatsFactoryContext],
+				any
+			>
 		>;
-		filterResults: HookMap<SyncBailHook<any, any>>;
-		merge: HookMap<SyncBailHook<[any[], Object], any>>;
-		result: HookMap<SyncBailHook<[any[], Object], any>>;
-		getItemName: HookMap<SyncBailHook<[any, Object], any>>;
-		getItemFactory: HookMap<SyncBailHook<[any, Object], any>>;
+		filterResults: HookMap<
+			SyncBailHook<[any, StatsFactoryContext, number, number], any>
+		>;
+		merge: HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
+		result: HookMap<SyncBailHook<[any[], StatsFactoryContext], any>>;
+		getItemName: HookMap<SyncBailHook<[any, StatsFactoryContext], any>>;
+		getItemFactory: HookMap<SyncBailHook<[any, StatsFactoryContext], any>>;
 	}>;
-	create(type?: any, data?: any, baseContext?: any): any;
+	create(
+		type: string,
+		data: any,
+		baseContext: Pick<StatsFactoryContext, string>
+	): any;
 }
+type StatsFactoryContext = KnownStatsFactoryContext & Record<string, any>;
 
 /**
  * Stats options object.
@@ -9128,7 +9239,7 @@ declare interface StatsOptions {
 	builtAt?: boolean;
 
 	/**
-	 * Add information about cached (not built) modules.
+	 * Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).
 	 */
 	cached?: boolean;
 
@@ -9449,6 +9560,11 @@ declare interface StatsOptions {
 	relatedAssets?: boolean;
 
 	/**
+	 * Add information about runtime modules (deprecated: use 'runtimeModules' instead).
+	 */
+	runtime?: boolean;
+
+	/**
 	 * Add information about runtime modules.
 	 */
 	runtimeModules?: boolean;
@@ -9494,16 +9610,19 @@ declare interface StatsOptions {
 }
 declare abstract class StatsPrinter {
 	hooks: Readonly<{
-		sortElements: HookMap<SyncBailHook<[string[], {}], true>>;
-		printElements: HookMap<SyncBailHook<[PrintedElement[], {}], string>>;
-		sortItems: HookMap<SyncBailHook<[any[], {}], true>>;
-		getItemName: HookMap<SyncBailHook<[any, {}], string>>;
-		printItems: HookMap<SyncBailHook<[string[], {}], string>>;
-		print: HookMap<SyncBailHook<[{}, {}], string>>;
-		result: HookMap<SyncWaterfallHook<[string, {}]>>;
+		sortElements: HookMap<SyncBailHook<[string[], StatsPrinterContext], true>>;
+		printElements: HookMap<
+			SyncBailHook<[PrintedElement[], StatsPrinterContext], string>
+		>;
+		sortItems: HookMap<SyncBailHook<[any[], StatsPrinterContext], true>>;
+		getItemName: HookMap<SyncBailHook<[any, StatsPrinterContext], string>>;
+		printItems: HookMap<SyncBailHook<[string[], StatsPrinterContext], string>>;
+		print: HookMap<SyncBailHook<[{}, StatsPrinterContext], string>>;
+		result: HookMap<SyncWaterfallHook<[string, StatsPrinterContext]>>;
 	}>;
 	print(type: string, object: Object, baseContext?: Object): string;
 }
+type StatsPrinterContext = KnownStatsPrinterContext & Record<string, any>;
 type StatsValue =
 	| boolean
 	| "none"
@@ -9907,7 +10026,10 @@ declare class WebpackError extends Error {
 	/**
 	 * Create .stack property on a target object
 	 */
-	static captureStackTrace(targetObject: {}, constructorOpt?: Function): void;
+	static captureStackTrace(
+		targetObject: object,
+		constructorOpt?: Function
+	): void;
 
 	/**
 	 * Optional override for formatting stack traces
@@ -10170,7 +10292,9 @@ declare interface WithOptions {
 		arg0: Partial<ResolveOptionsWithDependencyType>
 	) => ResolverWithOptions;
 }
-type __TypeWebpackOptions = (data: {}) =>
+type __TypeWebpackOptions = (
+	data: object
+) =>
 	| string
 	| {
 			/**
@@ -10207,7 +10331,7 @@ declare namespace exports {
 	export const validate: (options?: any) => void;
 	export const validateSchema: (
 		schema: Schema,
-		options: {} | {}[],
+		options: object | object[],
 		validationConfiguration?: ValidationErrorConfiguration
 	) => void;
 	export const version: string;
@@ -10500,7 +10624,7 @@ declare namespace exports {
 				loader: (arg0: string) => boolean
 			) => void;
 			export let registerNotSerializable: (Constructor: Constructor) => void;
-			export let NOT_SERIALIZABLE: {};
+			export let NOT_SERIALIZABLE: object;
 			export let buffersSerializer: Serializer;
 			export let createFileSerializer: (fs?: any) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
