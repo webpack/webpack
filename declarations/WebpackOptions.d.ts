@@ -1352,7 +1352,7 @@ export interface ResolvePluginInstance {
 	/**
 	 * The run point of the plugin, required method.
 	 */
-	apply: (resolver: import("enhanced-resolve/lib/Resolver")) => void;
+	apply: (resolver: import("enhanced-resolve").Resolver) => void;
 	[k: string]: any;
 }
 /**

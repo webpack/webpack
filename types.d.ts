@@ -1130,7 +1130,7 @@ declare class Compilation {
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 		moduleAsset: SyncHook<[Module, string]>;
 		chunkAsset: SyncHook<[Chunk, string]>;
-		assetPath: SyncWaterfallHook<[string, {}, AssetInfo]>;
+		assetPath: SyncWaterfallHook<[string, object, AssetInfo]>;
 		needAdditionalPass: SyncBailHook<[], boolean>;
 		childCompiler: SyncHook<[Compiler, string, number]>;
 		log: SyncBailHook<[string, LogEntry], true>;
@@ -1144,7 +1144,7 @@ declare class Compilation {
 		>;
 		statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>;
 		statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]>;
-		readonly normalModuleLoader: SyncHook<[{}, NormalModule]>;
+		readonly normalModuleLoader: SyncHook<[object, NormalModule]>;
 	}>;
 	name?: string;
 	startTime: any;
@@ -1198,7 +1198,7 @@ declare class Compilation {
 	logging: Map<string, LogEntry[]>;
 	dependencyFactories: Map<DepConstructor, ModuleFactory>;
 	dependencyTemplates: DependencyTemplates;
-	childrenCounters: {};
+	childrenCounters: object;
 	usedChunkIds: Set<string | number>;
 	usedModuleIds: Set<number>;
 	needAdditionalPass: boolean;
@@ -1519,7 +1519,7 @@ declare class Compiler {
 	watchFileSystem: WatchFileSystem;
 	recordsInputPath: null | string;
 	recordsOutputPath: null | string;
-	records: {};
+	records: object;
 	managedPaths: Set<string>;
 	immutablePaths: Set<string>;
 	modifiedFiles: Set<string>;
@@ -3781,8 +3781,8 @@ declare abstract class ItemCacheFacade {
 	providePromise<T>(computer: () => T | Promise<T>): Promise<T>;
 }
 declare class JavascriptModulesPlugin {
-	constructor(options?: {});
-	options: {};
+	constructor(options?: object);
+	options: object;
 
 	/**
 	 * Apply the plugin
@@ -4320,7 +4320,7 @@ declare class JavascriptParser extends Parser {
 	setVariable(name: string, variableInfo: ExportedVariableInfo): void;
 	parseCommentOptions(
 		range?: any
-	): { options: null; errors: null } | { options: {}; errors: any[] };
+	): { options: null; errors: null } | { options: object; errors: any[] };
 	extractMemberExpressionChain(
 		expression: MemberExpression
 	): {
@@ -4882,7 +4882,7 @@ declare abstract class MainTemplate {
 		readonly linkPreload: SyncWaterfallHook<[string, Chunk]>;
 	}>;
 	renderCurrentHashCode: (hash: string, length?: number) => string;
-	getPublicPath: (options: {}) => string;
+	getPublicPath: (options: object) => string;
 	getAssetPath: (path?: any, options?: any) => string;
 	getAssetPathWithInfo: (
 		path?: any,
@@ -4945,7 +4945,7 @@ declare class Module extends DependenciesBlock {
 	needId: boolean;
 	debugId: number;
 	resolveOptions: ResolveOptionsWebpackOptions;
-	factoryMeta?: {};
+	factoryMeta?: object;
 	useSourceMap: boolean;
 	useSimpleSourceMap: boolean;
 	buildMeta: BuildMeta;
@@ -5767,8 +5767,8 @@ declare class NormalModule extends Module {
 	static deserialize(context?: any): NormalModule;
 }
 declare interface NormalModuleCompilationHooks {
-	loader: SyncHook<[{}, NormalModule]>;
-	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, {}]>;
+	loader: SyncHook<[object, NormalModule]>;
+	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, object]>;
 	readResourceForScheme: HookMap<
 		AsyncSeriesBailHook<[string, NormalModule], string | Buffer>
 	>;
@@ -5813,10 +5813,10 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		resolveContext?: any,
 		callback?: any
 	): any;
-	getParser(type?: any, parserOptions?: {}): any;
+	getParser(type?: any, parserOptions?: object): any;
 	createParser(type: string, parserOptions?: { [index: string]: any }): Parser;
-	getGenerator(type?: any, generatorOptions?: {}): undefined | Generator;
-	createGenerator(type?: any, generatorOptions?: {}): any;
+	getGenerator(type?: any, generatorOptions?: object): undefined | Generator;
+	createGenerator(type?: any, generatorOptions?: object): any;
 	getResolver(type?: any, resolveOptions?: any): ResolverWithOptions;
 }
 declare class NormalModuleReplacementPlugin {
@@ -7698,7 +7698,7 @@ declare interface ResolvePluginInstance {
 	/**
 	 * The run point of the plugin, required method.
 	 */
-	apply: (resolver?: any) => void;
+	apply: (resolver: Resolver) => void;
 }
 type ResolveRequest = BaseResolveRequest & Partial<ParsedIdentifier>;
 declare abstract class Resolver {
@@ -7806,7 +7806,7 @@ declare interface RuleSet {
 	/**
 	 * execute the rule set
 	 */
-	exec: (arg0: {}) => Effect[];
+	exec: (arg0: object) => Effect[];
 }
 type RuleSetCondition =
 	| string
@@ -8186,7 +8186,9 @@ declare interface RuleSetRule {
 				 */
 				options?: string | { [index: string]: any };
 		  }
-		| ((data: {}) =>
+		| ((
+				data: object
+		  ) =>
 				| string
 				| {
 						/**
@@ -9183,7 +9185,7 @@ declare abstract class StatsFactory {
 			SyncBailHook<[any, StatsFactoryContext, number, number], any>
 		>;
 		groupResults: HookMap<
-			SyncBailHook<[GroupConfig<any, {}>[], StatsFactoryContext], any>
+			SyncBailHook<[GroupConfig<any, object>[], StatsFactoryContext], any>
 		>;
 		sortResults: HookMap<
 			SyncBailHook<
@@ -10024,7 +10026,10 @@ declare class WebpackError extends Error {
 	/**
 	 * Create .stack property on a target object
 	 */
-	static captureStackTrace(targetObject: {}, constructorOpt?: Function): void;
+	static captureStackTrace(
+		targetObject: object,
+		constructorOpt?: Function
+	): void;
 
 	/**
 	 * Optional override for formatting stack traces
@@ -10287,7 +10292,9 @@ declare interface WithOptions {
 		arg0: Partial<ResolveOptionsWithDependencyType>
 	) => ResolverWithOptions;
 }
-type __TypeWebpackOptions = (data: {}) =>
+type __TypeWebpackOptions = (
+	data: object
+) =>
 	| string
 	| {
 			/**
@@ -10324,7 +10331,7 @@ declare namespace exports {
 	export const validate: (options?: any) => void;
 	export const validateSchema: (
 		schema: Schema,
-		options: {} | {}[],
+		options: object | object[],
 		validationConfiguration?: ValidationErrorConfiguration
 	) => void;
 	export const version: string;
@@ -10617,7 +10624,7 @@ declare namespace exports {
 				loader: (arg0: string) => boolean
 			) => void;
 			export let registerNotSerializable: (Constructor: Constructor) => void;
-			export let NOT_SERIALIZABLE: {};
+			export let NOT_SERIALIZABLE: object;
 			export let buffersSerializer: Serializer;
 			export let createFileSerializer: (fs?: any) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };

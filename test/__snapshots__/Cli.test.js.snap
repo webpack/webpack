@@ -4549,13 +4549,13 @@ Object {
   "stats-cached": Object {
     "configs": Array [
       Object {
-        "description": "Add information about cached (not built) modules.",
+        "description": "Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).",
         "multiple": false,
         "path": "stats.cached",
         "type": "boolean",
       },
     ],
-    "description": "Add information about cached (not built) modules.",
+    "description": "Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5421,6 +5421,19 @@ Object {
       },
     ],
     "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-runtime": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about runtime modules (deprecated: use 'runtimeModules' instead).",
+        "multiple": false,
+        "path": "stats.runtime",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about runtime modules (deprecated: use 'runtimeModules' instead).",
     "multiple": false,
     "simpleType": "boolean",
   },

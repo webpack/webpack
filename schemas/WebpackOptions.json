@@ -2612,7 +2612,7 @@
         "apply": {
           "description": "The run point of the plugin, required method.",
           "instanceof": "Function",
-          "tsType": "(resolver: import('enhanced-resolve/lib/Resolver')) => void"
+          "tsType": "(resolver: import('enhanced-resolve').Resolver) => void"
         }
       },
       "required": ["apply"]
