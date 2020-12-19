@@ -2236,6 +2236,10 @@ export interface StatsOptions {
 	 */
 	nestedModules?: boolean;
 	/**
+	 * Tells stats how many items of nested modules should be displayed (groups will be collapsed to fit this space).
+	 */
+	nestedModulesSpace?: number;
+	/**
 	 * Show reasons why optimization bailed out for modules.
 	 */
 	optimizationBailout?: boolean;

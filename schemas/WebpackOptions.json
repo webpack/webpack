@@ -3443,9 +3443,9 @@
           "description": "Add information about modules nested in other modules (like with module concatenation).",
           "type": "boolean"
         },
-        "nestedModulesSpace":{
-          "description" : "Tells stats how many items of nested modules should be displayed (groups will be collapsed to fit this space).",
-          "type" : "number"
+        "nestedModulesSpace": {
+          "description": "Tells stats how many items of nested modules should be displayed (groups will be collapsed to fit this space).",
+          "type": "number"
         },
         "optimizationBailout": {
           "description": "Show reasons why optimization bailed out for modules.",
