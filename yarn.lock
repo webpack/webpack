@@ -1757,13 +1757,10 @@ co@^4.6.0:
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
   integrity sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=
 
-coffee-loader@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/coffee-loader/-/coffee-loader-1.0.1.tgz#f672c4b2ea358e039f702ad590148f7a1dda77f0"
-  integrity sha512-l3lcWeyNE11ZXNYEpkIkerrvBdSpT06/kcR7MyY+0ys38MOuqzhr+s+s7Tsvv2QH1+qEmhvG8mGuUWIO2zH7Bg==
-  dependencies:
-    loader-utils "^2.0.0"
-    schema-utils "^3.0.0"
+coffee-loader@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/coffee-loader/-/coffee-loader-2.0.0.tgz#76f4e193074cea8bf3e226aaed5ea356d3380c1b"
+  integrity sha512-fCq1T1b8ByUiPcWRMe3HCgvfS9h8kahRWR44Mew57x7Xm5MsNg9mjnV4XHHj6rWQS2+8SMYavHJQHQDUNybqhw==
 
 coffeescript@^2.5.1:
   version "2.5.1"
