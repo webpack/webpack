@@ -354,6 +354,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-layers": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable module and chunk layers.",
+        "multiple": false,
+        "path": "experiments.layers",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable module and chunk layers.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-output-module": Object {
     "configs": Array [
       Object {
@@ -1983,6 +1996,38 @@ Object {
       },
     ],
     "description": "Match the issuer of the module (The module pointing to this module).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-issuer-layer": Object {
+    "configs": Array [
+      Object {
+        "description": "Match layer of the issuer of this module (The module pointing to this module).",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match layer of the issuer of this module (The module pointing to this module).",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer",
+        "type": "string",
+      },
+    ],
+    "description": "Match layer of the issuer of this module (The module pointing to this module).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-layer": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the layer in which the module should be placed in.",
+        "multiple": true,
+        "path": "module.rules[].layer",
+        "type": "string",
+      },
+    ],
+    "description": "Specifies the layer in which the module should be placed in.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -6182,6 +6227,19 @@ Object {
       },
     ],
     "description": "Group modules by their extension.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-layer": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their layer.",
+        "multiple": false,
+        "path": "stats.groupModulesByLayer",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their layer.",
     "multiple": false,
     "simpleType": "boolean",
   },

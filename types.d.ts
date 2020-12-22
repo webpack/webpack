@@ -1319,6 +1319,23 @@ declare class Compilation {
 		dependency: Dependency,
 		callback: (err?: WebpackError, result?: Module) => void
 	): void;
+	addModuleTree(
+		__0: {
+			/**
+			 * context string path
+			 */
+			context: string;
+			/**
+			 * dependency used to create Module chain
+			 */
+			dependency: Dependency;
+			/**
+			 * additional context info for the root module
+			 */
+			contextInfo?: Partial<ModuleFactoryCreateDataContextInfo>;
+		},
+		callback: (err?: WebpackError, result?: Module) => void
+	): void;
 	addEntry(
 		context: string,
 		entry: Dependency,
@@ -1735,9 +1752,17 @@ declare interface Configuration {
 		| ExternalItem[]
 		| {
 				[index: string]: string | boolean | string[] | { [index: string]: any };
+				/**
+				 * Specify externals depending on the layer.
+				 */
+				byLayer?: { [index: string]: ExternalItem };
 		  }
 		| ((
-				data: { context: string; request: string },
+				data: {
+					context: string;
+					request: string;
+					contextInfo: ModuleFactoryCreateDataContextInfo;
+				},
 				callback: (err?: Error, result?: string) => void
 		  ) => void);
 
@@ -2682,6 +2707,11 @@ declare interface EntryDescription {
 	import: EntryItem;
 
 	/**
+	 * Specifies the layer in which modules of this entrypoint are placed.
+	 */
+	layer?: null | string;
+
+	/**
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
@@ -2720,6 +2750,11 @@ declare interface EntryDescriptionNormalized {
 	 * Module(s) that are loaded upon startup. The last one is exported.
 	 */
 	import?: string[];
+
+	/**
+	 * Specifies the layer in which modules of this entrypoint are placed.
+	 */
+	layer?: null | string;
 
 	/**
 	 * Options for library.
@@ -2766,6 +2801,7 @@ type EntryOptions = { name?: string } & Pick<
 	| "filename"
 	| "chunkLoading"
 	| "dependOn"
+	| "layer"
 	| "library"
 	| "runtime"
 	| "wasmLoading"
@@ -2909,6 +2945,11 @@ declare interface Experiments {
 	 * Support WebAssembly as asynchronous EcmaScript Module.
 	 */
 	asyncWebAssembly?: boolean;
+
+	/**
+	 * Enable module and chunk layers.
+	 */
+	layers?: boolean;
 
 	/**
 	 * Allow output javascript files as module source type.
@@ -3185,9 +3226,19 @@ declare interface ExpressionExpressionInfo {
 type ExternalItem =
 	| string
 	| RegExp
-	| { [index: string]: string | boolean | string[] | { [index: string]: any } }
+	| {
+			[index: string]: string | boolean | string[] | { [index: string]: any };
+			/**
+			 * Specify externals depending on the layer.
+			 */
+			byLayer?: { [index: string]: ExternalItem };
+	  }
 	| ((
-			data: { context: string; request: string },
+			data: {
+				context: string;
+				request: string;
+				contextInfo: ModuleFactoryCreateDataContextInfo;
+			},
 			callback: (err?: Error, result?: string) => void
 	  ) => void);
 declare class ExternalModule extends Module {
@@ -3209,9 +3260,19 @@ type Externals =
 	| string
 	| RegExp
 	| ExternalItem[]
-	| { [index: string]: string | boolean | string[] | { [index: string]: any } }
+	| {
+			[index: string]: string | boolean | string[] | { [index: string]: any };
+			/**
+			 * Specify externals depending on the layer.
+			 */
+			byLayer?: { [index: string]: ExternalItem };
+	  }
 	| ((
-			data: { context: string; request: string },
+			data: {
+				context: string;
+				request: string;
+				contextInfo: ModuleFactoryCreateDataContextInfo;
+			},
 			callback: (err?: Error, result?: string) => void
 	  ) => void);
 declare class ExternalsPlugin {
@@ -3294,6 +3355,7 @@ declare interface FactorizeModuleOptions {
 	factory: ModuleFactory;
 	dependencies: Dependency[];
 	originModule: null | Module;
+	contextInfo?: Partial<ModuleFactoryCreateDataContextInfo>;
 	context?: string;
 }
 type FakeHook<T> = T & FakeHookMarker;
@@ -3621,6 +3683,7 @@ declare interface HandleModuleCreationOptions {
 	factory: ModuleFactory;
 	dependencies: Dependency[];
 	originModule: null | Module;
+	contextInfo?: Partial<ModuleFactoryCreateDataContextInfo>;
 	context?: string;
 
 	/**
@@ -4634,6 +4697,7 @@ declare interface KnownNormalizedStatsOptions {
 	dependentModules: boolean;
 	runtimeModules: boolean;
 	groupModulesByCacheStatus: boolean;
+	groupModulesByLayer: boolean;
 	groupModulesByAttributes: boolean;
 	groupModulesByPath: boolean;
 	groupModulesByExtension: boolean;
@@ -5063,9 +5127,10 @@ declare interface MinChunkSizePluginOptions {
 	minChunkSize: number;
 }
 declare class Module extends DependenciesBlock {
-	constructor(type: string, context?: string);
+	constructor(type: string, context?: string, layer?: string);
 	type: string;
-	context: string;
+	context: null | string;
+	layer: null | string;
 	needId: boolean;
 	debugId: number;
 	resolveOptions: ResolveOptionsWebpackOptions;
@@ -5213,6 +5278,7 @@ declare interface ModuleFactoryCreateData {
 }
 declare interface ModuleFactoryCreateDataContextInfo {
 	issuer: string;
+	issuerLayer?: null | string;
 	compiler: string;
 }
 declare interface ModuleFactoryResult {
@@ -5879,6 +5945,10 @@ type NodeWebpackOptions = false | NodeOptions;
 declare class NormalModule extends Module {
 	constructor(__0: {
 		/**
+		 * an optional layer in which the module is
+		 */
+		layer?: string;
+		/**
 		 * module type
 		 */
 		type: string;
@@ -6249,6 +6319,11 @@ declare interface OptimizationSplitChunksCacheGroup {
 	 * Sets the hint for chunk id.
 	 */
 	idHint?: string;
+
+	/**
+	 * Assign modules to a cache group by module layer.
+	 */
+	layer?: string | Function | RegExp;
 
 	/**
 	 * Maximum number of requests which are accepted for on-demand loading.
@@ -8017,6 +8092,34 @@ declare interface RuleSetRule {
 		| RuleSetConditionAbsolute[];
 
 	/**
+	 * Match layer of the issuer of this module (The module pointing to this module).
+	 */
+	issuerLayer?:
+		| string
+		| RegExp
+		| {
+				/**
+				 * Logical AND.
+				 */
+				and?: RuleSetCondition[];
+				/**
+				 * Logical NOT.
+				 */
+				not?: RuleSetCondition[];
+				/**
+				 * Logical OR.
+				 */
+				or?: RuleSetCondition[];
+		  }
+		| ((value: string) => boolean)
+		| RuleSetCondition[];
+
+	/**
+	 * Specifies the layer in which the module should be placed in.
+	 */
+	layer?: string;
+
+	/**
 	 * Shortcut for use.loader.
 	 */
 	loader?: string;
@@ -9483,6 +9586,11 @@ declare interface StatsOptions {
 	 * Group modules by their extension.
 	 */
 	groupModulesByExtension?: boolean;
+
+	/**
+	 * Group modules by their layer.
+	 */
+	groupModulesByLayer?: boolean;
 
 	/**
 	 * Group modules by their path.

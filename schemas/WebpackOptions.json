@@ -366,6 +366,9 @@
         "import": {
           "$ref": "#/definitions/EntryItem"
         },
+        "layer": {
+          "$ref": "#/definitions/Layer"
+        },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
         },
@@ -410,6 +413,9 @@
           },
           "minItems": 1,
           "uniqueItems": true
+        },
+        "layer": {
+          "$ref": "#/definitions/Layer"
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
@@ -571,6 +577,10 @@
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
           "type": "boolean"
         },
+        "layers": {
+          "description": "Enable module and chunk layers.",
+          "type": "boolean"
+        },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
           "type": "boolean"
@@ -623,12 +633,21 @@
                 "type": "object"
               }
             ]
+          },
+          "properties": {
+            "byLayer": {
+              "description": "Specify externals depending on the layer.",
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/ExternalItem"
+              }
+            }
           }
         },
         {
           "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
           "instanceof": "Function",
-          "tsType": "((data: { context: string, request: string }, callback: (err?: Error, result?: string) => void) => void)"
+          "tsType": "((data: { context: string, request: string, contextInfo: import('../lib/ModuleFactory').ModuleFactoryCreateDataContextInfo }, callback: (err?: Error, result?: string) => void) => void)"
         }
       ]
     },
@@ -1055,6 +1074,18 @@
           ]
         }
       }
+    },
+    "Layer": {
+      "description": "Specifies the layer in which modules of this entrypoint are placed.",
+      "anyOf": [
+        {
+          "enum": [null]
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
     },
     "Library": {
       "description": "Make the output files a library, exporting the exports of the entry point.",
@@ -1741,6 +1772,22 @@
         "idHint": {
           "description": "Sets the hint for chunk id.",
           "type": "string"
+        },
+        "layer": {
+          "description": "Assign modules to a cache group by module layer.",
+          "anyOf": [
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "Function"
+            }
+          ]
         },
         "maxAsyncRequests": {
           "description": "Maximum number of requests which are accepted for on-demand loading.",
@@ -2886,8 +2933,7 @@
           "tsType": "RegExp"
         },
         {
-          "type": "string",
-          "minLength": 1
+          "type": "string"
         },
         {
           "type": "object",
@@ -3108,6 +3154,18 @@
               "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
           ]
+        },
+        "issuerLayer": {
+          "description": "Match layer of the issuer of this module (The module pointing to this module).",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ]
+        },
+        "layer": {
+          "description": "Specifies the layer in which the module should be placed in.",
+          "type": "string"
         },
         "loader": {
           "description": "Shortcut for use.loader.",
@@ -3634,6 +3692,10 @@
         },
         "groupModulesByExtension": {
           "description": "Group modules by their extension.",
+          "type": "boolean"
+        },
+        "groupModulesByLayer": {
+          "description": "Group modules by their layer.",
           "type": "boolean"
         },
         "groupModulesByPath": {
