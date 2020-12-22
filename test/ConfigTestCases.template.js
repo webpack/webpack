@@ -89,6 +89,7 @@ const describeCases = config => {
 									options.output.filename = "bundle" + idx + ".js";
 								if (config.cache) {
 									options.cache = {
+										...options.cache,
 										cacheDirectory,
 										name: `config-${idx}`,
 										...config.cache
@@ -96,6 +97,7 @@ const describeCases = config => {
 								}
 								if (config.snapshot) {
 									options.snapshot = {
+										...options.snapshot,
 										...config.snapshot
 									};
 								}
