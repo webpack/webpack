@@ -183,6 +183,7 @@
     "nwjs",
     "redeclaration",
     "kaios",
+    "hashbang",
 
     "webassemblyjs",
     "fsevents",
