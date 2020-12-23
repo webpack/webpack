@@ -2964,6 +2964,7 @@ declare abstract class ExportInfo {
 	): undefined | { module: Module; export?: string[] };
 	createNestedExportsInfo(): undefined | ExportsInfo;
 	getNestedExportsInfo(): undefined | ExportsInfo;
+	hasInfo(baseInfo?: any, runtime?: any): boolean;
 	updateHash(hash?: any, runtime?: any): void;
 	getUsedInfo(): string;
 	getProvidedInfo():
