@@ -4060,7 +4060,10 @@ declare class JavascriptParser extends Parser {
 		>;
 		expressionConditionalOperator: SyncBailHook<[Expression], boolean | void>;
 		expressionLogicalOperator: SyncBailHook<[Expression], boolean | void>;
-		program: SyncBailHook<[Program, Comment[]], boolean | void>;
+		program: SyncBailHook<
+			[Program, Comment[], undefined | string],
+			boolean | void
+		>;
 		finish: SyncBailHook<[Program, Comment[]], boolean | void>;
 	}>;
 	sourceType: "module" | "script" | "auto";
