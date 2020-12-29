@@ -293,7 +293,7 @@ function add() {
 /******/ 		// no deferred startup
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
@@ -311,7 +311,7 @@ function add() {
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			parentChunkLoadingFunction(data);
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
@@ -319,8 +319,10 @@ function add() {
 /******/ 		}
 /******/ 		
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
-/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		
+/******/ 		// no deferred startup
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -342,41 +344,41 @@ function add() {
 ## Unoptimized
 
 ```
-asset output.js 11.8 KiB [emitted] (name: main)
+asset output.js 11.9 KiB [emitted] (name: main)
 asset 35.output.js 772 bytes [emitted]
-chunk 35.output.js 24 bytes [rendered]
+chunk (runtime: main) 35.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
     [exports: answer]
     [used exports unknown]
     import() ./async-loaded ./example.js 6:0-24
-chunk output.js (main) 400 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.54 KiB 8 modules
   dependent modules 225 bytes [dependent] 2 modules
   ./example.js 175 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.98 KiB [emitted] [minimized] (name: main)
+asset output.js 2.03 KiB [emitted] [minimized] (name: main)
 asset 35.output.js 122 bytes [emitted] [minimized]
 chunk (runtime: main) 35.output.js 24 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
   ./async-loaded.js 24 bytes [built] [code generated]
     [exports: answer]
     import() ./async-loaded ./example.js + 2 modules ./example.js 6:0-24
-chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.54 KiB 8 modules
   ./example.js + 2 modules 400 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

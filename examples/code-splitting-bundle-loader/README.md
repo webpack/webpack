@@ -223,7 +223,7 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 		// no deferred startup
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
@@ -241,7 +241,7 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			parentChunkLoadingFunction(data);
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
@@ -249,8 +249,10 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 		}
 /******/ 		
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
-/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		
+/******/ 		// no deferred startup
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -301,32 +303,32 @@ module.exports = "It works";
 ## Unoptimized
 
 ```
-asset output.js 9.44 KiB [emitted] (name: main)
+asset output.js 9.58 KiB [emitted] (name: main)
 asset 929.output.js 354 bytes [emitted]
-chunk output.js (main) 375 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.97 KiB 6 modules
   dependent modules 281 bytes [dependent] 1 module
   ./example.js 94 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk 929.output.js 28 bytes [rendered]
+chunk (runtime: main) 929.output.js 28 bytes [rendered]
   > ../../node_modules/bundle-loader/index.js!./file.js 7:0-14:2
   ./file.js 28 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./file.js 1:0-14
     cjs require !!./file.js ../../node_modules/bundle-loader/index.js!./file.js 8:8-30
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.79 KiB [emitted] [minimized] (name: main)
+asset output.js 1.84 KiB [emitted] [minimized] (name: main)
 asset 929.output.js 88 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.85 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.85 KiB 6 modules
+  runtime modules 4.97 KiB 6 modules
   dependent modules 281 bytes [dependent] 1 module
   ./example.js 94 bytes [built] [code generated]
     [no exports used]
@@ -337,5 +339,5 @@ chunk (runtime: main) 929.output.js 28 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./file.js 1:0-14
     cjs require !!./file.js ../../node_modules/bundle-loader/index.js!./file.js 8:8-30
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

@@ -45,7 +45,7 @@ export function reset() {
 /*! namespace exports */
 /*! runtime requirements:  */
 
-// CONCATENATED MODULE: ./counter.js
+;// CONCATENATED MODULE: ./counter.js
 let value = 0;
 function increment() {
 	value++;
@@ -57,12 +57,12 @@ function counter_reset() {
 	value = 0;
 }
 
-// CONCATENATED MODULE: ./methods.js
+;// CONCATENATED MODULE: ./methods.js
 
 
 const print = value => console.log(value);
 
-// CONCATENATED MODULE: ./example.js
+;// CONCATENATED MODULE: ./example.js
 
 
 print(value);
@@ -85,25 +85,25 @@ let o=0;function n(){o++}const c=o=>console.log(o);c(o),n(),n(),n(),c(o),o=0,c(o
 ## Unoptimized
 
 ```
-asset output.js 577 bytes [emitted] (name: main)
+asset output.js 580 bytes [emitted] [javascript module] (name: main)
 chunk (runtime: main) output.js (main) 429 bytes [entry] [rendered]
   > ./example.js main
   ./example.js + 2 modules 429 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 82 bytes [emitted] [minimized] (name: main)
+asset output.js 82 bytes [emitted] [javascript module] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 429 bytes [entry] [rendered]
   > ./example.js main
   ./example.js + 2 modules 429 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

@@ -41,7 +41,7 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_ebb1a24c629010ce31fa;vendor_lib_ebb1a24c629010ce31fa =
+var vendor_lib_d696c7b4f72a4a70f39b;vendor_lib_d696c7b4f72a4a70f39b =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -152,7 +152,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_ebb1a24c629010ce31fa","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","sideEffectFree":true},"exports":["square"]}}}
+{"name":"vendor_lib_d696c7b4f72a4a70f39b","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
 ```
 
 # Info
@@ -161,7 +161,7 @@ function square(n) {
 
 ```
 asset vendor.js 3.56 KiB [emitted] (name: main)
-chunk vendor.js (main) 57 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
   > main
   runtime modules 668 bytes 3 modules
   dependent modules 45 bytes [dependent] 1 module
@@ -169,7 +169,7 @@ chunk vendor.js (main) 57 bytes (javascript) 668 bytes (runtime) [entry] [render
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
@@ -183,5 +183,5 @@ chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 668 bytes (runtime)
   dll main 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

@@ -280,7 +280,7 @@ var named = "named";
 
 ```
 asset output.js 7.19 KiB [emitted] (name: main)
-chunk output.js (main) 1.13 KiB (javascript) 931 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 931 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 785 bytes [dependent] 4 modules
   runtime modules 931 bytes 4 modules
@@ -288,7 +288,7 @@ chunk output.js (main) 1.13 KiB (javascript) 931 bytes (runtime) [entry] [render
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
@@ -303,5 +303,5 @@ chunk (runtime: main) output.js (main) 1.13 KiB (javascript) 668 bytes (runtime)
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

@@ -174,14 +174,14 @@ console.log(getTemplate("b"));
 
 ```
 asset output.js 3.62 KiB [emitted] (name: main)
-chunk output.js (main) 603 bytes (javascript) 86 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 603 bytes (javascript) 86 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 457 bytes [dependent] 4 modules
   runtime modules 86 bytes 1 module
   ./example.js 146 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
@@ -195,7 +195,7 @@ chunk (runtime: main) output.js (main) 603 bytes (javascript) 86 bytes (runtime)
   ./example.js 146 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 # Code Splitting

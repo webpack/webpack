@@ -89,8 +89,8 @@ module.exports = "Vendor1";
 ``` js
 /******/ 	// startup
 /******/ 	// Load entry module
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
 /******/ 	__webpack_require__(0);
-/******/ 	// This entry module used 'module' so it can't be inlined
 /******/ })()
 ;
 ```
@@ -164,8 +164,8 @@ __webpack_require__(/*! ./vendor1 */ 0);
 ``` js
 /******/ 	// startup
 /******/ 	// Load entry module
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
 /******/ 	__webpack_require__(1);
-/******/ 	// This entry module used 'module' so it can't be inlined
 /******/ })()
 ;
 ```
@@ -254,8 +254,8 @@ __webpack_require__(/*! ./vendor2 */ 1);
 ``` js
 /******/ 	// startup
 /******/ 	// Load entry module
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
 /******/ 	__webpack_require__(2);
-/******/ 	// This entry module used 'module' so it can't be inlined
 /******/ })()
 ;
 ```
@@ -265,31 +265,31 @@ __webpack_require__(/*! ./vendor2 */ 1);
 ## Unoptimized
 
 ```
-asset pageA.js 2.31 KiB [emitted] (name: pageA)
-asset vendor2.js 1.89 KiB [emitted] (name: vendor2)
-asset vendor1.js 1.5 KiB [emitted] (name: vendor1)
-asset pageB.js 1.49 KiB [emitted] (name: pageB)
-asset pageC.js 1.49 KiB [emitted] (name: pageC)
-chunk pageA.js (pageA) 147 bytes [entry] [rendered]
+asset pageA.js 2.33 KiB [emitted] (name: pageA)
+asset vendor2.js 1.9 KiB [emitted] (name: vendor2)
+asset vendor1.js 1.51 KiB [emitted] (name: vendor1)
+asset pageB.js 1.51 KiB [emitted] (name: pageB)
+asset pageC.js 1.51 KiB [emitted] (name: pageC)
+chunk (runtime: pageA) pageA.js (pageA) 147 bytes [entry] [rendered]
   > ./pageA pageA
   dependent modules 77 bytes [dependent] 2 modules
   ./pageA.js 70 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageA.js 1:0-14
     entry ./pageA pageA
-chunk pageB.js (pageB) 25 bytes [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 25 bytes [entry] [rendered]
   > ./pageB pageB
   ./pageB.js 25 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageB.js 1:0-14
     entry ./pageB pageB
-chunk pageC.js (pageC) 25 bytes [entry] [rendered]
+chunk (runtime: pageC) pageC.js (pageC) 25 bytes [entry] [rendered]
   > ./pageC pageC
   ./pageC.js 25 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageC.js 1:0-14
     entry ./pageC pageC
-chunk vendor1.js (vendor1) 27 bytes [entry] [rendered]
+chunk (runtime: vendor1) vendor1.js (vendor1) 27 bytes [entry] [rendered]
   > ./vendor1 vendor1
   ./vendor1.js 27 bytes [built] [code generated]
     [used exports unknown]
@@ -297,7 +297,7 @@ chunk vendor1.js (vendor1) 27 bytes [entry] [rendered]
     cjs self exports reference ./vendor1.js 1:0-14
     cjs require ./vendor1 ./vendor2.js 2:0-20
     entry ./vendor1 vendor1
-chunk vendor2.js (vendor2) 77 bytes [entry] [rendered]
+chunk (runtime: vendor2) vendor2.js (vendor2) 77 bytes [entry] [rendered]
   > ./vendor2 vendor2
   dependent modules 27 bytes [dependent] 1 module
   ./vendor2.js 50 bytes [built] [code generated]
@@ -305,7 +305,7 @@ chunk vendor2.js (vendor2) 77 bytes [entry] [rendered]
     cjs require ./vendor2 ./pageA.js 3:0-20
     cjs self exports reference ./vendor2.js 1:0-14
     entry ./vendor2 vendor2
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
@@ -351,5 +351,5 @@ chunk (runtime: vendor1) vendor1.js (vendor1) 27 bytes [entry] [rendered]
     cjs self exports reference ./vendor1.js 1:0-14
     cjs require ./vendor1 ./vendor2.js 2:0-20
     entry ./vendor1 vendor1
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

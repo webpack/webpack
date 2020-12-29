@@ -12,11 +12,11 @@ const async = require("neo-async");
 
 const extraArgs = "";
 
-const targetArgs = global.NO_TARGET_ARGS ? "" : "./example.js -o dist/output.js ";
-const displayReasons = global.NO_REASONS ? "" : "--display-reasons --display-used-exports --display-provided-exports";
-const statsArgs = global.NO_STATS_OPTIONS ? "" : "--display-chunks  --display-max-modules 99999 --display-origins";
+const targetArgs = global.NO_TARGET_ARGS ? "" : "--entry ./example.js --output-filename output.js";
+const displayReasons = global.NO_REASONS ? "" : "--stats-reasons --stats-used-exports --stats-provided-exports";
+const statsArgs = global.NO_STATS_OPTIONS ? "" : "--stats-chunks  --stats-modules-space 99999 --stats-chunk-origins";
 const publicPathArgs = global.NO_PUBLIC_PATH ? "" : '--output-public-path "dist/"';
-const commonArgs = `--no-color ${statsArgs} ${publicPathArgs} ${extraArgs} ${targetArgs}`;
+const commonArgs = `--no-stats-colors ${statsArgs} ${publicPathArgs} ${extraArgs} ${targetArgs}`;
 
 let readme = fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8");
 
@@ -68,7 +68,7 @@ const doCompileAndReplace = (args, prefix, callback) => {
 async.series([
 	callback => doCompileAndReplace("--mode production --env production", "production", callback),
 	callback => doCompileAndReplace("--mode development --env development --devtool none", "development", callback),
-	callback => doCompileAndReplace("--mode none --env none --output-pathinfo", "", callback)
+	callback => doCompileAndReplace("--mode none --env none --output-pathinfo verbose", "", callback)
 ], () => {
 	readme = tc.replaceBase(readme);
 	fs.writeFile("README.md", readme, "utf-8", function () { });

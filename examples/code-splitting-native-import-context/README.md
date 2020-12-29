@@ -291,7 +291,7 @@ module.exports = webpackAsyncContext;
 /******/ 		// no deferred startup
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
@@ -309,7 +309,7 @@ module.exports = webpackAsyncContext;
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			parentChunkLoadingFunction(data);
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
@@ -317,8 +317,10 @@ module.exports = webpackAsyncContext;
 /******/ 		}
 /******/ 		
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
-/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		
+/******/ 		// no deferred startup
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -360,18 +362,18 @@ getTemplate("baz");
 ## Unoptimized
 
 ```
-asset output.js 10.7 KiB [emitted] (name: main)
+asset output.js 10.9 KiB [emitted] (name: main)
 asset 398.output.js 856 bytes [emitted]
 asset 544.output.js 856 bytes [emitted]
 asset 718.output.js 856 bytes [emitted]
-chunk output.js (main) 441 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.54 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 281 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk 398.output.js 38 bytes [rendered]
+chunk (runtime: main) 398.output.js 38 bytes [rendered]
   > ./bar ./templates/ lazy ^\.\/.*$ namespace object ./bar
   > ./bar.js ./templates/ lazy ^\.\/.*$ namespace object ./bar.js
   ./templates/bar.js 38 bytes [optional] [built] [code generated]
@@ -379,7 +381,7 @@ chunk 398.output.js 38 bytes [rendered]
     [used exports unknown]
     context element ./bar ./templates/ lazy ^\.\/.*$ namespace object ./bar
     context element ./bar.js ./templates/ lazy ^\.\/.*$ namespace object ./bar.js
-chunk 544.output.js 38 bytes [rendered]
+chunk (runtime: main) 544.output.js 38 bytes [rendered]
   > ./baz ./templates/ lazy ^\.\/.*$ namespace object ./baz
   > ./baz.js ./templates/ lazy ^\.\/.*$ namespace object ./baz.js
   ./templates/baz.js 38 bytes [optional] [built] [code generated]
@@ -387,7 +389,7 @@ chunk 544.output.js 38 bytes [rendered]
     [used exports unknown]
     context element ./baz ./templates/ lazy ^\.\/.*$ namespace object ./baz
     context element ./baz.js ./templates/ lazy ^\.\/.*$ namespace object ./baz.js
-chunk 718.output.js 38 bytes [rendered]
+chunk (runtime: main) 718.output.js 38 bytes [rendered]
   > ./foo ./templates/ lazy ^\.\/.*$ namespace object ./foo
   > ./foo.js ./templates/ lazy ^\.\/.*$ namespace object ./foo.js
   ./templates/foo.js 38 bytes [optional] [built] [code generated]
@@ -395,19 +397,19 @@ chunk 718.output.js 38 bytes [rendered]
     [used exports unknown]
     context element ./foo ./templates/ lazy ^\.\/.*$ namespace object ./foo
     context element ./foo.js ./templates/ lazy ^\.\/.*$ namespace object ./foo.js
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.37 KiB [emitted] [minimized] (name: main)
+asset output.js 2.43 KiB [emitted] [minimized] (name: main)
 asset 398.output.js 130 bytes [emitted] [minimized]
 asset 544.output.js 130 bytes [emitted] [minimized]
 asset 718.output.js 130 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 441 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.54 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 281 bytes [built] [code generated]
     [no exports used]
@@ -433,5 +435,5 @@ chunk (runtime: main) 718.output.js 38 bytes [rendered]
     [exports: default]
     context element ./foo ./templates/ lazy ^\.\/.*$ namespace object ./foo
     context element ./foo.js ./templates/ lazy ^\.\/.*$ namespace object ./foo.js
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

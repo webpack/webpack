@@ -251,13 +251,13 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 asset output.js 5.78 KiB [emitted] (name: main)
-chunk output.js (main) 2.96 KiB [entry] [rendered]
+chunk (runtime: main) output.js (main) 2.96 KiB [entry] [rendered]
   > ./example.js main
   dependent modules 2.76 KiB [dependent] 3 modules
   ./example.js 205 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
@@ -270,5 +270,5 @@ chunk (runtime: main) output.js (main) 2.96 KiB [entry] [rendered]
   ./example.js 205 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

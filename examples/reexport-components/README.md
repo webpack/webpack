@@ -213,12 +213,12 @@ const Login = () => {
 ## Unoptimized
 
 ```
-asset output.js 10.8 KiB [emitted] (name: main)
+asset output.js 10.9 KiB [emitted] (name: main)
 asset pages_Login_js.output.js 2.84 KiB [emitted]
 asset pages_Dashboard_js.output.js 2.8 KiB [emitted]
-chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.54 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 48 bytes [built] [code generated]
     [no exports used]
@@ -239,18 +239,18 @@ chunk (runtime: main) pages_Login_js.output.js 504 bytes [rendered]
     [exports: default]
     context element ./Login ./pages/ lazy ^\.\/.*$ namespace object ./Login
     context element ./Login.js ./pages/ lazy ^\.\/.*$ namespace object ./Login.js
-webpack 5.8.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.44 KiB [emitted] [minimized] (name: main)
+asset output.js 2.48 KiB [emitted] [minimized] (name: main)
 asset pages_Dashboard_js.output.js 469 bytes [emitted] [minimized]
 asset pages_Login_js.output.js 463 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.54 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 48 bytes [built] [code generated]
     [no exports used]
@@ -271,5 +271,5 @@ chunk (runtime: main) pages_Login_js.output.js 504 bytes [rendered]
     [exports: default]
     context element ./Login ./pages/ lazy ^\.\/.*$ namespace object ./Login
     context element ./Login.js ./pages/ lazy ^\.\/.*$ namespace object ./Login.js
-webpack 5.8.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

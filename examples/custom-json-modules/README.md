@@ -249,7 +249,7 @@ module.exports = JSON.parse("{\"title\":\"JSON5 Example\",\"owner\":{\"name\":\"
 
 ```
 asset output.js 5.98 KiB [emitted] (name: main)
-chunk output.js (main) 919 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 919 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 565 bytes [dependent] 3 modules
   runtime modules 274 bytes 1 module
@@ -257,5 +257,5 @@ chunk output.js (main) 919 bytes (javascript) 274 bytes (runtime) [entry] [rende
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

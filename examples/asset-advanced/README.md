@@ -190,7 +190,7 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 
 ```
 asset output.js 3.86 KiB [emitted] (name: main)
-chunk output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 915 bytes [dependent] 1 module
   runtime modules 274 bytes 1 module
@@ -198,5 +198,5 @@ chunk output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [render
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

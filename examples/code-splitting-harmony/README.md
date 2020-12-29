@@ -35,19 +35,21 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
   \********************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.t, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.n, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.t, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! a */ 1);
+/* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(a__WEBPACK_IMPORTED_MODULE_0__);
 
 
-__webpack_require__.e(/*! import() */ 644).then(__webpack_require__.t.bind(__webpack_require__, /*! b */ 2, 7)).then(function(b) {
+__webpack_require__.e(/*! import() */ 644).then(__webpack_require__.t.bind(__webpack_require__, /*! b */ 3, 23)).then(function(b) {
 	console.log("b loaded", b);
 })
 
 function loadC(name) {
-	return __webpack_require__(1)("./" + name);
+	return __webpack_require__(2)("./" + name);
 }
 
 Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
@@ -57,6 +59,17 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 /***/ }),
 /* 1 */
+/*!***************************!*\
+  !*** ./node_modules/a.js ***!
+  \***************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements:  */
+/***/ (() => {
+
+// module a
+
+/***/ }),
+/* 2 */
 /*!********************************************************!*\
   !*** ./node_modules/c/ lazy ^\.\/.*$ namespace object ***!
   \********************************************************/
@@ -67,19 +80,19 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 var map = {
 	"./1": [
-		3,
+		4,
 		346
 	],
 	"./1.js": [
-		3,
+		4,
 		346
 	],
 	"./2": [
-		4,
+		5,
 		98
 	],
 	"./2.js": [
-		4,
+		5,
 		98
 	]
 };
@@ -98,7 +111,7 @@ function webpackAsyncContext(req) {
 	});
 }
 webpackAsyncContext.keys = () => Object.keys(map);
-webpackAsyncContext.id = 1;
+webpackAsyncContext.id = 2;
 module.exports = webpackAsyncContext;
 
 /***/ })
@@ -136,22 +149,41 @@ module.exports = webpackAsyncContext;
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => module['default'] :
+/******/ 				() => module;
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/create fake namespace object */
 /******/ 	(() => {
+/******/ 		var getProto = Object.getPrototypeOf ? (obj) => Object.getPrototypeOf(obj) : (obj) => obj.__proto__;
+/******/ 		var leafPrototypes;
 /******/ 		// create a fake namespace object
 /******/ 		// mode & 1: value is a module id, require it
 /******/ 		// mode & 2: merge all properties of value into the ns
 /******/ 		// mode & 4: return value when already ns object
+/******/ 		// mode & 16: return value when it's Promise-like
 /******/ 		// mode & 8|1: behave like require
 /******/ 		__webpack_require__.t = function(value, mode) {
 /******/ 			if(mode & 1) value = this(value);
 /******/ 			if(mode & 8) return value;
-/******/ 			if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 			if(typeof value === 'object' && value) {
+/******/ 				if((mode & 4) && value.__esModule) return value;
+/******/ 				if((mode & 16) && typeof value.then === 'function') return value;
+/******/ 			}
 /******/ 			var ns = Object.create(null);
 /******/ 			__webpack_require__.r(ns);
 /******/ 			var def = {};
-/******/ 			if(mode & 2 && typeof value == 'object' && value) {
-/******/ 				for(const key in value) def[key] = () => value[key];
+/******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
+/******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
+/******/ 				Object.getOwnPropertyNames(current).forEach(key => def[key] = () => value[key]);
 /******/ 			}
 /******/ 			def['default'] = () => value;
 /******/ 			__webpack_require__.d(ns, def);
@@ -324,7 +356,7 @@ module.exports = webpackAsyncContext;
 /******/ 		// no deferred startup
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
@@ -342,7 +374,7 @@ module.exports = webpackAsyncContext;
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			parentChunkLoadingFunction(data);
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
@@ -350,8 +382,10 @@ module.exports = webpackAsyncContext;
 /******/ 		}
 /******/ 		
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
-/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		
+/******/ 		// no deferred startup
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -373,44 +407,44 @@ module.exports = webpackAsyncContext;
 ## Unoptimized
 
 ```
-asset output.js 12.2 KiB [emitted] (name: main)
+asset output.js 13.7 KiB [emitted] (name: main)
 asset 346.output.js 296 bytes [emitted]
 asset 98.output.js 295 bytes [emitted]
 asset 644.output.js 288 bytes [emitted]
-chunk 98.output.js 13 bytes [rendered]
+chunk (runtime: main) 98.output.js 13 bytes [rendered]
   > ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
   > ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
   ./node_modules/c/2.js 13 bytes [optional] [built] [code generated]
     [used exports unknown]
     context element ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
     context element ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
-chunk output.js (main) 403 bytes (javascript) 6.08 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 414 bytes (javascript) 6.9 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.08 KiB 9 modules
-  dependent modules 160 bytes [dependent] 1 module
+  runtime modules 6.9 KiB 10 modules
+  dependent modules 171 bytes [dependent] 2 modules
   ./example.js 243 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-chunk 346.output.js 13 bytes [rendered]
+chunk (runtime: main) 346.output.js 13 bytes [rendered]
   > ./1 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1
   > ./1.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1.js
   ./node_modules/c/1.js 13 bytes [optional] [built] [code generated]
     [used exports unknown]
     context element ./1 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1
     context element ./1.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./1.js
-chunk 644.output.js 11 bytes [rendered]
+chunk (runtime: main) 644.output.js 11 bytes [rendered]
   > b ./example.js 3:0-11
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.62 KiB [emitted] [minimized] (name: main)
+asset output.js 2.88 KiB [emitted] [minimized] (name: main)
 asset 346.output.js 69 bytes [emitted] [minimized]
 asset 644.output.js 69 bytes [emitted] [minimized]
 asset 98.output.js 67 bytes [emitted] [minimized]
@@ -421,9 +455,9 @@ chunk (runtime: main) 98.output.js 13 bytes [rendered]
     [used exports unknown]
     context element ./2 ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2
     context element ./2.js ./node_modules/c/ lazy ^\.\/.*$ namespace object ./2.js
-chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.08 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 403 bytes (javascript) 6.64 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 6.08 KiB 9 modules
+  runtime modules 6.64 KiB 9 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 243 bytes [built] [code generated]
     [no exports]
@@ -441,5 +475,5 @@ chunk (runtime: main) 644.output.js 11 bytes [rendered]
   ./node_modules/b.js 11 bytes [built] [code generated]
     [used exports unknown]
     import() b ./example.js 3:0-11
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

@@ -119,13 +119,13 @@ module.exports = Math.random();
 
 ```
 asset output.js 2.31 KiB [emitted] (name: main)
-chunk output.js (main) 313 bytes [entry] [rendered]
+chunk (runtime: main) output.js (main) 313 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 31 bytes [dependent] 1 module
   ./example.js 282 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
@@ -138,5 +138,5 @@ chunk (runtime: main) output.js (main) 313 bytes [entry] [rendered]
   ./example.js 282 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
