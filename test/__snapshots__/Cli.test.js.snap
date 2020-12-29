@@ -5301,6 +5301,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-nested-modules-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Tells stats how many items of nested modules should be displayed (groups will be collapsed to fit this space).",
+        "multiple": false,
+        "path": "stats.nestedModulesSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Tells stats how many items of nested modules should be displayed (groups will be collapsed to fit this space).",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "stats-optimization-bailout": Object {
     "configs": Array [
       Object {
