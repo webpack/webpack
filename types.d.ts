@@ -214,10 +214,7 @@ declare interface AssetEmittedInfo {
 }
 type AssetInfo = KnownAssetInfo & Record<string, any>;
 declare abstract class AsyncDependenciesBlock extends DependenciesBlock {
-	groupOptions: {
-		preloadOrder?: number;
-		prefetchOrder?: number;
-		name?: string;
+	groupOptions: RawChunkGroupOptions & { name?: string } & {
 		entryOptions?: EntryOptions;
 	};
 	loc?: SyntheticDependencyLocation | RealDependencyLocation;
@@ -876,12 +873,7 @@ declare abstract class ChunkGroup {
 	getModuleIndex: (module: Module) => number;
 	getModuleIndex2: (module: Module) => number;
 }
-
-declare interface ChunkGroupOptions {
-	preloadOrder?: number;
-	prefetchOrder?: number;
-	name?: string;
-}
+type ChunkGroupOptions = RawChunkGroupOptions & { name?: string };
 declare interface ChunkHashContext {
 	/**
 	 * the runtime template
@@ -1614,25 +1606,7 @@ declare class ConcatenationScope {
 	static isModuleReference(name: string): boolean;
 	static matchModuleReference(
 		name: string
-	): {
-		/**
-		 * the properties/exports of the module
-		 */
-		ids: string[];
-		/**
-		 * true, when this referenced export is called
-		 */
-		call: boolean;
-		/**
-		 * true, when this referenced export is directly imported (not via property access)
-		 */
-		directImport: boolean;
-		/**
-		 * if the position is ASI safe or unknown
-		 */
-		asiSafe?: boolean;
-		index: number;
-	};
+	): ModuleReferenceOptions & { index: number };
 	static DEFAULT_EXPORT: string;
 	static NAMESPACE_OBJECT_EXPORT: string;
 }
@@ -7522,173 +7496,10 @@ declare interface ResolveOptionsWebpackOptions {
 	 */
 	useSyncFileSystemCalls?: boolean;
 }
-
-/**
- * Options object for resolving requests.
- */
-declare interface ResolveOptionsWithDependencyType {
-	/**
-	 * Redirect module requests.
-	 */
-	alias?:
-		| {
-				/**
-				 * New request.
-				 */
-				alias: Target;
-				/**
-				 * Request to be redirected.
-				 */
-				name: string;
-				/**
-				 * Redirect only exact matching request.
-				 */
-				onlyModule?: boolean;
-		  }[]
-		| { [index: string]: Target };
-
-	/**
-	 * Fields in the description file (usually package.json) which are used to redirect requests inside the module.
-	 */
-	aliasFields?: EntryItem[];
-
-	/**
-	 * Extra resolve options per dependency category. Typical categories are "commonjs", "amd", "esm".
-	 */
-	byDependency?: { [index: string]: ResolveOptionsWebpackOptions };
-
-	/**
-	 * Enable caching of successfully resolved requests (cache entries are revalidated).
-	 */
-	cache?: boolean;
-
-	/**
-	 * Predicate function to decide which requests should be cached.
-	 */
-	cachePredicate?: (request: ResolveRequest) => boolean;
-
-	/**
-	 * Include the context information in the cache identifier when caching.
-	 */
-	cacheWithContext?: boolean;
-
-	/**
-	 * Condition names for exports field entry point.
-	 */
-	conditionNames?: string[];
-
-	/**
-	 * Filenames used to find a description file (like a package.json).
-	 */
-	descriptionFiles?: string[];
-
-	/**
-	 * Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).
-	 */
-	enforceExtension?: boolean;
-
-	/**
-	 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
-	 */
-	exportsFields?: string[];
-
-	/**
-	 * Extensions added to the request when trying to find the file.
-	 */
-	extensions?: string[];
-
-	/**
-	 * Redirect module requests when normal resolving fails.
-	 */
-	fallback?:
-		| {
-				/**
-				 * New request.
-				 */
-				alias: Target;
-				/**
-				 * Request to be redirected.
-				 */
-				name: string;
-				/**
-				 * Redirect only exact matching request.
-				 */
-				onlyModule?: boolean;
-		  }[]
-		| { [index: string]: Target };
-
-	/**
-	 * Filesystem for the resolver.
-	 */
-	fileSystem?: InputFileSystem;
-
-	/**
-	 * Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).
-	 */
-	fullySpecified?: boolean;
-
-	/**
-	 * Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).
-	 */
-	importsFields?: string[];
-
-	/**
-	 * Field names from the description file (package.json) which are used to find the default entry point.
-	 */
-	mainFields?: EntryItem[];
-
-	/**
-	 * Filenames used to find the default entry point if there is no description file or main field.
-	 */
-	mainFiles?: string[];
-
-	/**
-	 * Folder names or directory paths where to find modules.
-	 */
-	modules?: string[];
-
-	/**
-	 * Plugins for the resolver.
-	 */
-	plugins?: ("..." | ResolvePluginInstance)[];
-
-	/**
-	 * Prefer to resolve module requests as relative request and fallback to resolving as module.
-	 */
-	preferRelative?: boolean;
-
-	/**
-	 * Custom resolver.
-	 */
-	resolver?: Resolver;
-
-	/**
-	 * A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.
-	 */
-	restrictions?: (string | RegExp)[];
-
-	/**
-	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.
-	 */
-	roots?: string[];
-
-	/**
-	 * Enable resolving symlinks to the original location.
-	 */
-	symlinks?: boolean;
-
-	/**
-	 * Enable caching of successfully resolved requests (cache entries are not revalidated).
-	 */
-	unsafeCache?: boolean | { [index: string]: any };
-
-	/**
-	 * Use synchronous filesystem calls for the resolver.
-	 */
-	useSyncFileSystemCalls?: boolean;
+type ResolveOptionsWithDependencyType = ResolveOptionsWebpackOptions & {
 	dependencyType?: string;
 	resolveToContext?: boolean;
-}
+};
 
 /**
  * Plugin instance.
