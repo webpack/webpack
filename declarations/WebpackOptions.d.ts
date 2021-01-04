@@ -2228,7 +2228,7 @@ export interface StatsOptions {
 	 */
 	modulesSort?: string;
 	/**
-	 * Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).
+	 * Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).
 	 */
 	modulesSpace?: number;
 	/**
@@ -2236,7 +2236,7 @@ export interface StatsOptions {
 	 */
 	nestedModules?: boolean;
 	/**
-	 * Tells stats how many items of nested modules should be displayed (groups will be collapsed to fit this space).
+	 * Space to display modules nested within other modules (groups will be collapsed to fit this space, value is in number of modules/group).
 	 */
 	nestedModulesSpace?: number;
 	/**

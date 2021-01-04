@@ -3436,7 +3436,7 @@
           "type": "string"
         },
         "modulesSpace": {
-          "description": "Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).",
+          "description": "Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).",
           "type": "number"
         },
         "nestedModules": {
@@ -3444,7 +3444,7 @@
           "type": "boolean"
         },
         "nestedModulesSpace": {
-          "description": "Tells stats how many items of nested modules should be displayed (groups will be collapsed to fit this space).",
+          "description": "Space to display modules nested within other modules (groups will be collapsed to fit this space, value is in number of modules/group).",
           "type": "number"
         },
         "optimizationBailout": {

@@ -137,10 +137,10 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-asset output.js 2.17 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
+asset output.js 2.18 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 652 bytes [entry] [rendered]
   > ./example.js main
-  dependent modules 601 bytes [dependent] 1 module
+  dependent modules 619 bytes [dependent] 1 module
   ./example.js 33 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -151,9 +151,9 @@ webpack 5.11.1 compiled successfully
 
 ```
 asset output.js 524 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
+chunk (runtime: main) output.js (main) 652 bytes [entry] [rendered]
   > ./example.js main
-  dependent modules 601 bytes [dependent] 1 module
+  dependent modules 619 bytes [dependent] 1 module
   ./example.js 33 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
