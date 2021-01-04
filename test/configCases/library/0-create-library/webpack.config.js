@@ -80,6 +80,15 @@ module.exports = (env, { testPath }) => [
 		externals: ["external"]
 	},
 	{
+		mode: "development",
+		output: {
+			filename: "commonjs2-external-eval-source-map.js",
+			libraryTarget: "commonjs2"
+		},
+		devtool: "eval-source-map",
+		externals: ["external"]
+	},
+	{
 		output: {
 			filename: "index.js",
 			path: path.resolve(testPath, "commonjs2-split-chunks"),
