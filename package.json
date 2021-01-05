@@ -49,7 +49,7 @@
     "core-js": "^3.6.5",
     "coveralls": "^3.1.0",
     "cspell": "^4.0.63",
-    "css-loader": "^3.6.0",
+    "css-loader": "^5.0.1",
     "date-fns": "^2.15.0",
     "es5-ext": "^0.10.53",
     "es6-promise-polyfill": "^1.2.0",
