@@ -193,6 +193,15 @@ describe("Defaults", () => {
 		    "exprContextRecursive": true,
 		    "exprContextRegExp": false,
 		    "exprContextRequest": ".",
+		    "generator": Object {},
+		    "parser": Object {
+		      "asset": Object {
+		        "dataUrlCondition": Object {
+		          "maxSize": 8096,
+		        },
+		      },
+		      "javascript": Object {},
+		    },
 		    "rules": Array [],
 		    "strictExportPresence": false,
 		    "strictThisContextOnImports": false,

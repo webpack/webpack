@@ -6271,7 +6271,6 @@ toml@^3.0.0:
 
 tooling@webpack/tooling#v1.12.1:
   version "1.12.1"
-  uid "277e4514abca9af9514a0f7f2fba8b7a5609ff76"
   resolved "https://codeload.github.com/webpack/tooling/tar.gz/277e4514abca9af9514a0f7f2fba8b7a5609ff76"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"

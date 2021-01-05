@@ -212,7 +212,74 @@ declare interface AssetEmittedInfo {
 	outputPath: string;
 	targetPath: string;
 }
+
+/**
+ * Options object for data url generation.
+ */
+declare interface AssetGeneratorDataUrlOptions {
+	/**
+	 * Asset encoding (defaults to base64).
+	 */
+	encoding?: false | "base64";
+
+	/**
+	 * Asset mimetype (getting from file extension by default).
+	 */
+	mimetype?: string;
+}
+type AssetGeneratorOptions = AssetInlineGeneratorOptions &
+	AssetResourceGeneratorOptions;
 type AssetInfo = KnownAssetInfo & Record<string, any>;
+
+/**
+ * Generator options for asset/inline modules.
+ */
+declare interface AssetInlineGeneratorOptions {
+	/**
+	 * The options for data url generator.
+	 */
+	dataUrl?:
+		| AssetGeneratorDataUrlOptions
+		| ((
+				source: string | Buffer,
+				context: { filename: string; module: Module }
+		  ) => string);
+}
+
+/**
+ * Options object for DataUrl condition.
+ */
+declare interface AssetParserDataUrlOptions {
+	/**
+	 * Maximum size of asset that should be inline as modules. Default: 8kb.
+	 */
+	maxSize?: number;
+}
+
+/**
+ * Parser options for asset modules.
+ */
+declare interface AssetParserOptions {
+	/**
+	 * The condition for inlining the asset as DataUrl.
+	 */
+	dataUrlCondition?:
+		| AssetParserDataUrlOptions
+		| ((
+				source: string | Buffer,
+				context: { filename: string; module: Module }
+		  ) => boolean);
+}
+
+/**
+ * Generator options for asset/resource modules.
+ */
+declare interface AssetResourceGeneratorOptions {
+	/**
+	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+}
 declare abstract class AsyncDependenciesBlock extends DependenciesBlock {
 	groupOptions: RawChunkGroupOptions & { name?: string } & {
 		entryOptions?: EntryOptions;
@@ -2535,6 +2602,16 @@ declare class ElectronTargetPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+
+/**
+ * No generator options are supported for this module type.
+ */
+declare interface EmptyGeneratorOptions {}
+
+/**
+ * No parser options are supported for this module type.
+ */
+declare interface EmptyParserOptions {}
 declare class EnableChunkLoadingPlugin {
 	constructor(type: string);
 	type: string;
@@ -2595,7 +2672,7 @@ declare interface EntryDescription {
 	dependOn?: string | string[];
 
 	/**
-	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+	 * Specifies the filename of the output file on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
@@ -2635,7 +2712,7 @@ declare interface EntryDescriptionNormalized {
 	dependOn?: string[];
 
 	/**
-	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
@@ -4347,6 +4424,78 @@ declare class JavascriptParser extends Parser {
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: 1;
 }
+
+/**
+ * Parser options for javascript modules.
+ */
+declare interface JavascriptParserOptions {
+	[index: string]: any;
+
+	/**
+	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
+	 */
+	amd?: false | { [index: string]: any };
+
+	/**
+	 * Enable/disable special handling for browserify bundles.
+	 */
+	browserify?: boolean;
+
+	/**
+	 * Enable/disable parsing of CommonJs syntax.
+	 */
+	commonjs?: boolean;
+
+	/**
+	 * Enable/disable parsing of EcmaScript Modules syntax.
+	 */
+	harmony?: boolean;
+
+	/**
+	 * Enable/disable parsing of import() syntax.
+	 */
+	import?: boolean;
+
+	/**
+	 * Include polyfills or mocks for various node stuff.
+	 */
+	node?: false | NodeOptions;
+
+	/**
+	 * Enable/disable parsing of require.context syntax.
+	 */
+	requireContext?: boolean;
+
+	/**
+	 * Enable/disable parsing of require.ensure syntax.
+	 */
+	requireEnsure?: boolean;
+
+	/**
+	 * Enable/disable parsing of require.include syntax.
+	 */
+	requireInclude?: boolean;
+
+	/**
+	 * Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.
+	 */
+	requireJs?: boolean;
+
+	/**
+	 * Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.
+	 */
+	system?: boolean;
+
+	/**
+	 * Enable/disable parsing of new URL() syntax.
+	 */
+	url?: boolean;
+
+	/**
+	 * Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().
+	 */
+	worker?: boolean | string[];
+}
 declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements?: any);
 	static getCompilationHooks(
@@ -5298,9 +5447,83 @@ declare interface ModuleOptions {
 	exprContextRequest?: string;
 
 	/**
+	 * Specify options for each generator.
+	 */
+	generator?: {
+		[index: string]: { [index: string]: any };
+		/**
+		 * Generator options for asset modules.
+		 */
+		asset?: AssetGeneratorOptions;
+		/**
+		 * Generator options for asset/inline modules.
+		 */
+		"asset/inline"?: AssetInlineGeneratorOptions;
+		/**
+		 * Generator options for asset/resource modules.
+		 */
+		"asset/resource"?: AssetResourceGeneratorOptions;
+		/**
+		 * No generator options are supported for this module type.
+		 */
+		javascript?: EmptyGeneratorOptions;
+		/**
+		 * No generator options are supported for this module type.
+		 */
+		"javascript/auto"?: EmptyGeneratorOptions;
+		/**
+		 * No generator options are supported for this module type.
+		 */
+		"javascript/dynamic"?: EmptyGeneratorOptions;
+		/**
+		 * No generator options are supported for this module type.
+		 */
+		"javascript/esm"?: EmptyGeneratorOptions;
+	};
+
+	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
 	noParse?: string | Function | RegExp | (string | Function | RegExp)[];
+
+	/**
+	 * Specify options for each parser.
+	 */
+	parser?: {
+		[index: string]: { [index: string]: any };
+		/**
+		 * Parser options for asset modules.
+		 */
+		asset?: AssetParserOptions;
+		/**
+		 * No parser options are supported for this module type.
+		 */
+		"asset/inline"?: EmptyParserOptions;
+		/**
+		 * No parser options are supported for this module type.
+		 */
+		"asset/resource"?: EmptyParserOptions;
+		/**
+		 * No parser options are supported for this module type.
+		 */
+		"asset/source"?: EmptyParserOptions;
+		/**
+		 * Parser options for javascript modules.
+		 */
+		javascript?: JavascriptParserOptions;
+		/**
+		 * Parser options for javascript modules.
+		 */
+		"javascript/auto"?: JavascriptParserOptions;
+		/**
+		 * Parser options for javascript modules.
+		 */
+		"javascript/dynamic"?: JavascriptParserOptions;
+		/**
+		 * Parser options for javascript modules.
+		 */
+		"javascript/esm"?: JavascriptParserOptions;
+	};
 
 	/**
 	 * An array of rules applied for modules.
@@ -6238,7 +6461,7 @@ declare class OriginalSource extends Source {
  */
 declare interface Output {
 	/**
-	 * The filename of asset modules as relative path inside the `output.path` directory.
+	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?:
 		| string
@@ -6255,7 +6478,7 @@ declare interface Output {
 	charset?: boolean;
 
 	/**
-	 * The filename of non-initial chunks as relative path inside the `output.path` directory.
+	 * Specifies the filename template of output files of non-initial chunks on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	chunkFilename?:
 		| string
@@ -6327,7 +6550,7 @@ declare interface Output {
 	environment?: Environment;
 
 	/**
-	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
@@ -6367,7 +6590,7 @@ declare interface Output {
 	hotUpdateGlobal?: string;
 
 	/**
-	 * The filename of the Hot Update Main File. It is inside the `output.path` directory.
+	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
 	 */
 	hotUpdateMainFilename?: string;
 
@@ -6427,7 +6650,7 @@ declare interface Output {
 	scriptType?: false | "module" | "text/javascript";
 
 	/**
-	 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
+	 * The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.
 	 */
 	sourceMapFilename?: string;
 
@@ -6457,7 +6680,7 @@ declare interface Output {
 	wasmLoading?: string | false;
 
 	/**
-	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
+	 * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
 	 */
 	webassemblyModuleFilename?: string;
 
@@ -6496,7 +6719,7 @@ declare interface OutputFileSystem {
  */
 declare interface OutputNormalized {
 	/**
-	 * The filename of asset modules as relative path inside the `output.path` directory.
+	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?:
 		| string
@@ -6508,7 +6731,7 @@ declare interface OutputNormalized {
 	charset?: boolean;
 
 	/**
-	 * The filename of non-initial chunks as relative path inside the `output.path` directory.
+	 * Specifies the filename template of output files of non-initial chunks on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	chunkFilename?:
 		| string
@@ -6580,7 +6803,7 @@ declare interface OutputNormalized {
 	environment?: Environment;
 
 	/**
-	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
@@ -6620,7 +6843,7 @@ declare interface OutputNormalized {
 	hotUpdateGlobal?: string;
 
 	/**
-	 * The filename of the Hot Update Main File. It is inside the `output.path` directory.
+	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
 	 */
 	hotUpdateMainFilename?: string;
 
@@ -6670,7 +6893,7 @@ declare interface OutputNormalized {
 	scriptType?: false | "module" | "text/javascript";
 
 	/**
-	 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
+	 * The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.
 	 */
 	sourceMapFilename?: string;
 
@@ -6695,7 +6918,7 @@ declare interface OutputNormalized {
 	wasmLoading?: string | false;
 
 	/**
-	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
+	 * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
 	 */
 	webassemblyModuleFilename?: string;
 

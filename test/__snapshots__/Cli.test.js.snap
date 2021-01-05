@@ -763,6 +763,92 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-asset-data-url-encoding": Object {
+    "configs": Array [
+      Object {
+        "description": "Asset encoding (defaults to base64).",
+        "multiple": false,
+        "path": "module.generator.asset.dataUrl.encoding",
+        "type": "enum",
+        "values": Array [
+          false,
+          "base64",
+        ],
+      },
+    ],
+    "description": "Asset encoding (defaults to base64).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-data-url-mimetype": Object {
+    "configs": Array [
+      Object {
+        "description": "Asset mimetype (getting from file extension by default).",
+        "multiple": false,
+        "path": "module.generator.asset.dataUrl.mimetype",
+        "type": "string",
+      },
+    ],
+    "description": "Asset mimetype (getting from file extension by default).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+        "multiple": false,
+        "path": "module.generator.asset.filename",
+        "type": "string",
+      },
+    ],
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-inline-data-url-encoding": Object {
+    "configs": Array [
+      Object {
+        "description": "Asset encoding (defaults to base64).",
+        "multiple": false,
+        "path": "module.generator.asset/inline.dataUrl.encoding",
+        "type": "enum",
+        "values": Array [
+          false,
+          "base64",
+        ],
+      },
+    ],
+    "description": "Asset encoding (defaults to base64).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-inline-data-url-mimetype": Object {
+    "configs": Array [
+      Object {
+        "description": "Asset mimetype (getting from file extension by default).",
+        "multiple": false,
+        "path": "module.generator.asset/inline.dataUrl.mimetype",
+        "type": "string",
+      },
+    ],
+    "description": "Asset mimetype (getting from file extension by default).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-resource-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+        "multiple": false,
+        "path": "module.generator.asset/resource.filename",
+        "type": "string",
+      },
+    ],
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-no-parse": Object {
     "configs": Array [
       Object {
@@ -792,6 +878,999 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. Don't parse files matching. It's matched against the full resolved request.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-asset-data-url-condition-max-size": Object {
+    "configs": Array [
+      Object {
+        "description": "Maximum size of asset that should be inline as modules. Default: 8kb.",
+        "multiple": false,
+        "path": "module.parser.asset.dataUrlCondition.maxSize",
+        "type": "number",
+      },
+    ],
+    "description": "Maximum size of asset that should be inline as modules. Default: 8kb.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "module-parser-javascript-amd": Object {
+    "configs": Array [
+      Object {
+        "description": "You can pass \`false\` to disable AMD support.",
+        "multiple": false,
+        "path": "module.parser.javascript.amd",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "You can pass \`false\` to disable AMD support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-amd": Object {
+    "configs": Array [
+      Object {
+        "description": "You can pass \`false\` to disable AMD support.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.amd",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "You can pass \`false\` to disable AMD support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-browserify": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable special handling for browserify bundles.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.browserify",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable special handling for browserify bundles.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-commonjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of CommonJs syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.commonjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of CommonJs syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-harmony": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.harmony",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of import() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of import() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-node": Object {
+    "configs": Array [
+      Object {
+        "description": "Include polyfills or mocks for various node stuff.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.node",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Include polyfills or mocks for various node stuff.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-node-dirname": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__dirname' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.node.__dirname",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__dirname' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-node-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__filename' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.node.__filename",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__filename' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-node-global": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the 'global' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.node.global",
+        "type": "boolean",
+      },
+    ],
+    "description": "Include a polyfill for the 'global' variable.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-require-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.context syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.requireContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.context syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-require-ensure": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.ensure syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.requireEnsure",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.ensure syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-require-include": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.include syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.requireInclude",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.include syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-require-js": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.requireJs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-system": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.system",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of new URL() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of new URL() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-worker": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible.",
+        "multiple": true,
+        "path": "module.parser.javascript/auto.worker[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.worker",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-worker-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.worker",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-browserify": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable special handling for browserify bundles.",
+        "multiple": false,
+        "path": "module.parser.javascript.browserify",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable special handling for browserify bundles.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-commonjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of CommonJs syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.commonjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of CommonJs syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-amd": Object {
+    "configs": Array [
+      Object {
+        "description": "You can pass \`false\` to disable AMD support.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.amd",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "You can pass \`false\` to disable AMD support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-browserify": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable special handling for browserify bundles.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.browserify",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable special handling for browserify bundles.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-commonjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of CommonJs syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.commonjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of CommonJs syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-harmony": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.harmony",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of import() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of import() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-node": Object {
+    "configs": Array [
+      Object {
+        "description": "Include polyfills or mocks for various node stuff.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.node",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Include polyfills or mocks for various node stuff.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-node-dirname": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__dirname' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.node.__dirname",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__dirname' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-node-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__filename' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.node.__filename",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__filename' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-node-global": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the 'global' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.node.global",
+        "type": "boolean",
+      },
+    ],
+    "description": "Include a polyfill for the 'global' variable.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-require-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.context syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.requireContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.context syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-require-ensure": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.ensure syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.requireEnsure",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.ensure syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-require-include": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.include syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.requireInclude",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.include syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-require-js": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.requireJs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-system": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.system",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of new URL() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of new URL() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-worker": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible.",
+        "multiple": true,
+        "path": "module.parser.javascript/dynamic.worker[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.worker",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-worker-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.worker",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-amd": Object {
+    "configs": Array [
+      Object {
+        "description": "You can pass \`false\` to disable AMD support.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.amd",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "You can pass \`false\` to disable AMD support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-browserify": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable special handling for browserify bundles.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.browserify",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable special handling for browserify bundles.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-commonjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of CommonJs syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.commonjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of CommonJs syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-harmony": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.harmony",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of import() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of import() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-node": Object {
+    "configs": Array [
+      Object {
+        "description": "Include polyfills or mocks for various node stuff.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.node",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Include polyfills or mocks for various node stuff.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-node-dirname": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__dirname' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.node.__dirname",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__dirname' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-node-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__filename' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.node.__filename",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__filename' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-node-global": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the 'global' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.node.global",
+        "type": "boolean",
+      },
+    ],
+    "description": "Include a polyfill for the 'global' variable.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-require-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.context syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.requireContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.context syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-require-ensure": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.ensure syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.requireEnsure",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.ensure syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-require-include": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.include syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.requireInclude",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.include syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-require-js": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.requireJs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-system": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.system",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of new URL() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of new URL() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-worker": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible.",
+        "multiple": true,
+        "path": "module.parser.javascript/esm.worker[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.worker",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-worker-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.worker",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-harmony": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.harmony",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of import() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of import() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-node": Object {
+    "configs": Array [
+      Object {
+        "description": "Include polyfills or mocks for various node stuff.",
+        "multiple": false,
+        "path": "module.parser.javascript.node",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Include polyfills or mocks for various node stuff.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-node-dirname": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__dirname' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript.node.__dirname",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__dirname' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-node-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__filename' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript.node.__filename",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__filename' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-node-global": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the 'global' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript.node.global",
+        "type": "boolean",
+      },
+    ],
+    "description": "Include a polyfill for the 'global' variable.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-require-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.context syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.requireContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.context syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-require-ensure": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.ensure syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.requireEnsure",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.ensure syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-require-include": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.include syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.requireInclude",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.include syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-require-js": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+        "multiple": false,
+        "path": "module.parser.javascript.requireJs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-system": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+        "multiple": false,
+        "path": "module.parser.javascript.system",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of new URL() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of new URL() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-worker": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible.",
+        "multiple": true,
+        "path": "module.parser.javascript.worker[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript.worker",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-worker-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript.worker",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1996,13 +3075,13 @@ Object {
   "output-asset-module-filename": Object {
     "configs": Array [
       Object {
-        "description": "The filename of asset modules as relative path inside the \`output.path\` directory.",
+        "description": "The filename of asset modules as relative path inside the 'output.path' directory.",
         "multiple": false,
         "path": "output.assetModuleFilename",
         "type": "string",
       },
     ],
-    "description": "The filename of asset modules as relative path inside the \`output.path\` directory.",
+    "description": "The filename of asset modules as relative path inside the 'output.path' directory.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2022,13 +3101,13 @@ Object {
   "output-chunk-filename": Object {
     "configs": Array [
       Object {
-        "description": "The filename of non-initial chunks as relative path inside the \`output.path\` directory.",
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
         "multiple": false,
         "path": "output.chunkFilename",
         "type": "string",
       },
     ],
-    "description": "The filename of non-initial chunks as relative path inside the \`output.path\` directory.",
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2405,13 +3484,13 @@ Object {
   "output-filename": Object {
     "configs": Array [
       Object {
-        "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
         "multiple": false,
         "path": "output.filename",
         "type": "string",
       },
     ],
-    "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2509,13 +3588,13 @@ Object {
   "output-hot-update-main-filename": Object {
     "configs": Array [
       Object {
-        "description": "The filename of the Hot Update Main File. It is inside the \`output.path\` directory.",
+        "description": "The filename of the Hot Update Main File. It is inside the 'output.path' directory.",
         "multiple": false,
         "path": "output.hotUpdateMainFilename",
         "type": "string",
       },
     ],
-    "description": "The filename of the Hot Update Main File. It is inside the \`output.path\` directory.",
+    "description": "The filename of the Hot Update Main File. It is inside the 'output.path' directory.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2946,13 +4025,13 @@ Object {
   "output-source-map-filename": Object {
     "configs": Array [
       Object {
-        "description": "The filename of the SourceMaps for the JavaScript files. They are inside the \`output.path\` directory.",
+        "description": "The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.",
         "multiple": false,
         "path": "output.sourceMapFilename",
         "type": "string",
       },
     ],
-    "description": "The filename of the SourceMaps for the JavaScript files. They are inside the \`output.path\` directory.",
+    "description": "The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -3031,13 +4110,13 @@ Object {
   "output-webassembly-module-filename": Object {
     "configs": Array [
       Object {
-        "description": "The filename of WebAssembly modules as relative path inside the \`output.path\` directory.",
+        "description": "The filename of WebAssembly modules as relative path inside the 'output.path' directory.",
         "multiple": false,
         "path": "output.webassemblyModuleFilename",
         "type": "string",
       },
     ],
-    "description": "The filename of WebAssembly modules as relative path inside the \`output.path\` directory.",
+    "description": "The filename of WebAssembly modules as relative path inside the 'output.path' directory.",
     "multiple": false,
     "simpleType": "string",
   },
