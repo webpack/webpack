@@ -5278,13 +5278,13 @@ Object {
   "stats-modules-space": Object {
     "configs": Array [
       Object {
-        "description": "Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).",
+        "description": "Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).",
         "multiple": false,
         "path": "stats.modulesSpace",
         "type": "number",
       },
     ],
-    "description": "Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).",
+    "description": "Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).",
     "multiple": false,
     "simpleType": "number",
   },
@@ -5300,6 +5300,19 @@ Object {
     "description": "Add information about modules nested in other modules (like with module concatenation).",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "stats-nested-modules-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display modules nested within other modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+        "multiple": false,
+        "path": "stats.nestedModulesSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display modules nested within other modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+    "multiple": false,
+    "simpleType": "number",
   },
   "stats-optimization-bailout": Object {
     "configs": Array [

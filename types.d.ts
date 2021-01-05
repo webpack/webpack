@@ -9317,7 +9317,7 @@ declare interface StatsOptions {
 	modulesSort?: string;
 
 	/**
-	 * Space to display modules (groups will be collapsed to fit this space, values is in number of modules/groups).
+	 * Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).
 	 */
 	modulesSpace?: number;
 
@@ -9325,6 +9325,11 @@ declare interface StatsOptions {
 	 * Add information about modules nested in other modules (like with module concatenation).
 	 */
 	nestedModules?: boolean;
+
+	/**
+	 * Space to display modules nested within other modules (groups will be collapsed to fit this space, value is in number of modules/group).
+	 */
+	nestedModulesSpace?: number;
 
 	/**
 	 * Show reasons why optimization bailed out for modules.
