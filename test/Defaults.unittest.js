@@ -317,6 +317,7 @@ describe("Defaults", () => {
 		    "iife": true,
 		    "importFunctionName": "import",
 		    "importMetaName": "import.meta",
+		    "initialChunkFilename": "[name].js",
 		    "library": undefined,
 		    "module": false,
 		    "path": "<cwd>/dist",
@@ -953,6 +954,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": "bundle.js",
+		@@ ... @@
+		-     "initialChunkFilename": "[name].js",
+		+     "initialChunkFilename": "bundle.js",
 	`)
 	);
 	test("function filename", { output: { filename: () => "bundle.js" } }, e =>
@@ -966,6 +970,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": [Function filename],
+		@@ ... @@
+		-     "initialChunkFilename": "[name].js",
+		+     "initialChunkFilename": [Function filename],
 	`)
 	);
 	test("library", { output: { library: ["myLib", "awesome"] } }, e =>

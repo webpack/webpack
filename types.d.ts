@@ -7560,6 +7560,13 @@ declare interface Output {
 	importMetaName?: string;
 
 	/**
+	 * Specifies the filename template of output files of initial chunks on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	initialChunkFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
 	 * Make the output files a library, exporting the exports of the entry point.
 	 */
 	library?: string | string[] | LibraryOptions | LibraryCustomUmdObject;
@@ -7830,6 +7837,13 @@ declare interface OutputNormalized {
 	 * The name of the native import.meta object (can be exchanged for a polyfill).
 	 */
 	importMetaName?: string;
+
+	/**
+	 * Specifies the filename template of output files of initial chunks on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	initialChunkFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
 	 * Options for library.

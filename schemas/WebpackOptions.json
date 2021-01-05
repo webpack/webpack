@@ -1249,6 +1249,14 @@
         }
       }
     },
+    "InitialChunkFilename": {
+      "description": "Specifies the filename template of output files of initial chunks on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/FilenameTemplate"
+        }
+      ]
+    },
     "JavascriptParserOptions": {
       "description": "Parser options for javascript modules.",
       "type": "object",
@@ -2622,6 +2630,9 @@
         "importMetaName": {
           "$ref": "#/definitions/ImportMetaName"
         },
+        "initialChunkFilename": {
+          "$ref": "#/definitions/InitialChunkFilename"
+        },
         "library": {
           "$ref": "#/definitions/Library"
         },
@@ -2794,6 +2805,9 @@
         },
         "importMetaName": {
           "$ref": "#/definitions/ImportMetaName"
+        },
+        "initialChunkFilename": {
+          "$ref": "#/definitions/InitialChunkFilename"
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
