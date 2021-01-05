@@ -124,7 +124,7 @@ describe("Validation", () => {
 			   -> A module that is loaded upon startup. Only the last one is exported.
 			 - configuration.output.filename should be one of these:
 			   non-empty string | function
-			   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+			   -> Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 			   Details:
 			    * configuration.output.filename should be a non-empty string.
 			    * configuration.output.filename should be an instance of function."
@@ -151,7 +151,7 @@ describe("Validation", () => {
 			   -> A module that is loaded upon startup. Only the last one is exported.
 			 - configuration[1].output.filename should be one of these:
 			   non-empty string | function
-			   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+			   -> Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 			   Details:
 			    * configuration[1].output.filename should be a non-empty string.
 			    * configuration[1].output.filename should be an instance of function."
