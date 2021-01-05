@@ -2932,6 +2932,11 @@ declare interface EntryDescription {
 	runtime?: string;
 
 	/**
+	 * The name of the runtime that the entry will be associated to. Optimization for modules will be done per runtime.
+	 */
+	runtimeName?: string;
+
+	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: string | false;
@@ -2975,6 +2980,11 @@ declare interface EntryDescriptionNormalized {
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
 	runtime?: string;
+
+	/**
+	 * The name of the runtime that the entry will be associated to. Optimization for modules will be done per runtime.
+	 */
+	runtimeName?: string;
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
