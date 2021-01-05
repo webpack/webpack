@@ -5,7 +5,20 @@ class A {
 		} else {
 			this.val = 1;
 		}
+		if (typeof new.target !== "function") {
+			this.val = 0;
+		}
+		if (typeof new.target.value !== "function") {
+			this.val = 0;
+		}
+		if (typeof new.target.unknown !== "undefined") {
+			this.val = 0;
+		}
+		if (!new.target.value) {
+			this.val = 0;
+		}
 	}
+	static value() {}
 }
 
 class B extends A {}
