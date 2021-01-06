@@ -153,9 +153,11 @@ export type ExternalItem =
 			/**
 			 * Specify externals depending on the layer.
 			 */
-			byLayer?: {
-				[k: string]: ExternalItem;
-			};
+			byLayer?:
+				| {
+						[k: string]: ExternalItem;
+				  }
+				| ((layer: string | null) => ExternalItem);
 			/**
 			 * The dependency used for the external.
 			 */
