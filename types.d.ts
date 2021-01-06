@@ -1755,7 +1755,9 @@ declare interface Configuration {
 				/**
 				 * Specify externals depending on the layer.
 				 */
-				byLayer?: { [index: string]: ExternalItem };
+				byLayer?:
+					| { [index: string]: ExternalItem }
+					| ((layer: null | string) => ExternalItem);
 		  }
 		| ((
 				data: {
@@ -3231,7 +3233,9 @@ type ExternalItem =
 			/**
 			 * Specify externals depending on the layer.
 			 */
-			byLayer?: { [index: string]: ExternalItem };
+			byLayer?:
+				| { [index: string]: ExternalItem }
+				| ((layer: null | string) => ExternalItem);
 	  }
 	| ((
 			data: {
@@ -3265,7 +3269,9 @@ type Externals =
 			/**
 			 * Specify externals depending on the layer.
 			 */
-			byLayer?: { [index: string]: ExternalItem };
+			byLayer?:
+				| { [index: string]: ExternalItem }
+				| ((layer: null | string) => ExternalItem);
 	  }
 	| ((
 			data: {
@@ -10777,7 +10783,7 @@ declare namespace exports {
 			export let createFileSerializer: (fs?: any) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
-		export const cleverMerge: <T, O>(first: T, second: O) => T & O;
+		export const cleverMerge: <T, O>(first: T, second: O) => T | O | (T & O);
 	}
 	export namespace sources {
 		export {

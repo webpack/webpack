@@ -47,5 +47,25 @@ module.exports = {
 	},
 	experiments: {
 		layers: true
-	}
+	},
+	externals: [
+		{
+			external1: "var 42",
+			byLayer: {
+				layer: {
+					external1: "var 43"
+				}
+			}
+		},
+		{
+			external2: "var 42",
+			byLayer: layer => {
+				if (layer === "layer") {
+					return {
+						external2: "var 43"
+					};
+				}
+			}
+		}
+	]
 };

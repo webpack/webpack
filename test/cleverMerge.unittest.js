@@ -3,7 +3,9 @@
 const {
 	cleverMerge,
 	DELETE,
-	removeOperations
+	removeOperations,
+	resolveByProperty,
+	cachedCleverMerge
 } = require("../lib/util/cleverMerge");
 
 describe("cleverMerge", () => {
@@ -517,12 +519,156 @@ describe("cleverMerge", () => {
 					}
 				}
 			}
-		]
+		],
+		dynamicSecond: [
+			{
+				a: 4, // keep
+				b: 5, // static override
+				c: 6 // dynamic override
+			},
+			{
+				b: 50,
+				y: 20,
+				byArguments: (x, y, z) => ({
+					c: 60,
+					x,
+					y,
+					z
+				})
+			},
+			{
+				a: 4,
+				b: 50,
+				c: 60,
+				x: 1,
+				y: 2,
+				z: 3
+			}
+		],
+		dynamicBoth: [
+			{
+				a: 4, // keep
+				b: 5, // static override
+				c: 6, // dynamic override
+				byArguments: (x, y, z) => ({
+					x, // keep
+					y, // static override
+					z // dynamic override
+				})
+			},
+			{
+				b: 50,
+				y: 20,
+				byArguments: (x, y, z) => ({
+					c: 60,
+					z: z * 10
+				})
+			},
+			{
+				a: 4,
+				b: 50,
+				c: 60,
+				x: 1,
+				y: 20,
+				z: 30
+			}
+		],
+		dynamicChained: [
+			cleverMerge(
+				{
+					a: 6, // keep
+					b: 7, // static override
+					c: 8, // dynamic override
+					d: 9, // static override (3rd)
+					e: 10, // dynamic override (3rd)
+					byArguments: (x, y, z, v, w) => ({
+						x, // keep
+						y, // static override
+						z, // dynamic override
+						v, // static override (3rd)
+						w // dynamic override (3rd)
+					})
+				},
+				{
+					b: 70,
+					y: 20,
+					byArguments: (x, y, z) => ({
+						c: 80,
+						z: z * 10
+					})
+				}
+			),
+			{
+				d: 90,
+				v: 40,
+				byArguments: (x, y, z, v, w) => ({
+					e: 100,
+					w: w * 10
+				})
+			},
+			{
+				a: 6,
+				b: 70,
+				c: 80,
+				d: 90,
+				e: 100,
+				x: 1,
+				y: 20,
+				z: 30,
+				v: 40,
+				w: 50
+			}
+		],
+		dynamicFalse1: [
+			{
+				a: 1,
+				byArguments: () => false
+			},
+			{
+				b: 2
+			},
+			false
+		],
+		dynamicFalse2: [
+			{
+				a: 1
+			},
+			{
+				b: 2,
+				byArguments: () => false
+			},
+			false
+		],
+		dynamicFalse3: [
+			{
+				a: 1,
+				byArguments: () => false
+			},
+			{
+				b: 2,
+				byArguments: () => false
+			},
+			false
+		],
+		nonObject1: [1, 2, 2],
+		nonObject2: [1, { a: 1 }, 1],
+		nonObject3: [{ a: 1 }, 1, 1],
+		nonObject4: [{ a: 1 }, undefined, { a: 1 }],
+		nonObject5: [undefined, { a: 1 }, { a: 1 }]
 	};
 	for (const key of Object.keys(cases)) {
 		const testCase = cases[key];
 		it(`should merge ${key} correctly`, () => {
-			expect(cleverMerge(testCase[0], testCase[1])).toEqual(testCase[2]);
+			let merged = cleverMerge(testCase[0], testCase[1]);
+			let merged1 = cachedCleverMerge(testCase[0], testCase[1]);
+			let merged2 = cachedCleverMerge(testCase[0], testCase[1]);
+			expect(merged2).toBe(merged1);
+			merged = resolveByProperty(merged, "byArguments", 1, 2, 3, 4, 5);
+			merged1 = resolveByProperty(merged1, "byArguments", 1, 2, 3, 4, 5);
+			merged2 = resolveByProperty(merged2, "byArguments", 1, 2, 3, 4, 5);
+			expect(merged).toEqual(testCase[2]);
+			expect(merged1).toEqual(testCase[2]);
+			expect(merged2).toEqual(testCase[2]);
 		});
 	}
 

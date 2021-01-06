@@ -637,10 +637,18 @@
           "properties": {
             "byLayer": {
               "description": "Specify externals depending on the layer.",
-              "type": "object",
-              "additionalProperties": {
-                "$ref": "#/definitions/ExternalItem"
-              }
+              "anyOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/definitions/ExternalItem"
+                  }
+                },
+                {
+                  "instanceof": "Function",
+                  "tsType": "((layer: string | null) => ExternalItem)"
+                }
+              ]
             }
           }
         },
