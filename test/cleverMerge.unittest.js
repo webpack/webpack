@@ -4,7 +4,8 @@ const {
 	cleverMerge,
 	DELETE,
 	removeOperations,
-	resolveByProperty
+	resolveByProperty,
+	cachedCleverMerge
 } = require("../lib/util/cleverMerge");
 
 describe("cleverMerge", () => {
@@ -648,14 +649,26 @@ describe("cleverMerge", () => {
 				byArguments: () => false
 			},
 			false
-		]
+		],
+		nonObject1: [1, 2, 2],
+		nonObject2: [1, { a: 1 }, 1],
+		nonObject3: [{ a: 1 }, 1, 1],
+		nonObject4: [{ a: 1 }, undefined, { a: 1 }],
+		nonObject5: [undefined, { a: 1 }, { a: 1 }]
 	};
 	for (const key of Object.keys(cases)) {
 		const testCase = cases[key];
 		it(`should merge ${key} correctly`, () => {
 			let merged = cleverMerge(testCase[0], testCase[1]);
+			let merged1 = cachedCleverMerge(testCase[0], testCase[1]);
+			let merged2 = cachedCleverMerge(testCase[0], testCase[1]);
+			expect(merged2).toBe(merged1);
 			merged = resolveByProperty(merged, "byArguments", 1, 2, 3, 4, 5);
+			merged1 = resolveByProperty(merged1, "byArguments", 1, 2, 3, 4, 5);
+			merged2 = resolveByProperty(merged2, "byArguments", 1, 2, 3, 4, 5);
 			expect(merged).toEqual(testCase[2]);
+			expect(merged1).toEqual(testCase[2]);
+			expect(merged2).toEqual(testCase[2]);
 		});
 	}
 
