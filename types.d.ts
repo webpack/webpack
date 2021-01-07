@@ -4757,7 +4757,8 @@ declare interface KnownStatsPrinterContext {
 	formatTime?: (time: number, boldQuantity?: boolean) => string;
 	chunkGroupKind?: string;
 }
-declare abstract class LazySet<T> {
+declare class LazySet<T> {
+	constructor(iterable?: Iterable<T>);
 	readonly size: number;
 	add(item: T): LazySet<T>;
 	addAll(iterable: LazySet<T> | Iterable<T>): LazySet<T>;
@@ -4774,6 +4775,7 @@ declare abstract class LazySet<T> {
 	[Symbol.iterator](): IterableIterator<T>;
 	readonly [Symbol.toStringTag]: string;
 	serialize(__0: { write: any }): void;
+	static deserialize(__0: { read: any }): LazySet<any>;
 }
 declare interface LibIdentOptions {
 	/**
@@ -10784,6 +10786,7 @@ declare namespace exports {
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
 		export const cleverMerge: <T, O>(first: T, second: O) => T | O | (T & O);
+		export { LazySet };
 	}
 	export namespace sources {
 		export {
