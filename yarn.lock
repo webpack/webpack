@@ -985,6 +985,14 @@
     "@typescript-eslint/types" "4.8.2"
     eslint-visitor-keys "^2.0.0"
 
+"@webassemblyjs/ast@1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.10.0.tgz#0acdb71009079b15c2d77a53e555474398b0668a"
+  integrity sha512-P676TKXikzAyHJMZXOfTmwH2FkO8jUDbGeVH9Yi3oPjaVRVoa9NI4/NG+K/8LQXE8ix9rLyvAe1qpRsVak36Zg==
+  dependencies:
+    "@webassemblyjs/helper-numbers" "1.10.0"
+    "@webassemblyjs/helper-wasm-bytecode" "1.10.0"
+
 "@webassemblyjs/ast@1.9.1":
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.9.1.tgz#76c6937716d68bf1484c15139f5ed30b9abc8bb4"
@@ -1027,6 +1035,16 @@
   integrity sha512-IEH2cMmEQKt7fqelLWB5e/cMdZXf2rST1JIrzWmf4XBt3QTxGdnnLvV4DYoN8pJjOx0VYXsWg+yF16MmJtolZg==
   dependencies:
     "@webassemblyjs/ast" "1.9.1"
+
+"@webassemblyjs/helper-numbers@1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-numbers/-/helper-numbers-1.10.0.tgz#00c4e66878830210c9e3dfc4c5efa13d3bf72250"
+  integrity sha512-vygNywh8JhLRjxq8+lAi1wJmHK0fReL71lv5tKhG/xSm6FXwp/f7C/4pNRL7HcMHl8JLYYwXIMdPKvmeeXeSRA==
+
+"@webassemblyjs/helper-wasm-bytecode@1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-bytecode/-/helper-wasm-bytecode-1.10.0.tgz#2f8c73e7aa4efa7a4419f0a7bb7c1eb41e7e4364"
+  integrity sha512-z/kpDJsW6sDijGPh46kj4kpwXQGOOpsmOd28Z/OmHzmKqdnq6i/ou79xf5CM3OatqYXP50RDBu2wr9w0LMRidA==
 
 "@webassemblyjs/helper-wasm-bytecode@1.9.1":
   version "1.9.1"
