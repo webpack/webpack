@@ -22,6 +22,9 @@ const exec = (n, options = {}) => {
 		p.once("exit", code => {
 			const stdout = Buffer.concat(chunks).toString("utf-8");
 			if (code === 0) {
+				if (!options.ignoreErrors && /<[ew]>/.test(stdout))
+					return reject(stdout);
+				console.log(stdout);
 				resolve(stdout);
 			} else {
 				reject(new Error(`Code ${code}: ${stdout}`));
@@ -54,7 +57,11 @@ describe("BuildDependencies", () => {
 			path.resolve(inputDirectory, "config-dependency.js"),
 			"module.exports = 0;"
 		);
-		await exec("0", { invalidBuildDepdencies: true, buildTwice: true });
+		await exec("0", {
+			invalidBuildDepdencies: true,
+			buildTwice: true,
+			ignoreErrors: true
+		});
 		fs.writeFileSync(
 			path.resolve(inputDirectory, "loader-dependency.js"),
 			"module.exports = 1;"

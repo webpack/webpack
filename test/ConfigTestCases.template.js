@@ -11,9 +11,11 @@ const deprecationTracking = require("./helpers/deprecationTracking");
 const FakeDocument = require("./helpers/FakeDocument");
 const CurrentScript = require("./helpers/CurrentScript");
 
-const webpack = require("..");
 const prepareOptions = require("./helpers/prepareOptions");
 const { parseResource } = require("../lib/util/identifier");
+const captureStdio = require("./helpers/captureStdio");
+
+let webpack;
 
 const casesPath = path.join(__dirname, "configCases");
 const categories = fs.readdirSync(casesPath).map(cat => {
@@ -28,11 +30,21 @@ const categories = fs.readdirSync(casesPath).map(cat => {
 
 const describeCases = config => {
 	describe(config.name, () => {
+		let stderr;
+		beforeEach(() => {
+			stderr = captureStdio(process.stderr, true);
+			webpack = require("..");
+		});
+		afterEach(() => {
+			stderr.restore();
+		});
 		jest.setTimeout(20000);
 
 		for (const category of categories) {
+			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
 				for (const testName of category.tests) {
+					// eslint-disable-next-line no-loop-func
 					describe(testName, function () {
 						const testDirectory = path.join(casesPath, category.name, testName);
 						const filterPath = path.join(testDirectory, "test.filter.js");
@@ -201,6 +213,14 @@ const describeCases = config => {
 									)
 								) {
 									return;
+								}
+								const infrastructureLogging = stderr.toString();
+								if (infrastructureLogging) {
+									done(
+										new Error(
+											"Errors/Warnings during build:\n" + infrastructureLogging
+										)
+									);
 								}
 								if (
 									checkArrayExpectation(
