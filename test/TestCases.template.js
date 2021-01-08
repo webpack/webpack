@@ -8,8 +8,9 @@ const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
+const captureStdio = require("./helpers/captureStdio");
 
-const webpack = require("..");
+let webpack;
 
 const terserForTesting = new TerserPlugin({
 	parallel: false
@@ -49,6 +50,14 @@ categories = categories.map(cat => {
 
 const describeCases = config => {
 	describe(config.name, () => {
+		let stderr;
+		beforeEach(() => {
+			stderr = captureStdio(process.stderr, true);
+			webpack = require("..");
+		});
+		afterEach(() => {
+			stderr.restore();
+		});
 		categories.forEach(category => {
 			describe(category.name, function () {
 				jest.setTimeout(20000);
@@ -262,6 +271,16 @@ const describeCases = config => {
 												) {
 													return;
 												}
+												const infrastructureLogging = stderr.toString();
+												if (infrastructureLogging) {
+													done(
+														new Error(
+															"Errors/Warnings during build:\n" +
+																infrastructureLogging
+														)
+													);
+												}
+
 												expect(deprecations).toEqual(config.deprecations || []);
 
 												Promise.resolve().then(done);
