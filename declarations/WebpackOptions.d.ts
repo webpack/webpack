@@ -149,26 +149,7 @@ export type Externals = ExternalItem[] | ExternalItem;
 export type ExternalItem =
 	| RegExp
 	| string
-	| {
-			/**
-			 * Specify externals depending on the layer.
-			 */
-			byLayer?:
-				| {
-						[k: string]: ExternalItem;
-				  }
-				| ((layer: string | null) => ExternalItem);
-			/**
-			 * The dependency used for the external.
-			 */
-			[k: string]:
-				| string[]
-				| boolean
-				| string
-				| {
-						[k: string]: any;
-				  };
-	  }
+	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
 	| ((
 			data: {
 				context: string;
@@ -372,38 +353,13 @@ export type RuleSetUseItem =
  */
 export type RuleSetRules = ("..." | RuleSetRule)[];
 /**
- * Generator options for asset modules.
+ * Name of the configuration. Used when loading multiple configurations.
  */
-export type AssetGeneratorOptions = AssetInlineGeneratorOptions &
-	AssetResourceGeneratorOptions;
-/**
- * The options for data url generator.
- */
-export type AssetGeneratorDataUrl =
-	| AssetGeneratorDataUrlOptions
-	| AssetGeneratorDataUrlFunction;
-/**
- * Function that executes for module and should return an DataUrl string.
- */
-export type AssetGeneratorDataUrlFunction = (
-	source: string | Buffer,
-	context: {filename: string; module: import("../lib/Module")}
-) => string;
-/**
- * Function that executes for module and should return whenever asset should be inlined as DataUrl.
- */
-export type AssetParserDataUrlFunction = (
-	source: string | Buffer,
-	context: {filename: string; module: import("../lib/Module")}
-) => boolean;
+export type Name = string;
 /**
  * Include polyfills or mocks for various node stuff.
  */
 export type Node = false | NodeOptions;
-/**
- * Name of the configuration. Used when loading multiple configurations.
- */
-export type Name = string;
 /**
  * Function acting as plugin.
  */
@@ -653,6 +609,31 @@ export type Target = string[] | false | string;
  * Enter watch mode, which rebuilds on file change.
  */
 export type Watch = boolean;
+/**
+ * The options for data url generator.
+ */
+export type AssetGeneratorDataUrl =
+	| AssetGeneratorDataUrlOptions
+	| AssetGeneratorDataUrlFunction;
+/**
+ * Function that executes for module and should return an DataUrl string.
+ */
+export type AssetGeneratorDataUrlFunction = (
+	source: string | Buffer,
+	context: {filename: string; module: import("../lib/Module")}
+) => string;
+/**
+ * Generator options for asset modules.
+ */
+export type AssetGeneratorOptions = AssetInlineGeneratorOptions &
+	AssetResourceGeneratorOptions;
+/**
+ * Function that executes for module and should return whenever asset should be inlined as DataUrl.
+ */
+export type AssetParserDataUrlFunction = (
+	source: string | Buffer,
+	context: {filename: string; module: import("../lib/Module")}
+) => boolean;
 /**
  * A Function returning a Promise resolving to a normalized entry.
  */
@@ -1128,42 +1109,7 @@ export interface ModuleOptions {
 	/**
 	 * Specify options for each generator.
 	 */
-	generator?: {
-		/**
-		 * Generator options for asset modules.
-		 */
-		asset?: AssetGeneratorOptions;
-		/**
-		 * Generator options for asset/inline modules.
-		 */
-		"asset/inline"?: AssetInlineGeneratorOptions;
-		/**
-		 * Generator options for asset/resource modules.
-		 */
-		"asset/resource"?: AssetResourceGeneratorOptions;
-		/**
-		 * No generator options are supported for this module type.
-		 */
-		javascript?: EmptyGeneratorOptions;
-		/**
-		 * No generator options are supported for this module type.
-		 */
-		"javascript/auto"?: EmptyGeneratorOptions;
-		/**
-		 * No generator options are supported for this module type.
-		 */
-		"javascript/dynamic"?: EmptyGeneratorOptions;
-		/**
-		 * No generator options are supported for this module type.
-		 */
-		"javascript/esm"?: EmptyGeneratorOptions;
-		/**
-		 * Options for generating.
-		 */
-		[k: string]: {
-			[k: string]: any;
-		};
-	};
+	generator?: ModuleOptionsGeneratorKnown & ModuleOptionsGeneratorUnknown;
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
@@ -1171,46 +1117,7 @@ export interface ModuleOptions {
 	/**
 	 * Specify options for each parser.
 	 */
-	parser?: {
-		/**
-		 * Parser options for asset modules.
-		 */
-		asset?: AssetParserOptions;
-		/**
-		 * No parser options are supported for this module type.
-		 */
-		"asset/inline"?: EmptyParserOptions;
-		/**
-		 * No parser options are supported for this module type.
-		 */
-		"asset/resource"?: EmptyParserOptions;
-		/**
-		 * No parser options are supported for this module type.
-		 */
-		"asset/source"?: EmptyParserOptions;
-		/**
-		 * Parser options for javascript modules.
-		 */
-		javascript?: JavascriptParserOptions;
-		/**
-		 * Parser options for javascript modules.
-		 */
-		"javascript/auto"?: JavascriptParserOptions;
-		/**
-		 * Parser options for javascript modules.
-		 */
-		"javascript/dynamic"?: JavascriptParserOptions;
-		/**
-		 * Parser options for javascript modules.
-		 */
-		"javascript/esm"?: JavascriptParserOptions;
-		/**
-		 * Options for parsing.
-		 */
-		[k: string]: {
-			[k: string]: any;
-		};
-	};
+	parser?: ModuleOptionsParserKnown & ModuleOptionsParserUnknown;
 	/**
 	 * An array of rules applied for modules.
 	 */
@@ -1495,121 +1402,6 @@ export interface ResolvePluginInstance {
 	 * The run point of the plugin, required method.
 	 */
 	apply: (resolver: import("enhanced-resolve").Resolver) => void;
-	[k: string]: any;
-}
-/**
- * Generator options for asset/inline modules.
- */
-export interface AssetInlineGeneratorOptions {
-	/**
-	 * The options for data url generator.
-	 */
-	dataUrl?: AssetGeneratorDataUrl;
-}
-/**
- * Options object for data url generation.
- */
-export interface AssetGeneratorDataUrlOptions {
-	/**
-	 * Asset encoding (defaults to base64).
-	 */
-	encoding?: false | "base64";
-	/**
-	 * Asset mimetype (getting from file extension by default).
-	 */
-	mimetype?: string;
-}
-/**
- * Generator options for asset/resource modules.
- */
-export interface AssetResourceGeneratorOptions {
-	/**
-	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
-	 */
-	filename?: FilenameTemplate;
-}
-/**
- * No generator options are supported for this module type.
- */
-export interface EmptyGeneratorOptions {}
-/**
- * Parser options for asset modules.
- */
-export interface AssetParserOptions {
-	/**
-	 * The condition for inlining the asset as DataUrl.
-	 */
-	dataUrlCondition?: AssetParserDataUrlOptions | AssetParserDataUrlFunction;
-}
-/**
- * Options object for DataUrl condition.
- */
-export interface AssetParserDataUrlOptions {
-	/**
-	 * Maximum size of asset that should be inline as modules. Default: 8kb.
-	 */
-	maxSize?: number;
-}
-/**
- * No parser options are supported for this module type.
- */
-export interface EmptyParserOptions {}
-/**
- * Parser options for javascript modules.
- */
-export interface JavascriptParserOptions {
-	/**
-	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
-	 */
-	amd?: Amd;
-	/**
-	 * Enable/disable special handling for browserify bundles.
-	 */
-	browserify?: boolean;
-	/**
-	 * Enable/disable parsing of CommonJs syntax.
-	 */
-	commonjs?: boolean;
-	/**
-	 * Enable/disable parsing of EcmaScript Modules syntax.
-	 */
-	harmony?: boolean;
-	/**
-	 * Enable/disable parsing of import() syntax.
-	 */
-	import?: boolean;
-	/**
-	 * Include polyfills or mocks for various node stuff.
-	 */
-	node?: Node;
-	/**
-	 * Enable/disable parsing of require.context syntax.
-	 */
-	requireContext?: boolean;
-	/**
-	 * Enable/disable parsing of require.ensure syntax.
-	 */
-	requireEnsure?: boolean;
-	/**
-	 * Enable/disable parsing of require.include syntax.
-	 */
-	requireInclude?: boolean;
-	/**
-	 * Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.
-	 */
-	requireJs?: boolean;
-	/**
-	 * Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.
-	 */
-	system?: boolean;
-	/**
-	 * Enable/disable parsing of new URL() syntax.
-	 */
-	url?: boolean;
-	/**
-	 * Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().
-	 */
-	worker?: string[] | boolean;
 	[k: string]: any;
 }
 /**
@@ -2603,6 +2395,63 @@ export interface WatchOptions {
 	stdin?: boolean;
 }
 /**
+ * Options object for data url generation.
+ */
+export interface AssetGeneratorDataUrlOptions {
+	/**
+	 * Asset encoding (defaults to base64).
+	 */
+	encoding?: false | "base64";
+	/**
+	 * Asset mimetype (getting from file extension by default).
+	 */
+	mimetype?: string;
+}
+/**
+ * Generator options for asset/inline modules.
+ */
+export interface AssetInlineGeneratorOptions {
+	/**
+	 * The options for data url generator.
+	 */
+	dataUrl?: AssetGeneratorDataUrl;
+}
+/**
+ * Options object for DataUrl condition.
+ */
+export interface AssetParserDataUrlOptions {
+	/**
+	 * Maximum size of asset that should be inline as modules. Default: 8kb.
+	 */
+	maxSize?: number;
+}
+/**
+ * Parser options for asset modules.
+ */
+export interface AssetParserOptions {
+	/**
+	 * The condition for inlining the asset as DataUrl.
+	 */
+	dataUrlCondition?: AssetParserDataUrlOptions | AssetParserDataUrlFunction;
+}
+/**
+ * Generator options for asset/resource modules.
+ */
+export interface AssetResourceGeneratorOptions {
+	/**
+	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	filename?: FilenameTemplate;
+}
+/**
+ * No generator options are supported for this module type.
+ */
+export interface EmptyGeneratorOptions {}
+/**
+ * No parser options are supported for this module type.
+ */
+export interface EmptyParserOptions {}
+/**
  * An object with entry point description.
  */
 export interface EntryDescriptionNormalized {
@@ -2647,6 +2496,64 @@ export interface EntryStaticNormalized {
 	 * An object with entry point description.
 	 */
 	[k: string]: EntryDescriptionNormalized;
+}
+/**
+ * Parser options for javascript modules.
+ */
+export interface JavascriptParserOptions {
+	/**
+	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
+	 */
+	amd?: Amd;
+	/**
+	 * Enable/disable special handling for browserify bundles.
+	 */
+	browserify?: boolean;
+	/**
+	 * Enable/disable parsing of CommonJs syntax.
+	 */
+	commonjs?: boolean;
+	/**
+	 * Enable/disable parsing of EcmaScript Modules syntax.
+	 */
+	harmony?: boolean;
+	/**
+	 * Enable/disable parsing of import() syntax.
+	 */
+	import?: boolean;
+	/**
+	 * Include polyfills or mocks for various node stuff.
+	 */
+	node?: Node;
+	/**
+	 * Enable/disable parsing of require.context syntax.
+	 */
+	requireContext?: boolean;
+	/**
+	 * Enable/disable parsing of require.ensure syntax.
+	 */
+	requireEnsure?: boolean;
+	/**
+	 * Enable/disable parsing of require.include syntax.
+	 */
+	requireInclude?: boolean;
+	/**
+	 * Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.
+	 */
+	requireJs?: boolean;
+	/**
+	 * Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.
+	 */
+	system?: boolean;
+	/**
+	 * Enable/disable parsing of new URL() syntax.
+	 */
+	url?: boolean;
+	/**
+	 * Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().
+	 */
+	worker?: string[] | boolean;
+	[k: string]: any;
 }
 /**
  * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
@@ -2961,4 +2868,124 @@ export interface WebpackOptionsNormalized {
 	 * Options for the watcher.
 	 */
 	watchOptions: WatchOptions;
+}
+/**
+ * If an dependency matches exactly a property of the object, the property value is used as dependency.
+ */
+export interface ExternalItemObjectKnown {
+	/**
+	 * Specify externals depending on the layer.
+	 */
+	byLayer?:
+		| {
+				[k: string]: ExternalItem;
+		  }
+		| ((layer: string | null) => ExternalItem);
+}
+/**
+ * If an dependency matches exactly a property of the object, the property value is used as dependency.
+ */
+export interface ExternalItemObjectUnknown {
+	/**
+	 * The dependency used for the external.
+	 */
+	[k: string]:
+		| string[]
+		| boolean
+		| string
+		| {
+				[k: string]: any;
+		  };
+}
+/**
+ * Specify options for each generator.
+ */
+export interface ModuleOptionsGeneratorKnown {
+	/**
+	 * Generator options for asset modules.
+	 */
+	asset?: AssetGeneratorOptions;
+	/**
+	 * Generator options for asset/inline modules.
+	 */
+	"asset/inline"?: AssetInlineGeneratorOptions;
+	/**
+	 * Generator options for asset/resource modules.
+	 */
+	"asset/resource"?: AssetResourceGeneratorOptions;
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	javascript?: EmptyGeneratorOptions;
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"javascript/auto"?: EmptyGeneratorOptions;
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"javascript/dynamic"?: EmptyGeneratorOptions;
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"javascript/esm"?: EmptyGeneratorOptions;
+}
+/**
+ * Specify options for each generator.
+ */
+export interface ModuleOptionsGeneratorUnknown {
+	/**
+	 * Options for generating.
+	 */
+	[k: string]: {
+		[k: string]: any;
+	};
+}
+/**
+ * Specify options for each parser.
+ */
+export interface ModuleOptionsParserKnown {
+	/**
+	 * Parser options for asset modules.
+	 */
+	asset?: AssetParserOptions;
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/inline"?: EmptyParserOptions;
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/resource"?: EmptyParserOptions;
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/source"?: EmptyParserOptions;
+	/**
+	 * Parser options for javascript modules.
+	 */
+	javascript?: JavascriptParserOptions;
+	/**
+	 * Parser options for javascript modules.
+	 */
+	"javascript/auto"?: JavascriptParserOptions;
+	/**
+	 * Parser options for javascript modules.
+	 */
+	"javascript/dynamic"?: JavascriptParserOptions;
+	/**
+	 * Parser options for javascript modules.
+	 */
+	"javascript/esm"?: JavascriptParserOptions;
+}
+/**
+ * Specify options for each parser.
+ */
+export interface ModuleOptionsParserUnknown {
+	/**
+	 * Options for parsing.
+	 */
+	[k: string]: {
+		[k: string]: any;
+	};
 }
