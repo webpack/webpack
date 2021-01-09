@@ -234,6 +234,7 @@ declare module "@webassemblyjs/ast" {
 		args: string[];
 		result: string[];
 	}
+	export function moduleContextFromModuleAST(ast: any): any;
 
 	// Node matcher
 	export function isGlobalType(n: Node): boolean;

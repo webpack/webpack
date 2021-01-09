@@ -13,4 +13,5 @@ it("should support hot module replacement in WebWorkers", done => {
 		}
 	};
 	worker.postMessage("test");
+	Promise.resolve(worker.terminate()).then(done, done);
 });

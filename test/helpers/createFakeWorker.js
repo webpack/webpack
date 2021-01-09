@@ -70,4 +70,8 @@ require(${JSON.stringify(path.resolve(outputDirectory, file))});
 		postMessage(data) {
 			this.worker.postMessage(data);
 		}
+
+		terminate() {
+			return this.worker.terminate();
+		}
 	};

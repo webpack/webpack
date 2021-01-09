@@ -7,6 +7,6 @@ it("should compile", done => {
 	const worker = new Worker(new URL("worker.js", import.meta.url));
 	worker.once("message", value => {
 		expect(value).toBe(42);
-		done();
+		Promise.resolve(worker.terminate()).then(() => done(), done);
 	});
 });
