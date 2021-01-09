@@ -1750,15 +1750,7 @@ declare interface Configuration {
 		| string
 		| RegExp
 		| ExternalItem[]
-		| {
-				[index: string]: string | boolean | string[] | { [index: string]: any };
-				/**
-				 * Specify externals depending on the layer.
-				 */
-				byLayer?:
-					| { [index: string]: ExternalItem }
-					| ((layer: null | string) => ExternalItem);
-		  }
+		| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
 		| ((
 				data: {
 					context: string;
@@ -3228,15 +3220,7 @@ declare interface ExpressionExpressionInfo {
 type ExternalItem =
 	| string
 	| RegExp
-	| {
-			[index: string]: string | boolean | string[] | { [index: string]: any };
-			/**
-			 * Specify externals depending on the layer.
-			 */
-			byLayer?:
-				| { [index: string]: ExternalItem }
-				| ((layer: null | string) => ExternalItem);
-	  }
+	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
 	| ((
 			data: {
 				context: string;
@@ -3245,6 +3229,25 @@ type ExternalItem =
 			},
 			callback: (err?: Error, result?: string) => void
 	  ) => void);
+
+/**
+ * If an dependency matches exactly a property of the object, the property value is used as dependency.
+ */
+declare interface ExternalItemObjectKnown {
+	/**
+	 * Specify externals depending on the layer.
+	 */
+	byLayer?:
+		| { [index: string]: ExternalItem }
+		| ((layer: null | string) => ExternalItem);
+}
+
+/**
+ * If an dependency matches exactly a property of the object, the property value is used as dependency.
+ */
+declare interface ExternalItemObjectUnknown {
+	[index: string]: string | boolean | string[] | { [index: string]: any };
+}
 declare class ExternalModule extends Module {
 	constructor(request?: any, type?: any, userRequest?: any);
 	request: string | string[] | Record<string, EntryItem>;
@@ -3264,15 +3267,7 @@ type Externals =
 	| string
 	| RegExp
 	| ExternalItem[]
-	| {
-			[index: string]: string | boolean | string[] | { [index: string]: any };
-			/**
-			 * Specify externals depending on the layer.
-			 */
-			byLayer?:
-				| { [index: string]: ExternalItem }
-				| ((layer: null | string) => ExternalItem);
-	  }
+	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
 	| ((
 			data: {
 				context: string;
@@ -5523,37 +5518,7 @@ declare interface ModuleOptions {
 	/**
 	 * Specify options for each generator.
 	 */
-	generator?: {
-		[index: string]: { [index: string]: any };
-		/**
-		 * Generator options for asset modules.
-		 */
-		asset?: AssetGeneratorOptions;
-		/**
-		 * Generator options for asset/inline modules.
-		 */
-		"asset/inline"?: AssetInlineGeneratorOptions;
-		/**
-		 * Generator options for asset/resource modules.
-		 */
-		"asset/resource"?: AssetResourceGeneratorOptions;
-		/**
-		 * No generator options are supported for this module type.
-		 */
-		javascript?: EmptyGeneratorOptions;
-		/**
-		 * No generator options are supported for this module type.
-		 */
-		"javascript/auto"?: EmptyGeneratorOptions;
-		/**
-		 * No generator options are supported for this module type.
-		 */
-		"javascript/dynamic"?: EmptyGeneratorOptions;
-		/**
-		 * No generator options are supported for this module type.
-		 */
-		"javascript/esm"?: EmptyGeneratorOptions;
-	};
+	generator?: ModuleOptionsGeneratorKnown & ModuleOptionsGeneratorUnknown;
 
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
@@ -5563,41 +5528,7 @@ declare interface ModuleOptions {
 	/**
 	 * Specify options for each parser.
 	 */
-	parser?: {
-		[index: string]: { [index: string]: any };
-		/**
-		 * Parser options for asset modules.
-		 */
-		asset?: AssetParserOptions;
-		/**
-		 * No parser options are supported for this module type.
-		 */
-		"asset/inline"?: EmptyParserOptions;
-		/**
-		 * No parser options are supported for this module type.
-		 */
-		"asset/resource"?: EmptyParserOptions;
-		/**
-		 * No parser options are supported for this module type.
-		 */
-		"asset/source"?: EmptyParserOptions;
-		/**
-		 * Parser options for javascript modules.
-		 */
-		javascript?: JavascriptParserOptions;
-		/**
-		 * Parser options for javascript modules.
-		 */
-		"javascript/auto"?: JavascriptParserOptions;
-		/**
-		 * Parser options for javascript modules.
-		 */
-		"javascript/dynamic"?: JavascriptParserOptions;
-		/**
-		 * Parser options for javascript modules.
-		 */
-		"javascript/esm"?: JavascriptParserOptions;
-	};
+	parser?: ModuleOptionsParserKnown & ModuleOptionsParserUnknown;
 
 	/**
 	 * An array of rules applied for modules.
@@ -5653,6 +5584,105 @@ declare interface ModuleOptions {
 	 * Set the inner regular expression for partial dynamic dependencies.
 	 */
 	wrappedContextRegExp?: RegExp;
+}
+
+/**
+ * Specify options for each generator.
+ */
+declare interface ModuleOptionsGeneratorKnown {
+	/**
+	 * Generator options for asset modules.
+	 */
+	asset?: AssetGeneratorOptions;
+
+	/**
+	 * Generator options for asset/inline modules.
+	 */
+	"asset/inline"?: AssetInlineGeneratorOptions;
+
+	/**
+	 * Generator options for asset/resource modules.
+	 */
+	"asset/resource"?: AssetResourceGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	javascript?: EmptyGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"javascript/auto"?: EmptyGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"javascript/dynamic"?: EmptyGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"javascript/esm"?: EmptyGeneratorOptions;
+}
+
+/**
+ * Specify options for each generator.
+ */
+declare interface ModuleOptionsGeneratorUnknown {
+	[index: string]: { [index: string]: any };
+}
+
+/**
+ * Specify options for each parser.
+ */
+declare interface ModuleOptionsParserKnown {
+	/**
+	 * Parser options for asset modules.
+	 */
+	asset?: AssetParserOptions;
+
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/inline"?: EmptyParserOptions;
+
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/resource"?: EmptyParserOptions;
+
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/source"?: EmptyParserOptions;
+
+	/**
+	 * Parser options for javascript modules.
+	 */
+	javascript?: JavascriptParserOptions;
+
+	/**
+	 * Parser options for javascript modules.
+	 */
+	"javascript/auto"?: JavascriptParserOptions;
+
+	/**
+	 * Parser options for javascript modules.
+	 */
+	"javascript/dynamic"?: JavascriptParserOptions;
+
+	/**
+	 * Parser options for javascript modules.
+	 */
+	"javascript/esm"?: JavascriptParserOptions;
+}
+
+/**
+ * Specify options for each parser.
+ */
+declare interface ModuleOptionsParserUnknown {
+	[index: string]: { [index: string]: any };
 }
 declare interface ModulePathData {
 	id: string | number;
