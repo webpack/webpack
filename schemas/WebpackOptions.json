@@ -1179,6 +1179,10 @@
         "fileSystem": {
           "description": "Filesystem for the resolver"
         },
+        "ignoreRootsErrors": {
+          "description": "Enable to ignore fatal errors happening during resolving of 'resolve.roots'. Usually such errors should not happen, but this option is provided for backward-compatibility.",
+          "type": "boolean"
+        },
         "mainFields": {
           "description": "Field names from the description file (package.json) which are used to find the default entry point",
           "anyOf": [
@@ -1226,11 +1230,15 @@
             ]
           }
         },
+        "preferAbsolute": {
+          "description": "Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.",
+          "type": "boolean"
+        },
         "resolver": {
           "description": "Custom resolver"
         },
         "roots": {
-          "description": "A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.",
+          "description": "A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
           "type": "array",
           "items": {
             "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",

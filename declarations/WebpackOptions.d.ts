@@ -684,6 +684,10 @@ export interface ResolveOptions {
 		[k: string]: any;
 	};
 	/**
+	 * Enable to ignore fatal errors happening during resolving of 'resolve.roots'. Usually such errors should not happen, but this option is provided for backward-compatibility.
+	 */
+	ignoreRootsErrors?: boolean;
+	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point
 	 */
 	mainFields?: ArrayOfStringOrStringArrayValues;
@@ -704,13 +708,17 @@ export interface ResolveOptions {
 	 */
 	plugins?: (WebpackPluginInstance | WebpackPluginFunction)[];
 	/**
+	 * Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.
+	 */
+	preferAbsolute?: boolean;
+	/**
 	 * Custom resolver
 	 */
 	resolver?: {
 		[k: string]: any;
 	};
 	/**
-	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.
+	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.
 	 */
 	roots?: string[];
 	/**
