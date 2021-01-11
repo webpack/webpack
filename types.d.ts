@@ -1600,8 +1600,8 @@ declare class Compiler {
 	immutablePaths: Set<string>;
 	modifiedFiles: Set<string>;
 	removedFiles: Set<string>;
-	fileTimestamps: Map<string, null | FileSystemInfoEntry>;
-	contextTimestamps: Map<string, null | FileSystemInfoEntry>;
+	fileTimestamps: Map<string, null | FileSystemInfoEntry | "ignore">;
+	contextTimestamps: Map<string, null | FileSystemInfoEntry | "ignore">;
 	resolverFactory: ResolverFactory;
 	infrastructureLogger: any;
 	options: WebpackOptionsNormalized;
@@ -10070,8 +10070,8 @@ declare interface WatchFileSystem {
 		options: WatchOptions,
 		callback: (
 			arg0: undefined | Error,
-			arg1: Map<string, FileSystemInfoEntry>,
-			arg2: Map<string, FileSystemInfoEntry>,
+			arg1: Map<string, FileSystemInfoEntry | "ignore">,
+			arg2: Map<string, FileSystemInfoEntry | "ignore">,
 			arg3: Set<string>,
 			arg4: Set<string>
 		) => void,
@@ -10137,12 +10137,12 @@ declare interface Watcher {
 	/**
 	 * get info about files
 	 */
-	getFileTimeInfoEntries: () => Map<string, FileSystemInfoEntry>;
+	getFileTimeInfoEntries: () => Map<string, FileSystemInfoEntry | "ignore">;
 
 	/**
 	 * get info about directories
 	 */
-	getContextTimeInfoEntries: () => Map<string, FileSystemInfoEntry>;
+	getContextTimeInfoEntries: () => Map<string, FileSystemInfoEntry | "ignore">;
 }
 declare abstract class Watching {
 	startTime: null | number;
