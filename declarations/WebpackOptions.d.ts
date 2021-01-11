@@ -1362,6 +1362,10 @@ export interface ResolveOptions {
 	 */
 	plugins?: ("..." | ResolvePluginInstance)[];
 	/**
+	 * Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.
+	 */
+	preferAbsolute?: boolean;
+	/**
 	 * Prefer to resolve module requests as relative request and fallback to resolving as module.
 	 */
 	preferRelative?: boolean;
@@ -1374,7 +1378,7 @@ export interface ResolveOptions {
 	 */
 	restrictions?: (RegExp | string)[];
 	/**
-	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.
+	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.
 	 */
 	roots?: string[];
 	/**
