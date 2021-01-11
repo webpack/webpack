@@ -7666,6 +7666,7 @@ declare interface ResolveOptionsTypes {
 	resolveToContext: boolean;
 	restrictions: Set<string | RegExp>;
 	preferRelative: boolean;
+	preferAbsolute: boolean;
 }
 
 /**
@@ -7798,6 +7799,11 @@ declare interface ResolveOptionsWebpackOptions {
 	plugins?: ("..." | ResolvePluginInstance)[];
 
 	/**
+	 * Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.
+	 */
+	preferAbsolute?: boolean;
+
+	/**
 	 * Prefer to resolve module requests as relative request and fallback to resolving as module.
 	 */
 	preferRelative?: boolean;
@@ -7813,7 +7819,7 @@ declare interface ResolveOptionsWebpackOptions {
 	restrictions?: (string | RegExp)[];
 
 	/**
-	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.
+	 * A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.
 	 */
 	roots?: string[];
 
@@ -10050,6 +10056,11 @@ declare interface UserResolveOptions {
 	 * Prefer to resolve module requests as relative requests before falling back to modules
 	 */
 	preferRelative?: boolean;
+
+	/**
+	 * Prefer to resolve server-relative urls as absolute paths before falling back to resolve in roots
+	 */
+	preferAbsolute?: boolean;
 }
 declare abstract class VariableInfo {
 	declaredScope: ScopeInfo;

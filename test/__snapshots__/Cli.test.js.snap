@@ -5122,6 +5122,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-loader-prefer-absolute": Object {
+    "configs": Array [
+      Object {
+        "description": "Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.",
+        "multiple": false,
+        "path": "resolveLoader.preferAbsolute",
+        "type": "boolean",
+      },
+    ],
+    "description": "Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-loader-prefer-relative": Object {
     "configs": Array [
       Object {
@@ -5183,13 +5196,13 @@ Object {
   "resolve-loader-roots-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.",
+        "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
         "multiple": false,
         "path": "resolveLoader.roots",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.",
+    "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5310,6 +5323,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-prefer-absolute": Object {
+    "configs": Array [
+      Object {
+        "description": "Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.",
+        "multiple": false,
+        "path": "resolve.preferAbsolute",
+        "type": "boolean",
+      },
+    ],
+    "description": "Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-prefer-relative": Object {
     "configs": Array [
       Object {
@@ -5371,13 +5397,13 @@ Object {
   "resolve-roots-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.",
+        "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
         "multiple": false,
         "path": "resolve.roots",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved. On non-windows system these requests are tried to resolve as absolute path first.",
+    "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
     "multiple": false,
     "simpleType": "boolean",
   },
