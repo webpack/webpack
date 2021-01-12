@@ -13,7 +13,6 @@
 9. [Harmony](#harmony)
 10. [HTTP2 Aggressive Splitting](#http2-aggressive-splitting)
 11. [Hybrid Routing](#hybrid-routing)
-12. [i18n](#i18n)
 13. [Loader](#loader)
 14. [Mixed](#mixed)
 15. [Multi Compiler](#multi-compiler)
@@ -97,9 +96,6 @@
 
 ## Hybrid Routing
 [hybrid-routing](hybrid-routing)
-
-## i18n
-[i18n](i18n) example demonstrating localization.
 
 ## Loader
 [loader](loader) example demonstrating the usage of loaders.
