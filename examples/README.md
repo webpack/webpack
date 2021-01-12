@@ -98,9 +98,6 @@
 ## Hybrid Routing
 [hybrid-routing](hybrid-routing)
 
-## i18n
-[i18n](i18n) example demonstrating localization.
-
 ## Loader
 [loader](loader) example demonstrating the usage of loaders.
 
