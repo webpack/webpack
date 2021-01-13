@@ -2311,10 +2311,10 @@ enhanced-resolve@^4.0.0:
     memory-fs "^0.5.0"
     tapable "^1.0.0"
 
-enhanced-resolve@^5.6.0:
-  version "5.6.0"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.6.0.tgz#ad19a1665f230a6e384724a30acf3f7332b2b3f0"
-  integrity sha512-C3GGDfFZmqUa21o10YRKbZN60DPl0HyXKXxoEnQMWso9u7KMU23L7CBHfr/rVxORddY/8YQZaU2MZ1ewTS8Pcw==
+enhanced-resolve@^5.7.0:
+  version "5.7.0"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.7.0.tgz#525c5d856680fbd5052de453ac83e32049958b5c"
+  integrity sha512-6njwt/NsZFUKhM6j9U8hzVyD4E4r0x7NQzhTCbcWOJ0IQjNSAoalWmb0AE51Wn+fwan5qVESWi7t2ToBxs9vrw==
   dependencies:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
@@ -6266,9 +6266,9 @@ toml@^3.0.0:
   resolved "https://registry.yarnpkg.com/toml/-/toml-3.0.0.tgz#342160f1af1904ec9d204d03a5d61222d762c5ee"
   integrity sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==
 
-tooling@webpack/tooling#v1.13.1:
-  version "1.13.1"
-  resolved "https://codeload.github.com/webpack/tooling/tar.gz/bc7ef7012b4553ca447a555fce57dc0e56c6f528"
+tooling@webpack/tooling#v1.14.0:
+  version "1.14.0"
+  resolved "https://codeload.github.com/webpack/tooling/tar.gz/f8500c02cf2a04b3a0c0c2ca38ad9df959b9d02a"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     commondir "^1.0.1"
@@ -6396,10 +6396,10 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typescript@^4.2.0-dev.20201130:
-  version "4.2.0-dev.20201130"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.0-dev.20201130.tgz#13339af4dfd23070dcd16f28e590efe541c766c4"
-  integrity sha512-oMboCGPKWDJ8BFmmanPAWw3LUGlEXSkkF+MbuHu97i1iF7K4z4zjmnodoD3Dilqs2IMuVDmWBIkmget9xMrpTw==
+typescript@^4.2.0-beta:
+  version "4.2.0-beta"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.0-beta.tgz#75326e43625718f4a325f5725a105a1b3f1a7b45"
+  integrity sha512-0nYjpkQ6bKjHoJTQkUHcDtGLNenqc5rfTcl3ISUnJXPkGa0115FcVJABmodfMKHLyDBmzDr8IGLbDv5m7sbYgw==
 
 uglify-js@^3.1.4:
   version "3.10.1"
