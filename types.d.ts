@@ -77,7 +77,6 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import { Stats as FsStats, WriteStream } from "fs";
 import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
 import {
@@ -3765,6 +3764,43 @@ declare class HttpsUriPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare interface IDirent {
+	isFile: () => boolean;
+	isDirectory: () => boolean;
+	isBlockDevice: () => boolean;
+	isCharacterDevice: () => boolean;
+	isSymbolicLink: () => boolean;
+	isFIFO: () => boolean;
+	isSocket: () => boolean;
+	name: string | Buffer;
+}
+declare interface IStats {
+	isFile: () => boolean;
+	isDirectory: () => boolean;
+	isBlockDevice: () => boolean;
+	isCharacterDevice: () => boolean;
+	isSymbolicLink: () => boolean;
+	isFIFO: () => boolean;
+	isSocket: () => boolean;
+	dev: number | bigint;
+	ino: number | bigint;
+	mode: number | bigint;
+	nlink: number | bigint;
+	uid: number | bigint;
+	gid: number | bigint;
+	rdev: number | bigint;
+	size: number | bigint;
+	blksize: number | bigint;
+	blocks: number | bigint;
+	atimeMs: number | bigint;
+	mtimeMs: number | bigint;
+	ctimeMs: number | bigint;
+	birthtimeMs: number | bigint;
+	atime: Date;
+	mtime: Date;
+	ctime: Date;
+	birthtime: Date;
+}
 declare class IgnorePlugin {
 	constructor(options: IgnorePluginOptions);
 	options: IgnorePluginOptions;
@@ -3831,7 +3867,7 @@ declare abstract class InitFragment {
 declare interface InputFileSystem {
 	readFile: (
 		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: Buffer) => void
+		arg1: (arg0?: NodeJS.ErrnoException, arg1?: string | Buffer) => void
 	) => void;
 	readJson?: (
 		arg0: string,
@@ -3843,15 +3879,18 @@ declare interface InputFileSystem {
 	) => void;
 	readdir: (
 		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: string[]) => void
+		arg1: (
+			arg0?: NodeJS.ErrnoException,
+			arg1?: (string | Buffer)[] | IDirent[]
+		) => void
 	) => void;
 	stat: (
 		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: FsStats) => void
+		arg1: (arg0?: NodeJS.ErrnoException, arg1?: IStats) => void
 	) => void;
 	realpath?: (
 		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: string) => void
+		arg1: (arg0?: NodeJS.ErrnoException, arg1?: string | Buffer) => void
 	) => void;
 	purge?: (arg0?: string) => void;
 	join?: (arg0: string, arg1: string) => string;
@@ -3863,7 +3902,7 @@ type IntermediateFileSystem = InputFileSystem &
 	IntermediateFileSystemExtras;
 declare interface IntermediateFileSystemExtras {
 	mkdirSync: (arg0: string) => void;
-	createWriteStream: (arg0: string) => WriteStream;
+	createWriteStream: (arg0: string) => NodeJS.WritableStream;
 	open: (
 		arg0: string,
 		arg1: string,
@@ -6816,11 +6855,11 @@ declare interface OutputFileSystem {
 	mkdir: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
 	stat: (
 		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: FsStats) => void
+		arg1: (arg0?: NodeJS.ErrnoException, arg1?: IStats) => void
 	) => void;
 	readFile: (
 		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: Buffer) => void
+		arg1: (arg0?: NodeJS.ErrnoException, arg1?: string | Buffer) => void
 	) => void;
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
