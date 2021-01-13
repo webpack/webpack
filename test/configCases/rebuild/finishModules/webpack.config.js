@@ -1,49 +1,60 @@
 const { resolve, join } = require("path");
+const { NormalModule } = require("../../../../");
 
 /**
- * @this {import("../../../../").Compiler} the compiler
+ * @param {import("../../../../").Compiler} compiler the compiler
  */
-var testPlugin = function () {
-	this.hooks.compilation.tap("TestPlugin", compilation => {
-		compilation.hooks.finishModules.tapAsync("TestPlugin", function (
-			modules,
-			callback
-		) {
-			const src = resolve(join(__dirname, "other-file.js"));
-
-			/**
-			 *
-			 * @param {any} m test
-			 * @returns {boolean} test
-			 */
-			function matcher(m) {
-				return m.resource && m.resource === src;
+var testPlugin = compiler => {
+	compiler.hooks.compilation.tap("TestPlugin", compilation => {
+		let shouldReplace = false;
+		NormalModule.getCompilationHooks(compilation).loader.tap(
+			"TestPlugin",
+			loaderContext => {
+				loaderContext.shouldReplace = shouldReplace;
 			}
+		);
+		compilation.hooks.finishModules.tapAsync(
+			"TestPlugin",
+			function (modules, callback) {
+				const src = resolve(join(__dirname, "other-file.js"));
 
-			const newSrc = `module.exports = { foo: { foo: 'bar' }, doThings: () => { }}`;
+				/**
+				 *
+				 * @param {any} m test
+				 * @returns {boolean} test
+				 */
+				function matcher(m) {
+					return m.resource && m.resource === src;
+				}
 
-			const module = Array.from(compilation.modules).find(matcher);
-			/** @type {any} */
-			const inputFileSystem = compilation.inputFileSystem;
-			const cachedFileInput = inputFileSystem._readFileBackend._data.get(src);
-			if (!cachedFileInput) {
-				inputFileSystem._readFileBackend._data.set(src, newSrc);
-			} else {
-				cachedFileInput.result = `module.exports = { foo: { foo: 'bar' }, doThings: () => { }}`;
+				const module = Array.from(modules).find(matcher);
+
+				if (!module) {
+					throw new Error("something went wrong");
+				}
+
+				shouldReplace = true;
+				compilation.rebuildModule(module, err => {
+					shouldReplace = false;
+					callback(err);
+				});
 			}
-
-			if (!module) {
-				throw new Error("something went wrong");
-			}
-
-			compilation.rebuildModule(module, () => {
-				callback();
-			});
-		});
+		);
 	});
 };
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
+	module: {
+		rules: [
+			{
+				test: /other-file/,
+				use: "./loader"
+			}
+		]
+	},
+	optimization: {
+		concatenateModules: false
+	},
 	plugins: [testPlugin]
 };

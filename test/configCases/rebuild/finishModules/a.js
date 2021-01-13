@@ -1,9 +1,5 @@
+import { doThings, foo } from "./other-file";
 
-import { doThings, foo } from './other-file';
+export { doThings, foo };
 
-export {
-	doThings,
-	foo,
-}
-
-export const valueFromA = 'A';
+export const valueFromA = "A";
