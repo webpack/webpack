@@ -2118,6 +2118,10 @@ export interface StatsOptions {
 	 */
 	chunkModules?: boolean;
 	/**
+	 * Space to display chunk modules (groups will be collapsed to fit this space, value is in number of modules/group).
+	 */
+	chunkModulesSpace?: number;
+	/**
 	 * Add the origins of chunks and chunk merging info.
 	 */
 	chunkOrigins?: boolean;

@@ -5813,6 +5813,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-chunk-modules-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display chunk modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+        "multiple": false,
+        "path": "stats.chunkModulesSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display chunk modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "stats-chunk-origins": Object {
     "configs": Array [
       Object {
