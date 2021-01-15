@@ -611,28 +611,7 @@
           "description": "If an dependency matches exactly a property of the object, the property value is used as dependency.",
           "type": "object",
           "additionalProperties": {
-            "description": "The dependency used for the external.",
-            "anyOf": [
-              {
-                "type": "array",
-                "items": {
-                  "description": "A part of the target of the external.",
-                  "type": "string",
-                  "minLength": 1
-                }
-              },
-              {
-                "description": "`true`: The dependency name is used as target of the external.",
-                "type": "boolean"
-              },
-              {
-                "description": "The target of the external.",
-                "type": "string"
-              },
-              {
-                "type": "object"
-              }
-            ]
+            "$ref": "#/definitions/ExternalItemValue"
           },
           "properties": {
             "byLayer": {
@@ -655,7 +634,56 @@
         {
           "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
           "instanceof": "Function",
-          "tsType": "((data: { context: string, request: string, contextInfo: import('../lib/ModuleFactory').ModuleFactoryCreateDataContextInfo }, callback: (err?: Error, result?: string) => void) => void)"
+          "tsType": "(((data: ExternalItemFunctionData, callback: (err?: Error, result?: ExternalItemValue) => void) => void) | ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>))"
+        }
+      ]
+    },
+    "ExternalItemFunctionData": {
+      "description": "Data object passed as argument when a function is set for 'externals'.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "context": {
+          "description": "The directory in which the request is placed.",
+          "type": "string"
+        },
+        "contextInfo": {
+          "description": "Contextual information.",
+          "type": "object",
+          "tsType": "import('../lib/ModuleFactory').ModuleFactoryCreateDataContextInfo"
+        },
+        "getResolve": {
+          "description": "Get a resolve function with the current resolver options.",
+          "instanceof": "Function",
+          "tsType": "((options?: ResolveOptions) => ((context: string, request: string, callback: (err?: Error, result?: string) => void) => void) | ((context: string, request: string) => Promise<string>))"
+        },
+        "request": {
+          "description": "The request as written by the user in the require/import expression/statement.",
+          "type": "string"
+        }
+      }
+    },
+    "ExternalItemValue": {
+      "description": "The dependency used for the external.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "description": "A part of the target of the external.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        {
+          "description": "`true`: The dependency name is used as target of the external.",
+          "type": "boolean"
+        },
+        {
+          "description": "The target of the external.",
+          "type": "string"
+        },
+        {
+          "type": "object"
         }
       ]
     },

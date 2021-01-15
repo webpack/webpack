@@ -1797,13 +1797,13 @@ declare interface Configuration {
 		| ExternalItem[]
 		| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
 		| ((
-				data: {
-					context: string;
-					request: string;
-					contextInfo: ModuleFactoryCreateDataContextInfo;
-				},
-				callback: (err?: Error, result?: string) => void
-		  ) => void);
+				data: ExternalItemFunctionData,
+				callback: (
+					err?: Error,
+					result?: string | boolean | string[] | { [index: string]: any }
+				) => void
+		  ) => void)
+		| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
 
 	/**
 	 * Enable presets of externals for specific targets.
@@ -3247,13 +3247,46 @@ type ExternalItem =
 	| RegExp
 	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
 	| ((
-			data: {
-				context: string;
-				request: string;
-				contextInfo: ModuleFactoryCreateDataContextInfo;
-			},
-			callback: (err?: Error, result?: string) => void
-	  ) => void);
+			data: ExternalItemFunctionData,
+			callback: (
+				err?: Error,
+				result?: string | boolean | string[] | { [index: string]: any }
+			) => void
+	  ) => void)
+	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
+
+/**
+ * Data object passed as argument when a function is set for 'externals'.
+ */
+declare interface ExternalItemFunctionData {
+	/**
+	 * The directory in which the request is placed.
+	 */
+	context?: string;
+
+	/**
+	 * Contextual information.
+	 */
+	contextInfo?: ModuleFactoryCreateDataContextInfo;
+
+	/**
+	 * Get a resolve function with the current resolver options.
+	 */
+	getResolve?: (
+		options?: ResolveOptionsWebpackOptions
+	) =>
+		| ((
+				context: string,
+				request: string,
+				callback: (err?: Error, result?: string) => void
+		  ) => void)
+		| ((context: string, request: string) => Promise<string>);
+
+	/**
+	 * The request as written by the user in the require/import expression/statement.
+	 */
+	request?: string;
+}
 
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.
@@ -3271,8 +3304,9 @@ declare interface ExternalItemObjectKnown {
  * If an dependency matches exactly a property of the object, the property value is used as dependency.
  */
 declare interface ExternalItemObjectUnknown {
-	[index: string]: string | boolean | string[] | { [index: string]: any };
+	[index: string]: ExternalItemValue;
 }
+type ExternalItemValue = string | boolean | string[] | { [index: string]: any };
 declare class ExternalModule extends Module {
 	constructor(request?: any, type?: any, userRequest?: any);
 	request: string | string[] | Record<string, string | string[]>;
@@ -3294,13 +3328,13 @@ type Externals =
 	| ExternalItem[]
 	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
 	| ((
-			data: {
-				context: string;
-				request: string;
-				contextInfo: ModuleFactoryCreateDataContextInfo;
-			},
-			callback: (err?: Error, result?: string) => void
-	  ) => void);
+			data: ExternalItemFunctionData,
+			callback: (
+				err?: Error,
+				result?: string | boolean | string[] | { [index: string]: any }
+			) => void
+	  ) => void)
+	| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
 declare class ExternalsPlugin {
 	constructor(type: undefined | string, externals: Externals);
 	type?: string;
