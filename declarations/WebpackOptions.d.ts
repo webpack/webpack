@@ -150,14 +150,13 @@ export type ExternalItem =
 	| RegExp
 	| string
 	| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
-	| ((
-			data: {
-				context: string;
-				request: string;
-				contextInfo: import("../lib/ModuleFactory").ModuleFactoryCreateDataContextInfo;
-			},
-			callback: (err?: Error, result?: string) => void
-	  ) => void);
+	| (
+			| ((
+					data: ExternalItemFunctionData,
+					callback: (err?: Error, result?: ExternalItemValue) => void
+			  ) => void)
+			| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
+	  );
 /**
  * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
  */
@@ -642,6 +641,16 @@ export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
  * The entry point(s) of the compilation.
  */
 export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
+/**
+ * The dependency used for the external.
+ */
+export type ExternalItemValue =
+	| string[]
+	| boolean
+	| string
+	| {
+			[k: string]: any;
+	  };
 /**
  * Ignore specific warnings.
  */
@@ -2506,6 +2515,35 @@ export interface EntryStaticNormalized {
 	[k: string]: EntryDescriptionNormalized;
 }
 /**
+ * Data object passed as argument when a function is set for 'externals'.
+ */
+export interface ExternalItemFunctionData {
+	/**
+	 * The directory in which the request is placed.
+	 */
+	context?: string;
+	/**
+	 * Contextual information.
+	 */
+	contextInfo?: import("../lib/ModuleFactory").ModuleFactoryCreateDataContextInfo;
+	/**
+	 * Get a resolve function with the current resolver options.
+	 */
+	getResolve?: (
+		options?: ResolveOptions
+	) =>
+		| ((
+				context: string,
+				request: string,
+				callback: (err?: Error, result?: string) => void
+		  ) => void)
+		| ((context: string, request: string) => Promise<string>);
+	/**
+	 * The request as written by the user in the require/import expression/statement.
+	 */
+	request?: string;
+}
+/**
  * Parser options for javascript modules.
  */
 export interface JavascriptParserOptions {
@@ -2894,16 +2932,7 @@ export interface ExternalItemObjectKnown {
  * If an dependency matches exactly a property of the object, the property value is used as dependency.
  */
 export interface ExternalItemObjectUnknown {
-	/**
-	 * The dependency used for the external.
-	 */
-	[k: string]:
-		| string[]
-		| boolean
-		| string
-		| {
-				[k: string]: any;
-		  };
+	[k: string]: ExternalItemValue;
 }
 /**
  * Specify options for each generator.
