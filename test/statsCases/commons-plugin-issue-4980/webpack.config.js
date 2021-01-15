@@ -1,4 +1,5 @@
 // should generate vendor chunk with the same chunkhash for both entries
+/** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{
 		mode: "production",

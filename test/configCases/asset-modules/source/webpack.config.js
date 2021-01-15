@@ -1,3 +1,4 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
 	module: {
@@ -7,8 +8,5 @@ module.exports = {
 				type: "asset/source"
 			}
 		]
-	},
-	experiments: {
-		asset: true
 	}
 };

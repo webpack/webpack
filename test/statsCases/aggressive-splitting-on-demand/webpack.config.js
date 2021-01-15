@@ -1,4 +1,5 @@
 var webpack = require("../../../");
+/** @type {import("../../../").Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./index",
@@ -18,6 +19,7 @@ module.exports = {
 	stats: {
 		chunks: true,
 		chunkModules: true,
+		dependentModules: true,
 		chunkOrigins: true,
 		entrypoints: true,
 		modules: false,

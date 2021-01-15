@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("../../../../");
-module.exports = [
+/** @type {function(any, any): import("../../../../").Configuration[]} */
+module.exports = (env, { testPath }) => [
 	{
 		output: {
 			filename: "commonjs.js",
@@ -71,12 +72,26 @@ module.exports = [
 		externals: ["external"]
 	},
 	{
+		mode: "development",
+		output: {
+			filename: "commonjs2-external-eval.js",
+			libraryTarget: "commonjs2"
+		},
+		externals: ["external"]
+	},
+	{
+		mode: "development",
+		output: {
+			filename: "commonjs2-external-eval-source-map.js",
+			libraryTarget: "commonjs2"
+		},
+		devtool: "eval-source-map",
+		externals: ["external"]
+	},
+	{
 		output: {
 			filename: "index.js",
-			path: path.resolve(
-				__dirname,
-				"../../../js/config/library/0-create-library/commonjs2-split-chunks"
-			),
+			path: path.resolve(testPath, "commonjs2-split-chunks"),
 			libraryTarget: "commonjs2"
 		},
 		target: "node",

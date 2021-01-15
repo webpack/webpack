@@ -1,4 +1,5 @@
 var webpack = require("../../../");
+/** @type {import("../../../").Configuration[]} */
 module.exports = [1, 2, 3, 4].map(n => ({
 	name: `${n} chunks`,
 	mode: "production",
@@ -13,6 +14,7 @@ module.exports = [1, 2, 3, 4].map(n => ({
 	],
 	stats: {
 		chunkModules: true,
+		dependentModules: true,
 		chunkRelations: true,
 		modules: false,
 		chunks: true

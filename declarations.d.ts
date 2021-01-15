@@ -234,6 +234,7 @@ declare module "@webassemblyjs/ast" {
 		args: string[];
 		result: string[];
 	}
+	export function moduleContextFromModuleAST(ast: any): any;
 
 	// Node matcher
 	export function isGlobalType(n: Node): boolean;
@@ -243,7 +244,7 @@ declare module "@webassemblyjs/ast" {
 }
 
 declare module "webpack-sources" {
-	type MapOptions = { columns?: boolean; module?: boolean };
+	export type MapOptions = { columns?: boolean; module?: boolean };
 
 	export abstract class Source {
 		size(): number;
@@ -299,7 +300,8 @@ declare module "webpack-sources" {
 			name: string,
 			sourceMap: Object | string | Buffer,
 			originalSource?: string | Buffer,
-			innerSourceMap?: Object | string | Buffer
+			innerSourceMap?: Object | string | Buffer,
+			removeOriginalSource?: boolean
 		);
 
 		getArgsAsBuffers(): [
@@ -307,7 +309,8 @@ declare module "webpack-sources" {
 			string,
 			Buffer,
 			Buffer | undefined,
-			Buffer | undefined
+			Buffer | undefined,
+			boolean
 		];
 	}
 
@@ -328,60 +331,51 @@ declare module "webpack-sources" {
 	}
 
 	export class CachedSource extends Source {
-		constructor(source: Source, cachedData?: any);
+		constructor(source: Source);
+		constructor(source: Source | (() => Source), cachedData?: any);
 
 		original(): Source;
+		originalLazy(): Source | (() => Source);
 		getCachedData(): any;
 	}
 
 	export class SizeOnlySource extends Source {
 		constructor(size: number);
 	}
+
+	interface SourceLike {
+		source(): string | Buffer;
+	}
+
+	export class CompatSource extends Source {
+		constructor(sourceLike: SourceLike);
+
+		static from(sourceLike: SourceLike): Source;
+	}
 }
 
-declare module "enhanced-resolve" {
-	type ResolveFunction = (
-		path: string,
-		request: string,
-		resolveContext: ResolveContext,
-		callback: (
-			err?: NodeJS.ErrnoException,
-			result?: string,
-			additionalInfo?: Object
-		) => void
-	) => void;
-
-	export function create(options: any): ResolveFunction;
-
-	interface WriteOnlySet<T> {
-		add(item: T): void;
+declare module "browserslist" {
+	function browserslist(query: string): string[] | undefined;
+	namespace browserslist {
+		export function loadConfig(
+			options:
+				| {
+						config: string;
+						env?: string;
+				  }
+				| {
+						path: string;
+						env?: string;
+				  }
+		): string | undefined;
+		export function findConfig(path: string): Record<string, string[]>;
 	}
-
-	interface ResolveContext {
-		log?: (message: string) => void;
-		fileDependencies?: WriteOnlySet<string>;
-		contextDependencies?: WriteOnlySet<string>;
-		missingDependencies?: WriteOnlySet<string>;
-		stack?: Set<string>;
-	}
-
-	export class Resolver {
-		resolve(
-			context: Object,
-			path: string,
-			request: string,
-			resolveContext: ResolveContext,
-			callback: (
-				err?: NodeJS.ErrnoException,
-				result?: string,
-				additionalInfo?: Object
-			) => void
-		): void;
-	}
-
-	export class ResolverFactory {
-		static createResolver(options: TODO): Resolver;
-	}
+	export = browserslist;
 }
 
 type TODO = any;
+
+type RecursiveArrayOrRecord<T> =
+	| { [index: string]: RecursiveArrayOrRecord<T> }
+	| Array<RecursiveArrayOrRecord<T>>
+	| T;

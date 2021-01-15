@@ -1,6 +1,6 @@
 This example demonstrates the AggressiveSplittingPlugin for splitting the bundle into multiple smaller chunks to improve caching. This works best with an HTTP2 web server, otherwise, there is an overhead for the increased number of requests.
 
-AggressiveSplittingPlugin splits every chunk until it reaches the specified `maxSize`. In this example, it tries to create chunks with <50kB raw code, which typically minimizes to ~10kB. It groups modules by folder structure because modules in the same folder are likely to have similar repetitive text, making them gzip efficiently together. They are also likely to change together.
+AggressiveSplittingPlugin splits every chunk until it reaches the specified `maxSize`. In this example, it tries to create chunks with <50kB raw code, which typically minimizes to ~10kB. It groups modules by folder structure, because modules in the same folder are likely to have similar repetitive text, making them gzip efficiently together. They are also likely to change together.
 
 AggressiveSplittingPlugin records its splitting in the webpack records. When it is next run, it tries to use the last recorded splitting. Since changes to application code between one run and the next are usually in only a few modules (or just one), re-using the old splittings (and chunks, which are probably still in the client's cache), is highly advantageous.
 
@@ -46,58 +46,45 @@ module.exports = {
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-                  Asset      Size
-1b3df87d8d004e83a428.js  17.7 KiB  [emitted] [immutable]  [name: main]
-515efe286e0264e81c5c.js   117 KiB  [emitted] [immutable]  [id hint: vendors]
-5ce1f3cb6de70a368806.js  7.15 KiB  [emitted] [immutable]
-Entrypoint main = 1b3df87d8d004e83a428.js
-chunk 1b3df87d8d004e83a428.js (main) 8.77 KiB (javascript) 4.28 KiB (runtime) [entry] [rendered]
-    > ./example main
- (webpack)/node_modules/object-assign/index.js 2.06 KiB [built]
- (webpack)/node_modules/react/cjs/react.production.min.js 6.49 KiB [built]
- (webpack)/node_modules/react/index.js 190 bytes [built]
- ./example.js 42 bytes [built]
-     + 4 hidden chunk modules
-chunk 5ce1f3cb6de70a368806.js 6.51 KiB [rendered]
-    > react-dom ./example.js 2:0-22
- (webpack)/node_modules/react-dom/index.js 1.33 KiB [built]
- (webpack)/node_modules/scheduler/cjs/scheduler.production.min.js 4.99 KiB [built]
- (webpack)/node_modules/scheduler/index.js 198 bytes [built]
-chunk 515efe286e0264e81c5c.js (id hint: vendors) 116 KiB [rendered] [recorded] aggressive splitted, reused as split chunk (cache group: defaultVendors)
-    > react-dom ./example.js 2:0-22
- (webpack)/node_modules/react-dom/cjs/react-dom.production.min.js 116 KiB [built]
+asset b5631f235298de2b0347.js 119 KiB [emitted] [immutable] (id hint: vendors)
+asset 32ef04e3e05f35a25e0c.js 25.6 KiB [emitted] [immutable] (name: main)
+asset 87295143e657ec03cfb0.js 15.3 KiB [emitted] [immutable]
+chunk (runtime: main) 32ef04e3e05f35a25e0c.js (main) 8.58 KiB (javascript) 5.02 KiB (runtime) [entry] [rendered]
+  > ./example main
+  runtime modules 5.02 KiB 6 modules
+  dependent modules 8.54 KiB [dependent] 3 modules
+  ./example.js 42 bytes [built] [code generated]
+chunk (runtime: main) 87295143e657ec03cfb0.js 6.24 KiB [rendered]
+  > react-dom ./example.js 2:0-22
+  dependent modules 4.72 KiB [dependent] 1 module
+  ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
+  ../../node_modules/scheduler/index.js 198 bytes [built] [code generated]
+chunk (runtime: main) b5631f235298de2b0347.js (id hint: vendors) 118 KiB [rendered] [recorded] aggressive splitted, reused as split chunk (cache group: defaultVendors)
+  > react-dom ./example.js 2:0-22
+  ../../node_modules/react-dom/cjs/react-dom.production.min.js 118 KiB [built] [code generated]
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-                          Asset       Size
-        68637c8e1dda08b1fadf.js    114 KiB  [emitted] [immutable]  [id hint: vendors]
-68637c8e1dda08b1fadf.js.LICENSE  247 bytes  [emitted]
-        aaa7fd653ee0bc7bb83b.js   4.98 KiB  [emitted] [immutable]
-aaa7fd653ee0bc7bb83b.js.LICENSE  246 bytes  [emitted]
-        c3d741758d9e4bf8e4bd.js   8.71 KiB  [emitted] [immutable]  [name: main]
-c3d741758d9e4bf8e4bd.js.LICENSE  295 bytes  [emitted]
-Entrypoint main = c3d741758d9e4bf8e4bd.js
-chunk c3d741758d9e4bf8e4bd.js (main) 8.77 KiB (javascript) 4.28 KiB (runtime) [entry] [rendered]
-    > ./example main
- (webpack)/node_modules/object-assign/index.js 2.06 KiB [built]
- (webpack)/node_modules/react/cjs/react.production.min.js 6.49 KiB [built]
- (webpack)/node_modules/react/index.js 190 bytes [built]
- ./example.js 42 bytes [built]
-     + 4 hidden chunk modules
-chunk aaa7fd653ee0bc7bb83b.js 6.51 KiB [rendered]
-    > react-dom ./example.js 2:0-22
- (webpack)/node_modules/react-dom/index.js 1.33 KiB [built]
- (webpack)/node_modules/scheduler/cjs/scheduler.production.min.js 4.99 KiB [built]
- (webpack)/node_modules/scheduler/index.js 198 bytes [built]
-chunk 68637c8e1dda08b1fadf.js (id hint: vendors) 116 KiB [rendered] [recorded] aggressive splitted, reused as split chunk (cache group: defaultVendors)
-    > react-dom ./example.js 2:0-22
- (webpack)/node_modules/react-dom/cjs/react-dom.production.min.js 116 KiB [built]
+asset 2865709fe07b9e0f6050.js 115 KiB [emitted] [immutable] [minimized] (id hint: vendors) 1 related asset
+asset 3435907a64efdaf8187b.js 8.6 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
+asset 643cc77ff66a1a2ca1cf.js 4.71 KiB [emitted] [immutable] [minimized] 1 related asset
+chunk (runtime: main) 3435907a64efdaf8187b.js (main) 8.58 KiB (javascript) 5.02 KiB (runtime) [entry] [rendered]
+  > ./example main
+  runtime modules 5.02 KiB 6 modules
+  dependent modules 8.54 KiB [dependent] 3 modules
+  ./example.js 42 bytes [built] [code generated]
+chunk (runtime: main) 643cc77ff66a1a2ca1cf.js 6.24 KiB [rendered]
+  > react-dom ./example.js 2:0-22
+  dependent modules 4.72 KiB [dependent] 1 module
+  ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
+  ../../node_modules/scheduler/index.js 198 bytes [built] [code generated]
+chunk (runtime: main) 2865709fe07b9e0f6050.js (id hint: vendors) 118 KiB [rendered] [recorded] aggressive splitted, reused as split chunk (cache group: defaultVendors)
+  > react-dom ./example.js 2:0-22
+  ../../node_modules/react-dom/cjs/react-dom.production.min.js 118 KiB [built] [code generated]
+webpack 5.11.1 compiled successfully
 ```
 
 ## Records
@@ -106,12 +93,12 @@ chunk 68637c8e1dda08b1fadf.js (id hint: vendors) 116 KiB [rendered] [recorded] a
 {
   "aggressiveSplits": [
     {
-      "hash": "515efe286e0264e81c5c93158843db80",
+      "hash": "b5631f235298de2b03479f5e2e9ecd2e",
       "id": 2,
       "modules": [
         "../../node_modules/react-dom/cjs/react-dom.production.min.js"
       ],
-      "size": 119155
+      "size": 120688
     }
   ],
   "chunks": {
@@ -120,6 +107,7 @@ chunk 68637c8e1dda08b1fadf.js (id hint: vendors) 116 KiB [rendered] [recorded] a
     },
     "bySource": {
       "0 ./example.js react-dom": 2,
+      "0 main": 0,
       "1 ./example.js react-dom": 1
     },
     "usedIds": [

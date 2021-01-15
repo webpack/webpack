@@ -1,4 +1,5 @@
 var DelegatedPlugin = require("../../../../").DelegatedPlugin;
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	optimization: {
 		moduleIds: "hashed"

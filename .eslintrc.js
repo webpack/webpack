@@ -41,7 +41,12 @@ module.exports = {
 		"jsdoc/require-property-type": "error",
 		"jsdoc/require-returns-description": "error",
 		"jsdoc/require-returns-type": "error",
-		"jsdoc/require-returns": "error"
+		"jsdoc/require-returns": "error",
+		// Disallow @ts-ignore directive. Use @ts-expect-error instead
+		"no-warning-comments": [
+			"error",
+			{ terms: ["@ts-ignore"], location: "start" }
+		]
 	},
 	settings: {
 		jsdoc: {
@@ -91,7 +96,8 @@ module.exports = {
 				"jest/globals": true
 			},
 			globals: {
-				nsObj: false
+				nsObj: false,
+				jasmine: false
 			}
 		}
 	]

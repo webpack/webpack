@@ -1,3 +1,4 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
 		vendors: ["./module"],
@@ -8,7 +9,7 @@ module.exports = {
 		filename: "[name].js"
 	},
 	optimization: {
-		noEmitOnErrors: false,
+		emitOnErrors: true,
 		splitChunks: {
 			cacheGroups: {
 				vendors: {

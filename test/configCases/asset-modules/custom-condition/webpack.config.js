@@ -1,6 +1,7 @@
 const path = require("path");
-const NormalModule = require("../../../../lib/NormalModule");
+const NormalModule = require("../../../../").NormalModule;
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
 	module: {
@@ -43,8 +44,5 @@ module.exports = {
 				}
 			}
 		]
-	},
-	experiments: {
-		asset: true
 	}
 };

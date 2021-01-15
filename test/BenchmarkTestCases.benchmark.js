@@ -76,7 +76,7 @@ describe("BenchmarkTestCases", function () {
 					}
 
 					function doLoadWebpack() {
-						const baselineWebpack = require.requireActual(
+						const baselineWebpack = jest.requireActual(
 							path.resolve(baselinePath, "lib/index.js")
 						);
 						baselines.push({
@@ -256,11 +256,11 @@ describe("BenchmarkTestCases", function () {
 						const z = tDistribution(n - 1);
 						stats.minConfidence = stats.mean - (z * stats.deviation) / nSqrt;
 						stats.maxConfidence = stats.mean + (z * stats.deviation) / nSqrt;
-						stats.text = `${Math.round(stats.mean * 1000)}ms ± ${Math.round(
+						stats.text = `${Math.round(stats.mean * 1000)} ms ± ${Math.round(
 							stats.deviation * 1000
-						)}ms [${Math.round(stats.minConfidence * 1000)}ms; ${Math.round(
+						)} ms [${Math.round(stats.minConfidence * 1000)} ms; ${Math.round(
 							stats.maxConfidence * 1000
-						)}ms]`;
+						)} ms]`;
 						callback(null, bench.stats);
 					},
 					onError: callback
@@ -289,7 +289,7 @@ describe("BenchmarkTestCases", function () {
 						);
 						const config =
 							Object.create(
-								require.requireActual(
+								jest.requireActual(
 									path.join(testDirectory, "webpack.config.js")
 								)
 							) || {};
@@ -314,7 +314,7 @@ describe("BenchmarkTestCases", function () {
 							testName
 						);
 						const config =
-							require.requireActual(
+							jest.requireActual(
 								path.join(testDirectory, "webpack.config.js")
 							) || {};
 						config.output = config.output || {};

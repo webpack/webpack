@@ -72,33 +72,45 @@ describe("Stats", () => {
 			expect(
 				stats.toJson({
 					all: false,
+					errorsCount: true,
 					chunkGroups: true
 				})
 			).toMatchInlineSnapshot(`
 			Object {
+			  "errorsCount": 0,
 			  "namedChunkGroups": Object {
 			    "entryA": Object {
 			      "assets": Array [
-			        "entryA.js",
+			        Object {
+			          "name": "entryA.js",
+			          "size": 182,
+			        },
 			      ],
-			      "auxiliaryAssets": Array [],
-			      "childAssets": Object {},
-			      "children": Object {},
-			      "chunks": Array [
-			        938,
-			      ],
+			      "assetsSize": 182,
+			      "auxiliaryAssets": undefined,
+			      "auxiliaryAssetsSize": 0,
+			      "childAssets": undefined,
+			      "children": undefined,
+			      "chunks": undefined,
+			      "filteredAssets": 0,
+			      "filteredAuxiliaryAssets": 0,
 			      "name": "entryA",
 			    },
 			    "entryB": Object {
 			      "assets": Array [
-			        "entryB.js",
+			        Object {
+			          "name": "entryB.js",
+			          "size": 182,
+			        },
 			      ],
-			      "auxiliaryAssets": Array [],
-			      "childAssets": Object {},
-			      "children": Object {},
-			      "chunks": Array [
-			        513,
-			      ],
+			      "assetsSize": 182,
+			      "auxiliaryAssets": undefined,
+			      "auxiliaryAssetsSize": 0,
+			      "childAssets": undefined,
+			      "children": undefined,
+			      "chunks": undefined,
+			      "filteredAssets": 0,
+			      "filteredAuxiliaryAssets": 0,
 			      "name": "entryB",
 			    },
 			  },
@@ -116,45 +128,62 @@ describe("Stats", () => {
 			expect(
 				stats.toJson({
 					all: false,
+					errorsCount: true,
 					chunkGroups: true
 				})
 			).toMatchInlineSnapshot(`
 			Object {
+			  "errorsCount": 0,
 			  "namedChunkGroups": Object {
 			    "chunkB": Object {
 			      "assets": Array [
-			        "chunkB.js",
+			        Object {
+			          "name": "chunkB.js",
+			          "size": 107,
+			        },
 			      ],
-			      "auxiliaryAssets": Array [],
-			      "childAssets": Object {},
-			      "children": Object {},
-			      "chunks": Array [
-			        336,
-			      ],
+			      "assetsSize": 107,
+			      "auxiliaryAssets": undefined,
+			      "auxiliaryAssetsSize": 0,
+			      "childAssets": undefined,
+			      "children": undefined,
+			      "chunks": undefined,
+			      "filteredAssets": 0,
+			      "filteredAuxiliaryAssets": 0,
 			      "name": "chunkB",
 			    },
 			    "entryA": Object {
 			      "assets": Array [
-			        "entryA.js",
+			        Object {
+			          "name": "entryA.js",
+			          "size": 182,
+			        },
 			      ],
-			      "auxiliaryAssets": Array [],
-			      "childAssets": Object {},
-			      "children": Object {},
-			      "chunks": Array [
-			        938,
-			      ],
+			      "assetsSize": 182,
+			      "auxiliaryAssets": undefined,
+			      "auxiliaryAssetsSize": 0,
+			      "childAssets": undefined,
+			      "children": undefined,
+			      "chunks": undefined,
+			      "filteredAssets": 0,
+			      "filteredAuxiliaryAssets": 0,
 			      "name": "entryA",
 			    },
 			    "entryB": Object {
 			      "assets": Array [
-			        "entryB.js",
+			        Object {
+			          "name": "entryB.js",
+			          "size": 2960,
+			        },
 			      ],
-			      "auxiliaryAssets": Array [],
-			      "childAssets": Object {},
-			      "children": Object {},
-			      "chunks": Array [
-			        513,
-			      ],
+			      "assetsSize": 2960,
+			      "auxiliaryAssets": undefined,
+			      "auxiliaryAssetsSize": 0,
+			      "childAssets": undefined,
+			      "children": undefined,
+			      "chunks": undefined,
+			      "filteredAssets": 0,
+			      "filteredAuxiliaryAssets": 0,
 			      "name": "entryB",
 			    },
 			  },
@@ -172,6 +201,7 @@ describe("Stats", () => {
 			expect(
 				stats.toJson({
 					all: false,
+					errorsCount: true,
 					assets: true
 				})
 			).toMatchInlineSnapshot(`
@@ -180,47 +210,62 @@ describe("Stats", () => {
 			    Object {
 			      "auxiliaryChunkIdHints": Array [],
 			      "auxiliaryChunkNames": Array [],
-			      "chunkIdHints": Array [],
-			      "chunkNames": Array [
-			        "chunkB",
-			      ],
-			      "comparedForEmit": false,
-			      "emitted": true,
-			      "info": Object {
-			        "size": 111,
-			      },
-			      "name": "chunkB.js",
-			      "size": 111,
-			    },
-			    Object {
-			      "auxiliaryChunkIdHints": Array [],
-			      "auxiliaryChunkNames": Array [],
-			      "chunkIdHints": Array [],
-			      "chunkNames": Array [
-			        "entryA",
-			      ],
-			      "comparedForEmit": false,
-			      "emitted": true,
-			      "info": Object {
-			        "size": 182,
-			      },
-			      "name": "entryA.js",
-			      "size": 182,
-			    },
-			    Object {
-			      "auxiliaryChunkIdHints": Array [],
-			      "auxiliaryChunkNames": Array [],
+			      "cached": false,
 			      "chunkIdHints": Array [],
 			      "chunkNames": Array [
 			        "entryB",
 			      ],
 			      "comparedForEmit": false,
 			      "emitted": true,
+			      "filteredRelated": undefined,
 			      "info": Object {
-			        "size": 1865,
+			        "javascriptModule": false,
+			        "minimized": true,
+			        "size": 2960,
 			      },
 			      "name": "entryB.js",
-			      "size": 1865,
+			      "size": 2960,
+			      "type": "asset",
+			    },
+			    Object {
+			      "auxiliaryChunkIdHints": Array [],
+			      "auxiliaryChunkNames": Array [],
+			      "cached": false,
+			      "chunkIdHints": Array [],
+			      "chunkNames": Array [
+			        "entryA",
+			      ],
+			      "comparedForEmit": false,
+			      "emitted": true,
+			      "filteredRelated": undefined,
+			      "info": Object {
+			        "javascriptModule": false,
+			        "minimized": true,
+			        "size": 182,
+			      },
+			      "name": "entryA.js",
+			      "size": 182,
+			      "type": "asset",
+			    },
+			    Object {
+			      "auxiliaryChunkIdHints": Array [],
+			      "auxiliaryChunkNames": Array [],
+			      "cached": false,
+			      "chunkIdHints": Array [],
+			      "chunkNames": Array [
+			        "chunkB",
+			      ],
+			      "comparedForEmit": false,
+			      "emitted": true,
+			      "filteredRelated": undefined,
+			      "info": Object {
+			        "javascriptModule": false,
+			        "minimized": true,
+			        "size": 107,
+			      },
+			      "name": "chunkB.js",
+			      "size": 107,
+			      "type": "asset",
 			    },
 			  ],
 			  "assetsByChunkName": Object {
@@ -234,7 +279,8 @@ describe("Stats", () => {
 			      "entryB.js",
 			    ],
 			  },
-			  "filteredAssets": 0,
+			  "errorsCount": 0,
+			  "filteredAssets": undefined,
 			}
 		`);
 		});

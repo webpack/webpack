@@ -1,8 +1,11 @@
 var DefinePlugin = require("../../../../").DefinePlugin;
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {
-		ecmaVersion: 11
+		environment: {
+			bigIntLiteral: true
+		}
 	},
 	plugins: [
 		new DefinePlugin({

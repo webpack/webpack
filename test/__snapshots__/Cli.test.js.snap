@@ -137,13 +137,13 @@ Object {
   "cache-immutable-paths-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.",
+        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
         "multiple": false,
         "path": "cache.immutablePaths",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable.",
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -163,13 +163,13 @@ Object {
   "cache-managed-paths-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not being modified otherwise.",
+        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
         "multiple": false,
         "path": "cache.managedPaths",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not being modified otherwise.",
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -354,42 +354,16 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-import-async": Object {
+  "experiments-layers": Object {
     "configs": Array [
       Object {
-        "description": "Allow 'import/export' syntax to import async modules.",
+        "description": "Enable module and chunk layers.",
         "multiple": false,
-        "path": "experiments.importAsync",
+        "path": "experiments.layers",
         "type": "boolean",
       },
     ],
-    "description": "Allow 'import/export' syntax to import async modules.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "experiments-import-await": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow 'import/export await' syntax to import async modules.",
-        "multiple": false,
-        "path": "experiments.importAwait",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow 'import/export await' syntax to import async modules.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "experiments-mjs": Object {
-    "configs": Array [
-      Object {
-        "description": "Support .mjs files as way to define strict ESM file (node.js).",
-        "multiple": false,
-        "path": "experiments.mjs",
-        "type": "boolean",
-      },
-    ],
-    "description": "Support .mjs files as way to define strict ESM file (node.js).",
+    "description": "Enable module and chunk layers.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -451,6 +425,110 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "externals-presets-electron": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electron",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat common electron built-in modules in main and preload context like 'electron', 'ipc' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-electron-main": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electronMain",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat electron built-in modules in the main context like 'app', 'ipc-main' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-electron-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat electron built-in modules in the preload context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electronPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat electron built-in modules in the preload context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-electron-renderer": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.electronRenderer",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat electron built-in modules in the renderer context like 'web-frame', 'ipc-renderer' or 'shell' as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-node": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.node",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat node.js built-in modules like fs, path or vm as external and load them via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-nwjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",
+        "multiple": false,
+        "path": "externalsPresets.nwjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat NW.js legacy nw.gui module as external and load it via require() when used.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-web": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).",
+        "multiple": false,
+        "path": "externalsPresets.web",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via import when used (Note that this changes execution order as externals are executed before any other code in the chunk).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "externals-presets-web-async": Object {
+    "configs": Array [
+      Object {
+        "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via async import() when used (Note that this external type is an async module, which has various effects on the execution).",
+        "multiple": false,
+        "path": "externalsPresets.webAsync",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treat references to 'http(s)://...' and 'std:...' as external and load them via async import() when used (Note that this external type is an async module, which has various effects on the execution).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "externals-reset": Object {
     "configs": Array [
       Object {
@@ -488,12 +566,80 @@ Object {
           "umd2",
           "jsonp",
           "system",
+          "promise",
+          "import",
+          "script",
         ],
       },
     ],
     "description": "Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).",
     "multiple": false,
     "simpleType": "string",
+  },
+  "ignore-warnings": Object {
+    "configs": Array [
+      Object {
+        "description": "A RegExp to select the warning message.",
+        "multiple": true,
+        "path": "ignoreWarnings[]",
+        "type": "RegExp",
+      },
+    ],
+    "description": "A RegExp to select the warning message.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "ignore-warnings-file": Object {
+    "configs": Array [
+      Object {
+        "description": "A RegExp to select the origin file for the warning.",
+        "multiple": true,
+        "path": "ignoreWarnings[].file",
+        "type": "RegExp",
+      },
+    ],
+    "description": "A RegExp to select the origin file for the warning.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "ignore-warnings-message": Object {
+    "configs": Array [
+      Object {
+        "description": "A RegExp to select the warning message.",
+        "multiple": true,
+        "path": "ignoreWarnings[].message",
+        "type": "RegExp",
+      },
+    ],
+    "description": "A RegExp to select the warning message.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "ignore-warnings-module": Object {
+    "configs": Array [
+      Object {
+        "description": "A RegExp to select the origin module for the warning.",
+        "multiple": true,
+        "path": "ignoreWarnings[].module",
+        "type": "RegExp",
+      },
+    ],
+    "description": "A RegExp to select the origin module for the warning.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "ignore-warnings-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Ignore specific warnings.",
+        "multiple": false,
+        "path": "ignoreWarnings",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Ignore specific warnings.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "infrastructure-logging-debug": Object {
     "configs": Array [
@@ -630,6 +776,92 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-asset-data-url-encoding": Object {
+    "configs": Array [
+      Object {
+        "description": "Asset encoding (defaults to base64).",
+        "multiple": false,
+        "path": "module.generator.asset.dataUrl.encoding",
+        "type": "enum",
+        "values": Array [
+          false,
+          "base64",
+        ],
+      },
+    ],
+    "description": "Asset encoding (defaults to base64).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-data-url-mimetype": Object {
+    "configs": Array [
+      Object {
+        "description": "Asset mimetype (getting from file extension by default).",
+        "multiple": false,
+        "path": "module.generator.asset.dataUrl.mimetype",
+        "type": "string",
+      },
+    ],
+    "description": "Asset mimetype (getting from file extension by default).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+        "multiple": false,
+        "path": "module.generator.asset.filename",
+        "type": "string",
+      },
+    ],
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-inline-data-url-encoding": Object {
+    "configs": Array [
+      Object {
+        "description": "Asset encoding (defaults to base64).",
+        "multiple": false,
+        "path": "module.generator.asset/inline.dataUrl.encoding",
+        "type": "enum",
+        "values": Array [
+          false,
+          "base64",
+        ],
+      },
+    ],
+    "description": "Asset encoding (defaults to base64).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-inline-data-url-mimetype": Object {
+    "configs": Array [
+      Object {
+        "description": "Asset mimetype (getting from file extension by default).",
+        "multiple": false,
+        "path": "module.generator.asset/inline.dataUrl.mimetype",
+        "type": "string",
+      },
+    ],
+    "description": "Asset mimetype (getting from file extension by default).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-resource-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+        "multiple": false,
+        "path": "module.generator.asset/resource.filename",
+        "type": "string",
+      },
+    ],
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-no-parse": Object {
     "configs": Array [
       Object {
@@ -662,6 +894,999 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-asset-data-url-condition-max-size": Object {
+    "configs": Array [
+      Object {
+        "description": "Maximum size of asset that should be inline as modules. Default: 8kb.",
+        "multiple": false,
+        "path": "module.parser.asset.dataUrlCondition.maxSize",
+        "type": "number",
+      },
+    ],
+    "description": "Maximum size of asset that should be inline as modules. Default: 8kb.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "module-parser-javascript-amd": Object {
+    "configs": Array [
+      Object {
+        "description": "You can pass \`false\` to disable AMD support.",
+        "multiple": false,
+        "path": "module.parser.javascript.amd",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "You can pass \`false\` to disable AMD support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-amd": Object {
+    "configs": Array [
+      Object {
+        "description": "You can pass \`false\` to disable AMD support.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.amd",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "You can pass \`false\` to disable AMD support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-browserify": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable special handling for browserify bundles.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.browserify",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable special handling for browserify bundles.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-commonjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of CommonJs syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.commonjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of CommonJs syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-harmony": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.harmony",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of import() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of import() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-node": Object {
+    "configs": Array [
+      Object {
+        "description": "Include polyfills or mocks for various node stuff.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.node",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Include polyfills or mocks for various node stuff.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-node-dirname": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__dirname' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.node.__dirname",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__dirname' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-node-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__filename' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.node.__filename",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__filename' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-node-global": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the 'global' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.node.global",
+        "type": "boolean",
+      },
+    ],
+    "description": "Include a polyfill for the 'global' variable.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-require-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.context syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.requireContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.context syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-require-ensure": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.ensure syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.requireEnsure",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.ensure syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-require-include": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.include syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.requireInclude",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.include syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-require-js": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.requireJs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-system": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.system",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of new URL() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of new URL() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-worker": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible.",
+        "multiple": true,
+        "path": "module.parser.javascript/auto.worker[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.worker",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-worker-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.worker",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-browserify": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable special handling for browserify bundles.",
+        "multiple": false,
+        "path": "module.parser.javascript.browserify",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable special handling for browserify bundles.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-commonjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of CommonJs syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.commonjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of CommonJs syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-amd": Object {
+    "configs": Array [
+      Object {
+        "description": "You can pass \`false\` to disable AMD support.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.amd",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "You can pass \`false\` to disable AMD support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-browserify": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable special handling for browserify bundles.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.browserify",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable special handling for browserify bundles.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-commonjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of CommonJs syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.commonjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of CommonJs syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-harmony": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.harmony",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of import() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of import() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-node": Object {
+    "configs": Array [
+      Object {
+        "description": "Include polyfills or mocks for various node stuff.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.node",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Include polyfills or mocks for various node stuff.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-node-dirname": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__dirname' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.node.__dirname",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__dirname' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-node-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__filename' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.node.__filename",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__filename' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-node-global": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the 'global' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.node.global",
+        "type": "boolean",
+      },
+    ],
+    "description": "Include a polyfill for the 'global' variable.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-require-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.context syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.requireContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.context syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-require-ensure": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.ensure syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.requireEnsure",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.ensure syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-require-include": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.include syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.requireInclude",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.include syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-require-js": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.requireJs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-system": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.system",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of new URL() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of new URL() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-worker": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible.",
+        "multiple": true,
+        "path": "module.parser.javascript/dynamic.worker[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.worker",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-worker-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.worker",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-amd": Object {
+    "configs": Array [
+      Object {
+        "description": "You can pass \`false\` to disable AMD support.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.amd",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "You can pass \`false\` to disable AMD support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-browserify": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable special handling for browserify bundles.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.browserify",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable special handling for browserify bundles.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-commonjs": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of CommonJs syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.commonjs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of CommonJs syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-harmony": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.harmony",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of import() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of import() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-node": Object {
+    "configs": Array [
+      Object {
+        "description": "Include polyfills or mocks for various node stuff.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.node",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Include polyfills or mocks for various node stuff.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-node-dirname": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__dirname' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.node.__dirname",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__dirname' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-node-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__filename' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.node.__filename",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__filename' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-node-global": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the 'global' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.node.global",
+        "type": "boolean",
+      },
+    ],
+    "description": "Include a polyfill for the 'global' variable.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-require-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.context syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.requireContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.context syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-require-ensure": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.ensure syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.requireEnsure",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.ensure syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-require-include": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.include syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.requireInclude",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.include syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-require-js": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.requireJs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-system": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.system",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of new URL() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of new URL() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-worker": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible.",
+        "multiple": true,
+        "path": "module.parser.javascript/esm.worker[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.worker",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-worker-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.worker",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-harmony": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.harmony",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of EcmaScript Modules syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of import() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.import",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of import() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-node": Object {
+    "configs": Array [
+      Object {
+        "description": "Include polyfills or mocks for various node stuff.",
+        "multiple": false,
+        "path": "module.parser.javascript.node",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Include polyfills or mocks for various node stuff.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-node-dirname": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__dirname' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript.node.__dirname",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__dirname' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-node-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the '__filename' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript.node.__filename",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "mock",
+          "eval-only",
+        ],
+      },
+    ],
+    "description": "Include a polyfill for the '__filename' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-node-global": Object {
+    "configs": Array [
+      Object {
+        "description": "Include a polyfill for the 'global' variable.",
+        "multiple": false,
+        "path": "module.parser.javascript.node.global",
+        "type": "boolean",
+      },
+    ],
+    "description": "Include a polyfill for the 'global' variable.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-require-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.context syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.requireContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.context syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-require-ensure": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.ensure syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.requireEnsure",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.ensure syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-require-include": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.include syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.requireInclude",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.include syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-require-js": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+        "multiple": false,
+        "path": "module.parser.javascript.requireJs",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-system": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+        "multiple": false,
+        "path": "module.parser.javascript.system",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-url": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of new URL() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.url",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of new URL() syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-worker": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible.",
+        "multiple": true,
+        "path": "module.parser.javascript.worker[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript.worker",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify a syntax that should be parsed as WebWorker reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', 'abc()' handles 'abc()', and combinations are also possible. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-worker-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "multiple": false,
+        "path": "module.parser.javascript.worker",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-rules-compiler": Object {
     "configs": Array [
       Object {
@@ -678,6 +1903,25 @@ Object {
       },
     ],
     "description": "Match the child compiler name.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-dependency": Object {
+    "configs": Array [
+      Object {
+        "description": "Match dependency type.",
+        "multiple": true,
+        "path": "module.rules[].dependency",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match dependency type.",
+        "multiple": true,
+        "path": "module.rules[].dependency",
+        "type": "string",
+      },
+    ],
+    "description": "Match dependency type.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -755,6 +1999,38 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-issuer-layer": Object {
+    "configs": Array [
+      Object {
+        "description": "Match layer of the issuer of this module (The module pointing to this module).",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match layer of the issuer of this module (The module pointing to this module).",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer",
+        "type": "string",
+      },
+    ],
+    "description": "Match layer of the issuer of this module (The module pointing to this module).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-layer": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the layer in which the module should be placed in.",
+        "multiple": true,
+        "path": "module.rules[].layer",
+        "type": "string",
+      },
+    ],
+    "description": "Specifies the layer in which the module should be placed in.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-loader": Object {
     "configs": Array [
       Object {
@@ -768,16 +2044,22 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
-  "module-rules-options": Object {
+  "module-rules-mimetype": Object {
     "configs": Array [
       Object {
-        "description": "Options passed to a loader.",
+        "description": "Match module mimetype when load from Data URI.",
         "multiple": true,
-        "path": "module.rules[].options",
+        "path": "module.rules[].mimetype",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match module mimetype when load from Data URI.",
+        "multiple": true,
+        "path": "module.rules[].mimetype",
         "type": "string",
       },
     ],
-    "description": "Options passed to a loader.",
+    "description": "Match module mimetype when load from Data URI.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -829,6 +2111,25 @@ Object {
       },
     ],
     "description": "Match the resource path of the module.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-resource-fragment": Object {
+    "configs": Array [
+      Object {
+        "description": "Match the resource fragment of the module.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match the resource fragment of the module.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment",
+        "type": "string",
+      },
+    ],
+    "description": "Match the resource fragment of the module.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -1124,6 +2425,7 @@ Object {
           false,
           true,
           "mock",
+          "eval-only",
         ],
       },
     ],
@@ -1142,6 +2444,7 @@ Object {
           false,
           true,
           "mock",
+          "eval-only",
         ],
       },
     ],
@@ -1209,6 +2512,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-emit-on-errors": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
+        "multiple": false,
+        "path": "optimization.emitOnErrors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit assets even when errors occur. Critical errors are emitted into the generated code and will cause errors at runtime.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-flag-included-chunks": Object {
     "configs": Array [
       Object {
@@ -1238,15 +2554,25 @@ Object {
   "optimization-mangle-exports": Object {
     "configs": Array [
       Object {
-        "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports).",
+        "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\\"deterministic\\": generate short deterministic names optimized for caching, \\"size\\": generate the shortest possible names).",
+        "multiple": false,
+        "path": "optimization.mangleExports",
+        "type": "enum",
+        "values": Array [
+          "size",
+          "deterministic",
+        ],
+      },
+      Object {
+        "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\\"deterministic\\": generate short deterministic names optimized for caching, \\"size\\": generate the shortest possible names).",
         "multiple": false,
         "path": "optimization.mangleExports",
         "type": "boolean",
       },
     ],
-    "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports).",
+    "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports, true/\\"deterministic\\": generate short deterministic names optimized for caching, \\"size\\": generate the shortest possible names).",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-mangle-wasm-imports": Object {
     "configs": Array [
@@ -1308,19 +2634,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "optimization-no-emit-on-errors": Object {
-    "configs": Array [
-      Object {
-        "description": "Avoid emitting assets when errors occur.",
-        "multiple": false,
-        "path": "optimization.noEmitOnErrors",
-        "type": "boolean",
-      },
-    ],
-    "description": "Avoid emitting assets when errors occur.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "optimization-node-env": Object {
     "configs": Array [
       Object {
@@ -1366,6 +2679,19 @@ Object {
       },
     ],
     "description": "Figure out which exports are provided by modules to generate more efficient code.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-real-content-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use real [contenthash] based on final content of the assets.",
+        "multiple": false,
+        "path": "optimization.realContentHash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use real [contenthash] based on final content of the assets.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1434,15 +2760,24 @@ Object {
   "optimization-side-effects": Object {
     "configs": Array [
       Object {
-        "description": "Skip over modules which are flagged to contain no side effects when exports are not used.",
+        "description": "Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).",
+        "multiple": false,
+        "path": "optimization.sideEffects",
+        "type": "enum",
+        "values": Array [
+          "flag",
+        ],
+      },
+      Object {
+        "description": "Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).",
         "multiple": false,
         "path": "optimization.sideEffects",
         "type": "boolean",
       },
     ],
-    "description": "Skip over modules which are flagged to contain no side effects when exports are not used.",
+    "description": "Skip over modules which contain no side effects when exports are not used (false: disabled, 'flag': only use manually placed side effects flag, true: also analyse source code for side effects).",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-split-chunks": Object {
     "configs": Array [
@@ -1490,6 +2825,45 @@ Object {
     "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
     "multiple": false,
     "simpleType": "string",
+  },
+  "optimization-split-chunks-default-size-types": Object {
+    "configs": Array [
+      Object {
+        "description": "Size type, like 'javascript', 'webassembly'.",
+        "multiple": true,
+        "path": "optimization.splitChunks.defaultSizeTypes[]",
+        "type": "string",
+      },
+    ],
+    "description": "Size type, like 'javascript', 'webassembly'.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "optimization-split-chunks-default-size-types-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Sets the size types which are used when a number is used for sizes.",
+        "multiple": false,
+        "path": "optimization.splitChunks.defaultSizeTypes",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Sets the size types which are used when a number is used for sizes.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "optimization-split-chunks-enforce-size-threshold": Object {
+    "configs": Array [
+      Object {
+        "description": "Size of the javascript part of the chunk.",
+        "multiple": false,
+        "path": "optimization.splitChunks.enforceSizeThreshold",
+        "type": "number",
+      },
+    ],
+    "description": "Size of the javascript part of the chunk.",
+    "multiple": false,
+    "simpleType": "number",
   },
   "optimization-split-chunks-fallback-cache-group-automatic-name-delimiter": Object {
     "configs": Array [
@@ -1708,55 +3082,101 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-split-chunks-used-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.",
+        "multiple": false,
+        "path": "optimization.splitChunks.usedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Compare used exports when checking common modules. Modules will only be put in the same chunk when exports are equal.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-used-exports": Object {
     "configs": Array [
       Object {
-        "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.",
+        "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \\"global\\": analyse exports globally for all runtimes combined).",
+        "multiple": false,
+        "path": "optimization.usedExports",
+        "type": "enum",
+        "values": Array [
+          "global",
+        ],
+      },
+      Object {
+        "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \\"global\\": analyse exports globally for all runtimes combined).",
         "multiple": false,
         "path": "optimization.usedExports",
         "type": "boolean",
       },
     ],
-    "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code.",
+    "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code (true: analyse used exports for each runtime, \\"global\\": analyse exports globally for all runtimes combined).",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "output-asset-module-filename": Object {
     "configs": Array [
       Object {
-        "description": "The filename of asset modules as relative path inside the \`output.path\` directory.",
+        "description": "The filename of asset modules as relative path inside the 'output.path' directory.",
         "multiple": false,
         "path": "output.assetModuleFilename",
         "type": "string",
       },
     ],
-    "description": "The filename of asset modules as relative path inside the \`output.path\` directory.",
+    "description": "The filename of asset modules as relative path inside the 'output.path' directory.",
     "multiple": false,
     "simpleType": "string",
   },
-  "output-chunk-callback-name": Object {
+  "output-charset": Object {
     "configs": Array [
       Object {
-        "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
+        "description": "Add charset attribute for script tag.",
         "multiple": false,
-        "path": "output.chunkCallbackName",
-        "type": "string",
+        "path": "output.charset",
+        "type": "boolean",
       },
     ],
-    "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
+    "description": "Add charset attribute for script tag.",
     "multiple": false,
-    "simpleType": "string",
+    "simpleType": "boolean",
   },
   "output-chunk-filename": Object {
     "configs": Array [
       Object {
-        "description": "The filename of non-entry chunks as relative path inside the \`output.path\` directory.",
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
         "multiple": false,
         "path": "output.chunkFilename",
         "type": "string",
       },
     ],
-    "description": "The filename of non-entry chunks as relative path inside the \`output.path\` directory.",
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-chunk-format": Object {
+    "configs": Array [
+      Object {
+        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkFormat",
+        "type": "enum",
+        "values": Array [
+          "array-push",
+          "commonjs",
+          false,
+        ],
+      },
+      Object {
+        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkFormat",
+        "type": "string",
+      },
+    ],
+    "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -1772,6 +3192,53 @@ Object {
     "description": "Number of milliseconds before chunk request expires.",
     "multiple": false,
     "simpleType": "number",
+  },
+  "output-chunk-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkLoading",
+        "type": "enum",
+        "values": Array [
+          "jsonp",
+          "import-scripts",
+          "require",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.chunkLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-chunk-loading-global": Object {
+    "configs": Array [
+      Object {
+        "description": "The global variable used by webpack for loading of chunks.",
+        "multiple": false,
+        "path": "output.chunkLoadingGlobal",
+        "type": "string",
+      },
+    ],
+    "description": "The global variable used by webpack for loading of chunks.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "output-compare-before-emit": Object {
     "configs": Array [
@@ -1843,32 +3310,48 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-ecma-version": Object {
+  "output-enabled-chunk-loading-types": Object {
     "configs": Array [
       Object {
-        "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-        "multiple": false,
-        "path": "output.ecmaVersion",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledChunkLoadingTypes[]",
         "type": "enum",
         "values": Array [
-          2009,
+          "jsonp",
+          "import-scripts",
+          "require",
+          "async-node",
         ],
       },
       Object {
-        "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
-        "multiple": false,
-        "path": "output.ecmaVersion",
-        "type": "number",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledChunkLoadingTypes[]",
+        "type": "string",
       },
     ],
-    "description": "The maximum EcmaScript version of the webpack generated code (doesn't include input source code from modules).",
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-enabled-chunk-loading-types-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of chunk loading types enabled for use by entry points.",
+        "multiple": false,
+        "path": "output.enabledChunkLoadingTypes",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of chunk loading types enabled for use by entry points.",
     "multiple": false,
-    "simpleType": "number",
+    "simpleType": "boolean",
   },
   "output-enabled-library-types": Object {
     "configs": Array [
       Object {
-        "description": "Type of library.",
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
         "multiple": true,
         "path": "output.enabledLibraryTypes[]",
         "type": "enum",
@@ -1891,8 +3374,14 @@ Object {
           "system",
         ],
       },
+      Object {
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledLibraryTypes[]",
+        "type": "string",
+      },
     ],
-    "description": "Type of library.",
+    "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -1909,16 +3398,144 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-enabled-wasm-loading-types": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledWasmLoadingTypes[]",
+        "type": "enum",
+        "values": Array [
+          "fetch-streaming",
+          "fetch",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": true,
+        "path": "output.enabledWasmLoadingTypes[]",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "output-enabled-wasm-loading-types-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of wasm loading types enabled for use by entry points.",
+        "multiple": false,
+        "path": "output.enabledWasmLoadingTypes",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of wasm loading types enabled for use by entry points.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-arrow-function": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports arrow functions ('() => { ... }').",
+        "multiple": false,
+        "path": "output.environment.arrowFunction",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports arrow functions ('() => { ... }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-big-int-literal": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports BigInt as literal (123n).",
+        "multiple": false,
+        "path": "output.environment.bigIntLiteral",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports BigInt as literal (123n).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-const": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports const and let for variable declarations.",
+        "multiple": false,
+        "path": "output.environment.const",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports const and let for variable declarations.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-destructuring": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports destructuring ('{ a, b } = obj').",
+        "multiple": false,
+        "path": "output.environment.destructuring",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports destructuring ('{ a, b } = obj').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-dynamic-import": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports an async import() function to import EcmaScript modules.",
+        "multiple": false,
+        "path": "output.environment.dynamicImport",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports an async import() function to import EcmaScript modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-for-of": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+        "multiple": false,
+        "path": "output.environment.forOf",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-module": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
+        "multiple": false,
+        "path": "output.environment.module",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-filename": Object {
     "configs": Array [
       Object {
-        "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
         "multiple": false,
         "path": "output.filename",
         "type": "string",
       },
     ],
-    "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2000,29 +3617,29 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "output-hot-update-function": Object {
+  "output-hot-update-global": Object {
     "configs": Array [
       Object {
-        "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+        "description": "The global variable used by webpack for loading of hot update chunks.",
         "multiple": false,
-        "path": "output.hotUpdateFunction",
+        "path": "output.hotUpdateGlobal",
         "type": "string",
       },
     ],
-    "description": "The JSONP function used by webpack for async loading of hot update chunks.",
+    "description": "The global variable used by webpack for loading of hot update chunks.",
     "multiple": false,
     "simpleType": "string",
   },
   "output-hot-update-main-filename": Object {
     "configs": Array [
       Object {
-        "description": "The filename of the Hot Update Main File. It is inside the \`output.path\` directory.",
+        "description": "The filename of the Hot Update Main File. It is inside the 'output.path' directory.",
         "multiple": false,
         "path": "output.hotUpdateMainFilename",
         "type": "string",
       },
     ],
-    "description": "The filename of the Hot Update Main File. It is inside the \`output.path\` directory.",
+    "description": "The filename of the Hot Update Main File. It is inside the 'output.path' directory.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2039,34 +3656,29 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "output-jsonp-function": Object {
+  "output-import-function-name": Object {
     "configs": Array [
       Object {
-        "description": "The JSONP function used by webpack for async loading of chunks.",
+        "description": "The name of the native import() function (can be exchanged for a polyfill).",
         "multiple": false,
-        "path": "output.jsonpFunction",
+        "path": "output.importFunctionName",
         "type": "string",
       },
     ],
-    "description": "The JSONP function used by webpack for async loading of chunks.",
+    "description": "The name of the native import() function (can be exchanged for a polyfill).",
     "multiple": false,
     "simpleType": "string",
   },
-  "output-jsonp-script-type": Object {
+  "output-import-meta-name": Object {
     "configs": Array [
       Object {
-        "description": "This option enables loading async chunks via a custom script type, such as script type=\\"module\\".",
+        "description": "The name of the native import.meta object (can be exchanged for a polyfill).",
         "multiple": false,
-        "path": "output.jsonpScriptType",
-        "type": "enum",
-        "values": Array [
-          false,
-          "text/javascript",
-          "module",
-        ],
+        "path": "output.importMetaName",
+        "type": "string",
       },
     ],
-    "description": "This option enables loading async chunks via a custom script type, such as script type=\\"module\\".",
+    "description": "The name of the native import.meta object (can be exchanged for a polyfill).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2320,7 +3932,7 @@ Object {
   "output-library-type": Object {
     "configs": Array [
       Object {
-        "description": "Type of library.",
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
         "multiple": false,
         "path": "output.library.type",
         "type": "enum",
@@ -2343,8 +3955,14 @@ Object {
           "system",
         ],
       },
+      Object {
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.library.type",
+        "type": "string",
+      },
     ],
-    "description": "Type of library.",
+    "description": "Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2393,15 +4011,33 @@ Object {
         "description": "Include comments with information about the modules.",
         "multiple": false,
         "path": "output.pathinfo",
+        "type": "enum",
+        "values": Array [
+          "verbose",
+        ],
+      },
+      Object {
+        "description": "Include comments with information about the modules.",
+        "multiple": false,
+        "path": "output.pathinfo",
         "type": "boolean",
       },
     ],
     "description": "Include comments with information about the modules.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "output-public-path": Object {
     "configs": Array [
+      Object {
+        "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
+        "multiple": false,
+        "path": "output.publicPath",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
       Object {
         "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
         "multiple": false,
@@ -2413,16 +4049,34 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-script-type": Object {
+    "configs": Array [
+      Object {
+        "description": "This option enables loading async chunks via a custom script type, such as script type=\\"module\\".",
+        "multiple": false,
+        "path": "output.scriptType",
+        "type": "enum",
+        "values": Array [
+          false,
+          "text/javascript",
+          "module",
+        ],
+      },
+    ],
+    "description": "This option enables loading async chunks via a custom script type, such as script type=\\"module\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-source-map-filename": Object {
     "configs": Array [
       Object {
-        "description": "The filename of the SourceMaps for the JavaScript files. They are inside the \`output.path\` directory.",
+        "description": "The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.",
         "multiple": false,
         "path": "output.sourceMapFilename",
         "type": "string",
       },
     ],
-    "description": "The filename of the SourceMaps for the JavaScript files. They are inside the \`output.path\` directory.",
+    "description": "The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2465,16 +4119,116 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-wasm-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.wasmLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.wasmLoading",
+        "type": "enum",
+        "values": Array [
+          "fetch-streaming",
+          "fetch",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.wasmLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-webassembly-module-filename": Object {
     "configs": Array [
       Object {
-        "description": "The filename of WebAssembly modules as relative path inside the \`output.path\` directory.",
+        "description": "The filename of WebAssembly modules as relative path inside the 'output.path' directory.",
         "multiple": false,
         "path": "output.webassemblyModuleFilename",
         "type": "string",
       },
     ],
-    "description": "The filename of WebAssembly modules as relative path inside the \`output.path\` directory.",
+    "description": "The filename of WebAssembly modules as relative path inside the 'output.path' directory.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-worker-chunk-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerChunkLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerChunkLoading",
+        "type": "enum",
+        "values": Array [
+          "jsonp",
+          "import-scripts",
+          "require",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerChunkLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-worker-wasm-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerWasmLoading",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerWasmLoading",
+        "type": "enum",
+        "values": Array [
+          "fetch-streaming",
+          "fetch",
+          "async-node",
+        ],
+      },
+      Object {
+        "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
+        "multiple": false,
+        "path": "output.workerWasmLoading",
+        "type": "string",
+      },
+    ],
+    "description": "The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2743,6 +4497,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-condition-names": Object {
+    "configs": Array [
+      Object {
+        "description": "Condition names for exports field entry point.",
+        "multiple": true,
+        "path": "resolve.conditionNames[]",
+        "type": "string",
+      },
+    ],
+    "description": "Condition names for exports field entry point.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-condition-names-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Condition names for exports field entry point.",
+        "multiple": false,
+        "path": "resolve.conditionNames",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Condition names for exports field entry point.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-description-files": Object {
     "configs": Array [
       Object {
@@ -2772,13 +4552,39 @@ Object {
   "resolve-enforce-extension": Object {
     "configs": Array [
       Object {
-        "description": "Enforce using one of the extensions from the extensions option.",
+        "description": "Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).",
         "multiple": false,
         "path": "resolve.enforceExtension",
         "type": "boolean",
       },
     ],
-    "description": "Enforce using one of the extensions from the extensions option.",
+    "description": "Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-exports-fields": Object {
+    "configs": Array [
+      Object {
+        "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
+        "multiple": true,
+        "path": "resolve.exportsFields[]",
+        "type": "string",
+      },
+    ],
+    "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-exports-fields-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
+        "multiple": false,
+        "path": "resolve.exportsFields",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2805,6 +4611,106 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-fallback-alias": Object {
+    "configs": Array [
+      Object {
+        "description": "Ignore request (replace with empty module).",
+        "multiple": true,
+        "path": "resolve.fallback[].alias",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "New request.",
+        "multiple": true,
+        "path": "resolve.fallback[].alias",
+        "type": "string",
+      },
+    ],
+    "description": "Ignore request (replace with empty module). New request.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-fallback-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Request to be redirected.",
+        "multiple": true,
+        "path": "resolve.fallback[].name",
+        "type": "string",
+      },
+    ],
+    "description": "Request to be redirected.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-fallback-only-module": Object {
+    "configs": Array [
+      Object {
+        "description": "Redirect only exact matching request.",
+        "multiple": true,
+        "path": "resolve.fallback[].onlyModule",
+        "type": "boolean",
+      },
+    ],
+    "description": "Redirect only exact matching request.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "resolve-fallback-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Redirect module requests.",
+        "multiple": false,
+        "path": "resolve.fallback",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Redirect module requests.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-fully-specified": Object {
+    "configs": Array [
+      Object {
+        "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
+        "multiple": false,
+        "path": "resolve.fullySpecified",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-imports-fields": Object {
+    "configs": Array [
+      Object {
+        "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+        "multiple": true,
+        "path": "resolve.importsFields[]",
+        "type": "string",
+      },
+    ],
+    "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-imports-fields-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+        "multiple": false,
+        "path": "resolve.importsFields",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2921,6 +4827,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-loader-condition-names": Object {
+    "configs": Array [
+      Object {
+        "description": "Condition names for exports field entry point.",
+        "multiple": true,
+        "path": "resolveLoader.conditionNames[]",
+        "type": "string",
+      },
+    ],
+    "description": "Condition names for exports field entry point.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-condition-names-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Condition names for exports field entry point.",
+        "multiple": false,
+        "path": "resolveLoader.conditionNames",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Condition names for exports field entry point.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-loader-description-files": Object {
     "configs": Array [
       Object {
@@ -2950,13 +4882,39 @@ Object {
   "resolve-loader-enforce-extension": Object {
     "configs": Array [
       Object {
-        "description": "Enforce using one of the extensions from the extensions option.",
+        "description": "Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).",
         "multiple": false,
         "path": "resolveLoader.enforceExtension",
         "type": "boolean",
       },
     ],
-    "description": "Enforce using one of the extensions from the extensions option.",
+    "description": "Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-exports-fields": Object {
+    "configs": Array [
+      Object {
+        "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
+        "multiple": true,
+        "path": "resolveLoader.exportsFields[]",
+        "type": "string",
+      },
+    ],
+    "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-exports-fields-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
+        "multiple": false,
+        "path": "resolveLoader.exportsFields",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2983,6 +4941,106 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-fallback-alias": Object {
+    "configs": Array [
+      Object {
+        "description": "Ignore request (replace with empty module).",
+        "multiple": true,
+        "path": "resolveLoader.fallback[].alias",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "New request.",
+        "multiple": true,
+        "path": "resolveLoader.fallback[].alias",
+        "type": "string",
+      },
+    ],
+    "description": "Ignore request (replace with empty module). New request.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-fallback-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Request to be redirected.",
+        "multiple": true,
+        "path": "resolveLoader.fallback[].name",
+        "type": "string",
+      },
+    ],
+    "description": "Request to be redirected.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-fallback-only-module": Object {
+    "configs": Array [
+      Object {
+        "description": "Redirect only exact matching request.",
+        "multiple": true,
+        "path": "resolveLoader.fallback[].onlyModule",
+        "type": "boolean",
+      },
+    ],
+    "description": "Redirect only exact matching request.",
+    "multiple": true,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-fallback-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Redirect module requests.",
+        "multiple": false,
+        "path": "resolveLoader.fallback",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Redirect module requests.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-fully-specified": Object {
+    "configs": Array [
+      Object {
+        "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
+        "multiple": false,
+        "path": "resolveLoader.fullySpecified",
+        "type": "boolean",
+      },
+    ],
+    "description": "Treats the request specified by the user as fully specified, meaning no extensions are added and the mainFiles in directories are not resolved (This doesn't affect requests from mainFields, aliasFields or aliases).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-imports-fields": Object {
+    "configs": Array [
+      Object {
+        "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+        "multiple": true,
+        "path": "resolveLoader.importsFields[]",
+        "type": "string",
+      },
+    ],
+    "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-imports-fields-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+        "multiple": false,
+        "path": "resolveLoader.importsFields",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3061,6 +5119,90 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-prefer-absolute": Object {
+    "configs": Array [
+      Object {
+        "description": "Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.",
+        "multiple": false,
+        "path": "resolveLoader.preferAbsolute",
+        "type": "boolean",
+      },
+    ],
+    "description": "Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-prefer-relative": Object {
+    "configs": Array [
+      Object {
+        "description": "Prefer to resolve module requests as relative request and fallback to resolving as module.",
+        "multiple": false,
+        "path": "resolveLoader.preferRelative",
+        "type": "boolean",
+      },
+    ],
+    "description": "Prefer to resolve module requests as relative request and fallback to resolving as module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-restrictions": Object {
+    "configs": Array [
+      Object {
+        "description": "Resolve restriction. Resolve result must fulfill this restriction.",
+        "multiple": true,
+        "path": "resolveLoader.restrictions[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Resolve restriction. Resolve result must fulfill this restriction.",
+        "multiple": true,
+        "path": "resolveLoader.restrictions[]",
+        "type": "path",
+      },
+    ],
+    "description": "Resolve restriction. Resolve result must fulfill this restriction.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-restrictions-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
+        "multiple": false,
+        "path": "resolveLoader.restrictions",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-loader-roots": Object {
+    "configs": Array [
+      Object {
+        "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
+        "multiple": true,
+        "path": "resolveLoader.roots[]",
+        "type": "string",
+      },
+    ],
+    "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-loader-roots-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
+        "multiple": false,
+        "path": "resolveLoader.roots",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3181,6 +5323,90 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "resolve-prefer-absolute": Object {
+    "configs": Array [
+      Object {
+        "description": "Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.",
+        "multiple": false,
+        "path": "resolve.preferAbsolute",
+        "type": "boolean",
+      },
+    ],
+    "description": "Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-prefer-relative": Object {
+    "configs": Array [
+      Object {
+        "description": "Prefer to resolve module requests as relative request and fallback to resolving as module.",
+        "multiple": false,
+        "path": "resolve.preferRelative",
+        "type": "boolean",
+      },
+    ],
+    "description": "Prefer to resolve module requests as relative request and fallback to resolving as module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-restrictions": Object {
+    "configs": Array [
+      Object {
+        "description": "Resolve restriction. Resolve result must fulfill this restriction.",
+        "multiple": true,
+        "path": "resolve.restrictions[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Resolve restriction. Resolve result must fulfill this restriction.",
+        "multiple": true,
+        "path": "resolve.restrictions[]",
+        "type": "path",
+      },
+    ],
+    "description": "Resolve restriction. Resolve result must fulfill this restriction.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-restrictions-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
+        "multiple": false,
+        "path": "resolve.restrictions",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "resolve-roots": Object {
+    "configs": Array [
+      Object {
+        "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
+        "multiple": true,
+        "path": "resolve.roots[]",
+        "type": "string",
+      },
+    ],
+    "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "resolve-roots-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
+        "multiple": false,
+        "path": "resolve.roots",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "resolve-symlinks": Object {
     "configs": Array [
       Object {
@@ -3220,6 +5446,162 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "snapshot-build-dependencies-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.buildDependencies.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-build-dependencies-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.buildDependencies.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-immutable-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "A path to a immutable directory (usually a package manager cache directory).",
+        "multiple": true,
+        "path": "snapshot.immutablePaths[]",
+        "type": "path",
+      },
+    ],
+    "description": "A path to a immutable directory (usually a package manager cache directory).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "snapshot-immutable-paths-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+        "multiple": false,
+        "path": "snapshot.immutablePaths",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-managed-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "A path to a managed directory (usually a node_modules directory).",
+        "multiple": true,
+        "path": "snapshot.managedPaths[]",
+        "type": "path",
+      },
+    ],
+    "description": "A path to a managed directory (usually a node_modules directory).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "snapshot-managed-paths-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+        "multiple": false,
+        "path": "snapshot.managedPaths",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-module-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.module.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-module-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.module.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-build-dependencies-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolveBuildDependencies.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-build-dependencies-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolveBuildDependencies.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-hash": Object {
+    "configs": Array [
+      Object {
+        "description": "Use hashes of the content of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolve.hash",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use hashes of the content of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "snapshot-resolve-timestamp": Object {
+    "configs": Array [
+      Object {
+        "description": "Use timestamps of the files/directories to determine invalidation.",
+        "multiple": false,
+        "path": "snapshot.resolve.timestamp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use timestamps of the files/directories to determine invalidation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats": Object {
     "configs": Array [
       Object {
@@ -3229,12 +5611,13 @@ Object {
         "type": "enum",
         "values": Array [
           "none",
+          "summary",
           "errors-only",
+          "errors-warnings",
           "minimal",
           "normal",
           "detailed",
           "verbose",
-          "errors-warnings",
         ],
       },
       Object {
@@ -3287,6 +5670,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "stats-assets-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display assets (groups will be collapsed to fit this space).",
+        "multiple": false,
+        "path": "stats.assetsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display assets (groups will be collapsed to fit this space).",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "stats-built-at": Object {
     "configs": Array [
       Object {
@@ -3303,13 +5699,13 @@ Object {
   "stats-cached": Object {
     "configs": Array [
       Object {
-        "description": "Add information about cached (not built) modules.",
+        "description": "Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).",
         "multiple": false,
         "path": "stats.cached",
         "type": "boolean",
       },
     ],
-    "description": "Add information about cached (not built) modules.",
+    "description": "Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3326,6 +5722,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-cached-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about cached (not built) modules.",
+        "multiple": false,
+        "path": "stats.cachedModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about cached (not built) modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-children": Object {
     "configs": Array [
       Object {
@@ -3338,6 +5747,45 @@ Object {
     "description": "Add children information.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "stats-chunk-group-auxiliary": Object {
+    "configs": Array [
+      Object {
+        "description": "Display auxiliary assets in chunk groups.",
+        "multiple": false,
+        "path": "stats.chunkGroupAuxiliary",
+        "type": "boolean",
+      },
+    ],
+    "description": "Display auxiliary assets in chunk groups.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-chunk-group-children": Object {
+    "configs": Array [
+      Object {
+        "description": "Display children of chunk groups.",
+        "multiple": false,
+        "path": "stats.chunkGroupChildren",
+        "type": "boolean",
+      },
+    ],
+    "description": "Display children of chunk groups.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-chunk-group-max-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Limit of assets displayed in chunk groups.",
+        "multiple": false,
+        "path": "stats.chunkGroupMaxAssets",
+        "type": "number",
+      },
+    ],
+    "description": "Limit of assets displayed in chunk groups.",
+    "multiple": false,
+    "simpleType": "number",
   },
   "stats-chunk-groups": Object {
     "configs": Array [
@@ -3388,19 +5836,6 @@ Object {
       },
     ],
     "description": "Add information about parent, children and sibling chunks to chunk information.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
-  "stats-chunk-root-modules": Object {
-    "configs": Array [
-      Object {
-        "description": "Add root modules information to chunk information.",
-        "multiple": false,
-        "path": "stats.chunkRootModules",
-        "type": "boolean",
-      },
-    ],
-    "description": "Add root modules information to chunk information.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3534,6 +5969,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "stats-dependent-modules": Object {
+    "configs": Array [
+      Object {
+        "description": "Show chunk modules that are dependencies of other modules of the chunk.",
+        "multiple": false,
+        "path": "stats.dependentModules",
+        "type": "boolean",
+      },
+    ],
+    "description": "Show chunk modules that are dependencies of other modules of the chunk.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-depth": Object {
     "configs": Array [
       Object {
@@ -3553,12 +6001,21 @@ Object {
         "description": "Display the entry points with the corresponding bundles.",
         "multiple": false,
         "path": "stats.entrypoints",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Display the entry points with the corresponding bundles.",
+        "multiple": false,
+        "path": "stats.entrypoints",
         "type": "boolean",
       },
     ],
     "description": "Display the entry points with the corresponding bundles.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "stats-env": Object {
     "configs": Array [
@@ -3609,6 +6066,19 @@ Object {
       },
     ],
     "description": "Add errors.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-errors-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add errors count.",
+        "multiple": false,
+        "path": "stats.errorsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add errors count.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3679,6 +6149,136 @@ Object {
       },
     ],
     "description": "Clear all items provided in configuration. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-chunk": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by how their are related to chunks.",
+        "multiple": false,
+        "path": "stats.groupAssetsByChunk",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by how their are related to chunks.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-emit-status": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their status (emitted, compared for emit or cached).",
+        "multiple": false,
+        "path": "stats.groupAssetsByEmitStatus",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their status (emitted, compared for emit or cached).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-extension": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their extension.",
+        "multiple": false,
+        "path": "stats.groupAssetsByExtension",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their extension.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-info": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+        "multiple": false,
+        "path": "stats.groupAssetsByInfo",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-assets-by-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Group assets by their path.",
+        "multiple": false,
+        "path": "stats.groupAssetsByPath",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group assets by their path.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-attributes": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
+        "multiple": false,
+        "path": "stats.groupModulesByAttributes",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-cache-status": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their status (cached or built and cacheable).",
+        "multiple": false,
+        "path": "stats.groupModulesByCacheStatus",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their status (cached or built and cacheable).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-extension": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their extension.",
+        "multiple": false,
+        "path": "stats.groupModulesByExtension",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their extension.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-layer": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their layer.",
+        "multiple": false,
+        "path": "stats.groupModulesByLayer",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their layer.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their path.",
+        "multiple": false,
+        "path": "stats.groupModulesByPath",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their path.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3786,19 +6386,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "stats-max-modules": Object {
-    "configs": Array [
-      Object {
-        "description": "Set the maximum number of modules to be shown.",
-        "multiple": false,
-        "path": "stats.maxModules",
-        "type": "number",
-      },
-    ],
-    "description": "Set the maximum number of modules to be shown.",
-    "multiple": false,
-    "simpleType": "number",
-  },
   "stats-module-assets": Object {
     "configs": Array [
       Object {
@@ -3851,6 +6438,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "stats-modules-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).",
+        "multiple": false,
+        "path": "stats.modulesSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "stats-nested-modules": Object {
     "configs": Array [
       Object {
@@ -3863,6 +6463,19 @@ Object {
     "description": "Add information about modules nested in other modules (like with module concatenation).",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "stats-nested-modules-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display modules nested within other modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+        "multiple": false,
+        "path": "stats.nestedModulesSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display modules nested within other modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+    "multiple": false,
+    "simpleType": "number",
   },
   "stats-optimization-bailout": Object {
     "configs": Array [
@@ -3974,12 +6587,38 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-related-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+        "multiple": false,
+        "path": "stats.relatedAssets",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-runtime": Object {
+    "configs": Array [
+      Object {
+        "description": "Add information about runtime modules (deprecated: use 'runtimeModules' instead).",
+        "multiple": false,
+        "path": "stats.runtime",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add information about runtime modules (deprecated: use 'runtimeModules' instead).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-runtime-modules": Object {
     "configs": Array [
       Object {
         "description": "Add information about runtime modules.",
         "multiple": false,
-        "path": "stats.runtime",
+        "path": "stats.runtimeModules",
         "type": "boolean",
       },
     ],
@@ -4052,35 +6691,48 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-warnings-count": Object {
+    "configs": Array [
+      Object {
+        "description": "Add warnings count.",
+        "multiple": false,
+        "path": "stats.warningsCount",
+        "type": "boolean",
+      },
+    ],
+    "description": "Add warnings count.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-warnings-filter": Object {
     "configs": Array [
       Object {
-        "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": true,
         "path": "stats.warningsFilter[]",
         "type": "RegExp",
       },
       Object {
-        "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": true,
         "path": "stats.warningsFilter[]",
         "type": "string",
       },
     ],
-    "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
     "multiple": true,
     "simpleType": "string",
   },
   "stats-warnings-filter-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Clear all items provided in configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": false,
         "path": "stats.warningsFilter",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "description": "Clear all items provided in configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4088,24 +6740,36 @@ Object {
     "configs": Array [
       Object {
         "description": "Environment to build for.",
+        "multiple": true,
+        "path": "target[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Environment to build for. An array of environments to build for all of them when possible.",
         "multiple": false,
         "path": "target",
         "type": "enum",
         "values": Array [
-          "web",
-          "webworker",
-          "node",
-          "async-node",
-          "node-webkit",
-          "electron-main",
-          "electron-renderer",
-          "electron-preload",
+          false,
         ],
       },
     ],
-    "description": "Environment to build for.",
-    "multiple": false,
+    "description": "Environment to build for. Environment to build for. An array of environments to build for all of them when possible.",
+    "multiple": true,
     "simpleType": "string",
+  },
+  "target-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in configuration. Environment to build for. An array of environments to build for all of them when possible.",
+        "multiple": false,
+        "path": "target",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in configuration. Environment to build for. An array of environments to build for all of them when possible.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "watch": Object {
     "configs": Array [
@@ -4133,6 +6797,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "watch-options-follow-symlinks": Object {
+    "configs": Array [
+      Object {
+        "description": "Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').",
+        "multiple": false,
+        "path": "watchOptions.followSymlinks",
+        "type": "boolean",
+      },
+    ],
+    "description": "Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "watch-options-ignored": Object {
     "configs": Array [
       Object {
@@ -4141,21 +6818,27 @@ Object {
         "path": "watchOptions.ignored[]",
         "type": "string",
       },
+      Object {
+        "description": "Ignore some files from watching (glob pattern or regexp).",
+        "multiple": false,
+        "path": "watchOptions.ignored",
+        "type": "RegExp",
+      },
     ],
-    "description": "A glob pattern for files that should be ignored from watching.",
+    "description": "A glob pattern for files that should be ignored from watching. Ignore some files from watching (glob pattern or regexp).",
     "multiple": true,
     "simpleType": "string",
   },
   "watch-options-ignored-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Ignore some files from watching (glob pattern).",
+        "description": "Clear all items provided in configuration. Ignore some files from watching (glob pattern or regexp).",
         "multiple": false,
         "path": "watchOptions.ignored",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Ignore some files from watching (glob pattern).",
+    "description": "Clear all items provided in configuration. Ignore some files from watching (glob pattern or regexp).",
     "multiple": false,
     "simpleType": "boolean",
   },

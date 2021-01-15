@@ -28,6 +28,7 @@ const config = {
 	}
 };
 
+/** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{
 		stats: { entrypoints: false, chunkGroups: true, ...stats },

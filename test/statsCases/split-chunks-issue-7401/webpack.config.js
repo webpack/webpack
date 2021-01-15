@@ -10,6 +10,7 @@ const stats = {
 	chunkGroups: true,
 	modules: false
 };
+/** @type {import("../../../").Configuration} */
 module.exports = {
 	name: "default",
 	mode: "production",

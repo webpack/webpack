@@ -1,5 +1,6 @@
 import e from "./e";
+export default e;
 
-if(module.hot) {
+if (module.hot) {
 	module.hot.decline();
 }

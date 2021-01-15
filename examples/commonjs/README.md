@@ -45,7 +45,9 @@ exports.add = function() {
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! default exports */
+/*! export increment [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_exports__ */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -60,7 +62,9 @@ exports.increment = function(val) {
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! default exports */
+/*! export add [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -91,16 +95,13 @@ exports.add = function() {
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -112,17 +113,18 @@ exports.add = function() {
 </details>
 
 ``` js
-!function() {
+(() => {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__ */
 const inc = __webpack_require__(/*! ./increment */ 1).increment;
 const a = 1;
 inc(a); // 2
 
-}();
+})();
+
 /******/ })()
 ;
 ```
@@ -132,39 +134,25 @@ inc(a); // 2
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-    Asset      Size
-output.js  2.23 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 326 bytes [entry] [rendered]
-    > ./example.js main
- ./example.js 72 bytes [built]
-     [used exports unknown]
-     entry ./example.js main
- ./increment.js 98 bytes [built]
-     [used exports unknown]
-     cjs require ./increment ./example.js 1:12-34
- ./math.js 156 bytes [built]
-     [used exports unknown]
-     cjs require ./math ./increment.js 1:12-29
+asset output.js 2.34 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 326 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 254 bytes [dependent] 2 modules
+  ./example.js 72 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-    Asset       Size
-output.js  333 bytes  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 326 bytes [entry] [rendered]
-    > ./example.js main
- ./example.js 72 bytes [built]
-     [no exports used]
-     entry ./example.js main
- ./increment.js 98 bytes [built]
-     cjs require ./increment ./example.js 1:12-34
- ./math.js 156 bytes [built]
-     cjs require ./math ./increment.js 1:12-29
+asset output.js 296 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 326 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 254 bytes [dependent] 2 modules
+  ./example.js 72 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+webpack 5.11.1 compiled successfully
 ```

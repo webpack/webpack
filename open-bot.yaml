@@ -685,6 +685,158 @@ rules:
         message: |-
           I've created an issue to backport this.
 
+  # Ask for tags on new issues
+  - filters:
+      open: true
+      issue: true
+      age:
+        maximum: 1w
+      any:
+        not_1:
+          any:
+            label_1: webpack-4
+            label_2: webpack-5
+        not_2:
+          any:
+            label_1: bug
+            label_2: critical-bug
+            label_3: enhancement
+            label_4: documentation
+            label_5: performance
+            label_6: dependencies
+            label_7: question
+      not:
+        comment:
+          author: webpack-bot
+          matching: admin-actions
+    actions:
+      comment:
+        identifier: admin-actions
+        edit: true
+        message: |-
+          *For maintainers only:*
+
+          * [ ] webpack-4
+          * [ ] webpack-5
+          * [ ] bug
+          * [ ] critical-bug
+          * [ ] enhancement
+          * [ ] documentation
+          * [ ] performance
+          * [ ] dependencies
+          * [ ] question
+
+  # Apply selected tags
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] webpack-4"
+    actions:
+      label: webpack-4
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] webpack-5"
+    actions:
+      label: webpack-5
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] bug"
+    actions:
+      label: bug
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] critical-bug"
+    actions:
+      label: critical-bug
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] enhancement"
+    actions:
+      label: enhancement
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] performance"
+    actions:
+      label: performance
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] dependencies"
+    actions:
+      label: dependencies
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] question"
+    actions:
+      label: question
+
+  # Remove question about tags again
+  - filters:
+      open: true
+      issue: true
+      any_1:
+        label_1: webpack-4
+        label_2: webpack-5
+      any_2:
+        label_1: bug
+        label_2: critical-bug
+        label_3: enhancement
+        label_4: documentation
+        label_5: performance
+        label_6: dependencies
+        label_7: question
+      comment:
+        author: webpack-bot
+        matching: admin-actions
+    actions:
+      schedule: 30s
+  - filters:
+      open: true
+      issue: true
+      any_1:
+        label_1: webpack-4
+        label_2: webpack-5
+      any_2:
+        label_1: bug
+        label_2: critical-bug
+        label_3: enhancement
+        label_4: documentation
+        label_5: performance
+        label_6: dependencies
+        label_7: question
+      comment:
+        author: webpack-bot
+        matching: admin-actions
+      last_action_age:
+        minimum: 30s
+        includeBotActions: true
+    actions:
+      comment:
+        identifier: admin-actions
+        message: ""
+
   # Check open issues and pull requests every day
   - filters:
       open: true

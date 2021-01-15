@@ -1,3 +1,4 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
 	entry: {
@@ -10,7 +11,7 @@ module.exports = {
 	output: {
 		filename: "[name].js",
 		chunkFilename: "[name].bundle.js",
-		jsonpFunction: "_load_chunk"
+		chunkLoadingGlobal: "_load_chunk"
 	},
 	optimization: {
 		splitChunks: {

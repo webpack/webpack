@@ -1,9 +1,11 @@
-/** @typedef {import("../../../../lib/Compilation")} Compilation */
+/** @typedef {import("../../../../").Compilation} Compilation */
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	optimization: {
 		usedExports: true,
-		concatenateModules: true
+		concatenateModules: true,
+		sideEffects: false
 	},
 	plugins: [
 		function () {
@@ -25,11 +27,16 @@ module.exports = {
 								refModule &&
 								refModule.identifier().endsWith("reference.js") &&
 								referencedExports.some(
-									names => names.length === 1 && names[0] === "unused"
+									names =>
+										Array.isArray(names) &&
+										names.length === 1 &&
+										names[0] === "unused"
 								)
 							) {
 								return referencedExports.filter(
-									names => names.length !== 1 || names[0] !== "unused"
+									names =>
+										(Array.isArray(names) && names.length !== 1) ||
+										names[0] !== "unused"
 								);
 							}
 							return referencedExports;

@@ -1,5 +1,6 @@
 const toml = require("toml");
 
+/** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
 		mode: "development",

@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "shared2": "1.2.3 3.2.1"
+  },
+  "peerDependencies": {
+    "shared": "^1.0.0"
+  }
+}

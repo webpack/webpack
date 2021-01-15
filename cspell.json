@@ -4,6 +4,7 @@
   "words": [
     "webpack",
     "webpack's",
+    "endregion",
     "entrypoint",
     "entrypoints",
     "splitted",
@@ -166,6 +167,22 @@
     "valign",
     "returnfalse",
     "return'development",
+    "datastructures",
+    "prewalking",
+    "overridables",
+    "overridable",
+    "darkblue",
+    "darkgreen",
+    "darkred",
+    "eqeqeq",
+    "boolish",
+    "analysing",
+    "etags",
+    "destructure",
+    "onconnect",
+    "nwjs",
+    "redeclaration",
+    "kaios",
 
     "webassemblyjs",
     "fsevents",
@@ -202,8 +219,11 @@
     "gitter",
     "codecov",
     "opencollective",
-    "dependabot"
+    "dependabot",
+    "browserslist",
+    "samsunginternet",
+    "pnpm"
   ],
   "ignoreRegExpList": ["/Author.+/", "/data:.*/", "/\"mappings\":\".+\"/"],
-  "ignorePaths": ["**/dist/**"]
+  "ignorePaths": ["**/dist/**", "examples/**/README.md"]
 }

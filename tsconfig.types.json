@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "commonjs",
+    "lib": ["es2017", "dom"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "types": ["node"],
+    "esModuleInterop": true
+  },
+  "include": ["declarations.d.ts", "declarations/*.d.ts", "lib/**/*.js"]
+}

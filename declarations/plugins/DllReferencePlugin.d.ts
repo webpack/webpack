@@ -1,4 +1,4 @@
-/**
+/*
  * This file was automatically generated.
  * DO NOT MODIFY BY HAND.
  * Run `yarn special-lint-fix` to update
@@ -81,7 +81,8 @@ export type DllReferencePluginOptionsSourceType =
 	| "amd-require"
 	| "umd"
 	| "umd2"
-	| "jsonp";
+	| "jsonp"
+	| "system";
 
 /**
  * An object containing content, name and type.

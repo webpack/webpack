@@ -1,3 +1,4 @@
+const path = require("path");
 const jestDiff = require("jest-diff").default;
 const stripAnsi = require("strip-ansi");
 const {
@@ -25,7 +26,7 @@ describe("Defaults", () => {
 		`${quotemeta(escapedCwd)}((?:\\\\\\\\)?(?:[a-zA-Z.\\-_]+\\\\\\\\)*)`,
 		"g"
 	);
-	const normalizeCwd = str => {
+	const normalize = str => {
 		if (cwd.startsWith("/")) {
 			str = str.replace(new RegExp(quotemeta(cwd), "g"), "<cwd>");
 		} else {
@@ -35,6 +36,7 @@ describe("Defaults", () => {
 				(m, g) => `<cwd>${g.replace(/\\\\/g, "/")}`
 			);
 		}
+		str = str.replace(/@@ -\d+,\d+ \+\d+,\d+ @@/g, "@@ ... @@");
 		return str;
 	};
 
@@ -49,7 +51,7 @@ describe("Defaults", () => {
 			return value instanceof Diff;
 		},
 		print(received) {
-			return normalizeCwd(received.value);
+			return normalize(received.value);
 		}
 	});
 
@@ -58,7 +60,7 @@ describe("Defaults", () => {
 			return typeof value === "string";
 		},
 		print(received) {
-			return JSON.stringify(normalizeCwd(received));
+			return JSON.stringify(normalize(received));
 		}
 	});
 
@@ -88,38 +90,118 @@ describe("Defaults", () => {
 		    },
 		  },
 		  "experiments": Object {
-		    "asset": false,
 		    "asyncWebAssembly": false,
-		    "importAsync": false,
-		    "importAwait": false,
-		    "mjs": false,
 		    "outputModule": false,
 		    "syncWebAssembly": false,
 		    "topLevelAwait": false,
 		  },
 		  "externals": undefined,
+		  "externalsPresets": Object {
+		    "electron": false,
+		    "electronMain": false,
+		    "electronPreload": false,
+		    "electronRenderer": false,
+		    "node": false,
+		    "nwjs": false,
+		    "web": true,
+		  },
 		  "externalsType": "var",
+		  "ignoreWarnings": undefined,
 		  "infrastructureLogging": Object {
 		    "debug": false,
 		    "level": "info",
 		  },
-		  "loader": undefined,
+		  "loader": Object {
+		    "target": "web",
+		  },
 		  "mode": "none",
 		  "module": Object {
 		    "defaultRules": Array [
 		      Object {
-		        "resolve": Object {},
+		        "type": "javascript/auto",
+		      },
+		      Object {
+		        "mimetype": "application/node",
 		        "type": "javascript/auto",
 		      },
 		      Object {
 		        "test": /\\\\\\.json\\$/i,
 		        "type": "json",
 		      },
+		      Object {
+		        "mimetype": "application/json",
+		        "type": "json",
+		      },
+		      Object {
+		        "resolve": Object {
+		          "byDependency": Object {
+		            "esm": Object {
+		              "fullySpecified": true,
+		            },
+		          },
+		        },
+		        "test": /\\\\\\.mjs\\$/i,
+		        "type": "javascript/esm",
+		      },
+		      Object {
+		        "descriptionData": Object {
+		          "type": "module",
+		        },
+		        "resolve": Object {
+		          "byDependency": Object {
+		            "esm": Object {
+		              "fullySpecified": true,
+		            },
+		          },
+		        },
+		        "test": /\\\\\\.js\\$/i,
+		        "type": "javascript/esm",
+		      },
+		      Object {
+		        "test": /\\\\\\.cjs\\$/i,
+		        "type": "javascript/dynamic",
+		      },
+		      Object {
+		        "descriptionData": Object {
+		          "type": "commonjs",
+		        },
+		        "test": /\\\\\\.js\\$/i,
+		        "type": "javascript/dynamic",
+		      },
+		      Object {
+		        "mimetype": Object {
+		          "or": Array [
+		            "text/javascript",
+		            "application/javascript",
+		          ],
+		        },
+		        "resolve": Object {
+		          "byDependency": Object {
+		            "esm": Object {
+		              "fullySpecified": true,
+		            },
+		          },
+		        },
+		        "type": "javascript/esm",
+		      },
+		      Object {
+		        "dependency": "url",
+		        "type": "asset/resource",
+		      },
 		    ],
 		    "exprContextCritical": true,
 		    "exprContextRecursive": true,
 		    "exprContextRegExp": false,
 		    "exprContextRequest": ".",
+		    "generator": Object {},
+		    "parser": Object {
+		      "asset": Object {
+		        "dataUrlCondition": Object {
+		          "maxSize": 8096,
+		        },
+		      },
+		      "javascript": Object {},
+		    },
 		    "rules": Array [],
 		    "strictExportPresence": false,
 		    "strictThisContextOnImports": false,
@@ -142,8 +224,9 @@ describe("Defaults", () => {
 		    "checkWasmTypes": false,
 		    "chunkIds": "natural",
 		    "concatenateModules": false,
+		    "emitOnErrors": true,
 		    "flagIncludedChunks": false,
-		    "innerGraph": true,
+		    "innerGraph": false,
 		    "mangleExports": false,
 		    "mangleWasmImports": false,
 		    "mergeDuplicateChunks": true,
@@ -154,14 +237,14 @@ describe("Defaults", () => {
 		      },
 		    ],
 		    "moduleIds": "natural",
-		    "noEmitOnErrors": false,
 		    "nodeEnv": false,
 		    "portableRecords": false,
 		    "providedExports": true,
+		    "realContentHash": false,
 		    "removeAvailableModules": false,
 		    "removeEmptyChunks": true,
 		    "runtimeChunk": false,
-		    "sideEffects": true,
+		    "sideEffects": "flag",
 		    "splitChunks": Object {
 		      "automaticNameDelimiter": "-",
 		      "cacheGroups": Object {
@@ -179,50 +262,77 @@ describe("Defaults", () => {
 		        },
 		      },
 		      "chunks": "async",
+		      "defaultSizeTypes": Array [
+		        "javascript",
+		        "unknown",
+		      ],
+		      "enforceSizeThreshold": 30000,
 		      "hidePathInfo": false,
 		      "maxAsyncRequests": Infinity,
 		      "maxInitialRequests": Infinity,
 		      "minChunks": 1,
 		      "minRemainingSize": undefined,
 		      "minSize": 10000,
+		      "usedExports": true,
 		    },
-		    "usedExports": true,
+		    "usedExports": false,
 		  },
 		  "output": Object {
-		    "assetModuleFilename": "[hash][ext]",
-		    "chunkCallbackName": "webpackChunkwebpack",
+		    "assetModuleFilename": "[hash][ext][query]",
+		    "charset": true,
 		    "chunkFilename": "[name].js",
+		    "chunkFormat": "array-push",
 		    "chunkLoadTimeout": 120000,
+		    "chunkLoading": "jsonp",
+		    "chunkLoadingGlobal": "webpackChunkwebpack",
 		    "compareBeforeEmit": true,
 		    "crossOriginLoading": false,
 		    "devtoolFallbackModuleFilenameTemplate": undefined,
 		    "devtoolModuleFilenameTemplate": undefined,
 		    "devtoolNamespace": "webpack",
-		    "ecmaVersion": 6,
+		    "enabledChunkLoadingTypes": Array [
+		      "jsonp",
+		      "import-scripts",
+		    ],
 		    "enabledLibraryTypes": Array [],
+		    "enabledWasmLoadingTypes": Array [
+		      "fetch",
+		    ],
+		    "environment": Object {
+		      "arrowFunction": true,
+		      "bigIntLiteral": undefined,
+		      "const": true,
+		      "destructuring": true,
+		      "dynamicImport": undefined,
+		      "forOf": true,
+		      "module": undefined,
+		    },
 		    "filename": "[name].js",
-		    "globalObject": "window",
+		    "globalObject": "self",
 		    "hashDigest": "hex",
 		    "hashDigestLength": 20,
 		    "hashFunction": "md4",
 		    "hashSalt": undefined,
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
-		    "hotUpdateFunction": "webpackHotUpdatewebpack",
-		    "hotUpdateMainFilename": "[fullhash].hot-update.json",
+		    "hotUpdateGlobal": "webpackHotUpdatewebpack",
+		    "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
 		    "iife": true,
-		    "jsonpFunction": "webpackJsonpwebpack",
-		    "jsonpScriptType": false,
+		    "importFunctionName": "import",
+		    "importMetaName": "import.meta",
 		    "library": undefined,
-		    "libraryTarget": "var",
 		    "module": false,
 		    "path": "<cwd>/dist",
 		    "pathinfo": false,
-		    "publicPath": "",
+		    "publicPath": "auto",
+		    "scriptType": false,
 		    "sourceMapFilename": "[file].map[query]",
 		    "sourcePrefix": undefined,
 		    "strictModuleExceptionHandling": false,
 		    "uniqueName": "webpack",
+		    "wasmLoading": "fetch",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
+		    "workerChunkLoading": "import-scripts",
+		    "workerWasmLoading": "fetch",
 		  },
 		  "parallelism": 100,
 		  "performance": false,
@@ -231,18 +341,184 @@ describe("Defaults", () => {
 		  "recordsInputPath": false,
 		  "recordsOutputPath": false,
 		  "resolve": Object {
-		    "aliasFields": Array [
-		      "browser",
-		    ],
+		    "aliasFields": Array [],
+		    "byDependency": Object {
+		      "amd": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "require",
+		          "module",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "commonjs": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "require",
+		          "module",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "esm": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "import",
+		          "module",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "loader": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "require",
+		          "module",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "undefined": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "require",
+		          "module",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "unknown": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "require",
+		          "module",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "url": Object {
+		        "preferRelative": true,
+		      },
+		      "wasm": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "import",
+		          "module",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "worker": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "import",
+		          "module",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		        "preferRelative": true,
+		      },
+		    },
 		    "cache": false,
-		    "extensions": Array [
-		      ".js",
-		      ".json",
-		      ".wasm",
-		    ],
-		    "mainFields": Array [
+		    "conditionNames": Array [
+		      "webpack",
+		      "production",
 		      "browser",
-		      "module",
+		    ],
+		    "exportsFields": Array [
+		      "exports",
+		    ],
+		    "extensions": Array [],
+		    "mainFields": Array [
 		      "main",
 		    ],
 		    "mainFiles": Array [
@@ -251,9 +527,20 @@ describe("Defaults", () => {
 		    "modules": Array [
 		      "node_modules",
 		    ],
+		    "roots": Array [
+		      "<cwd>",
+		    ],
 		  },
 		  "resolveLoader": Object {
 		    "cache": false,
+		    "conditionNames": Array [
+		      "loader",
+		      "require",
+		      "node",
+		    ],
+		    "exportsFields": Array [
+		      "exports",
+		    ],
 		    "extensions": Array [
 		      ".js",
 		    ],
@@ -264,6 +551,26 @@ describe("Defaults", () => {
 		    "mainFiles": Array [
 		      "index",
 		    ],
+		  },
+		  "snapshot": Object {
+		    "buildDependencies": Object {
+		      "hash": true,
+		      "timestamp": true,
+		    },
+		    "immutablePaths": Array [],
+		    "managedPaths": Array [
+		      "<cwd>/node_modules",
+		    ],
+		    "module": Object {
+		      "timestamp": true,
+		    },
+		    "resolve": Object {
+		      "timestamp": true,
+		    },
+		    "resolveBuildDependencies": Object {
+		      "hash": true,
+		      "timestamp": true,
+		    },
 		  },
 		  "stats": Object {},
 		  "target": "web",
@@ -297,48 +604,64 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -33,1 +33,1 @@
+		@@ ... @@
 		-   "mode": "none",
 		+   "mode": undefined,
-		@@ -68,4 +68,4 @@
+		@@ ... @@
 		-     "checkWasmTypes": false,
 		-     "chunkIds": "natural",
 		-     "concatenateModules": false,
+		-     "emitOnErrors": true,
 		-     "flagIncludedChunks": false,
+		-     "innerGraph": false,
+		-     "mangleExports": false,
 		+     "checkWasmTypes": true,
 		+     "chunkIds": "deterministic",
 		+     "concatenateModules": true,
+		+     "emitOnErrors": false,
 		+     "flagIncludedChunks": true,
-		@@ -73,1 +73,1 @@
-		-     "mangleExports": false,
+		+     "innerGraph": true,
 		+     "mangleExports": true,
-		@@ -76,1 +76,1 @@
+		@@ ... @@
 		-     "minimize": false,
 		+     "minimize": true,
-		@@ -82,3 +82,3 @@
+		@@ ... @@
 		-     "moduleIds": "natural",
-		-     "noEmitOnErrors": false,
 		-     "nodeEnv": false,
 		+     "moduleIds": "deterministic",
-		+     "noEmitOnErrors": true,
 		+     "nodeEnv": "production",
-		@@ -108,3 +108,3 @@
+		@@ ... @@
+		-     "realContentHash": false,
+		+     "realContentHash": true,
+		@@ ... @@
+		-     "sideEffects": "flag",
+		+     "sideEffects": true,
+		@@ ... @@
+		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
 		-       "maxInitialRequests": Infinity,
+		+       "enforceSizeThreshold": 50000,
 		+       "hidePathInfo": true,
-		+       "maxAsyncRequests": 6,
-		+       "maxInitialRequests": 4,
-		@@ -113,1 +113,1 @@
+		+       "maxAsyncRequests": 30,
+		+       "maxInitialRequests": 30,
+		@@ ... @@
 		-       "minSize": 10000,
-		+       "minSize": 30000,
-		@@ -154,1 +154,5 @@
+		+       "minSize": 20000,
+		@@ ... @@
+		-     "usedExports": false,
+		+     "usedExports": true,
+		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
 		+     "hints": "warning",
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
 		+   },
+		@@ ... @@
+		+       "hash": true,
+		@@ ... @@
+		+       "hash": true,
 	`)
 	);
 	test("production", { mode: "production" }, e =>
@@ -346,48 +669,64 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -33,1 +33,1 @@
+		@@ ... @@
 		-   "mode": "none",
 		+   "mode": "production",
-		@@ -68,4 +68,4 @@
+		@@ ... @@
 		-     "checkWasmTypes": false,
 		-     "chunkIds": "natural",
 		-     "concatenateModules": false,
+		-     "emitOnErrors": true,
 		-     "flagIncludedChunks": false,
+		-     "innerGraph": false,
+		-     "mangleExports": false,
 		+     "checkWasmTypes": true,
 		+     "chunkIds": "deterministic",
 		+     "concatenateModules": true,
+		+     "emitOnErrors": false,
 		+     "flagIncludedChunks": true,
-		@@ -73,1 +73,1 @@
-		-     "mangleExports": false,
+		+     "innerGraph": true,
 		+     "mangleExports": true,
-		@@ -76,1 +76,1 @@
+		@@ ... @@
 		-     "minimize": false,
 		+     "minimize": true,
-		@@ -82,3 +82,3 @@
+		@@ ... @@
 		-     "moduleIds": "natural",
-		-     "noEmitOnErrors": false,
 		-     "nodeEnv": false,
 		+     "moduleIds": "deterministic",
-		+     "noEmitOnErrors": true,
 		+     "nodeEnv": "production",
-		@@ -108,3 +108,3 @@
+		@@ ... @@
+		-     "realContentHash": false,
+		+     "realContentHash": true,
+		@@ ... @@
+		-     "sideEffects": "flag",
+		+     "sideEffects": true,
+		@@ ... @@
+		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
 		-       "maxInitialRequests": Infinity,
+		+       "enforceSizeThreshold": 50000,
 		+       "hidePathInfo": true,
-		+       "maxAsyncRequests": 6,
-		+       "maxInitialRequests": 4,
-		@@ -113,1 +113,1 @@
+		+       "maxAsyncRequests": 30,
+		+       "maxInitialRequests": 30,
+		@@ ... @@
 		-       "minSize": 10000,
-		+       "minSize": 30000,
-		@@ -154,1 +154,5 @@
+		+       "minSize": 20000,
+		@@ ... @@
+		-     "usedExports": false,
+		+     "usedExports": true,
+		@@ ... @@
 		-   "performance": false,
 		+   "performance": Object {
 		+     "hints": "warning",
 		+     "maxAssetSize": 250000,
 		+     "maxEntrypointSize": 250000,
 		+   },
+		@@ ... @@
+		+       "hash": true,
+		@@ ... @@
+		+       "hash": true,
 	`)
 	);
 	test("development", { mode: "development" }, e =>
@@ -395,43 +734,41 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -4,1 +4,7 @@
+		@@ ... @@
 		-   "cache": false,
 		+   "cache": Object {
-		+     "immutablePaths": Array [],
-		+     "managedPaths": Array [
-		+       "<cwd>/node_modules",
-		+     ],
 		+     "type": "memory",
 		+   },
-		@@ -8,1 +14,1 @@
+		@@ ... @@
 		-   "devtool": false,
 		+   "devtool": "eval",
-		@@ -33,1 +39,1 @@
+		@@ ... @@
 		-   "mode": "none",
 		+   "mode": "development",
-		@@ -56,1 +62,1 @@
+		@@ ... @@
 		-     "unsafeCache": false,
 		+     "unsafeCache": [Function anonymous],
-		@@ -69,1 +75,1 @@
+		@@ ... @@
 		-     "chunkIds": "natural",
 		+     "chunkIds": "named",
-		@@ -82,1 +88,1 @@
+		@@ ... @@
 		-     "moduleIds": "natural",
-		+     "moduleIds": "named",
-		@@ -84,1 +90,1 @@
 		-     "nodeEnv": false,
+		+     "moduleIds": "named",
 		+     "nodeEnv": "development",
-		@@ -112,1 +118,1 @@
+		@@ ... @@
 		-       "minRemainingSize": undefined,
 		+       "minRemainingSize": 0,
-		@@ -145,1 +151,1 @@
+		@@ ... @@
 		-     "pathinfo": false,
 		+     "pathinfo": true,
-		@@ -163,1 +169,1 @@
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
-		@@ -182,1 +188,1 @@
+		@@ ... @@
+		-       "production",
+		+       "development",
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
 	`)
@@ -441,38 +778,38 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -23,1 +23,1 @@
+		@@ ... @@
 		-     "syncWebAssembly": false,
 		+     "syncWebAssembly": true,
-		@@ -43,0 +43,4 @@
+		@@ ... @@
 		+       },
 		+       Object {
+		+         "rules": Array [
+		+           Object {
+		+             "descriptionData": Object {
+		+               "type": "module",
+		+             },
+		+             "resolve": Object {
+		+               "fullySpecified": true,
+		+             },
+		+           },
+		+         ],
 		+         "test": /\\.wasm$/i,
 		+         "type": "webassembly/sync",
-	`)
-	);
-	test("mjs", { experiments: { mjs: true } }, e =>
-		e.toMatchInlineSnapshot(`
-		- Expected
-		+ Received
-
-		@@ -21,1 +21,1 @@
-		-     "mjs": false,
-		+     "mjs": true,
-		@@ -44,0 +44,5 @@
-		+       Object {
-		+         "resolve": Object {
-		+           "mainFields": Array [
-		+             "browser",
-		+             "main",
-		@@ -45,0 +50,5 @@
-		+         },
-		+         "test": /\\.mjs$/i,
-		+         "type": "javascript/esm",
 		+       },
-		+     ],
-		@@ -165,0 +175,1 @@
-		+       ".mjs",
+		+       Object {
+		+         "mimetype": "application/wasm",
+		+         "rules": Array [
+		+           Object {
+		+             "descriptionData": Object {
+		+               "type": "module",
+		+             },
+		+             "resolve": Object {
+		+               "fullySpecified": true,
+		+             },
+		+           },
+		+         ],
+		+         "type": "webassembly/sync",
 	`)
 	);
 	test("output module", { experiments: { outputModule: true } }, e =>
@@ -480,23 +817,21 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -22,1 +22,1 @@
+		@@ ... @@
 		-     "outputModule": false,
 		+     "outputModule": true,
-		@@ -27,1 +27,1 @@
+		@@ ... @@
 		-   "externalsType": "var",
 		+   "externalsType": "module",
-		@@ -138,1 +138,1 @@
+		@@ ... @@
 		-     "iife": true,
 		+     "iife": false,
-		@@ -140,1 +140,1 @@
-		-     "jsonpScriptType": false,
-		+     "jsonpScriptType": "module",
-		@@ -142,2 +142,2 @@
-		-     "libraryTarget": "var",
+		@@ ... @@
 		-     "module": false,
-		+     "libraryTarget": "module",
 		+     "module": true,
+		@@ ... @@
+		-     "scriptType": false,
+		+     "scriptType": "module",
 	`)
 	);
 	test("async wasm", { experiments: { asyncWebAssembly: true } }, e =>
@@ -504,13 +839,37 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -18,1 +18,1 @@
+		@@ ... @@
 		-     "asyncWebAssembly": false,
 		+     "asyncWebAssembly": true,
-		@@ -43,0 +43,4 @@
+		@@ ... @@
 		+       },
 		+       Object {
+		+         "rules": Array [
+		+           Object {
+		+             "descriptionData": Object {
+		+               "type": "module",
+		+             },
+		+             "resolve": Object {
+		+               "fullySpecified": true,
+		+             },
+		+           },
+		+         ],
 		+         "test": /\\.wasm$/i,
+		+         "type": "webassembly/async",
+		+       },
+		+       Object {
+		+         "mimetype": "application/wasm",
+		+         "rules": Array [
+		+           Object {
+		+             "descriptionData": Object {
+		+               "type": "module",
+		+             },
+		+             "resolve": Object {
+		+               "fullySpecified": true,
+		+             },
+		+           },
+		+         ],
 		+         "type": "webassembly/async",
 	`)
 	);
@@ -522,16 +881,40 @@ describe("Defaults", () => {
 			- Expected
 			+ Received
 
-			@@ -18,1 +18,1 @@
+			@@ ... @@
 			-     "asyncWebAssembly": false,
 			+     "asyncWebAssembly": true,
-			@@ -23,1 +23,1 @@
+			@@ ... @@
 			-     "syncWebAssembly": false,
 			+     "syncWebAssembly": true,
-			@@ -43,0 +43,4 @@
+			@@ ... @@
 			+       },
 			+       Object {
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
 			+         "test": /\\.wasm$/i,
+			+         "type": "webassembly/async",
+			+       },
+			+       Object {
+			+         "mimetype": "application/wasm",
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
 			+         "type": "webassembly/async",
 		`)
 	);
@@ -540,10 +923,10 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -120,1 +120,1 @@
+		@@ ... @@
 		-     "chunkFilename": "[name].js",
 		+     "chunkFilename": "[id].bundle.js",
-		@@ -129,1 +129,1 @@
+		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": "bundle.js",
 	`)
@@ -553,10 +936,10 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -120,1 +120,1 @@
+		@@ ... @@
 		-     "chunkFilename": "[name].js",
 		+     "chunkFilename": "[id].js",
-		@@ -129,1 +129,1 @@
+		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": [Function filename],
 	`)
@@ -566,24 +949,21 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -119,1 +119,1 @@
-		-     "chunkCallbackName": "webpackChunkwebpack",
-		+     "chunkCallbackName": "webpackChunkmyLib_awesome",
-		@@ -126,1 +126,1 @@
+		@@ ... @@
+		-     "chunkLoadingGlobal": "webpackChunkwebpack",
+		+     "chunkLoadingGlobal": "webpackChunkmyLib_awesome",
+		@@ ... @@
 		-     "devtoolNamespace": "webpack",
 		+     "devtoolNamespace": "myLib.awesome",
-		@@ -128,1 +128,3 @@
+		@@ ... @@
 		-     "enabledLibraryTypes": Array [],
 		+     "enabledLibraryTypes": Array [
 		+       "var",
 		+     ],
-		@@ -136,1 +138,1 @@
-		-     "hotUpdateFunction": "webpackHotUpdatewebpack",
-		+     "hotUpdateFunction": "webpackHotUpdatemyLib_awesome",
-		@@ -139,1 +141,1 @@
-		-     "jsonpFunction": "webpackJsonpwebpack",
-		+     "jsonpFunction": "webpackJsonpmyLib_awesome",
-		@@ -141,1 +143,10 @@
+		@@ ... @@
+		-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+		+     "hotUpdateGlobal": "webpackHotUpdatemyLib_awesome",
+		@@ ... @@
 		-     "library": undefined,
 		+     "library": Object {
 		+       "auxiliaryComment": undefined,
@@ -595,7 +975,7 @@ describe("Defaults", () => {
 		+       "type": "var",
 		+       "umdNamedDefine": undefined,
 		+     },
-		@@ -150,1 +161,1 @@
+		@@ ... @@
 		-     "uniqueName": "webpack",
 		+     "uniqueName": "myLib.awesome",
 	`)
@@ -605,24 +985,109 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -63,3 +63,3 @@
+		@@ ... @@
+		-     "node": false,
+		+     "node": true,
+		@@ ... @@
+		-     "web": true,
+		+     "web": false,
+		@@ ... @@
+		-     "target": "web",
+		+     "target": "node",
+		@@ ... @@
 		-     "__dirname": "mock",
 		-     "__filename": "mock",
 		-     "global": true,
-		+     "__dirname": false,
-		+     "__filename": false,
+		+     "__dirname": "eval-only",
+		+     "__filename": "eval-only",
 		+     "global": false,
-		@@ -130,1 +130,1 @@
-		-     "globalObject": "window",
+		@@ ... @@
+		-     "chunkFormat": "array-push",
+		+     "chunkFormat": "commonjs",
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "require",
+		@@ ... @@
+		-       "jsonp",
+		-       "import-scripts",
+		+       "require",
+		@@ ... @@
+		-       "fetch",
+		+       "async-node",
+		@@ ... @@
+		-     "globalObject": "self",
 		+     "globalObject": "global",
-		@@ -160,3 +160,1 @@
-		-     "aliasFields": Array [
+		@@ ... @@
+		-     "publicPath": "auto",
+		+     "publicPath": "",
+		@@ ... @@
+		-     "wasmLoading": "fetch",
+		+     "wasmLoading": "async-node",
+		@@ ... @@
+		-     "workerChunkLoading": "import-scripts",
+		-     "workerWasmLoading": "fetch",
+		+     "workerChunkLoading": "require",
+		+     "workerWasmLoading": "async-node",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
 		-       "browser",
-		-     ],
-		+     "aliasFields": Array [],
-		@@ -170,1 +168,0 @@
-		-       "browser",
-		@@ -195,1 +192,1 @@
+		+       "node",
+		@@ ... @@
 		-   "target": "web",
 		+   "target": "node",
 	`)
@@ -632,12 +1097,250 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -130,1 +130,1 @@
-		-     "globalObject": "window",
-		+     "globalObject": "self",
-		@@ -195,1 +195,1 @@
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "import-scripts",
+		@@ ... @@
+		-       "jsonp",
+		@@ ... @@
+		+       "worker",
+		@@ ... @@
 		-   "target": "web",
 		+   "target": "webworker",
+	`)
+	);
+	test("target electron-main", { target: "electron-main" }, e =>
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-     "electron": false,
+		-     "electronMain": false,
+		+     "electron": true,
+		+     "electronMain": true,
+		@@ ... @@
+		-     "node": false,
+		+     "node": true,
+		@@ ... @@
+		-     "web": true,
+		+     "web": false,
+		@@ ... @@
+		-     "target": "web",
+		+     "target": "electron-main",
+		@@ ... @@
+		-     "__dirname": "mock",
+		-     "__filename": "mock",
+		-     "global": true,
+		+     "__dirname": "eval-only",
+		+     "__filename": "eval-only",
+		+     "global": false,
+		@@ ... @@
+		-     "chunkFormat": "array-push",
+		+     "chunkFormat": "commonjs",
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "require",
+		@@ ... @@
+		-       "jsonp",
+		-       "import-scripts",
+		+       "require",
+		@@ ... @@
+		-       "fetch",
+		+       "async-node",
+		@@ ... @@
+		-     "globalObject": "self",
+		+     "globalObject": "global",
+		@@ ... @@
+		-     "publicPath": "auto",
+		+     "publicPath": "",
+		@@ ... @@
+		-     "wasmLoading": "fetch",
+		+     "wasmLoading": "async-node",
+		@@ ... @@
+		-     "workerChunkLoading": "import-scripts",
+		-     "workerWasmLoading": "fetch",
+		+     "workerChunkLoading": "require",
+		+     "workerWasmLoading": "async-node",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-       "browser",
+		+       "node",
+		+       "electron",
+		@@ ... @@
+		-   "target": "web",
+		+   "target": "electron-main",
+	`)
+	);
+	test("target electron-main", { target: "electron-preload" }, e =>
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-     "electron": false,
+		+     "electron": true,
+		@@ ... @@
+		-     "electronPreload": false,
+		+     "electronPreload": true,
+		@@ ... @@
+		-     "node": false,
+		+     "node": true,
+		@@ ... @@
+		-     "target": "web",
+		+     "target": "electron-preload",
+		@@ ... @@
+		-     "__dirname": "mock",
+		-     "__filename": "mock",
+		-     "global": true,
+		+     "__dirname": "eval-only",
+		+     "__filename": "eval-only",
+		+     "global": false,
+		@@ ... @@
+		-     "chunkFormat": "array-push",
+		+     "chunkFormat": "commonjs",
+		@@ ... @@
+		-     "chunkLoading": "jsonp",
+		+     "chunkLoading": "require",
+		@@ ... @@
+		-       "jsonp",
+		-       "import-scripts",
+		+       "require",
+		@@ ... @@
+		-       "fetch",
+		+       "async-node",
+		@@ ... @@
+		-     "globalObject": "self",
+		+     "globalObject": "global",
+		@@ ... @@
+		-     "publicPath": "auto",
+		+     "publicPath": "",
+		@@ ... @@
+		-     "wasmLoading": "fetch",
+		+     "wasmLoading": "async-node",
+		@@ ... @@
+		-     "workerChunkLoading": "import-scripts",
+		-     "workerWasmLoading": "fetch",
+		+     "workerChunkLoading": "require",
+		+     "workerWasmLoading": "async-node",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
+		+       "node",
+		@@ ... @@
+		+       "electron",
+		@@ ... @@
+		-   "target": "web",
+		+   "target": "electron-preload",
 	`)
 	);
 	test("records", { recordsPath: "some-path" }, e =>
@@ -645,10 +1348,10 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -85,1 +85,1 @@
+		@@ ... @@
 		-     "portableRecords": false,
 		+     "portableRecords": true,
-		@@ -157,2 +157,2 @@
+		@@ ... @@
 		-   "recordsInputPath": false,
 		-   "recordsOutputPath": false,
 		+   "recordsInputPath": "some-path",
@@ -656,21 +1359,14 @@ describe("Defaults", () => {
 	`)
 	);
 	test("ecamVersion", { output: { ecmaVersion: 2020 } }, e =>
-		e.toMatchInlineSnapshot(`
-		- Expected
-		+ Received
-
-		@@ -127,1 +127,1 @@
-		-     "ecmaVersion": 6,
-		+     "ecmaVersion": 11,
-	`)
+		e.toMatchInlineSnapshot(`Compared values have no visual difference.`)
 	);
 	test("single runtimeChunk", { optimization: { runtimeChunk: "single" } }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
 		+ Received
 
-		@@ -89,1 +89,3 @@
+		@@ ... @@
 		-     "runtimeChunk": false,
 		+     "runtimeChunk": Object {
 		+       "name": [Function name],
@@ -685,7 +1381,7 @@ describe("Defaults", () => {
 			- Expected
 			+ Received
 
-			@@ -89,1 +89,3 @@
+			@@ ... @@
 			-     "runtimeChunk": false,
 			+     "runtimeChunk": Object {
 			+       "name": [Function name],
@@ -697,7 +1393,7 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -89,1 +89,3 @@
+		@@ ... @@
 		-     "runtimeChunk": false,
 		+     "runtimeChunk": Object {
 		+       "name": [Function name],
@@ -709,22 +1405,18 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -4,1 +4,7 @@
+		@@ ... @@
 		-   "cache": false,
 		+   "cache": Object {
-		+     "immutablePaths": Array [],
-		+     "managedPaths": Array [
-		+       "<cwd>/node_modules",
-		+     ],
 		+     "type": "memory",
 		+   },
-		@@ -56,1 +62,1 @@
+		@@ ... @@
 		-     "unsafeCache": false,
 		+     "unsafeCache": [Function anonymous],
-		@@ -163,1 +169,1 @@
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
-		@@ -182,1 +188,1 @@
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
 	`)
@@ -734,7 +1426,7 @@ describe("Defaults", () => {
 		- Expected
 		+ Received
 
-		@@ -4,1 +4,20 @@
+		@@ ... @@
 		-   "cache": false,
 		+   "cache": Object {
 		+     "buildDependencies": Object {
@@ -747,22 +1439,18 @@ describe("Defaults", () => {
 		+     "hashAlgorithm": "md4",
 		+     "idleTimeout": 60000,
 		+     "idleTimeoutForInitialStore": 0,
-		+     "immutablePaths": Array [],
-		+     "managedPaths": Array [
-		+       "<cwd>/node_modules",
-		+     ],
 		+     "name": "default-none",
 		+     "store": "pack",
 		+     "type": "filesystem",
 		+     "version": "",
 		+   },
-		@@ -56,1 +75,1 @@
+		@@ ... @@
 		-     "unsafeCache": false,
 		+     "unsafeCache": [Function anonymous],
-		@@ -163,1 +182,1 @@
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
-		@@ -182,1 +201,1 @@
+		@@ ... @@
 		-     "cache": false,
 		+     "cache": true,
 	`)
@@ -781,17 +1469,17 @@ describe("Defaults", () => {
 			- Expected
 			+ Received
 
-			@@ -2,1 +2,1 @@
+			@@ ... @@
 			-   "amd": undefined,
 			+   "amd": false,
-			@@ -62,5 +62,1 @@
+			@@ ... @@
 			-   "node": Object {
 			-     "__dirname": "mock",
 			-     "__filename": "mock",
 			-     "global": true,
 			-   },
 			+   "node": false,
-			@@ -91,24 +87,1 @@
+			@@ ... @@
 			-     "splitChunks": Object {
 			-       "automaticNameDelimiter": "-",
 			-       "cacheGroups": Object {
@@ -809,12 +1497,18 @@ describe("Defaults", () => {
 			-         },
 			-       },
 			-       "chunks": "async",
+			-       "defaultSizeTypes": Array [
+			-         "javascript",
+			-         "unknown",
+			-       ],
+			-       "enforceSizeThreshold": 30000,
 			-       "hidePathInfo": false,
 			-       "maxAsyncRequests": Infinity,
 			-       "maxInitialRequests": Infinity,
 			-       "minChunks": 1,
 			-       "minRemainingSize": undefined,
 			-       "minSize": 10000,
+			-       "usedExports": true,
 			-     },
 			+     "splitChunks": false,
 		`)
@@ -832,21 +1526,104 @@ describe("Defaults", () => {
 			- Expected
 			+ Received
 
-			@@ -119,1 +119,1 @@
-			-     "chunkCallbackName": "webpackChunkwebpack",
-			+     "chunkCallbackName": "webpackChunk_Hello_World_",
-			@@ -126,1 +126,1 @@
+			@@ ... @@
+			-     "chunkLoadingGlobal": "webpackChunkwebpack",
+			+     "chunkLoadingGlobal": "webpackChunk_Hello_World_",
+			@@ ... @@
 			-     "devtoolNamespace": "webpack",
 			+     "devtoolNamespace": "@@@Hello World!",
-			@@ -136,1 +136,1 @@
-			-     "hotUpdateFunction": "webpackHotUpdatewebpack",
-			+     "hotUpdateFunction": "webpackHotUpdate_Hello_World_",
-			@@ -139,1 +139,1 @@
-			-     "jsonpFunction": "webpackJsonpwebpack",
-			+     "jsonpFunction": "webpackJsonp_Hello_World_",
-			@@ -150,1 +150,1 @@
+			@@ ... @@
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": "webpackHotUpdate_Hello_World_",
+			@@ ... @@
 			-     "uniqueName": "webpack",
 			+     "uniqueName": "@@@Hello World!",
+		`)
+	);
+
+	test("stats true", { stats: true }, e =>
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-   "stats": Object {},
+		+   "stats": Object {
+		+     "preset": "normal",
+		+   },
+		`)
+	);
+
+	test("stats false", { stats: false }, e =>
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-   "stats": Object {},
+		+   "stats": Object {
+		+     "preset": "none",
+		+   },
+		`)
+	);
+
+	test("stats string", { stats: "minimal" }, e =>
+		e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-   "stats": Object {},
+		+   "stats": Object {
+		+     "preset": "minimal",
+		+   },
+		`)
+	);
+
+	test(
+		"browserslist",
+		{ context: path.resolve(__dirname, "fixtures/browserslist") },
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-   "context": "<cwd>",
+			+   "context": "<cwd>/test/fixtures/browserslist",
+			@@ ... @@
+			-     "chunkLoadingGlobal": "webpackChunkwebpack",
+			+     "chunkLoadingGlobal": "webpackChunkbrowserslist_test",
+			@@ ... @@
+			-     "devtoolNamespace": "webpack",
+			+     "devtoolNamespace": "browserslist-test",
+			@@ ... @@
+			-       "arrowFunction": true,
+			-       "bigIntLiteral": undefined,
+			-       "const": true,
+			-       "destructuring": true,
+			-       "dynamicImport": undefined,
+			-       "forOf": true,
+			-       "module": undefined,
+			+       "arrowFunction": false,
+			+       "bigIntLiteral": false,
+			+       "const": false,
+			+       "destructuring": false,
+			+       "dynamicImport": false,
+			+       "forOf": false,
+			+       "module": false,
+			@@ ... @@
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": "webpackHotUpdatebrowserslist_test",
+			@@ ... @@
+			-     "uniqueName": "webpack",
+			+     "uniqueName": "browserslist-test",
+			@@ ... @@
+			-       "<cwd>",
+			+       "<cwd>/test/fixtures/browserslist",
+			@@ ... @@
+			-   "target": "web",
+			+   "target": "browserslist",
 		`)
 	);
 });

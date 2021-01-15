@@ -1,3 +1,4 @@
+/** @type {import("../../../").Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./index",
@@ -5,6 +6,7 @@ module.exports = {
 		all: false,
 		assets: true,
 		entrypoints: true,
+		chunkGroupChildren: true,
 		chunks: true
 	}
 };

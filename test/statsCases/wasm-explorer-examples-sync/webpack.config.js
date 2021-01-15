@@ -1,3 +1,4 @@
+/** @type {import("../../../").Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./index",
@@ -15,10 +16,10 @@ module.exports = {
 	stats: {
 		chunks: true,
 		chunkModules: true,
+		dependentModules: true,
 		modules: true
 	},
 	experiments: {
-		asyncWebAssembly: true,
-		importAwait: true
+		asyncWebAssembly: true
 	}
 };

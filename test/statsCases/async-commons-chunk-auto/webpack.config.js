@@ -6,9 +6,9 @@ const stats = {
 	assets: false,
 	chunks: true,
 	chunkOrigins: true,
-	entrypoints: true,
 	modules: false
 };
+/** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{
 		name: "disabled",

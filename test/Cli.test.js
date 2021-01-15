@@ -124,15 +124,15 @@ describe("Cli", () => {
 		{},
 		e =>
 			e.toMatchInlineSnapshot(`
-Object {
-  "stats": Object {
-    "warningsFilter": Array [
-      /module/,
-      "path",
-    ],
-  },
-}
-`)
+			Object {
+			  "stats": Object {
+			    "warningsFilter": Array [
+			      /module/,
+			      "path",
+			    ],
+			  },
+			}
+		`)
 	);
 
 	test(
@@ -144,21 +144,21 @@ Object {
 		{},
 		e =>
 			e.toMatchInlineSnapshot(`
-Object {
-  "module": Object {
-    "rules": Array [
-      Object {
-        "test": /\\\\\\.css\\$/,
-        "use": "css-loader",
-      },
-      Object {
-        "test": /\\\\\\.js\\$/,
-        "use": "babel-loader",
-      },
-    ],
-  },
-}
-`)
+			Object {
+			  "module": Object {
+			    "rules": Array [
+			      Object {
+			        "test": /\\\\\\.css\\$/,
+			        "use": "css-loader",
+			      },
+			      Object {
+			        "test": /\\\\\\.js\\$/,
+			        "use": "babel-loader",
+			      },
+			    ],
+			  },
+			}
+		`)
 	);
 
 	test(
@@ -183,46 +183,48 @@ Object {
 		},
 		e =>
 			e.toMatchInlineSnapshot(`
-Object {
-  "module": Object {
-    "rules": Array [
-      Object {
-        "test": /\\\\\\.css\\$/,
-        "use": "css-loader",
-      },
-      Object {
-        "test": /\\\\\\.js\\$/,
-        "use": "babel-loader",
-      },
-    ],
-  },
-  "stats": Object {
-    "warningsFilter": Array [
-      "path",
-    ],
-  },
-}
-`)
+			Object {
+			  "module": Object {
+			    "rules": Array [
+			      Object {
+			        "test": /\\\\\\.css\\$/,
+			        "use": "css-loader",
+			      },
+			      Object {
+			        "test": /\\\\\\.js\\$/,
+			        "use": "babel-loader",
+			      },
+			    ],
+			  },
+			  "stats": Object {
+			    "warningsFilter": Array [
+			      "path",
+			    ],
+			  },
+			}
+		`)
 	);
 
 	test(
 		"numbers",
 		{
 			"watch-options-aggregate-timeout": 100,
-			"output-ecma-version": "2015"
+			"watch-options-poll": "100",
+			"output-chunk-load-timeout": "20000"
 		},
 		{},
 		e =>
 			e.toMatchInlineSnapshot(`
-Object {
-  "output": Object {
-    "ecmaVersion": "2015",
-  },
-  "watchOptions": Object {
-    "aggregateTimeout": 100,
-  },
-}
-`)
+			Object {
+			  "output": Object {
+			    "chunkLoadTimeout": 20000,
+			  },
+			  "watchOptions": Object {
+			    "aggregateTimeout": 100,
+			    "poll": 100,
+			  },
+			}
+		`)
 	);
 
 	test(
@@ -239,27 +241,27 @@ Object {
 		{},
 		e =>
 			e.toMatchInlineSnapshot(`
-Object {
-  "amd": false,
-  "optimization": Object {
-    "usedExports": true,
-  },
-  "output": Object {
-    "compareBeforeEmit": false,
-    "iife": true,
-    "library": Object {
-      "name": Array [
-        "hello",
-        "world",
-      ],
-      "umdNamedDefine": false,
-    },
-  },
-  "stats": Object {
-    "logging": "verbose",
-  },
-}
-`)
+			Object {
+			  "amd": false,
+			  "optimization": Object {
+			    "usedExports": true,
+			  },
+			  "output": Object {
+			    "compareBeforeEmit": false,
+			    "iife": true,
+			    "library": Object {
+			      "name": Array [
+			        "hello",
+			        "world",
+			      ],
+			      "umdNamedDefine": false,
+			    },
+			  },
+			  "stats": Object {
+			    "logging": "verbose",
+			  },
+			}
+		`)
 	);
 
 	test(
@@ -267,7 +269,7 @@ Object {
 		{
 			"output-library-name": "non-object",
 			"resolve-loader-unsafe-cache": [true, false],
-			"output-ecma-version": "2015x",
+			"output-chunk-load-timeout": "20000x",
 			"cache-type": "filsystem",
 			"entry-reset": false,
 			"module-unknown-context-reg-exp": "ab?c*",
@@ -281,98 +283,90 @@ Object {
 		},
 		e =>
 			e.toMatchInlineSnapshot(`
-Array [
-  Object {
-    "argument": "output-library-name",
-    "index": undefined,
-    "path": "output",
-    "type": "unexpected-non-object-in-path",
-    "value": "non-object",
-  },
-  Object {
-    "argument": "resolve-loader-unsafe-cache",
-    "index": 0,
-    "path": "resolveLoader.unsafeCache",
-    "type": "multiple-values-unexpected",
-    "value": true,
-  },
-  Object {
-    "argument": "resolve-loader-unsafe-cache",
-    "index": 1,
-    "path": "resolveLoader.unsafeCache",
-    "type": "multiple-values-unexpected",
-    "value": false,
-  },
-  Object {
-    "argument": "output-ecma-version",
-    "expected": "2009",
-    "index": undefined,
-    "path": "output.ecmaVersion",
-    "type": "invalid-value",
-    "value": "2015x",
-  },
-  Object {
-    "argument": "output-ecma-version",
-    "expected": "number",
-    "index": undefined,
-    "path": "output.ecmaVersion",
-    "type": "invalid-value",
-    "value": "2015x",
-  },
-  Object {
-    "argument": "cache-type",
-    "expected": "memory",
-    "index": undefined,
-    "path": "cache.type",
-    "type": "invalid-value",
-    "value": "filsystem",
-  },
-  Object {
-    "argument": "cache-type",
-    "expected": "filesystem",
-    "index": undefined,
-    "path": "cache.type",
-    "type": "invalid-value",
-    "value": "filsystem",
-  },
-  Object {
-    "argument": "entry-reset",
-    "expected": "true (will reset the previous value to an empty array)",
-    "index": undefined,
-    "path": "entry",
-    "type": "invalid-value",
-    "value": false,
-  },
-  Object {
-    "argument": "module-unknown-context-reg-exp",
-    "expected": "regular expression (example: /ab?c*/)",
-    "index": undefined,
-    "path": "module.unknownContextRegExp",
-    "type": "invalid-value",
-    "value": "ab?c*",
-  },
-  Object {
-    "argument": "module-unknown-context-reg-exp",
-    "expected": "true | false",
-    "index": undefined,
-    "path": "module.unknownContextRegExp",
-    "type": "invalid-value",
-    "value": "ab?c*",
-  },
-  Object {
-    "argument": "module-wrapped-context-reg-exp",
-    "expected": "regular expression (example: /ab?c*/)",
-    "index": undefined,
-    "path": "module.wrappedContextRegExp",
-    "type": "invalid-value",
-    "value": 123,
-  },
-  Object {
-    "argument": "my-argument",
-    "path": "",
-    "type": "unknown-argument",
-  },
-]
-`)
+			Array [
+			  Object {
+			    "argument": "output-library-name",
+			    "index": undefined,
+			    "path": "output",
+			    "type": "unexpected-non-object-in-path",
+			    "value": "non-object",
+			  },
+			  Object {
+			    "argument": "resolve-loader-unsafe-cache",
+			    "index": 0,
+			    "path": "resolveLoader.unsafeCache",
+			    "type": "multiple-values-unexpected",
+			    "value": true,
+			  },
+			  Object {
+			    "argument": "resolve-loader-unsafe-cache",
+			    "index": 1,
+			    "path": "resolveLoader.unsafeCache",
+			    "type": "multiple-values-unexpected",
+			    "value": false,
+			  },
+			  Object {
+			    "argument": "output-chunk-load-timeout",
+			    "expected": "number",
+			    "index": undefined,
+			    "path": "output.chunkLoadTimeout",
+			    "type": "invalid-value",
+			    "value": "20000x",
+			  },
+			  Object {
+			    "argument": "cache-type",
+			    "expected": "memory",
+			    "index": undefined,
+			    "path": "cache.type",
+			    "type": "invalid-value",
+			    "value": "filsystem",
+			  },
+			  Object {
+			    "argument": "cache-type",
+			    "expected": "filesystem",
+			    "index": undefined,
+			    "path": "cache.type",
+			    "type": "invalid-value",
+			    "value": "filsystem",
+			  },
+			  Object {
+			    "argument": "entry-reset",
+			    "expected": "true (will reset the previous value to an empty array)",
+			    "index": undefined,
+			    "path": "entry",
+			    "type": "invalid-value",
+			    "value": false,
+			  },
+			  Object {
+			    "argument": "module-unknown-context-reg-exp",
+			    "expected": "regular expression (example: /ab?c*/)",
+			    "index": undefined,
+			    "path": "module.unknownContextRegExp",
+			    "type": "invalid-value",
+			    "value": "ab?c*",
+			  },
+			  Object {
+			    "argument": "module-unknown-context-reg-exp",
+			    "expected": "true | false",
+			    "index": undefined,
+			    "path": "module.unknownContextRegExp",
+			    "type": "invalid-value",
+			    "value": "ab?c*",
+			  },
+			  Object {
+			    "argument": "module-wrapped-context-reg-exp",
+			    "expected": "regular expression (example: /ab?c*/)",
+			    "index": undefined,
+			    "path": "module.wrappedContextRegExp",
+			    "type": "invalid-value",
+			    "value": 123,
+			  },
+			  Object {
+			    "argument": "my-argument",
+			    "path": "",
+			    "type": "unknown-argument",
+			  },
+			]
+		`)
 	);
 });

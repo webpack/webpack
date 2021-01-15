@@ -35,14 +35,14 @@ module.exports = {
 # dist/MyDll.alpha.js
 
 ```javascript
-var alpha_dcd111488d58f7509919 =
+var alpha_bb584d575dc33696660b;alpha_bb584d575dc33696660b =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
 /*!*****************!*\
   !*** dll alpha ***!
   \*****************/
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__, module */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
@@ -53,8 +53,9 @@ module.exports = __webpack_require__;
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = "alpha";
@@ -64,8 +65,9 @@ module.exports = "alpha";
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = "a";
@@ -75,8 +77,9 @@ module.exports = "a";
 /*!*********************************!*\
   !*** ../node_modules/module.js ***!
   \*********************************/
-/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module) => {
 
 module.exports = "module";
@@ -100,16 +103,13 @@ module.exports = "module";
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -132,7 +132,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ```javascript
-{"name":"alpha_dcd111488d58f7509919","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
+{"name":"alpha_bb584d575dc33696660b","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
 ```
 
 # Info
@@ -140,83 +140,41 @@ module.exports = "module";
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-         Asset      Size
-MyDll.alpha.js  2.44 KiB  [emitted]  [name: alpha]
- MyDll.beta.js  2.41 KiB  [emitted]  [name: beta]
-Entrypoint alpha = MyDll.alpha.js
-Entrypoint beta = MyDll.beta.js
-chunk MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
-    > alpha
- ../node_modules/module.js 26 bytes [built]
-     entry module dll alpha alpha[2]
-     DllPlugin
- ./a.js 21 bytes [built]
-     entry ./a dll alpha alpha[1]
-     DllPlugin
- ./alpha.js 25 bytes [built]
-     entry ./alpha dll alpha alpha[0]
-     DllPlugin
- dll alpha 12 bytes [built]
-     dll entry
-     used a library export
-     DllPlugin
-chunk MyDll.beta.js (beta) 80 bytes [entry] [rendered]
-    > beta
- ./b.js 21 bytes [built]
-     entry ./b dll beta beta[1]
-     DllPlugin
- ./beta.js 24 bytes [built]
-     entry ./beta dll beta beta[0]
-     DllPlugin
- ./c.jsx 23 bytes [built]
-     entry ./c dll beta beta[2]
-     DllPlugin
- dll beta 12 bytes [built]
-     dll entry
-     used a library export
-     DllPlugin
+asset MyDll.alpha.js 2.46 KiB [emitted] (name: alpha)
+asset MyDll.beta.js 2.43 KiB [emitted] (name: beta)
+chunk (runtime: alpha) MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
+  > alpha
+  dependent modules 72 bytes [dependent] 3 modules
+  dll alpha 12 bytes [built] [code generated]
+    [used exports unknown]
+    dll entry
+    used as library export
+chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
+  > beta
+  dependent modules 68 bytes [dependent] 3 modules
+  dll beta 12 bytes [built] [code generated]
+    [used exports unknown]
+    dll entry
+    used as library export
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-         Asset       Size
-MyDll.alpha.js  291 bytes  [emitted]  [name: alpha]
- MyDll.beta.js  282 bytes  [emitted]  [name: beta]
-Entrypoint alpha = MyDll.alpha.js
-Entrypoint beta = MyDll.beta.js
-chunk MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
-    > alpha
- ../node_modules/module.js 26 bytes [built]
-     entry module dll alpha alpha[2]
-     DllPlugin
- ./a.js 21 bytes [built]
-     entry ./a dll alpha alpha[1]
-     DllPlugin
- ./alpha.js 25 bytes [built]
-     entry ./alpha dll alpha alpha[0]
-     DllPlugin
- dll alpha 12 bytes [built]
-     dll entry
-     used a library export
-     DllPlugin
-chunk MyDll.beta.js (beta) 80 bytes [entry] [rendered]
-    > beta
- ./b.js 21 bytes [built]
-     entry ./b dll beta beta[1]
-     DllPlugin
- ./beta.js 24 bytes [built]
-     entry ./beta dll beta beta[0]
-     DllPlugin
- ./c.jsx 23 bytes [built]
-     entry ./c dll beta beta[2]
-     DllPlugin
- dll beta 12 bytes [built]
-     dll entry
-     used a library export
-     DllPlugin
+asset MyDll.alpha.js 302 bytes [emitted] [minimized] (name: alpha)
+asset MyDll.beta.js 292 bytes [emitted] [minimized] (name: beta)
+chunk (runtime: alpha) MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
+  > alpha
+  dependent modules 72 bytes [dependent] 3 modules
+  dll alpha 12 bytes [built] [code generated]
+    dll entry
+    used as library export
+chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
+  > beta
+  dependent modules 68 bytes [dependent] 3 modules
+  dll beta 12 bytes [built] [code generated]
+    dll entry
+    used as library export
+webpack 5.11.1 compiled successfully
 ```

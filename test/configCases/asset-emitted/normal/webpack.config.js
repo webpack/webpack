@@ -1,6 +1,7 @@
 const Compilation = require("../../../../").Compilation;
 const Source = require("webpack-sources").Source;
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
 		compiler => {

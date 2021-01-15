@@ -35,7 +35,7 @@ If you have created your own loader/plugin please include it on the relevant doc
 
 ## Submitting Changes
 
-After getting some feedbacks, push to your fork and submit a pull request. We
+After getting some feedback, push to your fork and submit a pull request. We
 may suggest some changes or improvements or alternatives, but for small changes
 your pull request should be accepted quickly.
 
@@ -46,7 +46,7 @@ Something that will increase the chance that your pull request is accepted:
 - Write a [good commit message](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 - For a major fix/feature make sure your PR has an issue and if it doesn't, please create one. This would help discussion with the community, and polishing ideas in case of a new feature.
 - Make sure your PR's description contains GitHub's special keyword references that automatically close the related issue when the PR is merged. ([More info](https://github.com/blog/1506-closing-issues-via-pull-requests))
-- When you have lot of commits in your PR, it's good practice to squash all your commits in one single commit. ([Learn how to squash here](https://davidwalsh.name/squash-commits-git))
+- When you have a lot of commits in your PR, it's good practice to squash all your commits in one single commit. ([Learn how to squash here](https://davidwalsh.name/squash-commits-git))
 
 ## Documentation
 

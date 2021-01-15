@@ -1,5 +1,6 @@
 var DefinePlugin = require("../../../../").DefinePlugin;
 const Module = require("../../../../").Module;
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
 		new DefinePlugin({

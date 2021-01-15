@@ -1,3 +1,4 @@
+/** @type {import("../../../").Configuration} */
 module.exports = {
 	mode: "production",
 	entry: {
@@ -15,6 +16,7 @@ module.exports = {
 		chunks: true,
 		chunkRelations: true,
 		chunkModules: true,
+		dependentModules: true,
 		modules: false,
 		reasons: true
 	}

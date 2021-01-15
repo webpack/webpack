@@ -1,3 +1,5 @@
+package.json
+
 # Ignore test fixtures
 test/*.*
 !test/*.js

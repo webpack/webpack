@@ -26,7 +26,7 @@ module.exports = {
 		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = factory();
-})(window, function() {
+})(self, function() {
 return /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
@@ -34,11 +34,12 @@ return /******/ (() => { // webpackBootstrap
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! export default [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! export increment [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! export value [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
-/*! other exports [not provided] [maybe used (runtime-defined)] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.d, __webpack_require__.r, __webpack_require__.* */
+/*! namespace exports */
+/*! export default [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
+/*! export increment [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
+/*! export value [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used in main (runtime-defined)] */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -73,16 +74,13 @@ function increment() {
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -90,20 +88,24 @@ function increment() {
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
-/******/ 		var hasOwnProperty = Object.prototype.hasOwnProperty;
 /******/ 		__webpack_require__.d = (exports, definition) => {
 /******/ 			for(var key in definition) {
-/******/ 				if(hasOwnProperty.call(definition, key) && !hasOwnProperty.call(exports, key)) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
@@ -111,7 +113,7 @@ function increment() {
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -133,33 +135,28 @@ function increment() {
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-           Asset      Size
-MyLibrary.umd.js  3.83 KiB  [emitted]  [name: main]
-Entrypoint main = MyLibrary.umd.js
-chunk MyLibrary.umd.js (main) 92 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
-    > ./example main
- ./example.js 92 bytes [built]
-     [exports: default, increment, value]
-     entry ./example main
-     used a library export
-     + 2 hidden chunk modules
+asset MyLibrary.umd.js 3.97 KiB [emitted] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+  > ./example main
+  runtime modules 668 bytes 3 modules
+  ./example.js 92 bytes [built] [code generated]
+    [exports: default, increment, value]
+    [used exports unknown]
+    entry ./example main
+    used as library export
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-           Asset       Size
-MyLibrary.umd.js  840 bytes  [emitted]  [name: main]
-Entrypoint main = MyLibrary.umd.js
-chunk MyLibrary.umd.js (main) 92 bytes (javascript) 632 bytes (runtime) [entry] [rendered]
-    > ./example main
- ./example.js 92 bytes [built]
-     [exports: default, increment, value]
-     entry ./example main
-     used a library export
-     + 2 hidden chunk modules
+asset MyLibrary.umd.js 817 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+  > ./example main
+  runtime modules 668 bytes 3 modules
+  ./example.js 92 bytes [built] [code generated]
+    [exports: default, increment, value]
+    entry ./example main
+    used as library export
+webpack 5.11.1 compiled successfully
 ```

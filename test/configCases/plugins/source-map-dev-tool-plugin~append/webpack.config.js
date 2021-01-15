@@ -1,5 +1,6 @@
 var webpack = require("../../../../");
 var TerserPlugin = require("terser-webpack-plugin");
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	node: {
 		__dirname: false,
@@ -13,11 +14,7 @@ module.exports = {
 		filename: "[name].js"
 	},
 	optimization: {
-		minimizer: [
-			new TerserPlugin({
-				sourceMap: true
-			})
-		]
+		minimizer: [new TerserPlugin()]
 	},
 	plugins: [
 		new webpack.SourceMapDevToolPlugin({

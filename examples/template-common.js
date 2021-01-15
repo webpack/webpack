@@ -14,9 +14,7 @@ function lessStrict(regExpStr) {
 }
 
 const runtimeModulesRegexp = /(\/\*{72}\/\n(?:\/(?:\*{6}|\*{72})\/.*\n)*\/\*{72}\/\n)/g;
-const timeRegexp = /\s*Time: \d+ms/g;
-const buildAtRegexp = /\s*Built at: .+/mg;
-const hashRegexp = /Hash: [a-f0-9]+/g;
+const timeRegexp = / in \d+ ms/g;
 const dataUrlRegexp = /("data:[^"]+")/g;
 
 exports.replaceBase = (template) => {
@@ -35,13 +33,12 @@ exports.replaceBase = (template) => {
 	return template
 		.replace(/\r\n/g, "\n")
 		.replace(/\r/g, "\n")
+		.replace(/\[webpack-cli\].+\n/g, "")
 		.replace(cwdSlashRegExp, "./")
 		.replace(cwdRegExp, ".")
 		.replace(webpack, "(webpack)")
 		.replace(webpackParent, "(webpack)/~")
 		.replace(timeRegexp, "")
-		.replace(buildAtRegexp, "")
-		.replace(hashRegexp, "Hash: 0a1b2c3d4e5f6a7b8c9d")
 		.replace(dataUrlRegexp, function(match) {
 			if(match.length < 100) return match;
 			return match.slice(0, 50) + "..." + match.slice(-10);
@@ -66,6 +63,11 @@ exports.replaceResults = (template, baseDir, stdout, prefix) => {
 		match = match.substr(3 + (prefix ? prefix.length + 1 : 0), match.length - 6 - (prefix ? prefix.length + 1 : 0));
 		if(match === "stdout")
 			return stdout;
-		return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");
+		try {
+			return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");
+		} catch(e) {
+			e.message += `\nwhile reading '${match}' in '${baseDir}`;
+			throw e;
+		}
 	});
 };

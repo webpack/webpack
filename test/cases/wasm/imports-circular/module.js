@@ -1,4 +1,4 @@
-import await { addNumber } from "./wasm.wat";
+import { addNumber } from "./wasm.wat";
 
 export var result = addNumber(22);
 

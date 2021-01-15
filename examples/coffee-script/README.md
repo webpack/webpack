@@ -32,8 +32,9 @@ module.exports = 42
 /*!*********************!*\
   !*** ./cup1.coffee ***!
   \*********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__, module */
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements: module, __webpack_require__ */
+/*! CommonJS bailout: module.exports is used directly at 1:0-14 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = {
@@ -49,8 +50,9 @@ module.exports = {
 /*!*********************!*\
   !*** ./cup2.coffee ***!
   \*********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
+/*! CommonJS bailout: module.exports is used directly at 3:0-14 */
 /***/ ((module) => {
 
 console.log("yeah coffee-script");
@@ -77,16 +79,13 @@ module.exports = 42;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -98,14 +97,15 @@ module.exports = 42;
 </details>
 
 ``` js
-!function() {
+(() => {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! unknown exports (runtime-defined) */
 /*! runtime requirements: __webpack_require__ */
 console.log(__webpack_require__(/*! ./cup1 */ 1));
-}();
+})();
+
 /******/ })()
 ;
 ```
@@ -115,41 +115,25 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-    Asset      Size
-output.js  2.09 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 206 bytes [entry] [rendered]
-    > ./example.js main
- ./cup1.coffee 118 bytes [built]
-     [used exports unknown]
-     cjs require ./cup1 ./example.js 1:12-29
- ./cup2.coffee 57 bytes [built]
-     [used exports unknown]
-     cjs require ./cup2.coffee ./cup1.coffee 4:12-36
-     cjs require ./cup2 ./cup1.coffee 5:9-26
- ./example.js 31 bytes [built]
-     [used exports unknown]
-     entry ./example.js main
+asset output.js 2.09 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 206 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 175 bytes [dependent] 2 modules
+  ./example.js 31 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.6
-    Asset       Size
-output.js  294 bytes  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 206 bytes [entry] [rendered]
-    > ./example.js main
- ./cup1.coffee 118 bytes [built]
-     cjs require ./cup1 ./example.js 1:12-29
- ./cup2.coffee 57 bytes [built]
-     cjs require ./cup2.coffee ./cup1.coffee 4:12-36
-     cjs require ./cup2 ./cup1.coffee 5:9-26
- ./example.js 31 bytes [built]
-     [no exports used]
-     entry ./example.js main
+asset output.js 280 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 206 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 175 bytes [dependent] 2 modules
+  ./example.js 31 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+webpack 5.11.1 compiled successfully
 ```

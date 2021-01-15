@@ -389,7 +389,7 @@ describe("JavascriptParser", () => {
 			'"s" + ("trr" + "rin") + "g"': "string=strrring",
 			"'S' + (\"strr\" + \"ring\") + 'y'": "string=Sstrrringy",
 			"/abc/": "regExp=/abc/",
-			"1": "number=1",
+			1: "number=1",
 			"1 + 3": "number=4",
 			"3 - 1": "number=2",
 			"2 * 3": "number=6",
@@ -410,11 +410,11 @@ describe("JavascriptParser", () => {
 			"3 === 1": "bool=false",
 			"1 != 1": "bool=false",
 			"1 !== 1": "bool=false",
-			"100.25": "number=100.25",
+			100.25: "number=100.25",
 			"!100.25": "bool=false",
 			"!+100.25": "bool=false",
 			"!-100.25": "bool=false",
-			"0": "number=0",
+			0: "number=0",
 			"!0": "bool=true",
 			"!-0": "bool=true",
 			"!+0": "bool=true",
@@ -673,7 +673,7 @@ describe("JavascriptParser", () => {
 			Object.keys(cases).forEach(name => {
 				const expr = cases[name];
 				it(name, () => {
-					const actual = JavascriptParser.parse(expr, {});
+					const actual = JavascriptParser._parse(expr, {});
 					expect(typeof actual).toBe("object");
 				});
 			});
@@ -704,9 +704,37 @@ describe("JavascriptParser", () => {
 			Object.keys(cases).forEach(name => {
 				const expr = cases[name];
 				it(name, () => {
-					const actual = JavascriptParser.parse(expr);
+					const actual = JavascriptParser._parse(expr);
 					expect(typeof actual).toBe("object");
 				});
+			});
+		});
+	});
+
+	describe("BasicEvaluatedExpression", () => {
+		/** @type [string, boolean][] */
+		const tests = [
+			...["i", "g", "m", "y"].reduce((acc, flag) => {
+				acc.push([flag, true]);
+				acc.push([flag + flag, false]);
+				return acc;
+			}, []),
+			["", true],
+			["igm", true],
+			["igmy", true],
+			["igmyi", false],
+			["igmya", false],
+			["ai", false],
+			["ia", false]
+		];
+
+		tests.forEach(([suite, expected]) => {
+			it(`BasicEvaluatedExpression.isValidRegExpFlags(${JSON.stringify(
+				suite
+			)})`, () => {
+				expect(BasicEvaluatedExpression.isValidRegExpFlags(suite)).toBe(
+					expected
+				);
 			});
 		});
 	});

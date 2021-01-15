@@ -64,9 +64,6 @@ module.exports = {
 				}
 			}
 		]
-	},
-	experiments: {
-		asset: true
 	}
 };
 ```
@@ -81,6 +78,7 @@ module.exports = {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
+/*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -112,7 +110,7 @@ function createImageElement(title, src) {
 	container.appendChild(div);
 }
 
-[_images_file_svg__WEBPACK_IMPORTED_MODULE_0__/* .default */ ].forEach(src => {
+[_images_file_svg__WEBPACK_IMPORTED_MODULE_0__].forEach(src => {
 	createImageElement(src.split(".").pop(), src);
 });
 
@@ -122,9 +120,8 @@ function createImageElement(title, src) {
 /*!*************************!*\
   !*** ./images/file.svg ***!
   \*************************/
-/*! export default [not provided] [no usage info] [no name, virtual] */
-/*!   exports [not provided] [no usage info] */
-/*! other exports [not provided] [no usage info] */
+/*! default exports */
+/*! exports [not provided] [no usage info] */
 /*! runtime requirements: module */
 /***/ ((module) => {
 
@@ -149,16 +146,13 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -166,7 +160,7 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
+/******/ 	(() => {
 /******/ 		// define __esModule on exports
 /******/ 		__webpack_require__.r = (exports) => {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
@@ -174,7 +168,7 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	}();
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 ```
@@ -195,21 +189,14 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 ## webpack output
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-beta.7
-    Asset      Size
-output.js  4.01 KiB  [emitted]  [name: main]
-Entrypoint main = output.js
-chunk output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
-    > ./example.js main
- ./example.js 658 bytes [built]
-     [no exports]
-     [used exports unknown]
-     entry ./example.js main
- ./images/file.svg 915 bytes [built]
-     [no exports]
-     [used exports unknown]
-     harmony side effect evaluation ./images/file.svg ./example.js 1:0-36
-     harmony import specifier ./images/file.svg ./example.js 26:1-4
-     + 1 hidden chunk module
+asset output.js 3.86 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
+  > ./example.js main
+  dependent modules 915 bytes [dependent] 1 module
+  runtime modules 274 bytes 1 module
+  ./example.js 658 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.11.1 compiled successfully
 ```

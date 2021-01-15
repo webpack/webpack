@@ -81,3 +81,15 @@ it("should allow to attach exports to arrow function", () => {
 	expect(require("./attach-to-arrow-function?3")()).toBe("abc");
 	expect(require("./attach-to-arrow-function?3").def).toBe("def");
 });
+
+it("should properly handle export / require `default`", () => {
+	expect(require("./require-default").moduleExportsDefault).toBe("hello");
+	expect(require("./require-default").hello1).toBe("hello");
+	expect(require("./require-default").hello2).toBe("hello");
+	expect(require("./require-default").hello3).toBe("hello");
+	expect(require("./require-default").hello4).toBe("hello");
+	expect(require("./require-default").hello5).toBe("hello");
+	expect(require("./require-default").hello6).toBe("hello");
+	expect(require("./require-default").hello7).toBe("hello");
+	expect(require("./require-default").hello8).toBe("hello");
+});

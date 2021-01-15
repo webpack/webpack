@@ -8,9 +8,9 @@ about: Suggest an idea for this project
 
 ## Feature request
 
-<!-- Issues which contain questions or support requests will be closed. -->
+<!-- Issues that contain questions or support requests will be closed. -->
 <!-- Before creating an issue please make sure you are using the latest version of webpack. -->
-<!-- Check if this feature need to be implemented in a plugin or loader instead -->
+<!-- Check if this feature needs to be implemented in a plugin or loader instead -->
 <!-- If yes: file the issue on the plugin/loader repo -->
 <!-- Features related to the development server should be filed on this repo instead -->
 

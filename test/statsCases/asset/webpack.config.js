@@ -1,3 +1,4 @@
+/** @type {import("../../../").Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./index.js",
@@ -18,8 +19,5 @@ module.exports = {
 	},
 	output: {
 		filename: "bundle.js"
-	},
-	experiments: {
-		asset: true
 	}
 };
