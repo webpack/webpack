@@ -3542,6 +3542,10 @@
           "description": "Add built modules information to chunk information.",
           "type": "boolean"
         },
+        "chunkModulesSpace": {
+          "description": "Space to display chunk modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+          "type": "number"
+        },
         "chunkOrigins": {
           "description": "Add the origins of chunks and chunk merging info.",
           "type": "boolean"
