@@ -10,7 +10,7 @@ var testPlugin = compiler => {
 		NormalModule.getCompilationHooks(compilation).loader.tap(
 			"TestPlugin",
 			loaderContext => {
-				loaderContext.shouldReplace = shouldReplace;
+				/** @type {any} */ (loaderContext).shouldReplace = shouldReplace;
 			}
 		);
 		compilation.hooks.finishModules.tapAsync(
