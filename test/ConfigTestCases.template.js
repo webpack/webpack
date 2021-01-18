@@ -5,6 +5,7 @@ const fs = require("graceful-fs");
 const vm = require("vm");
 const { URL } = require("url");
 const rimraf = require("rimraf");
+const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
@@ -71,6 +72,13 @@ const describeCases = config => {
 								if (!options.optimization) options.optimization = {};
 								if (options.optimization.minimize === undefined)
 									options.optimization.minimize = false;
+								if (options.optimization.minimizer === undefined) {
+									options.optimization.minimizer = [
+										new TerserPlugin({
+											parallel: false
+										})
+									];
+								}
 								if (!options.entry) options.entry = "./index.js";
 								if (!options.target) options.target = "async-node";
 								if (!options.output) options.output = {};
@@ -350,14 +358,17 @@ const describeCases = config => {
 												if (testConfig.moduleScope) {
 													testConfig.moduleScope(moduleScope);
 												}
-												const args = Object.keys(moduleScope).join(", ");
+												const args = Object.keys(moduleScope);
+												const argValues = args.map(arg => moduleScope[arg]);
 												if (!runInNewContext)
 													content = `Object.assign(global, _globalAssign); ${content}`;
-												const code = `(function({${args}}) {${content}\n})`;
+												const code = `(function(${args.join(
+													", "
+												)}) {${content}\n})`;
 												const fn = runInNewContext
 													? vm.runInNewContext(code, globalContext, p)
 													: vm.runInThisContext(code, p);
-												fn.call(m.exports, moduleScope);
+												fn.call(m.exports, ...argValues);
 
 												//restore state
 												document.currentScript = oldCurrentScript;
