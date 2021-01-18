@@ -74,6 +74,42 @@ module.exports = (env, { testPath }) => [
 			alias: {
 				library: path.resolve(
 					testPath,
+					"../0-create-library/commonjs2-external-eval.js"
+				),
+				external: path.resolve(__dirname, "node_modules/external.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("commonjs2 with external and eval devtool"),
+				TEST_EXTERNAL: true
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/commonjs2-external-eval-source-map.js"
+				),
+				external: path.resolve(__dirname, "node_modules/external.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify(
+					"commonjs2 with external and eval-source-map devtool"
+				),
+				TEST_EXTERNAL: true
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
 					"../0-create-library/commonjs2-split-chunks/"
 				),
 				external: path.resolve(__dirname, "node_modules/external.js")

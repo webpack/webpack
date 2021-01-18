@@ -193,6 +193,15 @@ describe("Defaults", () => {
 		    "exprContextRecursive": true,
 		    "exprContextRegExp": false,
 		    "exprContextRequest": ".",
+		    "generator": Object {},
+		    "parser": Object {
+		      "asset": Object {
+		        "dataUrlCondition": Object {
+		          "maxSize": 8096,
+		        },
+		      },
+		      "javascript": Object {},
+		    },
 		    "rules": Array [],
 		    "strictExportPresence": false,
 		    "strictThisContextOnImports": false,
@@ -235,7 +244,7 @@ describe("Defaults", () => {
 		    "removeAvailableModules": false,
 		    "removeEmptyChunks": true,
 		    "runtimeChunk": false,
-		    "sideEffects": true,
+		    "sideEffects": "flag",
 		    "splitChunks": Object {
 		      "automaticNameDelimiter": "-",
 		      "cacheGroups": Object {
@@ -306,7 +315,7 @@ describe("Defaults", () => {
 		    "hashSalt": undefined,
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 		    "hotUpdateGlobal": "webpackHotUpdatewebpack",
-		    "hotUpdateMainFilename": "[fullhash].hot-update.json",
+		    "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
 		    "iife": true,
 		    "importFunctionName": "import",
 		    "importMetaName": "import.meta",
@@ -625,6 +634,9 @@ describe("Defaults", () => {
 		-     "realContentHash": false,
 		+     "realContentHash": true,
 		@@ ... @@
+		-     "sideEffects": "flag",
+		+     "sideEffects": true,
+		@@ ... @@
 		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
@@ -686,6 +698,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "realContentHash": false,
 		+     "realContentHash": true,
+		@@ ... @@
+		-     "sideEffects": "flag",
+		+     "sideEffects": true,
 		@@ ... @@
 		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,

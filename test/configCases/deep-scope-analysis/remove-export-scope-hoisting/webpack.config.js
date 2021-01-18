@@ -4,7 +4,8 @@
 module.exports = {
 	optimization: {
 		usedExports: true,
-		concatenateModules: true
+		concatenateModules: true,
+		sideEffects: false
 	},
 	plugins: [
 		function () {

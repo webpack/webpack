@@ -124,7 +124,7 @@ describe("Validation", () => {
 			   -> A module that is loaded upon startup. Only the last one is exported.
 			 - configuration.output.filename should be one of these:
 			   non-empty string | function
-			   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+			   -> Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 			   Details:
 			    * configuration.output.filename should be a non-empty string.
 			    * configuration.output.filename should be an instance of function."
@@ -151,7 +151,7 @@ describe("Validation", () => {
 			   -> A module that is loaded upon startup. Only the last one is exported.
 			 - configuration[1].output.filename should be one of these:
 			   non-empty string | function
-			   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
+			   -> Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 			   Details:
 			    * configuration[1].output.filename should be a non-empty string.
 			    * configuration[1].output.filename should be an instance of function."
@@ -181,7 +181,7 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.module.rules[0].oneOf[0] has an unknown property 'passer'. These properties are valid:
-			   object { compiler?, dependency?, descriptionData?, enforce?, exclude?, generator?, include?, issuer?, loader?, mimetype?, oneOf?, options?, parser?, realResource?, resolve?, resource?, resourceFragment?, resourceQuery?, rules?, sideEffects?, test?, type?, use? }
+			   object { compiler?, dependency?, descriptionData?, enforce?, exclude?, generator?, include?, issuer?, issuerLayer?, layer?, loader?, mimetype?, oneOf?, options?, parser?, realResource?, resolve?, resource?, resourceFragment?, resourceQuery?, rules?, sideEffects?, test?, type?, use? }
 			   -> A rule description with conditions and effects for modules."
 		`)
 	);
@@ -461,7 +461,7 @@ describe("Validation", () => {
 			       test: ...
 			     }
 			   }.
-			   object { <key>: false | RegExp | string | function | object { automaticNameDelimiter?, chunks?, enforce?, enforceSizeThreshold?, filename?, idHint?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name?, priority?, reuseExistingChunk?, test?, type?, usedExports? } }
+			   object { <key>: false | RegExp | string | function | object { automaticNameDelimiter?, chunks?, enforce?, enforceSizeThreshold?, filename?, idHint?, layer?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name?, priority?, reuseExistingChunk?, test?, type?, usedExports? } }
 			   -> Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')."
 		`)
 	);
@@ -539,7 +539,7 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.watchOptions should be an object:
-			   object { aggregateTimeout?, ignored?, poll?, stdin? }
+			   object { aggregateTimeout?, followSymlinks?, ignored?, poll?, stdin? }
 			   -> Options for the watcher."
 		`)
 	);

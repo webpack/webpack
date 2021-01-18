@@ -2,7 +2,10 @@ it("should receive a namespace object when importing commonjs", function (done) 
 	import("./cjs.js")
 		.then(function (result) {
 			expect(result).toEqual(
-				nsObj({ default: { named: "named", default: "default" } })
+				nsObj({
+					default: { named: "named", default: "default" },
+					named: "named"
+				})
 			);
 			done();
 		})
@@ -14,7 +17,8 @@ it("should receive a namespace object when importing commonjs with __esModule", 
 		.then(function (result) {
 			expect(result).toEqual(
 				nsObj({
-					default: { __esModule: true, named: "named", default: "default" }
+					default: { __esModule: true, named: "named", default: "default" },
+					named: "named"
 				})
 			);
 			done();
@@ -77,17 +81,18 @@ it("should receive a namespace object when importing commonjs via context", func
 	return Promise.all([
 		promiseTest(
 			contextCJS("one"),
-			nsObj({ default: { named: "named", default: "default" } })
+			nsObj({ default: { named: "named", default: "default" }, named: "named" })
 		),
 		promiseTest(
 			contextCJS("two"),
 			nsObj({
-				default: { __esModule: true, named: "named", default: "default" }
+				default: { __esModule: true, named: "named", default: "default" },
+				named: "named"
 			})
 		),
 		promiseTest(
 			contextCJS("three"),
-			nsObj({ default: { named: "named", default: "default" } })
+			nsObj({ default: { named: "named", default: "default" }, named: "named" })
 		),
 		promiseTest(contextCJS("null"), nsObj({ default: null }))
 	]);
@@ -114,12 +119,13 @@ it("should receive a namespace object when importing mixed content via context",
 	return Promise.all([
 		promiseTest(
 			contextMixed("one.js"),
-			nsObj({ default: { named: "named", default: "default" } })
+			nsObj({ default: { named: "named", default: "default" }, named: "named" })
 		),
 		promiseTest(
 			contextMixed("two.js"),
 			nsObj({
-				default: { __esModule: true, named: "named", default: "default" }
+				default: { __esModule: true, named: "named", default: "default" },
+				named: "named"
 			})
 		),
 		promiseTest(
