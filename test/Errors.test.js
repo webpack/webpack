@@ -871,4 +871,19 @@ describe("loaders", () => {
 					}
 				`);
 	});
+
+	it("should throw error for invalid library name", async () => {
+		await expect(
+			compile({
+				output: {
+					libraryTarget: "var"
+				}
+			})
+		).rejects.toMatchInlineSnapshot(`
+					Object {
+					  "message": "Library name must be a string or string array. Common configuration options that specific library names are 'output.library[.name]', 'entry.xyz.library[.name]', 'ModuleFederationPlugin.name' and 'ModuleFederationPlugin.library[.name]'.",
+					  "stack": "Error: Library name must be a string or string array. Common configuration options that specific library names are 'output.library[.name]', 'entry.xyz.library[.name]', 'ModuleFederationPlugin.name' and 'ModuleFederationPlugin.library[.name]'.",
+					}
+				`);
+	});
 });
