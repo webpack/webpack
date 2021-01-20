@@ -3704,6 +3704,55 @@ declare class Generator {
 	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
 	static byType(map?: any): ByTypeGenerator;
 }
+type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
+	GeneratorOptionsByModuleTypeUnknown;
+
+/**
+ * Specify options for each generator.
+ */
+declare interface GeneratorOptionsByModuleTypeKnown {
+	/**
+	 * Generator options for asset modules.
+	 */
+	asset?: AssetGeneratorOptions;
+
+	/**
+	 * Generator options for asset/inline modules.
+	 */
+	"asset/inline"?: AssetInlineGeneratorOptions;
+
+	/**
+	 * Generator options for asset/resource modules.
+	 */
+	"asset/resource"?: AssetResourceGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	javascript?: EmptyGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"javascript/auto"?: EmptyGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"javascript/dynamic"?: EmptyGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"javascript/esm"?: EmptyGeneratorOptions;
+}
+
+/**
+ * Specify options for each generator.
+ */
+declare interface GeneratorOptionsByModuleTypeUnknown {
+	[index: string]: { [index: string]: any };
+}
 declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	constructor(
 		contentType: string,
@@ -5706,7 +5755,7 @@ declare interface ModuleOptions {
 	/**
 	 * Specify options for each generator.
 	 */
-	generator?: ModuleOptionsGeneratorKnown & ModuleOptionsGeneratorUnknown;
+	generator?: GeneratorOptionsByModuleType;
 
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
@@ -5716,7 +5765,7 @@ declare interface ModuleOptions {
 	/**
 	 * Specify options for each parser.
 	 */
-	parser?: ModuleOptionsParserKnown & ModuleOptionsParserUnknown;
+	parser?: ParserOptionsByModuleType;
 
 	/**
 	 * An array of rules applied for modules.
@@ -5775,53 +5824,6 @@ declare interface ModuleOptions {
 }
 
 /**
- * Specify options for each generator.
- */
-declare interface ModuleOptionsGeneratorKnown {
-	/**
-	 * Generator options for asset modules.
-	 */
-	asset?: AssetGeneratorOptions;
-
-	/**
-	 * Generator options for asset/inline modules.
-	 */
-	"asset/inline"?: AssetInlineGeneratorOptions;
-
-	/**
-	 * Generator options for asset/resource modules.
-	 */
-	"asset/resource"?: AssetResourceGeneratorOptions;
-
-	/**
-	 * No generator options are supported for this module type.
-	 */
-	javascript?: EmptyGeneratorOptions;
-
-	/**
-	 * No generator options are supported for this module type.
-	 */
-	"javascript/auto"?: EmptyGeneratorOptions;
-
-	/**
-	 * No generator options are supported for this module type.
-	 */
-	"javascript/dynamic"?: EmptyGeneratorOptions;
-
-	/**
-	 * No generator options are supported for this module type.
-	 */
-	"javascript/esm"?: EmptyGeneratorOptions;
-}
-
-/**
- * Specify options for each generator.
- */
-declare interface ModuleOptionsGeneratorUnknown {
-	[index: string]: { [index: string]: any };
-}
-
-/**
  * Options affecting the normal modules (`NormalModuleFactory`).
  */
 declare interface ModuleOptionsNormalized {
@@ -5833,8 +5835,7 @@ declare interface ModuleOptionsNormalized {
 	/**
 	 * Specify options for each generator.
 	 */
-	generator: ModuleOptionsNormalizedGeneratorKnown &
-		ModuleOptionsNormalizedGeneratorUnknown;
+	generator: GeneratorOptionsByModuleType;
 
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
@@ -5844,8 +5845,7 @@ declare interface ModuleOptionsNormalized {
 	/**
 	 * Specify options for each parser.
 	 */
-	parser: ModuleOptionsNormalizedParserKnown &
-		ModuleOptionsNormalizedParserUnknown;
+	parser: ParserOptionsByModuleType;
 
 	/**
 	 * An array of rules applied for modules.
@@ -5856,157 +5856,6 @@ declare interface ModuleOptionsNormalized {
 	 * Cache the resolving of module requests.
 	 */
 	unsafeCache?: boolean | Function;
-}
-
-/**
- * Specify options for each generator.
- */
-declare interface ModuleOptionsNormalizedGeneratorKnown {
-	/**
-	 * Generator options for asset modules.
-	 */
-	asset?: AssetGeneratorOptions;
-
-	/**
-	 * Generator options for asset/inline modules.
-	 */
-	"asset/inline"?: AssetInlineGeneratorOptions;
-
-	/**
-	 * Generator options for asset/resource modules.
-	 */
-	"asset/resource"?: AssetResourceGeneratorOptions;
-
-	/**
-	 * No generator options are supported for this module type.
-	 */
-	javascript?: EmptyGeneratorOptions;
-
-	/**
-	 * No generator options are supported for this module type.
-	 */
-	"javascript/auto"?: EmptyGeneratorOptions;
-
-	/**
-	 * No generator options are supported for this module type.
-	 */
-	"javascript/dynamic"?: EmptyGeneratorOptions;
-
-	/**
-	 * No generator options are supported for this module type.
-	 */
-	"javascript/esm"?: EmptyGeneratorOptions;
-}
-
-/**
- * Specify options for each generator.
- */
-declare interface ModuleOptionsNormalizedGeneratorUnknown {
-	[index: string]: { [index: string]: any };
-}
-
-/**
- * Specify options for each parser.
- */
-declare interface ModuleOptionsNormalizedParserKnown {
-	/**
-	 * Parser options for asset modules.
-	 */
-	asset?: AssetParserOptions;
-
-	/**
-	 * No parser options are supported for this module type.
-	 */
-	"asset/inline"?: EmptyParserOptions;
-
-	/**
-	 * No parser options are supported for this module type.
-	 */
-	"asset/resource"?: EmptyParserOptions;
-
-	/**
-	 * No parser options are supported for this module type.
-	 */
-	"asset/source"?: EmptyParserOptions;
-
-	/**
-	 * Parser options for javascript modules.
-	 */
-	javascript?: JavascriptParserOptions;
-
-	/**
-	 * Parser options for javascript modules.
-	 */
-	"javascript/auto"?: JavascriptParserOptions;
-
-	/**
-	 * Parser options for javascript modules.
-	 */
-	"javascript/dynamic"?: JavascriptParserOptions;
-
-	/**
-	 * Parser options for javascript modules.
-	 */
-	"javascript/esm"?: JavascriptParserOptions;
-}
-
-/**
- * Specify options for each parser.
- */
-declare interface ModuleOptionsNormalizedParserUnknown {
-	[index: string]: { [index: string]: any };
-}
-
-/**
- * Specify options for each parser.
- */
-declare interface ModuleOptionsParserKnown {
-	/**
-	 * Parser options for asset modules.
-	 */
-	asset?: AssetParserOptions;
-
-	/**
-	 * No parser options are supported for this module type.
-	 */
-	"asset/inline"?: EmptyParserOptions;
-
-	/**
-	 * No parser options are supported for this module type.
-	 */
-	"asset/resource"?: EmptyParserOptions;
-
-	/**
-	 * No parser options are supported for this module type.
-	 */
-	"asset/source"?: EmptyParserOptions;
-
-	/**
-	 * Parser options for javascript modules.
-	 */
-	javascript?: JavascriptParserOptions;
-
-	/**
-	 * Parser options for javascript modules.
-	 */
-	"javascript/auto"?: JavascriptParserOptions;
-
-	/**
-	 * Parser options for javascript modules.
-	 */
-	"javascript/dynamic"?: JavascriptParserOptions;
-
-	/**
-	 * Parser options for javascript modules.
-	 */
-	"javascript/esm"?: JavascriptParserOptions;
-}
-
-/**
- * Specify options for each parser.
- */
-declare interface ModuleOptionsParserUnknown {
-	[index: string]: { [index: string]: any };
 }
 declare interface ModulePathData {
 	id: string | number;
@@ -7387,6 +7236,60 @@ declare class Parser {
 		source: string | Buffer | PreparsedAst,
 		state: ParserState
 	): ParserState;
+}
+type ParserOptionsByModuleType = ParserOptionsByModuleTypeKnown &
+	ParserOptionsByModuleTypeUnknown;
+
+/**
+ * Specify options for each parser.
+ */
+declare interface ParserOptionsByModuleTypeKnown {
+	/**
+	 * Parser options for asset modules.
+	 */
+	asset?: AssetParserOptions;
+
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/inline"?: EmptyParserOptions;
+
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/resource"?: EmptyParserOptions;
+
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/source"?: EmptyParserOptions;
+
+	/**
+	 * Parser options for javascript modules.
+	 */
+	javascript?: JavascriptParserOptions;
+
+	/**
+	 * Parser options for javascript modules.
+	 */
+	"javascript/auto"?: JavascriptParserOptions;
+
+	/**
+	 * Parser options for javascript modules.
+	 */
+	"javascript/dynamic"?: JavascriptParserOptions;
+
+	/**
+	 * Parser options for javascript modules.
+	 */
+	"javascript/esm"?: JavascriptParserOptions;
+}
+
+/**
+ * Specify options for each parser.
+ */
+declare interface ParserOptionsByModuleTypeUnknown {
+	[index: string]: { [index: string]: any };
 }
 type ParserState = Record<string, any> & ParserStateBase;
 declare interface ParserStateBase {

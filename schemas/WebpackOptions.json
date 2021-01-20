@@ -912,6 +912,38 @@
         }
       ]
     },
+    "GeneratorOptionsByModuleType": {
+      "description": "Specify options for each generator.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "Options for generating.",
+        "type": "object",
+        "additionalProperties": true
+      },
+      "properties": {
+        "asset": {
+          "$ref": "#/definitions/AssetGeneratorOptions"
+        },
+        "asset/inline": {
+          "$ref": "#/definitions/AssetInlineGeneratorOptions"
+        },
+        "asset/resource": {
+          "$ref": "#/definitions/AssetResourceGeneratorOptions"
+        },
+        "javascript": {
+          "$ref": "#/definitions/EmptyGeneratorOptions"
+        },
+        "javascript/auto": {
+          "$ref": "#/definitions/EmptyGeneratorOptions"
+        },
+        "javascript/dynamic": {
+          "$ref": "#/definitions/EmptyGeneratorOptions"
+        },
+        "javascript/esm": {
+          "$ref": "#/definitions/EmptyGeneratorOptions"
+        }
+      }
+    },
     "GlobalObject": {
       "description": "An expression which is used to address the global object/scope in runtime code.",
       "type": "string",
@@ -1414,113 +1446,13 @@
           "type": "string"
         },
         "generator": {
-          "description": "Specify options for each generator.",
-          "type": "object",
-          "additionalProperties": {
-            "description": "Options for generating.",
-            "type": "object",
-            "additionalProperties": true
-          },
-          "properties": {
-            "asset": {
-              "$ref": "#/definitions/AssetGeneratorOptions"
-            },
-            "asset/inline": {
-              "$ref": "#/definitions/AssetInlineGeneratorOptions"
-            },
-            "asset/resource": {
-              "$ref": "#/definitions/AssetResourceGeneratorOptions"
-            },
-            "javascript": {
-              "$ref": "#/definitions/EmptyGeneratorOptions"
-            },
-            "javascript/auto": {
-              "$ref": "#/definitions/EmptyGeneratorOptions"
-            },
-            "javascript/dynamic": {
-              "$ref": "#/definitions/EmptyGeneratorOptions"
-            },
-            "javascript/esm": {
-              "$ref": "#/definitions/EmptyGeneratorOptions"
-            }
-          }
+          "$ref": "#/definitions/GeneratorOptionsByModuleType"
         },
         "noParse": {
-          "description": "Don't parse files matching. It's matched against the full resolved request.",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "description": "Don't parse files matching. It's matched against the full resolved request.",
-                "anyOf": [
-                  {
-                    "description": "A regular expression, when matched the module is not parsed.",
-                    "instanceof": "RegExp",
-                    "tsType": "RegExp"
-                  },
-                  {
-                    "description": "An absolute path, when the module starts with this path it is not parsed.",
-                    "type": "string",
-                    "absolutePath": true
-                  },
-                  {
-                    "instanceof": "Function",
-                    "tsType": "Function"
-                  }
-                ]
-              },
-              "minItems": 1
-            },
-            {
-              "description": "A regular expression, when matched the module is not parsed.",
-              "instanceof": "RegExp",
-              "tsType": "RegExp"
-            },
-            {
-              "description": "An absolute path, when the module starts with this path it is not parsed.",
-              "type": "string",
-              "absolutePath": true
-            },
-            {
-              "instanceof": "Function",
-              "tsType": "Function"
-            }
-          ]
+          "$ref": "#/definitions/NoParse"
         },
         "parser": {
-          "description": "Specify options for each parser.",
-          "type": "object",
-          "additionalProperties": {
-            "description": "Options for parsing.",
-            "type": "object",
-            "additionalProperties": true
-          },
-          "properties": {
-            "asset": {
-              "$ref": "#/definitions/AssetParserOptions"
-            },
-            "asset/inline": {
-              "$ref": "#/definitions/EmptyParserOptions"
-            },
-            "asset/resource": {
-              "$ref": "#/definitions/EmptyParserOptions"
-            },
-            "asset/source": {
-              "$ref": "#/definitions/EmptyParserOptions"
-            },
-            "javascript": {
-              "$ref": "#/definitions/JavascriptParserOptions"
-            },
-            "javascript/auto": {
-              "$ref": "#/definitions/JavascriptParserOptions"
-            },
-            "javascript/dynamic": {
-              "$ref": "#/definitions/JavascriptParserOptions"
-            },
-            "javascript/esm": {
-              "$ref": "#/definitions/JavascriptParserOptions"
-            }
-          }
+          "$ref": "#/definitions/ParserOptionsByModuleType"
         },
         "rules": {
           "description": "An array of rules applied for modules.",
@@ -1606,113 +1538,13 @@
           ]
         },
         "generator": {
-          "description": "Specify options for each generator.",
-          "type": "object",
-          "additionalProperties": {
-            "description": "Options for generating.",
-            "type": "object",
-            "additionalProperties": true
-          },
-          "properties": {
-            "asset": {
-              "$ref": "#/definitions/AssetGeneratorOptions"
-            },
-            "asset/inline": {
-              "$ref": "#/definitions/AssetInlineGeneratorOptions"
-            },
-            "asset/resource": {
-              "$ref": "#/definitions/AssetResourceGeneratorOptions"
-            },
-            "javascript": {
-              "$ref": "#/definitions/EmptyGeneratorOptions"
-            },
-            "javascript/auto": {
-              "$ref": "#/definitions/EmptyGeneratorOptions"
-            },
-            "javascript/dynamic": {
-              "$ref": "#/definitions/EmptyGeneratorOptions"
-            },
-            "javascript/esm": {
-              "$ref": "#/definitions/EmptyGeneratorOptions"
-            }
-          }
+          "$ref": "#/definitions/GeneratorOptionsByModuleType"
         },
         "noParse": {
-          "description": "Don't parse files matching. It's matched against the full resolved request.",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "description": "Don't parse files matching. It's matched against the full resolved request.",
-                "anyOf": [
-                  {
-                    "description": "A regular expression, when matched the module is not parsed.",
-                    "instanceof": "RegExp",
-                    "tsType": "RegExp"
-                  },
-                  {
-                    "description": "An absolute path, when the module starts with this path it is not parsed.",
-                    "type": "string",
-                    "absolutePath": true
-                  },
-                  {
-                    "instanceof": "Function",
-                    "tsType": "Function"
-                  }
-                ]
-              },
-              "minItems": 1
-            },
-            {
-              "description": "A regular expression, when matched the module is not parsed.",
-              "instanceof": "RegExp",
-              "tsType": "RegExp"
-            },
-            {
-              "description": "An absolute path, when the module starts with this path it is not parsed.",
-              "type": "string",
-              "absolutePath": true
-            },
-            {
-              "instanceof": "Function",
-              "tsType": "Function"
-            }
-          ]
+          "$ref": "#/definitions/NoParse"
         },
         "parser": {
-          "description": "Specify options for each parser.",
-          "type": "object",
-          "additionalProperties": {
-            "description": "Options for parsing.",
-            "type": "object",
-            "additionalProperties": true
-          },
-          "properties": {
-            "asset": {
-              "$ref": "#/definitions/AssetParserOptions"
-            },
-            "asset/inline": {
-              "$ref": "#/definitions/EmptyParserOptions"
-            },
-            "asset/resource": {
-              "$ref": "#/definitions/EmptyParserOptions"
-            },
-            "asset/source": {
-              "$ref": "#/definitions/EmptyParserOptions"
-            },
-            "javascript": {
-              "$ref": "#/definitions/JavascriptParserOptions"
-            },
-            "javascript/auto": {
-              "$ref": "#/definitions/JavascriptParserOptions"
-            },
-            "javascript/dynamic": {
-              "$ref": "#/definitions/JavascriptParserOptions"
-            },
-            "javascript/esm": {
-              "$ref": "#/definitions/JavascriptParserOptions"
-            }
-          }
+          "$ref": "#/definitions/ParserOptionsByModuleType"
         },
         "rules": {
           "description": "An array of rules applied for modules.",
@@ -1740,6 +1572,48 @@
     "Name": {
       "description": "Name of the configuration. Used when loading multiple configurations.",
       "type": "string"
+    },
+    "NoParse": {
+      "description": "Don't parse files matching. It's matched against the full resolved request.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "description": "Don't parse files matching. It's matched against the full resolved request.",
+            "anyOf": [
+              {
+                "description": "A regular expression, when matched the module is not parsed.",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "An absolute path, when the module starts with this path it is not parsed.",
+                "type": "string",
+                "absolutePath": true
+              },
+              {
+                "instanceof": "Function",
+                "tsType": "Function"
+              }
+            ]
+          },
+          "minItems": 1
+        },
+        {
+          "description": "A regular expression, when matched the module is not parsed.",
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
+        },
+        {
+          "description": "An absolute path, when the module starts with this path it is not parsed.",
+          "type": "string",
+          "absolutePath": true
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "Function"
+        }
+      ]
     },
     "Node": {
       "description": "Include polyfills or mocks for various node stuff.",
@@ -2727,6 +2601,41 @@
       "description": "The number of parallel processed modules in the compilation.",
       "type": "number",
       "minimum": 1
+    },
+    "ParserOptionsByModuleType": {
+      "description": "Specify options for each parser.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "Options for parsing.",
+        "type": "object",
+        "additionalProperties": true
+      },
+      "properties": {
+        "asset": {
+          "$ref": "#/definitions/AssetParserOptions"
+        },
+        "asset/inline": {
+          "$ref": "#/definitions/EmptyParserOptions"
+        },
+        "asset/resource": {
+          "$ref": "#/definitions/EmptyParserOptions"
+        },
+        "asset/source": {
+          "$ref": "#/definitions/EmptyParserOptions"
+        },
+        "javascript": {
+          "$ref": "#/definitions/JavascriptParserOptions"
+        },
+        "javascript/auto": {
+          "$ref": "#/definitions/JavascriptParserOptions"
+        },
+        "javascript/dynamic": {
+          "$ref": "#/definitions/JavascriptParserOptions"
+        },
+        "javascript/esm": {
+          "$ref": "#/definitions/JavascriptParserOptions"
+        }
+      }
     },
     "Path": {
       "description": "The output directory as **absolute path** (required).",

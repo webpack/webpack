@@ -353,6 +353,24 @@ export type RuleSetUseItem =
  */
 export type RuleSetRules = ("..." | RuleSetRule)[];
 /**
+ * Specify options for each generator.
+ */
+export type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
+	GeneratorOptionsByModuleTypeUnknown;
+/**
+ * Don't parse files matching. It's matched against the full resolved request.
+ */
+export type NoParse =
+	| (RegExp | string | Function)[]
+	| RegExp
+	| string
+	| Function;
+/**
+ * Specify options for each parser.
+ */
+export type ParserOptionsByModuleType = ParserOptionsByModuleTypeKnown &
+	ParserOptionsByModuleTypeUnknown;
+/**
  * Name of the configuration. Used when loading multiple configurations.
  */
 export type Name = string;
@@ -1119,15 +1137,15 @@ export interface ModuleOptions {
 	/**
 	 * Specify options for each generator.
 	 */
-	generator?: ModuleOptionsGeneratorKnown & ModuleOptionsGeneratorUnknown;
+	generator?: GeneratorOptionsByModuleType;
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
-	noParse?: (RegExp | string | Function)[] | RegExp | string | Function;
+	noParse?: NoParse;
 	/**
 	 * Specify options for each parser.
 	 */
-	parser?: ModuleOptionsParserKnown & ModuleOptionsParserUnknown;
+	parser?: ParserOptionsByModuleType;
 	/**
 	 * An array of rules applied for modules.
 	 */
@@ -2669,17 +2687,15 @@ export interface ModuleOptionsNormalized {
 	/**
 	 * Specify options for each generator.
 	 */
-	generator: ModuleOptionsNormalizedGeneratorKnown &
-		ModuleOptionsNormalizedGeneratorUnknown;
+	generator: GeneratorOptionsByModuleType;
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
-	noParse?: (RegExp | string | Function)[] | RegExp | string | Function;
+	noParse?: NoParse;
 	/**
 	 * Specify options for each parser.
 	 */
-	parser: ModuleOptionsNormalizedParserKnown &
-		ModuleOptionsNormalizedParserUnknown;
+	parser: ParserOptionsByModuleType;
 	/**
 	 * An array of rules applied for modules.
 	 */
@@ -3025,7 +3041,7 @@ export interface ExternalItemObjectUnknown {
 /**
  * Specify options for each generator.
  */
-export interface ModuleOptionsGeneratorKnown {
+export interface GeneratorOptionsByModuleTypeKnown {
 	/**
 	 * Generator options for asset modules.
 	 */
@@ -3058,7 +3074,7 @@ export interface ModuleOptionsGeneratorKnown {
 /**
  * Specify options for each generator.
  */
-export interface ModuleOptionsGeneratorUnknown {
+export interface GeneratorOptionsByModuleTypeUnknown {
 	/**
 	 * Options for generating.
 	 */
@@ -3069,7 +3085,7 @@ export interface ModuleOptionsGeneratorUnknown {
 /**
  * Specify options for each parser.
  */
-export interface ModuleOptionsParserKnown {
+export interface ParserOptionsByModuleTypeKnown {
 	/**
 	 * Parser options for asset modules.
 	 */
@@ -3106,99 +3122,7 @@ export interface ModuleOptionsParserKnown {
 /**
  * Specify options for each parser.
  */
-export interface ModuleOptionsParserUnknown {
-	/**
-	 * Options for parsing.
-	 */
-	[k: string]: {
-		[k: string]: any;
-	};
-}
-/**
- * Specify options for each generator.
- */
-export interface ModuleOptionsNormalizedGeneratorKnown {
-	/**
-	 * Generator options for asset modules.
-	 */
-	asset?: AssetGeneratorOptions;
-	/**
-	 * Generator options for asset/inline modules.
-	 */
-	"asset/inline"?: AssetInlineGeneratorOptions;
-	/**
-	 * Generator options for asset/resource modules.
-	 */
-	"asset/resource"?: AssetResourceGeneratorOptions;
-	/**
-	 * No generator options are supported for this module type.
-	 */
-	javascript?: EmptyGeneratorOptions;
-	/**
-	 * No generator options are supported for this module type.
-	 */
-	"javascript/auto"?: EmptyGeneratorOptions;
-	/**
-	 * No generator options are supported for this module type.
-	 */
-	"javascript/dynamic"?: EmptyGeneratorOptions;
-	/**
-	 * No generator options are supported for this module type.
-	 */
-	"javascript/esm"?: EmptyGeneratorOptions;
-}
-/**
- * Specify options for each generator.
- */
-export interface ModuleOptionsNormalizedGeneratorUnknown {
-	/**
-	 * Options for generating.
-	 */
-	[k: string]: {
-		[k: string]: any;
-	};
-}
-/**
- * Specify options for each parser.
- */
-export interface ModuleOptionsNormalizedParserKnown {
-	/**
-	 * Parser options for asset modules.
-	 */
-	asset?: AssetParserOptions;
-	/**
-	 * No parser options are supported for this module type.
-	 */
-	"asset/inline"?: EmptyParserOptions;
-	/**
-	 * No parser options are supported for this module type.
-	 */
-	"asset/resource"?: EmptyParserOptions;
-	/**
-	 * No parser options are supported for this module type.
-	 */
-	"asset/source"?: EmptyParserOptions;
-	/**
-	 * Parser options for javascript modules.
-	 */
-	javascript?: JavascriptParserOptions;
-	/**
-	 * Parser options for javascript modules.
-	 */
-	"javascript/auto"?: JavascriptParserOptions;
-	/**
-	 * Parser options for javascript modules.
-	 */
-	"javascript/dynamic"?: JavascriptParserOptions;
-	/**
-	 * Parser options for javascript modules.
-	 */
-	"javascript/esm"?: JavascriptParserOptions;
-}
-/**
- * Specify options for each parser.
- */
-export interface ModuleOptionsNormalizedParserUnknown {
+export interface ParserOptionsByModuleTypeUnknown {
 	/**
 	 * Options for parsing.
 	 */
