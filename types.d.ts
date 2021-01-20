@@ -7289,7 +7289,7 @@ declare class Profiler {
 	startProfiling(): Promise<void> | Promise<[any, any, any]>;
 	sendCommand(method?: any, params?: any): Promise<any>;
 	destroy(): Promise<void>;
-	stopProfiling(): Promise<any>;
+	stopProfiling(): Promise<{ profile: any }>;
 }
 declare class ProfilingPlugin {
 	constructor(options?: ProfilingPluginOptions);
