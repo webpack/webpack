@@ -734,45 +734,45 @@ Object {
   "module-expr-context-recursive": Object {
     "configs": Array [
       Object {
-        "description": "Enable recursive directory lookup for full dynamic dependencies.",
+        "description": "Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.",
         "multiple": false,
         "path": "module.exprContextRecursive",
         "type": "boolean",
       },
     ],
-    "description": "Enable recursive directory lookup for full dynamic dependencies.",
+    "description": "Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "module-expr-context-reg-exp": Object {
     "configs": Array [
       Object {
-        "description": "Sets the default regular expression for full dynamic dependencies.",
+        "description": "Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.",
         "multiple": false,
         "path": "module.exprContextRegExp",
         "type": "RegExp",
       },
       Object {
-        "description": "Sets the default regular expression for full dynamic dependencies.",
+        "description": "Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.",
         "multiple": false,
         "path": "module.exprContextRegExp",
         "type": "boolean",
       },
     ],
-    "description": "Sets the default regular expression for full dynamic dependencies.",
+    "description": "Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.",
     "multiple": false,
     "simpleType": "string",
   },
   "module-expr-context-request": Object {
     "configs": Array [
       Object {
-        "description": "Set the default request for full dynamic dependencies.",
+        "description": "Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.",
         "multiple": false,
         "path": "module.exprContextRequest",
         "type": "string",
       },
     ],
-    "description": "Set the default request for full dynamic dependencies.",
+    "description": "Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -965,6 +965,77 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-commonjs-magic-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.commonjsMagicComments",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-expr-context-critical": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable warnings for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.exprContextCritical",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable warnings for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-expr-context-recursive": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable recursive directory lookup for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.exprContextRecursive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable recursive directory lookup for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-expr-context-reg-exp": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the default regular expression for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.exprContextRegExp",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Sets the default regular expression for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.exprContextRegExp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Sets the default regular expression for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-expr-context-request": Object {
+    "configs": Array [
+      Object {
+        "description": "Set the default request for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.exprContextRequest",
+        "type": "string",
+      },
+    ],
+    "description": "Set the default request for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-harmony": Object {
     "configs": Array [
       Object {
@@ -1110,6 +1181,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-strict-export-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.strictExportPresence",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-strict-this-context-on-imports": Object {
+    "configs": Array [
+      Object {
+        "description": "Handle the this context correctly according to the spec for namespace objects.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.strictThisContextOnImports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Handle the this context correctly according to the spec for namespace objects.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-system": Object {
     "configs": Array [
       Object {
@@ -1122,6 +1219,64 @@ Object {
     "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-unknown-context-critical": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.unknownContextCritical",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-unknown-context-recursive": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.unknownContextRecursive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-unknown-context-reg-exp": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.unknownContextRegExp",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.unknownContextRegExp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-unknown-context-request": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the request when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.unknownContextRequest",
+        "type": "string",
+      },
+    ],
+    "description": "Sets the request when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-auto-url": Object {
     "configs": Array [
@@ -1168,6 +1323,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-wrapped-context-critical": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable warnings for partial dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.wrappedContextCritical",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable warnings for partial dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-wrapped-context-recursive": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.wrappedContextRecursive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-auto-wrapped-context-reg-exp": Object {
+    "configs": Array [
+      Object {
+        "description": "Set the inner regular expression for partial dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.wrappedContextRegExp",
+        "type": "RegExp",
+      },
+    ],
+    "description": "Set the inner regular expression for partial dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-browserify": Object {
     "configs": Array [
       Object {
@@ -1191,6 +1385,19 @@ Object {
       },
     ],
     "description": "Enable/disable parsing of CommonJs syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-commonjs-magic-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.commonjsMagicComments",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1235,6 +1442,77 @@ Object {
     "description": "Enable/disable parsing of CommonJs syntax.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-commonjs-magic-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.commonjsMagicComments",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-expr-context-critical": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable warnings for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.exprContextCritical",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable warnings for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-expr-context-recursive": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable recursive directory lookup for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.exprContextRecursive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable recursive directory lookup for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-expr-context-reg-exp": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the default regular expression for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.exprContextRegExp",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Sets the default regular expression for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.exprContextRegExp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Sets the default regular expression for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-expr-context-request": Object {
+    "configs": Array [
+      Object {
+        "description": "Set the default request for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.exprContextRequest",
+        "type": "string",
+      },
+    ],
+    "description": "Set the default request for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-harmony": Object {
     "configs": Array [
@@ -1381,6 +1659,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-strict-export-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.strictExportPresence",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-strict-this-context-on-imports": Object {
+    "configs": Array [
+      Object {
+        "description": "Handle the this context correctly according to the spec for namespace objects.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.strictThisContextOnImports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Handle the this context correctly according to the spec for namespace objects.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-system": Object {
     "configs": Array [
       Object {
@@ -1393,6 +1697,64 @@ Object {
     "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-unknown-context-critical": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.unknownContextCritical",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-unknown-context-recursive": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.unknownContextRecursive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-unknown-context-reg-exp": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.unknownContextRegExp",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.unknownContextRegExp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-unknown-context-request": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the request when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.unknownContextRequest",
+        "type": "string",
+      },
+    ],
+    "description": "Sets the request when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-url": Object {
     "configs": Array [
@@ -1439,6 +1801,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-wrapped-context-critical": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable warnings for partial dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.wrappedContextCritical",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable warnings for partial dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-wrapped-context-recursive": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.wrappedContextRecursive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-wrapped-context-reg-exp": Object {
+    "configs": Array [
+      Object {
+        "description": "Set the inner regular expression for partial dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.wrappedContextRegExp",
+        "type": "RegExp",
+      },
+    ],
+    "description": "Set the inner regular expression for partial dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-amd": Object {
     "configs": Array [
       Object {
@@ -1480,6 +1881,77 @@ Object {
     "description": "Enable/disable parsing of CommonJs syntax.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-commonjs-magic-comments": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.commonjsMagicComments",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-expr-context-critical": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable warnings for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.exprContextCritical",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable warnings for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-expr-context-recursive": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable recursive directory lookup for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.exprContextRecursive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable recursive directory lookup for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-expr-context-reg-exp": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the default regular expression for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.exprContextRegExp",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Sets the default regular expression for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.exprContextRegExp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Sets the default regular expression for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-expr-context-request": Object {
+    "configs": Array [
+      Object {
+        "description": "Set the default request for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.exprContextRequest",
+        "type": "string",
+      },
+    ],
+    "description": "Set the default request for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-esm-harmony": Object {
     "configs": Array [
@@ -1626,6 +2098,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-strict-export-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.strictExportPresence",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-strict-this-context-on-imports": Object {
+    "configs": Array [
+      Object {
+        "description": "Handle the this context correctly according to the spec for namespace objects.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.strictThisContextOnImports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Handle the this context correctly according to the spec for namespace objects.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-system": Object {
     "configs": Array [
       Object {
@@ -1638,6 +2136,64 @@ Object {
     "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-unknown-context-critical": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.unknownContextCritical",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-unknown-context-recursive": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.unknownContextRecursive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-unknown-context-reg-exp": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.unknownContextRegExp",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.unknownContextRegExp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-unknown-context-request": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the request when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.unknownContextRequest",
+        "type": "string",
+      },
+    ],
+    "description": "Sets the request when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-esm-url": Object {
     "configs": Array [
@@ -1683,6 +2239,103 @@ Object {
     "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-wrapped-context-critical": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable warnings for partial dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.wrappedContextCritical",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable warnings for partial dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-wrapped-context-recursive": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.wrappedContextRecursive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-wrapped-context-reg-exp": Object {
+    "configs": Array [
+      Object {
+        "description": "Set the inner regular expression for partial dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.wrappedContextRegExp",
+        "type": "RegExp",
+      },
+    ],
+    "description": "Set the inner regular expression for partial dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-expr-context-critical": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable warnings for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript.exprContextCritical",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable warnings for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-expr-context-recursive": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable recursive directory lookup for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript.exprContextRecursive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable recursive directory lookup for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-expr-context-reg-exp": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the default regular expression for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript.exprContextRegExp",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Sets the default regular expression for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript.exprContextRegExp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Sets the default regular expression for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-expr-context-request": Object {
+    "configs": Array [
+      Object {
+        "description": "Set the default request for full dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript.exprContextRequest",
+        "type": "string",
+      },
+    ],
+    "description": "Set the default request for full dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-harmony": Object {
     "configs": Array [
@@ -1829,6 +2482,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-strict-export-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "multiple": false,
+        "path": "module.parser.javascript.strictExportPresence",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-strict-this-context-on-imports": Object {
+    "configs": Array [
+      Object {
+        "description": "Handle the this context correctly according to the spec for namespace objects.",
+        "multiple": false,
+        "path": "module.parser.javascript.strictThisContextOnImports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Handle the this context correctly according to the spec for namespace objects.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-system": Object {
     "configs": Array [
       Object {
@@ -1841,6 +2520,64 @@ Object {
     "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-unknown-context-critical": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript.unknownContextCritical",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-unknown-context-recursive": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript.unknownContextRecursive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-unknown-context-reg-exp": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript.unknownContextRegExp",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript.unknownContextRegExp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-unknown-context-request": Object {
+    "configs": Array [
+      Object {
+        "description": "Sets the request when using the require function in a not statically analyse-able way.",
+        "multiple": false,
+        "path": "module.parser.javascript.unknownContextRequest",
+        "type": "string",
+      },
+    ],
+    "description": "Sets the request when using the require function in a not statically analyse-able way.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-url": Object {
     "configs": Array [
@@ -1886,6 +2623,45 @@ Object {
     "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-wrapped-context-critical": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable warnings for partial dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript.wrappedContextCritical",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable warnings for partial dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-wrapped-context-recursive": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript.wrappedContextRecursive",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-wrapped-context-reg-exp": Object {
+    "configs": Array [
+      Object {
+        "description": "Set the inner regular expression for partial dynamic dependencies.",
+        "multiple": false,
+        "path": "module.parser.javascript.wrappedContextRegExp",
+        "type": "RegExp",
+      },
+    ],
+    "description": "Set the inner regular expression for partial dynamic dependencies.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-rules-compiler": Object {
     "configs": Array [
@@ -2252,84 +3028,84 @@ Object {
   "module-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "description": "Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.",
         "multiple": false,
         "path": "module.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "description": "Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "module-strict-this-context-on-imports": Object {
     "configs": Array [
       Object {
-        "description": "Handle the this context correctly according to the spec for namespace objects.",
+        "description": "Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.",
         "multiple": false,
         "path": "module.strictThisContextOnImports",
         "type": "boolean",
       },
     ],
-    "description": "Handle the this context correctly according to the spec for namespace objects.",
+    "description": "Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "module-unknown-context-critical": Object {
     "configs": Array [
       Object {
-        "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+        "description": "Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.",
         "multiple": false,
         "path": "module.unknownContextCritical",
         "type": "boolean",
       },
     ],
-    "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+    "description": "Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "module-unknown-context-recursive": Object {
     "configs": Array [
       Object {
-        "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+        "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.",
         "multiple": false,
         "path": "module.unknownContextRecursive",
         "type": "boolean",
       },
     ],
-    "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+    "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "module-unknown-context-reg-exp": Object {
     "configs": Array [
       Object {
-        "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+        "description": "Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.",
         "multiple": false,
         "path": "module.unknownContextRegExp",
         "type": "RegExp",
       },
       Object {
-        "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+        "description": "Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.",
         "multiple": false,
         "path": "module.unknownContextRegExp",
         "type": "boolean",
       },
     ],
-    "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+    "description": "Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.",
     "multiple": false,
     "simpleType": "string",
   },
   "module-unknown-context-request": Object {
     "configs": Array [
       Object {
-        "description": "Sets the request when using the require function in a not statically analyse-able way.",
+        "description": "Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.",
         "multiple": false,
         "path": "module.unknownContextRequest",
         "type": "string",
       },
     ],
-    "description": "Sets the request when using the require function in a not statically analyse-able way.",
+    "description": "Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2349,39 +3125,39 @@ Object {
   "module-wrapped-context-critical": Object {
     "configs": Array [
       Object {
-        "description": "Enable warnings for partial dynamic dependencies.",
+        "description": "Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.",
         "multiple": false,
         "path": "module.wrappedContextCritical",
         "type": "boolean",
       },
     ],
-    "description": "Enable warnings for partial dynamic dependencies.",
+    "description": "Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "module-wrapped-context-recursive": Object {
     "configs": Array [
       Object {
-        "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+        "description": "Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.",
         "multiple": false,
         "path": "module.wrappedContextRecursive",
         "type": "boolean",
       },
     ],
-    "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+    "description": "Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "module-wrapped-context-reg-exp": Object {
     "configs": Array [
       Object {
-        "description": "Set the inner regular expression for partial dynamic dependencies.",
+        "description": "Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.",
         "multiple": false,
         "path": "module.wrappedContextRegExp",
         "type": "RegExp",
       },
     ],
-    "description": "Set the inner regular expression for partial dynamic dependencies.",
+    "description": "Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.",
     "multiple": false,
     "simpleType": "string",
   },
