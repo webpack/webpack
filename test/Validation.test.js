@@ -78,7 +78,7 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.module.wrappedContextRegExp should be an instance of RegExp.
-			   -> Set the inner regular expression for partial dynamic dependencies."
+			   -> Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'."
 		`)
 	);
 

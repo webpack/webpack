@@ -3704,6 +3704,55 @@ declare class Generator {
 	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
 	static byType(map?: any): ByTypeGenerator;
 }
+type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
+	GeneratorOptionsByModuleTypeUnknown;
+
+/**
+ * Specify options for each generator.
+ */
+declare interface GeneratorOptionsByModuleTypeKnown {
+	/**
+	 * Generator options for asset modules.
+	 */
+	asset?: AssetGeneratorOptions;
+
+	/**
+	 * Generator options for asset/inline modules.
+	 */
+	"asset/inline"?: AssetInlineGeneratorOptions;
+
+	/**
+	 * Generator options for asset/resource modules.
+	 */
+	"asset/resource"?: AssetResourceGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	javascript?: EmptyGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"javascript/auto"?: EmptyGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"javascript/dynamic"?: EmptyGeneratorOptions;
+
+	/**
+	 * No generator options are supported for this module type.
+	 */
+	"javascript/esm"?: EmptyGeneratorOptions;
+}
+
+/**
+ * Specify options for each generator.
+ */
+declare interface GeneratorOptionsByModuleTypeUnknown {
+	[index: string]: { [index: string]: any };
+}
 declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	constructor(
 		contentType: string,
@@ -4537,7 +4586,7 @@ declare class JavascriptParser extends Parser {
 			| ClassDeclaration,
 		commentsStartPos: number
 	): boolean;
-	getComments(range?: any): any;
+	getComments(range?: any): any[];
 	isAsiPosition(pos: number): boolean;
 	unsetAsiPosition(pos: number): void;
 	isStatementLevelExpression(expr?: any): boolean;
@@ -4625,6 +4674,31 @@ declare interface JavascriptParserOptions {
 	commonjs?: boolean;
 
 	/**
+	 * Enable/disable parsing of magic comments in CommonJs syntax.
+	 */
+	commonjsMagicComments?: boolean;
+
+	/**
+	 * Enable warnings for full dynamic dependencies.
+	 */
+	exprContextCritical?: boolean;
+
+	/**
+	 * Enable recursive directory lookup for full dynamic dependencies.
+	 */
+	exprContextRecursive?: boolean;
+
+	/**
+	 * Sets the default regular expression for full dynamic dependencies.
+	 */
+	exprContextRegExp?: boolean | RegExp;
+
+	/**
+	 * Set the default request for full dynamic dependencies.
+	 */
+	exprContextRequest?: string;
+
+	/**
 	 * Enable/disable parsing of EcmaScript Modules syntax.
 	 */
 	harmony?: boolean;
@@ -4660,9 +4734,39 @@ declare interface JavascriptParserOptions {
 	requireJs?: boolean;
 
 	/**
+	 * Emit errors instead of warnings when imported names don't exist in imported module.
+	 */
+	strictExportPresence?: boolean;
+
+	/**
+	 * Handle the this context correctly according to the spec for namespace objects.
+	 */
+	strictThisContextOnImports?: boolean;
+
+	/**
 	 * Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.
 	 */
 	system?: boolean;
+
+	/**
+	 * Enable warnings when using the require function in a not statically analyse-able way.
+	 */
+	unknownContextCritical?: boolean;
+
+	/**
+	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way.
+	 */
+	unknownContextRecursive?: boolean;
+
+	/**
+	 * Sets the regular expression when using the require function in a not statically analyse-able way.
+	 */
+	unknownContextRegExp?: boolean | RegExp;
+
+	/**
+	 * Sets the request when using the require function in a not statically analyse-able way.
+	 */
+	unknownContextRequest?: string;
 
 	/**
 	 * Enable/disable parsing of new URL() syntax.
@@ -4673,6 +4777,21 @@ declare interface JavascriptParserOptions {
 	 * Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().
 	 */
 	worker?: boolean | string[];
+
+	/**
+	 * Enable warnings for partial dynamic dependencies.
+	 */
+	wrappedContextCritical?: boolean;
+
+	/**
+	 * Enable recursive directory lookup for partial dynamic dependencies.
+	 */
+	wrappedContextRecursive?: boolean;
+
+	/**
+	 * Set the inner regular expression for partial dynamic dependencies.
+	 */
+	wrappedContextRegExp?: RegExp;
 }
 declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements?: any);
@@ -5619,24 +5738,24 @@ declare interface ModuleOptions {
 	exprContextCritical?: boolean;
 
 	/**
-	 * Enable recursive directory lookup for full dynamic dependencies.
+	 * Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.
 	 */
 	exprContextRecursive?: boolean;
 
 	/**
-	 * Sets the default regular expression for full dynamic dependencies.
+	 * Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.
 	 */
 	exprContextRegExp?: boolean | RegExp;
 
 	/**
-	 * Set the default request for full dynamic dependencies.
+	 * Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.
 	 */
 	exprContextRequest?: string;
 
 	/**
 	 * Specify options for each generator.
 	 */
-	generator?: ModuleOptionsGeneratorKnown & ModuleOptionsGeneratorUnknown;
+	generator?: GeneratorOptionsByModuleType;
 
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
@@ -5646,7 +5765,7 @@ declare interface ModuleOptions {
 	/**
 	 * Specify options for each parser.
 	 */
-	parser?: ModuleOptionsParserKnown & ModuleOptionsParserUnknown;
+	parser?: ParserOptionsByModuleType;
 
 	/**
 	 * An array of rules applied for modules.
@@ -5654,32 +5773,32 @@ declare interface ModuleOptions {
 	rules?: (RuleSetRule | "...")[];
 
 	/**
-	 * Emit errors instead of warnings when imported names don't exist in imported module.
+	 * Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.
 	 */
 	strictExportPresence?: boolean;
 
 	/**
-	 * Handle the this context correctly according to the spec for namespace objects.
+	 * Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.
 	 */
 	strictThisContextOnImports?: boolean;
 
 	/**
-	 * Enable warnings when using the require function in a not statically analyse-able way.
+	 * Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.
 	 */
 	unknownContextCritical?: boolean;
 
 	/**
-	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way.
+	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.
 	 */
 	unknownContextRecursive?: boolean;
 
 	/**
-	 * Sets the regular expression when using the require function in a not statically analyse-able way.
+	 * Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.
 	 */
 	unknownContextRegExp?: boolean | RegExp;
 
 	/**
-	 * Sets the request when using the require function in a not statically analyse-able way.
+	 * Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.
 	 */
 	unknownContextRequest?: string;
 
@@ -5689,118 +5808,54 @@ declare interface ModuleOptions {
 	unsafeCache?: boolean | Function;
 
 	/**
-	 * Enable warnings for partial dynamic dependencies.
+	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
 	 */
 	wrappedContextCritical?: boolean;
 
 	/**
-	 * Enable recursive directory lookup for partial dynamic dependencies.
+	 * Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.
 	 */
 	wrappedContextRecursive?: boolean;
 
 	/**
-	 * Set the inner regular expression for partial dynamic dependencies.
+	 * Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.
 	 */
 	wrappedContextRegExp?: RegExp;
 }
 
 /**
- * Specify options for each generator.
+ * Options affecting the normal modules (`NormalModuleFactory`).
  */
-declare interface ModuleOptionsGeneratorKnown {
+declare interface ModuleOptionsNormalized {
 	/**
-	 * Generator options for asset modules.
+	 * An array of rules applied by default for modules.
 	 */
-	asset?: AssetGeneratorOptions;
-
-	/**
-	 * Generator options for asset/inline modules.
-	 */
-	"asset/inline"?: AssetInlineGeneratorOptions;
+	defaultRules: (RuleSetRule | "...")[];
 
 	/**
-	 * Generator options for asset/resource modules.
+	 * Specify options for each generator.
 	 */
-	"asset/resource"?: AssetResourceGeneratorOptions;
+	generator: GeneratorOptionsByModuleType;
 
 	/**
-	 * No generator options are supported for this module type.
+	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
-	javascript?: EmptyGeneratorOptions;
+	noParse?: string | Function | RegExp | (string | Function | RegExp)[];
 
 	/**
-	 * No generator options are supported for this module type.
+	 * Specify options for each parser.
 	 */
-	"javascript/auto"?: EmptyGeneratorOptions;
+	parser: ParserOptionsByModuleType;
 
 	/**
-	 * No generator options are supported for this module type.
+	 * An array of rules applied for modules.
 	 */
-	"javascript/dynamic"?: EmptyGeneratorOptions;
+	rules: (RuleSetRule | "...")[];
 
 	/**
-	 * No generator options are supported for this module type.
+	 * Cache the resolving of module requests.
 	 */
-	"javascript/esm"?: EmptyGeneratorOptions;
-}
-
-/**
- * Specify options for each generator.
- */
-declare interface ModuleOptionsGeneratorUnknown {
-	[index: string]: { [index: string]: any };
-}
-
-/**
- * Specify options for each parser.
- */
-declare interface ModuleOptionsParserKnown {
-	/**
-	 * Parser options for asset modules.
-	 */
-	asset?: AssetParserOptions;
-
-	/**
-	 * No parser options are supported for this module type.
-	 */
-	"asset/inline"?: EmptyParserOptions;
-
-	/**
-	 * No parser options are supported for this module type.
-	 */
-	"asset/resource"?: EmptyParserOptions;
-
-	/**
-	 * No parser options are supported for this module type.
-	 */
-	"asset/source"?: EmptyParserOptions;
-
-	/**
-	 * Parser options for javascript modules.
-	 */
-	javascript?: JavascriptParserOptions;
-
-	/**
-	 * Parser options for javascript modules.
-	 */
-	"javascript/auto"?: JavascriptParserOptions;
-
-	/**
-	 * Parser options for javascript modules.
-	 */
-	"javascript/dynamic"?: JavascriptParserOptions;
-
-	/**
-	 * Parser options for javascript modules.
-	 */
-	"javascript/esm"?: JavascriptParserOptions;
-}
-
-/**
- * Specify options for each parser.
- */
-declare interface ModuleOptionsParserUnknown {
-	[index: string]: { [index: string]: any };
+	unsafeCache?: boolean | Function;
 }
 declare interface ModulePathData {
 	id: string | number;
@@ -7181,6 +7236,60 @@ declare class Parser {
 		source: string | Buffer | PreparsedAst,
 		state: ParserState
 	): ParserState;
+}
+type ParserOptionsByModuleType = ParserOptionsByModuleTypeKnown &
+	ParserOptionsByModuleTypeUnknown;
+
+/**
+ * Specify options for each parser.
+ */
+declare interface ParserOptionsByModuleTypeKnown {
+	/**
+	 * Parser options for asset modules.
+	 */
+	asset?: AssetParserOptions;
+
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/inline"?: EmptyParserOptions;
+
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/resource"?: EmptyParserOptions;
+
+	/**
+	 * No parser options are supported for this module type.
+	 */
+	"asset/source"?: EmptyParserOptions;
+
+	/**
+	 * Parser options for javascript modules.
+	 */
+	javascript?: JavascriptParserOptions;
+
+	/**
+	 * Parser options for javascript modules.
+	 */
+	"javascript/auto"?: JavascriptParserOptions;
+
+	/**
+	 * Parser options for javascript modules.
+	 */
+	"javascript/dynamic"?: JavascriptParserOptions;
+
+	/**
+	 * Parser options for javascript modules.
+	 */
+	"javascript/esm"?: JavascriptParserOptions;
+}
+
+/**
+ * Specify options for each parser.
+ */
+declare interface ParserOptionsByModuleTypeUnknown {
+	[index: string]: { [index: string]: any };
 }
 type ParserState = Record<string, any> & ParserStateBase;
 declare interface ParserStateBase {
@@ -10465,7 +10574,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Options affecting the normal modules (`NormalModuleFactory`).
 	 */
-	module: ModuleOptions;
+	module: ModuleOptionsNormalized;
 
 	/**
 	 * Name of the configuration. Used when loading multiple configurations.

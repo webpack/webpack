@@ -353,6 +353,24 @@ export type RuleSetUseItem =
  */
 export type RuleSetRules = ("..." | RuleSetRule)[];
 /**
+ * Specify options for each generator.
+ */
+export type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
+	GeneratorOptionsByModuleTypeUnknown;
+/**
+ * Don't parse files matching. It's matched against the full resolved request.
+ */
+export type NoParse =
+	| (RegExp | string | Function)[]
+	| RegExp
+	| string
+	| Function;
+/**
+ * Specify options for each parser.
+ */
+export type ParserOptionsByModuleType = ParserOptionsByModuleTypeKnown &
+	ParserOptionsByModuleTypeUnknown;
+/**
  * Name of the configuration. Used when loading multiple configurations.
  */
 export type Name = string;
@@ -1105,55 +1123,55 @@ export interface ModuleOptions {
 	 */
 	exprContextCritical?: boolean;
 	/**
-	 * Enable recursive directory lookup for full dynamic dependencies.
+	 * Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.
 	 */
 	exprContextRecursive?: boolean;
 	/**
-	 * Sets the default regular expression for full dynamic dependencies.
+	 * Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.
 	 */
 	exprContextRegExp?: RegExp | boolean;
 	/**
-	 * Set the default request for full dynamic dependencies.
+	 * Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.
 	 */
 	exprContextRequest?: string;
 	/**
 	 * Specify options for each generator.
 	 */
-	generator?: ModuleOptionsGeneratorKnown & ModuleOptionsGeneratorUnknown;
+	generator?: GeneratorOptionsByModuleType;
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
-	noParse?: (RegExp | string | Function)[] | RegExp | string | Function;
+	noParse?: NoParse;
 	/**
 	 * Specify options for each parser.
 	 */
-	parser?: ModuleOptionsParserKnown & ModuleOptionsParserUnknown;
+	parser?: ParserOptionsByModuleType;
 	/**
 	 * An array of rules applied for modules.
 	 */
 	rules?: RuleSetRules;
 	/**
-	 * Emit errors instead of warnings when imported names don't exist in imported module.
+	 * Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.
 	 */
 	strictExportPresence?: boolean;
 	/**
-	 * Handle the this context correctly according to the spec for namespace objects.
+	 * Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.
 	 */
 	strictThisContextOnImports?: boolean;
 	/**
-	 * Enable warnings when using the require function in a not statically analyse-able way.
+	 * Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.
 	 */
 	unknownContextCritical?: boolean;
 	/**
-	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way.
+	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.
 	 */
 	unknownContextRecursive?: boolean;
 	/**
-	 * Sets the regular expression when using the require function in a not statically analyse-able way.
+	 * Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.
 	 */
 	unknownContextRegExp?: RegExp | boolean;
 	/**
-	 * Sets the request when using the require function in a not statically analyse-able way.
+	 * Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.
 	 */
 	unknownContextRequest?: string;
 	/**
@@ -1161,15 +1179,15 @@ export interface ModuleOptions {
 	 */
 	unsafeCache?: boolean | Function;
 	/**
-	 * Enable warnings for partial dynamic dependencies.
+	 * Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.
 	 */
 	wrappedContextCritical?: boolean;
 	/**
-	 * Enable recursive directory lookup for partial dynamic dependencies.
+	 * Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.
 	 */
 	wrappedContextRecursive?: boolean;
 	/**
-	 * Set the inner regular expression for partial dynamic dependencies.
+	 * Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.
 	 */
 	wrappedContextRegExp?: RegExp;
 }
@@ -2561,6 +2579,26 @@ export interface JavascriptParserOptions {
 	 */
 	commonjs?: boolean;
 	/**
+	 * Enable/disable parsing of magic comments in CommonJs syntax.
+	 */
+	commonjsMagicComments?: boolean;
+	/**
+	 * Enable warnings for full dynamic dependencies.
+	 */
+	exprContextCritical?: boolean;
+	/**
+	 * Enable recursive directory lookup for full dynamic dependencies.
+	 */
+	exprContextRecursive?: boolean;
+	/**
+	 * Sets the default regular expression for full dynamic dependencies.
+	 */
+	exprContextRegExp?: RegExp | boolean;
+	/**
+	 * Set the default request for full dynamic dependencies.
+	 */
+	exprContextRequest?: string;
+	/**
 	 * Enable/disable parsing of EcmaScript Modules syntax.
 	 */
 	harmony?: boolean;
@@ -2589,9 +2627,33 @@ export interface JavascriptParserOptions {
 	 */
 	requireJs?: boolean;
 	/**
+	 * Emit errors instead of warnings when imported names don't exist in imported module.
+	 */
+	strictExportPresence?: boolean;
+	/**
+	 * Handle the this context correctly according to the spec for namespace objects.
+	 */
+	strictThisContextOnImports?: boolean;
+	/**
 	 * Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.
 	 */
 	system?: boolean;
+	/**
+	 * Enable warnings when using the require function in a not statically analyse-able way.
+	 */
+	unknownContextCritical?: boolean;
+	/**
+	 * Enable recursive directory lookup when using the require function in a not statically analyse-able way.
+	 */
+	unknownContextRecursive?: boolean;
+	/**
+	 * Sets the regular expression when using the require function in a not statically analyse-able way.
+	 */
+	unknownContextRegExp?: RegExp | boolean;
+	/**
+	 * Sets the request when using the require function in a not statically analyse-able way.
+	 */
+	unknownContextRequest?: string;
 	/**
 	 * Enable/disable parsing of new URL() syntax.
 	 */
@@ -2600,7 +2662,48 @@ export interface JavascriptParserOptions {
 	 * Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().
 	 */
 	worker?: string[] | boolean;
+	/**
+	 * Enable warnings for partial dynamic dependencies.
+	 */
+	wrappedContextCritical?: boolean;
+	/**
+	 * Enable recursive directory lookup for partial dynamic dependencies.
+	 */
+	wrappedContextRecursive?: boolean;
+	/**
+	 * Set the inner regular expression for partial dynamic dependencies.
+	 */
+	wrappedContextRegExp?: RegExp;
 	[k: string]: any;
+}
+/**
+ * Options affecting the normal modules (`NormalModuleFactory`).
+ */
+export interface ModuleOptionsNormalized {
+	/**
+	 * An array of rules applied by default for modules.
+	 */
+	defaultRules: RuleSetRules;
+	/**
+	 * Specify options for each generator.
+	 */
+	generator: GeneratorOptionsByModuleType;
+	/**
+	 * Don't parse files matching. It's matched against the full resolved request.
+	 */
+	noParse?: NoParse;
+	/**
+	 * Specify options for each parser.
+	 */
+	parser: ParserOptionsByModuleType;
+	/**
+	 * An array of rules applied for modules.
+	 */
+	rules: RuleSetRules;
+	/**
+	 * Cache the resolving of module requests.
+	 */
+	unsafeCache?: boolean | Function;
 }
 /**
  * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
@@ -2846,7 +2949,7 @@ export interface WebpackOptionsNormalized {
 	/**
 	 * Options affecting the normal modules (`NormalModuleFactory`).
 	 */
-	module: ModuleOptions;
+	module: ModuleOptionsNormalized;
 	/**
 	 * Name of the configuration. Used when loading multiple configurations.
 	 */
@@ -2938,7 +3041,7 @@ export interface ExternalItemObjectUnknown {
 /**
  * Specify options for each generator.
  */
-export interface ModuleOptionsGeneratorKnown {
+export interface GeneratorOptionsByModuleTypeKnown {
 	/**
 	 * Generator options for asset modules.
 	 */
@@ -2971,7 +3074,7 @@ export interface ModuleOptionsGeneratorKnown {
 /**
  * Specify options for each generator.
  */
-export interface ModuleOptionsGeneratorUnknown {
+export interface GeneratorOptionsByModuleTypeUnknown {
 	/**
 	 * Options for generating.
 	 */
@@ -2982,7 +3085,7 @@ export interface ModuleOptionsGeneratorUnknown {
 /**
  * Specify options for each parser.
  */
-export interface ModuleOptionsParserKnown {
+export interface ParserOptionsByModuleTypeKnown {
 	/**
 	 * Parser options for asset modules.
 	 */
@@ -3019,7 +3122,7 @@ export interface ModuleOptionsParserKnown {
 /**
  * Specify options for each parser.
  */
-export interface ModuleOptionsParserUnknown {
+export interface ParserOptionsByModuleTypeUnknown {
 	/**
 	 * Options for parsing.
 	 */

@@ -912,6 +912,38 @@
         }
       ]
     },
+    "GeneratorOptionsByModuleType": {
+      "description": "Specify options for each generator.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "Options for generating.",
+        "type": "object",
+        "additionalProperties": true
+      },
+      "properties": {
+        "asset": {
+          "$ref": "#/definitions/AssetGeneratorOptions"
+        },
+        "asset/inline": {
+          "$ref": "#/definitions/AssetInlineGeneratorOptions"
+        },
+        "asset/resource": {
+          "$ref": "#/definitions/AssetResourceGeneratorOptions"
+        },
+        "javascript": {
+          "$ref": "#/definitions/EmptyGeneratorOptions"
+        },
+        "javascript/auto": {
+          "$ref": "#/definitions/EmptyGeneratorOptions"
+        },
+        "javascript/dynamic": {
+          "$ref": "#/definitions/EmptyGeneratorOptions"
+        },
+        "javascript/esm": {
+          "$ref": "#/definitions/EmptyGeneratorOptions"
+        }
+      }
+    },
     "GlobalObject": {
       "description": "An expression which is used to address the global object/scope in runtime code.",
       "type": "string",
@@ -1058,6 +1090,34 @@
           "description": "Enable/disable parsing of CommonJs syntax.",
           "type": "boolean"
         },
+        "commonjsMagicComments": {
+          "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
+          "type": "boolean"
+        },
+        "exprContextCritical": {
+          "description": "Enable warnings for full dynamic dependencies.",
+          "type": "boolean"
+        },
+        "exprContextRecursive": {
+          "description": "Enable recursive directory lookup for full dynamic dependencies.",
+          "type": "boolean"
+        },
+        "exprContextRegExp": {
+          "description": "Sets the default regular expression for full dynamic dependencies.",
+          "anyOf": [
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "exprContextRequest": {
+          "description": "Set the default request for full dynamic dependencies.",
+          "type": "string"
+        },
         "harmony": {
           "description": "Enable/disable parsing of EcmaScript Modules syntax.",
           "type": "boolean"
@@ -1085,9 +1145,41 @@
           "description": "Enable/disable parsing of require.js special syntax like require.config, requirejs.config, require.version and requirejs.onError.",
           "type": "boolean"
         },
+        "strictExportPresence": {
+          "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+          "type": "boolean"
+        },
+        "strictThisContextOnImports": {
+          "description": "Handle the this context correctly according to the spec for namespace objects.",
+          "type": "boolean"
+        },
         "system": {
           "description": "Enable/disable parsing of System.js special syntax like System.import, System.get, System.set and System.register.",
           "type": "boolean"
+        },
+        "unknownContextCritical": {
+          "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+          "type": "boolean"
+        },
+        "unknownContextRecursive": {
+          "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+          "type": "boolean"
+        },
+        "unknownContextRegExp": {
+          "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+          "anyOf": [
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "unknownContextRequest": {
+          "description": "Sets the request when using the require function in a not statically analyse-able way.",
+          "type": "string"
         },
         "url": {
           "description": "Enable/disable parsing of new URL() syntax.",
@@ -1108,6 +1200,19 @@
               "type": "boolean"
             }
           ]
+        },
+        "wrappedContextCritical": {
+          "description": "Enable warnings for partial dynamic dependencies.",
+          "type": "boolean"
+        },
+        "wrappedContextRecursive": {
+          "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+          "type": "boolean"
+        },
+        "wrappedContextRegExp": {
+          "description": "Set the inner regular expression for partial dynamic dependencies.",
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
         }
       }
     },
@@ -1321,11 +1426,11 @@
           "type": "boolean"
         },
         "exprContextRecursive": {
-          "description": "Enable recursive directory lookup for full dynamic dependencies.",
+          "description": "Enable recursive directory lookup for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRecursive'.",
           "type": "boolean"
         },
         "exprContextRegExp": {
-          "description": "Sets the default regular expression for full dynamic dependencies.",
+          "description": "Sets the default regular expression for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRegExp'.",
           "anyOf": [
             {
               "instanceof": "RegExp",
@@ -1337,117 +1442,17 @@
           ]
         },
         "exprContextRequest": {
-          "description": "Set the default request for full dynamic dependencies.",
+          "description": "Set the default request for full dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.exprContextRequest'.",
           "type": "string"
         },
         "generator": {
-          "description": "Specify options for each generator.",
-          "type": "object",
-          "additionalProperties": {
-            "description": "Options for generating.",
-            "type": "object",
-            "additionalProperties": true
-          },
-          "properties": {
-            "asset": {
-              "$ref": "#/definitions/AssetGeneratorOptions"
-            },
-            "asset/inline": {
-              "$ref": "#/definitions/AssetInlineGeneratorOptions"
-            },
-            "asset/resource": {
-              "$ref": "#/definitions/AssetResourceGeneratorOptions"
-            },
-            "javascript": {
-              "$ref": "#/definitions/EmptyGeneratorOptions"
-            },
-            "javascript/auto": {
-              "$ref": "#/definitions/EmptyGeneratorOptions"
-            },
-            "javascript/dynamic": {
-              "$ref": "#/definitions/EmptyGeneratorOptions"
-            },
-            "javascript/esm": {
-              "$ref": "#/definitions/EmptyGeneratorOptions"
-            }
-          }
+          "$ref": "#/definitions/GeneratorOptionsByModuleType"
         },
         "noParse": {
-          "description": "Don't parse files matching. It's matched against the full resolved request.",
-          "anyOf": [
-            {
-              "type": "array",
-              "items": {
-                "description": "Don't parse files matching. It's matched against the full resolved request.",
-                "anyOf": [
-                  {
-                    "description": "A regular expression, when matched the module is not parsed.",
-                    "instanceof": "RegExp",
-                    "tsType": "RegExp"
-                  },
-                  {
-                    "description": "An absolute path, when the module starts with this path it is not parsed.",
-                    "type": "string",
-                    "absolutePath": true
-                  },
-                  {
-                    "instanceof": "Function",
-                    "tsType": "Function"
-                  }
-                ]
-              },
-              "minItems": 1
-            },
-            {
-              "description": "A regular expression, when matched the module is not parsed.",
-              "instanceof": "RegExp",
-              "tsType": "RegExp"
-            },
-            {
-              "description": "An absolute path, when the module starts with this path it is not parsed.",
-              "type": "string",
-              "absolutePath": true
-            },
-            {
-              "instanceof": "Function",
-              "tsType": "Function"
-            }
-          ]
+          "$ref": "#/definitions/NoParse"
         },
         "parser": {
-          "description": "Specify options for each parser.",
-          "type": "object",
-          "additionalProperties": {
-            "description": "Options for parsing.",
-            "type": "object",
-            "additionalProperties": true
-          },
-          "properties": {
-            "asset": {
-              "$ref": "#/definitions/AssetParserOptions"
-            },
-            "asset/inline": {
-              "$ref": "#/definitions/EmptyParserOptions"
-            },
-            "asset/resource": {
-              "$ref": "#/definitions/EmptyParserOptions"
-            },
-            "asset/source": {
-              "$ref": "#/definitions/EmptyParserOptions"
-            },
-            "javascript": {
-              "$ref": "#/definitions/JavascriptParserOptions"
-            },
-            "javascript/auto": {
-              "$ref": "#/definitions/JavascriptParserOptions"
-            },
-            "javascript/dynamic": {
-              "$ref": "#/definitions/JavascriptParserOptions"
-            },
-            "javascript/esm": {
-              "$ref": "#/definitions/JavascriptParserOptions"
-            }
-          }
+          "$ref": "#/definitions/ParserOptionsByModuleType"
         },
         "rules": {
           "description": "An array of rules applied for modules.",
@@ -1458,23 +1463,23 @@
           ]
         },
         "strictExportPresence": {
-          "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+          "description": "Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.",
           "type": "boolean"
         },
         "strictThisContextOnImports": {
-          "description": "Handle the this context correctly according to the spec for namespace objects.",
+          "description": "Handle the this context correctly according to the spec for namespace objects. Deprecated: This option has moved to 'module.parser.javascript.strictThisContextOnImports'.",
           "type": "boolean"
         },
         "unknownContextCritical": {
-          "description": "Enable warnings when using the require function in a not statically analyse-able way.",
+          "description": "Enable warnings when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextCritical'.",
           "type": "boolean"
         },
         "unknownContextRecursive": {
-          "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way.",
+          "description": "Enable recursive directory lookup when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRecursive'.",
           "type": "boolean"
         },
         "unknownContextRegExp": {
-          "description": "Sets the regular expression when using the require function in a not statically analyse-able way.",
+          "description": "Sets the regular expression when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRegExp'.",
           "anyOf": [
             {
               "instanceof": "RegExp",
@@ -1486,7 +1491,7 @@
           ]
         },
         "unknownContextRequest": {
-          "description": "Sets the request when using the require function in a not statically analyse-able way.",
+          "description": "Sets the request when using the require function in a not statically analyse-able way. Deprecated: This option has moved to 'module.parser.javascript.unknownContextRequest'.",
           "type": "string"
         },
         "unsafeCache": {
@@ -1502,23 +1507,113 @@
           ]
         },
         "wrappedContextCritical": {
-          "description": "Enable warnings for partial dynamic dependencies.",
+          "description": "Enable warnings for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextCritical'.",
           "type": "boolean"
         },
         "wrappedContextRecursive": {
-          "description": "Enable recursive directory lookup for partial dynamic dependencies.",
+          "description": "Enable recursive directory lookup for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRecursive'.",
           "type": "boolean"
         },
         "wrappedContextRegExp": {
-          "description": "Set the inner regular expression for partial dynamic dependencies.",
+          "description": "Set the inner regular expression for partial dynamic dependencies. Deprecated: This option has moved to 'module.parser.javascript.wrappedContextRegExp'.",
           "instanceof": "RegExp",
           "tsType": "RegExp"
         }
       }
     },
+    "ModuleOptionsNormalized": {
+      "description": "Options affecting the normal modules (`NormalModuleFactory`).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "defaultRules": {
+          "description": "An array of rules applied by default for modules.",
+          "cli": {
+            "exclude": true
+          },
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetRules"
+            }
+          ]
+        },
+        "generator": {
+          "$ref": "#/definitions/GeneratorOptionsByModuleType"
+        },
+        "noParse": {
+          "$ref": "#/definitions/NoParse"
+        },
+        "parser": {
+          "$ref": "#/definitions/ParserOptionsByModuleType"
+        },
+        "rules": {
+          "description": "An array of rules applied for modules.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetRules"
+            }
+          ]
+        },
+        "unsafeCache": {
+          "description": "Cache the resolving of module requests.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "Function"
+            }
+          ]
+        }
+      },
+      "required": ["defaultRules", "generator", "parser", "rules"]
+    },
     "Name": {
       "description": "Name of the configuration. Used when loading multiple configurations.",
       "type": "string"
+    },
+    "NoParse": {
+      "description": "Don't parse files matching. It's matched against the full resolved request.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "description": "Don't parse files matching. It's matched against the full resolved request.",
+            "anyOf": [
+              {
+                "description": "A regular expression, when matched the module is not parsed.",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "An absolute path, when the module starts with this path it is not parsed.",
+                "type": "string",
+                "absolutePath": true
+              },
+              {
+                "instanceof": "Function",
+                "tsType": "Function"
+              }
+            ]
+          },
+          "minItems": 1
+        },
+        {
+          "description": "A regular expression, when matched the module is not parsed.",
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
+        },
+        {
+          "description": "An absolute path, when the module starts with this path it is not parsed.",
+          "type": "string",
+          "absolutePath": true
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "Function"
+        }
+      ]
     },
     "Node": {
       "description": "Include polyfills or mocks for various node stuff.",
@@ -2506,6 +2601,41 @@
       "description": "The number of parallel processed modules in the compilation.",
       "type": "number",
       "minimum": 1
+    },
+    "ParserOptionsByModuleType": {
+      "description": "Specify options for each parser.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "Options for parsing.",
+        "type": "object",
+        "additionalProperties": true
+      },
+      "properties": {
+        "asset": {
+          "$ref": "#/definitions/AssetParserOptions"
+        },
+        "asset/inline": {
+          "$ref": "#/definitions/EmptyParserOptions"
+        },
+        "asset/resource": {
+          "$ref": "#/definitions/EmptyParserOptions"
+        },
+        "asset/source": {
+          "$ref": "#/definitions/EmptyParserOptions"
+        },
+        "javascript": {
+          "$ref": "#/definitions/JavascriptParserOptions"
+        },
+        "javascript/auto": {
+          "$ref": "#/definitions/JavascriptParserOptions"
+        },
+        "javascript/dynamic": {
+          "$ref": "#/definitions/JavascriptParserOptions"
+        },
+        "javascript/esm": {
+          "$ref": "#/definitions/JavascriptParserOptions"
+        }
+      }
     },
     "Path": {
       "description": "The output directory as **absolute path** (required).",
@@ -4093,7 +4223,7 @@
           "$ref": "#/definitions/Mode"
         },
         "module": {
-          "$ref": "#/definitions/ModuleOptions"
+          "$ref": "#/definitions/ModuleOptionsNormalized"
         },
         "name": {
           "$ref": "#/definitions/Name"
