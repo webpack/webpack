@@ -367,6 +367,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-lazy-compilation": Object {
+    "configs": Array [
+      Object {
+        "description": "Compile import()s only when they are accessed.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation",
+        "type": "boolean",
+      },
+    ],
+    "description": "Compile import()s only when they are accessed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-lazy-compilation-client": Object {
+    "configs": Array [
+      Object {
+        "description": "A custom client.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation.client",
+        "type": "string",
+      },
+    ],
+    "description": "A custom client.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "experiments-output-module": Object {
     "configs": Array [
       Object {

@@ -581,6 +581,29 @@
           "description": "Enable module and chunk layers.",
           "type": "boolean"
         },
+        "lazyCompilation": {
+          "description": "Compile import()s only when they are accessed.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "backend": {
+                  "description": "A custom backend.",
+                  "instanceof": "Function",
+                  "tsType": "(((compiler: import('../lib/Compiler'), client: string, callback: (err?: Error, api?: any) => void) => void) | ((compiler: import('../lib/Compiler'), client: string) => Promise<any>))"
+                },
+                "client": {
+                  "description": "A custom client.",
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
           "type": "boolean"
