@@ -8,21 +8,23 @@
 module.exports = class EventSource {
 	constructor(url) {
 		this.response = undefined;
-		require("http")
-			.request(
-				url,
-				{
-					agent: false,
-					headers: { accept: "text/event-stream" }
-				},
-				res => {
-					this.response = res;
-					res.on("error", err => {
-						if (this.onerror) this.onerror(err);
-					});
-				}
-			)
-			.end();
+		const request = require("http").request(
+			url,
+			{
+				agent: false,
+				headers: { accept: "text/event-stream" }
+			},
+			res => {
+				this.response = res;
+				res.on("error", err => {
+					if (this.onerror) this.onerror(err);
+				});
+			}
+		);
+		request.on("error", err => {
+			if (this.onerror) this.onerror({ message: err });
+		});
+		request.end();
 	}
 
 	close() {

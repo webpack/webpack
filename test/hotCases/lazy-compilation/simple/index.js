@@ -8,7 +8,9 @@ it("should compile to lazy imported module", done => {
 			require("../../update")(done, true, () => {
 				promise.then(result => {
 					expect(result).toHaveProperty("default", 42);
-					done();
+					setTimeout(() => {
+						done();
+					}, 1000);
 				}, done);
 			})
 		);
