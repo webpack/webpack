@@ -130,11 +130,13 @@ jobs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
         displayName: "Cache Yarn packages"
-      - script: |
-          yarn --frozen-lockfile
-          yarn link --frozen-lockfile || true
-          yarn link webpack --frozen-lockfile
+      - script: yarn --frozen-lockfile
         displayName: "Install dependencies"
+      - script: yarn link --frozen-lockfile || true
+        displayName: "Link webpack"
+        continueOnError: true
+      - script: yarn link webpack --frozen-lockfile
+        displayName: "Link webpack into node_modules"
       - script: |
           yarn cover:integration --ci --maxWorkers=2 --reporters=jest-junit
         displayName: "Run tests with coverage"
