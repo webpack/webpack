@@ -1621,6 +1621,7 @@ declare class Compiler {
 		failed: SyncHook<[Error]>;
 		invalid: SyncHook<[null | string, number]>;
 		watchClose: SyncHook<[]>;
+		shutdown: AsyncSeriesHook<[]>;
 		infrastructureLog: SyncBailHook<[string, string, any[]], true>;
 		environment: SyncHook<[]>;
 		afterEnvironment: SyncHook<[]>;
@@ -2953,6 +2954,32 @@ declare interface Experiments {
 	 * Enable module and chunk layers.
 	 */
 	layers?: boolean;
+
+	/**
+	 * Compile entrypoints and import()s only when they are accessed.
+	 */
+	lazyCompilation?:
+		| boolean
+		| {
+				/**
+				 * A custom backend.
+				 */
+				backend?:
+					| ((
+							compiler: Compiler,
+							client: string,
+							callback: (err?: Error, api?: any) => void
+					  ) => void)
+					| ((compiler: Compiler, client: string) => Promise<any>);
+				/**
+				 * A custom client.
+				 */
+				client?: string;
+				/**
+				 * Enable/disable lazy compilation for entries.
+				 */
+				entries?: boolean;
+		  };
 
 	/**
 	 * Allow output javascript files as module source type.

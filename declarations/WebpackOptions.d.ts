@@ -1042,6 +1042,34 @@ export interface Experiments {
 	 */
 	layers?: boolean;
 	/**
+	 * Compile entrypoints and import()s only when they are accessed.
+	 */
+	lazyCompilation?:
+		| boolean
+		| {
+				/**
+				 * A custom backend.
+				 */
+				backend?:
+					| ((
+							compiler: import("../lib/Compiler"),
+							client: string,
+							callback: (err?: Error, api?: any) => void
+					  ) => void)
+					| ((
+							compiler: import("../lib/Compiler"),
+							client: string
+					  ) => Promise<any>);
+				/**
+				 * A custom client.
+				 */
+				client?: string;
+				/**
+				 * Enable/disable lazy compilation for entries.
+				 */
+				entries?: boolean;
+		  };
+	/**
 	 * Allow output javascript files as module source type.
 	 */
 	outputModule?: boolean;
