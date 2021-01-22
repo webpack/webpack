@@ -3,6 +3,8 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	experiments: {
-		lazyCompilation: true
+		lazyCompilation: {
+			entries: false
+		}
 	}
 };

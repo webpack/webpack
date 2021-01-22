@@ -2,16 +2,12 @@
 
 "use strict";
 
-if (!module.hot) {
-	throw new Error(
-		"Environment doesn't support lazy compilation (requires Hot Module Replacement enabled)"
-	);
-}
-
 var urlBase = decodeURIComponent(__resourceQuery.slice(1));
 exports.keepAlive = function (options) {
 	var data = options.data;
 	var onError = options.onError;
+	var active = options.active;
+	var module = options.module;
 	var response;
 	var request = require("http").request(
 		urlBase + data,
@@ -22,6 +18,11 @@ exports.keepAlive = function (options) {
 		function (res) {
 			response = res;
 			response.on("error", errorHandler);
+			if (!active && !module.hot) {
+				console.log(
+					"Hot Module Replacement is not enabled. Waiting for process restart..."
+				);
+			}
 		}
 	);
 	function errorHandler(err) {

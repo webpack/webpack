@@ -2956,7 +2956,7 @@ declare interface Experiments {
 	layers?: boolean;
 
 	/**
-	 * Compile import()s only when they are accessed.
+	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?:
 		| boolean
@@ -2975,6 +2975,10 @@ declare interface Experiments {
 				 * A custom client.
 				 */
 				client?: string;
+				/**
+				 * Enable/disable lazy compilation for entries.
+				 */
+				entries?: boolean;
 		  };
 
 	/**

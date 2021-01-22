@@ -2,9 +2,9 @@
 
 "use strict";
 
-if (typeof EventSource !== "function" || !module.hot) {
+if (typeof EventSource !== "function") {
 	throw new Error(
-		"Environment doesn't support lazy compilation (requires EventSource and Hot Module Replacement enabled)"
+		"Environment doesn't support lazy compilation (requires EventSource)"
 	);
 }
 
@@ -45,11 +45,18 @@ var updateEventSource = function updateEventSource() {
 exports.keepAlive = function (options) {
 	var data = options.data;
 	var onError = options.onError;
+	var active = options.active;
+	var module = options.module;
 	errorHandlers.add(onError);
 	var value = activeKeys.get(data) || 0;
 	activeKeys.set(data, value + 1);
 	if (value === 0) {
 		updateEventSource();
+	}
+	if (!active && !module.hot) {
+		console.log(
+			"Hot Module Replacement is not enabled. Waiting for process restart..."
+		);
 	}
 
 	return function () {

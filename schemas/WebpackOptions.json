@@ -582,7 +582,7 @@
           "type": "boolean"
         },
         "lazyCompilation": {
-          "description": "Compile import()s only when they are accessed.",
+          "description": "Compile entrypoints and import()s only when they are accessed.",
           "anyOf": [
             {
               "type": "boolean"
@@ -599,6 +599,10 @@
                 "client": {
                   "description": "A custom client.",
                   "type": "string"
+                },
+                "entries": {
+                  "description": "Enable/disable lazy compilation for entries.",
+                  "type": "boolean"
                 }
               }
             }
