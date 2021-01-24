@@ -833,6 +833,11 @@ declare class ChunkGraph {
 		runtime: RuntimeSpec
 	): ReadonlySet<string>;
 	getChunkRuntimeRequirements(chunk: Chunk): ReadonlySet<string>;
+	getModuleGraphHash(
+		module?: any,
+		runtime?: any,
+		withConnections?: boolean
+	): any;
 	getTreeRuntimeRequirements(chunk: Chunk): ReadonlySet<string>;
 	static getChunkGraphForModule(
 		module: Module,
@@ -8728,6 +8733,7 @@ declare abstract class RuntimeSpecMap<T> {
 	get(runtime: RuntimeSpec): T;
 	has(runtime: RuntimeSpec): boolean;
 	set(runtime?: any, value?: any): void;
+	provide(runtime?: any, computer?: any): any;
 	delete(runtime?: any): void;
 	update(runtime?: any, fn?: any): void;
 	keys(): RuntimeSpec[];

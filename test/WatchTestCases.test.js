@@ -197,6 +197,7 @@ describe("WatchTestCases", () => {
 											preset: "verbose",
 											cached: true,
 											cachedAssets: true,
+											cachedModules: true,
 											colors: false
 										};
 										fs.mkdirSync(outputDirectory, { recursive: true });
