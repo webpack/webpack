@@ -4039,13 +4039,13 @@ declare interface InputFileSystem {
 		arg0: string,
 		arg1: (arg0?: NodeJS.ErrnoException, arg1?: IStats) => void
 	) => void;
-	lstat: (
-		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: FsStats) => void
-	) => void;
 	realpath?: (
 		arg0: string,
 		arg1: (arg0?: NodeJS.ErrnoException, arg1?: string | Buffer) => void
+	) => void;
+	lstat: (
+		arg0: string,
+		arg1: (arg0?: NodeJS.ErrnoException, arg1?: IStats) => void
 	) => void;
 	purge?: (arg0?: string) => void;
 	join?: (arg0: string, arg1: string) => string;
