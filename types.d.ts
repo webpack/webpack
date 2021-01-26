@@ -799,6 +799,9 @@ declare class ChunkGraph {
 	getChunkFullHashModulesIterable(
 		chunk: Chunk
 	): undefined | Iterable<RuntimeModule>;
+	getChunkFullHashModulesSet(
+		chunk: Chunk
+	): undefined | ReadonlySet<RuntimeModule>;
 	getChunkEntryModulesWithChunkGroupIterable(
 		chunk: Chunk
 	): Iterable<[Module, undefined | Entrypoint]>;
@@ -833,6 +836,11 @@ declare class ChunkGraph {
 		runtime: RuntimeSpec
 	): ReadonlySet<string>;
 	getChunkRuntimeRequirements(chunk: Chunk): ReadonlySet<string>;
+	getModuleGraphHash(
+		module?: any,
+		runtime?: any,
+		withConnections?: boolean
+	): any;
 	getTreeRuntimeRequirements(chunk: Chunk): ReadonlySet<string>;
 	static getChunkGraphForModule(
 		module: Module,
@@ -1063,16 +1071,24 @@ declare interface CodeGenerationResult {
 	 * the runtime requirements
 	 */
 	runtimeRequirements: ReadonlySet<string>;
+
+	/**
+	 * a hash of the code generation result (will be automatically calculated from sources and runtimeRequirements if not provided)
+	 */
+	hash?: string;
 }
 declare abstract class CodeGenerationResults {
 	map: Map<Module, RuntimeSpecMap<CodeGenerationResult>>;
+	hashes: Map<Module, RuntimeSpecMap<string>>;
 	get(module: Module, runtime: RuntimeSpec): CodeGenerationResult;
+	has(module: Module, runtime: RuntimeSpec): boolean;
 	getSource(module: Module, runtime: RuntimeSpec, sourceType: string): Source;
 	getRuntimeRequirements(
 		module: Module,
 		runtime: RuntimeSpec
 	): ReadonlySet<string>;
 	getData(module: Module, runtime: RuntimeSpec, key: string): any;
+	getHash(module: Module, runtime: RuntimeSpec): any;
 	add(module: Module, runtime: RuntimeSpec, result: CodeGenerationResult): void;
 }
 type CodeValue =
@@ -1437,7 +1453,12 @@ declare class Compilation {
 	sortItemsWithChunkIds(): void;
 	summarizeDependencies(): void;
 	createModuleHashes(): void;
-	createHash(): void;
+	createHash(): {
+		module: Module;
+		hash: string;
+		runtime: RuntimeSpec;
+		runtimes: RuntimeSpec[];
+	}[];
 	fullHash?: string;
 	hash?: string;
 	emitAsset(file: string, source: Source, assetInfo?: AssetInfo): void;
@@ -8728,6 +8749,7 @@ declare abstract class RuntimeSpecMap<T> {
 	get(runtime: RuntimeSpec): T;
 	has(runtime: RuntimeSpec): boolean;
 	set(runtime?: any, value?: any): void;
+	provide(runtime?: any, computer?: any): any;
 	delete(runtime?: any): void;
 	update(runtime?: any, fn?: any): void;
 	keys(): RuntimeSpec[];
@@ -10117,7 +10139,9 @@ declare class Template {
 	): Source;
 	static renderRuntimeModules(
 		runtimeModules: RuntimeModule[],
-		renderContext: RenderContextModuleTemplate
+		renderContext: RenderContextModuleTemplate & {
+			codeGenerationResults?: CodeGenerationResults;
+		}
 	): Source;
 	static renderChunkRuntimeModules(
 		runtimeModules: RuntimeModule[],
