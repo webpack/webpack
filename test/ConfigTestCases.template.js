@@ -224,7 +224,17 @@ const describeCases = config => {
 								) {
 									return;
 								}
-								const infrastructureLogging = stderr.toString();
+								let infrastructureLogging = stderr.toString();
+								const esmWarning =
+									"<i> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Node.js doesn't offer a (nice) way to introspect the ESM dependency graph yet.\n" +
+									"<i> Until a full solution is available webpack uses an experimental ESM tracking based on parsing.\n" +
+									"<i> As best effort webpack parses the ESM files to guess dependencies. But this can lead to expensive and incorrect tracking.";
+								if (infrastructureLogging.indexOf(esmWarning) >= 0) {
+									infrastructureLogging = infrastructureLogging
+										.replace(esmWarning, "")
+										.trim();
+								}
+
 								if (infrastructureLogging) {
 									done(
 										new Error(
