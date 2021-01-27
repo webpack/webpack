@@ -2298,7 +2298,10 @@ declare class Dependency {
 	): (string[] | ReferencedExport)[];
 	getCondition(
 		moduleGraph: ModuleGraph
-	): (arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState;
+	):
+		| null
+		| false
+		| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState);
 
 	/**
 	 * Returns the exported names
@@ -5732,10 +5735,9 @@ declare class ModuleGraphConnection {
 		module: Module,
 		explanation?: string,
 		weak?: boolean,
-		condition?: (
-			arg0: ModuleGraphConnection,
-			arg1: RuntimeSpec
-		) => ConnectionState
+		condition?:
+			| false
+			| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState)
 	);
 	originModule?: Module;
 	resolvedOriginModule?: Module;
@@ -8754,7 +8756,7 @@ declare abstract class RuntimeSpecMap<T> {
 	delete(runtime?: any): void;
 	update(runtime?: any, fn?: any): void;
 	keys(): RuntimeSpec[];
-	values(): IterableIterator<T>;
+	values(): T[] | IterableIterator<T>;
 }
 declare abstract class RuntimeSpecSet {
 	add(runtime?: any): void;
