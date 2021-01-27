@@ -8756,7 +8756,8 @@ declare abstract class RuntimeSpecMap<T> {
 	delete(runtime?: any): void;
 	update(runtime?: any, fn?: any): void;
 	keys(): RuntimeSpec[];
-	values(): T[] | IterableIterator<T>;
+	values(): IterableIterator<T>;
+	readonly size?: number;
 }
 declare abstract class RuntimeSpecSet {
 	add(runtime?: any): void;
