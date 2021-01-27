@@ -5713,6 +5713,7 @@ declare class ModuleGraph {
 	isAsync(module: Module): boolean;
 	setAsync(module: Module): void;
 	getMeta(thing?: any): Object;
+	getMetaIfExisting(thing?: any): Object;
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
