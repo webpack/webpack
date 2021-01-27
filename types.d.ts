@@ -1079,7 +1079,6 @@ declare interface CodeGenerationResult {
 }
 declare abstract class CodeGenerationResults {
 	map: Map<Module, RuntimeSpecMap<CodeGenerationResult>>;
-	hashes: Map<Module, RuntimeSpecMap<string>>;
 	get(module: Module, runtime: RuntimeSpec): CodeGenerationResult;
 	has(module: Module, runtime: RuntimeSpec): boolean;
 	getSource(module: Module, runtime: RuntimeSpec, sourceType: string): Source;
