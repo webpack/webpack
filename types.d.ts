@@ -1079,7 +1079,6 @@ declare interface CodeGenerationResult {
 }
 declare abstract class CodeGenerationResults {
 	map: Map<Module, RuntimeSpecMap<CodeGenerationResult>>;
-	hashes: Map<Module, RuntimeSpecMap<string>>;
 	get(module: Module, runtime: RuntimeSpec): CodeGenerationResult;
 	has(module: Module, runtime: RuntimeSpec): boolean;
 	getSource(module: Module, runtime: RuntimeSpec, sourceType: string): Source;
@@ -2298,7 +2297,10 @@ declare class Dependency {
 	): (string[] | ReferencedExport)[];
 	getCondition(
 		moduleGraph: ModuleGraph
-	): (arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState;
+	):
+		| null
+		| false
+		| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState);
 
 	/**
 	 * Returns the exported names
@@ -5713,6 +5715,7 @@ declare class ModuleGraph {
 	isAsync(module: Module): boolean;
 	setAsync(module: Module): void;
 	getMeta(thing?: any): Object;
+	getMetaIfExisting(thing?: any): Object;
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
@@ -5731,10 +5734,9 @@ declare class ModuleGraphConnection {
 		module: Module,
 		explanation?: string,
 		weak?: boolean,
-		condition?: (
-			arg0: ModuleGraphConnection,
-			arg1: RuntimeSpec
-		) => ConnectionState
+		condition?:
+			| false
+			| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState)
 	);
 	originModule?: Module;
 	resolvedOriginModule?: Module;
@@ -8754,6 +8756,7 @@ declare abstract class RuntimeSpecMap<T> {
 	update(runtime?: any, fn?: any): void;
 	keys(): RuntimeSpec[];
 	values(): IterableIterator<T>;
+	readonly size?: number;
 }
 declare abstract class RuntimeSpecSet {
 	add(runtime?: any): void;
