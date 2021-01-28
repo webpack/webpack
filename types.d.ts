@@ -7463,7 +7463,7 @@ declare interface ProfilingPluginOptions {
 	outputPath?: string;
 }
 declare class ProgressPlugin {
-	constructor(options: ProgressPluginArgument);
+	constructor(options?: ProgressPluginArgument);
 	profile?: null | boolean;
 	handler?: (percentage: number, msg: string, ...args: string[]) => void;
 	modulesCount?: number;
