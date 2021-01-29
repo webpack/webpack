@@ -1272,10 +1272,10 @@ webpack x.x.x compiled successfully"
 `;
 
 exports[`StatsTestCases should print correct stats for module-federation-custom-exposed-module-name 1`] = `
-"asset container_bundle.js 12 KiB [emitted] (name: container)
-asset custom-entry_bundle.js 412 bytes [emitted] (name: custom-entry)
+"asset container_bundle.js 12.1 KiB [emitted] (name: container)
+asset custom-entry_bundle.js 414 bytes [emitted] (name: custom-entry)
 asset main_bundle.js 54 bytes [emitted] (name: main)
-runtime modules 6.59 KiB 9 modules
+runtime modules 6.6 KiB 9 modules
 built modules 82 bytes [built]
   ./index.js 1 bytes [built] [code generated]
   container entry 42 bytes [built] [code generated]
