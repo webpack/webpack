@@ -151,6 +151,10 @@ export interface ExposesConfig {
 	 * Request to a module that should be exposed by this container.
 	 */
 	import: ExposesItem | ExposesItems;
+	/**
+	 * Custom chunk name for the exposed module.
+	 */
+	name?: string;
 }
 /**
  * Options for library.

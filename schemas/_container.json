@@ -37,6 +37,10 @@
               "$ref": "#/definitions/ExposesItems"
             }
           ]
+        },
+        "name": {
+          "description": "Custom chunk name for the exposed module.",
+          "type": "string"
         }
       },
       "required": ["import"]
