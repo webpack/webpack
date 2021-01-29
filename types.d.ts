@@ -10902,6 +10902,7 @@ declare namespace exports {
 		export let hasOwnProperty: string;
 		export let systemContext: string;
 		export let baseURI: string;
+		export let asyncModule: string;
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
