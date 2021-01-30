@@ -11168,6 +11168,7 @@ declare namespace exports {
 		WebpackOptionsDefaulter,
 		Entry,
 		EntryNormalized,
+		EntryObject,
 		LibraryOptions,
 		ModuleOptions,
 		ResolveOptionsWebpackOptions as ResolveOptions,
