@@ -1073,9 +1073,9 @@ export interface Experiments {
 				 */
 				imports?: boolean;
 				/**
-				 * Callback to specify which entry modules should not be lazily compiled. When the callback returns 'true', the entry/import are compiled immediately.
+				 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
 				 */
-				skipModule?: (moduleName: string) => boolean;
+				test?: RegExp | string | ((module: import("../lib/Module")) => boolean);
 		  };
 	/**
 	 * Allow output javascript files as module source type.
