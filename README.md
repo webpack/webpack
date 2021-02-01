@@ -232,23 +232,6 @@ or are automatically applied via regex from your webpack configuration.
 [postcss-npm]: https://img.shields.io/npm/v/postcss-loader.svg
 [postcss-size]: https://packagephobia.com/badge?p=postcss-loader
 
-#### Linting & Testing
-
-|                                                                      Name                                                                      |    Status     |  Install Size  | Description                             |
-| :--------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :------------: | :-------------------------------------- |
-|  <a href="https://github.com/webpack-contrib/mocha-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/mocha.svg"></a>  | ![mocha-npm]  | ![mocha-size]  | Tests with mocha (Browser/NodeJS)       |
-| <a href="https://github.com/webpack-contrib/eslint-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/eslint.svg"></a> | ![eslint-npm] | ![eslint-size] | PreLoader for linting code using ESLint |
-|  <a href="https://github.com/webpack-contrib/jshint-loader"><img width="48" height="20.64" src="https://jshint.com/res/jshint-dark.png"></a>   | ![jshint-npm] | ![jshint-size] | PreLoader for linting code using JSHint |
-
-[mocha-npm]: https://img.shields.io/npm/v/mocha-loader.svg
-[mocha-size]: https://packagephobia.com/badge?p=mocha-loader
-[eslint-npm]: https://img.shields.io/npm/v/eslint-loader.svg
-[eslint-size]: https://packagephobia.com/badge?p=eslint-loader
-[jshint-npm]: https://img.shields.io/npm/v/jshint-loader.svg
-[jshint-size]: https://packagephobia.com/badge?p=jshint-loader
-[jscs-npm]: https://img.shields.io/npm/v/jscs-loader.svg
-[jscs-size]: https://packagephobia.com/badge?p=jscs-loader
-
 #### Frameworks
 
 |                                                                             Name                                                                             |     Status     |  Install Size   | Description                                                                                            |
