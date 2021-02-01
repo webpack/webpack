@@ -4265,14 +4265,12 @@ lcov-parse@^1.0.0:
   resolved "https://registry.yarnpkg.com/lcov-parse/-/lcov-parse-1.0.0.tgz#eb0d46b54111ebc561acb4c408ef9363bdc8f7e0"
   integrity sha1-6w1GtUER68VhrLTECO+TY73I9+A=
 
-less-loader@^7.1.0:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/less-loader/-/less-loader-7.3.0.tgz#f9d6d36d18739d642067a05fb5bd70c8c61317e5"
-  integrity sha512-Mi8915g7NMaLlgi77mgTTQvK022xKRQBIVDSyfl3ErTuBhmZBQab0mjeJjNNqGbdR+qrfTleKXqbGI4uEFavxg==
+less-loader@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/less-loader/-/less-loader-8.0.0.tgz#cd7f10e3c13ca8f71244a11ee396405ae3ce9c82"
+  integrity sha512-tnDs0ZdwPZgNOg0NGJ0sAD2KViG9TvOMDVibT33fH1bpLkT4xMo5Ue2FsbjFsVsUKtuRTlU0tYp2/lRizrycLg==
   dependencies:
     klona "^2.0.4"
-    loader-utils "^2.0.0"
-    schema-utils "^3.0.0"
 
 less@^4.0.0:
   version "4.1.1"
