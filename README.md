@@ -176,8 +176,6 @@ or are automatically applied via regex from your webpack configuration.
 |  <a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>  |  ![type-npm]   |  ![type-size]   | Loads TypeScript like JavaScript                                                                     |
 |    <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>    | ![coffee-npm]  | ![coffee-size]  | Loads CoffeeScript like JavaScript                                                                   |
 
-[script-npm]: https://img.shields.io/npm/v/script-loader.svg
-[script-size]: https://packagephobia.com/badge?p=script-loader
 [babel-npm]: https://img.shields.io/npm/v/babel-loader.svg
 [babel-size]: https://packagephobia.com/badge?p=babel-loader
 [traceur-npm]: https://img.shields.io/npm/v/traceur-loader.svg
@@ -186,8 +184,6 @@ or are automatically applied via regex from your webpack configuration.
 [coffee-size]: https://packagephobia.com/badge?p=coffee-loader
 [type-npm]: https://img.shields.io/npm/v/ts-loader.svg
 [type-size]: https://packagephobia.com/badge?p=ts-loader
-[awesome-typescript-npm]: https://img.shields.io/npm/v/awesome-typescript-loader.svg
-[awesome-typescript-size]: https://packagephobia.com/badge?p=awesome-typescript-loader
 
 #### Templating
 
