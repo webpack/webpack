@@ -3002,6 +3002,14 @@ declare interface Experiments {
 				 * Enable/disable lazy compilation for entries.
 				 */
 				entries?: boolean;
+				/**
+				 * Enable/disable lazy compilation for import() modules.
+				 */
+				imports?: boolean;
+				/**
+				 * Callback to specify which entry modules should not be lazily compiled. When the callback returns 'true', the entry/import are compiled immediately.
+				 */
+				skipModule?: (moduleName: string) => boolean;
 		  };
 
 	/**

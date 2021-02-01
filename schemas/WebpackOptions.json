@@ -603,6 +603,15 @@
                 "entries": {
                   "description": "Enable/disable lazy compilation for entries.",
                   "type": "boolean"
+                },
+                "imports": {
+                  "description": "Enable/disable lazy compilation for import() modules.",
+                  "type": "boolean"
+                },
+                "skipModule": {
+                  "description": "Callback to specify which entry modules should not be lazily compiled. When the callback returns 'true', the entry/import are compiled immediately.",
+                  "instanceof": "Function",
+                  "tsType": "((moduleName: string) => boolean)"
                 }
               }
             }

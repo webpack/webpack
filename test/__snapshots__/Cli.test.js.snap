@@ -406,6 +406,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-lazy-compilation-imports": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable lazy compilation for import() modules.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation.imports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable lazy compilation for import() modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-output-module": Object {
     "configs": Array [
       Object {
