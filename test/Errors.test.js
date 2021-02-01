@@ -5,7 +5,10 @@ const fs = require("graceful-fs");
 const webpack = require("..");
 const prettyFormat = require("pretty-format");
 
-const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
+const CWD_PATTERN = new RegExp(
+	process.cwd().replace(/\\/g, "/"),
+	process.platform === "win32" ? "gmi" : "gm"
+);
 const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/gm;
 
 function cleanError(err) {

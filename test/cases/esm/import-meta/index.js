@@ -23,9 +23,18 @@ it('typeof import.meta.webpack === "number"', () => {
 });
 
 it("should return correct import.meta.url", () => {
-	expect(import.meta.url).toBe(url);
-	expect(import.meta["url"]).toBe(url);
-	expect("my" + import.meta.url).toBe("my" + url);
+	let expectedUrl = url;
+	if (process.platform === "win32") {
+		// on Windows this test might need to compare `file:///C:/folder/...` with `file:///c:/folder/...`
+		const actualDrive = import.meta.url.substr(0, 9);
+		const expectedDrive = expectedUrl.substr(0, 9);
+		expect(actualDrive.toUpperCase()).toBe(expectedDrive.toUpperCase());
+		expectedUrl = actualDrive + expectedUrl.substr(9);
+	}
+
+	expect(import.meta.url).toBe(expectedUrl);
+	expect(import.meta["url"]).toBe(expectedUrl);
+	expect("my" + import.meta.url).toBe("my" + expectedUrl);
 	if (import.meta.url.indexOf("index.js") === -1) require("fail");
 });
 
