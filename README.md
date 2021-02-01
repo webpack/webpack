@@ -111,7 +111,6 @@ within webpack itself use this plugin interface. This makes webpack very
 | :---------------------------------------: | :----------------: | :-----------------: | :-------------------------------------------------------------------------------------- |
 |    [mini-css-extract-plugin][mini-css]    |  ![mini-css-npm]   |  ![mini-css-size]   | Extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. |
 | [compression-webpack-plugin][compression] | ![compression-npm] | ![compression-size] | Prepares compressed versions of assets to serve them with Content-Encoding              |
-|        [i18n-webpack-plugin][i18n]        |    ![i18n-npm]     |    ![i18n-size]     | Adds i18n support to your bundles                                                       |
 |    [html-webpack-plugin][html-plugin]     | ![html-plugin-npm] | ![html-plugin-size] | Simplifies creation of HTML files (`index.html`) to serve your bundles                  |
 |  [extract-text-webpack-plugin][extract]   |   ![extract-npm]   |   ![extract-size]   | Extract text from a bundle, or bundles, into a separate file                            |
 
@@ -128,9 +127,6 @@ within webpack itself use this plugin interface. This makes webpack very
 [compression]: https://github.com/webpack-contrib/compression-webpack-plugin
 [compression-npm]: https://img.shields.io/npm/v/compression-webpack-plugin.svg
 [compression-size]: https://packagephobia.com/badge?p=compression-webpack-plugin
-[i18n]: https://github.com/webpack-contrib/i18n-webpack-plugin
-[i18n-npm]: https://img.shields.io/npm/v/i18n-webpack-plugin.svg
-[i18n-size]: https://packagephobia.com/badge?p=i18n-webpack-plugin
 [html-plugin]: https://github.com/jantimon/html-webpack-plugin
 [html-plugin-npm]: https://img.shields.io/npm/v/html-webpack-plugin.svg
 [html-plugin-size]: https://packagephobia.com/badge?p=html-webpack-plugin
