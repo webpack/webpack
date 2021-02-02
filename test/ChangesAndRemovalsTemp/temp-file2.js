@@ -1,1 +1,0 @@
-module.exports = function temp2() {return 'temp file 2';};
