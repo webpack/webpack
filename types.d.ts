@@ -1025,6 +1025,46 @@ declare abstract class ChunkTemplate {
 	}>;
 	readonly outputOptions: Output;
 }
+declare class CleanPlugin {
+	constructor(options?: CleanPluginArgument);
+	options: {
+		/**
+		 * Log the assets that should be removed instead of delete them.
+		 */
+		dry: boolean;
+		/**
+		 * Not delete the assets, that matches to this regexp or a function.
+		 */
+		ignore?: RegExp | ((asset: string) => boolean);
+	};
+	ignoreList: IgnoreItem[];
+	logger: WebpackLogger;
+	fs: OutputFileSystem;
+	fsState: { files: Set<string>; directories: Set<string> };
+	apply(compiler: Compiler): void;
+	resetFSState(): void;
+	cleanRecursive(
+		p: string,
+		callback: (arg0?: NodeJS.ErrnoException) => void
+	): void;
+	static getCompilationHooks(
+		compilation: Compilation
+	): CleanPluginCompilationHooks;
+}
+declare interface CleanPluginArgument {
+	/**
+	 * Log the assets that should be removed instead of delete them.
+	 */
+	dry?: boolean;
+
+	/**
+	 * Not delete the assets, that matches to this regexp or a function.
+	 */
+	ignore?: RegExp | ((asset: string) => boolean);
+}
+declare interface CleanPluginCompilationHooks {
+	ignore: SyncHook<[(arg0: IgnoreItem) => void]>;
+}
 declare interface CodeGenerationContext {
 	/**
 	 * the dependency templates
@@ -3980,6 +4020,7 @@ declare interface IStats {
 	ctime: Date;
 	birthtime: Date;
 }
+type IgnoreItem = RegExp | ((arg0: string) => boolean);
 declare class IgnorePlugin {
 	constructor(options: IgnorePluginOptions);
 	options: IgnorePluginOptions;
@@ -6846,6 +6887,22 @@ declare interface Output {
 	chunkLoadingGlobal?: string;
 
 	/**
+	 * Clean the output directory before emit.
+	 */
+	clean?:
+		| boolean
+		| {
+				/**
+				 * Log the assets that should be removed instead of delete them.
+				 */
+				dry?: boolean;
+				/**
+				 * Not delete the assets, that matches to this regexp or a function.
+				 */
+				ignore?: RegExp | ((asset: string) => boolean);
+		  };
+
+	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: boolean;
@@ -7042,6 +7099,15 @@ declare interface OutputFileSystem {
 		arg2: (arg0?: NodeJS.ErrnoException) => void
 	) => void;
 	mkdir: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
+	readdir: (
+		arg0: string,
+		arg1: (
+			arg0?: NodeJS.ErrnoException,
+			arg1?: (string | Buffer)[] | IDirent[]
+		) => void
+	) => void;
+	rmdir: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
+	unlink: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
 	stat: (
 		arg0: string,
 		arg1: (arg0?: NodeJS.ErrnoException, arg1?: IStats) => void
@@ -7097,6 +7163,22 @@ declare interface OutputNormalized {
 	 * The global variable used by webpack for loading of chunks.
 	 */
 	chunkLoadingGlobal?: string;
+
+	/**
+	 * Clean the output directory before emit.
+	 */
+	clean?:
+		| boolean
+		| {
+				/**
+				 * Log the assets that should be removed instead of delete them.
+				 */
+				dry?: boolean;
+				/**
+				 * Not delete the assets, that matches to this regexp or a function.
+				 */
+				ignore?: RegExp | ((asset: string) => boolean);
+		  };
 
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
@@ -11119,6 +11201,7 @@ declare namespace exports {
 		Cache,
 		Chunk,
 		ChunkGraph,
+		CleanPlugin,
 		Compilation,
 		Compiler,
 		ConcatenationScope,
