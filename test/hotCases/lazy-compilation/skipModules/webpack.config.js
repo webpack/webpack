@@ -5,7 +5,7 @@ module.exports = {
 	experiments: {
 		lazyCompilation: {
 			entries: false,
-			skipModule: name => /moduleB/.test(name)
+			test: name => !/moduleB/.test(name)
 		}
 	}
 };

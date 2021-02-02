@@ -419,6 +419,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-lazy-compilation-test": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation.test",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation.test",
+        "type": "string",
+      },
+    ],
+    "description": "Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "experiments-output-module": Object {
     "configs": Array [
       Object {
