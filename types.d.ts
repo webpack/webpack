@@ -1325,11 +1325,11 @@ declare class Compilation {
 	moduleGraph: ModuleGraph;
 	chunkGraph?: ChunkGraph;
 	codeGenerationResults: CodeGenerationResults;
-	factorizeQueue: AsyncQueue<FactorizeModuleOptions, string, Module>;
+	processDependenciesQueue: AsyncQueue<Module, Module, Module>;
 	addModuleQueue: AsyncQueue<Module, string, Module>;
+	factorizeQueue: AsyncQueue<FactorizeModuleOptions, string, Module>;
 	buildQueue: AsyncQueue<Module, Module, Module>;
 	rebuildQueue: AsyncQueue<Module, Module, Module>;
-	processDependenciesQueue: AsyncQueue<Module, Module, Module>;
 
 	/**
 	 * Modules in value are building during the build of Module in key.
@@ -5969,33 +5969,40 @@ declare interface ModulePathData {
 }
 declare abstract class ModuleProfile {
 	startTime: number;
+	factoryStartTime: number;
+	factoryEndTime: number;
 	factory: number;
+	factoryParallelismFactor: number;
+	restoringStartTime: number;
+	restoringEndTime: number;
 	restoring: number;
+	restoringParallelismFactor: number;
+	integrationStartTime: number;
+	integrationEndTime: number;
 	integration: number;
+	integrationParallelismFactor: number;
+	buildingStartTime: number;
+	buildingEndTime: number;
 	building: number;
+	buildingParallelismFactor: number;
+	storingStartTime: number;
+	storingEndTime: number;
 	storing: number;
+	storingParallelismFactor: number;
+	additionalFactoryTimes: any;
 	additionalFactories: number;
+	additionalFactoriesParallelismFactor: number;
 	additionalIntegration: number;
 	markFactoryStart(): void;
-	factoryStartTime?: number;
 	markFactoryEnd(): void;
-	factoryEndTime?: number;
 	markRestoringStart(): void;
-	restoringStartTime?: number;
 	markRestoringEnd(): void;
-	restoringEndTime?: number;
 	markIntegrationStart(): void;
-	integrationStartTime?: number;
 	markIntegrationEnd(): void;
-	integrationEndTime?: number;
 	markBuildingStart(): void;
-	buildingStartTime?: number;
 	markBuildingEnd(): void;
-	buildingEndTime?: number;
 	markStoringStart(): void;
-	storingStartTime?: number;
 	markStoringEnd(): void;
-	storingEndTime?: number;
 
 	/**
 	 * Merge this profile into another one
