@@ -12,11 +12,11 @@ module.exports = {
 	plugins: [
 		compiler => {
 			compiler.hooks.thisCompilation.tap("Test", compilation => {
-				webpack.CleanPlugin.getCompilationHooks(compilation).ignore.tap(
+				webpack.CleanPlugin.getCompilationHooks(compilation).keep.tap(
 					"Test",
-					ignore => {
-						ignore(/[/\\]ignored[/\\]dir[/\\]/);
-						ignore(asset => asset.includes(`ignored${path.sep}too`));
+					asset => {
+						if (/[/\\]ignored[/\\]dir[/\\]/.test(asset)) return true;
+						if (asset.includes(`ignored/too`)) return true;
 					}
 				);
 				compilation.hooks.processAssets.tap("Test", assets => {

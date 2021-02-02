@@ -7,8 +7,8 @@ const readDir = require("../enabled/readdir");
 module.exports = {
 	output: {
 		clean: {
-			ignore(asset) {
-				return asset.includes(`ignored${path.sep}dir`);
+			keep(asset) {
+				return asset.includes(`ignored/dir`);
 			}
 		}
 	},

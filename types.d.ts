@@ -1027,8 +1027,7 @@ declare abstract class ChunkTemplate {
 }
 
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "CleanOptions".
+ * Advanced options for cleaning assets.
  */
 declare interface CleanOptions {
 	/**
@@ -1039,7 +1038,7 @@ declare interface CleanOptions {
 	/**
 	 * Keep these assets.
 	 */
-	ignore?: RegExp | ((filename: string) => boolean);
+	keep?: string | RegExp | ((filename: string) => boolean);
 }
 declare class CleanPlugin {
 	constructor(options?: CleanOptions);
@@ -1051,24 +1050,22 @@ declare class CleanPlugin {
 		/**
 		 * Keep these assets.
 		 */
-		ignore?: RegExp | ((filename: string) => boolean);
+		keep?: string | RegExp | ((filename: string) => boolean);
 	};
-	ignoreList: IgnoreItem[];
-	logger: WebpackLogger;
-	fs: OutputFileSystem;
-	fsState: { files: Set<string>; directories: Set<string> };
+
+	/**
+	 * Apply the plugin
+	 */
 	apply(compiler: Compiler): void;
-	resetFSState(): void;
-	cleanRecursive(
-		p: string,
-		callback: (arg0?: NodeJS.ErrnoException) => void
-	): void;
 	static getCompilationHooks(
 		compilation: Compilation
 	): CleanPluginCompilationHooks;
 }
 declare interface CleanPluginCompilationHooks {
-	ignore: SyncHook<[(arg0: IgnoreItem) => void]>;
+	/**
+	 * when returning true the file/directory will be kept during cleaning, returning false will clean it and ignore the following plugins and config
+	 */
+	keep: SyncBailHook<[string], boolean>;
 }
 declare interface CodeGenerationContext {
 	/**
@@ -4025,7 +4022,6 @@ declare interface IStats {
 	ctime: Date;
 	birthtime: Date;
 }
-type IgnoreItem = RegExp | ((arg0: string) => boolean);
 declare class IgnorePlugin {
 	constructor(options: IgnorePluginOptions);
 	options: IgnorePluginOptions;

@@ -2003,8 +2003,7 @@ export interface Output {
 	workerWasmLoading?: WasmLoading;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "CleanOptions".
+ * Advanced options for cleaning assets.
  */
 export interface CleanOptions {
 	/**
@@ -2014,7 +2013,7 @@ export interface CleanOptions {
 	/**
 	 * Keep these assets.
 	 */
-	ignore?: RegExp | ((filename: string) => boolean);
+	keep?: RegExp | string | ((filename: string) => boolean);
 }
 /**
  * The abilities of the environment where the webpack generated code should run.

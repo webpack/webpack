@@ -236,6 +236,7 @@
       ]
     },
     "CleanOptions": {
+      "description": "Advanced options for cleaning assets.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -243,12 +244,16 @@
           "description": "Log the assets that should be removed instead of deleting them.",
           "type": "boolean"
         },
-        "ignore": {
+        "keep": {
           "description": "Keep these assets.",
           "anyOf": [
             {
               "instanceof": "RegExp",
               "tsType": "RegExp"
+            },
+            {
+              "type": "string",
+              "absolutePath": false
             },
             {
               "instanceof": "Function",
