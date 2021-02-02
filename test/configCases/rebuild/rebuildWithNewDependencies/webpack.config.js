@@ -13,33 +13,33 @@ var testPlugin = compiler => {
 				/** @type {any} */ (loaderContext).shouldReplace = shouldReplace;
 			}
 		);
-		compilation.hooks.finishModules.tapAsync("TestPlugin", function (
-			modules,
-			callback
-		) {
-			const src = resolve(join(__dirname, "a.js"));
+		compilation.hooks.finishModules.tapAsync(
+			"TestPlugin",
+			function (modules, callback) {
+				const src = resolve(join(__dirname, "a.js"));
 
-			/**
-			 *
-			 * @param {any} m test
-			 * @returns {boolean} test
-			 */
-			function matcher(m) {
-				return m.resource && m.resource === src;
+				/**
+				 *
+				 * @param {any} m test
+				 * @returns {boolean} test
+				 */
+				function matcher(m) {
+					return m.resource && m.resource === src;
+				}
+
+				const module = Array.from(modules).find(matcher);
+
+				if (!module) {
+					throw new Error("something went wrong");
+				}
+
+				shouldReplace = true;
+				compilation.rebuildModule(module, err => {
+					shouldReplace = false;
+					callback(err);
+				});
 			}
-
-			const module = Array.from(modules).find(matcher);
-
-			if (!module) {
-				throw new Error("something went wrong");
-			}
-
-			shouldReplace = true;
-			compilation.rebuildModule(module, err => {
-				shouldReplace = false;
-				callback(err);
-			});
-		});
+		);
 	});
 };
 
