@@ -224,36 +224,39 @@
         }
       ]
     },
-    "CleanPlugin": {
+    "Clean": {
       "description": "Clean the output directory before emit.",
       "anyOf": [
         {
           "type": "boolean"
         },
         {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "dry": {
-              "description": "Log the assets that should be removed instead of delete them.",
-              "type": "boolean"
-            },
-            "ignore": {
-              "description": "Not delete the assets, that matches to this regexp or a function.",
-              "anyOf": [
-                {
-                  "instanceof": "RegExp",
-                  "tsType": "RegExp"
-                },
-                {
-                  "instanceof": "Function",
-                  "tsType": "((asset:string) => boolean)"
-                }
-              ]
-            }
-          }
+          "$ref": "#/definitions/CleanOptions"
         }
       ]
+    },
+    "CleanOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dry": {
+          "description": "Log the assets that should be removed instead of deleting them.",
+          "type": "boolean"
+        },
+        "ignore": {
+          "description": "Keep these assets.",
+          "anyOf": [
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((filename: string) => boolean)"
+            }
+          ]
+        }
+      }
     },
     "CompareBeforeEmit": {
       "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem.",
@@ -2382,7 +2385,7 @@
           "$ref": "#/definitions/ChunkLoadingGlobal"
         },
         "clean": {
-          "$ref": "#/definitions/CleanPlugin"
+          "$ref": "#/definitions/Clean"
         },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"
@@ -2552,7 +2555,7 @@
           "$ref": "#/definitions/ChunkLoadingGlobal"
         },
         "clean": {
-          "$ref": "#/definitions/CleanPlugin"
+          "$ref": "#/definitions/Clean"
         },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"

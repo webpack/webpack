@@ -1025,17 +1025,33 @@ declare abstract class ChunkTemplate {
 	}>;
 	readonly outputOptions: Output;
 }
+
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "CleanOptions".
+ */
+declare interface CleanOptions {
+	/**
+	 * Log the assets that should be removed instead of deleting them.
+	 */
+	dry?: boolean;
+
+	/**
+	 * Keep these assets.
+	 */
+	ignore?: RegExp | ((filename: string) => boolean);
+}
 declare class CleanPlugin {
-	constructor(options?: CleanPluginArgument);
+	constructor(options?: CleanOptions);
 	options: {
 		/**
-		 * Log the assets that should be removed instead of delete them.
+		 * Log the assets that should be removed instead of deleting them.
 		 */
 		dry: boolean;
 		/**
-		 * Not delete the assets, that matches to this regexp or a function.
+		 * Keep these assets.
 		 */
-		ignore?: RegExp | ((asset: string) => boolean);
+		ignore?: RegExp | ((filename: string) => boolean);
 	};
 	ignoreList: IgnoreItem[];
 	logger: WebpackLogger;
@@ -1050,17 +1066,6 @@ declare class CleanPlugin {
 	static getCompilationHooks(
 		compilation: Compilation
 	): CleanPluginCompilationHooks;
-}
-declare interface CleanPluginArgument {
-	/**
-	 * Log the assets that should be removed instead of delete them.
-	 */
-	dry?: boolean;
-
-	/**
-	 * Not delete the assets, that matches to this regexp or a function.
-	 */
-	ignore?: RegExp | ((asset: string) => boolean);
 }
 declare interface CleanPluginCompilationHooks {
 	ignore: SyncHook<[(arg0: IgnoreItem) => void]>;
@@ -6889,18 +6894,7 @@ declare interface Output {
 	/**
 	 * Clean the output directory before emit.
 	 */
-	clean?:
-		| boolean
-		| {
-				/**
-				 * Log the assets that should be removed instead of delete them.
-				 */
-				dry?: boolean;
-				/**
-				 * Not delete the assets, that matches to this regexp or a function.
-				 */
-				ignore?: RegExp | ((asset: string) => boolean);
-		  };
+	clean?: boolean | CleanOptions;
 
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
@@ -7167,18 +7161,7 @@ declare interface OutputNormalized {
 	/**
 	 * Clean the output directory before emit.
 	 */
-	clean?:
-		| boolean
-		| {
-				/**
-				 * Log the assets that should be removed instead of delete them.
-				 */
-				dry?: boolean;
-				/**
-				 * Not delete the assets, that matches to this regexp or a function.
-				 */
-				ignore?: RegExp | ((asset: string) => boolean);
-		  };
+	clean?: boolean | CleanOptions;
 
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
