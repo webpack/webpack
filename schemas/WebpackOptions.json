@@ -603,6 +603,26 @@
                 "entries": {
                   "description": "Enable/disable lazy compilation for entries.",
                   "type": "boolean"
+                },
+                "imports": {
+                  "description": "Enable/disable lazy compilation for import() modules.",
+                  "type": "boolean"
+                },
+                "test": {
+                  "description": "Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.",
+                  "anyOf": [
+                    {
+                      "instanceof": "RegExp",
+                      "tsType": "RegExp"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "instanceof": "Function",
+                      "tsType": "((module: import('../lib/Module')) => boolean)"
+                    }
+                  ]
                 }
               }
             }

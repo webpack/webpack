@@ -3002,6 +3002,14 @@ declare interface Experiments {
 				 * Enable/disable lazy compilation for entries.
 				 */
 				entries?: boolean;
+				/**
+				 * Enable/disable lazy compilation for import() modules.
+				 */
+				imports?: boolean;
+				/**
+				 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
+				 */
+				test?: string | RegExp | ((module: Module) => boolean);
 		  };
 
 	/**
