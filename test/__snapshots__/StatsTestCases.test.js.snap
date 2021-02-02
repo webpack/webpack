@@ -2188,16 +2188,8 @@ LOG from webpack.Compiler
 <t> done hook: X ms
 <t> beginIdle: X ms
 
-LOG from webpack.FlagDependencyExportsPlugin
-<t> restore cached provided exports: X ms
-<t> figure out provided exports: X ms
-    100% of exports of modules have been determined (6 not cached, 0 flagged uncacheable, 0 from cache, 0 additional calculations due to dependencies)
-<t> store provided exports into cache: X ms
-
-LOG from webpack.InnerGraphPlugin
-<t> infer dependency usage: X ms
-
 LOG from webpack.Compilation
+<t> finish module profiles: X ms
 <t> finish modules: X ms
 <t> report dependency errors and warnings: X ms
 <t> optimize dependencies: X ms
@@ -2220,6 +2212,15 @@ LOG from webpack.Compilation
 <t> module assets: X ms
 <t> create chunk assets: X ms
 <t> process assets: X ms
+
+LOG from webpack.FlagDependencyExportsPlugin
+<t> restore cached provided exports: X ms
+<t> figure out provided exports: X ms
+    100% of exports of modules have been determined (6 not cached, 0 flagged uncacheable, 0 from cache, 0 additional calculations due to dependencies)
+<t> store provided exports into cache: X ms
+
+LOG from webpack.InnerGraphPlugin
+<t> infer dependency usage: X ms
 
 LOG from webpack.SideEffectsFlagPlugin
 <t> update dependencies: X ms
