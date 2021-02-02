@@ -7089,15 +7089,15 @@ declare interface OutputFileSystem {
 		arg2: (arg0?: NodeJS.ErrnoException) => void
 	) => void;
 	mkdir: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
-	readdir: (
+	readdir?: (
 		arg0: string,
 		arg1: (
 			arg0?: NodeJS.ErrnoException,
 			arg1?: (string | Buffer)[] | IDirent[]
 		) => void
 	) => void;
-	rmdir: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
-	unlink: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
+	rmdir?: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
+	unlink?: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
 	stat: (
 		arg0: string,
 		arg1: (arg0?: NodeJS.ErrnoException, arg1?: IStats) => void
