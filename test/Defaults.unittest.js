@@ -287,6 +287,7 @@ describe("Defaults", () => {
 		    "chunkLoadTimeout": 120000,
 		    "chunkLoading": "jsonp",
 		    "chunkLoadingGlobal": "webpackChunkwebpack",
+		    "clean": undefined,
 		    "compareBeforeEmit": true,
 		    "crossOriginLoading": false,
 		    "devtoolFallbackModuleFilenameTemplate": undefined,

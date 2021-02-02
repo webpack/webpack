@@ -1025,6 +1025,48 @@ declare abstract class ChunkTemplate {
 	}>;
 	readonly outputOptions: Output;
 }
+
+/**
+ * Advanced options for cleaning assets.
+ */
+declare interface CleanOptions {
+	/**
+	 * Log the assets that should be removed instead of deleting them.
+	 */
+	dry?: boolean;
+
+	/**
+	 * Keep these assets.
+	 */
+	keep?: string | RegExp | ((filename: string) => boolean);
+}
+declare class CleanPlugin {
+	constructor(options?: CleanOptions);
+	options: {
+		/**
+		 * Log the assets that should be removed instead of deleting them.
+		 */
+		dry: boolean;
+		/**
+		 * Keep these assets.
+		 */
+		keep?: string | RegExp | ((filename: string) => boolean);
+	};
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+	static getCompilationHooks(
+		compilation: Compilation
+	): CleanPluginCompilationHooks;
+}
+declare interface CleanPluginCompilationHooks {
+	/**
+	 * when returning true the file/directory will be kept during cleaning, returning false will clean it and ignore the following plugins and config
+	 */
+	keep: SyncBailHook<[string], boolean>;
+}
 declare interface CodeGenerationContext {
 	/**
 	 * the dependency templates
@@ -6854,6 +6896,11 @@ declare interface Output {
 	chunkLoadingGlobal?: string;
 
 	/**
+	 * Clean the output directory before emit.
+	 */
+	clean?: boolean | CleanOptions;
+
+	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: boolean;
@@ -7050,6 +7097,15 @@ declare interface OutputFileSystem {
 		arg2: (arg0?: NodeJS.ErrnoException) => void
 	) => void;
 	mkdir: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
+	readdir?: (
+		arg0: string,
+		arg1: (
+			arg0?: NodeJS.ErrnoException,
+			arg1?: (string | Buffer)[] | IDirent[]
+		) => void
+	) => void;
+	rmdir?: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
+	unlink?: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
 	stat: (
 		arg0: string,
 		arg1: (arg0?: NodeJS.ErrnoException, arg1?: IStats) => void
@@ -7105,6 +7161,11 @@ declare interface OutputNormalized {
 	 * The global variable used by webpack for loading of chunks.
 	 */
 	chunkLoadingGlobal?: string;
+
+	/**
+	 * Clean the output directory before emit.
+	 */
+	clean?: boolean | CleanOptions;
 
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
@@ -11127,6 +11188,7 @@ declare namespace exports {
 		Cache,
 		Chunk,
 		ChunkGraph,
+		CleanPlugin,
 		Compilation,
 		Compiler,
 		ConcatenationScope,

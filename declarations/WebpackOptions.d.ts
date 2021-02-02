@@ -438,6 +438,10 @@ export type ChunkLoadTimeout = number;
  */
 export type ChunkLoadingGlobal = string;
 /**
+ * Clean the output directory before emit.
+ */
+export type Clean = boolean | CleanOptions;
+/**
  * Check if to be emitted file already exists and have the same content before writing to output filesystem.
  */
 export type CompareBeforeEmit = boolean;
@@ -1850,6 +1854,10 @@ export interface Output {
 	 */
 	chunkLoadingGlobal?: ChunkLoadingGlobal;
 	/**
+	 * Clean the output directory before emit.
+	 */
+	clean?: Clean;
+	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */
 	compareBeforeEmit?: CompareBeforeEmit;
@@ -2001,6 +2009,19 @@ export interface Output {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	workerWasmLoading?: WasmLoading;
+}
+/**
+ * Advanced options for cleaning assets.
+ */
+export interface CleanOptions {
+	/**
+	 * Log the assets that should be removed instead of deleting them.
+	 */
+	dry?: boolean;
+	/**
+	 * Keep these assets.
+	 */
+	keep?: RegExp | string | ((filename: string) => boolean);
 }
 /**
  * The abilities of the environment where the webpack generated code should run.
@@ -2773,6 +2794,10 @@ export interface OutputNormalized {
 	 * The global variable used by webpack for loading of chunks.
 	 */
 	chunkLoadingGlobal?: ChunkLoadingGlobal;
+	/**
+	 * Clean the output directory before emit.
+	 */
+	clean?: Clean;
 	/**
 	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
 	 */

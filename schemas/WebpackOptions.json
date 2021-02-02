@@ -224,6 +224,45 @@
         }
       ]
     },
+    "Clean": {
+      "description": "Clean the output directory before emit.",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/definitions/CleanOptions"
+        }
+      ]
+    },
+    "CleanOptions": {
+      "description": "Advanced options for cleaning assets.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dry": {
+          "description": "Log the assets that should be removed instead of deleting them.",
+          "type": "boolean"
+        },
+        "keep": {
+          "description": "Keep these assets.",
+          "anyOf": [
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "string",
+              "absolutePath": false
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((filename: string) => boolean)"
+            }
+          ]
+        }
+      }
+    },
     "CompareBeforeEmit": {
       "description": "Check if to be emitted file already exists and have the same content before writing to output filesystem.",
       "type": "boolean"
@@ -2370,6 +2409,9 @@
         "chunkLoadingGlobal": {
           "$ref": "#/definitions/ChunkLoadingGlobal"
         },
+        "clean": {
+          "$ref": "#/definitions/Clean"
+        },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"
         },
@@ -2536,6 +2578,9 @@
         },
         "chunkLoadingGlobal": {
           "$ref": "#/definitions/ChunkLoadingGlobal"
+        },
+        "clean": {
+          "$ref": "#/definitions/Clean"
         },
         "compareBeforeEmit": {
           "$ref": "#/definitions/CompareBeforeEmit"

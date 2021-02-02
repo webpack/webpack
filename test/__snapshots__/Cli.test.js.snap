@@ -4087,6 +4087,51 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-clean": Object {
+    "configs": Array [
+      Object {
+        "description": "Clean the output directory before emit.",
+        "multiple": false,
+        "path": "output.clean",
+        "type": "boolean",
+      },
+    ],
+    "description": "Clean the output directory before emit.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-clean-dry": Object {
+    "configs": Array [
+      Object {
+        "description": "Log the assets that should be removed instead of deleting them.",
+        "multiple": false,
+        "path": "output.clean.dry",
+        "type": "boolean",
+      },
+    ],
+    "description": "Log the assets that should be removed instead of deleting them.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-clean-keep": Object {
+    "configs": Array [
+      Object {
+        "description": "Keep these assets.",
+        "multiple": false,
+        "path": "output.clean.keep",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Keep these assets.",
+        "multiple": false,
+        "path": "output.clean.keep",
+        "type": "string",
+      },
+    ],
+    "description": "Keep these assets.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-compare-before-emit": Object {
     "configs": Array [
       Object {
