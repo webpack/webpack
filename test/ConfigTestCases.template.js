@@ -5,15 +5,18 @@ const fs = require("graceful-fs");
 const vm = require("vm");
 const { URL } = require("url");
 const rimraf = require("rimraf");
+const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const FakeDocument = require("./helpers/FakeDocument");
 const CurrentScript = require("./helpers/CurrentScript");
 
-const webpack = require("..");
 const prepareOptions = require("./helpers/prepareOptions");
 const { parseResource } = require("../lib/util/identifier");
+const captureStdio = require("./helpers/captureStdio");
+
+let webpack;
 
 const casesPath = path.join(__dirname, "configCases");
 const categories = fs.readdirSync(casesPath).map(cat => {
@@ -28,11 +31,21 @@ const categories = fs.readdirSync(casesPath).map(cat => {
 
 const describeCases = config => {
 	describe(config.name, () => {
+		let stderr;
+		beforeEach(() => {
+			stderr = captureStdio(process.stderr, true);
+			webpack = require("..");
+		});
+		afterEach(() => {
+			stderr.restore();
+		});
 		jest.setTimeout(20000);
 
 		for (const category of categories) {
+			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
 				for (const testName of category.tests) {
+					// eslint-disable-next-line no-loop-func
 					describe(testName, function () {
 						const testDirectory = path.join(casesPath, category.name, testName);
 						const filterPath = path.join(testDirectory, "test.filter.js");
@@ -59,6 +72,13 @@ const describeCases = config => {
 								if (!options.optimization) options.optimization = {};
 								if (options.optimization.minimize === undefined)
 									options.optimization.minimize = false;
+								if (options.optimization.minimizer === undefined) {
+									options.optimization.minimizer = [
+										new TerserPlugin({
+											parallel: false
+										})
+									];
+								}
 								if (!options.entry) options.entry = "./index.js";
 								if (!options.target) options.target = "async-node";
 								if (!options.output) options.output = {};
@@ -202,6 +222,14 @@ const describeCases = config => {
 								) {
 									return;
 								}
+								const infrastructureLogging = stderr.toString();
+								if (infrastructureLogging) {
+									done(
+										new Error(
+											"Errors/Warnings during build:\n" + infrastructureLogging
+										)
+									);
+								}
 								if (
 									checkArrayExpectation(
 										testDirectory,
@@ -322,67 +350,25 @@ const describeCases = config => {
 													moduleScope.window = globalContext;
 													moduleScope.self = globalContext;
 													moduleScope.URL = URL;
-													moduleScope.Worker = class Worker {
-														constructor(url, options) {
-															expect(url).toBeInstanceOf(URL);
-															expect(url.origin).toBe("https://test.cases");
-															expect(url.pathname.startsWith("/path/")).toBe(
-																true
-															);
-															const file = url.pathname.slice(6);
-															const workerBootstrap = `
-															const { parentPort } = require("worker_threads");
-															const { URL } = require("url");
-															const path = require("path");
-															global.self = global;
-															self.URL = URL;
-															self.importScripts = url => {
-																require(path.resolve(${JSON.stringify(outputDirectory)}, \`./\${url}\`));
-															};
-															parentPort.on("message", data => {
-																if(self.onmessage) self.onmessage({
-																	data
-																});
-															});
-															self.postMessage = data => {
-																parentPort.postMessage(data);
-															};
-															require(${JSON.stringify(path.resolve(outputDirectory, file))});
-															`;
-															// eslint-disable-next-line node/no-unsupported-features/node-builtins
-															this.worker = new (require("worker_threads").Worker)(
-																workerBootstrap,
-																{
-																	eval: true
-																}
-															);
-														}
-
-														set onmessage(value) {
-															this.worker.on("message", data => {
-																value({
-																	data
-																});
-															});
-														}
-
-														postMessage(data) {
-															this.worker.postMessage(data);
-														}
-													};
+													moduleScope.Worker = require("./helpers/createFakeWorker")(
+														{ outputDirectory }
+													);
 													runInNewContext = true;
 												}
 												if (testConfig.moduleScope) {
 													testConfig.moduleScope(moduleScope);
 												}
-												const args = Object.keys(moduleScope).join(", ");
+												const args = Object.keys(moduleScope);
+												const argValues = args.map(arg => moduleScope[arg]);
 												if (!runInNewContext)
 													content = `Object.assign(global, _globalAssign); ${content}`;
-												const code = `(function({${args}}) {${content}\n})`;
+												const code = `(function(${args.join(
+													", "
+												)}) {${content}\n})`;
 												const fn = runInNewContext
 													? vm.runInNewContext(code, globalContext, p)
 													: vm.runInThisContext(code, p);
-												fn.call(m.exports, moduleScope);
+												fn.call(m.exports, ...argValues);
 
 												//restore state
 												document.currentScript = oldCurrentScript;

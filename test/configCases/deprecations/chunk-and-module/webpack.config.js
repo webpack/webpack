@@ -59,7 +59,7 @@ module.exports = {
 					expect(
 						typeof m.usedExports === "boolean" ? [] : [...m.usedExports]
 					).toEqual(["testExport"]);
-					expect(m.optimizationBailout).toEqual([]);
+					expect(Array.isArray(m.optimizationBailout)).toBe(true);
 					expect(m.optional).toBe(false);
 					expect(m.isInChunk(chunk)).toBe(true);
 					expect(m.isEntryModule()).toBe(true);

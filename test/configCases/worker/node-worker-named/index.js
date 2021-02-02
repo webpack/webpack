@@ -11,7 +11,7 @@ it("should allow to create a WebWorker", async () => {
 		});
 	});
 	expect(result).toBe("data: OK, thanks");
-	worker.terminate();
+	await worker.terminate();
 });
 
 it("should allow to create another WebWorker", async () => {

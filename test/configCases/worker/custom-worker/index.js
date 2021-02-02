@@ -11,6 +11,7 @@ it("should allow to create a WebWorker", async () => {
 		};
 	});
 	expect(result).toBe("data: OK, thanks");
+	await worker.terminate();
 });
 
 it("should allow to share chunks", async () => {

@@ -42,6 +42,19 @@ const isInstalled = packageName => {
 };
 
 /**
+ * @param {CliOption} cli options
+ * @returns {void}
+ */
+const runCli = cli => {
+	const path = require("path");
+	const pkgPath = require.resolve(`${cli.package}/package.json`);
+	// eslint-disable-next-line node/no-missing-require
+	const pkg = require(pkgPath);
+	// eslint-disable-next-line node/no-missing-require
+	require(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName]));
+};
+
+/**
  * @typedef {Object} CliOption
  * @property {string} name display name
  * @property {string} package npm package name
@@ -69,15 +82,22 @@ if (!cli.installed) {
 
 	console.error(notify);
 
-	const isYarn = fs.existsSync(path.resolve(process.cwd(), "yarn.lock"));
+	let packageManager;
 
-	const packageManager = isYarn ? "yarn" : "npm";
-	const installOptions = [isYarn ? "add" : "install", "-D"];
+	if (fs.existsSync(path.resolve(process.cwd(), "yarn.lock"))) {
+		packageManager = "yarn";
+	} else if (fs.existsSync(path.resolve(process.cwd(), "pnpm-lock.yaml"))) {
+		packageManager = "pnpm";
+	} else {
+		packageManager = "npm";
+	}
+
+	const installOptions = [packageManager === "yarn" ? "add" : "install", "-D"];
 
 	console.error(
 		`We will use "${packageManager}" to install the CLI via "${packageManager} ${installOptions.join(
 			" "
-		)}".`
+		)} ${cli.package}".`
 	);
 
 	const question = `Do you want to install 'webpack-cli' (yes/no): `;
@@ -116,7 +136,7 @@ if (!cli.installed) {
 
 		runCommand(packageManager, installOptions.concat(cli.package))
 			.then(() => {
-				require(cli.package); //eslint-disable-line
+				runCli(cli);
 			})
 			.catch(error => {
 				console.error(error);
@@ -124,10 +144,5 @@ if (!cli.installed) {
 			});
 	});
 } else {
-	const path = require("path");
-	const pkgPath = require.resolve(`${cli.package}/package.json`);
-	// eslint-disable-next-line node/no-missing-require
-	const pkg = require(pkgPath);
-	// eslint-disable-next-line node/no-missing-require
-	require(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName]));
+	runCli(cli);
 }

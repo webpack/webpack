@@ -7,12 +7,12 @@ rules:
       open: true
       pull_request:
         mergeable: true
-      status_1:
-        context: "continuous-integration/travis-ci/pr"
+      check_1:
+        name: "webpack.webpack"
       status_2:
         context: "continuous-integration/appveyor/pr"
       ensure_1:
-        value: "{{status_1.state}}"
+        value: "{{check_1.conclusion}}"
         equals: "success"
       ensure_2:
         value: "{{status_2.state}}"
@@ -29,13 +29,13 @@ rules:
       open: true
       pull_request:
         mergeable: true
-      status_1:
-        context: "continuous-integration/travis-ci/pr"
+      check_1:
+        name: "webpack.webpack"
       status_2:
         context: "continuous-integration/appveyor/pr"
       any:
         ensure_1:
-          value: "{{status_1.state}}"
+          value: "{{check_1.conclusion}}"
           equals: "failure"
         ensure_2:
           value: "{{status_2.state}}"
@@ -43,7 +43,7 @@ rules:
       not:
         any:
           ensure_3:
-            value: "{{status_1.state}}"
+            value: "{{check_1.conclusion}}"
             equals: "pending"
           ensure_4:
             value: "{{status_2.state}}"
@@ -56,233 +56,14 @@ rules:
         id: report_ci
         value: yep
 
-  # Report specific error message if jest for basic tests fails
-  - filters:
-      ensure:
-        value: "{{report_ci}}"
-        equals: yep
-      commit: true
-      status:
-        context: "continuous-integration/travis-ci/pr"
-      travis_job:
-        state: "failed"
-        allow_failure: false
-        config:
-          env: JOB_PART=basic
-      fetch: travis_job.log
-      string_cleanup:
-        id: logResult
-        value: "{{{fetch}}}"
-        remove:
-          - ".\\[2K.\\[1G|.\\[999D.\\[K"
-          - "^[\\s\\S]+?\\$ yarn travis:\\$JOB_PART.*\n"
-          - "\\$ node --max-old-space-size=4096.*\n"
-          - ".+rimraf coverage"
-          - "yarn run.+\n"
-          - "\\(node:\\d+\\) (\\[DEP0005\\]|DeprecationWarning).+\n"
-          - "\\$ yarn (cover|test):.+\n"
-          - "Ran all test suites.\n[\\s\\S]*"
-          - "error Command failed with exit code \\d+.\n"
-          - "info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.\n"
-          - "Force exiting Jest\n\nHave you considered.+"
-          - "=============================== Coverage summary ===============================[\\s\\S]+?================================================================================"
-          - " *PASS *test/.*\n"
-          - "^\\s+\n|\\s+$"
-      string_cleanup_1:
-        id: firstError
-        value: "{{{logResult}}}"
-        remove:
-          - "\n\n(  ●| FAIL)[\\s\\S]*"
-          - "Test Suites:[\\s\\S]*"
-          - "\\s+$"
-      string_cleanup_2:
-        id: remainingErrors
-        value: "{{{logResult}}}"
-        remove:
-          - "^[\\s\\S]+?(?=\n\n(  ●| FAIL)|$)"
-          - "^\n+"
-          - "Test Suites:[\\s\\S]*"
-          - "\\s+$"
-      string_cleanup_3:
-        id: summary
-        value: "{{{logResult}}}"
-        remove:
-          - "^[\\s\\S]+?(?=Test Suites:)"
-          - "\\s+$"
-    actions:
-      comment:
-        identifier: "ci-result"
-        message: |-
-          The basic integration tests failed.
-
-          @{{commit.author.login}} Please review the following output log for errors:
-
-          ```text
-          {{{firstError}}}
-          ```
-          {{#if remainingErrors}}
-          <details>
-            <summary>Show remaining errors</summary>
-
-          ```text
-          {{{remainingErrors}}}
-          ```
-          </details>
-          {{/if}}
-
-          ```text
-          {{{summary}}}
-          ```
-
-          See [complete report here]({{status.target_url}}).
-      set:
-        id: report_ci
-        value: nope
-
-  # Report specific error message if jest for integration tests fails
-  - filters:
-      ensure:
-        value: "{{report_ci}}"
-        equals: yep
-      commit: true
-      status:
-        context: "continuous-integration/travis-ci/pr"
-      travis_job:
-        state: "failed"
-        allow_failure: false
-        config:
-          env: JOB_PART=integration
-      fetch: travis_job.log
-      string_cleanup:
-        id: logResult
-        value: "{{{fetch}}}"
-        remove:
-          - ".\\[2K.\\[1G|.\\[999D.\\[K"
-          - "^[\\s\\S]+?\\$ yarn travis:\\$JOB_PART.*\n"
-          - "\\$ node --max-old-space-size=4096.*\n"
-          - ".+rimraf coverage"
-          - "yarn run.+\n"
-          - "\\(node:\\d+\\) (\\[DEP0005\\]|DeprecationWarning).+\n"
-          - "\\$ yarn (cover|test):.+\n"
-          - "The command \"yarn travis:\\$JOB_PART\" exited[\\s\\S]*"
-          - "Ran all test suites.+\n"
-          - "error Command failed with exit code \\d+.\n"
-          - "info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.\n"
-          - "Force exiting Jest\n\nHave you considered.+"
-          - "=============================== Coverage summary ===============================[\\s\\S]+?================================================================================"
-          - " *PASS *test/.*\n"
-          - "^\\s+\n|\\s+$"
-      string_cleanup_1:
-        id: firstError
-        value: "{{{logResult}}}"
-        remove:
-          - "\n\n(  ●| FAIL)[\\s\\S]*"
-          - "Test Suites:[\\s\\S]*"
-          - "\\s+$"
-      string_cleanup_2:
-        id: remainingErrors
-        value: "{{{logResult}}}"
-        remove:
-          - "^[\\s\\S]+?(?=\n\n(  ●| FAIL)|$)"
-          - "^\n+"
-          - "Test Suites:[\\s\\S]*"
-          - "\\s+$"
-      string_cleanup_3:
-        id: summary
-        value: "{{{logResult}}}"
-        remove:
-          - "^[\\s\\S]+?(?=Test Suites:)"
-          - "\\s+$"
-    actions:
-      comment:
-        identifier: "ci-result"
-        message: |-
-          The basic integration tests succeeded, but the full suite failed.
-
-          @{{commit.author.login}} Please review the following output log for errors:
-
-          ```text
-          {{{firstError}}}
-          ```
-          {{#if remainingErrors}}
-          <details>
-            <summary>Show remaining errors</summary>
-
-          ```text
-          {{{remainingErrors}}}
-          ```
-          </details>
-          {{/if}}
-
-          ```text
-          {{{summary}}}
-          ```
-
-          See [complete report here]({{status.target_url}}).
-      set:
-        id: report_ci
-        value: nope
-
-  # Report specific error message if jest for unit tests or liniting fails
-  - filters:
-      ensure:
-        value: "{{report_ci}}"
-        equals: yep
-      commit: true
-      status:
-        context: "continuous-integration/travis-ci/pr"
-      travis_job:
-        state: "failed"
-        allow_failure: false
-        config:
-          env: JOB_PART=lint-unit
-      fetch: travis_job.log
-      string_cleanup:
-        id: logResult
-        value: "{{{fetch}}}"
-        remove:
-          - ".\\[2K.\\[1G|.\\[999D.\\[K"
-          - "^[\\s\\S]+?\\$ yarn travis:\\$JOB_PART.*\n"
-          - "\\$ node --max-old-space-size=4096.*\n"
-          - ".+rimraf coverage"
-          - "yarn run.+\n"
-          - "\\(node:\\d+\\) (\\[DEP0005\\]|DeprecationWarning).+\n"
-          - "\\$ yarn (unit|lint).+\n"
-          - "The command \"yarn travis:\\$JOB_PART\" exited[\\s\\S]*"
-          - "Ran all test suites.+\n"
-          - "error Command failed with exit code \\d+.\n"
-          - "info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.\n"
-          - "Force exiting Jest\n\nHave you considered.+"
-          - "=============================== Coverage summary ===============================[\\s\\S]+?================================================================================"
-          - " *PASS *test/.*\n"
-          - "^\\s+\n|\\s+$"
-    actions:
-      comment:
-        identifier: "ci-result"
-        message: |-
-          The integration tests look fine, but there are code style issues or unit test failures in the Pull Request.
-
-          @{{commit.author.login}} Please review the following output log for errors:
-
-          ``` text
-          {{{logResult}}}
-          ```
-
-          If the unit tests are outdated, you can choose to delete them and add integration tests instead. That would be great.
-
-          See [complete report here]({{status.target_url}}).
-      set:
-        id: report_ci
-        value: nope
-
   # Report a general error message
   - filters:
       ensure:
         value: "{{report_ci}}"
         equals: yep
       commit: true
-      status_1:
-        context: "continuous-integration/travis-ci/pr"
+      check_1:
+        name: "webpack.webpack"
       status_2:
         context: "continuous-integration/appveyor/pr"
     actions:
@@ -291,7 +72,7 @@ rules:
         message: |-
           @{{commit.author.login}} The most important CI builds failed. This way your PR can't be merged.
 
-          Please take a look at the CI results from [travis]({{status_1.target_url}}) ({{status_1.state}}) and [appveyor]({{status_2.target_url}}) ({{status_2.state}}) and fix these issues.
+          Please take a look at the CI results from azure ({{{check_1.output.summary}}}) and [appveyor]({{status_2.target_url}}) ({{status_2.state}}) and fix these issues.
 
   # Add tests-needed label depending on codecov status
   # comment to point the user writing test cases
@@ -684,6 +465,158 @@ rules:
         identifier: admin-action-webpack-4-backport-executed
         message: |-
           I've created an issue to backport this.
+
+  # Ask for tags on new issues
+  - filters:
+      open: true
+      issue: true
+      age:
+        maximum: 1w
+      any:
+        not_1:
+          any:
+            label_1: webpack-4
+            label_2: webpack-5
+        not_2:
+          any:
+            label_1: bug
+            label_2: critical-bug
+            label_3: enhancement
+            label_4: documentation
+            label_5: performance
+            label_6: dependencies
+            label_7: question
+      not:
+        comment:
+          author: webpack-bot
+          matching: admin-actions
+    actions:
+      comment:
+        identifier: admin-actions
+        edit: true
+        message: |-
+          *For maintainers only:*
+
+          * [ ] webpack-4
+          * [ ] webpack-5
+          * [ ] bug
+          * [ ] critical-bug
+          * [ ] enhancement
+          * [ ] documentation
+          * [ ] performance
+          * [ ] dependencies
+          * [ ] question
+
+  # Apply selected tags
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] webpack-4"
+    actions:
+      label: webpack-4
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] webpack-5"
+    actions:
+      label: webpack-5
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] bug"
+    actions:
+      label: bug
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] critical-bug"
+    actions:
+      label: critical-bug
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] enhancement"
+    actions:
+      label: enhancement
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] performance"
+    actions:
+      label: performance
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] dependencies"
+    actions:
+      label: dependencies
+  - filters:
+      open: true
+      issue: true
+      comment:
+        author: webpack-bot
+        matching: "\\* \\[x\\] question"
+    actions:
+      label: question
+
+  # Remove question about tags again
+  - filters:
+      open: true
+      issue: true
+      any_1:
+        label_1: webpack-4
+        label_2: webpack-5
+      any_2:
+        label_1: bug
+        label_2: critical-bug
+        label_3: enhancement
+        label_4: documentation
+        label_5: performance
+        label_6: dependencies
+        label_7: question
+      comment:
+        author: webpack-bot
+        matching: admin-actions
+    actions:
+      schedule: 30s
+  - filters:
+      open: true
+      issue: true
+      any_1:
+        label_1: webpack-4
+        label_2: webpack-5
+      any_2:
+        label_1: bug
+        label_2: critical-bug
+        label_3: enhancement
+        label_4: documentation
+        label_5: performance
+        label_6: dependencies
+        label_7: question
+      comment:
+        author: webpack-bot
+        matching: admin-actions
+      last_action_age:
+        minimum: 30s
+        includeBotActions: true
+    actions:
+      comment:
+        identifier: admin-actions
+        message: ""
 
   # Check open issues and pull requests every day
   - filters:

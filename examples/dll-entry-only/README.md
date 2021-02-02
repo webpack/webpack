@@ -63,7 +63,7 @@ module.exports = {
 # dist/dll.js
 
 ```javascript
-var dll_84b3c692d890d26bb885;dll_84b3c692d890d26bb885 =
+var dll_86cc3668cb72d94ce910;dll_86cc3668cb72d94ce910 =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -102,20 +102,20 @@ __webpack_require__.d(__webpack_exports__, {
   "c": () => /* reexport */ cjs.c
 });
 
-// CONCATENATED MODULE: ./b.js
+;// CONCATENATED MODULE: ./b.js
 // module b
 function b() {
 	return "b";
 }
 
-// CONCATENATED MODULE: ./a.js
+;// CONCATENATED MODULE: ./a.js
 // module a
 var a = "a";
 
 
 // EXTERNAL MODULE: ./cjs.js
 var cjs = __webpack_require__(2);
-// CONCATENATED MODULE: ./example.js
+;// CONCATENATED MODULE: ./example.js
 
 
 
@@ -213,7 +213,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_84b3c692d890d26bb885","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+{"name":"dll_86cc3668cb72d94ce910","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -222,7 +222,7 @@ exports.c = "c";
 
 ```
 asset dll.js 4.58 KiB [emitted] (name: dll)
-chunk dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
   > dll
   runtime modules 668 bytes 3 modules
   dependent modules 199 bytes [dependent] 2 modules
@@ -230,13 +230,13 @@ chunk dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset dll.js 675 bytes [emitted] [minimized] (name: dll)
+asset dll.js 679 bytes [emitted] [minimized] (name: dll)
 chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
   > dll
   runtime modules 668 bytes 3 modules
@@ -244,5 +244,5 @@ chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [en
   dll dll 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

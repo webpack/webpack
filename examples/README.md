@@ -13,20 +13,19 @@
 9. [Harmony](#harmony)
 10. [HTTP2 Aggressive Splitting](#http2-aggressive-splitting)
 11. [Hybrid Routing](#hybrid-routing)
-12. [i18n](#i18n)
-13. [Loader](#loader)
-14. [Mixed](#mixed)
-15. [Multi Compiler](#multi-compiler)
-16. [Multi Part Library](#multi-part-library)
-17. [Multiple Entry Points](#multiple-entry-points)
-18. [Require Context](#require-context)
-19. [Require Resolve](#require-resolve)
-20. [Scope Hoisting](#scope-hoisting)
-21. [Side Effects](#side-effects)
-22. [Source Map](#source-map)
-23. [Web Worker](#web-worker)
-24. [Requests](#requests)
-25. [Building an Example](#building-an-example)
+12. [Loader](#loader)
+13. [Mixed](#mixed)
+14. [Multi Compiler](#multi-compiler)
+15. [Multi Part Library](#multi-part-library)
+16. [Multiple Entry Points](#multiple-entry-points)
+17. [Require Context](#require-context)
+18. [Require Resolve](#require-resolve)
+19. [Scope Hoisting](#scope-hoisting)
+20. [Side Effects](#side-effects)
+21. [Source Map](#source-map)
+22. [Web Worker](#web-worker)
+23. [Requests](#requests)
+24. [Building an Example](#building-an-example)
 
 
 ## Aggressive Merging
@@ -97,9 +96,6 @@
 
 ## Hybrid Routing
 [hybrid-routing](hybrid-routing)
-
-## i18n
-[i18n](i18n) example demonstrating localization.
 
 ## Loader
 [loader](loader) example demonstrating the usage of loaders.

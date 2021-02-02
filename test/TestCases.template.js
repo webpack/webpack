@@ -8,13 +8,12 @@ const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
+const captureStdio = require("./helpers/captureStdio");
 
-const webpack = require("..");
+let webpack;
 
 const terserForTesting = new TerserPlugin({
-	cache: false,
-	parallel: false,
-	sourceMap: true
+	parallel: false
 });
 
 const DEFAULT_OPTIMIZATIONS = {
@@ -51,6 +50,14 @@ categories = categories.map(cat => {
 
 const describeCases = config => {
 	describe(config.name, () => {
+		let stderr;
+		beforeEach(() => {
+			stderr = captureStdio(process.stderr, true);
+			webpack = require("..");
+		});
+		afterEach(() => {
+			stderr.restore();
+		});
 		categories.forEach(category => {
 			describe(category.name, function () {
 				jest.setTimeout(20000);
@@ -95,7 +102,10 @@ const describeCases = config => {
 								devtool: config.devtool,
 								mode: config.mode || "none",
 								optimization: config.mode
-									? NO_EMIT_ON_ERRORS_OPTIMIZATIONS
+									? {
+											...NO_EMIT_ON_ERRORS_OPTIMIZATIONS,
+											...config.optimization
+									  }
 									: {
 											...DEFAULT_OPTIMIZATIONS,
 											...config.optimization
@@ -261,6 +271,16 @@ const describeCases = config => {
 												) {
 													return;
 												}
+												const infrastructureLogging = stderr.toString();
+												if (infrastructureLogging) {
+													done(
+														new Error(
+															"Errors/Warnings during build:\n" +
+																infrastructureLogging
+														)
+													);
+												}
+
 												expect(deprecations).toEqual(config.deprecations || []);
 
 												Promise.resolve().then(done);
@@ -289,7 +309,7 @@ const describeCases = config => {
 										if (module.substr(0, 2) === "./") {
 											const p = path.join(outputDirectory, module);
 											const fn = vm.runInThisContext(
-												"(function(require, module, exports, __dirname, it, expect) {" +
+												"(function(require, module, exports, __dirname, __filename, it, expect) {" +
 													"global.expect = expect;" +
 													'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 													fs.readFileSync(p, "utf-8") +
@@ -306,6 +326,7 @@ const describeCases = config => {
 												m,
 												m.exports,
 												outputDirectory,
+												p,
 												_it,
 												expect
 											);

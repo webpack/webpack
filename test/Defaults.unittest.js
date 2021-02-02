@@ -189,21 +189,32 @@ describe("Defaults", () => {
 		        "type": "asset/resource",
 		      },
 		    ],
-		    "exprContextCritical": true,
-		    "exprContextRecursive": true,
-		    "exprContextRegExp": false,
-		    "exprContextRequest": ".",
+		    "generator": Object {},
+		    "noParse": undefined,
+		    "parser": Object {
+		      "asset": Object {
+		        "dataUrlCondition": Object {
+		          "maxSize": 8096,
+		        },
+		      },
+		      "javascript": Object {
+		        "exprContextCritical": true,
+		        "exprContextRecursive": true,
+		        "exprContextRegExp": false,
+		        "exprContextRequest": ".",
+		        "strictExportPresence": false,
+		        "strictThisContextOnImports": false,
+		        "unknownContextCritical": true,
+		        "unknownContextRecursive": true,
+		        "unknownContextRegExp": false,
+		        "unknownContextRequest": ".",
+		        "wrappedContextCritical": false,
+		        "wrappedContextRecursive": true,
+		        "wrappedContextRegExp": /\\.\\*/,
+		      },
+		    },
 		    "rules": Array [],
-		    "strictExportPresence": false,
-		    "strictThisContextOnImports": false,
-		    "unknownContextCritical": true,
-		    "unknownContextRecursive": true,
-		    "unknownContextRegExp": false,
-		    "unknownContextRequest": ".",
 		    "unsafeCache": false,
-		    "wrappedContextCritical": false,
-		    "wrappedContextRecursive": true,
-		    "wrappedContextRegExp": /\\.\\*/,
 		  },
 		  "name": undefined,
 		  "node": Object {
@@ -235,7 +246,7 @@ describe("Defaults", () => {
 		    "removeAvailableModules": false,
 		    "removeEmptyChunks": true,
 		    "runtimeChunk": false,
-		    "sideEffects": true,
+		    "sideEffects": "flag",
 		    "splitChunks": Object {
 		      "automaticNameDelimiter": "-",
 		      "cacheGroups": Object {
@@ -307,7 +318,7 @@ describe("Defaults", () => {
 		    "hashSalt": undefined,
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 		    "hotUpdateGlobal": "webpackHotUpdatewebpack",
-		    "hotUpdateMainFilename": "[fullhash].hot-update.json",
+		    "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
 		    "iife": true,
 		    "importFunctionName": "import",
 		    "importMetaName": "import.meta",
@@ -626,6 +637,9 @@ describe("Defaults", () => {
 		-     "realContentHash": false,
 		+     "realContentHash": true,
 		@@ ... @@
+		-     "sideEffects": "flag",
+		+     "sideEffects": true,
+		@@ ... @@
 		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
 		-       "maxAsyncRequests": Infinity,
@@ -687,6 +701,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "realContentHash": false,
 		+     "realContentHash": true,
+		@@ ... @@
+		-     "sideEffects": "flag",
+		+     "sideEffects": true,
 		@@ ... @@
 		-       "enforceSizeThreshold": 30000,
 		-       "hidePathInfo": false,
