@@ -39,7 +39,11 @@ describe("BinaryMiddleware", () => {
 		-11,
 		-0x100,
 		-1.25,
-		SerializerMiddleware.createLazy([5], other),
+		SerializerMiddleware.createLazy([5], other)
+	];
+
+	const itemsWithLazy = [
+		...items,
 		SerializerMiddleware.createLazy(
 			[SerializerMiddleware.createLazy([5], other)],
 			mw
@@ -54,12 +58,17 @@ describe("BinaryMiddleware", () => {
 			mw
 		)
 	];
-	items.push(SerializerMiddleware.createLazy(items.slice(), mw));
-	items.push(SerializerMiddleware.createLazy(items.slice(), other));
+	itemsWithLazy.push(
+		SerializerMiddleware.createLazy(itemsWithLazy.slice(), mw)
+	);
+	itemsWithLazy.push(
+		SerializerMiddleware.createLazy(itemsWithLazy.slice(), other)
+	);
+
 	items.push(undefined);
 
 	const cases = [
-		...items.map(item => [item]),
+		...itemsWithLazy.map(item => [item]),
 		[(true, true)],
 		[false, true],
 		[true, false],
@@ -81,6 +90,7 @@ describe("BinaryMiddleware", () => {
 		cont([false, true, false, true], 133),
 		cont([false, true, false, true], 134),
 		cont([false, true, false, true], 135),
+		cont([false, true, false, true], 10000),
 		cont([true], 135),
 		[null],
 		[null, null],
@@ -93,19 +103,29 @@ describe("BinaryMiddleware", () => {
 		cont([5.5], 20)
 	];
 
-	for (const caseData of cases) {
-		for (const prepend of items) {
-			for (const append of items) {
-				const data = [prepend, ...caseData, append].filter(
-					x => x !== undefined
-				);
-				if (data.length === 0) continue;
-				const key = JSON.stringify(data.map(resolveLazy));
-				it(`should serialize ${key} (${data.length}) correctly`, () => {
-					const serialized = mw.serialize(data, {});
-					const newData = mw.deserialize(serialized, {});
-					expect(newData.map(resolveLazy)).toEqual(data.map(resolveLazy));
-				});
+	for (const c of [1, 100]) {
+		for (const caseData of cases) {
+			for (const prepend of items) {
+				for (const append of items) {
+					if (c > 1 && append !== undefined) continue;
+					let data = [prepend, ...caseData, append].filter(
+						x => x !== undefined
+					);
+					if (data.length * c > 200000) continue;
+					if (data.length === 0) continue;
+					let key = JSON.stringify(data.map(resolveLazy));
+					if (key.length > 100)
+						key = key.slice(0, 50) + " ... " + key.slice(-50);
+					it(`should serialize ${c} x ${key} (${data.length}) correctly`, () => {
+						// process.stderr.write(
+						// 	`${c} x ${key.slice(0, 20)} (${data.length})\n`
+						// );
+						const realData = cont(data, data.length * c);
+						const serialized = mw.serialize(realData, {});
+						const newData = mw.deserialize(serialized, {});
+						expect(newData.map(resolveLazy)).toEqual(realData.map(resolveLazy));
+					});
+				}
 			}
 		}
 	}
