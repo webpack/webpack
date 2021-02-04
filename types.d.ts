@@ -6268,8 +6268,7 @@ declare class MultiCompiler {
 	purgeInputFileSystem(): void;
 	close(callback: CallbackFunction<void>): void;
 }
-declare class MultiStats {
-	constructor(stats: Stats[]);
+declare abstract class MultiStats {
 	stats: Stats[];
 	readonly hash: string;
 	hasErrors(): boolean;
@@ -10449,7 +10448,7 @@ declare interface UpdateHashContextGenerator {
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
 }
-type UsageStateType = 0 | 2 | 3 | 1 | 4;
+type UsageStateType = 0 | 1 | 2 | 3 | 4;
 declare interface UserResolveOptions {
 	/**
 	 * A list of module alias configurations or an object which maps key to value
@@ -11433,7 +11432,6 @@ declare namespace exports {
 		EntryPlugin as SingleEntryPlugin,
 		SourceMapDevToolPlugin,
 		Stats,
-		MultiStats,
 		Template,
 		WatchIgnorePlugin,
 		WebpackError,
@@ -11455,6 +11453,7 @@ declare namespace exports {
 		WebpackPluginInstance,
 		Asset,
 		AssetInfo,
+		MultiStats,
 		ParserState,
 		StatsCompilation
 	};
