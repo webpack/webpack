@@ -6268,7 +6268,8 @@ declare class MultiCompiler {
 	purgeInputFileSystem(): void;
 	close(callback: CallbackFunction<void>): void;
 }
-declare abstract class MultiStats {
+declare class MultiStats {
+	constructor(stats: Stats[]);
 	stats: Stats[];
 	readonly hash: string;
 	hasErrors(): boolean;
@@ -11432,6 +11433,7 @@ declare namespace exports {
 		EntryPlugin as SingleEntryPlugin,
 		SourceMapDevToolPlugin,
 		Stats,
+		MultiStats,
 		Template,
 		WatchIgnorePlugin,
 		WebpackError,
