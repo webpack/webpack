@@ -1646,6 +1646,7 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	renderChunk: SyncWaterfallHook<[Source, RenderContextObject]>;
 	renderMain: SyncWaterfallHook<[Source, RenderContextObject]>;
 	render: SyncWaterfallHook<[Source, RenderContextObject]>;
+	renderStartup: SyncWaterfallHook<[Source, Module, StartupRenderContext]>;
 	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 	useSourceMap: SyncBailHook<[Chunk, RenderContextObject], boolean>;
@@ -9860,6 +9861,7 @@ declare abstract class StackedMap<K, V> {
 	readonly size: number;
 	createChild(): StackedMap<K, V>;
 }
+type StartupRenderContext = RenderContextObject & { inlined: boolean };
 type Statement =
 	| FunctionDeclaration
 	| VariableDeclaration
