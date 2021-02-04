@@ -117,8 +117,14 @@ describe("StatsTestCases", () => {
 			});
 			c.run((err, stats) => {
 				if (err) return done(err);
-				if (/error$/.test(testName)) {
+				// the number at the end is the count of errors occurred in the test case
+				// it's ok if the number is not given
+				if (/error$/.test(testName) || /(error-)(\d+)$/.test(testName)) {
 					expect(stats.hasErrors()).toBe(true);
+					const found = testName.match(/(error-)(\d+)$/);
+					if (found) {
+						expect(stats.getErrors().length).toEqual(parseInt(found[2], 10));
+					}
 				} else if (stats.hasErrors()) {
 					return done(
 						new Error(
