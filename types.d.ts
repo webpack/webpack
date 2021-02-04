@@ -128,6 +128,12 @@ declare class AbstractLibraryPlugin<T> {
 		renderContext: RenderContextObject,
 		libraryContext: LibraryContext<T>
 	): Source;
+	renderStartup(
+		source: Source,
+		module: Module,
+		renderContext: StartupRenderContext,
+		libraryContext: LibraryContext<T>
+	): Source;
 	chunkHash(
 		chunk: Chunk,
 		hash: Hash,
