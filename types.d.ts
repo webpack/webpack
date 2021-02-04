@@ -134,6 +134,7 @@ declare class AbstractLibraryPlugin<T> {
 		chunkHashContext: ChunkHashContext,
 		libraryContext: LibraryContext<T>
 	): void;
+	static COMMON_LIBRARY_NAME_MESSAGE: string;
 }
 declare class AggressiveMergingPlugin {
 	constructor(options?: any);
