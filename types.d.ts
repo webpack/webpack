@@ -10103,7 +10103,7 @@ declare interface StatsOptions {
 	/**
 	 * Add details to errors (like resolving log).
 	 */
-	errorDetails?: boolean;
+	errorDetails?: boolean | "auto";
 
 	/**
 	 * Add internal stack trace to errors.

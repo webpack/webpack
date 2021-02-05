@@ -6943,12 +6943,21 @@ Object {
         "description": "Add details to errors (like resolving log).",
         "multiple": false,
         "path": "stats.errorDetails",
+        "type": "enum",
+        "values": Array [
+          "auto",
+        ],
+      },
+      Object {
+        "description": "Add details to errors (like resolving log).",
+        "multiple": false,
+        "path": "stats.errorDetails",
         "type": "boolean",
       },
     ],
     "description": "Add details to errors (like resolving log).",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "stats-error-stack": Object {
     "configs": Array [
