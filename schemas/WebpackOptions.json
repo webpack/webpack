@@ -3882,7 +3882,14 @@
         },
         "errorDetails": {
           "description": "Add details to errors (like resolving log).",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "enum": ["auto"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "errorStack": {
           "description": "Add internal stack trace to errors.",

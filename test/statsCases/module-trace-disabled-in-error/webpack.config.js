@@ -4,6 +4,7 @@ module.exports = {
 	entry: "./index",
 	stats: {
 		hash: false,
-		moduleTrace: false
+		moduleTrace: false,
+		errorDetails: false
 	}
 };
