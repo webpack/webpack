@@ -67,6 +67,7 @@ describe("Defaults", () => {
 	const getDefaultConfig = config => {
 		config = getNormalizedWebpackOptions(config);
 		applyWebpackOptionsDefaults(config);
+		process.chdir(cwd);
 		return config;
 	};
 
@@ -583,16 +584,21 @@ describe("Defaults", () => {
 	`);
 	});
 
-	const test = (name, options, fn) => {
+	const test = (name, options, fn, before, after) => {
 		it(`should generate the correct defaults from ${name}`, () => {
 			if (!("mode" in options)) options.mode = "none";
-			const result = getDefaultConfig(options);
+			try {
+				if (before) before();
+				const result = getDefaultConfig(options);
 
-			const diff = stripAnsi(
-				jestDiff(baseConfig, result, { expand: false, contextLines: 0 })
-			);
+				const diff = stripAnsi(
+					jestDiff(baseConfig, result, { expand: false, contextLines: 0 })
+				);
 
-			fn(expect(new Diff(diff)), expect(result));
+				fn(expect(new Diff(diff)), expect(result));
+			} finally {
+				if (after) after();
+			}
 		});
 	};
 
@@ -1628,5 +1634,73 @@ describe("Defaults", () => {
 			-   "target": "web",
 			+   "target": "browserslist",
 		`)
+	);
+
+	test(
+		"non-root directory",
+		{
+			cache: {
+				type: "filesystem"
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-   "cache": false,
+			-   "context": "<cwd>",
+			+   "cache": Object {
+			+     "buildDependencies": Object {
+			+       "defaultWebpack": Array [
+			+         "<cwd>/lib/",
+			+       ],
+			+     },
+			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
+			+     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-none",
+			+     "hashAlgorithm": "md4",
+			+     "idleTimeout": 60000,
+			+     "idleTimeoutForInitialStore": 0,
+			+     "name": "default-none",
+			+     "store": "pack",
+			+     "type": "filesystem",
+			+     "version": "",
+			+   },
+			+   "context": "<cwd>/test/fixtures",
+			@@ ... @@
+			-     "unsafeCache": false,
+			+     "unsafeCache": [Function anonymous],
+			@@ ... @@
+			-     "chunkLoadingGlobal": "webpackChunkwebpack",
+			+     "chunkLoadingGlobal": "webpackChunk",
+			@@ ... @@
+			-     "devtoolNamespace": "webpack",
+			+     "devtoolNamespace": "",
+			@@ ... @@
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": "webpackHotUpdate",
+			@@ ... @@
+			-     "path": "<cwd>/dist",
+			+     "path": "<cwd>/test/fixtures/dist",
+			@@ ... @@
+			-     "uniqueName": "webpack",
+			+     "uniqueName": "",
+			@@ ... @@
+			-     "cache": false,
+			+     "cache": true,
+			@@ ... @@
+			-       "<cwd>",
+			+       "<cwd>/test/fixtures",
+			@@ ... @@
+			-     "cache": false,
+			+     "cache": true,
+		`),
+		() => {
+			process.chdir(path.resolve(__dirname, "fixtures"));
+		},
+		() => {
+			process.chdir(cwd);
+		}
 	);
 });
