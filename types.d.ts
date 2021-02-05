@@ -5058,6 +5058,108 @@ declare interface KnownNormalizedStatsOptions {
 	loggingDebug: Function[];
 	loggingTrace: boolean;
 }
+declare interface KnownStatsAsset {
+	type: string;
+	name: string;
+	info: AssetInfo;
+	size: number;
+	emitted: boolean;
+	comparedForEmit: boolean;
+	cached: boolean;
+	related?: StatsAsset[];
+	chunkNames?: (string | number)[];
+	chunkIdHints?: (string | number)[];
+	chunks?: (string | number)[];
+	auxiliaryChunkNames?: (string | number)[];
+	auxiliaryChunks?: (string | number)[];
+	auxiliaryChunkIdHints?: (string | number)[];
+	filteredRelated?: number;
+	isOverSizeLimit?: boolean;
+}
+declare interface KnownStatsChunk {
+	rendered: boolean;
+	initial: boolean;
+	entry: boolean;
+	recorded: boolean;
+	reason?: string;
+	size: number;
+	sizes?: Record<string, number>;
+	names?: string[];
+	idHints?: string[];
+	runtime?: string[];
+	files?: string[];
+	auxiliaryFiles?: string[];
+	hash: string;
+	childrenByOrder?: Record<string, (string | number)[]>;
+	id?: string | number;
+	siblings?: (string | number)[];
+	parents?: (string | number)[];
+	children?: (string | number)[];
+	modules?: StatsModule[];
+	filteredModules?: number;
+	origins?: StatsChunkOrigin[];
+}
+declare interface KnownStatsChunkGroup {
+	name?: string;
+	chunks?: (string | number)[];
+	assets?: { name: string; size?: number }[];
+	filteredAssets?: number;
+	assetsSize?: number;
+	auxiliaryAssets?: { name: string; size?: number }[];
+	filteredAuxiliaryAssets?: number;
+	auxiliaryAssetsSize?: number;
+	children?: { [index: string]: StatsChunkGroup[] };
+	childAssets?: { [index: string]: string[] };
+	isOverSizeLimit?: boolean;
+}
+declare interface KnownStatsChunkOrigin {
+	module?: string;
+	moduleIdentifier?: string;
+	moduleName?: string;
+	loc?: string;
+	request?: string;
+	moduleId?: string | number;
+}
+declare interface KnownStatsCompilation {
+	env?: any;
+	name?: string;
+	hash?: string;
+	version?: string;
+	time?: number;
+	builtAt?: number;
+	needAdditionalPass?: boolean;
+	publicPath?: string;
+	outputPath?: string;
+	assetsByChunkName?: Record<string, string[]>;
+	assets?: StatsAsset[];
+	filteredAssets?: number;
+	chunks?: StatsChunk[];
+	modules?: StatsModule[];
+	filteredModules?: number;
+	entrypoints?: Record<string, StatsChunkGroup>;
+	namedChunkGroups?: Record<string, StatsChunkGroup>;
+	errors?: StatsError[];
+	errorsCount?: number;
+	warnings?: StatsError[];
+	warningsCount?: number;
+	children?: StatsCompilation[];
+	logging?: Record<string, StatsLogging>;
+}
+declare interface KnownStatsError {
+	message: string;
+	chunkName?: string;
+	chunkEntry?: boolean;
+	chunkInitial?: boolean;
+	file?: string;
+	moduleIdentifier?: string;
+	moduleName?: string;
+	loc?: string;
+	chunkId?: string | number;
+	moduleId?: string | number;
+	moduleTrace?: any;
+	details?: any;
+	stack?: any;
+}
 declare interface KnownStatsFactoryContext {
 	type: string;
 	makePathsRelative?: (arg0: string) => string;
@@ -5069,14 +5171,87 @@ declare interface KnownStatsFactoryContext {
 	cachedGetErrors?: (arg0: Compilation) => WebpackError[];
 	cachedGetWarnings?: (arg0: Compilation) => WebpackError[];
 }
+declare interface KnownStatsLogging {
+	entries: StatsLoggingEntry[];
+	filteredEntries: number;
+	debug: boolean;
+}
+declare interface KnownStatsLoggingEntry {
+	type: string;
+	message: string;
+	trace?: string[];
+	children?: StatsLoggingEntry[];
+	args?: any[];
+	time?: number;
+}
+declare interface KnownStatsModule {
+	type?: string;
+	moduleType?: string;
+	layer?: string;
+	identifier?: string;
+	name?: string;
+	nameForCondition?: string;
+	index?: number;
+	preOrderIndex?: number;
+	index2?: number;
+	postOrderIndex?: number;
+	size?: number;
+	sizes?: { [index: string]: number };
+	cacheable?: boolean;
+	built?: boolean;
+	codeGenerated?: boolean;
+	cached?: boolean;
+	optional?: boolean;
+	orphan?: boolean;
+	id?: string | number;
+	issuerId?: string | number;
+	chunks?: (string | number)[];
+	assets?: (string | number)[];
+	dependent?: boolean;
+	issuer?: string;
+	issuerName?: string;
+	issuerPath?: StatsModuleIssuer[];
+	failed?: boolean;
+	errors?: number;
+	warnings?: number;
+	profile?: StatsProfile;
+	reasons?: StatsModuleReason[];
+	usedExports?: boolean | string[];
+	providedExports?: string[];
+	optimizationBailout?: string[];
+	depth?: number;
+	modules?: StatsModule[];
+	filteredModules?: number;
+	source?: string | Buffer;
+}
+declare interface KnownStatsModuleIssuer {
+	identifier?: string;
+	name?: string;
+	id?: string | number;
+	profile?: StatsProfile;
+}
+declare interface KnownStatsModuleReason {
+	moduleIdentifier?: string;
+	module?: string;
+	moduleName?: string;
+	resolvedModuleIdentifier?: string;
+	resolvedModule?: string;
+	type?: string;
+	active: boolean;
+	explanation?: string;
+	userRequest?: string;
+	loc?: string;
+	moduleId?: string | number;
+	resolvedModuleId?: string | number;
+}
 declare interface KnownStatsPrinterContext {
 	type?: string;
-	compilation?: Object;
-	chunkGroup?: Object;
-	asset?: Object;
-	module?: Object;
-	chunk?: Object;
-	moduleReason?: Object;
+	compilation?: StatsCompilation;
+	chunkGroup?: StatsChunkGroup;
+	asset?: StatsAsset;
+	module?: StatsModule;
+	chunk?: StatsChunk;
+	moduleReason?: StatsModuleReason;
 	bold?: (str: string) => string;
 	yellow?: (str: string) => string;
 	red?: (str: string) => string;
@@ -5094,6 +5269,18 @@ declare interface KnownStatsPrinterContext {
 	formatFlag?: (flag: string) => string;
 	formatTime?: (time: number, boldQuantity?: boolean) => string;
 	chunkGroupKind?: string;
+}
+declare interface KnownStatsProfile {
+	total: number;
+	resolving: number;
+	restoring: number;
+	building: number;
+	integration: number;
+	storing: number;
+	additionalResolving: number;
+	additionalIntegration: number;
+	factory: number;
+	dependencies: number;
 }
 declare class LazySet<T> {
 	constructor(iterable?: Iterable<T>);
@@ -6086,17 +6273,7 @@ declare abstract class MultiStats {
 	readonly hash: string;
 	hasErrors(): boolean;
 	hasWarnings(): boolean;
-	toJson(
-		options?: any
-	): {
-		children: any[];
-		version: any;
-		hash: string;
-		errors: any[];
-		warnings: any[];
-		errorsCount: number;
-		warningsCount: number;
-	};
+	toJson(options?: any): StatsCompilation;
 	toString(options?: any): string;
 }
 declare abstract class MultiWatching {
@@ -9713,9 +9890,15 @@ declare class Stats {
 	readonly endTime: any;
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
-	toJson(options?: any): any;
+	toJson(options?: string | StatsOptions): StatsCompilation;
 	toString(options?: any): string;
 }
+type StatsAsset = KnownStatsAsset & Record<string, any>;
+type StatsChunk = KnownStatsChunk & Record<string, any>;
+type StatsChunkGroup = KnownStatsChunkGroup & Record<string, any>;
+type StatsChunkOrigin = KnownStatsChunkOrigin & Record<string, any>;
+type StatsCompilation = KnownStatsCompilation & Record<string, any>;
+type StatsError = KnownStatsError & Record<string, any>;
 declare abstract class StatsFactory {
 	hooks: Readonly<{
 		extract: HookMap<SyncBailHook<[Object, any, StatsFactoryContext], any>>;
@@ -9755,6 +9938,11 @@ declare abstract class StatsFactory {
 	): any;
 }
 type StatsFactoryContext = KnownStatsFactoryContext & Record<string, any>;
+type StatsLogging = KnownStatsLogging & Record<string, any>;
+type StatsLoggingEntry = KnownStatsLoggingEntry & Record<string, any>;
+type StatsModule = KnownStatsModule & Record<string, any>;
+type StatsModuleIssuer = KnownStatsModuleIssuer & Record<string, any>;
+type StatsModuleReason = KnownStatsModuleReason & Record<string, any>;
 
 /**
  * Stats options object.
@@ -10185,6 +10373,7 @@ declare abstract class StatsPrinter {
 	print(type: string, object: Object, baseContext?: Object): string;
 }
 type StatsPrinterContext = KnownStatsPrinterContext & Record<string, any>;
+type StatsProfile = KnownStatsProfile & Record<string, any>;
 type StatsValue =
 	| boolean
 	| "none"
@@ -11264,7 +11453,8 @@ declare namespace exports {
 		WebpackPluginInstance,
 		Asset,
 		AssetInfo,
-		ParserState
+		ParserState,
+		StatsCompilation
 	};
 }
 
