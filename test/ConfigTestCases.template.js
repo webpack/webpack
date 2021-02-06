@@ -323,7 +323,21 @@ const describeCases = config => {
 														options
 													),
 													importScripts: url => {
-														_require(path.dirname(p), options, `./${url}`);
+														let importPathDir;
+														let urlTestMatch = /https:\/\/{0,1}test.cases\/path\//gm;
+														if (url.match(urlTestMatch)) {
+															importPathDir = outputDirectory.replace(
+																urlTestMatch,
+																""
+															);
+														} else {
+															importPathDir = p;
+														}
+														_require(
+															path.dirname(importPathDir),
+															options,
+															`./${url}`
+														);
 													},
 													module: m,
 													exports: m.exports,
