@@ -24,6 +24,13 @@ it("should be able to write properties", () => {
 	expect(data.nested.array3[1]).toBe("ok");
 	expect(data.nested.array4[10]).toBe("ok");
 	expect(data.nested.array5[0]).toBe("ok");
+	// nested access and length
+	expect(data.nested.array6[1]).toBe("ok");
+	expect(data.nested.array6.length).toBe(3);
+	expect(data.nested.array7[10]).toBe("ok");
+	expect(data.nested.array7.length).toBe(11);
+	expect(data.nested.array8[0]).toBe("ok");
+	expect(data.nested.array8.length).toBe(11);
 	// object methods
 	expect(data.nested.object.hasOwnProperty("test")).toBe(true);
 	// unknown object property
