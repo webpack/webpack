@@ -1,0 +1,129 @@
+name: Test
+
+# cspell:word Ignus
+# cspell:word eslintcache
+
+on:
+  push:
+    branches:
+      - master
+      - dev-1
+  pull_request:
+    branches:
+      - master
+      - dev-1
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+      - run: yarn --frozen-lockfile
+      - uses: actions/cache@v1
+        with:
+          path: .eslintcache
+          key: lint-${{ env.GITHUB_SHA }}
+          restore-keys: lint-
+      - run: yarn lint
+  basic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+      - run: yarn --frozen-lockfile
+      - run: yarn link --frozen-lockfile || true
+      - run: yarn link webpack --frozen-lockfile
+      - run: yarn test:basic --ci --reporters=default --reporters=jest-junit
+      - uses: codecov/codecov-action@v1
+        with:
+          flags: basic
+          functionalities: gcov
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+      - run: yarn --frozen-lockfile
+      - run: yarn link --frozen-lockfile || true
+      - run: yarn link webpack --frozen-lockfile
+      - uses: actions/cache@v1
+        with:
+          path: .jest-cache
+          key: jest-unit-${{ env.GITHUB_SHA }}
+          restore-keys: jest-unit-
+      - run: yarn cover:unit --ci --cacheDirectory .jest-cache --reporters=default --reporters=jest-junit
+      - uses: codecov/codecov-action@v1
+        with:
+          flags: unit
+          functionalities: gcov
+  integration:
+    needs: basic
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [10.x, 14.x]
+        include:
+          - os: ubuntu-latest
+            node-version: 15.x
+          - os: ubuntu-latest
+            node-version: 12.x
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
+      - run: yarn --frozen-lockfile
+      - run: yarn link --frozen-lockfile || true
+      - run: yarn link webpack --frozen-lockfile
+      - uses: actions/cache@v1
+        with:
+          path: .jest-cache
+          key: jest-integration-${{ env.GITHUB_SHA }}
+          restore-keys: jest-integration-
+      - run: yarn cover:integration --ci --cacheDirectory .jest-cache --reporters=default --reporters=jest-junit
+      - if: ${{ matrix.os != 'windows-latest' }}
+        uses: codecov/codecov-action@v1
+        with:
+          flags: integration
+          functionalities: gcov
