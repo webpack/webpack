@@ -63,7 +63,7 @@ module.exports = {
 # dist/dll.js
 
 ```javascript
-var dll_86cc3668cb72d94ce910;dll_86cc3668cb72d94ce910 =
+var dll_d0df219eb80cbacc6873;dll_d0df219eb80cbacc6873 =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -97,9 +97,9 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "a": () => /* reexport */ a,
-  "b": () => /* reexport */ b,
-  "c": () => /* reexport */ cjs.c
+  "a": () => (/* reexport */ a),
+  "b": () => (/* reexport */ b),
+  "c": () => (/* reexport */ cjs.c)
 });
 
 ;// CONCATENATED MODULE: ./b.js
@@ -182,7 +182,7 @@ exports.c = "c";
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
@@ -213,7 +213,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_86cc3668cb72d94ce910","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+{"name":"dll_d0df219eb80cbacc6873","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -221,28 +221,28 @@ exports.c = "c";
 ## Unoptimized
 
 ```
-asset dll.js 4.58 KiB [emitted] (name: dll)
-chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+asset dll.js 4.6 KiB [emitted] (name: dll)
+chunk (runtime: dll) dll.js (dll) 222 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > dll
-  runtime modules 668 bytes 3 modules
-  dependent modules 199 bytes [dependent] 2 modules
+  runtime modules 670 bytes 3 modules
+  dependent modules 210 bytes [dependent] 2 modules
   dll dll 12 bytes [built] [code generated]
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset dll.js 679 bytes [emitted] [minimized] (name: dll)
-chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+chunk (runtime: dll) dll.js (dll) 222 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > dll
-  runtime modules 668 bytes 3 modules
-  dependent modules 199 bytes [dependent] 2 modules
+  runtime modules 670 bytes 3 modules
+  dependent modules 210 bytes [dependent] 2 modules
   dll dll 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```

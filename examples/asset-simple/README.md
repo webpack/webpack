@@ -210,14 +210,14 @@ module.exports = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDo...vc3ZnPgo="
 
 ```
 asset images/89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-asset output.js 13 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 9.58 KiB (javascript) 14.6 KiB (asset) 306 bytes (runtime) [entry] [rendered]
+asset output.js 13.1 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 9.61 KiB (javascript) 14.6 KiB (asset) 306 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 8.86 KiB (javascript) 14.6 KiB (asset) [dependent] 3 modules
   runtime modules 306 bytes 2 modules
-  ./example.js 742 bytes [built] [code generated]
+  ./example.js 772 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```

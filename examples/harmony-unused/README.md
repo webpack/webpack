@@ -87,9 +87,9 @@ _library__WEBPACK_IMPORTED_MODULE_1__.reexportedMultiply(1, 2);
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "add": () => /* binding */ add,
-/* harmony export */   "multiply": () => /* binding */ multiply,
-/* harmony export */   "list": () => /* binding */ list
+/* harmony export */   "add": () => (/* binding */ add),
+/* harmony export */   "multiply": () => (/* binding */ multiply),
+/* harmony export */   "list": () => (/* binding */ list)
 /* harmony export */ });
 function add() {
 	var sum = 0, i = 0, args = arguments, l = args.length;
@@ -129,11 +129,11 @@ function list() {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => /* reexport safe */ _abc__WEBPACK_IMPORTED_MODULE_0__.a,
-/* harmony export */   "b": () => /* reexport safe */ _abc__WEBPACK_IMPORTED_MODULE_0__.b,
-/* harmony export */   "c": () => /* reexport safe */ _abc__WEBPACK_IMPORTED_MODULE_0__.c,
-/* harmony export */   "reexportedAdd": () => /* reexport safe */ _math__WEBPACK_IMPORTED_MODULE_1__.add,
-/* harmony export */   "reexportedMultiply": () => /* reexport safe */ _math__WEBPACK_IMPORTED_MODULE_1__.multiply
+/* harmony export */   "a": () => (/* reexport safe */ _abc__WEBPACK_IMPORTED_MODULE_0__.a),
+/* harmony export */   "b": () => (/* reexport safe */ _abc__WEBPACK_IMPORTED_MODULE_0__.b),
+/* harmony export */   "c": () => (/* reexport safe */ _abc__WEBPACK_IMPORTED_MODULE_0__.c),
+/* harmony export */   "reexportedAdd": () => (/* reexport safe */ _math__WEBPACK_IMPORTED_MODULE_1__.add),
+/* harmony export */   "reexportedMultiply": () => (/* reexport safe */ _math__WEBPACK_IMPORTED_MODULE_1__.multiply)
 /* harmony export */ });
 /* harmony import */ var _abc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abc */ 3);
 /* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 1);
@@ -155,9 +155,9 @@ __webpack_require__.r(__webpack_exports__);
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => /* binding */ a,
-/* harmony export */   "b": () => /* binding */ b,
-/* harmony export */   "c": () => /* binding */ c
+/* harmony export */   "a": () => (/* binding */ a),
+/* harmony export */   "b": () => (/* binding */ b),
+/* harmony export */   "c": () => (/* binding */ c)
 /* harmony export */ });
 function a() { console.log("a"); }
 function b() { console.log("b"); }
@@ -210,7 +210,7 @@ function c() { console.log("c"); }
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
@@ -249,29 +249,29 @@ function c() { console.log("c"); }
 ## Unoptimized
 
 ```
-asset output.js 7.06 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 698 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+asset output.js 7.11 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 726 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  dependent modules 584 bytes [dependent] 3 modules
-  runtime modules 668 bytes 3 modules
-  ./example.js 114 bytes [built] [code generated]
+  dependent modules 607 bytes [dependent] 3 modules
+  runtime modules 670 bytes 3 modules
+  ./example.js 119 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset output.js 522 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 461 bytes (javascript) 394 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 485 bytes (javascript) 396 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 394 bytes 2 modules
-  dependent modules 347 bytes [dependent] 1 module
-  ./example.js 114 bytes [built] [code generated]
+  runtime modules 396 bytes 2 modules
+  dependent modules 366 bytes [dependent] 1 module
+  ./example.js 119 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```

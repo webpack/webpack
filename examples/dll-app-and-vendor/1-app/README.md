@@ -71,7 +71,7 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 /***/ }),
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_d696c7b4f72a4a70f39b ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_b0e8362f3cdc1dea6400 ***!
   \******************************************************************************************************/
 /*! namespace exports */
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
@@ -79,12 +79,12 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_d696c7b4f72a4a70f39b */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_b0e8362f3cdc1dea6400 */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_d696c7b4f72a4a70f39b" ***!
+  !*** external "vendor_lib_b0e8362f3cdc1dea6400" ***!
   \**************************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -92,7 +92,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_lib_d696c7b4f72a4
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_d696c7b4f72a4a70f39b;
+module.exports = vendor_lib_b0e8362f3cdc1dea6400;
 
 /***/ })
 /******/ 	]);
@@ -157,29 +157,29 @@ module.exports = vendor_lib_d696c7b4f72a4a70f39b;
 
 ```
 asset app.js 3.52 KiB [emitted] (name: main)
-chunk (runtime: main) app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) app.js (main) 182 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules
   runtime modules 274 bytes 1 module
-  ./example-app.js 94 bytes [built] [code generated]
+  ./example-app.js 98 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example-app main
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset app.js 319 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
+chunk (runtime: main) app.js (main) 182 bytes [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules
-  ./example-app.js 94 bytes [built] [code generated]
+  ./example-app.js 98 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example-app main
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 <!-- @TODO:

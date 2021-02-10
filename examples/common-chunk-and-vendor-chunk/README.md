@@ -216,11 +216,11 @@ module.exports = "utility1";
 /******/ 	
 /******/ 	// the startup function
 /******/ 	// It's empty as some runtime module handles the default behavior
-/******/ 	__webpack_require__.x = x => {}
+/******/ 	__webpack_require__.x = x => {};
 /************************************************************************/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -319,7 +319,7 @@ module.exports = "utility1";
 
 ``` js
 /******/ 	// run startup
-/******/ 	return __webpack_require__.x();
+/******/ 	__webpack_require__.x();
 /******/ })()
 ;
 ```
@@ -383,11 +383,11 @@ module.exports = "pageB";
 /******/ 	
 /******/ 	// the startup function
 /******/ 	// It's empty as some runtime module handles the default behavior
-/******/ 	__webpack_require__.x = x => {}
+/******/ 	__webpack_require__.x = x => {};
 /************************************************************************/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -486,7 +486,7 @@ module.exports = "pageB";
 
 ``` js
 /******/ 	// run startup
-/******/ 	return __webpack_require__.x();
+/******/ 	__webpack_require__.x();
 /******/ })()
 ;
 ```
@@ -548,11 +548,11 @@ module.exports = "pageC";
 /******/ 	
 /******/ 	// the startup function
 /******/ 	// It's empty as some runtime module handles the default behavior
-/******/ 	__webpack_require__.x = x => {}
+/******/ 	__webpack_require__.x = x => {};
 /************************************************************************/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/jsonp chunk loading */
@@ -651,7 +651,7 @@ module.exports = "pageC";
 
 ``` js
 /******/ 	// run startup
-/******/ 	return __webpack_require__.x();
+/******/ 	__webpack_require__.x();
 /******/ })()
 ;
 ```
@@ -668,7 +668,7 @@ asset pageA.js 6 KiB [emitted] (name: pageA)
 asset pageB.js 5.73 KiB [emitted] (name: pageB)
 asset pageC.js 5.67 KiB [emitted] (name: pageC)
 asset vendor.js 737 bytes [emitted] (name: vendor) (id hint: vendor)
-Entrypoint pageA 7.09 KiB = vendor.js 737 bytes commons-utility2_js.js 384 bytes pageA.js 6 KiB
+Entrypoint pageA 7.1 KiB = vendor.js 737 bytes commons-utility2_js.js 384 bytes pageA.js 6 KiB
 Entrypoint pageB 7.2 KiB = vendor.js 737 bytes commons-utility2_js.js 384 bytes commons-utility3_js.js 384 bytes pageB.js 5.73 KiB
 Entrypoint pageC 6.42 KiB = commons-utility2_js.js 384 bytes commons-utility3_js.js 384 bytes pageC.js 5.67 KiB
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
@@ -689,25 +689,25 @@ chunk (runtime: pageB, pageC) commons-utility3_js.js (id hint: commons) 28 bytes
     cjs require ./utility3 ./pageB.js 3:15-36
     cjs require ./utility3 ./pageC.js 2:15-36
     cjs self exports reference ./utility3.js 1:0-14
-chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.6 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 170 bytes (javascript) 2.6 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
   runtime modules 2.6 KiB 2 modules
   dependent modules 28 bytes [dependent] 1 module
-  ./pageA.js 137 bytes [built] [code generated]
+  ./pageA.js 142 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageA.js 5:0-14
     entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.62 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 142 bytes (javascript) 2.63 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 2.62 KiB 2 modules
-  ./pageB.js 137 bytes [built] [code generated]
+  runtime modules 2.63 KiB 2 modules
+  ./pageB.js 142 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageB.js 5:0-14
     entry ./pageB pageB
-chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.61 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageC) pageC.js (pageC) 105 bytes (javascript) 2.62 KiB (runtime) [entry] [rendered]
   > ./pageC pageC
-  runtime modules 2.61 KiB 2 modules
-  ./pageC.js 102 bytes [built] [code generated]
+  runtime modules 2.62 KiB 2 modules
+  ./pageC.js 105 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageC.js 4:0-14
     entry ./pageC pageC
@@ -722,7 +722,7 @@ chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [ini
     [used exports unknown]
     cjs self exports reference ./node_modules/vendor2.js 1:0-14
     cjs require vendor2 ./pageB.js 1:14-32
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
@@ -756,25 +756,25 @@ chunk (runtime: pageB, pageC) commons-utility3_js.js (id hint: commons) 28 bytes
     cjs require ./utility3 ./pageB.js 3:15-36
     cjs require ./utility3 ./pageC.js 2:15-36
     cjs self exports reference ./utility3.js 1:0-14
-chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.6 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 170 bytes (javascript) 2.61 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 2.6 KiB 2 modules
+  runtime modules 2.61 KiB 2 modules
   dependent modules 28 bytes [dependent] 1 module
-  ./pageA.js 137 bytes [built] [code generated]
+  ./pageA.js 142 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageA.js 5:0-14
     entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.63 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 142 bytes (javascript) 2.63 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
   runtime modules 2.63 KiB 2 modules
-  ./pageB.js 137 bytes [built] [code generated]
+  ./pageB.js 142 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageB.js 5:0-14
     entry ./pageB pageB
-chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.62 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageC) pageC.js (pageC) 105 bytes (javascript) 2.62 KiB (runtime) [entry] [rendered]
   > ./pageC pageC
   runtime modules 2.62 KiB 2 modules
-  ./pageC.js 102 bytes [built] [code generated]
+  ./pageC.js 105 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageC.js 4:0-14
     entry ./pageC pageC
@@ -789,5 +789,5 @@ chunk (runtime: pageA, pageB) vendor.js (vendor) (id hint: vendor) 54 bytes [ini
     [used exports unknown]
     cjs self exports reference ./node_modules/vendor2.js 1:0-14
     cjs require vendor2 ./pageB.js 1:14-32
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```

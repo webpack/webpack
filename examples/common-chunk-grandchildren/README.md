@@ -165,7 +165,7 @@ module.exports = {
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
@@ -173,7 +173,7 @@ module.exports = {
 /******/ 		var inProgress = {};
 /******/ 		// data-webpack is not used as build has no uniqueName
 /******/ 		// loadScript function to load a script via script tag
-/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
 /******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
@@ -203,7 +203,7 @@ module.exports = {
 /******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			;
@@ -266,7 +266,7 @@ module.exports = {
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -454,44 +454,44 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 9.1 KiB [emitted] (name: main)
-asset 588.output.js 736 bytes [emitted]
-asset 366.output.js 558 bytes [emitted]
-asset 145.output.js 552 bytes [emitted]
-asset 421.output.js 434 bytes [emitted]
-chunk (runtime: main) 145.output.js 136 bytes [rendered]
+asset output.js 9.13 KiB [emitted] (name: main)
+asset 588.output.js 743 bytes [emitted]
+asset 366.output.js 564 bytes [emitted]
+asset 145.output.js 558 bytes [emitted]
+asset 421.output.js 437 bytes [emitted]
+chunk (runtime: main) 145.output.js 142 bytes [rendered]
   > ./pageB.js 3:1-6:3
-  ./pageC.js 136 bytes [built] [code generated]
+  ./pageC.js 142 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./pageC ./pageB.js 4:15-33
     cjs self exports reference ./pageC.js 3:0-14
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 233 bytes (javascript) 4.99 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.97 KiB 6 modules
-  ./example.js 220 bytes [built] [code generated]
+  runtime modules 4.99 KiB 6 modules
+  ./example.js 233 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk (runtime: main) 366.output.js 136 bytes [rendered]
+chunk (runtime: main) 366.output.js 142 bytes [rendered]
   > ./example.js 3:1-6:3
-  ./pageA.js 136 bytes [built] [code generated]
+  ./pageA.js 142 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./pageA ./example.js 4:15-33
     cjs self exports reference ./pageA.js 3:0-14
-chunk (runtime: main) 421.output.js 69 bytes [rendered] split chunk (cache group: default)
+chunk (runtime: main) 421.output.js 72 bytes [rendered] split chunk (cache group: default)
   > ./example.js 3:1-6:3
   > ./pageB.js 3:1-6:3
-  ./reusableComponent.js 69 bytes [built] [code generated]
+  ./reusableComponent.js 72 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./reusableComponent ./pageA.js 1:24-54
     cjs require ./reusableComponent ./pageC.js 1:24-54
     cjs self exports reference ./reusableComponent.js 1:0-14
-chunk (runtime: main) 588.output.js 133 bytes [rendered]
+chunk (runtime: main) 588.output.js 140 bytes [rendered]
   > ./example.js 7:1-10:3
-  ./pageB.js 133 bytes [built] [code generated]
+  ./pageB.js 140 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./pageB ./example.js 8:15-33
     cjs self exports reference ./pageB.js 1:0-14
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
@@ -502,37 +502,37 @@ asset 588.output.js 198 bytes [emitted] [minimized]
 asset 145.output.js 134 bytes [emitted] [minimized]
 asset 366.output.js 134 bytes [emitted] [minimized]
 asset 421.output.js 123 bytes [emitted] [minimized]
-chunk (runtime: main) 145.output.js 136 bytes [rendered]
+chunk (runtime: main) 145.output.js 142 bytes [rendered]
   > ./pageB.js 3:1-6:3
-  ./pageC.js 136 bytes [built] [code generated]
+  ./pageC.js 142 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./pageC ./pageB.js 4:15-33
     cjs self exports reference ./pageC.js 3:0-14
-chunk (runtime: main) output.js (main) 220 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 233 bytes (javascript) 4.99 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.97 KiB 6 modules
-  ./example.js 220 bytes [built] [code generated]
+  runtime modules 4.99 KiB 6 modules
+  ./example.js 233 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-chunk (runtime: main) 366.output.js 136 bytes [rendered]
+chunk (runtime: main) 366.output.js 142 bytes [rendered]
   > ./example.js 3:1-6:3
-  ./pageA.js 136 bytes [built] [code generated]
+  ./pageA.js 142 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./pageA ./example.js 4:15-33
     cjs self exports reference ./pageA.js 3:0-14
-chunk (runtime: main) 421.output.js 69 bytes [rendered] split chunk (cache group: default)
+chunk (runtime: main) 421.output.js 72 bytes [rendered] split chunk (cache group: default)
   > ./example.js 3:1-6:3
   > ./pageB.js 3:1-6:3
-  ./reusableComponent.js 69 bytes [built] [code generated]
+  ./reusableComponent.js 72 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./reusableComponent ./pageA.js 1:24-54
     cjs require ./reusableComponent ./pageC.js 1:24-54
     cjs self exports reference ./reusableComponent.js 1:0-14
-chunk (runtime: main) 588.output.js 133 bytes [rendered]
+chunk (runtime: main) 588.output.js 140 bytes [rendered]
   > ./example.js 7:1-10:3
-  ./pageB.js 133 bytes [built] [code generated]
+  ./pageB.js 140 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./pageB ./example.js 8:15-33
     cjs self exports reference ./pageB.js 1:0-14
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```

@@ -79,7 +79,7 @@ function webpackAsyncContext(req) {
 		return __webpack_require__(id);
 	});
 }
-webpackAsyncContext.keys = () => Object.keys(map);
+webpackAsyncContext.keys = () => (Object.keys(map));
 webpackAsyncContext.id = 1;
 module.exports = webpackAsyncContext;
 
@@ -154,7 +154,7 @@ module.exports = webpackAsyncContext;
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
@@ -162,7 +162,7 @@ module.exports = webpackAsyncContext;
 /******/ 		var inProgress = {};
 /******/ 		// data-webpack is not used as build has no uniqueName
 /******/ 		// loadScript function to load a script via script tag
-/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
 /******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
@@ -192,7 +192,7 @@ module.exports = webpackAsyncContext;
 /******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			;
@@ -266,7 +266,7 @@ module.exports = webpackAsyncContext;
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -354,78 +354,78 @@ __webpack_require__(1)("./ba" + createContextVar).then(function(bar) {
 ## Unoptimized
 
 ```
-asset output.js 11.2 KiB [emitted] (name: main)
-asset 548.output.js 856 bytes [emitted] (name: chunk-bar-baz2)
-asset 791.output.js 856 bytes [emitted] (name: chunk-bar-baz0)
-asset 930.output.js 856 bytes [emitted] (name: chunk-foo)
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
+asset output.js 11.3 KiB [emitted] (name: main)
+asset 548.output.js 861 bytes [emitted] (name: chunk-bar-baz2)
+asset 791.output.js 861 bytes [emitted] (name: chunk-bar-baz0)
+asset 930.output.js 861 bytes [emitted] (name: chunk-foo)
+chunk (runtime: main) output.js (main) 580 bytes (javascript) 5.56 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.54 KiB 8 modules
+  runtime modules 5.56 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
-  ./example.js 405 bytes [built] [code generated]
+  ./example.js 420 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk (runtime: main) 548.output.js (chunk-bar-baz2) 38 bytes [rendered]
+chunk (runtime: main) 548.output.js (chunk-bar-baz2) 41 bytes [rendered]
   > ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
   > ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
-  ./templates/baz.js 38 bytes [optional] [built] [code generated]
+  ./templates/baz.js 41 bytes [optional] [built] [code generated]
     [exports: default]
     [used exports unknown]
     context element ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
     context element ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
-chunk (runtime: main) 791.output.js (chunk-bar-baz0) 38 bytes [rendered]
+chunk (runtime: main) 791.output.js (chunk-bar-baz0) 41 bytes [rendered]
   > ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
   > ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
-  ./templates/bar.js 38 bytes [optional] [built] [code generated]
+  ./templates/bar.js 41 bytes [optional] [built] [code generated]
     [exports: default]
     [used exports unknown]
     context element ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
     context element ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
-chunk (runtime: main) 930.output.js (chunk-foo) 38 bytes [rendered]
+chunk (runtime: main) 930.output.js (chunk-foo) 41 bytes [rendered]
   > ./templates/foo ./example.js 1:0-62
   > ./example.js 5:0-8:16
-  ./templates/foo.js 38 bytes [built] [code generated]
+  ./templates/foo.js 41 bytes [built] [code generated]
     [exports: default]
     [used exports unknown]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.44 KiB [emitted] [minimized] (name: main)
+asset output.js 2.45 KiB [emitted] [minimized] (name: main)
 asset 548.output.js 130 bytes [emitted] [minimized] (name: chunk-bar-baz2)
 asset 791.output.js 130 bytes [emitted] [minimized] (name: chunk-bar-baz0)
 asset 930.output.js 130 bytes [emitted] [minimized] (name: chunk-foo)
-chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 580 bytes (javascript) 5.56 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.54 KiB 8 modules
+  runtime modules 5.56 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
-  ./example.js 405 bytes [built] [code generated]
+  ./example.js 420 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-chunk (runtime: main) 548.output.js (chunk-bar-baz2) 38 bytes [rendered]
+chunk (runtime: main) 548.output.js (chunk-bar-baz2) 41 bytes [rendered]
   > ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
   > ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
-  ./templates/baz.js 38 bytes [optional] [built] [code generated]
+  ./templates/baz.js 41 bytes [optional] [built] [code generated]
     [exports: default]
     context element ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
     context element ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
-chunk (runtime: main) 791.output.js (chunk-bar-baz0) 38 bytes [rendered]
+chunk (runtime: main) 791.output.js (chunk-bar-baz0) 41 bytes [rendered]
   > ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
   > ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
-  ./templates/bar.js 38 bytes [optional] [built] [code generated]
+  ./templates/bar.js 41 bytes [optional] [built] [code generated]
     [exports: default]
     context element ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
     context element ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
-chunk (runtime: main) 930.output.js (chunk-foo) 38 bytes [rendered]
+chunk (runtime: main) 930.output.js (chunk-foo) 41 bytes [rendered]
   > ./templates/foo ./example.js 1:0-62
   > ./example.js 5:0-8:16
-  ./templates/foo.js 38 bytes [built] [code generated]
+  ./templates/foo.js 41 bytes [built] [code generated]
     [exports: default]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```

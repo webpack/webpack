@@ -35,7 +35,7 @@ module.exports = {
 # dist/MyDll.alpha.js
 
 ```javascript
-var alpha_bb584d575dc33696660b;alpha_bb584d575dc33696660b =
+var alpha_7d7dd0173e3eb870cc80;alpha_7d7dd0173e3eb870cc80 =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -132,7 +132,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ```javascript
-{"name":"alpha_bb584d575dc33696660b","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
+{"name":"alpha_7d7dd0173e3eb870cc80","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
 ```
 
 # Info
@@ -156,7 +156,7 @@ chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
@@ -176,5 +176,5 @@ chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
   dll beta 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```

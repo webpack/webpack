@@ -44,9 +44,9 @@ return /******/ (() => { // webpackBootstrap
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "value": () => /* binding */ value,
-/* harmony export */   "increment": () => /* binding */ increment,
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "value": () => (/* binding */ value),
+/* harmony export */   "increment": () => (/* binding */ increment),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var value = 0;
 function increment() {
@@ -101,7 +101,7 @@ function increment() {
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
@@ -135,28 +135,28 @@ function increment() {
 ## Unoptimized
 
 ```
-asset MyLibrary.umd.js 3.97 KiB [emitted] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+asset MyLibrary.umd.js 3.98 KiB [emitted] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 97 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 668 bytes 3 modules
-  ./example.js 92 bytes [built] [code generated]
+  runtime modules 670 bytes 3 modules
+  ./example.js 97 bytes [built] [code generated]
     [exports: default, increment, value]
     [used exports unknown]
     entry ./example main
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset MyLibrary.umd.js 817 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) MyLibrary.umd.js (main) 97 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 668 bytes 3 modules
-  ./example.js 92 bytes [built] [code generated]
+  runtime modules 670 bytes 3 modules
+  ./example.js 97 bytes [built] [code generated]
     [exports: default, increment, value]
     entry ./example main
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```

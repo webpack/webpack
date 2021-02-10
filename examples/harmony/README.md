@@ -60,7 +60,7 @@ __webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(__webpac
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "increment": () => /* binding */ increment
+/* harmony export */   "increment": () => (/* binding */ increment)
 /* harmony export */ });
 /* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */ 2);
 
@@ -82,7 +82,7 @@ function increment(val) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "add": () => /* binding */ add
+/* harmony export */   "add": () => (/* binding */ add)
 /* harmony export */ });
 function add() {
 	var sum = 0, i = 0, args = arguments, l = args.length;
@@ -164,7 +164,7 @@ function add() {
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
@@ -172,7 +172,7 @@ function add() {
 /******/ 		var inProgress = {};
 /******/ 		// data-webpack is not used as build has no uniqueName
 /******/ 		// loadScript function to load a script via script tag
-/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
 /******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
@@ -202,7 +202,7 @@ function add() {
 /******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			;
@@ -276,7 +276,7 @@ function add() {
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -344,23 +344,23 @@ function add() {
 ## Unoptimized
 
 ```
-asset output.js 11.9 KiB [emitted] (name: main)
-asset 35.output.js 772 bytes [emitted]
-chunk (runtime: main) 35.output.js 24 bytes [rendered]
+asset output.js 12 KiB [emitted] (name: main)
+asset 35.output.js 775 bytes [emitted]
+chunk (runtime: main) 35.output.js 25 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
-  ./async-loaded.js 24 bytes [built] [code generated]
+  ./async-loaded.js 25 bytes [built] [code generated]
     [exports: answer]
     [used exports unknown]
     import() ./async-loaded ./example.js 6:0-24
-chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 419 bytes (javascript) 5.56 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.54 KiB 8 modules
-  dependent modules 225 bytes [dependent] 2 modules
-  ./example.js 175 bytes [built] [code generated]
+  runtime modules 5.56 KiB 8 modules
+  dependent modules 236 bytes [dependent] 2 modules
+  ./example.js 183 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
@@ -368,17 +368,17 @@ webpack 5.11.1 compiled successfully
 ```
 asset output.js 2.03 KiB [emitted] [minimized] (name: main)
 asset 35.output.js 122 bytes [emitted] [minimized]
-chunk (runtime: main) 35.output.js 24 bytes [rendered]
+chunk (runtime: main) 35.output.js 25 bytes [rendered]
   > ./async-loaded ./example.js 6:0-24
-  ./async-loaded.js 24 bytes [built] [code generated]
+  ./async-loaded.js 25 bytes [built] [code generated]
     [exports: answer]
     import() ./async-loaded ./example.js + 2 modules ./example.js 6:0-24
-chunk (runtime: main) output.js (main) 400 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 419 bytes (javascript) 5.56 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.54 KiB 8 modules
-  ./example.js + 2 modules 400 bytes [built] [code generated]
+  runtime modules 5.56 KiB 8 modules
+  ./example.js + 2 modules 419 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```

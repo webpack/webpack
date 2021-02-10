@@ -154,27 +154,27 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ```
 asset output.js 3.29 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
+chunk (runtime: main) output.js (main) 197 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 84 bytes [dependent] 2 modules
-  ./example.js 110 bytes [built] [code generated]
+  ./example.js 113 bytes [built] [code generated]
     [exports: exampleValue]
     [used exports unknown]
     entry ./example.js main
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset output.js 650 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
+chunk (runtime: main) output.js (main) 197 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 84 bytes [dependent] 2 modules
-  ./example.js 110 bytes [built] [code generated]
+  ./example.js 113 bytes [built] [code generated]
     [exports: exampleValue]
     entry ./example.js main
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```

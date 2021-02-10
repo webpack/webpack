@@ -76,7 +76,7 @@ getTemplate("b", function(b) {
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
@@ -84,7 +84,7 @@ getTemplate("b", function(b) {
 /******/ 		var inProgress = {};
 /******/ 		// data-webpack is not used as build has no uniqueName
 /******/ 		// loadScript function to load a script via script tag
-/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
 /******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
@@ -114,7 +114,7 @@ getTemplate("b", function(b) {
 /******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			;
@@ -177,7 +177,7 @@ getTemplate("b", function(b) {
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -346,22 +346,22 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset output.js 9.04 KiB [emitted] (name: main)
-asset 577.output.js 2.23 KiB [emitted]
-chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
+asset output.js 9.07 KiB [emitted] (name: main)
+asset 577.output.js 2.24 KiB [emitted]
+chunk (runtime: main) output.js (main) 261 bytes (javascript) 4.99 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.97 KiB 6 modules
-  ./example.js 251 bytes [built] [code generated]
+  runtime modules 4.99 KiB 6 modules
+  ./example.js 261 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-chunk (runtime: main) 577.output.js 457 bytes [rendered]
+chunk (runtime: main) 577.output.js 463 bytes [rendered]
   > ./example.js 2:1-4:3
-  dependent modules 240 bytes [dependent] 3 modules
+  dependent modules 246 bytes [dependent] 3 modules
   ../require.context/templates/ sync ^\.\/.*$ 217 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     amd require context ./example.js 2:1-4:3
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
@@ -369,17 +369,17 @@ webpack 5.11.1 compiled successfully
 ```
 asset output.js 1.82 KiB [emitted] [minimized] (name: main)
 asset 577.output.js 609 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 251 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 261 bytes (javascript) 4.99 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.97 KiB 6 modules
-  ./example.js 251 bytes [built] [code generated]
+  runtime modules 4.99 KiB 6 modules
+  ./example.js 261 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-chunk (runtime: main) 577.output.js 457 bytes [rendered]
+chunk (runtime: main) 577.output.js 463 bytes [rendered]
   > ./example.js 2:1-4:3
-  dependent modules 240 bytes [dependent] 3 modules
+  dependent modules 246 bytes [dependent] 3 modules
   ../require.context/templates/ sync ^\.\/.*$ 217 bytes [built] [code generated]
     [no exports]
     amd require context ./example.js 2:1-4:3
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```

@@ -134,25 +134,25 @@ inc(a); // 2
 ## Unoptimized
 
 ```
-asset output.js 2.34 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 326 bytes [entry] [rendered]
+asset output.js 2.35 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 339 bytes [entry] [rendered]
   > ./example.js main
-  dependent modules 254 bytes [dependent] 2 modules
-  ./example.js 72 bytes [built] [code generated]
+  dependent modules 264 bytes [dependent] 2 modules
+  ./example.js 75 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
 asset output.js 296 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 326 bytes [entry] [rendered]
+chunk (runtime: main) output.js (main) 339 bytes [entry] [rendered]
   > ./example.js main
-  dependent modules 254 bytes [dependent] 2 modules
-  ./example.js 72 bytes [built] [code generated]
+  dependent modules 264 bytes [dependent] 2 modules
+  ./example.js 75 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```

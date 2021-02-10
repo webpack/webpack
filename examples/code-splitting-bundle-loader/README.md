@@ -105,7 +105,7 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
@@ -113,7 +113,7 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 		var inProgress = {};
 /******/ 		// data-webpack is not used as build has no uniqueName
 /******/ 		// loadScript function to load a script via script tag
-/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
 /******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
@@ -143,7 +143,7 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			;
@@ -206,7 +206,7 @@ __webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -303,13 +303,13 @@ module.exports = "It works";
 ## Unoptimized
 
 ```
-asset output.js 9.58 KiB [emitted] (name: main)
+asset output.js 9.61 KiB [emitted] (name: main)
 asset 929.output.js 354 bytes [emitted]
-chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 378 bytes (javascript) 4.99 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.97 KiB 6 modules
+  runtime modules 4.99 KiB 6 modules
   dependent modules 281 bytes [dependent] 1 module
-  ./example.js 94 bytes [built] [code generated]
+  ./example.js 97 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
 chunk (runtime: main) 929.output.js 28 bytes [rendered]
@@ -318,19 +318,19 @@ chunk (runtime: main) 929.output.js 28 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./file.js 1:0-14
     cjs require !!./file.js ../../node_modules/bundle-loader/index.js!./file.js 8:8-30
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.84 KiB [emitted] [minimized] (name: main)
+asset output.js 1.85 KiB [emitted] [minimized] (name: main)
 asset 929.output.js 88 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 375 bytes (javascript) 4.97 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 378 bytes (javascript) 4.99 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 4.97 KiB 6 modules
+  runtime modules 4.99 KiB 6 modules
   dependent modules 281 bytes [dependent] 1 module
-  ./example.js 94 bytes [built] [code generated]
+  ./example.js 97 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
 chunk (runtime: main) 929.output.js 28 bytes [rendered]
@@ -339,5 +339,5 @@ chunk (runtime: main) 929.output.js 28 bytes [rendered]
     [used exports unknown]
     cjs self exports reference ./file.js 1:0-14
     cjs require !!./file.js ../../node_modules/bundle-loader/index.js!./file.js 8:8-30
-webpack 5.11.1 compiled successfully
+webpack 5.20.0 compiled successfully
 ```
