@@ -7,3 +7,5 @@ inc();
 print(value);
 resetCounter();
 print(value);
+
+export { inc, print };

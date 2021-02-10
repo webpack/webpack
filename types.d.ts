@@ -128,12 +128,19 @@ declare class AbstractLibraryPlugin<T> {
 		renderContext: RenderContextObject,
 		libraryContext: LibraryContext<T>
 	): Source;
+	renderStartup(
+		source: Source,
+		module: Module,
+		renderContext: StartupRenderContext,
+		libraryContext: LibraryContext<T>
+	): Source;
 	chunkHash(
 		chunk: Chunk,
 		hash: Hash,
 		chunkHashContext: ChunkHashContext,
 		libraryContext: LibraryContext<T>
 	): void;
+	static COMMON_LIBRARY_NAME_MESSAGE: string;
 }
 declare class AggressiveMergingPlugin {
 	constructor(options?: any);
@@ -1646,6 +1653,7 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 	renderChunk: SyncWaterfallHook<[Source, RenderContextObject]>;
 	renderMain: SyncWaterfallHook<[Source, RenderContextObject]>;
 	render: SyncWaterfallHook<[Source, RenderContextObject]>;
+	renderStartup: SyncWaterfallHook<[Source, Module, StartupRenderContext]>;
 	renderRequire: SyncWaterfallHook<[string, RenderBootstrapContext]>;
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 	useSourceMap: SyncBailHook<[Chunk, RenderContextObject], boolean>;
@@ -9860,6 +9868,7 @@ declare abstract class StackedMap<K, V> {
 	readonly size: number;
 	createChild(): StackedMap<K, V>;
 }
+type StartupRenderContext = RenderContextObject & { inlined: boolean };
 type Statement =
 	| FunctionDeclaration
 	| VariableDeclaration
