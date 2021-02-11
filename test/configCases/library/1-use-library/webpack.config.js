@@ -17,6 +17,42 @@ module.exports = (env, { testPath }) => [
 	{
 		resolve: {
 			alias: {
+				library: path.resolve(testPath, "../0-create-library/commonjs-iife.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("commonjs-iife")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/amd.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("amd")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/amd-iife.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("amd-iife")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
 				library: path.resolve(testPath, "../0-create-library/umd.js")
 			}
 		},
@@ -40,6 +76,19 @@ module.exports = (env, { testPath }) => [
 		]
 	},
 	{
+		entry: "./this-test.js",
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/this-iife.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("this-iife")
+			})
+		]
+	},
+	{
 		entry: "./var-test.js",
 		resolve: {
 			alias: {
@@ -49,6 +98,49 @@ module.exports = (env, { testPath }) => [
 		plugins: [
 			new webpack.DefinePlugin({
 				NAME: JSON.stringify("var")
+			})
+		]
+	},
+	{
+		entry: "./var-test.js",
+		resolve: {
+			alias: {
+				library: path.resolve(testPath, "../0-create-library/var-iife.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("var-iife")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/commonjs-nested.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("commonjs-nested")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/commonjs-nested-iife.js"
+				)
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("commonjs-nested-iife")
 			})
 		]
 	},
@@ -65,6 +157,23 @@ module.exports = (env, { testPath }) => [
 		plugins: [
 			new webpack.DefinePlugin({
 				NAME: JSON.stringify("commonjs2 with external"),
+				TEST_EXTERNAL: true
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
+					"../0-create-library/commonjs2-iife-external.js"
+				),
+				external: path.resolve(__dirname, "node_modules/external.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("commonjs2-iife with external"),
 				TEST_EXTERNAL: true
 			})
 		]
