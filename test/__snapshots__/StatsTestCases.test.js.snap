@@ -1043,7 +1043,7 @@ chunk (runtime: main) trees.js (trees) 215 bytes [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for ignore-warnings 1`] = `
-"asset main.js 997 bytes [emitted] (name: main)
+"asset main.js 989 bytes [emitted] (name: main)
 orphan modules 617 bytes [orphan] 9 modules
 ./index.js + 9 modules 790 bytes [built] [code generated]
 
