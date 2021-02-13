@@ -63,7 +63,9 @@ const baseStats = {
 	timings: false,
 	version: false,
 	hash: false,
-	builtAt: false
+	builtAt: false,
+	errorsCount: false,
+	warningsCount: false
 };
 
 /** @type {import("../../../").Configuration} */
