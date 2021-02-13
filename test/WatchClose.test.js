@@ -23,9 +23,7 @@ describe("WatchClose", () => {
 					filename: "bundle.js"
 				}
 			});
-			watcher = compiler.watch({
-				poll: 300
-			});
+			watcher = compiler.watch({ poll: 300 }, () => {});
 		});
 
 		afterEach(() => {
