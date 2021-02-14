@@ -1,7 +1,9 @@
 import { Worker } from "worker_threads";
 
 it("should allow to create a WebWorker", async () => {
-	const worker = new Worker(new URL("./worker.js", import.meta.url));
+	const worker = new Worker(
+		new URL("./worker.js" + __resourceQuery, import.meta.url)
+	);
 	worker.postMessage("ok");
 	const result = await new Promise(resolve => {
 		worker.on("message", data => {
