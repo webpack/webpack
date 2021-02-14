@@ -657,7 +657,9 @@ describe("Compiler", () => {
 			if (err) return done(err);
 			watchCb();
 		});
-		watch.invalidate(invalidateCb);
+		process.nextTick(() => {
+			watch.invalidate(invalidateCb);
+		});
 	});
 	it("should call afterDone hook after other callbacks (watch close)", done => {
 		const compiler = webpack({
@@ -687,7 +689,9 @@ describe("Compiler", () => {
 			if (err) return done(err);
 			watch.close(watchCloseCb);
 		});
-		watch.invalidate(invalidateCb);
+		process.nextTick(() => {
+			watch.invalidate(invalidateCb);
+		});
 	});
 	it("should flag watchMode as true in watch", done => {
 		const compiler = webpack({

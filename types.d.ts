@@ -6252,7 +6252,10 @@ declare abstract class ModuleTemplate {
 	readonly runtimeTemplate: any;
 }
 declare class MultiCompiler {
-	constructor(compilers: Compiler[] | Record<string, Compiler>);
+	constructor(
+		compilers: Compiler[] | Record<string, Compiler>,
+		options: MultiCompilerOptions
+	);
 	hooks: Readonly<{
 		done: SyncHook<[MultiStats]>;
 		invalid: MultiHook<SyncHook<[null | string, number]>>;
@@ -6264,7 +6267,7 @@ declare class MultiCompiler {
 	compilers: Compiler[];
 	dependencies: WeakMap<Compiler, string[]>;
 	running: boolean;
-	readonly options: WebpackOptionsNormalized[];
+	readonly options: WebpackOptionsNormalized[] & MultiCompilerOptions;
 	readonly outputPath: string;
 	inputFileSystem: InputFileSystem;
 	outputFileSystem: OutputFileSystem;
@@ -6285,6 +6288,12 @@ declare class MultiCompiler {
 	run(callback: CallbackFunction<MultiStats>): void;
 	purgeInputFileSystem(): void;
 	close(callback: CallbackFunction<void>): void;
+}
+declare interface MultiCompilerOptions {
+	/**
+	 * how many Compilers are allows to run at the same time in parallel
+	 */
+	parallelism?: number;
 }
 declare abstract class MultiStats {
 	stats: Stats[];
@@ -10708,6 +10717,7 @@ declare abstract class Watching {
 	callbacks: CallbackFunction<void>[];
 	closed: boolean;
 	suspended: boolean;
+	blocked: boolean;
 	watchOptions: {
 		/**
 		 * Delay the rebuilt after the first change. Value is a time in ms.
@@ -11063,14 +11073,14 @@ declare function exports(
 	callback?: CallbackWebpack<Stats>
 ): Compiler;
 declare function exports(
-	options: Configuration[],
+	options: Configuration[] & MultiCompilerOptions,
 	callback?: CallbackWebpack<MultiStats>
 ): MultiCompiler;
 declare namespace exports {
 	export const webpack: {
 		(options: Configuration, callback?: CallbackWebpack<Stats>): Compiler;
 		(
-			options: Configuration[],
+			options: Configuration[] & MultiCompilerOptions,
 			callback?: CallbackWebpack<MultiStats>
 		): MultiCompiler;
 	};

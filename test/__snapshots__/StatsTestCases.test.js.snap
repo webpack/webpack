@@ -454,6 +454,7 @@ Entrypoint parent 84 bytes = parent.js
   Entrypoint child = child.js
   ./child.js 1 bytes [built] [code generated]
     
+  Child TestApplyEntryOptionPlugin compiled successfully
 
 WARNING in configuration
 The 'mode' option has not been set, webpack will fallback to 'production' for this value.
@@ -2063,7 +2064,8 @@ LOG from LogTestPlugin
 <e> Error
 <w> Warning
 + 13 hidden lines
-"
+
+webpack compiled successfully"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-minimal 1`] = `
