@@ -4899,7 +4899,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Enable/disable parsing of new URL() syntax.
 	 */
-	url?: boolean;
+	url?: boolean | "relative";
 
 	/**
 	 * Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().
@@ -11201,6 +11201,7 @@ declare namespace exports {
 		export let hasOwnProperty: string;
 		export let systemContext: string;
 		export let baseURI: string;
+		export let relativeUrl: string;
 		export let asyncModule: string;
 	}
 	export const UsageState: Readonly<{

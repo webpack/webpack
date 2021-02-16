@@ -1355,12 +1355,21 @@ Object {
         "description": "Enable/disable parsing of new URL() syntax.",
         "multiple": false,
         "path": "module.parser.javascript/auto.url",
+        "type": "enum",
+        "values": Array [
+          "relative",
+        ],
+      },
+      Object {
+        "description": "Enable/disable parsing of new URL() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.url",
         "type": "boolean",
       },
     ],
     "description": "Enable/disable parsing of new URL() syntax.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-auto-worker": Object {
     "configs": Array [
@@ -1833,12 +1842,21 @@ Object {
         "description": "Enable/disable parsing of new URL() syntax.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.url",
+        "type": "enum",
+        "values": Array [
+          "relative",
+        ],
+      },
+      Object {
+        "description": "Enable/disable parsing of new URL() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.url",
         "type": "boolean",
       },
     ],
     "description": "Enable/disable parsing of new URL() syntax.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-worker": Object {
     "configs": Array [
@@ -2272,12 +2290,21 @@ Object {
         "description": "Enable/disable parsing of new URL() syntax.",
         "multiple": false,
         "path": "module.parser.javascript/esm.url",
+        "type": "enum",
+        "values": Array [
+          "relative",
+        ],
+      },
+      Object {
+        "description": "Enable/disable parsing of new URL() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.url",
         "type": "boolean",
       },
     ],
     "description": "Enable/disable parsing of new URL() syntax.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-esm-worker": Object {
     "configs": Array [
@@ -2656,12 +2683,21 @@ Object {
         "description": "Enable/disable parsing of new URL() syntax.",
         "multiple": false,
         "path": "module.parser.javascript.url",
+        "type": "enum",
+        "values": Array [
+          "relative",
+        ],
+      },
+      Object {
+        "description": "Enable/disable parsing of new URL() syntax.",
+        "multiple": false,
+        "path": "module.parser.javascript.url",
         "type": "boolean",
       },
     ],
     "description": "Enable/disable parsing of new URL() syntax.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-worker": Object {
     "configs": Array [
