@@ -2714,7 +2714,7 @@ export interface JavascriptParserOptions {
 	/**
 	 * Enable/disable parsing of new URL() syntax.
 	 */
-	url?: boolean;
+	url?: "relative" | boolean;
 	/**
 	 * Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().
 	 */

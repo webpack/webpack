@@ -1269,7 +1269,14 @@
         },
         "url": {
           "description": "Enable/disable parsing of new URL() syntax.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "enum": ["relative"]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "worker": {
           "description": "Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
