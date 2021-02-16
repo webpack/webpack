@@ -23,6 +23,7 @@
     "submodules",
     "typeof",
     "devtool",
+    "wasi",
     "wasm",
     "webassembly",
     "IIFE",
