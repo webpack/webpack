@@ -2391,7 +2391,7 @@ LOG from webpack.SplitChunksPlugin
 <t> queue: X ms
 <t> maxSize: X ms
 
-LOG from ModuleConcatenationPlugin
+LOG from webpack.ModuleConcatenationPlugin
 <t> select relevant modules: X ms
 <t> sort relevant modules: X ms
 <t> find modules to concatenate: X ms
