@@ -231,6 +231,36 @@ module.exports = (env, { testPath }) => [
 		}
 	},
 	{
+		output: {
+			filename: "commonjs2-runtimeChunk/[name].js",
+			libraryTarget: "commonjs2",
+			iife: false
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
+		}
+	},
+	{
+		output: {
+			filename: "commonjs2-iife-runtimeChunk/[name].js",
+			libraryTarget: "commonjs2",
+			iife: true
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
+		}
+	},
+	{
 		entry: {
 			entryA: {
 				import: "./index"
