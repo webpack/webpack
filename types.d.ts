@@ -11485,8 +11485,8 @@ declare namespace exports {
 		AssetInfo,
 		MultiStats,
 		ParserState,
-		StatsCompilation,
-	  Watching
+	  Watching,
+		StatsCompilation
 	};
 }
 
