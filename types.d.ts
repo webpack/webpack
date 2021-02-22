@@ -3132,6 +3132,7 @@ declare abstract class ExportInfo {
 		runtime: RuntimeSpec
 	): boolean;
 	setUsed(newValue: UsageStateType, runtime: RuntimeSpec): boolean;
+	unsetTarget(key?: any): boolean;
 	setTarget(
 		key?: any,
 		connection?: ModuleGraphConnection,
@@ -3238,6 +3239,11 @@ declare interface ExportSpec {
 	 * when reexported: from which export
 	 */
 	export?: null | string[];
+
+	/**
+	 * export is not visible, because another export blends over it
+	 */
+	hidden?: boolean;
 }
 type ExportedVariableInfo = string | ScopeInfo | VariableInfo;
 declare abstract class ExportsInfo {
@@ -3296,6 +3302,11 @@ declare interface ExportsSpec {
 	 * when exports = true, list of unaffected exports
 	 */
 	excludeExports?: Set<string>;
+
+	/**
+	 * list of maybe prior exposed, but now hidden exports
+	 */
+	hideExports?: Set<string>;
 
 	/**
 	 * when reexported: from which module
