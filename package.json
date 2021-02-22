@@ -146,7 +146,6 @@
     "type-report": "rimraf coverage && yarn cover:types && yarn cover:report && open-cli coverage/lcov-report/index.html",
     "pretest": "yarn lint",
     "prelint": "yarn setup",
-    "postinstall": "husky install",
     "lint": "yarn code-lint && yarn special-lint && yarn type-lint && yarn typings-lint && yarn yarn-lint && yarn pretty-lint && yarn spellcheck",
     "code-lint": "eslint . --ext '.js' --cache",
     "type-lint": "tsc",
