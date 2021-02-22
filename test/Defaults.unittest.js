@@ -1703,4 +1703,24 @@ describe("Defaults", () => {
 			process.chdir(cwd);
 		}
 	);
+
+	test(
+		"array defaults",
+		{
+			output: {
+				enabledChunkLoadingTypes: ["require", "..."],
+				enabledWasmLoadingTypes: ["...", "async-node"]
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			+       "require",
+			@@ ... @@
+			+       "async-node",
+		`)
+	);
 });
