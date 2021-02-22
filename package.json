@@ -169,11 +169,6 @@
     "cover:types": "node node_modules/tooling/type-coverage",
     "cover:report": "istanbul report"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.js|{lib,setup,bin,hot,tooling,schemas}/**/*.js|test/*.js|{test,examples}/**/webpack.config.js}": [
       "eslint --cache"

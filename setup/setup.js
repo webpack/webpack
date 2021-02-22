@@ -4,19 +4,29 @@ const fs = require("fs");
 const path = require("path");
 const root = process.cwd();
 const node_modulesFolder = path.resolve(root, "node_modules");
+const huskyFolder = path.resolve(root, ".husky", "_");
 const webpackDependencyFolder = path.resolve(root, "node_modules/webpack");
 
 function setup() {
-	return checkSymlinkExistsAsync()
-		.then(hasSymlink => {
+	return Promise.all([
+		checkGitHooksInstalledAsync().then(async hasGitHooks => {
+			if (!hasGitHooks) {
+				await runSetupGitHooksAsync();
+				if (!(await checkGitHooksInstalledAsync())) {
+					throw new Error("Git hooks were not successfully installed");
+				}
+			}
+		}),
+		checkSymlinkExistsAsync().then(async hasSymlink => {
 			if (!hasSymlink) {
-				return ensureYarnInstalledAsync().then(() => {
-					return runSetupAsync().then(() => {
-						return checkSymlinkExistsAsync();
-					});
-				});
+				await ensureYarnInstalledAsync();
+				await runSetupSymlinkAsync();
+				if (!(await checkSymlinkExistsAsync())) {
+					throw new Error("windows symlink was not successfully created");
+				}
 			}
 		})
+	])
 		.then(() => {
 			process.exitCode = 0;
 		})
@@ -26,10 +36,14 @@ function setup() {
 		});
 }
 
-function runSetupAsync() {
-	return exec("yarn", ["install"], "Install dependencies")
-		.then(() => exec("yarn", ["link"], "Create webpack symlink"))
-		.then(() => exec("yarn", ["link", "webpack"], "Link webpack into itself"));
+async function runSetupSymlinkAsync() {
+	await exec("yarn", ["install"], "Install dependencies");
+	await exec("yarn", ["link"], "Create webpack symlink");
+	await exec("yarn", ["link", "webpack"], "Link webpack into itself");
+}
+
+async function runSetupGitHooksAsync() {
+	await exec("yarn", ["run", "husky", "install"], "Enable Git hooks");
 }
 
 function checkSymlinkExistsAsync() {
@@ -46,14 +60,26 @@ function checkSymlinkExistsAsync() {
 	});
 }
 
-function ensureYarnInstalledAsync() {
+function checkGitHooksInstalledAsync() {
+	return new Promise((resolve, reject) => {
+		if (fs.existsSync(huskyFolder)) {
+			resolve(true);
+		} else {
+			resolve(false);
+		}
+	});
+}
+
+async function ensureYarnInstalledAsync() {
 	const semverPattern = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/;
-	return execGetOutput("yarn", ["-v"], "Check yarn version")
-		.then(
-			stdout => semverPattern.test(stdout),
-			() => false
-		)
-		.then(hasYarn => hasYarn || installYarnAsync());
+	let hasYarn = false;
+	try {
+		const stdout = await execGetOutput("yarn", ["-v"], "Check yarn version");
+		hasYarn = semverPattern.test(stdout);
+	} catch (e) {
+		hasYarn = false;
+	}
+	if (!hasYarn) await installYarnAsync();
 }
 
 function installYarnAsync() {
