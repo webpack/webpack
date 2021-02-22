@@ -3176,7 +3176,11 @@ declare abstract class ExportInfo {
 		resolveTargetFilter: (arg0: {
 			module: Module;
 			export?: string[];
-		}) => boolean
+		}) => boolean,
+		updateOriginalConnection?: (arg0: {
+			module: Module;
+			export?: string[];
+		}) => ModuleGraphConnection
 	): undefined | { module: Module; export?: string[] };
 	createNestedExportsInfo(): undefined | ExportsInfo;
 	getNestedExportsInfo(): undefined | ExportsInfo;
