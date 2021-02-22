@@ -232,6 +232,10 @@ declare interface AssetEmittedInfo {
 	outputPath: string;
 	targetPath: string;
 }
+type AssetFilterItemTypes =
+	| string
+	| RegExp
+	| ((name: string, asset: StatsAsset) => boolean);
 
 /**
  * Options object for data url generation.
@@ -5051,9 +5055,13 @@ declare interface KnownNormalizedStatsOptions {
 	groupAssetsByPath: boolean;
 	groupAssetsByExtension: boolean;
 	assetsSpace: number;
-	excludeAssets: Function[];
-	excludeModules: Function[];
-	warningsFilter: Function[];
+	excludeAssets: ((value: string, asset: StatsAsset) => boolean)[];
+	excludeModules: ((
+		name: string,
+		module: StatsModule,
+		type: "module" | "chunk" | "root-of-chunk" | "nested"
+	) => boolean)[];
+	warningsFilter: ((warning: StatsError, textValue: string) => boolean)[];
 	cachedModules: boolean;
 	orphanModules: boolean;
 	dependentModules: boolean;
@@ -5073,7 +5081,7 @@ declare interface KnownNormalizedStatsOptions {
 	chunkModulesSpace: number;
 	nestedModulesSpace: number;
 	logging: false | "none" | "verbose" | "error" | "warn" | "info" | "log";
-	loggingDebug: Function[];
+	loggingDebug: ((value: string) => boolean)[];
 	loggingTrace: boolean;
 }
 declare interface KnownStatsAsset {
@@ -5910,6 +5918,14 @@ declare interface ModuleFederationPluginOptions {
 	 */
 	shared?: (string | SharedObject)[] | SharedObject;
 }
+type ModuleFilterItemTypes =
+	| string
+	| RegExp
+	| ((
+			name: string,
+			module: StatsModule,
+			type: "module" | "chunk" | "root-of-chunk" | "nested"
+	  ) => boolean);
 declare class ModuleGraph {
 	constructor();
 	setParents(
@@ -6636,7 +6652,47 @@ declare class NormalModuleReplacementPlugin {
 	apply(compiler: Compiler): void;
 }
 type NormalizedStatsOptions = KnownNormalizedStatsOptions &
-	StatsOptions &
+	Omit<
+		StatsOptions,
+		| "context"
+		| "requestShortener"
+		| "chunkGroups"
+		| "chunksSort"
+		| "modulesSort"
+		| "chunkModulesSort"
+		| "nestedModulesSort"
+		| "assetsSort"
+		| "ids"
+		| "cachedAssets"
+		| "groupAssetsByEmitStatus"
+		| "groupAssetsByPath"
+		| "groupAssetsByExtension"
+		| "assetsSpace"
+		| "excludeAssets"
+		| "excludeModules"
+		| "warningsFilter"
+		| "cachedModules"
+		| "orphanModules"
+		| "dependentModules"
+		| "runtimeModules"
+		| "groupModulesByCacheStatus"
+		| "groupModulesByLayer"
+		| "groupModulesByAttributes"
+		| "groupModulesByPath"
+		| "groupModulesByExtension"
+		| "groupModulesByType"
+		| "entrypoints"
+		| "chunkGroupAuxiliary"
+		| "chunkGroupChildren"
+		| "chunkGroupMaxAssets"
+		| "modulesSpace"
+		| "chunkModulesSpace"
+		| "nestedModulesSpace"
+		| "logging"
+		| "loggingDebug"
+		| "loggingTrace"
+		| "_env"
+	> &
 	Record<string, any>;
 declare interface ObjectDeserializerContext {
 	read: () => any;
@@ -6830,7 +6886,7 @@ declare interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML).
 	 */
-	chunks?: "initial" | "async" | "all" | ((chunk: Chunk) => boolean);
+	chunks?: "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
 
 	/**
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
@@ -6952,7 +7008,7 @@ declare interface OptimizationSplitChunksOptions {
 	/**
 	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 	 */
-	chunks?: "initial" | "async" | "all" | ((chunk: Chunk) => boolean);
+	chunks?: "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
 
 	/**
 	 * Sets the size types which are used when a number is used for sizes.
@@ -10155,8 +10211,12 @@ declare interface StatsOptions {
 		| string
 		| boolean
 		| RegExp
-		| FilterItemTypes[]
-		| ((value: string) => boolean);
+		| ModuleFilterItemTypes[]
+		| ((
+				name: string,
+				module: StatsModule,
+				type: "module" | "chunk" | "root-of-chunk" | "nested"
+		  ) => boolean);
 
 	/**
 	 * Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.
@@ -10164,8 +10224,8 @@ declare interface StatsOptions {
 	excludeAssets?:
 		| string
 		| RegExp
-		| FilterItemTypes[]
-		| ((value: string) => boolean);
+		| AssetFilterItemTypes[]
+		| ((name: string, asset: StatsAsset) => boolean);
 
 	/**
 	 * Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.
@@ -10174,8 +10234,12 @@ declare interface StatsOptions {
 		| string
 		| boolean
 		| RegExp
-		| FilterItemTypes[]
-		| ((value: string) => boolean);
+		| ModuleFilterItemTypes[]
+		| ((
+				name: string,
+				module: StatsModule,
+				type: "module" | "chunk" | "root-of-chunk" | "nested"
+		  ) => boolean);
 
 	/**
 	 * Group assets by how their are related to chunks.
@@ -10383,8 +10447,8 @@ declare interface StatsOptions {
 	warningsFilter?:
 		| string
 		| RegExp
-		| FilterItemTypes[]
-		| ((value: string) => boolean);
+		| WarningFilterItemTypes[]
+		| ((warning: StatsError, value: string) => boolean);
 }
 declare abstract class StatsPrinter {
 	hooks: Readonly<{
@@ -10627,6 +10691,10 @@ declare interface VariableInfoInterface {
 	freeName: string | true;
 	tagInfo?: TagInfo;
 }
+type WarningFilterItemTypes =
+	| string
+	| RegExp
+	| ((warning: StatsError, value: string) => boolean);
 declare interface WatchFileSystem {
 	watch: (
 		files: Iterable<string>,
