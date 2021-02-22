@@ -146,6 +146,7 @@
     "type-report": "rimraf coverage && yarn cover:types && yarn cover:report && open-cli coverage/lcov-report/index.html",
     "pretest": "yarn lint",
     "prelint": "yarn setup",
+    "postinstall": "husky install",
     "lint": "yarn code-lint && yarn special-lint && yarn type-lint && yarn typings-lint && yarn yarn-lint && yarn pretty-lint && yarn spellcheck",
     "code-lint": "eslint . --ext '.js' --cache",
     "type-lint": "tsc",
@@ -168,11 +169,6 @@
     "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:types": "node node_modules/tooling/type-coverage",
     "cover:report": "istanbul report"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.js|{lib,setup,bin,hot,tooling,schemas}/**/*.js|test/*.js|{test,examples}/**/webpack.config.js}": [
