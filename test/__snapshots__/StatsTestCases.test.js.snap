@@ -1280,6 +1280,32 @@ asset <CLR=32,BOLD>main.js</CLR> 84 bytes <CLR=32,BOLD>[emitted]</CLR> (name: ma
 webpack x.x.x compiled <CLR=32,BOLD>successfully</CLR> in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for logging-debug 1`] = `
+"<i> <CLR=32,BOLD>[LogTestPlugin] Info</CLR>
+asset <CLR=32,BOLD>main.js</CLR> 84 bytes <CLR=32,BOLD>[emitted]</CLR> (name: main)
+<CLR=BOLD>./index.js</CLR> 1 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
+
+<CLR=31,BOLD>DEBUG</CLR> <CLR=BOLD>LOG from ../logging/node_modules/custom-loader/index.js ../logging/node_modules/custom-loader/index.js!./index.js</CLR>
+<e> <CLR=31,BOLD>An error</CLR>
+<w> <CLR=33,BOLD>A warning</CLR>
+<-> <CLR=36,BOLD>Unimportant</CLR>
+  <i> <CLR=32,BOLD>Info message</CLR>
+      <CLR=BOLD>Just log</CLR>
+      Just debug
+  <t> <CLR=35,BOLD>Measure: X ms</CLR>
+  <-> <CLR=36,BOLD>Nested</CLR>
+        <CLR=BOLD>Log inside collapsed group</CLR>
+      Trace
+  <t> <CLR=35,BOLD>Measure: X ms</CLR>
+      -------
+      <CLR=BOLD>After clear</CLR>
+
+<CLR=31,BOLD>DEBUG</CLR> <CLR=BOLD>LOG from ../logging/node_modules/custom-loader/index.js Named Logger ../logging/node_modules/custom-loader/index.js!./index.js</CLR>
+    Message with named logger
+
+webpack x.x.x compiled <CLR=32,BOLD>successfully</CLR> in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for max-modules 1`] = `
 "asset main.js 5.43 KiB [emitted] (name: main)
 31 modules
