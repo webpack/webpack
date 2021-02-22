@@ -30,7 +30,7 @@ function runSetupAsync() {
 	return exec("yarn", ["install"], "Install dependencies")
 		.then(() => exec("yarn", ["link"], "Create webpack symlink"))
 		.then(() => exec("yarn", ["link", "webpack"], "Link webpack into itself"))
-		.then(() => exec("yarn", ["run", "husky", "install"]));
+		.then(() => exec("yarn", ["run", "husky", "install"], "Enable Git hooks"));
 }
 
 function checkSymlinkExistsAsync() {
