@@ -2423,7 +2423,7 @@ LOG from webpack.ModuleConcatenationPlugin
 <t> find modules to concatenate: X ms
 <t> sort concat configurations: X ms
 <t> create concatenated modules: X ms
-+ 2 hidden lines
++ 3 hidden lines
 
 LOG from webpack.FileSystemInfo
     6 new snapshots created
@@ -3032,7 +3032,7 @@ cacheable modules 975 bytes
     modules by path ./*.js 106 bytes
       ./vendor.js 25 bytes [built] [code generated]
       ./lazy_shared.js 56 bytes [built] [code generated]
-        ModuleConcatenation bailout: Cannot concat with ./common_lazy_shared.js: Module ./common_lazy_shared.js is referenced from different chunks by these modules: ./lazy_first.js + 1 modules, ./lazy_second.js + 1 modules
+        ModuleConcatenation bailout: Cannot concat with ./common_lazy_shared.js: Module ./common_lazy_shared.js is referenced from different chunks by these modules: ./lazy_first.js, ./lazy_second.js
       ./common_lazy_shared.js 25 bytes [built] [code generated]
     ./first.js + 2 modules 292 bytes [built] [code generated]
       ModuleConcatenation bailout: Cannot concat with ./vendor.js: Module ./vendor.js is not in the same chunk(s) (expected in chunk(s) first, module is in chunk(s) vendor)
