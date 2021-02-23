@@ -168,9 +168,37 @@ const describeCases = config => {
 								rimraf.sync(outputDirectory);
 								fs.mkdirSync(outputDirectory, { recursive: true });
 								const deprecationTracker = deprecationTracking.start();
-								webpack(options, err => {
+								webpack(options, (err, stats) => {
 									deprecationTracker();
 									if (err) return handleFatalError(err, done);
+									const { modules, children, errorsCount } = stats.toJson({
+										all: false,
+										modules: true,
+										errorsCount: true
+									});
+									if (errorsCount === 0) {
+										const allModules = children
+											? children.reduce(
+													(all, { modules }) => all.concat(modules),
+													modules || []
+											  )
+											: modules;
+										if (
+											allModules.some(
+												m => m.type !== "cached modules" && !m.cached
+											)
+										) {
+											return done(
+												new Error(
+													`Some modules were not cached:\n${stats.toString({
+														all: false,
+														modules: true,
+														modulesSpace: 100
+													})}`
+												)
+											);
+										}
+									}
 									done();
 								});
 							}, 20000);
