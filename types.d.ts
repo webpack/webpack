@@ -5979,6 +5979,9 @@ declare class ModuleGraph {
 	getResolvedOrigin(dependency: Dependency): Module;
 	getIncomingConnections(module: Module): Iterable<ModuleGraphConnection>;
 	getOutgoingConnections(module: Module): Iterable<ModuleGraphConnection>;
+	getIncomingConnectionsByOriginModule(
+		module: Module
+	): Map<Module, ReadonlyArray<ModuleGraphConnection>>;
 	getProfile(module: Module): null | ModuleProfile;
 	setProfile(module: Module, profile: null | ModuleProfile): void;
 	getIssuer(module: Module): null | Module;
@@ -6025,8 +6028,8 @@ declare class ModuleGraph {
 }
 declare class ModuleGraphConnection {
 	constructor(
-		originModule: undefined | Module,
-		dependency: undefined | Dependency,
+		originModule: null | Module,
+		dependency: null | Dependency,
 		module: Module,
 		explanation?: string,
 		weak?: boolean,
@@ -6034,9 +6037,9 @@ declare class ModuleGraphConnection {
 			| false
 			| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState)
 	);
-	originModule?: Module;
-	resolvedOriginModule?: Module;
-	dependency?: Dependency;
+	originModule: null | Module;
+	resolvedOriginModule: null | Module;
+	dependency: null | Dependency;
 	resolvedModule: Module;
 	module: Module;
 	weak: boolean;
