@@ -33,6 +33,10 @@ var testPlugin = compiler => {
 					throw new Error("something went wrong");
 				}
 
+				// Check if already build the updated version
+				// this will happen when using caching
+				if (module.buildInfo._isReplaced) return callback();
+
 				shouldReplace = true;
 				compilation.rebuildModule(module, err => {
 					shouldReplace = false;
