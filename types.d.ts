@@ -13190,6 +13190,7 @@ declare namespace exports {
 		Entry,
 		EntryNormalized,
 		EntryObject,
+		Externals,
 		FileCacheOptions,
 		LibraryOptions,
 		ModuleOptions,
