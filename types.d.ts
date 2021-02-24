@@ -10787,6 +10787,16 @@ declare interface Watcher {
 	pause: () => void;
 
 	/**
+	 * get current aggregated changes that have not yet send to callback
+	 */
+	getAggregatedChanges?: () => Set<string>;
+
+	/**
+	 * get current aggregated removals that have not yet send to callback
+	 */
+	getAggregatedRemovals?: () => Set<string>;
+
+	/**
 	 * get info about files
 	 */
 	getFileTimeInfoEntries: () => Map<string, FileSystemInfoEntry | "ignore">;
