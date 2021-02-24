@@ -13191,6 +13191,7 @@ declare namespace exports {
 		EntryNormalized,
 		EntryObject,
 		ExternalItemFunctionData,
+		ExternalItemObjectKnown,
 		ExternalItemValue,
 		Externals,
 		FileCacheOptions,
