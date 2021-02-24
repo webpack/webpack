@@ -270,6 +270,8 @@ describe("MultiCompiler", function () {
 							c:
 							  c compiled successfully"
 					`);
+					expect(compiler.compilers[0].modifiedFiles).toBe(undefined);
+					expect(compiler.compilers[0].removedFiles).toBe(undefined);
 					expect(events).toMatchInlineSnapshot(`
 							Array [
 							  "b run",
@@ -295,6 +297,8 @@ describe("MultiCompiler", function () {
 				b:
 				  b compiled successfully"
 			`);
+					expect(compiler.compilers[1].modifiedFiles).toEqual(new Set());
+					expect(compiler.compilers[1].removedFiles).toEqual(new Set());
 					expect(events).toMatchInlineSnapshot(`
 				Array [
 				  "b run",
