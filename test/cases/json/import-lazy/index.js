@@ -20,6 +20,7 @@ it("should be possible to import json data async", function() {
 			1: 2,
 			2: 3,
 			3: 4,
+			length: 4,
 			default: [1, 2, 3, 4]
 		}));
 		expect(d).toEqual(nsObj({

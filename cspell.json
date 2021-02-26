@@ -23,6 +23,7 @@
     "submodules",
     "typeof",
     "devtool",
+    "wasi",
     "wasm",
     "webassembly",
     "IIFE",
@@ -181,6 +182,9 @@
     "destructure",
     "onconnect",
     "nwjs",
+    "redeclaration",
+    "kaios",
+    "parallelism",
 
     "webassemblyjs",
     "fsevents",
@@ -218,7 +222,9 @@
     "codecov",
     "opencollective",
     "dependabot",
-    "browserslist"
+    "browserslist",
+    "samsunginternet",
+    "pnpm"
   ],
   "ignoreRegExpList": ["/Author.+/", "/data:.*/", "/\"mappings\":\".+\"/"],
   "ignorePaths": ["**/dist/**", "examples/**/README.md"]

@@ -1,6 +1,9 @@
 module.exports = {
 	output: {
-		module: true
+		module: true,
+		library: {
+			type: "module"
+		}
 	},
 	optimization: {
 		usedExports: true,

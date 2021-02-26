@@ -6,4 +6,9 @@ it("should fail loading a deleted asset", async () => {
 			code: "ENOENT"
 		})
 	);
+	await expect(import("./chunk2.js")).rejects.toEqual(
+		expect.objectContaining({
+			code: "ENOENT"
+		})
+	);
 });

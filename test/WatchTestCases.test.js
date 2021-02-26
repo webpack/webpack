@@ -197,6 +197,7 @@ describe("WatchTestCases", () => {
 											preset: "verbose",
 											cached: true,
 											cachedAssets: true,
+											cachedModules: true,
 											colors: false
 										};
 										fs.mkdirSync(outputDirectory, { recursive: true });
@@ -303,7 +304,7 @@ describe("WatchTestCases", () => {
 												module in testConfig.modules
 											) {
 												return testConfig.modules[module];
-											} else return require.requireActual(module);
+											} else return jest.requireActual(module);
 										}
 
 										let testConfig = {};

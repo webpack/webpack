@@ -33,6 +33,33 @@
       "UNUSEDVALUE",
       "UNUSEDVALUE"
     ],
+    "array6": ["UNUSEDVALUE", "ok", "UNUSEDVALUE"],
+    "array7": [
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "ok"
+    ],
+    "array8": [
+      "ok",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE"
+    ],
     "object": {
       "test": "TESTVALUE"
     },

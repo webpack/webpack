@@ -8,7 +8,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "^12.4.0"
+          versionSpec: "^14.0.0"
         displayName: "Install Node.js"
       - script: |
           curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -58,7 +58,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "^12.4.0"
+          versionSpec: "^14.0.0"
         displayName: "Install Node.js"
       - script: |
           curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -130,11 +130,13 @@ jobs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
         displayName: "Cache Yarn packages"
-      - script: |
-          yarn --frozen-lockfile
-          yarn link --frozen-lockfile || true
-          yarn link webpack --frozen-lockfile
+      - script: yarn --frozen-lockfile
         displayName: "Install dependencies"
+      - script: yarn link --frozen-lockfile || true
+        displayName: "Link webpack"
+        continueOnError: true
+      - script: yarn link webpack --frozen-lockfile
+        displayName: "Link webpack into node_modules"
       - script: |
           yarn cover:integration --ci --maxWorkers=2 --reporters=jest-junit
         displayName: "Run tests with coverage"
@@ -151,7 +153,7 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     strategy:
-      maxParallel: 3
+      maxParallel: 4
       matrix:
         node-10:
           node_version: ^10.13.0
@@ -159,6 +161,8 @@ jobs:
           node_version: ^12.4.0
         node-14:
           node_version: ^14.0.0
+        node-15:
+          node_version: ^15.0.0
     steps:
       - task: NodeTool@0
         inputs:

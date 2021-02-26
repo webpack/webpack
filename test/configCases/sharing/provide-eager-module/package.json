@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "common": "*",
+    "uncommon": "*"
+  },
+  "name": "appshell-2.0"
+}

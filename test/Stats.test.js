@@ -173,10 +173,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryB.js",
-			          "size": 2702,
+			          "size": 2964,
 			        },
 			      ],
-			      "assetsSize": 2702,
+			      "assetsSize": 2964,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -219,11 +219,12 @@ describe("Stats", () => {
 			      "emitted": true,
 			      "filteredRelated": undefined,
 			      "info": Object {
+			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 2702,
+			        "size": 2964,
 			      },
 			      "name": "entryB.js",
-			      "size": 2702,
+			      "size": 2964,
 			      "type": "asset",
 			    },
 			    Object {
@@ -238,6 +239,7 @@ describe("Stats", () => {
 			      "emitted": true,
 			      "filteredRelated": undefined,
 			      "info": Object {
+			        "javascriptModule": false,
 			        "minimized": true,
 			        "size": 182,
 			      },
@@ -257,6 +259,7 @@ describe("Stats", () => {
 			      "emitted": true,
 			      "filteredRelated": undefined,
 			      "info": Object {
+			        "javascriptModule": false,
 			        "minimized": true,
 			        "size": 107,
 			      },

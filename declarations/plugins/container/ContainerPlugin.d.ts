@@ -29,13 +29,14 @@ export type LibraryExport = string[] | string;
  */
 export type LibraryName = string[] | string | LibraryCustomUmdObject;
 /**
- * Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
+ * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
  */
 export type LibraryType =
 	| (
 			| "var"
 			| "module"
 			| "assign"
+			| "assign-properties"
 			| "this"
 			| "window"
 			| "self"
@@ -95,6 +96,10 @@ export interface ExposesConfig {
 	 * Request to a module that should be exposed by this container.
 	 */
 	import: ExposesItem | ExposesItems;
+	/**
+	 * Custom chunk name for the exposed module.
+	 */
+	name?: string;
 }
 /**
  * Options for library.
@@ -113,7 +118,7 @@ export interface LibraryOptions {
 	 */
 	name?: LibraryName;
 	/**
-	 * Type of library (types included by default are 'var', 'module', 'assign', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
+	 * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
 	 */
 	type: LibraryType;
 	/**

@@ -241,7 +241,7 @@ function c() { console.log("c"); }
 # dist/output.js
 
 ```javascript
-(()=>{"use strict";var r,e,t={169:(r,e,t)=>{},345:(r,e,t)=>{t.d(e,{n:()=>n.Jp}),t(169);var n=t(451)},451:(r,e,t)=>{function n(){for(var r=0,e=0,t=arguments,n=t.length;e<n;)r+=t[e++];return r}function o(){for(var r=1,e=0,t=arguments,n=t.length;e<n;)r*=t[e++];return r}t.d(e,{IH:()=>n,Jp:()=>o})}},n={};function o(r){if(n[r])return n[r].exports;var e=n[r]={exports:{}};return t[r](e,e.exports,o),e.exports}o.d=(r,e)=>{for(var t in e)o.o(e,t)&&!o.o(r,t)&&Object.defineProperty(r,t,{enumerable:!0,get:e[t]})},o.o=(r,e)=>Object.prototype.hasOwnProperty.call(r,e),r=o(451),e=o(345),(0,r.IH)(1,2),e.n(1,2)})();
+(()=>{"use strict";var r,e={451:(r,e,t)=>{function o(){for(var r=0,e=0,t=arguments,o=t.length;e<o;)r+=t[e++];return r}function n(){for(var r=1,e=0,t=arguments,o=t.length;e<o;)r*=t[e++];return r}t.d(e,{IH:()=>o,Jp:()=>n})}},t={};function o(r){if(t[r])return t[r].exports;var n=t[r]={exports:{}};return e[r](n,n.exports,o),n.exports}o.d=(r,e)=>{for(var t in e)o.o(e,t)&&!o.o(r,t)&&Object.defineProperty(r,t,{enumerable:!0,get:e[t]})},o.o=(r,e)=>Object.prototype.hasOwnProperty.call(r,e),(0,(r=o(451)).IH)(1,2),r.Jp(1,2)})();
 ```
 
 # Info
@@ -250,7 +250,7 @@ function c() { console.log("c"); }
 
 ```
 asset output.js 7.06 KiB [emitted] (name: main)
-chunk output.js (main) 698 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 698 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 584 bytes [dependent] 3 modules
   runtime modules 668 bytes 3 modules
@@ -258,20 +258,20 @@ chunk output.js (main) 698 bytes (javascript) 668 bytes (runtime) [entry] [rende
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 603 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 698 bytes (javascript) 394 bytes (runtime) [entry] [rendered]
+asset output.js 522 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 461 bytes (javascript) 394 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  dependent modules 584 bytes [dependent] 3 modules
   runtime modules 394 bytes 2 modules
+  dependent modules 347 bytes [dependent] 1 module
   ./example.js 114 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0-rc.2 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
