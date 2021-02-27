@@ -1615,6 +1615,7 @@ describe("Defaults", () => {
 			-       "dynamicImport": undefined,
 			-       "forOf": true,
 			-       "module": undefined,
+			-       "promise": true,
 			+       "arrowFunction": false,
 			+       "bigIntLiteral": false,
 			+       "const": false,
@@ -1622,6 +1623,7 @@ describe("Defaults", () => {
 			+       "dynamicImport": false,
 			+       "forOf": false,
 			+       "module": false,
+			+       "promise": false,
 			@@ ... @@
 			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
 			+     "hotUpdateGlobal": "webpackHotUpdatebrowserslist_test",
