@@ -4455,6 +4455,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-promise": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports ECMAScript Promise.",
+        "multiple": false,
+        "path": "output.environment.promise",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports ECMAScript Promise.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-filename": Object {
     "configs": Array [
       Object {

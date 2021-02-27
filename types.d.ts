@@ -2985,6 +2985,11 @@ declare interface Environment {
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
+
+	/**
+	 * The environment supports ECMAScript Promise.
+	 */
+	promise?: boolean;
 }
 declare class EnvironmentPlugin {
 	constructor(...keys: any[]);
@@ -9141,6 +9146,7 @@ declare abstract class RuntimeTemplate {
 	supportsDynamicImport(): undefined | boolean;
 	supportsEcmaScriptModuleSyntax(): undefined | boolean;
 	supportTemplateLiteral(): boolean;
+	supportsPromise(): undefined | boolean;
 	returningFunction(returnValue?: any, args?: string): string;
 	basicFunction(args?: any, body?: any): string;
 	emptyFunction(): "x => {}" | "function() {}";
@@ -11297,6 +11303,7 @@ declare namespace exports {
 		export let hasOwnProperty: string;
 		export let systemContext: string;
 		export let baseURI: string;
+		export let promise: string;
 		export let relativeUrl: string;
 		export let asyncModule: string;
 	}
