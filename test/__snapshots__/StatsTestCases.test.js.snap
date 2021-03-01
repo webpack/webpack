@@ -2440,85 +2440,97 @@ LOG from webpack.FileSystemInfo
 
 exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
 "a-normal:
-  assets by path *.js 3 KiB
-    asset 18c2d7f22a461e1f021f-18c2d7.js 2.61 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+  assets by path *.js 3.14 KiB
+    asset 28d919d2ba0afe316d4d-28d919.js 2.65 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+    asset a639a9edc4557744bf94-a639a9.js 288 bytes [emitted] [immutable] [minimized] (name: lazy)
     asset 3cc8faad16137711c07e-3cc8fa.js 210 bytes [emitted] [immutable] [minimized] (name: main)
-    asset b6f77787a670e97d47b5-b6f777.js 193 bytes [emitted] [immutable] [minimized] (name: lazy)
-  asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+  assets by chunk 20.4 KiB (auxiliary name: lazy)
+    asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: main)
-  Entrypoint main 2.81 KiB (5.89 KiB) = 18c2d7f22a461e1f021f-18c2d7.js 2.61 KiB 3cc8faad16137711c07e-3cc8fa.js 210 bytes 1 auxiliary asset
-  runtime modules 7.37 KiB 8 modules
+  Entrypoint main 2.85 KiB (5.89 KiB) = 28d919d2ba0afe316d4d-28d919.js 2.65 KiB 3cc8faad16137711c07e-3cc8fa.js 210 bytes 1 auxiliary asset
+  runtime modules 7.42 KiB 8 modules
   orphan modules 23 bytes [orphan] 1 module
-  cacheable modules 340 bytes (javascript) 20.4 KiB (asset)
-    javascript modules 256 bytes
-      ./a/index.js 150 bytes [built] [code generated]
-      ./a/lazy.js + 1 modules 106 bytes [built] [code generated]
-    asset modules 84 bytes (javascript) 20.4 KiB (asset)
+  cacheable modules 426 bytes (javascript) 26.3 KiB (asset)
+    asset modules 126 bytes (javascript) 26.3 KiB (asset)
       ./a/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built] [code generated]
       ./a/file.png 42 bytes (javascript) 14.6 KiB (asset) [built] [code generated]
+      ./a/file.jpg?query 42 bytes (javascript) 5.89 KiB (asset) [built] [code generated]
+    javascript modules 300 bytes
+      ./a/index.js 150 bytes [built] [code generated]
+      ./a/lazy.js + 1 modules 150 bytes [built] [code generated]
   a-normal (webpack x.x.x) compiled successfully in X ms
 
 b-normal:
-  assets by path *.js 3 KiB
-    asset 4408ab3a86604e4c16e2-4408ab.js 2.61 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+  assets by path *.js 3.14 KiB
+    asset 78946a272f83db936232-78946a.js 2.65 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+    asset a639a9edc4557744bf94-a639a9.js 288 bytes [emitted] [immutable] [minimized] (name: lazy)
     asset 3cc8faad16137711c07e-3cc8fa.js 210 bytes [emitted] [immutable] [minimized] (name: main)
-    asset b6f77787a670e97d47b5-b6f777.js 193 bytes [emitted] [immutable] [minimized] (name: lazy)
-  asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+  assets by chunk 20.4 KiB (auxiliary name: lazy)
+    asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: main)
-  Entrypoint main 2.81 KiB (5.89 KiB) = 4408ab3a86604e4c16e2-4408ab.js 2.61 KiB 3cc8faad16137711c07e-3cc8fa.js 210 bytes 1 auxiliary asset
-  runtime modules 7.37 KiB 8 modules
+  Entrypoint main 2.85 KiB (5.89 KiB) = 78946a272f83db936232-78946a.js 2.65 KiB 3cc8faad16137711c07e-3cc8fa.js 210 bytes 1 auxiliary asset
+  runtime modules 7.42 KiB 8 modules
   orphan modules 19 bytes [orphan] 1 module
-  cacheable modules 295 bytes (javascript) 20.4 KiB (asset)
-    javascript modules 211 bytes
-      ./b/index.js 109 bytes [built] [code generated]
-      ./b/lazy.js + 1 modules 102 bytes [built] [code generated]
-    asset modules 84 bytes (javascript) 20.4 KiB (asset)
+  cacheable modules 381 bytes (javascript) 26.3 KiB (asset)
+    asset modules 126 bytes (javascript) 26.3 KiB (asset)
       ./b/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built] [code generated]
       ./b/file.png 42 bytes (javascript) 14.6 KiB (asset) [built] [code generated]
+      ./b/file.jpg?query 42 bytes (javascript) 5.89 KiB (asset) [built] [code generated]
+    javascript modules 255 bytes
+      ./b/index.js 109 bytes [built] [code generated]
+      ./b/lazy.js + 1 modules 146 bytes [built] [code generated]
   b-normal (webpack x.x.x) compiled successfully in X ms
 
 a-source-map:
-  assets by path *.js 3.17 KiB
-    asset 9351b9819e587de6a617-9351b9.js 2.66 KiB [emitted] [immutable] [minimized] (name: runtime~main)
-      sourceMap 9351b9819e587de6a617-9351b9.js.map 14.5 KiB [emitted] [dev] (auxiliary name: runtime~main)
+  assets by path *.js 3.3 KiB
+    asset 6ab6298c9ee98458fcc2-6ab629.js 2.7 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+      sourceMap 6ab6298c9ee98458fcc2-6ab629.js.map 14.6 KiB [emitted] [dev] (auxiliary name: runtime~main)
+    asset 05c637d15dff2d0dc5fd-05c637.js 344 bytes [emitted] [immutable] [minimized] (name: lazy)
+      sourceMap 05c637d15dff2d0dc5fd-05c637.js.map 399 bytes [emitted] [dev] (auxiliary name: lazy)
     asset b8bfcec62cdd15c9a840-b8bfce.js 266 bytes [emitted] [immutable] [minimized] (name: main)
       sourceMap b8bfcec62cdd15c9a840-b8bfce.js.map 366 bytes [emitted] [dev] (auxiliary name: main)
-    asset c7c0f8bb2e61b59a89f5-c7c0f8.js 249 bytes [emitted] [immutable] [minimized] (name: lazy)
-      sourceMap c7c0f8bb2e61b59a89f5-c7c0f8.js.map 331 bytes [emitted] [dev] (auxiliary name: lazy)
-  asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+  assets by chunk 20.4 KiB (auxiliary name: lazy)
+    asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: main)
-  Entrypoint main 2.92 KiB (20.7 KiB) = 9351b9819e587de6a617-9351b9.js 2.66 KiB b8bfcec62cdd15c9a840-b8bfce.js 266 bytes 3 auxiliary assets
-  runtime modules 7.37 KiB 8 modules
+  Entrypoint main 2.96 KiB (20.8 KiB) = 6ab6298c9ee98458fcc2-6ab629.js 2.7 KiB b8bfcec62cdd15c9a840-b8bfce.js 266 bytes 3 auxiliary assets
+  runtime modules 7.42 KiB 8 modules
   orphan modules 23 bytes [orphan] 1 module
-  cacheable modules 340 bytes (javascript) 20.4 KiB (asset)
-    javascript modules 256 bytes
-      ./a/index.js 150 bytes [built] [code generated]
-      ./a/lazy.js + 1 modules 106 bytes [built] [code generated]
-    asset modules 84 bytes (javascript) 20.4 KiB (asset)
+  cacheable modules 426 bytes (javascript) 26.3 KiB (asset)
+    asset modules 126 bytes (javascript) 26.3 KiB (asset)
       ./a/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built] [code generated]
       ./a/file.png 42 bytes (javascript) 14.6 KiB (asset) [built] [code generated]
+      ./a/file.jpg?query 42 bytes (javascript) 5.89 KiB (asset) [built] [code generated]
+    javascript modules 300 bytes
+      ./a/index.js 150 bytes [built] [code generated]
+      ./a/lazy.js + 1 modules 150 bytes [built] [code generated]
   a-source-map (webpack x.x.x) compiled successfully in X ms
 
 b-source-map:
-  assets by path *.js 3.17 KiB
-    asset ff44eb1f030374616671-ff44eb.js 2.66 KiB [emitted] [immutable] [minimized] (name: runtime~main)
-      sourceMap ff44eb1f030374616671-ff44eb.js.map 14.5 KiB [emitted] [dev] (auxiliary name: runtime~main)
+  assets by path *.js 3.3 KiB
+    asset a16ab0460019d5b48418-a16ab0.js 2.7 KiB [emitted] [immutable] [minimized] (name: runtime~main)
+      sourceMap a16ab0460019d5b48418-a16ab0.js.map 14.6 KiB [emitted] [dev] (auxiliary name: runtime~main)
+    asset 05c637d15dff2d0dc5fd-05c637.js 344 bytes [emitted] [immutable] [minimized] (name: lazy)
+      sourceMap 05c637d15dff2d0dc5fd-05c637.js.map 395 bytes [emitted] [dev] (auxiliary name: lazy)
     asset b8bfcec62cdd15c9a840-b8bfce.js 266 bytes [emitted] [immutable] [minimized] (name: main)
       sourceMap b8bfcec62cdd15c9a840-b8bfce.js.map 323 bytes [emitted] [dev] (auxiliary name: main)
-    asset c7c0f8bb2e61b59a89f5-c7c0f8.js 249 bytes [emitted] [immutable] [minimized] (name: lazy)
-      sourceMap c7c0f8bb2e61b59a89f5-c7c0f8.js.map 327 bytes [emitted] [dev] (auxiliary name: lazy)
-  asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+  assets by chunk 20.4 KiB (auxiliary name: lazy)
+    asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
+    asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: main)
-  Entrypoint main 2.92 KiB (20.7 KiB) = ff44eb1f030374616671-ff44eb.js 2.66 KiB b8bfcec62cdd15c9a840-b8bfce.js 266 bytes 3 auxiliary assets
-  runtime modules 7.37 KiB 8 modules
+  Entrypoint main 2.96 KiB (20.8 KiB) = a16ab0460019d5b48418-a16ab0.js 2.7 KiB b8bfcec62cdd15c9a840-b8bfce.js 266 bytes 3 auxiliary assets
+  runtime modules 7.42 KiB 8 modules
   orphan modules 19 bytes [orphan] 1 module
-  cacheable modules 295 bytes (javascript) 20.4 KiB (asset)
-    javascript modules 211 bytes
-      ./b/index.js 109 bytes [built] [code generated]
-      ./b/lazy.js + 1 modules 102 bytes [built] [code generated]
-    asset modules 84 bytes (javascript) 20.4 KiB (asset)
+  cacheable modules 381 bytes (javascript) 26.3 KiB (asset)
+    asset modules 126 bytes (javascript) 26.3 KiB (asset)
       ./b/file.jpg 42 bytes (javascript) 5.89 KiB (asset) [built] [code generated]
       ./b/file.png 42 bytes (javascript) 14.6 KiB (asset) [built] [code generated]
+      ./b/file.jpg?query 42 bytes (javascript) 5.89 KiB (asset) [built] [code generated]
+    javascript modules 255 bytes
+      ./b/index.js 109 bytes [built] [code generated]
+      ./b/lazy.js + 1 modules 146 bytes [built] [code generated]
   b-source-map (webpack x.x.x) compiled successfully in X ms"
 `;
 

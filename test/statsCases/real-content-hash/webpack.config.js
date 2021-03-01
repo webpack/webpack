@@ -1,9 +1,15 @@
 const path = require("path");
 
+/** @type {import("../../../").Configuration} */
 const base = {
 	mode: "production",
 	entry: "./index",
 	module: {
+		generator: {
+			asset: {
+				filename: "[hash][ext][query]"
+			}
+		},
 		rules: [
 			{
 				test: /\.(png|jpg)$/,
@@ -16,7 +22,8 @@ const base = {
 		minimize: true
 	},
 	stats: {
-		relatedAssets: true
+		relatedAssets: true,
+		cachedAssets: true
 	}
 };
 
