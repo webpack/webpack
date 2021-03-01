@@ -4,19 +4,10 @@ const fs = require("fs");
 const path = require("path");
 const root = process.cwd();
 const node_modulesFolder = path.resolve(root, "node_modules");
-const huskyFolder = path.resolve(root, ".husky", "_");
 const webpackDependencyFolder = path.resolve(root, "node_modules/webpack");
 
 function setup() {
 	return Promise.all([
-		checkGitHooksInstalledAsync().then(async hasGitHooks => {
-			if (!hasGitHooks) {
-				await runSetupGitHooksAsync();
-				if (!(await checkGitHooksInstalledAsync())) {
-					throw new Error("Git hooks were not successfully installed");
-				}
-			}
-		}),
 		checkSymlinkExistsAsync().then(async hasSymlink => {
 			if (!hasSymlink) {
 				await ensureYarnInstalledAsync();
@@ -42,10 +33,6 @@ async function runSetupSymlinkAsync() {
 	await exec("yarn", ["link", "webpack"], "Link webpack into itself");
 }
 
-async function runSetupGitHooksAsync() {
-	await exec("yarn", ["run", "husky", "install"], "Enable Git hooks");
-}
-
 function checkSymlinkExistsAsync() {
 	return new Promise((resolve, reject) => {
 		if (
@@ -53,16 +40,6 @@ function checkSymlinkExistsAsync() {
 			fs.existsSync(webpackDependencyFolder) &&
 			fs.lstatSync(webpackDependencyFolder).isSymbolicLink()
 		) {
-			resolve(true);
-		} else {
-			resolve(false);
-		}
-	});
-}
-
-function checkGitHooksInstalledAsync() {
-	return new Promise((resolve, reject) => {
-		if (fs.existsSync(huskyFolder)) {
 			resolve(true);
 		} else {
 			resolve(false);
