@@ -1460,7 +1460,8 @@
             "description": "A part of the library name.",
             "type": "string",
             "minLength": 1
-          }
+          },
+          "minItems": 1
         },
         {
           "type": "string",
