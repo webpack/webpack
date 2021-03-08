@@ -11169,14 +11169,14 @@ declare function exports(
 	callback?: CallbackWebpack<Stats>
 ): Compiler;
 declare function exports(
-	options: Configuration[] & MultiCompilerOptions,
+	options: ReadonlyArray<Configuration> & MultiCompilerOptions,
 	callback?: CallbackWebpack<MultiStats>
 ): MultiCompiler;
 declare namespace exports {
 	export const webpack: {
 		(options: Configuration, callback?: CallbackWebpack<Stats>): Compiler;
 		(
-			options: Configuration[] & MultiCompilerOptions,
+			options: ReadonlyArray<Configuration> & MultiCompilerOptions,
 			callback?: CallbackWebpack<MultiStats>
 		): MultiCompiler;
 	};
