@@ -21,8 +21,8 @@ function run({ default: value2, asyncDep: value3 }) {
 	const compiler = webpack(
 		{
 			mode: "development",
-			context: __dirname,
-			entry: "./index",
+			context: path.resolve(__dirname, "../../js/buildDepsInput"),
+			entry: path.resolve(__dirname, "./index"),
 			output: {
 				path: path.resolve(__dirname, "../../js/buildDeps/" + process.argv[2]),
 				libraryTarget: "commonjs2"
@@ -49,7 +49,7 @@ function run({ default: value2, asyncDep: value3 }) {
 					config: [
 						__filename,
 						path.resolve(__dirname, "../../../node_modules/.yarn-integrity")
-					].concat(esm ? ["./esm.mjs"] : []),
+					].concat(esm ? ["../../fixtures/buildDependencies/esm.mjs"] : []),
 					invalid: options.invalidBuildDepdencies
 						? ["should-fail-resolving"]
 						: []
