@@ -33,7 +33,7 @@ exports.start = handler => {
 	return () => {
 		const map = interception;
 		interception = undefined;
-		return Array.from(map)
+		return Array.from(map || [])
 			.sort(([a], [b]) => {
 				if (a < b) return -1;
 				if (a > b) return 1;

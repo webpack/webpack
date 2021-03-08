@@ -279,6 +279,36 @@ module.exports = (env, { testPath }) => [
 			})
 		]
 	},
+	{
+		externals: {
+			library: `var (require(${JSON.stringify(
+				"../0-create-library/global-runtimeChunk/runtime.js"
+			)}), require(${JSON.stringify(
+				"../0-create-library/global-runtimeChunk/main.js"
+			)}), globalName.x.y)`
+		},
+		target: "web",
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("global-runtimeChunk")
+			})
+		]
+	},
+	{
+		externals: {
+			library: `var (require(${JSON.stringify(
+				"../0-create-library/global-iife-runtimeChunk/runtime.js"
+			)}), require(${JSON.stringify(
+				"../0-create-library/global-iife-runtimeChunk/main.js"
+			)}), globalName.x.y)`
+		},
+		target: "web",
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("global-iife-runtimeChunk")
+			})
+		]
+	},
 
 	{
 		resolve: {
