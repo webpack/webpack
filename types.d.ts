@@ -714,6 +714,10 @@ declare class Chunk {
 		chunkGraph: ChunkGraph,
 		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
 	): Record<string, (string | number)[]>;
+	getChildrenOfTypeInOrder(
+		chunkGraph: ChunkGraph,
+		type: string
+	): { onChunks: Chunk[]; chunks: Set<Chunk> }[];
 	getChildIdsByOrdersMap(
 		chunkGraph: ChunkGraph,
 		includeDirectChildren?: boolean,
@@ -11279,7 +11283,9 @@ declare namespace exports {
 		export let startupNoDefault: string;
 		export let startupOnlyAfter: string;
 		export let startupOnlyBefore: string;
+		export let chunkCallback: string;
 		export let startupEntrypoint: string;
+		export let onChunksLoaded: string;
 		export let externalInstallChunk: string;
 		export let interceptModuleExecution: string;
 		export let global: string;
