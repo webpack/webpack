@@ -4017,34 +4017,36 @@ development:
   development (webpack x.x.x) compiled successfully
 
 switched:
-  Entrypoint main 31.3 KiB = 8 assets
-  chunk (runtime: main) switched-main-6bb16544.js (main-6bb16544) 1.57 KiB ={59}= ={247}= ={318}= ={520}= ={581}= ={663}= ={997}= [initial] [rendered]
+  Entrypoint main 31.3 KiB = 9 assets
+  chunk (runtime: main) switched-main-6bb16544.js (main-6bb16544) 1.57 KiB ={59}= ={318}= ={410}= ={520}= ={581}= ={663}= ={869}= ={997}= [initial] [rendered]
     > ./ main
     ./in-some-directory/very-big.js?1 1.57 KiB [built] [code generated]
-  chunk (runtime: main) switched-main-77a8c116.js (main-77a8c116) 1.57 KiB ={1}= ={247}= ={318}= ={520}= ={581}= ={663}= ={997}= [initial] [rendered]
+  chunk (runtime: main) switched-main-77a8c116.js (main-77a8c116) 1.57 KiB ={1}= ={318}= ={410}= ={520}= ={581}= ={663}= ={869}= ={997}= [initial] [rendered]
     > ./ main
     ./very-big.js?2 1.57 KiB [built] [code generated]
-  chunk (runtime: main) switched-247.js (id hint: vendors) 1.96 KiB ={1}= ={59}= ={318}= ={520}= ={581}= ={663}= ={997}= [initial] [rendered] split chunk (cache group: defaultVendors)
+  chunk (runtime: main) switched-main-89a43a0f.js (main-89a43a0f) 1.57 KiB ={1}= ={59}= ={410}= ={520}= ={581}= ={663}= ={869}= ={997}= [initial] [rendered]
+    > ./ main
+    ./very-big.js?3 1.57 KiB [built] [code generated]
+  chunk (runtime: main) switched-410.js (id hint: vendors) 1.57 KiB ={1}= ={59}= ={318}= ={520}= ={581}= ={663}= ={869}= ={997}= [initial] [rendered] split chunk (cache group: defaultVendors)
+    > ./ main
+    ./node_modules/very-big.js?1 1.57 KiB [built] [code generated]
+  chunk (runtime: main) switched-main-1df31ce3.js (main-1df31ce3) 1.19 KiB ={1}= ={59}= ={318}= ={410}= ={581}= ={663}= ={869}= ={997}= [initial] [rendered]
+    > ./ main
+    ./index.js 1.19 KiB [built] [code generated]
+  chunk (runtime: main) switched-main-879072e3.js (main-879072e3) 1.68 KiB ={1}= ={59}= ={318}= ={410}= ={520}= ={663}= ={869}= ={997}= [initial] [rendered]
+    > ./ main
+    modules by path ./subfolder/*.js 1.1 KiB 11 modules
+    modules by path ./*.js 594 bytes 9 modules
+  chunk (runtime: main) switched-main-12217e1d.js (main-12217e1d) 1.57 KiB (javascript) 2.89 KiB (runtime) ={1}= ={59}= ={318}= ={410}= ={520}= ={581}= ={869}= ={997}= [entry] [rendered]
+    > ./ main
+    runtime modules 2.89 KiB 5 modules
+    ./very-big.js?1 1.57 KiB [built] [code generated]
+  chunk (runtime: main) switched-869.js (id hint: vendors) 399 bytes ={1}= ={59}= ={318}= ={410}= ={520}= ={581}= ={663}= ={997}= [initial] [rendered] split chunk (cache group: defaultVendors)
     > ./ main
     ./node_modules/big.js?1 267 bytes [built] [code generated]
     ./node_modules/small.js?1 66 bytes [built] [code generated]
     ./node_modules/small.js?2 66 bytes [built] [code generated]
-    ./node_modules/very-big.js?1 1.57 KiB [built] [code generated]
-  chunk (runtime: main) switched-main-89a43a0f.js (main-89a43a0f) 1.57 KiB ={1}= ={59}= ={247}= ={520}= ={581}= ={663}= ={997}= [initial] [rendered]
-    > ./ main
-    ./very-big.js?3 1.57 KiB [built] [code generated]
-  chunk (runtime: main) switched-main-1df31ce3.js (main-1df31ce3) 1.19 KiB ={1}= ={59}= ={247}= ={318}= ={581}= ={663}= ={997}= [initial] [rendered]
-    > ./ main
-    ./index.js 1.19 KiB [built] [code generated]
-  chunk (runtime: main) switched-main-879072e3.js (main-879072e3) 1.68 KiB ={1}= ={59}= ={247}= ={318}= ={520}= ={663}= ={997}= [initial] [rendered]
-    > ./ main
-    modules by path ./subfolder/*.js 1.1 KiB 11 modules
-    modules by path ./*.js 594 bytes 9 modules
-  chunk (runtime: main) switched-main-12217e1d.js (main-12217e1d) 1.57 KiB (javascript) 2.89 KiB (runtime) ={1}= ={59}= ={247}= ={318}= ={520}= ={581}= ={997}= [entry] [rendered]
-    > ./ main
-    runtime modules 2.89 KiB 5 modules
-    ./very-big.js?1 1.57 KiB [built] [code generated]
-  chunk (runtime: main) switched-main-7aeafcb2.js (main-7aeafcb2) 1.62 KiB ={1}= ={59}= ={247}= ={318}= ={520}= ={581}= ={663}= [initial] [rendered]
+  chunk (runtime: main) switched-main-7aeafcb2.js (main-7aeafcb2) 1.62 KiB ={1}= ={59}= ={318}= ={410}= ={520}= ={581}= ={663}= ={869}= [initial] [rendered]
     > ./ main
     modules by path ./inner-module/*.js 594 bytes 9 modules
     modules by path ./in-some-directory/*.js 531 bytes
