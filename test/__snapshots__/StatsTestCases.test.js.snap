@@ -1140,9 +1140,9 @@ assets by chunk 895 bytes (id hint: all)
   asset c-all-b_js-fe3b412293f057de38c8.js 502 bytes [emitted] [immutable] (id hint: all)
   asset c-all-c_js-172fc4c28be7e411e551.js 393 bytes [emitted] [immutable] (id hint: all)
 asset c-runtime~main-1f09eb858439196f27c9.js 13.4 KiB [emitted] [immutable] (name: runtime~main)
-asset c-main-012ece0a038732fde0a4.js 681 bytes [emitted] [immutable] (name: main)
+asset c-main-012ece0a038732fde0a4.js 673 bytes [emitted] [immutable] (name: main)
 asset c-vendors-node_modules_vendor_js-499179597d8c965dd5e0.js 185 bytes [emitted] [immutable] (id hint: vendors)
-Entrypoint main 14.5 KiB = c-runtime~main-1f09eb858439196f27c9.js 13.4 KiB c-all-c_js-172fc4c28be7e411e551.js 393 bytes c-main-012ece0a038732fde0a4.js 681 bytes
+Entrypoint main 14.5 KiB = c-runtime~main-1f09eb858439196f27c9.js 13.4 KiB c-all-c_js-172fc4c28be7e411e551.js 393 bytes c-main-012ece0a038732fde0a4.js 673 bytes
 runtime modules 8.55 KiB 13 modules
 cacheable modules 101 bytes
   ./c.js 61 bytes [built] [code generated]
