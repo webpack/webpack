@@ -5023,16 +5023,29 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-strict-module-error-handling": Object {
+    "configs": Array [
+      Object {
+        "description": "Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.",
+        "multiple": false,
+        "path": "output.strictModuleErrorHandling",
+        "type": "boolean",
+      },
+    ],
+    "description": "Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-strict-module-exception-handling": Object {
     "configs": Array [
       Object {
-        "description": "Handles exceptions in module loading correctly at a performance cost.",
+        "description": "Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.",
         "multiple": false,
         "path": "output.strictModuleExceptionHandling",
         "type": "boolean",
       },
     ],
-    "description": "Handles exceptions in module loading correctly at a performance cost.",
+    "description": "Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.",
     "multiple": false,
     "simpleType": "boolean",
   },

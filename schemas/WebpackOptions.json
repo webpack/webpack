@@ -2617,6 +2617,9 @@
         "sourcePrefix": {
           "$ref": "#/definitions/SourcePrefix"
         },
+        "strictModuleErrorHandling": {
+          "$ref": "#/definitions/StrictModuleErrorHandling"
+        },
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
         },
@@ -2766,6 +2769,9 @@
         },
         "sourcePrefix": {
           "$ref": "#/definitions/SourcePrefix"
+        },
+        "strictModuleErrorHandling": {
+          "$ref": "#/definitions/StrictModuleErrorHandling"
         },
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
@@ -4247,8 +4253,12 @@
         }
       ]
     },
+    "StrictModuleErrorHandling": {
+      "description": "Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.",
+      "type": "boolean"
+    },
     "StrictModuleExceptionHandling": {
-      "description": "Handles exceptions in module loading correctly at a performance cost.",
+      "description": "Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.",
       "type": "boolean"
     },
     "Target": {
