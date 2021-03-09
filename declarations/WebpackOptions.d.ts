@@ -560,7 +560,11 @@ export type SourceMapFilename = string;
  */
 export type SourcePrefix = string;
 /**
- * Handles exceptions in module loading correctly at a performance cost.
+ * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
+ */
+export type StrictModuleErrorHandling = boolean;
+/**
+ * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
  */
 export type StrictModuleExceptionHandling = boolean;
 /**
@@ -2027,7 +2031,11 @@ export interface Output {
 	 */
 	sourcePrefix?: SourcePrefix;
 	/**
-	 * Handles exceptions in module loading correctly at a performance cost.
+	 * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
+	 */
+	strictModuleErrorHandling?: StrictModuleErrorHandling;
+	/**
+	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
@@ -2960,7 +2968,11 @@ export interface OutputNormalized {
 	 */
 	sourcePrefix?: SourcePrefix;
 	/**
-	 * Handles exceptions in module loading correctly at a performance cost.
+	 * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
+	 */
+	strictModuleErrorHandling?: StrictModuleErrorHandling;
+	/**
+	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
