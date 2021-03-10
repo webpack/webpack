@@ -16,7 +16,7 @@ it("should pass when use babeljs transpiler", function() {
 	expect(test2).toBe("OK");
 });
 
-it("should double reexport from non-harmony modules correctly", function() {
+it("should double reexport from non-es modules correctly", function() {
 	expect(y).toBe("y");
 	expect(x).toBe("x");
 });
