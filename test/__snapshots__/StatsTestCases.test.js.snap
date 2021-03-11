@@ -4017,7 +4017,7 @@ development:
   development (webpack x.x.x) compiled successfully
 
 switched:
-  Entrypoint main 31.3 KiB = 9 assets
+  Entrypoint main 31.4 KiB = 9 assets
   chunk (runtime: main) switched-main-6bb16544.js (main-6bb16544) 1.57 KiB ={59}= ={318}= ={410}= ={520}= ={581}= ={663}= ={869}= ={997}= [initial] [rendered]
     > ./ main
     ./in-some-directory/very-big.js?1 1.57 KiB [built] [code generated]
