@@ -101,13 +101,12 @@
         "dataUrl": {
           "$ref": "#/definitions/AssetGeneratorDataUrl"
         },
+        "emit": {
+          "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+          "type": "boolean"
+        },
         "filename": {
-          "description": "This is deprecated and has moved to 'parser.filename'.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/FilenameTemplate"
-            }
-          ]
+          "$ref": "#/definitions/FilenameTemplate"
         }
       }
     },
@@ -153,7 +152,6 @@
     "AssetParserOptions": {
       "description": "Parser options for asset modules.",
       "type": "object",
-      "implements": ["#/definitions/AssetResourceParserOptions"],
       "additionalProperties": false,
       "properties": {
         "dataUrlCondition": {
@@ -166,9 +164,6 @@
               "$ref": "#/definitions/AssetParserDataUrlFunction"
             }
           ]
-        },
-        "filename": {
-          "$ref": "#/definitions/FilenameTemplate"
         }
       }
     },
@@ -177,21 +172,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "filename": {
-          "description": "This is deprecated and has moved to 'parser.filename'.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/FilenameTemplate"
-            }
-          ]
-        }
-      }
-    },
-    "AssetResourceParserOptions": {
-      "description": "Parser options for asset/resource modules.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
+        "emit": {
+          "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+          "type": "boolean"
+        },
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
         }
@@ -2838,7 +2822,7 @@
           "$ref": "#/definitions/EmptyParserOptions"
         },
         "asset/resource": {
-          "$ref": "#/definitions/AssetResourceParserOptions"
+          "$ref": "#/definitions/EmptyParserOptions"
         },
         "asset/source": {
           "$ref": "#/definitions/EmptyParserOptions"

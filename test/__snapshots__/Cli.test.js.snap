@@ -877,6 +877,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-asset-emit": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+        "multiple": false,
+        "path": "module.generator.asset.emit",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-generator-asset-filename": Object {
     "configs": Array [
       Object {
@@ -919,6 +932,19 @@ Object {
     "description": "Asset mimetype (getting from file extension by default).",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-generator-asset-resource-emit": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+        "multiple": false,
+        "path": "module.generator.asset/resource.emit",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-generator-asset-resource-filename": Object {
     "configs": Array [
@@ -977,32 +1003,6 @@ Object {
     "description": "Maximum size of asset that should be inline as modules. Default: 8kb.",
     "multiple": false,
     "simpleType": "number",
-  },
-  "module-parser-asset-filename": Object {
-    "configs": Array [
-      Object {
-        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
-        "multiple": false,
-        "path": "module.parser.asset.filename",
-        "type": "string",
-      },
-    ],
-    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
-    "multiple": false,
-    "simpleType": "string",
-  },
-  "module-parser-asset-resource-filename": Object {
-    "configs": Array [
-      Object {
-        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
-        "multiple": false,
-        "path": "module.parser.asset/resource.filename",
-        "type": "string",
-      },
-    ],
-    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
-    "multiple": false,
-    "simpleType": "string",
   },
   "module-parser-javascript-amd": Object {
     "configs": Array [
