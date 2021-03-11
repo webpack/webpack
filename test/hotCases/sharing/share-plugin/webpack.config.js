@@ -10,7 +10,11 @@ module.exports = {
 			shared: {
 				common: {
 					eager: true,
-					import: "./common",
+					import: "./common?1",
+					requiredVersion: "1.1.1"
+				},
+				common2: {
+					import: "./common?2",
 					requiredVersion: "1.1.1"
 				}
 			}

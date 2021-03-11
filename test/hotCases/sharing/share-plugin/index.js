@@ -1,13 +1,14 @@
-it("should accept a shared dependency", done => {
-	expect.assertions(1);
+import value, { getValue } from "./module";
 
-	const onApply = error => {
-		expect(error).toBeFalsy();
-		done();
-	};
-
-	require("./module");
+it("should accept a shared dependency", async () => {
+	expect(value).toBe("module");
+	await expect(getValue()).resolves.toHaveProperty("default", "module");
 	module.hot.accept("./module");
 
-	NEXT(require("../../update")(onApply, true, () => onApply()));
+	await new Promise((resolve, reject) =>
+		NEXT(require("../../update")(reject, true, resolve))
+	);
+
+	expect(value).toBe("common-lib");
+	await expect(getValue()).resolves.toHaveProperty("default", "common-lib");
 });
