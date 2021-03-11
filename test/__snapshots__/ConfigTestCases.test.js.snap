@@ -31,13 +31,13 @@ exports[`ConfigTestCases records issue-2991 exported tests should write relative
       \\"./test.js\\": 393,
       \\"external \\\\\\"fs\\\\\\"\\": 747,
       \\"external \\\\\\"path\\\\\\"\\": 622,
-      \\"ignored|pkgs/somepackage/foo\\": 713
+      \\"ignored|./|pkgs/somepackage/foo\\": 907
     },
     \\"usedIds\\": [
       393,
       622,
-      713,
-      747
+      747,
+      907
     ]
   }
 }"

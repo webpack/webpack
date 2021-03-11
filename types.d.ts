@@ -2408,6 +2408,7 @@ declare class Dependency {
 	getModuleEvaluationSideEffectsState(
 		moduleGraph: ModuleGraph
 	): ConnectionState;
+	createIgnoredModule(context: string): Module;
 	serialize(__0: { write: any }): void;
 	deserialize(__0: { read: any }): void;
 	module: any;
