@@ -877,6 +877,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-asset-emit": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+        "multiple": false,
+        "path": "module.generator.asset.emit",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-generator-asset-filename": Object {
     "configs": Array [
       Object {
@@ -919,6 +932,19 @@ Object {
     "description": "Asset mimetype (getting from file extension by default).",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-generator-asset-resource-emit": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+        "multiple": false,
+        "path": "module.generator.asset/resource.emit",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-generator-asset-resource-filename": Object {
     "configs": Array [
