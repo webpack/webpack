@@ -16,7 +16,22 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(png|svg)$/,
-				type: "asset/resource"
+				type: "asset/resource",
+				rules: [
+					{
+						resourceQuery: "?custom2",
+						generator: {
+							// TODO webpack 6: remove generator.filename
+							filename: "custom-images/success[ext]"
+						}
+					},
+					{
+						resourceQuery: "?custom3",
+						parser: {
+							filename: "images/custom/success[ext]"
+						}
+					}
+				]
 			}
 		]
 	}
