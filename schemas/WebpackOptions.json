@@ -102,12 +102,7 @@
           "$ref": "#/definitions/AssetGeneratorDataUrl"
         },
         "filename": {
-          "description": "This is deprecated and has moved to 'parser.filename'.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/FilenameTemplate"
-            }
-          ]
+          "$ref": "#/definitions/FilenameTemplate"
         }
       }
     },
@@ -153,7 +148,6 @@
     "AssetParserOptions": {
       "description": "Parser options for asset modules.",
       "type": "object",
-      "implements": ["#/definitions/AssetResourceParserOptions"],
       "additionalProperties": false,
       "properties": {
         "dataUrlCondition": {
@@ -166,29 +160,11 @@
               "$ref": "#/definitions/AssetParserDataUrlFunction"
             }
           ]
-        },
-        "filename": {
-          "$ref": "#/definitions/FilenameTemplate"
         }
       }
     },
     "AssetResourceGeneratorOptions": {
       "description": "Generator options for asset/resource modules.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "filename": {
-          "description": "This is deprecated and has moved to 'parser.filename'.",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/FilenameTemplate"
-            }
-          ]
-        }
-      }
-    },
-    "AssetResourceParserOptions": {
-      "description": "Parser options for asset/resource modules.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -2838,7 +2814,7 @@
           "$ref": "#/definitions/EmptyParserOptions"
         },
         "asset/resource": {
-          "$ref": "#/definitions/AssetResourceParserOptions"
+          "$ref": "#/definitions/EmptyParserOptions"
         },
         "asset/source": {
           "$ref": "#/definitions/EmptyParserOptions"
