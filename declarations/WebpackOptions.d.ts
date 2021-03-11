@@ -2585,6 +2585,10 @@ export interface AssetParserOptions {
  */
 export interface AssetResourceGeneratorOptions {
 	/**
+	 * Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.
+	 */
+	emit?: boolean;
+	/**
 	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	filename?: FilenameTemplate;

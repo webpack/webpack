@@ -101,6 +101,10 @@
         "dataUrl": {
           "$ref": "#/definitions/AssetGeneratorDataUrl"
         },
+        "emit": {
+          "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+          "type": "boolean"
+        },
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
         }
@@ -168,6 +172,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "emit": {
+          "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+          "type": "boolean"
+        },
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
         }
