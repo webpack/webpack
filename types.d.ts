@@ -4626,6 +4626,7 @@ declare class JavascriptParser extends Parser {
 	walkArrayExpression(expression?: any): void;
 	walkSpreadElement(expression?: any): void;
 	walkObjectExpression(expression?: any): void;
+	walkProperty(prop?: any): void;
 	walkFunctionExpression(expression?: any): void;
 	walkArrowFunctionExpression(expression?: any): void;
 	walkSequenceExpression(expression: SequenceExpression): void;
