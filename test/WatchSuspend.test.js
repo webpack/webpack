@@ -24,6 +24,7 @@ describe("WatchSuspend", () => {
 		let compiler = null;
 		let watching = null;
 		let onChange = null;
+		let onInvalid = null;
 
 		beforeAll(() => {
 			try {
@@ -44,9 +45,13 @@ describe("WatchSuspend", () => {
 					filename: "bundle.js"
 				}
 			});
-			watching = compiler.watch({ aggregateTimeout: 50 }, () => {});
+			watching = compiler.watch({ aggregateTimeout: 500 }, () => {});
+
 			compiler.hooks.done.tap("WatchSuspendTest", () => {
 				if (onChange) onChange();
+			});
+			compiler.hooks.invalid.tap(`WatchSuspendTestInvalidation`, () => {
+				if (onInvalid) onInvalid();
 			});
 		});
 
@@ -91,6 +96,22 @@ describe("WatchSuspend", () => {
 				done();
 			};
 			watching.resume();
+		});
+
+		it("should not drop aggregated changes with resumed compilation", done => {
+			watching.suspend();
+
+			onInvalid = () => {
+				watching.resume();
+				onInvalid = null;
+			};
+
+			fs.writeFileSync(filePath, `'baz'`, "utf-8");
+
+			setTimeout(() => {
+				expect(fs.readFileSync(outputPath, "utf-8")).toContain("'baz'");
+				done();
+			}, 2000);
 		});
 	});
 });
