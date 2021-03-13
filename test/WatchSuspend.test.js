@@ -94,31 +94,27 @@ describe("WatchSuspend", () => {
 			watching.resume();
 		});
 
-		it("should not ignore changes during resumed compilation", done => {
+		it("should not ignore changes during resumed compilation", async () => {
 			// aggregateTimeout must be long enough for this test
-			watching.close();
-			watching = compiler.watch({ aggregateTimeout: 1000 }, () => {});
-			watching.suspend();
+			//  So set-up new watcher and wait when initial compilation is done
+			await new Promise(resolve => {
+				watching.close();
+				watching = compiler.watch({ aggregateTimeout: 1000 }, resolve);
+			});
+			return new Promise(resolve => {
+				watching.suspend();
+				fs.writeFileSync(filePath, "'baz'", "utf-8");
 
-			fs.writeFileSync(filePath, "'baz'", "utf-8");
+				// Run resume between "changed" and "aggregated" events
+				setTimeout(() => {
+					watching.resume();
 
-			// Run resume between "changed" and "aggregated" events
-			setTimeout(() => {
-				watching.resume();
-
-				onChange = () => {
-					// Sanity-check:
-					//  First compilation after resume() here is expected to be a no-op
-					//  (because "aggregated" event is not fired yet, so nothing changed)
-					expect(fs.readFileSync(outputPath, "utf-8")).not.toContain("'baz'");
-					onChange = () => {
-						// Second compilation must work:
-						onChange = null;
+					setTimeout(() => {
 						expect(fs.readFileSync(outputPath, "utf-8")).toContain("'baz'");
-						done();
-					};
-				};
-			}, 200);
+						resolve();
+					}, 2000);
+				}, 200);
+			});
 		});
 	});
 });
