@@ -4398,8 +4398,8 @@ assets by path *.wasm 1.37 KiB
   asset d1fdb94978c775bdc12a.module.wasm 120 bytes [emitted] [immutable]
 chunk (runtime: main) 99.bundle.js 50 bytes (javascript) 531 bytes (webassembly) [rendered]
   ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) [built] [code generated]
-chunk (runtime: main) bundle.js (main) 586 bytes (javascript) 9.14 KiB (runtime) [entry] [rendered]
-  runtime modules 9.14 KiB 11 modules
+chunk (runtime: main) bundle.js (main) 586 bytes (javascript) 9.15 KiB (runtime) [entry] [rendered]
+  runtime modules 9.15 KiB 11 modules
   ./index.js 586 bytes [built] [code generated]
 chunk (runtime: main) 230.bundle.js 50 bytes (javascript) 156 bytes (webassembly) [rendered]
   ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) [built] [code generated]
@@ -4412,7 +4412,7 @@ chunk (runtime: main) 526.bundle.js (id hint: vendors) 34 bytes [rendered] split
 chunk (runtime: main) 780.bundle.js 110 bytes (javascript) 444 bytes (webassembly) [rendered]
   ./fact.wasm 50 bytes (javascript) 154 bytes (webassembly) [built] [code generated]
   ./fast-math.wasm 60 bytes (javascript) 290 bytes (webassembly) [built] [code generated]
-runtime modules 9.14 KiB 11 modules
+runtime modules 9.15 KiB 11 modules
 cacheable modules 2.31 KiB (javascript) 1.37 KiB (webassembly)
   webassembly modules 310 bytes (javascript) 1.37 KiB (webassembly)
     ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) [built] [code generated]
