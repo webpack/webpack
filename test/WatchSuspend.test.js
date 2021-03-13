@@ -5,8 +5,6 @@ const fs = require("fs");
 
 const webpack = require("../");
 
-const aggregateTimeout = 50;
-
 describe("WatchSuspend", () => {
 	if (process.env.NO_WATCH_TESTS) {
 		it.skip("long running tests excluded", () => {});
@@ -26,7 +24,6 @@ describe("WatchSuspend", () => {
 		let compiler = null;
 		let watching = null;
 		let onChange = null;
-		let onInvalid = null;
 
 		beforeAll(() => {
 			try {
@@ -47,13 +44,10 @@ describe("WatchSuspend", () => {
 					filename: "bundle.js"
 				}
 			});
-			watching = compiler.watch({ aggregateTimeout }, () => {});
+			watching = compiler.watch({ aggregateTimeout: 50 }, () => {});
 
 			compiler.hooks.done.tap("WatchSuspendTest", () => {
 				if (onChange) onChange();
-			});
-			compiler.hooks.invalid.tap("WatchSuspendTestInvalidation", () => {
-				if (onInvalid) onInvalid();
 			});
 		});
 
@@ -100,24 +94,31 @@ describe("WatchSuspend", () => {
 			watching.resume();
 		});
 
-		it("should not drop changes during resumed compilation", done => {
-			// aggregateTimeout must be long enough to make
-			//  resumed compilation finish first
-			watching.watchOptions.aggregateTimeout = 500;
+		it("should not ignore changes during resumed compilation", done => {
+			// aggregateTimeout must be long enough for this test
+			watching.close();
+			watching = compiler.watch({ aggregateTimeout: 1000 }, () => {});
 			watching.suspend();
-
-			onInvalid = () => {
-				watching.resume();
-				onInvalid = null;
-			};
 
 			fs.writeFileSync(filePath, "'baz'", "utf-8");
 
+			// Run resume between "changed" and "aggregated" events
 			setTimeout(() => {
-				watching.watchOptions.aggregateTimeout = aggregateTimeout;
-				expect(fs.readFileSync(outputPath, "utf-8")).toContain("'baz'");
-				done();
-			}, 1000);
+				watching.resume();
+
+				onChange = () => {
+					// Sanity-check:
+					//  First compilation after resume() here is expected to be a no-op
+					//  (because "aggregated" event is not fired yet, so nothing changed)
+					expect(fs.readFileSync(outputPath, "utf-8")).not.toContain("'baz'");
+					onChange = () => {
+						// Second compilation must work:
+						onChange = null;
+						expect(fs.readFileSync(outputPath, "utf-8")).toContain("'baz'");
+						done();
+					};
+				};
+			}, 200);
 		});
 	});
 });
