@@ -3,12 +3,12 @@
 exports[`StatsTestCases should print correct stats for aggressive-splitting-entry 1`] = `
 "fitting:
   PublicPath: auto
-  asset fitting-76b3ff5906f5f79a2083.js 16 KiB [emitted] [immutable]
+  asset fitting-49cf6822fdd3ab62f1fa.js 16 KiB [emitted] [immutable]
   asset fitting-1c702fff0ba9fe1126d9.js 1.9 KiB [emitted] [immutable]
   asset fitting-c0e0ed061413e64a66c5.js 1.9 KiB [emitted] [immutable]
   asset fitting-445185754184bf780ddc.js 1.08 KiB [emitted] [immutable]
-  Entrypoint main 19.8 KiB = fitting-1c702fff0ba9fe1126d9.js 1.9 KiB fitting-c0e0ed061413e64a66c5.js 1.9 KiB fitting-76b3ff5906f5f79a2083.js 16 KiB
-  chunk (runtime: main) fitting-76b3ff5906f5f79a2083.js 1.87 KiB (javascript) 8.55 KiB (runtime) [entry] [rendered]
+  Entrypoint main 19.8 KiB = fitting-1c702fff0ba9fe1126d9.js 1.9 KiB fitting-c0e0ed061413e64a66c5.js 1.9 KiB fitting-49cf6822fdd3ab62f1fa.js 16 KiB
+  chunk (runtime: main) fitting-49cf6822fdd3ab62f1fa.js 1.87 KiB (javascript) 8.55 KiB (runtime) [entry] [rendered]
     > ./index main
     runtime modules 8.55 KiB 11 modules
     cacheable modules 1.87 KiB
@@ -30,12 +30,12 @@ exports[`StatsTestCases should print correct stats for aggressive-splitting-entr
 
 content-change:
   PublicPath: auto
-  asset content-change-920651e7c0f0ff8ef514.js 16 KiB [emitted] [immutable]
+  asset content-change-18711faf03f6d39ddf5e.js 16 KiB [emitted] [immutable]
   asset content-change-1c702fff0ba9fe1126d9.js 1.9 KiB [emitted] [immutable]
   asset content-change-c0e0ed061413e64a66c5.js 1.9 KiB [emitted] [immutable]
   asset content-change-445185754184bf780ddc.js 1.08 KiB [emitted] [immutable]
-  Entrypoint main 19.8 KiB = content-change-1c702fff0ba9fe1126d9.js 1.9 KiB content-change-c0e0ed061413e64a66c5.js 1.9 KiB content-change-920651e7c0f0ff8ef514.js 16 KiB
-  chunk (runtime: main) content-change-920651e7c0f0ff8ef514.js 1.87 KiB (javascript) 8.56 KiB (runtime) [entry] [rendered]
+  Entrypoint main 19.8 KiB = content-change-1c702fff0ba9fe1126d9.js 1.9 KiB content-change-c0e0ed061413e64a66c5.js 1.9 KiB content-change-18711faf03f6d39ddf5e.js 16 KiB
+  chunk (runtime: main) content-change-18711faf03f6d39ddf5e.js 1.87 KiB (javascript) 8.56 KiB (runtime) [entry] [rendered]
     > ./index main
     runtime modules 8.56 KiB 11 modules
     cacheable modules 1.87 KiB
@@ -1060,7 +1060,7 @@ webpack x.x.x compiled with 2 warnings in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for immutable 1`] = `
-"asset 625d2bf847145ad1ed96.js 13.3 KiB [emitted] [immutable] (name: main)
+"asset b16ed121da995c229ac0.js 13.3 KiB [emitted] [immutable] (name: main)
 asset 22c24a3b26d46118dc06.js 809 bytes [emitted] [immutable]"
 `;
 
