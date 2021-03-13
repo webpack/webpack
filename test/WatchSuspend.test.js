@@ -5,6 +5,8 @@ const fs = require("fs");
 
 const webpack = require("../");
 
+const aggregateTimeout = 50;
+
 describe("WatchSuspend", () => {
 	if (process.env.NO_WATCH_TESTS) {
 		it.skip("long running tests excluded", () => {});
@@ -45,12 +47,12 @@ describe("WatchSuspend", () => {
 					filename: "bundle.js"
 				}
 			});
-			watching = compiler.watch({ aggregateTimeout: 500 }, () => {});
+			watching = compiler.watch({ aggregateTimeout }, () => {});
 
 			compiler.hooks.done.tap("WatchSuspendTest", () => {
 				if (onChange) onChange();
 			});
-			compiler.hooks.invalid.tap(`WatchSuspendTestInvalidation`, () => {
+			compiler.hooks.invalid.tap("WatchSuspendTestInvalidation", () => {
 				if (onInvalid) onInvalid();
 			});
 		});
@@ -98,7 +100,10 @@ describe("WatchSuspend", () => {
 			watching.resume();
 		});
 
-		it("should not drop aggregated changes with resumed compilation", done => {
+		it("should not drop changes during resumed compilation", done => {
+			// aggregateTimeout must be long enough to make
+			//  resumed compilation finish first
+			watching.watchOptions.aggregateTimeout = 500;
 			watching.suspend();
 
 			onInvalid = () => {
@@ -106,12 +111,13 @@ describe("WatchSuspend", () => {
 				onInvalid = null;
 			};
 
-			fs.writeFileSync(filePath, `'baz'`, "utf-8");
+			fs.writeFileSync(filePath, "'baz'", "utf-8");
 
 			setTimeout(() => {
+				watching.watchOptions.aggregateTimeout = aggregateTimeout;
 				expect(fs.readFileSync(outputPath, "utf-8")).toContain("'baz'");
 				done();
-			}, 2000);
+			}, 1000);
 		});
 	});
 });
