@@ -136,7 +136,7 @@ function increment() {
 
 ```
 asset MyLibrary.umd.js 3.97 KiB [emitted] (name: main)
-chunk MyLibrary.umd.js (main) 92 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
   > ./example main
   runtime modules 668 bytes 3 modules
   ./example.js 92 bytes [built] [code generated]
@@ -144,7 +144,7 @@ chunk MyLibrary.umd.js (main) 92 bytes (javascript) 668 bytes (runtime) [entry] 
     [used exports unknown]
     entry ./example main
     used as library export
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
@@ -158,5 +158,5 @@ chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 668 bytes (r
     [exports: default, increment, value]
     entry ./example main
     used as library export
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

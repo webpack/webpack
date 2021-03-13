@@ -77,4 +77,16 @@ describe("itemsToRegexp", () => {
 				`(\\.\\/path\\/to\\/(directory\\/with\\/(file\\.(js(|on)|css)|module\\.css)|file\\.(|m)js|other\\-file\\.js)|webpack\\/runtime\\/module)`
 			)
 	);
+
+	expectCompiled(
+		"prefix and suffix overlap",
+		[
+			"webpack_sharing_consume_default_react_react",
+			"webpack_sharing_consume_default_classnames_classnames-webpack_sharing_consume_default_react_react"
+		],
+		e =>
+			e.toMatchInlineSnapshot(
+				`webpack_sharing_consume_default_(|classnames_classnames\\-webpack_sharing_consume_default_)react_react`
+			)
+	);
 });

@@ -8,8 +8,10 @@ it("should support hot module replacement in WebWorkers", done => {
 				});
 				break;
 			case "done":
-				done();
+				Promise.resolve(worker.terminate()).then(() => done(), done);
 				break;
+			default:
+				throw new Error(`Unexpected message: ${msg}`);
 		}
 	};
 	worker.postMessage("test");

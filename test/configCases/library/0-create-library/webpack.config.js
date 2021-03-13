@@ -5,7 +5,44 @@ module.exports = (env, { testPath }) => [
 	{
 		output: {
 			filename: "commonjs.js",
-			libraryTarget: "commonjs"
+			libraryTarget: "commonjs",
+			iife: false
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		}
+	},
+	{
+		output: {
+			filename: "commonjs-iife.js",
+			libraryTarget: "commonjs",
+			iife: true
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		}
+	},
+	{
+		output: {
+			filename: "amd.js",
+			libraryTarget: "amd",
+			iife: false
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		}
+	},
+	{
+		output: {
+			filename: "amd-iife.js",
+			libraryTarget: "amd",
+			iife: true
 		},
 		resolve: {
 			alias: {
@@ -39,7 +76,20 @@ module.exports = (env, { testPath }) => [
 	{
 		output: {
 			filename: "this.js",
-			libraryTarget: "this"
+			libraryTarget: "this",
+			iife: false
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		}
+	},
+	{
+		output: {
+			filename: "this-iife.js",
+			libraryTarget: "this",
+			iife: true
 		},
 		resolve: {
 			alias: {
@@ -50,7 +100,8 @@ module.exports = (env, { testPath }) => [
 	{
 		output: {
 			filename: "var.js",
-			library: ["globalName", "x", "y"]
+			library: ["globalName", "x", "y"],
+			iife: false
 		},
 		resolve: {
 			alias: {
@@ -66,9 +117,92 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			filename: "var-iife.js",
+			library: ["globalName", "x", "y"],
+			iife: true
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		plugins: [
+			new webpack.BannerPlugin({
+				raw: true,
+				banner: "module.exports = () => globalName;\n"
+			})
+		]
+	},
+	{
+		entry: "./nested.js",
+		output: {
+			filename: "commonjs-nested.js",
+			libraryTarget: "commonjs",
+			libraryExport: "NS",
+			iife: false
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		}
+	},
+	{
+		entry: "./nested.js",
+		output: {
+			filename: "commonjs-nested-iife.js",
+			libraryTarget: "commonjs",
+			libraryExport: "NS",
+			iife: true
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		}
+	},
+	{
+		output: {
 			filename: "commonjs2-external.js",
+			libraryTarget: "commonjs2",
+			iife: false
+		},
+		externals: ["external"]
+	},
+	{
+		output: {
+			filename: "commonjs2-external-no-concat.js",
+			libraryTarget: "commonjs2",
+			iife: false
+		},
+		optimization: {
+			concatenateModules: false
+		},
+		externals: ["external"]
+	},
+	{
+		output: {
+			filename: "commonjs2-iife-external.js",
+			libraryTarget: "commonjs2",
+			iife: true
+		},
+		externals: ["external"]
+	},
+	{
+		mode: "development",
+		output: {
+			filename: "commonjs2-external-eval.js",
 			libraryTarget: "commonjs2"
 		},
+		externals: ["external"]
+	},
+	{
+		mode: "development",
+		output: {
+			filename: "commonjs2-external-eval-source-map.js",
+			libraryTarget: "commonjs2"
+		},
+		devtool: "eval-source-map",
 		externals: ["external"]
 	},
 	{
@@ -94,6 +228,70 @@ module.exports = (env, { testPath }) => [
 			alias: {
 				external: "./non-external"
 			}
+		}
+	},
+	{
+		output: {
+			filename: "commonjs2-runtimeChunk/[name].js",
+			libraryTarget: "commonjs2",
+			iife: false
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
+		}
+	},
+	{
+		output: {
+			filename: "commonjs2-iife-runtimeChunk/[name].js",
+			libraryTarget: "commonjs2",
+			iife: true
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
+		}
+	},
+	{
+		output: {
+			filename: "global-runtimeChunk/[name].js",
+			library: ["globalName", "x", "y"],
+			libraryTarget: "global",
+			iife: false
+		},
+		target: "web",
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
+		}
+	},
+	{
+		output: {
+			filename: "global-iife-runtimeChunk/[name].js",
+			library: ["globalName", "x", "y"],
+			libraryTarget: "global",
+			iife: true
+		},
+		target: "web",
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
 		}
 	},
 	{

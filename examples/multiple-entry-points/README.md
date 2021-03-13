@@ -156,6 +156,9 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
+/******/ 	// the startup function
+/******/ 	// It's empty as some runtime module handles the default behavior
+/******/ 	__webpack_require__.x = x => {}
 /************************************************************************/
 /******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	(() => {
@@ -298,43 +301,10 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		var checkDeferredModules = () => {
-/******/ 		
-/******/ 		};
-/******/ 		function checkDeferredModulesImpl() {
-/******/ 			var result;
-/******/ 			for(var i = 0; i < deferredModules.length; i++) {
-/******/ 				var deferredModule = deferredModules[i];
-/******/ 				var fulfilled = true;
-/******/ 				for(var j = 1; j < deferredModule.length; j++) {
-/******/ 					var depId = deferredModule[j];
-/******/ 					if(installedChunks[depId] !== 0) fulfilled = false;
-/******/ 				}
-/******/ 				if(fulfilled) {
-/******/ 					deferredModules.splice(i--, 1);
-/******/ 					result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
-/******/ 				}
-/******/ 			}
-/******/ 			if(deferredModules.length === 0) {
-/******/ 				__webpack_require__.x();
-/******/ 				__webpack_require__.x = () => {
-/******/ 		
-/******/ 				}
-/******/ 			}
-/******/ 			return result;
-/******/ 		}
-/******/ 		__webpack_require__.x = () => {
-/******/ 			// reset startup function so it can be called again when more startup code is added
-/******/ 			__webpack_require__.x = () => {
-/******/ 		
-/******/ 			}
-/******/ 			chunkLoadingGlobal = chunkLoadingGlobal.slice();
-/******/ 			for(var i = 0; i < chunkLoadingGlobal.length; i++) webpackJsonpCallback(chunkLoadingGlobal[i]);
-/******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
-/******/ 		};
+/******/ 		var checkDeferredModules = x => {};
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var [chunkIds, moreModules, runtime, executeModules] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
@@ -352,7 +322,7 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			parentChunkLoadingFunction(data);
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
@@ -365,8 +335,35 @@ __webpack_require__.e(/*! AMD require */ 52).then(function() { var __WEBPACK_AMD
 /******/ 		}
 /******/ 		
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
-/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		
+/******/ 		function checkDeferredModulesImpl() {
+/******/ 			var result;
+/******/ 			for(var i = 0; i < deferredModules.length; i++) {
+/******/ 				var deferredModule = deferredModules[i];
+/******/ 				var fulfilled = true;
+/******/ 				for(var j = 1; j < deferredModule.length; j++) {
+/******/ 					var depId = deferredModule[j];
+/******/ 					if(installedChunks[depId] !== 0) fulfilled = false;
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferredModules.splice(i--, 1);
+/******/ 					result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
+/******/ 				}
+/******/ 			}
+/******/ 			if(deferredModules.length === 0) {
+/******/ 				__webpack_require__.x();
+/******/ 				__webpack_require__.x = x => {};
+/******/ 			}
+/******/ 			return result;
+/******/ 		}
+/******/ 		var startup = __webpack_require__.x;
+/******/ 		__webpack_require__.x = () => {
+/******/ 			// reset startup function so it can be called again when more startup code is added
+/******/ 			__webpack_require__.x = startup || (x => {});
+/******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
+/******/ 		};
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -436,6 +433,9 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
+/******/ 	// the startup function
+/******/ 	// It's empty as some runtime module handles the default behavior
+/******/ 	__webpack_require__.x = x => {}
 /************************************************************************/
 /******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	(() => {
@@ -578,43 +578,10 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		var checkDeferredModules = () => {
-/******/ 		
-/******/ 		};
-/******/ 		function checkDeferredModulesImpl() {
-/******/ 			var result;
-/******/ 			for(var i = 0; i < deferredModules.length; i++) {
-/******/ 				var deferredModule = deferredModules[i];
-/******/ 				var fulfilled = true;
-/******/ 				for(var j = 1; j < deferredModule.length; j++) {
-/******/ 					var depId = deferredModule[j];
-/******/ 					if(installedChunks[depId] !== 0) fulfilled = false;
-/******/ 				}
-/******/ 				if(fulfilled) {
-/******/ 					deferredModules.splice(i--, 1);
-/******/ 					result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
-/******/ 				}
-/******/ 			}
-/******/ 			if(deferredModules.length === 0) {
-/******/ 				__webpack_require__.x();
-/******/ 				__webpack_require__.x = () => {
-/******/ 		
-/******/ 				}
-/******/ 			}
-/******/ 			return result;
-/******/ 		}
-/******/ 		__webpack_require__.x = () => {
-/******/ 			// reset startup function so it can be called again when more startup code is added
-/******/ 			__webpack_require__.x = () => {
-/******/ 		
-/******/ 			}
-/******/ 			chunkLoadingGlobal = chunkLoadingGlobal.slice();
-/******/ 			for(var i = 0; i < chunkLoadingGlobal.length; i++) webpackJsonpCallback(chunkLoadingGlobal[i]);
-/******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
-/******/ 		};
+/******/ 		var checkDeferredModules = x => {};
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var [chunkIds, moreModules, runtime, executeModules] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
@@ -632,7 +599,7 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			parentChunkLoadingFunction(data);
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
@@ -645,8 +612,35 @@ __webpack_require__.e(/*! require.ensure */ 52).then((function(require) {
 /******/ 		}
 /******/ 		
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
-/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		
+/******/ 		function checkDeferredModulesImpl() {
+/******/ 			var result;
+/******/ 			for(var i = 0; i < deferredModules.length; i++) {
+/******/ 				var deferredModule = deferredModules[i];
+/******/ 				var fulfilled = true;
+/******/ 				for(var j = 1; j < deferredModule.length; j++) {
+/******/ 					var depId = deferredModule[j];
+/******/ 					if(installedChunks[depId] !== 0) fulfilled = false;
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferredModules.splice(i--, 1);
+/******/ 					result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
+/******/ 				}
+/******/ 			}
+/******/ 			if(deferredModules.length === 0) {
+/******/ 				__webpack_require__.x();
+/******/ 				__webpack_require__.x = x => {};
+/******/ 			}
+/******/ 			return result;
+/******/ 		}
+/******/ 		var startup = __webpack_require__.x;
+/******/ 		__webpack_require__.x = () => {
+/******/ 			// reset startup function so it can be called again when more startup code is added
+/******/ 			__webpack_require__.x = startup || (x => {});
+/******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
+/******/ 		};
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -690,54 +684,12 @@ module.exports = function(msg) {
 ## Unoptimized
 
 ```
-asset pageA.js 10.6 KiB [emitted] (name: pageA)
-asset pageB.js 10.5 KiB [emitted] (name: pageB)
+asset pageA.js 10.7 KiB [emitted] (name: pageA)
+asset pageB.js 10.6 KiB [emitted] (name: pageB)
 asset 52.js 506 bytes [emitted]
 asset commons.js 364 bytes [emitted] (name: commons) (id hint: commons)
-Entrypoint pageA 10.9 KiB = commons.js 364 bytes pageA.js 10.6 KiB
-Entrypoint pageB 10.9 KiB = commons.js 364 bytes pageB.js 10.5 KiB
-chunk 52.js 88 bytes [rendered]
-  > ./shared ./pageA.js 2:0-4:2
-  > ./pageB.js 2:0-5:2
-  ./shared.js 88 bytes [built] [code generated]
-    [used exports unknown]
-    amd require ./shared ./pageA.js 2:0-4:2
-    require.ensure item ./shared ./pageB.js 2:0-5:2
-    cjs require ./shared ./pageB.js 3:14-33
-    cjs self exports reference ./shared.js 2:0-14
-chunk pageB.js (pageB) 148 bytes (javascript) 6.03 KiB (runtime) [entry] [rendered]
-  > ./pageB pageB
-  runtime modules 6.03 KiB 6 modules
-  ./pageB.js 148 bytes [built] [code generated]
-    [used exports unknown]
-    entry ./pageB pageB
-chunk commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
-  > ./pageA pageA
-  > ./pageB pageB
-  ./common.js 26 bytes [built] [code generated]
-    [used exports unknown]
-    cjs self exports reference ./common.js 1:0-14
-    cjs require ./common ./pageA.js 1:13-32
-    cjs require ./common ./pageB.js 1:13-32
-    cjs require ./common ./shared.js 1:13-32
-chunk pageA.js (pageA) 105 bytes (javascript) 6.03 KiB (runtime) [entry] [rendered]
-  > ./pageA pageA
-  runtime modules 6.03 KiB 6 modules
-  ./pageA.js 105 bytes [built] [code generated]
-    [used exports unknown]
-    entry ./pageA pageA
-webpack 5.0.0 compiled successfully
-```
-
-## Production mode
-
-```
-asset pageA.js 2.02 KiB [emitted] [minimized] (name: pageA)
-asset pageB.js 2 KiB [emitted] [minimized] (name: pageB)
-asset 52.js 116 bytes [emitted] [minimized]
-asset commons.js 86 bytes [emitted] [minimized] (name: commons) (id hint: commons)
-Entrypoint pageA 2.11 KiB = commons.js 86 bytes pageA.js 2.02 KiB
-Entrypoint pageB 2.08 KiB = commons.js 86 bytes pageB.js 2 KiB
+Entrypoint pageA 11 KiB = commons.js 364 bytes pageA.js 10.7 KiB
+Entrypoint pageB 11 KiB = commons.js 364 bytes pageB.js 10.6 KiB
 chunk (runtime: pageA, pageB) 52.js 88 bytes [rendered]
   > ./shared ./pageA.js 2:0-4:2
   > ./pageB.js 2:0-5:2
@@ -747,9 +699,51 @@ chunk (runtime: pageA, pageB) 52.js 88 bytes [rendered]
     require.ensure item ./shared ./pageB.js 2:0-5:2
     cjs require ./shared ./pageB.js 3:14-33
     cjs self exports reference ./shared.js 2:0-14
-chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 6.04 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 6.03 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 6.04 KiB 6 modules
+  runtime modules 6.03 KiB 6 modules
+  ./pageB.js 148 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./pageB pageB
+chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
+  > ./pageA pageA
+  > ./pageB pageB
+  ./common.js 26 bytes [built] [code generated]
+    [used exports unknown]
+    cjs self exports reference ./common.js 1:0-14
+    cjs require ./common ./pageA.js 1:13-32
+    cjs require ./common ./pageB.js 1:13-32
+    cjs require ./common ./shared.js 1:13-32
+chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 6.03 KiB (runtime) [entry] [rendered]
+  > ./pageA pageA
+  runtime modules 6.03 KiB 6 modules
+  ./pageA.js 105 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./pageA pageA
+webpack 5.11.1 compiled successfully
+```
+
+## Production mode
+
+```
+asset pageA.js 2.04 KiB [emitted] [minimized] (name: pageA)
+asset pageB.js 2.01 KiB [emitted] [minimized] (name: pageB)
+asset 52.js 116 bytes [emitted] [minimized]
+asset commons.js 86 bytes [emitted] [minimized] (name: commons) (id hint: commons)
+Entrypoint pageA 2.12 KiB = commons.js 86 bytes pageA.js 2.04 KiB
+Entrypoint pageB 2.1 KiB = commons.js 86 bytes pageB.js 2.01 KiB
+chunk (runtime: pageA, pageB) 52.js 88 bytes [rendered]
+  > ./shared ./pageA.js 2:0-4:2
+  > ./pageB.js 2:0-5:2
+  ./shared.js 88 bytes [built] [code generated]
+    [used exports unknown]
+    amd require ./shared ./pageA.js 2:0-4:2
+    require.ensure item ./shared ./pageB.js 2:0-5:2
+    cjs require ./shared ./pageB.js 3:14-33
+    cjs self exports reference ./shared.js 2:0-14
+chunk (runtime: pageB) pageB.js (pageB) 148 bytes (javascript) 6.03 KiB (runtime) [entry] [rendered]
+  > ./pageB pageB
+  runtime modules 6.03 KiB 6 modules
   ./pageB.js 148 bytes [built] [code generated]
     [no exports used]
     entry ./pageB pageB
@@ -762,11 +756,11 @@ chunk (runtime: pageA, pageB) commons.js (commons) (id hint: commons) 26 bytes [
     cjs require ./common ./pageA.js 1:13-32
     cjs require ./common ./pageB.js 1:13-32
     cjs require ./common ./shared.js 1:13-32
-chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 6.04 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 105 bytes (javascript) 6.03 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 6.04 KiB 6 modules
+  runtime modules 6.03 KiB 6 modules
   ./pageA.js 105 bytes [built] [code generated]
     [no exports used]
     entry ./pageA pageA
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

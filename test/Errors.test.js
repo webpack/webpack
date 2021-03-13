@@ -291,8 +291,8 @@ it("should emit warning for undef mode", async () => {
 					  "errors": Array [],
 					  "warnings": Array [
 					    Object {
-					      "message": "configuration\\nThe 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.\\nYou can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/",
-					      "stack": "NoModeWarning: configuration\\nThe 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.\\nYou can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/",
+					      "message": "configuration\\nThe 'mode' option has not been set, webpack will fallback to 'production' for this value.\\nSet 'mode' option to 'development' or 'production' to enable defaults for each environment.\\nYou can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/",
+					      "stack": "NoModeWarning: configuration\\nThe 'mode' option has not been set, webpack will fallback to 'production' for this value.\\nSet 'mode' option to 'development' or 'production' to enable defaults for each environment.\\nYou can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/",
 					    },
 					  ],
 					}
@@ -868,6 +868,21 @@ describe("loaders", () => {
 					    },
 					  ],
 					  "warnings": Array [],
+					}
+				`);
+	});
+
+	it("should throw error for invalid library name", async () => {
+		await expect(
+			compile({
+				output: {
+					libraryTarget: "var"
+				}
+			})
+		).rejects.toMatchInlineSnapshot(`
+					Object {
+					  "message": "Library name must be a string or string array. Common configuration options that specific library names are 'output.library[.name]', 'entry.xyz.library[.name]', 'ModuleFederationPlugin.name' and 'ModuleFederationPlugin.library[.name]'.",
+					  "stack": "Error: Library name must be a string or string array. Common configuration options that specific library names are 'output.library[.name]', 'entry.xyz.library[.name]', 'ModuleFederationPlugin.name' and 'ModuleFederationPlugin.library[.name]'.",
 					}
 				`);
 	});

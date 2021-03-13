@@ -111,14 +111,9 @@ within webpack itself use this plugin interface. This makes webpack very
 | :---------------------------------------: | :----------------: | :-----------------: | :-------------------------------------------------------------------------------------- |
 |    [mini-css-extract-plugin][mini-css]    |  ![mini-css-npm]   |  ![mini-css-size]   | Extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. |
 | [compression-webpack-plugin][compression] | ![compression-npm] | ![compression-size] | Prepares compressed versions of assets to serve them with Content-Encoding              |
-|        [i18n-webpack-plugin][i18n]        |    ![i18n-npm]     |    ![i18n-size]     | Adds i18n support to your bundles                                                       |
 |    [html-webpack-plugin][html-plugin]     | ![html-plugin-npm] | ![html-plugin-size] | Simplifies creation of HTML files (`index.html`) to serve your bundles                  |
-|  [extract-text-webpack-plugin][extract]   |   ![extract-npm]   |   ![extract-size]   | Extract text from a bundle, or bundles, into a separate file                            |
 
 [common-npm]: https://img.shields.io/npm/v/webpack.svg
-[extract]: https://github.com/webpack-contrib/extract-text-webpack-plugin
-[extract-npm]: https://img.shields.io/npm/v/extract-text-webpack-plugin.svg
-[extract-size]: https://packagephobia.com/badge?p=extract-text-webpack-plugin
 [mini-css]: https://github.com/webpack-contrib/mini-css-extract-plugin
 [mini-css-npm]: https://img.shields.io/npm/v/mini-css-extract-plugin.svg
 [mini-css-size]: https://packagephobia.com/badge?p=mini-css-extract-plugin
@@ -128,9 +123,6 @@ within webpack itself use this plugin interface. This makes webpack very
 [compression]: https://github.com/webpack-contrib/compression-webpack-plugin
 [compression-npm]: https://img.shields.io/npm/v/compression-webpack-plugin.svg
 [compression-size]: https://packagephobia.com/badge?p=compression-webpack-plugin
-[i18n]: https://github.com/webpack-contrib/i18n-webpack-plugin
-[i18n-npm]: https://img.shields.io/npm/v/i18n-webpack-plugin.svg
-[i18n-size]: https://packagephobia.com/badge?p=i18n-webpack-plugin
 [html-plugin]: https://github.com/jantimon/html-webpack-plugin
 [html-plugin-npm]: https://img.shields.io/npm/v/html-webpack-plugin.svg
 [html-plugin-size]: https://packagephobia.com/badge?p=html-webpack-plugin
@@ -168,32 +160,22 @@ or are automatically applied via regex from your webpack configuration.
 
 #### JSON
 
-|                                                                                Name                                                                                |    Status    | Install Size  | Description                             |
-| :----------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------: | :-----------: | :-------------------------------------- |
-|             <a href="https://github.com/webpack-contrib/json-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/json.svg"></a>             | ![json-npm]  | ![json-size]  | Loads a JSON file (included by default) |
-| <a href="https://github.com/webpack-contrib/json5-loader"><img width="48" height="10.656" src="https://cdn.rawgit.com/json5/json5-logo/master/json5-logo.svg"></a> | ![json5-npm] | ![json5-size] | Loads and transpiles a JSON 5 file      |
-|             <a href="https://github.com/awnist/cson-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>              | ![cson-npm]  | ![cson-size]  | Loads and transpiles a CSON file        |
+|                                                                   Name                                                                    |   Status    | Install Size |           Description            |
+| :---------------------------------------------------------------------------------------------------------------------------------------: | :---------: | :----------: | :------------------------------: |
+| <a href="https://github.com/awnist/cson-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a> | ![cson-npm] | ![cson-size] | Loads and transpiles a CSON file |
 
-[json-npm]: https://img.shields.io/npm/v/json-loader.svg
-[json-size]: https://packagephobia.com/badge?p=json-loader
-[json5-npm]: https://img.shields.io/npm/v/json5-loader.svg
-[json5-size]: https://packagephobia.com/badge?p=json5-loader
 [cson-npm]: https://img.shields.io/npm/v/cson-loader.svg
 [cson-size]: https://packagephobia.com/badge?p=cson-loader
 
 #### Transpiling
 
-|                                                                            Name                                                                            |          Status           |        Install Size        | Description                                                                                          |
-| :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------: | :------------------------: | :--------------------------------------------------------------------------------------------------- |
-|                                         <a href="https://github.com/webpack-contrib/script-loader">`<script>`</a>                                          |       ![script-npm]       |       ![script-size]       | Executes a JavaScript file once in global context (like in script tag), `require()`s are not parsed  |
-| <a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a> |       ![babel-npm]        |       ![babel-size]        | Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a>    |
-|       <a href="https://github.com/jupl/traceur-loader"><img width="48" height="48" src="https://google.github.com/traceur-compiler/logo/tc.svg"></a>       |      ![traceur-npm]       |      ![traceur-size]       | Loads ES2015+ code and transpiles to ES5 using [Traceur](https://github.com/google/traceur-compiler) |
-|  <a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>  |        ![type-npm]        |        ![type-size]        | Loads TypeScript like JavaScript                                                                     |
-|                                   [`awesome-typescript-loader`](https://github.com/s-panferov/awesome-typescript-loader)                                   | ![awesome-typescript-npm] | ![awesome-typescript-size] | Awesome TypeScript loader for webpack                                                                |
-|    <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>    |       ![coffee-npm]       |       ![coffee-size]       | Loads CoffeeScript like JavaScript                                                                   |
+|                                                                            Name                                                                            |     Status     |  Install Size   | Description                                                                                          |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------: | :-------------: | :--------------------------------------------------------------------------------------------------- |
+| <a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a> |  ![babel-npm]  |  ![babel-size]  | Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a>    |
+|       <a href="https://github.com/jupl/traceur-loader"><img width="48" height="48" src="https://google.github.com/traceur-compiler/logo/tc.svg"></a>       | ![traceur-npm] | ![traceur-size] | Loads ES2015+ code and transpiles to ES5 using [Traceur](https://github.com/google/traceur-compiler) |
+|  <a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>  |  ![type-npm]   |  ![type-size]   | Loads TypeScript like JavaScript                                                                     |
+|    <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>    | ![coffee-npm]  | ![coffee-size]  | Loads CoffeeScript like JavaScript                                                                   |
 
-[script-npm]: https://img.shields.io/npm/v/script-loader.svg
-[script-size]: https://packagephobia.com/badge?p=script-loader
 [babel-npm]: https://img.shields.io/npm/v/babel-loader.svg
 [babel-size]: https://packagephobia.com/badge?p=babel-loader
 [traceur-npm]: https://img.shields.io/npm/v/traceur-loader.svg
@@ -202,8 +184,6 @@ or are automatically applied via regex from your webpack configuration.
 [coffee-size]: https://packagephobia.com/badge?p=coffee-loader
 [type-npm]: https://img.shields.io/npm/v/ts-loader.svg
 [type-size]: https://packagephobia.com/badge?p=ts-loader
-[awesome-typescript-npm]: https://img.shields.io/npm/v/awesome-typescript-loader.svg
-[awesome-typescript-size]: https://packagephobia.com/badge?p=awesome-typescript-loader
 
 #### Templating
 
@@ -251,23 +231,6 @@ or are automatically applied via regex from your webpack configuration.
 [stylus-size]: https://packagephobia.com/badge?p=stylus-loader
 [postcss-npm]: https://img.shields.io/npm/v/postcss-loader.svg
 [postcss-size]: https://packagephobia.com/badge?p=postcss-loader
-
-#### Linting & Testing
-
-|                                                                      Name                                                                      |    Status     |  Install Size  | Description                             |
-| :--------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :------------: | :-------------------------------------- |
-|  <a href="https://github.com/webpack-contrib/mocha-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/mocha.svg"></a>  | ![mocha-npm]  | ![mocha-size]  | Tests with mocha (Browser/NodeJS)       |
-| <a href="https://github.com/webpack-contrib/eslint-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/eslint.svg"></a> | ![eslint-npm] | ![eslint-size] | PreLoader for linting code using ESLint |
-|  <a href="https://github.com/webpack-contrib/jshint-loader"><img width="48" height="20.64" src="https://jshint.com/res/jshint-dark.png"></a>   | ![jshint-npm] | ![jshint-size] | PreLoader for linting code using JSHint |
-
-[mocha-npm]: https://img.shields.io/npm/v/mocha-loader.svg
-[mocha-size]: https://packagephobia.com/badge?p=mocha-loader
-[eslint-npm]: https://img.shields.io/npm/v/eslint-loader.svg
-[eslint-size]: https://packagephobia.com/badge?p=eslint-loader
-[jshint-npm]: https://img.shields.io/npm/v/jshint-loader.svg
-[jshint-size]: https://packagephobia.com/badge?p=jshint-loader
-[jscs-npm]: https://img.shields.io/npm/v/jscs-loader.svg
-[jscs-size]: https://packagephobia.com/badge?p=jscs-loader
 
 #### Frameworks
 

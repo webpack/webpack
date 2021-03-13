@@ -33,6 +33,7 @@ exports.replaceBase = (template) => {
 	return template
 		.replace(/\r\n/g, "\n")
 		.replace(/\r/g, "\n")
+		.replace(/\[webpack-cli\].+\n/g, "")
 		.replace(cwdSlashRegExp, "./")
 		.replace(cwdRegExp, ".")
 		.replace(webpack, "(webpack)")
@@ -62,6 +63,11 @@ exports.replaceResults = (template, baseDir, stdout, prefix) => {
 		match = match.substr(3 + (prefix ? prefix.length + 1 : 0), match.length - 6 - (prefix ? prefix.length + 1 : 0));
 		if(match === "stdout")
 			return stdout;
-		return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");
+		try {
+			return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");
+		} catch(e) {
+			e.message += `\nwhile reading '${match}' in '${baseDir}`;
+			throw e;
+		}
 	});
 };

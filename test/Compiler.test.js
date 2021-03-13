@@ -366,7 +366,7 @@ describe("Compiler", () => {
 			done();
 		});
 	});
-	it("should not be run twice at a time (run)", function (done) {
+	it("should not be running twice at a time (run)", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -384,7 +384,7 @@ describe("Compiler", () => {
 			if (err) return done();
 		});
 	});
-	it("should not be run twice at a time (watch)", function (done) {
+	it("should not be running twice at a time (watch)", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -402,7 +402,7 @@ describe("Compiler", () => {
 			if (err) return done();
 		});
 	});
-	it("should not be run twice at a time (run - watch)", function (done) {
+	it("should not be running twice at a time (run - watch)", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -420,7 +420,7 @@ describe("Compiler", () => {
 			if (err) return done();
 		});
 	});
-	it("should not be run twice at a time (watch - run)", function (done) {
+	it("should not be running twice at a time (watch - run)", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -438,7 +438,7 @@ describe("Compiler", () => {
 			if (err) return done();
 		});
 	});
-	it("should not be run twice at a time (instance cb)", function (done) {
+	it("should not be running twice at a time (instance cb)", done => {
 		const compiler = webpack(
 			{
 				context: __dirname,
@@ -456,7 +456,7 @@ describe("Compiler", () => {
 			if (err) return done();
 		});
 	});
-	it("should run again correctly after first compilation", function (done) {
+	it("should run again correctly after first compilation", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -476,7 +476,7 @@ describe("Compiler", () => {
 			});
 		});
 	});
-	it("should watch again correctly after first compilation", function (done) {
+	it("should watch again correctly after first compilation", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -496,7 +496,7 @@ describe("Compiler", () => {
 			});
 		});
 	});
-	it("should run again correctly after first closed watch", function (done) {
+	it("should run again correctly after first closed watch", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -534,7 +534,7 @@ describe("Compiler", () => {
 		});
 		expect(compiler.watching).toBe(watching);
 	});
-	it("should watch again correctly after first closed watch", function (done) {
+	it("should watch again correctly after first closed watch", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -555,7 +555,7 @@ describe("Compiler", () => {
 			});
 		});
 	});
-	it("should run again correctly inside afterDone hook", function (done) {
+	it("should run again correctly inside afterDone hook", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -579,7 +579,7 @@ describe("Compiler", () => {
 			if (err) return done(err);
 		});
 	});
-	it("should call afterDone hook after other callbacks (run)", function (done) {
+	it("should call afterDone hook after other callbacks (run)", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -603,7 +603,7 @@ describe("Compiler", () => {
 			runCb();
 		});
 	});
-	it("should call afterDone hook after other callbacks (instance cb)", function (done) {
+	it("should call afterDone hook after other callbacks (instance cb)", done => {
 		const instanceCb = jest.fn();
 		const compiler = webpack(
 			{
@@ -629,7 +629,7 @@ describe("Compiler", () => {
 			done();
 		});
 	});
-	it("should call afterDone hook after other callbacks (watch)", function (done) {
+	it("should call afterDone hook after other callbacks (watch)", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -657,9 +657,11 @@ describe("Compiler", () => {
 			if (err) return done(err);
 			watchCb();
 		});
-		watch.invalidate(invalidateCb);
+		process.nextTick(() => {
+			watch.invalidate(invalidateCb);
+		});
 	});
-	it("should call afterDone hook after other callbacks (watch close)", function (done) {
+	it("should call afterDone hook after other callbacks (watch close)", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -687,9 +689,11 @@ describe("Compiler", () => {
 			if (err) return done(err);
 			watch.close(watchCloseCb);
 		});
-		watch.invalidate(invalidateCb);
+		process.nextTick(() => {
+			watch.invalidate(invalidateCb);
+		});
 	});
-	it("should flag watchMode as true in watch", function (done) {
+	it("should flag watchMode as true in watch", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -711,7 +715,7 @@ describe("Compiler", () => {
 			});
 		});
 	});
-	it("should use cache on second run call", function (done) {
+	it("should use cache on second run call", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "development",

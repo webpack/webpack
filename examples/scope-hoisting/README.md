@@ -133,11 +133,11 @@ __webpack_require__.d(__webpack_exports__, {
   "y": () => /* reexport */ y
 });
 
-// CONCATENATED MODULE: ./node_modules/shared2.js
+;// CONCATENATED MODULE: ./node_modules/shared2.js
 // shared2 module
 var y = "y";
 
-// CONCATENATED MODULE: ./node_modules/shared.js
+;// CONCATENATED MODULE: ./node_modules/shared.js
 // shared module
 var x = "x";
 
@@ -343,7 +343,7 @@ var x = "x";
 /******/ 		// no deferred startup
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
@@ -361,7 +361,7 @@ var x = "x";
 /******/ 				}
 /******/ 			}
 /******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			parentChunkLoadingFunction(data);
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
 /******/ 			while(resolves.length) {
 /******/ 				resolves.shift()();
 /******/ 			}
@@ -369,8 +369,10 @@ var x = "x";
 /******/ 		}
 /******/ 		
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
-/******/ 		var parentChunkLoadingFunction = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback;
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		
+/******/ 		// no deferred startup
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -389,18 +391,18 @@ var x = "x";
 
 // EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
 var shared = __webpack_require__(1);
-// CONCATENATED MODULE: ./node_modules/a.js
+;// CONCATENATED MODULE: ./node_modules/a.js
 // module a
 var a = "a";
 
 
-// CONCATENATED MODULE: ./node_modules/b.js
+;// CONCATENATED MODULE: ./node_modules/b.js
 // module b
 function b_a() {
 	return "b";
 };
 
-// CONCATENATED MODULE: ./example.js
+;// CONCATENATED MODULE: ./example.js
 
 
 
@@ -460,7 +462,7 @@ __webpack_require__.d(d_namespaceObject, {
 var cjs = __webpack_require__(3);
 // EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
 var shared = __webpack_require__(1);
-// CONCATENATED MODULE: ./node_modules/c.js
+;// CONCATENATED MODULE: ./node_modules/c.js
 // module c
 
 
@@ -468,11 +470,11 @@ var c = String.fromCharCode(cjs.c.charCodeAt(0) - 2);
 
 
 
-// CONCATENATED MODULE: ./node_modules/d.js
+;// CONCATENATED MODULE: ./node_modules/d.js
 // module d
 var a = "d";
 
-// CONCATENATED MODULE: ./lazy.js
+;// CONCATENATED MODULE: ./lazy.js
 
 
 
@@ -500,7 +502,7 @@ exports.c = "e";
 Minimized
 
 ```javascript
-(self.webpackChunk=self.webpackChunk||[]).push([[872],{872:(r,e,a)=>{"use strict";a.r(e),a.d(e,{c:()=>s,d:()=>c,x:()=>h.x,y:()=>h.y});var c={};a.r(c),a.d(c,{a:()=>C});var d=a(75),h=a(376),s=String.fromCharCode(d.c.charCodeAt(0)-2),C="d"},75:(r,e)=>{e.c="e"}}]);
+(self.webpackChunk=self.webpackChunk||[]).push([[872],{872:(r,e,a)=>{"use strict";a.r(e),a.d(e,{c:()=>C,d:()=>c,x:()=>h.x,y:()=>s.y});var c={};a.r(c),a.d(c,{a:()=>k});var d=a(75),h=a(845),s=a(383),C=String.fromCharCode(d.c.charCodeAt(0)-2),k="d"},75:(r,e)=>{e.c="e"}}]);
 ```
 
 # Info
@@ -508,11 +510,11 @@ Minimized
 ## Unoptimized
 
 ```
-asset output.js 10.9 KiB [emitted] (name: main)
+asset output.js 11.1 KiB [emitted] (name: main)
 asset 872.output.js 2.73 KiB [emitted]
-chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
+  runtime modules 5.54 KiB 8 modules
   dependent modules 100 bytes [dependent] 1 module
   ./example.js + 2 modules 267 bytes [built] [code generated]
     [no exports]
@@ -524,18 +526,18 @@ chunk (runtime: main) 872.output.js 263 bytes [rendered]
   ./lazy.js + 2 modules 221 bytes [built] [code generated]
     [exports: c, d, x, y]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.01 KiB [emitted] [minimized] (name: main)
-asset 872.output.js 261 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.42 KiB (runtime) [entry] [rendered]
+asset output.js 2.1 KiB [emitted] [minimized] (name: main)
+asset 872.output.js 270 bytes [emitted] [minimized]
+chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.42 KiB 8 modules
-  dependent modules 100 bytes [dependent] 1 module
+  runtime modules 5.54 KiB 8 modules
+  dependent modules 100 bytes [dependent] 2 modules
   ./example.js + 2 modules 267 bytes [built] [code generated]
     [no exports]
     [no exports used]
@@ -546,5 +548,5 @@ chunk (runtime: main) 872.output.js 263 bytes [rendered]
   ./lazy.js + 2 modules 221 bytes [built] [code generated]
     [exports: c, d, x, y]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

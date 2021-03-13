@@ -137,23 +137,19 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-Starting type checking service...
-Using 1 worker with 2048MB memory limit
 asset output.js 2.18 KiB [emitted] (name: main)
-chunk output.js (main) 652 bytes [entry] [rendered]
+chunk (runtime: main) output.js (main) 652 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 619 bytes [dependent] 1 module
   ./example.js 33 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Starting type checking service...
-Using 1 worker with 2048MB memory limit
 asset output.js 524 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 652 bytes [entry] [rendered]
   > ./example.js main
@@ -161,5 +157,5 @@ chunk (runtime: main) output.js (main) 652 bytes [entry] [rendered]
   ./example.js 33 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

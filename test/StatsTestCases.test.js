@@ -117,6 +117,11 @@ describe("StatsTestCases", () => {
 			});
 			c.run((err, stats) => {
 				if (err) return done(err);
+				for (const compilation of []
+					.concat(stats.stats || stats)
+					.map(s => s.compilation)) {
+					compilation.logging.delete("webpack.Compilation.ModuleProfile");
+				}
 				if (/error$/.test(testName)) {
 					expect(stats.hasErrors()).toBe(true);
 				} else if (stats.hasErrors()) {

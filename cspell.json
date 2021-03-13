@@ -23,6 +23,7 @@
     "submodules",
     "typeof",
     "devtool",
+    "wasi",
     "wasm",
     "webassembly",
     "IIFE",
@@ -183,6 +184,7 @@
     "nwjs",
     "redeclaration",
     "kaios",
+    "parallelism",
 
     "webassemblyjs",
     "fsevents",

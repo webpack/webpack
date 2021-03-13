@@ -83,10 +83,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryA.js",
-			          "size": 182,
+			          "size": 196,
 			        },
 			      ],
-			      "assetsSize": 182,
+			      "assetsSize": 196,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -100,10 +100,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryB.js",
-			          "size": 182,
+			          "size": 196,
 			        },
 			      ],
-			      "assetsSize": 182,
+			      "assetsSize": 196,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -156,10 +156,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryA.js",
-			          "size": 182,
+			          "size": 196,
 			        },
 			      ],
-			      "assetsSize": 182,
+			      "assetsSize": 196,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -173,10 +173,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryB.js",
-			          "size": 2910,
+			          "size": 2940,
 			        },
 			      ],
-			      "assetsSize": 2910,
+			      "assetsSize": 2940,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -221,10 +221,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 2910,
+			        "size": 2940,
 			      },
 			      "name": "entryB.js",
-			      "size": 2910,
+			      "size": 2940,
 			      "type": "asset",
 			    },
 			    Object {
@@ -241,10 +241,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 182,
+			        "size": 196,
 			      },
 			      "name": "entryA.js",
-			      "size": 182,
+			      "size": 196,
 			      "type": "asset",
 			    },
 			    Object {

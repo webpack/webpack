@@ -113,7 +113,7 @@ return __webpack_exports__;
 /*! runtime requirements: module, module.id, __webpack_exports__, __webpack_require__.v, __webpack_require__.* */
 /***/ ((module, exports, __webpack_require__) => {
 
-module.exports = __webpack_require__.v(exports, module.id, "ceee125bae475876af47")
+module.exports = __webpack_require__.v(exports, module.id, "a7a690138d8dd16930b3")
 
 /***/ }),
 /* 2 */
@@ -173,7 +173,7 @@ return __webpack_exports__;
 /*! runtime requirements: module, module.id, __webpack_exports__, __webpack_require__.v, __webpack_require__.* */
 /***/ ((module, exports, __webpack_require__) => {
 
-module.exports = __webpack_require__.v(exports, module.id, "f06646bac0d91cc0583d")
+module.exports = __webpack_require__.v(exports, module.id, "9d2b0c46ef31acbcf414")
 
 /***/ }),
 /* 4 */
@@ -186,7 +186,7 @@ module.exports = __webpack_require__.v(exports, module.id, "f06646bac0d91cc0583d
 /*! runtime requirements: module, module.id, __webpack_exports__, __webpack_require__.v, __webpack_require__.* */
 /***/ ((module, exports, __webpack_require__) => {
 
-module.exports = __webpack_require__.v(exports, module.id, "0c2b42c68d1cb59a3b24")
+module.exports = __webpack_require__.v(exports, module.id, "0925a077f3cf38995044")
 
 /***/ })
 /******/ 	]);
@@ -288,10 +288,10 @@ module.exports = __webpack_require__.v(exports, module.id, "0c2b42c68d1cb59a3b24
 
 ```
 asset output.js 9.05 KiB [emitted] (name: main)
-asset 0c2b42c68d1cb59a3b24.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
-asset f06646bac0d91cc0583d.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
-asset ceee125bae475876af47.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 1.19 KiB (runtime) [entry] [rendered]
+asset 0925a077f3cf38995044.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
+asset 9d2b0c46ef31acbcf414.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
+asset a7a690138d8dd16930b3.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 1.19 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 1.19 KiB 5 modules
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
@@ -299,16 +299,16 @@ chunk output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 1.19 KiB (r
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 1.57 KiB [emitted] [minimized] (name: main)
-asset 24f7619aa8685820e275.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
-asset fb8c9ac1a90009920ab8.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
-asset ccc0513d2f742a4d8505.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
+asset output.js 1.59 KiB [emitted] [minimized] (name: main)
+asset 908ca2d722f446ec8201.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
+asset ea4e26db3d258a94d99d.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
+asset f4c0bab8e2d961142f75.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
 chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 943 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
@@ -317,5 +317,5 @@ chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassem
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.0.0 compiled successfully
+webpack 5.11.1 compiled successfully
 ```

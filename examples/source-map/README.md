@@ -181,7 +181,7 @@ race = function(winner, ...runners) {
 ```javascript
 /*
  * ATTENTION: An "eval-source-map" devtool has been used.
- * This devtool is not neither made for production nor for readable output files.
+ * This devtool is neither made for production nor for readable output files.
  * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
  * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
  * or disable the default devtool with "devtool: false".
@@ -208,7 +208,7 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 ```javascript
 /*
  * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
- * This devtool is not neither made for production nor for readable output files.
+ * This devtool is neither made for production nor for readable output files.
  * It uses "eval()" calls to create a separate source file in the browser devtools.
  * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
  * or disable the default devtool with "devtool: false".
@@ -235,7 +235,7 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 ```javascript
 /*
  * ATTENTION: An "eval-source-map" devtool has been used.
- * This devtool is not neither made for production nor for readable output files.
+ * This devtool is neither made for production nor for readable output files.
  * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
  * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
  * or disable the default devtool with "devtool: false".
@@ -262,7 +262,7 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 ```javascript
 /*
  * ATTENTION: An "eval-source-map" devtool has been used.
- * This devtool is not neither made for production nor for readable output files.
+ * This devtool is neither made for production nor for readable output files.
  * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
  * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
  * or disable the default devtool with "devtool: false".
@@ -299,159 +299,159 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 # webpack output
 
 ```
-asset ./runtime~bundle-eval.js 5.65 KiB [emitted] (name: runtime~bundle)
+asset ./runtime~bundle-eval.js 5.72 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-eval.js 1.32 KiB [emitted] (name: bundle)
-Entrypoint bundle 6.96 KiB = ./runtime~bundle-eval.js 5.65 KiB ./bundle-eval.js 1.32 KiB
-chunk ./bundle-eval.js (bundle) 256 bytes [initial] [rendered]
+Entrypoint bundle 7.04 KiB = ./runtime~bundle-eval.js 5.72 KiB ./bundle-eval.js 1.32 KiB
+chunk (runtime: runtime~bundle) ./bundle-eval.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
-chunk ./runtime~bundle-eval.js (runtime~bundle) 2.57 KiB [entry] [rendered]
+chunk (runtime: runtime~bundle) ./runtime~bundle-eval.js (runtime~bundle) 2.56 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
-  runtime modules 2.57 KiB 2 modules
-webpack 5.0.0 compiled successfully
+  runtime modules 2.56 KiB 2 modules
+webpack 5.11.1 compiled successfully
 
-asset ./runtime~bundle-eval-cheap-source-map.js 5.64 KiB [emitted] (name: runtime~bundle)
+asset ./runtime~bundle-eval-cheap-source-map.js 5.72 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-eval-cheap-source-map.js 1.98 KiB [emitted] (name: bundle)
-Entrypoint bundle 7.62 KiB = ./runtime~bundle-eval-cheap-source-map.js 5.64 KiB ./bundle-eval-cheap-source-map.js 1.98 KiB
-chunk ./bundle-eval-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
+Entrypoint bundle 7.7 KiB = ./runtime~bundle-eval-cheap-source-map.js 5.72 KiB ./bundle-eval-cheap-source-map.js 1.98 KiB
+chunk (runtime: runtime~bundle) ./bundle-eval-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
-chunk ./runtime~bundle-eval-cheap-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
+chunk (runtime: runtime~bundle) ./runtime~bundle-eval-cheap-source-map.js (runtime~bundle) 2.56 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
-  runtime modules 2.57 KiB 2 modules
-webpack 5.0.0 compiled successfully
+  runtime modules 2.56 KiB 2 modules
+webpack 5.11.1 compiled successfully
 
-asset ./runtime~bundle-eval-cheap-module-source-map.js 5.64 KiB [emitted] (name: runtime~bundle)
+asset ./runtime~bundle-eval-cheap-module-source-map.js 5.72 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-eval-cheap-module-source-map.js 2.12 KiB [emitted] (name: bundle)
-Entrypoint bundle 7.76 KiB = ./runtime~bundle-eval-cheap-module-source-map.js 5.64 KiB ./bundle-eval-cheap-module-source-map.js 2.12 KiB
-chunk ./bundle-eval-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
+Entrypoint bundle 7.84 KiB = ./runtime~bundle-eval-cheap-module-source-map.js 5.72 KiB ./bundle-eval-cheap-module-source-map.js 2.12 KiB
+chunk (runtime: runtime~bundle) ./bundle-eval-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
-chunk ./runtime~bundle-eval-cheap-module-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
+chunk (runtime: runtime~bundle) ./runtime~bundle-eval-cheap-module-source-map.js (runtime~bundle) 2.56 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
-  runtime modules 2.57 KiB 2 modules
-webpack 5.0.0 compiled successfully
+  runtime modules 2.56 KiB 2 modules
+webpack 5.11.1 compiled successfully
 
-asset ./runtime~bundle-eval-source-map.js 5.64 KiB [emitted] (name: runtime~bundle)
+asset ./runtime~bundle-eval-source-map.js 5.72 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-eval-source-map.js 2.12 KiB [emitted] (name: bundle)
-Entrypoint bundle 7.76 KiB = ./runtime~bundle-eval-source-map.js 5.64 KiB ./bundle-eval-source-map.js 2.12 KiB
-chunk ./bundle-eval-source-map.js (bundle) 256 bytes [initial] [rendered]
+Entrypoint bundle 7.84 KiB = ./runtime~bundle-eval-source-map.js 5.72 KiB ./bundle-eval-source-map.js 2.12 KiB
+chunk (runtime: runtime~bundle) ./bundle-eval-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
-chunk ./runtime~bundle-eval-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
+chunk (runtime: runtime~bundle) ./runtime~bundle-eval-source-map.js (runtime~bundle) 2.56 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
-  runtime modules 2.57 KiB 2 modules
-webpack 5.0.0 compiled successfully
+  runtime modules 2.56 KiB 2 modules
+webpack 5.11.1 compiled successfully
 
-asset ./runtime~bundle-cheap-source-map.js 5.15 KiB [emitted] (name: runtime~bundle) 1 related asset
+asset ./runtime~bundle-cheap-source-map.js 5.23 KiB [emitted] (name: runtime~bundle) 1 related asset
 asset ./bundle-cheap-source-map.js 717 bytes [emitted] (name: bundle) 1 related asset
-Entrypoint bundle 5.85 KiB (4.92 KiB) = ./runtime~bundle-cheap-source-map.js 5.15 KiB ./bundle-cheap-source-map.js 717 bytes 2 auxiliary assets
-chunk ./bundle-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
+Entrypoint bundle 5.93 KiB (5.01 KiB) = ./runtime~bundle-cheap-source-map.js 5.23 KiB ./bundle-cheap-source-map.js 717 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
-chunk ./runtime~bundle-cheap-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
+chunk (runtime: runtime~bundle) ./runtime~bundle-cheap-source-map.js (runtime~bundle) 2.56 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
-  runtime modules 2.57 KiB 2 modules
-webpack 5.0.0 compiled successfully
+  runtime modules 2.56 KiB 2 modules
+webpack 5.11.1 compiled successfully
 
-asset ./runtime~bundle-cheap-module-source-map.js 5.16 KiB [emitted] (name: runtime~bundle) 1 related asset
+asset ./runtime~bundle-cheap-module-source-map.js 5.24 KiB [emitted] (name: runtime~bundle) 1 related asset
 asset ./bundle-cheap-module-source-map.js 724 bytes [emitted] (name: bundle) 1 related asset
-Entrypoint bundle 5.86 KiB (4.85 KiB) = ./runtime~bundle-cheap-module-source-map.js 5.16 KiB ./bundle-cheap-module-source-map.js 724 bytes 2 auxiliary assets
-chunk ./bundle-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
+Entrypoint bundle 5.94 KiB (4.95 KiB) = ./runtime~bundle-cheap-module-source-map.js 5.24 KiB ./bundle-cheap-module-source-map.js 724 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
-chunk ./runtime~bundle-cheap-module-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
+chunk (runtime: runtime~bundle) ./runtime~bundle-cheap-module-source-map.js (runtime~bundle) 2.56 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
-  runtime modules 2.57 KiB 2 modules
-webpack 5.0.0 compiled successfully
+  runtime modules 2.56 KiB 2 modules
+webpack 5.11.1 compiled successfully
 
-asset ./runtime~bundle-inline-cheap-source-map.js 11 KiB [emitted] (name: runtime~bundle)
+asset ./runtime~bundle-inline-cheap-source-map.js 11.2 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-inline-cheap-source-map.js 1.41 KiB [emitted] (name: bundle)
-Entrypoint bundle 12.4 KiB = ./runtime~bundle-inline-cheap-source-map.js 11 KiB ./bundle-inline-cheap-source-map.js 1.41 KiB
-chunk ./bundle-inline-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
+Entrypoint bundle 12.7 KiB = ./runtime~bundle-inline-cheap-source-map.js 11.2 KiB ./bundle-inline-cheap-source-map.js 1.41 KiB
+chunk (runtime: runtime~bundle) ./bundle-inline-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
-chunk ./runtime~bundle-inline-cheap-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
+chunk (runtime: runtime~bundle) ./runtime~bundle-inline-cheap-source-map.js (runtime~bundle) 2.56 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
-  runtime modules 2.57 KiB 2 modules
-webpack 5.0.0 compiled successfully
+  runtime modules 2.56 KiB 2 modules
+webpack 5.11.1 compiled successfully
 
-asset ./runtime~bundle-inline-cheap-module-source-map.js 11 KiB [emitted] (name: runtime~bundle)
+asset ./runtime~bundle-inline-cheap-module-source-map.js 11.3 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-inline-cheap-module-source-map.js 1.31 KiB [emitted] (name: bundle)
-Entrypoint bundle 12.4 KiB = ./runtime~bundle-inline-cheap-module-source-map.js 11 KiB ./bundle-inline-cheap-module-source-map.js 1.31 KiB
-chunk ./bundle-inline-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
+Entrypoint bundle 12.6 KiB = ./runtime~bundle-inline-cheap-module-source-map.js 11.3 KiB ./bundle-inline-cheap-module-source-map.js 1.31 KiB
+chunk (runtime: runtime~bundle) ./bundle-inline-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
-chunk ./runtime~bundle-inline-cheap-module-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
+chunk (runtime: runtime~bundle) ./runtime~bundle-inline-cheap-module-source-map.js (runtime~bundle) 2.56 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
-  runtime modules 2.57 KiB 2 modules
-webpack 5.0.0 compiled successfully
+  runtime modules 2.56 KiB 2 modules
+webpack 5.11.1 compiled successfully
 
-asset ./runtime~bundle-source-map.js 5.14 KiB [emitted] (name: runtime~bundle) 1 related asset
+asset ./runtime~bundle-source-map.js 5.22 KiB [emitted] (name: runtime~bundle) 1 related asset
 asset ./bundle-source-map.js 711 bytes [emitted] (name: bundle) 1 related asset
-Entrypoint bundle 5.84 KiB (4.91 KiB) = ./runtime~bundle-source-map.js 5.14 KiB ./bundle-source-map.js 711 bytes 2 auxiliary assets
-chunk ./bundle-source-map.js (bundle) 256 bytes [initial] [rendered]
+Entrypoint bundle 5.92 KiB (5.01 KiB) = ./runtime~bundle-source-map.js 5.22 KiB ./bundle-source-map.js 711 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
-chunk ./runtime~bundle-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
+chunk (runtime: runtime~bundle) ./runtime~bundle-source-map.js (runtime~bundle) 2.56 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
-  runtime modules 2.57 KiB 2 modules
-webpack 5.0.0 compiled successfully
+  runtime modules 2.56 KiB 2 modules
+webpack 5.11.1 compiled successfully
 
-asset ./runtime~bundle-inline-source-map.js 11 KiB [emitted] (name: runtime~bundle)
+asset ./runtime~bundle-inline-source-map.js 11.2 KiB [emitted] (name: runtime~bundle)
 asset ./bundle-inline-source-map.js 1.42 KiB [emitted] (name: bundle)
-Entrypoint bundle 12.4 KiB = ./runtime~bundle-inline-source-map.js 11 KiB ./bundle-inline-source-map.js 1.42 KiB
-chunk ./bundle-inline-source-map.js (bundle) 256 bytes [initial] [rendered]
+Entrypoint bundle 12.6 KiB = ./runtime~bundle-inline-source-map.js 11.2 KiB ./bundle-inline-source-map.js 1.42 KiB
+chunk (runtime: runtime~bundle) ./bundle-inline-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
-chunk ./runtime~bundle-inline-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
+chunk (runtime: runtime~bundle) ./runtime~bundle-inline-source-map.js (runtime~bundle) 2.56 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
-  runtime modules 2.57 KiB 2 modules
-webpack 5.0.0 compiled successfully
+  runtime modules 2.56 KiB 2 modules
+webpack 5.11.1 compiled successfully
 
-asset ./runtime~bundle-hidden-source-map.js 5.09 KiB [emitted] (name: runtime~bundle) 1 related asset
+asset ./runtime~bundle-hidden-source-map.js 5.17 KiB [emitted] (name: runtime~bundle) 1 related asset
 asset ./bundle-hidden-source-map.js 665 bytes [emitted] (name: bundle) 1 related asset
-Entrypoint bundle 5.74 KiB (4.93 KiB) = ./runtime~bundle-hidden-source-map.js 5.09 KiB ./bundle-hidden-source-map.js 665 bytes 2 auxiliary assets
-chunk ./bundle-hidden-source-map.js (bundle) 256 bytes [initial] [rendered]
+Entrypoint bundle 5.82 KiB (5.02 KiB) = ./runtime~bundle-hidden-source-map.js 5.17 KiB ./bundle-hidden-source-map.js 665 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-hidden-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
-chunk ./runtime~bundle-hidden-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
+chunk (runtime: runtime~bundle) ./runtime~bundle-hidden-source-map.js (runtime~bundle) 2.56 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
-  runtime modules 2.57 KiB 2 modules
-webpack 5.0.0 compiled successfully
+  runtime modules 2.56 KiB 2 modules
+webpack 5.11.1 compiled successfully
 
-asset ./runtime~bundle-nosources-source-map.js 5.15 KiB [emitted] (name: runtime~bundle) 1 related asset
+asset ./runtime~bundle-nosources-source-map.js 5.23 KiB [emitted] (name: runtime~bundle) 1 related asset
 asset ./bundle-nosources-source-map.js 721 bytes [emitted] (name: bundle) 1 related asset
-Entrypoint bundle 5.86 KiB (1.17 KiB) = ./runtime~bundle-nosources-source-map.js 5.15 KiB ./bundle-nosources-source-map.js 721 bytes 2 auxiliary assets
-chunk ./bundle-nosources-source-map.js (bundle) 256 bytes [initial] [rendered]
+Entrypoint bundle 5.94 KiB (1.16 KiB) = ./runtime~bundle-nosources-source-map.js 5.23 KiB ./bundle-nosources-source-map.js 721 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-nosources-source-map.js (bundle) 256 bytes [initial] [rendered]
   > coffee-loader!./example.coffee bundle
   ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
     [used exports unknown]
     entry coffee-loader!./example.coffee bundle
-chunk ./runtime~bundle-nosources-source-map.js (runtime~bundle) 2.57 KiB [entry] [rendered]
+chunk (runtime: runtime~bundle) ./runtime~bundle-nosources-source-map.js (runtime~bundle) 2.56 KiB [entry] [rendered]
   > coffee-loader!./example.coffee bundle
-  runtime modules 2.57 KiB 2 modules
-webpack 5.0.0 compiled successfully
+  runtime modules 2.56 KiB 2 modules
+webpack 5.11.1 compiled successfully
 ```

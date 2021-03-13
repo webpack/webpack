@@ -37,7 +37,15 @@ const base = name => ({
 		rules: [
 			{
 				test: /\.css$/,
-				use: [MCEP.loader, "css-loader"]
+				use: [
+					MCEP.loader,
+					{
+						loader: "css-loader",
+						options: {
+							sourceMap: true
+						}
+					}
+				]
 			}
 		]
 	},
@@ -55,7 +63,9 @@ const baseStats = {
 	timings: false,
 	version: false,
 	hash: false,
-	builtAt: false
+	builtAt: false,
+	errorsCount: false,
+	warningsCount: false
 };
 
 /** @type {import("../../../").Configuration} */
