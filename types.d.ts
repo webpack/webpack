@@ -279,12 +279,11 @@ declare interface AssetParserDataUrlOptions {
 	 */
 	maxSize?: number;
 }
-type AssetParserOptions = AssetResourceParserOptions & AssetParserOptionsExtra;
 
 /**
  * Parser options for asset modules.
  */
-declare interface AssetParserOptionsExtra {
+declare interface AssetParserOptions {
 	/**
 	 * The condition for inlining the asset as DataUrl.
 	 */
@@ -301,15 +300,10 @@ declare interface AssetParserOptionsExtra {
  */
 declare interface AssetResourceGeneratorOptions {
 	/**
-	 * This is deprecated and has moved to 'parser.filename'.
+	 * Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.
 	 */
-	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
-}
+	emit?: boolean;
 
-/**
- * Parser options for asset/resource modules.
- */
-declare interface AssetResourceParserOptions {
 	/**
 	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
@@ -2408,6 +2402,7 @@ declare class Dependency {
 	getModuleEvaluationSideEffectsState(
 		moduleGraph: ModuleGraph
 	): ConnectionState;
+	createIgnoredModule(context: string): Module;
 	serialize(__0: { write: any }): void;
 	deserialize(__0: { read: any }): void;
 	module: any;
@@ -4631,6 +4626,7 @@ declare class JavascriptParser extends Parser {
 	walkArrayExpression(expression?: any): void;
 	walkSpreadElement(expression?: any): void;
 	walkObjectExpression(expression?: any): void;
+	walkProperty(prop?: any): void;
 	walkFunctionExpression(expression?: any): void;
 	walkArrowFunctionExpression(expression?: any): void;
 	walkSequenceExpression(expression: SequenceExpression): void;
@@ -7694,9 +7690,9 @@ declare interface ParserOptionsByModuleTypeKnown {
 	"asset/inline"?: EmptyParserOptions;
 
 	/**
-	 * Parser options for asset/resource modules.
+	 * No parser options are supported for this module type.
 	 */
-	"asset/resource"?: AssetResourceParserOptions;
+	"asset/resource"?: EmptyParserOptions;
 
 	/**
 	 * No parser options are supported for this module type.
@@ -9154,6 +9150,7 @@ declare abstract class RuntimeSpecSet {
 	readonly size: number;
 }
 declare abstract class RuntimeTemplate {
+	compilation: Compilation;
 	outputOptions: OutputNormalized;
 	requestShortener: RequestShortener;
 	isIIFE(): undefined | boolean;

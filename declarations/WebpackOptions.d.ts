@@ -706,11 +706,6 @@ export type AssetParserDataUrlFunction = (
 	context: {filename: string; module: import("../lib/Module")}
 ) => boolean;
 /**
- * Parser options for asset modules.
- */
-export type AssetParserOptions = AssetResourceParserOptions &
-	AssetParserOptionsExtra;
-/**
  * A Function returning a Promise resolving to a normalized entry.
  */
 export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
@@ -2577,18 +2572,22 @@ export interface AssetParserDataUrlOptions {
 	maxSize?: number;
 }
 /**
+ * Parser options for asset modules.
+ */
+export interface AssetParserOptions {
+	/**
+	 * The condition for inlining the asset as DataUrl.
+	 */
+	dataUrlCondition?: AssetParserDataUrlOptions | AssetParserDataUrlFunction;
+}
+/**
  * Generator options for asset/resource modules.
  */
 export interface AssetResourceGeneratorOptions {
 	/**
-	 * This is deprecated and has moved to 'parser.filename'.
+	 * Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.
 	 */
-	filename?: FilenameTemplate;
-}
-/**
- * Parser options for asset/resource modules.
- */
-export interface AssetResourceParserOptions {
+	emit?: boolean;
 	/**
 	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
@@ -3143,15 +3142,6 @@ export interface WebpackOptionsNormalized {
 	watchOptions: WatchOptions;
 }
 /**
- * Parser options for asset modules.
- */
-export interface AssetParserOptionsExtra {
-	/**
-	 * The condition for inlining the asset as DataUrl.
-	 */
-	dataUrlCondition?: AssetParserDataUrlOptions | AssetParserDataUrlFunction;
-}
-/**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.
  */
 export interface ExternalItemObjectKnown {
@@ -3227,9 +3217,9 @@ export interface ParserOptionsByModuleTypeKnown {
 	 */
 	"asset/inline"?: EmptyParserOptions;
 	/**
-	 * Parser options for asset/resource modules.
+	 * No parser options are supported for this module type.
 	 */
-	"asset/resource"?: AssetResourceParserOptions;
+	"asset/resource"?: EmptyParserOptions;
 	/**
 	 * No parser options are supported for this module type.
 	 */
