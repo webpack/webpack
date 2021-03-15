@@ -123,6 +123,10 @@ declare class AbstractLibraryPlugin<T> {
 		renderContext: RenderContextObject,
 		libraryContext: LibraryContext<T>
 	): undefined | string;
+	strictRuntimeBailout(
+		renderContext: RenderContextObject,
+		libraryContext: LibraryContext<T>
+	): undefined | string;
 	runtimeRequirements(
 		chunk: Chunk,
 		set: Set<string>,
@@ -1690,6 +1694,7 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 		string
 	>;
 	embedInRuntimeBailout: SyncBailHook<[Module, RenderContextObject], string>;
+	strictRuntimeBailout: SyncBailHook<[RenderContextObject], string>;
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 	useSourceMap: SyncBailHook<[Chunk, RenderContextObject], boolean>;
 }
