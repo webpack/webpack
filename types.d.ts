@@ -9211,6 +9211,7 @@ declare abstract class RuntimeTemplate {
 	supportTemplateLiteral(): boolean;
 	returningFunction(returnValue?: any, args?: string): string;
 	basicFunction(args?: any, body?: any): string;
+	expressionFunction(expression?: any, args?: string): string;
 	emptyFunction(): "x => {}" | "function() {}";
 	destructureArray(items?: any, value?: any): string;
 	iife(args?: any, body?: any): string;
