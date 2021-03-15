@@ -1193,6 +1193,15 @@ type CodeValue =
 			| RegExp
 			| RuntimeValue
 	  >[];
+type CodeValuePrimitive =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| Function
+	| RegExp;
 declare interface Comparator<T> {
 	(arg0: T, arg1: T): 0 | 1 | -1;
 }
@@ -1338,6 +1347,7 @@ declare class Compilation {
 	resolverFactory: ResolverFactory;
 	inputFileSystem: InputFileSystem;
 	fileSystemInfo: FileSystemInfo;
+	valueCacheVersions: Map<string, string>;
 	requestShortener: RequestShortener;
 	compilerPath: string;
 	logger: WebpackLogger;
@@ -2311,7 +2321,14 @@ declare class DefinePlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
-	static runtimeValue(fn?: any, fileDependencies?: any): RuntimeValue;
+	static runtimeValue(
+		fn: (arg0: {
+			module: NormalModule;
+			key: string;
+			readonly version?: string;
+		}) => CodeValuePrimitive,
+		options?: true | string[] | RuntimeValueOptions
+	): RuntimeValue;
 }
 declare class DelegatedPlugin {
 	constructor(options?: any);
@@ -6399,6 +6416,7 @@ declare class NaturalModuleIdsPlugin {
 }
 declare interface NeedBuildContext {
 	fileSystemInfo: FileSystemInfo;
+	valueCacheVersions: Map<string, string>;
 }
 declare class NoEmitOnErrorsPlugin {
 	constructor();
@@ -9569,9 +9587,26 @@ declare abstract class RuntimeTemplate {
 	}): string;
 }
 declare abstract class RuntimeValue {
-	fn: any;
-	fileDependencies: any;
-	exec(parser?: any): any;
+	fn: (arg0: {
+		module: NormalModule;
+		key: string;
+		readonly version?: string;
+	}) => CodeValuePrimitive;
+	options: true | RuntimeValueOptions;
+	readonly fileDependencies?: true | string[];
+	exec(
+		parser: JavascriptParser,
+		valueCacheVersions: Map<string, string>,
+		key: string
+	): CodeValuePrimitive;
+	getCacheVersion(): undefined | string;
+}
+declare interface RuntimeValueOptions {
+	fileDependencies?: string[];
+	contextDependencies?: string[];
+	missingDependencies?: string[];
+	buildDependencies?: string[];
+	version?: string | (() => string);
 }
 type Schema =
 	| (JSONSchema4 & Extend)
