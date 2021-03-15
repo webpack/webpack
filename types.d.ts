@@ -873,12 +873,14 @@ declare class ChunkGraph {
 		deprecationCode: string
 	): ChunkGraph;
 	static setChunkGraphForModule(module: Module, chunkGraph: ChunkGraph): void;
+	static clearChunkGraphForModule(module: Module): void;
 	static getChunkGraphForChunk(
 		chunk: Chunk,
 		deprecateMessage: string,
 		deprecationCode: string
 	): ChunkGraph;
 	static setChunkGraphForChunk(chunk: Chunk, chunkGraph: ChunkGraph): void;
+	static clearChunkGraphForChunk(chunk: Chunk): void;
 }
 declare abstract class ChunkGroup {
 	groupDebugId: number;
@@ -5823,6 +5825,17 @@ declare class Module extends DependenciesBlock {
 	 * and properties.
 	 */
 	updateCacheModule(module: Module): void;
+
+	/**
+	 * Module should be unsafe cached. Get data that's needed for that.
+	 * This data will be passed to restoreFromUnsafeCache later.
+	 */
+	getUnsafeCacheData(): object;
+
+	/**
+	 * Assuming this module is in the cache. Remove internal references to allow freeing some memory.
+	 */
+	cleanupForCache(): void;
 	originalSource(): null | Source;
 	addCacheDependencies(
 		fileDependencies: LazySet<string>,
@@ -6035,6 +6048,7 @@ declare class ModuleGraph {
 		module: Module,
 		moduleGraph: ModuleGraph
 	): void;
+	static clearModuleGraphForModule(module: Module): void;
 	static ModuleGraphConnection: typeof ModuleGraphConnection;
 }
 declare class ModuleGraphConnection {
@@ -6558,9 +6572,17 @@ declare class NormalModule extends Module {
 		 */
 		parser: Parser;
 		/**
+		 * the options of the parser used
+		 */
+		parserOptions: object;
+		/**
 		 * the generator used
 		 */
 		generator: Generator;
+		/**
+		 * the options of the generator used
+		 */
+		generatorOptions: object;
 		/**
 		 * options used for resolving requests from this module
 		 */
@@ -6571,11 +6593,17 @@ declare class NormalModule extends Module {
 	rawRequest: string;
 	binary: boolean;
 	parser: Parser;
+	parserOptions: object;
 	generator: Generator;
+	generatorOptions: object;
 	resource: string;
 	matchResource?: string;
 	loaders: LoaderItem[];
 	error?: WebpackError;
+	restoreFromUnsafeCache(
+		unsafeCacheData?: any,
+		normalModuleFactory?: any
+	): void;
 	createSourceForAsset(
 		context: string,
 		name: string,
