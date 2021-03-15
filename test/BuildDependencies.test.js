@@ -122,6 +122,9 @@ describe("BuildDependencies", () => {
 		await exec("5");
 		const now3 = Date.now();
 		await exec("6");
+		await exec("7", {
+			definedValue: "other"
+		});
 		let now4, now5;
 		if (supportsEsm) {
 			fs.writeFileSync(
@@ -129,21 +132,27 @@ describe("BuildDependencies", () => {
 				"module.exports = Date.now();"
 			);
 			now4 = Date.now();
-			await exec("7");
+			await exec("8", {
+				definedValue: "other"
+			});
 			fs.writeFileSync(
 				path.resolve(inputDirectory, "esm-async-dependency.mjs"),
 				"export default Date.now();"
 			);
 			now5 = Date.now();
-			await exec("8");
+
+			await exec("9", {
+				definedValue: "other"
+			});
 		}
-		const results = Array.from({ length: supportsEsm ? 9 : 7 }).map((_, i) =>
+		const results = Array.from({ length: supportsEsm ? 10 : 8 }).map((_, i) =>
 			require(`./js/buildDeps/${i}/main.js`)
 		);
 		for (const r of results) {
 			expect(typeof r.loader).toBe("number");
 			expect(typeof r.config).toBe("number");
 			expect(typeof r.uncached).toBe("number");
+			expect(typeof r.definedValue).toBe("string");
 		}
 		let result = results.shift();
 		expect(result.loader).toBe(0);
@@ -163,14 +172,16 @@ describe("BuildDependencies", () => {
 		expect(result.esmConfig).toBe(1);
 		expect(result.uncached).toBe(1);
 		// 2 -> 3 should stay cached
+		let prevResult = result;
 		result = results.shift();
-		expect(result.loader).toBe(result.loader);
+		expect(result.loader).toBe(prevResult.loader);
 		expect(result.config).toBe(1);
 		expect(result.esmConfig).toBe(1);
 		expect(result.uncached).toBe(1);
 		// 3 -> 4 should stay cached
+		prevResult = result;
 		result = results.shift();
-		expect(result.loader).toBe(result.loader);
+		expect(result.loader).toBe(prevResult.loader);
 		expect(result.config).toBe(1);
 		expect(result.esmConfig).toBe(1);
 		expect(result.uncached).toBe(1);
@@ -181,18 +192,25 @@ describe("BuildDependencies", () => {
 		expect(result.esmConfig).toBe(1);
 		expect(result.uncached).toBe(result.config);
 		// 5 -> 6 should stay cached, but uncacheable module still rebuilds
+		prevResult = result;
 		result = results.shift();
-		expect(result.loader).toBe(result.loader);
-		expect(result.config).toBe(result.config);
+		expect(result.loader).toBe(prevResult.loader);
+		expect(result.config).toBe(prevResult.config);
 		expect(result.uncached).toBeGreaterThan(now3);
+		// 6 -> 7 should stay cached, except the updated defined value
+		prevResult = result;
+		result = results.shift();
+		expect(result.loader).toBe(prevResult.loader);
+		expect(result.config).toBe(prevResult.config);
+		expect(result.definedValue).toBe("other");
 		if (supportsEsm) {
-			// 6 -> 7 should be invalidated
+			// 7 -> 8 should be invalidated
 			result = results.shift();
 			expect(result.loader).toBeGreaterThan(now4);
 			expect(result.config).toBeGreaterThan(now4);
 			expect(result.esmConfig).toBeGreaterThan(now4);
 			expect(result.uncached).toBeGreaterThan(now4);
-			// 7 -> 8 should be invalidated
+			// 8 -> 9 should be invalidated
 			result = results.shift();
 			expect(result.loader).toBeGreaterThan(now5);
 			expect(result.config).toBeGreaterThan(now5);

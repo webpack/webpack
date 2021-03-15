@@ -5,5 +5,6 @@ module.exports = {
 	config: VALUE,
 	esmConfig: VALUE2,
 	esmAsyncConfig: VALUE3,
-	uncached: require("./module")
+	uncached: require("./module"),
+	definedValue: require("./definedValue")
 };

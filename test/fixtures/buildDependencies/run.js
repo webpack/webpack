@@ -29,13 +29,23 @@ function run({ default: value2, asyncDep: value3 }) {
 			},
 			plugins: [
 				new webpack.DefinePlugin({
-					VALUE: JSON.stringify(value),
-					VALUE2: JSON.stringify(value2),
-					VALUE3: JSON.stringify(value3),
+					VALUE: webpack.DefinePlugin.runtimeValue(
+						() => JSON.stringify(value),
+						{ version: "no" }
+					),
+					VALUE2: webpack.DefinePlugin.runtimeValue(
+						() => JSON.stringify(value2),
+						{ version: "no" }
+					),
+					VALUE3: webpack.DefinePlugin.runtimeValue(
+						() => JSON.stringify(value3),
+						{ version: "no" }
+					),
 					VALUE_UNCACHEABLE: webpack.DefinePlugin.runtimeValue(
 						() => JSON.stringify(value),
 						true
-					)
+					),
+					DEFINED_VALUE: JSON.stringify(options.definedValue || "value")
 				})
 			],
 			infrastructureLogging: {
@@ -75,6 +85,7 @@ function run({ default: value2, asyncDep: value3 }) {
 					console.log("OK");
 				});
 			} else {
+				console.log(stats.toString());
 				process.exitCode = 0;
 				console.log("OK");
 			}
