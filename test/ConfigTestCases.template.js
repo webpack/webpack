@@ -351,7 +351,14 @@ const describeCases = config => {
 														options
 													),
 													importScripts: url => {
-														_require(path.dirname(p), options, `./${url}`);
+														expect(url).toMatch(
+															/^https:\/\/test\.cases\/path\//
+														);
+														_require(
+															outputDirectory,
+															options,
+															`.${url.slice("https://test.cases/path".length)}`
+														);
 													},
 													module: m,
 													exports: m.exports,

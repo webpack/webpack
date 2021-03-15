@@ -161,7 +161,8 @@ const describeCases = config => {
 											}
 										},
 										importScripts: url => {
-											_require("./" + url);
+											expect(url).toMatch(/^https:\/\/test\.cases\/path\//);
+											_require(urlToRelativePath(url));
 										},
 										document: {
 											createElement(type) {

@@ -14,6 +14,7 @@ const path = require("path");
 const fs = require("fs");
 global.self = global;
 self.URL = URL;
+self.location = new URL(${JSON.stringify(url.toString())});
 const urlToPath = url => {
 	if(url.startsWith("https://test.cases/path/")) url = url.slice(24);
 	return path.resolve(${JSON.stringify(outputDirectory)}, \`./\${url}\`);
