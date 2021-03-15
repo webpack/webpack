@@ -107,6 +107,9 @@
         },
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
+        },
+        "publicPath": {
+          "$ref": "#/definitions/AssetModulePublicPath"
         }
       }
     },
@@ -126,6 +129,18 @@
         {
           "type": "string",
           "absolutePath": false
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+        }
+      ]
+    },
+    "AssetModulePublicPath": {
+      "description": "The publicPath of asset modules.",
+      "anyOf": [
+        {
+          "type": "string"
         },
         {
           "instanceof": "Function",
@@ -178,6 +193,9 @@
         },
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
+        },
+        "publicPath": {
+          "$ref": "#/definitions/AssetModulePublicPath"
         }
       }
     },
@@ -2487,6 +2505,9 @@
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
+        "assetModulePublicPath": {
+          "$ref": "#/definitions/AssetModulePublicPath"
+        },
         "auxiliaryComment": {
           "cli": {
             "exclude": true
@@ -2669,6 +2690,9 @@
       "properties": {
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
+        },
+        "assetModulePublicPath": {
+          "$ref": "#/definitions/AssetModulePublicPath"
         },
         "charset": {
           "$ref": "#/definitions/Charset"

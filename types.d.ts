@@ -308,6 +308,11 @@ declare interface AssetResourceGeneratorOptions {
 	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * The publicPath of asset modules.
+	 */
+	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 }
 declare abstract class AsyncDependenciesBlock extends DependenciesBlock {
 	groupOptions: RawChunkGroupOptions & { name?: string } & {
@@ -7206,6 +7211,13 @@ declare interface Output {
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
+	 * The publicPath of asset modules.
+	 */
+	assetModulePublicPath?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: string | LibraryCustomUmdCommentObject;
@@ -7479,6 +7491,13 @@ declare interface OutputNormalized {
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * The publicPath of asset modules.
+	 */
+	assetModulePublicPath?:
 		| string
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 

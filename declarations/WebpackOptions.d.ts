@@ -418,6 +418,15 @@ export type AssetModuleFilename =
 			assetInfo?: import("../lib/Compilation").AssetInfo
 	  ) => string);
 /**
+ * The publicPath of asset modules.
+ */
+export type AssetModulePublicPath =
+	| string
+	| ((
+			pathData: import("../lib/Compilation").PathData,
+			assetInfo?: import("../lib/Compilation").AssetInfo
+	  ) => string);
+/**
  * Add charset attribute for script tag.
  */
 export type Charset = boolean;
@@ -1875,6 +1884,10 @@ export interface Output {
 	 */
 	assetModuleFilename?: AssetModuleFilename;
 	/**
+	 * The publicPath of asset modules.
+	 */
+	assetModulePublicPath?: AssetModulePublicPath;
+	/**
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: AuxiliaryComment;
@@ -2592,6 +2605,10 @@ export interface AssetResourceGeneratorOptions {
 	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	filename?: FilenameTemplate;
+	/**
+	 * The publicPath of asset modules.
+	 */
+	publicPath?: AssetModulePublicPath;
 }
 /**
  * No generator options are supported for this module type.
@@ -2827,6 +2844,10 @@ export interface OutputNormalized {
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
+	/**
+	 * The publicPath of asset modules.
+	 */
+	assetModulePublicPath?: AssetModulePublicPath;
 	/**
 	 * Add charset attribute for script tag.
 	 */
