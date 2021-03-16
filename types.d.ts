@@ -10620,6 +10620,7 @@ declare class Template {
 		runtimeModules: RuntimeModule[],
 		renderContext: RenderContextModuleTemplate & {
 			codeGenerationResults?: CodeGenerationResults;
+			useStrict?: boolean;
 		}
 	): Source;
 	static renderChunkRuntimeModules(

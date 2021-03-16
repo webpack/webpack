@@ -2,7 +2,7 @@
 module.exports = {
 	output: {
 		library: {
-			name: "MyLibrary",
+			name: "MyLibraryProperties",
 			type: "assign-properties"
 		}
 	}
