@@ -131,7 +131,7 @@
 [source-map](source-map)
 
 ## Web Worker
-[worker](web-worker) example demonstrating creating WebWorkers with webpack.
+[web-worker](worker) example demonstrating creating WebWorkers with webpack.
 
 
 # Requests
