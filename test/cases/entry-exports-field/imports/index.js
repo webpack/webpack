@@ -1,4 +1,4 @@
-import d1 from "pck";
+import d1 from "pkg";
 import d2 from "#internal";
 
 it("imports field to resolve to the same", () => {
