@@ -363,6 +363,41 @@ describe("MultiCompiler", function () {
 			}
 		});
 	});
+
+	it("shouldn't hang when invalidating watchers", done => {
+		const entriesA = { a: "./a.js" };
+		const entriesB = { b: "./b.js" };
+		const compiler = webpack([
+			{
+				name: "a",
+				mode: "development",
+				entry: () => entriesA,
+				context: path.join(__dirname, "fixtures")
+			},
+			{
+				name: "b",
+				mode: "development",
+				entry: () => entriesB,
+				context: path.join(__dirname, "fixtures")
+			}
+		]);
+
+		compiler.watchFileSystem = { watch() {} };
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
+
+		const watching = compiler.watch({}, error => {
+			if (error) {
+				done(error);
+				return;
+			}
+
+			entriesA.b = "./b.js";
+			entriesB.a = "./a.js";
+
+			watching.invalidate(done);
+		});
+	}, 2000);
+
 	it("shouldn't hang when invalidating during build", done => {
 		const compiler = webpack(
 			Object.assign([
