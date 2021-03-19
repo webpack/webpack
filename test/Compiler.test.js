@@ -166,7 +166,7 @@ describe("Compiler", () => {
 			expect(bundle).not.toMatch("fixtures");
 			expect(chunk).not.toMatch("fixtures");
 			expect(bundle).toMatch("webpackChunk");
-			expect(chunk).toMatch('self["webpackChunk"] || []).push');
+			expect(chunk).toMatch('(self)["webpackChunk"] || []).push');
 			done();
 		});
 	});
