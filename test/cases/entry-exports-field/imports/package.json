@@ -1,0 +1,7 @@
+{
+  "name": "pkg",
+  "exports": "./pkg.mjs",
+  "imports": {
+    "#internal": "./pkg.mjs"
+  }
+}
