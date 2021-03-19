@@ -1118,18 +1118,18 @@ webpack x.x.x compiled with 3 warnings"
 
 exports[`StatsTestCases should print correct stats for issue-7577 1`] = `
 "asset a-runtime~main-2ee3b719049796c1a859.js 4.8 KiB [emitted] [immutable] (name: runtime~main)
-asset a-main-f541dc606339a43b1ff1.js 398 bytes [emitted] [immutable] (name: main)
+asset a-main-ef61ff9b5cacf52087be.js 424 bytes [emitted] [immutable] (name: main)
 asset a-all-a_js-5af81d3b60f9e87be69d.js 140 bytes [emitted] [immutable] (id hint: all)
-Entrypoint main 5.33 KiB = a-runtime~main-2ee3b719049796c1a859.js 4.8 KiB a-all-a_js-5af81d3b60f9e87be69d.js 140 bytes a-main-f541dc606339a43b1ff1.js 398 bytes
+Entrypoint main 5.35 KiB = a-runtime~main-2ee3b719049796c1a859.js 4.8 KiB a-all-a_js-5af81d3b60f9e87be69d.js 140 bytes a-main-ef61ff9b5cacf52087be.js 424 bytes
 runtime modules 2.34 KiB 3 modules
 ./a.js 18 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
 asset b-runtime~main-c0fda4a5ca3ab8452a13.js 5.74 KiB [emitted] [immutable] (name: runtime~main)
 asset b-all-b_js-286fe88eae15de65188e.js 475 bytes [emitted] [immutable] (id hint: all)
-asset b-main-9e35ddc0acdb05533ff7.js 431 bytes [emitted] [immutable] (name: main)
+asset b-main-132fd6da6e6e6728c990.js 457 bytes [emitted] [immutable] (name: main)
 asset b-vendors-node_modules_vendor_js-499179597d8c965dd5e0.js 185 bytes [emitted] [immutable] (id hint: vendors)
-Entrypoint main 6.8 KiB = b-runtime~main-c0fda4a5ca3ab8452a13.js 5.74 KiB b-vendors-node_modules_vendor_js-499179597d8c965dd5e0.js 185 bytes b-all-b_js-286fe88eae15de65188e.js 475 bytes b-main-9e35ddc0acdb05533ff7.js 431 bytes
+Entrypoint main 6.83 KiB = b-runtime~main-c0fda4a5ca3ab8452a13.js 5.74 KiB b-vendors-node_modules_vendor_js-499179597d8c965dd5e0.js 185 bytes b-all-b_js-286fe88eae15de65188e.js 475 bytes b-main-132fd6da6e6e6728c990.js 457 bytes
 runtime modules 2.9 KiB 5 modules
 cacheable modules 40 bytes
   ./b.js 17 bytes [built] [code generated]
@@ -1140,9 +1140,9 @@ assets by chunk 895 bytes (id hint: all)
   asset c-all-b_js-fe3b412293f057de38c8.js 502 bytes [emitted] [immutable] (id hint: all)
   asset c-all-c_js-172fc4c28be7e411e551.js 393 bytes [emitted] [immutable] (id hint: all)
 asset c-runtime~main-ef835ea1b67a6d1dc497.js 13.4 KiB [emitted] [immutable] (name: runtime~main)
-asset c-main-fafaf3814fdfca053377.js 638 bytes [emitted] [immutable] (name: main)
+asset c-main-a443d2f54b3b7aebaf75.js 664 bytes [emitted] [immutable] (name: main)
 asset c-vendors-node_modules_vendor_js-499179597d8c965dd5e0.js 185 bytes [emitted] [immutable] (id hint: vendors)
-Entrypoint main 14.4 KiB = c-runtime~main-ef835ea1b67a6d1dc497.js 13.4 KiB c-all-c_js-172fc4c28be7e411e551.js 393 bytes c-main-fafaf3814fdfca053377.js 638 bytes
+Entrypoint main 14.5 KiB = c-runtime~main-ef835ea1b67a6d1dc497.js 13.4 KiB c-all-c_js-172fc4c28be7e411e551.js 393 bytes c-main-a443d2f54b3b7aebaf75.js 664 bytes
 runtime modules 8.54 KiB 13 modules
 cacheable modules 101 bytes
   ./c.js 61 bytes [built] [code generated]
@@ -2766,8 +2766,8 @@ dynamic custom name:
 `;
 
 exports[`StatsTestCases should print correct stats for runtime-chunk-issue-7382 1`] = `
-"Entrypoint e1 7.27 KiB = runtime.js 5.34 KiB all.js 1020 bytes e1.js 955 bytes
-Entrypoint e2 7.27 KiB = runtime.js 5.34 KiB all.js 1020 bytes e2.js 955 bytes
+"Entrypoint e1 7.29 KiB = runtime.js 5.34 KiB all.js 1020 bytes e1.js 981 bytes
+Entrypoint e2 7.29 KiB = runtime.js 5.34 KiB all.js 1020 bytes e2.js 981 bytes
 webpack x.x.x compiled successfully"
 `;
 
