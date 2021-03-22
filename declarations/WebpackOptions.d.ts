@@ -418,15 +418,6 @@ export type AssetModuleFilename =
 			assetInfo?: import("../lib/Compilation").AssetInfo
 	  ) => string);
 /**
- * The publicPath of asset modules.
- */
-export type AssetModulePublicPath =
-	| string
-	| ((
-			pathData: import("../lib/Compilation").PathData,
-			assetInfo?: import("../lib/Compilation").AssetInfo
-	  ) => string);
-/**
  * Add charset attribute for script tag.
  */
 export type Charset = boolean;
@@ -547,10 +538,13 @@ export type Path = string;
  */
 export type Pathinfo = "verbose" | boolean;
 /**
- * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
+ * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
  */
-export type PublicPath =
-	| "auto"
+export type PublicPath = "auto" | RawPublicPath;
+/**
+ * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+ */
+export type RawPublicPath =
 	| string
 	| ((
 			pathData: import("../lib/Compilation").PathData,
@@ -1884,10 +1878,6 @@ export interface Output {
 	 */
 	assetModuleFilename?: AssetModuleFilename;
 	/**
-	 * The publicPath of asset modules.
-	 */
-	assetModulePublicPath?: AssetModulePublicPath;
-	/**
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: AuxiliaryComment;
@@ -2028,7 +2018,7 @@ export interface Output {
 	 */
 	pathinfo?: Pathinfo;
 	/**
-	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: PublicPath;
 	/**
@@ -2606,9 +2596,9 @@ export interface AssetResourceGeneratorOptions {
 	 */
 	filename?: FilenameTemplate;
 	/**
-	 * The publicPath of asset modules.
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
-	publicPath?: AssetModulePublicPath;
+	publicPath?: RawPublicPath;
 }
 /**
  * No generator options are supported for this module type.
@@ -2845,10 +2835,6 @@ export interface OutputNormalized {
 	 */
 	assetModuleFilename?: AssetModuleFilename;
 	/**
-	 * The publicPath of asset modules.
-	 */
-	assetModulePublicPath?: AssetModulePublicPath;
-	/**
 	 * Add charset attribute for script tag.
 	 */
 	charset?: Charset;
@@ -2977,7 +2963,7 @@ export interface OutputNormalized {
 	 */
 	pathinfo?: Pathinfo;
 	/**
-	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: PublicPath;
 	/**

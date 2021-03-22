@@ -2,8 +2,7 @@
 module.exports = {
 	mode: "development",
 	output: {
-		assetModulePublicPath: "/assets/",
-		assetModuleFilename: "file[ext]"
+		assetModuleFilename: "[contenthash:10].file[ext]"
 	},
 	module: {
 		rules: [
@@ -11,6 +10,11 @@ module.exports = {
 				test: /\.png$/,
 				type: "asset"
 			}
-		]
+		],
+		generator: {
+			asset: {
+				publicPath: "[contenthash]/assets/"
+			}
+		}
 	}
 };

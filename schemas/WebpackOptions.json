@@ -109,7 +109,7 @@
           "$ref": "#/definitions/FilenameTemplate"
         },
         "publicPath": {
-          "$ref": "#/definitions/AssetModulePublicPath"
+          "$ref": "#/definitions/RawPublicPath"
         }
       }
     },
@@ -129,18 +129,6 @@
         {
           "type": "string",
           "absolutePath": false
-        },
-        {
-          "instanceof": "Function",
-          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
-        }
-      ]
-    },
-    "AssetModulePublicPath": {
-      "description": "The publicPath of asset modules.",
-      "anyOf": [
-        {
-          "type": "string"
         },
         {
           "instanceof": "Function",
@@ -195,7 +183,7 @@
           "$ref": "#/definitions/FilenameTemplate"
         },
         "publicPath": {
-          "$ref": "#/definitions/AssetModulePublicPath"
+          "$ref": "#/definitions/RawPublicPath"
         }
       }
     },
@@ -2505,9 +2493,6 @@
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
-        "assetModulePublicPath": {
-          "$ref": "#/definitions/AssetModulePublicPath"
-        },
         "auxiliaryComment": {
           "cli": {
             "exclude": true
@@ -2690,9 +2675,6 @@
       "properties": {
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
-        },
-        "assetModulePublicPath": {
-          "$ref": "#/definitions/AssetModulePublicPath"
         },
         "charset": {
           "$ref": "#/definitions/Charset"
@@ -2936,11 +2918,19 @@
       "type": "boolean"
     },
     "PublicPath": {
-      "description": "The `publicPath` specifies the public URL address of the output files when referenced in a browser.",
+      "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
       "anyOf": [
         {
           "enum": ["auto"]
         },
+        {
+          "$ref": "#/definitions/RawPublicPath"
+        }
+      ]
+    },
+    "RawPublicPath": {
+      "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
+      "anyOf": [
         {
           "type": "string"
         },

@@ -310,7 +310,7 @@ declare interface AssetResourceGeneratorOptions {
 	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
-	 * The publicPath of asset modules.
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 }
@@ -7211,13 +7211,6 @@ declare interface Output {
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
-	 * The publicPath of asset modules.
-	 */
-	assetModulePublicPath?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
-
-	/**
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: string | LibraryCustomUmdCommentObject;
@@ -7395,7 +7388,7 @@ declare interface Output {
 	pathinfo?: boolean | "verbose";
 
 	/**
-	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
@@ -7491,13 +7484,6 @@ declare interface OutputNormalized {
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?:
-		| string
-		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
-
-	/**
-	 * The publicPath of asset modules.
-	 */
-	assetModulePublicPath?:
 		| string
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
@@ -7664,7 +7650,7 @@ declare interface OutputNormalized {
 	pathinfo?: boolean | "verbose";
 
 	/**
-	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
