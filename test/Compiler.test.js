@@ -877,4 +877,62 @@ describe("Compiler", () => {
 			});
 		});
 	});
+	it("should compile multiple files with the same library namespace", done => {
+		const config = {
+			mode: "development",
+			output: {
+				filename: "[name].js",
+				library: ["MyLibrary"],
+				libraryTarget: "umd",
+				globalObject: "this"
+			}
+		};
+		compile({ a: "./a", b: "./b" }, config, (stats, files) => {
+			expect(Object.keys(files)).toEqual(["/a.js", "/b.js"]);
+
+			const umdLoaderSignatureStart =
+				"if(typeof exports === 'object' && typeof module === 'object')";
+			const umdLoaderSignatureEnd = "})(this, function() {";
+			const bundleA = files["/a.js"];
+			const umdLoaderBundleA = bundleA.substring(
+				bundleA.indexOf(umdLoaderSignatureStart),
+				bundleA.indexOf(umdLoaderSignatureEnd)
+			);
+			expect(umdLoaderBundleA).toMatchInlineSnapshot(`
+			"if(typeof exports === 'object' && typeof module === 'object')
+					module.exports = factory();
+				else if(typeof define === 'function' && define.amd)
+					define([], factory);
+				else if(typeof exports === 'object')
+					exports[\\"MyLibrary\\"] = factory();
+				else{
+					var a = factory();
+					root[\\"MyLibrary\\"] = root[\\"MyLibrary\\"] || {};
+					for(var i in a) root[\\"MyLibrary\\"][i] = a[i];
+				}
+			"
+		`);
+
+			const bundleB = files["/b.js"];
+			const umdLoaderBundleB = bundleB.substring(
+				bundleA.indexOf(umdLoaderSignatureStart),
+				bundleA.indexOf(umdLoaderSignatureEnd)
+			);
+			expect(umdLoaderBundleB).toMatchInlineSnapshot(`
+			"if(typeof exports === 'object' && typeof module === 'object')
+					module.exports = factory();
+				else if(typeof define === 'function' && define.amd)
+					define([], factory);
+				else if(typeof exports === 'object')
+					exports[\\"MyLibrary\\"] = factory();
+				else{
+					var a = factory();
+					root[\\"MyLibrary\\"] = root[\\"MyLibrary\\"] || {};
+					for(var i in a) root[\\"MyLibrary\\"][i] = a[i];
+				}
+			"
+		`);
+			done();
+		});
+	});
 });
