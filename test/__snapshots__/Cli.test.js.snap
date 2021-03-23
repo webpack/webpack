@@ -933,6 +933,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-asset-public-path": Object {
+    "configs": Array [
+      Object {
+        "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
+        "multiple": false,
+        "path": "module.generator.asset.publicPath",
+        "type": "string",
+      },
+    ],
+    "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-asset-resource-emit": Object {
     "configs": Array [
       Object {
@@ -956,6 +969,19 @@ Object {
       },
     ],
     "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-resource-public-path": Object {
+    "configs": Array [
+      Object {
+        "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
+        "multiple": false,
+        "path": "module.generator.asset/resource.publicPath",
+        "type": "string",
+      },
+    ],
+    "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -4986,7 +5012,7 @@ Object {
   "output-public-path": Object {
     "configs": Array [
       Object {
-        "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
+        "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
         "multiple": false,
         "path": "output.publicPath",
         "type": "enum",
@@ -4995,13 +5021,13 @@ Object {
         ],
       },
       Object {
-        "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
+        "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
         "multiple": false,
         "path": "output.publicPath",
         "type": "string",
       },
     ],
-    "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
+    "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
     "multiple": false,
     "simpleType": "string",
   },

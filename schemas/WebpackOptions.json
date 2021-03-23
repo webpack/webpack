@@ -107,6 +107,9 @@
         },
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
+        },
+        "publicPath": {
+          "$ref": "#/definitions/RawPublicPath"
         }
       }
     },
@@ -178,6 +181,9 @@
         },
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
+        },
+        "publicPath": {
+          "$ref": "#/definitions/RawPublicPath"
         }
       }
     },
@@ -2912,11 +2918,19 @@
       "type": "boolean"
     },
     "PublicPath": {
-      "description": "The `publicPath` specifies the public URL address of the output files when referenced in a browser.",
+      "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
       "anyOf": [
         {
           "enum": ["auto"]
         },
+        {
+          "$ref": "#/definitions/RawPublicPath"
+        }
+      ]
+    },
+    "RawPublicPath": {
+      "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
+      "anyOf": [
         {
           "type": "string"
         },
