@@ -36,7 +36,7 @@ import {
 	ForStatement,
 	FunctionDeclaration,
 	FunctionExpression,
-	Identifier,
+	Identifier as IdentifierImport,
 	IfStatement,
 	ImportDeclaration,
 	ImportDefaultSpecifier,
@@ -96,6 +96,207 @@ import {
 	SyncWaterfallHook
 } from "tapable";
 
+declare class AMDDefineDependency extends NullDependency {
+	constructor(
+		range?: any,
+		arrayRange?: any,
+		functionRange?: any,
+		objectRange?: any,
+		namedModule?: any
+	);
+	range: any;
+	arrayRange: any;
+	functionRange: any;
+	objectRange: any;
+	namedModule: any;
+	localModule: any;
+	static Template: typeof AMDDefineDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class AMDDefineDependencyParserPlugin {
+	constructor(options?: any);
+	options: any;
+	apply(parser?: any): void;
+	processArray(
+		parser?: any,
+		expr?: any,
+		param?: any,
+		identifiers?: any,
+		namedModule?: any
+	): undefined | true;
+	processItem(
+		parser?: any,
+		expr?: any,
+		param?: any,
+		namedModule?: any
+	): undefined | true;
+	processContext(parser?: any, expr?: any, param?: any): undefined | true;
+	processCallDefine(parser?: any, expr?: any): undefined | true;
+	newDefineDependency(
+		range?: any,
+		arrayRange?: any,
+		functionRange?: any,
+		objectRange?: any,
+		namedModule?: any
+	): AMDDefineDependency;
+	newRequireArrayDependency(
+		depsArray?: any,
+		range?: any
+	): AMDRequireArrayDependency;
+	newRequireItemDependency(
+		request?: any,
+		range?: any
+	): AMDRequireItemDependency;
+}
+declare class AMDDefineDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+	localModuleVar(dependency?: any): any;
+	branch(dependency?: any): string;
+	replace(dependency?: any, source?: any, definition?: any, text?: any): void;
+}
+declare class AMDDefineRuntimeModule extends RuntimeModule {
+	constructor();
+
+	/**
+	 * Runtime modules without any dependencies to other runtime modules
+	 */
+	static STAGE_NORMAL: number;
+
+	/**
+	 * Runtime modules with simple dependencies on other runtime modules
+	 */
+	static STAGE_BASIC: number;
+
+	/**
+	 * Runtime modules which attach to handlers of other runtime modules
+	 */
+	static STAGE_ATTACH: number;
+
+	/**
+	 * Runtime modules which trigger actions on bootstrap
+	 */
+	static STAGE_TRIGGER: number;
+}
+declare class AMDOptionsRuntimeModule extends RuntimeModule {
+	constructor(options: Record<string, string | number | boolean>);
+	options: Record<string, string | number | boolean>;
+
+	/**
+	 * Runtime modules without any dependencies to other runtime modules
+	 */
+	static STAGE_NORMAL: number;
+
+	/**
+	 * Runtime modules with simple dependencies on other runtime modules
+	 */
+	static STAGE_BASIC: number;
+
+	/**
+	 * Runtime modules which attach to handlers of other runtime modules
+	 */
+	static STAGE_ATTACH: number;
+
+	/**
+	 * Runtime modules which trigger actions on bootstrap
+	 */
+	static STAGE_TRIGGER: number;
+}
+declare class AMDPlugin {
+	constructor(amdOptions: Record<string, any>);
+	amdOptions: Record<string, any>;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare class AMDRequireArrayDependency extends NullDependency {
+	constructor(depsArray?: any, range?: any);
+	depsArray: any;
+	range: any;
+	static Template: typeof AMDRequireArrayDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class AMDRequireArrayDependencyTemplate extends DependencyTemplate {
+	constructor();
+	getContent(dep?: any, templateContext?: any): string;
+	contentForDependency(
+		dep: any,
+		__1: {
+			runtimeTemplate: any;
+			moduleGraph: any;
+			chunkGraph: any;
+			runtimeRequirements: any;
+		}
+	): any;
+}
+declare class AMDRequireContextDependency extends ContextDependency {
+	constructor(options?: any, range?: any, valueRange?: any);
+	static Template: typeof ContextDependencyTemplateAsRequireCall;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class AMDRequireDependenciesBlock extends AsyncDependenciesBlock {
+	constructor(loc?: any, request?: any);
+}
+declare class AMDRequireDependenciesBlockParserPlugin {
+	constructor(options?: any);
+	options: any;
+	processFunctionArgument(parser?: any, expression?: any): boolean;
+	apply(parser?: any): void;
+	processArray(parser?: any, expr?: any, param?: any): undefined | true;
+	processItem(parser?: any, expr?: any, param?: any): undefined | true;
+	processContext(parser?: any, expr?: any, param?: any): undefined | true;
+	processArrayForRequestString(param?: any): any;
+	processItemForRequestString(param?: any): any;
+	processCallRequire(parser?: any, expr?: any): undefined | true;
+	newRequireDependenciesBlock(
+		loc?: any,
+		request?: any
+	): AMDRequireDependenciesBlock;
+	newRequireDependency(
+		outerRange?: any,
+		arrayRange?: any,
+		functionRange?: any,
+		errorCallbackRange?: any
+	): AMDRequireDependency;
+	newRequireItemDependency(
+		request?: any,
+		range?: any
+	): AMDRequireItemDependency;
+	newRequireArrayDependency(
+		depsArray?: any,
+		range?: any
+	): AMDRequireArrayDependency;
+}
+declare class AMDRequireDependency extends NullDependency {
+	constructor(
+		outerRange?: any,
+		arrayRange?: any,
+		functionRange?: any,
+		errorCallbackRange?: any
+	);
+	outerRange: any;
+	arrayRange: any;
+	functionRange: any;
+	errorCallbackRange: any;
+	functionBindThis: boolean;
+	errorCallbackBindThis: boolean;
+	static Template: typeof AMDRequireDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class AMDRequireDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
+declare class AMDRequireItemDependency extends ModuleDependency {
+	constructor(request?: any, range?: any);
+	static Template: typeof ModuleDependencyTemplateAsRequireId;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
 declare class AbstractLibraryPlugin<T> {
 	constructor(__0: {
 		/**
@@ -210,7 +411,7 @@ declare interface ArgumentConfig {
 	description: string;
 	path: string;
 	multiple: boolean;
-	type: "string" | "number" | "boolean" | "path" | "enum" | "RegExp" | "reset";
+	type: "string" | "number" | "boolean" | "path" | "RegExp" | "enum" | "reset";
 	values?: any[];
 }
 declare interface Asset {
@@ -240,6 +441,31 @@ type AssetFilterItemTypes =
 	| string
 	| RegExp
 	| ((name: string, asset: StatsAsset) => boolean);
+declare class AssetGenerator extends Generator {
+	constructor(
+		dataUrlOptions?:
+			| AssetGeneratorDataUrlOptions
+			| ((
+					source: string | Buffer,
+					context: { filename: string; module: Module }
+			  ) => string),
+		filename?: string,
+		publicPath?:
+			| string
+			| ((pathData: PathData, assetInfo?: AssetInfo) => string),
+		emit?: boolean
+	);
+	dataUrlOptions?:
+		| AssetGeneratorDataUrlOptions
+		| ((
+				source: string | Buffer,
+				context: { filename: string; module: Module }
+		  ) => string);
+	filename?: string;
+	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+	emit?: boolean;
+	static byType(map?: any): ByTypeGenerator;
+}
 
 /**
  * Options object for data url generation.
@@ -272,6 +498,32 @@ declare interface AssetInlineGeneratorOptions {
 				source: string | Buffer,
 				context: { filename: string; module: Module }
 		  ) => string);
+}
+declare class AssetModulesPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare class AssetParser extends Parser {
+	constructor(
+		dataUrlCondition?:
+			| boolean
+			| AssetParserDataUrlOptions
+			| ((
+					source: string | Buffer,
+					context: { filename: string; module: Module }
+			  ) => boolean)
+	);
+	dataUrlCondition?:
+		| boolean
+		| AssetParserDataUrlOptions
+		| ((
+				source: string | Buffer,
+				context: { filename: string; module: Module }
+		  ) => boolean);
 }
 
 /**
@@ -318,7 +570,21 @@ declare interface AssetResourceGeneratorOptions {
 	 */
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 }
-declare abstract class AsyncDependenciesBlock extends DependenciesBlock {
+declare class AssetSourceGenerator extends Generator {
+	constructor();
+	static byType(map?: any): ByTypeGenerator;
+}
+declare class AssetSourceParser extends Parser {
+	constructor();
+}
+declare class AsyncDependenciesBlock extends DependenciesBlock {
+	constructor(
+		groupOptions: RawChunkGroupOptions & { name?: string } & {
+			entryOptions?: EntryOptions;
+		},
+		loc?: SyntheticDependencyLocation | RealDependencyLocation,
+		request?: string
+	);
 	groupOptions: RawChunkGroupOptions & { name?: string } & {
 		entryOptions?: EntryOptions;
 	};
@@ -367,6 +633,22 @@ declare class AutomaticPrefetchPlugin {
 	apply(compiler: Compiler): void;
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
+declare class AwaitDependenciesInitFragment extends InitFragment {
+	constructor(promises: Set<string>);
+	promises: Set<string>;
+	static addToSource(
+		source?: any,
+		initFragments?: any,
+		generateContext?: any
+	): any;
+	static STAGE_CONSTANTS: number;
+	static STAGE_ASYNC_BOUNDARY: number;
+	static STAGE_HARMONY_EXPORTS: number;
+	static STAGE_HARMONY_IMPORTS: number;
+	static STAGE_PROVIDES: number;
+	static STAGE_ASYNC_DEPENDENCIES: number;
+	static STAGE_ASYNC_HARMONY_IMPORTS: number;
+}
 declare class BannerPlugin {
 	constructor(options: BannerPluginArgument);
 	options: BannerPluginOptions;
@@ -633,6 +915,18 @@ declare interface CacheGroupsContext {
 	chunkGraph: ChunkGraph;
 }
 type CacheOptionsNormalized = false | MemoryCacheOptions | FileCacheOptions;
+declare class CachedConstDependency extends NullDependency {
+	constructor(expression?: any, range?: any, identifier?: any);
+	expression: any;
+	range: any;
+	identifier: any;
+	static Template: typeof CachedConstDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class CachedConstDependencyTemplate extends DependencyTemplate {
+	constructor();
+}
 declare class CachedSource extends Source {
 	constructor(source: Source);
 	constructor(source: Source | (() => Source), cachedData?: any);
@@ -1211,6 +1505,100 @@ type CodeValuePrimitive =
 	| boolean
 	| Function
 	| RegExp;
+declare class CommonJsExportRequireDependency extends ModuleDependency {
+	constructor(
+		range?: any,
+		valueRange?: any,
+		base?: any,
+		names?: any,
+		request?: any,
+		ids?: any,
+		resultUsed?: any
+	);
+	valueRange: any;
+	base: any;
+	names: any;
+	ids: any;
+	resultUsed: any;
+	asiSafe: any;
+	getIds(moduleGraph: ModuleGraph): string[];
+	setIds(moduleGraph: ModuleGraph, ids: string[]): void;
+	getStarReexports(
+		moduleGraph: ModuleGraph,
+		runtime: RuntimeSpec,
+		importedModule?: Module
+	): { exports?: Set<string>; checked?: Set<string> };
+	static Template: typeof CommonJsExportRequireDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class CommonJsExportRequireDependencyTemplate extends DependencyTemplate {
+	constructor();
+}
+declare class CommonJsExportsDependency extends NullDependency {
+	constructor(range?: any, valueRange?: any, base?: any, names?: any);
+	range: any;
+	valueRange: any;
+	base: any;
+	names: any;
+	static Template: typeof CommonJsExportsDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class CommonJsExportsDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
+declare class CommonJsExportsParserPlugin {
+	constructor(moduleGraph?: any);
+	moduleGraph: any;
+	apply(parser: JavascriptParser): void;
+}
+declare class CommonJsFullRequireDependency extends ModuleDependency {
+	constructor(request: string, range: [number, number], names: string[]);
+	names: string[];
+	call: boolean;
+	asiSafe: any;
+	static Template: typeof CommonJsFullRequireDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class CommonJsFullRequireDependencyTemplate extends DependencyTemplate {
+	constructor();
+}
+declare class CommonJsImportsParserPlugin {
+	constructor(options: JavascriptParserOptions);
+	options: JavascriptParserOptions;
+	apply(parser?: any): void;
+}
+declare class CommonJsPlugin {
+	constructor();
+	apply(compiler?: any): void;
+}
+declare class CommonJsRequireContextDependency extends ContextDependency {
+	constructor(options?: any, range?: any, valueRange?: any);
+	static Template: typeof ContextDependencyTemplateAsRequireCall;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class CommonJsRequireDependency extends ModuleDependency {
+	constructor(request?: any, range?: any);
+	static Template: typeof ModuleDependencyTemplateAsId;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class CommonJsSelfReferenceDependency extends NullDependency {
+	constructor(range?: any, base?: any, names?: any, call?: any);
+	range: any;
+	base: any;
+	names: any;
+	call: any;
+	static Template: typeof CommonJsSelfReferenceDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class CommonJsSelfReferenceDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
 declare interface Comparator<T> {
 	(arg0: T, arg1: T): 0 | 1 | -1;
 }
@@ -2099,6 +2487,22 @@ type ConnectionState =
 	| boolean
 	| typeof TRANSITIVE_ONLY
 	| typeof CIRCULAR_CONNECTION;
+declare class ConstDependency extends NullDependency {
+	constructor(
+		expression: string,
+		range: number | [number, number],
+		runtimeRequirements?: string[]
+	);
+	expression: string;
+	range: number | [number, number];
+	runtimeRequirements: null | Set<string>;
+	static Template: typeof ConstDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class ConstDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
 declare interface Constructor {
 	new (...params: any[]): any;
 }
@@ -2178,6 +2582,36 @@ declare interface ConsumesConfig {
 declare interface ConsumesObject {
 	[index: string]: string | ConsumesConfig;
 }
+declare class ContainerEntryDependency extends Dependency {
+	constructor(
+		name: string,
+		exposes: [string, ExposeOptions][],
+		shareScope: string
+	);
+	name: string;
+	exposes: [string, ExposeOptions][];
+	shareScope: string;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class ContainerEntryModule extends Module {
+	constructor(
+		name: string,
+		exposes: [string, ExposeOptions][],
+		shareScope: string
+	);
+	static deserialize(context?: any): ContainerEntryModule;
+}
+declare class ContainerEntryModuleFactory extends ModuleFactory {
+	constructor();
+}
+declare class ContainerExposedDependency extends ModuleDependency {
+	constructor(exposedName: string, request: string);
+	exposedName: string;
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
 type ContainerOptionsFormat<T> =
 	| Record<string, string | string[] | T>
 	| (string | Record<string, string | string[] | T>)[];
@@ -2239,8 +2673,64 @@ declare interface ContainerReferencePluginOptions {
 	 */
 	shareScope?: string;
 }
-declare abstract class ContextElementDependency extends ModuleDependency {
+declare class ContextDependency extends Dependency {
+	constructor(options: ContextDependencyOptions);
+	options:
+		| ContextDependencyOptions
+		| {
+				regExp: null;
+				mode: ContextMode;
+				recursive: boolean;
+				namespaceObject?: boolean | "strict";
+				addon?: string;
+				chunkName?: string;
+				include?: RegExp;
+				exclude?: RegExp;
+				groupOptions?: RawChunkGroupOptions;
+				category?: string;
+				/**
+				 * exports referenced from modules (won't be mangled)
+				 */
+				referencedExports?: string[][];
+				request: string;
+		  };
+	userRequest: string;
+	critical: string | false;
+	hadGlobalOrStickyRegExp: boolean;
+	request: any;
+	range: any;
+	valueRange: any;
+	replaces: any;
+	prepend: any;
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare interface ContextDependencyConstructor {
+	new (
+		options: ContextDependencyOptions,
+		range: [number, number],
+		valueRange: [number, number]
+	): ContextDependency;
+}
+type ContextDependencyOptions = ContextOptions & { request: string };
+declare class ContextDependencyTemplateAsId extends DependencyTemplate {
+	constructor();
+}
+declare class ContextDependencyTemplateAsRequireCall extends DependencyTemplate {
+	constructor();
+}
+declare class ContextElementDependency extends ModuleDependency {
+	constructor(
+		request?: any,
+		userRequest?: any,
+		category?: any,
+		referencedExports?: any
+	);
 	referencedExports: any;
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
 }
 declare class ContextExclusionPlugin {
 	constructor(negativeMatcher: RegExp);
@@ -2280,8 +2770,14 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		callback: (err?: Error, dependencies?: ContextElementDependency[]) => any
 	): void;
 }
-
-declare interface ContextModuleOptions {
+type ContextModuleOptions = ContextOptions & ContextModuleOptionsExtras;
+declare interface ContextModuleOptionsExtras {
+	resource: string;
+	resourceQuery?: string;
+	resourceFragment?: string;
+	resolveOptions: any;
+}
+declare interface ContextOptions {
 	mode: ContextMode;
 	recursive: boolean;
 	regExp: RegExp;
@@ -2297,10 +2793,6 @@ declare interface ContextModuleOptions {
 	 * exports referenced from modules (won't be mangled)
 	 */
 	referencedExports?: string[][];
-	resource: string;
-	resourceQuery?: string;
-	resourceFragment?: string;
-	resolveOptions: any;
 }
 declare class ContextReplacementPlugin {
 	constructor(
@@ -2319,6 +2811,26 @@ declare class ContextReplacementPlugin {
 }
 type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
 	Record<string, any>;
+declare class CriticalDependencyWarning extends WebpackError {
+	constructor(message?: any);
+
+	/**
+	 * Create .stack property on a target object
+	 */
+	static captureStackTrace(
+		targetObject: object,
+		constructorOpt?: Function
+	): void;
+
+	/**
+	 * Optional override for formatting stack traces
+	 */
+	static prepareStackTrace?: (
+		err: Error,
+		stackTraces: NodeJS.CallSite[]
+	) => any;
+	static stackTraceLimit: number;
+}
 type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
 declare class DefinePlugin {
 	/**
@@ -2348,6 +2860,12 @@ declare class DelegatedPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare class DelegatedSourceDependency extends ModuleDependency {
+	constructor(request?: any);
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
 }
 declare interface DepConstructor {
 	new (...args: any[]): Dependency;
@@ -2443,7 +2961,8 @@ declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
 }
 type DependencyLocation = SyntheticDependencyLocation | RealDependencyLocation;
-declare abstract class DependencyTemplate {
+declare class DependencyTemplate {
+	constructor();
 	apply(
 		dependency: Dependency,
 		source: ReplaceSource,
@@ -2530,6 +3049,13 @@ declare class DeterministicModuleIdsPlugin {
  */
 declare interface DevServer {
 	[index: string]: any;
+}
+declare class DllEntryDependency extends Dependency {
+	constructor(dependencies?: any, name?: any);
+	dependencies: any;
+	name: any;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
 }
 declare class DllPlugin {
 	constructor(options: DllPluginOptions);
@@ -2816,7 +3342,12 @@ declare interface EntryData {
 	 */
 	options: EntryOptions;
 }
-declare abstract class EntryDependency extends ModuleDependency {}
+declare class EntryDependency extends ModuleDependency {
+	constructor(request: string);
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
 
 /**
  * An object with entry point description.
@@ -3248,6 +3779,27 @@ declare abstract class ExportInfo {
 		| "usage and provision prevents renaming"
 		| "provision prevents renaming";
 }
+declare abstract class ExportMode {
+	type: ExportModeType;
+	items: null | NormalReexportItem[];
+	name: null | string;
+	partialNamespaceExportInfo: null | ExportInfo;
+	ignored: null | Set<string>;
+	hidden: null | Set<string>;
+	userRequest: null | string;
+	fakeType: number;
+}
+type ExportModeType =
+	| "unused"
+	| "missing"
+	| "empty-star"
+	| "reexport-dynamic-default"
+	| "reexport-named-default"
+	| "reexport-namespace-object"
+	| "reexport-fake-namespace-object"
+	| "reexport-undefined"
+	| "normal-reexport"
+	| "dynamic-reexport";
 declare interface ExportSpec {
 	/**
 	 * the name of the export
@@ -3331,6 +3883,19 @@ declare abstract class ExportsInfo {
 		exports: any;
 	}): void;
 }
+declare class ExportsInfoDependency extends NullDependency {
+	constructor(range?: any, exportName?: any, property?: any);
+	range: any;
+	exportName: any;
+	property: any;
+	static deserialize(context?: any): ExportsInfoDependency;
+	static Template: typeof ExportsInfoDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class ExportsInfoDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
 declare interface ExportsSpec {
 	/**
 	 * exported names, true for unknown exports or null for no exports
@@ -3367,6 +3932,17 @@ declare interface ExportsSpec {
 	 */
 	dependencies?: Module[];
 }
+declare interface ExposeOptions {
+	/**
+	 * requests to exposed modules (last one is exported)
+	 */
+	import: string[];
+
+	/**
+	 * custom chunk name for the exposed module
+	 */
+	name: string;
+}
 type Exposes = (string | ExposesObject)[] | ExposesObject;
 
 /**
@@ -3391,15 +3967,16 @@ declare interface ExposesObject {
 	[index: string]: string | ExposesConfig | string[];
 }
 type Expression =
-	| UnaryExpression
+	| IdentifierImport
+	| SimpleLiteral
+	| RegExpLiteral
+	| FunctionExpression
+	| ArrowFunctionExpression
 	| ThisExpression
 	| ArrayExpression
 	| ObjectExpression
-	| FunctionExpression
-	| ArrowFunctionExpression
 	| YieldExpression
-	| SimpleLiteral
-	| RegExpLiteral
+	| UnaryExpression
 	| UpdateExpression
 	| BinaryExpression
 	| AssignmentExpression
@@ -3413,7 +3990,6 @@ type Expression =
 	| TaggedTemplateExpression
 	| ClassExpression
 	| MetaProperty
-	| Identifier
 	| AwaitExpression
 	| ImportExpression
 	| ChainExpression;
@@ -3606,6 +4182,27 @@ declare interface FallbackCacheGroup {
 	maxAsyncSize: SplitChunksSizes;
 	maxInitialSize: SplitChunksSizes;
 	automaticNameDelimiter: string;
+}
+declare class FallbackDependency extends Dependency {
+	constructor(requests?: any);
+	requests: any;
+	static deserialize(context?: any): FallbackDependency;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class FallbackItemDependency extends ModuleDependency {
+	constructor(request?: any);
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class FallbackModule extends Module {
+	constructor(requests: string[]);
+	requests: string[];
+	static deserialize(context?: any): FallbackModule;
+}
+declare class FallbackModuleFactory extends ModuleFactory {
+	constructor();
 }
 declare class FetchCompileAsyncWasmPlugin {
 	constructor();
@@ -3832,6 +4429,9 @@ declare interface FileSystemStats {
 	isFile: () => boolean;
 }
 type FilterItemTypes = string | RegExp | ((value: string) => boolean);
+declare abstract class FuncParam extends NodeDeclarations {
+	valtype: string;
+}
 declare interface GenerateContext {
 	/**
 	 * mapping from dependencies to templates
@@ -4002,6 +4602,273 @@ declare interface HandleModuleCreationOptions {
 	 */
 	recursive?: boolean;
 }
+declare class HarmonyAcceptDependency extends NullDependency {
+	constructor(
+		range: [number, number],
+		dependencies: HarmonyAcceptImportDependency[],
+		hasCallback: boolean
+	);
+	range: [number, number];
+	dependencies: HarmonyAcceptImportDependency[];
+	hasCallback: boolean;
+	static Template: typeof HarmonyAcceptDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class HarmonyAcceptDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
+declare class HarmonyAcceptImportDependency extends HarmonyImportDependency {
+	constructor(request?: any);
+	static Template: typeof HarmonyAcceptImportDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class HarmonyAcceptImportDependencyTemplate extends HarmonyImportDependencyTemplate {
+	constructor();
+	static getImportEmittedRuntime(
+		module: Module,
+		referencedModule: Module
+	): undefined | string | boolean | SortableSet<string>;
+}
+declare class HarmonyCompatibilityDependency extends NullDependency {
+	constructor();
+	static Template: typeof HarmonyExportDependencyTemplateHarmonyCompatibilityDependency;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class HarmonyDetectionParserPlugin {
+	constructor(options?: any);
+	topLevelAwait: any;
+	apply(parser?: any): void;
+}
+declare class HarmonyExportDependencyParserPlugin {
+	constructor(options?: any);
+	strictExportPresence: any;
+	apply(parser?: any): void;
+}
+declare class HarmonyExportDependencyTemplateHarmonyCompatibilityDependency extends NullDependencyTemplate {
+	constructor();
+}
+declare class HarmonyExportDependencyTemplateHarmonyExportExpressionDependency extends NullDependencyTemplate {
+	constructor();
+}
+declare class HarmonyExportDependencyTemplateHarmonyExportHeaderDependency extends NullDependencyTemplate {
+	constructor();
+}
+declare class HarmonyExportExpressionDependency extends NullDependency {
+	constructor(
+		range?: any,
+		rangeStatement?: any,
+		prefix?: any,
+		declarationId?: any
+	);
+	range: any;
+	rangeStatement: any;
+	prefix: any;
+	declarationId: any;
+	static Template: typeof HarmonyExportDependencyTemplateHarmonyExportExpressionDependency;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class HarmonyExportHeaderDependency extends NullDependency {
+	constructor(range?: any, rangeStatement?: any);
+	range: any;
+	rangeStatement: any;
+	static Template: typeof HarmonyExportDependencyTemplateHarmonyExportHeaderDependency;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class HarmonyExportImportedSpecifierDependency extends HarmonyImportDependency {
+	constructor(
+		request: string,
+		sourceOrder: number,
+		ids: string[],
+		name: null | string,
+		activeExports: Set<string>,
+		otherStarExports: Iterable<HarmonyExportImportedSpecifierDependency>,
+		strictExportPresence: boolean
+	);
+	ids: string[];
+	name: null | string;
+	activeExports: Set<string>;
+	otherStarExports: Iterable<HarmonyExportImportedSpecifierDependency>;
+	strictExportPresence: boolean;
+	readonly id: void;
+	getId(): void;
+	setId(): void;
+	getIds(moduleGraph: ModuleGraph): string[];
+	setIds(moduleGraph: ModuleGraph, ids: string[]): void;
+	getMode(moduleGraph: ModuleGraph, runtime: RuntimeSpec): ExportMode;
+	getStarReexports(
+		moduleGraph: ModuleGraph,
+		runtime: RuntimeSpec,
+		exportsInfo?: ExportsInfo,
+		importedModule?: Module
+	): {
+		exports?: Set<string>;
+		checked?: Set<string>;
+		ignoredExports: Set<string>;
+		hidden: Set<string>;
+	};
+	static Template: typeof HarmonyExportImportedSpecifierDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class HarmonyExportImportedSpecifierDependencyTemplate extends HarmonyImportDependencyTemplate {
+	constructor();
+	getReexportFragment(
+		module?: any,
+		comment?: any,
+		key?: any,
+		name?: any,
+		valueKey?: any,
+		runtimeRequirements?: any
+	): HarmonyExportInitFragment;
+	getReexportFakeNamespaceObjectFragments(
+		module?: any,
+		key?: any,
+		name?: any,
+		fakeType?: any,
+		runtimeRequirements?: any
+	): InitFragment[];
+	getConditionalReexportStatement(
+		module?: any,
+		key?: any,
+		name?: any,
+		valueKey?: any,
+		runtimeRequirements?: any
+	): "/* unused export */\n" | string;
+	getReturnValue(name?: any, valueKey?: any): any;
+	static getImportEmittedRuntime(
+		module: Module,
+		referencedModule: Module
+	): undefined | string | boolean | SortableSet<string>;
+}
+declare class HarmonyExportInitFragment extends InitFragment {
+	constructor(
+		exportsArgument: string,
+		exportMap?: Map<string, string>,
+		unusedExports?: Set<string>
+	);
+	exportsArgument: string;
+	exportMap: Map<string, string>;
+	unusedExports: Set<string>;
+	static addToSource(
+		source?: any,
+		initFragments?: any,
+		generateContext?: any
+	): any;
+	static STAGE_CONSTANTS: number;
+	static STAGE_ASYNC_BOUNDARY: number;
+	static STAGE_HARMONY_EXPORTS: number;
+	static STAGE_HARMONY_IMPORTS: number;
+	static STAGE_PROVIDES: number;
+	static STAGE_ASYNC_DEPENDENCIES: number;
+	static STAGE_ASYNC_HARMONY_IMPORTS: number;
+}
+declare class HarmonyExportSpecifierDependency extends NullDependency {
+	constructor(id?: any, name?: any);
+	id: any;
+	name: any;
+	static Template: typeof HarmonyExportSpecifierDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class HarmonyExportSpecifierDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
+declare class HarmonyImportDependency extends ModuleDependency {
+	constructor(request: string, sourceOrder: number);
+	sourceOrder: number;
+	getImportVar(moduleGraph: ModuleGraph): string;
+	getImportStatement(
+		update: boolean,
+		__1: DependencyTemplateContext
+	): [string, string];
+	getLinkingErrors(
+		moduleGraph: ModuleGraph,
+		ids: string[],
+		additionalMessage: string
+	): undefined | WebpackError[];
+	static Template: typeof HarmonyImportDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class HarmonyImportDependencyParserPlugin {
+	constructor(options?: any);
+	strictExportPresence: any;
+	strictThisContextOnImports: any;
+	apply(parser: JavascriptParser): void;
+	static harmonySpecifierTag: typeof harmonySpecifierTag;
+}
+declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
+	constructor();
+	static getImportEmittedRuntime(
+		module: Module,
+		referencedModule: Module
+	): undefined | string | boolean | SortableSet<string>;
+}
+declare class HarmonyImportSideEffectDependency extends HarmonyImportDependency {
+	constructor(request?: any, sourceOrder?: any);
+	static Template: typeof HarmonyImportSideEffectDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class HarmonyImportSideEffectDependencyTemplate extends HarmonyImportDependencyTemplate {
+	constructor();
+	static getImportEmittedRuntime(
+		module: Module,
+		referencedModule: Module
+	): undefined | string | boolean | SortableSet<string>;
+}
+declare class HarmonyImportSpecifierDependency extends HarmonyImportDependency {
+	constructor(
+		request?: any,
+		sourceOrder?: any,
+		ids?: any,
+		name?: any,
+		range?: any,
+		strictExportPresence?: any
+	);
+	ids: any;
+	name: any;
+	strictExportPresence: any;
+	namespaceObjectAsContext: boolean;
+	call: any;
+	directImport: any;
+	shorthand: any;
+	asiSafe: any;
+	usedByExports: boolean | Set<string>;
+	readonly id: void;
+	getId(): void;
+	setId(): void;
+	getIds(moduleGraph: ModuleGraph): string[];
+	setIds(moduleGraph: ModuleGraph, ids: string[]): void;
+	static Template: typeof HarmonyImportSpecifierDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class HarmonyImportSpecifierDependencyTemplate extends HarmonyImportDependencyTemplate {
+	constructor();
+	static getImportEmittedRuntime(
+		module: Module,
+		referencedModule: Module
+	): undefined | string | boolean | SortableSet<string>;
+}
+declare class HarmonyModulesPlugin {
+	constructor(options?: any);
+	options: any;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare class HarmonyTopLevelThisParserPlugin {
+	constructor();
+	apply(parser?: any): void;
+}
 declare class Hash {
 	constructor();
 
@@ -4111,6 +4978,9 @@ declare interface IStats {
 	ctime: Date;
 	birthtime: Date;
 }
+declare abstract class IdentifierDeclarations extends NodeDeclarations {
+	value: string;
+}
 declare class IgnorePlugin {
 	constructor(options: IgnorePluginOptions);
 	options: IgnorePluginOptions;
@@ -4143,7 +5013,90 @@ type IgnorePluginOptions =
 			 */
 			checkResource?: (resource: string, context: string) => boolean;
 	  };
+declare class ImportContextDependency extends ContextDependency {
+	constructor(options?: any, range?: any, valueRange?: any);
+	static Template: typeof ContextDependencyTemplateAsRequireCall;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class ImportDependency extends ModuleDependency {
+	constructor(
+		request: string,
+		range: [number, number],
+		referencedExports?: string[][]
+	);
+	referencedExports?: string[][];
+	static Template: typeof ImportDependencyTemplateImportDependency;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class ImportDependencyTemplateImportDependency extends DependencyTemplate {
+	constructor();
+}
+declare class ImportDependencyTemplateImportWeakDependency extends ImportDependencyTemplateImportDependency {
+	constructor();
+}
+declare class ImportEagerDependency extends ImportDependency {
+	constructor(
+		request: string,
+		range: [number, number],
+		referencedExports?: string[][]
+	);
+	static Template: typeof ImportEagerDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class ImportEagerDependencyTemplate extends ImportDependencyTemplateImportDependency {
+	constructor();
+}
+declare class ImportMetaHotAcceptDependency extends ModuleDependency {
+	constructor(request?: any, range?: any);
+	static Template: typeof ModuleDependencyTemplateAsId;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class ImportMetaHotDeclineDependency extends ModuleDependency {
+	constructor(request?: any, range?: any);
+	static Template: typeof ModuleDependencyTemplateAsId;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class ImportMetaPlugin {
+	constructor();
+	apply(compiler: Compiler): void;
+}
+declare class ImportParserPlugin {
+	constructor(options?: any);
+	options: any;
+	apply(parser?: any): void;
+}
+declare class ImportPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 type ImportSource = undefined | null | string | SimpleLiteral | RegExpLiteral;
+declare class ImportWeakDependency extends ImportDependency {
+	constructor(
+		request: string,
+		range: [number, number],
+		referencedExports?: string[][]
+	);
+	static Template: typeof ImportDependencyTemplateImportWeakDependency;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class InferAsyncModulesPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 
 /**
  * Options for infrastructure level logging.
@@ -4307,13 +5260,13 @@ declare class JavascriptParser extends Parser {
 		>;
 		evaluateIdentifier: HookMap<
 			SyncBailHook<
-				[ThisExpression | MemberExpression | MetaProperty | Identifier],
+				[IdentifierImport | ThisExpression | MemberExpression | MetaProperty],
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
 		evaluateDefinedIdentifier: HookMap<
 			SyncBailHook<
-				[ThisExpression | MemberExpression | Identifier],
+				[IdentifierImport | ThisExpression | MemberExpression],
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
@@ -4327,15 +5280,19 @@ declare class JavascriptParser extends Parser {
 			SyncBailHook<
 				[
 					(
-						| UnaryExpression
+						| IdentifierImport
+						| SimpleLiteral
+						| RegExpLiteral
+						| FunctionDeclaration
+						| FunctionExpression
+						| ArrowFunctionExpression
+						| VariableDeclaration
+						| ClassDeclaration
 						| ThisExpression
 						| ArrayExpression
 						| ObjectExpression
-						| FunctionExpression
-						| ArrowFunctionExpression
 						| YieldExpression
-						| SimpleLiteral
-						| RegExpLiteral
+						| UnaryExpression
 						| UpdateExpression
 						| BinaryExpression
 						| AssignmentExpression
@@ -4349,13 +5306,9 @@ declare class JavascriptParser extends Parser {
 						| TaggedTemplateExpression
 						| ClassExpression
 						| MetaProperty
-						| Identifier
 						| AwaitExpression
 						| ImportExpression
 						| ChainExpression
-						| FunctionDeclaration
-						| VariableDeclaration
-						| ClassDeclaration
 					),
 					number
 				],
@@ -4365,8 +5318,6 @@ declare class JavascriptParser extends Parser {
 		preStatement: SyncBailHook<
 			[
 				| FunctionDeclaration
-				| VariableDeclaration
-				| ClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
 				| EmptyStatement
@@ -4385,6 +5336,8 @@ declare class JavascriptParser extends Parser {
 				| ForStatement
 				| ForInStatement
 				| ForOfStatement
+				| VariableDeclaration
+				| ClassDeclaration
 				| ImportDeclaration
 				| ExportNamedDeclaration
 				| ExportDefaultDeclaration
@@ -4395,8 +5348,6 @@ declare class JavascriptParser extends Parser {
 		blockPreStatement: SyncBailHook<
 			[
 				| FunctionDeclaration
-				| VariableDeclaration
-				| ClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
 				| EmptyStatement
@@ -4415,6 +5366,8 @@ declare class JavascriptParser extends Parser {
 				| ForStatement
 				| ForInStatement
 				| ForOfStatement
+				| VariableDeclaration
+				| ClassDeclaration
 				| ImportDeclaration
 				| ExportNamedDeclaration
 				| ExportDefaultDeclaration
@@ -4425,8 +5378,6 @@ declare class JavascriptParser extends Parser {
 		statement: SyncBailHook<
 			[
 				| FunctionDeclaration
-				| VariableDeclaration
-				| ClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
 				| EmptyStatement
@@ -4445,6 +5396,8 @@ declare class JavascriptParser extends Parser {
 				| ForStatement
 				| ForInStatement
 				| ForOfStatement
+				| VariableDeclaration
+				| ClassDeclaration
 				| ImportDeclaration
 				| ExportNamedDeclaration
 				| ExportDefaultDeclaration
@@ -4454,11 +5407,11 @@ declare class JavascriptParser extends Parser {
 		>;
 		statementIf: SyncBailHook<[IfStatement], boolean | void>;
 		classExtendsExpression: SyncBailHook<
-			[Expression, ClassExpression | ClassDeclaration],
+			[Expression, ClassDeclaration | ClassExpression],
 			boolean | void
 		>;
 		classBodyElement: SyncBailHook<
-			[MethodDefinition, ClassExpression | ClassDeclaration],
+			[MethodDefinition, ClassDeclaration | ClassExpression],
 			boolean | void
 		>;
 		label: HookMap<SyncBailHook<[LabeledStatement], boolean | void>>;
@@ -4488,7 +5441,7 @@ declare class JavascriptParser extends Parser {
 		varDeclarationLet: HookMap<SyncBailHook<[Declaration], boolean | void>>;
 		varDeclarationConst: HookMap<SyncBailHook<[Declaration], boolean | void>>;
 		varDeclarationVar: HookMap<SyncBailHook<[Declaration], boolean | void>>;
-		pattern: HookMap<SyncBailHook<[Identifier], boolean | void>>;
+		pattern: HookMap<SyncBailHook<[IdentifierImport], boolean | void>>;
 		canRename: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		rename: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		assign: HookMap<SyncBailHook<[AssignmentExpression], boolean | void>>;
@@ -4534,35 +5487,12 @@ declare class JavascriptParser extends Parser {
 	comments: any;
 	semicolons: any;
 	statementPath: (
-		| UnaryExpression
-		| ThisExpression
-		| ArrayExpression
-		| ObjectExpression
-		| FunctionExpression
-		| ArrowFunctionExpression
-		| YieldExpression
+		| IdentifierImport
 		| SimpleLiteral
 		| RegExpLiteral
-		| UpdateExpression
-		| BinaryExpression
-		| AssignmentExpression
-		| LogicalExpression
-		| MemberExpression
-		| ConditionalExpression
-		| SimpleCallExpression
-		| NewExpression
-		| SequenceExpression
-		| TemplateLiteral
-		| TaggedTemplateExpression
-		| ClassExpression
-		| MetaProperty
-		| Identifier
-		| AwaitExpression
-		| ImportExpression
-		| ChainExpression
 		| FunctionDeclaration
-		| VariableDeclaration
-		| ClassDeclaration
+		| FunctionExpression
+		| ArrowFunctionExpression
 		| ExpressionStatement
 		| BlockStatement
 		| EmptyStatement
@@ -4581,11 +5511,34 @@ declare class JavascriptParser extends Parser {
 		| ForStatement
 		| ForInStatement
 		| ForOfStatement
+		| VariableDeclaration
+		| ClassDeclaration
+		| ThisExpression
+		| ArrayExpression
+		| ObjectExpression
+		| YieldExpression
+		| UnaryExpression
+		| UpdateExpression
+		| BinaryExpression
+		| AssignmentExpression
+		| LogicalExpression
+		| MemberExpression
+		| ConditionalExpression
+		| SimpleCallExpression
+		| NewExpression
+		| SequenceExpression
+		| TemplateLiteral
+		| TaggedTemplateExpression
+		| ClassExpression
+		| MetaProperty
+		| AwaitExpression
+		| ImportExpression
+		| ChainExpression
 	)[];
 	prevStatement: any;
 	currentTagData: any;
 	getRenameIdentifier(expr?: any): undefined | string;
-	walkClass(classy: ClassExpression | ClassDeclaration): void;
+	walkClass(classy: ClassDeclaration | ClassExpression): void;
 	walkMethodDefinition(methodDefinition?: any): void;
 	preWalkStatements(statements?: any): void;
 	blockPreWalkStatements(statements?: any): void;
@@ -4742,15 +5695,19 @@ declare class JavascriptParser extends Parser {
 		expr:
 			| undefined
 			| null
-			| UnaryExpression
+			| IdentifierImport
+			| SimpleLiteral
+			| RegExpLiteral
+			| FunctionDeclaration
+			| FunctionExpression
+			| ArrowFunctionExpression
+			| VariableDeclaration
+			| ClassDeclaration
 			| ThisExpression
 			| ArrayExpression
 			| ObjectExpression
-			| FunctionExpression
-			| ArrowFunctionExpression
 			| YieldExpression
-			| SimpleLiteral
-			| RegExpLiteral
+			| UnaryExpression
 			| UpdateExpression
 			| BinaryExpression
 			| AssignmentExpression
@@ -4764,13 +5721,9 @@ declare class JavascriptParser extends Parser {
 			| TaggedTemplateExpression
 			| ClassExpression
 			| MetaProperty
-			| Identifier
 			| AwaitExpression
 			| ImportExpression
-			| ChainExpression
-			| FunctionDeclaration
-			| VariableDeclaration
-			| ClassDeclaration,
+			| ChainExpression,
 		commentsStartPos: number
 	): boolean;
 	getComments(range?: any): any[];
@@ -4792,15 +5745,16 @@ declare class JavascriptParser extends Parser {
 	): {
 		members: string[];
 		object:
-			| UnaryExpression
+			| IdentifierImport
+			| SimpleLiteral
+			| RegExpLiteral
+			| FunctionExpression
+			| ArrowFunctionExpression
 			| ThisExpression
 			| ArrayExpression
 			| ObjectExpression
-			| FunctionExpression
-			| ArrowFunctionExpression
 			| YieldExpression
-			| SimpleLiteral
-			| RegExpLiteral
+			| UnaryExpression
 			| UpdateExpression
 			| BinaryExpression
 			| AssignmentExpression
@@ -4814,7 +5768,6 @@ declare class JavascriptParser extends Parser {
 			| TaggedTemplateExpression
 			| ClassExpression
 			| MetaProperty
-			| Identifier
 			| AwaitExpression
 			| ImportExpression
 			| ChainExpression
@@ -4979,6 +5932,14 @@ declare interface JavascriptParserOptions {
 	 * Set the inner regular expression for partial dynamic dependencies.
 	 */
 	wrappedContextRegExp?: RegExp;
+}
+declare class JsonExportsDependency extends NullDependency {
+	constructor(exports: (string | ExportSpec)[]);
+	exports: (string | ExportSpec)[];
+	static getExportsFromData: (data?: any) => any;
+	static Template: typeof NullDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
 }
 declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements?: any);
@@ -5562,6 +6523,12 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 declare interface Loader {
 	[index: string]: any;
 }
+declare class LoaderDependency extends ModuleDependency {
+	constructor(request: string);
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
 declare interface LoaderItem {
 	loader: string;
 	options: any;
@@ -5601,6 +6568,10 @@ declare interface LoaderOptionsPluginOptions {
 		context?: string;
 	};
 }
+declare class LoaderPlugin {
+	constructor();
+	apply(compiler?: any): void;
+}
 declare class LoaderTargetPlugin {
 	constructor(target: string);
 	target: string;
@@ -5609,6 +6580,28 @@ declare class LoaderTargetPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare class LocalModule {
+	constructor(name?: any, idx?: any);
+	name: any;
+	idx: any;
+	used: boolean;
+	flagUsed(): void;
+	variableName(): string;
+	serialize(context?: any): void;
+	deserialize(context?: any): void;
+}
+declare class LocalModuleDependency extends NullDependency {
+	constructor(localModule?: any, range?: any, callNew?: any);
+	localModule: any;
+	range: any;
+	callNew: any;
+	static Template: typeof LocalModuleDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class LocalModuleDependencyTemplate extends NullDependencyTemplate {
+	constructor();
 }
 declare interface LogEntry {
 	type: string;
@@ -5885,10 +6878,31 @@ declare class ModuleConcatenationPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-declare abstract class ModuleDependency extends Dependency {
+declare class ModuleDecoratorDependency extends NullDependency {
+	constructor(decorator: string, allowExportsAccess: boolean);
+	decorator: string;
+	allowExportsAccess: boolean;
+	static Template: typeof ModuleDecoratorDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class ModuleDecoratorDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
+declare class ModuleDependency extends Dependency {
+	constructor(request: string);
 	request: string;
 	userRequest: string;
 	range: any;
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class ModuleDependencyTemplateAsId extends DependencyTemplate {
+	constructor();
+}
+declare class ModuleDependencyTemplateAsRequireId extends DependencyTemplate {
+	constructor();
 }
 declare abstract class ModuleFactory {
 	create(
@@ -6121,6 +7135,24 @@ declare class ModuleGraphConnection {
 	) => ConnectionState;
 	static TRANSITIVE_ONLY: typeof TRANSITIVE_ONLY;
 	static CIRCULAR_CONNECTION: typeof CIRCULAR_CONNECTION;
+}
+declare class ModuleHotAcceptDependency extends ModuleDependency {
+	constructor(request?: any, range?: any);
+	static Template: typeof ModuleDependencyTemplateAsId;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class ModuleHotDeclineDependency extends ModuleDependency {
+	constructor(request?: any, range?: any);
+	static Template: typeof ModuleDependencyTemplateAsId;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare abstract class ModuleImportDescription {
+	type: string;
+	valtype?: string;
+	id?: IdentifierDeclarations;
+	signature?: Signature;
 }
 type ModuleInfo = ConcatenatedModuleInfo | ExternalModuleInfo;
 
@@ -6436,6 +7468,7 @@ declare class NoEmitOnErrorsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare abstract class NodeDeclarations {}
 declare class NodeEnvironmentPlugin {
 	constructor(options?: any);
 	options: any;
@@ -6446,35 +7479,16 @@ declare class NodeEnvironmentPlugin {
 	apply(compiler: Compiler): void;
 }
 type NodeEstreeIndex =
-	| UnaryExpression
-	| ThisExpression
-	| ArrayExpression
-	| ObjectExpression
-	| FunctionExpression
-	| ArrowFunctionExpression
-	| YieldExpression
+	| IdentifierImport
 	| SimpleLiteral
 	| RegExpLiteral
-	| UpdateExpression
-	| BinaryExpression
-	| AssignmentExpression
-	| LogicalExpression
-	| MemberExpression
-	| ConditionalExpression
-	| SimpleCallExpression
-	| NewExpression
-	| SequenceExpression
-	| TemplateLiteral
-	| TaggedTemplateExpression
-	| ClassExpression
-	| MetaProperty
-	| Identifier
-	| AwaitExpression
-	| ImportExpression
-	| ChainExpression
+	| Program
 	| FunctionDeclaration
-	| VariableDeclaration
-	| ClassDeclaration
+	| FunctionExpression
+	| ArrowFunctionExpression
+	| SwitchCase
+	| CatchClause
+	| VariableDeclarator
 	| ExpressionStatement
 	| BlockStatement
 	| EmptyStatement
@@ -6493,18 +7507,32 @@ type NodeEstreeIndex =
 	| ForStatement
 	| ForInStatement
 	| ForOfStatement
-	| ImportDeclaration
-	| ExportNamedDeclaration
-	| ExportDefaultDeclaration
-	| ExportAllDeclaration
-	| MethodDefinition
-	| VariableDeclarator
-	| Program
-	| Super
-	| SwitchCase
-	| CatchClause
+	| VariableDeclaration
+	| ClassDeclaration
+	| ThisExpression
+	| ArrayExpression
+	| ObjectExpression
+	| YieldExpression
+	| UnaryExpression
+	| UpdateExpression
+	| BinaryExpression
+	| AssignmentExpression
+	| LogicalExpression
+	| MemberExpression
+	| ConditionalExpression
+	| SimpleCallExpression
+	| NewExpression
+	| SequenceExpression
+	| TemplateLiteral
+	| TaggedTemplateExpression
+	| ClassExpression
+	| MetaProperty
+	| AwaitExpression
+	| ImportExpression
+	| ChainExpression
 	| Property
 	| AssignmentProperty
+	| Super
 	| TemplateElement
 	| SpreadElement
 	| ObjectPattern
@@ -6512,6 +7540,11 @@ type NodeEstreeIndex =
 	| RestElement
 	| AssignmentPattern
 	| ClassBody
+	| MethodDefinition
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportDefaultDeclaration
+	| ExportAllDeclaration
 	| ImportSpecifier
 	| ImportDefaultSpecifier
 	| ImportNamespaceSpecifier
@@ -6736,6 +7769,13 @@ declare class NormalModuleReplacementPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare abstract class NormalReexportItem {
+	name: string;
+	ids: string[];
+	exportInfo: ExportInfo;
+	checked: boolean;
+	hidden: boolean;
+}
 type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 	Omit<
 		StatsOptions,
@@ -6779,6 +7819,15 @@ type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 		| "_env"
 	> &
 	Record<string, any>;
+declare class NullDependency extends Dependency {
+	constructor();
+	static Template: typeof NullDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class NullDependencyTemplate extends DependencyTemplate {
+	constructor();
+}
 declare interface ObjectDeserializerContext {
 	read: () => any;
 }
@@ -7842,6 +8891,12 @@ declare interface PossibleFileSystemError {
 	path?: string;
 	syscall?: string;
 }
+declare class PrefetchDependency extends ModuleDependency {
+	constructor(request?: any);
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
 declare class PrefetchPlugin {
 	constructor(context?: any, request?: any);
 	context: any;
@@ -8009,6 +9064,17 @@ declare interface ProvideSharedPluginOptions {
 	 */
 	shareScope?: string;
 }
+declare class ProvidedDependency extends ModuleDependency {
+	constructor(request?: any, identifier?: any, path?: any, range?: any);
+	identifier: any;
+	path: any;
+	static Template: typeof ProvidedDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class ProvidedDependencyTemplate extends DependencyTemplate {
+	constructor();
+}
 type Provides = (string | ProvidesObject)[] | ProvidesObject;
 
 /**
@@ -8041,6 +9107,17 @@ declare interface ProvidesConfig {
  */
 declare interface ProvidesObject {
 	[index: string]: string | ProvidesConfig;
+}
+declare class PureExpressionDependency extends NullDependency {
+	constructor(range: [number, number]);
+	range: [number, number];
+	usedByExports: false | Set<string>;
+	static Template: typeof PureExpressionDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class PureExpressionDependencyTemplate extends NullDependencyTemplate {
+	constructor();
 }
 declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
@@ -8089,6 +9166,48 @@ declare interface ReferencedExport {
 	 * when false, referenced export can not be mangled, defaults to true
 	 */
 	canMangle?: boolean;
+}
+declare class RemoteModule extends Module {
+	constructor(
+		request: string,
+		externalRequests: string[],
+		internalRequest: string,
+		shareScope: string
+	);
+	request: string;
+	externalRequests: string[];
+	internalRequest: string;
+	shareScope: string;
+	static deserialize(context?: any): RemoteModule;
+}
+declare class RemoteRuntimeModule extends RuntimeModule {
+	constructor();
+
+	/**
+	 * Runtime modules without any dependencies to other runtime modules
+	 */
+	static STAGE_NORMAL: number;
+
+	/**
+	 * Runtime modules with simple dependencies on other runtime modules
+	 */
+	static STAGE_BASIC: number;
+
+	/**
+	 * Runtime modules which attach to handlers of other runtime modules
+	 */
+	static STAGE_ATTACH: number;
+
+	/**
+	 * Runtime modules which trigger actions on bootstrap
+	 */
+	static STAGE_TRIGGER: number;
+}
+declare class RemoteToExternalDependency extends ModuleDependency {
+	constructor(request?: any);
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
 }
 type Remotes = (string | RemotesObject)[] | RemotesObject;
 
@@ -8248,6 +9367,106 @@ declare class ReplaceSource extends Source {
 declare abstract class RequestShortener {
 	contextify: (arg0: string) => string;
 	shorten(request?: null | string): undefined | null | string;
+}
+declare class RequireContextDependency extends ContextDependency {
+	constructor(options?: any, range?: any);
+	static Template: typeof ModuleDependencyTemplateAsRequireId;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class RequireContextDependencyParserPlugin {
+	constructor();
+	apply(parser?: any): void;
+}
+declare class RequireContextPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
+declare class RequireEnsureDependenciesBlock extends AsyncDependenciesBlock {
+	constructor(chunkName?: any, loc?: any);
+}
+declare class RequireEnsureDependenciesBlockParserPlugin {
+	constructor();
+	apply(parser?: any): void;
+}
+declare class RequireEnsureDependency extends NullDependency {
+	constructor(range?: any, contentRange?: any, errorHandlerRange?: any);
+	range: any;
+	contentRange: any;
+	errorHandlerRange: any;
+	static Template: typeof RequireEnsureDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class RequireEnsureDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
+declare class RequireEnsureItemDependency extends ModuleDependency {
+	constructor(request?: any);
+	static Template: typeof NullDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class RequireEnsurePlugin {
+	constructor();
+	apply(compiler?: any): void;
+}
+declare class RequireHeaderDependency extends NullDependency {
+	constructor(range?: any);
+	range: any[];
+	static deserialize(context?: any): RequireHeaderDependency;
+	static Template: typeof RequireHeaderDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class RequireHeaderDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
+declare class RequireIncludeDependency extends ModuleDependency {
+	constructor(request?: any, range?: any);
+	static Template: typeof RequireIncludeDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class RequireIncludeDependencyParserPlugin {
+	constructor(warn?: any);
+	warn: any;
+	apply(parser?: any): void;
+}
+declare class RequireIncludeDependencyTemplate extends DependencyTemplate {
+	constructor();
+}
+declare class RequireIncludePlugin {
+	constructor();
+	apply(compiler?: any): void;
+}
+declare class RequireResolveContextDependency extends ContextDependency {
+	constructor(options?: any, range?: any, valueRange?: any);
+	static Template: typeof ContextDependencyTemplateAsId;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class RequireResolveDependency extends ModuleDependency {
+	constructor(request?: any, range?: any);
+	static Template: typeof ModuleDependencyTemplateAsId;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class RequireResolveHeaderDependency extends NullDependency {
+	constructor(range?: any);
+	range: any[];
+	static deserialize(context?: any): RequireResolveHeaderDependency;
+	static Template: typeof RequireResolveHeaderDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class RequireResolveHeaderDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+	applyAsTemplateArgument(name?: any, dep?: any, source?: any): void;
 }
 declare interface ResolveBuildDependenciesResult {
 	/**
@@ -9187,6 +10406,16 @@ declare class RuntimeModule extends Module {
 	 */
 	static STAGE_TRIGGER: number;
 }
+declare class RuntimeRequirementsDependency extends NullDependency {
+	constructor(runtimeRequirements: string[]);
+	runtimeRequirements: Set<string>;
+	static Template: typeof RuntimeRequirementsDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class RuntimeRequirementsDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
 type RuntimeSpec = undefined | string | SortableSet<string>;
 declare abstract class RuntimeSpecMap<T> {
 	get(runtime: RuntimeSpec): T;
@@ -9735,6 +10964,11 @@ declare class SideEffectsFlagPlugin {
 		cache?: any
 	): any;
 }
+declare abstract class Signature {
+	type: "Signature";
+	params: FuncParam[];
+	results: string[];
+}
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
 }
@@ -10060,8 +11294,6 @@ declare abstract class StackedMap<K, V> {
 type StartupRenderContext = RenderContextObject & { inlined: boolean };
 type Statement =
 	| FunctionDeclaration
-	| VariableDeclaration
-	| ClassDeclaration
 	| ExpressionStatement
 	| BlockStatement
 	| EmptyStatement
@@ -10079,7 +11311,17 @@ type Statement =
 	| DoWhileStatement
 	| ForStatement
 	| ForInStatement
-	| ForOfStatement;
+	| ForOfStatement
+	| VariableDeclaration
+	| ClassDeclaration;
+declare class StaticExportsDependency extends NullDependency {
+	constructor(exports: true | string[], canMangle: boolean);
+	exports: true | string[];
+	canMangle: boolean;
+	static Template: typeof NullDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
 declare class Stats {
 	constructor(compilation: Compilation);
 	compilation: Compilation;
@@ -10595,6 +11837,58 @@ declare interface SyntheticDependencyLocation {
 	name: string;
 	index?: number;
 }
+declare class SystemImportDeprecationWarning extends WebpackError {
+	constructor(loc?: any);
+
+	/**
+	 * Create .stack property on a target object
+	 */
+	static captureStackTrace(
+		targetObject: object,
+		constructorOpt?: Function
+	): void;
+
+	/**
+	 * Optional override for formatting stack traces
+	 */
+	static prepareStackTrace?: (
+		err: Error,
+		stackTraces: NodeJS.CallSite[]
+	) => any;
+	static stackTraceLimit: number;
+}
+declare class SystemPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+	static SystemImportDeprecationWarning: typeof SystemImportDeprecationWarning;
+}
+declare class SystemRuntimeModule extends RuntimeModule {
+	constructor();
+
+	/**
+	 * Runtime modules without any dependencies to other runtime modules
+	 */
+	static STAGE_NORMAL: number;
+
+	/**
+	 * Runtime modules with simple dependencies on other runtime modules
+	 */
+	static STAGE_BASIC: number;
+
+	/**
+	 * Runtime modules which attach to handlers of other runtime modules
+	 */
+	static STAGE_ATTACH: number;
+
+	/**
+	 * Runtime modules which trigger actions on bootstrap
+	 */
+	static STAGE_TRIGGER: number;
+}
 declare const TOMBSTONE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
 declare interface TagInfo {
@@ -10642,6 +11936,38 @@ declare interface TimestampAndHash {
 	hash: string;
 }
 declare const UNDEFINED_MARKER: unique symbol;
+declare class URLDependency extends ModuleDependency {
+	constructor(
+		request: string,
+		range: [number, number],
+		outerRange: [number, number],
+		relative?: boolean
+	);
+	outerRange: [number, number];
+	relative: boolean;
+	usedByExports: boolean | Set<string>;
+	static Template: typeof URLDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class URLDependencyTemplate extends DependencyTemplate {
+	constructor();
+}
+declare class URLPlugin {
+	constructor();
+	apply(compiler: Compiler): void;
+}
+declare class UnsupportedDependency extends NullDependency {
+	constructor(request?: any, range?: any);
+	request: any;
+	range: any;
+	static Template: typeof UnsupportedDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class UnsupportedDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
 declare interface UpdateHashContextDependency {
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
@@ -10947,6 +12273,29 @@ declare abstract class Watching {
 	resume(): void;
 	close(callback: CallbackFunction<void>): void;
 }
+declare class WebAssemblyExportImportedDependency extends ModuleDependency {
+	constructor(exportName?: any, request?: any, name?: any, valueType?: any);
+	exportName: string;
+	name: string;
+	valueType: string;
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class WebAssemblyImportDependency extends ModuleDependency {
+	constructor(
+		request: string,
+		name: string,
+		description: ModuleImportDescription,
+		onlyDirectImport: string | false
+	);
+	name: string;
+	description: ModuleImportDescription;
+	onlyDirectImport: string | false;
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
 declare class WebWorkerTemplatePlugin {
 	constructor();
 
@@ -10985,6 +12334,15 @@ declare class WebpackError extends Error {
 		stackTraces: NodeJS.CallSite[]
 	) => any;
 	static stackTraceLimit: number;
+}
+declare class WebpackIsIncludedDependency extends ModuleDependency {
+	constructor(request?: any, range?: any);
+	static Template: typeof WebpackIsIncludedDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class WebpackIsIncludedDependencyTemplate extends DependencyTemplate {
+	constructor();
 }
 declare abstract class WebpackLogger {
 	getChildLogger: (arg0: string | (() => string)) => WebpackLogger;
@@ -11238,6 +12596,23 @@ declare interface WithOptions {
 		arg0: Partial<ResolveOptionsWithDependencyType>
 	) => ResolverWithOptions;
 }
+declare class WorkerDependency extends ModuleDependency {
+	constructor(request: string, range: [number, number]);
+	static Template: typeof WorkerDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
+}
+declare class WorkerDependencyTemplate extends DependencyTemplate {
+	constructor();
+}
+declare class WorkerPlugin {
+	constructor(chunkLoading?: any, wasmLoading?: any);
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 declare interface WriteOnlySet<T> {
 	add: (T?: any) => void;
 }
@@ -11487,17 +12862,6 @@ declare namespace exports {
 	export namespace library {
 		export { AbstractLibraryPlugin, EnableLibraryPlugin };
 	}
-	export namespace container {
-		export const scope: <T>(
-			scope: string,
-			options: ContainerOptionsFormat<T>
-		) => Record<string, string | string[] | T>;
-		export {
-			ContainerPlugin,
-			ContainerReferencePlugin,
-			ModuleFederationPlugin
-		};
-	}
 	export namespace sharing {
 		export const scope: <T>(
 			scope: string,
@@ -11599,6 +12963,219 @@ declare namespace exports {
 			CompatSource
 		};
 	}
+	export namespace asset {
+		export {
+			AssetGenerator,
+			AssetModulesPlugin,
+			AssetParser,
+			AssetSourceGenerator,
+			AssetSourceParser
+		};
+	}
+	export namespace asyncModules {
+		export { AwaitDependenciesInitFragment, InferAsyncModulesPlugin };
+	}
+	export namespace container {
+		export namespace options {
+			export let parseOptions: <T, R>(
+				options: ContainerOptionsFormat<T>,
+				normalizeSimple: (arg0: string | string[], arg1: string) => R,
+				normalizeOptions: (arg0: T, arg1: string) => R
+			) => [string, R][];
+			export let scope: <T>(
+				scope: string,
+				options: ContainerOptionsFormat<T>
+			) => Record<string, string | string[] | T>;
+		}
+		export const scope: <T>(
+			scope: string,
+			options: ContainerOptionsFormat<T>
+		) => Record<string, string | string[] | T>;
+		export {
+			ContainerEntryDependency,
+			ContainerEntryModule,
+			ContainerEntryModuleFactory,
+			ContainerExposedDependency,
+			ContainerPlugin,
+			ContainerReferencePlugin,
+			FallbackDependency,
+			FallbackItemDependency,
+			FallbackModule,
+			FallbackModuleFactory,
+			ModuleFederationPlugin,
+			RemoteModule,
+			RemoteRuntimeModule,
+			RemoteToExternalDependency
+		};
+	}
+	export namespace dependencies {
+		export namespace AMDRuntimeModules {
+			export { AMDDefineRuntimeModule, AMDOptionsRuntimeModule };
+		}
+		export namespace CommonJsDependencyHelpers {
+			export let handleDependencyBase: (
+				depBase?: any,
+				module?: any,
+				runtimeRequirements?: any
+			) => any[];
+		}
+		export namespace ContextDependencyHelpers {
+			export let create: (
+				Dep: ContextDependencyConstructor,
+				range: [number, number],
+				param: BasicEvaluatedExpression,
+				expr: NodeEstreeIndex,
+				options: Pick<
+					JavascriptParserOptions,
+					| "exprContextCritical"
+					| "exprContextRecursive"
+					| "exprContextRegExp"
+					| "wrappedContextCritical"
+					| "wrappedContextRecursive"
+					| "wrappedContextRegExp"
+					| "exprContextRequest"
+				>,
+				contextOptions: Partial<
+					Omit<ContextDependencyOptions, "resource" | "recursive" | "regExp">
+				>,
+				parser: JavascriptParser
+			) => ContextDependency;
+		}
+		export namespace DynamicExports {
+			export let bailout: (parserState: ParserState) => void;
+			export let enable: (parserState: ParserState) => void;
+			export let setFlagged: (parserState: ParserState) => void;
+			export let setDynamic: (parserState: ParserState) => void;
+			export let isEnabled: (parserState: ParserState) => boolean;
+		}
+		export namespace HarmonyExports {
+			export let enable: (
+				parserState: ParserState,
+				isStrictHarmony: boolean
+			) => void;
+			export let isEnabled: (parserState: ParserState) => boolean;
+		}
+		export namespace LocalModulesHelpers {
+			export let addLocalModule: (state?: any, name?: any) => LocalModule;
+			export let getLocalModule: (
+				state?: any,
+				name?: any,
+				namedModule?: any
+			) => any;
+		}
+		export const getFunctionExpression: (
+			expr?: any
+		) =>
+			| undefined
+			| { fn: any; expressions: never[]; needThis: boolean }
+			| { fn: any; expressions: any[]; needThis: undefined };
+		export const processExportInfo: (
+			runtime: RuntimeSpec,
+			referencedExports: string[][],
+			prefix: string[],
+			exportInfo?: ExportInfo,
+			defaultPointsToSelf?: boolean,
+			alreadyVisited?: Set<ExportInfo>
+		) => void;
+		export {
+			AMDDefineDependency,
+			AMDDefineDependencyParserPlugin,
+			AMDPlugin,
+			AMDRequireArrayDependency,
+			AMDRequireContextDependency,
+			AMDRequireDependenciesBlock,
+			AMDRequireDependenciesBlockParserPlugin,
+			AMDRequireDependency,
+			AMDRequireItemDependency,
+			CachedConstDependency,
+			CommonJsExportRequireDependency,
+			CommonJsExportsDependency,
+			CommonJsExportsParserPlugin,
+			CommonJsFullRequireDependency,
+			CommonJsImportsParserPlugin,
+			CommonJsPlugin,
+			CommonJsRequireContextDependency,
+			CommonJsRequireDependency,
+			CommonJsSelfReferenceDependency,
+			ConstDependency,
+			ContextDependency,
+			ContextDependencyTemplateAsId,
+			ContextDependencyTemplateAsRequireCall,
+			ContextElementDependency,
+			CriticalDependencyWarning,
+			DelegatedSourceDependency,
+			DllEntryDependency,
+			EntryDependency,
+			ExportsInfoDependency,
+			HarmonyAcceptDependency,
+			HarmonyAcceptImportDependency,
+			HarmonyCompatibilityDependency,
+			HarmonyDetectionParserPlugin,
+			HarmonyExportDependencyParserPlugin,
+			HarmonyExportExpressionDependency,
+			HarmonyExportHeaderDependency,
+			HarmonyExportImportedSpecifierDependency,
+			HarmonyExportInitFragment,
+			HarmonyExportSpecifierDependency,
+			HarmonyImportDependency,
+			HarmonyImportDependencyParserPlugin,
+			HarmonyImportSideEffectDependency,
+			HarmonyImportSpecifierDependency,
+			HarmonyModulesPlugin,
+			HarmonyTopLevelThisParserPlugin,
+			ImportContextDependency,
+			ImportDependency,
+			ImportEagerDependency,
+			ImportMetaHotAcceptDependency,
+			ImportMetaHotDeclineDependency,
+			ImportMetaPlugin,
+			ImportParserPlugin,
+			ImportPlugin,
+			ImportWeakDependency,
+			JsonExportsDependency,
+			LoaderDependency,
+			LoaderPlugin,
+			LocalModule,
+			LocalModuleDependency,
+			ModuleDecoratorDependency,
+			ModuleDependency,
+			ModuleDependencyTemplateAsId,
+			ModuleDependencyTemplateAsRequireId,
+			ModuleHotAcceptDependency,
+			ModuleHotDeclineDependency,
+			NullDependency,
+			PrefetchDependency,
+			ProvidedDependency,
+			PureExpressionDependency,
+			RequireContextDependency,
+			RequireContextDependencyParserPlugin,
+			RequireContextPlugin,
+			RequireEnsureDependenciesBlock,
+			RequireEnsureDependenciesBlockParserPlugin,
+			RequireEnsureDependency,
+			RequireEnsureItemDependency,
+			RequireEnsurePlugin,
+			RequireHeaderDependency,
+			RequireIncludeDependency,
+			RequireIncludeDependencyParserPlugin,
+			RequireIncludePlugin,
+			RequireResolveContextDependency,
+			RequireResolveDependency,
+			RequireResolveHeaderDependency,
+			RuntimeRequirementsDependency,
+			StaticExportsDependency,
+			SystemPlugin,
+			SystemRuntimeModule,
+			URLDependency,
+			URLPlugin,
+			UnsupportedDependency,
+			WebAssemblyExportImportedDependency,
+			WebAssemblyImportDependency,
+			WebpackIsIncludedDependency,
+			WorkerDependency,
+			WorkerPlugin
+		};
+	}
 	export namespace experiments {
 		export namespace schemes {
 			export { HttpUriPlugin, HttpsUriPlugin };
@@ -11610,6 +13187,7 @@ declare namespace exports {
 	) => void;
 	export {
 		AutomaticPrefetchPlugin,
+		AsyncDependenciesBlock,
 		BannerPlugin,
 		Cache,
 		Chunk,
@@ -11684,5 +13262,6 @@ declare namespace exports {
 		StatsCompilation
 	};
 }
+declare const harmonySpecifierTag: unique symbol;
 
 export = exports;

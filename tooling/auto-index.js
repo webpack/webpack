@@ -22,8 +22,9 @@ async function writeAutoIndex(dir, explicitExports = []) {
 	const dirContent = readdirSync(dir, { withFileTypes: true });
 
 	const ignore = new Set(["index.js"]);
-	let indexCode = `/* \n\tMIT License http://www.opensource.org/licenses/mit-license.php\n\tAuthor Tobias Koppers @sokra\n*/`;
-	indexCode += `\n\n/*
+	let indexCode = `/*\n\tMIT License http://www.opensource.org/licenses/mit-license.php\n\tAuthor Auto Index Generator\n*/\n`;
+	indexCode += `\n"use strict";\n`;
+	indexCode += `\n/*
 	* This file was automatically generated.
 	* DO NOT MODIFY BY HAND.
 	* Run \`yarn auto-index\` to update
