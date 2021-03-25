@@ -3760,6 +3760,7 @@ declare abstract class FileSystemInfo {
 	immutablePaths: string[];
 	immutablePathsWithSlash: string[];
 	logStatistics(): void;
+	clear(): void;
 	addFileTimestamps(
 		map: Map<string, null | FileSystemInfoEntry | "ignore">
 	): void;
