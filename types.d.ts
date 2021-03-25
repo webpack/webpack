@@ -318,7 +318,14 @@ declare interface AssetResourceGeneratorOptions {
 	 */
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 }
-declare abstract class AsyncDependenciesBlock extends DependenciesBlock {
+declare class AsyncDependenciesBlock extends DependenciesBlock {
+	constructor(
+		groupOptions: RawChunkGroupOptions & { name?: string } & {
+			entryOptions?: EntryOptions;
+		},
+		loc?: SyntheticDependencyLocation | RealDependencyLocation,
+		request?: string
+	);
 	groupOptions: RawChunkGroupOptions & { name?: string } & {
 		entryOptions?: EntryOptions;
 	};
@@ -2443,7 +2450,8 @@ declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
 }
 type DependencyLocation = SyntheticDependencyLocation | RealDependencyLocation;
-declare abstract class DependencyTemplate {
+declare class DependencyTemplate {
+	constructor();
 	apply(
 		dependency: Dependency,
 		source: ReplaceSource,
@@ -5885,10 +5893,14 @@ declare class ModuleConcatenationPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-declare abstract class ModuleDependency extends Dependency {
+declare class ModuleDependency extends Dependency {
+	constructor(request: string);
 	request: string;
 	userRequest: string;
 	range: any;
+	static Template: typeof DependencyTemplate;
+	static NO_EXPORTS_REFERENCED: any[];
+	static EXPORTS_OBJECT_REFERENCED: never[][];
 }
 declare abstract class ModuleFactory {
 	create(
@@ -11299,6 +11311,9 @@ declare namespace exports {
 			>
 		) => null | Problem[];
 	}
+	export namespace dependencies {
+		export { ModuleDependency };
+	}
 	export namespace ModuleFilenameHelpers {
 		export let ALL_LOADERS_RESOURCE: string;
 		export let REGEXP_ALL_LOADERS_RESOURCE: RegExp;
@@ -11610,6 +11625,7 @@ declare namespace exports {
 	) => void;
 	export {
 		AutomaticPrefetchPlugin,
+		AsyncDependenciesBlock,
 		BannerPlugin,
 		Cache,
 		Chunk,
