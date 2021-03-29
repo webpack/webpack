@@ -3236,7 +3236,17 @@ declare abstract class ExportInfo {
 		| "maybe provided (runtime-defined)"
 		| "provided"
 		| "not provided";
-	getRenameInfo(): string;
+	getRenameInfo():
+		| string
+		| "missing provision and use info prevents renaming"
+		| "usage prevents renaming (no provision info)"
+		| "missing provision info prevents renaming"
+		| "missing usage info prevents renaming"
+		| "usage prevents renaming"
+		| "could be renamed"
+		| "provision prevents renaming (no use info)"
+		| "usage and provision prevents renaming"
+		| "provision prevents renaming";
 }
 declare interface ExportSpec {
 	/**
