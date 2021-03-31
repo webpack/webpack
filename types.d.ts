@@ -2106,6 +2106,22 @@ type ConnectionState =
 	| boolean
 	| typeof TRANSITIVE_ONLY
 	| typeof CIRCULAR_CONNECTION;
+declare class ConstDependency extends NullDependency {
+	constructor(
+		expression: string,
+		range: number | [number, number],
+		runtimeRequirements?: string[]
+	);
+	expression: string;
+	range: number | [number, number];
+	runtimeRequirements: null | Set<string>;
+	static Template: typeof ConstDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: string[][];
+}
+declare class ConstDependencyTemplate extends NullDependencyTemplate {
+	constructor();
+}
 declare interface Constructor {
 	new (...params: any[]): any;
 }
@@ -2443,8 +2459,8 @@ declare class Dependency {
 	deserialize(__0: { read: any }): void;
 	module: any;
 	readonly disconnect: any;
-	static NO_EXPORTS_REFERENCED: any[];
-	static EXPORTS_OBJECT_REFERENCED: never[][];
+	static NO_EXPORTS_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: string[][];
 }
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
@@ -5899,8 +5915,8 @@ declare class ModuleDependency extends Dependency {
 	userRequest: string;
 	range: any;
 	static Template: typeof DependencyTemplate;
-	static NO_EXPORTS_REFERENCED: any[];
-	static EXPORTS_OBJECT_REFERENCED: never[][];
+	static NO_EXPORTS_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: string[][];
 }
 declare abstract class ModuleFactory {
 	create(
@@ -6791,6 +6807,15 @@ type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 		| "_env"
 	> &
 	Record<string, any>;
+declare class NullDependency extends Dependency {
+	constructor();
+	static Template: typeof NullDependencyTemplate;
+	static NO_EXPORTS_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: string[][];
+}
+declare class NullDependencyTemplate extends DependencyTemplate {
+	constructor();
+}
 declare interface ObjectDeserializerContext {
 	read: () => any;
 }
@@ -11311,9 +11336,6 @@ declare namespace exports {
 			>
 		) => null | Problem[];
 	}
-	export namespace dependencies {
-		export { ModuleDependency };
-	}
 	export namespace ModuleFilenameHelpers {
 		export let ALL_LOADERS_RESOURCE: string;
 		export let REGEXP_ALL_LOADERS_RESOURCE: RegExp;
@@ -11433,6 +11455,9 @@ declare namespace exports {
 		export const applyWebpackOptionsDefaults: (
 			options: WebpackOptionsNormalized
 		) => void;
+	}
+	export namespace dependencies {
+		export { ModuleDependency, ConstDependency, NullDependency };
 	}
 	export namespace ids {
 		export {
