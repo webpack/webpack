@@ -5237,9 +5237,9 @@ declare interface KnownStatsError {
 	loc?: string;
 	chunkId?: string | number;
 	moduleId?: string | number;
-	moduleTrace?: any;
+	moduleTrace?: StatsModuleTraceItem[];
 	details?: any;
-	stack?: any;
+	stack?: string;
 }
 declare interface KnownStatsFactoryContext {
 	type: string;
@@ -5324,6 +5324,18 @@ declare interface KnownStatsModuleReason {
 	loc?: string;
 	moduleId?: string | number;
 	resolvedModuleId?: string | number;
+}
+declare interface KnownStatsModuleTraceDependency {
+	loc?: string;
+}
+declare interface KnownStatsModuleTraceItem {
+	originIdentifier?: string;
+	originName?: string;
+	moduleIdentifier?: string;
+	moduleName?: string;
+	dependencies?: StatsModuleTraceDependency[];
+	originId?: string | number;
+	moduleId?: string | number;
 }
 declare interface KnownStatsPrinterContext {
 	type?: string;
@@ -10141,6 +10153,9 @@ type StatsLoggingEntry = KnownStatsLoggingEntry & Record<string, any>;
 type StatsModule = KnownStatsModule & Record<string, any>;
 type StatsModuleIssuer = KnownStatsModuleIssuer & Record<string, any>;
 type StatsModuleReason = KnownStatsModuleReason & Record<string, any>;
+type StatsModuleTraceDependency = KnownStatsModuleTraceDependency &
+	Record<string, any>;
+type StatsModuleTraceItem = KnownStatsModuleTraceItem & Record<string, any>;
 
 /**
  * Stats options object.
@@ -11682,7 +11697,19 @@ declare namespace exports {
 		ParserState,
 		Watching,
 		StatsAsset,
-		StatsCompilation
+		StatsChunk,
+		StatsChunkGroup,
+		StatsChunkOrigin,
+		StatsCompilation,
+		StatsError,
+		StatsLogging,
+		StatsLoggingEntry,
+		StatsModule,
+		StatsModuleIssuer,
+		StatsModuleReason,
+		StatsModuleTraceDependency,
+		StatsModuleTraceItem,
+		StatsProfile
 	};
 }
 
