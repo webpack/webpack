@@ -971,6 +971,16 @@
             "minLength": 1
           }
         },
+        "maxAge": {
+          "description": "Time for which unused cache entries stay in the filesystem cache at minimum (in milliseconds).",
+          "type": "number",
+          "minimum": 0
+        },
+        "maxMemoryGenerations": {
+          "description": "Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.",
+          "type": "number",
+          "minimum": 0
+        },
         "name": {
           "description": "Name for the cache. Different names will lead to different coexisting caches.",
           "type": "string"
@@ -1547,6 +1557,11 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "maxGenerations": {
+          "description": "Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).",
+          "type": "number",
+          "minimum": 1
+        },
         "type": {
           "description": "In memory caching.",
           "enum": ["memory"]

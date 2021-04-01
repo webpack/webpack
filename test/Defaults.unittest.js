@@ -746,6 +746,7 @@ describe("Defaults", () => {
 		@@ ... @@
 		-   "cache": false,
 		+   "cache": Object {
+		+     "maxGenerations": Infinity,
 		+     "type": "memory",
 		+   },
 		@@ ... @@
@@ -1417,6 +1418,7 @@ describe("Defaults", () => {
 		@@ ... @@
 		-   "cache": false,
 		+   "cache": Object {
+		+     "maxGenerations": Infinity,
 		+     "type": "memory",
 		+   },
 		@@ ... @@
@@ -1448,6 +1450,8 @@ describe("Defaults", () => {
 		+     "hashAlgorithm": "md4",
 		+     "idleTimeout": 60000,
 		+     "idleTimeoutForInitialStore": 0,
+		+     "maxAge": 5184000000,
+		+     "maxMemoryGenerations": Infinity,
 		+     "name": "default-none",
 		+     "store": "pack",
 		+     "type": "filesystem",
@@ -1662,6 +1666,8 @@ describe("Defaults", () => {
 			+     "hashAlgorithm": "md4",
 			+     "idleTimeout": 60000,
 			+     "idleTimeoutForInitialStore": 0,
+			+     "maxAge": 5184000000,
+			+     "maxMemoryGenerations": Infinity,
 			+     "name": "default-none",
 			+     "store": "pack",
 			+     "type": "filesystem",

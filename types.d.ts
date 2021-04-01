@@ -3670,6 +3670,16 @@ declare interface FileCacheOptions {
 	managedPaths?: string[];
 
 	/**
+	 * Time for which unused cache entries stay in the filesystem cache at minimum (in milliseconds).
+	 */
+	maxAge?: number;
+
+	/**
+	 * Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.
+	 */
+	maxMemoryGenerations?: number;
+
+	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
 	 */
 	name?: string;
@@ -5704,6 +5714,11 @@ declare interface MapOptions {
  * Options object for in-memory caching.
  */
 declare interface MemoryCacheOptions {
+	/**
+	 * Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).
+	 */
+	maxGenerations?: number;
+
 	/**
 	 * In memory caching.
 	 */
