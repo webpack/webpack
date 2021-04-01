@@ -7299,6 +7299,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-group-modules-by-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their type.",
+        "multiple": false,
+        "path": "stats.groupModulesByType",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their type.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-hash": Object {
     "configs": Array [
       Object {

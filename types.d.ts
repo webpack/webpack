@@ -10421,6 +10421,11 @@ declare interface StatsOptions {
 	groupModulesByPath?: boolean;
 
 	/**
+	 * Group modules by their type.
+	 */
+	groupModulesByType?: boolean;
+
+	/**
 	 * Add the hash of the compilation.
 	 */
 	hash?: boolean;
