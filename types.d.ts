@@ -743,7 +743,7 @@ declare class Chunk {
 		chunkGraph: ChunkGraph,
 		includeDirectChildren?: boolean,
 		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
-	): Record<string | number, Record<string, (string | number)[]>>;
+	): Record<string, Record<string, (string | number)[]>>;
 }
 declare class ChunkGraph {
 	constructor(moduleGraph: ModuleGraph);
@@ -790,17 +790,17 @@ declare class ChunkGraph {
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
 		includeAllChunks?: boolean
-	): Record<string | number, (string | number)[]>;
+	): Record<string, (string | number)[]>;
 	getChunkModuleRenderedHashMap(
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
 		hashLength?: number,
 		includeAllChunks?: boolean
-	): Record<string | number, Record<string | number, string>>;
+	): Record<string, Record<string, string>>;
 	getChunkConditionMap(
 		chunk: Chunk,
 		filterFn: (c: Chunk, chunkGraph: ChunkGraph) => boolean
-	): Record<string | number, boolean>;
+	): Record<string, boolean>;
 	hasModuleInGraph(
 		chunk: Chunk,
 		filterFn: (m: Module) => boolean,
@@ -1017,9 +1017,9 @@ declare interface ChunkHashContext {
 	chunkGraph: ChunkGraph;
 }
 declare interface ChunkMaps {
-	hash: Record<string | number, string>;
-	contentHash: Record<string | number, Record<string, string>>;
-	name: Record<string | number, string>;
+	hash: Record<string, string>;
+	contentHash: Record<string, Record<string, string>>;
+	name: Record<string, string>;
 }
 declare class ChunkModuleIdRangePlugin {
 	constructor(options?: any);
@@ -1031,8 +1031,8 @@ declare class ChunkModuleIdRangePlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface ChunkModuleMaps {
-	id: Record<string | number, (string | number)[]>;
-	hash: Record<string | number, string>;
+	id: Record<string, (string | number)[]>;
+	hash: Record<string, string>;
 }
 declare interface ChunkPathData {
 	id: string | number;
@@ -3260,17 +3260,7 @@ declare abstract class ExportInfo {
 		| "maybe provided (runtime-defined)"
 		| "provided"
 		| "not provided";
-	getRenameInfo():
-		| string
-		| "missing provision and use info prevents renaming"
-		| "usage prevents renaming (no provision info)"
-		| "missing provision info prevents renaming"
-		| "missing usage info prevents renaming"
-		| "usage prevents renaming"
-		| "could be renamed"
-		| "provision prevents renaming (no use info)"
-		| "usage and provision prevents renaming"
-		| "provision prevents renaming";
+	getRenameInfo(): string;
 }
 declare interface ExportSpec {
 	/**
