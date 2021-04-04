@@ -788,7 +788,7 @@ describe("Compiler", () => {
 				logger.info("Info");
 				logger.log("Log");
 				logger.debug("Debug");
-				logger.groupCollapsed("Collaped group");
+				logger.groupCollapsed("Collapsed group");
 				logger.log("Log inside collapsed group");
 				logger.groupEnd();
 				logger.groupEnd();
@@ -817,7 +817,7 @@ describe("Compiler", () => {
   <w> [MyPlugin] Warning
   <i> [MyPlugin] Info
       [MyPlugin] Log
-  <-> [MyPlugin] Collaped group
+  <-> [MyPlugin] Collapsed group
         [MyPlugin] Log inside collapsed group
 <t> [MyPlugin] Time: X ms
 "
@@ -849,7 +849,7 @@ describe("Compiler", () => {
   <i> [MyPlugin] Info
       [MyPlugin] Log
       [MyPlugin] Debug
-  <-> [MyPlugin] Collaped group
+  <-> [MyPlugin] Collapsed group
         [MyPlugin] Log inside collapsed group
 <t> [MyPlugin] Time: X ms
 "
