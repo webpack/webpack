@@ -1200,6 +1200,10 @@ export interface ExternalsPresets {
  */
 export interface InfrastructureLogging {
 	/**
+	 * Enables/Disables colorful output.
+	 */
+	colors?: boolean;
+	/**
 	 * Enable debug logging for specific loggers.
 	 */
 	debug?: boolean | FilterTypes;

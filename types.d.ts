@@ -4185,6 +4185,11 @@ type ImportSource = undefined | null | string | SimpleLiteral | RegExpLiteral;
  */
 declare interface InfrastructureLogging {
 	/**
+	 * Enables/Disables colorful output.
+	 */
+	colors?: boolean;
+
+	/**
 	 * Enable debug logging for specific loggers.
 	 */
 	debug?:

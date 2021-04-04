@@ -751,6 +751,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "infrastructure-logging-colors": Object {
+    "configs": Array [
+      Object {
+        "description": "Enables/Disables colorful output.",
+        "multiple": false,
+        "path": "infrastructureLogging.colors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enables/Disables colorful output.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "infrastructure-logging-debug": Object {
     "configs": Array [
       Object {

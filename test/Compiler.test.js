@@ -778,6 +778,12 @@ describe("Compiler", () => {
 		afterEach(() => {
 			capture.restore();
 		});
+		const escapeAnsi = stringRaw =>
+			stringRaw
+				.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
+				.replace(/\u001b\[1m/g, "<CLR=BOLD>")
+				.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
+				.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>");
 		class MyPlugin {
 			apply(compiler) {
 				const logger = compiler.getInfrastructureLogger("MyPlugin");
@@ -873,6 +879,70 @@ describe("Compiler", () => {
 			compiler.outputFileSystem = createFsFromVolume(new Volume());
 			compiler.run((err, stats) => {
 				expect(capture.toString()).toMatchInlineSnapshot(`""`);
+				done();
+			});
+		});
+		it("should log to the console with colors (verbose)", done => {
+			const compiler = webpack({
+				context: path.join(__dirname, "fixtures"),
+				entry: "./a",
+				output: {
+					path: "/directory",
+					filename: "bundle.js"
+				},
+				infrastructureLogging: {
+					level: "verbose",
+					colors: true
+				},
+				plugins: [new MyPlugin()]
+			});
+			compiler.outputFileSystem = createFsFromVolume(new Volume());
+			compiler.run((err, stats) => {
+				expect(escapeAnsi(capture.toStringRaw()).replace(/[\d.]+ ms/, "X ms"))
+					.toMatchInlineSnapshot(`
+"<-> <CLR=36,BOLD>[MyPlugin] Group</CLR>
+  <e> <CLR=31,BOLD>[MyPlugin] Error</CLR>
+  <w> <CLR=33,BOLD>[MyPlugin] Warning</CLR>
+  <i> <CLR=32,BOLD>[MyPlugin] Info</CLR>
+      <CLR=BOLD>[MyPlugin] Log<CLR=22>
+  <-> <CLR=36,BOLD>[MyPlugin] Collapsed group</CLR>
+        <CLR=BOLD>[MyPlugin] Log inside collapsed group<CLR=22>
+<t> <CLR=35,BOLD>[MyPlugin] Time: X ms</CLR>
+"
+`);
+				done();
+			});
+		});
+		it("should log to the console with colors (debug mode)", done => {
+			const compiler = webpack({
+				context: path.join(__dirname, "fixtures"),
+				entry: "./a",
+				output: {
+					path: "/directory",
+					filename: "bundle.js"
+				},
+				infrastructureLogging: {
+					level: "error",
+					debug: /MyPlugin/,
+					colors: true
+				},
+				plugins: [new MyPlugin()]
+			});
+			compiler.outputFileSystem = createFsFromVolume(new Volume());
+			compiler.run((err, stats) => {
+				expect(escapeAnsi(capture.toStringRaw()).replace(/[\d.]+ ms/, "X ms"))
+					.toMatchInlineSnapshot(`
+"<-> <CLR=36,BOLD>[MyPlugin] Group</CLR>
+  <e> <CLR=31,BOLD>[MyPlugin] Error</CLR>
+  <w> <CLR=33,BOLD>[MyPlugin] Warning</CLR>
+  <i> <CLR=32,BOLD>[MyPlugin] Info</CLR>
+      <CLR=BOLD>[MyPlugin] Log<CLR=22>
+      [MyPlugin] Debug
+  <-> <CLR=36,BOLD>[MyPlugin] Collapsed group</CLR>
+        <CLR=BOLD>[MyPlugin] Log inside collapsed group<CLR=22>
+<t> <CLR=35,BOLD>[MyPlugin] Time: X ms</CLR>
+"
+`);
 				done();
 			});
 		});

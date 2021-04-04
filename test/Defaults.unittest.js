@@ -109,6 +109,7 @@ describe("Defaults", () => {
 		  "externalsType": "var",
 		  "ignoreWarnings": undefined,
 		  "infrastructureLogging": Object {
+		    "colors": undefined,
 		    "debug": false,
 		    "level": "info",
 		  },

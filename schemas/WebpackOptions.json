@@ -1211,6 +1211,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "colors": {
+          "description": "Enables/Disables colorful output.",
+          "type": "boolean"
+        },
         "debug": {
           "description": "Enable debug logging for specific loggers.",
           "anyOf": [
