@@ -11753,6 +11753,8 @@ declare namespace exports {
 		Configuration,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance,
+		InputFileSystem,
+		OutputFileSystem,
 		Asset,
 		AssetInfo,
 		MultiStats,
