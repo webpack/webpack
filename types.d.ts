@@ -3197,9 +3197,10 @@ declare abstract class ExportInfo {
 	setUsed(newValue: UsageStateType, runtime: RuntimeSpec): boolean;
 	unsetTarget(key?: any): boolean;
 	setTarget(
-		key?: any,
-		connection?: ModuleGraphConnection,
-		exportName?: string[]
+		key: any,
+		connection: ModuleGraphConnection,
+		exportName?: string[],
+		priority?: number
 	): boolean;
 	getUsed(runtime: RuntimeSpec): UsageStateType;
 
@@ -3304,6 +3305,11 @@ declare interface ExportSpec {
 	export?: null | string[];
 
 	/**
+	 * when reexported: with which priority
+	 */
+	priority?: number;
+
+	/**
 	 * export is not visible, because another export blends over it
 	 */
 	hidden?: boolean;
@@ -3327,7 +3333,8 @@ declare abstract class ExportsInfo {
 		canMangle?: boolean,
 		excludeExports?: Set<string>,
 		targetKey?: any,
-		targetModule?: ModuleGraphConnection
+		targetModule?: ModuleGraphConnection,
+		priority?: number
 	): boolean;
 	setUsedInUnknownWay(runtime: RuntimeSpec): boolean;
 	setUsedWithoutInfo(runtime: RuntimeSpec): boolean;
@@ -3375,6 +3382,11 @@ declare interface ExportsSpec {
 	 * when reexported: from which module
 	 */
 	from?: ModuleGraphConnection;
+
+	/**
+	 * when reexported: with which priority
+	 */
+	priority?: number;
 
 	/**
 	 * can the export be renamed (defaults to true)
