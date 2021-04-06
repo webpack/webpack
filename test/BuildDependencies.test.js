@@ -99,10 +99,14 @@ describe("BuildDependencies", () => {
 		const output2 = await exec("2");
 		expect(output2).toMatch(/but build dependencies have changed/);
 		expect(output2).toMatch(/Captured build dependencies/);
+		expect(output2).not.toMatch(/Assuming/);
+		expect(output2).not.toMatch(/<w>/);
 		const output3 = await exec("3");
 		expect(output3).not.toMatch(/resolving of build dependencies is invalid/);
 		expect(output3).not.toMatch(/but build dependencies have changed/);
 		expect(output3).not.toMatch(/Captured build dependencies/);
+		expect(output3).not.toMatch(/Assuming/);
+		expect(output3).not.toMatch(/<w>/);
 		fs.writeFileSync(
 			path.resolve(inputDirectory, "package.json"),
 			JSON.stringify({
