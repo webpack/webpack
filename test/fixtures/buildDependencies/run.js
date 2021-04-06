@@ -62,7 +62,11 @@ function run({ default: value2, asyncDep: value3 }) {
 					].concat(esm ? ["../../fixtures/buildDependencies/esm.mjs"] : []),
 					invalid: options.invalidBuildDepdencies
 						? ["should-fail-resolving"]
-						: []
+						: [],
+					optionalDepsTest: [
+						path.resolve(__dirname, "node_modules/dependency-with-optional") +
+							"/"
+					]
 				}
 			}
 		},

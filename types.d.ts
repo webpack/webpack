@@ -3829,7 +3829,7 @@ declare abstract class FileSystemInfo {
 		callback: (arg0?: Error, arg1?: ResolveBuildDependenciesResult) => void
 	): void;
 	checkResolveResultsValid(
-		resolveResults: Map<string, string>,
+		resolveResults: Map<string, string | false>,
 		callback: (arg0?: Error, arg1?: boolean) => void
 	): void;
 	createSnapshot(
@@ -8333,7 +8333,7 @@ declare interface ResolveBuildDependenciesResult {
 	/**
 	 * stored resolve results
 	 */
-	resolveResults: Map<string, string>;
+	resolveResults: Map<string, string | false>;
 
 	/**
 	 * dependencies of the resolving
