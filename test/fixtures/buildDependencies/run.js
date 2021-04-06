@@ -10,6 +10,7 @@ const options = JSON.parse(process.argv[3]);
 const esm = +process.versions.modules >= 83;
 
 if (esm) {
+	require("require-dependency-with-exports");
 	import("./esm.mjs").then(module => {
 		run(module);
 	});
@@ -56,6 +57,7 @@ function run({ default: value2, asyncDep: value3 }) {
 				type: "filesystem",
 				cacheDirectory: path.resolve(__dirname, "../../js/buildDepsCache"),
 				buildDependencies: {
+					defaultWebpack: [],
 					config: [
 						__filename,
 						path.resolve(__dirname, "../../../node_modules/.yarn-integrity")
