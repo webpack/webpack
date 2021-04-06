@@ -1200,9 +1200,17 @@ export interface ExternalsPresets {
  */
 export interface InfrastructureLogging {
 	/**
-	 * Enables/Disables colorful output.
+	 * Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.
+	 */
+	appendOnly?: boolean;
+	/**
+	 * Enables/Disables colorful output. This option is only used when no custom console is provided.
 	 */
 	colors?: boolean;
+	/**
+	 * Custom console used for logging.
+	 */
+	console?: Console;
 	/**
 	 * Enable debug logging for specific loggers.
 	 */
@@ -1211,6 +1219,10 @@ export interface InfrastructureLogging {
 	 * Log level.
 	 */
 	level?: "none" | "error" | "warn" | "info" | "log" | "verbose";
+	/**
+	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
+	 */
+	stream?: NodeJS.WritableStream;
 }
 /**
  * Custom values available in the loader context.

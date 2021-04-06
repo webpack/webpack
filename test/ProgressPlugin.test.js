@@ -3,9 +3,8 @@
 const _ = require("lodash");
 const path = require("path");
 const { createFsFromVolume, Volume } = require("memfs");
+const webpack = require("..");
 const captureStdio = require("./helpers/captureStdio");
-
-let webpack;
 
 const createMultiCompiler = (progressOptions, configOptions) => {
 	const compiler = webpack(
@@ -86,7 +85,6 @@ describe("ProgressPlugin", function () {
 	beforeEach(() => {
 		stderr = captureStdio(process.stderr, true);
 		stdout = captureStdio(process.stdout, true);
-		webpack = require("..");
 	});
 	afterEach(() => {
 		stderr && stderr.restore();

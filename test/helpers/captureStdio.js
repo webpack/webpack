@@ -11,13 +11,6 @@ module.exports = (stdio, tty) => {
 	};
 	if (tty !== undefined) stdio.isTTY = tty;
 
-	// isTTY flag is only read once on initialization
-	// therefore we need to clear some module caches
-	// to get the mocked value
-	delete require.cache[require.resolve("../../")];
-	delete require.cache[require.resolve("../../lib/node/NodeEnvironmentPlugin")];
-	delete require.cache[require.resolve("../../lib/node/nodeConsole")];
-
 	return {
 		data: logs,
 
