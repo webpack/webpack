@@ -108,11 +108,7 @@ describe("Defaults", () => {
 		  },
 		  "externalsType": "var",
 		  "ignoreWarnings": undefined,
-		  "infrastructureLogging": Object {
-		    "colors": undefined,
-		    "debug": false,
-		    "level": "info",
-		  },
+		  "infrastructureLogging": Object {},
 		  "loader": Object {
 		    "target": "web",
 		  },
