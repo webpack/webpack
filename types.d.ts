@@ -4185,6 +4185,21 @@ type ImportSource = undefined | null | string | SimpleLiteral | RegExpLiteral;
  */
 declare interface InfrastructureLogging {
 	/**
+	 * Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.
+	 */
+	appendOnly?: boolean;
+
+	/**
+	 * Enables/Disables colorful output. This option is only used when no custom console is provided.
+	 */
+	colors?: boolean;
+
+	/**
+	 * Custom console used for logging.
+	 */
+	console?: Console;
+
+	/**
 	 * Enable debug logging for specific loggers.
 	 */
 	debug?:
@@ -4198,6 +4213,11 @@ declare interface InfrastructureLogging {
 	 * Log level.
 	 */
 	level?: "none" | "verbose" | "error" | "warn" | "info" | "log";
+
+	/**
+	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
+	 */
+	stream?: NodeJS.WritableStream;
 }
 declare abstract class InitFragment {
 	content: string | Source;
@@ -6493,8 +6513,18 @@ declare class NoEmitOnErrorsPlugin {
 	apply(compiler: Compiler): void;
 }
 declare class NodeEnvironmentPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options: {
+		/**
+		 * infrastructure logging options
+		 */
+		infrastructureLogging: InfrastructureLogging;
+	});
+	options: {
+		/**
+		 * infrastructure logging options
+		 */
+		infrastructureLogging: InfrastructureLogging;
+	};
 
 	/**
 	 * Apply the plugin

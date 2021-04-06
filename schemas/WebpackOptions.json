@@ -1211,6 +1211,18 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "appendOnly": {
+          "description": "Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.",
+          "type": "boolean"
+        },
+        "colors": {
+          "description": "Enables/Disables colorful output. This option is only used when no custom console is provided.",
+          "type": "boolean"
+        },
+        "console": {
+          "description": "Custom console used for logging.",
+          "tsType": "Console"
+        },
         "debug": {
           "description": "Enable debug logging for specific loggers.",
           "anyOf": [
@@ -1226,6 +1238,10 @@
         "level": {
           "description": "Log level.",
           "enum": ["none", "error", "warn", "info", "log", "verbose"]
+        },
+        "stream": {
+          "description": "Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.",
+          "tsType": "NodeJS.WritableStream"
         }
       }
     },

@@ -751,6 +751,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "infrastructure-logging-append-only": Object {
+    "configs": Array [
+      Object {
+        "description": "Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.",
+        "multiple": false,
+        "path": "infrastructureLogging.appendOnly",
+        "type": "boolean",
+      },
+    ],
+    "description": "Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "infrastructure-logging-colors": Object {
+    "configs": Array [
+      Object {
+        "description": "Enables/Disables colorful output. This option is only used when no custom console is provided.",
+        "multiple": false,
+        "path": "infrastructureLogging.colors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enables/Disables colorful output. This option is only used when no custom console is provided.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "infrastructure-logging-debug": Object {
     "configs": Array [
       Object {

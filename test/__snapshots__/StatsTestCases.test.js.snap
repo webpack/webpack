@@ -1224,7 +1224,7 @@ asset <CLR=32,BOLD>main.js</CLR> 84 bytes <CLR=32,BOLD>[emitted]</CLR> (name: ma
 <-> <CLR=36,BOLD>Group</CLR>
   <i> <CLR=32,BOLD>Info</CLR>
       <CLR=BOLD>Log</CLR>
-  <+> <CLR=36,BOLD>Collaped group</CLR>
+  <+> <CLR=36,BOLD>Collapsed group</CLR>
       <CLR=BOLD>Log</CLR>
     <CLR=BOLD>End</CLR>
 + 6 hidden lines
@@ -1959,7 +1959,7 @@ exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
   <w> [LogTestPlugin] Warning
   <i> [LogTestPlugin] Info
       [LogTestPlugin] Log
-  <+> [LogTestPlugin] Collaped group
+  <+> [LogTestPlugin] Collapsed group
       [LogTestPlugin] Log
     [LogTestPlugin] End
 PublicPath: auto
@@ -2034,7 +2034,7 @@ LOG from LogTestPlugin
   <w> Warning
   <i> Info
       Log
-  <+> Collaped group
+  <+> Collapsed group
       Log
     End
 + 6 hidden lines
@@ -2232,7 +2232,7 @@ exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
   <w> [LogTestPlugin] Warning
   <i> [LogTestPlugin] Info
       [LogTestPlugin] Log
-  <-> [LogTestPlugin] Collaped group
+  <-> [LogTestPlugin] Collapsed group
         [LogTestPlugin] Log inside collapsed group
     <-> [LogTestPlugin] Inner group
           [LogTestPlugin] Inner inner message
@@ -2332,7 +2332,7 @@ LOG from LogTestPlugin
   <w> Warning
   <i> Info
       Log
-  <-> Collaped group
+  <-> Collapsed group
         Log inside collapsed group
     <-> Inner group
           Inner inner message
