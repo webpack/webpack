@@ -246,6 +246,9 @@ describe("MultiCompiler", function () {
 		};
 		const events = [];
 		compiler.compilers.forEach(c => {
+			c.hooks.invalid.tap("test", () => {
+				events.push(`${c.name} invalid`);
+			});
 			c.hooks.watchRun.tap("test", () => {
 				events.push(`${c.name} run`);
 			});
@@ -273,15 +276,15 @@ describe("MultiCompiler", function () {
 					expect(compiler.compilers[0].modifiedFiles).toBe(undefined);
 					expect(compiler.compilers[0].removedFiles).toBe(undefined);
 					expect(events).toMatchInlineSnapshot(`
-							Array [
-							  "b run",
-							  "b done",
-							  "c run",
-							  "c done",
-							  "a run",
-							  "a done",
-							]
-					`);
+				Array [
+				  "b run",
+				  "b done",
+				  "c run",
+				  "c done",
+				  "a run",
+				  "a done",
+				]
+			`);
 					events.length = 0;
 					// wait until watching begins
 					setTimeout(() => {
@@ -301,8 +304,10 @@ describe("MultiCompiler", function () {
 					expect(compiler.compilers[1].removedFiles).toEqual(new Set());
 					expect(events).toMatchInlineSnapshot(`
 				Array [
+				  "b invalid",
 				  "b run",
 				  "b done",
+				  "a invalid",
 				  "a run",
 				  "a done",
 				]
@@ -317,10 +322,13 @@ describe("MultiCompiler", function () {
 			`);
 					expect(events).toMatchInlineSnapshot(`
 				Array [
+				  "b invalid",
 				  "b run",
 				  "b done",
+				  "a invalid",
 				  "a run",
 				  "a done",
+				  "a invalid",
 				  "a run",
 				  "a done",
 				]
@@ -344,10 +352,13 @@ describe("MultiCompiler", function () {
 			`);
 					expect(events).toMatchInlineSnapshot(`
 				Array [
+				  "b invalid",
+				  "c invalid",
 				  "b run",
 				  "b done",
 				  "c run",
 				  "c done",
+				  "a invalid",
 				  "a run",
 				  "a done",
 				]
