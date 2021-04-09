@@ -1646,7 +1646,7 @@ declare class Compilation {
 	runModule(
 		module: Module,
 		options: RunModuleOptions,
-		callback: (err?: WebpackError, exports?: any) => void
+		callback: (err?: WebpackError, result?: RunModuleResult) => void
 	): void;
 	checkConstraints(): void;
 
@@ -4095,6 +4095,11 @@ declare interface HandleModuleCreationOptions {
 	 * recurse into dependencies of the created module
 	 */
 	recursive?: boolean;
+
+	/**
+	 * connect the resolved module with the origin module
+	 */
+	connectOrigin?: boolean;
 }
 declare class Hash {
 	constructor();
@@ -9308,12 +9313,21 @@ declare interface RunModuleArgument {
 	codeGenerationResult: CodeGenerationResult;
 }
 declare interface RunModuleContext {
+	assets: Map<string, { source: Source; info: AssetInfo }>;
 	chunk: Chunk;
 	chunkGraph: ChunkGraph;
 	__webpack_require__: Function;
 }
 declare interface RunModuleOptions {
 	entryOptions?: EntryOptions;
+}
+declare interface RunModuleResult {
+	exports: any;
+	assets: Map<string, { source: Source; info: AssetInfo }>;
+	fileDependencies: LazySet<string>;
+	contextDependencies: LazySet<string>;
+	missingDependencies: LazySet<string>;
+	buildDependencies: LazySet<string>;
 }
 declare class RuntimeChunkPlugin {
 	constructor(options?: any);
