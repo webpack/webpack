@@ -116,9 +116,6 @@ describe("Defaults", () => {
 		  "module": Object {
 		    "defaultRules": Array [
 		      Object {
-		        "type": "javascript/auto",
-		      },
-		      Object {
 		        "mimetype": "application/node",
 		        "type": "javascript/auto",
 		      },
