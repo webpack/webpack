@@ -1174,7 +1174,6 @@ declare abstract class CodeGenerationResults {
 	getData(module: Module, runtime: RuntimeSpec, key: string): any;
 	getHash(module: Module, runtime: RuntimeSpec): any;
 	add(module: Module, runtime: RuntimeSpec, result: CodeGenerationResult): void;
-	dispose(): void;
 }
 type CodeValue =
 	| undefined
