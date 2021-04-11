@@ -11,7 +11,7 @@ it("should ignore context modules that match resource regex and context", functi
 	}).toThrowError();
 });
 
-it("should not ignore context modules that dont match the resource", function() {
+it("should not ignore context modules that do not match the resource", function() {
 	const folderBContext = function(mod) {
 		require("./folder-b/" + mod);
 	};
@@ -21,7 +21,7 @@ it("should not ignore context modules that dont match the resource", function() 
 	}).not.toThrowError();
 });
 
-it("should not ignore context modules that dont match the context", function() {
+it("should not ignore context modules that do not match the context", function() {
 	const folderBContext = function(mod) {
 		require("./folder-a/" + mod);
 	};
