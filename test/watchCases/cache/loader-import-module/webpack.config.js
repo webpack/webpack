@@ -8,5 +8,8 @@ module.exports = {
 				type: "json"
 			}
 		]
+	},
+	experiments: {
+		executeModule: true
 	}
 };

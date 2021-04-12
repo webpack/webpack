@@ -1250,7 +1250,7 @@ declare class Compilation {
 		dependencyReferencedExports: SyncWaterfallHook<
 			[(string[] | ReferencedExport)[], Dependency, RuntimeSpec]
 		>;
-		runModule: SyncHook<[RunModuleArgument, RunModuleContext]>;
+		executeModule: SyncHook<[ExecuteModuleArgument, ExecuteModuleContext]>;
 		finishModules: AsyncSeriesHook<[Iterable<Module>]>;
 		finishRebuildingModule: AsyncSeriesHook<[Module]>;
 		unseal: SyncHook<[]>;
@@ -1395,7 +1395,7 @@ declare class Compilation {
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: { javascript: ModuleTemplate };
 	moduleGraph: ModuleGraph;
-	chunkGraph: any;
+	chunkGraph: ChunkGraph;
 	codeGenerationResults: CodeGenerationResults;
 	processDependenciesQueue: AsyncQueue<Module, Module, Module>;
 	addModuleQueue: AsyncQueue<Module, string, Module>;
@@ -1646,10 +1646,10 @@ declare class Compilation {
 			| WebpackPluginInstance
 		)[]
 	): Compiler;
-	runModule(
+	executeModule(
 		module: Module,
-		options: RunModuleOptions,
-		callback: (err?: WebpackError, result?: RunModuleResult) => void
+		options: ExecuteModuleOptions,
+		callback: (err?: WebpackError, result?: ExecuteModuleResult) => void
 	): void;
 	checkConstraints(): void;
 
@@ -3135,6 +3135,28 @@ declare class EvalSourceMapDevToolPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare interface ExecuteModuleArgument {
+	module: Module;
+	moduleObject: object;
+	codeGenerationResult: CodeGenerationResult;
+}
+declare interface ExecuteModuleContext {
+	assets: Map<string, { source: Source; info: AssetInfo }>;
+	chunk: Chunk;
+	chunkGraph: ChunkGraph;
+	__webpack_require__: Function;
+}
+declare interface ExecuteModuleOptions {
+	entryOptions?: EntryOptions;
+}
+declare interface ExecuteModuleResult {
+	exports: any;
+	assets: Map<string, { source: Source; info: AssetInfo }>;
+	fileDependencies: LazySet<string>;
+	contextDependencies: LazySet<string>;
+	missingDependencies: LazySet<string>;
+	buildDependencies: LazySet<string>;
+}
 
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
@@ -3149,6 +3171,11 @@ declare interface Experiments {
 	 * Support WebAssembly as asynchronous EcmaScript Module.
 	 */
 	asyncWebAssembly?: boolean;
+
+	/**
+	 * Enable build-time execution of modules from the module graph for plugins and loaders.
+	 */
+	executeModule?: boolean;
 
 	/**
 	 * Enable module and chunk layers.
@@ -9310,28 +9337,6 @@ type RuleSetUseItem =
 			options?: string | { [index: string]: any };
 	  }
 	| __TypeWebpackOptions;
-declare interface RunModuleArgument {
-	module: Module;
-	moduleObject: object;
-	codeGenerationResult: CodeGenerationResult;
-}
-declare interface RunModuleContext {
-	assets: Map<string, { source: Source; info: AssetInfo }>;
-	chunk: Chunk;
-	chunkGraph: ChunkGraph;
-	__webpack_require__: Function;
-}
-declare interface RunModuleOptions {
-	entryOptions?: EntryOptions;
-}
-declare interface RunModuleResult {
-	exports: any;
-	assets: Map<string, { source: Source; info: AssetInfo }>;
-	fileDependencies: LazySet<string>;
-	contextDependencies: LazySet<string>;
-	missingDependencies: LazySet<string>;
-	buildDependencies: LazySet<string>;
-}
 declare class RuntimeChunkPlugin {
 	constructor(options?: any);
 	options: any;
