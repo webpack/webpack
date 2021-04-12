@@ -343,8 +343,13 @@ declare abstract class AsyncQueue<T, K, R> {
 		started: SyncHook<[T]>;
 		result: SyncHook<[T, Error, R]>;
 	};
-	add(item: T, callback: CallbackFunction<R>): void;
+	add(item: T, callback: CallbackAsyncQueue<R>): void;
 	invalidate(item: T): void;
+
+	/**
+	 * Waits for an already started item
+	 */
+	waitFor(item: T, callback: CallbackAsyncQueue<R>): void;
 	stop(): void;
 	increaseParallelism(): void;
 	decreaseParallelism(): void;
@@ -656,6 +661,9 @@ declare interface CallExpressionInfo {
 	getCalleeMembers: () => string[];
 	name: string;
 	getMembers: () => string[];
+}
+declare interface CallbackAsyncQueue<T> {
+	(err?: WebpackError, result?: T): any;
 }
 declare interface CallbackCache<T> {
 	(err?: WebpackError, result?: T): void;
@@ -1242,6 +1250,7 @@ declare class Compilation {
 		dependencyReferencedExports: SyncWaterfallHook<
 			[(string[] | ReferencedExport)[], Dependency, RuntimeSpec]
 		>;
+		executeModule: SyncHook<[ExecuteModuleArgument, ExecuteModuleContext]>;
 		finishModules: AsyncSeriesHook<[Iterable<Module>]>;
 		finishRebuildingModule: AsyncSeriesHook<[Module]>;
 		unseal: SyncHook<[]>;
@@ -1263,14 +1272,24 @@ declare class Compilation {
 		>;
 		afterOptimizeChunkModules: SyncHook<[Iterable<Chunk>, Iterable<Module>]>;
 		shouldRecord: SyncBailHook<[], boolean>;
-		additionalChunkRuntimeRequirements: SyncHook<[Chunk, Set<string>]>;
-		runtimeRequirementInChunk: HookMap<SyncBailHook<[Chunk, Set<string>], any>>;
-		additionalModuleRuntimeRequirements: SyncHook<[Module, Set<string>]>;
-		runtimeRequirementInModule: HookMap<
-			SyncBailHook<[Module, Set<string>], any>
+		additionalChunkRuntimeRequirements: SyncHook<
+			[Chunk, Set<string>, RuntimeRequirementsContext]
 		>;
-		additionalTreeRuntimeRequirements: SyncHook<[Chunk, Set<string>]>;
-		runtimeRequirementInTree: HookMap<SyncBailHook<[Chunk, Set<string>], any>>;
+		runtimeRequirementInChunk: HookMap<
+			SyncBailHook<[Chunk, Set<string>, RuntimeRequirementsContext], any>
+		>;
+		additionalModuleRuntimeRequirements: SyncHook<
+			[Module, Set<string>, RuntimeRequirementsContext]
+		>;
+		runtimeRequirementInModule: HookMap<
+			SyncBailHook<[Module, Set<string>, RuntimeRequirementsContext], any>
+		>;
+		additionalTreeRuntimeRequirements: SyncHook<
+			[Chunk, Set<string>, RuntimeRequirementsContext]
+		>;
+		runtimeRequirementInTree: HookMap<
+			SyncBailHook<[Chunk, Set<string>, RuntimeRequirementsContext], any>
+		>;
 		runtimeModule: SyncHook<[RuntimeModule, Chunk]>;
 		reviveModules: SyncHook<[Iterable<Module>, any]>;
 		beforeModuleIds: SyncHook<[Iterable<Module>]>;
@@ -1376,7 +1395,7 @@ declare class Compilation {
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: { javascript: ModuleTemplate };
 	moduleGraph: ModuleGraph;
-	chunkGraph?: ChunkGraph;
+	chunkGraph: ChunkGraph;
 	codeGenerationResults: CodeGenerationResults;
 	processDependenciesQueue: AsyncQueue<Module, Module, Module>;
 	addModuleQueue: AsyncQueue<Module, string, Module>;
@@ -1415,6 +1434,7 @@ declare class Compilation {
 	needAdditionalPass: boolean;
 	builtModules: WeakSet<Module>;
 	codeGeneratedModules: WeakSet<Module>;
+	buildTimeExecutedModules: WeakSet<Module>;
 	emittedAssets: Set<string>;
 	comparedForEmitAssets: Set<string>;
 	fileDependencies: LazySet<string>;
@@ -1512,8 +1532,33 @@ declare class Compilation {
 		blocks: DependenciesBlock[]
 	): void;
 	codeGeneration(callback?: any): void;
-	processRuntimeRequirements(): void;
-	addRuntimeModule(chunk: Chunk, module: RuntimeModule): void;
+	processRuntimeRequirements(__0?: {
+		/**
+		 * the chunk graph
+		 */
+		chunkGraph?: ChunkGraph;
+		/**
+		 * modules
+		 */
+		modules?: Iterable<Module>;
+		/**
+		 * chunks
+		 */
+		chunks?: Iterable<Chunk>;
+		/**
+		 * codeGenerationResults
+		 */
+		codeGenerationResults?: CodeGenerationResults;
+		/**
+		 * chunkGraphEntries
+		 */
+		chunkGraphEntries?: Iterable<Chunk>;
+	}): void;
+	addRuntimeModule(
+		chunk: Chunk,
+		module: RuntimeModule,
+		chunkGraph?: ChunkGraph
+	): void;
 	addChunkInGroup(
 		groupOptions: string | ChunkGroupOptions,
 		module: Module,
@@ -1601,6 +1646,11 @@ declare class Compilation {
 			| WebpackPluginInstance
 		)[]
 	): Compiler;
+	executeModule(
+		module: Module,
+		options: ExecuteModuleOptions,
+		callback: (err?: WebpackError, result?: ExecuteModuleResult) => void
+	): void;
 	checkConstraints(): void;
 
 	/**
@@ -3085,6 +3135,28 @@ declare class EvalSourceMapDevToolPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare interface ExecuteModuleArgument {
+	module: Module;
+	moduleObject: object;
+	codeGenerationResult: CodeGenerationResult;
+}
+declare interface ExecuteModuleContext {
+	assets: Map<string, { source: Source; info: AssetInfo }>;
+	chunk: Chunk;
+	chunkGraph: ChunkGraph;
+	__webpack_require__: Function;
+}
+declare interface ExecuteModuleOptions {
+	entryOptions?: EntryOptions;
+}
+declare interface ExecuteModuleResult {
+	exports: any;
+	assets: Map<string, { source: Source; info: AssetInfo }>;
+	fileDependencies: LazySet<string>;
+	contextDependencies: LazySet<string>;
+	missingDependencies: LazySet<string>;
+	buildDependencies: LazySet<string>;
+}
 
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
@@ -3099,6 +3171,11 @@ declare interface Experiments {
 	 * Support WebAssembly as asynchronous EcmaScript Module.
 	 */
 	asyncWebAssembly?: boolean;
+
+	/**
+	 * Enable build-time execution of modules from the module graph for plugins and loaders.
+	 */
+	executeModule?: boolean;
 
 	/**
 	 * Enable module and chunk layers.
@@ -4048,6 +4125,11 @@ declare interface HandleModuleCreationOptions {
 	 * recurse into dependencies of the created module
 	 */
 	recursive?: boolean;
+
+	/**
+	 * connect the resolved module with the origin module
+	 */
+	connectOrigin?: boolean;
 }
 declare class Hash {
 	constructor();
@@ -5348,6 +5430,7 @@ declare interface KnownStatsModule {
 	cacheable?: boolean;
 	built?: boolean;
 	codeGenerated?: boolean;
+	buildTimeExecuted?: boolean;
 	cached?: boolean;
 	optional?: boolean;
 	orphan?: boolean;
@@ -5484,6 +5567,7 @@ declare class LibManifestPlugin {
 }
 declare interface LibraryContext<T> {
 	compilation: Compilation;
+	chunkGraph: ChunkGraph;
 	options: T;
 }
 
@@ -9293,6 +9377,17 @@ declare class RuntimeModule extends Module {
 	 * Runtime modules which trigger actions on bootstrap
 	 */
 	static STAGE_TRIGGER: number;
+}
+declare interface RuntimeRequirementsContext {
+	/**
+	 * the chunk graph
+	 */
+	chunkGraph: ChunkGraph;
+
+	/**
+	 * the code generation results
+	 */
+	codeGenerationResults: CodeGenerationResults;
 }
 type RuntimeSpec = undefined | string | SortableSet<string>;
 declare abstract class RuntimeSpecMap<T> {
