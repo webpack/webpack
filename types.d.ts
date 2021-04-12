@@ -9352,8 +9352,9 @@ declare class RuntimeModule extends Module {
 	stage: number;
 	compilation: Compilation;
 	chunk: Chunk;
+	chunkGraph: ChunkGraph;
 	fullHash: boolean;
-	attach(compilation: Compilation, chunk: Chunk): void;
+	attach(compilation: Compilation, chunk: Chunk, chunkGraph?: ChunkGraph): void;
 	generate(): string;
 	getGeneratedCode(): string;
 	shouldIsolate(): boolean;
