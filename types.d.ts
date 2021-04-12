@@ -1363,7 +1363,7 @@ declare class Compilation {
 	resolverFactory: ResolverFactory;
 	inputFileSystem: InputFileSystem;
 	fileSystemInfo: FileSystemInfo;
-	valueCacheVersions: Map<string, string>;
+	valueCacheVersions: Map<string, string | Set<string>>;
 	requestShortener: RequestShortener;
 	compilerPath: string;
 	logger: WebpackLogger;
@@ -6514,7 +6514,7 @@ declare class NaturalModuleIdsPlugin {
 }
 declare interface NeedBuildContext {
 	fileSystemInfo: FileSystemInfo;
-	valueCacheVersions: Map<string, string>;
+	valueCacheVersions: Map<string, string | Set<string>>;
 }
 declare class NoEmitOnErrorsPlugin {
 	constructor();
@@ -9714,7 +9714,7 @@ declare abstract class RuntimeValue {
 	readonly fileDependencies?: true | string[];
 	exec(
 		parser: JavascriptParser,
-		valueCacheVersions: Map<string, string>,
+		valueCacheVersions: Map<string, string | Set<string>>,
 		key: string
 	): CodeValuePrimitive;
 	getCacheVersion(): undefined | string;
