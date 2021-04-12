@@ -343,13 +343,13 @@ declare abstract class AsyncQueue<T, K, R> {
 		started: SyncHook<[T]>;
 		result: SyncHook<[T, Error, R]>;
 	};
-	add(item: T, callback: CallbackFunction<R>): void;
+	add(item: T, callback: CallbackAsyncQueue<R>): void;
 	invalidate(item: T): void;
 
 	/**
 	 * Waits for an already started item
 	 */
-	waitFor(item: T, callback: CallbackFunction<R>): void;
+	waitFor(item: T, callback: CallbackAsyncQueue<R>): void;
 	stop(): void;
 	increaseParallelism(): void;
 	decreaseParallelism(): void;
@@ -661,6 +661,9 @@ declare interface CallExpressionInfo {
 	getCalleeMembers: () => string[];
 	name: string;
 	getMembers: () => string[];
+}
+declare interface CallbackAsyncQueue<T> {
+	(err?: WebpackError, result?: T): any;
 }
 declare interface CallbackCache<T> {
 	(err?: WebpackError, result?: T): void;
