@@ -393,6 +393,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-execute-module": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable build-time execution of modules from the module graph for plugins and loaders.",
+        "multiple": false,
+        "path": "experiments.executeModule",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable build-time execution of modules from the module graph for plugins and loaders.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-layers": Object {
     "configs": Array [
       Object {
