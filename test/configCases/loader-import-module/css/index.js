@@ -9,5 +9,7 @@ it("should be able to use build-time code", () => {
 	expect(stylesheet1).toBe(
 		'body { background: url("/public/assets/file.png?1"); color: #f00; }'
 	);
-	expect(otherStylesheet).toBe("body { background-color: #0f0; }");
+	expect(otherStylesheet).toBe(
+		'body { background: url("/public/assets/file.jpg"); color: #0f0; }'
+	);
 });

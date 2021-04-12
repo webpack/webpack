@@ -1,2 +1,3 @@
 import { green } from "./colors.js";
-export default `body { background-color: ${green}; }`;
+import file from "./file.jpg";
+export default `body { background: url("${file}"); color: ${green}; }`;
