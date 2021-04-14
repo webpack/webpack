@@ -5,12 +5,22 @@ module.exports = {
 	entry() {
 		return {
 			a: "./a",
-			b: "./b"
+			b: "./b",
+			c: {
+				import: "./c",
+				publicPath: "/other/"
+			},
+			d: {
+				import: "./d",
+				publicPath: "/other/"
+			}
 		};
 	},
 	output: {
 		filename: data => {
-			return data.chunk.name === "a" ? `inner1/inner2/[name].js` : "[name].js";
+			return /^[ac]$/.test(data.chunk.name)
+				? `inner1/inner2/[name].js`
+				: "[name].js";
 		},
 		assetModuleFilename: "[name][ext]"
 	},
