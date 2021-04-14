@@ -6238,6 +6238,12 @@ declare class ModuleGraph {
 	setAsync(module: Module): void;
 	getMeta(thing?: any): Object;
 	getMetaIfExisting(thing?: any): Object;
+	freeze(): void;
+	unfreeze(): void;
+	cached<T extends any[], V>(
+		fn: (moduleGraph: ModuleGraph, ...args: T) => V,
+		...args: T
+	): V;
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
