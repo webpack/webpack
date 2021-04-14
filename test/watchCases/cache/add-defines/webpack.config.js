@@ -1,4 +1,5 @@
 const { DefinePlugin } = require("../../../../");
+const currentWatchStep = require("../../../helpers/currentWatchStep");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -9,7 +10,7 @@ module.exports = {
 		compiler => {
 			const base = {
 				DEFINE: "{}",
-				RUN: DefinePlugin.runtimeValue(() => 3 - defines.length, [])
+				RUN: DefinePlugin.runtimeValue(() => +(currentWatchStep.step || 0), [])
 			};
 			const defines = [
 				{
@@ -38,7 +39,7 @@ module.exports = {
 				}
 			];
 			compiler.hooks.compilation.tap("webpack.config", (...args) => {
-				const plugin = new DefinePlugin(defines.shift());
+				const plugin = new DefinePlugin(defines[+(currentWatchStep.step || 0)]);
 				plugin.apply(
 					/** @type {any} */ ({
 						hooks: {
