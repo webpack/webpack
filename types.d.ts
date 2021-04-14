@@ -3778,12 +3778,12 @@ declare interface FileCacheOptions {
 	hashAlgorithm?: string;
 
 	/**
-	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').
+	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack').
 	 */
 	idleTimeout?: number;
 
 	/**
-	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').
+	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').
 	 */
 	idleTimeoutForInitialStore?: number;
 
@@ -6255,10 +6255,7 @@ declare class ModuleGraph {
 	getMetaIfExisting(thing?: any): Object;
 	freeze(): void;
 	unfreeze(): void;
-	cached<T extends any[], V>(
-		fn: (moduleGraph: ModuleGraph, ...args: T) => V,
-		...args: T
-	): V;
+	cached<T, V>(fn: (moduleGraph: ModuleGraph, ...args: T) => V, ...args: T): V;
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
