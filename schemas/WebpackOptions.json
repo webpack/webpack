@@ -246,7 +246,18 @@
       "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
       "anyOf": [
         {
-          "enum": ["array-push", "commonjs", false]
+          "enum": [false]
+        },
+        {
+          "$ref": "#/definitions/ChunkFormatType"
+        }
+      ]
+    },
+    "ChunkFormatType": {
+      "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+      "anyOf": [
+        {
+          "enum": ["array-push", "commonjs"]
         },
         {
           "type": "string"
@@ -397,6 +408,13 @@
       "type": "object",
       "additionalProperties": false
     },
+    "EnabledChunkFormatTypes": {
+      "description": "List of chunk format types enabled for use by entry points.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChunkFormatType"
+      }
+    },
     "EnabledChunkLoadingTypes": {
       "description": "List of chunk loading types enabled for use by entry points.",
       "type": "array",
@@ -432,10 +450,17 @@
     "EntryDescription": {
       "description": "An object with entry point description.",
       "type": "object",
+      "implements": "#/definitions/EntryDescriptionOptions",
       "additionalProperties": false,
       "properties": {
+        "chunkFilename": {
+          "$ref": "#/definitions/ChunkFilename"
+        },
+        "chunkFormat": {
+          "$ref": "#/definitions/ChunkFormatType"
+        },
         "chunkLoading": {
-          "$ref": "#/definitions/ChunkLoading"
+          "$ref": "#/definitions/ChunkLoadingType"
         },
         "dependOn": {
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
@@ -464,6 +489,9 @@
         "import": {
           "$ref": "#/definitions/EntryItem"
         },
+        "initialChunkFilename": {
+          "$ref": "#/definitions/InitialChunkFilename"
+        },
         "layer": {
           "$ref": "#/definitions/Layer"
         },
@@ -473,19 +501,71 @@
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"
         },
+        "runtimeName": {
+          "$ref": "#/definitions/EntryRuntimeName"
+        },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         }
       },
       "required": ["import"]
     },
+    "EntryDescriptionNamed": {
+      "description": "An object with entry point description.",
+      "type": "object",
+      "implements": "#/definitions/EntryDescriptionOptions",
+      "additionalProperties": false,
+      "properties": {
+        "chunkFilename": {
+          "$ref": "#/definitions/ChunkFilename"
+        },
+        "chunkFormat": {
+          "$ref": "#/definitions/ChunkFormatType"
+        },
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoadingType"
+        },
+        "filename": {
+          "$ref": "#/definitions/EntryFilename"
+        },
+        "initialChunkFilename": {
+          "$ref": "#/definitions/InitialChunkFilename"
+        },
+        "layer": {
+          "$ref": "#/definitions/Layer"
+        },
+        "library": {
+          "$ref": "#/definitions/LibraryOptions"
+        },
+        "name": {
+          "description": "Name of this entrypoint.",
+          "type": "string",
+          "minLength": 1
+        },
+        "runtime": {
+          "$ref": "#/definitions/EntryRuntime"
+        },
+        "runtimeName": {
+          "$ref": "#/definitions/EntryRuntimeName"
+        },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
+        }
+      }
+    },
     "EntryDescriptionNormalized": {
       "description": "An object with entry point description.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "chunkFilename": {
+          "$ref": "#/definitions/ChunkFilename"
+        },
+        "chunkFormat": {
+          "$ref": "#/definitions/ChunkFormatType"
+        },
         "chunkLoading": {
-          "$ref": "#/definitions/ChunkLoading"
+          "$ref": "#/definitions/ChunkLoadingType"
         },
         "dependOn": {
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
@@ -499,7 +579,7 @@
           "uniqueItems": true
         },
         "filename": {
-          "$ref": "#/definitions/Filename"
+          "$ref": "#/definitions/EntryFilename"
         },
         "import": {
           "description": "Module(s) that are loaded upon startup. The last one is exported.",
@@ -512,6 +592,9 @@
           "minItems": 1,
           "uniqueItems": true
         },
+        "initialChunkFilename": {
+          "$ref": "#/definitions/InitialChunkFilename"
+        },
         "layer": {
           "$ref": "#/definitions/Layer"
         },
@@ -520,6 +603,46 @@
         },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"
+        },
+        "runtimeName": {
+          "$ref": "#/definitions/EntryRuntimeName"
+        },
+        "wasmLoading": {
+          "$ref": "#/definitions/WasmLoading"
+        }
+      }
+    },
+    "EntryDescriptionOptions": {
+      "description": "An object with entry point description.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "chunkFilename": {
+          "$ref": "#/definitions/ChunkFilename"
+        },
+        "chunkFormat": {
+          "$ref": "#/definitions/ChunkFormatType"
+        },
+        "chunkLoading": {
+          "$ref": "#/definitions/ChunkLoadingType"
+        },
+        "filename": {
+          "$ref": "#/definitions/EntryFilename"
+        },
+        "initialChunkFilename": {
+          "$ref": "#/definitions/InitialChunkFilename"
+        },
+        "layer": {
+          "$ref": "#/definitions/Layer"
+        },
+        "library": {
+          "$ref": "#/definitions/LibraryOptions"
+        },
+        "runtime": {
+          "$ref": "#/definitions/EntryRuntime"
+        },
+        "runtimeName": {
+          "$ref": "#/definitions/EntryRuntimeName"
         },
         "wasmLoading": {
           "$ref": "#/definitions/WasmLoading"
@@ -596,6 +719,11 @@
       "type": "string",
       "minLength": 1
     },
+    "EntryRuntimeName": {
+      "description": "The name of the runtime that the entry will be associated to. Optimization for modules will be done per runtime.",
+      "type": "string",
+      "minLength": 1
+    },
     "EntryStatic": {
       "description": "A static entry description.",
       "anyOf": [
@@ -669,6 +797,10 @@
       "properties": {
         "asset": {
           "description": "Allow module type 'asset' to generate assets.",
+          "type": "boolean"
+        },
+        "asyncEntries": {
+          "description": "Allow to configure that async entries can be parsed.",
           "type": "boolean"
         },
         "asyncWebAssembly": {
@@ -1249,6 +1381,45 @@
         }
       }
     },
+    "InitialChunkFilename": {
+      "description": "Specifies the filename template of output files of initial chunks on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/FilenameTemplate"
+        }
+      ]
+    },
+    "JavascriptParserAsyncEntryDescription": {
+      "description": "Options for any async entrypoint.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "byArguments": {
+          "description": "Determine values based on custom logic. First argument is an context object, second and following arguments are values passed in source code. Return value is merged with the static values.",
+          "instanceof": "Function",
+          "tsType": "((info: { expression: import('estree').Expression }, ...args: any[]) => false | JavascriptParserAsyncEntryDescription)"
+        },
+        "dependencyType": {
+          "description": "Specify the dependency type of the request that is used for resolving.",
+          "type": "string"
+        },
+        "entryOptions": {
+          "$ref": "#/definitions/EntryDescriptionNamed"
+        },
+        "request": {
+          "description": "Specify the request to reference a module.",
+          "type": "string"
+        },
+        "return": {
+          "description": "Specify the returned value (void: returns undefined, files: returns an array of filenames, urls: returns an array of URLs).",
+          "enum": ["void", "files", "urls"]
+        },
+        "value": {
+          "description": "Any JSON value that should be returned.",
+          "tsType": "any"
+        }
+      }
+    },
     "JavascriptParserOptions": {
       "description": "Parser options for javascript modules.",
       "type": "object",
@@ -1268,6 +1439,28 @@
         "commonjsMagicComments": {
           "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
           "type": "boolean"
+        },
+        "entries": {
+          "description": "Disable or configure handling of async entrypoints specified in source code.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "object",
+              "additionalProperties": {
+                "description": "Specify behavior of this async entrypoint.",
+                "anyOf": [
+                  {
+                    "enum": [false]
+                  },
+                  {
+                    "$ref": "#/definitions/JavascriptParserAsyncEntryDescription"
+                  }
+                ]
+              }
+            }
+          ]
         },
         "exprContextCritical": {
           "description": "Enable warnings for full dynamic dependencies.",
@@ -2574,6 +2767,9 @@
         "devtoolNamespace": {
           "$ref": "#/definitions/DevtoolNamespace"
         },
+        "enabledChunkFormatTypes": {
+          "$ref": "#/definitions/EnabledChunkFormatTypes"
+        },
         "enabledChunkLoadingTypes": {
           "$ref": "#/definitions/EnabledChunkLoadingTypes"
         },
@@ -2621,6 +2817,9 @@
         },
         "importMetaName": {
           "$ref": "#/definitions/ImportMetaName"
+        },
+        "initialChunkFilename": {
+          "$ref": "#/definitions/InitialChunkFilename"
         },
         "library": {
           "$ref": "#/definitions/Library"
@@ -2747,6 +2946,9 @@
         "devtoolNamespace": {
           "$ref": "#/definitions/DevtoolNamespace"
         },
+        "enabledChunkFormatTypes": {
+          "$ref": "#/definitions/EnabledChunkFormatTypes"
+        },
         "enabledChunkLoadingTypes": {
           "$ref": "#/definitions/EnabledChunkLoadingTypes"
         },
@@ -2794,6 +2996,9 @@
         },
         "importMetaName": {
           "$ref": "#/definitions/ImportMetaName"
+        },
+        "initialChunkFilename": {
+          "$ref": "#/definitions/InitialChunkFilename"
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
