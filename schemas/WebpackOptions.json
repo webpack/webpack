@@ -470,6 +470,9 @@
         "library": {
           "$ref": "#/definitions/LibraryOptions"
         },
+        "publicPath": {
+          "$ref": "#/definitions/PublicPath"
+        },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"
         },
@@ -517,6 +520,9 @@
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
+        },
+        "publicPath": {
+          "$ref": "#/definitions/PublicPath"
         },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"

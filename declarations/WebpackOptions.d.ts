@@ -123,6 +123,19 @@ export type LibraryType =
  */
 export type UmdNamedDefine = boolean;
 /**
+ * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+ */
+export type PublicPath = "auto" | RawPublicPath;
+/**
+ * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+ */
+export type RawPublicPath =
+	| string
+	| ((
+			pathData: import("../lib/Compilation").PathData,
+			assetInfo?: import("../lib/Compilation").AssetInfo
+	  ) => string);
+/**
  * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
  */
 export type EntryRuntime = string;
@@ -537,19 +550,6 @@ export type Path = string;
  * Include comments with information about the modules.
  */
 export type Pathinfo = "verbose" | boolean;
-/**
- * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
- */
-export type PublicPath = "auto" | RawPublicPath;
-/**
- * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
- */
-export type RawPublicPath =
-	| string
-	| ((
-			pathData: import("../lib/Compilation").PathData,
-			assetInfo?: import("../lib/Compilation").AssetInfo
-	  ) => string);
 /**
  * This option enables loading async chunks via a custom script type, such as script type="module".
  */
@@ -1021,6 +1021,10 @@ export interface EntryDescription {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+	/**
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: PublicPath;
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
@@ -2672,6 +2676,10 @@ export interface EntryDescriptionNormalized {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+	/**
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: PublicPath;
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */

@@ -2930,6 +2930,11 @@ declare interface EntryDescription {
 	library?: LibraryOptions;
 
 	/**
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
 	runtime?: string;
@@ -2973,6 +2978,11 @@ declare interface EntryDescriptionNormalized {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+
+	/**
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
