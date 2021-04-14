@@ -1251,6 +1251,9 @@ declare class Compilation {
 			[(string[] | ReferencedExport)[], Dependency, RuntimeSpec]
 		>;
 		executeModule: SyncHook<[ExecuteModuleArgument, ExecuteModuleContext]>;
+		prepareModuleExecution: AsyncParallelHook<
+			[ExecuteModuleArgument, ExecuteModuleContext]
+		>;
 		finishModules: AsyncSeriesHook<[Iterable<Module>]>;
 		finishRebuildingModule: AsyncSeriesHook<[Module]>;
 		unseal: SyncHook<[]>;
@@ -3137,20 +3140,22 @@ declare class EvalSourceMapDevToolPlugin {
 }
 declare interface ExecuteModuleArgument {
 	module: Module;
-	moduleObject: object;
+	moduleObject?: { id: string; exports: any; loaded: boolean };
+	preparedInfo: any;
 	codeGenerationResult: CodeGenerationResult;
 }
 declare interface ExecuteModuleContext {
 	assets: Map<string, { source: Source; info: AssetInfo }>;
 	chunk: Chunk;
 	chunkGraph: ChunkGraph;
-	__webpack_require__: Function;
+	__webpack_require__?: (arg0: string) => any;
 }
 declare interface ExecuteModuleOptions {
 	entryOptions?: EntryOptions;
 }
 declare interface ExecuteModuleResult {
 	exports: any;
+	cacheable: boolean;
 	assets: Map<string, { source: Source; info: AssetInfo }>;
 	fileDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
