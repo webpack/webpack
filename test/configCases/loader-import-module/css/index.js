@@ -10,6 +10,6 @@ it("should be able to use build-time code", () => {
 		'body { background: url("/public/assets/file.png?1"); color: #f00; }'
 	);
 	expect(otherStylesheet).toBe(
-		'body { background: url("/public/assets/file.jpg"); color: #0f0; }'
+		'body { background: url("/other/assets/file.jpg"); color: #0f0; }'
 	);
 });
