@@ -98,26 +98,26 @@ Object {
   "cache-idle-timeout": Object {
     "configs": Array [
       Object {
-        "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').",
+        "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
         "multiple": false,
         "path": "cache.idleTimeout",
         "type": "number",
       },
     ],
-    "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').",
+    "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
     "multiple": false,
     "simpleType": "number",
   },
   "cache-idle-timeout-for-initial-store": Object {
     "configs": Array [
       Object {
-        "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').",
+        "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
         "multiple": false,
         "path": "cache.idleTimeoutForInitialStore",
         "type": "number",
       },
     ],
-    "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').",
+    "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
     "multiple": false,
     "simpleType": "number",
   },
