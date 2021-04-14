@@ -6255,7 +6255,10 @@ declare class ModuleGraph {
 	getMetaIfExisting(thing?: any): Object;
 	freeze(): void;
 	unfreeze(): void;
-	cached<T, V>(fn: (moduleGraph: ModuleGraph, ...args: T) => V, ...args: T): V;
+	cached<T extends any[], V>(
+		fn: (moduleGraph: ModuleGraph, ...args: T) => V,
+		...args: T
+	): V;
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
