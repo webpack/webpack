@@ -938,11 +938,11 @@ export interface FileCacheOptions {
 	 */
 	hashAlgorithm?: string;
 	/**
-	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').
+	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack').
 	 */
 	idleTimeout?: number;
 	/**
-	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').
+	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').
 	 */
 	idleTimeoutForInitialStore?: number;
 	/**
