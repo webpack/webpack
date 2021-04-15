@@ -4369,6 +4369,7 @@ declare interface InputFileSystem {
 	purge?: (arg0?: string) => void;
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
+	resolve?: (arg0: string, arg1: string) => string;
 	dirname?: (arg0: string) => string;
 }
 type IntermediateFileSystem = InputFileSystem &
@@ -7690,6 +7691,7 @@ declare interface OutputFileSystem {
 	) => void;
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
+	resolve?: (arg0: string, arg1: string) => string;
 	dirname?: (arg0: string) => string;
 }
 
