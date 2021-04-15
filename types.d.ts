@@ -6107,6 +6107,16 @@ declare class ModuleFederationPlugin {
 	constructor(options: ModuleFederationPluginOptions);
 
 	/**
+	 * Apply the RuntimeRequirements
+	 */
+	enablingRuntimeRequirements(
+		compilation: Compilation,
+		module: Module,
+		runtime: string | SortableSet<string>,
+		chunkGraph: ChunkGraph
+	): void;
+
+	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
