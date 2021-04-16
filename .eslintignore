@@ -5,10 +5,13 @@ node_modules
 benchmark
 coverage
 
-# Ignore not support files
+# Ignore not supported files
 !.*.js
 .eslintrc.js
 *.d.ts
+
+# Ignore precompiled schemas
+schemas/**/*.check.js
 
 # Ignore some test files
 test/*

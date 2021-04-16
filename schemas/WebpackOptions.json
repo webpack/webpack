@@ -2325,15 +2325,15 @@
                 "description": "The test property is a cache group name, but using the test option of the cache group could be intended instead.",
                 "anyOf": [
                   {
-                    "instanceof": "Function",
-                    "tsType": "Function"
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
                   },
                   {
                     "type": "string"
                   },
                   {
-                    "instanceof": "RegExp",
-                    "tsType": "RegExp"
+                    "instanceof": "Function",
+                    "tsType": "Function"
                   }
                 ]
               }
@@ -2360,7 +2360,7 @@
             "description": "Size type, like 'javascript', 'webassembly'.",
             "type": "string"
           },
-          "minLength": 1
+          "minItems": 1
         },
         "enforceSizeThreshold": {
           "description": "Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.",
@@ -4634,6 +4634,7 @@
       "required": ["apply"]
     }
   },
+  "title": "WebpackOptions",
   "description": "Options object as provided by the user.",
   "type": "object",
   "additionalProperties": false,
