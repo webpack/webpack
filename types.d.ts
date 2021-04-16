@@ -5740,6 +5740,32 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 declare interface Loader {
 	[index: string]: any;
 }
+type LoaderContext = LoaderContextBase & Loader;
+declare interface LoaderContextBase {
+	getOptions: (schema?: any) => any;
+	emitWarning: (warning?: any) => void;
+	emitError: (error?: any) => void;
+	resolve: (context?: any, request?: any, callback?: any) => void;
+	getResolve: (
+		options?: any
+	) => (context?: any, request?: any, callback?: any) => Promise<any>;
+	emitFile: (
+		name?: any,
+		content?: any,
+		sourceMap?: any,
+		assetInfo?: any
+	) => void;
+	addBuildDependency: (dep?: any) => void;
+	utils: {
+		absolutify: (context?: any, request?: any) => string;
+		contextify: (context?: any, request?: any) => string;
+	};
+	rootContext: string;
+	webpack: boolean;
+	sourceMap: boolean;
+	mode: Mode;
+	fs: InputFileSystem;
+}
 declare interface LoaderItem {
 	loader: string;
 	options: any;
@@ -5924,6 +5950,7 @@ declare interface MinChunkSizePluginOptions {
 	 */
 	minChunkSize: number;
 }
+type Mode = "development" | "production" | "none";
 declare class Module extends DependenciesBlock {
 	constructor(type: string, context?: string, layer?: string);
 	type: string;
@@ -6847,7 +6874,7 @@ declare class NormalModule extends Module {
 		options: WebpackOptionsNormalized,
 		compilation: Compilation,
 		fs: InputFileSystem
-	): any;
+	): LoaderContext;
 	getCurrentLoader(loaderContext?: any, index?: any): null | LoaderItem;
 	createSource(
 		context: string,
