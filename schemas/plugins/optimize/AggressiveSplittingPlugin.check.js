@@ -1,0 +1,6 @@
+/*
+ * This file was automatically generated.
+ * DO NOT MODIFY BY HAND.
+ * Run `yarn special-lint-fix` to update
+ */
+"use strict";function e(r,{instancePath:t="",parentData:i,parentDataProperty:n,rootData:o=r}={}){if(!r||"object"!=typeof r||Array.isArray(r))return e.errors=[{params:{type:"object"}}],!1;{const t=0;for(const t in r)if("chunkOverhead"!==t&&"entryChunkMultiplicator"!==t&&"maxSize"!==t&&"minSize"!==t)return e.errors=[{params:{additionalProperty:t}}],!1;if(0===t){if(void 0!==r.chunkOverhead){let t=r.chunkOverhead;const i=0;if("number"!=typeof t||!isFinite(t))return e.errors=[{params:{type:"number"}}],!1;var a=0===i}else a=!0;if(a){if(void 0!==r.entryChunkMultiplicator){let t=r.entryChunkMultiplicator;const i=0;if("number"!=typeof t||!isFinite(t))return e.errors=[{params:{type:"number"}}],!1;a=0===i}else a=!0;if(a){if(void 0!==r.maxSize){let t=r.maxSize;const i=0;if("number"!=typeof t||!isFinite(t))return e.errors=[{params:{type:"number"}}],!1;a=0===i}else a=!0;if(a)if(void 0!==r.minSize){let t=r.minSize;const i=0;if("number"!=typeof t||!isFinite(t))return e.errors=[{params:{type:"number"}}],!1;a=0===i}else a=!0}}}}return e.errors=null,!0}module.exports=e,module.exports.default=e;

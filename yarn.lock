@@ -1226,6 +1226,16 @@ ajv@^7.0.2:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
+ajv@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.1.0.tgz#45d5d3d36c7cdd808930cc3e603cf6200dbeb736"
+  integrity sha512-B/Sk2Ix7A36fs/ZkuGLIR86EdjbgR6fsAcbx9lOP/QBSXujDNbVmIS/U4Itz5k8fPFDeVZl/zQ/gJW4Jrq6XjQ==
+  dependencies:
+    fast-deep-equal "^3.1.1"
+    json-schema-traverse "^1.0.0"
+    require-from-string "^2.0.2"
+    uri-js "^4.2.2"
+
 amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
@@ -6138,7 +6148,7 @@ terser-webpack-plugin@^5.1.1:
     source-map "^0.6.1"
     terser "^5.5.1"
 
-terser@^5.5.0, terser@^5.5.1:
+terser@^5.5.0, terser@^5.5.1, terser@^5.6.1:
   version "5.6.1"
   resolved "https://registry.yarnpkg.com/terser/-/terser-5.6.1.tgz#a48eeac5300c0a09b36854bf90d9c26fb201973c"
   integrity sha512-yv9YLFQQ+3ZqgWCUk+pvNJwgUTdlIxUk1WTN+RnaFJe2L7ipG2csPT0ra2XRm7Cs8cxN7QXmK1rFzEwYEQkzXw==
@@ -6253,14 +6263,16 @@ toml@^3.0.0:
   resolved "https://registry.yarnpkg.com/toml/-/toml-3.0.0.tgz#342160f1af1904ec9d204d03a5d61222d762c5ee"
   integrity sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==
 
-tooling@webpack/tooling#v1.15.0:
-  version "1.15.0"
-  resolved "https://codeload.github.com/webpack/tooling/tar.gz/1c8c975ada1d94d011a4bc00fb149b168cc60580"
+tooling@webpack/tooling#v1.17.0:
+  version "1.17.0"
+  resolved "https://codeload.github.com/webpack/tooling/tar.gz/d02dd5db7f06b66897adf7f5321a5a7c20f70cc6"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
+    ajv "^8.1.0"
     commondir "^1.0.1"
     glob "^7.1.6"
     json-schema-to-typescript "^9.1.1"
+    terser "^5.6.1"
     yargs "^16.1.1"
 
 tough-cookie@^2.3.3, tough-cookie@~2.5.0:
