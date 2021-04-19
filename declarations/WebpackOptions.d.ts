@@ -1207,8 +1207,7 @@ export interface OutputOptions {
 	 */
 	strictModuleExceptionHandling?: boolean;
 	/**
-	 * The name of the trusted types policy created by webpack to serve bundle chunks.
-	 * The default name of the policy is 'webpack'.
+	 * The name of the trusted types policy created by webpack to serve bundle chunks (default: 'webpack').
 	 */
 	trustedTypesPolicyName?: string;
 	/**

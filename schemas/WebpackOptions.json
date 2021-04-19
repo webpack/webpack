@@ -1060,7 +1060,7 @@
           "type": "boolean"
         },
         "trustedTypesPolicyName": {
-          "description": "The name of the trusted types policy created by webpack to serve bundle chunks.",
+          "description": "The name of the trusted types policy created by webpack to serve bundle chunks (default: 'webpack').",
           "type": "string"
         },
         "umdNamedDefine": {
