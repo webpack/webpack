@@ -3194,8 +3194,7 @@
           "type": "array",
           "items": {
             "description": "Extension added to the request when trying to find the file.",
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           }
         },
         "fallback": {
