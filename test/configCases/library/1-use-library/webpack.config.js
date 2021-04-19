@@ -51,6 +51,40 @@ module.exports = (env, { testPath }) => [
 		]
 	},
 	{
+		externals: {
+			library: `promise (global.self = {}, require(${JSON.stringify(
+				"../0-create-library/amd-runtimeChunk/runtime.js"
+			)}), require(${JSON.stringify(
+				"../0-create-library/amd-runtimeChunk/main.js"
+			)}))`
+		},
+		output: {
+			library: { type: "commonjs-module" }
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("amd-runtimeChunk")
+			})
+		]
+	},
+	{
+		externals: {
+			library: `promise (global.self = {}, require(${JSON.stringify(
+				"../0-create-library/amd-iife-runtimeChunk/runtime.js"
+			)}), require(${JSON.stringify(
+				"../0-create-library/amd-iife-runtimeChunk/main.js"
+			)}))`
+		},
+		output: {
+			library: { type: "commonjs-module" }
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("amd-iife-runtimeChunk")
+			})
+		]
+	},
+	{
 		resolve: {
 			alias: {
 				library: path.resolve(testPath, "../0-create-library/umd.js")
