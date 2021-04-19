@@ -12,6 +12,7 @@ import {
 	AssignmentPattern,
 	AssignmentProperty,
 	AwaitExpression,
+	BigIntLiteral,
 	BinaryExpression,
 	BlockStatement,
 	BreakStatement,
@@ -3528,6 +3529,7 @@ type Expression =
 	| YieldExpression
 	| SimpleLiteral
 	| RegExpLiteral
+	| BigIntLiteral
 	| UpdateExpression
 	| BinaryExpression
 	| AssignmentExpression
@@ -4287,7 +4289,13 @@ type IgnorePluginOptions =
 			 */
 			checkResource?: (resource: string, context: string) => boolean;
 	  };
-type ImportSource = undefined | null | string | SimpleLiteral | RegExpLiteral;
+type ImportSource =
+	| undefined
+	| null
+	| string
+	| SimpleLiteral
+	| RegExpLiteral
+	| BigIntLiteral;
 
 /**
  * Options for infrastructure level logging.
@@ -4500,6 +4508,7 @@ declare class JavascriptParser extends Parser {
 						| YieldExpression
 						| SimpleLiteral
 						| RegExpLiteral
+						| BigIntLiteral
 						| UpdateExpression
 						| BinaryExpression
 						| AssignmentExpression
@@ -4707,6 +4716,7 @@ declare class JavascriptParser extends Parser {
 		| YieldExpression
 		| SimpleLiteral
 		| RegExpLiteral
+		| BigIntLiteral
 		| UpdateExpression
 		| BinaryExpression
 		| AssignmentExpression
@@ -4915,6 +4925,7 @@ declare class JavascriptParser extends Parser {
 			| YieldExpression
 			| SimpleLiteral
 			| RegExpLiteral
+			| BigIntLiteral
 			| UpdateExpression
 			| BinaryExpression
 			| AssignmentExpression
@@ -4965,6 +4976,7 @@ declare class JavascriptParser extends Parser {
 			| YieldExpression
 			| SimpleLiteral
 			| RegExpLiteral
+			| BigIntLiteral
 			| UpdateExpression
 			| BinaryExpression
 			| AssignmentExpression
@@ -6658,6 +6670,7 @@ type NodeEstreeIndex =
 	| YieldExpression
 	| SimpleLiteral
 	| RegExpLiteral
+	| BigIntLiteral
 	| UpdateExpression
 	| BinaryExpression
 	| AssignmentExpression
