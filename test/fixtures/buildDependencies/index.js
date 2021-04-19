@@ -1,5 +1,6 @@
 /* global VALUE */
 
+require("dep#with#hash/#.js");
 module.exports = {
 	loader: require("./loader!"),
 	config: VALUE,
