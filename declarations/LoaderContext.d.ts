@@ -1,15 +1,17 @@
+import type { RawSourceMap } from "source-map";
 import type { Schema } from "schema-utils/declarations/validate";
 import type { AssetInfo, Configuration } from "../lib";
 import Compilation from "../lib/Compilation";
 import NormalModule, { InputFileSystem } from "../lib/NormalModule";
 import type { Mode } from "./WebpackOptions";
+import type { Logger } from "../lib/logging/Logger";
 
 export interface LoaderContext {
 	version: number;
 	getOptions(schema: Schema): any;
 	emitWarning(warning: Error | string): void;
 	emitError(error: Error | string): void;
-	getLogger(name: string): import("../lib/logging/Logger").Logger;
+	getLogger(name: string): Logger;
 	resolve(context: string, request: string, callback: any): any;
 	getResolve(
 		options: Configuration
@@ -148,9 +150,9 @@ export interface EmptyContextAdditions {
 	 *   }
 	 * ]
 	 */
-	loaders: { 
-        request: string;
-        path: string;
+	loaders: {
+		request: string;
+		path: string;
 		query: string;
 		fragment: string;
 		options: any;
@@ -161,7 +163,7 @@ export interface EmptyContextAdditions {
 		data: any;
 		pitchExecuted: boolean;
 		normalExecuted: boolean;
-    }[];
+	}[];
 
 	/**
 	 * The resource file.
@@ -171,5 +173,5 @@ export interface EmptyContextAdditions {
 }
 
 export interface LoaderDefinition {
-    (this: LoaderContext & EmptyContextAdditions, contents: string): string;
+	(this: LoaderContext & EmptyContextAdditions, contents: string): string;
 }

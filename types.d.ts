@@ -83,6 +83,7 @@ import {
 	Extend,
 	ValidationErrorConfiguration
 } from "schema-utils/declarations/validate";
+import { RawSourceMap } from "source-map/source-map";
 import {
 	AsArray,
 	AsyncParallelHook,
@@ -2862,9 +2863,11 @@ declare interface EmptyContextAdditions {
 	 * Make this loader async.
 	 */
 	async(): (
-		err?: null | Error,
-		content?: string | Buffer,
-		sourceMap?: any
+		err: undefined | null | Error,
+		content: undefined | string | Buffer,
+		sourceMap: undefined | string | RawSourceMap,
+		additionalData: undefined | Record<string, any>,
+		...args: any[]
 	) => undefined | void;
 
 	/**
@@ -5886,8 +5889,8 @@ declare interface LoaderContext {
 		contextify: (context: string, request: string) => string;
 	};
 	rootContext: string;
-	webpack: boolean;
-	sourceMap: boolean;
+	webpack?: boolean;
+	sourceMap?: boolean;
 	mode: Mode;
 	fs: InputFileSystem;
 }
