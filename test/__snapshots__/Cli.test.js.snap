@@ -56,6 +56,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "cache-allow-collecting-memory": Object {
+    "configs": Array [
+      Object {
+        "description": "Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.",
+        "multiple": false,
+        "path": "cache.allowCollectingMemory",
+        "type": "boolean",
+      },
+    ],
+    "description": "Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "cache-cache-directory": Object {
     "configs": Array [
       Object {

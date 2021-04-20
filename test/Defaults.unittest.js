@@ -1475,6 +1475,7 @@ describe("Defaults", () => {
 		@@ ... @@
 		-   "cache": false,
 		+   "cache": Object {
+		+     "allowCollectingMemory": false,
 		+     "buildDependencies": Object {
 		+       "defaultWebpack": Array [
 		+         "<cwd>/lib/",
@@ -1502,6 +1503,69 @@ describe("Defaults", () => {
 		-     "cache": false,
 		+     "cache": true,
 	`)
+	);
+	test(
+		"cache filesystem development",
+		{ mode: "development", cache: { type: "filesystem" } },
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-   "cache": false,
+			+   "cache": Object {
+			+     "allowCollectingMemory": true,
+			+     "buildDependencies": Object {
+			+       "defaultWebpack": Array [
+			+         "<cwd>/lib/",
+			+       ],
+			+     },
+			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
+			+     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-development",
+			+     "hashAlgorithm": "md4",
+			+     "idleTimeout": 60000,
+			+     "idleTimeoutForInitialStore": 0,
+			+     "maxAge": 5184000000,
+			+     "maxMemoryGenerations": 5,
+			+     "name": "default-development",
+			+     "store": "pack",
+			+     "type": "filesystem",
+			+     "version": "",
+			+   },
+			@@ ... @@
+			-   "devtool": false,
+			+   "devtool": "eval",
+			@@ ... @@
+			-   "mode": "none",
+			+   "mode": "development",
+			@@ ... @@
+			-     "unsafeCache": false,
+			+     "unsafeCache": [Function anonymous],
+			@@ ... @@
+			-     "chunkIds": "natural",
+			+     "chunkIds": "named",
+			@@ ... @@
+			-     "moduleIds": "natural",
+			-     "nodeEnv": false,
+			+     "moduleIds": "named",
+			+     "nodeEnv": "development",
+			@@ ... @@
+			-       "minRemainingSize": undefined,
+			+       "minRemainingSize": 0,
+			@@ ... @@
+			-     "pathinfo": false,
+			+     "pathinfo": true,
+			@@ ... @@
+			-     "cache": false,
+			+     "cache": true,
+			@@ ... @@
+			-       "production",
+			+       "development",
+			@@ ... @@
+			-     "cache": false,
+			+     "cache": true,
+		`)
 	);
 
 	test(
@@ -1691,6 +1755,7 @@ describe("Defaults", () => {
 			-   "cache": false,
 			-   "context": "<cwd>",
 			+   "cache": Object {
+			+     "allowCollectingMemory": false,
 			+     "buildDependencies": Object {
 			+       "defaultWebpack": Array [
 			+         "<cwd>/lib/",
