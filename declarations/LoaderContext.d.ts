@@ -56,7 +56,9 @@ export interface EmptyContextAdditions {
 	async(): (
 		err: Error | undefined | null,
 		content?: string | Buffer,
-		sourceMap?: string | any
+		sourceMap?: string | RawSourceMap,
+		additionalData?: Record<string, any>,
+		...args: any[]
 	) => void | undefined;
 
 	/**
