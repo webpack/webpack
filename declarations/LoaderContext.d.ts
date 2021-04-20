@@ -9,7 +9,7 @@ export interface LoaderContext {
 	getOptions(schema: Schema): any;
 	emitWarning(warning: Error | string): void;
 	emitError(error: Error | string): void;
-	getLogger(name: string): Compilation["logger"];
+	getLogger(name: string): import("../lib/logging/Logger").Logger;
 	resolve(context: string, request: string, callback: any): any;
 	getResolve(
 		options: Configuration
@@ -26,8 +26,8 @@ export interface LoaderContext {
 		contextify: (context: string, request: string) => string;
 	};
 	rootContext: string;
-	webpack: boolean;
-	sourceMap: boolean;
+	webpack?: boolean;
+	sourceMap?: boolean;
 	mode: Mode;
 	_module: NormalModule;
 	_compilation: Compilation;
@@ -57,7 +57,9 @@ export interface EmptyContextAdditions {
 	async(): (
 		err: Error | undefined | null,
 		content?: string | Buffer,
-		sourceMap?: string | any
+		sourceMap?: string | RawSourceMap,
+		additionalData?: Record<string, any>,
+		...args: any[]
 	) => void | undefined;
 
 	/**
