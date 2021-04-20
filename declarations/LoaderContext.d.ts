@@ -3,7 +3,7 @@ import Compilation from "../lib/Compilation";
 import NormalModule, { InputFileSystem } from "../lib/NormalModule";
 import type { Mode } from "./WebpackOptions";
 
-export interface LoaderContextBase {
+export interface LoaderContext {
 	version: number;
 	getOptions(schema: any): any;
 	emitWarning(warning: Error | string): void;
@@ -35,7 +35,7 @@ export interface LoaderContextBase {
 }
 
 /** The types added to LoaderContextBase by https://github.com/webpack/loader-runner */
-export interface LoaderContext extends LoaderContextBase {
+export interface EmptyContextAdditions {
 	/**
 	 * Add a directory as dependency of the loader result.
 	 */
@@ -119,13 +119,13 @@ export interface LoaderContext extends LoaderContextBase {
 		) => void
 	): void;
 
-	readonly previousRequest: any;
+	readonly previousRequest: string;
 
 	readonly query: any;
 
-	readonly remainingRequest: any;
+	readonly remainingRequest: string;
 
-	readonly request: any;
+	readonly request: string;
 
 	/**
 	 * An array of all the loaders. It is writeable in the pitch phase.
@@ -145,11 +145,28 @@ export interface LoaderContext extends LoaderContextBase {
 	 *   }
 	 * ]
 	 */
-	loaders: { request: string }[];
+	loaders: { 
+        request: string;
+        path: string;
+		query: string;
+		fragment: string;
+		options: any;
+		ident: string;
+		normal: any;
+		pitch: any;
+		raw: any;
+		data: any;
+		pitchExecuted: boolean;
+		normalExecuted: boolean;
+    }[];
 
 	/**
 	 * The resource file.
 	 * In the example: "/abc/resource.js"
 	 */
 	resourcePath: string;
+}
+
+export interface LoaderDefinition<ContextAdditions = EmptyContextAdditions> {
+    (this: LoaderContext & ContextAdditions, contents: string): string;
 }
