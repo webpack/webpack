@@ -6,7 +6,7 @@ import NormalModule, { InputFileSystem } from "../lib/NormalModule";
 import type { Mode } from "./WebpackOptions";
 import type { Logger } from "../lib/logging/Logger";
 
-export interface LoaderContext {
+export interface NormalModuleLoaderContext {
 	version: number;
 	getOptions(schema: Schema): any;
 	emitWarning(warning: Error | string): void;
