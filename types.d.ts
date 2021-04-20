@@ -5891,9 +5891,6 @@ declare interface LoaderContext {
 	mode: Mode;
 	fs: InputFileSystem;
 }
-declare interface LoaderDefinition<ContextAdditions> {
-	(this: LoaderContext & ContextAdditions, contents: string): string;
-}
 declare interface LoaderItem {
 	loader: string;
 	options: any;
@@ -11994,7 +11991,10 @@ declare namespace exports {
 			export { HttpUriPlugin, HttpsUriPlugin };
 		}
 	}
-	export type LoaderDefinition = LoaderDefinition<EmptyContextAdditions>;
+	export type LoaderDefinition = (
+		this: LoaderContext & EmptyContextAdditions,
+		contents: string
+	) => string;
 	export type WebpackPluginFunction = (
 		this: Compiler,
 		compiler: Compiler

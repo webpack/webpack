@@ -167,6 +167,6 @@ export interface EmptyContextAdditions {
 	resourcePath: string;
 }
 
-export interface LoaderDefinition<ContextAdditions = EmptyContextAdditions> {
-    (this: LoaderContext & ContextAdditions, contents: string): string;
+export interface LoaderDefinition {
+    (this: LoaderContext & EmptyContextAdditions, contents: string): string;
 }
