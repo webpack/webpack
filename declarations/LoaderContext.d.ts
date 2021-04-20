@@ -172,6 +172,12 @@ export interface LoaderRunnerLoaderContext {
 	resourcePath: string;
 }
 
+type LoaderContext = NormalModuleLoaderContext & LoaderRunnerLoaderContext;
+
+declare class EmptyContextAdditions {
+	_EmptyContextAdditions: true
+}
+
 export interface LoaderDefinition {
 	(this: LoaderContext & EmptyContextAdditions, contents: string): string;
 }
