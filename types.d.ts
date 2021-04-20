@@ -2841,132 +2841,7 @@ declare class ElectronTargetPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-
-/**
- * The types added to LoaderContextBase by https://github.com/webpack/loader-runner
- */
-declare interface EmptyContextAdditions {
-	/**
-	 * Add a directory as dependency of the loader result.
-	 */
-	addContextDependency(context: string): void;
-
-	/**
-	 * Adds a file as dependency of the loader result in order to make them watchable.
-	 * For example, html-loader uses this technique as it finds src and src-set attributes.
-	 * Then, it sets the url's for those attributes as dependencies of the html file that is parsed.
-	 */
-	addDependency(file: string): void;
-	addMissingDependency(context: string): void;
-
-	/**
-	 * Make this loader async.
-	 */
-	async(): (
-		err: undefined | null | Error,
-		content: undefined | string | Buffer,
-		sourceMap: undefined | string | RawSourceMap,
-		additionalData: undefined | Record<string, any>,
-		...args: any[]
-	) => undefined | void;
-
-	/**
-	 * Make this loader result cacheable. By default it's not cacheable.
-	 * A cacheable loader must have a deterministic result, when inputs and dependencies haven't changed.
-	 * This means the loader shouldn't have other dependencies than specified with this.addDependency.
-	 * Most loaders are deterministic and cacheable.
-	 */
-	cacheable(flag?: boolean): void;
-	callback(): void;
-
-	/**
-	 * Remove all dependencies of the loader result. Even initial dependencies and these of other loaders.
-	 */
-	clearDependencies(): void;
-
-	/**
-	 * The directory of the module. Can be used as context for resolving other stuff.
-	 * eg '/workspaces/ts-loader/examples/vanilla/src'
-	 */
-	context: string;
-	readonly currentRequest: string;
-	readonly data: any;
-
-	/**
-	 * alias of addDependency
-	 * Adds a file as dependency of the loader result in order to make them watchable.
-	 * For example, html-loader uses this technique as it finds src and src-set attributes.
-	 * Then, it sets the url's for those attributes as dependencies of the html file that is parsed.
-	 */
-	dependency(file: string): void;
-	getContextDependencies(): string[];
-	getDependencies(): string[];
-	getMissingDependencies(): string[];
-
-	/**
-	 * The index in the loaders array of the current loader.
-	 * In the example: in loader1: 0, in loader2: 1
-	 */
-	loaderIndex: number;
-
-	/**
-	 * Resolves the given request to a module, applies all configured loaders and calls
-	 * back with the generated source, the sourceMap and the module instance (usually an
-	 * instance of NormalModule). Use this function if you need to know the source code
-	 * of another module to generate the result.
-	 */
-	loadModule(
-		request: string,
-		callback: (
-			err: null | Error,
-			source: string,
-			sourceMap: any,
-			module: NormalModule
-		) => void
-	): void;
-	readonly previousRequest: string;
-	readonly query: any;
-	readonly remainingRequest: string;
-	readonly request: string;
-
-	/**
-	 * An array of all the loaders. It is writeable in the pitch phase.
-	 * loaders = [{request: string, path: string, query: string, module: function}]
-	 * In the example:
-	 * [
-	 *   { request: "/abc/loader1.js?xyz",
-	 *     path: "/abc/loader1.js",
-	 *     query: "?xyz",
-	 *     module: [Function]
-	 *   },
-	 *   { request: "/abc/node_modules/loader2/index.js",
-	 *     path: "/abc/node_modules/loader2/index.js",
-	 *     query: "",
-	 *     module: [Function]
-	 *   }
-	 * ]
-	 */
-	loaders: {
-		request: string;
-		path: string;
-		query: string;
-		fragment: string;
-		options: any;
-		ident: string;
-		normal: any;
-		pitch: any;
-		raw: any;
-		data: any;
-		pitchExecuted: boolean;
-		normalExecuted: boolean;
-	}[];
-
-	/**
-	 * The resource file.
-	 * In the example: "/abc/resource.js"
-	 */
-	resourcePath: string;
-}
+declare abstract class EmptyContextAdditions {}
 
 /**
  * No generator options are supported for this module type.
@@ -5867,32 +5742,12 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 declare interface Loader {
 	[index: string]: any;
 }
-declare interface LoaderContext {
-	version: number;
-	getOptions(schema: Schema): any;
-	emitWarning(warning: string | Error): void;
-	emitError(error: string | Error): void;
-	getLogger(name: string): WebpackLogger;
-	resolve(context: string, request: string, callback?: any): any;
-	getResolve(
-		options: Configuration
-	): (context: string, request: string, callback?: any) => Promise<any>;
-	emitFile(
-		name: string,
-		content: string,
-		sourceMap: string,
-		assetInfo: AssetInfo
-	): void;
-	addBuildDependency(dep: string): void;
-	utils: {
-		absolutify: (context: string, request: string) => string;
-		contextify: (context: string, request: string) => string;
-	};
-	rootContext: string;
-	webpack?: boolean;
-	sourceMap?: boolean;
-	mode: Mode;
-	fs: InputFileSystem;
+type LoaderContext = NormalModuleLoaderContext & LoaderRunnerLoaderContext;
+declare interface LoaderDefinition<ContextAdditions> {
+	(
+		this: NormalModuleLoaderContext & LoaderRunnerLoaderContext & {},
+		contents: string
+	): string;
 }
 declare interface LoaderItem {
 	loader: string;
@@ -5932,6 +5787,138 @@ declare interface LoaderOptionsPluginOptions {
 		 */
 		context?: string;
 	};
+}
+
+/**
+ * The types added to LoaderContextBase by https://github.com/webpack/loader-runner
+ */
+declare interface LoaderRunnerLoaderContext {
+	/**
+	 * Add a directory as dependency of the loader result.
+	 */
+	addContextDependency(context: string): void;
+
+	/**
+	 * Adds a file as dependency of the loader result in order to make them watchable.
+	 * For example, html-loader uses this technique as it finds src and src-set attributes.
+	 * Then, it sets the url's for those attributes as dependencies of the html file that is parsed.
+	 */
+	addDependency(file: string): void;
+	addMissingDependency(context: string): void;
+
+	/**
+	 * Make this loader async.
+	 */
+	async(): (
+		err: undefined | null | Error,
+		content: undefined | string | Buffer,
+		sourceMap: undefined | string | RawSourceMap,
+		additionalData: undefined | Record<string, any>,
+		...args: any[]
+	) => undefined | void;
+
+	/**
+	 * Make this loader result cacheable. By default it's cacheable.
+	 * A cacheable loader must have a deterministic result, when inputs and dependencies haven't changed.
+	 * This means the loader shouldn't have other dependencies than specified with this.addDependency.
+	 * Most loaders are deterministic and cacheable.
+	 */
+	cacheable(flag?: boolean): void;
+	callback(): (
+		err: undefined | null | Error,
+		content: undefined | string | Buffer,
+		sourceMap: undefined | string | RawSourceMap,
+		additionalData: undefined | Record<string, any>,
+		...args: any[]
+	) => undefined | void;
+
+	/**
+	 * Remove all dependencies of the loader result. Even initial dependencies and these of other loaders.
+	 */
+	clearDependencies(): void;
+
+	/**
+	 * The directory of the module. Can be used as context for resolving other stuff.
+	 * eg '/workspaces/ts-loader/examples/vanilla/src'
+	 */
+	context: string;
+	readonly currentRequest: string;
+	readonly data: any;
+
+	/**
+	 * alias of addDependency
+	 * Adds a file as dependency of the loader result in order to make them watchable.
+	 * For example, html-loader uses this technique as it finds src and src-set attributes.
+	 * Then, it sets the url's for those attributes as dependencies of the html file that is parsed.
+	 */
+	dependency(file: string): void;
+	getContextDependencies(): string[];
+	getDependencies(): string[];
+	getMissingDependencies(): string[];
+
+	/**
+	 * The index in the loaders array of the current loader.
+	 * In the example: in loader1: 0, in loader2: 1
+	 */
+	loaderIndex: number;
+
+	/**
+	 * Resolves the given request to a module, applies all configured loaders and calls
+	 * back with the generated source, the sourceMap and the module instance (usually an
+	 * instance of NormalModule). Use this function if you need to know the source code
+	 * of another module to generate the result.
+	 */
+	loadModule(
+		request: string,
+		callback: (
+			err: null | Error,
+			source: string,
+			sourceMap: any,
+			module: NormalModule
+		) => void
+	): void;
+	readonly previousRequest: string;
+	readonly query: any;
+	readonly remainingRequest: string;
+	readonly request: string;
+
+	/**
+	 * An array of all the loaders. It is writeable in the pitch phase.
+	 * loaders = [{request: string, path: string, query: string, module: function}]
+	 * In the example:
+	 * [
+	 *   { request: "/abc/loader1.js?xyz",
+	 *     path: "/abc/loader1.js",
+	 *     query: "?xyz",
+	 *     module: [Function]
+	 *   },
+	 *   { request: "/abc/node_modules/loader2/index.js",
+	 *     path: "/abc/node_modules/loader2/index.js",
+	 *     query: "",
+	 *     module: [Function]
+	 *   }
+	 * ]
+	 */
+	loaders: {
+		request: string;
+		path: string;
+		query: string;
+		fragment: string;
+		options: any;
+		ident: string;
+		normal: any;
+		pitch: any;
+		raw: any;
+		data: any;
+		pitchExecuted: boolean;
+		normalExecuted: boolean;
+	}[];
+
+	/**
+	 * The resource file.
+	 * In the example: "/abc/resource.js"
+	 */
+	resourcePath: string;
 }
 declare class LoaderTargetPlugin {
 	constructor(target: string);
@@ -7002,7 +6989,7 @@ declare class NormalModule extends Module {
 		options: WebpackOptionsNormalized,
 		compilation: Compilation,
 		fs: InputFileSystem
-	): LoaderContext;
+	): NormalModuleLoaderContext;
 	getCurrentLoader(loaderContext?: any, index?: any): null | LoaderItem;
 	createSource(
 		context: string,
@@ -7077,6 +7064,33 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	getGenerator(type?: any, generatorOptions?: object): undefined | Generator;
 	createGenerator(type?: any, generatorOptions?: object): any;
 	getResolver(type?: any, resolveOptions?: any): ResolverWithOptions;
+}
+declare interface NormalModuleLoaderContext {
+	version: number;
+	getOptions(schema: Schema): any;
+	emitWarning(warning: string | Error): void;
+	emitError(error: string | Error): void;
+	getLogger(name: string): WebpackLogger;
+	resolve(context: string, request: string, callback?: any): any;
+	getResolve(
+		options: Configuration
+	): (context: string, request: string, callback?: any) => Promise<any>;
+	emitFile(
+		name: string,
+		content: string,
+		sourceMap?: string,
+		assetInfo?: AssetInfo
+	): void;
+	addBuildDependency(dep: string): void;
+	utils: {
+		absolutify: (context: string, request: string) => string;
+		contextify: (context: string, request: string) => string;
+	};
+	rootContext: string;
+	webpack?: boolean;
+	sourceMap?: boolean;
+	mode: Mode;
+	fs: InputFileSystem;
 }
 declare class NormalModuleReplacementPlugin {
 	/**
@@ -11994,10 +12008,7 @@ declare namespace exports {
 			export { HttpUriPlugin, HttpsUriPlugin };
 		}
 	}
-	export type LoaderDefinition = (
-		this: LoaderContext & EmptyContextAdditions,
-		contents: string
-	) => string;
+	export type LoaderDefinition = LoaderDefinition<T>;
 	export type WebpackPluginFunction = (
 		this: Compiler,
 		compiler: Compiler

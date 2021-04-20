@@ -33,7 +33,7 @@ export interface NormalModuleLoaderContext {
 	mode: Mode;
 	_module?: NormalModule;
 	_compilation?: Compilation;
-	_compiler?: Compiler;
+	_compiler?: Compilation.Compiler;
 	fs: InputFileSystem;
 }
 
@@ -56,13 +56,7 @@ export interface LoaderRunnerLoaderContext {
 	/**
 	 * Make this loader async.
 	 */
-	async(): (
-		err: Error | undefined | null,
-		content?: string | Buffer,
-		sourceMap?: string | RawSourceMap,
-		additionalData?: Record<string, any>,
-		...args: any[]
-	) => void | undefined;
+	async(): WebpackLoaderContextCallback;
 
 	/**
 	 * Make this loader result cacheable. By default it's cacheable.
@@ -72,7 +66,7 @@ export interface LoaderRunnerLoaderContext {
 	 */
 	cacheable(flag?: boolean): void;
 
-	callback(): void;
+	callback(): WebpackLoaderContextCallback;
 
 	/**
 	 * Remove all dependencies of the loader result. Even initial dependencies and these of other loaders.
@@ -172,12 +166,20 @@ export interface LoaderRunnerLoaderContext {
 	resourcePath: string;
 }
 
+type WebpackLoaderContextCallback = (
+    err: Error | undefined | null,
+    content?: string | Buffer,
+    sourceMap?: string | RawSourceMap,
+    additionalData?: Record<string, any>,
+    ...args: any[]
+) => void | undefined;
+
 type LoaderContext = NormalModuleLoaderContext & LoaderRunnerLoaderContext;
 
 declare class EmptyContextAdditions {
 	_EmptyContextAdditions: true
 }
 
-export interface LoaderDefinition {
-	(this: LoaderContext & EmptyContextAdditions, contents: string): string;
+export interface LoaderDefinition<ContextAdditions = EmptyContextAdditions> {
+	(this: LoaderContext & (ContextAdditions extends EmptyContextAdditions ? {} : ContextAdditions), contents: string): string;
 }
