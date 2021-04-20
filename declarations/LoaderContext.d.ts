@@ -180,6 +180,6 @@ declare class EmptyContextAdditions {
 	_EmptyContextAdditions: true
 }
 
-export interface LoaderDefinition<ContextAdditions = EmptyContextAdditions> {
-	(this: LoaderContext & (ContextAdditions extends EmptyContextAdditions ? {} : ContextAdditions), contents: string): string;
+export interface LoaderDefinition {
+	(this: LoaderContext & EmptyContextAdditions, contents: string): string;
 }

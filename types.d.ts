@@ -5743,12 +5743,6 @@ declare interface Loader {
 	[index: string]: any;
 }
 type LoaderContext = NormalModuleLoaderContext & LoaderRunnerLoaderContext;
-declare interface LoaderDefinition<ContextAdditions> {
-	(
-		this: NormalModuleLoaderContext & LoaderRunnerLoaderContext & {},
-		contents: string
-	): string;
-}
 declare interface LoaderItem {
 	loader: string;
 	options: any;
@@ -12008,7 +12002,12 @@ declare namespace exports {
 			export { HttpUriPlugin, HttpsUriPlugin };
 		}
 	}
-	export type LoaderDefinition = LoaderDefinition<T>;
+	export type LoaderDefinition = (
+		this: NormalModuleLoaderContext &
+			LoaderRunnerLoaderContext &
+			EmptyContextAdditions,
+		contents: string
+	) => string;
 	export type WebpackPluginFunction = (
 		this: Compiler,
 		compiler: Compiler
