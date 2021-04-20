@@ -5866,7 +5866,7 @@ declare interface Loader {
 }
 declare interface LoaderContext {
 	version: number;
-	getOptions(schema?: any): any;
+	getOptions(schema: Schema): any;
 	emitWarning(warning: string | Error): void;
 	emitError(error: string | Error): void;
 	getLogger(name: string): WebpackLogger;

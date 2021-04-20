@@ -1,3 +1,4 @@
+import type { Schema } from "schema-utils/declarations/validate";
 import type { AssetInfo, Configuration } from "../lib";
 import Compilation from "../lib/Compilation";
 import NormalModule, { InputFileSystem } from "../lib/NormalModule";
@@ -5,7 +6,7 @@ import type { Mode } from "./WebpackOptions";
 
 export interface LoaderContext {
 	version: number;
-	getOptions(schema: any): any;
+	getOptions(schema: Schema): any;
 	emitWarning(warning: Error | string): void;
 	emitError(error: Error | string): void;
 	getLogger(name: string): Compilation["logger"];
