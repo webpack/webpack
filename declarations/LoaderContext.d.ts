@@ -38,7 +38,7 @@ export interface NormalModuleLoaderContext {
 }
 
 /** The types added to LoaderContextBase by https://github.com/webpack/loader-runner */
-export interface EmptyContextAdditions {
+export interface LoaderRunnerLoaderContext {
 	/**
 	 * Add a directory as dependency of the loader result.
 	 */
