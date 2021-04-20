@@ -924,6 +924,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "allowCollectingMemory": {
+          "description": "Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.",
+          "type": "boolean"
+        },
         "buildDependencies": {
           "description": "Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').",
           "type": "object",
