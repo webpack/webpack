@@ -3760,6 +3760,11 @@ declare class FetchCompileWasmPlugin {
  */
 declare interface FileCacheOptions {
 	/**
+	 * Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.
+	 */
+	allowCollectingMemory?: boolean;
+
+	/**
 	 * Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').
 	 */
 	buildDependencies?: { [index: string]: string[] };
