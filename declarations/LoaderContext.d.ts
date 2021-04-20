@@ -8,7 +8,7 @@ export interface LoaderContext {
 	getOptions(schema: any): any;
 	emitWarning(warning: Error | string): void;
 	emitError(error: Error | string): void;
-	getLogger(name: string): Compilation["logger"];
+	getLogger(name: string): import("../lib/logging/Logger").Logger;
 	resolve(context: string, request: string, callback: any): any;
 	getResolve(
 		options: Configuration
