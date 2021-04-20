@@ -25,8 +25,8 @@ export interface LoaderContext {
 		contextify: (context: string, request: string) => string;
 	};
 	rootContext: string;
-	webpack: boolean;
-	sourceMap: boolean;
+	webpack?: boolean;
+	sourceMap?: boolean;
 	mode: Mode;
 	_module: NormalModule;
 	_compilation: Compilation;
