@@ -1,5 +1,5 @@
 import type { RawSourceMap } from "source-map";
-import type { Schema } from "schema-utils/declarations/validate";
+import type { Schema } from "schema-utils/declarations/ValidationError";
 import type { AssetInfo, Configuration } from "../lib";
 import Compilation from "../lib/Compilation";
 import NormalModule, { InputFileSystem } from "../lib/NormalModule";
