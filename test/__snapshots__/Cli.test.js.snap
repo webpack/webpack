@@ -5205,6 +5205,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-trusted-types-policy-name": Object {
+    "configs": Array [
+      Object {
+        "description": "The name of the trusted types policy created by webpack to serve bundle chunks. Defaults to 'webpack'.",
+        "multiple": false,
+        "path": "output.trustedTypesPolicyName",
+        "type": "string",
+      },
+    ],
+    "description": "The name of the trusted types policy created by webpack to serve bundle chunks. Defaults to 'webpack'.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-unique-name": Object {
     "configs": Array [
       Object {

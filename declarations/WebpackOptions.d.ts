@@ -571,6 +571,10 @@ export type StrictModuleErrorHandling = boolean;
  */
 export type StrictModuleExceptionHandling = boolean;
 /**
+ * The name of the trusted types policy created by webpack to serve bundle chunks. Defaults to 'webpack'.
+ */
+export type TrustedTypesPolicyName = string;
+/**
  * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
  */
 export type UniqueName = string;
@@ -753,10 +757,6 @@ export type OptimizationSplitChunksGetCacheGroups = (
 	| OptimizationSplitChunksCacheGroup
 	| OptimizationSplitChunksCacheGroup[]
 	| void;
-/**
- * The name of the trusted types policy created by webpack to serve bundle chunks. Defaults to 'webpack'.
- */
-export type TrustedTypesPolicyName = string;
 
 /**
  * Options object as provided by the user.
@@ -2089,6 +2089,10 @@ export interface Output {
 	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
+	/**
+	 * The name of the trusted types policy created by webpack to serve bundle chunks. Defaults to 'webpack'.
+	 */
+	trustedTypesPolicyName?: TrustedTypesPolicyName;
 	/**
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
 	 */

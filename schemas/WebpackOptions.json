@@ -2686,6 +2686,9 @@
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
         },
+        "trustedTypesPolicyName": {
+          "$ref": "#/definitions/TrustedTypesPolicyName"
+        },
         "umdNamedDefine": {
           "cli": {
             "exclude": true

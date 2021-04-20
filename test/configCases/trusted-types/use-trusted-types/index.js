@@ -24,7 +24,7 @@ it("should load chunk using trusted types", function() {
 	var script = document.head._children.pop();
 	__non_webpack_require__("./trusted-types.web.js");
 	expect(script.src).toBe("https://test.cases/path/trusted-types.web.js");
-	expect(createScriptURLSpy).toHaveBeenCalledWith('trusted-types.web.js');
+	expect(createScriptURLSpy).toHaveBeenCalledWith('https://test.cases/path/trusted-types.web.js');
 	expect(createPolicySpy).toHaveBeenCalledWith('customPolicyName', expect.anything())
 
 	return promise;

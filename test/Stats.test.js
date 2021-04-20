@@ -173,10 +173,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryB.js",
-			          "size": 2938,
+			          "size": 3124,
 			        },
 			      ],
-			      "assetsSize": 2938,
+			      "assetsSize": 3124,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -221,10 +221,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 2938,
+			        "size": 3124,
 			      },
 			      "name": "entryB.js",
-			      "size": 2938,
+			      "size": 3124,
 			      "type": "asset",
 			    },
 			    Object {
@@ -259,10 +259,13 @@ describe("Stats", () => {
 			      "emitted": true,
 			      "filteredRelated": undefined,
 			      "info": Object {
-			        "size": 2256,
+			        "javascriptModule": false,
+			        "minimized": true,
+			        "size": 107,
 			      },
-			      "name": "entryB.js",
-			      "size": 2256,
+			      "name": "chunkB.js",
+			      "size": 107,
+			      "type": "asset",
 			    },
 			  ],
 			  "assetsByChunkName": Object {
