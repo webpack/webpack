@@ -65,7 +65,7 @@ export interface EmptyContextAdditions {
 	) => void | undefined;
 
 	/**
-	 * Make this loader result cacheable. By default it's not cacheable.
+	 * Make this loader result cacheable. By default it's cacheable.
 	 * A cacheable loader must have a deterministic result, when inputs and dependencies haven't changed.
 	 * This means the loader shouldn't have other dependencies than specified with this.addDependency.
 	 * Most loaders are deterministic and cacheable.
