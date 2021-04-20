@@ -19,8 +19,8 @@ export interface LoaderContext {
 	emitFile(
 		name: string,
 		content: string,
-		sourceMap: string,
-		assetInfo: AssetInfo
+		sourceMap?: string,
+		assetInfo?: AssetInfo
 	): void;
 	addBuildDependency(dep: string): void;
 	utils: {
