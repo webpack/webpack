@@ -31,9 +31,9 @@ export interface LoaderContext {
 	webpack?: boolean;
 	sourceMap?: boolean;
 	mode: Mode;
-	_module: NormalModule;
-	_compilation: Compilation;
-	_compiler: Compilation.Compiler;
+	_module?: NormalModule;
+	_compilation?: Compilation;
+	_compiler?: Compiler;
 	fs: InputFileSystem;
 }
 
