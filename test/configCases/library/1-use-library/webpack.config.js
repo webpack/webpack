@@ -52,7 +52,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		externals: {
-			library: `promise (global.self = {}, require(${JSON.stringify(
+			library: `promise (require(${JSON.stringify(
 				"../0-create-library/amd-runtimeChunk/runtime.js"
 			)}), require(${JSON.stringify(
 				"../0-create-library/amd-runtimeChunk/main.js"
@@ -69,7 +69,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		externals: {
-			library: `promise (global.self = {}, require(${JSON.stringify(
+			library: `promise (require(${JSON.stringify(
 				"../0-create-library/amd-iife-runtimeChunk/runtime.js"
 			)}), require(${JSON.stringify(
 				"../0-create-library/amd-iife-runtimeChunk/main.js"

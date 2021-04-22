@@ -3,5 +3,8 @@ module.exports = {
 		scope.define = factory => {
 			scope.module.exports = factory();
 		};
+	},
+	afterExecute() {
+		delete global.webpackChunk;
 	}
 };

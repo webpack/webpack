@@ -54,6 +54,7 @@ module.exports = (env, { testPath }) => [
 		output: {
 			filename: "amd-runtimeChunk/[name].js",
 			libraryTarget: "amd",
+			globalObject: "global",
 			iife: false
 		},
 		target: "web",
@@ -70,6 +71,7 @@ module.exports = (env, { testPath }) => [
 		output: {
 			filename: "amd-iife-runtimeChunk/[name].js",
 			libraryTarget: "amd",
+			globalObject: "global",
 			iife: true
 		},
 		target: "web",
