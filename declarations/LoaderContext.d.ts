@@ -166,20 +166,36 @@ export interface LoaderRunnerLoaderContext {
 	resourcePath: string;
 }
 
+type AdditionalData = {
+	webpackAST: object;
+	[index: string]: any;
+};
+
 type WebpackLoaderContextCallback = (
-    err: Error | undefined | null,
-    content?: string | Buffer,
-    sourceMap?: string | RawSourceMap,
-    additionalData?: Record<string, any>,
-    ...args: any[]
-) => void | undefined;
+	err: Error | undefined | null,
+	content?: string | Buffer,
+	sourceMap?: string | RawSourceMap,
+	additionalData?: AdditionalData
+) => void;
 
 type LoaderContext = NormalModuleLoaderContext & LoaderRunnerLoaderContext;
 
-declare class EmptyContextAdditions {
-	_EmptyContextAdditions: true
-}
-
-export interface LoaderDefinition {
-	(this: LoaderContext & EmptyContextAdditions, contents: string): string;
-}
+export type LoaderDefinition =
+	| {
+			(
+				this: LoaderContext,
+				content: string,
+				sourceMap?: string | RawSourceMap,
+				additionalData?: AdditionalData
+			): string | Buffer | Promise<string | Buffer> | void;
+			raw?: false;
+	  }
+	| {
+			(
+				this: LoaderContext,
+				content: Buffer,
+				sourceMap?: string | RawSourceMap,
+				additionalData?: AdditionalData
+			): string | Buffer | Promise<string | Buffer> | void;
+			raw: true;
+	  };

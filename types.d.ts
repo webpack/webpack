@@ -152,6 +152,10 @@ declare class AbstractLibraryPlugin<T> {
 	): void;
 	static COMMON_LIBRARY_NAME_MESSAGE: string;
 }
+declare interface AdditionalData {
+	[index: string]: any;
+	webpackAST: object;
+}
 declare class AggressiveMergingPlugin {
 	constructor(options?: any);
 	options: any;
@@ -2841,7 +2845,6 @@ declare class ElectronTargetPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-declare abstract class EmptyContextAdditions {}
 
 /**
  * No generator options are supported for this module type.
@@ -5743,6 +5746,25 @@ declare interface Loader {
 	[index: string]: any;
 }
 type LoaderContext = NormalModuleLoaderContext & LoaderRunnerLoaderContext;
+type LoaderDefinition =
+	| {
+			(
+				this: LoaderContext,
+				content: string,
+				sourceMap?: string | RawSourceMap,
+				additionalData?: AdditionalData
+			): string | void | Buffer | Promise<string | Buffer>;
+			raw?: false;
+	  }
+	| {
+			(
+				this: LoaderContext,
+				content: Buffer,
+				sourceMap?: string | RawSourceMap,
+				additionalData?: AdditionalData
+			): string | void | Buffer | Promise<string | Buffer>;
+			raw: true;
+	  };
 declare interface LoaderItem {
 	loader: string;
 	options: any;
@@ -5804,12 +5826,11 @@ declare interface LoaderRunnerLoaderContext {
 	 * Make this loader async.
 	 */
 	async(): (
-		err: undefined | null | Error,
-		content: undefined | string | Buffer,
-		sourceMap: undefined | string | RawSourceMap,
-		additionalData: undefined | Record<string, any>,
-		...args: any[]
-	) => undefined | void;
+		err?: null | Error,
+		content?: string | Buffer,
+		sourceMap?: string | RawSourceMap,
+		additionalData?: AdditionalData
+	) => void;
 
 	/**
 	 * Make this loader result cacheable. By default it's cacheable.
@@ -5819,12 +5840,11 @@ declare interface LoaderRunnerLoaderContext {
 	 */
 	cacheable(flag?: boolean): void;
 	callback: (
-		err: undefined | null | Error,
-		content: undefined | string | Buffer,
-		sourceMap: undefined | string | RawSourceMap,
-		additionalData: undefined | Record<string, any>,
-		...args: any[]
-	) => undefined | void;
+		err?: null | Error,
+		content?: string | Buffer,
+		sourceMap?: string | RawSourceMap,
+		additionalData?: AdditionalData
+	) => void;
 
 	/**
 	 * Remove all dependencies of the loader result. Even initial dependencies and these of other loaders.
@@ -12002,12 +12022,6 @@ declare namespace exports {
 			export { HttpUriPlugin, HttpsUriPlugin };
 		}
 	}
-	export type LoaderDefinition = (
-		this: NormalModuleLoaderContext &
-			LoaderRunnerLoaderContext &
-			EmptyContextAdditions,
-		contents: string
-	) => string;
 	export type WebpackPluginFunction = (
 		this: Compiler,
 		compiler: Compiler
@@ -12067,8 +12081,8 @@ declare namespace exports {
 		WebpackError,
 		WebpackOptionsApply,
 		WebpackOptionsDefaulter,
-		EmptyContextAdditions,
 		LoaderContext,
+		LoaderDefinition,
 		Entry,
 		EntryNormalized,
 		EntryObject,
