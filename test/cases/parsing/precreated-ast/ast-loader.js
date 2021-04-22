@@ -3,7 +3,8 @@
 const acorn = require("acorn");
 const acornParser = acorn.Parser;
 
-module.exports = function(source) {
+/** @type {import("../../../../").LoaderDefinition} */
+module.exports = function (source) {
 	const comments = [];
 
 	const ast = acornParser.parse(source, {
@@ -15,9 +16,12 @@ module.exports = function(source) {
 	});
 
 	// change something to test if it's really used
+	//@ts-ignore
 	ast.body[0].expression.right.arguments[0].value = "./ok";
-	ast.body[0].expression.right.arguments[0].raw = "\"./ok\"";
+	//@ts-ignore
+	ast.body[0].expression.right.arguments[0].raw = '"./ok"';
 
+	//@ts-ignore
 	ast.comments = comments;
 	this.callback(null, source, null, {
 		webpackAST: ast

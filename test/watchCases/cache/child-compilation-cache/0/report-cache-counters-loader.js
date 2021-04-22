@@ -4,30 +4,38 @@ var cacheMap = new WeakMap();
 
 const getCache = (associate, path) => {
 	let o = cacheMap.get(associate);
-	if(o === undefined) {
+	if (o === undefined) {
 		o = new Map();
 		cacheMap.set(associate, o);
 	}
 	let c = o.get(path);
-	if(c === undefined) {
+	if (c === undefined) {
 		c = { counter: 0 };
 		o.set(path, c);
 	}
 	return c;
 };
 
-module.exports = function(source) {
-	if(map.has(currentWatchStepModule.step)) return map.get(currentWatchStepModule.step);
+/** @type {import("../../../../../").LoaderDefinition} */
+module.exports = function (source) {
+	if (map.has(currentWatchStepModule.step))
+		return map.get(currentWatchStepModule.step);
 
-	const compilationCache = getCache(this._compiler.root, this._compilation.compilerPath);
+	const compilationCache = getCache(
+		this._compiler.root,
+		this._compilation.compilerPath
+	);
 	compilationCache.counter++;
 
-	var childCompiler = this._compilation.createChildCompiler("my-compiler " + source.trim(), {
-		filename: "test"
-	});
+	var childCompiler = this._compilation.createChildCompiler(
+		"my-compiler " + source.trim(),
+		{
+			filename: "test"
+		}
+	);
 	var callback = this.async();
 	childCompiler.runAsChild((err, entries, compilation) => {
-		if(err) return callback(err);
+		if (err) return callback(err);
 
 		const childCache = getCache(this._compiler.root, compilation.compilerPath);
 		childCache.counter++;

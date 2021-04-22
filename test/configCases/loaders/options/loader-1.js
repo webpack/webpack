@@ -1,6 +1,7 @@
-const schema = require("./loader-1.options");
+const schema = require("./loader-1.options.json");
 
-module.exports = function() {
+/** @type {import("../../../../").LoaderDefinition} */
+module.exports = function () {
 	const options = this.getOptions(schema);
 
 	const json = JSON.stringify(options)
