@@ -4204,6 +4204,13 @@ declare class HotModuleReplacementPlugin {
 	apply(compiler: Compiler): void;
 	static getParserHooks(parser: JavascriptParser): HMRJavascriptParserHooks;
 }
+
+/**
+ * These properties are added by the HotModuleReplacementPlugin
+ */
+declare interface HotModuleReplacementPluginLoaderContext {
+	hot?: boolean;
+}
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
@@ -4292,6 +4299,17 @@ type IgnorePluginOptions =
 			 */
 			checkResource?: (resource: string, context: string) => boolean;
 	  };
+declare interface ImportModuleOptions {
+	/**
+	 * the target layer
+	 */
+	layer?: string;
+
+	/**
+	 * the target public path
+	 */
+	publicPath?: string;
+}
 type ImportSource = undefined | null | string | SimpleLiteral | RegExpLiteral;
 
 /**
@@ -5745,31 +5763,44 @@ declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
 declare interface Loader {
 	[index: string]: any;
 }
-type LoaderContext = NormalModuleLoaderContext & LoaderRunnerLoaderContext;
-type LoaderDefinition =
-	| {
-			(
-				this: LoaderContext,
-				content: string,
-				sourceMap?: string | RawSourceMap,
-				additionalData?: AdditionalData
-			): string | void | Buffer | Promise<string | Buffer>;
-			raw?: false;
-	  }
-	| {
-			(
-				this: LoaderContext,
-				content: Buffer,
-				sourceMap?: string | RawSourceMap,
-				additionalData?: AdditionalData
-			): string | void | Buffer | Promise<string | Buffer>;
-			raw: true;
-	  };
+type LoaderContext<OptionsType> = NormalModuleLoaderContext<OptionsType> &
+	LoaderRunnerLoaderContext<OptionsType> &
+	LoaderPluginLoaderContext &
+	HotModuleReplacementPluginLoaderContext;
+type LoaderDefinition<
+	OptionsType = {},
+	ContextAdditions = {}
+> = LoaderDefinitionFunction<OptionsType, ContextAdditions> & {
+	raw?: false;
+	pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
+};
+declare interface LoaderDefinitionFunction<
+	OptionsType = {},
+	ContextAdditions = {}
+> {
+	(
+		this: NormalModuleLoaderContext<OptionsType> &
+			LoaderRunnerLoaderContext<OptionsType> &
+			LoaderPluginLoaderContext &
+			HotModuleReplacementPluginLoaderContext &
+			ContextAdditions,
+		content: string,
+		sourceMap?: string | SourceMap,
+		additionalData?: AdditionalData
+	): string | void | Buffer | Promise<string | Buffer>;
+}
 declare interface LoaderItem {
 	loader: string;
 	options: any;
 	ident: null | string;
 	type: null | string;
+}
+declare interface LoaderModule<OptionsType = {}, ContextAdditions = {}> {
+	default?:
+		| RawLoaderDefinitionFunction<OptionsType, ContextAdditions>
+		| LoaderDefinitionFunction<OptionsType, ContextAdditions>;
+	raw?: false;
+	pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
 }
 declare class LoaderOptionsPlugin {
 	constructor(options?: LoaderOptionsPluginOptions);
@@ -5806,9 +5837,36 @@ declare interface LoaderOptionsPluginOptions {
 }
 
 /**
- * The types added to LoaderContextBase by https://github.com/webpack/loader-runner
+ * These properties are added by the LoaderPlugin
  */
-declare interface LoaderRunnerLoaderContext {
+declare interface LoaderPluginLoaderContext {
+	/**
+	 * Resolves the given request to a module, applies all configured loaders and calls
+	 * back with the generated source, the sourceMap and the module instance (usually an
+	 * instance of NormalModule). Use this function if you need to know the source code
+	 * of another module to generate the result.
+	 */
+	loadModule(
+		request: string,
+		callback: (
+			err: null | Error,
+			source: string,
+			sourceMap: any,
+			module: NormalModule
+		) => void
+	): void;
+	importModule(
+		request: string,
+		options: ImportModuleOptions,
+		callback: (err?: Error, exports?: any) => any
+	): void;
+	importModule(request: string, options?: ImportModuleOptions): Promise<any>;
+}
+
+/**
+ * The properties are added by https://github.com/webpack/loader-runner
+ */
+declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * Add a directory as dependency of the loader result.
 	 */
@@ -5828,7 +5886,7 @@ declare interface LoaderRunnerLoaderContext {
 	async(): (
 		err?: null | Error,
 		content?: string | Buffer,
-		sourceMap?: string | RawSourceMap,
+		sourceMap?: string | SourceMap,
 		additionalData?: AdditionalData
 	) => void;
 
@@ -5842,7 +5900,7 @@ declare interface LoaderRunnerLoaderContext {
 	callback: (
 		err?: null | Error,
 		content?: string | Buffer,
-		sourceMap?: string | RawSourceMap,
+		sourceMap?: string | SourceMap,
 		additionalData?: AdditionalData
 	) => void;
 
@@ -5875,24 +5933,8 @@ declare interface LoaderRunnerLoaderContext {
 	 * In the example: in loader1: 0, in loader2: 1
 	 */
 	loaderIndex: number;
-
-	/**
-	 * Resolves the given request to a module, applies all configured loaders and calls
-	 * back with the generated source, the sourceMap and the module instance (usually an
-	 * instance of NormalModule). Use this function if you need to know the source code
-	 * of another module to generate the result.
-	 */
-	loadModule(
-		request: string,
-		callback: (
-			err: null | Error,
-			source: string,
-			sourceMap: any,
-			module: NormalModule
-		) => void
-	): void;
 	readonly previousRequest: string;
-	readonly query: string;
+	readonly query: string | OptionsType;
 	readonly remainingRequest: string;
 	readonly request: string;
 
@@ -5929,10 +5971,28 @@ declare interface LoaderRunnerLoaderContext {
 	}[];
 
 	/**
-	 * The resource file.
+	 * The resource path.
 	 * In the example: "/abc/resource.js"
 	 */
 	resourcePath: string;
+
+	/**
+	 * The resource query string.
+	 * Example: "?query"
+	 */
+	resourceQuery: string;
+
+	/**
+	 * The resource fragment.
+	 * Example: "#frag"
+	 */
+	resourceFragment: string;
+
+	/**
+	 * The resource inclusive query and fragment.
+	 * Example: "/abc/resource.js?query#frag"
+	 */
+	resource: string;
 }
 declare class LoaderTargetPlugin {
 	constructor(target: string);
@@ -6079,7 +6139,6 @@ declare interface MinChunkSizePluginOptions {
 	 */
 	minChunkSize: number;
 }
-type Mode = "development" | "production" | "none";
 declare class Module extends DependenciesBlock {
 	constructor(type: string, context?: string, layer?: string);
 	type: string;
@@ -7003,7 +7062,7 @@ declare class NormalModule extends Module {
 		options: WebpackOptionsNormalized,
 		compilation: Compilation,
 		fs: InputFileSystem
-	): NormalModuleLoaderContext;
+	): NormalModuleLoaderContext<any>;
 	getCurrentLoader(loaderContext?: any, index?: any): null | LoaderItem;
 	createSource(
 		context: string,
@@ -7079,16 +7138,44 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	createGenerator(type?: any, generatorOptions?: object): any;
 	getResolver(type?: any, resolveOptions?: any): ResolverWithOptions;
 }
-declare interface NormalModuleLoaderContext {
+
+/**
+ * These properties are added by the NormalModule
+ */
+declare interface NormalModuleLoaderContext<OptionsType> {
 	version: number;
-	getOptions(schema: Schema): any;
-	emitWarning(warning: string | Error): void;
-	emitError(error: string | Error): void;
-	getLogger(name: string): WebpackLogger;
-	resolve(context: string, request: string, callback?: any): any;
+	getOptions(
+		schema?:
+			| (JSONSchema4 & Extend)
+			| (JSONSchema6 & Extend)
+			| (JSONSchema7 & Extend)
+	): OptionsType;
+	emitWarning(warning: Error): void;
+	emitError(error: Error): void;
+	getLogger(name?: string): WebpackLogger;
+	resolve(
+		context: string,
+		request: string,
+		callback: (
+			arg0: null | Error,
+			arg1?: string | false,
+			arg2?: ResolveRequest
+		) => void
+	): any;
 	getResolve(
-		options: Configuration
-	): (context: string, request: string, callback?: any) => Promise<any>;
+		options?: ResolveOptionsWithDependencyType
+	): {
+		(
+			context: string,
+			request: string,
+			callback: (
+				arg0: null | Error,
+				arg1?: string | false,
+				arg2?: ResolveRequest
+			) => void
+		): void;
+		(context: string, request: string): Promise<string>;
+	};
 	emitFile(
 		name: string,
 		content: string,
@@ -7101,10 +7188,13 @@ declare interface NormalModuleLoaderContext {
 		contextify: (context: string, request: string) => string;
 	};
 	rootContext: string;
-	webpack?: boolean;
-	sourceMap?: boolean;
-	mode: Mode;
 	fs: InputFileSystem;
+	sourceMap?: boolean;
+	mode: "development" | "production" | "none";
+	webpack?: boolean;
+	_module?: NormalModule;
+	_compilation?: Compilation;
+	_compiler?: Compiler;
 }
 declare class NormalModuleReplacementPlugin {
 	/**
@@ -8225,6 +8315,21 @@ declare interface PerformanceOptions {
 	 */
 	maxEntrypointSize?: number;
 }
+declare interface PitchLoaderDefinitionFunction<
+	OptionsType = {},
+	ContextAdditions = {}
+> {
+	(
+		this: NormalModuleLoaderContext<OptionsType> &
+			LoaderRunnerLoaderContext<OptionsType> &
+			LoaderPluginLoaderContext &
+			HotModuleReplacementPluginLoaderContext &
+			ContextAdditions,
+		remainingRequest: string,
+		previousRequest: string,
+		data: object
+	): string | void | Buffer | Promise<string | Buffer>;
+}
 type Plugin =
 	| { apply: (arg0: Resolver) => void }
 	| ((this: Resolver, arg1: Resolver) => void);
@@ -8440,6 +8545,28 @@ declare interface ProvidesObject {
 declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
+}
+type RawLoaderDefinition<
+	OptionsType = {},
+	ContextAdditions = {}
+> = RawLoaderDefinitionFunction<OptionsType, ContextAdditions> & {
+	raw: true;
+	pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
+};
+declare interface RawLoaderDefinitionFunction<
+	OptionsType = {},
+	ContextAdditions = {}
+> {
+	(
+		this: NormalModuleLoaderContext<OptionsType> &
+			LoaderRunnerLoaderContext<OptionsType> &
+			LoaderPluginLoaderContext &
+			HotModuleReplacementPluginLoaderContext &
+			ContextAdditions,
+		content: Buffer,
+		sourceMap?: string | SourceMap,
+		additionalData?: AdditionalData
+	): string | void | Buffer | Promise<string | Buffer>;
 }
 declare class RawSource extends Source {
 	constructor(source: string | Buffer, convertToString?: boolean);
@@ -10305,6 +10432,7 @@ declare interface SourceData {
 declare interface SourceLike {
 	source(): string | Buffer;
 }
+type SourceMap = Omit<RawSourceMap, "version"> & { version: number };
 declare class SourceMapDevToolPlugin {
 	constructor(options?: SourceMapDevToolPluginOptions);
 	sourceMapFilename: string | false;
@@ -12081,8 +12209,6 @@ declare namespace exports {
 		WebpackError,
 		WebpackOptionsApply,
 		WebpackOptionsDefaulter,
-		LoaderContext,
-		LoaderDefinition,
 		Entry,
 		EntryNormalized,
 		EntryObject,
@@ -12115,7 +12241,14 @@ declare namespace exports {
 		StatsModuleReason,
 		StatsModuleTraceDependency,
 		StatsModuleTraceItem,
-		StatsProfile
+		StatsProfile,
+		LoaderModule,
+		RawLoaderDefinition,
+		LoaderDefinition,
+		LoaderDefinitionFunction,
+		PitchLoaderDefinitionFunction,
+		RawLoaderDefinitionFunction,
+		LoaderContext
 	};
 }
 

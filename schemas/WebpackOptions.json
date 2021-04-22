@@ -2325,15 +2325,15 @@
                 "description": "The test property is a cache group name, but using the test option of the cache group could be intended instead.",
                 "anyOf": [
                   {
-                    "instanceof": "Function",
-                    "tsType": "Function"
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
                   },
                   {
                     "type": "string"
                   },
                   {
-                    "instanceof": "RegExp",
-                    "tsType": "RegExp"
+                    "instanceof": "Function",
+                    "tsType": "Function"
                   }
                 ]
               }
