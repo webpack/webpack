@@ -3,6 +3,8 @@ const webpack = require("../../..");
 // eslint-disable-next-line node/no-missing-require
 const value = require("../../js/buildDepsInput/config-dependency");
 
+require("dep#with#hash/#.js");
+
 process.exitCode = 1;
 
 const options = JSON.parse(process.argv[3]);

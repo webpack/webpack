@@ -52,6 +52,40 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			filename: "amd-runtimeChunk/[name].js",
+			libraryTarget: "amd",
+			globalObject: "global",
+			iife: false
+		},
+		target: "web",
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
+		}
+	},
+	{
+		output: {
+			filename: "amd-iife-runtimeChunk/[name].js",
+			libraryTarget: "amd",
+			globalObject: "global",
+			iife: true
+		},
+		target: "web",
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
+		}
+	},
+	{
+		output: {
 			filename: "umd.js",
 			libraryTarget: "umd"
 		},

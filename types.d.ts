@@ -12,6 +12,7 @@ import {
 	AssignmentPattern,
 	AssignmentProperty,
 	AwaitExpression,
+	BigIntLiteral,
 	BinaryExpression,
 	BlockStatement,
 	BreakStatement,
@@ -3533,6 +3534,7 @@ type Expression =
 	| YieldExpression
 	| SimpleLiteral
 	| RegExpLiteral
+	| BigIntLiteral
 	| UpdateExpression
 	| BinaryExpression
 	| AssignmentExpression
@@ -3762,6 +3764,11 @@ declare class FetchCompileWasmPlugin {
  * Options object for persistent file-based caching.
  */
 declare interface FileCacheOptions {
+	/**
+	 * Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.
+	 */
+	allowCollectingMemory?: boolean;
+
 	/**
 	 * Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').
 	 */
@@ -4310,7 +4317,13 @@ declare interface ImportModuleOptions {
 	 */
 	publicPath?: string;
 }
-type ImportSource = undefined | null | string | SimpleLiteral | RegExpLiteral;
+type ImportSource =
+	| undefined
+	| null
+	| string
+	| SimpleLiteral
+	| RegExpLiteral
+	| BigIntLiteral;
 
 /**
  * Options for infrastructure level logging.
@@ -4523,6 +4536,7 @@ declare class JavascriptParser extends Parser {
 						| YieldExpression
 						| SimpleLiteral
 						| RegExpLiteral
+						| BigIntLiteral
 						| UpdateExpression
 						| BinaryExpression
 						| AssignmentExpression
@@ -4730,6 +4744,7 @@ declare class JavascriptParser extends Parser {
 		| YieldExpression
 		| SimpleLiteral
 		| RegExpLiteral
+		| BigIntLiteral
 		| UpdateExpression
 		| BinaryExpression
 		| AssignmentExpression
@@ -4938,6 +4953,7 @@ declare class JavascriptParser extends Parser {
 			| YieldExpression
 			| SimpleLiteral
 			| RegExpLiteral
+			| BigIntLiteral
 			| UpdateExpression
 			| BinaryExpression
 			| AssignmentExpression
@@ -4988,6 +5004,7 @@ declare class JavascriptParser extends Parser {
 			| YieldExpression
 			| SimpleLiteral
 			| RegExpLiteral
+			| BigIntLiteral
 			| UpdateExpression
 			| BinaryExpression
 			| AssignmentExpression
@@ -6873,6 +6890,7 @@ type NodeEstreeIndex =
 	| YieldExpression
 	| SimpleLiteral
 	| RegExpLiteral
+	| BigIntLiteral
 	| UpdateExpression
 	| BinaryExpression
 	| AssignmentExpression

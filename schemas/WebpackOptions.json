@@ -924,6 +924,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "allowCollectingMemory": {
+          "description": "Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.",
+          "type": "boolean"
+        },
         "buildDependencies": {
           "description": "Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').",
           "type": "object",
@@ -2360,7 +2364,7 @@
             "description": "Size type, like 'javascript', 'webassembly'.",
             "type": "string"
           },
-          "minLength": 1
+          "minItems": 1
         },
         "enforceSizeThreshold": {
           "description": "Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.",
@@ -3194,8 +3198,7 @@
           "type": "array",
           "items": {
             "description": "Extension added to the request when trying to find the file.",
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           }
         },
         "fallback": {
@@ -4634,6 +4637,7 @@
       "required": ["apply"]
     }
   },
+  "title": "WebpackOptions",
   "description": "Options object as provided by the user.",
   "type": "object",
   "additionalProperties": false,
