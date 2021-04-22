@@ -66,7 +66,7 @@ export interface LoaderRunnerLoaderContext {
 	 */
 	cacheable(flag?: boolean): void;
 
-	callback(): WebpackLoaderContextCallback;
+	callback: WebpackLoaderContextCallback;
 
 	/**
 	 * Remove all dependencies of the loader result. Even initial dependencies and these of other loaders.
@@ -120,7 +120,7 @@ export interface LoaderRunnerLoaderContext {
 
 	readonly previousRequest: string;
 
-	readonly query: any;
+	readonly query: string;
 
 	readonly remainingRequest: string;
 
@@ -149,12 +149,12 @@ export interface LoaderRunnerLoaderContext {
 		path: string;
 		query: string;
 		fragment: string;
-		options: any;
+		options: object | string | undefined;
 		ident: string;
-		normal: any;
-		pitch: any;
-		raw: any;
-		data: any;
+		normal: Function | undefined;
+		pitch: Function | undefined;
+		raw: boolean | undefined;
+		data: object | undefined;
 		pitchExecuted: boolean;
 		normalExecuted: boolean;
 	}[];
