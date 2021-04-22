@@ -5818,7 +5818,7 @@ declare interface LoaderRunnerLoaderContext {
 	 * Most loaders are deterministic and cacheable.
 	 */
 	cacheable(flag?: boolean): void;
-	callback(): (
+	callback: (
 		err: undefined | null | Error,
 		content: undefined | string | Buffer,
 		sourceMap: undefined | string | RawSourceMap,
@@ -5872,7 +5872,7 @@ declare interface LoaderRunnerLoaderContext {
 		) => void
 	): void;
 	readonly previousRequest: string;
-	readonly query: any;
+	readonly query: string;
 	readonly remainingRequest: string;
 	readonly request: string;
 
@@ -5898,12 +5898,12 @@ declare interface LoaderRunnerLoaderContext {
 		path: string;
 		query: string;
 		fragment: string;
-		options: any;
+		options?: string | object;
 		ident: string;
-		normal: any;
-		pitch: any;
-		raw: any;
-		data: any;
+		normal?: Function;
+		pitch?: Function;
+		raw?: boolean;
+		data?: object;
 		pitchExecuted: boolean;
 		normalExecuted: boolean;
 	}[];
