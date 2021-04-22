@@ -1648,8 +1648,8 @@ declare class Compilation {
 	 */
 	createChildCompiler(
 		name: string,
-		outputOptions: OutputNormalized,
-		plugins: (
+		outputOptions?: OutputNormalized,
+		plugins?: (
 			| ((this: Compiler, compiler: Compiler) => void)
 			| WebpackPluginInstance
 		)[]
@@ -1853,8 +1853,8 @@ declare class Compiler {
 		compilation: Compilation,
 		compilerName: string,
 		compilerIndex: number,
-		outputOptions: OutputNormalized,
-		plugins: WebpackPluginInstance[]
+		outputOptions?: OutputNormalized,
+		plugins?: WebpackPluginInstance[]
 	): Compiler;
 	isChild(): boolean;
 	createCompilation(): Compilation;
@@ -3033,7 +3033,7 @@ declare class EntryPlugin {
 	 * An entry plugin which will handle
 	 * creation of the EntryDependency
 	 */
-	constructor(context: string, entry: string, options: string | EntryOptions);
+	constructor(context: string, entry: string, options?: string | EntryOptions);
 	context: string;
 	entry: string;
 	options: string | EntryOptions;
