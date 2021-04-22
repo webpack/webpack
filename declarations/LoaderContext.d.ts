@@ -4,7 +4,8 @@ import type { AssetInfo } from "../lib/Compilation";
 import type { ResolveOptionsWithDependencyType } from "../lib/ResolverFactory";
 import type Compilation from "../lib/Compilation";
 import type Compiler from "../lib/Compiler";
-import type NormalModule, { InputFileSystem } from "../lib/NormalModule";
+import type NormalModule from "../lib/NormalModule";
+import type { InputFileSystem } from "../lib/util/fs";
 import type { Logger } from "../lib/logging/Logger";
 import type {
 	ImportModuleCallback,
