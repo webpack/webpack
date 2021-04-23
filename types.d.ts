@@ -887,10 +887,15 @@ declare class ChunkGraph {
 	): ReadonlySet<string>;
 	getChunkRuntimeRequirements(chunk: Chunk): ReadonlySet<string>;
 	getModuleGraphHash(
-		module?: any,
-		runtime?: any,
+		module: Module,
+		runtime: RuntimeSpec,
 		withConnections?: boolean
-	): any;
+	): string;
+	getModuleGraphHashBigInt(
+		module: Module,
+		runtime: RuntimeSpec,
+		withConnections?: boolean
+	): bigint;
 	getTreeRuntimeRequirements(chunk: Chunk): ReadonlySet<string>;
 	static getChunkGraphForModule(
 		module: Module,
