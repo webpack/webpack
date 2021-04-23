@@ -1251,7 +1251,7 @@ asset <CLR=32,BOLD>main.js</CLR> 84 bytes <CLR=32,BOLD>[emitted]</CLR> (name: ma
     Message with named logger
 
 <CLR=BOLD>LOG from webpack.FlagDependencyExportsPlugin</CLR>
-    <CLR=BOLD>100% of exports of modules have been determined (1 not cached, 0 flagged uncacheable, 0 from cache, 0 additional calculations due to dependencies)</CLR>
+    <CLR=BOLD>0% of exports of modules have been determined (1 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 additional calculations due to dependencies)</CLR>
 + 3 hidden lines
 
 <CLR=BOLD>LOG from webpack.Compilation</CLR>
@@ -2040,7 +2040,7 @@ LOG from LogTestPlugin
 + 6 hidden lines
 
 LOG from webpack.FlagDependencyExportsPlugin
-    100% of exports of modules have been determined (6 not cached, 0 flagged uncacheable, 0 from cache, 0 additional calculations due to dependencies)
+    0% of exports of modules have been determined (6 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 additional calculations due to dependencies)
 + 3 hidden lines
 
 LOG from webpack.Compilation
@@ -2379,7 +2379,7 @@ LOG from webpack.Compilation
 LOG from webpack.FlagDependencyExportsPlugin
 <t> restore cached provided exports: X ms
 <t> figure out provided exports: X ms
-    100% of exports of modules have been determined (6 not cached, 0 flagged uncacheable, 0 from cache, 0 additional calculations due to dependencies)
+    0% of exports of modules have been determined (6 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 additional calculations due to dependencies)
 <t> store provided exports into cache: X ms
 
 LOG from webpack.InnerGraphPlugin
@@ -3177,7 +3177,7 @@ cacheable modules 1.35 KiB
     |   [no exports used]
     | ./node_modules/big-module/index.js 44 bytes [built]
     |   [only some exports used: a, huh]
-    |   ModuleConcatenation bailout: List of module exports is dynamic (huh: maybe provided (runtime-defined) and used in main)
+    |   ModuleConcatenation bailout: List of module exports is dynamic (a: maybe provided (runtime-defined) and used in main, huh: maybe provided (runtime-defined) and used in main)
     | ./node_modules/big-module/a.js 58 bytes [built]
     |   [only some exports used: a, huh]
     |   ModuleConcatenation bailout: List of module exports is dynamic (huh: maybe provided (runtime-defined) and used in main)
