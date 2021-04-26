@@ -2462,9 +2462,9 @@ declare class Dependency {
 	constructor();
 	weak: boolean;
 	optional: boolean;
-	loc: DependencyLocation;
 	readonly type: string;
 	readonly category: string;
+	loc: DependencyLocation;
 	getResourceIdentifier(): null | string;
 
 	/**
