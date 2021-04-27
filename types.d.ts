@@ -60,6 +60,7 @@ import {
 	SequenceExpression,
 	SimpleCallExpression,
 	SimpleLiteral,
+	SourceLocation,
 	SpreadElement,
 	Super,
 	SwitchCase,
@@ -4539,6 +4540,7 @@ declare class JavascriptParser extends Parser {
 						| FunctionDeclaration
 						| VariableDeclaration
 						| ClassDeclaration
+						| PrivateIdentifierNode
 					),
 					number
 				],
@@ -4641,7 +4643,18 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		classBodyElement: SyncBailHook<
-			[MethodDefinition, ClassExpression | ClassDeclaration],
+			[
+				MethodDefinition | PropertyDefinitionNode,
+				ClassExpression | ClassDeclaration
+			],
+			boolean | void
+		>;
+		classBodyValue: SyncBailHook<
+			[
+				Expression,
+				MethodDefinition | PropertyDefinitionNode,
+				ClassExpression | ClassDeclaration
+			],
 			boolean | void
 		>;
 		label: HookMap<SyncBailHook<[LabeledStatement], boolean | void>>;
@@ -4770,7 +4783,6 @@ declare class JavascriptParser extends Parser {
 	currentTagData: any;
 	getRenameIdentifier(expr?: any): undefined | string;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
-	walkMethodDefinition(methodDefinition?: any): void;
 	preWalkStatements(statements?: any): void;
 	blockPreWalkStatements(statements?: any): void;
 	walkStatements(statements?: any): void;
@@ -4955,7 +4967,8 @@ declare class JavascriptParser extends Parser {
 			| ChainExpression
 			| FunctionDeclaration
 			| VariableDeclaration
-			| ClassDeclaration,
+			| ClassDeclaration
+			| PrivateIdentifierNode,
 		commentsStartPos: number
 	): boolean;
 	getComments(range?: any): any[];
@@ -8099,6 +8112,12 @@ declare interface PrintedElement {
 	element: string;
 	content: string;
 }
+declare interface PrivateIdentifierNode {
+	type: "PrivateIdentifier";
+	name: string;
+	loc?: null | SourceLocation;
+	range?: [number, number];
+}
 declare interface Problem {
 	type: ProblemType;
 	path: string;
@@ -8215,6 +8234,71 @@ declare interface ProgressPluginOptions {
 	 * Collect profile data for progress steps. Default: false.
 	 */
 	profile?: null | boolean;
+}
+declare interface PropertyDefinitionNode {
+	type: "PropertyDefinition";
+	key:
+		| UnaryExpression
+		| ThisExpression
+		| ArrayExpression
+		| ObjectExpression
+		| FunctionExpression
+		| ArrowFunctionExpression
+		| YieldExpression
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| UpdateExpression
+		| BinaryExpression
+		| AssignmentExpression
+		| LogicalExpression
+		| MemberExpression
+		| ConditionalExpression
+		| SimpleCallExpression
+		| NewExpression
+		| SequenceExpression
+		| TemplateLiteral
+		| TaggedTemplateExpression
+		| ClassExpression
+		| MetaProperty
+		| Identifier
+		| AwaitExpression
+		| ImportExpression
+		| ChainExpression
+		| PrivateIdentifierNode;
+	value:
+		| null
+		| UnaryExpression
+		| ThisExpression
+		| ArrayExpression
+		| ObjectExpression
+		| FunctionExpression
+		| ArrowFunctionExpression
+		| YieldExpression
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| UpdateExpression
+		| BinaryExpression
+		| AssignmentExpression
+		| LogicalExpression
+		| MemberExpression
+		| ConditionalExpression
+		| SimpleCallExpression
+		| NewExpression
+		| SequenceExpression
+		| TemplateLiteral
+		| TaggedTemplateExpression
+		| ClassExpression
+		| MetaProperty
+		| Identifier
+		| AwaitExpression
+		| ImportExpression
+		| ChainExpression;
+	computed: boolean;
+	static: boolean;
+	loc?: null | SourceLocation;
+	range?: [number, number];
 }
 declare class ProvidePlugin {
 	constructor(definitions: Record<string, string | string[]>);

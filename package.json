@@ -10,7 +10,7 @@
     "@webassemblyjs/ast": "1.11.0",
     "@webassemblyjs/wasm-edit": "1.11.0",
     "@webassemblyjs/wasm-parser": "1.11.0",
-    "acorn": "^8.0.4",
+    "acorn": "^8.2.1",
     "browserslist": "^4.14.5",
     "chrome-trace-event": "^1.0.2",
     "enhanced-resolve": "^5.8.0",
