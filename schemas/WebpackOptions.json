@@ -999,6 +999,10 @@
           "description": "Name for the cache. Different names will lead to different coexisting caches.",
           "type": "string"
         },
+        "profile": {
+          "description": "Track and log detailed timing information for individual cache items.",
+          "type": "boolean"
+        },
         "store": {
           "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
           "enum": ["pack"]

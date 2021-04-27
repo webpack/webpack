@@ -970,6 +970,10 @@ export interface FileCacheOptions {
 	 */
 	name?: string;
 	/**
+	 * Track and log detailed timing information for individual cache items.
+	 */
+	profile?: boolean;
+	/**
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
 	store?: "pack";
