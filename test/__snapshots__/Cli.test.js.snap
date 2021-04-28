@@ -238,6 +238,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "cache-profile": Object {
+    "configs": Array [
+      Object {
+        "description": "Track and log detailed timing information for individual cache items.",
+        "multiple": false,
+        "path": "cache.profile",
+        "type": "boolean",
+      },
+    ],
+    "description": "Track and log detailed timing information for individual cache items.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "cache-store": Object {
     "configs": Array [
       Object {
