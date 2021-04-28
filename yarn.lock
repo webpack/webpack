@@ -1882,10 +1882,10 @@ comment-json@^4.0.6, comment-json@^4.1.0:
     has-own-prop "^2.0.0"
     repeat-string "^1.6.1"
 
-comment-parser@1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/comment-parser/-/comment-parser-1.1.2.tgz#e5317d7a2ec22b470dcb54a29b25426c30bf39d8"
-  integrity sha512-AOdq0i8ghZudnYv8RUnHrhTgafUGs61Rdz9jemU5x2lnZwAWyOq7vySo626K59e1fVKH1xSRorJwPVRLSWOoAQ==
+comment-parser@1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/comment-parser/-/comment-parser-1.1.5.tgz#453627ef8f67dbcec44e79a9bd5baa37f0bce9b2"
+  integrity sha512-RePCE4leIhBlmrqiYTvaqEeGYg7qpSl4etaIabKtdOQVi+mSTIBBklGUwIr79GXYnl3LpMwmDw4KeR2stNc6FA==
 
 commondir@^1.0.1:
   version "1.0.1"
@@ -2488,16 +2488,16 @@ eslint-plugin-jest@^24.1.3:
     "@typescript-eslint/experimental-utils" "^4.0.1"
 
 eslint-plugin-jsdoc@^32.0.2:
-  version "32.3.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-32.3.0.tgz#7c9fa5da8c72bd6ad7d97bbf8dee8bc29bec3f9e"
-  integrity sha512-zyx7kajDK+tqS1bHuY5sapkad8P8KT0vdd/lE55j47VPG2MeenSYuIY/M/Pvmzq5g0+3JB+P3BJGUXmHxtuKPQ==
+  version "32.3.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-32.3.2.tgz#69cf9ad42bcb0cf265890e7477207392fbfa541d"
+  integrity sha512-kcdg0OvhI466KgMYXwxGvP6+m9J/sIBg0Jkn9eDU5lnM6RSVM27M9zKZim2XY6AUbbdqmkBPEP4ixvtBXRHktQ==
   dependencies:
-    comment-parser "1.1.2"
+    comment-parser "1.1.5"
     debug "^4.3.1"
     jsdoctypeparser "^9.0.0"
-    lodash "^4.17.20"
+    lodash "^4.17.21"
     regextras "^0.7.1"
-    semver "^7.3.4"
+    semver "^7.3.5"
     spdx-expression-parse "^3.0.1"
 
 eslint-plugin-node@^11.0.0:
