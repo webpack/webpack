@@ -12,8 +12,3 @@ it("should return a valid url when modified", async () => {
 	expect(url.pathname).toMatch(/\.txt$/);
 	expect((await promisify(stat)(url)).isFile()).toBe(true);
 });
-
-it("should not emit undefined files", () => {
-	expect(STATS_JSON.assets.map(a => a.name)).not.toContain(undefined);
-	expect(STATS_JSON.assets.map(a => a.name)).not.toContain("undefined");
-});

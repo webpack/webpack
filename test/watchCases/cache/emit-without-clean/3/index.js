@@ -13,7 +13,10 @@ it("should return a valid url when modified", async () => {
 	expect((await promisify(stat)(url)).isFile()).toBe(true);
 });
 
-it("should not emit undefined files", () => {
-	expect(STATS_JSON.assets.map(a => a.name)).not.toContain(undefined);
-	expect(STATS_JSON.assets.map(a => a.name)).not.toContain("undefined");
+it("should not rewrite files and only compare them", () => {
+	for (const asset of STATS_JSON.assets) {
+		if (asset.name.endsWith(".txt")) {
+			expect(asset).toHaveProperty("cached", true);
+		}
+	}
 });
