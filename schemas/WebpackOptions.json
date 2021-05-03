@@ -3380,7 +3380,7 @@
               "description": "Logical AND.",
               "oneOf": [
                 {
-                  "$ref": "#/definitions/RuleSetConditions"
+                  "$ref": "#/definitions/RuleSetCondition"
                 }
               ]
             },
@@ -3388,7 +3388,7 @@
               "description": "Logical NOT.",
               "oneOf": [
                 {
-                  "$ref": "#/definitions/RuleSetConditions"
+                  "$ref": "#/definitions/RuleSetCondition"
                 }
               ]
             },
@@ -3396,7 +3396,7 @@
               "description": "Logical OR.",
               "oneOf": [
                 {
-                  "$ref": "#/definitions/RuleSetConditions"
+                  "$ref": "#/definitions/RuleSetCondition"
                 }
               ]
             }

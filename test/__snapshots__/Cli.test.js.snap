@@ -2945,6 +2945,63 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-compiler-and": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical AND.",
+        "multiple": true,
+        "path": "module.rules[].compiler.and",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical AND.",
+        "multiple": true,
+        "path": "module.rules[].compiler.and",
+        "type": "string",
+      },
+    ],
+    "description": "Logical AND.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-compiler-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].compiler.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].compiler.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-compiler-or": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical OR.",
+        "multiple": true,
+        "path": "module.rules[].compiler.or",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical OR.",
+        "multiple": true,
+        "path": "module.rules[].compiler.or",
+        "type": "string",
+      },
+    ],
+    "description": "Logical OR.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-dependency": Object {
     "configs": Array [
       Object {
@@ -2961,6 +3018,63 @@ Object {
       },
     ],
     "description": "Match dependency type.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-dependency-and": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical AND.",
+        "multiple": true,
+        "path": "module.rules[].dependency.and",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical AND.",
+        "multiple": true,
+        "path": "module.rules[].dependency.and",
+        "type": "string",
+      },
+    ],
+    "description": "Logical AND.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-dependency-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].dependency.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].dependency.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-dependency-or": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical OR.",
+        "multiple": true,
+        "path": "module.rules[].dependency.or",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical OR.",
+        "multiple": true,
+        "path": "module.rules[].dependency.or",
+        "type": "string",
+      },
+    ],
+    "description": "Logical OR.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3057,6 +3171,63 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-issuer-layer-and": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical AND.",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer.and",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical AND.",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer.and",
+        "type": "string",
+      },
+    ],
+    "description": "Logical AND.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-issuer-layer-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-issuer-layer-or": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical OR.",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer.or",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical OR.",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer.or",
+        "type": "string",
+      },
+    ],
+    "description": "Logical OR.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-layer": Object {
     "configs": Array [
       Object {
@@ -3099,6 +3270,63 @@ Object {
       },
     ],
     "description": "Match module mimetype when load from Data URI.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-mimetype-and": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical AND.",
+        "multiple": true,
+        "path": "module.rules[].mimetype.and",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical AND.",
+        "multiple": true,
+        "path": "module.rules[].mimetype.and",
+        "type": "string",
+      },
+    ],
+    "description": "Logical AND.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-mimetype-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].mimetype.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].mimetype.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-mimetype-or": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical OR.",
+        "multiple": true,
+        "path": "module.rules[].mimetype.or",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical OR.",
+        "multiple": true,
+        "path": "module.rules[].mimetype.or",
+        "type": "string",
+      },
+    ],
+    "description": "Logical OR.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3172,6 +3400,63 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-resource-fragment-and": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical AND.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment.and",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical AND.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment.and",
+        "type": "string",
+      },
+    ],
+    "description": "Logical AND.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-resource-fragment-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-resource-fragment-or": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical OR.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment.or",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical OR.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment.or",
+        "type": "string",
+      },
+    ],
+    "description": "Logical OR.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-resource-query": Object {
     "configs": Array [
       Object {
@@ -3188,6 +3473,63 @@ Object {
       },
     ],
     "description": "Match the resource query of the module.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-resource-query-and": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical AND.",
+        "multiple": true,
+        "path": "module.rules[].resourceQuery.and",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical AND.",
+        "multiple": true,
+        "path": "module.rules[].resourceQuery.and",
+        "type": "string",
+      },
+    ],
+    "description": "Logical AND.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-resource-query-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].resourceQuery.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].resourceQuery.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-resource-query-or": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical OR.",
+        "multiple": true,
+        "path": "module.rules[].resourceQuery.or",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical OR.",
+        "multiple": true,
+        "path": "module.rules[].resourceQuery.or",
+        "type": "string",
+      },
+    ],
+    "description": "Logical OR.",
     "multiple": true,
     "simpleType": "string",
   },

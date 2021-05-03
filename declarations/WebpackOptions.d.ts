@@ -244,15 +244,15 @@ export type RuleSetCondition =
 			/**
 			 * Logical AND.
 			 */
-			and?: RuleSetConditions;
+			and?: RuleSetCondition;
 			/**
 			 * Logical NOT.
 			 */
-			not?: RuleSetConditions;
+			not?: RuleSetCondition;
 			/**
 			 * Logical OR.
 			 */
-			or?: RuleSetConditions;
+			or?: RuleSetCondition;
 	  }
 	| ((value: string) => boolean)
 	| RuleSetConditions;
