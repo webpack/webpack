@@ -9015,8 +9015,7 @@ type RuleSetConditionOrConditions =
 	| RuleSetCondition[];
 
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetLogicalConditions".
+ * Logic operators used in a condition matcher.
  */
 declare interface RuleSetLogicalConditions {
 	/**

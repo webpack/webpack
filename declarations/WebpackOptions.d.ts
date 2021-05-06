@@ -1426,8 +1426,7 @@ export interface RuleSetRule {
 	use?: RuleSetUse;
 }
 /**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetLogicalConditions".
+ * Logic operators used in a condition matcher.
  */
 export interface RuleSetLogicalConditions {
 	/**

@@ -3506,6 +3506,7 @@
       ]
     },
     "RuleSetLogicalConditions": {
+      "description": "Logic operators used in a condition matcher.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
