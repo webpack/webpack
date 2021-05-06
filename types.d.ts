@@ -8985,36 +8985,8 @@ declare interface RuleSet {
 type RuleSetCondition =
 	| string
 	| RegExp
-	| {
-			/**
-			 * Logical AND.
-			 */
-			and?:
-				| string
-				| RegExp
-				| __TypeWebpackOptions
-				| ((value: string) => boolean)
-				| RuleSetCondition[];
-			/**
-			 * Logical NOT.
-			 */
-			not?:
-				| string
-				| RegExp
-				| __TypeWebpackOptions
-				| ((value: string) => boolean)
-				| RuleSetCondition[];
-			/**
-			 * Logical OR.
-			 */
-			or?:
-				| string
-				| RegExp
-				| __TypeWebpackOptions
-				| ((value: string) => boolean)
-				| RuleSetCondition[];
-	  }
 	| ((value: string) => boolean)
+	| RuleSetLogicalConditions
 	| RuleSetCondition[];
 type RuleSetConditionAbsolute =
 	| string
@@ -9038,9 +9010,35 @@ type RuleSetConditionAbsolute =
 type RuleSetConditionOrConditions =
 	| string
 	| RegExp
-	| __TypeWebpackOptions
 	| ((value: string) => boolean)
+	| RuleSetLogicalConditions
 	| RuleSetCondition[];
+
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "RuleSetLogicalConditions".
+ */
+declare interface RuleSetLogicalConditions {
+	/**
+	 * Logical AND.
+	 */
+	and?: RuleSetCondition[];
+
+	/**
+	 * Logical NOT.
+	 */
+	not?:
+		| string
+		| RegExp
+		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
+		| RuleSetCondition[];
+
+	/**
+	 * Logical OR.
+	 */
+	or?: RuleSetCondition[];
+}
 
 /**
  * A rule description with conditions and effects for modules.
@@ -9052,8 +9050,8 @@ declare interface RuleSetRule {
 	compiler?:
 		| string
 		| RegExp
-		| __TypeWebpackOptions
 		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
 		| RuleSetCondition[];
 
 	/**
@@ -9062,8 +9060,8 @@ declare interface RuleSetRule {
 	dependency?:
 		| string
 		| RegExp
-		| __TypeWebpackOptions
 		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
 		| RuleSetCondition[];
 
 	/**
@@ -9156,8 +9154,8 @@ declare interface RuleSetRule {
 	issuerLayer?:
 		| string
 		| RegExp
-		| __TypeWebpackOptions
 		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
 		| RuleSetCondition[];
 
 	/**
@@ -9176,8 +9174,8 @@ declare interface RuleSetRule {
 	mimetype?:
 		| string
 		| RegExp
-		| __TypeWebpackOptions
 		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
 		| RuleSetCondition[];
 
 	/**
@@ -9252,8 +9250,8 @@ declare interface RuleSetRule {
 	resourceFragment?:
 		| string
 		| RegExp
-		| __TypeWebpackOptions
 		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
 		| RuleSetCondition[];
 
 	/**
@@ -9262,8 +9260,8 @@ declare interface RuleSetRule {
 	resourceQuery?:
 		| string
 		| RegExp
-		| __TypeWebpackOptions
 		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
 		| RuleSetCondition[];
 
 	/**
@@ -9349,7 +9347,7 @@ declare interface RuleSetRule {
 						 */
 						options?: string | { [index: string]: any };
 				  }
-				| __TypeWebpackOptionsFunction
+				| __TypeWebpackOptions
 				| RuleSetUseItem[]);
 }
 type RuleSetUse =
@@ -9376,7 +9374,7 @@ type RuleSetUse =
 			 */
 			options?: string | { [index: string]: any };
 	  }
-	| __TypeWebpackOptionsFunction;
+	| __TypeWebpackOptions;
 type RuleSetUseItem =
 	| string
 	| {
@@ -9393,7 +9391,7 @@ type RuleSetUseItem =
 			 */
 			options?: string | { [index: string]: any };
 	  }
-	| __TypeWebpackOptionsFunction;
+	| __TypeWebpackOptions;
 declare class RuntimeChunkPlugin {
 	constructor(options?: any);
 	options: any;
@@ -11509,36 +11507,7 @@ declare interface WithOptions {
 declare interface WriteOnlySet<T> {
 	add: (T?: any) => void;
 }
-type __TypeWebpackOptions = {
-	/**
-	 * Logical AND.
-	 */
-	and?:
-		| string
-		| RegExp
-		| __TypeWebpackOptions
-		| ((value: string) => boolean)
-		| RuleSetCondition[];
-	/**
-	 * Logical NOT.
-	 */
-	not?:
-		| string
-		| RegExp
-		| __TypeWebpackOptions
-		| ((value: string) => boolean)
-		| RuleSetCondition[];
-	/**
-	 * Logical OR.
-	 */
-	or?:
-		| string
-		| RegExp
-		| __TypeWebpackOptions
-		| ((value: string) => boolean)
-		| RuleSetCondition[];
-};
-type __TypeWebpackOptionsFunction = (
+type __TypeWebpackOptions = (
 	data: object
 ) =>
 	| string
@@ -11556,7 +11525,7 @@ type __TypeWebpackOptionsFunction = (
 			 */
 			options?: string | { [index: string]: any };
 	  }
-	| __TypeWebpackOptionsFunction
+	| __TypeWebpackOptions
 	| RuleSetUseItem[];
 declare function exports(
 	options: Configuration,

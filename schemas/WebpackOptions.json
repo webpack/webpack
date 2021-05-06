@@ -3373,38 +3373,11 @@
           "type": "string"
         },
         {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "and": {
-              "description": "Logical AND.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetCondition"
-                }
-              ]
-            },
-            "not": {
-              "description": "Logical NOT.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetCondition"
-                }
-              ]
-            },
-            "or": {
-              "description": "Logical OR.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetCondition"
-                }
-              ]
-            }
-          }
-        },
-        {
           "instanceof": "Function",
           "tsType": "((value: string) => boolean)"
+        },
+        {
+          "$ref": "#/definitions/RuleSetLogicalConditions"
         },
         {
           "$ref": "#/definitions/RuleSetConditions"
@@ -3531,6 +3504,36 @@
           "type": "object"
         }
       ]
+    },
+    "RuleSetLogicalConditions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "and": {
+          "description": "Logical AND.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditions"
+            }
+          ]
+        },
+        "not": {
+          "description": "Logical NOT.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetCondition"
+            }
+          ]
+        },
+        "or": {
+          "description": "Logical OR.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditions"
+            }
+          ]
+        }
+      }
     },
     "RuleSetRule": {
       "description": "A rule description with conditions and effects for modules.",
