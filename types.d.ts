@@ -79,7 +79,7 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import { ValidationError, validate } from "schema-utils";
+import { ValidationError, validate as validateFunction } from "schema-utils";
 import { ValidationErrorConfiguration } from "schema-utils/declarations/validate";
 import {
 	AsArray,
@@ -7181,7 +7181,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 declare interface NormalModuleLoaderContext<OptionsType> {
 	version: number;
 	getOptions(): OptionsType;
-	getOptions(schema: Parameters<typeof validate>[0]): OptionsType;
+	getOptions(schema: Parameters<typeof validateFunction>[0]): OptionsType;
 	emitWarning(warning: Error): void;
 	emitError(error: Error): void;
 	getLogger(name?: string): WebpackLogger;
@@ -11929,8 +11929,8 @@ declare namespace exports {
 	};
 	export const validate: (options?: any) => void;
 	export const validateSchema: (
-		schema: Parameters<typeof validate>[0],
-		options: Parameters<typeof validate>[1],
+		schema: Parameters<typeof validateFunction>[0],
+		options: Parameters<typeof validateFunction>[1],
 		validationConfiguration?: ValidationErrorConfiguration
 	) => void;
 	export const version: string;
