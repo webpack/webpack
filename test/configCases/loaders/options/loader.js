@@ -1,9 +1,10 @@
-module.exports = function() {
+/** @type {import("../../../../").LoaderDefinition} */
+module.exports = function () {
 	const options = this.getOptions();
 
 	const json = JSON.stringify(options)
-		.replace(/\u2028/g, '\\u2028')
-		.replace(/\u2029/g, '\\u2029');
+		.replace(/\u2028/g, "\\u2028")
+		.replace(/\u2029/g, "\\u2029");
 
 	return `module.exports = ${json}`;
 };
