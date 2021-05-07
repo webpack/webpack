@@ -78,13 +78,8 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import { JSONSchema4, JSONSchema6, JSONSchema7 } from "json-schema";
-import { default as ValidationError } from "schema-utils/declarations/ValidationError";
-import {
-	Extend,
-	ValidationErrorConfiguration
-} from "schema-utils/declarations/validate";
-import { RawSourceMap } from "source-map/source-map";
+import { ValidationError, validate } from "schema-utils";
+import { ValidationErrorConfiguration } from "schema-utils/declarations/validate";
 import {
 	AsArray,
 	AsyncParallelHook,
@@ -4188,7 +4183,7 @@ declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.
 	 */
-	hashDigest?: "hex" | "latin1" | "base64";
+	hashDigest?: "base64" | "latin1" | "hex";
 
 	/**
 	 * The prefix length of the hash digest to use, defaults to 4.
@@ -7162,12 +7157,8 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
  */
 declare interface NormalModuleLoaderContext<OptionsType> {
 	version: number;
-	getOptions(
-		schema?:
-			| (JSONSchema4 & Extend)
-			| (JSONSchema6 & Extend)
-			| (JSONSchema7 & Extend)
-	): OptionsType;
+	getOptions(): OptionsType;
+	getOptions(schema: Parameters<typeof validate>[0]): OptionsType;
 	emitWarning(warning: Error): void;
 	emitError(error: Error): void;
 	getLogger(name?: string): WebpackLogger;
@@ -10171,10 +10162,6 @@ declare interface RuntimeValueOptions {
 	buildDependencies?: string[];
 	version?: string | (() => string);
 }
-type Schema =
-	| (JSONSchema4 & Extend)
-	| (JSONSchema6 & Extend)
-	| (JSONSchema7 & Extend);
 declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
 	topLevelScope: boolean | "arrow";
@@ -10450,7 +10437,15 @@ declare interface SourceData {
 declare interface SourceLike {
 	source(): string | Buffer;
 }
-type SourceMap = Omit<RawSourceMap, "version"> & { version: number };
+declare interface SourceMap {
+	version: number;
+	sources: string[];
+	mappings: string;
+	file?: string;
+	sourceRoot?: string;
+	sourcesContent?: string[];
+	names?: string[];
+}
 declare class SourceMapDevToolPlugin {
 	constructor(options?: SourceMapDevToolPluginOptions);
 	sourceMapFilename: string | false;
@@ -11840,8 +11835,8 @@ declare namespace exports {
 	};
 	export const validate: (options?: any) => void;
 	export const validateSchema: (
-		schema: Schema,
-		options: object | object[],
+		schema: Parameters<typeof validate>[0],
+		options: Parameters<typeof validate>[1],
 		validationConfiguration?: ValidationErrorConfiguration
 	) => void;
 	export const version: string;
@@ -11967,8 +11962,6 @@ declare namespace exports {
 		Unknown: 3;
 		Used: 4;
 	}>;
-	export const WebpackOptionsValidationError: ValidationError;
-	export const ValidationError: ValidationError;
 	export namespace cache {
 		export { MemoryCachePlugin };
 	}
@@ -12227,6 +12220,8 @@ declare namespace exports {
 		WebpackError,
 		WebpackOptionsApply,
 		WebpackOptionsDefaulter,
+		ValidationError as WebpackOptionsValidationError,
+		ValidationError,
 		Entry,
 		EntryNormalized,
 		EntryObject,

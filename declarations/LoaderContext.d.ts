@@ -1,5 +1,5 @@
 import type { SourceMap } from "../lib/NormalModule";
-import type { Schema } from "schema-utils/declarations/ValidationError";
+import type { validate } from "schema-utils";
 import type { AssetInfo } from "../lib/Compilation";
 import type { ResolveOptionsWithDependencyType } from "../lib/ResolverFactory";
 import type Compilation from "../lib/Compilation";
@@ -14,11 +14,13 @@ import type {
 import type { Resolver } from "enhanced-resolve";
 
 type ResolveCallback = Parameters<Resolver["resolve"]>[4];
+type Schema = Parameters<typeof validate>[0];
 
 /** These properties are added by the NormalModule */
 export interface NormalModuleLoaderContext<OptionsType> {
 	version: number;
-	getOptions(schema?: Schema): OptionsType;
+	getOptions(): any;
+	getOptions(schema: Schema): OptionsType;
 	emitWarning(warning: Error): void;
 	emitError(error: Error): void;
 	getLogger(name?: string): Logger;
