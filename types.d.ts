@@ -7676,7 +7676,7 @@ declare interface Output {
 	strictModuleExceptionHandling?: boolean;
 
 	/**
-	 * The name of the trusted types policy created by webpack to serve bundle chunks. Defaults to 'webpack'.
+	 * The name of the Trusted Types policy created by webpack to serve bundle chunks. Defaults to 'webpack'. Set to an empty string, if webpack should not use Trusted Types.
 	 */
 	trustedTypesPolicyName?: string;
 
@@ -7943,7 +7943,7 @@ declare interface OutputNormalized {
 	strictModuleExceptionHandling?: boolean;
 
 	/**
-	 * The name of the trusted types policy created by webpack to serve bundle chunks. Defaults to 'webpack'.
+	 * The name of the Trusted Types policy created by webpack to serve bundle chunks. Defaults to 'webpack'. Set to an empty string, if webpack should not use Trusted Types.
 	 */
 	trustedTypesPolicyName?: string;
 

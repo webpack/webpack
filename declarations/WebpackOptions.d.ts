@@ -571,7 +571,7 @@ export type StrictModuleErrorHandling = boolean;
  */
 export type StrictModuleExceptionHandling = boolean;
 /**
- * The name of the trusted types policy created by webpack to serve bundle chunks. Defaults to 'webpack'.
+ * The name of the Trusted Types policy created by webpack to serve bundle chunks. Defaults to 'webpack'. Set to an empty string, if webpack should not use Trusted Types.
  */
 export type TrustedTypesPolicyName = string;
 /**
@@ -2090,7 +2090,7 @@ export interface Output {
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
-	 * The name of the trusted types policy created by webpack to serve bundle chunks. Defaults to 'webpack'.
+	 * The name of the Trusted Types policy created by webpack to serve bundle chunks. Defaults to 'webpack'. Set to an empty string, if webpack should not use Trusted Types.
 	 */
 	trustedTypesPolicyName?: TrustedTypesPolicyName;
 	/**
@@ -3047,7 +3047,7 @@ export interface OutputNormalized {
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
-	 * The name of the trusted types policy created by webpack to serve bundle chunks. Defaults to 'webpack'.
+	 * The name of the Trusted Types policy created by webpack to serve bundle chunks. Defaults to 'webpack'. Set to an empty string, if webpack should not use Trusted Types.
 	 */
 	trustedTypesPolicyName?: TrustedTypesPolicyName;
 	/**
