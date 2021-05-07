@@ -8,7 +8,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "^14.0.0"
+          versionSpec: "^16.0.0"
         displayName: "Install Node.js"
       - script: |
           curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -111,8 +111,8 @@ jobs:
           node_version: ^10.13.0
         node-12:
           node_version: ^12.4.0
-        node-14:
-          node_version: ^14.0.0
+        node-16:
+          node_version: ^16.0.0
     steps:
       - task: NodeTool@0
         inputs:
@@ -161,8 +161,8 @@ jobs:
           node_version: ^12.4.0
         node-14:
           node_version: ^14.0.0
-        node-15:
-          node_version: ^15.0.0
+        node-16:
+          node_version: ^16.0.0
     steps:
       - task: NodeTool@0
         inputs:
@@ -212,8 +212,8 @@ jobs:
       matrix:
         node-12:
           node_version: ^12.4.0
-        node-14:
-          node_version: ^14.0.0
+        node-16:
+          node_version: ^16.0.0
     steps:
       - task: NodeTool@0
         inputs:

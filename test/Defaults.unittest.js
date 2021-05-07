@@ -270,7 +270,7 @@ describe("Defaults", () => {
 		      "minChunks": 1,
 		      "minRemainingSize": undefined,
 		      "minSize": 10000,
-		      "usedExports": true,
+		      "usedExports": false,
 		    },
 		    "usedExports": false,
 		  },
@@ -670,7 +670,9 @@ describe("Defaults", () => {
 		+       "maxInitialRequests": 30,
 		@@ ... @@
 		-       "minSize": 10000,
+		-       "usedExports": false,
 		+       "minSize": 20000,
+		+       "usedExports": true,
 		@@ ... @@
 		-     "usedExports": false,
 		+     "usedExports": true,
@@ -735,7 +737,9 @@ describe("Defaults", () => {
 		+       "maxInitialRequests": 30,
 		@@ ... @@
 		-       "minSize": 10000,
+		-       "usedExports": false,
 		+       "minSize": 20000,
+		+       "usedExports": true,
 		@@ ... @@
 		-     "usedExports": false,
 		+     "usedExports": true,
@@ -1489,6 +1493,7 @@ describe("Defaults", () => {
 		+     "maxAge": 5184000000,
 		+     "maxMemoryGenerations": Infinity,
 		+     "name": "default-none",
+		+     "profile": false,
 		+     "store": "pack",
 		+     "type": "filesystem",
 		+     "version": "",
@@ -1529,6 +1534,7 @@ describe("Defaults", () => {
 			+     "maxAge": 5184000000,
 			+     "maxMemoryGenerations": 5,
 			+     "name": "default-development",
+			+     "profile": false,
 			+     "store": "pack",
 			+     "type": "filesystem",
 			+     "version": "",
@@ -1620,7 +1626,7 @@ describe("Defaults", () => {
 			-       "minChunks": 1,
 			-       "minRemainingSize": undefined,
 			-       "minSize": 10000,
-			-       "usedExports": true,
+			-       "usedExports": false,
 			-     },
 			+     "splitChunks": false,
 		`)
@@ -1769,6 +1775,7 @@ describe("Defaults", () => {
 			+     "maxAge": 5184000000,
 			+     "maxMemoryGenerations": Infinity,
 			+     "name": "default-none",
+			+     "profile": false,
 			+     "store": "pack",
 			+     "type": "filesystem",
 			+     "version": "",
