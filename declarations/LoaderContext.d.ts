@@ -19,7 +19,7 @@ type Schema = Parameters<typeof validate>[0];
 /** These properties are added by the NormalModule */
 export interface NormalModuleLoaderContext<OptionsType> {
 	version: number;
-	getOptions(): any;
+	getOptions(): OptionsType;
 	getOptions(schema: Schema): OptionsType;
 	emitWarning(warning: Error): void;
 	emitError(error: Error): void;
