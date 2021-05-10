@@ -4383,30 +4383,30 @@ declare abstract class InitFragment {
 declare interface InputFileSystem {
 	readFile: (
 		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: string | Buffer) => void
+		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
 	) => void;
 	readJson?: (
 		arg0: string,
-		arg1: (arg0?: Error | NodeJS.ErrnoException, arg1?: any) => void
+		arg1: (arg0?: null | Error | NodeJS.ErrnoException, arg1?: any) => void
 	) => void;
 	readlink: (
 		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: string | Buffer) => void
+		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
 	) => void;
 	readdir: (
 		arg0: string,
 		arg1: (
-			arg0?: NodeJS.ErrnoException,
+			arg0?: null | NodeJS.ErrnoException,
 			arg1?: (string | Buffer)[] | IDirent[]
 		) => void
 	) => void;
 	stat: (
 		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: IStats) => void
+		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
 	) => void;
 	realpath?: (
 		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: string | Buffer) => void
+		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
 	) => void;
 	purge?: (arg0?: string) => void;
 	join?: (arg0: string, arg1: string) => string;
@@ -4422,7 +4422,7 @@ declare interface IntermediateFileSystemExtras {
 	open: (
 		arg0: string,
 		arg1: string,
-		arg2: (arg0?: NodeJS.ErrnoException, arg1?: number) => void
+		arg2: (arg0?: null | NodeJS.ErrnoException, arg1?: number) => void
 	) => void;
 	read: (
 		arg0: number,
@@ -4430,13 +4430,16 @@ declare interface IntermediateFileSystemExtras {
 		arg2: number,
 		arg3: number,
 		arg4: number,
-		arg5: (arg0?: NodeJS.ErrnoException, arg1?: number) => void
+		arg5: (arg0?: null | NodeJS.ErrnoException, arg1?: number) => void
 	) => void;
-	close: (arg0: number, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
+	close: (
+		arg0: number,
+		arg1: (arg0?: null | NodeJS.ErrnoException) => void
+	) => void;
 	rename: (
 		arg0: string,
 		arg1: string,
-		arg2: (arg0?: NodeJS.ErrnoException) => void
+		arg2: (arg0?: null | NodeJS.ErrnoException) => void
 	) => void;
 }
 type InternalCell<T> = T | typeof TOMBSTONE | typeof UNDEFINED_MARKER;
@@ -7973,25 +7976,34 @@ declare interface OutputFileSystem {
 	writeFile: (
 		arg0: string,
 		arg1: string | Buffer,
-		arg2: (arg0?: NodeJS.ErrnoException) => void
+		arg2: (arg0?: null | NodeJS.ErrnoException) => void
 	) => void;
-	mkdir: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
+	mkdir: (
+		arg0: string,
+		arg1: (arg0?: null | NodeJS.ErrnoException) => void
+	) => void;
 	readdir?: (
 		arg0: string,
 		arg1: (
-			arg0?: NodeJS.ErrnoException,
+			arg0?: null | NodeJS.ErrnoException,
 			arg1?: (string | Buffer)[] | IDirent[]
 		) => void
 	) => void;
-	rmdir?: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
-	unlink?: (arg0: string, arg1: (arg0?: NodeJS.ErrnoException) => void) => void;
+	rmdir?: (
+		arg0: string,
+		arg1: (arg0?: null | NodeJS.ErrnoException) => void
+	) => void;
+	unlink?: (
+		arg0: string,
+		arg1: (arg0?: null | NodeJS.ErrnoException) => void
+	) => void;
 	stat: (
 		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: IStats) => void
+		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
 	) => void;
 	readFile: (
 		arg0: string,
-		arg1: (arg0?: NodeJS.ErrnoException, arg1?: string | Buffer) => void
+		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
 	) => void;
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
