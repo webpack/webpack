@@ -326,6 +326,7 @@ describe("Defaults", () => {
 		    "sourceMapFilename": "[file].map[query]",
 		    "sourcePrefix": undefined,
 		    "strictModuleExceptionHandling": false,
+		    "trustedTypes": undefined,
 		    "uniqueName": "webpack",
 		    "wasmLoading": "fetch",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
@@ -1636,7 +1637,8 @@ describe("Defaults", () => {
 		"uniqueName",
 		{
 			output: {
-				uniqueName: "@@@Hello World!"
+				uniqueName: "@@@Hello World!",
+				trustedTypes: true
 			}
 		},
 		e =>
@@ -1654,7 +1656,11 @@ describe("Defaults", () => {
 			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
 			+     "hotUpdateGlobal": "webpackHotUpdate_Hello_World_",
 			@@ ... @@
+			-     "trustedTypes": undefined,
 			-     "uniqueName": "webpack",
+			+     "trustedTypes": Object {
+			+       "policyName": "@@@Hello_World_",
+			+     },
 			+     "uniqueName": "@@@Hello World!",
 		`)
 	);

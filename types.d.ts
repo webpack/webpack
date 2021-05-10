@@ -5766,7 +5766,7 @@ declare interface LoadScriptCompilationHooks {
 	createScript: SyncWaterfallHook<[string, Chunk]>;
 }
 declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
-	constructor();
+	constructor(withCreateScriptUrl?: boolean);
 	static getCompilationHooks(
 		compilation: Compilation
 	): LoadScriptCompilationHooks;
@@ -7940,6 +7940,11 @@ declare interface Output {
 	strictModuleExceptionHandling?: boolean;
 
 	/**
+	 * Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.
+	 */
+	trustedTypes?: string | true | TrustedTypes;
+
+	/**
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
 	 */
 	umdNamedDefine?: boolean;
@@ -8200,6 +8205,11 @@ declare interface OutputNormalized {
 	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: boolean;
+
+	/**
+	 * Use a Trusted Types policy to create urls for chunks.
+	 */
+	trustedTypes?: TrustedTypes;
 
 	/**
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
@@ -11291,6 +11301,16 @@ declare interface TimestampAndHash {
 	timestampHash?: string;
 	hash: string;
 }
+
+/**
+ * Use a Trusted Types policy to create urls for chunks.
+ */
+declare interface TrustedTypes {
+	/**
+	 * The name of the Trusted Types policy created by webpack to serve bundle chunks.
+	 */
+	policyName?: string;
+}
 declare const UNDEFINED_MARKER: unique symbol;
 declare interface UpdateHashContextDependency {
 	chunkGraph: ChunkGraph;
@@ -12018,6 +12038,7 @@ declare namespace exports {
 		export let uncaughtErrorHandler: string;
 		export let scriptNonce: string;
 		export let loadScript: string;
+		export let createScriptUrl: string;
 		export let chunkName: string;
 		export let runtimeId: string;
 		export let getChunkScriptFilename: string;

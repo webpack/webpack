@@ -5205,6 +5205,41 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-trusted-types": Object {
+    "configs": Array [
+      Object {
+        "description": "Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.",
+        "multiple": false,
+        "path": "output.trustedTypes",
+        "type": "enum",
+        "values": Array [
+          true,
+        ],
+      },
+      Object {
+        "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+        "multiple": false,
+        "path": "output.trustedTypes",
+        "type": "string",
+      },
+    ],
+    "description": "Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name. The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-trusted-types-policy-name": Object {
+    "configs": Array [
+      Object {
+        "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+        "multiple": false,
+        "path": "output.trustedTypes.policyName",
+        "type": "string",
+      },
+    ],
+    "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-unique-name": Object {
     "configs": Array [
       Object {
