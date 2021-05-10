@@ -2658,6 +2658,20 @@ exclude3:
       compressed exclude3-main.css.gz 70 bytes [emitted]"
 `;
 
+exports[`StatsTestCases should print correct stats for require-context-comments 1`] = `
+"runtime modules 670 bytes 3 modules
+cacheable modules 265 bytes
+  modules by path ./context/ 81 bytes
+    ./context/chunk-a.js 27 bytes [built] [code generated]
+    ./context/chunk-b.js 27 bytes [built] [code generated]
+    ./context/chunk-c.js 27 bytes [built] [code generated]
+  modules by path ./*.js 184 bytes
+    ./index.js 52 bytes [built] [code generated]
+    ./chunk.js 132 bytes [built] [code generated]
+./context/ sync nonrecursive chunk-[abc].js$ chunkName: ChunkName-[request] 211 bytes [built] [code generated]
+webpack x.x.x compiled successfully"
+`;
+
 exports[`StatsTestCases should print correct stats for resolve-plugin-context 1`] = `
 "asset bundle.js 1.67 KiB [emitted] (name: main)
 modules by path ./node_modules/def/ 17 bytes
