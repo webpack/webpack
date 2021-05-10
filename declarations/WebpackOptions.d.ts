@@ -571,9 +571,9 @@ export type StrictModuleErrorHandling = boolean;
  */
 export type StrictModuleExceptionHandling = boolean;
 /**
- * The name of the Trusted Types policy created by webpack to serve bundle chunks. Defaults to 'webpack'. Set to an empty string, if webpack should not use Trusted Types.
+ * Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name.
  */
-export type TrustedTypesPolicyName = string;
+export type TrustedTypesPolicy = boolean | string;
 /**
  * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
  */
@@ -2090,9 +2090,9 @@ export interface Output {
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
-	 * The name of the Trusted Types policy created by webpack to serve bundle chunks. Defaults to 'webpack'. Set to an empty string, if webpack should not use Trusted Types.
+	 * Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name.
 	 */
-	trustedTypesPolicyName?: TrustedTypesPolicyName;
+	trustedTypesPolicy?: TrustedTypesPolicy;
 	/**
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
 	 */
@@ -3047,9 +3047,9 @@ export interface OutputNormalized {
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
-	 * The name of the Trusted Types policy created by webpack to serve bundle chunks. Defaults to 'webpack'. Set to an empty string, if webpack should not use Trusted Types.
+	 * Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name.
 	 */
-	trustedTypesPolicyName?: TrustedTypesPolicyName;
+	trustedTypesPolicy?: TrustedTypesPolicy;
 	/**
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
 	 */

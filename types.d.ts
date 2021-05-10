@@ -7676,9 +7676,9 @@ declare interface Output {
 	strictModuleExceptionHandling?: boolean;
 
 	/**
-	 * The name of the Trusted Types policy created by webpack to serve bundle chunks. Defaults to 'webpack'. Set to an empty string, if webpack should not use Trusted Types.
+	 * Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name.
 	 */
-	trustedTypesPolicyName?: string;
+	trustedTypesPolicy?: string | boolean;
 
 	/**
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
@@ -7943,9 +7943,9 @@ declare interface OutputNormalized {
 	strictModuleExceptionHandling?: boolean;
 
 	/**
-	 * The name of the Trusted Types policy created by webpack to serve bundle chunks. Defaults to 'webpack'. Set to an empty string, if webpack should not use Trusted Types.
+	 * Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name.
 	 */
-	trustedTypesPolicyName?: string;
+	trustedTypesPolicy?: string | boolean;
 
 	/**
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.

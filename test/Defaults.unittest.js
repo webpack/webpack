@@ -326,7 +326,7 @@ describe("Defaults", () => {
 		    "sourceMapFilename": "[file].map[query]",
 		    "sourcePrefix": undefined,
 		    "strictModuleExceptionHandling": false,
-		    "trustedTypesPolicyName": "webpack",
+		    "trustedTypesPolicy": false,
 		    "uniqueName": "webpack",
 		    "wasmLoading": "fetch",
 		    "webassemblyModuleFilename": "[hash].module.wasm",

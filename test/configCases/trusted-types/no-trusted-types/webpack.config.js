@@ -3,7 +3,7 @@ module.exports = {
 	output: {
 		chunkFilename: "[name].web.js",
 		crossOriginLoading: "anonymous",
-		trustedTypesPolicyName: "customPolicyName"
+		trustedTypesPolicy: true
 	},
 	performance: {
 		hints: false

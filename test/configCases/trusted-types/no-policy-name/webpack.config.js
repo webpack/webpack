@@ -2,8 +2,7 @@ module.exports = {
 	target: "web",
 	output: {
 		chunkFilename: "[name].web.js",
-		crossOriginLoading: "anonymous",
-		trustedTypesPolicyName: "" // Skip Trusted Types.
+		crossOriginLoading: "anonymous"
 	},
 	performance: {
 		hints: false

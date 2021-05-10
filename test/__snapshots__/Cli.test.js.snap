@@ -5205,16 +5205,22 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "output-trusted-types-policy-name": Object {
+  "output-trusted-types-policy": Object {
     "configs": Array [
       Object {
-        "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks. Defaults to 'webpack'. Set to an empty string, if webpack should not use Trusted Types.",
+        "description": "Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name.",
         "multiple": false,
-        "path": "output.trustedTypesPolicyName",
+        "path": "output.trustedTypesPolicy",
+        "type": "boolean",
+      },
+      Object {
+        "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+        "multiple": false,
+        "path": "output.trustedTypesPolicy",
         "type": "string",
       },
     ],
-    "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks. Defaults to 'webpack'. Set to an empty string, if webpack should not use Trusted Types.",
+    "description": "Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name. The name of the Trusted Types policy created by webpack to serve bundle chunks.",
     "multiple": false,
     "simpleType": "string",
   },
