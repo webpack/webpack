@@ -4,23 +4,22 @@ let policyName = "none";
 let scriptURL = "none";
 
 self.trustedTypes = {
-    createPolicy: (name, rules) => {
-    policyName = name;
-    const createScriptURL = rules.createScriptURL;
-    rules.createScriptURL = (url) => {
-        scriptURL = url;
-        return createScriptURL(url);
-    };
-    return rules;
-}
+	createPolicy: (name, rules) => {
+		policyName = name;
+		const createScriptURL = rules.createScriptURL;
+		rules.createScriptURL = url => {
+			scriptURL = url;
+			return createScriptURL(url);
+		};
+		return rules;
+	}
 };
 
 onmessage = async event => {
-
-    const { upper } = await import("./module");
+	const { upper } = await import("./module");
 	postMessage({
-        data: upper(event.data), 
-        policyName,
-        scriptURL
-    });
+		data: upper(event.data),
+		policyName,
+		scriptURL
+	});
 };

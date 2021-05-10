@@ -1,5 +1,7 @@
-it("should load chunk when there are no trusted types", function() {
-	const promise = import("./empty?a" /* webpackChunkName: "no-trusted-types" */);
+it("should load chunk when there are no trusted types", function () {
+	const promise = import(
+		"./empty?a" /* webpackChunkName: "no-trusted-types" */
+	);
 
 	var script = document.head._children.pop();
 	__non_webpack_require__("./no-trusted-types.web.js");
