@@ -2353,9 +2353,9 @@ enhanced-resolve@^4.0.0:
     tapable "^1.0.0"
 
 enhanced-resolve@^5.8.0:
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.8.0.tgz#d9deae58f9d3773b6a111a5a46831da5be5c9ac0"
-  integrity sha512-Sl3KRpJA8OpprrtaIswVki3cWPiPKxXuFxJXBp+zNb6s6VwNWwFRUdtmzd2ReUut8n+sCPx7QCtQ7w5wfJhSgQ==
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.8.1.tgz#3b375599be390e48573138385b9a89a3e316328e"
+  integrity sha512-TeHbKJI8Yy5M0SNz/QrMtZ0Mx5WYpN+OwglnTOJZkM8oy+K7xoicYRGFOb2ZTj5EYLPY5JMRUTVsiKVLL9vgOw==
   dependencies:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
