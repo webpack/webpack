@@ -571,10 +571,6 @@ export type StrictModuleErrorHandling = boolean;
  */
 export type StrictModuleExceptionHandling = boolean;
 /**
- * Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name.
- */
-export type TrustedTypesPolicy = boolean | string;
-/**
  * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
  */
 export type UniqueName = string;
@@ -757,6 +753,10 @@ export type OptimizationSplitChunksGetCacheGroups = (
 	| OptimizationSplitChunksCacheGroup
 	| OptimizationSplitChunksCacheGroup[]
 	| void;
+/**
+ * Use a Trusted Types policy to create urls for chunks.
+ */
+export type TrustedTypesPolicy = false | string;
 
 /**
  * Options object as provided by the user.
@@ -2092,7 +2092,7 @@ export interface Output {
 	/**
 	 * Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name.
 	 */
-	trustedTypesPolicy?: TrustedTypesPolicy;
+	trustedTypesPolicy?: boolean | string;
 	/**
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
 	 */
@@ -3047,7 +3047,7 @@ export interface OutputNormalized {
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
-	 * Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name.
+	 * Use a Trusted Types policy to create urls for chunks.
 	 */
 	trustedTypesPolicy?: TrustedTypesPolicy;
 	/**

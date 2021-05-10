@@ -2687,7 +2687,17 @@
           "$ref": "#/definitions/StrictModuleExceptionHandling"
         },
         "trustedTypesPolicy": {
-          "$ref": "#/definitions/TrustedTypesPolicy"
+          "description": "Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+              "type": "string",
+              "minLength": 1
+            }
+          ]
         },
         "umdNamedDefine": {
           "cli": {
@@ -4363,10 +4373,10 @@
       ]
     },
     "TrustedTypesPolicy": {
-      "description": "Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name.",
+      "description": "Use a Trusted Types policy to create urls for chunks.",
       "anyOf": [
         {
-          "type": "boolean"
+          "enum": [false]
         },
         {
           "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",

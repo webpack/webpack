@@ -7943,9 +7943,9 @@ declare interface OutputNormalized {
 	strictModuleExceptionHandling?: boolean;
 
 	/**
-	 * Use a Trusted Types policy to create urls for chunks. The default policy name is 'webpack'. Passing a string sets a custom policy name.
+	 * Use a Trusted Types policy to create urls for chunks.
 	 */
-	trustedTypesPolicy?: string | boolean;
+	trustedTypesPolicy?: string | false;
 
 	/**
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
