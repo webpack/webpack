@@ -54,7 +54,7 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
-      - run: yarn test:basic --ci --reporters=default --reporters=jest-junit
+      - run: yarn test:basic --ci
       - uses: codecov/codecov-action@v1
         with:
           flags: basic
@@ -82,7 +82,7 @@ jobs:
           path: .jest-cache
           key: jest-unit-${{ env.GITHUB_SHA }}
           restore-keys: jest-unit-
-      - run: yarn cover:unit --ci --cacheDirectory .jest-cache --reporters=default --reporters=jest-junit
+      - run: yarn cover:unit --ci --cacheDirectory .jest-cache
       - uses: codecov/codecov-action@v1
         with:
           flags: unit
@@ -121,9 +121,9 @@ jobs:
           path: .jest-cache
           key: jest-integration-${{ env.GITHUB_SHA }}
           restore-keys: jest-integration-
-      - run: yarn cover:integration --ci --cacheDirectory .jest-cache --reporters=default --reporters=jest-junit
-      - if: ${{ matrix.os != 'windows-latest' }}
-        uses: codecov/codecov-action@v1
+      - run: yarn cover:integration --ci --cacheDirectory .jest-cache
+      - run: yarn cover:merge
+      - uses: codecov/codecov-action@v1
         with:
           flags: integration
           functionalities: gcov
