@@ -43,7 +43,7 @@
     "babel-loader": "^8.1.0",
     "benchmark": "^2.1.4",
     "bundle-loader": "^0.5.6",
-    "coffee-loader": "^1.0.0",
+    "coffee-loader": "^2.0.0",
     "coffeescript": "^2.5.1",
     "core-js": "^3.6.5",
     "coveralls": "^3.1.0",
