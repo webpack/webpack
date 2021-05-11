@@ -251,9 +251,7 @@ declare module "webpack-sources" {
 
 		map(options?: MapOptions): Object;
 
-		sourceAndMap(
-			options?: MapOptions
-		): {
+		sourceAndMap(options?: MapOptions): {
 			source: string | Buffer;
 			map: Object;
 		};

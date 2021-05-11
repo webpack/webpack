@@ -44,14 +44,16 @@ module.exports = [
 		},
 		plugins: [
 			new webpack.DefinePlugin({
-				VALUE: webpack.DefinePlugin.runtimeValue(() => read("123.txt"), [
-					join(__dirname, "./123.txt")
-				])
+				VALUE: webpack.DefinePlugin.runtimeValue(
+					() => read("123.txt"),
+					[join(__dirname, "./123.txt")]
+				)
 			}),
 			new webpack.DefinePlugin({
-				VALUE: webpack.DefinePlugin.runtimeValue(() => read("321.txt"), [
-					join(__dirname, "./321.txt")
-				])
+				VALUE: webpack.DefinePlugin.runtimeValue(
+					() => read("321.txt"),
+					[join(__dirname, "./321.txt")]
+				)
 			})
 		]
 	}

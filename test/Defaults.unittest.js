@@ -1,10 +1,8 @@
 const path = require("path");
 const jestDiff = require("jest-diff").default;
 const stripAnsi = require("strip-ansi");
-const {
-	applyWebpackOptionsDefaults,
-	getNormalizedWebpackOptions
-} = require("..").config;
+const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
+	require("..").config;
 
 /**
  * Escapes regular expression metacharacters

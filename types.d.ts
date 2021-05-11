@@ -5011,9 +5011,7 @@ declare class JavascriptParser extends Parser {
 	parseCommentOptions(
 		range?: any
 	): { options: null; errors: null } | { options: object; errors: any[] };
-	extractMemberExpressionChain(
-		expression: MemberExpression
-	): {
+	extractMemberExpressionChain(expression: MemberExpression): {
 		members: string[];
 		object:
 			| UnaryExpression
@@ -5045,16 +5043,15 @@ declare class JavascriptParser extends Parser {
 			| ChainExpression
 			| Super;
 	};
-	getFreeInfoFromVariable(
-		varName: string
-	): { name: string; info: string | VariableInfo };
+	getFreeInfoFromVariable(varName: string): {
+		name: string;
+		info: string | VariableInfo;
+	};
 	getMemberExpressionInfo(
 		expression: MemberExpression,
 		allowedTypes: number
 	): undefined | CallExpressionInfo | ExpressionExpressionInfo;
-	getNameForExpression(
-		expression: MemberExpression
-	): {
+	getNameForExpression(expression: MemberExpression): {
 		name: string;
 		rootInfo: ExportedVariableInfo;
 		getMembers: () => string[];
@@ -5805,13 +5802,11 @@ type LoaderContext<OptionsType> = NormalModuleLoaderContext<OptionsType> &
 	LoaderRunnerLoaderContext<OptionsType> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
-type LoaderDefinition<
-	OptionsType = {},
-	ContextAdditions = {}
-> = LoaderDefinitionFunction<OptionsType, ContextAdditions> & {
-	raw?: false;
-	pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
-};
+type LoaderDefinition<OptionsType = {}, ContextAdditions = {}> =
+	LoaderDefinitionFunction<OptionsType, ContextAdditions> & {
+		raw?: false;
+		pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
+	};
 declare interface LoaderDefinitionFunction<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -7197,9 +7192,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 			arg2?: ResolveRequest
 		) => void
 	): any;
-	getResolve(
-		options?: ResolveOptionsWithDependencyType
-	): {
+	getResolve(options?: ResolveOptionsWithDependencyType): {
 		(
 			context: string,
 			request: string,
@@ -8671,13 +8664,11 @@ declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
 }
-type RawLoaderDefinition<
-	OptionsType = {},
-	ContextAdditions = {}
-> = RawLoaderDefinitionFunction<OptionsType, ContextAdditions> & {
-	raw: true;
-	pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
-};
+type RawLoaderDefinition<OptionsType = {}, ContextAdditions = {}> =
+	RawLoaderDefinitionFunction<OptionsType, ContextAdditions> & {
+		raw: true;
+		pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
+	};
 declare interface RawLoaderDefinitionFunction<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -9730,9 +9721,7 @@ declare interface RuleSetRule {
 				 */
 				options?: string | { [index: string]: any };
 		  }
-		| ((
-				data: object
-		  ) =>
+		| ((data: object) =>
 				| string
 				| {
 						/**
@@ -11923,9 +11912,7 @@ declare interface WithOptions {
 declare interface WriteOnlySet<T> {
 	add: (T?: any) => void;
 }
-type __TypeWebpackOptions = (
-	data: object
-) =>
+type __TypeWebpackOptions = (data: object) =>
 	| string
 	| {
 			/**
