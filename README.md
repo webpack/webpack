@@ -169,11 +169,11 @@ or are automatically applied via regex from your webpack configuration.
 
 #### Transpiling
 
-|                                                                            Name                                                                            |     Status     |  Install Size   | Description                                                                                          |
-| :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------: | :-------------: | :--------------------------------------------------------------------------------------------------- |
-| <a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a> |  ![babel-npm]  |  ![babel-size]  | Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a>    |
-|  <a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>  |  ![type-npm]   |  ![type-size]   | Loads TypeScript like JavaScript                                                                     |
-|    <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>    | ![coffee-npm]  | ![coffee-size]  | Loads CoffeeScript like JavaScript                                                                   |
+|                                                                            Name                                                                            |    Status     |  Install Size  | Description                                                                                       |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :------------: | :------------------------------------------------------------------------------------------------ |
+| <a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a> | ![babel-npm]  | ![babel-size]  | Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a> |
+|  <a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>  |  ![type-npm]  |  ![type-size]  | Loads TypeScript like JavaScript                                                                  |
+|    <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>    | ![coffee-npm] | ![coffee-size] | Loads CoffeeScript like JavaScript                                                                |
 
 [babel-npm]: https://img.shields.io/npm/v/babel-loader.svg
 [babel-size]: https://packagephobia.com/badge?p=babel-loader
