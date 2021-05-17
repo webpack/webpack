@@ -1,5 +1,5 @@
-var HotModuleReplacementPlugin = require("../../../../")
-	.HotModuleReplacementPlugin;
+var HotModuleReplacementPlugin =
+	require("../../../../").HotModuleReplacementPlugin;
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {

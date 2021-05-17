@@ -1,2 +1,2 @@
-module.exports = function(){
-}
+/** @type {import("../../../../").LoaderDefinition} */
+module.exports = function () {};

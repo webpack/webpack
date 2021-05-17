@@ -1,3 +1,4 @@
+/** @type {import("../../../../").LoaderDefinition} */
 module.exports = function () {
 	return `module.exports = {
 	request1: ${JSON.stringify(

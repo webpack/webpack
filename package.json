@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.36.2",
+  "version": "5.37.0",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -70,13 +70,14 @@
     "json5": "^2.1.3",
     "less": "^4.0.0",
     "less-loader": "^8.0.0",
-    "lint-staged": "^10.2.11",
+    "lint-staged": "^11.0.0",
     "loader-utils": "^2.0.0",
     "lodash": "^4.17.19",
     "lodash-es": "^4.17.15",
     "memfs": "^3.2.0",
     "mini-css-extract-plugin": "^1.0.0",
     "mini-svg-data-uri": "^1.2.3",
+    "nyc": "^15.1.0",
     "open-cli": "^6.0.1",
     "prettier": "^2.2.0",
     "pretty-format": "^26.3.0",
@@ -92,7 +93,7 @@
     "style-loader": "^2.0.0",
     "terser": "^5.5.0",
     "toml": "^3.0.0",
-    "tooling": "webpack/tooling#v1.18.0",
+    "tooling": "webpack/tooling#v1.19.0",
     "ts-loader": "^8.0.2",
     "typescript": "^4.2.0-beta",
     "url-loader": "^4.1.0",
@@ -163,12 +164,14 @@
     "yarn-lint-fix": "yarn-deduplicate -s highest yarn.lock",
     "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
     "cover": "yarn cover:all && yarn cover:report",
+    "cover:clean": "rimraf .nyc_output coverage",
     "cover:all": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
     "cover:basic": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/te{st/TestCasesNormal,st/StatsTestCases,st/ConfigTestCases}.test.js\" --coverage",
     "cover:integration": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
     "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:types": "node node_modules/tooling/type-coverage",
-    "cover:report": "istanbul report"
+    "cover:merge": "nyc merge .nyc_output coverage/coverage-nyc.json && rimraf .nyc_output",
+    "cover:report": "nyc report -t coverage"
   },
   "lint-staged": {
     "*.js|{lib,setup,bin,hot,tooling,schemas}/**/*.js|test/*.js|{test,examples}/**/webpack.config.js}": [

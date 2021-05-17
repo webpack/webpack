@@ -1,4 +1,5 @@
-module.exports = function() {
+/** @type {import("../../../../").LoaderDefinition<string>} */
+module.exports = function () {
 	const usedExports = JSON.parse(this.query.slice(1));
 	return [
 		`import { ${usedExports

@@ -383,9 +383,10 @@ const describeCases = config => {
 													moduleScope.window = globalContext;
 													moduleScope.self = globalContext;
 													moduleScope.URL = URL;
-													moduleScope.Worker = require("./helpers/createFakeWorker")(
-														{ outputDirectory }
-													);
+													moduleScope.Worker =
+														require("./helpers/createFakeWorker")({
+															outputDirectory
+														});
 													runInNewContext = true;
 												}
 												if (testConfig.moduleScope) {

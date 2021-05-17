@@ -8,6 +8,8 @@
 /benchmark/fixtures
 /examples/**/dist
 /coverage
+/.nyc_output
+/.jest-cache
 .DS_Store
 *.log
 .idea
