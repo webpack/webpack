@@ -20,6 +20,8 @@ describe("WatchSuspend", () => {
 			"temp-watch-" + Date.now()
 		);
 		const filePath = path.join(fixturePath, "file.js");
+		const file2Path = path.join(fixturePath, "file2.js");
+		const file3Path = path.join(fixturePath, "file3.js");
 		const outputPath = path.join(fixturePath, "bundle.js");
 		let compiler = null;
 		let watching = null;
@@ -33,6 +35,8 @@ describe("WatchSuspend", () => {
 			}
 			try {
 				fs.writeFileSync(filePath, "'foo'", "utf-8");
+				fs.writeFileSync(file2Path, "'file2'", "utf-8");
+				fs.writeFileSync(file3Path, "'file3'", "utf-8");
 			} catch (e) {
 				// skip
 			}
@@ -45,6 +49,7 @@ describe("WatchSuspend", () => {
 				}
 			});
 			watching = compiler.watch({ aggregateTimeout: 50 }, () => {});
+
 			compiler.hooks.done.tap("WatchSuspendTest", () => {
 				if (onChange) onChange();
 			});
@@ -91,6 +96,63 @@ describe("WatchSuspend", () => {
 				done();
 			};
 			watching.resume();
+		});
+
+		it("should not ignore changes during resumed compilation", async () => {
+			// aggregateTimeout must be long enough for this test
+			//  So set-up new watcher and wait when initial compilation is done
+			await new Promise(resolve => {
+				watching.close();
+				watching = compiler.watch({ aggregateTimeout: 1000 }, resolve);
+			});
+			return new Promise(resolve => {
+				watching.suspend();
+				fs.writeFileSync(filePath, "'baz'", "utf-8");
+
+				// Run resume between "changed" and "aggregated" events
+				setTimeout(() => {
+					watching.resume();
+
+					setTimeout(() => {
+						expect(fs.readFileSync(outputPath, "utf-8")).toContain("'baz'");
+						resolve();
+					}, 2000);
+				}, 200);
+			});
+		});
+
+		it("should not drop changes when suspended", done => {
+			const aggregateTimeout = 50;
+			// Trigger initial compilation with file2.js (assuming correct)
+			fs.writeFileSync(
+				filePath,
+				'require("./file2.js"); require("./file3.js")',
+				"utf-8"
+			);
+
+			onChange = () => {
+				// Initial compilation is done, start the test
+				watching.suspend();
+
+				// Trigger the first change (works as expected):
+				fs.writeFileSync(file2Path, "'foo'", "utf-8");
+
+				// Trigger the second change _after_ aggregation timeout of the first
+				setTimeout(() => {
+					fs.writeFileSync(file3Path, "'bar'", "utf-8");
+
+					// Wait when the file3 edit is settled and re-compile
+					setTimeout(() => {
+						watching.resume();
+
+						onChange = () => {
+							onChange = null;
+							expect(fs.readFileSync(outputPath, "utf-8")).toContain("'bar'");
+							done();
+						};
+					}, 200);
+				}, aggregateTimeout + 50);
+			};
 		});
 	});
 });
