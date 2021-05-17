@@ -9,18 +9,37 @@ const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");
 const outputDirectory = path.resolve(__dirname, "js/buildDeps");
 const inputDirectory = path.resolve(__dirname, "js/buildDepsInput");
 
+const webpack = require("../");
+const coverageEnabled = webpack.toString().includes("++");
+
 const exec = (n, options = {}) => {
 	return new Promise((resolve, reject) => {
-		const p = child_process.fork(
-			path.resolve(__dirname, "fixtures/buildDependencies/run.js"),
-			[n, JSON.stringify(options)],
-			{ stdio: ["ignore", "pipe", "pipe", "ipc"] }
+		const p = child_process.execFile(
+			process.execPath,
+			[
+				...(coverageEnabled
+					? [
+							require.resolve("nyc/bin/nyc.js"),
+							"--silent",
+							"--no-clean",
+							"--cache-dir",
+							".jest-cache/nyc",
+							process.execPath
+					  ]
+					: []),
+				path.resolve(__dirname, "fixtures/buildDependencies/run.js"),
+				n,
+				JSON.stringify(options)
+			],
+			{
+				stdio: ["ignore", "pipe", "pipe"]
+			}
 		);
 		const chunks = [];
 		p.stderr.on("data", chunk => chunks.push(chunk));
 		p.stdout.on("data", chunk => chunks.push(chunk));
 		p.once("exit", code => {
-			const stdout = Buffer.concat(chunks).toString("utf-8");
+			const stdout = chunks.join("");
 			if (code === 0) {
 				if (!options.ignoreErrors && /<[ew]>/.test(stdout))
 					return reject(stdout);
@@ -29,7 +48,11 @@ const exec = (n, options = {}) => {
 				reject(new Error(`Code ${code}: ${stdout}`));
 			}
 		});
-		p.once("error", err => reject(err));
+		p.once("error", err => {
+			const stdout = chunks.join("");
+			console.log(stdout);
+			reject(err);
+		});
 	});
 };
 
@@ -222,5 +245,5 @@ describe("BuildDependencies", () => {
 			expect(result.esmAsyncConfig).toBeGreaterThan(now5);
 			expect(result.uncached).toBeGreaterThan(now5);
 		}
-	}, 100000);
+	}, 500000);
 });
