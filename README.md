@@ -169,17 +169,14 @@ or are automatically applied via regex from your webpack configuration.
 
 #### Transpiling
 
-|                                                                            Name                                                                            |     Status     |  Install Size   | Description                                                                                          |
-| :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------: | :-------------: | :--------------------------------------------------------------------------------------------------- |
-| <a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a> |  ![babel-npm]  |  ![babel-size]  | Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a>    |
-|       <a href="https://github.com/jupl/traceur-loader"><img width="48" height="48" src="https://google.github.com/traceur-compiler/logo/tc.svg"></a>       | ![traceur-npm] | ![traceur-size] | Loads ES2015+ code and transpiles to ES5 using [Traceur](https://github.com/google/traceur-compiler) |
-|  <a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>  |  ![type-npm]   |  ![type-size]   | Loads TypeScript like JavaScript                                                                     |
-|    <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>    | ![coffee-npm]  | ![coffee-size]  | Loads CoffeeScript like JavaScript                                                                   |
+|                                                                            Name                                                                            |    Status     |  Install Size  | Description                                                                                       |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :------------: | :------------------------------------------------------------------------------------------------ |
+| <a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a> | ![babel-npm]  | ![babel-size]  | Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a> |
+|  <a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>  |  ![type-npm]  |  ![type-size]  | Loads TypeScript like JavaScript                                                                  |
+|    <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>    | ![coffee-npm] | ![coffee-size] | Loads CoffeeScript like JavaScript                                                                |
 
 [babel-npm]: https://img.shields.io/npm/v/babel-loader.svg
 [babel-size]: https://packagephobia.com/badge?p=babel-loader
-[traceur-npm]: https://img.shields.io/npm/v/traceur-loader.svg
-[traceur-size]: https://packagephobia.com/badge?p=traceur-loader
 [coffee-npm]: https://img.shields.io/npm/v/coffee-loader.svg
 [coffee-size]: https://packagephobia.com/badge?p=coffee-loader
 [type-npm]: https://img.shields.io/npm/v/ts-loader.svg
