@@ -6,8 +6,9 @@ module.exports = {
 				oneOf: [
 					{
 						test: {
-							and: [/a.\.js$/, /b\.js$/]
+							and: [/a.\.js$/, /b\.js$/, { not: /not-/ }]
 						},
+						resourceQuery: { not: /not/ },
 						loader: "./loader",
 						options: "first"
 					},

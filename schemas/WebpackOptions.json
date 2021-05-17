@@ -3399,38 +3399,11 @@
           "absolutePath": true
         },
         {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "and": {
-              "description": "Logical AND.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionsAbsolute"
-                }
-              ]
-            },
-            "not": {
-              "description": "Logical NOT.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionsAbsolute"
-                }
-              ]
-            },
-            "or": {
-              "description": "Logical OR.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionsAbsolute"
-                }
-              ]
-            }
-          }
-        },
-        {
           "instanceof": "Function",
           "tsType": "((value: string) => boolean)"
+        },
+        {
+          "$ref": "#/definitions/RuleSetLogicalConditionsAbsolute"
         },
         {
           "$ref": "#/definitions/RuleSetConditionsAbsolute"
@@ -3531,6 +3504,37 @@
           "oneOf": [
             {
               "$ref": "#/definitions/RuleSetConditions"
+            }
+          ]
+        }
+      }
+    },
+    "RuleSetLogicalConditionsAbsolute": {
+      "description": "Logic operators used in a condition matcher.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "and": {
+          "description": "Logical AND.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionsAbsolute"
+            }
+          ]
+        },
+        "not": {
+          "description": "Logical NOT.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionAbsolute"
+            }
+          ]
+        },
+        "or": {
+          "description": "Logical OR.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionsAbsolute"
             }
           ]
         }

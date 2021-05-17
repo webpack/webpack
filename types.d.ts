@@ -8991,21 +8991,8 @@ type RuleSetCondition =
 type RuleSetConditionAbsolute =
 	| string
 	| RegExp
-	| {
-			/**
-			 * Logical AND.
-			 */
-			and?: RuleSetConditionAbsolute[];
-			/**
-			 * Logical NOT.
-			 */
-			not?: RuleSetConditionAbsolute[];
-			/**
-			 * Logical OR.
-			 */
-			or?: RuleSetConditionAbsolute[];
-	  }
 	| ((value: string) => boolean)
+	| RuleSetLogicalConditionsAbsolute
 	| RuleSetConditionAbsolute[];
 type RuleSetConditionOrConditions =
 	| string
@@ -9037,6 +9024,31 @@ declare interface RuleSetLogicalConditions {
 	 * Logical OR.
 	 */
 	or?: RuleSetCondition[];
+}
+
+/**
+ * Logic operators used in a condition matcher.
+ */
+declare interface RuleSetLogicalConditionsAbsolute {
+	/**
+	 * Logical AND.
+	 */
+	and?: RuleSetConditionAbsolute[];
+
+	/**
+	 * Logical NOT.
+	 */
+	not?:
+		| string
+		| RegExp
+		| ((value: string) => boolean)
+		| RuleSetLogicalConditionsAbsolute
+		| RuleSetConditionAbsolute[];
+
+	/**
+	 * Logical OR.
+	 */
+	or?: RuleSetConditionAbsolute[];
 }
 
 /**
@@ -9079,21 +9091,8 @@ declare interface RuleSetRule {
 	exclude?:
 		| string
 		| RegExp
-		| {
-				/**
-				 * Logical AND.
-				 */
-				and?: RuleSetConditionAbsolute[];
-				/**
-				 * Logical NOT.
-				 */
-				not?: RuleSetConditionAbsolute[];
-				/**
-				 * Logical OR.
-				 */
-				or?: RuleSetConditionAbsolute[];
-		  }
 		| ((value: string) => boolean)
+		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
 	/**
@@ -9107,21 +9106,8 @@ declare interface RuleSetRule {
 	include?:
 		| string
 		| RegExp
-		| {
-				/**
-				 * Logical AND.
-				 */
-				and?: RuleSetConditionAbsolute[];
-				/**
-				 * Logical NOT.
-				 */
-				not?: RuleSetConditionAbsolute[];
-				/**
-				 * Logical OR.
-				 */
-				or?: RuleSetConditionAbsolute[];
-		  }
 		| ((value: string) => boolean)
+		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
 	/**
@@ -9130,21 +9116,8 @@ declare interface RuleSetRule {
 	issuer?:
 		| string
 		| RegExp
-		| {
-				/**
-				 * Logical AND.
-				 */
-				and?: RuleSetConditionAbsolute[];
-				/**
-				 * Logical NOT.
-				 */
-				not?: RuleSetConditionAbsolute[];
-				/**
-				 * Logical OR.
-				 */
-				or?: RuleSetConditionAbsolute[];
-		  }
 		| ((value: string) => boolean)
+		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
 	/**
@@ -9198,21 +9171,8 @@ declare interface RuleSetRule {
 	realResource?:
 		| string
 		| RegExp
-		| {
-				/**
-				 * Logical AND.
-				 */
-				and?: RuleSetConditionAbsolute[];
-				/**
-				 * Logical NOT.
-				 */
-				not?: RuleSetConditionAbsolute[];
-				/**
-				 * Logical OR.
-				 */
-				or?: RuleSetConditionAbsolute[];
-		  }
 		| ((value: string) => boolean)
+		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
 	/**
@@ -9226,21 +9186,8 @@ declare interface RuleSetRule {
 	resource?:
 		| string
 		| RegExp
-		| {
-				/**
-				 * Logical AND.
-				 */
-				and?: RuleSetConditionAbsolute[];
-				/**
-				 * Logical NOT.
-				 */
-				not?: RuleSetConditionAbsolute[];
-				/**
-				 * Logical OR.
-				 */
-				or?: RuleSetConditionAbsolute[];
-		  }
 		| ((value: string) => boolean)
+		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
 	/**
@@ -9279,21 +9226,8 @@ declare interface RuleSetRule {
 	test?:
 		| string
 		| RegExp
-		| {
-				/**
-				 * Logical AND.
-				 */
-				and?: RuleSetConditionAbsolute[];
-				/**
-				 * Logical NOT.
-				 */
-				not?: RuleSetConditionAbsolute[];
-				/**
-				 * Logical OR.
-				 */
-				or?: RuleSetConditionAbsolute[];
-		  }
 		| ((value: string) => boolean)
+		| RuleSetLogicalConditionsAbsolute
 		| RuleSetConditionAbsolute[];
 
 	/**
