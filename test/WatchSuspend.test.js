@@ -98,28 +98,47 @@ describe("WatchSuspend", () => {
 			watching.resume();
 		});
 
-		it("should not ignore changes during resumed compilation", async () => {
-			// aggregateTimeout must be long enough for this test
-			//  So set-up new watcher and wait when initial compilation is done
-			await new Promise(resolve => {
-				watching.close();
-				watching = compiler.watch({ aggregateTimeout: 1000 }, resolve);
-			});
-			return new Promise(resolve => {
-				watching.suspend();
-				fs.writeFileSync(filePath, "'baz'", "utf-8");
+		for (const changeBefore of [false, true])
+			for (const delay of [200, 1500]) {
+				// eslint-disable-next-line no-loop-func
+				it(`should not ignore changes during resumed compilation (changeBefore: ${changeBefore}, delay: ${delay}ms)`, async () => {
+					// aggregateTimeout must be long enough for this test
+					//  So set-up new watcher and wait when initial compilation is done
+					await new Promise(resolve => {
+						watching.close(() => {
+							watching = compiler.watch({ aggregateTimeout: 1000 }, () => {
+								resolve();
+							});
+						});
+					});
+					return new Promise(resolve => {
+						if (changeBefore) fs.writeFileSync(filePath, "'bar'", "utf-8");
+						setTimeout(() => {
+							watching.suspend();
+							fs.writeFileSync(filePath, "'baz'", "utf-8");
 
-				// Run resume between "changed" and "aggregated" events
-				setTimeout(() => {
-					watching.resume();
-
-					setTimeout(() => {
-						expect(fs.readFileSync(outputPath, "utf-8")).toContain("'baz'");
-						resolve();
-					}, 2000);
-				}, 200);
-			});
-		});
+							onChange = "throw";
+							setTimeout(() => {
+								onChange = () => {
+									expect(fs.readFileSync(outputPath, "utf-8")).toContain(
+										"'baz'"
+									);
+									expect(
+										compiler.modifiedFiles &&
+											Array.from(compiler.modifiedFiles).sort()
+									).toEqual([filePath]);
+									expect(
+										compiler.removedFiles && Array.from(compiler.removedFiles)
+									).toEqual([]);
+									onChange = null;
+									resolve();
+								};
+								watching.resume();
+							}, delay);
+						}, 200);
+					});
+				});
+			}
 
 		it("should not drop changes when suspended", done => {
 			const aggregateTimeout = 50;
