@@ -9,4 +9,9 @@ it("should have the correct exports", () => {
 		y: true,
 		z: false
 	});
+
+	return Promise.all([
+		import("./a-or-b").then(m => m.default(it)),
+		import("./b-or-c").then(m => m.default(it))
+	]);
 });

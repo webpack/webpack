@@ -12,14 +12,6 @@ module.exports = {
 		c: {
 			import: "./c",
 			runtime: "runtime-c"
-		},
-		"a-or-b": {
-			import: "./a-or-b",
-			dependOn: ["a", "b"]
-		},
-		"b-or-c": {
-			import: "./b-or-c",
-			dependOn: ["b", "c"]
 		}
 	}
 };

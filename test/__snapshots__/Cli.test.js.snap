@@ -56,6 +56,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "cache-allow-collecting-memory": Object {
+    "configs": Array [
+      Object {
+        "description": "Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.",
+        "multiple": false,
+        "path": "cache.allowCollectingMemory",
+        "type": "boolean",
+      },
+    ],
+    "description": "Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "cache-cache-directory": Object {
     "configs": Array [
       Object {
@@ -98,26 +111,26 @@ Object {
   "cache-idle-timeout": Object {
     "configs": Array [
       Object {
-        "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').",
+        "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
         "multiple": false,
         "path": "cache.idleTimeout",
         "type": "number",
       },
     ],
-    "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').",
+    "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
     "multiple": false,
     "simpleType": "number",
   },
   "cache-idle-timeout-for-initial-store": Object {
     "configs": Array [
       Object {
-        "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').",
+        "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
         "multiple": false,
         "path": "cache.idleTimeoutForInitialStore",
         "type": "number",
       },
     ],
-    "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').",
+    "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
     "multiple": false,
     "simpleType": "number",
   },
@@ -173,6 +186,45 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "cache-max-age": Object {
+    "configs": Array [
+      Object {
+        "description": "Time for which unused cache entries stay in the filesystem cache at minimum (in milliseconds).",
+        "multiple": false,
+        "path": "cache.maxAge",
+        "type": "number",
+      },
+    ],
+    "description": "Time for which unused cache entries stay in the filesystem cache at minimum (in milliseconds).",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "cache-max-generations": Object {
+    "configs": Array [
+      Object {
+        "description": "Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).",
+        "multiple": false,
+        "path": "cache.maxGenerations",
+        "type": "number",
+      },
+    ],
+    "description": "Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "cache-max-memory-generations": Object {
+    "configs": Array [
+      Object {
+        "description": "Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.",
+        "multiple": false,
+        "path": "cache.maxMemoryGenerations",
+        "type": "number",
+      },
+    ],
+    "description": "Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "cache-name": Object {
     "configs": Array [
       Object {
@@ -185,6 +237,19 @@ Object {
     "description": "Name for the cache. Different names will lead to different coexisting caches.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "cache-profile": Object {
+    "configs": Array [
+      Object {
+        "description": "Track and log detailed timing information for individual cache items.",
+        "multiple": false,
+        "path": "cache.profile",
+        "type": "boolean",
+      },
+    ],
+    "description": "Track and log detailed timing information for individual cache items.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "cache-store": Object {
     "configs": Array [
@@ -351,6 +416,19 @@ Object {
       },
     ],
     "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-execute-module": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable build-time execution of modules from the module graph for plugins and loaders.",
+        "multiple": false,
+        "path": "experiments.executeModule",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable build-time execution of modules from the module graph for plugins and loaders.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -712,6 +790,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "infrastructure-logging-append-only": Object {
+    "configs": Array [
+      Object {
+        "description": "Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.",
+        "multiple": false,
+        "path": "infrastructureLogging.appendOnly",
+        "type": "boolean",
+      },
+    ],
+    "description": "Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "infrastructure-logging-colors": Object {
+    "configs": Array [
+      Object {
+        "description": "Enables/Disables colorful output. This option is only used when no custom console is provided.",
+        "multiple": false,
+        "path": "infrastructureLogging.colors",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enables/Disables colorful output. This option is only used when no custom console is provided.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "infrastructure-logging-debug": Object {
     "configs": Array [
       Object {
@@ -877,6 +981,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-asset-emit": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+        "multiple": false,
+        "path": "module.generator.asset.emit",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-generator-asset-filename": Object {
     "configs": Array [
       Object {
@@ -920,6 +1037,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-asset-public-path": Object {
+    "configs": Array [
+      Object {
+        "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
+        "multiple": false,
+        "path": "module.generator.asset.publicPath",
+        "type": "string",
+      },
+    ],
+    "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-resource-emit": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+        "multiple": false,
+        "path": "module.generator.asset/resource.emit",
+        "type": "boolean",
+      },
+    ],
+    "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-generator-asset-resource-filename": Object {
     "configs": Array [
       Object {
@@ -930,6 +1073,19 @@ Object {
       },
     ],
     "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-resource-public-path": Object {
+    "configs": Array [
+      Object {
+        "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
+        "multiple": false,
+        "path": "module.generator.asset/resource.publicPath",
+        "type": "string",
+      },
+    ],
+    "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -4960,7 +5116,7 @@ Object {
   "output-public-path": Object {
     "configs": Array [
       Object {
-        "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
+        "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
         "multiple": false,
         "path": "output.publicPath",
         "type": "enum",
@@ -4969,13 +5125,13 @@ Object {
         ],
       },
       Object {
-        "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
+        "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
         "multiple": false,
         "path": "output.publicPath",
         "type": "string",
       },
     ],
-    "description": "The \`publicPath\` specifies the public URL address of the output files when referenced in a browser.",
+    "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -5023,18 +5179,66 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-strict-module-error-handling": Object {
+    "configs": Array [
+      Object {
+        "description": "Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.",
+        "multiple": false,
+        "path": "output.strictModuleErrorHandling",
+        "type": "boolean",
+      },
+    ],
+    "description": "Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-strict-module-exception-handling": Object {
     "configs": Array [
       Object {
-        "description": "Handles exceptions in module loading correctly at a performance cost.",
+        "description": "Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.",
         "multiple": false,
         "path": "output.strictModuleExceptionHandling",
         "type": "boolean",
       },
     ],
-    "description": "Handles exceptions in module loading correctly at a performance cost.",
+    "description": "Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "output-trusted-types": Object {
+    "configs": Array [
+      Object {
+        "description": "Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.",
+        "multiple": false,
+        "path": "output.trustedTypes",
+        "type": "enum",
+        "values": Array [
+          true,
+        ],
+      },
+      Object {
+        "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+        "multiple": false,
+        "path": "output.trustedTypes",
+        "type": "string",
+      },
+    ],
+    "description": "Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name. The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-trusted-types-policy-name": Object {
+    "configs": Array [
+      Object {
+        "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+        "multiple": false,
+        "path": "output.trustedTypes.policyName",
+        "type": "string",
+      },
+    ],
+    "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "output-unique-name": Object {
     "configs": Array [
@@ -7231,6 +7435,19 @@ Object {
       },
     ],
     "description": "Group modules by their path.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "stats-group-modules-by-type": Object {
+    "configs": Array [
+      Object {
+        "description": "Group modules by their type.",
+        "multiple": false,
+        "path": "stats.groupModulesByType",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group modules by their type.",
     "multiple": false,
     "simpleType": "boolean",
   },

@@ -4,13 +4,12 @@ const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
 const rimraf = require("rimraf");
+const webpack = require("..");
 const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const captureStdio = require("./helpers/captureStdio");
-
-let webpack;
 
 const terserForTesting = new TerserPlugin({
 	parallel: false
@@ -53,7 +52,6 @@ const describeCases = config => {
 		let stderr;
 		beforeEach(() => {
 			stderr = captureStdio(process.stderr, true);
-			webpack = require("..");
 		});
 		afterEach(() => {
 			stderr.restore();

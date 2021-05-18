@@ -16,7 +16,15 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(png|svg)$/,
-				type: "asset/resource"
+				type: "asset/resource",
+				rules: [
+					{
+						resourceQuery: "?custom2",
+						generator: {
+							filename: "custom-images/success[ext]"
+						}
+					}
+				]
 			}
 		]
 	}

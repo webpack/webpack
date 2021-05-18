@@ -1,4 +1,5 @@
-module.exports = function() {
+/** @type {import("../../../../").LoaderDefinition} */
+module.exports = function () {
 	const callback = this.async();
 	let finished = false;
 	this.loadModule("./module.js", (err, result) => {

@@ -1,5 +1,6 @@
 import { v } from "./module";
 
-it("should have the correct exports", () => {
-	expect(v).toBe("v");
-});
+export default it =>
+	it("should have the correct exports", () => {
+		expect(v).toBe("v");
+	});

@@ -5,6 +5,7 @@ const fs = require("graceful-fs");
 const vm = require("vm");
 const { URL } = require("url");
 const rimraf = require("rimraf");
+const webpack = require("..");
 const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
@@ -15,8 +16,6 @@ const CurrentScript = require("./helpers/CurrentScript");
 const prepareOptions = require("./helpers/prepareOptions");
 const { parseResource } = require("../lib/util/identifier");
 const captureStdio = require("./helpers/captureStdio");
-
-let webpack;
 
 const casesPath = path.join(__dirname, "configCases");
 const categories = fs.readdirSync(casesPath).map(cat => {
@@ -34,7 +33,6 @@ const describeCases = config => {
 		let stderr;
 		beforeEach(() => {
 			stderr = captureStdio(process.stderr, true);
-			webpack = require("..");
 		});
 		afterEach(() => {
 			stderr.restore();
@@ -351,7 +349,14 @@ const describeCases = config => {
 														options
 													),
 													importScripts: url => {
-														_require(path.dirname(p), options, `./${url}`);
+														expect(url).toMatch(
+															/^https:\/\/test\.cases\/path\//
+														);
+														_require(
+															outputDirectory,
+															options,
+															`.${url.slice("https://test.cases/path".length)}`
+														);
 													},
 													module: m,
 													exports: m.exports,
@@ -378,9 +383,10 @@ const describeCases = config => {
 													moduleScope.window = globalContext;
 													moduleScope.self = globalContext;
 													moduleScope.URL = URL;
-													moduleScope.Worker = require("./helpers/createFakeWorker")(
-														{ outputDirectory }
-													);
+													moduleScope.Worker =
+														require("./helpers/createFakeWorker")({
+															outputDirectory
+														});
 													runInNewContext = true;
 												}
 												if (testConfig.moduleScope) {

@@ -1,4 +1,5 @@
-module.exports = function() {
+/** @type {import("../../../../").LoaderDefinition<string>} */
+module.exports = function () {
 	const { name, expect, usedExports } = JSON.parse(this.query.slice(1));
 	return [
 		`if (Math.random() < 0) require(${JSON.stringify(

@@ -1,3 +1,4 @@
+/** @type {import("../../../../").LoaderDefinition} */
 module.exports = async function () {
 	const defaultResolve = this.getResolve({});
 	const overrideResolve = this.getResolve({
@@ -20,6 +21,7 @@ module.exports = async function () {
 	expect(await defaultResolve(undefined, "package2").catch(e => "ok")).toBe(
 		"ok"
 	);
+	// @ts-expect-error undefined should not be a valid type
 	expect(await defaultResolve(undefined).catch(e => "ok")).toBe("ok");
 	return `
 export { default as a } from ${JSON.stringify(resolved1)};

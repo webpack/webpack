@@ -51,4 +51,42 @@ describe("util/identifier", () => {
 			});
 		});
 	});
+
+	describe("getUndoPath", () => {
+		const cases = [
+			["file.js", ""],
+			["file.js", "./", true],
+			["dir/file.js", "../"],
+			["dir/file.js", "../", true],
+			["./file.js", ""],
+			[".dir/file.js", "../"],
+			["./dir/file.js", "../"],
+			["./dir/././file.js", "../"],
+			["./dir/../file.js", ""],
+			["./dir/../file.js", "./", true],
+			["../file.js", "d/"],
+			["../file.js", "./d/", true],
+			["../dir/file.js", "../d/"],
+			[".././../dir/file.js", "../c/d/"],
+			["./.././../dir/file.js", "../c/d/"],
+			["../dir/../file.js", "d/"],
+			["../dir/../file.js", "./d/", true]
+		];
+		for (const [filename, expected, enforceRelative] of cases) {
+			it(`should handle ${filename} correctly${
+				enforceRelative ? " (enforced relative path)" : ""
+			}`, () => {
+				for (const outputPath of [
+					"/a/b/c/d",
+					"C:\\a\\b\\c\\d",
+					"/a/b/c/d/",
+					"C:\\a\\b\\c\\d\\"
+				]) {
+					expect(
+						identifierUtil.getUndoPath(filename, outputPath, enforceRelative)
+					).toBe(expected);
+				}
+			});
+		}
+	});
 });

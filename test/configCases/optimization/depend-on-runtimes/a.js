@@ -9,4 +9,6 @@ it("should have the correct exports", () => {
 		y: false,
 		z: false
 	});
+
+	return import("./a-or-b").then(m => m.default(it));
 });

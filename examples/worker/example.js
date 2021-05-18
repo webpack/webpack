@@ -25,7 +25,8 @@ const output2 = document.getElementById("output2");
 const chatWorker = new SharedWorker(
 	new URL("./chat-worker.js", import.meta.url),
 	{
-		name: "chat"
+		name: "chat",
+		type: "module"
 	}
 );
 
@@ -77,7 +78,8 @@ fib1.addEventListener("change", async () => {
 /// FIBONACCI with worker ///
 
 const fibWorker = new Worker(new URL("./fib-worker.js", import.meta.url), {
-	name: "fibonacci"
+	name: "fibonacci",
+	type: "module"
 	/* webpackEntryOptions: { filename: "workers/[name].js" } */
 });
 

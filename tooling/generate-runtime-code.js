@@ -15,7 +15,8 @@ const files = ["lib/util/semver.js"];
 		const content = fs.readFileSync(filePath, "utf-8");
 		const exports = require(`../${file}`);
 
-		const regexp = /\n\/\/#region runtime code: (.+)\n[\s\S]+?\/\/#endregion\n/g;
+		const regexp =
+			/\n\/\/#region runtime code: (.+)\n[\s\S]+?\/\/#endregion\n/g;
 
 		const replaces = new Map();
 

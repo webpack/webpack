@@ -123,6 +123,19 @@ export type LibraryType =
  */
 export type UmdNamedDefine = boolean;
 /**
+ * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+ */
+export type PublicPath = "auto" | RawPublicPath;
+/**
+ * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+ */
+export type RawPublicPath =
+	| string
+	| ((
+			pathData: import("../lib/Compilation").PathData,
+			assetInfo?: import("../lib/Compilation").AssetInfo
+	  ) => string);
+/**
  * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
  */
 export type EntryRuntime = string;
@@ -538,16 +551,6 @@ export type Path = string;
  */
 export type Pathinfo = "verbose" | boolean;
 /**
- * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
- */
-export type PublicPath =
-	| "auto"
-	| string
-	| ((
-			pathData: import("../lib/Compilation").PathData,
-			assetInfo?: import("../lib/Compilation").AssetInfo
-	  ) => string);
-/**
  * This option enables loading async chunks via a custom script type, such as script type="module".
  */
 export type ScriptType = false | "text/javascript" | "module";
@@ -560,7 +563,11 @@ export type SourceMapFilename = string;
  */
 export type SourcePrefix = string;
 /**
- * Handles exceptions in module loading correctly at a performance cost.
+ * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
+ */
+export type StrictModuleErrorHandling = boolean;
+/**
+ * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
  */
 export type StrictModuleExceptionHandling = boolean;
 /**
@@ -897,6 +904,10 @@ export interface WebpackOptions {
  */
 export interface MemoryCacheOptions {
 	/**
+	 * Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).
+	 */
+	maxGenerations?: number;
+	/**
 	 * In memory caching.
 	 */
 	type: "memory";
@@ -905,6 +916,10 @@ export interface MemoryCacheOptions {
  * Options object for persistent file-based caching.
  */
 export interface FileCacheOptions {
+	/**
+	 * Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.
+	 */
+	allowCollectingMemory?: boolean;
 	/**
 	 * Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').
 	 */
@@ -927,11 +942,11 @@ export interface FileCacheOptions {
 	 */
 	hashAlgorithm?: string;
 	/**
-	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').
+	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack').
 	 */
 	idleTimeout?: number;
 	/**
-	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').
+	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').
 	 */
 	idleTimeoutForInitialStore?: number;
 	/**
@@ -943,9 +958,21 @@ export interface FileCacheOptions {
 	 */
 	managedPaths?: string[];
 	/**
+	 * Time for which unused cache entries stay in the filesystem cache at minimum (in milliseconds).
+	 */
+	maxAge?: number;
+	/**
+	 * Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.
+	 */
+	maxMemoryGenerations?: number;
+	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
 	 */
 	name?: string;
+	/**
+	 * Track and log detailed timing information for individual cache items.
+	 */
+	profile?: boolean;
 	/**
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
@@ -1002,6 +1029,10 @@ export interface EntryDescription {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+	/**
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: PublicPath;
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
@@ -1086,6 +1117,10 @@ export interface Experiments {
 	 * Support WebAssembly as asynchronous EcmaScript Module.
 	 */
 	asyncWebAssembly?: boolean;
+	/**
+	 * Enable build-time execution of modules from the module graph for plugins and loaders.
+	 */
+	executeModule?: boolean;
 	/**
 	 * Enable module and chunk layers.
 	 */
@@ -1181,6 +1216,18 @@ export interface ExternalsPresets {
  */
 export interface InfrastructureLogging {
 	/**
+	 * Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.
+	 */
+	appendOnly?: boolean;
+	/**
+	 * Enables/Disables colorful output. This option is only used when no custom console is provided.
+	 */
+	colors?: boolean;
+	/**
+	 * Custom console used for logging.
+	 */
+	console?: Console;
+	/**
 	 * Enable debug logging for specific loggers.
 	 */
 	debug?: boolean | FilterTypes;
@@ -1188,6 +1235,10 @@ export interface InfrastructureLogging {
 	 * Log level.
 	 */
 	level?: "none" | "error" | "warn" | "info" | "log" | "verbose";
+	/**
+	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
+	 */
+	stream?: NodeJS.WritableStream;
 }
 /**
  * Custom values available in the loader context.
@@ -2011,7 +2062,7 @@ export interface Output {
 	 */
 	pathinfo?: Pathinfo;
 	/**
-	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: PublicPath;
 	/**
@@ -2027,9 +2078,17 @@ export interface Output {
 	 */
 	sourcePrefix?: SourcePrefix;
 	/**
-	 * Handles exceptions in module loading correctly at a performance cost.
+	 * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
+	 */
+	strictModuleErrorHandling?: StrictModuleErrorHandling;
+	/**
+	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
+	/**
+	 * Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.
+	 */
+	trustedTypes?: true | string | TrustedTypes;
 	/**
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
 	 */
@@ -2100,6 +2159,15 @@ export interface Environment {
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
+}
+/**
+ * Use a Trusted Types policy to create urls for chunks.
+ */
+export interface TrustedTypes {
+	/**
+	 * The name of the Trusted Types policy created by webpack to serve bundle chunks.
+	 */
+	policyName?: string;
 }
 /**
  * Configuration object for web performance recommendations.
@@ -2387,6 +2455,10 @@ export interface StatsOptions {
 	 */
 	groupModulesByPath?: boolean;
 	/**
+	 * Group modules by their type.
+	 */
+	groupModulesByType?: boolean;
+	/**
 	 * Add the hash of the compilation.
 	 */
 	hash?: boolean;
@@ -2577,9 +2649,17 @@ export interface AssetParserOptions {
  */
 export interface AssetResourceGeneratorOptions {
 	/**
+	 * Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.
+	 */
+	emit?: boolean;
+	/**
 	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	filename?: FilenameTemplate;
+	/**
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: RawPublicPath;
 }
 /**
  * No generator options are supported for this module type.
@@ -2617,6 +2697,10 @@ export interface EntryDescriptionNormalized {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+	/**
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: PublicPath;
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
@@ -2944,7 +3028,7 @@ export interface OutputNormalized {
 	 */
 	pathinfo?: Pathinfo;
 	/**
-	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: PublicPath;
 	/**
@@ -2960,9 +3044,17 @@ export interface OutputNormalized {
 	 */
 	sourcePrefix?: SourcePrefix;
 	/**
-	 * Handles exceptions in module loading correctly at a performance cost.
+	 * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
+	 */
+	strictModuleErrorHandling?: StrictModuleErrorHandling;
+	/**
+	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
+	/**
+	 * Use a Trusted Types policy to create urls for chunks.
+	 */
+	trustedTypes?: TrustedTypes;
 	/**
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
 	 */

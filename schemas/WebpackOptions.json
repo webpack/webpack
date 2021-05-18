@@ -101,8 +101,15 @@
         "dataUrl": {
           "$ref": "#/definitions/AssetGeneratorDataUrl"
         },
+        "emit": {
+          "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+          "type": "boolean"
+        },
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
+        },
+        "publicPath": {
+          "$ref": "#/definitions/RawPublicPath"
         }
       }
     },
@@ -168,8 +175,15 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "emit": {
+          "description": "Emit an output asset from this asset module. This can be set to 'false' to omit emitting e. g. for SSR.",
+          "type": "boolean"
+        },
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
+        },
+        "publicPath": {
+          "$ref": "#/definitions/RawPublicPath"
         }
       }
     },
@@ -456,6 +470,9 @@
         "library": {
           "$ref": "#/definitions/LibraryOptions"
         },
+        "publicPath": {
+          "$ref": "#/definitions/PublicPath"
+        },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"
         },
@@ -503,6 +520,9 @@
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
+        },
+        "publicPath": {
+          "$ref": "#/definitions/PublicPath"
         },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"
@@ -659,6 +679,10 @@
         },
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+          "type": "boolean"
+        },
+        "executeModule": {
+          "description": "Enable build-time execution of modules from the module graph for plugins and loaders.",
           "type": "boolean"
         },
         "layers": {
@@ -900,6 +924,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "allowCollectingMemory": {
+          "description": "Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.",
+          "type": "boolean"
+        },
         "buildDependencies": {
           "description": "Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').",
           "type": "object",
@@ -928,12 +956,12 @@
           "type": "string"
         },
         "idleTimeout": {
-          "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').",
+          "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
           "type": "number",
           "minimum": 0
         },
         "idleTimeoutForInitialStore": {
-          "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').",
+          "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
           "type": "number",
           "minimum": 0
         },
@@ -957,9 +985,23 @@
             "minLength": 1
           }
         },
+        "maxAge": {
+          "description": "Time for which unused cache entries stay in the filesystem cache at minimum (in milliseconds).",
+          "type": "number",
+          "minimum": 0
+        },
+        "maxMemoryGenerations": {
+          "description": "Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.",
+          "type": "number",
+          "minimum": 0
+        },
         "name": {
           "description": "Name for the cache. Different names will lead to different coexisting caches.",
           "type": "string"
+        },
+        "profile": {
+          "description": "Track and log detailed timing information for individual cache items.",
+          "type": "boolean"
         },
         "store": {
           "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
@@ -1187,6 +1229,18 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "appendOnly": {
+          "description": "Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.",
+          "type": "boolean"
+        },
+        "colors": {
+          "description": "Enables/Disables colorful output. This option is only used when no custom console is provided.",
+          "type": "boolean"
+        },
+        "console": {
+          "description": "Custom console used for logging.",
+          "tsType": "Console"
+        },
         "debug": {
           "description": "Enable debug logging for specific loggers.",
           "anyOf": [
@@ -1202,6 +1256,10 @@
         "level": {
           "description": "Log level.",
           "enum": ["none", "error", "warn", "info", "log", "verbose"]
+        },
+        "stream": {
+          "description": "Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.",
+          "tsType": "NodeJS.WritableStream"
         }
       }
     },
@@ -1460,7 +1518,8 @@
             "description": "A part of the library name.",
             "type": "string",
             "minLength": 1
-          }
+          },
+          "minItems": 1
         },
         {
           "type": "string",
@@ -1532,6 +1591,11 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "maxGenerations": {
+          "description": "Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).",
+          "type": "number",
+          "minimum": 1
+        },
         "type": {
           "description": "In memory caching.",
           "enum": ["memory"]
@@ -2269,15 +2333,15 @@
                 "description": "The test property is a cache group name, but using the test option of the cache group could be intended instead.",
                 "anyOf": [
                   {
-                    "instanceof": "Function",
-                    "tsType": "Function"
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
                   },
                   {
                     "type": "string"
                   },
                   {
-                    "instanceof": "RegExp",
-                    "tsType": "RegExp"
+                    "instanceof": "Function",
+                    "tsType": "Function"
                   }
                 ]
               }
@@ -2304,7 +2368,7 @@
             "description": "Size type, like 'javascript', 'webassembly'.",
             "type": "string"
           },
-          "minLength": 1
+          "minItems": 1
         },
         "enforceSizeThreshold": {
           "description": "Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.",
@@ -2616,8 +2680,27 @@
         "sourcePrefix": {
           "$ref": "#/definitions/SourcePrefix"
         },
+        "strictModuleErrorHandling": {
+          "$ref": "#/definitions/StrictModuleErrorHandling"
+        },
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
+        },
+        "trustedTypes": {
+          "description": "Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.",
+          "anyOf": [
+            {
+              "enum": [true]
+            },
+            {
+              "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "$ref": "#/definitions/TrustedTypes"
+            }
+          ]
         },
         "umdNamedDefine": {
           "cli": {
@@ -2766,8 +2849,14 @@
         "sourcePrefix": {
           "$ref": "#/definitions/SourcePrefix"
         },
+        "strictModuleErrorHandling": {
+          "$ref": "#/definitions/StrictModuleErrorHandling"
+        },
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
+        },
+        "trustedTypes": {
+          "$ref": "#/definitions/TrustedTypes"
         },
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
@@ -2897,11 +2986,19 @@
       "type": "boolean"
     },
     "PublicPath": {
-      "description": "The `publicPath` specifies the public URL address of the output files when referenced in a browser.",
+      "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
       "anyOf": [
         {
           "enum": ["auto"]
         },
+        {
+          "$ref": "#/definitions/RawPublicPath"
+        }
+      ]
+    },
+    "RawPublicPath": {
+      "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
+      "anyOf": [
         {
           "type": "string"
         },
@@ -3124,8 +3221,7 @@
           "type": "array",
           "items": {
             "description": "Extension added to the request when trying to find the file.",
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           }
         },
         "fallback": {
@@ -4073,6 +4169,10 @@
           "description": "Group modules by their path.",
           "type": "boolean"
         },
+        "groupModulesByType": {
+          "description": "Group modules by their type.",
+          "type": "boolean"
+        },
         "hash": {
           "description": "Add the hash of the compilation.",
           "type": "boolean"
@@ -4246,8 +4346,12 @@
         }
       ]
     },
+    "StrictModuleErrorHandling": {
+      "description": "Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.",
+      "type": "boolean"
+    },
     "StrictModuleExceptionHandling": {
-      "description": "Handles exceptions in module loading correctly at a performance cost.",
+      "description": "Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.",
       "type": "boolean"
     },
     "Target": {
@@ -4270,6 +4374,18 @@
           "minLength": 1
         }
       ]
+    },
+    "TrustedTypes": {
+      "description": "Use a Trusted Types policy to create urls for chunks.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "policyName": {
+          "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
     },
     "UmdNamedDefine": {
       "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
@@ -4556,6 +4672,7 @@
       "required": ["apply"]
     }
   },
+  "title": "WebpackOptions",
   "description": "Options object as provided by the user.",
   "type": "object",
   "additionalProperties": false,

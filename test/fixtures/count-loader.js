@@ -1,5 +1,6 @@
 let counter = 0;
 
-module.exports = function() {
+/** @type {import("../../../../").LoaderDefinition} */
+module.exports = function () {
 	return `module.exports = ${counter++};`;
 };
