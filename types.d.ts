@@ -11596,8 +11596,8 @@ declare abstract class Watching {
 	};
 	compiler: Compiler;
 	running: boolean;
-	watcher: any;
-	pausedWatcher: any;
+	watcher?: null | Watcher;
+	pausedWatcher?: null | Watcher;
 	watch(
 		files: Iterable<string>,
 		dirs: Iterable<string>,
