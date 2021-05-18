@@ -169,10 +169,11 @@ describe("WatchTestCases", () => {
 									},
 									(err, stats) => {
 										if (err) return compilationFinished(err);
-										if (!stats)
+										if (!stats) {
 											return compilationFinished(
 												new Error("No stats reported from Compiler")
 											);
+										}
 										if (stats.hash === lastHash) return;
 										lastHash = stats.hash;
 										if (run.done && lastHash !== stats.hash) {
@@ -192,6 +193,7 @@ describe("WatchTestCases", () => {
 										}
 										if (waitMode) return;
 										run.done = true;
+										run.stats = stats;
 										if (err) return compilationFinished(err);
 										const statOptions = {
 											preset: "verbose",
@@ -383,6 +385,10 @@ describe("WatchTestCases", () => {
 						);
 						run.it = _it;
 						run.getNumberOfTests = getNumberOfTests;
+						it(`${run.name} should allow to read stats`, done => {
+							if (run.stats) run.stats.toString({ all: true });
+							done();
+						});
 					}
 
 					afterAll(() => {

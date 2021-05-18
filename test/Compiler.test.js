@@ -467,11 +467,12 @@ describe("Compiler", () => {
 			}
 		});
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
-		compiler.run((err, stats) => {
+		compiler.run((err, stats1) => {
 			if (err) return done(err);
 
-			compiler.run((err, stats) => {
+			compiler.run((err, stats2) => {
 				if (err) return done(err);
+				expect(stats1.toString({ all: true })).toBeTypeOf("string");
 				done();
 			});
 		});
