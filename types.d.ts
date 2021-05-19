@@ -1830,6 +1830,7 @@ declare class Compiler {
 	removedFiles: Set<string>;
 	fileTimestamps: Map<string, null | FileSystemInfoEntry | "ignore">;
 	contextTimestamps: Map<string, null | FileSystemInfoEntry | "ignore">;
+	fsStartTime: number;
 	resolverFactory: ResolverFactory;
 	infrastructureLogger: any;
 	options: WebpackOptionsNormalized;
@@ -11453,6 +11454,7 @@ declare abstract class Watching {
 	running: boolean;
 	watcher?: null | Watcher;
 	pausedWatcher?: null | Watcher;
+	lastWatcherStartTime?: number;
 	watch(
 		files: Iterable<string>,
 		dirs: Iterable<string>,
