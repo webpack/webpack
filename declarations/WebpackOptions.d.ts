@@ -240,21 +240,8 @@ export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
 export type RuleSetCondition =
 	| RegExp
 	| string
-	| {
-			/**
-			 * Logical AND.
-			 */
-			and?: RuleSetConditions;
-			/**
-			 * Logical NOT.
-			 */
-			not?: RuleSetConditions;
-			/**
-			 * Logical OR.
-			 */
-			or?: RuleSetConditions;
-	  }
 	| ((value: string) => boolean)
+	| RuleSetLogicalConditions
 	| RuleSetConditions;
 /**
  * A list of rule conditions.
@@ -272,21 +259,8 @@ export type RuleSetConditionOrConditionsAbsolute =
 export type RuleSetConditionAbsolute =
 	| RegExp
 	| string
-	| {
-			/**
-			 * Logical AND.
-			 */
-			and?: RuleSetConditionsAbsolute;
-			/**
-			 * Logical NOT.
-			 */
-			not?: RuleSetConditionsAbsolute;
-			/**
-			 * Logical OR.
-			 */
-			or?: RuleSetConditionsAbsolute;
-	  }
 	| ((value: string) => boolean)
+	| RuleSetLogicalConditionsAbsolute
 	| RuleSetConditionsAbsolute;
 /**
  * A list of rule conditions matching an absolute path.
@@ -1437,6 +1411,40 @@ export interface RuleSetRule {
 	 * Modifiers applied to the module when rule is matched.
 	 */
 	use?: RuleSetUse;
+}
+/**
+ * Logic operators used in a condition matcher.
+ */
+export interface RuleSetLogicalConditions {
+	/**
+	 * Logical AND.
+	 */
+	and?: RuleSetConditions;
+	/**
+	 * Logical NOT.
+	 */
+	not?: RuleSetCondition;
+	/**
+	 * Logical OR.
+	 */
+	or?: RuleSetConditions;
+}
+/**
+ * Logic operators used in a condition matcher.
+ */
+export interface RuleSetLogicalConditionsAbsolute {
+	/**
+	 * Logical AND.
+	 */
+	and?: RuleSetConditionsAbsolute;
+	/**
+	 * Logical NOT.
+	 */
+	not?: RuleSetConditionAbsolute;
+	/**
+	 * Logical OR.
+	 */
+	or?: RuleSetConditionsAbsolute;
 }
 /**
  * Options object for resolving requests.

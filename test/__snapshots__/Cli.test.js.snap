@@ -2945,6 +2945,25 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-compiler-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].compiler.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].compiler.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-dependency": Object {
     "configs": Array [
       Object {
@@ -2961,6 +2980,25 @@ Object {
       },
     ],
     "description": "Match dependency type.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-dependency-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].dependency.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].dependency.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3000,6 +3038,25 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-exclude-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].exclude.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].exclude.not",
+        "type": "path",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-include": Object {
     "configs": Array [
       Object {
@@ -3016,6 +3073,25 @@ Object {
       },
     ],
     "description": "Shortcut for resource.include.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-include-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].include.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].include.not",
+        "type": "path",
+      },
+    ],
+    "description": "Logical NOT.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3054,6 +3130,44 @@ Object {
       },
     ],
     "description": "Match layer of the issuer of this module (The module pointing to this module).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-issuer-layer-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].issuerLayer.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-issuer-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].issuer.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].issuer.not",
+        "type": "path",
+      },
+    ],
+    "description": "Logical NOT.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3102,6 +3216,25 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-mimetype-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].mimetype.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].mimetype.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-real-resource": Object {
     "configs": Array [
       Object {
@@ -3118,6 +3251,25 @@ Object {
       },
     ],
     "description": "Match the real resource path of the module.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-real-resource-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].realResource.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].realResource.not",
+        "type": "path",
+      },
+    ],
+    "description": "Logical NOT.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3172,6 +3324,44 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-resource-fragment-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].resourceFragment.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-resource-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].resource.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].resource.not",
+        "type": "path",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-resource-query": Object {
     "configs": Array [
       Object {
@@ -3188,6 +3378,25 @@ Object {
       },
     ],
     "description": "Match the resource query of the module.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-resource-query-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].resourceQuery.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].resourceQuery.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
     "multiple": true,
     "simpleType": "string",
   },
@@ -3220,6 +3429,25 @@ Object {
       },
     ],
     "description": "Shortcut for resource.test.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-test-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].test.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].test.not",
+        "type": "path",
+      },
+    ],
+    "description": "Logical NOT.",
     "multiple": true,
     "simpleType": "string",
   },
