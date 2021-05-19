@@ -7034,6 +7034,10 @@ declare class NormalModule extends Module {
 		 */
 		resource: string;
 		/**
+		 * resource resolve data
+		 */
+		resourceResolveData?: Record<string, any>;
+		/**
 		 * path + query of the matched resource (virtual)
 		 */
 		matchResource?: string;
@@ -7067,6 +7071,7 @@ declare class NormalModule extends Module {
 	generator: Generator;
 	generatorOptions: object;
 	resource: string;
+	resourceResolveData?: Record<string, any>;
 	matchResource?: string;
 	loaders: LoaderItem[];
 	error?: WebpackError;
@@ -9518,6 +9523,16 @@ declare interface RuleSetRule {
 	 * Match and execute these rules when this rule is matched.
 	 */
 	rules?: RuleSetRule[];
+
+	/**
+	 * Match module scheme.
+	 */
+	scheme?:
+		| string
+		| RegExp
+		| ((value: string) => boolean)
+		| RuleSetLogicalConditions
+		| RuleSetCondition[];
 
 	/**
 	 * Flags a module as with or without side effects.

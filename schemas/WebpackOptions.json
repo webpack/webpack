@@ -3728,6 +3728,14 @@
             ]
           }
         },
+        "scheme": {
+          "description": "Match module scheme.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ]
+        },
         "sideEffects": {
           "description": "Flags a module as with or without side effects.",
           "type": "boolean"

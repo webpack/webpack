@@ -3400,6 +3400,44 @@ Object {
     "multiple": true,
     "simpleType": "string",
   },
+  "module-rules-scheme": Object {
+    "configs": Array [
+      Object {
+        "description": "Match module scheme.",
+        "multiple": true,
+        "path": "module.rules[].scheme",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Match module scheme.",
+        "multiple": true,
+        "path": "module.rules[].scheme",
+        "type": "string",
+      },
+    ],
+    "description": "Match module scheme.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-rules-scheme-not": Object {
+    "configs": Array [
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].scheme.not",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Logical NOT.",
+        "multiple": true,
+        "path": "module.rules[].scheme.not",
+        "type": "string",
+      },
+    ],
+    "description": "Logical NOT.",
+    "multiple": true,
+    "simpleType": "string",
+  },
   "module-rules-side-effects": Object {
     "configs": Array [
       Object {
