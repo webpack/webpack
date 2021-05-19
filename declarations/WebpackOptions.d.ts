@@ -1396,6 +1396,10 @@ export interface RuleSetRule {
 	 */
 	rules?: RuleSetRule[];
 	/**
+	 * Match module scheme.
+	 */
+	scheme?: RuleSetConditionOrConditions;
+	/**
 	 * Flags a module as with or without side effects.
 	 */
 	sideEffects?: boolean;
