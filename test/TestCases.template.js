@@ -245,7 +245,10 @@ const describeCases = config => {
 													"utf-8"
 												);
 												const jsonStats = stats.toJson({
-													errorDetails: true
+													errorDetails: true,
+													modules: false,
+													assets: false,
+													chunks: false
 												});
 												if (
 													checkArrayExpectation(
