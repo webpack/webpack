@@ -300,7 +300,7 @@ const describeCases = config => {
 										run();
 									}
 								},
-								config.cache ? 10000 : 60000
+								config.cache ? 20000 : 60000
 							);
 
 							it(
