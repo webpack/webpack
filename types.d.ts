@@ -12099,19 +12099,19 @@ declare namespace exports {
 			) => 0 | 1 | -1;
 		}
 		export namespace serialization {
-			export let register: (
+			export const register: (
 				Constructor: Constructor,
 				request: string,
 				name: string,
 				serializer: ObjectSerializer
 			) => void;
-			export let registerLoader: (
+			export const registerLoader: (
 				regExp: RegExp,
 				loader: (arg0: string) => boolean
 			) => void;
-			export let registerNotSerializable: (Constructor: Constructor) => void;
-			export let NOT_SERIALIZABLE: object;
-			export let buffersSerializer: Serializer;
+			export const registerNotSerializable: (Constructor: Constructor) => void;
+			export const NOT_SERIALIZABLE: object;
+			export const buffersSerializer: Serializer;
 			export let createFileSerializer: (fs?: any) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
