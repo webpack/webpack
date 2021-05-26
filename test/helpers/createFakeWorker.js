@@ -62,14 +62,20 @@ require(${JSON.stringify(path.resolve(outputDirectory, file))});
 			this.worker = new (require("worker_threads").Worker)(workerBootstrap, {
 				eval: true
 			});
+
+			this._onmessage = undefined;
 		}
 
 		set onmessage(value) {
-			this.worker.on("message", data => {
-				value({
-					data
-				});
-			});
+			if (this._onmessage) this.worker.off("message", this._onmessage);
+			this.worker.on(
+				"message",
+				(this._onmessage = data => {
+					value({
+						data
+					});
+				})
+			);
 		}
 
 		postMessage(data) {
