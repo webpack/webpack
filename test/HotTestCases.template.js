@@ -29,7 +29,7 @@ const describeCases = config => {
 				category.tests.forEach(testName => {
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const filterPath = path.join(testDirectory, "test.filter.js");
-					if (fs.existsSync(filterPath) && !require(filterPath)()) {
+					if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
 						describe.skip(testName, () => {
 							it("filtered", () => {});
 						});
