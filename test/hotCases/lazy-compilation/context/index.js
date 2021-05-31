@@ -1,11 +1,32 @@
-// TODO: Why is this giving "No tests exported by test case"?
-it("should compile to lazy imported context", done => {
-	const req = require.context("./modules", /^\.\/.*\.js$/);
-	const result = req("./demo");
+import contextImport from "./context-import.js";
+import generation from "./generation.js";
 
-	// It's not clear why timeout would be needed now since req is a sync call
-	setTimeout(() => {
-		expect(result).toBe(42);
-		done();
-	}, 1000);
-});
+import.meta.webpackHot.accept("./generation.js");
+
+for (const name of ["demo", "module"]) {
+	it("should compile to lazy imported context element " + name, done => {
+		let resolved;
+		const promise = contextImport(name)
+			.then(r => (resolved = r))
+			.catch(done);
+		const start = generation;
+		expect(resolved).toBe(undefined);
+		setTimeout(() => {
+			expect(resolved).toBe(undefined);
+			expect(generation).toBe(start);
+			NEXT(
+				require("../../update")(done, true, () => {
+					promise.then(result => {
+						try {
+							expect(result).toHaveProperty("default", name);
+							expect(generation).toBe(start + 1);
+							done();
+						} catch (e) {
+							done(e);
+						}
+					}, done);
+				})
+			);
+		}, 1000);
+	});
+}
