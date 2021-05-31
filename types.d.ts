@@ -2375,6 +2375,7 @@ declare interface ContextModuleOptions {
 	include?: RegExp;
 	exclude?: RegExp;
 	groupOptions?: RawChunkGroupOptions;
+	typePrefix?: string;
 	category?: string;
 
 	/**

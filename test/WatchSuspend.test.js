@@ -22,7 +22,8 @@ describe("WatchSuspend", () => {
 		const filePath = path.join(fixturePath, "file.js");
 		const file2Path = path.join(fixturePath, "file2.js");
 		const file3Path = path.join(fixturePath, "file3.js");
-		const outputPath = path.join(fixturePath, "bundle.js");
+		const outputPath = path.join(__dirname, "js/WatchSuspend");
+		const outputFile = path.join(outputPath, "bundle.js");
 		let compiler = null;
 		let watching = null;
 		let onChange = null;
@@ -44,7 +45,7 @@ describe("WatchSuspend", () => {
 				mode: "development",
 				entry: filePath,
 				output: {
-					path: fixturePath,
+					path: outputPath,
 					filename: "bundle.js"
 				}
 			});
@@ -72,7 +73,7 @@ describe("WatchSuspend", () => {
 
 		it("should compile successfully", done => {
 			onChange = () => {
-				expect(fs.readFileSync(outputPath, "utf-8")).toContain("'foo'");
+				expect(fs.readFileSync(outputFile, "utf-8")).toContain("'foo'");
 				onChange = null;
 				done();
 			};
@@ -91,7 +92,7 @@ describe("WatchSuspend", () => {
 
 		it("should resume compilation", done => {
 			onChange = () => {
-				expect(fs.readFileSync(outputPath, "utf-8")).toContain("'bar'");
+				expect(fs.readFileSync(outputFile, "utf-8")).toContain("'bar'");
 				onChange = null;
 				done();
 			};
@@ -120,7 +121,7 @@ describe("WatchSuspend", () => {
 							onChange = "throw";
 							setTimeout(() => {
 								onChange = () => {
-									expect(fs.readFileSync(outputPath, "utf-8")).toContain(
+									expect(fs.readFileSync(outputFile, "utf-8")).toContain(
 										"'baz'"
 									);
 									expect(
@@ -166,7 +167,7 @@ describe("WatchSuspend", () => {
 
 						onChange = () => {
 							onChange = null;
-							expect(fs.readFileSync(outputPath, "utf-8")).toContain("'bar'");
+							expect(fs.readFileSync(outputFile, "utf-8")).toContain("'bar'");
 							done();
 						};
 					}, 200);
