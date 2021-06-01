@@ -2441,7 +2441,7 @@ LOG from webpack.FileSystemInfo
 exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
 "a-normal:
   assets by path *.js 3.22 KiB
-    asset 3ff4cb81976a33814443-3ff4cb.js 2.7 KiB [emitted] [immutable] [minimized] (name: runtime)
+    asset f967a165cb7549ae4373-f967a1.js 2.7 KiB [emitted] [immutable] [minimized] (name: runtime)
     asset a639a9edc4557744bf94-a639a9.js 288 bytes [emitted] [immutable] [minimized] (name: lazy)
     asset e00b58ce2785691cd374-e00b58.js 225 bytes [emitted] [immutable] [minimized] (name: index)
     asset 666f2b8847021ccc7608-666f2b.js 21 bytes [emitted] [immutable] [minimized] (name: a, b)
@@ -2449,7 +2449,7 @@ exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
     asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index 2.92 KiB (5.89 KiB) = 3ff4cb81976a33814443-3ff4cb.js 2.7 KiB e00b58ce2785691cd374-e00b58.js 225 bytes 1 auxiliary asset
+  Entrypoint index 2.92 KiB (5.89 KiB) = f967a165cb7549ae4373-f967a1.js 2.7 KiB e00b58ce2785691cd374-e00b58.js 225 bytes 1 auxiliary asset
   Entrypoint a 21 bytes = 666f2b8847021ccc7608-666f2b.js
   Entrypoint b 21 bytes = 666f2b8847021ccc7608-666f2b.js
   runtime modules 7.19 KiB 9 modules
@@ -2468,7 +2468,7 @@ exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
 
 b-normal:
   assets by path *.js 3.22 KiB
-    asset 5d9329c3b14d7be316de-5d9329.js 2.7 KiB [emitted] [immutable] [minimized] (name: runtime)
+    asset 92b100c9dd880fb6fedd-92b100.js 2.7 KiB [emitted] [immutable] [minimized] (name: runtime)
     asset a639a9edc4557744bf94-a639a9.js 288 bytes [emitted] [immutable] [minimized] (name: lazy)
     asset e00b58ce2785691cd374-e00b58.js 225 bytes [emitted] [immutable] [minimized] (name: index)
     asset 666f2b8847021ccc7608-666f2b.js 21 bytes [emitted] [immutable] [minimized] (name: a, b)
@@ -2476,7 +2476,7 @@ b-normal:
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
     asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index 2.92 KiB (5.89 KiB) = 5d9329c3b14d7be316de-5d9329.js 2.7 KiB e00b58ce2785691cd374-e00b58.js 225 bytes 1 auxiliary asset
+  Entrypoint index 2.92 KiB (5.89 KiB) = 92b100c9dd880fb6fedd-92b100.js 2.7 KiB e00b58ce2785691cd374-e00b58.js 225 bytes 1 auxiliary asset
   Entrypoint a 21 bytes = 666f2b8847021ccc7608-666f2b.js
   Entrypoint b 21 bytes = 666f2b8847021ccc7608-666f2b.js
   runtime modules 7.19 KiB 9 modules
@@ -2495,8 +2495,8 @@ b-normal:
 
 a-source-map:
   assets by path *.js 3.44 KiB
-    asset 15bc5e7a3cba409fc993-15bc5e.js 2.76 KiB [emitted] [immutable] [minimized] (name: runtime)
-      sourceMap 15bc5e7a3cba409fc993-15bc5e.js.map 14.2 KiB [emitted] [dev] (auxiliary name: runtime)
+    asset 455b77a33a8878c30d52-455b77.js 2.76 KiB [emitted] [immutable] [minimized] (name: runtime)
+      sourceMap 455b77a33a8878c30d52-455b77.js.map 14.2 KiB [emitted] [dev] (auxiliary name: runtime)
     asset 05c637d15dff2d0dc5fd-05c637.js 344 bytes [emitted] [immutable] [minimized] (name: lazy)
       sourceMap 05c637d15dff2d0dc5fd-05c637.js.map 399 bytes [emitted] [dev] (auxiliary name: lazy)
     asset c41aff3dd03dbe1d8aa3-c41aff.js 281 bytes [emitted] [immutable] [minimized] (name: index)
@@ -2507,7 +2507,7 @@ a-source-map:
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
     asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index 3.03 KiB (20.5 KiB) = 15bc5e7a3cba409fc993-15bc5e.js 2.76 KiB c41aff3dd03dbe1d8aa3-c41aff.js 281 bytes 3 auxiliary assets
+  Entrypoint index 3.03 KiB (20.5 KiB) = 455b77a33a8878c30d52-455b77.js 2.76 KiB c41aff3dd03dbe1d8aa3-c41aff.js 281 bytes 3 auxiliary assets
   Entrypoint a 77 bytes (254 bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
   Entrypoint b 77 bytes (254 bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
   runtime modules 7.19 KiB 9 modules
@@ -2526,8 +2526,8 @@ a-source-map:
 
 b-source-map:
   assets by path *.js 3.44 KiB
-    asset 34097d095846bc2527cb-34097d.js 2.76 KiB [emitted] [immutable] [minimized] (name: runtime)
-      sourceMap 34097d095846bc2527cb-34097d.js.map 14.2 KiB [emitted] [dev] (auxiliary name: runtime)
+    asset 455b77a33a8878c30d52-455b77.js 2.76 KiB [emitted] [immutable] [minimized] (name: runtime)
+      sourceMap 455b77a33a8878c30d52-455b77.js.map 14.2 KiB [emitted] [dev] (auxiliary name: runtime)
     asset 05c637d15dff2d0dc5fd-05c637.js 344 bytes [emitted] [immutable] [minimized] (name: lazy)
       sourceMap 05c637d15dff2d0dc5fd-05c637.js.map 395 bytes [emitted] [dev] (auxiliary name: lazy)
     asset c41aff3dd03dbe1d8aa3-c41aff.js 281 bytes [emitted] [immutable] [minimized] (name: index)
@@ -2538,7 +2538,7 @@ b-source-map:
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
     asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index 3.03 KiB (20.4 KiB) = 34097d095846bc2527cb-34097d.js 2.76 KiB c41aff3dd03dbe1d8aa3-c41aff.js 281 bytes 3 auxiliary assets
+  Entrypoint index 3.03 KiB (20.4 KiB) = 455b77a33a8878c30d52-455b77.js 2.76 KiB c41aff3dd03dbe1d8aa3-c41aff.js 281 bytes 3 auxiliary assets
   Entrypoint a 77 bytes (254 bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
   Entrypoint b 77 bytes (254 bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
   runtime modules 7.19 KiB 9 modules
