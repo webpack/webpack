@@ -11951,19 +11951,19 @@ declare namespace exports {
 		) => void;
 	}
 	export namespace dependencies {
-		export { ModuleDependency, ConstDependency, NullDependency };
+		export { ConstDependency, ModuleDependency, NullDependency };
 	}
 	export namespace ids {
 		export {
 			ChunkModuleIdRangePlugin,
-			NaturalModuleIdsPlugin,
-			OccurrenceModuleIdsPlugin,
-			NamedModuleIdsPlugin,
-			DeterministicChunkIdsPlugin,
 			DeterministicModuleIdsPlugin,
+			HashedModuleIdsPlugin,
+			NaturalModuleIdsPlugin,
+			NamedModuleIdsPlugin,
+			OccurrenceModuleIdsPlugin,
+			DeterministicChunkIdsPlugin,
 			NamedChunkIdsPlugin,
-			OccurrenceChunkIdsPlugin,
-			HashedModuleIdsPlugin
+			OccurrenceChunkIdsPlugin
 		};
 	}
 	export namespace javascript {
@@ -12180,10 +12180,10 @@ declare namespace exports {
 		Module,
 		ModuleGraph,
 		ModuleGraphConnection,
+		MultiCompiler,
 		NoEmitOnErrorsPlugin,
 		NormalModule,
 		NormalModuleReplacementPlugin,
-		MultiCompiler,
 		Parser,
 		PrefetchPlugin,
 		ProgressPlugin,
