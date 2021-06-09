@@ -62,7 +62,7 @@ export { DialogInline } from "./DialogInline";
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => /* binding */ Button
+/* harmony export */   "default": () => (/* binding */ Button)
 /* harmony export */ });
 const Button = () => {
   return /*#__PURE__*/React.createElement("button", null);
@@ -83,7 +83,7 @@ const Button = () => {
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Checkbox": () => /* binding */ Checkbox
+/* harmony export */   "Checkbox": () => (/* binding */ Checkbox)
 /* harmony export */ });
 const Checkbox = () => {
   return /*#__PURE__*/React.createElement("input", {
@@ -108,7 +108,7 @@ const Checkbox = () => {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components */ "./components/Button.js");
 /* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components */ "./components/Checkbox.js");
@@ -141,7 +141,7 @@ const Dashboard = () => {
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => /* binding */ Button
+/* harmony export */   "default": () => (/* binding */ Button)
 /* harmony export */ });
 const Button = () => {
   return /*#__PURE__*/React.createElement("button", null);
@@ -162,7 +162,7 @@ const Button = () => {
 
 "use strict";
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 const Dialog = ({
   children
@@ -187,7 +187,7 @@ const Dialog = ({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components */ "./components/Button.js");
 /* harmony import */ var _components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components */ "./components/Dialog.js");
@@ -213,12 +213,12 @@ const Login = () => {
 ## Unoptimized
 
 ```
-asset output.js 10.9 KiB [emitted] (name: main)
-asset pages_Login_js.output.js 2.84 KiB [emitted]
-asset pages_Dashboard_js.output.js 2.8 KiB [emitted]
-chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
+asset output.js 11 KiB [emitted] (name: main)
+asset pages_Login_js.output.js 2.85 KiB [emitted]
+asset pages_Dashboard_js.output.js 2.81 KiB [emitted]
+chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.54 KiB 8 modules
+  runtime modules 5.48 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 48 bytes [built] [code generated]
     [no exports used]
@@ -229,28 +229,28 @@ chunk (runtime: main) pages_Dashboard_js.output.js 513 bytes [rendered]
   dependent modules 244 bytes [dependent] 2 modules
   ./pages/Dashboard.js 269 bytes [optional] [built] [code generated]
     [exports: default]
-    context element ./Dashboard ./pages/ lazy ^\.\/.*$ namespace object ./Dashboard
-    context element ./Dashboard.js ./pages/ lazy ^\.\/.*$ namespace object ./Dashboard.js
+    import() context element ./Dashboard ./pages/ lazy ^\.\/.*$ namespace object ./Dashboard
+    import() context element ./Dashboard.js ./pages/ lazy ^\.\/.*$ namespace object ./Dashboard.js
 chunk (runtime: main) pages_Login_js.output.js 504 bytes [rendered]
   > ./Login ./pages/ lazy ^\.\/.*$ namespace object ./Login
   > ./Login.js ./pages/ lazy ^\.\/.*$ namespace object ./Login.js
   dependent modules 247 bytes [dependent] 2 modules
   ./pages/Login.js 257 bytes [optional] [built] [code generated]
     [exports: default]
-    context element ./Login ./pages/ lazy ^\.\/.*$ namespace object ./Login
-    context element ./Login.js ./pages/ lazy ^\.\/.*$ namespace object ./Login.js
-webpack 5.11.1 compiled successfully
+    import() context element ./Login ./pages/ lazy ^\.\/.*$ namespace object ./Login
+    import() context element ./Login.js ./pages/ lazy ^\.\/.*$ namespace object ./Login.js
+webpack 5.38.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.48 KiB [emitted] [minimized] (name: main)
+asset output.js 2.47 KiB [emitted] [minimized] (name: main)
 asset pages_Dashboard_js.output.js 469 bytes [emitted] [minimized]
 asset pages_Login_js.output.js 463 bytes [emitted] [minimized]
-chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.48 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.54 KiB 8 modules
+  runtime modules 5.48 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 48 bytes [built] [code generated]
     [no exports used]
@@ -261,15 +261,15 @@ chunk (runtime: main) pages_Dashboard_js.output.js 513 bytes [rendered]
   dependent modules 115 bytes [dependent] 1 module
   ./pages/Dashboard.js + 1 modules 398 bytes [optional] [built] [code generated]
     [exports: default]
-    context element ./Dashboard ./pages/ lazy ^\.\/.*$ namespace object ./Dashboard
-    context element ./Dashboard.js ./pages/ lazy ^\.\/.*$ namespace object ./Dashboard.js
+    import() context element ./Dashboard ./pages/ lazy ^\.\/.*$ namespace object ./Dashboard
+    import() context element ./Dashboard.js ./pages/ lazy ^\.\/.*$ namespace object ./Dashboard.js
 chunk (runtime: main) pages_Login_js.output.js 504 bytes [rendered]
   > ./Login ./pages/ lazy ^\.\/.*$ namespace object ./Login
   > ./Login.js ./pages/ lazy ^\.\/.*$ namespace object ./Login.js
   dependent modules 115 bytes [dependent] 1 module
   ./pages/Login.js + 1 modules 389 bytes [optional] [built] [code generated]
     [exports: default]
-    context element ./Login ./pages/ lazy ^\.\/.*$ namespace object ./Login
-    context element ./Login.js ./pages/ lazy ^\.\/.*$ namespace object ./Login.js
-webpack 5.11.1 compiled successfully
+    import() context element ./Login ./pages/ lazy ^\.\/.*$ namespace object ./Login
+    import() context element ./Login.js ./pages/ lazy ^\.\/.*$ namespace object ./Login.js
+webpack 5.38.1 compiled successfully
 ```

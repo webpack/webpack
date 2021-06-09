@@ -56,7 +56,9 @@ module.exports = {
 		idleTimeout: 5000
 	},
 	experiments: {
-		lazyCompilation: true
+		lazyCompilation: {
+			entries: false
+		}
 	},
 	devServer: {
 		hot: true,

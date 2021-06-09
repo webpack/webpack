@@ -46,45 +46,45 @@ module.exports = {
 ## Unoptimized
 
 ```
-asset b5631f235298de2b0347.js 119 KiB [emitted] [immutable] (id hint: vendors)
-asset 32ef04e3e05f35a25e0c.js 25.6 KiB [emitted] [immutable] (name: main)
-asset 87295143e657ec03cfb0.js 15.3 KiB [emitted] [immutable]
-chunk (runtime: main) 32ef04e3e05f35a25e0c.js (main) 8.58 KiB (javascript) 5.02 KiB (runtime) [entry] [rendered]
+asset f2fe25321765cafe1394.js 119 KiB [emitted] [immutable] (id hint: vendors)
+asset 1c3aac55182bf64500ee.js 25.7 KiB [emitted] [immutable] (name: main)
+asset d55c486284db715b4167.js 15.3 KiB [emitted] [immutable]
+chunk (runtime: main) 1c3aac55182bf64500ee.js (main) 8.58 KiB (javascript) 4.96 KiB (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 5.02 KiB 6 modules
+  runtime modules 4.96 KiB 6 modules
   dependent modules 8.54 KiB [dependent] 3 modules
   ./example.js 42 bytes [built] [code generated]
-chunk (runtime: main) 87295143e657ec03cfb0.js 6.24 KiB [rendered]
+chunk (runtime: main) d55c486284db715b4167.js 6.24 KiB [rendered]
   > react-dom ./example.js 2:0-22
   dependent modules 4.72 KiB [dependent] 1 module
   ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
   ../../node_modules/scheduler/index.js 198 bytes [built] [code generated]
-chunk (runtime: main) b5631f235298de2b0347.js (id hint: vendors) 118 KiB [rendered] [recorded] aggressive splitted, reused as split chunk (cache group: defaultVendors)
+chunk (runtime: main) f2fe25321765cafe1394.js (id hint: vendors) 118 KiB [rendered] [recorded] aggressive splitted, reused as split chunk (cache group: defaultVendors)
   > react-dom ./example.js 2:0-22
   ../../node_modules/react-dom/cjs/react-dom.production.min.js 118 KiB [built] [code generated]
-webpack 5.11.1 compiled successfully
+webpack 5.38.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset 2865709fe07b9e0f6050.js 115 KiB [emitted] [immutable] [minimized] (id hint: vendors) 1 related asset
-asset 3435907a64efdaf8187b.js 8.6 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
-asset 643cc77ff66a1a2ca1cf.js 4.71 KiB [emitted] [immutable] [minimized] 1 related asset
-chunk (runtime: main) 3435907a64efdaf8187b.js (main) 8.58 KiB (javascript) 5.02 KiB (runtime) [entry] [rendered]
+asset 5c673e6af145d6efb5b4.js 115 KiB [emitted] [immutable] [minimized] (id hint: vendors) 1 related asset
+asset 51ff743bcfe2c04f3f07.js 8.58 KiB [emitted] [immutable] [minimized] (name: main) 1 related asset
+asset 72afa0fbe37eff02803b.js 4.71 KiB [emitted] [immutable] [minimized] 1 related asset
+chunk (runtime: main) 51ff743bcfe2c04f3f07.js (main) 8.58 KiB (javascript) 4.96 KiB (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 5.02 KiB 6 modules
+  runtime modules 4.96 KiB 6 modules
   dependent modules 8.54 KiB [dependent] 3 modules
   ./example.js 42 bytes [built] [code generated]
-chunk (runtime: main) 643cc77ff66a1a2ca1cf.js 6.24 KiB [rendered]
+chunk (runtime: main) 72afa0fbe37eff02803b.js 6.24 KiB [rendered]
   > react-dom ./example.js 2:0-22
   dependent modules 4.72 KiB [dependent] 1 module
   ../../node_modules/react-dom/index.js 1.33 KiB [built] [code generated]
   ../../node_modules/scheduler/index.js 198 bytes [built] [code generated]
-chunk (runtime: main) 2865709fe07b9e0f6050.js (id hint: vendors) 118 KiB [rendered] [recorded] aggressive splitted, reused as split chunk (cache group: defaultVendors)
+chunk (runtime: main) 5c673e6af145d6efb5b4.js (id hint: vendors) 118 KiB [rendered] [recorded] aggressive splitted, reused as split chunk (cache group: defaultVendors)
   > react-dom ./example.js 2:0-22
   ../../node_modules/react-dom/cjs/react-dom.production.min.js 118 KiB [built] [code generated]
-webpack 5.11.1 compiled successfully
+webpack 5.38.1 compiled successfully
 ```
 
 ## Records
@@ -93,7 +93,7 @@ webpack 5.11.1 compiled successfully
 {
   "aggressiveSplits": [
     {
-      "hash": "b5631f235298de2b03479f5e2e9ecd2e",
+      "hash": "f2fe25321765cafe1394b09fbb9aa0cb",
       "id": 2,
       "modules": [
         "../../node_modules/react-dom/cjs/react-dom.production.min.js"
