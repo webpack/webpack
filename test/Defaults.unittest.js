@@ -120,10 +120,16 @@ describe("Defaults", () => {
 		      Object {
 		        "test": /\\\\\\.json\\$/i,
 		        "type": "json",
+                "assert": Object {
+		          "type": "json",
+		        },
 		      },
 		      Object {
 		        "mimetype": "application/json",
 		        "type": "json",
+                "assert": Object {
+		          "type": "json",
+		        },
 		      },
 		      Object {
 		        "resolve": Object {
