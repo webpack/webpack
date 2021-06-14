@@ -4361,6 +4361,16 @@ type IgnorePluginOptions =
 			 */
 			checkResource?: (resource: string, context: string) => boolean;
 	  };
+
+/**
+ * Specify assertions on the imported module. If one of the assertion can't be met, the module will fail to import.
+ */
+declare interface ImportAssertions {
+	/**
+	 * The module type.
+	 */
+	type?: "json";
+}
 declare interface ImportModuleOptions {
 	/**
 	 * the target layer
@@ -6372,6 +6382,7 @@ declare class ModuleDependency extends Dependency {
 	request: string;
 	userRequest: string;
 	range: any;
+	assertions: Map<any, any>;
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
@@ -8928,6 +8939,7 @@ declare interface ResolveData {
 	resolveOptions?: ResolveOptionsWebpackOptions;
 	context: string;
 	request: string;
+	assertions: Map<any, any>;
 	dependencies: ModuleDependency[];
 	createData: Object;
 	fileDependencies: LazySet<string>;
@@ -9339,6 +9351,11 @@ declare interface RuleSetLogicalConditionsAbsolute {
  * A rule description with conditions and effects for modules.
  */
 declare interface RuleSetRule {
+	/**
+	 * Specify assertions on the imported module. If one of the assertion can't be met, the module will fail to import.
+	 */
+	assert?: ImportAssertions;
+
 	/**
 	 * Match the child compiler name.
 	 */

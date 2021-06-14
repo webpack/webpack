@@ -1237,6 +1237,18 @@
       "description": "Wrap javascript code into IIFE's to avoid leaking into global scope.",
       "type": "boolean"
     },
+    "ImportAssertions": {
+      "description": "Specify assertions on the imported module. If one of the assertion can't be met, the module will fail to import.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "description": "The module type.",
+          "type": "string",
+          "enum": ["json"]
+        }
+      }
+    },
     "ImportFunctionName": {
       "description": "The name of the native import() function (can be exchanged for a polyfill).",
       "type": "string"
@@ -3585,6 +3597,15 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "assert": {
+          "description": "Specify assertions on the imported module. If one of the assertion can't be met, the module will fail to import.",
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ImportAssertions"
+            }
+          ]
+        },
         "compiler": {
           "description": "Match the child compiler name.",
           "oneOf": [

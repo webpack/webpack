@@ -1317,6 +1317,10 @@ export interface ModuleOptions {
  */
 export interface RuleSetRule {
 	/**
+	 * Specify assertions on the imported module. If one of the assertion can't be met, the module will fail to import.
+	 */
+	assert?: ImportAssertions;
+	/**
 	 * Match the child compiler name.
 	 */
 	compiler?: RuleSetConditionOrConditions;
@@ -1426,6 +1430,15 @@ export interface RuleSetRule {
 	 * Modifiers applied to the module when rule is matched.
 	 */
 	use?: RuleSetUse;
+}
+/**
+ * Specify assertions on the imported module. If one of the assertion can't be met, the module will fail to import.
+ */
+export interface ImportAssertions {
+	/**
+	 * The module type.
+	 */
+	type?: "json";
 }
 /**
  * Logic operators used in a condition matcher.
