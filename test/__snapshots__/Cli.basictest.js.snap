@@ -323,13 +323,13 @@ Object {
   "cache-readonly": Object {
     "configs": Array [
       Object {
-        "description": "Set filesystem cache in readonly mode. Main usage is for parallel webpack builds with warmed up cache.",
+        "description": "Enable/disable readonly mode.",
         "multiple": false,
         "path": "cache.readonly",
         "type": "boolean",
       },
     ],
-    "description": "Set filesystem cache in readonly mode. Main usage is for parallel webpack builds with warmed up cache.",
+    "description": "Enable/disable readonly mode.",
     "multiple": false,
     "simpleType": "boolean",
   },

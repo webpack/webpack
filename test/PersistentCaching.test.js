@@ -210,6 +210,7 @@ sum([1,2,3])
 		});
 		await compile({ entry: `./src/main.js` });
 		const firstCacheFiles = (await readdir(cachePath)).sort();
+		// cSpell:words Mtimes
 		const firstMtimes = firstCacheFiles.map(
 			f => fs.statSync(path.join(cachePath, f)).mtime
 		);
@@ -230,6 +231,7 @@ import 'lodash';
 		expect(cacheFiles).toStrictEqual(firstCacheFiles);
 		expect(
 			firstCacheFiles.map(f => fs.statSync(path.join(cachePath, f)).mtime)
+			// cSpell:words Mtimes
 		).toStrictEqual(firstMtimes);
-	}, 120000);
+	}, 20000);
 });

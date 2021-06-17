@@ -4262,7 +4262,7 @@ declare interface FileCacheOptions {
 	profile?: boolean;
 
 	/**
-	 * Set filesystem cache in readonly mode. Main usage is for parallel webpack builds with warmed up cache.
+	 * Enable/disable readonly mode.
 	 */
 	readonly?: boolean;
 
