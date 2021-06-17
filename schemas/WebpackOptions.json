@@ -1024,6 +1024,10 @@
           "description": "Track and log detailed timing information for individual cache items.",
           "type": "boolean"
         },
+        "readonly": {
+          "description": "Set filesystem cache in readonly mode. Main usage is for parallel webpack builds with warmed up cache.",
+          "type": "boolean"
+        },
         "store": {
           "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
           "enum": ["pack"]

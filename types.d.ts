@@ -3887,6 +3887,11 @@ declare interface FileCacheOptions {
 	profile?: boolean;
 
 	/**
+	 * Set filesystem cache in readonly mode. Main usage is for parallel webpack builds with warmed up cache.
+	 */
+	readonly?: boolean;
+
+	/**
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
 	store?: "pack";

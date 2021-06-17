@@ -225,7 +225,8 @@
     "dependabot",
     "browserslist",
     "samsunginternet",
-    "pnpm"
+    "pnpm",
+    "readonly"
   ],
   "ignoreRegExpList": ["/Author.+/", "/data:.*/", "/\"mappings\":\".+\"/"],
   "ignorePaths": ["**/dist/**", "examples/**/README.md"]

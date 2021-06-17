@@ -199,4 +199,37 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 		await compile(configAdditions);
 		await expect(execute()).resolves.toEqual({ ok: true });
 	}, 120000);
+
+	it("should not overwrite cache files if readonly = true", async () => {
+		await updateSrc({
+			"main.js": `
+import { sum } from 'lodash';
+
+sum([1,2,3])
+			`
+		});
+		await compile({ entry: `./src/main.js` });
+		const firstCacheFiles = (await readdir(cachePath)).sort();
+		const firstMtimes = firstCacheFiles.map(
+			f => fs.statSync(path.join(cachePath, f)).mtime
+		);
+
+		await updateSrc({
+			"main.js": `
+import 'lodash';
+			`
+		});
+		await compile({
+			entry: `./src/main.js`,
+			cache: {
+				...config.cache,
+				readonly: true
+			}
+		});
+		const cacheFiles = (await readdir(cachePath)).sort();
+		expect(cacheFiles).toStrictEqual(firstCacheFiles);
+		expect(
+			firstCacheFiles.map(f => fs.statSync(path.join(cachePath, f)).mtime)
+		).toStrictEqual(firstMtimes);
+	}, 120000);
 });
