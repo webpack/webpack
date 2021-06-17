@@ -358,6 +358,7 @@ declare abstract class AsyncQueue<T, K, R> {
 	isProcessing(item: T): boolean;
 	isQueued(item: T): boolean;
 	isDone(item: T): boolean;
+	clear(): void;
 }
 declare class AsyncWebAssemblyModulesPlugin {
 	constructor(options?: any);
