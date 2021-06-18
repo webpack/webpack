@@ -4305,16 +4305,6 @@ type IgnorePluginOptions =
 			 */
 			checkResource?: (resource: string, context: string) => boolean;
 	  };
-
-/**
- * Specify assertions on the imported module. If one of the assertion can't be met, the module will fail to import.
- */
-declare interface ImportAssertions {
-	/**
-	 * The module type.
-	 */
-	type?: "json";
-}
 declare interface ImportModuleOptions {
 	/**
 	 * the target layer
@@ -9407,9 +9397,9 @@ declare interface RuleSetLogicalConditionsAbsolute {
  */
 declare interface RuleSetRule {
 	/**
-	 * Specify assertions on the imported module. If one of the assertion can't be met, the module will fail to import.
+	 * Match on import assertions of the dependency.
 	 */
-	assert?: ImportAssertions;
+	assert?: { [index: string]: RuleSetConditionOrConditions };
 
 	/**
 	 * Match the child compiler name.
