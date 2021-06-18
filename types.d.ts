@@ -7203,7 +7203,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	};
 	emitFile(
 		name: string,
-		content: string,
+		content: string | Buffer,
 		sourceMap?: string,
 		assetInfo?: AssetInfo
 	): void;
