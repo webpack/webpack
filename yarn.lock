@@ -1225,10 +1225,10 @@ acorn-globals@^6.0.0:
     acorn "^7.1.1"
     acorn-walk "^7.1.1"
 
-acorn-import-assertions@^1.4.6:
-  version "1.4.6"
-  resolved "https://registry.yarnpkg.com/acorn-import-assertions/-/acorn-import-assertions-1.4.6.tgz#4c319605512950af5da82f4893ab8a087299fde2"
-  integrity sha512-wMx12i/IaRy3IyA4XzOhwgGzRRLa2Vhj30Pk99pqG2becPTV3ip/3ANM+4zrRilBs2JUTp3opRoIkxJ4f3II4g==
+acorn-import-assertions@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/acorn-import-assertions/-/acorn-import-assertions-1.5.0.tgz#97635d406b3ebec4bdb81609efdb6f6092f0e8fc"
+  integrity sha512-4vMjmirB7FVXfFv3KXT76JJw0TqHNmczYK205OW+K3b9CmW14xclZ1+juB1Hm5KwK1QyN81ZlNbE1XiH60SyYw==
 
 acorn-jsx@^5.3.1:
   version "5.3.1"
