@@ -123,6 +123,19 @@ export type LibraryType =
  */
 export type UmdNamedDefine = boolean;
 /**
+ * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+ */
+export type PublicPath = "auto" | RawPublicPath;
+/**
+ * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+ */
+export type RawPublicPath =
+	| string
+	| ((
+			pathData: import("../lib/Compilation").PathData,
+			assetInfo?: import("../lib/Compilation").AssetInfo
+	  ) => string);
+/**
  * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
  */
 export type EntryRuntime = string;
@@ -227,21 +240,8 @@ export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
 export type RuleSetCondition =
 	| RegExp
 	| string
-	| {
-			/**
-			 * Logical AND.
-			 */
-			and?: RuleSetConditions;
-			/**
-			 * Logical NOT.
-			 */
-			not?: RuleSetConditions;
-			/**
-			 * Logical OR.
-			 */
-			or?: RuleSetConditions;
-	  }
 	| ((value: string) => boolean)
+	| RuleSetLogicalConditions
 	| RuleSetConditions;
 /**
  * A list of rule conditions.
@@ -259,21 +259,8 @@ export type RuleSetConditionOrConditionsAbsolute =
 export type RuleSetConditionAbsolute =
 	| RegExp
 	| string
-	| {
-			/**
-			 * Logical AND.
-			 */
-			and?: RuleSetConditionsAbsolute;
-			/**
-			 * Logical NOT.
-			 */
-			not?: RuleSetConditionsAbsolute;
-			/**
-			 * Logical OR.
-			 */
-			or?: RuleSetConditionsAbsolute;
-	  }
 	| ((value: string) => boolean)
+	| RuleSetLogicalConditionsAbsolute
 	| RuleSetConditionsAbsolute;
 /**
  * A list of rule conditions matching an absolute path.
@@ -537,19 +524,6 @@ export type Path = string;
  * Include comments with information about the modules.
  */
 export type Pathinfo = "verbose" | boolean;
-/**
- * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
- */
-export type PublicPath = "auto" | RawPublicPath;
-/**
- * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
- */
-export type RawPublicPath =
-	| string
-	| ((
-			pathData: import("../lib/Compilation").PathData,
-			assetInfo?: import("../lib/Compilation").AssetInfo
-	  ) => string);
 /**
  * This option enables loading async chunks via a custom script type, such as script type="module".
  */
@@ -917,6 +891,10 @@ export interface MemoryCacheOptions {
  */
 export interface FileCacheOptions {
 	/**
+	 * Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.
+	 */
+	allowCollectingMemory?: boolean;
+	/**
 	 * Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').
 	 */
 	buildDependencies?: {
@@ -938,11 +916,11 @@ export interface FileCacheOptions {
 	 */
 	hashAlgorithm?: string;
 	/**
-	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').
+	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack').
 	 */
 	idleTimeout?: number;
 	/**
-	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').
+	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').
 	 */
 	idleTimeoutForInitialStore?: number;
 	/**
@@ -965,6 +943,10 @@ export interface FileCacheOptions {
 	 * Name for the cache. Different names will lead to different coexisting caches.
 	 */
 	name?: string;
+	/**
+	 * Track and log detailed timing information for individual cache items.
+	 */
+	profile?: boolean;
 	/**
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
@@ -1021,6 +1003,10 @@ export interface EntryDescription {
 	 * Options for library.
 	 */
 	library?: LibraryOptions;
+	/**
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: PublicPath;
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
@@ -1105,6 +1091,10 @@ export interface Experiments {
 	 * Support WebAssembly as asynchronous EcmaScript Module.
 	 */
 	asyncWebAssembly?: boolean;
+	/**
+	 * Enable build-time execution of modules from the module graph for plugins and loaders.
+	 */
+	executeModule?: boolean;
 	/**
 	 * Enable module and chunk layers.
 	 */
@@ -1200,6 +1190,18 @@ export interface ExternalsPresets {
  */
 export interface InfrastructureLogging {
 	/**
+	 * Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.
+	 */
+	appendOnly?: boolean;
+	/**
+	 * Enables/Disables colorful output. This option is only used when no custom console is provided.
+	 */
+	colors?: boolean;
+	/**
+	 * Custom console used for logging.
+	 */
+	console?: Console;
+	/**
 	 * Enable debug logging for specific loggers.
 	 */
 	debug?: boolean | FilterTypes;
@@ -1207,6 +1209,10 @@ export interface InfrastructureLogging {
 	 * Log level.
 	 */
 	level?: "none" | "error" | "warn" | "info" | "log" | "verbose";
+	/**
+	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
+	 */
+	stream?: NodeJS.WritableStream;
 }
 /**
  * Custom values available in the loader context.
@@ -1390,6 +1396,10 @@ export interface RuleSetRule {
 	 */
 	rules?: RuleSetRule[];
 	/**
+	 * Match module scheme.
+	 */
+	scheme?: RuleSetConditionOrConditions;
+	/**
 	 * Flags a module as with or without side effects.
 	 */
 	sideEffects?: boolean;
@@ -1405,6 +1415,40 @@ export interface RuleSetRule {
 	 * Modifiers applied to the module when rule is matched.
 	 */
 	use?: RuleSetUse;
+}
+/**
+ * Logic operators used in a condition matcher.
+ */
+export interface RuleSetLogicalConditions {
+	/**
+	 * Logical AND.
+	 */
+	and?: RuleSetConditions;
+	/**
+	 * Logical NOT.
+	 */
+	not?: RuleSetCondition;
+	/**
+	 * Logical OR.
+	 */
+	or?: RuleSetConditions;
+}
+/**
+ * Logic operators used in a condition matcher.
+ */
+export interface RuleSetLogicalConditionsAbsolute {
+	/**
+	 * Logical AND.
+	 */
+	and?: RuleSetConditionsAbsolute;
+	/**
+	 * Logical NOT.
+	 */
+	not?: RuleSetConditionAbsolute;
+	/**
+	 * Logical OR.
+	 */
+	or?: RuleSetConditionsAbsolute;
 }
 /**
  * Options object for resolving requests.
@@ -2054,6 +2098,10 @@ export interface Output {
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
 	/**
+	 * Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.
+	 */
+	trustedTypes?: true | string | TrustedTypes;
+	/**
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
 	 */
 	umdNamedDefine?: UmdNamedDefine;
@@ -2123,6 +2171,15 @@ export interface Environment {
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
+}
+/**
+ * Use a Trusted Types policy to create urls for chunks.
+ */
+export interface TrustedTypes {
+	/**
+	 * The name of the Trusted Types policy created by webpack to serve bundle chunks.
+	 */
+	policyName?: string;
 }
 /**
  * Configuration object for web performance recommendations.
@@ -2653,6 +2710,10 @@ export interface EntryDescriptionNormalized {
 	 */
 	library?: LibraryOptions;
 	/**
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: PublicPath;
+	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
 	runtime?: EntryRuntime;
@@ -3002,6 +3063,10 @@ export interface OutputNormalized {
 	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
 	 */
 	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
+	/**
+	 * Use a Trusted Types policy to create urls for chunks.
+	 */
+	trustedTypes?: TrustedTypes;
 	/**
 	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
 	 */

@@ -1,6 +1,7 @@
-module.exports = function(source) {
+/** @type {import("../../../../").LoaderDefinition} */
+module.exports = function (source) {
 	var cb = this.async();
-	setTimeout(function() {
+	setTimeout(function () {
 		cb(null, source);
 	}, 500);
 };

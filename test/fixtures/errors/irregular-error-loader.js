@@ -1,4 +1,5 @@
-module.exports = function(source) {
+/** @type {import("../../../../").LoaderDefinition} */
+module.exports = function (source) {
 	const empty = null;
 	const emptyError = new Error();
 	this.emitWarning(empty);

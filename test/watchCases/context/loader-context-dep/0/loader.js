@@ -1,7 +1,8 @@
 const path = require("path");
 const directory = path.resolve(__dirname, "directory");
 
-module.exports = function() {
+/** @type {import("../../../../../").LoaderDefinition} */
+module.exports = function () {
 	this.addContextDependency(directory);
 	const callback = this.async();
 	this.fs.readdir(directory, (err, files) => {

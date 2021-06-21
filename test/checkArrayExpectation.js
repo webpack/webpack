@@ -6,6 +6,9 @@ const check = (expected, actual) => {
 	if (expected instanceof RegExp) {
 		expected = { message: expected };
 	}
+	if (Array.isArray(expected)) {
+		return expected.every(e => check(e, actual));
+	}
 	return Object.keys(expected).every(key => {
 		let value = actual[key];
 		if (typeof value === "object") {
@@ -33,6 +36,32 @@ const explain = object => {
 		.join("; ");
 };
 
+const diffItems = (actual, expected, kind) => {
+	const tooMuch = actual.slice();
+	const missing = expected.slice();
+	for (let i = 0; i < missing.length; i++) {
+		const current = missing[i];
+		for (let j = 0; j < tooMuch.length; j++) {
+			if (check(current, tooMuch[j])) {
+				tooMuch.splice(j, 1);
+				missing.splice(i, 1);
+				i--;
+				break;
+			}
+		}
+	}
+	const diff = [];
+	if (missing.length > 0) {
+		diff.push(`The following expected ${kind}s are missing:
+${missing.map(item => `${item}`).join("\n\n")}`);
+	}
+	if (tooMuch.length > 0) {
+		diff.push(`The following ${kind}s are unexpected:
+${tooMuch.map(item => `${explain(item)}`).join("\n\n")}`);
+	}
+	return diff.join("\n\n");
+};
+
 module.exports = function checkArrayExpectation(
 	testDirectory,
 	object,
@@ -55,13 +84,12 @@ module.exports = function checkArrayExpectation(
 	if (fs.existsSync(path.join(testDirectory, `${filename}.js`))) {
 		const expectedFilename = path.join(testDirectory, `${filename}.js`);
 		const expected = require(expectedFilename);
+		const diff = diffItems(array, expected, kind);
 		if (expected.length < array.length) {
 			return (
 				done(
 					new Error(
-						`More ${kind}s while compiling than expected:\n\n${array
-							.map(explain)
-							.join("\n\n")}. Check expected ${kind}s: ${expectedFilename}`
+						`More ${kind}s (${array.length} instead of ${expected.length}) while compiling than expected:\n\n${diff}\n\nCheck expected ${kind}s: ${expectedFilename}`
 					)
 				),
 				true
@@ -70,9 +98,7 @@ module.exports = function checkArrayExpectation(
 			return (
 				done(
 					new Error(
-						`Less ${kind}s while compiling than expected:\n\n${array
-							.map(explain)
-							.join("\n\n")}. Check expected ${kind}s: ${expectedFilename}`
+						`Less ${kind}s (${array.length} instead of ${expected.length}) while compiling than expected:\n\n${diff}\n\nCheck expected ${kind}s: ${expectedFilename}`
 					)
 				),
 				true

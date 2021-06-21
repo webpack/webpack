@@ -470,6 +470,9 @@
         "library": {
           "$ref": "#/definitions/LibraryOptions"
         },
+        "publicPath": {
+          "$ref": "#/definitions/PublicPath"
+        },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"
         },
@@ -517,6 +520,9 @@
         },
         "library": {
           "$ref": "#/definitions/LibraryOptions"
+        },
+        "publicPath": {
+          "$ref": "#/definitions/PublicPath"
         },
         "runtime": {
           "$ref": "#/definitions/EntryRuntime"
@@ -673,6 +679,10 @@
         },
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+          "type": "boolean"
+        },
+        "executeModule": {
+          "description": "Enable build-time execution of modules from the module graph for plugins and loaders.",
           "type": "boolean"
         },
         "layers": {
@@ -914,6 +924,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "allowCollectingMemory": {
+          "description": "Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.",
+          "type": "boolean"
+        },
         "buildDependencies": {
           "description": "Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').",
           "type": "object",
@@ -942,12 +956,12 @@
           "type": "string"
         },
         "idleTimeout": {
-          "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle').",
+          "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
           "type": "number",
           "minimum": 0
         },
         "idleTimeoutForInitialStore": {
-          "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle').",
+          "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
           "type": "number",
           "minimum": 0
         },
@@ -984,6 +998,10 @@
         "name": {
           "description": "Name for the cache. Different names will lead to different coexisting caches.",
           "type": "string"
+        },
+        "profile": {
+          "description": "Track and log detailed timing information for individual cache items.",
+          "type": "boolean"
         },
         "store": {
           "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
@@ -1211,6 +1229,18 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "appendOnly": {
+          "description": "Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.",
+          "type": "boolean"
+        },
+        "colors": {
+          "description": "Enables/Disables colorful output. This option is only used when no custom console is provided.",
+          "type": "boolean"
+        },
+        "console": {
+          "description": "Custom console used for logging.",
+          "tsType": "Console"
+        },
         "debug": {
           "description": "Enable debug logging for specific loggers.",
           "anyOf": [
@@ -1226,6 +1256,10 @@
         "level": {
           "description": "Log level.",
           "enum": ["none", "error", "warn", "info", "log", "verbose"]
+        },
+        "stream": {
+          "description": "Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.",
+          "tsType": "NodeJS.WritableStream"
         }
       }
     },
@@ -2299,15 +2333,15 @@
                 "description": "The test property is a cache group name, but using the test option of the cache group could be intended instead.",
                 "anyOf": [
                   {
-                    "instanceof": "Function",
-                    "tsType": "Function"
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
                   },
                   {
                     "type": "string"
                   },
                   {
-                    "instanceof": "RegExp",
-                    "tsType": "RegExp"
+                    "instanceof": "Function",
+                    "tsType": "Function"
                   }
                 ]
               }
@@ -2334,7 +2368,7 @@
             "description": "Size type, like 'javascript', 'webassembly'.",
             "type": "string"
           },
-          "minLength": 1
+          "minItems": 1
         },
         "enforceSizeThreshold": {
           "description": "Size threshold at which splitting is enforced and other restrictions (minRemainingSize, maxAsyncRequests, maxInitialRequests) are ignored.",
@@ -2652,6 +2686,22 @@
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
         },
+        "trustedTypes": {
+          "description": "Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.",
+          "anyOf": [
+            {
+              "enum": [true]
+            },
+            {
+              "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "$ref": "#/definitions/TrustedTypes"
+            }
+          ]
+        },
         "umdNamedDefine": {
           "cli": {
             "exclude": true
@@ -2804,6 +2854,9 @@
         },
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
+        },
+        "trustedTypes": {
+          "$ref": "#/definitions/TrustedTypes"
         },
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
@@ -3168,8 +3221,7 @@
           "type": "array",
           "items": {
             "description": "Extension added to the request when trying to find the file.",
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           }
         },
         "fallback": {
@@ -3340,38 +3392,11 @@
           "type": "string"
         },
         {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "and": {
-              "description": "Logical AND.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditions"
-                }
-              ]
-            },
-            "not": {
-              "description": "Logical NOT.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditions"
-                }
-              ]
-            },
-            "or": {
-              "description": "Logical OR.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditions"
-                }
-              ]
-            }
-          }
-        },
-        {
           "instanceof": "Function",
           "tsType": "((value: string) => boolean)"
+        },
+        {
+          "$ref": "#/definitions/RuleSetLogicalConditions"
         },
         {
           "$ref": "#/definitions/RuleSetConditions"
@@ -3393,38 +3418,11 @@
           "absolutePath": true
         },
         {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "and": {
-              "description": "Logical AND.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionsAbsolute"
-                }
-              ]
-            },
-            "not": {
-              "description": "Logical NOT.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionsAbsolute"
-                }
-              ]
-            },
-            "or": {
-              "description": "Logical OR.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionsAbsolute"
-                }
-              ]
-            }
-          }
-        },
-        {
           "instanceof": "Function",
           "tsType": "((value: string) => boolean)"
+        },
+        {
+          "$ref": "#/definitions/RuleSetLogicalConditionsAbsolute"
         },
         {
           "$ref": "#/definitions/RuleSetConditionsAbsolute"
@@ -3498,6 +3496,68 @@
           "type": "object"
         }
       ]
+    },
+    "RuleSetLogicalConditions": {
+      "description": "Logic operators used in a condition matcher.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "and": {
+          "description": "Logical AND.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditions"
+            }
+          ]
+        },
+        "not": {
+          "description": "Logical NOT.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetCondition"
+            }
+          ]
+        },
+        "or": {
+          "description": "Logical OR.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditions"
+            }
+          ]
+        }
+      }
+    },
+    "RuleSetLogicalConditionsAbsolute": {
+      "description": "Logic operators used in a condition matcher.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "and": {
+          "description": "Logical AND.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionsAbsolute"
+            }
+          ]
+        },
+        "not": {
+          "description": "Logical NOT.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionAbsolute"
+            }
+          ]
+        },
+        "or": {
+          "description": "Logical OR.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionsAbsolute"
+            }
+          ]
+        }
+      }
     },
     "RuleSetRule": {
       "description": "A rule description with conditions and effects for modules.",
@@ -3667,6 +3727,14 @@
               }
             ]
           }
+        },
+        "scheme": {
+          "description": "Match module scheme.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ]
         },
         "sideEffects": {
           "description": "Flags a module as with or without side effects.",
@@ -4323,6 +4391,18 @@
         }
       ]
     },
+    "TrustedTypes": {
+      "description": "Use a Trusted Types policy to create urls for chunks.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "policyName": {
+          "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
     "UmdNamedDefine": {
       "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
       "type": "boolean"
@@ -4608,6 +4688,7 @@
       "required": ["apply"]
     }
   },
+  "title": "WebpackOptions",
   "description": "Options object as provided by the user.",
   "type": "object",
   "additionalProperties": false,

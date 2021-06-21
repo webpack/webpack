@@ -1,10 +1,8 @@
 const path = require("path");
 const jestDiff = require("jest-diff").default;
 const stripAnsi = require("strip-ansi");
-const {
-	applyWebpackOptionsDefaults,
-	getNormalizedWebpackOptions
-} = require("..").config;
+const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
+	require("..").config;
 
 /**
  * Escapes regular expression metacharacters
@@ -108,19 +106,13 @@ describe("Defaults", () => {
 		  },
 		  "externalsType": "var",
 		  "ignoreWarnings": undefined,
-		  "infrastructureLogging": Object {
-		    "debug": false,
-		    "level": "info",
-		  },
+		  "infrastructureLogging": Object {},
 		  "loader": Object {
 		    "target": "web",
 		  },
 		  "mode": "none",
 		  "module": Object {
 		    "defaultRules": Array [
-		      Object {
-		        "type": "javascript/auto",
-		      },
 		      Object {
 		        "mimetype": "application/node",
 		        "type": "javascript/auto",
@@ -187,7 +179,15 @@ describe("Defaults", () => {
 		      },
 		      Object {
 		        "dependency": "url",
-		        "type": "asset/resource",
+		        "oneOf": Array [
+		          Object {
+		            "scheme": /\\^data\\$/,
+		            "type": "asset/inline",
+		          },
+		          Object {
+		            "type": "asset/resource",
+		          },
+		        ],
 		      },
 		    ],
 		    "generator": Object {},
@@ -276,7 +276,7 @@ describe("Defaults", () => {
 		      "minChunks": 1,
 		      "minRemainingSize": undefined,
 		      "minSize": 10000,
-		      "usedExports": true,
+		      "usedExports": false,
 		    },
 		    "usedExports": false,
 		  },
@@ -332,6 +332,7 @@ describe("Defaults", () => {
 		    "sourceMapFilename": "[file].map[query]",
 		    "sourcePrefix": undefined,
 		    "strictModuleExceptionHandling": false,
+		    "trustedTypes": undefined,
 		    "uniqueName": "webpack",
 		    "wasmLoading": "fetch",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
@@ -413,6 +414,26 @@ describe("Defaults", () => {
 		        ],
 		        "conditionNames": Array [
 		          "require",
+		          "module",
+		          "...",
+		        ],
+		        "extensions": Array [
+		          ".js",
+		          ".json",
+		          ".wasm",
+		        ],
+		        "mainFields": Array [
+		          "browser",
+		          "module",
+		          "...",
+		        ],
+		      },
+		      "loaderImport": Object {
+		        "aliasFields": Array [
+		          "browser",
+		        ],
+		        "conditionNames": Array [
+		          "import",
 		          "module",
 		          "...",
 		        ],
@@ -656,7 +677,9 @@ describe("Defaults", () => {
 		+       "maxInitialRequests": 30,
 		@@ ... @@
 		-       "minSize": 10000,
+		-       "usedExports": false,
 		+       "minSize": 20000,
+		+       "usedExports": true,
 		@@ ... @@
 		-     "usedExports": false,
 		+     "usedExports": true,
@@ -721,7 +744,9 @@ describe("Defaults", () => {
 		+       "maxInitialRequests": 30,
 		@@ ... @@
 		-       "minSize": 10000,
+		-       "usedExports": false,
 		+       "minSize": 20000,
+		+       "usedExports": true,
 		@@ ... @@
 		-     "usedExports": false,
 		+     "usedExports": true,
@@ -792,6 +817,8 @@ describe("Defaults", () => {
 		-     "syncWebAssembly": false,
 		+     "syncWebAssembly": true,
 		@@ ... @@
+		+           },
+		+         ],
 		+       },
 		+       Object {
 		+         "rules": Array [
@@ -816,9 +843,9 @@ describe("Defaults", () => {
 		+             },
 		+             "resolve": Object {
 		+               "fullySpecified": true,
-		+             },
+		@@ ... @@
 		+           },
-		+         ],
+		@@ ... @@
 		+         "type": "webassembly/sync",
 	`)
 	);
@@ -853,6 +880,8 @@ describe("Defaults", () => {
 		-     "asyncWebAssembly": false,
 		+     "asyncWebAssembly": true,
 		@@ ... @@
+		+           },
+		+         ],
 		+       },
 		+       Object {
 		+         "rules": Array [
@@ -877,9 +906,9 @@ describe("Defaults", () => {
 		+             },
 		+             "resolve": Object {
 		+               "fullySpecified": true,
-		+             },
+		@@ ... @@
 		+           },
-		+         ],
+		@@ ... @@
 		+         "type": "webassembly/async",
 	`)
 	);
@@ -898,6 +927,8 @@ describe("Defaults", () => {
 			-     "syncWebAssembly": false,
 			+     "syncWebAssembly": true,
 			@@ ... @@
+			+           },
+			+         ],
 			+       },
 			+       Object {
 			+         "rules": Array [
@@ -912,7 +943,7 @@ describe("Defaults", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			+       },
+			@@ ... @@
 			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
@@ -924,7 +955,7 @@ describe("Defaults", () => {
 			+               "fullySpecified": true,
 			+             },
 			+           },
-			+         ],
+			@@ ... @@
 			+         "type": "webassembly/async",
 		`)
 	);
@@ -1038,6 +1069,13 @@ describe("Defaults", () => {
 		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
 		+     "workerWasmLoading": "async-node",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
@@ -1229,6 +1267,13 @@ describe("Defaults", () => {
 		@@ ... @@
 		-           "browser",
 		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
+		@@ ... @@
 		-       "browser",
 		+       "node",
 		+       "electron",
@@ -1288,6 +1333,13 @@ describe("Defaults", () => {
 		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
 		+     "workerWasmLoading": "async-node",
+		@@ ... @@
+		-         "aliasFields": Array [
+		-           "browser",
+		-         ],
+		+         "aliasFields": Array [],
+		@@ ... @@
+		-           "browser",
 		@@ ... @@
 		-         "aliasFields": Array [
 		-           "browser",
@@ -1440,6 +1492,7 @@ describe("Defaults", () => {
 		@@ ... @@
 		-   "cache": false,
 		+   "cache": Object {
+		+     "allowCollectingMemory": false,
 		+     "buildDependencies": Object {
 		+       "defaultWebpack": Array [
 		+         "<cwd>/lib/",
@@ -1453,6 +1506,7 @@ describe("Defaults", () => {
 		+     "maxAge": 5184000000,
 		+     "maxMemoryGenerations": Infinity,
 		+     "name": "default-none",
+		+     "profile": false,
 		+     "store": "pack",
 		+     "type": "filesystem",
 		+     "version": "",
@@ -1467,6 +1521,70 @@ describe("Defaults", () => {
 		-     "cache": false,
 		+     "cache": true,
 	`)
+	);
+	test(
+		"cache filesystem development",
+		{ mode: "development", cache: { type: "filesystem" } },
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-   "cache": false,
+			+   "cache": Object {
+			+     "allowCollectingMemory": true,
+			+     "buildDependencies": Object {
+			+       "defaultWebpack": Array [
+			+         "<cwd>/lib/",
+			+       ],
+			+     },
+			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
+			+     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-development",
+			+     "hashAlgorithm": "md4",
+			+     "idleTimeout": 60000,
+			+     "idleTimeoutForInitialStore": 0,
+			+     "maxAge": 5184000000,
+			+     "maxMemoryGenerations": 5,
+			+     "name": "default-development",
+			+     "profile": false,
+			+     "store": "pack",
+			+     "type": "filesystem",
+			+     "version": "",
+			+   },
+			@@ ... @@
+			-   "devtool": false,
+			+   "devtool": "eval",
+			@@ ... @@
+			-   "mode": "none",
+			+   "mode": "development",
+			@@ ... @@
+			-     "unsafeCache": false,
+			+     "unsafeCache": [Function anonymous],
+			@@ ... @@
+			-     "chunkIds": "natural",
+			+     "chunkIds": "named",
+			@@ ... @@
+			-     "moduleIds": "natural",
+			-     "nodeEnv": false,
+			+     "moduleIds": "named",
+			+     "nodeEnv": "development",
+			@@ ... @@
+			-       "minRemainingSize": undefined,
+			+       "minRemainingSize": 0,
+			@@ ... @@
+			-     "pathinfo": false,
+			+     "pathinfo": true,
+			@@ ... @@
+			-     "cache": false,
+			+     "cache": true,
+			@@ ... @@
+			-       "production",
+			+       "development",
+			@@ ... @@
+			-     "cache": false,
+			+     "cache": true,
+		`)
 	);
 
 	test(
@@ -1521,7 +1639,7 @@ describe("Defaults", () => {
 			-       "minChunks": 1,
 			-       "minRemainingSize": undefined,
 			-       "minSize": 10000,
-			-       "usedExports": true,
+			-       "usedExports": false,
 			-     },
 			+     "splitChunks": false,
 		`)
@@ -1531,7 +1649,8 @@ describe("Defaults", () => {
 		"uniqueName",
 		{
 			output: {
-				uniqueName: "@@@Hello World!"
+				uniqueName: "@@@Hello World!",
+				trustedTypes: true
 			}
 		},
 		e =>
@@ -1549,7 +1668,11 @@ describe("Defaults", () => {
 			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
 			+     "hotUpdateGlobal": "webpackHotUpdate_Hello_World_",
 			@@ ... @@
+			-     "trustedTypes": undefined,
 			-     "uniqueName": "webpack",
+			+     "trustedTypes": Object {
+			+       "policyName": "@@@Hello_World_",
+			+     },
 			+     "uniqueName": "@@@Hello World!",
 		`)
 	);
@@ -1656,6 +1779,7 @@ describe("Defaults", () => {
 			-   "cache": false,
 			-   "context": "<cwd>",
 			+   "cache": Object {
+			+     "allowCollectingMemory": false,
 			+     "buildDependencies": Object {
 			+       "defaultWebpack": Array [
 			+         "<cwd>/lib/",
@@ -1669,6 +1793,7 @@ describe("Defaults", () => {
 			+     "maxAge": 5184000000,
 			+     "maxMemoryGenerations": Infinity,
 			+     "name": "default-none",
+			+     "profile": false,
 			+     "store": "pack",
 			+     "type": "filesystem",
 			+     "version": "",

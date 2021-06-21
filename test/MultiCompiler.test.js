@@ -246,6 +246,9 @@ describe("MultiCompiler", function () {
 		};
 		const events = [];
 		compiler.compilers.forEach(c => {
+			c.hooks.invalid.tap("test", () => {
+				events.push(`${c.name} invalid`);
+			});
 			c.hooks.watchRun.tap("test", () => {
 				events.push(`${c.name} run`);
 			});
@@ -273,15 +276,15 @@ describe("MultiCompiler", function () {
 					expect(compiler.compilers[0].modifiedFiles).toBe(undefined);
 					expect(compiler.compilers[0].removedFiles).toBe(undefined);
 					expect(events).toMatchInlineSnapshot(`
-							Array [
-							  "b run",
-							  "b done",
-							  "c run",
-							  "c done",
-							  "a run",
-							  "a done",
-							]
-					`);
+				Array [
+				  "b run",
+				  "b done",
+				  "c run",
+				  "c done",
+				  "a run",
+				  "a done",
+				]
+			`);
 					events.length = 0;
 					// wait until watching begins
 					setTimeout(() => {
@@ -301,8 +304,10 @@ describe("MultiCompiler", function () {
 					expect(compiler.compilers[1].removedFiles).toEqual(new Set());
 					expect(events).toMatchInlineSnapshot(`
 				Array [
+				  "b invalid",
 				  "b run",
 				  "b done",
+				  "a invalid",
 				  "a run",
 				  "a done",
 				]
@@ -317,10 +322,13 @@ describe("MultiCompiler", function () {
 			`);
 					expect(events).toMatchInlineSnapshot(`
 				Array [
+				  "b invalid",
 				  "b run",
 				  "b done",
+				  "a invalid",
 				  "a run",
 				  "a done",
+				  "a invalid",
 				  "a run",
 				  "a done",
 				]
@@ -344,10 +352,13 @@ describe("MultiCompiler", function () {
 			`);
 					expect(events).toMatchInlineSnapshot(`
 				Array [
+				  "b invalid",
+				  "c invalid",
 				  "b run",
 				  "b done",
 				  "c run",
 				  "c done",
+				  "a invalid",
 				  "a run",
 				  "a done",
 				]
@@ -363,6 +374,161 @@ describe("MultiCompiler", function () {
 			}
 		});
 	});
+
+	it("should respect parallelism when using invalidate", done => {
+		const configs = [
+			{
+				name: "a",
+				mode: "development",
+				entry: { a: "./a.js" },
+				context: path.join(__dirname, "fixtures")
+			},
+			{
+				name: "b",
+				mode: "development",
+				entry: { b: "./b.js" },
+				context: path.join(__dirname, "fixtures")
+			}
+		];
+		configs.parallelism = 1;
+		const compiler = webpack(configs);
+
+		const events = [];
+		compiler.compilers.forEach(c => {
+			c.hooks.invalid.tap("test", () => {
+				events.push(`${c.name} invalid`);
+			});
+			c.hooks.watchRun.tap("test", () => {
+				events.push(`${c.name} run`);
+			});
+			c.hooks.done.tap("test", () => {
+				events.push(`${c.name} done`);
+			});
+		});
+
+		compiler.watchFileSystem = { watch() {} };
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
+
+		let state = 0;
+		const watching = compiler.watch({}, error => {
+			if (error) {
+				done(error);
+				return;
+			}
+			if (state !== 0) return;
+			state++;
+
+			expect(events).toMatchInlineSnapshot(`
+			Array [
+			  "a run",
+			  "a done",
+			  "b run",
+			  "b done",
+			]
+		`);
+			events.length = 0;
+
+			watching.invalidate(err => {
+				try {
+					if (err) return done(err);
+
+					expect(events).toMatchInlineSnapshot(`
+				Array [
+				  "a invalid",
+				  "b invalid",
+				  "a run",
+				  "a done",
+				  "b run",
+				  "b done",
+				]
+			`);
+					events.length = 0;
+					expect(state).toBe(1);
+					setTimeout(done, 1000);
+				} catch (e) {
+					console.error(e);
+					done(e);
+				}
+			});
+		});
+	}, 2000);
+
+	it("should respect dependencies when using invalidate", done => {
+		const compiler = webpack([
+			{
+				name: "a",
+				mode: "development",
+				entry: { a: "./a.js" },
+				context: path.join(__dirname, "fixtures"),
+				dependencies: ["b"]
+			},
+			{
+				name: "b",
+				mode: "development",
+				entry: { b: "./b.js" },
+				context: path.join(__dirname, "fixtures")
+			}
+		]);
+
+		const events = [];
+		compiler.compilers.forEach(c => {
+			c.hooks.invalid.tap("test", () => {
+				events.push(`${c.name} invalid`);
+			});
+			c.hooks.watchRun.tap("test", () => {
+				events.push(`${c.name} run`);
+			});
+			c.hooks.done.tap("test", () => {
+				events.push(`${c.name} done`);
+			});
+		});
+
+		compiler.watchFileSystem = { watch() {} };
+		compiler.outputFileSystem = createFsFromVolume(new Volume());
+
+		let state = 0;
+		const watching = compiler.watch({}, error => {
+			if (error) {
+				done(error);
+				return;
+			}
+			if (state !== 0) return;
+			state++;
+
+			expect(events).toMatchInlineSnapshot(`
+			Array [
+			  "b run",
+			  "b done",
+			  "a run",
+			  "a done",
+			]
+		`);
+			events.length = 0;
+
+			watching.invalidate(err => {
+				try {
+					if (err) return done(err);
+
+					expect(events).toMatchInlineSnapshot(`
+				Array [
+				  "a invalid",
+				  "b invalid",
+				  "b run",
+				  "b done",
+				  "a run",
+				  "a done",
+				]
+			`);
+					events.length = 0;
+					expect(state).toBe(1);
+					setTimeout(done, 1000);
+				} catch (e) {
+					console.error(e);
+					done(e);
+				}
+			});
+		});
+	}, 2000);
 
 	it("shouldn't hang when invalidating watchers", done => {
 		const entriesA = { a: "./a.js" };

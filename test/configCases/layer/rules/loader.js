@@ -1,3 +1,4 @@
+/** @type {import("../../../../").LoaderDefinition<{ value: any }>} */
 module.exports = function (source) {
 	const options = this.getOptions();
 	return `${source}

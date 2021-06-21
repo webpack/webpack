@@ -3,6 +3,8 @@ const webpack = require("../../..");
 // eslint-disable-next-line node/no-missing-require
 const value = require("../../js/buildDepsInput/config-dependency");
 
+require("dep#with#hash/#.js");
+
 process.exitCode = 1;
 
 const options = JSON.parse(process.argv[3]);
@@ -10,6 +12,7 @@ const options = JSON.parse(process.argv[3]);
 const esm = +process.versions.modules >= 83;
 
 if (esm) {
+	require("require-dependency-with-exports");
 	import("./esm.mjs").then(module => {
 		run(module);
 	});
@@ -56,13 +59,18 @@ function run({ default: value2, asyncDep: value3 }) {
 				type: "filesystem",
 				cacheDirectory: path.resolve(__dirname, "../../js/buildDepsCache"),
 				buildDependencies: {
+					defaultWebpack: [],
 					config: [
 						__filename,
 						path.resolve(__dirname, "../../../node_modules/.yarn-integrity")
 					].concat(esm ? ["../../fixtures/buildDependencies/esm.mjs"] : []),
 					invalid: options.invalidBuildDepdencies
 						? ["should-fail-resolving"]
-						: []
+						: [],
+					optionalDepsTest: [
+						path.resolve(__dirname, "node_modules/dependency-with-optional") +
+							"/"
+					]
 				}
 			}
 		},
