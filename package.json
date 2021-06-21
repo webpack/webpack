@@ -78,7 +78,7 @@
     "mini-css-extract-plugin": "^1.0.0",
     "mini-svg-data-uri": "^1.2.3",
     "nyc": "^15.1.0",
-    "open-cli": "^6.0.1",
+    "open-cli": "^7.0.0",
     "prettier": "^2.2.0",
     "pretty-format": "^26.3.0",
     "pug": "^3.0.0",
