@@ -454,7 +454,7 @@ const describeCases = config => {
 							afterEach: _afterEach,
 							setDefaultTimeout,
 							getNumberOfTests
-						} = createLazyTestEnv(jasmine.getEnv(), 10000);
+						} = createLazyTestEnv(10000);
 					});
 				}
 			});

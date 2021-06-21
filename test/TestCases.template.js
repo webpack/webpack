@@ -343,10 +343,7 @@ const describeCases = config => {
 								10000
 							);
 
-							const { it: _it, getNumberOfTests } = createLazyTestEnv(
-								jasmine.getEnv(),
-								10000
-							);
+							const { it: _it, getNumberOfTests } = createLazyTestEnv(10000);
 						});
 					});
 			});

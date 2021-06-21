@@ -64,6 +64,7 @@
     "is-ci": "^3.0.0",
     "istanbul": "^0.4.5",
     "jest": "^27.0.4",
+    "jest-circus": "^27.0.4",
     "jest-diff": "^26.6.2",
     "jest-junit": "^12.0.0",
     "json-loader": "^0.5.7",

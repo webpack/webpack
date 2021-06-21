@@ -379,7 +379,6 @@ describe("WatchTestCases", () => {
 
 					for (const run of runs) {
 						const { it: _it, getNumberOfTests } = createLazyTestEnv(
-							jasmine.getEnv(),
 							10000,
 							run.name
 						);

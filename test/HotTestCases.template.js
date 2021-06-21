@@ -322,7 +322,7 @@ const describeCases = config => {
 							beforeEach: _beforeEach,
 							afterEach: _afterEach,
 							getNumberOfTests
-						} = createLazyTestEnv(jasmine.getEnv(), 20000);
+						} = createLazyTestEnv(20000);
 					});
 				});
 			});
