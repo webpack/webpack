@@ -420,9 +420,21 @@ const describeCases = config => {
 											}
 										};
 
-										results.push(
-											_require(outputDirectory, optionsArr[i], bundlePath)
-										);
+										if (Array.isArray(bundlePath)) {
+											for (const bundlePathItem of bundlePath) {
+												results.push(
+													_require(
+														outputDirectory,
+														optionsArr[i],
+														"./" + bundlePathItem
+													)
+												);
+											}
+										} else {
+											results.push(
+												_require(outputDirectory, optionsArr[i], bundlePath)
+											);
+										}
 									}
 								}
 								// give a free pass to compilation that generated an error
