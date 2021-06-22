@@ -1,5 +1,5 @@
 const path = require("path");
-const jestDiff = require("jest-diff").default;
+const jestDiff = require("jest-diff").diff;
 const stripAnsi = require("strip-ansi");
 const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
 	require("..").config;
