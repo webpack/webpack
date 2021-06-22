@@ -37,7 +37,7 @@
   "devDependencies": {
     "@babel/core": "^7.11.1",
     "@babel/preset-react": "^7.10.4",
-    "@types/es-module-lexer": "^0.3.0",
+    "@types/es-module-lexer": "^0.4.1",
     "@types/jest": "^26.0.15",
     "@types/node": "^15.0.1",
     "babel-loader": "^8.1.0",
