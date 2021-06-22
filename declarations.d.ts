@@ -387,6 +387,11 @@ declare type PropertyDefinitionNode = {
 	loc?: import("estree").SourceLocation | null;
 	range?: [number, number];
 };
+interface ImportAttributeNode {
+	type: "ImportAttribute";
+	key: import("estree").Identifier | import("estree").Literal;
+	value: import("estree").Literal;
+}
 
 type TODO = any;
 
