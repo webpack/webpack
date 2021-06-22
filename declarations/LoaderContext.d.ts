@@ -31,7 +31,7 @@ export interface NormalModuleLoaderContext<OptionsType> {
 		((context: string, request: string) => Promise<string>);
 	emitFile(
 		name: string,
-		content: string,
+		content: string | Buffer,
 		sourceMap?: string,
 		assetInfo?: AssetInfo
 	): void;

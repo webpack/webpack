@@ -358,6 +358,7 @@ declare abstract class AsyncQueue<T, K, R> {
 	isProcessing(item: T): boolean;
 	isQueued(item: T): boolean;
 	isDone(item: T): boolean;
+	clear(): void;
 }
 declare class AsyncWebAssemblyModulesPlugin {
 	constructor(options?: any);
@@ -5794,11 +5795,13 @@ type LoaderContext<OptionsType> = NormalModuleLoaderContext<OptionsType> &
 	LoaderRunnerLoaderContext<OptionsType> &
 	LoaderPluginLoaderContext &
 	HotModuleReplacementPluginLoaderContext;
-type LoaderDefinition<OptionsType = {}, ContextAdditions = {}> =
-	LoaderDefinitionFunction<OptionsType, ContextAdditions> & {
-		raw?: false;
-		pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
-	};
+type LoaderDefinition<
+	OptionsType = {},
+	ContextAdditions = {}
+> = LoaderDefinitionFunction<OptionsType, ContextAdditions> & {
+	raw?: false;
+	pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
+};
 declare interface LoaderDefinitionFunction<
 	OptionsType = {},
 	ContextAdditions = {}
@@ -7203,7 +7206,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	};
 	emitFile(
 		name: string,
-		content: string,
+		content: string | Buffer,
 		sourceMap?: string,
 		assetInfo?: AssetInfo
 	): void;
@@ -8661,11 +8664,13 @@ declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
 }
-type RawLoaderDefinition<OptionsType = {}, ContextAdditions = {}> =
-	RawLoaderDefinitionFunction<OptionsType, ContextAdditions> & {
-		raw: true;
-		pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
-	};
+type RawLoaderDefinition<
+	OptionsType = {},
+	ContextAdditions = {}
+> = RawLoaderDefinitionFunction<OptionsType, ContextAdditions> & {
+	raw: true;
+	pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
+};
 declare interface RawLoaderDefinitionFunction<
 	OptionsType = {},
 	ContextAdditions = {}

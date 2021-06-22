@@ -413,7 +413,11 @@ const describeCases = config => {
 												module in testConfig.modules
 											) {
 												return testConfig.modules[module];
-											} else return require(module);
+											} else {
+												return require(module.startsWith("node:")
+													? module.slice(5)
+													: module);
+											}
 										};
 
 										results.push(
