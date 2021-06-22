@@ -42,7 +42,7 @@ describe("WatchClose", () => {
 			});
 		}
 
-		it("each callback should be called", async done => {
+		it("each callback should be called", async () => {
 			let num = 0;
 
 			await Promise.all([
@@ -55,8 +55,6 @@ describe("WatchClose", () => {
 			]);
 
 			expect(num).toBe(1111);
-
-			done();
 		});
 	});
 });
