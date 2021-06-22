@@ -4,7 +4,7 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.opus$/,
+				test: /\.opuuus$/,
 				type: "asset"
 			}
 		]
