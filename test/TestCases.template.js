@@ -3,6 +3,7 @@
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
+const { pathToFileURL } = require("url");
 const rimraf = require("rimraf");
 const webpack = require("..");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -122,7 +123,7 @@ const describeCases = config => {
 								output: {
 									pathinfo: true,
 									path: outputDirectory,
-									filename: "bundle.js"
+									filename: config.module ? "bundle.mjs" : "bundle.js"
 								},
 								resolve: {
 									modules: ["web_modules", "node_modules"],
@@ -186,7 +187,8 @@ const describeCases = config => {
 								}),
 								experiments: {
 									asyncWebAssembly: true,
-									topLevelAwait: true
+									topLevelAwait: true,
+									...(config.module ? { outputModule: true } : {})
 								}
 							};
 							beforeAll(done => {
@@ -309,36 +311,73 @@ const describeCases = config => {
 									function _require(module) {
 										if (module.substr(0, 2) === "./") {
 											const p = path.join(outputDirectory, module);
-											const fn = vm.runInThisContext(
-												"(function(require, module, exports, __dirname, __filename, it, expect) {" +
-													"global.expect = expect;" +
-													'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
-													fs.readFileSync(p, "utf-8") +
-													"\n})",
-												p
-											);
-											const m = {
-												exports: {},
-												webpackTestSuiteModule: true
-											};
-											fn.call(
-												m.exports,
-												_require,
-												m,
-												m.exports,
-												outputDirectory,
-												p,
-												_it,
-												expect
-											);
-											return m.exports;
+											if (p.endsWith(".mjs")) {
+												const module = new vm.SourceTextModule(
+													`import { it, expect } from "TEST_ENV";
+function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }
+${fs.readFileSync(p, "utf-8")}`,
+													{
+														identifier: p,
+														lineOffset: 1,
+														initializeImportMeta: (meta, module) => {
+															meta.url = pathToFileURL(p);
+														},
+														importModuleDynamically: (specifier, module) => {
+															return _require(specifier);
+														}
+													}
+												);
+												return module
+													.link((specifier, module) => {
+														if (specifier === "TEST_ENV") {
+															const m = new vm.SyntheticModule(
+																["it", "expect"],
+																function () {
+																	this.setExport("it", _it);
+																	this.setExport("expect", expect);
+																}
+															);
+															return m;
+														}
+													})
+													.then(() => module.evaluate())
+													.then(() => module.namespace);
+											} else {
+												const fn = vm.runInThisContext(
+													"(function(require, module, exports, __dirname, __filename, it, expect) {" +
+														"global.expect = expect;" +
+														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
+														fs.readFileSync(p, "utf-8") +
+														"\n})",
+													p
+												);
+												const m = {
+													exports: {},
+													webpackTestSuiteModule: true
+												};
+												fn.call(
+													m.exports,
+													_require,
+													m,
+													m.exports,
+													outputDirectory,
+													p,
+													_it,
+													expect
+												);
+												return m.exports;
+											}
 										} else return require(module);
 									}
 									_require.webpackTestSuiteRequire = true;
-									_require("./bundle.js");
-									if (getNumberOfTests() === 0)
-										return done(new Error("No tests exported by test case"));
-									done();
+									const promise = _require("./" + options.output.filename);
+									if (promise && promise.then) promise.then(finish);
+									else finish();
+									function finish() {
+										if (getNumberOfTests() === 0)
+											return done(new Error("No tests exported by test case"));
+										done();
+									}
 								},
 								10000
 							);

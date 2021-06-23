@@ -84,7 +84,12 @@ const describeCases = config => {
 								if (typeof options.output.pathinfo === "undefined")
 									options.output.pathinfo = true;
 								if (!options.output.filename)
-									options.output.filename = "bundle" + idx + ".js";
+									options.output.filename =
+										"bundle" +
+										idx +
+										(options.experiments && options.experiments.outputModule
+											? ".mjs"
+											: ".js");
 								if (config.cache) {
 									options.cache = {
 										cacheDirectory,
@@ -295,7 +300,12 @@ const describeCases = config => {
 
 										const requireCache = Object.create(null);
 										// eslint-disable-next-line no-loop-func
-										const _require = (currentDirectory, options, module) => {
+										const _require = (
+											currentDirectory,
+											options,
+											module,
+											esmModule
+										) => {
 											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 												let content;
 												let p;
@@ -339,35 +349,13 @@ const describeCases = config => {
 												};
 												requireCache[p] = m;
 												let runInNewContext = false;
-												let oldCurrentScript = document.currentScript;
-												document.currentScript = new CurrentScript(subPath);
 
 												const moduleScope = {
-													require: _require.bind(
-														null,
-														path.dirname(p),
-														options
-													),
-													importScripts: url => {
-														expect(url).toMatch(
-															/^https:\/\/test\.cases\/path\//
-														);
-														_require(
-															outputDirectory,
-															options,
-															`.${url.slice("https://test.cases/path".length)}`
-														);
-													},
-													module: m,
-													exports: m.exports,
-													__dirname: path.dirname(p),
-													__filename: p,
 													it: _it,
 													beforeEach: _beforeEach,
 													afterEach: _afterEach,
 													expect,
 													jest,
-													_globalAssign: { expect },
 													__STATS__: jsonStats,
 													nsObj: m => {
 														Object.defineProperty(m, Symbol.toStringTag, {
@@ -376,6 +364,36 @@ const describeCases = config => {
 														return m;
 													}
 												};
+												const isModule =
+													p.endsWith(".mjs") &&
+													options.experiments &&
+													options.experiments.outputModule;
+												if (!isModule) {
+													Object.assign(moduleScope, {
+														require: _require.bind(
+															null,
+															path.dirname(p),
+															options
+														),
+														importScripts: url => {
+															expect(url).toMatch(
+																/^https:\/\/test\.cases\/path\//
+															);
+															_require(
+																outputDirectory,
+																options,
+																`.${url.slice(
+																	"https://test.cases/path".length
+																)}`
+															);
+														},
+														module: m,
+														exports: m.exports,
+														__dirname: path.dirname(p),
+														__filename: p,
+														_globalAssign: { expect }
+													});
+												}
 												if (
 													options.target === "web" ||
 													options.target === "webworker"
@@ -392,21 +410,88 @@ const describeCases = config => {
 												if (testConfig.moduleScope) {
 													testConfig.moduleScope(moduleScope);
 												}
-												const args = Object.keys(moduleScope);
-												const argValues = args.map(arg => moduleScope[arg]);
-												if (!runInNewContext)
-													content = `Object.assign(global, _globalAssign); ${content}`;
-												const code = `(function(${args.join(
-													", "
-												)}) {${content}\n})`;
-												const fn = runInNewContext
-													? vm.runInNewContext(code, globalContext, p)
-													: vm.runInThisContext(code, p);
-												fn.call(m.exports, ...argValues);
+												if (isModule) {
+													if (!vm.SourceTextModule)
+														throw new Error(
+															"Running this test requires '--experimental-vm-modules'.\nRun with 'node --experimental-vm-modules node_modules/jest-cli/bin/jest'."
+														);
+													const esm = new vm.SourceTextModule(content, {
+														identifier: p,
+														context: vm.createContext(moduleScope, {
+															name: `context for ${p}`
+														}),
+														importModuleDynamically: async (
+															specifier,
+															module
+														) => {
+															const result = await _require(
+																path.dirname(p),
+																options,
+																specifier,
+																"evaluated"
+															);
+															if (
+																result instanceof
+																(vm.Module ||
+																	/* node.js 10 */ vm.SourceTextModule)
+															) {
+																return result;
+															}
+															if (!vm.SyntheticModule) return result;
+															return new vm.SyntheticModule(
+																[
+																	...new Set([
+																		"default",
+																		...Object.keys(result)
+																	])
+																],
+																function () {
+																	for (const key in result) {
+																		this.setExport(key, result[key]);
+																	}
+																	this.setExport("default", result);
+																}
+															);
+														}
+													});
+													if (esmModule === "unlinked") return esm;
+													return (async () => {
+														await esm.link(
+															async (specifier, referencingModule) => {
+																return _require(
+																	path.dirname(referencingModule.identfier),
+																	options,
+																	specifier,
+																	"unlinked"
+																);
+															}
+														);
+														// node.js 10 needs instantiate
+														if (esm.instantiate) esm.instantiate();
+														await esm.evaluate();
+														if (esmModule === "evaluated") return esm;
+														const ns = esm.namespace;
+														return ns.default && ns.default instanceof Promise
+															? ns.default
+															: ns;
+													})();
+												} else {
+													if (!runInNewContext)
+														content = `Object.assign(global, _globalAssign); ${content}`;
+													const args = Object.keys(moduleScope);
+													const argValues = args.map(arg => moduleScope[arg]);
+													const code = `(function(${args.join(
+														", "
+													)}) {${content}\n})`;
 
-												//restore state
-												document.currentScript = oldCurrentScript;
-
+													let oldCurrentScript = document.currentScript;
+													document.currentScript = new CurrentScript(subPath);
+													const fn = runInNewContext
+														? vm.runInNewContext(code, globalContext, p)
+														: vm.runInThisContext(code, p);
+													fn.call(m.exports, ...argValues);
+													document.currentScript = oldCurrentScript;
+												}
 												return m.exports;
 											} else if (
 												testConfig.modules &&

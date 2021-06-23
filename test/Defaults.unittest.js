@@ -861,6 +861,15 @@ describe("Defaults", () => {
 		-   "externalsType": "var",
 		+   "externalsType": "module",
 		@@ ... @@
+		-     "chunkFilename": "[name].js",
+		+     "chunkFilename": "[name].mjs",
+		@@ ... @@
+		-     "filename": "[name].js",
+		+     "filename": "[name].mjs",
+		@@ ... @@
+		-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
+		+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
+		@@ ... @@
 		-     "iife": true,
 		+     "iife": false,
 		@@ ... @@

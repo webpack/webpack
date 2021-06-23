@@ -9671,6 +9671,7 @@ declare abstract class RuntimeTemplate {
 	expressionFunction(expression?: any, args?: string): string;
 	emptyFunction(): "x => {}" | "function() {}";
 	destructureArray(items?: any, value?: any): string;
+	destructureObject(items?: any, value?: any): string;
 	iife(args?: any, body?: any): string;
 	forEach(variable?: any, array?: any, body?: any): string;
 
