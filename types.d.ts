@@ -3618,6 +3618,11 @@ declare interface ExternalItemFunctionData {
 	contextInfo?: ModuleFactoryCreateDataContextInfo;
 
 	/**
+	 * The category of the referencing dependencies.
+	 */
+	dependencyType?: string;
+
+	/**
 	 * Get a resolve function with the current resolver options.
 	 */
 	getResolve?: (

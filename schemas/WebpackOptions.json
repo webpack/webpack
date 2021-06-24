@@ -807,6 +807,10 @@
           "type": "object",
           "tsType": "import('../lib/ModuleFactory').ModuleFactoryCreateDataContextInfo"
         },
+        "dependencyType": {
+          "description": "The category of the referencing dependencies.",
+          "type": "string"
+        },
         "getResolve": {
           "description": "Get a resolve function with the current resolver options.",
           "instanceof": "Function",
