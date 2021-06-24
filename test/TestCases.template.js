@@ -11,6 +11,7 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const captureStdio = require("./helpers/captureStdio");
+const asModule = require("./helpers/asModule");
 
 const terserForTesting = new TerserPlugin({
 	parallel: false
@@ -121,7 +122,7 @@ const describeCases = config => {
 									...config.cache
 								},
 								output: {
-									pathinfo: true,
+									pathinfo: "verbose",
 									path: outputDirectory,
 									filename: config.module ? "bundle.mjs" : "bundle.js"
 								},
@@ -345,32 +346,7 @@ const describeCases = config => {
 																specifier,
 																"evaluated"
 															);
-															if (
-																result instanceof
-																(vm.Module ||
-																	/* node.js 10 */ vm.SourceTextModule)
-															) {
-																return result;
-															}
-															if (!vm.SyntheticModule) return result;
-															const m = new vm.SyntheticModule(
-																[
-																	...new Set([
-																		"default",
-																		...Object.keys(result)
-																	])
-																],
-																function () {
-																	for (const key in result) {
-																		this.setExport(key, result[key]);
-																	}
-																	this.setExport("default", result);
-																}
-															);
-															await m.link(() => {});
-															if (m.instantiate) m.instantiate();
-															await m.evaluate();
-															return m;
+															return await asModule(result);
 														}
 													});
 												} catch (e) {
@@ -380,8 +356,11 @@ const describeCases = config => {
 												}
 												if (esmMode === "unlinked") return esm;
 												return (async () => {
-													await esm.link((specifier, module) => {
-														return _require(specifier, "unlinked");
+													await esm.link(async (specifier, module) => {
+														return await asModule(
+															await _require(specifier, "unlinked"),
+															module.context
+														);
 													});
 													// node.js 10 needs instantiate
 													if (esm.instantiate) esm.instantiate();

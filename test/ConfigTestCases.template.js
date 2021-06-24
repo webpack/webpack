@@ -16,6 +16,7 @@ const CurrentScript = require("./helpers/CurrentScript");
 const prepareOptions = require("./helpers/prepareOptions");
 const { parseResource } = require("../lib/util/identifier");
 const captureStdio = require("./helpers/captureStdio");
+const asModule = require("./helpers/asModule");
 
 const casesPath = path.join(__dirname, "configCases");
 const categories = fs.readdirSync(casesPath).map(cat => {
@@ -433,43 +434,21 @@ const describeCases = config => {
 																specifier,
 																"evaluated"
 															);
-															if (
-																result instanceof
-																(vm.Module ||
-																	/* node.js 10 */ vm.SourceTextModule)
-															) {
-																return result;
-															}
-															if (!vm.SyntheticModule) return result;
-															const m = new vm.SyntheticModule(
-																[
-																	...new Set([
-																		"default",
-																		...Object.keys(result)
-																	])
-																],
-																function () {
-																	for (const key in result) {
-																		this.setExport(key, result[key]);
-																	}
-																	this.setExport("default", result);
-																}
-															);
-															await m.link(() => {});
-															if (m.instantiate) m.instantiate();
-															await m.evaluate();
-															return m;
+															return await asModule(result);
 														}
 													});
 													if (esmMode === "unlinked") return esm;
 													return (async () => {
 														await esm.link(
 															async (specifier, referencingModule) => {
-																return _require(
-																	path.dirname(referencingModule.identfier),
-																	options,
-																	specifier,
-																	"unlinked"
+																return await asModule(
+																	await _require(
+																		path.dirname(referencingModule.identfier),
+																		options,
+																		specifier,
+																		"unlinked"
+																	),
+																	module.context
 																);
 															}
 														);
