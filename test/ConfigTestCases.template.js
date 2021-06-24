@@ -3,7 +3,7 @@
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
-const { URL } = require("url");
+const { URL, pathToFileURL } = require("url");
 const rimraf = require("rimraf");
 const webpack = require("..");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -304,7 +304,7 @@ const describeCases = config => {
 											currentDirectory,
 											options,
 											module,
-											esmModule
+											esmMode
 										) => {
 											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 												let content;
@@ -420,6 +420,9 @@ const describeCases = config => {
 														context: vm.createContext(moduleScope, {
 															name: `context for ${p}`
 														}),
+														initializeImportMeta: (meta, module) => {
+															meta.url = pathToFileURL(p).href;
+														},
 														importModuleDynamically: async (
 															specifier,
 															module
@@ -438,7 +441,7 @@ const describeCases = config => {
 																return result;
 															}
 															if (!vm.SyntheticModule) return result;
-															return new vm.SyntheticModule(
+															const m = new vm.SyntheticModule(
 																[
 																	...new Set([
 																		"default",
@@ -452,9 +455,13 @@ const describeCases = config => {
 																	this.setExport("default", result);
 																}
 															);
+															await m.link(() => {});
+															if (m.instantiate) m.instantiate();
+															await m.evaluate();
+															return m;
 														}
 													});
-													if (esmModule === "unlinked") return esm;
+													if (esmMode === "unlinked") return esm;
 													return (async () => {
 														await esm.link(
 															async (specifier, referencingModule) => {
@@ -469,7 +476,7 @@ const describeCases = config => {
 														// node.js 10 needs instantiate
 														if (esm.instantiate) esm.instantiate();
 														await esm.evaluate();
-														if (esmModule === "evaluated") return esm;
+														if (esmMode === "evaluated") return esm;
 														const ns = esm.namespace;
 														return ns.default && ns.default instanceof Promise
 															? ns.default

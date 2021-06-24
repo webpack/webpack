@@ -3,11 +3,13 @@ const vm = require("vm");
 
 describe("TestCases", () => {
 	if (!vm.SourceTextModule) {
-		it("module can't run without --experimental-vm-modules");
-		return;
+		throw new Error(
+			"Running this test requires '--experimental-vm-modules'.\nRun with 'node --experimental-vm-modules node_modules/jest-cli/bin/jest'."
+		);
 	}
 	describeCases({
 		name: "module",
+		target: "node14",
 		module: true
 	});
 });

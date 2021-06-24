@@ -3,7 +3,7 @@
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
-const { pathToFileURL } = require("url");
+const { pathToFileURL, URL } = require("url");
 const rimraf = require("rimraf");
 const webpack = require("..");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -97,7 +97,7 @@ const describeCases = config => {
 							const options = {
 								context: casesPath,
 								entry: "./" + category.name + "/" + testName + "/",
-								target: "async-node",
+								target: config.target || "async-node",
 								devtool: config.devtool,
 								mode: config.mode || "none",
 								optimization: config.mode
@@ -308,46 +308,96 @@ const describeCases = config => {
 							it(
 								testName + " should load the compiled tests",
 								done => {
-									function _require(module) {
+									const esmContext = vm.createContext({
+										it: _it,
+										expect,
+										process,
+										global,
+										URL,
+										Buffer,
+										setTimeout,
+										setImmediate,
+										nsObj: function (m) {
+											Object.defineProperty(m, Symbol.toStringTag, {
+												value: "Module"
+											});
+											return m;
+										}
+									});
+									function _require(module, esmMode) {
 										if (module.substr(0, 2) === "./") {
 											const p = path.join(outputDirectory, module);
+											const content = fs.readFileSync(p, "utf-8");
 											if (p.endsWith(".mjs")) {
-												const module = new vm.SourceTextModule(
-													`import { it, expect } from "TEST_ENV";
-function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }
-${fs.readFileSync(p, "utf-8")}`,
-													{
+												let esm;
+												try {
+													esm = new vm.SourceTextModule(content, {
 														identifier: p,
-														lineOffset: 1,
+														context: esmContext,
 														initializeImportMeta: (meta, module) => {
-															meta.url = pathToFileURL(p);
+															meta.url = pathToFileURL(p).href;
 														},
-														importModuleDynamically: (specifier, module) => {
-															return _require(specifier);
-														}
-													}
-												);
-												return module
-													.link((specifier, module) => {
-														if (specifier === "TEST_ENV") {
+														importModuleDynamically: async (
+															specifier,
+															module
+														) => {
+															const result = await _require(
+																specifier,
+																"evaluated"
+															);
+															if (
+																result instanceof
+																(vm.Module ||
+																	/* node.js 10 */ vm.SourceTextModule)
+															) {
+																return result;
+															}
+															if (!vm.SyntheticModule) return result;
 															const m = new vm.SyntheticModule(
-																["it", "expect"],
+																[
+																	...new Set([
+																		"default",
+																		...Object.keys(result)
+																	])
+																],
 																function () {
-																	this.setExport("it", _it);
-																	this.setExport("expect", expect);
+																	for (const key in result) {
+																		this.setExport(key, result[key]);
+																	}
+																	this.setExport("default", result);
 																}
 															);
+															await m.link(() => {});
+															if (m.instantiate) m.instantiate();
+															await m.evaluate();
 															return m;
 														}
-													})
-													.then(() => module.evaluate())
-													.then(() => module.namespace);
+													});
+												} catch (e) {
+													console.log(e);
+													e.message += `\nwhile parsing ${p}`;
+													throw e;
+												}
+												if (esmMode === "unlinked") return esm;
+												return (async () => {
+													await esm.link((specifier, module) => {
+														return _require(specifier, "unlinked");
+													});
+													// node.js 10 needs instantiate
+													if (esm.instantiate) esm.instantiate();
+													await esm.evaluate();
+													if (esmMode === "evaluated") return esm;
+													const ns = esm.namespace;
+													return ns.default && ns.default instanceof Promise
+														? ns.default
+														: ns;
+												})();
 											} else {
 												const fn = vm.runInThisContext(
 													"(function(require, module, exports, __dirname, __filename, it, expect) {" +
 														"global.expect = expect;" +
 														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
-														fs.readFileSync(p, "utf-8") +
+														content +
 														"\n})",
 													p
 												);
@@ -370,14 +420,15 @@ ${fs.readFileSync(p, "utf-8")}`,
 										} else return require(module);
 									}
 									_require.webpackTestSuiteRequire = true;
-									const promise = _require("./" + options.output.filename);
-									if (promise && promise.then) promise.then(finish);
-									else finish();
-									function finish() {
-										if (getNumberOfTests() === 0)
-											return done(new Error("No tests exported by test case"));
-										done();
-									}
+									Promise.resolve()
+										.then(() => _require("./" + options.output.filename))
+										.then(() => {
+											if (getNumberOfTests() === 0)
+												return done(
+													new Error("No tests exported by test case")
+												);
+											done();
+										}, done);
 								},
 								10000
 							);
