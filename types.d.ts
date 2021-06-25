@@ -52,15 +52,16 @@ import {
 	NewExpression,
 	ObjectExpression,
 	ObjectPattern,
+	PrivateIdentifier,
 	Program,
 	Property,
+	PropertyDefinition,
 	RegExpLiteral,
 	RestElement,
 	ReturnStatement,
 	SequenceExpression,
 	SimpleCallExpression,
 	SimpleLiteral,
-	SourceLocation,
 	SpreadElement,
 	Super,
 	SwitchCase,
@@ -4559,7 +4560,7 @@ declare class JavascriptParser extends Parser {
 						| FunctionDeclaration
 						| VariableDeclaration
 						| ClassDeclaration
-						| PrivateIdentifierNode
+						| PrivateIdentifier
 					),
 					number
 				],
@@ -4663,7 +4664,7 @@ declare class JavascriptParser extends Parser {
 		>;
 		classBodyElement: SyncBailHook<
 			[
-				MethodDefinition | PropertyDefinitionNode,
+				MethodDefinition | PropertyDefinition,
 				ClassExpression | ClassDeclaration
 			],
 			boolean | void
@@ -4671,7 +4672,7 @@ declare class JavascriptParser extends Parser {
 		classBodyValue: SyncBailHook<
 			[
 				Expression,
-				MethodDefinition | PropertyDefinitionNode,
+				MethodDefinition | PropertyDefinition,
 				ClassExpression | ClassDeclaration
 			],
 			boolean | void
@@ -4987,7 +4988,7 @@ declare class JavascriptParser extends Parser {
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
-			| PrivateIdentifierNode,
+			| PrivateIdentifier,
 		commentsStartPos: number
 	): boolean;
 	getComments(range?: any): any[];
@@ -6922,6 +6923,7 @@ type NodeEstreeIndex =
 	| FunctionDeclaration
 	| VariableDeclaration
 	| ClassDeclaration
+	| PrivateIdentifier
 	| ExpressionStatement
 	| BlockStatement
 	| EmptyStatement
@@ -6945,6 +6947,7 @@ type NodeEstreeIndex =
 	| ExportDefaultDeclaration
 	| ExportAllDeclaration
 	| MethodDefinition
+	| PropertyDefinition
 	| VariableDeclarator
 	| Program
 	| Super
@@ -8411,12 +8414,6 @@ declare interface PrintedElement {
 	element: string;
 	content: string;
 }
-declare interface PrivateIdentifierNode {
-	type: "PrivateIdentifier";
-	name: string;
-	loc?: null | SourceLocation;
-	range?: [number, number];
-}
 declare interface Problem {
 	type: ProblemType;
 	path: string;
@@ -8533,71 +8530,6 @@ declare interface ProgressPluginOptions {
 	 * Collect profile data for progress steps. Default: false.
 	 */
 	profile?: null | boolean;
-}
-declare interface PropertyDefinitionNode {
-	type: "PropertyDefinition";
-	key:
-		| UnaryExpression
-		| ThisExpression
-		| ArrayExpression
-		| ObjectExpression
-		| FunctionExpression
-		| ArrowFunctionExpression
-		| YieldExpression
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| UpdateExpression
-		| BinaryExpression
-		| AssignmentExpression
-		| LogicalExpression
-		| MemberExpression
-		| ConditionalExpression
-		| SimpleCallExpression
-		| NewExpression
-		| SequenceExpression
-		| TemplateLiteral
-		| TaggedTemplateExpression
-		| ClassExpression
-		| MetaProperty
-		| Identifier
-		| AwaitExpression
-		| ImportExpression
-		| ChainExpression
-		| PrivateIdentifierNode;
-	value:
-		| null
-		| UnaryExpression
-		| ThisExpression
-		| ArrayExpression
-		| ObjectExpression
-		| FunctionExpression
-		| ArrowFunctionExpression
-		| YieldExpression
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| UpdateExpression
-		| BinaryExpression
-		| AssignmentExpression
-		| LogicalExpression
-		| MemberExpression
-		| ConditionalExpression
-		| SimpleCallExpression
-		| NewExpression
-		| SequenceExpression
-		| TemplateLiteral
-		| TaggedTemplateExpression
-		| ClassExpression
-		| MetaProperty
-		| Identifier
-		| AwaitExpression
-		| ImportExpression
-		| ChainExpression;
-	computed: boolean;
-	static: boolean;
-	loc?: null | SourceLocation;
-	range?: [number, number];
 }
 declare class ProvidePlugin {
 	constructor(definitions: Record<string, string | string[]>);
