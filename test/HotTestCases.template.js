@@ -39,6 +39,7 @@ const describeCases = config => {
 						let compiler;
 						afterAll(callback => {
 							compiler.close(callback);
+							compiler = undefined;
 						});
 
 						it(
