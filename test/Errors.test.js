@@ -129,6 +129,12 @@ async function compile(options) {
 	return { errors, warnings };
 }
 
+it("should compile fine", async () => {
+	await compile({
+		entry: "./entry-point"
+	});
+}, 40000);
+
 it("should emit warning for missingFile", async () => {
 	await expect(
 		compile({
