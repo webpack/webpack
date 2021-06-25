@@ -346,7 +346,7 @@ const describeCases = config => {
 																specifier,
 																"evaluated"
 															);
-															return await asModule(result);
+															return await asModule(result, module.context);
 														}
 													});
 												} catch (e) {
@@ -359,7 +359,8 @@ const describeCases = config => {
 													await esm.link(async (specifier, module) => {
 														return await asModule(
 															await _require(specifier, "unlinked"),
-															module.context
+															module.context,
+															true
 														);
 													});
 													// node.js 10 needs instantiate

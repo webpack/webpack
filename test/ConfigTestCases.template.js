@@ -434,7 +434,7 @@ const describeCases = config => {
 																specifier,
 																"evaluated"
 															);
-															return await asModule(result);
+															return await asModule(result, module.context);
 														}
 													});
 													if (esmMode === "unlinked") return esm;
@@ -448,7 +448,8 @@ const describeCases = config => {
 																		specifier,
 																		"unlinked"
 																	),
-																	module.context
+																	module.context,
+																	true
 																);
 															}
 														);
