@@ -46,7 +46,6 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 	describe(
 		nameSuffix ? `exported tests ${nameSuffix}` : "exported tests",
 		() => {
-			jest.setTimeout(globalTimeout);
 			// this must have a child to be handled correctly
 			it("should run the exported tests", () => {
 				runTests++;
@@ -90,6 +89,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			numberOfTests++;
 			if (runTests >= numberOfTests) throw new Error("it called too late");
 			args[1] = createDisposableFn(args[1], true);
+			args[2] = args[2] || globalTimeout;
 			inSuite(() => {
 				it(...args);
 			});
