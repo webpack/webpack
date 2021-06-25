@@ -4,7 +4,13 @@ const createOnceFn = fn => {
 	if (!fn) return null;
 	if (fn.length >= 1) {
 		return done => {
-			fn(done);
+			try {
+				fn(done);
+			} catch (e) {
+				// avoid leaking memory
+				e.stack;
+				throw e;
+			}
 			fn = null;
 		};
 	}
@@ -22,11 +28,23 @@ const createDisposableFn = fn => {
 	let rfn;
 	if (fn.length >= 1) {
 		rfn = done => {
-			fn(done);
+			try {
+				fn(done);
+			} catch (e) {
+				// avoid leaking memory
+				e.stack;
+				throw e;
+			}
 		};
 	} else {
 		rfn = () => {
-			return fn();
+			try {
+				return fn();
+			} catch (e) {
+				// avoid leaking memory
+				e.stack;
+				throw e;
+			}
 		};
 	}
 	rfn.dispose = () => {
