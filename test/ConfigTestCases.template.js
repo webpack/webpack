@@ -199,7 +199,7 @@ const describeCases = config => {
 									}
 									done();
 								});
-							}, 20000);
+							}, 40000);
 						}
 						it(`${testName} should compile`, done => {
 							rimraf.sync(outputDirectory);
