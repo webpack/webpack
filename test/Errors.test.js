@@ -133,7 +133,7 @@ it("should compile fine", async () => {
 	await compile({
 		entry: "./entry-point"
 	});
-}, 40000);
+}, 100000);
 
 it("should emit warning for missingFile", async () => {
 	await expect(
