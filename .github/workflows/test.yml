@@ -6,11 +6,11 @@ name: Test
 on:
   push:
     branches:
-      - master
+      - main
       - dev-1
   pull_request:
     branches:
-      - master
+      - main
       - dev-1
 
 jobs:

@@ -2,7 +2,7 @@
 
 [DllPlugin documentation](https://webpack.js.org/plugins/dll-plugin)
 
-This is the _reference_ bundle (with the manifests) for [dll user example](https://github.com/webpack/webpack/tree/master/examples/dll-user)
+This is the _reference_ bundle (with the manifests) for [dll user example](https://github.com/webpack/webpack/tree/main/examples/dll-user)
 
 # webpack.config.js
 

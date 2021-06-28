@@ -10,7 +10,7 @@ You can see that webpack automatically wraps your module so that it is consumabl
 
 Note: You can also use the `library` and `libraryTarget` options without multiple entry points. Then you don't need `[name]`.
 
-Note: When your library has dependencies that should not be included in the compiled version, you can use the `externals` option. See [externals example](https://github.com/webpack/webpack/tree/master/examples/externals).
+Note: When your library has dependencies that should not be included in the compiled version, you can use the `externals` option. See [externals example](https://github.com/webpack/webpack/tree/main/examples/externals).
 
 # webpack.config.js
 
@@ -63,37 +63,44 @@ module.exports = "alpha";
 
 <details><summary><code>/* webpack runtime code */</code></summary>
 
-``` js
+```js
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+	/******/ // Check if module is in cache
+	/******/ if (__webpack_module_cache__[moduleId]) {
+		/******/ return __webpack_module_cache__[moduleId].exports;
+		/******/
+	}
+	/******/ // Create a new module (and put it into the cache)
+	/******/ var module = (__webpack_module_cache__[moduleId] = {
+		/******/ // no module.id needed
+		/******/ // no module.loaded needed
+		/******/ exports: {}
+		/******/
+	});
+	/******/
+	/******/ // Execute the module function
+	/******/ __webpack_modules__[moduleId](
+		module,
+		module.exports,
+		__webpack_require__
+	);
+	/******/
+	/******/ // Return the exports of the module
+	/******/ return module.exports;
+	/******/
+}
+/******/
 /************************************************************************/
 ```
 
 </details>
 
-``` js
+```js
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
@@ -136,37 +143,44 @@ module.exports = "beta";
 
 <details><summary><code>/* webpack runtime code */</code></summary>
 
-``` js
+```js
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+	/******/ // Check if module is in cache
+	/******/ if (__webpack_module_cache__[moduleId]) {
+		/******/ return __webpack_module_cache__[moduleId].exports;
+		/******/
+	}
+	/******/ // Create a new module (and put it into the cache)
+	/******/ var module = (__webpack_module_cache__[moduleId] = {
+		/******/ // no module.id needed
+		/******/ // no module.loaded needed
+		/******/ exports: {}
+		/******/
+	});
+	/******/
+	/******/ // Execute the module function
+	/******/ __webpack_modules__[moduleId](
+		module,
+		module.exports,
+		__webpack_require__
+	);
+	/******/
+	/******/ // Return the exports of the module
+	/******/ return module.exports;
+	/******/
+}
+/******/
 /************************************************************************/
 ```
 
 </details>
 
-``` js
+```js
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports

@@ -4,7 +4,7 @@
 branches:
   only:
     - webpack-4
-    - master
+    - main
     - next
     - dev-1
 
