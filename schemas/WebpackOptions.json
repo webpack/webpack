@@ -960,12 +960,17 @@
           "type": "string"
         },
         "idleTimeout": {
-          "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
+          "description": "Time in ms after which idle period the cache storing should happen.",
+          "type": "number",
+          "minimum": 0
+        },
+        "idleTimeoutAfterLargeChanges": {
+          "description": "Time in ms after which idle period the cache storing should happen when larger changes has been detected (cumulative build time > 2 x avg cache store time).",
           "type": "number",
           "minimum": 0
         },
         "idleTimeoutForInitialStore": {
-          "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
+          "description": "Time in ms after which idle period the initial cache storing should happen.",
           "type": "number",
           "minimum": 0
         },
