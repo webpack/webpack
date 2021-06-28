@@ -141,7 +141,7 @@ export function reset() {
 /******/ 	};
 /******/ 	
 /******/ 	__webpack_require__.f.j = (chunkId, promises) => {
-/******/ 			// JSONP chunk loading for javascript
+/******/ 			// import() chunk loading for javascript
 /******/ 			var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 			if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 	
@@ -232,9 +232,9 @@ var e,o={},t={};function r(e){var n=t[e];if(void 0!==n)return n.exports;var i=t[
 ```
 asset output.js 6.35 KiB [emitted] [javascript module] (name: main)
 asset 1.output.js 1.36 KiB [emitted] [javascript module]
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.89 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.9 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.89 KiB 6 modules
+  runtime modules 2.9 KiB 6 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]
@@ -255,9 +255,9 @@ webpack 5.40.0 compiled successfully
 ```
 asset output.js 1.15 KiB [emitted] [javascript module] [minimized] (name: main)
 asset 946.output.js 213 bytes [emitted] [javascript module] [minimized]
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.89 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.9 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.89 KiB 6 modules
+  runtime modules 2.9 KiB 6 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]
