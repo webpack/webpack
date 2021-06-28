@@ -70,10 +70,13 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		state.currentDescribeBlock = currentDescribeBlock;
 		state.currentlyRunningTest = currentlyRunningTest;
 		state.hasStarted = false;
-		const prevLimit = Error.stackTraceLimit;
-		Error.stackTraceLimit = 0;
-		fn();
-		Error.stackTraceLimit = prevLimit;
+		try {
+			fn();
+		} catch (e) {
+			// avoid leaking memory
+			e.stack;
+			throw e;
+		}
 		state.currentDescribeBlock = oldCurrentDescribeBlock;
 		state.currentlyRunningTest = oldCurrentlyRunningTest;
 		state.hasStarted = oldHasStarted;

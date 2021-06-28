@@ -5,6 +5,18 @@ module.exports = (env, { testPath }) => [
 	{
 		resolve: {
 			alias: {
+				library: path.resolve(testPath, "../0-create-library/esm.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("esm")
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
 				library: path.resolve(testPath, "../0-create-library/commonjs.js")
 			}
 		},

@@ -1673,8 +1673,8 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for output-module 1`] = `
-"asset main.js 9.95 KiB [emitted] [javascript module] (name: main)
-asset 52.js 417 bytes [emitted] [javascript module]
+"asset main.mjs 9.95 KiB [emitted] [javascript module] (name: main)
+asset 52.mjs 417 bytes [emitted] [javascript module]
 runtime modules 6.01 KiB 8 modules
 orphan modules 38 bytes [orphan] 1 module
 cacheable modules 263 bytes
