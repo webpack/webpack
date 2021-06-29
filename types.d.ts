@@ -1991,7 +1991,10 @@ declare interface Configuration {
 	 * References to other configurations to depend on.
 	 */
 	dependencies?: string[];
-
+	/**
+	 * Options for the webpack-dev-server.
+	 */
+	devServer?: DevServer;
 	/**
 	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
 	 */
