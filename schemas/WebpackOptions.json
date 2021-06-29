@@ -956,6 +956,10 @@
           "type": "string",
           "absolutePath": true
         },
+        "compression": {
+          "description": "Compression type used for the cache files.",
+          "enum": [false, "gzip", "brotli"]
+        },
         "hashAlgorithm": {
           "description": "Algorithm used for generation the hash (see node.js crypto package).",
           "type": "string"
