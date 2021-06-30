@@ -2055,7 +2055,8 @@ declare interface Configuration {
 		| "system"
 		| "promise"
 		| "import"
-		| "script";
+		| "script"
+		| "node-commonjs";
 
 	/**
 	 * Ignore specific warnings.
@@ -3757,7 +3758,8 @@ type ExternalsType =
 	| "system"
 	| "promise"
 	| "import"
-	| "script";
+	| "script"
+	| "node-commonjs";
 declare interface FactorizeModuleOptions {
 	currentProfile: ModuleProfile;
 	factory: ModuleFactory;
@@ -6440,7 +6442,8 @@ declare interface ModuleFederationPluginOptions {
 		| "system"
 		| "promise"
 		| "import"
-		| "script";
+		| "script"
+		| "node-commonjs";
 
 	/**
 	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
@@ -11580,7 +11583,8 @@ declare interface WebpackOptionsNormalized {
 		| "system"
 		| "promise"
 		| "import"
-		| "script";
+		| "script"
+		| "node-commonjs";
 
 	/**
 	 * Ignore specific warnings.

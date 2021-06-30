@@ -731,6 +731,7 @@ Object {
           "promise",
           "import",
           "script",
+          "node-commonjs",
         ],
       },
     ],

@@ -193,7 +193,8 @@ export type ExternalsType =
 	| "system"
 	| "promise"
 	| "import"
-	| "script";
+	| "script"
+	| "node-commonjs";
 /**
  * Ignore specific warnings.
  */
