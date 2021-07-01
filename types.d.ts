@@ -7198,6 +7198,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	fs: InputFileSystem;
 	parserCache: Map<string, WeakMap<Object, any>>;
 	generatorCache: Map<string, WeakMap<Object, Generator>>;
+	cleanupForCache(): void;
 	resolveResource(
 		contextInfo?: any,
 		context?: any,
