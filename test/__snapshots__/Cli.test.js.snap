@@ -95,6 +95,24 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "cache-compression": Object {
+    "configs": Array [
+      Object {
+        "description": "Compression type used for the cache files.",
+        "multiple": false,
+        "path": "cache.compression",
+        "type": "enum",
+        "values": Array [
+          false,
+          "gzip",
+          "brotli",
+        ],
+      },
+    ],
+    "description": "Compression type used for the cache files.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "cache-hash-algorithm": Object {
     "configs": Array [
       Object {
