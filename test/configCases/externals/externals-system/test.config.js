@@ -16,6 +16,10 @@ module.exports = {
 			external4: {
 				default: "the external4 default export",
 				namedThing: "the external4 named export"
+			},
+			external5: {
+				default: "the external5 default export",
+				namedThing: "the external5 named export"
 			}
 		});
 	},
