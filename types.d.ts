@@ -2335,6 +2335,11 @@ declare interface ContainerPluginOptions {
 	name: string;
 
 	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: string | false;
+
+	/**
 	 * The name of the share scope which is shared with the host (defaults to 'default').
 	 */
 	shareScope?: string;
@@ -2986,7 +2991,7 @@ declare interface EntryDescription {
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
-	runtime?: string;
+	runtime?: string | false;
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
@@ -3036,7 +3041,7 @@ declare interface EntryDescriptionNormalized {
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
-	runtime?: string;
+	runtime?: string | false;
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
@@ -6454,6 +6459,11 @@ declare interface ModuleFederationPluginOptions {
 	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
 	 */
 	remotes?: (string | RemotesObject)[] | RemotesObject;
+
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: string | false;
 
 	/**
 	 * Share scope name used for all shared modules (defaults to 'default').

@@ -93,6 +93,10 @@ export type RemotesItem = string;
  */
 export type RemotesItems = RemotesItem[];
 /**
+ * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+ */
+export type EntryRuntime = false | string;
+/**
  * Modules that should be shared in the share scope. When provided, property names are used to match requested modules in this compilation.
  */
 export type Shared = (SharedItem | SharedObject)[] | SharedObject;
@@ -126,6 +130,10 @@ export interface ModuleFederationPluginOptions {
 	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
 	 */
 	remotes?: Remotes;
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: EntryRuntime;
 	/**
 	 * Share scope name used for all shared modules (defaults to 'default').
 	 */
