@@ -52,12 +52,19 @@ describe("Persistent Caching", () => {
 
 	const compile = async (configAdditions = {}) => {
 		return new Promise((resolve, reject) => {
-			webpack({ ...config, ...configAdditions }, (err, stats) => {
-				if (err) return reject(err);
-				if (stats.hasErrors())
-					return reject(stats.toString({ preset: "errors-only" }));
-				resolve(stats);
-			});
+			webpack(
+				{
+					...config,
+					...configAdditions,
+					cache: { ...config.cache, ...configAdditions.cache }
+				},
+				(err, stats) => {
+					if (err) return reject(err);
+					if (stats.hasErrors())
+						return reject(stats.toString({ preset: "errors-only" }));
+					resolve(stats);
+				}
+			);
 		});
 	};
 
@@ -84,6 +91,18 @@ describe("Persistent Caching", () => {
 		return require("./main");
 	};
 
+	it("should compile fine (warmup)", async () => {
+		const data = {
+			"index.js": `import file from "./file.js";
+export default 40 + file;
+`,
+			"file.js": "export default 2;"
+		};
+		await updateSrc(data);
+		await compile();
+		expect(execute()).toBe(42);
+	}, 100000);
+
 	it("should merge multiple small files", async () => {
 		const files = Array.from({ length: 30 }).map((_, i) => `file${i}.js`);
 		const data = {
@@ -98,19 +117,19 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 			data[file] = `export default 1;`;
 		}
 		await updateSrc(data);
-		await compile();
+		await compile({ cache: { compression: false } });
 		expect(execute()).toBe(30);
 		for (let i = 0; i < 30; i++) {
 			updateSrc({
 				[files[i]]: `export default 2;`
 			});
-			await compile();
+			await compile({ cache: { compression: false } });
 			expect(execute()).toBe(31 + i);
 		}
 		const cacheFiles = await readdir(cachePath);
 		expect(cacheFiles.length).toBeLessThan(20);
 		expect(cacheFiles.length).toBeGreaterThan(10);
-	}, 60000);
+	}, 120000);
 
 	it("should optimize unused content", async () => {
 		const data = {
@@ -120,21 +139,21 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 			"d.js": 'import "date-fns";',
 			"e.js": 'import "lodash";'
 		};
-		const createEntry = items => {
+		await updateSrc(data);
+		const c = items => {
 			const entry = {};
 			for (const item of items.split("")) entry[item] = `./src/${item}.js`;
-			return entry;
+			return compile({ entry, cache: { compression: false } });
 		};
-		await updateSrc(data);
-		await compile({ entry: createEntry("abcde") });
-		await compile({ entry: createEntry("abc") });
-		await compile({ entry: createEntry("cde") });
-		await compile({ entry: createEntry("acd") });
-		await compile({ entry: createEntry("bce") });
-		await compile({ entry: createEntry("abcde") });
+		await c("abcde");
+		await c("abc");
+		await c("cde");
+		await c("acd");
+		await c("bce");
+		await c("abcde");
 		const cacheFiles = await readdir(cachePath);
 		expect(cacheFiles.length).toBeGreaterThan(4);
-	}, 60000);
+	}, 120000);
 
 	it("should allow persistent caching of container related objects", async () => {
 		const data = {
@@ -176,5 +195,5 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 		});
 		await compile(configAdditions);
 		await expect(execute()).resolves.toEqual({ ok: true });
-	}, 60000);
+	}, 120000);
 });
