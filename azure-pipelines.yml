@@ -16,6 +16,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          export CI=true
           node -v
           yarn -v
         displayName: "Print versions"
@@ -66,6 +67,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          export CI=true
           node -v
           yarn -v
         displayName: "Print versions"
@@ -140,6 +142,7 @@ jobs:
       - script: |
           yarn cover:integration --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
           yarn cover:merge
+        env: CI=true
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
         inputs:
@@ -175,6 +178,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          export CI=true
           node -v
           yarn -v
         displayName: "Print versions"
@@ -227,6 +231,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          export CI=true
           node -v
           yarn -v
         displayName: "Print versions"
