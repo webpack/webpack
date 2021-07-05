@@ -29,7 +29,7 @@ matrix:
 test_script:
   - node --version
   - yarn --version
-  - cmd: set JEST=--maxWorkers=2 --cacheDirectory .jest-cache
+  - cmd: set JEST=--runInBand --cacheDirectory .jest-cache
   - cmd: yarn appveyor:integration
   - cmd: yarn cover:report --reporter=lcovonly
   - cmd: yarn unlink webpack

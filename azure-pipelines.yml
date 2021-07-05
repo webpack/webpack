@@ -35,7 +35,7 @@ jobs:
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           export JEST_JUNIT_OUTPUT_NAME=basic-junit.xml
-          yarn test:basic --ci --reporters=default --reporters=jest-junit
+          yarn test:basic --ci --runInBand --reporters=default --reporters=jest-junit
           export JEST_JUNIT_OUTPUT_NAME=unit-junit.xml
           yarn test:unit --ci --reporters=default --reporters=jest-junit
         displayName: "Run basic tests"
@@ -138,7 +138,7 @@ jobs:
       - script: yarn link webpack --frozen-lockfile
         displayName: "Link webpack into node_modules"
       - script: |
-          yarn cover:integration --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
+          yarn cover:integration --ci --runInBand --reporters=default --reporters=jest-junit
           yarn cover:merge
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
@@ -193,7 +193,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn cover:integration --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
+          yarn cover:integration --ci --runInBand --reporters=default --reporters=jest-junit
           yarn cover:merge
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
@@ -245,7 +245,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn cover:integration --ci --reporters=default --reporters=jest-junit
+          yarn cover:integration --ci --runInBand --reporters=default --reporters=jest-junit
           yarn cover:merge
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
