@@ -95,6 +95,24 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "cache-compression": Object {
+    "configs": Array [
+      Object {
+        "description": "Compression type used for the cache files.",
+        "multiple": false,
+        "path": "cache.compression",
+        "type": "enum",
+        "values": Array [
+          false,
+          "gzip",
+          "brotli",
+        ],
+      },
+    ],
+    "description": "Compression type used for the cache files.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "cache-hash-algorithm": Object {
     "configs": Array [
       Object {
@@ -111,26 +129,39 @@ Object {
   "cache-idle-timeout": Object {
     "configs": Array [
       Object {
-        "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
+        "description": "Time in ms after which idle period the cache storing should happen.",
         "multiple": false,
         "path": "cache.idleTimeout",
         "type": "number",
       },
     ],
-    "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
+    "description": "Time in ms after which idle period the cache storing should happen.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "cache-idle-timeout-after-large-changes": Object {
+    "configs": Array [
+      Object {
+        "description": "Time in ms after which idle period the cache storing should happen when larger changes has been detected (cumulative build time > 2 x avg cache store time).",
+        "multiple": false,
+        "path": "cache.idleTimeoutAfterLargeChanges",
+        "type": "number",
+      },
+    ],
+    "description": "Time in ms after which idle period the cache storing should happen when larger changes has been detected (cumulative build time > 2 x avg cache store time).",
     "multiple": false,
     "simpleType": "number",
   },
   "cache-idle-timeout-for-initial-store": Object {
     "configs": Array [
       Object {
-        "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
+        "description": "Time in ms after which idle period the initial cache storing should happen.",
         "multiple": false,
         "path": "cache.idleTimeoutForInitialStore",
         "type": "number",
       },
     ],
-    "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
+    "description": "Time in ms after which idle period the initial cache storing should happen.",
     "multiple": false,
     "simpleType": "number",
   },
@@ -718,6 +749,7 @@ Object {
           "promise",
           "import",
           "script",
+          "node-commonjs",
         ],
       },
     ],
@@ -4464,24 +4496,25 @@ Object {
   "output-chunk-format": Object {
     "configs": Array [
       Object {
-        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).",
         "multiple": false,
         "path": "output.chunkFormat",
         "type": "enum",
         "values": Array [
           "array-push",
           "commonjs",
+          "module",
           false,
         ],
       },
       Object {
-        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).",
         "multiple": false,
         "path": "output.chunkFormat",
         "type": "string",
       },
     ],
-    "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+    "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -4501,7 +4534,7 @@ Object {
   "output-chunk-loading": Object {
     "configs": Array [
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": false,
         "path": "output.chunkLoading",
         "type": "enum",
@@ -4510,7 +4543,7 @@ Object {
         ],
       },
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": false,
         "path": "output.chunkLoading",
         "type": "enum",
@@ -4519,16 +4552,17 @@ Object {
           "import-scripts",
           "require",
           "async-node",
+          "import",
         ],
       },
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": false,
         "path": "output.chunkLoading",
         "type": "string",
       },
     ],
-    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -4663,7 +4697,7 @@ Object {
   "output-enabled-chunk-loading-types": Object {
     "configs": Array [
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": true,
         "path": "output.enabledChunkLoadingTypes[]",
         "type": "enum",
@@ -4672,16 +4706,17 @@ Object {
           "import-scripts",
           "require",
           "async-node",
+          "import",
         ],
       },
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": true,
         "path": "output.enabledChunkLoadingTypes[]",
         "type": "string",
       },
     ],
-    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -5568,7 +5603,7 @@ Object {
   "output-worker-chunk-loading": Object {
     "configs": Array [
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": false,
         "path": "output.workerChunkLoading",
         "type": "enum",
@@ -5577,7 +5612,7 @@ Object {
         ],
       },
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": false,
         "path": "output.workerChunkLoading",
         "type": "enum",
@@ -5586,16 +5621,17 @@ Object {
           "import-scripts",
           "require",
           "async-node",
+          "import",
         ],
       },
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": false,
         "path": "output.workerChunkLoading",
         "type": "string",
       },
     ],
-    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },

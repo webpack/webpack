@@ -56,6 +56,10 @@ export type LibraryType =
  * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
  */
 export type UmdNamedDefine = boolean;
+/**
+ * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+ */
+export type EntryRuntime = false | string;
 
 export interface ContainerPluginOptions {
 	/**
@@ -74,6 +78,10 @@ export interface ContainerPluginOptions {
 	 * The name for this container.
 	 */
 	name: string;
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: EntryRuntime;
 	/**
 	 * The name of the share scope which is shared with the host (defaults to 'default').
 	 */

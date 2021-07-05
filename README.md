@@ -287,7 +287,7 @@ Contributions go far beyond pull requests and commits. Although we love giving y
 - [Blogging, speaking about, or creating tutorials](https://github.com/webpack-contrib/awesome-webpack) about one of webpack's many features.
 - Helping others in our webpack [gitter channel](https://gitter.im/webpack/webpack).
 
-To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/master/CONTRIBUTING.md).
+To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/main/CONTRIBUTING.md).
 
 If you are worried or don't know where to start, you can **always** reach out to [Sean Larkin (@TheLarkInn) on Twitter](https://twitter.com/thelarkinn) or simply submit an issue and a maintainer can help give you guidance!
 
@@ -715,11 +715,11 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 [node-url]: https://nodejs.org
 [deps]: https://img.shields.io/david/webpack/webpack.svg
 [deps-url]: https://david-dm.org/webpack/webpack
-[tests]: https://img.shields.io/travis/webpack/webpack/master.svg
+[tests]: https://img.shields.io/travis/webpack/webpack/main.svg
 [tests-url]: https://travis-ci.org/webpack/webpack
 [prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
 [prs-url]: https://webpack.js.org/contribute/
-[builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
+[builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/main
 [builds]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
 [builds2]: https://dev.azure.com/webpack/webpack/_apis/build/status/webpack.webpack
 [builds2-url]: https://dev.azure.com/webpack/webpack/_build/latest?definitionId=3

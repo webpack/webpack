@@ -2055,7 +2055,8 @@ declare interface Configuration {
 		| "system"
 		| "promise"
 		| "import"
-		| "script";
+		| "script"
+		| "node-commonjs";
 
 	/**
 	 * Ignore specific warnings.
@@ -2332,6 +2333,11 @@ declare interface ContainerPluginOptions {
 	 * The name for this container.
 	 */
 	name: string;
+
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: string | false;
 
 	/**
 	 * The name of the share scope which is shared with the host (defaults to 'default').
@@ -2948,7 +2954,7 @@ declare abstract class EntryDependency extends ModuleDependency {}
  */
 declare interface EntryDescription {
 	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: string | false;
 
@@ -2985,7 +2991,7 @@ declare interface EntryDescription {
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
-	runtime?: string;
+	runtime?: string | false;
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
@@ -2998,7 +3004,7 @@ declare interface EntryDescription {
  */
 declare interface EntryDescriptionNormalized {
 	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: string | false;
 
@@ -3035,7 +3041,7 @@ declare interface EntryDescriptionNormalized {
 	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
-	runtime?: string;
+	runtime?: string | false;
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
@@ -3757,7 +3763,8 @@ type ExternalsType =
 	| "system"
 	| "promise"
 	| "import"
-	| "script";
+	| "script"
+	| "node-commonjs";
 declare interface FactorizeModuleOptions {
 	currentProfile: ModuleProfile;
 	factory: ModuleFactory;
@@ -3817,17 +3824,27 @@ declare interface FileCacheOptions {
 	cacheLocation?: string;
 
 	/**
+	 * Compression type used for the cache files.
+	 */
+	compression?: false | "gzip" | "brotli";
+
+	/**
 	 * Algorithm used for generation the hash (see node.js crypto package).
 	 */
 	hashAlgorithm?: string;
 
 	/**
-	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack').
+	 * Time in ms after which idle period the cache storing should happen.
 	 */
 	idleTimeout?: number;
 
 	/**
-	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').
+	 * Time in ms after which idle period the cache storing should happen when larger changes has been detected (cumulative build time > 2 x avg cache store time).
+	 */
+	idleTimeoutAfterLargeChanges?: number;
+
+	/**
+	 * Time in ms after which idle period the initial cache storing should happen.
 	 */
 	idleTimeoutForInitialStore?: number;
 
@@ -6435,12 +6452,18 @@ declare interface ModuleFederationPluginOptions {
 		| "system"
 		| "promise"
 		| "import"
-		| "script";
+		| "script"
+		| "node-commonjs";
 
 	/**
 	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
 	 */
 	remotes?: (string | RemotesObject)[] | RemotesObject;
+
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: string | false;
 
 	/**
 	 * Share scope name used for all shared modules (defaults to 'default').
@@ -7190,6 +7213,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	fs: InputFileSystem;
 	parserCache: Map<string, WeakMap<Object, any>>;
 	generatorCache: Map<string, WeakMap<Object, Generator>>;
+	cleanupForCache(): void;
 	resolveResource(
 		contextInfo?: any,
 		context?: any,
@@ -7786,7 +7810,7 @@ declare interface Output {
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
-	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
+	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).
 	 */
 	chunkFormat?: string | false;
 
@@ -7796,7 +7820,7 @@ declare interface Output {
 	chunkLoadTimeout?: number;
 
 	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: string | false;
 
@@ -8001,7 +8025,7 @@ declare interface Output {
 	webassemblyModuleFilename?: string;
 
 	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: string | false;
 
@@ -8072,7 +8096,7 @@ declare interface OutputNormalized {
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
-	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
+	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).
 	 */
 	chunkFormat?: string | false;
 
@@ -8082,7 +8106,7 @@ declare interface OutputNormalized {
 	chunkLoadTimeout?: number;
 
 	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: string | false;
 
@@ -8272,7 +8296,7 @@ declare interface OutputNormalized {
 	webassemblyModuleFilename?: string;
 
 	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: string | false;
 
@@ -11575,7 +11599,8 @@ declare interface WebpackOptionsNormalized {
 		| "system"
 		| "promise"
 		| "import"
-		| "script";
+		| "script"
+		| "node-commonjs";
 
 	/**
 	 * Ignore specific warnings.

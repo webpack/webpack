@@ -129,11 +129,11 @@ async function compile(options) {
 	return { errors, warnings };
 }
 
-it("should compile fine", async () => {
+it("should compile fine (warmup)", async () => {
 	await compile({
 		entry: "./entry-point"
 	});
-}, 100000);
+}, 120000);
 
 it("should emit warning for missingFile", async () => {
 	await expect(

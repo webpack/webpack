@@ -2,7 +2,7 @@
 
 [DllPlugin documentation](https://webpack.js.org/plugins/dll-plugin)
 
-This is the _user_ bundle, which uses the manifest from [dll-reference example](https://github.com/webpack/webpack/tree/master/examples/dll)
+This is the _user_ bundle, which uses the manifest from [dll-reference example](https://github.com/webpack/webpack/tree/main/examples/dll)
 
 # webpack.config.js
 
@@ -141,37 +141,44 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_bb584d575dc3369666
 
 <details><summary><code>/* webpack runtime code */</code></summary>
 
-``` js
+```js
 /************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+	/******/ // Check if module is in cache
+	/******/ if (__webpack_module_cache__[moduleId]) {
+		/******/ return __webpack_module_cache__[moduleId].exports;
+		/******/
+	}
+	/******/ // Create a new module (and put it into the cache)
+	/******/ var module = (__webpack_module_cache__[moduleId] = {
+		/******/ // no module.id needed
+		/******/ // no module.loaded needed
+		/******/ exports: {}
+		/******/
+	});
+	/******/
+	/******/ // Execute the module function
+	/******/ __webpack_modules__[moduleId](
+		module,
+		module.exports,
+		__webpack_require__
+	);
+	/******/
+	/******/ // Return the exports of the module
+	/******/ return module.exports;
+	/******/
+}
+/******/
 /************************************************************************/
 ```
 
 </details>
 
-``` js
+```js
 (() => {
 /*!********************!*\
   !*** ./example.js ***!

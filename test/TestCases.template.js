@@ -95,6 +95,11 @@ const describeCases = config => {
 								category.name,
 								testName
 							);
+							let testConfig = {};
+							const testConfigPath = path.join(testDirectory, "test.config.js");
+							if (fs.existsSync(testConfigPath)) {
+								testConfig = require(testConfigPath);
+							}
 							const options = {
 								context: casesPath,
 								entry: "./" + category.name + "/" + testName + "/",
@@ -196,34 +201,42 @@ const describeCases = config => {
 								rimraf(cacheDirectory, done);
 							});
 							if (config.cache) {
-								it(`${testName} should pre-compile to fill disk cache (1st)`, done => {
-									const oldPath = options.output.path;
-									options.output.path = path.join(
-										options.output.path,
-										"cache1"
-									);
-									const deprecationTracker = deprecationTracking.start();
-									webpack(options, err => {
-										deprecationTracker();
-										options.output.path = oldPath;
-										if (err) return done(err);
-										done();
-									});
-								}, 60000);
-								it(`${testName} should pre-compile to fill disk cache (2nd)`, done => {
-									const oldPath = options.output.path;
-									options.output.path = path.join(
-										options.output.path,
-										"cache2"
-									);
-									const deprecationTracker = deprecationTracking.start();
-									webpack(options, err => {
-										deprecationTracker();
-										options.output.path = oldPath;
-										if (err) return done(err);
-										done();
-									});
-								}, 10000);
+								it(
+									`${testName} should pre-compile to fill disk cache (1st)`,
+									done => {
+										const oldPath = options.output.path;
+										options.output.path = path.join(
+											options.output.path,
+											"cache1"
+										);
+										const deprecationTracker = deprecationTracking.start();
+										webpack(options, err => {
+											deprecationTracker();
+											options.output.path = oldPath;
+											if (err) return done(err);
+											done();
+										});
+									},
+									testConfig.timeout || 60000
+								);
+								it(
+									`${testName} should pre-compile to fill disk cache (2nd)`,
+									done => {
+										const oldPath = options.output.path;
+										options.output.path = path.join(
+											options.output.path,
+											"cache2"
+										);
+										const deprecationTracker = deprecationTracking.start();
+										webpack(options, err => {
+											deprecationTracker();
+											options.output.path = oldPath;
+											if (err) return done(err);
+											done();
+										});
+									},
+									testConfig.cachedTimeout || testConfig.timeout || 10000
+								);
 							}
 							it(
 								testName + " should compile",
@@ -303,7 +316,9 @@ const describeCases = config => {
 										run();
 									}
 								},
-								config.cache ? 20000 : 60000
+								testConfig.cachedTimeout ||
+									testConfig.timeout ||
+									(config.cache ? 20000 : 60000)
 							);
 
 							it(
@@ -413,7 +428,9 @@ const describeCases = config => {
 								10000
 							);
 
-							const { it: _it, getNumberOfTests } = createLazyTestEnv(10000);
+							const { it: _it, getNumberOfTests } = createLazyTestEnv(
+								testConfig.timeout || 10000
+							);
 						});
 					});
 			});

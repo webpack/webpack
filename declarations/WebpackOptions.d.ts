@@ -56,14 +56,14 @@ export type EntryStatic = EntryObject | EntryUnnamed;
  */
 export type EntryItem = string[] | string;
 /**
- * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+ * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
  */
 export type ChunkLoading = false | ChunkLoadingType;
 /**
- * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+ * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
  */
 export type ChunkLoadingType =
-	| ("jsonp" | "import-scripts" | "require" | "async-node")
+	| ("jsonp" | "import-scripts" | "require" | "async-node" | "import")
 	| string;
 /**
  * Specifies the filename of the output file on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
@@ -138,7 +138,7 @@ export type RawPublicPath =
 /**
  * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
  */
-export type EntryRuntime = string;
+export type EntryRuntime = false | string;
 /**
  * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
  */
@@ -193,7 +193,8 @@ export type ExternalsType =
 	| "system"
 	| "promise"
 	| "import"
-	| "script";
+	| "script"
+	| "node-commonjs";
 /**
  * Ignore specific warnings.
  */
@@ -413,9 +414,11 @@ export type Charset = boolean;
  */
 export type ChunkFilename = FilenameTemplate;
 /**
- * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
+ * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).
  */
-export type ChunkFormat = ("array-push" | "commonjs" | false) | string;
+export type ChunkFormat =
+	| ("array-push" | "commonjs" | "module" | false)
+	| string;
 /**
  * Number of milliseconds before chunk request expires.
  */
@@ -912,15 +915,23 @@ export interface FileCacheOptions {
 	 */
 	cacheLocation?: string;
 	/**
+	 * Compression type used for the cache files.
+	 */
+	compression?: false | "gzip" | "brotli";
+	/**
 	 * Algorithm used for generation the hash (see node.js crypto package).
 	 */
 	hashAlgorithm?: string;
 	/**
-	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack').
+	 * Time in ms after which idle period the cache storing should happen.
 	 */
 	idleTimeout?: number;
 	/**
-	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').
+	 * Time in ms after which idle period the cache storing should happen when larger changes has been detected (cumulative build time > 2 x avg cache store time).
+	 */
+	idleTimeoutAfterLargeChanges?: number;
+	/**
+	 * Time in ms after which idle period the initial cache storing should happen.
 	 */
 	idleTimeoutForInitialStore?: number;
 	/**
@@ -980,7 +991,7 @@ export interface EntryObject {
  */
 export interface EntryDescription {
 	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: ChunkLoading;
 	/**
@@ -1946,7 +1957,7 @@ export interface Output {
 	 */
 	chunkFilename?: ChunkFilename;
 	/**
-	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
+	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).
 	 */
 	chunkFormat?: ChunkFormat;
 	/**
@@ -1954,7 +1965,7 @@ export interface Output {
 	 */
 	chunkLoadTimeout?: ChunkLoadTimeout;
 	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: ChunkLoading;
 	/**
@@ -2118,7 +2129,7 @@ export interface Output {
 	 */
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
 	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: ChunkLoading;
 	/**
@@ -2686,7 +2697,7 @@ export interface EmptyParserOptions {}
  */
 export interface EntryDescriptionNormalized {
 	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: ChunkLoading;
 	/**
@@ -2924,7 +2935,7 @@ export interface OutputNormalized {
 	 */
 	chunkFilename?: ChunkFilename;
 	/**
-	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).
+	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).
 	 */
 	chunkFormat?: ChunkFormat;
 	/**
@@ -2932,7 +2943,7 @@ export interface OutputNormalized {
 	 */
 	chunkLoadTimeout?: ChunkLoadTimeout;
 	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: ChunkLoading;
 	/**
@@ -3084,7 +3095,7 @@ export interface OutputNormalized {
 	 */
 	webassemblyModuleFilename?: WebassemblyModuleFilename;
 	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: ChunkLoading;
 	/**
