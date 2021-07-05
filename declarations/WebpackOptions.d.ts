@@ -138,7 +138,7 @@ export type RawPublicPath =
 /**
  * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
  */
-export type EntryRuntime = string;
+export type EntryRuntime = false | string;
 /**
  * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
  */

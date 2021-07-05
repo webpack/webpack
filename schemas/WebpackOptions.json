@@ -599,8 +599,15 @@
     },
     "EntryRuntime": {
       "description": "The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.",
-      "type": "string",
-      "minLength": 1
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
     },
     "EntryStatic": {
       "description": "A static entry description.",
