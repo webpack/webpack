@@ -80,7 +80,8 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import { ValidationError, validate as validateFunction } from "schema-utils";
+import { validate as validateFunction } from "schema-utils";
+import { default as ValidationError } from "schema-utils/declarations/ValidationError";
 import { ValidationErrorConfiguration } from "schema-utils/declarations/validate";
 import {
 	AsArray,
