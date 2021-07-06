@@ -3,7 +3,7 @@
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
-const { URL, pathToFileURL } = require("url");
+const { URL, pathToFileURL, fileURLToPath } = require("url");
 const rimraf = require("rimraf");
 const webpack = require("..");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -305,7 +305,8 @@ const describeCases = config => {
 											currentDirectory,
 											options,
 											module,
-											esmMode
+											esmMode,
+											parentModule
 										) => {
 											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 												let content;
@@ -418,9 +419,12 @@ const describeCases = config => {
 														);
 													const esm = new vm.SourceTextModule(content, {
 														identifier: p,
-														context: vm.createContext(moduleScope, {
-															name: `context for ${p}`
-														}),
+														url: pathToFileURL(p).href,
+														context:
+															(parentModule && parentModule.context) ||
+															vm.createContext(moduleScope, {
+																name: `context for ${p}`
+															}),
 														initializeImportMeta: (meta, module) => {
 															meta.url = pathToFileURL(p).href;
 														},
@@ -432,7 +436,8 @@ const describeCases = config => {
 																path.dirname(p),
 																options,
 																specifier,
-																"evaluated"
+																"evaluated",
+																module
 															);
 															return await asModule(result, module.context);
 														}
@@ -443,10 +448,14 @@ const describeCases = config => {
 															async (specifier, referencingModule) => {
 																return await asModule(
 																	await _require(
-																		path.dirname(referencingModule.identfier),
+																		path.dirname(
+																			referencingModule.identifier ||
+																				fileURLToPath(referencingModule.url)
+																		),
 																		options,
 																		specifier,
-																		"unlinked"
+																		"unlinked",
+																		referencingModule
 																	),
 																	module.context,
 																	true
