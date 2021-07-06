@@ -520,6 +520,57 @@ describe("cleverMerge", () => {
 				}
 			}
 		],
+		"clear objects": [
+			{
+				nested1: base,
+				nested2: base,
+				nested3: {
+					a: 1,
+					b: 2,
+					c: 3
+				},
+				nested4: {
+					a: 1,
+					b: 2,
+					c: 3
+				}
+			},
+			{
+				nested1: {
+					"...": DELETE
+				},
+				nested2: {
+					"...": undefined
+				},
+				nested3: {
+					a: 11,
+					"...": DELETE,
+					c: 33
+				},
+				nested4: {
+					a: 11,
+					"...": 0,
+					c: 33
+				}
+			},
+			{
+				nested1: {
+					"...": DELETE
+				},
+				nested2: base,
+				nested3: {
+					a: 11,
+					"...": DELETE,
+					c: 33
+				},
+				nested4: {
+					a: 11,
+					b: 0,
+					c: 33,
+					"...": 0
+				}
+			}
+		],
 		dynamicSecond: [
 			{
 				a: 4, // keep
