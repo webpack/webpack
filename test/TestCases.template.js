@@ -5,38 +5,13 @@ const fs = require("graceful-fs");
 const vm = require("vm");
 const { pathToFileURL, URL } = require("url");
 const rimraf = require("rimraf");
-const webpack = require("..");
-const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const captureStdio = require("./helpers/captureStdio");
 const asModule = require("./helpers/asModule");
 
-const terserForTesting = new TerserPlugin({
-	parallel: false
-});
-
-const DEFAULT_OPTIMIZATIONS = {
-	removeAvailableModules: true,
-	removeEmptyChunks: true,
-	mergeDuplicateChunks: true,
-	flagIncludedChunks: true,
-	sideEffects: true,
-	providedExports: true,
-	usedExports: true,
-	mangleExports: true,
-	emitOnErrors: true,
-	concatenateModules: false,
-	moduleIds: "size",
-	chunkIds: "size",
-	minimizer: [terserForTesting]
-};
-
-const NO_EMIT_ON_ERRORS_OPTIMIZATIONS = {
-	emitOnErrors: true,
-	minimizer: [terserForTesting]
-};
+const webpack = require("..");
 
 const casesPath = path.join(__dirname, "cases");
 let categories = fs.readdirSync(casesPath);
@@ -100,6 +75,10 @@ const describeCases = config => {
 							if (fs.existsSync(testConfigPath)) {
 								testConfig = require(testConfigPath);
 							}
+							const TerserPlugin = require("terser-webpack-plugin");
+							const terserForTesting = new TerserPlugin({
+								parallel: false
+							});
 							const options = {
 								context: casesPath,
 								entry: "./" + category.name + "/" + testName + "/",
@@ -108,11 +87,24 @@ const describeCases = config => {
 								mode: config.mode || "none",
 								optimization: config.mode
 									? {
-											...NO_EMIT_ON_ERRORS_OPTIMIZATIONS,
+											emitOnErrors: true,
+											minimizer: [terserForTesting],
 											...config.optimization
 									  }
 									: {
-											...DEFAULT_OPTIMIZATIONS,
+											removeAvailableModules: true,
+											removeEmptyChunks: true,
+											mergeDuplicateChunks: true,
+											flagIncludedChunks: true,
+											sideEffects: true,
+											providedExports: true,
+											usedExports: true,
+											mangleExports: true,
+											emitOnErrors: true,
+											concatenateModules: false,
+											moduleIds: "size",
+											chunkIds: "size",
+											minimizer: [terserForTesting],
 											...config.optimization
 									  },
 								performance: {
@@ -197,6 +189,10 @@ const describeCases = config => {
 									...(config.module ? { outputModule: true } : {})
 								}
 							};
+							const cleanups = [];
+							afterAll(() => {
+								for (const fn of cleanups) fn();
+							});
 							beforeAll(done => {
 								rimraf(cacheDirectory, done);
 							});
@@ -340,6 +336,7 @@ const describeCases = config => {
 											return m;
 										}
 									});
+									cleanups.push(() => (esmContext.it = undefined));
 									function _require(module, esmMode) {
 										if (module.substr(0, 2) === "./") {
 											const p = path.join(outputDirectory, module);
@@ -364,6 +361,7 @@ const describeCases = config => {
 															return await asModule(result, module.context);
 														}
 													});
+													cleanups.push(() => (esmContext.it = undefined));
 												} catch (e) {
 													console.log(e);
 													e.message += `\nwhile parsing ${p}`;
