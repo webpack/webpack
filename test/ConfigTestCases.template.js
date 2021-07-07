@@ -532,6 +532,9 @@ const describeCases = config => {
 								Promise.all(results)
 									.then(() => {
 										if (testConfig.afterExecute) testConfig.afterExecute();
+										for (const key of Object.keys(global)) {
+											if (key.includes("webpack")) delete global[key];
+										}
 										if (getNumberOfTests() < filesCount) {
 											return done(new Error("No tests exported by test case"));
 										}
