@@ -3,10 +3,8 @@
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
-const { URL, pathToFileURL } = require("url");
+const { URL, pathToFileURL, fileURLToPath } = require("url");
 const rimraf = require("rimraf");
-const webpack = require("..");
-const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
@@ -73,7 +71,7 @@ const describeCases = config => {
 									options.optimization.minimize = false;
 								if (options.optimization.minimizer === undefined) {
 									options.optimization.minimizer = [
-										new TerserPlugin({
+										new (require("terser-webpack-plugin"))({
 											parallel: false
 										})
 									];
@@ -130,6 +128,12 @@ const describeCases = config => {
 							}
 							if (testConfig.timeout) setDefaultTimeout(testConfig.timeout);
 						});
+						afterAll(() => {
+							// cleanup
+							options = undefined;
+							optionsArr = undefined;
+							testConfig = undefined;
+						});
 						beforeAll(() => {
 							rimraf.sync(cacheDirectory);
 						});
@@ -162,7 +166,7 @@ const describeCases = config => {
 								rimraf.sync(outputDirectory);
 								fs.mkdirSync(outputDirectory, { recursive: true });
 								const deprecationTracker = deprecationTracking.start();
-								webpack(options, err => {
+								require("..")(options, err => {
 									deprecationTracker();
 									if (err) return handleFatalError(err, done);
 									done();
@@ -172,7 +176,7 @@ const describeCases = config => {
 								rimraf.sync(outputDirectory);
 								fs.mkdirSync(outputDirectory, { recursive: true });
 								const deprecationTracker = deprecationTracking.start();
-								webpack(options, (err, stats) => {
+								require("..")(options, (err, stats) => {
 									deprecationTracker();
 									if (err) return handleFatalError(err, done);
 									const { modules, children, errorsCount } = stats.toJson({
@@ -211,7 +215,7 @@ const describeCases = config => {
 							rimraf.sync(outputDirectory);
 							fs.mkdirSync(outputDirectory, { recursive: true });
 							const deprecationTracker = deprecationTracking.start();
-							webpack(options, (err, stats) => {
+							require("..")(options, (err, stats) => {
 								const deprecations = deprecationTracker();
 								if (err) return handleFatalError(err, done);
 								const statOptions = {
@@ -305,8 +309,14 @@ const describeCases = config => {
 											currentDirectory,
 											options,
 											module,
-											esmMode
+											esmMode,
+											parentModule
 										) => {
+											if (testConfig === undefined) {
+												throw new Error(
+													`_require(${module}) called after all tests have completed`
+												);
+											}
 											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 												let content;
 												let p;
@@ -418,9 +428,12 @@ const describeCases = config => {
 														);
 													const esm = new vm.SourceTextModule(content, {
 														identifier: p,
-														context: vm.createContext(moduleScope, {
-															name: `context for ${p}`
-														}),
+														url: pathToFileURL(p).href,
+														context:
+															(parentModule && parentModule.context) ||
+															vm.createContext(moduleScope, {
+																name: `context for ${p}`
+															}),
 														initializeImportMeta: (meta, module) => {
 															meta.url = pathToFileURL(p).href;
 														},
@@ -432,7 +445,8 @@ const describeCases = config => {
 																path.dirname(p),
 																options,
 																specifier,
-																"evaluated"
+																"evaluated",
+																module
 															);
 															return await asModule(result, module.context);
 														}
@@ -443,10 +457,14 @@ const describeCases = config => {
 															async (specifier, referencingModule) => {
 																return await asModule(
 																	await _require(
-																		path.dirname(referencingModule.identfier),
+																		path.dirname(
+																			referencingModule.identifier ||
+																				fileURLToPath(referencingModule.url)
+																		),
 																		options,
 																		specifier,
-																		"unlinked"
+																		"unlinked",
+																		referencingModule
 																	),
 																	module.context,
 																	true
@@ -523,6 +541,9 @@ const describeCases = config => {
 								Promise.all(results)
 									.then(() => {
 										if (testConfig.afterExecute) testConfig.afterExecute();
+										for (const key of Object.keys(global)) {
+											if (key.includes("webpack")) delete global[key];
+										}
 										if (getNumberOfTests() < filesCount) {
 											return done(new Error("No tests exported by test case"));
 										}
