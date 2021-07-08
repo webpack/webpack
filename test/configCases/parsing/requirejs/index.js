@@ -9,12 +9,12 @@ it("should ignore require.config", function() {
 it("should have a require.version", function() {
 	expect(require.version).toBeTypeOf("string");
 });
-it("should have a requirejs.onError function", function() {
+it("should have a requirejs.onError function", function(done) {
 	function f(){}
 	expect(requirejs.onError).toBeTypeOf("undefined"); // has no default handler
 	var org = requirejs.onError;
 	requirejs.onError = f;
 	expect(requirejs.onError).toBe(f);
 	requirejs.onError = org;
-	require(["./file.js"], function() {});
+	require(["./file.js"], function() { done() });
 });

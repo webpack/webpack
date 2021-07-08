@@ -312,6 +312,11 @@ const describeCases = config => {
 											esmMode,
 											parentModule
 										) => {
+											if (testConfig === undefined) {
+												throw new Error(
+													`_require(${module}) called after all tests have completed`
+												);
+											}
 											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 												let content;
 												let p;
