@@ -386,7 +386,10 @@ describe("WatchTestCases", () => {
 						run.it = _it;
 						run.getNumberOfTests = getNumberOfTests;
 						it(`${run.name} should allow to read stats`, done => {
-							if (run.stats) run.stats.toString({ all: true });
+							if (run.stats) {
+								run.stats.toString({ all: true });
+								run.stats = undefined;
+							}
 							done();
 						});
 					}
