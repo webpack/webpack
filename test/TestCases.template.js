@@ -11,8 +11,6 @@ const deprecationTracking = require("./helpers/deprecationTracking");
 const captureStdio = require("./helpers/captureStdio");
 const asModule = require("./helpers/asModule");
 
-const webpack = require("..");
-
 const casesPath = path.join(__dirname, "cases");
 let categories = fs.readdirSync(casesPath);
 categories = categories.map(cat => {
@@ -79,7 +77,7 @@ const describeCases = config => {
 							const terserForTesting = new TerserPlugin({
 								parallel: false
 							});
-							const options = {
+							let options = {
 								context: casesPath,
 								entry: "./" + category.name + "/" + testName + "/",
 								target: config.target || "async-node",
@@ -191,6 +189,8 @@ const describeCases = config => {
 							};
 							const cleanups = [];
 							afterAll(() => {
+								options = undefined;
+								testConfig = undefined;
 								for (const fn of cleanups) fn();
 							});
 							beforeAll(done => {
@@ -206,6 +206,7 @@ const describeCases = config => {
 											"cache1"
 										);
 										const deprecationTracker = deprecationTracking.start();
+										const webpack = require("..");
 										webpack(options, err => {
 											deprecationTracker();
 											options.output.path = oldPath;
@@ -224,6 +225,7 @@ const describeCases = config => {
 											"cache2"
 										);
 										const deprecationTracker = deprecationTracking.start();
+										const webpack = require("..");
 										webpack(options, err => {
 											deprecationTracker();
 											options.output.path = oldPath;
@@ -237,6 +239,7 @@ const describeCases = config => {
 							it(
 								testName + " should compile",
 								done => {
+									const webpack = require("..");
 									const compiler = webpack(options);
 									const run = () => {
 										const deprecationTracker = deprecationTracking.start();

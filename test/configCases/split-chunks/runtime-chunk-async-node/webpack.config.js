@@ -9,7 +9,10 @@ module.exports = {
 	},
 	target: "async-node",
 	output: {
-		filename: "[name].js"
+		filename: "[name].js",
+		library: {
+			type: "commonjs-module"
+		}
 	},
 	optimization: {
 		chunkIds: "named",

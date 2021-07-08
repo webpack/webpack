@@ -1,4 +1,2 @@
-it("should handle mixed size types chunk in splitChunks", async () => {
-	import("./chunk1");
-	import("./chunk2");
-});
+it("should handle mixed size types chunk in splitChunks", () =>
+	Promise.all([import("./chunk1"), import("./chunk2")]));
