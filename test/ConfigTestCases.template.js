@@ -128,6 +128,12 @@ const describeCases = config => {
 							}
 							if (testConfig.timeout) setDefaultTimeout(testConfig.timeout);
 						});
+						afterAll(() => {
+							// cleanup
+							options = undefined;
+							optionsArr = undefined;
+							testConfig = undefined;
+						});
 						beforeAll(() => {
 							rimraf.sync(cacheDirectory);
 						});
