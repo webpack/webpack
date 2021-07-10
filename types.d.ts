@@ -95,12 +95,13 @@ import {
 	SyncWaterfallHook
 } from "tapable";
 
-type IsConfigurationValueAny<
-	Config,
-	Key extends keyof Config
-> = true extends Config[Key] & false ? Omit<Config, Key> : Config;
+type IsDevServerValueAny<DevServerConfig> = true extends DevServerConfig & false
+	? { [key: string]: any }
+	: DevServerConfig;
 
-type DevServer = import("webpack-dev-server").Configuration;
+type DevServer = IsDevServerValueAny<
+	import("webpack-dev-server").Configuration
+>;
 
 declare class AbstractLibraryPlugin<T> {
 	constructor(__0: {
@@ -1973,251 +1974,248 @@ declare class ConcatenationScope {
 /**
  * Options object as provided by the user.
  */
-declare type Configuration = IsConfigurationValueAny<
-	{
-		/**
-		 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
-		 */
-		amd?: false | { [index: string]: any };
+declare interface Configuration {
+	/**
+	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
+	 */
+	amd?: false | { [index: string]: any };
 
-		/**
-		 * Report the first error as a hard error instead of tolerating it.
-		 */
-		bail?: boolean;
+	/**
+	 * Report the first error as a hard error instead of tolerating it.
+	 */
+	bail?: boolean;
 
-		/**
-		 * Cache generated modules and chunks to improve performance for multiple incremental builds.
-		 */
-		cache?: boolean | MemoryCacheOptions | FileCacheOptions;
+	/**
+	 * Cache generated modules and chunks to improve performance for multiple incremental builds.
+	 */
+	cache?: boolean | MemoryCacheOptions | FileCacheOptions;
 
-		/**
-		 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
-		 */
-		context?: string;
+	/**
+	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
+	 */
+	context?: string;
 
-		/**
-		 * References to other configurations to depend on.
-		 */
-		dependencies?: string[];
+	/**
+	 * References to other configurations to depend on.
+	 */
+	dependencies?: string[];
 
-		/**
-		 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
-		 */
-		devtool?: string | false;
+	/**
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+	 */
+	devtool?: string | false;
 
-		/**
-		 * The entry point(s) of the compilation.
-		 */
-		entry?:
-			| string
-			| (() => string | EntryObject | string[] | Promise<EntryStatic>)
-			| EntryObject
-			| string[];
+	/**
+	 * The entry point(s) of the compilation.
+	 */
+	entry?:
+		| string
+		| (() => string | EntryObject | string[] | Promise<EntryStatic>)
+		| EntryObject
+		| string[];
 
-		/**
-		 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
-		 */
-		experiments?: Experiments;
+	/**
+	 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+	 */
+	experiments?: Experiments;
 
-		/**
-		 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
-		 */
-		externals?:
-			| string
-			| RegExp
-			| ExternalItem[]
-			| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
-			| ((
-					data: ExternalItemFunctionData,
-					callback: (
-						err?: Error,
-						result?: string | boolean | string[] | { [index: string]: any }
-					) => void
-			  ) => void)
-			| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
+	/**
+	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
+	 */
+	externals?:
+		| string
+		| RegExp
+		| ExternalItem[]
+		| (ExternalItemObjectKnown & ExternalItemObjectUnknown)
+		| ((
+				data: ExternalItemFunctionData,
+				callback: (
+					err?: Error,
+					result?: string | boolean | string[] | { [index: string]: any }
+				) => void
+		  ) => void)
+		| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>);
 
-		/**
-		 * Enable presets of externals for specific targets.
-		 */
-		externalsPresets?: ExternalsPresets;
+	/**
+	 * Enable presets of externals for specific targets.
+	 */
+	externalsPresets?: ExternalsPresets;
 
-		/**
-		 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
-		 */
-		externalsType?:
-			| "var"
-			| "module"
-			| "assign"
-			| "this"
-			| "window"
-			| "self"
-			| "global"
-			| "commonjs"
-			| "commonjs2"
-			| "commonjs-module"
-			| "amd"
-			| "amd-require"
-			| "umd"
-			| "umd2"
-			| "jsonp"
-			| "system"
-			| "promise"
-			| "import"
-			| "script"
-			| "node-commonjs";
+	/**
+	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+	 */
+	externalsType?:
+		| "var"
+		| "module"
+		| "assign"
+		| "this"
+		| "window"
+		| "self"
+		| "global"
+		| "commonjs"
+		| "commonjs2"
+		| "commonjs-module"
+		| "amd"
+		| "amd-require"
+		| "umd"
+		| "umd2"
+		| "jsonp"
+		| "system"
+		| "promise"
+		| "import"
+		| "script"
+		| "node-commonjs";
 
-		/**
-		 * Ignore specific warnings.
-		 */
-		ignoreWarnings?: (
-			| RegExp
-			| {
-					/**
-					 * A RegExp to select the origin file for the warning.
-					 */
-					file?: RegExp;
-					/**
-					 * A RegExp to select the warning message.
-					 */
-					message?: RegExp;
-					/**
-					 * A RegExp to select the origin module for the warning.
-					 */
-					module?: RegExp;
-			  }
-			| ((warning: WebpackError, compilation: Compilation) => boolean)
-		)[];
+	/**
+	 * Ignore specific warnings.
+	 */
+	ignoreWarnings?: (
+		| RegExp
+		| {
+				/**
+				 * A RegExp to select the origin file for the warning.
+				 */
+				file?: RegExp;
+				/**
+				 * A RegExp to select the warning message.
+				 */
+				message?: RegExp;
+				/**
+				 * A RegExp to select the origin module for the warning.
+				 */
+				module?: RegExp;
+		  }
+		| ((warning: WebpackError, compilation: Compilation) => boolean)
+	)[];
 
-		/**
-		 * Options for infrastructure level logging.
-		 */
-		infrastructureLogging?: InfrastructureLogging;
+	/**
+	 * Options for infrastructure level logging.
+	 */
+	infrastructureLogging?: InfrastructureLogging;
 
-		/**
-		 * Custom values available in the loader context.
-		 */
-		loader?: Loader;
+	/**
+	 * Custom values available in the loader context.
+	 */
+	loader?: Loader;
 
-		/**
-		 * Enable production optimizations or development hints.
-		 */
-		mode?: "development" | "production" | "none";
+	/**
+	 * Enable production optimizations or development hints.
+	 */
+	mode?: "development" | "production" | "none";
 
-		/**
-		 * Options affecting the normal modules (`NormalModuleFactory`).
-		 */
-		module?: ModuleOptions;
+	/**
+	 * Options affecting the normal modules (`NormalModuleFactory`).
+	 */
+	module?: ModuleOptions;
 
-		/**
-		 * Name of the configuration. Used when loading multiple configurations.
-		 */
-		name?: string;
+	/**
+	 * Name of the configuration. Used when loading multiple configurations.
+	 */
+	name?: string;
 
-		/**
-		 * Include polyfills or mocks for various node stuff.
-		 */
-		node?: false | NodeOptions;
+	/**
+	 * Include polyfills or mocks for various node stuff.
+	 */
+	node?: false | NodeOptions;
 
-		/**
-		 * Enables/Disables integrated optimizations.
-		 */
-		optimization?: Optimization;
+	/**
+	 * Enables/Disables integrated optimizations.
+	 */
+	optimization?: Optimization;
 
-		/**
-		 * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
-		 */
-		output?: Output;
+	/**
+	 * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
+	 */
+	output?: Output;
 
-		/**
-		 * The number of parallel processed modules in the compilation.
-		 */
-		parallelism?: number;
+	/**
+	 * The number of parallel processed modules in the compilation.
+	 */
+	parallelism?: number;
 
-		/**
-		 * Configuration for web performance recommendations.
-		 */
-		performance?: false | PerformanceOptions;
+	/**
+	 * Configuration for web performance recommendations.
+	 */
+	performance?: false | PerformanceOptions;
 
-		/**
-		 * Add additional plugins to the compiler.
-		 */
-		plugins?: (
-			| ((this: Compiler, compiler: Compiler) => void)
-			| WebpackPluginInstance
-		)[];
+	/**
+	 * Add additional plugins to the compiler.
+	 */
+	plugins?: (
+		| ((this: Compiler, compiler: Compiler) => void)
+		| WebpackPluginInstance
+	)[];
 
-		/**
-		 * Capture timing information for each module.
-		 */
-		profile?: boolean;
+	/**
+	 * Capture timing information for each module.
+	 */
+	profile?: boolean;
 
-		/**
-		 * Store compiler state to a json file.
-		 */
-		recordsInputPath?: string | false;
+	/**
+	 * Store compiler state to a json file.
+	 */
+	recordsInputPath?: string | false;
 
-		/**
-		 * Load compiler state from a json file.
-		 */
-		recordsOutputPath?: string | false;
+	/**
+	 * Load compiler state from a json file.
+	 */
+	recordsOutputPath?: string | false;
 
-		/**
-		 * Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.
-		 */
-		recordsPath?: string | false;
+	/**
+	 * Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.
+	 */
+	recordsPath?: string | false;
 
-		/**
-		 * Options for the resolver.
-		 */
-		resolve?: ResolveOptionsWebpackOptions;
+	/**
+	 * Options for the resolver.
+	 */
+	resolve?: ResolveOptionsWebpackOptions;
 
-		/**
-		 * Options for the resolver when resolving loaders.
-		 */
-		resolveLoader?: ResolveOptionsWebpackOptions;
+	/**
+	 * Options for the resolver when resolving loaders.
+	 */
+	resolveLoader?: ResolveOptionsWebpackOptions;
 
-		/**
-		 * Options affecting how file system snapshots are created and validated.
-		 */
-		snapshot?: SnapshotOptions;
+	/**
+	 * Options affecting how file system snapshots are created and validated.
+	 */
+	snapshot?: SnapshotOptions;
 
-		/**
-		 * Stats options object or preset name.
-		 */
-		stats?:
-			| boolean
-			| "none"
-			| "summary"
-			| "errors-only"
-			| "errors-warnings"
-			| "minimal"
-			| "normal"
-			| "detailed"
-			| "verbose"
-			| StatsOptions;
+	/**
+	 * Stats options object or preset name.
+	 */
+	stats?:
+		| boolean
+		| "none"
+		| "summary"
+		| "errors-only"
+		| "errors-warnings"
+		| "minimal"
+		| "normal"
+		| "detailed"
+		| "verbose"
+		| StatsOptions;
 
-		/**
-		 * Environment to build for. An array of environments to build for all of them when possible.
-		 */
-		target?: string | false | string[];
+	/**
+	 * Environment to build for. An array of environments to build for all of them when possible.
+	 */
+	target?: string | false | string[];
 
-		/**
-		 * Enter watch mode, which rebuilds on file change.
-		 */
-		watch?: boolean;
+	/**
+	 * Enter watch mode, which rebuilds on file change.
+	 */
+	watch?: boolean;
 
-		/**
-		 * Options for the watcher.
-		 */
-		watchOptions?: WatchOptions;
+	/**
+	 * Options for the watcher.
+	 */
+	watchOptions?: WatchOptions;
 
-		/**
-		 * Options for the webpack-dev-server.
-		 */
-		devServer?: DevServer;
-	},
-	"devServer"
->;
+	/**
+	 * Options for the webpack-dev-server.
+	 */
+	devServer?: DevServer;
+}
 
 type ConnectionState =
 	| boolean
@@ -11531,206 +11529,203 @@ declare class WebpackOptionsDefaulter {
 /**
  * Normalized webpack options object.
  */
-declare type WebpackOptionsNormalized = IsConfigurationValueAny<
-	{
-		/**
-		 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
-		 */
-		amd?: false | { [index: string]: any };
+declare interface WebpackOptionsNormalized {
+	/**
+	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
+	 */
+	amd?: false | { [index: string]: any };
 
-		/**
-		 * Report the first error as a hard error instead of tolerating it.
-		 */
-		bail?: boolean;
+	/**
+	 * Report the first error as a hard error instead of tolerating it.
+	 */
+	bail?: boolean;
 
-		/**
-		 * Cache generated modules and chunks to improve performance for multiple incremental builds.
-		 */
-		cache: CacheOptionsNormalized;
+	/**
+	 * Cache generated modules and chunks to improve performance for multiple incremental builds.
+	 */
+	cache: CacheOptionsNormalized;
 
-		/**
-		 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
-		 */
-		context?: string;
+	/**
+	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
+	 */
+	context?: string;
 
-		/**
-		 * References to other configurations to depend on.
-		 */
-		dependencies?: string[];
+	/**
+	 * References to other configurations to depend on.
+	 */
+	dependencies?: string[];
 
-		/**
-		 * Options for the webpack-dev-server.
-		 */
-		devServer?: DevServer;
+	/**
+	 * Options for the webpack-dev-server.
+	 */
+	devServer?: DevServer;
 
-		/**
-		 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
-		 */
-		devtool?: string | false;
+	/**
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+	 */
+	devtool?: string | false;
 
-		/**
-		 * The entry point(s) of the compilation.
-		 */
-		entry: EntryNormalized;
+	/**
+	 * The entry point(s) of the compilation.
+	 */
+	entry: EntryNormalized;
 
-		/**
-		 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
-		 */
-		experiments: Experiments;
+	/**
+	 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+	 */
+	experiments: Experiments;
 
-		/**
-		 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
-		 */
-		externals: Externals;
+	/**
+	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
+	 */
+	externals: Externals;
 
-		/**
-		 * Enable presets of externals for specific targets.
-		 */
-		externalsPresets: ExternalsPresets;
+	/**
+	 * Enable presets of externals for specific targets.
+	 */
+	externalsPresets: ExternalsPresets;
 
-		/**
-		 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
-		 */
-		externalsType?:
-			| "var"
-			| "module"
-			| "assign"
-			| "this"
-			| "window"
-			| "self"
-			| "global"
-			| "commonjs"
-			| "commonjs2"
-			| "commonjs-module"
-			| "amd"
-			| "amd-require"
-			| "umd"
-			| "umd2"
-			| "jsonp"
-			| "system"
-			| "promise"
-			| "import"
-			| "script"
-			| "node-commonjs";
+	/**
+	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+	 */
+	externalsType?:
+		| "var"
+		| "module"
+		| "assign"
+		| "this"
+		| "window"
+		| "self"
+		| "global"
+		| "commonjs"
+		| "commonjs2"
+		| "commonjs-module"
+		| "amd"
+		| "amd-require"
+		| "umd"
+		| "umd2"
+		| "jsonp"
+		| "system"
+		| "promise"
+		| "import"
+		| "script"
+		| "node-commonjs";
 
-		/**
-		 * Ignore specific warnings.
-		 */
-		ignoreWarnings?: ((
-			warning: WebpackError,
-			compilation: Compilation
-		) => boolean)[];
+	/**
+	 * Ignore specific warnings.
+	 */
+	ignoreWarnings?: ((
+		warning: WebpackError,
+		compilation: Compilation
+	) => boolean)[];
 
-		/**
-		 * Options for infrastructure level logging.
-		 */
-		infrastructureLogging: InfrastructureLogging;
+	/**
+	 * Options for infrastructure level logging.
+	 */
+	infrastructureLogging: InfrastructureLogging;
 
-		/**
-		 * Custom values available in the loader context.
-		 */
-		loader?: Loader;
+	/**
+	 * Custom values available in the loader context.
+	 */
+	loader?: Loader;
 
-		/**
-		 * Enable production optimizations or development hints.
-		 */
-		mode?: "development" | "production" | "none";
+	/**
+	 * Enable production optimizations or development hints.
+	 */
+	mode?: "development" | "production" | "none";
 
-		/**
-		 * Options affecting the normal modules (`NormalModuleFactory`).
-		 */
-		module: ModuleOptionsNormalized;
+	/**
+	 * Options affecting the normal modules (`NormalModuleFactory`).
+	 */
+	module: ModuleOptionsNormalized;
 
-		/**
-		 * Name of the configuration. Used when loading multiple configurations.
-		 */
-		name?: string;
+	/**
+	 * Name of the configuration. Used when loading multiple configurations.
+	 */
+	name?: string;
 
-		/**
-		 * Include polyfills or mocks for various node stuff.
-		 */
-		node: NodeWebpackOptions;
+	/**
+	 * Include polyfills or mocks for various node stuff.
+	 */
+	node: NodeWebpackOptions;
 
-		/**
-		 * Enables/Disables integrated optimizations.
-		 */
-		optimization: Optimization;
+	/**
+	 * Enables/Disables integrated optimizations.
+	 */
+	optimization: Optimization;
 
-		/**
-		 * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
-		 */
-		output: OutputNormalized;
+	/**
+	 * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
+	 */
+	output: OutputNormalized;
 
-		/**
-		 * The number of parallel processed modules in the compilation.
-		 */
-		parallelism?: number;
+	/**
+	 * The number of parallel processed modules in the compilation.
+	 */
+	parallelism?: number;
 
-		/**
-		 * Configuration for web performance recommendations.
-		 */
-		performance?: false | PerformanceOptions;
+	/**
+	 * Configuration for web performance recommendations.
+	 */
+	performance?: false | PerformanceOptions;
 
-		/**
-		 * Add additional plugins to the compiler.
-		 */
-		plugins: (
-			| ((this: Compiler, compiler: Compiler) => void)
-			| WebpackPluginInstance
-		)[];
+	/**
+	 * Add additional plugins to the compiler.
+	 */
+	plugins: (
+		| ((this: Compiler, compiler: Compiler) => void)
+		| WebpackPluginInstance
+	)[];
 
-		/**
-		 * Capture timing information for each module.
-		 */
-		profile?: boolean;
+	/**
+	 * Capture timing information for each module.
+	 */
+	profile?: boolean;
 
-		/**
-		 * Store compiler state to a json file.
-		 */
-		recordsInputPath?: string | false;
+	/**
+	 * Store compiler state to a json file.
+	 */
+	recordsInputPath?: string | false;
 
-		/**
-		 * Load compiler state from a json file.
-		 */
-		recordsOutputPath?: string | false;
+	/**
+	 * Load compiler state from a json file.
+	 */
+	recordsOutputPath?: string | false;
 
-		/**
-		 * Options for the resolver.
-		 */
-		resolve: ResolveOptionsWebpackOptions;
+	/**
+	 * Options for the resolver.
+	 */
+	resolve: ResolveOptionsWebpackOptions;
 
-		/**
-		 * Options for the resolver when resolving loaders.
-		 */
-		resolveLoader: ResolveOptionsWebpackOptions;
+	/**
+	 * Options for the resolver when resolving loaders.
+	 */
+	resolveLoader: ResolveOptionsWebpackOptions;
 
-		/**
-		 * Options affecting how file system snapshots are created and validated.
-		 */
-		snapshot: SnapshotOptions;
+	/**
+	 * Options affecting how file system snapshots are created and validated.
+	 */
+	snapshot: SnapshotOptions;
 
-		/**
-		 * Stats options object or preset name.
-		 */
-		stats: StatsValue;
+	/**
+	 * Stats options object or preset name.
+	 */
+	stats: StatsValue;
 
-		/**
-		 * Environment to build for. An array of environments to build for all of them when possible.
-		 */
-		target?: string | false | string[];
+	/**
+	 * Environment to build for. An array of environments to build for all of them when possible.
+	 */
+	target?: string | false | string[];
 
-		/**
-		 * Enter watch mode, which rebuilds on file change.
-		 */
-		watch?: boolean;
+	/**
+	 * Enter watch mode, which rebuilds on file change.
+	 */
+	watch?: boolean;
 
-		/**
-		 * Options for the watcher.
-		 */
-		watchOptions: WatchOptions;
-	},
-	"devServer"
->;
+	/**
+	 * Options for the watcher.
+	 */
+	watchOptions: WatchOptions;
+}
 
 /**
  * Plugin instance.
