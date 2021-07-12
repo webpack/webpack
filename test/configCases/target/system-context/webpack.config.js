@@ -1,7 +1,9 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {
-		libraryTarget: "system"
+		library: {
+			type: "system"
+		}
 	},
 	node: {
 		__dirname: false,
