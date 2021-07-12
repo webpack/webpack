@@ -13,11 +13,15 @@ it("should contain banner in bundle0 chunk", () => {
 	expect(source).toMatch(
 		"/*!\n * trim trailing whitespace\n *\n * no trailing whitespace\n */"
 	);
+	expect(source).not.toMatch(new RegExp("^/*! A test value in single file */$"));
+	expect(source).not.toMatch(new RegExp("^/*! Match test file */$"));
 });
 
 it("should not contain banner in vendors chunk", () => {
 	const source = fs.readFileSync(path.join(__dirname, "vendors.js"), "utf-8");
-	expect(source).not.toMatch("A test value");
+	expect(source).not.toMatch("/*! A test value */");
+	expect(source).toMatch("/*! A test value in single file */");
+	expect(source).toMatch("/*! Match test file */");
 });
 
 if (Math.random() < 0) require("./test.js");
