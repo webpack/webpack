@@ -4456,6 +4456,10 @@ declare interface InputFileSystem {
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
 	) => void;
+	lstat: (
+		arg0: string,
+		arg1: (arg0?: NodeJS.ErrnoException, arg1?: IStats) => void
+	) => void;
 	purge?: (arg0?: string) => void;
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;

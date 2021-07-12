@@ -10,6 +10,8 @@ branches:
 
 init:
   - git config --global core.autocrlf input
+  # test case hs symbolic link
+  - git config --global core.symlinks true
 
 cache:
   - "..\\.yarn-cache"
