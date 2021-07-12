@@ -168,6 +168,15 @@ const describeCases = config => {
 								const deprecationTracker = deprecationTracking.start();
 								require("..")(options, err => {
 									deprecationTracker();
+									const infrastructureLogging = stderr.toString();
+									if (infrastructureLogging) {
+										return done(
+											new Error(
+												"Errors/Warnings during build:\n" +
+													infrastructureLogging
+											)
+										);
+									}
 									if (err) return handleFatalError(err, done);
 									done();
 								});
@@ -185,6 +194,15 @@ const describeCases = config => {
 										errorsCount: true
 									});
 									if (errorsCount === 0) {
+										const infrastructureLogging = stderr.toString();
+										if (infrastructureLogging) {
+											return done(
+												new Error(
+													"Errors/Warnings during build:\n" +
+														infrastructureLogging
+												)
+											);
+										}
 										const allModules = children
 											? children.reduce(
 													(all, { modules }) => all.concat(modules),
@@ -260,7 +278,7 @@ const describeCases = config => {
 								}
 								const infrastructureLogging = stderr.toString();
 								if (infrastructureLogging) {
-									done(
+									return done(
 										new Error(
 											"Errors/Warnings during build:\n" + infrastructureLogging
 										)
