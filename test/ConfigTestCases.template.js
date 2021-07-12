@@ -551,7 +551,7 @@ const describeCases = config => {
 									})
 									.catch(done);
 							});
-						});
+						}, 30000);
 
 						const {
 							it: _it,
