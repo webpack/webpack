@@ -12,8 +12,7 @@ exports.keepAlive = function (options) {
 	var request = require("http").request(
 		urlBase + data,
 		{
-			agent: false,
-			headers: { accept: "text/event-stream" }
+			agent: false
 		},
 		function (res) {
 			response = res;
