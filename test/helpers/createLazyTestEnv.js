@@ -81,6 +81,14 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		state.currentlyRunningTest = oldCurrentlyRunningTest;
 		state.hasStarted = oldHasStarted;
 	};
+	const fixAsyncError = block => {
+		// By default jest leaks memory as it stores asyncError
+		// for each "it" call to track the origin test suite
+		// We want to evaluate this early here to avoid leaking memory
+		block.asyncError = {
+			stack: block.asyncError.stack
+		};
+	};
 	return {
 		setDefaultTimeout(time) {
 			globalTimeout = time;
@@ -95,6 +103,9 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			args[2] = args[2] || globalTimeout;
 			inSuite(() => {
 				it(...args);
+				fixAsyncError(
+					currentDescribeBlock.tests[currentDescribeBlock.tests.length - 1]
+				);
 			});
 		},
 		beforeEach(...args) {
@@ -103,6 +114,9 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			args[0] = createDisposableFn(args[0]);
 			inSuite(() => {
 				beforeEach(...args);
+				fixAsyncError(
+					currentDescribeBlock.hooks[currentDescribeBlock.hooks.length - 1]
+				);
 			});
 		},
 		afterEach(...args) {
@@ -111,6 +125,9 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 			args[0] = createDisposableFn(args[0]);
 			inSuite(() => {
 				afterEach(...args);
+				fixAsyncError(
+					currentDescribeBlock.hooks[currentDescribeBlock.hooks.length - 1]
+				);
 			});
 		}
 	};
