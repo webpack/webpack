@@ -11,9 +11,10 @@ it("should allow to invalidate and reload a file", () => {
 	expect(module.hot.status()).toBe("ready");
 	c.invalidate();
 	expect(module.hot.status()).toBe("ready");
-	module.hot.apply();
-	expect(module.hot.status()).toBe("idle");
-	expect(a.value).not.toBe(oldA);
-	expect(b.value).not.toBe(oldB);
-	expect(c.value).toBe(oldC);
+	module.hot.apply().then(function () {
+		expect(module.hot.status()).toBe("idle");
+		expect(a.value).not.toBe(oldA);
+		expect(b.value).not.toBe(oldB);
+		expect(c.value).toBe(oldC);
+	});
 });
