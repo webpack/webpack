@@ -132,6 +132,7 @@
   ],
   "scripts": {
     "setup": "node ./setup/setup.js",
+    "jest": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage",
     "test": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage",
     "test:update-snapshots": "yarn jest -u",
     "test:integration": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.test.js\"",
