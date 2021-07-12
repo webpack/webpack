@@ -16,7 +16,6 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          export CI=true
           node -v
           yarn -v
         displayName: "Print versions"
@@ -39,6 +38,8 @@ jobs:
           yarn test:basic --ci --reporters=default --reporters=jest-junit
           export JEST_JUNIT_OUTPUT_NAME=unit-junit.xml
           yarn test:unit --ci --reporters=default --reporters=jest-junit
+        env:
+          CI: true
         displayName: "Run basic tests"
       - task: PublishTestResults@2
         inputs:
@@ -67,7 +68,6 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          export CI=true
           node -v
           yarn -v
         displayName: "Print versions"
@@ -92,6 +92,8 @@ jobs:
           yarn typings-lint
           yarn pretty-lint
           yarn spellcheck
+        env:
+          CI: true
         displayName: "Run linting"
       - task: PublishTestResults@2
         inputs:
@@ -151,6 +153,7 @@ jobs:
           testResultsFiles: "**/junit.xml"
         condition: succeededOrFailed()
         displayName: "Publish test results"
+
   - job: Linux
     dependsOn:
       - basic
@@ -179,7 +182,6 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          export CI=true
           node -v
           yarn -v
         displayName: "Print versions"
@@ -200,6 +202,8 @@ jobs:
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn cover:integration --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
           yarn cover:merge
+        env:
+          CI: true
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
         inputs:
@@ -232,7 +236,6 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          export CI=true
           node -v
           yarn -v
         displayName: "Print versions"
@@ -253,6 +256,8 @@ jobs:
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn cover:integration --ci --reporters=default --reporters=jest-junit
           yarn cover:merge
+        env:
+          CI: true
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
         inputs:
