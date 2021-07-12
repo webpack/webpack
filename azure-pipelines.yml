@@ -142,7 +142,8 @@ jobs:
       - script: |
           yarn cover:integration --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
           yarn cover:merge
-        env: CI=true
+        env:
+          CI: true
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
         inputs:
