@@ -122,8 +122,8 @@ if (process.env.DEBUG_INFO) {
 			}
 		};
 	};
-	const env = jasmine.getEnv();
-	env.it = addDebugInfo(env.it);
+	// eslint-disable-next-line no-global-assign
+	it = addDebugInfo(it);
 }
 
 // Workaround for a memory leak in wabt
