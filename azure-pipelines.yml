@@ -109,14 +109,26 @@ jobs:
     pool:
       vmImage: windows-latest
     strategy:
-      maxParallel: 3
+      maxParallel: 6
       matrix:
-        node-10:
+        node-10-a:
           node_version: ^10.13.0
-        node-12:
+          part: a
+        node-10-b:
+          node_version: ^10.13.0
+          part: b
+        node-12-a:
           node_version: ^12.4.0
-        node-16:
+          part: a
+        node-12-b:
+          node_version: ^12.4.0
+          part: b
+        node-16-a:
           node_version: ^16.0.0
+          part: a
+        node-16-b:
+          node_version: ^16.0.0
+          part: b
     steps:
       - task: NodeTool@0
         inputs:
@@ -142,7 +154,7 @@ jobs:
       - script: yarn link webpack --frozen-lockfile
         displayName: "Link webpack into node_modules"
       - script: |
-          yarn cover:integration --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
+          yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
           yarn cover:merge
         env:
           CI: "true"

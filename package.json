@@ -135,8 +135,8 @@
     "jest": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage",
     "test": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage",
     "test:update-snapshots": "yarn jest -u",
-    "test:integration": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.test.js\"",
-    "test:basic": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/te{st/TestCasesNormal,st/StatsTestCases,st/ConfigTestCases}.test.js\"",
+    "test:integration": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\"",
+    "test:basic": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.basictest.js\"",
     "test:unit": "node --max-old-space-size=4096 --experimental-vm-modules --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\"",
     "travis:integration": "yarn cover:integration --ci $JEST",
     "travis:basic": "yarn cover:basic --ci $JEST",
@@ -168,8 +168,10 @@
     "cover": "yarn cover:all && yarn cover:report",
     "cover:clean": "rimraf .nyc_output coverage",
     "cover:all": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --coverage",
-    "cover:basic": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/te{st/TestCasesNormal,st/StatsTestCases,st/ConfigTestCases}.test.js\" --coverage",
-    "cover:integration": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.test.js\" --coverage",
+    "cover:basic": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.basictest.js\" --coverage",
+    "cover:integration": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\" --coverage",
+    "cover:integration:a": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.test.js\" --coverage",
+    "cover:integration:b": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.{basictest,longtest}.js\" --coverage",
     "cover:unit": "node --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:types": "node node_modules/tooling/type-coverage",
     "cover:merge": "nyc merge .nyc_output coverage/coverage-nyc.json && rimraf .nyc_output",
@@ -193,6 +195,8 @@
     ],
     "testMatch": [
       "<rootDir>/test/*.test.js",
+      "<rootDir>/test/*.basictest.js",
+      "<rootDir>/test/*.longtest.js",
       "<rootDir>/test/*.unittest.js"
     ],
     "watchPathIgnorePatterns": [
