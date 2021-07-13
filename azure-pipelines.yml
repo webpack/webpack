@@ -43,6 +43,7 @@ jobs:
           yarn cover:merge
         env:
           CI: "true"
+          DEBUG_INFO: "true"
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
         inputs:
