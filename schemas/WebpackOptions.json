@@ -761,6 +761,9 @@
       "description": "Specify dependency that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",
       "anyOf": [
         {
+          "type": "symbol"
+        },
+        {
           "description": "Every matched dependency becomes external.",
           "instanceof": "RegExp",
           "tsType": "RegExp"
