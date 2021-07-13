@@ -302,7 +302,7 @@ describe("Compiler", () => {
 			done();
 		});
 	});
-	it("should bubble up errors when wrapped in a promise and bail is true", async done => {
+	it("should bubble up errors when wrapped in a promise and bail is true", async () => {
 		try {
 			const createCompiler = options => {
 				return new Promise((resolve, reject) => {
@@ -330,42 +330,35 @@ describe("Compiler", () => {
 				},
 				bail: true
 			});
-			done();
 		} catch (err) {
 			expect(err.toString()).toMatch(
 				"ModuleNotFoundError: Module not found: Error: Can't resolve './missing-file'"
 			);
-			done();
 		}
 	});
-	it("should not emit compilation errors in async (watch)", async done => {
-		try {
-			const createStats = options => {
-				return new Promise((resolve, reject) => {
-					const c = webpack(options);
-					c.outputFileSystem = createFsFromVolume(new Volume());
-					const watching = c.watch({}, (err, stats) => {
-						watching.close(() => {
-							if (err) return reject(err);
-							resolve(stats);
-						});
+	it("should not emit compilation errors in async (watch)", async () => {
+		const createStats = options => {
+			return new Promise((resolve, reject) => {
+				const c = webpack(options);
+				c.outputFileSystem = createFsFromVolume(new Volume());
+				const watching = c.watch({}, (err, stats) => {
+					watching.close(() => {
+						if (err) return reject(err);
+						resolve(stats);
 					});
 				});
-			};
-			const stats = await createStats({
-				context: __dirname,
-				mode: "production",
-				entry: "./missing-file",
-				output: {
-					path: "/directory",
-					filename: "bundle.js"
-				}
 			});
-			expect(stats).toBeInstanceOf(Stats);
-			done();
-		} catch (err) {
-			done(err);
-		}
+		};
+		const stats = await createStats({
+			context: __dirname,
+			mode: "production",
+			entry: "./missing-file",
+			output: {
+				path: "/directory",
+				filename: "bundle.js"
+			}
+		});
+		expect(stats).toBeInstanceOf(Stats);
 	});
 
 	it("should not emit on errors (watch)", done => {

@@ -165,7 +165,7 @@ it("should emit warning for missingFile", async () => {
 					  "warnings": Array [],
 					}
 				`);
-});
+}, 20000);
 
 it("should emit warning for require.extensions", async () => {
 	await expect(compile({ entry: "./require.extensions" })).resolves

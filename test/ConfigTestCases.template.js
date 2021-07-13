@@ -168,6 +168,15 @@ const describeCases = config => {
 								const deprecationTracker = deprecationTracking.start();
 								require("..")(options, err => {
 									deprecationTracker();
+									const infrastructureLogging = stderr.toString();
+									if (infrastructureLogging) {
+										return done(
+											new Error(
+												"Errors/Warnings during build:\n" +
+													infrastructureLogging
+											)
+										);
+									}
 									if (err) return handleFatalError(err, done);
 									done();
 								});
@@ -185,6 +194,15 @@ const describeCases = config => {
 										errorsCount: true
 									});
 									if (errorsCount === 0) {
+										const infrastructureLogging = stderr.toString();
+										if (infrastructureLogging) {
+											return done(
+												new Error(
+													"Errors/Warnings during build:\n" +
+														infrastructureLogging
+												)
+											);
+										}
 										const allModules = children
 											? children.reduce(
 													(all, { modules }) => all.concat(modules),
@@ -209,7 +227,7 @@ const describeCases = config => {
 									}
 									done();
 								});
-							}, 20000);
+							}, 40000);
 						}
 						it(`${testName} should compile`, done => {
 							rimraf.sync(outputDirectory);
@@ -260,7 +278,7 @@ const describeCases = config => {
 								}
 								const infrastructureLogging = stderr.toString();
 								if (infrastructureLogging) {
-									done(
+									return done(
 										new Error(
 											"Errors/Warnings during build:\n" + infrastructureLogging
 										)
@@ -551,7 +569,7 @@ const describeCases = config => {
 									})
 									.catch(done);
 							});
-						});
+						}, 30000);
 
 						const {
 							it: _it,
@@ -559,7 +577,7 @@ const describeCases = config => {
 							afterEach: _afterEach,
 							setDefaultTimeout,
 							getNumberOfTests
-						} = createLazyTestEnv(jasmine.getEnv(), 10000);
+						} = createLazyTestEnv(10000);
 					});
 				}
 			});

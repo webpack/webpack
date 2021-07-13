@@ -430,7 +430,6 @@ const describeCases = config => {
 							);
 
 							const { it: _it, getNumberOfTests } = createLazyTestEnv(
-								jasmine.getEnv(),
 								testConfig.timeout || 10000
 							);
 						});
