@@ -39,7 +39,7 @@ jobs:
           export JEST_JUNIT_OUTPUT_NAME=unit-junit.xml
           yarn test:unit --ci --reporters=default --reporters=jest-junit
         env:
-          CI: true
+          CI: "true"
         displayName: "Run basic tests"
       - task: PublishTestResults@2
         inputs:
@@ -93,7 +93,7 @@ jobs:
           yarn pretty-lint
           yarn spellcheck
         env:
-          CI: true
+          CI: "true"
         displayName: "Run linting"
       - task: PublishTestResults@2
         inputs:
@@ -145,7 +145,7 @@ jobs:
           yarn cover:integration --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
           yarn cover:merge
         env:
-          CI: true
+          CI: "true"
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
         inputs:
@@ -203,7 +203,7 @@ jobs:
           yarn cover:integration --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
           yarn cover:merge
         env:
-          CI: true
+          CI: "true"
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
         inputs:
@@ -257,7 +257,7 @@ jobs:
           yarn cover:integration --ci --reporters=default --reporters=jest-junit
           yarn cover:merge
         env:
-          CI: true
+          CI: "true"
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
         inputs:
