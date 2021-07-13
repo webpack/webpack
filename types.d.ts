@@ -1998,6 +1998,11 @@ declare interface Configuration {
 	devtool?: string | false;
 
 	/**
+	 * Specify options for webpack devserver options
+	 */
+	devServer?: DevServer;
+
+	/**
 	 * The entry point(s) of the compilation.
 	 */
 	entry?:
