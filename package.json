@@ -174,7 +174,7 @@
     "cover:integration:b": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.longtest.js\" --coverage",
     "cover:unit": "node --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:types": "node node_modules/tooling/type-coverage",
-    "cover:merge": "nyc merge .nyc_output coverage/coverage-nyc.json && rimraf .nyc_output",
+    "cover:merge": "yarn mkdirp .nyc_output && nyc merge .nyc_output coverage/coverage-nyc.json && rimraf .nyc_output",
     "cover:report": "nyc report -t coverage"
   },
   "lint-staged": {
