@@ -35,6 +35,7 @@ const tests = fs
 	});
 
 describe("StatsTestCases", () => {
+	jest.setTimeout(60000);
 	let stderr;
 	beforeEach(() => {
 		stderr = captureStdio(process.stderr, true);
@@ -44,7 +45,6 @@ describe("StatsTestCases", () => {
 	});
 	tests.forEach(testName => {
 		it("should print correct stats for " + testName, done => {
-			jest.setTimeout(30000);
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
 			fs.mkdirSync(outputDirectory, { recursive: true });
