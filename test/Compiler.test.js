@@ -1,8 +1,8 @@
 "use strict";
 
-const path = require("path");
+require("./helpers/warmup-webpack");
 
-const webpack = require("..");
+const path = require("path");
 const Stats = require("../lib/Stats");
 const { createFsFromVolume, Volume } = require("memfs");
 const captureStdio = require("./helpers/captureStdio");
@@ -12,6 +12,7 @@ describe("Compiler", () => {
 	jest.setTimeout(20000);
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
+		const webpack = require("..");
 		options = webpack.config.getNormalizedWebpackOptions(options);
 		if (!options.mode) options.mode = "production";
 		options.entry = entry;
@@ -206,6 +207,7 @@ describe("Compiler", () => {
 	describe("methods", () => {
 		let compiler;
 		beforeEach(() => {
+			const webpack = require("..");
 			compiler = webpack({
 				entry: "./c",
 				context: path.join(__dirname, "fixtures"),
@@ -285,6 +287,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should not emit on errors", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -306,6 +309,7 @@ describe("Compiler", () => {
 		try {
 			const createCompiler = options => {
 				return new Promise((resolve, reject) => {
+					const webpack = require("..");
 					const c = webpack(options);
 					c.run((err, stats) => {
 						if (err) {
@@ -339,6 +343,7 @@ describe("Compiler", () => {
 	it("should not emit compilation errors in async (watch)", async () => {
 		const createStats = options => {
 			return new Promise((resolve, reject) => {
+				const webpack = require("..");
 				const c = webpack(options);
 				c.outputFileSystem = createFsFromVolume(new Volume());
 				const watching = c.watch({}, (err, stats) => {
@@ -362,6 +367,7 @@ describe("Compiler", () => {
 	});
 
 	it("should not emit on errors (watch)", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -381,6 +387,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should not be running twice at a time (run)", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -399,6 +406,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should not be running twice at a time (watch)", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -417,6 +425,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should not be running twice at a time (run - watch)", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -435,6 +444,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should not be running twice at a time (watch - run)", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -453,6 +463,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should not be running twice at a time (instance cb)", done => {
+		const webpack = require("..");
 		compiler = webpack(
 			{
 				context: __dirname,
@@ -471,6 +482,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should run again correctly after first compilation", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -492,6 +504,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should watch again correctly after first compilation", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -512,6 +525,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should run again correctly after first closed watch", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -533,6 +547,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should set compiler.watching correctly", function (done) {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -550,6 +565,7 @@ describe("Compiler", () => {
 		expect(compiler.watching).toBe(watching);
 	});
 	it("should watch again correctly after first closed watch", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -571,6 +587,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should run again correctly inside afterDone hook", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -595,6 +612,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should call afterDone hook after other callbacks (run)", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -620,6 +638,7 @@ describe("Compiler", () => {
 	});
 	it("should call afterDone hook after other callbacks (instance cb)", done => {
 		const instanceCb = jest.fn();
+		const webpack = require("..");
 		compiler = webpack(
 			{
 				context: __dirname,
@@ -645,6 +664,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should call afterDone hook after other callbacks (watch)", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -677,6 +697,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should call afterDone hook after other callbacks (watch close)", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -709,6 +730,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should flag watchMode as true in watch", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -731,6 +753,7 @@ describe("Compiler", () => {
 		});
 	});
 	it("should use cache on second run call", done => {
+		const webpack = require("..");
 		compiler = webpack({
 			context: __dirname,
 			mode: "development",
@@ -754,6 +777,7 @@ describe("Compiler", () => {
 	});
 	it("should call the failed-hook on error", done => {
 		const failedSpy = jest.fn();
+		const webpack = require("..");
 		compiler = webpack({
 			bail: true,
 			context: __dirname,
@@ -775,7 +799,8 @@ describe("Compiler", () => {
 	});
 	it("should deprecate when watch option is used without callback", () => {
 		const tracker = deprecationTracking.start();
-		webpack({
+		const webpack = require("..");
+		compiler = webpack({
 			watch: true
 		});
 		const deprecations = tracker();
@@ -817,6 +842,7 @@ describe("Compiler", () => {
 			}
 		}
 		it("should log to the console (verbose)", done => {
+			const webpack = require("..");
 			compiler = webpack({
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a",
@@ -847,6 +873,7 @@ describe("Compiler", () => {
 			});
 		});
 		it("should log to the console (debug mode)", done => {
+			const webpack = require("..");
 			compiler = webpack({
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a",
@@ -879,6 +906,7 @@ describe("Compiler", () => {
 			});
 		});
 		it("should log to the console (none)", done => {
+			const webpack = require("..");
 			compiler = webpack({
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a",
@@ -898,6 +926,7 @@ describe("Compiler", () => {
 			});
 		});
 		it("should log to the console with colors (verbose)", done => {
+			const webpack = require("..");
 			compiler = webpack({
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a",
@@ -929,6 +958,7 @@ describe("Compiler", () => {
 			});
 		});
 		it("should log to the console with colors (debug mode)", done => {
+			const webpack = require("..");
 			compiler = webpack({
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a",

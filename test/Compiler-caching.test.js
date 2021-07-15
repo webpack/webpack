@@ -1,16 +1,18 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 
-const webpack = require("..");
 let fixtureCount = 0;
 
 describe("Compiler (caching)", () => {
 	jest.setTimeout(15000);
 
 	function compile(entry, options, callback) {
+		const webpack = require("..");
 		options = webpack.config.getNormalizedWebpackOptions(options);
 		options.mode = "none";
 		options.cache = true;

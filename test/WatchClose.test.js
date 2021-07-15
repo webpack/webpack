@@ -1,8 +1,8 @@
 "use strict";
 
-const path = require("path");
+require("./helpers/warmup-webpack");
 
-const webpack = require("../");
+const path = require("path");
 
 describe("WatchClose", () => {
 	jest.setTimeout(5000);
@@ -16,6 +16,7 @@ describe("WatchClose", () => {
 		let watcher;
 
 		beforeEach(() => {
+			const webpack = require("../");
 			compiler = webpack({
 				mode: "development",
 				entry: filePath,

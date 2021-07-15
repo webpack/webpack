@@ -1,5 +1,4 @@
 const { describeCases } = require("./TestCases.template");
-const webpack = require("..");
 
 describe("TestCases", () => {
 	describeCases({
@@ -11,6 +10,11 @@ describe("TestCases", () => {
 			moduleIds: "named",
 			chunkIds: "named"
 		},
-		plugins: [new webpack.HotModuleReplacementPlugin()]
+		plugins: [
+			c => {
+				const webpack = require("..");
+				new webpack.HotModuleReplacementPlugin().apply(c);
+			}
+		]
 	});
 });

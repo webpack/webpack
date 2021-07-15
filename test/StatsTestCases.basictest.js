@@ -1,5 +1,6 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
@@ -35,7 +36,7 @@ const tests = fs
 	});
 
 describe("StatsTestCases", () => {
-	jest.setTimeout(60000);
+	jest.setTimeout(30000);
 	let stderr;
 	beforeEach(() => {
 		stderr = captureStdio(process.stderr, true);

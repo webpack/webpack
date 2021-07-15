@@ -1,9 +1,9 @@
 "use strict";
 
-/* describe it */
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
-const webpack = require("..");
 
 describe("Examples", () => {
 	const basePath = path.join(__dirname, "..", "examples");
@@ -39,6 +39,7 @@ describe("Examples", () => {
 					if (!options.entry) options.entry = "./example.js";
 					if (!options.plugins) options.plugins = [];
 				}
+				const webpack = require("..");
 				webpack(options, (err, stats) => {
 					if (err) return done(err);
 					if (stats.hasErrors()) {

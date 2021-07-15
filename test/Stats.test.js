@@ -1,10 +1,12 @@
 "use strict";
 
-const webpack = require("..");
+require("./helpers/warmup-webpack");
+
 const { createFsFromVolume, Volume } = require("memfs");
 
 const compile = options => {
 	return new Promise((resolve, reject) => {
+		const webpack = require("..");
 		const compiler = webpack(options);
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {

@@ -1,9 +1,10 @@
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const util = require("util");
 const fs = require("fs");
 const rimraf = require("rimraf");
 const vm = require("vm");
-const webpack = require("../");
 
 const readdir = util.promisify(fs.readdir);
 const writeFile = util.promisify(fs.writeFile);
@@ -52,6 +53,7 @@ describe("Persistent Caching", () => {
 
 	const compile = async (configAdditions = {}) => {
 		return new Promise((resolve, reject) => {
+			const webpack = require("../");
 			webpack(
 				{
 					...config,
@@ -164,6 +166,7 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 			"lib2.js": "export default 21"
 		};
 		await updateSrc(data);
+		const webpack = require("../");
 		const configAdditions = {
 			plugins: [
 				new webpack.container.ModuleFederationPlugin({

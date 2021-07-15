@@ -1,13 +1,13 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
-
-const webpack = require("..");
 
 const casesPath = path.join(__dirname, "hotCases");
 let categories = fs
@@ -45,6 +45,7 @@ const describeCases = config => {
 						it(
 							testName + " should compile",
 							done => {
+								const webpack = require("..");
 								const outputDirectory = path.join(
 									__dirname,
 									"js",
