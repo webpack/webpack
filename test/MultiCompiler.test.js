@@ -1,5 +1,6 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
 const path = require("path");
 const { createFsFromVolume, Volume } = require("memfs");
 const webpack = require("..");
@@ -29,6 +30,13 @@ const createMultiCompiler = options => {
 	return compiler;
 };
 
+const close = (watching, compiler, done) => {
+	watching.close(err => {
+		if (err) return done(err);
+		compiler.close(done);
+	});
+};
+
 describe("MultiCompiler", function () {
 	jest.setTimeout(20000);
 
@@ -42,7 +50,7 @@ describe("MultiCompiler", function () {
 				throw err;
 			}
 			expect(called).toBe(2);
-			done();
+			compiler.close(done);
 		});
 	});
 
@@ -51,13 +59,12 @@ describe("MultiCompiler", function () {
 		let called = 0;
 
 		compiler.hooks.watchRun.tap("MultiCompiler test", () => called++);
-		const watcher = compiler.watch(1000, err => {
+		const watching = compiler.watch(1000, err => {
 			if (err) {
 				throw err;
 			}
-			watcher.close();
 			expect(called).toBe(2);
-			done();
+			close(watching, compiler, done);
 		});
 	});
 
@@ -67,16 +74,20 @@ describe("MultiCompiler", function () {
 			if (err) return done(err);
 		});
 		compiler.run((err, stats) => {
-			if (err) return done();
+			if (err) {
+				compiler.close(done);
+			}
 		});
 	});
 	it("should not be running twice at a time (watch)", done => {
 		const compiler = createMultiCompiler();
-		const watcher = compiler.watch({}, (err, stats) => {
+		const watching = compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
 		});
 		compiler.watch({}, (err, stats) => {
-			if (err) return watcher.close(done);
+			if (err) {
+				close(watching, compiler, done);
+			}
 		});
 	});
 	it("should not be running twice at a time (run - watch)", done => {
@@ -85,17 +96,21 @@ describe("MultiCompiler", function () {
 			if (err) return done(err);
 		});
 		compiler.watch({}, (err, stats) => {
-			if (err) return done();
+			if (err) {
+				compiler.close(done);
+			}
 		});
 	});
 	it("should not be running twice at a time (watch - run)", done => {
 		const compiler = createMultiCompiler();
-		let watcher;
-		watcher = compiler.watch({}, (err, stats) => {
+		let watching;
+		watching = compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
 		});
 		compiler.run((err, stats) => {
-			if (err) return watcher.close(done);
+			if (err) {
+				close(watching, compiler, done);
+			}
 		});
 	});
 	it("should not be running twice at a time (instance cb)", done => {
@@ -113,7 +128,9 @@ describe("MultiCompiler", function () {
 		);
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
-			if (err) return done();
+			if (err) {
+				compiler.close(done);
+			}
 		});
 	});
 	it("should run again correctly after first compilation", done => {
@@ -123,7 +140,7 @@ describe("MultiCompiler", function () {
 
 			compiler.run((err, stats) => {
 				if (err) return done(err);
-				done();
+				compiler.close(done);
 			});
 		});
 	});
@@ -132,10 +149,10 @@ describe("MultiCompiler", function () {
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 
-			let watcher;
-			watcher = compiler.watch({}, (err, stats) => {
+			let watching;
+			watching = compiler.watch({}, (err, stats) => {
 				if (err) return done(err);
-				watcher.close(done);
+				close(watching, compiler, done);
 			});
 		});
 	});
@@ -147,7 +164,7 @@ describe("MultiCompiler", function () {
 		watching.close(() => {
 			compiler.run((err, stats) => {
 				if (err) return done(err);
-				done();
+				compiler.close(done);
 			});
 		});
 	});
@@ -157,10 +174,9 @@ describe("MultiCompiler", function () {
 			if (err) return done(err);
 		});
 		watching.close(() => {
-			let watcher;
-			watcher = compiler.watch({}, (err, stats) => {
+			const watching2 = compiler.watch({}, (err, stats) => {
 				if (err) return done(err);
-				watcher.close(done);
+				close(watching2, compiler, done);
 			});
 		});
 	});
@@ -197,7 +213,7 @@ describe("MultiCompiler", function () {
 			expect(events.join(" ")).toBe(
 				"a run a done b run b done d run d done e run e done c run c done"
 			);
-			done();
+			compiler.close(done);
 		});
 	});
 	it("should respect parallelism and dependencies for watching", done => {
@@ -364,10 +380,7 @@ describe("MultiCompiler", function () {
 				]
 			`);
 					events.length = 0;
-					watching.close(err => {
-						if (err) return done(err);
-						compiler.close(done);
-					});
+					close(watching, compiler, done);
 					break;
 				default:
 					done(new Error("unexpected"));
@@ -444,7 +457,9 @@ describe("MultiCompiler", function () {
 			`);
 					events.length = 0;
 					expect(state).toBe(1);
-					setTimeout(done, 1000);
+					setTimeout(() => {
+						close(watching, compiler, done);
+					}, 1000);
 				} catch (e) {
 					console.error(e);
 					done(e);
@@ -521,7 +536,9 @@ describe("MultiCompiler", function () {
 			`);
 					events.length = 0;
 					expect(state).toBe(1);
-					setTimeout(done, 1000);
+					setTimeout(() => {
+						close(watching, compiler, done);
+					}, 1000);
 				} catch (e) {
 					console.error(e);
 					done(e);
@@ -560,7 +577,10 @@ describe("MultiCompiler", function () {
 			entriesA.b = "./b.js";
 			entriesB.a = "./a.js";
 
-			watching.invalidate(done);
+			watching.invalidate(err => {
+				if (err) return done(err);
+				close(watching, compiler, done);
+			});
 		});
 	}, 2000);
 
@@ -606,8 +626,9 @@ describe("MultiCompiler", function () {
 				}
 			}
 		};
-		compiler.watch({}, (err, stats) => {
-			done(err);
+		const watching = compiler.watch({}, (err, stats) => {
+			if (err) return done(err);
+			close(watching, compiler, done);
 		});
 	});
 });

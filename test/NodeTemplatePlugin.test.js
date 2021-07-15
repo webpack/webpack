@@ -1,11 +1,13 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
+
 const path = require("path");
-const webpack = require("..");
 
 describe("NodeTemplatePlugin", () => {
 	jest.setTimeout(20000);
 	it("should compile and run a simple module", done => {
+		const webpack = require("..");
 		webpack(
 			{
 				mode: "production",
@@ -42,6 +44,7 @@ describe("NodeTemplatePlugin", () => {
 	});
 
 	it("should compile and run a simple module in single mode", done => {
+		const webpack = require("..");
 		webpack(
 			{
 				mode: "production",

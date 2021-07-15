@@ -38,12 +38,12 @@ To add a new case, create a new directory inside of the top level test groups, a
 
 By default this file will be the entry point for the test suite and you can add your `it()`'s there. This will also become bundled so that node env support happens as well.
 
-#### configCases (`ConfigTestCases.test.js`) <sup>1</sup>
+#### configCases (`ConfigTestCases.basictest.js`) <sup>1</sup>
 If you are trying to solve a bug which is reproducible when x and y properties are used together in a config, then configCases is the place to be!!!!
 
 In addition to an `index.js`, these configCases require a `webpack.config.js` is located inside of your test suite. This will run this specific config through `webpack` just as you were building individually. They will use the same loading/bundling technique of your `it()` tests, however you now have a more specific config use cases that you can write even before you start coding.
 
-#### statsCases (`StatsTestCases.test.js`)
+#### statsCases (`StatsTestCases.basictest.js`)
 Stats cases are similar to configCases except specifically focusing on the `expected` output of your stats. Instead of writing to the console, however the output of stats will be written to disk.
 
 By default, the "expected" outcome is a pain to write by hand so instead when statsCases are run, runner is checking output using jest's awesome snapshot functionality.

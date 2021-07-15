@@ -1,5 +1,7 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const webpack = require("..");
@@ -128,12 +130,6 @@ async function compile(options) {
 
 	return { errors, warnings };
 }
-
-it("should compile fine (warmup)", async () => {
-	await compile({
-		entry: "./entry-point"
-	});
-}, 120000);
 
 it("should emit warning for missingFile", async () => {
 	await expect(

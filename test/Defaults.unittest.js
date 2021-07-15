@@ -1,8 +1,8 @@
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const jestDiff = require("jest-diff").diff;
 const stripAnsi = require("strip-ansi");
-const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
-	require("..").config;
 
 /**
  * Escapes regular expression metacharacters
@@ -63,6 +63,8 @@ describe("Defaults", () => {
 	});
 
 	const getDefaultConfig = config => {
+		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
+			require("..").config;
 		config = getNormalizedWebpackOptions(config);
 		applyWebpackOptionsDefaults(config);
 		process.chdir(cwd);

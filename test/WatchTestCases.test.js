@@ -1,5 +1,7 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
@@ -10,8 +12,6 @@ const { remove } = require("./helpers/remove");
 const prepareOptions = require("./helpers/prepareOptions");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const FakeDocument = require("./helpers/FakeDocument");
-
-const webpack = require("..");
 
 function copyDiff(src, dest, initial) {
 	if (!fs.existsSync(dest)) fs.mkdirSync(dest);
@@ -156,6 +156,7 @@ describe("WatchTestCases", () => {
 
 							setTimeout(() => {
 								const deprecationTracker = deprecationTracking.start();
+								const webpack = require("..");
 								const compiler = webpack(options);
 								compiler.hooks.invalid.tap(
 									"WatchTestCasesTest",

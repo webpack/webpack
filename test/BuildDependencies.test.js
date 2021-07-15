@@ -9,11 +9,11 @@ const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");
 const outputDirectory = path.resolve(__dirname, "js/buildDeps");
 const inputDirectory = path.resolve(__dirname, "js/buildDepsInput");
 
-const webpack = require("../");
-const coverageEnabled = webpack.toString().includes("++");
-
 const exec = (n, options = {}) => {
 	return new Promise((resolve, reject) => {
+		const webpack = require("../");
+		const coverageEnabled = webpack.toString().includes("++");
+
 		const p = child_process.execFile(
 			process.execPath,
 			[

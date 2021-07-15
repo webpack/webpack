@@ -1,12 +1,14 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const { createFsFromVolume, Volume } = require("memfs");
-const webpack = require("..");
 const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 
 const createCompiler = config => {
+	const webpack = require("..");
 	const compiler = webpack(config);
 	compiler.outputFileSystem = createFsFromVolume(new Volume());
 	return compiler;

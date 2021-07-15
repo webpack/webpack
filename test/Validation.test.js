@@ -1,11 +1,12 @@
 "use strict";
 
-const webpack = require("..");
+require("./helpers/warmup-webpack");
 
 describe("Validation", () => {
 	const createTestCase = (name, config, fn) => {
 		it("should fail validation for " + name, () => {
 			try {
+				const webpack = require("..");
 				webpack(config);
 			} catch (err) {
 				if (err.name !== "ValidationError") throw err;
