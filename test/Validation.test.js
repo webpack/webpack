@@ -47,7 +47,7 @@ describe("Validation", () => {
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.entry should be an non-empty string.
+			 - configuration.entry should be a non-empty string.
 			   -> The string is resolved to a module which is loaded upon startup."
 		`)
 	);
@@ -62,7 +62,7 @@ describe("Validation", () => {
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.entry['bundle'] should be an non-empty array.
+			 - configuration.entry['bundle'] should be a non-empty array.
 			   -> All modules are loaded upon startup. The last one is exported."
 		`)
 	);
