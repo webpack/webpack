@@ -1317,6 +1317,12 @@ export interface ModuleOptions {
  */
 export interface RuleSetRule {
 	/**
+	 * Match on import assertions of the dependency.
+	 */
+	assert?: {
+		[k: string]: RuleSetConditionOrConditions;
+	};
+	/**
 	 * Match the child compiler name.
 	 */
 	compiler?: RuleSetConditionOrConditions;
