@@ -154,7 +154,7 @@ jobs:
       - script: yarn link webpack --frozen-lockfile
         displayName: "Link webpack into node_modules"
       - script: |
-          yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
+          yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit || yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit -f
           yarn cover:merge
         env:
           CI: "true"
@@ -222,7 +222,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
+          yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit || yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit -f
           yarn cover:merge
         env:
           CI: "true"
@@ -284,7 +284,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn cover:integration:$(part) --ci --reporters=default --reporters=jest-junit
+          yarn cover:integration:$(part) --ci --reporters=default --reporters=jest-junit || yarn cover:integration:$(part) --ci --reporters=default --reporters=jest-junit -f
           yarn cover:merge
         env:
           CI: "true"
