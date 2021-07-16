@@ -124,7 +124,7 @@ jobs:
           path: .jest-cache
           key: jest-integration-${{ env.GITHUB_SHA }}
           restore-keys: jest-integration-
-      - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache
+      - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
       - run: yarn cover:merge
       - uses: codecov/codecov-action@v1
         with:
