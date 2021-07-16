@@ -31,6 +31,7 @@ const base = name => ({
 	devtool: "source-map",
 	entry: "./index",
 	output: {
+		pathinfo: false,
 		filename: `${name}-[name].js`
 	},
 	module: {
