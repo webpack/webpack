@@ -371,13 +371,6 @@ declare module "browserslist" {
 	export = browserslist;
 }
 
-// TODO remove that when @types/estree is updated
-interface ImportAttributeNode {
-	type: "ImportAttribute";
-	key: import("estree").Identifier | import("estree").Literal;
-	value: import("estree").Literal;
-}
-
 type TODO = any;
 
 type RecursiveArrayOrRecord<T> =
