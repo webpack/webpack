@@ -1865,10 +1865,10 @@ declare class Compiler {
 	records: object;
 	managedPaths: Set<string>;
 	immutablePaths: Set<string>;
-	modifiedFiles: Set<string>;
-	removedFiles: Set<string>;
-	fileTimestamps: Map<string, null | FileSystemInfoEntry | "ignore">;
-	contextTimestamps: Map<string, null | FileSystemInfoEntry | "ignore">;
+	modifiedFiles: ReadonlySet<string>;
+	removedFiles: ReadonlySet<string>;
+	fileTimestamps: ReadonlyMap<string, null | FileSystemInfoEntry | "ignore">;
+	contextTimestamps: ReadonlyMap<string, null | FileSystemInfoEntry | "ignore">;
 	fsStartTime: number;
 	resolverFactory: ResolverFactory;
 	infrastructureLogger: any;
@@ -3965,17 +3965,13 @@ declare abstract class FileSystemInfo {
 	immutablePathsWithSlash: string[];
 	logStatistics(): void;
 	clear(): void;
-	useFileTimestamps(
-		map: Map<string, null | FileSystemInfoEntry | "ignore">
-	): void;
-	useContextTimestamps(
-		map: Map<string, null | FileSystemInfoEntry | "ignore">
-	): void;
 	addFileTimestamps(
-		map: Map<string, null | FileSystemInfoEntry | "ignore">
+		map: ReadonlyMap<string, null | FileSystemInfoEntry | "ignore">,
+		immutable?: boolean
 	): void;
 	addContextTimestamps(
-		map: Map<string, null | FileSystemInfoEntry | "ignore">
+		map: ReadonlyMap<string, null | FileSystemInfoEntry | "ignore">,
+		immutable?: boolean
 	): void;
 	getFileTimestamp(
 		path: string,
