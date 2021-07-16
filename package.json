@@ -60,7 +60,7 @@
     "eslint-plugin-prettier": "^3.1.4",
     "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^6.0.5",
-    "husky": "^6.0.0",
+    "husky": "^7.0.1",
     "is-ci": "^3.0.0",
     "istanbul": "^0.4.5",
     "jest": "^27.0.6",
