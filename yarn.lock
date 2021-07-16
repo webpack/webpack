@@ -1225,7 +1225,7 @@ acorn-globals@^6.0.0:
     acorn "^7.1.1"
     acorn-walk "^7.1.1"
 
-acorn-import-assertions@1.7.2:
+acorn-import-assertions@^1.7.2:
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/acorn-import-assertions/-/acorn-import-assertions-1.7.2.tgz#4406083ea36e046e9cdb6cc9abdc0ddb16e7fbe5"
   integrity sha512-BIhFcmW/EvvT4noRG3yC2LSGhTYbf7rIsUmCgVOP+4HDX12kVwrmk9Un9qfqBD4s9MXASzN075E8PQ4E/sa9Lw==
