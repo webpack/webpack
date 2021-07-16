@@ -28,3 +28,20 @@ it("should allow data urls with mimetype mapped to rules", () => {
 	);
 	expect(url.href).toMatch(/^https:\/\/test\.cases\/path\/[a-f0-9]+\.svg$/);
 });
+
+it("should work with 'image/svg+xml'", () => {
+	const one = new URL(
+		"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e",
+		import.meta.url
+	);
+	expect(one.href).toBe(
+		"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Cpath%20fill='none'%20stroke='%23343a40'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='2'%20d='M2%205l6%206%206-6'/%3E%3C/svg%3E"
+	);
+	const two = new URL(
+		'data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"%3e%3cpath fill="none" stroke="%23343a40" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 5l6 6 6-6"/%3e%3c/svg%3e',
+		import.meta.url
+	);
+	expect(two.href).toBe(
+		"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Cpath%20fill='none'%20stroke='%23343a40'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='2'%20d='M2%205l6%206%206-6'/%3E%3C/svg%3E"
+	);
+});
