@@ -4735,21 +4735,44 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		label: HookMap<SyncBailHook<[LabeledStatement], boolean | void>>;
-		import: SyncBailHook<[Statement, ImportSource], boolean | void>;
+		import: SyncBailHook<[ImportDeclaration, ImportSource], boolean | void>;
 		importSpecifier: SyncBailHook<
-			[Statement, ImportSource, string, string],
+			[ImportDeclaration, ImportSource, string, string],
 			boolean | void
 		>;
-		export: SyncBailHook<[Statement], boolean | void>;
-		exportImport: SyncBailHook<[Statement, ImportSource], boolean | void>;
-		exportDeclaration: SyncBailHook<[Statement, Declaration], boolean | void>;
-		exportExpression: SyncBailHook<[Statement, Declaration], boolean | void>;
+		export: SyncBailHook<
+			[ExportNamedDeclaration | ExportAllDeclaration],
+			boolean | void
+		>;
+		exportImport: SyncBailHook<
+			[ExportNamedDeclaration | ExportAllDeclaration, ImportSource],
+			boolean | void
+		>;
+		exportDeclaration: SyncBailHook<
+			[ExportNamedDeclaration | ExportAllDeclaration, Declaration],
+			boolean | void
+		>;
+		exportExpression: SyncBailHook<
+			[ExportDefaultDeclaration, Declaration],
+			boolean | void
+		>;
 		exportSpecifier: SyncBailHook<
-			[Statement, string, string, undefined | number],
+			[
+				ExportNamedDeclaration | ExportAllDeclaration,
+				string,
+				string,
+				undefined | number
+			],
 			boolean | void
 		>;
 		exportImportSpecifier: SyncBailHook<
-			[Statement, ImportSource, string, string, undefined | number],
+			[
+				ExportNamedDeclaration | ExportAllDeclaration,
+				ImportSource,
+				string,
+				string,
+				undefined | number
+			],
 			boolean | void
 		>;
 		preDeclarator: SyncBailHook<
@@ -6374,6 +6397,7 @@ declare class ModuleDependency extends Dependency {
 	request: string;
 	userRequest: string;
 	range: any;
+	assertions?: Record<string, any>;
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
@@ -8930,6 +8954,7 @@ declare interface ResolveData {
 	resolveOptions?: ResolveOptionsWebpackOptions;
 	context: string;
 	request: string;
+	assertions?: Record<string, any>;
 	dependencies: ModuleDependency[];
 	createData: Object;
 	fileDependencies: LazySet<string>;
@@ -9341,6 +9366,11 @@ declare interface RuleSetLogicalConditionsAbsolute {
  * A rule description with conditions and effects for modules.
  */
 declare interface RuleSetRule {
+	/**
+	 * Match on import assertions of the dependency.
+	 */
+	assert?: { [index: string]: RuleSetConditionOrConditions };
+
 	/**
 	 * Match the child compiler name.
 	 */
