@@ -44,4 +44,11 @@ it("should work with 'image/svg+xml'", () => {
 	expect(two.href).toBe(
 		"data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Cpath%20fill='none'%20stroke='%23343a40'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='2'%20d='M2%205l6%206%206-6'/%3E%3C/svg%3E"
 	);
+	const three = new URL(
+		"data:IMAGE/SVG+XML,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e",
+		import.meta.url
+	);
+	expect(three.href).toBe(
+		"data:IMAGE/SVG+XML,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2017%2017'%3E%3Cpath%20fill='none'%20stroke='%23343a40'%20stroke-linecap='round'%20stroke-linejoin='round'%20stroke-width='2'%20d='M2%205l6%206%206-6'/%3E%3C/svg%3E"
+	);
 });
