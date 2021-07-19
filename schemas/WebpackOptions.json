@@ -1684,6 +1684,7 @@
     },
     "Mode": {
       "description": "Enable production optimizations or development hints.",
+      "link": "https://webpack.js.org/configuration/mode/",
       "enum": ["development", "production", "none"]
     },
     "ModuleFilterItemTypes": {
