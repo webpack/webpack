@@ -539,6 +539,7 @@
     },
     "EntryDynamic": {
       "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
+      "link": "https://webpack.js.org/configuration/entry-context/#dynamic-entry",
       "instanceof": "Function",
       "tsType": "(() => EntryStatic | Promise<EntryStatic>)"
     },
