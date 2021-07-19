@@ -330,6 +330,7 @@
     },
     "Context": {
       "description": "The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.",
+      "link": "https://webpack.js.org/configuration/entry-context/#context",
       "type": "string",
       "absolutePath": true
     },
@@ -423,6 +424,7 @@
     },
     "Entry": {
       "description": "The entry point(s) of the compilation.",
+      "link": "https://webpack.js.org/configuration/entry-context/#entry",
       "anyOf": [
         {
           "$ref": "#/definitions/EntryDynamic"
