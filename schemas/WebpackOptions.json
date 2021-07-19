@@ -126,6 +126,7 @@
     },
     "AssetModuleFilename": {
       "description": "The filename of asset modules as relative path inside the 'output.path' directory.",
+      "link": "https://webpack.js.org/configuration/output/#outputassetmodulefilename",
       "anyOf": [
         {
           "type": "string",
@@ -190,6 +191,7 @@
     },
     "AuxiliaryComment": {
       "description": "Add a comment in the UMD wrapper.",
+      "link": "https://webpack.js.org/configuration/output/#outputauxiliarycomment",
       "anyOf": [
         {
           "description": "Append the same comment above each import style.",
@@ -234,10 +236,12 @@
     },
     "Charset": {
       "description": "Add charset attribute for script tag.",
+      "link": "https://webpack.js.org/configuration/output/#outputcharset",
       "type": "boolean"
     },
     "ChunkFilename": {
       "description": "Specifies the filename template of output files of non-initial chunks on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "link": "https://webpack.js.org/configuration/output/#outputchunkfilename",
       "oneOf": [
         {
           "$ref": "#/definitions/FilenameTemplate"
@@ -246,6 +250,7 @@
     },
     "ChunkFormat": {
       "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).",
+      "link": "https://webpack.js.org/configuration/output/#outputchunkformat",
       "anyOf": [
         {
           "enum": ["array-push", "commonjs", "module", false]
@@ -257,10 +262,12 @@
     },
     "ChunkLoadTimeout": {
       "description": "Number of milliseconds before chunk request expires.",
+      "link": "https://webpack.js.org/configuration/output/#outputchunkloadtimeout",
       "type": "number"
     },
     "ChunkLoading": {
       "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "link": "https://webpack.js.org/configuration/output/#outputchunkloading",
       "anyOf": [
         {
           "enum": [false]
@@ -272,6 +279,7 @@
     },
     "ChunkLoadingGlobal": {
       "description": "The global variable used by webpack for loading of chunks.",
+      "link": "https://webpack.js.org/configuration/output/#outputchunkloadingglobal",
       "type": "string"
     },
     "ChunkLoadingType": {
@@ -287,6 +295,7 @@
     },
     "Clean": {
       "description": "Clean the output directory before emit.",
+      "link": "https://webpack.js.org/configuration/output/#outputclean",
       "anyOf": [
         {
           "type": "boolean"
@@ -336,6 +345,7 @@
     },
     "CrossOriginLoading": {
       "description": "This option enables cross-origin loading of chunks.",
+      "link": "https://webpack.js.org/configuration/output/#outputcrossoriginloading",
       "enum": [false, "anonymous", "use-credentials"]
     },
     "Dependencies": {
@@ -365,6 +375,7 @@
     },
     "DevtoolFallbackModuleFilenameTemplate": {
       "description": "Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.",
+      "link": "https://webpack.js.org/configuration/output/#outputdevtoolfallbackmodulefilenametemplate",
       "anyOf": [
         {
           "type": "string"
@@ -377,6 +388,7 @@
     },
     "DevtoolModuleFilenameTemplate": {
       "description": "Filename template string of function for the sources array in a generated SourceMap.",
+      "link": "https://webpack.js.org/configuration/output/#outputdevtoolmodulefilenametemplate",
       "anyOf": [
         {
           "type": "string"
@@ -389,6 +401,7 @@
     },
     "DevtoolNamespace": {
       "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
+      "link": "https://webpack.js.org/configuration/output/#outputdevtoolnamespace",
       "type": "string"
     },
     "EmptyGeneratorOptions": {
@@ -403,6 +416,7 @@
     },
     "EnabledChunkLoadingTypes": {
       "description": "List of chunk loading types enabled for use by entry points.",
+      "link": "https://webpack.js.org/configuration/output/#outputenabledchunkloadingtypes",
       "type": "array",
       "items": {
         "$ref": "#/definitions/ChunkLoadingType"
@@ -1058,6 +1072,7 @@
     },
     "Filename": {
       "description": "Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "link": "https://webpack.js.org/configuration/output/#outputfilename",
       "oneOf": [
         {
           "$ref": "#/definitions/FilenameTemplate"
@@ -1157,20 +1172,24 @@
     },
     "GlobalObject": {
       "description": "An expression which is used to address the global object/scope in runtime code.",
+      "link": "https://webpack.js.org/configuration/output/#outputglobalobject",
       "type": "string",
       "minLength": 1
     },
     "HashDigest": {
       "description": "Digest type used for the hash.",
+      "link": "https://webpack.js.org/configuration/output/#outputhashdigest",
       "type": "string"
     },
     "HashDigestLength": {
       "description": "Number of chars which are used for the hash.",
+      "link": "https://webpack.js.org/configuration/output/#outputhashdigestlength",
       "type": "number",
       "minimum": 1
     },
     "HashFunction": {
       "description": "Algorithm used for generation the hash (see node.js crypto package).",
+      "link": "https://webpack.js.org/configuration/output/#outputhashfunction",
       "anyOf": [
         {
           "type": "string",
@@ -1184,20 +1203,24 @@
     },
     "HashSalt": {
       "description": "Any string which is added to the hash to salt it.",
+      "link": "https://webpack.js.org/configuration/output/#outputhashsalt",
       "type": "string",
       "minLength": 1
     },
     "HotUpdateChunkFilename": {
       "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
+      "link": "https://webpack.js.org/configuration/output/#outputhotupdatechunkfilename",
       "type": "string",
       "absolutePath": false
     },
     "HotUpdateGlobal": {
       "description": "The global variable used by webpack for loading of hot update chunks.",
+      "link": "https://webpack.js.org/configuration/output/#outputhotupdateglobal",
       "type": "string"
     },
     "HotUpdateMainFilename": {
       "description": "The filename of the Hot Update Main File. It is inside the 'output.path' directory.",
+      "link": "https://webpack.js.org/configuration/output/#outputhotupdatemainfilename",
       "type": "string",
       "absolutePath": false
     },
@@ -1285,10 +1308,12 @@
     },
     "Iife": {
       "description": "Wrap javascript code into IIFE's to avoid leaking into global scope.",
+      "link": "https://webpack.js.org/configuration/output/#outputiife",
       "type": "boolean"
     },
     "ImportFunctionName": {
       "description": "The name of the native import() function (can be exchanged for a polyfill).",
+      "link": "https://webpack.js.org/configuration/output/#outputimportfunctionname",
       "type": "string"
     },
     "ImportMetaName": {
@@ -1504,6 +1529,7 @@
     },
     "Library": {
       "description": "Make the output files a library, exporting the exports of the entry point.",
+      "link": "https://webpack.js.org/configuration/output/#outputlibrary",
       "anyOf": [
         {
           "$ref": "#/definitions/LibraryName"
@@ -1572,6 +1598,7 @@
     },
     "LibraryExport": {
       "description": "Specify which export should be exposed as library.",
+      "link": "https://webpack.js.org/configuration/output/#outputlibraryexport-1",
       "anyOf": [
         {
           "type": "array",
@@ -1633,6 +1660,7 @@
     },
     "LibraryType": {
       "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+      "link": "https://webpack.js.org/configuration/output/#outputlibrarytarget",
       "anyOf": [
         {
           "enum": [
@@ -2617,6 +2645,7 @@
     },
     "Output": {
       "description": "Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.",
+      "link": "https://webpack.js.org/configuration/output/",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -2769,6 +2798,7 @@
         },
         "trustedTypes": {
           "description": "Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.",
+          "link": "https://webpack.js.org/configuration/output/#outputtrustedtypes",
           "anyOf": [
             {
               "enum": [true]
@@ -2812,6 +2842,7 @@
     },
     "OutputModule": {
       "description": "Output javascript files as module source type.",
+      "link": "https://webpack.js.org/configuration/output/#outputmodule",
       "type": "boolean"
     },
     "OutputNormalized": {
@@ -2999,11 +3030,13 @@
     },
     "Path": {
       "description": "The output directory as **absolute path** (required).",
+      "link": "https://webpack.js.org/configuration/output/#outputpath",
       "type": "string",
       "absolutePath": true
     },
     "Pathinfo": {
       "description": "Include comments with information about the modules.",
+      "link": "https://webpack.js.org/configuration/output/#outputpathinfo",
       "anyOf": [
         {
           "enum": ["verbose"]
@@ -3070,6 +3103,7 @@
     },
     "PublicPath": {
       "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
+      "link": "https://webpack.js.org/configuration/output/#outputpublicpath",
       "anyOf": [
         {
           "enum": ["auto"]
@@ -3936,6 +3970,7 @@
     },
     "ScriptType": {
       "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\".",
+      "link": "https://webpack.js.org/configuration/output/#outputscripttype",
       "enum": [false, "text/javascript", "module"]
     },
     "SnapshotOptions": {
@@ -4034,11 +4069,13 @@
     },
     "SourceMapFilename": {
       "description": "The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.",
+      "link": "https://webpack.js.org/configuration/output/#outputsourcemapfilename",
       "type": "string",
       "absolutePath": false
     },
     "SourcePrefix": {
       "description": "Prefixes every line of the source in the bundle with this string.",
+      "link": "https://webpack.js.org/configuration/output/#outputsourceprefix",
       "type": "string"
     },
     "StatsOptions": {
@@ -4472,10 +4509,12 @@
     },
     "StrictModuleErrorHandling": {
       "description": "Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.",
+      "link": "https://webpack.js.org/configuration/output/#outputsourceprefix",
       "type": "boolean"
     },
     "StrictModuleExceptionHandling": {
       "description": "Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.",
+      "link": "https://webpack.js.org/configuration/output/#outputstrictmoduleexceptionhandling",
       "type": "boolean"
     },
     "Target": {
@@ -4513,10 +4552,12 @@
     },
     "UmdNamedDefine": {
       "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
+      "link": "https://webpack.js.org/configuration/output/#outputumdnameddefine",
       "type": "boolean"
     },
     "UniqueName": {
       "description": "A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.",
+      "link": "https://webpack.js.org/configuration/output/#outputuniquename",
       "type": "string",
       "minLength": 1
     },
