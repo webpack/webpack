@@ -2,6 +2,7 @@
   "definitions": {
     "Amd": {
       "description": "Set the value of `require.amd` and `define.amd`. Or disable AMD support.",
+      "link": "https://webpack.js.org/configuration/other-options/#amd",
       "anyOf": [
         {
           "description": "You can pass `false` to disable AMD support.",
@@ -201,6 +202,7 @@
     },
     "Bail": {
       "description": "Report the first error as a hard error instead of tolerating it.",
+      "link": "https://webpack.js.org/configuration/other-options/#bail",
       "type": "boolean"
     },
     "CacheOptions": {
@@ -337,6 +339,7 @@
     },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
+      "link": "https://webpack.js.org/configuration/other-options/#dependencies",
       "type": "array",
       "items": {
         "description": "References to another configuration to depend on.",
@@ -1229,6 +1232,7 @@
     },
     "IgnoreWarnings": {
       "description": "Ignore specific warnings.",
+      "link": "https://webpack.js.org/configuration/other-options/#ignorewarnings",
       "type": "array",
       "items": {
         "description": "Ignore specific warnings.",
@@ -1290,23 +1294,28 @@
     },
     "InfrastructureLogging": {
       "description": "Options for infrastructure level logging.",
+      "link": "https://webpack.js.org/configuration/other-options/#infrastructurelogging",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "appendOnly": {
           "description": "Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.",
+          "link": "https://webpack.js.org/configuration/other-options/#appendonly",
           "type": "boolean"
         },
         "colors": {
           "description": "Enables/Disables colorful output. This option is only used when no custom console is provided.",
+          "link": "https://webpack.js.org/configuration/other-options/#colors",
           "type": "boolean"
         },
         "console": {
           "description": "Custom console used for logging.",
+          "link": "https://webpack.js.org/configuration/other-options/#console",
           "tsType": "Console"
         },
         "debug": {
           "description": "Enable debug logging for specific loggers.",
+          "link": "https://webpack.js.org/configuration/other-options/#debug",
           "anyOf": [
             {
               "description": "Enable/Disable debug logging for all loggers.",
@@ -1319,10 +1328,12 @@
         },
         "level": {
           "description": "Log level.",
+          "link": "https://webpack.js.org/configuration/other-options/#level",
           "enum": ["none", "error", "warn", "info", "log", "verbose"]
         },
         "stream": {
           "description": "Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.",
+          "link": "https://webpack.js.org/configuration/other-options/#stream",
           "tsType": "NodeJS.WritableStream"
         }
       }
@@ -1648,6 +1659,7 @@
     },
     "Loader": {
       "description": "Custom values available in the loader context.",
+      "link": "https://webpack.js.org/configuration/other-options/#loader",
       "type": "object"
     },
     "MemoryCacheOptions": {
@@ -1882,6 +1894,7 @@
     },
     "Name": {
       "description": "Name of the configuration. Used when loading multiple configurations.",
+      "link": "https://webpack.js.org/configuration/other-options/#name",
       "type": "string"
     },
     "NoParse": {
@@ -2941,6 +2954,7 @@
     },
     "Parallelism": {
       "description": "The number of parallel processed modules in the compilation.",
+      "link": "https://webpack.js.org/configuration/other-options/#parallelism",
       "type": "number",
       "minimum": 1
     },
@@ -3047,6 +3061,7 @@
     },
     "Profile": {
       "description": "Capture timing information for each module.",
+      "link": "https://webpack.js.org/configuration/other-options/#profile",
       "type": "boolean"
     },
     "PublicPath": {
@@ -3074,6 +3089,7 @@
     },
     "RecordsInputPath": {
       "description": "Store compiler state to a json file.",
+      "link": "https://webpack.js.org/configuration/other-options/#recordsinputpath",
       "anyOf": [
         {
           "enum": [false]
@@ -3086,6 +3102,7 @@
     },
     "RecordsOutputPath": {
       "description": "Load compiler state from a json file.",
+      "link": "https://webpack.js.org/configuration/other-options/#recordsoutputpath",
       "anyOf": [
         {
           "enum": [false]
@@ -3098,6 +3115,7 @@
     },
     "RecordsPath": {
       "description": "Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.",
+      "link": "https://webpack.js.org/configuration/other-options/#recordspath",
       "anyOf": [
         {
           "enum": [false]
