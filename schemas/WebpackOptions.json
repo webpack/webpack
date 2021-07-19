@@ -3936,11 +3936,13 @@
     },
     "SnapshotOptions": {
       "description": "Options affecting how file system snapshots are created and validated.",
+      "link": "https://webpack.js.org/configuration/other-options/#snapshot",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "buildDependencies": {
           "description": "Options for snapshotting build dependencies to determine if the whole cache need to be invalidated.",
+          "link": "https://webpack.js.org/configuration/other-options/#builddependencies",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -3956,6 +3958,7 @@
         },
         "immutablePaths": {
           "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+          "link": "https://webpack.js.org/configuration/other-options/#immutablepaths",
           "type": "array",
           "items": {
             "description": "A path to a immutable directory (usually a package manager cache directory).",
@@ -3966,6 +3969,7 @@
         },
         "managedPaths": {
           "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+          "link": "https://webpack.js.org/configuration/other-options/#managedpaths",
           "type": "array",
           "items": {
             "description": "A path to a managed directory (usually a node_modules directory).",
@@ -3976,6 +3980,7 @@
         },
         "module": {
           "description": "Options for snapshotting dependencies of modules to determine if they need to be built again.",
+          "link": "https://webpack.js.org/configuration/other-options/#module",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -3991,6 +3996,7 @@
         },
         "resolve": {
           "description": "Options for snapshotting dependencies of request resolving to determine if requests need to be re-resolved.",
+          "link": "https://webpack.js.org/configuration/other-options/#resolve",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -4006,6 +4012,7 @@
         },
         "resolveBuildDependencies": {
           "description": "Options for snapshotting the resolving of build dependencies to determine if the build dependencies need to be re-resolved.",
+          "link": "https://webpack.js.org/configuration/other-options/#resolvebuilddependencies",
           "type": "object",
           "additionalProperties": false,
           "properties": {
