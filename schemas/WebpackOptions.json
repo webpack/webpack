@@ -4210,6 +4210,10 @@
           "description": "Group modules by their type.",
           "type": "boolean"
         },
+        "groupReasonsByOrigin": {
+          "description": "Group reasons by their origin module.",
+          "type": "boolean"
+        },
         "hash": {
           "description": "Add the hash of the compilation.",
           "type": "boolean"
@@ -4313,6 +4317,10 @@
         "reasons": {
           "description": "Add information about the reasons why modules are included.",
           "type": "boolean"
+        },
+        "reasonsSpace": {
+          "description": "Space to display reasons (groups will be collapsed to fit this space).",
+          "type": "number"
         },
         "relatedAssets": {
           "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
