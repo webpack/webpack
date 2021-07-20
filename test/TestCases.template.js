@@ -252,7 +252,8 @@ const describeCases = config => {
 												const statOptions = {
 													preset: "verbose",
 													colors: false,
-													modules: true
+													modules: true,
+													reasonsSpace: 1000
 												};
 												fs.mkdirSync(outputDirectory, { recursive: true });
 												fs.writeFileSync(

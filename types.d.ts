@@ -10900,6 +10900,11 @@ declare interface StatsOptions {
 	groupModulesByType?: boolean;
 
 	/**
+	 * Group reasons by their origin module.
+	 */
+	groupReasonsByOrigin?: boolean;
+
+	/**
 	 * Add the hash of the compilation.
 	 */
 	hash?: boolean;
@@ -11003,6 +11008,11 @@ declare interface StatsOptions {
 	 * Add information about the reasons why modules are included.
 	 */
 	reasons?: boolean;
+
+	/**
+	 * Space to display reasons (groups will be collapsed to fit this space).
+	 */
+	reasonsSpace?: number;
 
 	/**
 	 * Add information about assets that are related to other assets (like SourceMaps for assets).

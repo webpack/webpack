@@ -7753,6 +7753,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-group-reasons-by-origin": Object {
+    "configs": Array [
+      Object {
+        "description": "Group reasons by their origin module.",
+        "multiple": false,
+        "path": "stats.groupReasonsByOrigin",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group reasons by their origin module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-hash": Object {
     "configs": Array [
       Object {
@@ -8057,6 +8070,19 @@ Object {
     "description": "Add information about the reasons why modules are included.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "stats-reasons-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display reasons (groups will be collapsed to fit this space).",
+        "multiple": false,
+        "path": "stats.reasonsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display reasons (groups will be collapsed to fit this space).",
+    "multiple": false,
+    "simpleType": "number",
   },
   "stats-related-assets": Object {
     "configs": Array [
