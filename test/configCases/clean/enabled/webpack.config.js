@@ -10,12 +10,19 @@ module.exports = {
 	},
 	plugins: [
 		compiler => {
+			let once = true;
 			compiler.hooks.thisCompilation.tap("Test", compilation => {
 				compilation.hooks.processAssets.tap("Test", assets => {
-					const outputPath = compilation.getPath(compiler.outputPath, {});
-					const customDir = path.join(outputPath, "this/dir/should/be/removed");
-					fs.mkdirSync(customDir, { recursive: true });
-					fs.writeFileSync(path.join(customDir, "file.ext"), "");
+					if (once) {
+						const outputPath = compilation.getPath(compiler.outputPath, {});
+						const customDir = path.join(
+							outputPath,
+							"this/dir/should/be/removed"
+						);
+						fs.mkdirSync(customDir, { recursive: true });
+						fs.writeFileSync(path.join(customDir, "file.ext"), "");
+						once = false;
+					}
 					assets["this/dir/should/not/be/removed/file.ext"] = new RawSource("");
 				});
 			});

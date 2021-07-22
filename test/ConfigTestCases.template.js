@@ -572,16 +572,20 @@ const describeCases = config => {
 									.catch(done);
 							};
 							if (config.cache) {
-								const compiler = require("..")(options);
-								compiler.run(err => {
-									if (err) return handleFatalError(err, done);
-									compiler.run((error, stats) => {
-										compiler.close(err => {
-											if (err) return handleFatalError(err, done);
-											onCompiled(error, stats);
+								try {
+									const compiler = require("..")(options);
+									compiler.run(err => {
+										if (err) return handleFatalError(err, done);
+										compiler.run((error, stats) => {
+											compiler.close(err => {
+												if (err) return handleFatalError(err, done);
+												onCompiled(error, stats);
+											});
 										});
 									});
-								});
+								} catch (e) {
+									handleFatalError(e, done);
+								}
 							} else {
 								require("..")(options, onCompiled);
 							}

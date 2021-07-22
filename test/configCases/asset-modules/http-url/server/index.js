@@ -6,7 +6,10 @@ const fs = require("fs");
  * @returns {Promise<import("http").Server>} server instance
  */
 function createServer(port) {
-	const file = fs.readFileSync("./test/configCases/asset-modules/http-url/server/index.css").toString().trim();
+	const file = fs
+		.readFileSync("./test/configCases/asset-modules/http-url/server/index.css")
+		.toString()
+		.trim();
 
 	const server = http.createServer((req, res) => {
 		if (req.url !== "/index.css") {
@@ -18,7 +21,7 @@ function createServer(port) {
 	});
 
 	return new Promise((resolve, reject) => {
-		server.listen(port, (err) => {
+		server.listen(port, err => {
 			if (err) {
 				reject(err);
 			} else {
@@ -40,21 +43,25 @@ class ServerPlugin {
 	 * @param {import("../../../../../").Compiler} compiler
 	 */
 	apply(compiler) {
-		const serverPromise = createServer(this.port);
+		let server;
 
-		serverPromise
-			.then(server => server.unref());
+		compiler.hooks.beforeRun.tapPromise(
+			"ServerPlugin",
+			async (compiler, callback) => {
+				if (!server) {
+					server = await createServer(this.port);
+					server.unref();
+				}
+			}
+		);
 
 		compiler.hooks.done.tapAsync("ServerPlugin", (stats, callback) => {
-			serverPromise
-				.then(server => server.close(callback))
-				.catch(callback)
-		});
-
-		compiler.hooks.beforeRun.tapAsync("ServerPlugin", (compiler, callback) => {
-			serverPromise
-				.then(() => callback())
-				.catch(callback)
+			if (server) {
+				server.close(callback);
+				server = undefined;
+			} else {
+				callback();
+			}
 		});
 	}
 }
