@@ -1,12 +1,10 @@
 const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
-const file = path.resolve(
-	"./test/configCases/asset-modules/file-url",
-	"./temp/index.js"
-);
+const dir = path.resolve(__dirname, "temp");
+const file = path.resolve(dir, "index.js");
 
-fs.mkdirSync("./test/configCases/asset-modules/file-url/temp", {
+fs.mkdirSync(dir, {
 	recursive: true
 });
 fs.writeFileSync(
@@ -31,6 +29,7 @@ import v2 from ${JSON.stringify(
 export const val1 = v1;
 export const val2 = v2;`
 );
+fs.utimesSync(file, new Date(Date.now() - 10000), new Date(Date.now() - 10000));
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

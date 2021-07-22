@@ -1,4 +1,5 @@
-exports.default = function(source) {
+/** @type {import("../../../../").LoaderDefinitionFunction} */
+exports.default = function (source) {
 	const callback = this.async();
 	const ref = JSON.parse(source);
 	this.loadModule("./error-loader!" + ref, (err, source, sourceMap, module) => {

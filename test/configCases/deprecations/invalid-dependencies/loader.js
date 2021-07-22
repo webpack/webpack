@@ -1,3 +1,4 @@
+/** @type {import("../../../../").LoaderDefinition} */
 module.exports = function (source) {
 	this.addDependency("loader.js");
 	this.addDependency("../**/dir/*.js");

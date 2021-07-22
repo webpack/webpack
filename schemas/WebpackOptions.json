@@ -243,10 +243,10 @@
       ]
     },
     "ChunkFormat": {
-      "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+      "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).",
       "anyOf": [
         {
-          "enum": ["array-push", "commonjs", false]
+          "enum": ["array-push", "commonjs", "module", false]
         },
         {
           "type": "string"
@@ -258,7 +258,7 @@
       "type": "number"
     },
     "ChunkLoading": {
-      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
       "anyOf": [
         {
           "enum": [false]
@@ -273,10 +273,10 @@
       "type": "string"
     },
     "ChunkLoadingType": {
-      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
       "anyOf": [
         {
-          "enum": ["jsonp", "import-scripts", "require", "async-node"]
+          "enum": ["jsonp", "import-scripts", "require", "async-node", "import"]
         },
         {
           "type": "string"
@@ -599,8 +599,15 @@
     },
     "EntryRuntime": {
       "description": "The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.",
-      "type": "string",
-      "minLength": 1
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
     },
     "EntryStatic": {
       "description": "A static entry description.",
@@ -807,6 +814,10 @@
           "type": "object",
           "tsType": "import('../lib/ModuleFactory').ModuleFactoryCreateDataContextInfo"
         },
+        "dependencyType": {
+          "description": "The category of the referencing dependencies.",
+          "type": "string"
+        },
         "getResolve": {
           "description": "Get a resolve function with the current resolver options.",
           "instanceof": "Function",
@@ -916,7 +927,8 @@
         "system",
         "promise",
         "import",
-        "script"
+        "script",
+        "node-commonjs"
       ]
     },
     "FileCacheOptions": {
@@ -951,17 +963,26 @@
           "type": "string",
           "absolutePath": true
         },
+        "compression": {
+          "description": "Compression type used for the cache files.",
+          "enum": [false, "gzip", "brotli"]
+        },
         "hashAlgorithm": {
           "description": "Algorithm used for generation the hash (see node.js crypto package).",
           "type": "string"
         },
         "idleTimeout": {
-          "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
+          "description": "Time in ms after which idle period the cache storing should happen.",
+          "type": "number",
+          "minimum": 0
+        },
+        "idleTimeoutAfterLargeChanges": {
+          "description": "Time in ms after which idle period the cache storing should happen when larger changes has been detected (cumulative build time > 2 x avg cache store time).",
           "type": "number",
           "minimum": 0
         },
         "idleTimeoutForInitialStore": {
-          "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
+          "description": "Time in ms after which idle period the initial cache storing should happen.",
           "type": "number",
           "minimum": 0
         },
@@ -2686,6 +2707,22 @@
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
         },
+        "trustedTypes": {
+          "description": "Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.",
+          "anyOf": [
+            {
+              "enum": [true]
+            },
+            {
+              "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "$ref": "#/definitions/TrustedTypes"
+            }
+          ]
+        },
         "umdNamedDefine": {
           "cli": {
             "exclude": true
@@ -2838,6 +2875,9 @@
         },
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
+        },
+        "trustedTypes": {
+          "$ref": "#/definitions/TrustedTypes"
         },
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
@@ -3373,38 +3413,11 @@
           "type": "string"
         },
         {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "and": {
-              "description": "Logical AND.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditions"
-                }
-              ]
-            },
-            "not": {
-              "description": "Logical NOT.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditions"
-                }
-              ]
-            },
-            "or": {
-              "description": "Logical OR.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditions"
-                }
-              ]
-            }
-          }
-        },
-        {
           "instanceof": "Function",
           "tsType": "((value: string) => boolean)"
+        },
+        {
+          "$ref": "#/definitions/RuleSetLogicalConditions"
         },
         {
           "$ref": "#/definitions/RuleSetConditions"
@@ -3426,38 +3439,11 @@
           "absolutePath": true
         },
         {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "and": {
-              "description": "Logical AND.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionsAbsolute"
-                }
-              ]
-            },
-            "not": {
-              "description": "Logical NOT.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionsAbsolute"
-                }
-              ]
-            },
-            "or": {
-              "description": "Logical OR.",
-              "oneOf": [
-                {
-                  "$ref": "#/definitions/RuleSetConditionsAbsolute"
-                }
-              ]
-            }
-          }
-        },
-        {
           "instanceof": "Function",
           "tsType": "((value: string) => boolean)"
+        },
+        {
+          "$ref": "#/definitions/RuleSetLogicalConditionsAbsolute"
         },
         {
           "$ref": "#/definitions/RuleSetConditionsAbsolute"
@@ -3531,6 +3517,68 @@
           "type": "object"
         }
       ]
+    },
+    "RuleSetLogicalConditions": {
+      "description": "Logic operators used in a condition matcher.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "and": {
+          "description": "Logical AND.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditions"
+            }
+          ]
+        },
+        "not": {
+          "description": "Logical NOT.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetCondition"
+            }
+          ]
+        },
+        "or": {
+          "description": "Logical OR.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditions"
+            }
+          ]
+        }
+      }
+    },
+    "RuleSetLogicalConditionsAbsolute": {
+      "description": "Logic operators used in a condition matcher.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "and": {
+          "description": "Logical AND.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionsAbsolute"
+            }
+          ]
+        },
+        "not": {
+          "description": "Logical NOT.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionAbsolute"
+            }
+          ]
+        },
+        "or": {
+          "description": "Logical OR.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionsAbsolute"
+            }
+          ]
+        }
+      }
     },
     "RuleSetRule": {
       "description": "A rule description with conditions and effects for modules.",
@@ -3700,6 +3748,14 @@
               }
             ]
           }
+        },
+        "scheme": {
+          "description": "Match module scheme.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ]
         },
         "sideEffects": {
           "description": "Flags a module as with or without side effects.",
@@ -4154,6 +4210,10 @@
           "description": "Group modules by their type.",
           "type": "boolean"
         },
+        "groupReasonsByOrigin": {
+          "description": "Group reasons by their origin module.",
+          "type": "boolean"
+        },
         "hash": {
           "description": "Add the hash of the compilation.",
           "type": "boolean"
@@ -4258,6 +4318,10 @@
           "description": "Add information about the reasons why modules are included.",
           "type": "boolean"
         },
+        "reasonsSpace": {
+          "description": "Space to display reasons (groups will be collapsed to fit this space).",
+          "type": "number"
+        },
         "relatedAssets": {
           "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
           "type": "boolean"
@@ -4355,6 +4419,18 @@
           "minLength": 1
         }
       ]
+    },
+    "TrustedTypes": {
+      "description": "Use a Trusted Types policy to create urls for chunks.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "policyName": {
+          "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
     },
     "UmdNamedDefine": {
       "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",

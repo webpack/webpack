@@ -129,7 +129,7 @@ rules:
 
           @{{issue.user.login}} Please check if this is appliable to your PR and if you can add more test cases.
 
-          Read the [test readme](https://github.com/webpack/webpack/blob/master/test/README.md) for details how to write test cases.
+          Read the [test readme](https://github.com/webpack/webpack/blob/main/test/README.md) for details how to write test cases.
 
   # add conflict label to pull requests with conflict
   # on conflict all result labels are removed
@@ -229,16 +229,16 @@ rules:
     actions:
       label: "PR: unreviewed"
 
-  # add non-master, webpack-4 and next label to pull request to other branch
+  # add non-main, webpack-4 and next label to pull request to other branch
   - filters:
       pull_request:
-        base_ref: "^master$"
+        base_ref: "^main$"
     actions:
       label:
         remove:
           - "PR: next"
           - "PR: webpack-4"
-          - "PR: non-master"
+          - "PR: non-main"
   - filters:
       pull_request:
         base_ref: "^next$"
@@ -247,7 +247,7 @@ rules:
         add: "PR: next"
         remove:
           - "PR: webpack-4"
-          - "PR: non-master"
+          - "PR: non-main"
   - filters:
       pull_request:
         base_ref: "^webpack-4$"
@@ -256,36 +256,36 @@ rules:
         add: "PR: webpack-4"
         remove:
           - "PR: next"
-          - "PR: non-master"
+          - "PR: non-main"
   - filters:
       pull_request:
-        base_ref: "^(?!master$)(?!webpack-4$)(?!next$)"
+        base_ref: "^(?!main$)(?!webpack-4$)(?!next$)"
     actions:
       label:
-        add: "PR: non-master"
+        add: "PR: non-main"
         remove:
           - "PR: next"
           - "PR: webpack-4"
 
-  # add non-master label to pull request to other branch
+  # add non-main label to pull request to other branch
   - filters:
       open: true
       age:
         minimum: 1d
         maximum: 1w
       pull_request:
-        head_ref: "^master$"
+        head_ref: "^main$"
       permission: "read|none"
     actions:
       comment:
-        identifier: "head-master"
+        identifier: "head-main"
         edit: true
         message: |-
           Hi @{{pull_request.user.login}}.
 
           Just a little hint from a friendly bot about the best practice when submitting pull requests:
 
-          > Don't submit pull request from your own `master` branch. It's recommended to create a feature branch for the PR.
+          > Don't submit pull request from your own `main` branch. It's recommended to create a feature branch for the PR.
 
           *You don't have to change it for this PR, just make sure to follow this hint the next time you submit a PR.*
 

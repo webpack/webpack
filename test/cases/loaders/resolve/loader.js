@@ -1,5 +1,6 @@
 const path = require("path");
-module.exports = function() {
+/** @type {import("../../../../").LoaderDefinition} */
+module.exports = function () {
 	const resolve1 = this.getResolve();
 	const resolve2 = this.getResolve({
 		extensions: [".xyz", ".js"]

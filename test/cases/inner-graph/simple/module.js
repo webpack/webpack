@@ -12,7 +12,7 @@ function f3() {
 	return EXPORT;
 }
 
-const f4 = function() {
+const f4 = function () {
 	return EXPORT;
 };
 
@@ -95,6 +95,6 @@ export function fWithDefault(r = EXPORT4) {
 	return r;
 }
 
-export default (function() {
+export default (function () {
 	return EXPORT;
 });

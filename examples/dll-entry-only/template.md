@@ -21,8 +21,8 @@ Module `cjs.js` is left as is since it's in CommonJS format.
 The manifest includes `example.js` as the only exposed module and lists the exports as `["a","b","c"]`
 from the corresponding modules `a.js`, `b.js`, and `cjs.js`. None of the other modules are exposed.
 
-Also, see [tree shaking](https://github.com/webpack/webpack/tree/master/examples/harmony-unused)
-and [scope hoisting example](https://github.com/webpack/webpack/tree/master/examples/scope-hoisting).
+Also, see [tree shaking](https://github.com/webpack/webpack/tree/main/examples/harmony-unused)
+and [scope hoisting example](https://github.com/webpack/webpack/tree/main/examples/scope-hoisting).
 
 # example.js
 

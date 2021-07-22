@@ -40,7 +40,7 @@
 	</a>
   <h1>webpack</h1>
   <p>
-    webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
+    Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
   </p>
 </div>
 
@@ -77,7 +77,7 @@ yarn add webpack --dev
 
 <h2 align="center">Introduction</h2>
 
-webpack is a bundler for modules. The main purpose is to bundle JavaScript
+Webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
 or packaging just about any resource or asset.
 
@@ -95,14 +95,14 @@ Check out webpack's quick [**Get Started**](https://webpack.js.org/guides/gettin
 
 ### Browser Compatibility
 
-webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
-webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
+Webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+Webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
 
 <h2 align="center">Concepts</h2>
 
 ### [Plugins](https://webpack.js.org/plugins/)
 
-webpack has a [rich plugin
+Webpack has a [rich plugin
 interface](https://webpack.js.org/plugins/). Most of the features
 within webpack itself use this plugin interface. This makes webpack very
 **flexible**.
@@ -129,7 +129,7 @@ within webpack itself use this plugin interface. This makes webpack very
 
 ### [Loaders](https://webpack.js.org/loaders/)
 
-webpack enables the use of loaders to preprocess files. This allows you to bundle
+Webpack enables the use of loaders to preprocess files. This allows you to bundle
 **any static resource** way beyond JavaScript. You can easily [write your own
 loaders](https://webpack.js.org/api/loaders/) using Node.js.
 
@@ -169,17 +169,14 @@ or are automatically applied via regex from your webpack configuration.
 
 #### Transpiling
 
-|                                                                            Name                                                                            |     Status     |  Install Size   | Description                                                                                          |
-| :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------: | :-------------: | :--------------------------------------------------------------------------------------------------- |
-| <a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a> |  ![babel-npm]  |  ![babel-size]  | Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a>    |
-|       <a href="https://github.com/jupl/traceur-loader"><img width="48" height="48" src="https://google.github.com/traceur-compiler/logo/tc.svg"></a>       | ![traceur-npm] | ![traceur-size] | Loads ES2015+ code and transpiles to ES5 using [Traceur](https://github.com/google/traceur-compiler) |
-|  <a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>  |  ![type-npm]   |  ![type-size]   | Loads TypeScript like JavaScript                                                                     |
-|    <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>    | ![coffee-npm]  | ![coffee-size]  | Loads CoffeeScript like JavaScript                                                                   |
+|                                                                            Name                                                                            |    Status     |  Install Size  | Description                                                                                       |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :------------: | :------------------------------------------------------------------------------------------------ |
+| <a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a> | ![babel-npm]  | ![babel-size]  | Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a> |
+|  <a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>  |  ![type-npm]  |  ![type-size]  | Loads TypeScript like JavaScript                                                                  |
+|    <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>    | ![coffee-npm] | ![coffee-size] | Loads CoffeeScript like JavaScript                                                                |
 
 [babel-npm]: https://img.shields.io/npm/v/babel-loader.svg
 [babel-size]: https://packagephobia.com/badge?p=babel-loader
-[traceur-npm]: https://img.shields.io/npm/v/traceur-loader.svg
-[traceur-size]: https://packagephobia.com/badge?p=traceur-loader
 [coffee-npm]: https://img.shields.io/npm/v/coffee-loader.svg
 [coffee-size]: https://packagephobia.com/badge?p=coffee-loader
 [type-npm]: https://img.shields.io/npm/v/ts-loader.svg
@@ -252,23 +249,23 @@ or are automatically applied via regex from your webpack configuration.
 
 ### Performance
 
-webpack uses async I/O and has multiple caching levels. This makes webpack fast
+Webpack uses async I/O and has multiple caching levels. This makes webpack fast
 and incredibly **fast** on incremental compilations.
 
 ### Module Formats
 
-webpack supports ES2015+, CommonJS and AMD modules **out of the box**. It performs clever static
+Webpack supports ES2015+, CommonJS and AMD modules **out of the box**. It performs clever static
 analysis on the AST of your code. It even has an evaluation engine to evaluate
 simple expressions. This allows you to **support most existing libraries** out of the box.
 
 ### [Code Splitting](https://webpack.js.org/guides/code-splitting/)
 
-webpack allows you to split your codebase into multiple chunks. Chunks are
+Webpack allows you to split your codebase into multiple chunks. Chunks are
 loaded asynchronously at runtime. This reduces the initial loading time.
 
 ### [Optimizations](https://webpack.js.org/guides/production-build/)
 
-webpack can do many optimizations to **reduce the output size of your
+Webpack can do many optimizations to **reduce the output size of your
 JavaScript** by deduplicating frequently used modules, minifying, and giving
 you full control of what is loaded initially and what is loaded at runtime
 through code splitting. It can also make your code chunks **cache
@@ -290,7 +287,7 @@ Contributions go far beyond pull requests and commits. Although we love giving y
 - [Blogging, speaking about, or creating tutorials](https://github.com/webpack-contrib/awesome-webpack) about one of webpack's many features.
 - Helping others in our webpack [gitter channel](https://gitter.im/webpack/webpack).
 
-To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/master/CONTRIBUTING.md).
+To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/main/CONTRIBUTING.md).
 
 If you are worried or don't know where to start, you can **always** reach out to [Sean Larkin (@TheLarkInn) on Twitter](https://twitter.com/thelarkinn) or simply submit an issue and a maintainer can help give you guidance!
 
@@ -718,11 +715,11 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 [node-url]: https://nodejs.org
 [deps]: https://img.shields.io/david/webpack/webpack.svg
 [deps-url]: https://david-dm.org/webpack/webpack
-[tests]: https://img.shields.io/travis/webpack/webpack/master.svg
+[tests]: https://img.shields.io/travis/webpack/webpack/main.svg
 [tests-url]: https://travis-ci.org/webpack/webpack
 [prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
 [prs-url]: https://webpack.js.org/contribute/
-[builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
+[builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/main
 [builds]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
 [builds2]: https://dev.azure.com/webpack/webpack/_apis/build/status/webpack.webpack
 [builds2-url]: https://dev.azure.com/webpack/webpack/_build/latest?definitionId=3

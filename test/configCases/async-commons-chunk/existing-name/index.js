@@ -1,11 +1,17 @@
 const chunkLoadingSpy = jest.spyOn(__webpack_require__, "e");
 
-it("should not have duplicate chunks in blocks", function(done) {
+it("should not have duplicate chunks in blocks", function (done) {
+	let i = 0;
+	const d = () => {
+		if (i++ >= 3) done();
+	};
+
 	// This split point should contain: a
 	require.ensure(
 		[],
-		function(require) {
+		function (require) {
 			expect(require("./a")).toBe("a");
+			d();
 		},
 		"a"
 	);
@@ -14,9 +20,10 @@ it("should not have duplicate chunks in blocks", function(done) {
 	// have it only contain b and make chunk a be an async dependency.
 	require.ensure(
 		[],
-		function(require) {
+		function (require) {
 			expect(require("./a")).toBe("a");
 			expect(require("./b")).toBe("b");
+			d();
 		},
 		"a+b"
 	);
@@ -25,10 +32,11 @@ it("should not have duplicate chunks in blocks", function(done) {
 	// have it only contain c and make chunks a and a+b be async dependencies.
 	require.ensure(
 		[],
-		function(require) {
+		function (require) {
 			expect(require("./a")).toBe("a");
 			expect(require("./b")).toBe("b");
 			expect(require("./c")).toBe("c");
+			d();
 		},
 		"a+b+c"
 	);
@@ -46,5 +54,5 @@ it("should not have duplicate chunks in blocks", function(done) {
 		["a+b" /* == b */],
 		["a+b+c" /* == c */]
 	]);
-	done();
+	d();
 });

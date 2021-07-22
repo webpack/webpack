@@ -19,6 +19,7 @@
     "preloading",
     "preloaded",
     "gzipping",
+    "brotli",
     "submodule",
     "submodules",
     "typeof",

@@ -4,6 +4,39 @@ const webpack = require("../../../../");
 module.exports = (env, { testPath }) => [
 	{
 		output: {
+			filename: "esm.js",
+			libraryTarget: "module"
+		},
+		target: "node14",
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		output: {
+			filename: "esm-runtimeChunk/[name].js",
+			libraryTarget: "module"
+		},
+		target: "node14",
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		},
+		optimization: {
+			runtimeChunk: "single"
+		},
+		experiments: {
+			outputModule: true
+		}
+	},
+	{
+		output: {
 			filename: "commonjs.js",
 			libraryTarget: "commonjs",
 			iife: false

@@ -110,7 +110,8 @@ class HtmlInlinePlugin {
 							const asset = compilation.getAsset(name);
 							const content = asset.source.source();
 							const matches = [];
-							const regExp = /<script\s+src\s*=\s*"([^"]+)"(?:\s+[^"=\s]+(?:\s*=\s*(?:"[^"]*"|[^\s]+))?)*\s*><\/script>/g;
+							const regExp =
+								/<script\s+src\s*=\s*"([^"]+)"(?:\s+[^"=\s]+(?:\s*=\s*(?:"[^"]*"|[^\s]+))?)*\s*><\/script>/g;
 							let match = regExp.exec(content);
 							while (match) {
 								let url = match[1];

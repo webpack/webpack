@@ -1,13 +1,13 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
-
-const webpack = require("..");
 
 const casesPath = path.join(__dirname, "hotCases");
 let categories = fs
@@ -29,7 +29,7 @@ const describeCases = config => {
 				category.tests.forEach(testName => {
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const filterPath = path.join(testDirectory, "test.filter.js");
-					if (fs.existsSync(filterPath) && !require(filterPath)()) {
+					if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
 						describe.skip(testName, () => {
 							it("filtered", () => {});
 						});
@@ -39,11 +39,13 @@ const describeCases = config => {
 						let compiler;
 						afterAll(callback => {
 							compiler.close(callback);
+							compiler = undefined;
 						});
 
 						it(
 							testName + " should compile",
 							done => {
+								const webpack = require("..");
 								const outputDirectory = path.join(
 									__dirname,
 									"js",
@@ -250,7 +252,7 @@ const describeCases = config => {
 												return JSON.parse(fs.readFileSync(p, "utf-8"));
 											} else {
 												const fn = vm.runInThisContext(
-													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, self, window, fetch, document, importScripts, Worker, EventSource, NEXT, STATS) {" +
+													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest, self, window, fetch, document, importScripts, Worker, EventSource, NEXT, STATS) {" +
 														"global.expect = expect;" +
 														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 														fs.readFileSync(p, "utf-8") +
@@ -271,6 +273,7 @@ const describeCases = config => {
 													_beforeEach,
 													_afterEach,
 													expect,
+													jest,
 													window,
 													window,
 													window.fetch,
@@ -322,7 +325,7 @@ const describeCases = config => {
 							beforeEach: _beforeEach,
 							afterEach: _afterEach,
 							getNumberOfTests
-						} = createLazyTestEnv(jasmine.getEnv(), 20000);
+						} = createLazyTestEnv(20000);
 					});
 				});
 			});

@@ -21,7 +21,8 @@
         "system",
         "promise",
         "import",
-        "script"
+        "script",
+        "node-commonjs"
       ]
     },
     "Remotes": {

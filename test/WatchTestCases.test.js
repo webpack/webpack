@@ -1,5 +1,7 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
@@ -10,8 +12,6 @@ const { remove } = require("./helpers/remove");
 const prepareOptions = require("./helpers/prepareOptions");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const FakeDocument = require("./helpers/FakeDocument");
-
-const webpack = require("..");
 
 function copyDiff(src, dest, initial) {
 	if (!fs.existsSync(dest)) fs.mkdirSync(dest);
@@ -156,6 +156,7 @@ describe("WatchTestCases", () => {
 
 							setTimeout(() => {
 								const deprecationTracker = deprecationTracking.start();
+								const webpack = require("..");
 								const compiler = webpack(options);
 								compiler.hooks.invalid.tap(
 									"WatchTestCasesTest",
@@ -169,10 +170,11 @@ describe("WatchTestCases", () => {
 									},
 									(err, stats) => {
 										if (err) return compilationFinished(err);
-										if (!stats)
+										if (!stats) {
 											return compilationFinished(
 												new Error("No stats reported from Compiler")
 											);
+										}
 										if (stats.hash === lastHash) return;
 										lastHash = stats.hash;
 										if (run.done && lastHash !== stats.hash) {
@@ -192,6 +194,7 @@ describe("WatchTestCases", () => {
 										}
 										if (waitMode) return;
 										run.done = true;
+										run.stats = stats;
 										if (err) return compilationFinished(err);
 										const statOptions = {
 											preset: "verbose",
@@ -377,12 +380,18 @@ describe("WatchTestCases", () => {
 
 					for (const run of runs) {
 						const { it: _it, getNumberOfTests } = createLazyTestEnv(
-							jasmine.getEnv(),
 							10000,
 							run.name
 						);
 						run.it = _it;
 						run.getNumberOfTests = getNumberOfTests;
+						it(`${run.name} should allow to read stats`, done => {
+							if (run.stats) {
+								run.stats.toString({ all: true });
+								run.stats = undefined;
+							}
+							done();
+						});
 					}
 
 					afterAll(() => {

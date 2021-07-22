@@ -251,9 +251,7 @@ declare module "webpack-sources" {
 
 		map(options?: MapOptions): Object;
 
-		sourceAndMap(
-			options?: MapOptions
-		): {
+		sourceAndMap(options?: MapOptions): {
 			source: string | Buffer;
 			map: Object;
 		};
@@ -372,23 +370,6 @@ declare module "browserslist" {
 	}
 	export = browserslist;
 }
-
-// TODO remove that when @types/estree is updated
-declare type PrivateIdentifierNode = {
-	type: "PrivateIdentifier";
-	name: string;
-	loc?: import("estree").SourceLocation | null;
-	range?: [number, number];
-};
-declare type PropertyDefinitionNode = {
-	type: "PropertyDefinition";
-	key: import("estree").Expression | PrivateIdentifierNode;
-	value: import("estree").Expression | null;
-	computed: boolean;
-	static: boolean;
-	loc?: import("estree").SourceLocation | null;
-	range?: [number, number];
-};
 
 type TODO = any;
 

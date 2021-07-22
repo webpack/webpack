@@ -1,3 +1,1 @@
-import("./module");
-
-it("should run", () => {});
+it("should run", () => import("./module"));
