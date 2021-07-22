@@ -90,6 +90,7 @@ jobs:
           yarn special-lint
           yarn type-lint
           yarn typings-lint
+          yarn yarn-lint
           yarn pretty-lint
           yarn spellcheck
         env:
