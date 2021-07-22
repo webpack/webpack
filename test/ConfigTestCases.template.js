@@ -235,7 +235,7 @@ const describeCases = config => {
 							rimraf.sync(outputDirectory);
 							fs.mkdirSync(outputDirectory, { recursive: true });
 							const deprecationTracker = deprecationTracking.start();
-							require("..")(options, (err, stats) => {
+							const onCompiled = (err, stats) => {
 								const deprecations = deprecationTracker();
 								if (err) return handleFatalError(err, done);
 								const statOptions = {
@@ -570,7 +570,25 @@ const describeCases = config => {
 										done();
 									})
 									.catch(done);
-							});
+							};
+							if (config.cache) {
+								try {
+									const compiler = require("..")(options);
+									compiler.run(err => {
+										if (err) return handleFatalError(err, done);
+										compiler.run((error, stats) => {
+											compiler.close(err => {
+												if (err) return handleFatalError(err, done);
+												onCompiled(error, stats);
+											});
+										});
+									});
+								} catch (e) {
+									handleFatalError(e, done);
+								}
+							} else {
+								require("..")(options, onCompiled);
+							}
 						}, 30000);
 
 						const {
