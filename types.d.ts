@@ -1099,6 +1099,11 @@ declare interface ChunkRenderContext {
 	 * init fragments for the chunk
 	 */
 	chunkInitFragments: InitFragment<ChunkRenderContext>[];
+
+	/**
+	 * rendering in strict context
+	 */
+	strictMode: boolean;
 }
 declare interface ChunkSizeOptions {
 	/**
@@ -1787,7 +1792,9 @@ declare interface CompilationAssets {
 	[index: string]: Source;
 }
 declare interface CompilationHooksAsyncWebAssemblyModulesPlugin {
-	renderModuleContent: SyncWaterfallHook<[Source, Module, RenderContext]>;
+	renderModuleContent: SyncWaterfallHook<
+		[Source, Module, WebAssemblyRenderContext]
+	>;
 }
 declare interface CompilationHooksJavascriptModulesPlugin {
 	renderModuleContent: SyncWaterfallHook<[Source, Module, ChunkRenderContext]>;
@@ -4517,7 +4524,7 @@ declare class JavascriptModulesPlugin {
 		module: Module,
 		renderContext: ChunkRenderContext,
 		hooks: CompilationHooksJavascriptModulesPlugin,
-		factory: boolean | "strict"
+		factory: boolean
 	): Source;
 	renderChunk(
 		renderContext: RenderContext,
@@ -6132,6 +6139,11 @@ declare interface MainRenderContext {
 	 * hash to be used for render call
 	 */
 	hash: string;
+
+	/**
+	 * rendering in strict context
+	 */
+	strictMode: boolean;
 }
 declare abstract class MainTemplate {
 	hooks: Readonly<{
@@ -8805,6 +8817,11 @@ declare interface RenderContext {
 	 * results of code generation
 	 */
 	codeGenerationResults: CodeGenerationResults;
+
+	/**
+	 * rendering in strict context
+	 */
+	strictMode: boolean;
 }
 type RenderManifestEntry =
 	| RenderManifestEntryTemplated
@@ -11129,7 +11146,6 @@ declare class Template {
 		runtimeModules: RuntimeModule[],
 		renderContext: RenderContext & {
 			codeGenerationResults?: CodeGenerationResults;
-			useStrict?: boolean;
 		}
 	): Source;
 	static renderChunkRuntimeModules(
@@ -11461,6 +11477,37 @@ declare abstract class Watching {
 	suspend(): void;
 	resume(): void;
 	close(callback: CallbackFunction<void>): void;
+}
+declare interface WebAssemblyRenderContext {
+	/**
+	 * the chunk
+	 */
+	chunk: Chunk;
+
+	/**
+	 * the dependency templates
+	 */
+	dependencyTemplates: DependencyTemplates;
+
+	/**
+	 * the runtime template
+	 */
+	runtimeTemplate: RuntimeTemplate;
+
+	/**
+	 * the module graph
+	 */
+	moduleGraph: ModuleGraph;
+
+	/**
+	 * the chunk graph
+	 */
+	chunkGraph: ChunkGraph;
+
+	/**
+	 * results of code generation
+	 */
+	codeGenerationResults: CodeGenerationResults;
 }
 declare class WebWorkerTemplatePlugin {
 	constructor();
