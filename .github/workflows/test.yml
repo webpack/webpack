@@ -23,6 +23,12 @@ jobs:
         with:
           node-version: 16.x
           cache: 'yarn'
+      - run: yarn --frozen-lockfile
+      - uses: actions/cache@v1
+        with:
+          path: .eslintcache
+          key: lint-${{ env.GITHUB_SHA }}
+          restore-keys: lint-
       - run: yarn lint
   basic:
     runs-on: ubuntu-latest
