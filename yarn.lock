@@ -1225,12 +1225,10 @@ acorn-globals@^6.0.0:
     acorn "^7.1.1"
     acorn-walk "^7.1.1"
 
-acorn-import-assertions@^1.7.3:
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/acorn-import-assertions/-/acorn-import-assertions-1.7.3.tgz#02c36ee16a9250570bda2a7da77b6380a03f901d"
-  integrity sha512-DndurmtqabrfIFxdpRRKx7u3XVpGUYr7UsTkPWQYjHj4zhFcgeNVB6U2Bad/qORybNI2HJ62V1PsvBDPiomc+Q==
-  dependencies:
-    charcodes "^0.2.0"
+acorn-import-assertions@^1.7.6:
+  version "1.7.6"
+  resolved "https://registry.yarnpkg.com/acorn-import-assertions/-/acorn-import-assertions-1.7.6.tgz#580e3ffcae6770eebeec76c3b9723201e9d01f78"
+  integrity sha512-FlVvVFA1TX6l3lp8VjDnYYq7R1nyW6x3svAt4nDgrWQ9SBaSh9CnbwgSUTasgfNfOG5HlM1ehugCvM+hjo56LA==
 
 acorn-jsx@^5.3.1:
   version "5.3.1"
@@ -1678,11 +1676,6 @@ character-parser@^2.2.0:
   integrity sha1-x84o821LzZdE5f/CxfzeHHMmH8A=
   dependencies:
     is-regex "^1.0.3"
-
-charcodes@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/charcodes/-/charcodes-0.2.0.tgz#5208d327e6cc05f99eb80ffc814707572d1f14e4"
-  integrity sha512-Y4kiDb+AM4Ecy58YkuZrrSRJBDQdQ2L+NyS1vHHFtNtUjgutcZfx3yp1dAONI/oPaPmyGfCLx5CxL+zauIMyKQ==
 
 chokidar@^3.4.2:
   version "3.4.3"
