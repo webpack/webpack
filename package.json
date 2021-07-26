@@ -39,7 +39,7 @@
     "@babel/preset-react": "^7.10.4",
     "@types/es-module-lexer": "^0.4.1",
     "@types/jest": "^26.0.24",
-    "@types/node": "^15.0.1",
+    "@types/node": "^16.4.3",
     "babel-loader": "^8.1.0",
     "benchmark": "^2.1.4",
     "bundle-loader": "^0.5.6",
