@@ -940,10 +940,6 @@
           "description": "Allows to collect unused memory allocated during deserialization. This requires copying data into smaller buffers and has a performance cost.",
           "type": "boolean"
         },
-        "purgeStaleCache": {
-          "description": "Allows webpack to delete stale cache files",
-          "type": "boolean"
-        },
         "buildDependencies": {
           "description": "Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack').",
           "type": "object",
@@ -1026,6 +1022,10 @@
         },
         "profile": {
           "description": "Track and log detailed timing information for individual cache items.",
+          "type": "boolean"
+        },
+        "purgeStaleCache": {
+          "description": "Allows webpack to delete stale cache files.",
           "type": "boolean"
         },
         "store": {

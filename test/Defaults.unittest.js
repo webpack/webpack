@@ -1497,109 +1497,111 @@ describe("Defaults", () => {
 	);
 	test("cache filesystem", { cache: { type: "filesystem" } }, e =>
 		e.toMatchInlineSnapshot(`
-		- Expected
-		+ Received
+- Expected
++ Received
 
-		@@ ... @@
-		-   "cache": false,
-		+   "cache": Object {
-		+     "allowCollectingMemory": false,
-		+     "buildDependencies": Object {
-		+       "defaultWebpack": Array [
-		+         "<cwd>/lib/",
-		+       ],
-		+     },
-		+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
-		+     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-none",
-		+     "compression": "gzip",
-		+     "hashAlgorithm": "md4",
-		+     "idleTimeout": 60000,
-		+     "idleTimeoutAfterLargeChanges": 1000,
-		+     "idleTimeoutForInitialStore": 5000,
-		+     "maxAge": 5184000000,
-		+     "maxMemoryGenerations": Infinity,
-		+     "name": "default-none",
-		+     "profile": false,
-		+     "store": "pack",
-		+     "type": "filesystem",
-		+     "version": "",
-		+   },
-		@@ ... @@
-		-     "unsafeCache": false,
-		+     "unsafeCache": [Function anonymous],
-		@@ ... @@
-		-     "cache": false,
-		+     "cache": true,
-		@@ ... @@
-		-     "cache": false,
-		+     "cache": true,
-	`)
+@@ ... @@
+-   "cache": false,
++   "cache": Object {
++     "allowCollectingMemory": false,
++     "buildDependencies": Object {
++       "defaultWebpack": Array [
++         "<cwd>/lib/",
++       ],
++     },
++     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
++     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-none",
++     "compression": "gzip",
++     "hashAlgorithm": "md4",
++     "idleTimeout": 60000,
++     "idleTimeoutAfterLargeChanges": 1000,
++     "idleTimeoutForInitialStore": 5000,
++     "maxAge": 5184000000,
++     "maxMemoryGenerations": Infinity,
++     "name": "default-none",
++     "profile": false,
++     "purgeStaleCache": false,
++     "store": "pack",
++     "type": "filesystem",
++     "version": "",
++   },
+@@ ... @@
+-     "unsafeCache": false,
++     "unsafeCache": [Function anonymous],
+@@ ... @@
+-     "cache": false,
++     "cache": true,
+@@ ... @@
+-     "cache": false,
++     "cache": true,
+`)
 	);
 	test(
 		"cache filesystem development",
 		{ mode: "development", cache: { type: "filesystem" } },
 		e =>
 			e.toMatchInlineSnapshot(`
-			- Expected
-			+ Received
+- Expected
++ Received
 
-			@@ ... @@
-			-   "cache": false,
-			+   "cache": Object {
-			+     "allowCollectingMemory": true,
-			+     "buildDependencies": Object {
-			+       "defaultWebpack": Array [
-			+         "<cwd>/lib/",
-			+       ],
-			+     },
-			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
-			+     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-development",
-			+     "compression": false,
-			+     "hashAlgorithm": "md4",
-			+     "idleTimeout": 60000,
-			+     "idleTimeoutAfterLargeChanges": 1000,
-			+     "idleTimeoutForInitialStore": 5000,
-			+     "maxAge": 5184000000,
-			+     "maxMemoryGenerations": 5,
-			+     "name": "default-development",
-			+     "profile": false,
-			+     "store": "pack",
-			+     "type": "filesystem",
-			+     "version": "",
-			+   },
-			@@ ... @@
-			-   "devtool": false,
-			+   "devtool": "eval",
-			@@ ... @@
-			-   "mode": "none",
-			+   "mode": "development",
-			@@ ... @@
-			-     "unsafeCache": false,
-			+     "unsafeCache": [Function anonymous],
-			@@ ... @@
-			-     "chunkIds": "natural",
-			+     "chunkIds": "named",
-			@@ ... @@
-			-     "moduleIds": "natural",
-			-     "nodeEnv": false,
-			+     "moduleIds": "named",
-			+     "nodeEnv": "development",
-			@@ ... @@
-			-       "minRemainingSize": undefined,
-			+       "minRemainingSize": 0,
-			@@ ... @@
-			-     "pathinfo": false,
-			+     "pathinfo": true,
-			@@ ... @@
-			-     "cache": false,
-			+     "cache": true,
-			@@ ... @@
-			-       "production",
-			+       "development",
-			@@ ... @@
-			-     "cache": false,
-			+     "cache": true,
-		`)
+@@ ... @@
+-   "cache": false,
++   "cache": Object {
++     "allowCollectingMemory": true,
++     "buildDependencies": Object {
++       "defaultWebpack": Array [
++         "<cwd>/lib/",
++       ],
++     },
++     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
++     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-development",
++     "compression": false,
++     "hashAlgorithm": "md4",
++     "idleTimeout": 60000,
++     "idleTimeoutAfterLargeChanges": 1000,
++     "idleTimeoutForInitialStore": 5000,
++     "maxAge": 5184000000,
++     "maxMemoryGenerations": 5,
++     "name": "default-development",
++     "profile": false,
++     "purgeStaleCache": false,
++     "store": "pack",
++     "type": "filesystem",
++     "version": "",
++   },
+@@ ... @@
+-   "devtool": false,
++   "devtool": "eval",
+@@ ... @@
+-   "mode": "none",
++   "mode": "development",
+@@ ... @@
+-     "unsafeCache": false,
++     "unsafeCache": [Function anonymous],
+@@ ... @@
+-     "chunkIds": "natural",
++     "chunkIds": "named",
+@@ ... @@
+-     "moduleIds": "natural",
+-     "nodeEnv": false,
++     "moduleIds": "named",
++     "nodeEnv": "development",
+@@ ... @@
+-       "minRemainingSize": undefined,
++       "minRemainingSize": 0,
+@@ ... @@
+-     "pathinfo": false,
++     "pathinfo": true,
+@@ ... @@
+-     "cache": false,
++     "cache": true,
+@@ ... @@
+-       "production",
++       "development",
+@@ ... @@
+-     "cache": false,
++     "cache": true,
+`)
 	);
 
 	test(
@@ -1787,63 +1789,64 @@ describe("Defaults", () => {
 		},
 		e =>
 			e.toMatchInlineSnapshot(`
-			- Expected
-			+ Received
+- Expected
++ Received
 
-			@@ ... @@
-			-   "cache": false,
-			-   "context": "<cwd>",
-			+   "cache": Object {
-			+     "allowCollectingMemory": false,
-			+     "buildDependencies": Object {
-			+       "defaultWebpack": Array [
-			+         "<cwd>/lib/",
-			+       ],
-			+     },
-			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
-			+     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-none",
-			+     "compression": "gzip",
-			+     "hashAlgorithm": "md4",
-			+     "idleTimeout": 60000,
-			+     "idleTimeoutAfterLargeChanges": 1000,
-			+     "idleTimeoutForInitialStore": 5000,
-			+     "maxAge": 5184000000,
-			+     "maxMemoryGenerations": Infinity,
-			+     "name": "default-none",
-			+     "profile": false,
-			+     "store": "pack",
-			+     "type": "filesystem",
-			+     "version": "",
-			+   },
-			+   "context": "<cwd>/test/fixtures",
-			@@ ... @@
-			-     "unsafeCache": false,
-			+     "unsafeCache": [Function anonymous],
-			@@ ... @@
-			-     "chunkLoadingGlobal": "webpackChunkwebpack",
-			+     "chunkLoadingGlobal": "webpackChunk",
-			@@ ... @@
-			-     "devtoolNamespace": "webpack",
-			+     "devtoolNamespace": "",
-			@@ ... @@
-			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
-			+     "hotUpdateGlobal": "webpackHotUpdate",
-			@@ ... @@
-			-     "path": "<cwd>/dist",
-			+     "path": "<cwd>/test/fixtures/dist",
-			@@ ... @@
-			-     "uniqueName": "webpack",
-			+     "uniqueName": "",
-			@@ ... @@
-			-     "cache": false,
-			+     "cache": true,
-			@@ ... @@
-			-       "<cwd>",
-			+       "<cwd>/test/fixtures",
-			@@ ... @@
-			-     "cache": false,
-			+     "cache": true,
-		`),
+@@ ... @@
+-   "cache": false,
+-   "context": "<cwd>",
++   "cache": Object {
++     "allowCollectingMemory": false,
++     "buildDependencies": Object {
++       "defaultWebpack": Array [
++         "<cwd>/lib/",
++       ],
++     },
++     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
++     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-none",
++     "compression": "gzip",
++     "hashAlgorithm": "md4",
++     "idleTimeout": 60000,
++     "idleTimeoutAfterLargeChanges": 1000,
++     "idleTimeoutForInitialStore": 5000,
++     "maxAge": 5184000000,
++     "maxMemoryGenerations": Infinity,
++     "name": "default-none",
++     "profile": false,
++     "purgeStaleCache": false,
++     "store": "pack",
++     "type": "filesystem",
++     "version": "",
++   },
++   "context": "<cwd>/test/fixtures",
+@@ ... @@
+-     "unsafeCache": false,
++     "unsafeCache": [Function anonymous],
+@@ ... @@
+-     "chunkLoadingGlobal": "webpackChunkwebpack",
++     "chunkLoadingGlobal": "webpackChunk",
+@@ ... @@
+-     "devtoolNamespace": "webpack",
++     "devtoolNamespace": "",
+@@ ... @@
+-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
++     "hotUpdateGlobal": "webpackHotUpdate",
+@@ ... @@
+-     "path": "<cwd>/dist",
++     "path": "<cwd>/test/fixtures/dist",
+@@ ... @@
+-     "uniqueName": "webpack",
++     "uniqueName": "",
+@@ ... @@
+-     "cache": false,
++     "cache": true,
+@@ ... @@
+-       "<cwd>",
++       "<cwd>/test/fixtures",
+@@ ... @@
+-     "cache": false,
++     "cache": true,
+`),
 		() => {
 			process.chdir(path.resolve(__dirname, "fixtures"));
 		},
