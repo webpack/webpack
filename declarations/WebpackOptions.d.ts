@@ -959,7 +959,7 @@ export interface FileCacheOptions {
 	 */
 	profile?: boolean;
 	/**
-	 * If webpack will remove stale cache files
+	 * Allows webpack to delete stale cache files.
 	 */
 	purgeStaleCache?: boolean;
 	/**

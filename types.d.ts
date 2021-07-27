@@ -3887,6 +3887,11 @@ declare interface FileCacheOptions {
 	profile?: boolean;
 
 	/**
+	 * Allows webpack to delete stale cache files.
+	 */
+	purgeStaleCache?: boolean;
+
+	/**
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
 	store?: "pack";
