@@ -282,6 +282,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "cache-purge-stale-cache": Object {
+    "configs": Array [
+      Object {
+        "description": "Allows webpack to delete stale cache files.",
+        "multiple": false,
+        "path": "cache.purgeStaleCache",
+        "type": "boolean",
+      },
+    ],
+    "description": "Allows webpack to delete stale cache files.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "cache-store": Object {
     "configs": Array [
       Object {
