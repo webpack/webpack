@@ -701,9 +701,9 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
 
 exports[`StatsTestCases should print correct stats for context-independence 1`] = `
 "asset main-4d9216d100d42b71ee29.js 10.3 KiB [emitted] [immutable] (name: main)
-  sourceMap main-4d9216d100d42b71ee29.js.map 9.2 KiB [emitted] [dev] (auxiliary name: main)
+  sourceMap main-4d9216d100d42b71ee29.js.map 9.18 KiB [emitted] [dev] (auxiliary name: main)
 asset 664-bca314bd02016092cab9.js 455 bytes [emitted] [immutable]
-  sourceMap 664-bca314bd02016092cab9.js.map 344 bytes [emitted] [dev]
+  sourceMap 664-bca314bd02016092cab9.js.map 342 bytes [emitted] [dev]
 runtime modules 6.23 KiB 8 modules
 orphan modules 19 bytes [orphan] 1 module
 cacheable modules 106 bytes
@@ -712,9 +712,9 @@ cacheable modules 106 bytes
 webpack x.x.x compiled successfully in X ms
 
 asset main-4d9216d100d42b71ee29.js 10.3 KiB [emitted] [immutable] (name: main)
-  sourceMap main-4d9216d100d42b71ee29.js.map 9.2 KiB [emitted] [dev] (auxiliary name: main)
+  sourceMap main-4d9216d100d42b71ee29.js.map 9.18 KiB [emitted] [dev] (auxiliary name: main)
 asset 664-bca314bd02016092cab9.js 455 bytes [emitted] [immutable]
-  sourceMap 664-bca314bd02016092cab9.js.map 344 bytes [emitted] [dev]
+  sourceMap 664-bca314bd02016092cab9.js.map 342 bytes [emitted] [dev]
 runtime modules 6.23 KiB 8 modules
 orphan modules 19 bytes [orphan] 1 module
 cacheable modules 106 bytes
@@ -2576,9 +2576,9 @@ relatedAssets:
     asset relatedAssets-chunk_js.js 809 bytes [emitted]
       compressed relatedAssets-chunk_js.js.br 809 bytes [emitted]
       compressed relatedAssets-chunk_js.js.gz 809 bytes [emitted]
-      sourceMap relatedAssets-chunk_js.js.map 301 bytes [emitted] [dev]
-        compressed relatedAssets-chunk_js.js.map.br 301 bytes [emitted]
-        compressed relatedAssets-chunk_js.js.map.gz 301 bytes [emitted]
+      sourceMap relatedAssets-chunk_js.js.map 300 bytes [emitted] [dev]
+        compressed relatedAssets-chunk_js.js.map.br 300 bytes [emitted]
+        compressed relatedAssets-chunk_js.js.map.gz 300 bytes [emitted]
   assets by path *.css 154 bytes
     asset relatedAssets-chunk_js.css 79 bytes [emitted]
       sourceMap relatedAssets-chunk_js.css.map 202 bytes [emitted] [dev]
@@ -2603,8 +2603,8 @@ exclude1:
       1 related asset
     asset exclude1-chunk_js.js 804 bytes [emitted]
       hidden assets 1.57 KiB 2 assets
-      sourceMap exclude1-chunk_js.js.map 296 bytes [emitted] [dev]
-        hidden assets 592 bytes 2 assets
+      sourceMap exclude1-chunk_js.js.map 295 bytes [emitted] [dev]
+        hidden assets 590 bytes 2 assets
         1 related asset
       1 related asset
   assets by path *.css 144 bytes
@@ -2628,7 +2628,7 @@ exclude2:
       compressed exclude2-main.js.br 14.4 KiB [emitted]
       compressed exclude2-main.js.gz 14.4 KiB [emitted]
     asset exclude2-chunk_js.js 804 bytes [emitted]
-      hidden assets 296 bytes 1 asset
+      hidden assets 295 bytes 1 asset
       compressed exclude2-chunk_js.js.br 804 bytes [emitted]
       compressed exclude2-chunk_js.js.gz 804 bytes [emitted]
   assets by path *.css 144 bytes
