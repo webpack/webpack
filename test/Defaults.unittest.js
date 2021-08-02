@@ -191,6 +191,12 @@ describe("Defaults", () => {
 		          },
 		        ],
 		      },
+		      Object {
+		        "assert": Object {
+		          "type": "json",
+		        },
+		        "type": "json",
+		      },
 		    ],
 		    "generator": Object {},
 		    "noParse": undefined,
@@ -819,8 +825,6 @@ describe("Defaults", () => {
 		-     "syncWebAssembly": false,
 		+     "syncWebAssembly": true,
 		@@ ... @@
-		+           },
-		+         ],
 		+       },
 		+       Object {
 		+         "rules": Array [
@@ -845,9 +849,9 @@ describe("Defaults", () => {
 		+             },
 		+             "resolve": Object {
 		+               "fullySpecified": true,
-		@@ ... @@
+		+             },
 		+           },
-		@@ ... @@
+		+         ],
 		+         "type": "webassembly/sync",
 	`)
 	);
@@ -891,8 +895,6 @@ describe("Defaults", () => {
 		-     "asyncWebAssembly": false,
 		+     "asyncWebAssembly": true,
 		@@ ... @@
-		+           },
-		+         ],
 		+       },
 		+       Object {
 		+         "rules": Array [
@@ -917,9 +919,9 @@ describe("Defaults", () => {
 		+             },
 		+             "resolve": Object {
 		+               "fullySpecified": true,
-		@@ ... @@
+		+             },
 		+           },
-		@@ ... @@
+		+         ],
 		+         "type": "webassembly/async",
 	`)
 	);
@@ -938,8 +940,6 @@ describe("Defaults", () => {
 			-     "syncWebAssembly": false,
 			+     "syncWebAssembly": true,
 			@@ ... @@
-			+           },
-			+         ],
 			+       },
 			+       Object {
 			+         "rules": Array [
@@ -954,7 +954,7 @@ describe("Defaults", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			@@ ... @@
+			+       },
 			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
@@ -966,7 +966,7 @@ describe("Defaults", () => {
 			+               "fullySpecified": true,
 			+             },
 			+           },
-			@@ ... @@
+			+         ],
 			+         "type": "webassembly/async",
 		`)
 	);

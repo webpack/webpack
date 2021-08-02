@@ -3585,6 +3585,13 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "assert": {
+          "description": "Match on import assertions of the dependency.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/RuleSetConditionOrConditions"
+          }
+        },
         "compiler": {
           "description": "Match the child compiler name.",
           "oneOf": [
