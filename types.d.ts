@@ -8480,9 +8480,6 @@ declare interface PitchLoaderDefinitionFunction<
 		data: object
 	): string | void | Buffer | Promise<string | Buffer>;
 }
-type Plugin =
-	| { apply: (arg0: Resolver) => void }
-	| ((this: Resolver, arg1: Resolver) => void);
 declare interface PnpApiImpl {
 	resolveToUnqualified: (arg0: string, arg1: string, arg2: object) => string;
 }
@@ -9006,7 +9003,7 @@ declare interface ResolveOptionsTypes {
 	modules: (string | string[])[];
 	mainFields: { name: string[]; forceRelative: boolean }[];
 	mainFiles: Set<string>;
-	plugins: Plugin[];
+	plugins: exports.Plugin[];
 	pnpApi: null | PnpApiImpl;
 	roots: Set<string>;
 	fullySpecified: boolean;
@@ -11314,7 +11311,7 @@ declare interface UserResolveOptions {
 	/**
 	 * A list of additional resolve plugins which should be applied
 	 */
-	plugins?: Plugin[];
+	plugins?: exports.Plugin[];
 
 	/**
 	 * A PnP API that should be used - null is "never", undefined is "auto"
@@ -11861,6 +11858,9 @@ declare function exports(
 	callback?: CallbackWebpack<MultiStats>
 ): MultiCompiler;
 declare namespace exports {
+	export type Plugin =
+		| { apply: (arg0: Resolver) => void }
+		| ((this: Resolver, arg1: Resolver) => void);
 	export const webpack: {
 		(options: Configuration, callback?: CallbackWebpack<Stats>): Compiler;
 		(
