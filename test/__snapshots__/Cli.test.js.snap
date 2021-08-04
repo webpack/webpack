@@ -450,6 +450,80 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-build-http": Object {
+    "configs": Array [
+      Object {
+        "description": "Build http(s): urls using a lockfile and resource content cache.",
+        "multiple": false,
+        "path": "experiments.buildHttp",
+        "type": "boolean",
+      },
+    ],
+    "description": "Build http(s): urls using a lockfile and resource content cache.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-build-http-cache-location": Object {
+    "configs": Array [
+      Object {
+        "description": "Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.",
+        "multiple": false,
+        "path": "experiments.buildHttp.cacheLocation",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.",
+        "multiple": false,
+        "path": "experiments.buildHttp.cacheLocation",
+        "type": "path",
+      },
+    ],
+    "description": "Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "experiments-build-http-frozen": Object {
+    "configs": Array [
+      Object {
+        "description": "When set, anything that would lead to an modification of the lockfile or any resource content, will result in an error.",
+        "multiple": false,
+        "path": "experiments.buildHttp.frozen",
+        "type": "boolean",
+      },
+    ],
+    "description": "When set, anything that would lead to an modification of the lockfile or any resource content, will result in an error.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-build-http-lockfile-location": Object {
+    "configs": Array [
+      Object {
+        "description": "Location of the lockfile.",
+        "multiple": false,
+        "path": "experiments.buildHttp.lockfileLocation",
+        "type": "path",
+      },
+    ],
+    "description": "Location of the lockfile.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "experiments-build-http-upgrade": Object {
+    "configs": Array [
+      Object {
+        "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
+        "multiple": false,
+        "path": "experiments.buildHttp.upgrade",
+        "type": "boolean",
+      },
+    ],
+    "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-execute-module": Object {
     "configs": Array [
       Object {

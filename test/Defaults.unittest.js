@@ -91,7 +91,12 @@ describe("Defaults", () => {
 		    },
 		  },
 		  "experiments": Object {
+		    "asset": false,
 		    "asyncWebAssembly": false,
+		    "buildHttp": false,
+		    "executeModule": false,
+		    "layers": false,
+		    "lazyCompilation": false,
 		    "outputModule": false,
 		    "syncWebAssembly": false,
 		    "topLevelAwait": false,

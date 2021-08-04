@@ -688,6 +688,17 @@
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
           "type": "boolean"
         },
+        "buildHttp": {
+          "description": "Build http(s): urls using a lockfile and resource content cache.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/HttpUriOptions"
+            }
+          ]
+        },
         "executeModule": {
           "description": "Enable build-time execution of modules from the module graph for plugins and loaders.",
           "type": "boolean"
@@ -1183,6 +1194,38 @@
       "description": "The filename of the Hot Update Main File. It is inside the 'output.path' directory.",
       "type": "string",
       "absolutePath": false
+    },
+    "HttpUriOptions": {
+      "description": "Options for building http resources.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cacheLocation": {
+          "description": "Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "string",
+              "absolutePath": true
+            }
+          ]
+        },
+        "frozen": {
+          "description": "When set, anything that would lead to an modification of the lockfile or any resource content, will result in an error.",
+          "type": "boolean"
+        },
+        "lockfileLocation": {
+          "description": "Location of the lockfile.",
+          "type": "string",
+          "absolutePath": true
+        },
+        "upgrade": {
+          "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
+          "type": "boolean"
+        }
+      }
     },
     "IgnoreWarnings": {
       "description": "Ignore specific warnings.",

@@ -3250,6 +3250,11 @@ declare interface Experiments {
 	asyncWebAssembly?: boolean;
 
 	/**
+	 * Build http(s): urls using a lockfile and resource content cache.
+	 */
+	buildHttp?: boolean | HttpUriOptions;
+
+	/**
 	 * Enable build-time execution of modules from the module graph for plugins and loaders.
 	 */
 	executeModule?: boolean;
@@ -4285,16 +4290,53 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
-declare class HttpUriPlugin {
-	constructor();
+
+/**
+ * Options for building http resources.
+ */
+declare interface HttpUriOptions {
+	/**
+	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
+	 */
+	cacheLocation?: string | false;
 
 	/**
-	 * Apply the plugin
+	 * When set, anything that would lead to an modification of the lockfile or any resource content, will result in an error.
 	 */
-	apply(compiler: Compiler): void;
+	frozen?: boolean;
+
+	/**
+	 * Location of the lockfile.
+	 */
+	lockfileLocation?: string;
+
+	/**
+	 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
+	 */
+	upgrade?: boolean;
 }
-declare class HttpsUriPlugin {
-	constructor();
+declare class HttpUriPlugin {
+	constructor(options?: {
+		/**
+		 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
+		 */
+		cacheLocation?: string | false;
+		/**
+		 * When set, anything that would lead to an modification of the lockfile or any resource content, will result in an error.
+		 */
+		frozen?: boolean;
+		/**
+		 * Location of the lockfile.
+		 */
+		lockfileLocation?: string;
+		/**
+		 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
+		 */
+		upgrade?: boolean;
+		hashFunction?: string | typeof Hash;
+		hashDigest?: string;
+		hashDigestLength?: number;
+	});
 
 	/**
 	 * Apply the plugin
@@ -6961,6 +7003,7 @@ declare class NaturalModuleIdsPlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface NeedBuildContext {
+	compilation: Compilation;
 	fileSystemInfo: FileSystemInfo;
 	valueCacheVersions: Map<string, string | Set<string>>;
 }
@@ -7227,11 +7270,15 @@ declare interface NormalModuleCompilationHooks {
 	readResourceForScheme: HookMap<
 		AsyncSeriesBailHook<[string, NormalModule], string | Buffer>
 	>;
+	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		resolve: AsyncSeriesBailHook<[ResolveData], any>;
 		resolveForScheme: HookMap<
+			AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], true | void>
+		>;
+		resolveInScheme: HookMap<
 			AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], true | void>
 		>;
 		factorize: AsyncSeriesBailHook<[ResolveData], any>;
@@ -12194,7 +12241,7 @@ declare namespace exports {
 	}
 	export namespace experiments {
 		export namespace schemes {
-			export { HttpUriPlugin, HttpsUriPlugin };
+			export { HttpUriPlugin };
 		}
 	}
 	export type WebpackPluginFunction = (

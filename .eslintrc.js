@@ -25,7 +25,7 @@ module.exports = {
 		"no-process-exit": "warn",
 		"no-use-before-define": "off",
 		"no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true }],
-		"no-loop-func": "warn",
+		"no-loop-func": "off",
 		"node/no-missing-require": ["error", { allowModules: ["webpack"] }],
 		"jsdoc/check-indentation": "error",
 		"jsdoc/check-param-names": "error",
