@@ -9020,6 +9020,7 @@ declare interface ResolveData {
 	request: string;
 	assertions?: Record<string, any>;
 	dependencies: ModuleDependency[];
+	dependencyType: string;
 	createData: Object;
 	fileDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;

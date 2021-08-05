@@ -21,6 +21,7 @@ const base = {
 			},
 			{
 				test: /\.txt$/,
+				dependency: { not: "url" },
 				type: "asset/source"
 			}
 		]
