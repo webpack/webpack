@@ -1,0 +1,7 @@
+{
+  "https://framer.com/m/Nav-IVY2.js@eU19tqEirbKE04tvgGQB": { "resolved": "https://framerusercontent.com/modules/Nt1M3GNZdVOLGmgfkSMM/eU19tqEirbKE04tvgGQB/PVCYaCHXB.js", "integrity": "sha512-toF/giU4iUyOxhep17sH5gPOz6a2BMWTDSzVD2NexflQ98VKbCwtkTsz68PlJUtoljgYN6vmUM2kL5rn/1dVOA==", "contentType": "text/javascript" },
+  "https://framer.com/m/framer/randomID.js@^1.0.0": { "resolved": "https://framerusercontent.com/modules/2W956XRYuGT98e8bK0cI/XsPE86Gl3t7T3QO8IZXO/randomID.js", "integrity": "sha512-WUruVU+FW9SFBM2DyAio68ZR7WcTXuSE/iV30ul25LQbtoN8tbPQrMS7Mgb9eKiYbZFFnxWh8MyUg4FYUmyAkw==", "contentType": "text/javascript" },
+  "https://framerusercontent.com/modules/ExNgrA7EJTKUPpH6vIlN/UhvmooT4YAD6mU3raeSS/useConstant.js": { "resolved": "https://framerusercontent.com/modules/ExNgrA7EJTKUPpH6vIlN/UhvmooT4YAD6mU3raeSS/useConstant.js", "integrity": "sha512-wr7eR2AFuWM5aiGGtdUJCdyeunszIbwAGibmq5l0Z5y3Ta9a+W21NZjV0c0+y+vHwxqhuotnubZnTw3HIksBQQ==", "contentType": "text/javascript" },
+  "https://framerusercontent.com/modules/p01zhxb9qUP7ZeOgCyuQ/QTjbAw1R1kcZUIbTURIa/mY56S67Qe.js": { "resolved": "https://framerusercontent.com/modules/p01zhxb9qUP7ZeOgCyuQ/QTjbAw1R1kcZUIbTURIa/mY56S67Qe.js", "integrity": "sha512-0iYcc2SCmqsQO17/VA+tfpNauBE4PdmjLGw0ZK8ehc5Q7aH6zz6PuhGPxJZTCYoj3LMEMWbMTzArL5bzhGTqZg==", "contentType": "text/javascript" },
+  "version": 1
+}

@@ -1,0 +1,12 @@
+{
+  "name": "build-http-with-bare-specifiers",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "framer": "^1.3.7-alpha.4",
+    "framer-motion": "^4.1.17",
+    "react": "^17.0.2"
+  }
+}
