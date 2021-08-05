@@ -4,9 +4,11 @@
 import pMap1 from "https://cdn.skypack.dev/p-map";
 import pMap2 from "https://cdn.esm.sh/p-map";
 import pMap3 from "https://jspm.dev/p-map";
+import pMap4 from "https://unpkg.com/p-map-series?module"; // unpkg doesn't support p-map :(
 console.log(pMap1);
 console.log(pMap2);
 console.log(pMap3);
+console.log(pMap4);
 ```
 
 # webpack.config.js
@@ -28,40 +30,35 @@ module.exports = {
 ## Unoptimized
 
 ```
-asset output.js 58.1 KiB [emitted] (name: main)
+asset output.js 61.7 KiB [emitted] (name: main)
 runtime modules 670 bytes 3 modules
-modules by path https:// 20.9 KiB
+modules by path https:// 21.9 KiB
   modules by path https://jspm.dev/ 8.43 KiB
     modules by path https://jspm.dev/*.0 6.04 KiB 5 modules
-    modules by path https://jspm.dev/npm:@jspm/ 1.99 KiB 2 modules
+    modules by path https://jspm.dev/npm:@jspm/ 1.99 KiB
+      https://jspm.dev/npm:@jspm/core@2/nodelibs/os 126 bytes [built] [code generated]
+        [exports: EOL, arch, cpus, default, endianness, freemem, getNetworkInterfaces, homedir, hostname, loadavg, networkInterfaces, platform, release, tmpDir, tmpdir, totalmem, type, uptime]
+        [used exports unknown]
+        harmony side effect evaluation /npm:@jspm/core@2/nodelibs/os https://jspm.dev/npm:clean-stack@4 1:0-39
+        harmony side effect evaluation ./npm:@jspm/core@2/nodelibs/os https://jspm.dev/npm:clean-stack@4.1.0 1:0-48
+        harmony import specifier ./npm:@jspm/core@2/nodelibs/os https://jspm.dev/npm:clean-stack@4.1.0 6:23-33
+        harmony import specifier ./npm:@jspm/core@2/nodelibs/os https://jspm.dev/npm:clean-stack@4.1.0 6:57-67
+      https://jspm.dev/npm:@jspm/core@2.0.0-beta.8/nodelibs/os 1.87 KiB [built] [code generated]
+        [exports: EOL, arch, cpus, default, endianness, freemem, getNetworkInterfaces, homedir, hostname, loadavg, networkInterfaces, platform, release, tmpDir, tmpdir, totalmem, type, uptime]
+        [used exports unknown]
+        harmony side effect evaluation /npm:@jspm/core@2.0.0-beta.8/nodelibs/os https://jspm.dev/npm:@jspm/core@2/nodelibs/os 1:0-57
+        harmony export imported specifier /npm:@jspm/core@2.0.0-beta.8/nodelibs/os https://jspm.dev/npm:@jspm/core@2/nodelibs/os 1:0-57
+        harmony side effect evaluation /npm:@jspm/core@2.0.0-beta.8/nodelibs/os https://jspm.dev/npm:@jspm/core@2/nodelibs/os 2:0-67
+        harmony export imported specifier /npm:@jspm/core@2.0.0-beta.8/nodelibs/os https://jspm.dev/npm:@jspm/core@2/nodelibs/os 2:0-67
+    4 modules
   modules by path https://cdn.esm.sh/ 5.72 KiB 7 modules
-  modules by path https://cdn.skypack.dev/ 6.72 KiB
-    https://cdn.skypack.dev/p-map 2.29 KiB [built] [code generated]
-      [exports: default, pMapSkip]
-      [used exports unknown]
-      harmony side effect evaluation https://cdn.skypack.dev/p-map ./example.js 1:0-50
-      harmony import specifier https://cdn.skypack.dev/p-map ./example.js 4:12-17
-    https://cdn.skypack.dev/-/aggregate-error@v4.0.0-rCH8s5R9g4kQQ807o58j/dist=es2020,mode=imports/optimized/aggregate-error.js 1.99 KiB [built] [code generated]
-      [exports: default]
-      [used exports unknown]
-      harmony side effect evaluation /-/aggregate-error@v4.0.0-rCH8s5R9g4kQQ807o58j/dist=es2020,mode=imports/optimized/aggregate-error.js https://cdn.skypack.dev/p-map 1:0-130
-      harmony import specifier /-/aggregate-error@v4.0.0-rCH8s5R9g4kQQ807o58j/dist=es2020,mode=imports/optimized/aggregate-error.js https://cdn.skypack.dev/p-map 32:23-37
-    https://cdn.skypack.dev/-/indent-string@v5.0.0-VgKPSgi4hUX5NbF4n3aC/dist=es2020,mode=imports/optimized/indent-string.js 827 bytes [built] [code generated]
-      [exports: default]
-      [used exports unknown]
-      harmony side effect evaluation /-/indent-string@v5.0.0-VgKPSgi4hUX5NbF4n3aC/dist=es2020,mode=imports/optimized/indent-string.js https://cdn.skypack.dev/-/aggregate-error@v4.0.0-rCH8s5R9g4kQQ807o58j/dist=es2020,mode=imports/optimized/aggregate-error.js 23:0-124
-      harmony import specifier /-/indent-string@v5.0.0-VgKPSgi4hUX5NbF4n3aC/dist=es2020,mode=imports/optimized/indent-string.js https://cdn.skypack.dev/-/aggregate-error@v4.0.0-rCH8s5R9g4kQQ807o58j/dist=es2020,mode=imports/optimized/aggregate-error.js 45:21-33
-    https://cdn.skypack.dev/-/clean-stack@v4.1.0-DgWUKXHVzThBBZtsHXhC/dist=es2020,mode=imports/optimized/clean-stack.js 1.4 KiB [built] [code generated]
-      [exports: default]
-      [used exports unknown]
-      harmony side effect evaluation /-/clean-stack@v4.1.0-DgWUKXHVzThBBZtsHXhC/dist=es2020,mode=imports/optimized/clean-stack.js https://cdn.skypack.dev/-/aggregate-error@v4.0.0-rCH8s5R9g4kQQ807o58j/dist=es2020,mode=imports/optimized/aggregate-error.js 24:0-118
-      harmony import specifier /-/clean-stack@v4.1.0-DgWUKXHVzThBBZtsHXhC/dist=es2020,mode=imports/optimized/clean-stack.js https://cdn.skypack.dev/-/aggregate-error@v4.0.0-rCH8s5R9g4kQQ807o58j/dist=es2020,mode=imports/optimized/aggregate-error.js 43:66-76
-    https://cdn.skypack.dev/-/escape-string-regexp@v5.0.0-SUDdAhYOdAgXIYndxZss/dist=es2020,mode=imports/optimized/escape-string-regexp.js 240 bytes [built] [code generated]
-      [exports: default]
-      [used exports unknown]
-      harmony side effect evaluation /-/escape-string-regexp@v5.0.0-SUDdAhYOdAgXIYndxZss/dist=es2020,mode=imports/optimized/escape-string-regexp.js https://cdn.skypack.dev/-/clean-stack@v4.1.0-DgWUKXHVzThBBZtsHXhC/dist=es2020,mode=imports/optimized/clean-stack.js 1:0-144
-      harmony import specifier /-/escape-string-regexp@v5.0.0-SUDdAhYOdAgXIYndxZss/dist=es2020,mode=imports/optimized/escape-string-regexp.js https://cdn.skypack.dev/-/clean-stack@v4.1.0-DgWUKXHVzThBBZtsHXhC/dist=es2020,mode=imports/optimized/clean-stack.js 7:60-78
-./example.js 201 bytes [built] [code generated]
+  modules by path https://cdn.skypack.dev/ 7.46 KiB 6 modules
+  https://unpkg.com/p-map-series?module 263 bytes [built] [code generated]
+    [exports: default]
+    [used exports unknown]
+    harmony side effect evaluation https://unpkg.com/p-map-series?module ./example.js 4:0-58
+    harmony import specifier https://unpkg.com/p-map-series?module ./example.js 8:12-17
+./example.js 314 bytes [built] [code generated]
   [no exports]
   [used exports unknown]
   entry ./example.js main
@@ -71,9 +68,9 @@ webpack 5.48.0 compiled successfully
 ## Production mode
 
 ```
-asset output.js 11.3 KiB [emitted] [minimized] (name: main)
-orphan modules 20.9 KiB [orphan] 23 modules
-./example.js + 22 modules 21 KiB [built] [code generated]
+asset output.js 11.4 KiB [emitted] [minimized] (name: main)
+orphan modules 21.9 KiB [orphan] 25 modules
+./example.js + 24 modules 22.1 KiB [built] [code generated]
   [no exports]
   [no exports used]
   entry ./example.js main

@@ -10,7 +10,8 @@
   "https://cdn.skypack.dev/-/clean-stack@v4.1.0-DgWUKXHVzThBBZtsHXhC/dist=es2020,mode=imports/optimized/clean-stack.js": { "integrity": "sha512-1nEMT4Vc2YLu3EbeBnck7Traj0/D6G9MMSGraGpsoQIMKVuhQjq4gP76X6RxUn5GoiHv90KfrFMSWlbBn26Dhw==", "contentType": "application/javascript; charset=utf-8" },
   "https://cdn.skypack.dev/-/escape-string-regexp@v5.0.0-SUDdAhYOdAgXIYndxZss/dist=es2020,mode=imports/optimized/escape-string-regexp.js": { "integrity": "sha512-54oHYow5obgsKb0twQZMNLvCH2tV5MCOY4YHB0LQH+zVonIAn7JYZseUPWhC3MMkJFK5EkeNWDAX7P2camp27g==", "contentType": "application/javascript; charset=utf-8" },
   "https://cdn.skypack.dev/-/indent-string@v5.0.0-VgKPSgi4hUX5NbF4n3aC/dist=es2020,mode=imports/optimized/indent-string.js": { "integrity": "sha512-lSZAs06jEHkVlPMEeMtKbygGhrSmJUMVmpB6/2ChdG2F0694vRU1v6N12bUyqR5uGbbteTJ7atP5PmPtTVmlcw==", "contentType": "application/javascript; charset=utf-8" },
-  "https://cdn.skypack.dev/p-map": { "resolved": "https://cdn.skypack.dev/-/p-map@v5.1.0-7ixXvZxXPKKt9unR9LT0/dist=es2020,mode=imports/optimized/p-map.js", "integrity": "sha512-mZyhNJe8VlqEqafSkUGTooFrKcQPSwVjB3UxAAPqywSFD+age77uTRP6ul8uAMEQ3lllmengXX1q45igRxRcDw==", "contentType": "application/javascript; charset=utf-8" },
+  "https://cdn.skypack.dev/-/p-map@v5.1.0-7ixXvZxXPKKt9unR9LT0/dist=es2020,mode=imports/optimized/p-map.js": { "integrity": "sha512-mZyhNJe8VlqEqafSkUGTooFrKcQPSwVjB3UxAAPqywSFD+age77uTRP6ul8uAMEQ3lllmengXX1q45igRxRcDw==", "contentType": "application/javascript; charset=utf-8" },
+  "https://cdn.skypack.dev/p-map": { "integrity": "sha512-FFu6R9j8mrGqTvw8WL37XsWhI9P65XdPD9Jfs/47jiYNdex12f0XJNsIy+fI81PbOkCuEQRgm2nf0P76ieBlag==", "contentType": "application/javascript; charset=utf-8" },
   "https://jspm.dev/npm:@jspm/core@2.0.0-beta.8/nodelibs/os": { "integrity": "sha512-bNMLa9/IfXCZprEMIuXuHM/9s4OFAl4ZKy8r6EdXNkduLNLHQ626srFqLRdWHx6ZWGIgppc1bI9+tRJT3FzfAw==", "contentType": "application/javascript; charset=utf-8" },
   "https://jspm.dev/npm:@jspm/core@2/nodelibs/os": { "integrity": "sha512-rPwqsk0nq0tqTCdbeGoopnlzAVh5BsaVUsXoFKQCcb04LWJrXmOhQEwj1Yj/WHfNj2ZIPzODlZdKtWZl5bbIpA==", "contentType": "application/javascript; charset=utf-8" },
   "https://jspm.dev/npm:aggregate-error@4": { "integrity": "sha512-XfXd6EZ09/SKLmWFFvjPCSkqv0E08IxKc8mFm9mePyLIiEiGyAKokeFt1wql+kG8ikGmI7YqKBsDf07/I31VvA==", "contentType": "application/javascript; charset=utf-8" },
@@ -22,5 +23,6 @@
   "https://jspm.dev/npm:indent-string@5.0.0": { "integrity": "sha512-1KRJ7I1gDWWBAXz+NpwQnlJXDiSpaxaftugln1zHywLbqhA/akcZYM6+nTdfSSuQ7wiVong69R5X9l/QKWqO7g==", "contentType": "application/javascript; charset=utf-8" },
   "https://jspm.dev/npm:p-map@5.1.0": { "integrity": "sha512-Ml4ozElyzZEvq3G61nmeDVjEPVbjNzhWwIfvVcEr0OsUu58yT/ieSJWr6VSSHbNGY8B1IYjJCEO2zFrgIT9plQ==", "contentType": "application/javascript; charset=utf-8" },
   "https://jspm.dev/p-map": { "integrity": "sha512-Ztuu37YpSElOGm1OnAmLzhgTuTSyeDXCudBO94yRDDicb2zwUTIDEaVnHMJ6Gb7AVnKk26uubHB+Hw0XxKRnrw==", "contentType": "application/javascript; charset=utf-8" },
+  "https://unpkg.com/p-map-series?module": { "resolved": "https://unpkg.com/p-map-series@3.0.0/index.js?module", "integrity": "sha512-e68FFGx6Hb3/2x4o16EWcd6rdmyiov0OLjPnj2bmc60JrrNowav76umw0Gc5TmT+UOjaJo9Xk2lTGQT1/Y6Jug==", "contentType": "application/javascript; charset=utf-8" },
   "version": 1
 }
