@@ -13,7 +13,7 @@ if (module.hot) {
 		module.hot
 			.check()
 			.then(function (updatedModules) {
-				if (!updatedModules || updatedModules.length === 0) {
+				if (!updatedModules) {
 					log("warning", "[HMR] Cannot find update. Need to do a full reload!");
 					log(
 						"warning",
