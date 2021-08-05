@@ -7188,6 +7188,10 @@ declare class NormalModule extends Module {
 		 */
 		resourceResolveData?: Record<string, any>;
 		/**
+		 * context directory for resolving
+		 */
+		context: string;
+		/**
 		 * path + query of the matched resource (virtual)
 		 */
 		matchResource?: string;
@@ -9344,6 +9348,7 @@ declare interface ResourceDataWithData {
 	path: string;
 	query: string;
 	fragment: string;
+	context?: string;
 	data: Record<string, any>;
 }
 type Rule = string | RegExp;
