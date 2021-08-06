@@ -9,7 +9,7 @@ if (module.hot) {
 		module.hot
 			.check()
 			.then(function (updatedModules) {
-				if (!updatedModules || updatedModules.length === 0) {
+				if (!updatedModules) {
 					if (fromUpdate) log("info", "[HMR] Update applied.");
 					else log("warning", "[HMR] Cannot find update.");
 					return;
