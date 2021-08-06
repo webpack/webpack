@@ -1,0 +1,42 @@
+{
+  "definitions": {
+    "HttpUriOptions": {
+      "description": "Options for building http resources.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cacheLocation": {
+          "description": "Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "string",
+              "absolutePath": true
+            }
+          ]
+        },
+        "frozen": {
+          "description": "When set, anything that would lead to an modification of the lockfile or any resource content, will result in an error.",
+          "type": "boolean"
+        },
+        "lockfileLocation": {
+          "description": "Location of the lockfile.",
+          "type": "string",
+          "absolutePath": true
+        },
+        "upgrade": {
+          "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "title": "HttpUriPluginOptions",
+  "oneOf": [
+    {
+      "$ref": "#/definitions/HttpUriOptions"
+    }
+  ]
+}

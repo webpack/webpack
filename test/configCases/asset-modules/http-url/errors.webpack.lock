@@ -1,0 +1,13 @@
+{
+  "http://localhost:9990/asset.txt?ignore": "ignore",
+  "http://localhost:9990/index.css": { "integrity": "sha512-sqhF9JAEi5h3ziP48SBnzQnaeei8cf/pfYJBdKL4F7xdu3v5yr71eQ0kCL11/jWRFjLG4TKOudUnS/u6WLMqYw==", "contentType": "invalid" },
+  "http://localhost:9990/index.css?query#fragment": { "integrity": "sha512-sqhF9JAEi5h3ziP48SBnzQnaeei8cf/pfYJBdKL4F7xdu3v5yr71eQ0kCL11/jWRFjLG4TKOudUnS/u6WLMqYw==", "contentType": "text/css" },
+  "http://localhost:9990/index.css?no-cache": { "integrity": "sha512-sqhF9JAEi5h3ziP48SBnzQnaeei8cf/pfYJBdKL4F7xdu3v5yr71eQ0kCL11/jWRFjLG4TKOudUnS/u6WLMqYw==", "contentType": "text/css" },
+  "http://localhost:9990/index.css?cache": "no-cache",
+  "http://localhost:9990/redirect": { "integrity": "sha512-BV/MK/QTq+NHRve1XpZyQ8V6cjRP/fwbtJvENRdm5C73qNYZ4i2/fw+soj7J4qxzBXMHDbvOnA6E0ShnX2hc1w==", "contentType": "text/javascript" },
+  "http://localhost:9990/redirect.js": { "resolved": "http://localhost:9990/redirect", "integrity": "sha512-BV/MK/QTq+NHRve1XpZyQ8V6cjRP/fwbtJvENRdm5C73qNYZ4i2/fw+soj7J4qxzBXMHDbvOnA6E0ShnX2hc1w==", "contentType": "text/javascript" },
+  "http://localhost:9990/resolve.js": { "integrity": "sha512-SHOULD_BE_INVALID", "contentType": "text/javascript" },
+  "https://raw.githubusercontent.com//webpack//webpack//main/CODE_OF_CONDUCT.md": { "integrity": "sha512-OLJ9q6iSO652hVBkTLsMLtQnFBBTzEbFqLGyWD62nPga/0DZ9bc3oOFb5OYT8RIPzmlOX4WzK2uiLgc1NSGtBA==", "contentType": "text/plain; charset=utf-8" },
+  "https://raw.githubusercontent.com/webpack/webpack/main/CODE_OF_CONDUCT.md": { "integrity": "sha512-OLJ9q6iSO652hVBkTLsMLtQnFBBTzEbFqLGyWD62nPga/0DZ9bc3oOFb5OYT8RIPzmlOX4WzK2uiLgc1NSGtBA==", "contentType": "text/plain; charset=utf-8" },
+  "version": 1
+}
