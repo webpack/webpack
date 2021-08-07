@@ -1172,7 +1172,7 @@ export interface HttpUriOptions {
 	 */
 	cacheLocation?: false | string;
 	/**
-	 * When set, anything that would lead to an modification of the lockfile or any resource content, will result in an error.
+	 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
 	 */
 	frozen?: boolean;
 	/**
