@@ -8470,6 +8470,7 @@ declare interface ParserOptionsByModuleTypeUnknown {
 }
 type ParserState = Record<string, any> & ParserStateBase;
 declare interface ParserStateBase {
+	source: string | Buffer;
 	current: NormalModule;
 	module: NormalModule;
 	compilation: Compilation;
