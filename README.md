@@ -138,11 +138,10 @@ or are automatically applied via regex from your webpack configuration.
 
 #### Files
 
-|        Name         |   Status    | Install Size | Description                                                                               |
-| :-----------------: | :---------: | :----------: | :---------------------------------------------------------------------------------------- |
-|  [val-loader][val]  | ![val-npm]  | ![val-size]  | Executes code as module and considers exports as JS code                                  |
-|  [url-loader][url]  | ![url-npm]  | ![url-size]  | Works like the file loader, but can return a Data Url if the file is smaller than a limit |
-| [file-loader][file] | ![file-npm] | ![file-size] | Emits the file into the output folder and returns the (relative) url                      |
+|        Name         |   Status    | Install Size | Description                                                          |
+| :-----------------: | :---------: | :----------: | :------------------------------------------------------------------- |
+|  [val-loader][val]  | ![val-npm]  | ![val-size]  | Executes code as module and considers exports as JS code             |
+| [file-loader][file] | ![file-npm] | ![file-size] | Emits the file into the output folder and returns the (relative) url |
 
 [raw]: https://github.com/webpack-contrib/raw-loader
 [raw-npm]: https://img.shields.io/npm/v/raw-loader.svg
