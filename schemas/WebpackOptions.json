@@ -4731,19 +4731,23 @@
     },
     "WatchOptions": {
       "description": "Options for the watcher.",
+      "link": "https://webpack.js.org/configuration/watch/#watchoptions",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "aggregateTimeout": {
           "description": "Delay the rebuilt after the first change. Value is a time in ms.",
+          "link": "https://webpack.js.org/configuration/watch/#watchoptionsaggregatetimeout",
           "type": "number"
         },
         "followSymlinks": {
           "description": "Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').",
+          "link": "https://webpack.js.org/configuration/watch/#watchoptionsfollowsymlinks",
           "type": "boolean"
         },
         "ignored": {
           "description": "Ignore some files from watching (glob pattern or regexp).",
+          "link": "https://webpack.js.org/configuration/watch/#watchoptionsignored",
           "anyOf": [
             {
               "type": "array",
@@ -4766,6 +4770,7 @@
         },
         "poll": {
           "description": "Enable polling mode for watching.",
+          "link": "https://webpack.js.org/configuration/watch/#watchoptionspoll",
           "anyOf": [
             {
               "description": "`number`: use polling with specified interval.",
