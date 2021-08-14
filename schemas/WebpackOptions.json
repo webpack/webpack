@@ -3172,6 +3172,7 @@
     },
     "Resolve": {
       "description": "Options for the resolver.",
+      "link": "https://webpack.js.org/configuration/resolve/",
       "oneOf": [
         {
           "$ref": "#/definitions/ResolveOptions"
@@ -3180,6 +3181,7 @@
     },
     "ResolveAlias": {
       "description": "Redirect module requests.",
+      "link": "https://webpack.js.org/configuration/resolve/#resolvealias",
       "anyOf": [
         {
           "type": "array",
@@ -3269,6 +3271,7 @@
         },
         "aliasFields": {
           "description": "Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvealiasfields",
           "type": "array",
           "items": {
             "description": "Field in the description file (usually package.json) which are used to redirect requests inside the module.",
@@ -3290,6 +3293,7 @@
         },
         "byDependency": {
           "description": "Extra resolve options per dependency category. Typical categories are \"commonjs\", \"amd\", \"esm\".",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvebydependency",
           "type": "object",
           "additionalProperties": {
             "description": "Options object for resolving requests.",
@@ -3306,15 +3310,18 @@
         },
         "cachePredicate": {
           "description": "Predicate function to decide which requests should be cached.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvecachepredicate",
           "instanceof": "Function",
           "tsType": "((request: import('enhanced-resolve').ResolveRequest) => boolean)"
         },
         "cacheWithContext": {
           "description": "Include the context information in the cache identifier when caching.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvecachewithcontext",
           "type": "boolean"
         },
         "conditionNames": {
           "description": "Condition names for exports field entry point.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveconditionnames",
           "type": "array",
           "items": {
             "description": "Condition names for exports field entry point.",
@@ -3323,6 +3330,7 @@
         },
         "descriptionFiles": {
           "description": "Filenames used to find a description file (like a package.json).",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvedescriptionfiles",
           "type": "array",
           "items": {
             "description": "Filename used to find a description file (like a package.json).",
@@ -3332,10 +3340,12 @@
         },
         "enforceExtension": {
           "description": "Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveenforceextension",
           "type": "boolean"
         },
         "exportsFields": {
           "description": "Field names from the description file (usually package.json) which are used to provide entry points of a package.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveexportsfields",
           "type": "array",
           "items": {
             "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
@@ -3344,6 +3354,7 @@
         },
         "extensions": {
           "description": "Extensions added to the request when trying to find the file.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveextensions",
           "type": "array",
           "items": {
             "description": "Extension added to the request when trying to find the file.",
@@ -3352,6 +3363,7 @@
         },
         "fallback": {
           "description": "Redirect module requests when normal resolving fails.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvefallback",
           "oneOf": [
             {
               "$ref": "#/definitions/ResolveAlias"
@@ -3368,6 +3380,7 @@
         },
         "importsFields": {
           "description": "Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveimportsfields",
           "type": "array",
           "items": {
             "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
@@ -3376,6 +3389,7 @@
         },
         "mainFields": {
           "description": "Field names from the description file (package.json) which are used to find the default entry point.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvemainfields",
           "type": "array",
           "items": {
             "description": "Field name from the description file (package.json) which are used to find the default entry point.",
@@ -3397,6 +3411,7 @@
         },
         "mainFiles": {
           "description": "Filenames used to find the default entry point if there is no description file or main field.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvemainfiles",
           "type": "array",
           "items": {
             "description": "Filename used to find the default entry point if there is no description file or main field.",
@@ -3406,6 +3421,7 @@
         },
         "modules": {
           "description": "Folder names or directory paths where to find modules.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvemodules",
           "type": "array",
           "items": {
             "description": "Folder name or directory path where to find modules.",
@@ -3415,6 +3431,7 @@
         },
         "plugins": {
           "description": "Plugins for the resolver.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveplugins",
           "type": "array",
           "cli": {
             "exclude": true
@@ -3433,10 +3450,12 @@
         },
         "preferAbsolute": {
           "description": "Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvepreferabsolute",
           "type": "boolean"
         },
         "preferRelative": {
           "description": "Prefer to resolve module requests as relative request and fallback to resolving as module.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvepreferrelative",
           "type": "boolean"
         },
         "resolver": {
@@ -3445,6 +3464,7 @@
         },
         "restrictions": {
           "description": "A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolverestrictions",
           "type": "array",
           "items": {
             "description": "Resolve restriction. Resolve result must fulfill this restriction.",
@@ -3463,6 +3483,7 @@
         },
         "roots": {
           "description": "A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveroots",
           "type": "array",
           "items": {
             "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
@@ -3471,10 +3492,12 @@
         },
         "symlinks": {
           "description": "Enable resolving symlinks to the original location.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvesymlinks",
           "type": "boolean"
         },
         "unsafeCache": {
           "description": "Enable caching of successfully resolved requests (cache entries are not revalidated).",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveunsafecache",
           "anyOf": [
             {
               "type": "boolean"
