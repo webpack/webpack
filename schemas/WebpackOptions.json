@@ -4114,82 +4114,102 @@
       "properties": {
         "all": {
           "description": "Fallback value for stats options when an option is not defined (has precedence over local webpack defaults).",
+          "link": "https://webpack.js.org/configuration/stats/#statsall",
           "type": "boolean"
         },
         "assets": {
           "description": "Add assets information.",
+          "link": "https://webpack.js.org/configuration/stats/#statsassets",
           "type": "boolean"
         },
         "assetsSort": {
           "description": "Sort the assets by that field.",
+          "link": "https://webpack.js.org/configuration/stats/#statsassetssort",
           "type": "string"
         },
         "assetsSpace": {
           "description": "Space to display assets (groups will be collapsed to fit this space).",
+          "link": "https://webpack.js.org/configuration/stats/#statsassetsspace",
           "type": "number"
         },
         "builtAt": {
           "description": "Add built at time information.",
+          "link": "https://webpack.js.org/configuration/stats/#statsbuiltat",
           "type": "boolean"
         },
         "cached": {
           "description": "Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).",
+          "link": "https://webpack.js.org/configuration/stats/#statscached",
           "type": "boolean"
         },
         "cachedAssets": {
           "description": "Show cached assets (setting this to `false` only shows emitted files).",
+          "link": "https://webpack.js.org/configuration/stats/#statscachedassets",
           "type": "boolean"
         },
         "cachedModules": {
           "description": "Add information about cached (not built) modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statscachedmodules",
           "type": "boolean"
         },
         "children": {
           "description": "Add children information.",
+          "link": "https://webpack.js.org/configuration/stats/#statschildren",
           "type": "boolean"
         },
         "chunkGroupAuxiliary": {
           "description": "Display auxiliary assets in chunk groups.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkgroupauxiliary",
           "type": "boolean"
         },
         "chunkGroupChildren": {
           "description": "Display children of chunk groups.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkgroupchildren",
           "type": "boolean"
         },
         "chunkGroupMaxAssets": {
           "description": "Limit of assets displayed in chunk groups.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkgroupmaxassets",
           "type": "number"
         },
         "chunkGroups": {
           "description": "Display all chunk groups with the corresponding bundles.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkgroups",
           "type": "boolean"
         },
         "chunkModules": {
           "description": "Add built modules information to chunk information.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkmodules",
           "type": "boolean"
         },
         "chunkModulesSpace": {
           "description": "Space to display chunk modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkmodulesspace",
           "type": "number"
         },
         "chunkOrigins": {
           "description": "Add the origins of chunks and chunk merging info.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkorigins",
           "type": "boolean"
         },
         "chunkRelations": {
           "description": "Add information about parent, children and sibling chunks to chunk information.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkrelations",
           "type": "boolean"
         },
         "chunks": {
           "description": "Add chunk information.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunks",
           "type": "boolean"
         },
         "chunksSort": {
           "description": "Sort the chunks by that field.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkssort",
           "type": "string"
         },
         "colors": {
           "description": "Enables/Disables colorful output.",
+          "link": "https://webpack.js.org/configuration/stats/#statscolors",
           "anyOf": [
             {
               "description": "Enables/Disables colorful output.",
@@ -4229,19 +4249,23 @@
         },
         "context": {
           "description": "Context directory for request shortening.",
+          "link": "https://webpack.js.org/configuration/stats/#statscontext",
           "type": "string",
           "absolutePath": true
         },
         "dependentModules": {
           "description": "Show chunk modules that are dependencies of other modules of the chunk.",
+          "link": "https://webpack.js.org/configuration/stats/#statsdependentmodules",
           "type": "boolean"
         },
         "depth": {
           "description": "Add module depth in module graph.",
+          "link": "https://webpack.js.org/configuration/stats/#statsdepth",
           "type": "boolean"
         },
         "entrypoints": {
           "description": "Display the entry points with the corresponding bundles.",
+          "link": "https://webpack.js.org/configuration/stats/#statsentrypoints",
           "anyOf": [
             {
               "enum": ["auto"]
@@ -4253,10 +4277,12 @@
         },
         "env": {
           "description": "Add --env information.",
+          "link": "https://webpack.js.org/configuration/stats/#statsenv",
           "type": "boolean"
         },
         "errorDetails": {
           "description": "Add details to errors (like resolving log).",
+          "link": "https://webpack.js.org/configuration/stats/#statserrordetails",
           "anyOf": [
             {
               "enum": ["auto"]
@@ -4268,18 +4294,22 @@
         },
         "errorStack": {
           "description": "Add internal stack trace to errors.",
+          "link": "https://webpack.js.org/configuration/stats/#statserrorstack",
           "type": "boolean"
         },
         "errors": {
           "description": "Add errors.",
+          "link": "https://webpack.js.org/configuration/stats/#statserrors",
           "type": "boolean"
         },
         "errorsCount": {
           "description": "Add errors count.",
+          "link": "https://webpack.js.org/configuration/stats/#statserrorscount",
           "type": "boolean"
         },
         "exclude": {
           "description": "Please use excludeModules instead.",
+          "link": "https://webpack.js.org/configuration/stats/#statsexclude",
           "cli": {
             "exclude": true
           },
@@ -4294,6 +4324,7 @@
         },
         "excludeAssets": {
           "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
+          "link": "https://webpack.js.org/configuration/stats/#statsexcludeassets",
           "oneOf": [
             {
               "$ref": "#/definitions/AssetFilterTypes"
@@ -4302,6 +4333,7 @@
         },
         "excludeModules": {
           "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+          "link": "https://webpack.js.org/configuration/stats/#statsexcludemodules",
           "anyOf": [
             {
               "type": "boolean"
@@ -4313,10 +4345,12 @@
         },
         "groupAssetsByChunk": {
           "description": "Group assets by how their are related to chunks.",
+          "link": "https://webpack.js.org/configuration/stats/#statsgroupassetsbychunk",
           "type": "boolean"
         },
         "groupAssetsByEmitStatus": {
           "description": "Group assets by their status (emitted, compared for emit or cached).",
+          "link": "https://webpack.js.org/configuration/stats/#statsgroupassetsbyemitstatus",
           "type": "boolean"
         },
         "groupAssetsByExtension": {
@@ -4325,6 +4359,7 @@
         },
         "groupAssetsByInfo": {
           "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+          "link": "https://webpack.js.org/configuration/stats/#statsgroupassetsbyinfo",
           "type": "boolean"
         },
         "groupAssetsByPath": {
@@ -4333,6 +4368,7 @@
         },
         "groupModulesByAttributes": {
           "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
+          "link": "https://webpack.js.org/configuration/stats/#statsgroupmodulesbyattributes",
           "type": "boolean"
         },
         "groupModulesByCacheStatus": {
@@ -4357,18 +4393,22 @@
         },
         "groupReasonsByOrigin": {
           "description": "Group reasons by their origin module.",
+          "link": "https://webpack.js.org/configuration/stats/#statsgroupreasonsbyorigin",
           "type": "boolean"
         },
         "hash": {
           "description": "Add the hash of the compilation.",
+          "link": "https://webpack.js.org/configuration/stats/#statshash",
           "type": "boolean"
         },
         "ids": {
           "description": "Add ids.",
+          "link": "https://webpack.js.org/configuration/stats/#statsids",
           "type": "boolean"
         },
         "logging": {
           "description": "Add logging output.",
+          "link": "https://webpack.js.org/configuration/stats/#statslogging",
           "anyOf": [
             {
               "description": "Specify log level of logging output.",
@@ -4382,6 +4422,7 @@
         },
         "loggingDebug": {
           "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+          "link": "https://webpack.js.org/configuration/stats/#statsloggingdebug",
           "anyOf": [
             {
               "description": "Enable/Disable debug logging for all loggers.",
@@ -4394,26 +4435,32 @@
         },
         "loggingTrace": {
           "description": "Add stack traces to logging output.",
+          "link": "https://webpack.js.org/configuration/stats/#statsloggingtrace",
           "type": "boolean"
         },
         "moduleAssets": {
           "description": "Add information about assets inside modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statsmoduleassets",
           "type": "boolean"
         },
         "moduleTrace": {
           "description": "Add dependencies and origin of warnings/errors.",
+          "link": "https://webpack.js.org/configuration/stats/#statsmoduletrace",
           "type": "boolean"
         },
         "modules": {
           "description": "Add built modules information.",
+          "link": "https://webpack.js.org/configuration/stats/#statsmodules",
           "type": "boolean"
         },
         "modulesSort": {
           "description": "Sort the modules by that field.",
+          "link": "https://webpack.js.org/configuration/stats/#statsmodulessort",
           "type": "string"
         },
         "modulesSpace": {
           "description": "Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).",
+          "link": "https://webpack.js.org/configuration/stats/#statsmodulesspace",
           "type": "number"
         },
         "nestedModules": {
@@ -4422,6 +4469,7 @@
         },
         "nestedModulesSpace": {
           "description": "Space to display modules nested within other modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+          "link": "https://webpack.js.org/configuration/stats/#statsnestedmodulesspace",
           "type": "number"
         },
         "optimizationBailout": {
@@ -4430,18 +4478,22 @@
         },
         "orphanModules": {
           "description": "Add information about orphan modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statsorphanmodules",
           "type": "boolean"
         },
         "outputPath": {
           "description": "Add output path information.",
+          "link": "https://webpack.js.org/configuration/stats/#statsoutputpath",
           "type": "boolean"
         },
         "performance": {
           "description": "Add performance hint flags.",
+          "link": "https://webpack.js.org/configuration/stats/#statsperformance",
           "type": "boolean"
         },
         "preset": {
           "description": "Preset for the default values.",
+          "link": "https://webpack.js.org/configuration/stats/#statspreset",
           "anyOf": [
             {
               "type": "boolean"
@@ -4453,22 +4505,27 @@
         },
         "providedExports": {
           "description": "Show exports provided by modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statsprovidedexports",
           "type": "boolean"
         },
         "publicPath": {
           "description": "Add public path information.",
+          "link": "https://webpack.js.org/configuration/stats/#statspublicpath",
           "type": "boolean"
         },
         "reasons": {
           "description": "Add information about the reasons why modules are included.",
+          "link": "https://webpack.js.org/configuration/stats/#statsreasons",
           "type": "boolean"
         },
         "reasonsSpace": {
           "description": "Space to display reasons (groups will be collapsed to fit this space).",
+          "link": "https://webpack.js.org/configuration/stats/#statsreasonsspace",
           "type": "number"
         },
         "relatedAssets": {
           "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+          "link": "https://webpack.js.org/configuration/stats/#statsrelatedassets",
           "type": "boolean"
         },
         "runtime": {
@@ -4477,34 +4534,42 @@
         },
         "runtimeModules": {
           "description": "Add information about runtime modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statsruntimemodules",
           "type": "boolean"
         },
         "source": {
           "description": "Add the source code of modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statssource",
           "type": "boolean"
         },
         "timings": {
           "description": "Add timing information.",
+          "link": "https://webpack.js.org/configuration/stats/#statstimings",
           "type": "boolean"
         },
         "usedExports": {
           "description": "Show exports used by modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statsusedexports",
           "type": "boolean"
         },
         "version": {
           "description": "Add webpack version information.",
+          "link": "https://webpack.js.org/configuration/stats/#statsversion",
           "type": "boolean"
         },
         "warnings": {
           "description": "Add warnings.",
+          "link": "https://webpack.js.org/configuration/stats/#statswarnings",
           "type": "boolean"
         },
         "warningsCount": {
           "description": "Add warnings count.",
+          "link": "https://webpack.js.org/configuration/stats/#statswarningscount",
           "type": "boolean"
         },
         "warningsFilter": {
           "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
+          "link": "https://webpack.js.org/configuration/stats/#statswarningsfilter",
           "oneOf": [
             {
               "$ref": "#/definitions/WarningFilterTypes"
@@ -4515,6 +4580,7 @@
     },
     "StatsValue": {
       "description": "Stats options object or preset name.",
+      "link": "https://webpack.js.org/configuration/stats/",
       "anyOf": [
         {
           "enum": [
