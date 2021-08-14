@@ -3088,6 +3088,7 @@
     },
     "Plugins": {
       "description": "Add additional plugins to the compiler.",
+      "link": "https://webpack.js.org/configuration/plugins/",
       "type": "array",
       "items": {
         "description": "Plugin of type object or instanceof Function.",
