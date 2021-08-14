@@ -140,7 +140,6 @@ or are automatically applied via regex from your webpack configuration.
 
 |        Name         |   Status    | Install Size | Description                                                                               |
 | :-----------------: | :---------: | :----------: | :---------------------------------------------------------------------------------------- |
-|  [raw-loader][raw]  | ![raw-npm]  | ![raw-size]  | Loads raw content of a file (utf-8)                                                       |
 |  [val-loader][val]  | ![val-npm]  | ![val-size]  | Executes code as module and considers exports as JS code                                  |
 |  [url-loader][url]  | ![url-npm]  | ![url-size]  | Works like the file loader, but can return a Data Url if the file is smaller than a limit |
 | [file-loader][file] | ![file-npm] | ![file-size] | Emits the file into the output folder and returns the (relative) url                      |
