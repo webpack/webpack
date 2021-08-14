@@ -3048,6 +3048,7 @@
     },
     "Performance": {
       "description": "Configuration for web performance recommendations.",
+      "link": "https://webpack.js.org/configuration/performance/",
       "anyOf": [
         {
           "enum": [false]
@@ -3064,19 +3065,23 @@
       "properties": {
         "assetFilter": {
           "description": "Filter function to select assets that are checked.",
+          "link": "https://webpack.js.org/configuration/performance/#performanceassetfilter",
           "instanceof": "Function",
           "tsType": "Function"
         },
         "hints": {
           "description": "Sets the format of the hints: warnings, errors or nothing at all.",
+          "link": "https://webpack.js.org/configuration/performance/#performancehints",
           "enum": [false, "warning", "error"]
         },
         "maxAssetSize": {
           "description": "File size limit (in bytes) when exceeded, that webpack will provide performance hints.",
+          "link": "https://webpack.js.org/configuration/performance/#performancemaxassetsize",
           "type": "number"
         },
         "maxEntrypointSize": {
           "description": "Total size of an entry point (in bytes).",
+          "link": "https://webpack.js.org/configuration/performance/#performancemaxentrypointsize",
           "type": "number"
         }
       }
