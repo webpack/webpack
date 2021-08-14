@@ -91,10 +91,11 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.parallelism should be >= 1.
-			   -> The number of parallel processed modules in the compilation."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.parallelism should be >= 1.
+   -> The number of parallel processed modules in the compilation.
+   -> Read more at https://webpack.js.org/configuration/other-options/#parallelism"
+`)
 	);
 
 	createTestCase(
@@ -120,16 +121,17 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.entry[0] should be a non-empty string.
-			   -> A module that is loaded upon startup. Only the last one is exported.
-			 - configuration.output.filename should be one of these:
-			   non-empty string | function
-			   -> Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
-			   Details:
-			    * configuration.output.filename should be a non-empty string.
-			    * configuration.output.filename should be an instance of function."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.entry[0] should be a non-empty string.
+   -> A module that is loaded upon startup. Only the last one is exported.
+ - configuration.output.filename should be one of these:
+   non-empty string | function
+   -> Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+   -> Read more at https://webpack.js.org/configuration/output/#outputfilename
+   Details:
+    * configuration.output.filename should be a non-empty string.
+    * configuration.output.filename should be an instance of function."
+`)
 	);
 
 	createTestCase(
@@ -147,16 +149,17 @@ describe("Validation", () => {
 		],
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration[0].entry[0] should be a non-empty string.
-			   -> A module that is loaded upon startup. Only the last one is exported.
-			 - configuration[1].output.filename should be one of these:
-			   non-empty string | function
-			   -> Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
-			   Details:
-			    * configuration[1].output.filename should be a non-empty string.
-			    * configuration[1].output.filename should be an instance of function."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration[0].entry[0] should be a non-empty string.
+   -> A module that is loaded upon startup. Only the last one is exported.
+ - configuration[1].output.filename should be one of these:
+   non-empty string | function
+   -> Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+   -> Read more at https://webpack.js.org/configuration/output/#outputfilename
+   Details:
+    * configuration[1].output.filename should be a non-empty string.
+    * configuration[1].output.filename should be an instance of function."
+`)
 	);
 
 	createTestCase(
@@ -244,10 +247,11 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.output.path: The provided value \\"/somepath/!test\\" contains exclamation mark (!) which is not allowed because it's reserved for loader syntax.
-			   -> The output directory as **absolute path** (required)."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.output.path: The provided value \\"/somepath/!test\\" contains exclamation mark (!) which is not allowed because it's reserved for loader syntax.
+   -> The output directory as **absolute path** (required).
+   -> Read more at https://webpack.js.org/configuration/output/#outputpath"
+`)
 	);
 
 	createTestCase(
@@ -277,10 +281,11 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.context: The provided value \\"baz\\" is not an absolute path!
-			   -> The base directory (absolute path!) for resolving the \`entry\` option. If \`output.pathinfo\` is set, the included pathinfo is shortened to this directory."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.context: The provided value \\"baz\\" is not an absolute path!
+   -> The base directory (absolute path!) for resolving the \`entry\` option. If \`output.pathinfo\` is set, the included pathinfo is shortened to this directory.
+   -> Read more at https://webpack.js.org/configuration/entry-context/#context"
+`)
 	);
 
 	createTestCase(
@@ -411,11 +416,12 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.mode should be one of these:
-			   \\"development\\" | \\"production\\" | \\"none\\"
-			   -> Enable production optimizations or development hints."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.mode should be one of these:
+   \\"development\\" | \\"production\\" | \\"none\\"
+   -> Enable production optimizations or development hints.
+   -> Read more at https://webpack.js.org/configuration/mode/"
+`)
 	);
 
 	createTestCase(
@@ -495,12 +501,13 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.output has an unknown property 'ecmaVersion'. These properties are valid:
-			   object { assetModuleFilename?, auxiliaryComment?, charset?, chunkFilename?, chunkFormat?, chunkLoadTimeout?, chunkLoading?, chunkLoadingGlobal?, clean?, compareBeforeEmit?, crossOriginLoading?, devtoolFallbackModuleFilenameTemplate?, devtoolModuleFilenameTemplate?, devtoolNamespace?, enabledChunkLoadingTypes?, enabledLibraryTypes?, enabledWasmLoadingTypes?, environment?, filename?, globalObject?, hashDigest?, hashDigestLength?, hashFunction?, hashSalt?, hotUpdateChunkFilename?, hotUpdateGlobal?, hotUpdateMainFilename?, iife?, importFunctionName?, importMetaName?, library?, libraryExport?, libraryTarget?, module?, path?, pathinfo?, publicPath?, scriptType?, sourceMapFilename?, sourcePrefix?, strictModuleErrorHandling?, strictModuleExceptionHandling?, trustedTypes?, umdNamedDefine?, uniqueName?, wasmLoading?, webassemblyModuleFilename?, workerChunkLoading?, workerWasmLoading? }
-			   -> Options affecting the output of the compilation. \`output\` options tell webpack how to write the compiled files to disk.
-			   Did you mean output.environment (output.ecmaVersion was a temporary configuration option during webpack 5 beta)?"
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.output has an unknown property 'ecmaVersion'. These properties are valid:
+   object { assetModuleFilename?, auxiliaryComment?, charset?, chunkFilename?, chunkFormat?, chunkLoadTimeout?, chunkLoading?, chunkLoadingGlobal?, clean?, compareBeforeEmit?, crossOriginLoading?, devtoolFallbackModuleFilenameTemplate?, devtoolModuleFilenameTemplate?, devtoolNamespace?, enabledChunkLoadingTypes?, enabledLibraryTypes?, enabledWasmLoadingTypes?, environment?, filename?, globalObject?, hashDigest?, hashDigestLength?, hashFunction?, hashSalt?, hotUpdateChunkFilename?, hotUpdateGlobal?, hotUpdateMainFilename?, iife?, importFunctionName?, importMetaName?, library?, libraryExport?, libraryTarget?, module?, path?, pathinfo?, publicPath?, scriptType?, sourceMapFilename?, sourcePrefix?, strictModuleErrorHandling?, strictModuleExceptionHandling?, trustedTypes?, umdNamedDefine?, uniqueName?, wasmLoading?, webassemblyModuleFilename?, workerChunkLoading?, workerWasmLoading? }
+   -> Options affecting the output of the compilation. \`output\` options tell webpack how to write the compiled files to disk.
+   -> Read more at https://webpack.js.org/configuration/output/
+   Did you mean output.environment (output.ecmaVersion was a temporary configuration option during webpack 5 beta)?"
+`)
 	);
 
 	createTestCase(
@@ -538,11 +545,12 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.watchOptions should be an object:
-			   object { aggregateTimeout?, followSymlinks?, ignored?, poll?, stdin? }
-			   -> Options for the watcher."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.watchOptions should be an object:
+   object { aggregateTimeout?, followSymlinks?, ignored?, poll?, stdin? }
+   -> Options for the watcher.
+   -> Read more at https://webpack.js.org/configuration/watch/#watchoptions"
+`)
 	);
 
 	createTestCase(
