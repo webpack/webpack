@@ -565,7 +565,6 @@ const describeCases = config => {
 											if (key.includes("webpack")) delete global[key];
 										}
 										if (getNumberOfTests() < filesCount) {
-											console.log(getNumberOfTests() + " / " + filesCount);
 											return done(new Error("No tests exported by test case"));
 										}
 										done();
