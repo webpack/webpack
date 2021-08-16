@@ -64,6 +64,9 @@ const describeCases = config => {
 								);
 								let options = {};
 								if (fs.existsSync(configPath)) options = require(configPath);
+								if (typeof options === "function") {
+									options = options({ config });
+								}
 								if (!options.mode) options.mode = "development";
 								if (!options.devtool) options.devtool = false;
 								if (!options.context) options.context = testDirectory;

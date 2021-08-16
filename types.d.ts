@@ -12036,6 +12036,7 @@ declare namespace exports {
 		export let hmrDownloadUpdateHandlers: string;
 		export let hmrModuleData: string;
 		export let hmrInvalidateModuleHandlers: string;
+		export let hmrRuntimeStatePrefix: string;
 		export let amdDefine: string;
 		export let amdOptions: string;
 		export let system: string;
