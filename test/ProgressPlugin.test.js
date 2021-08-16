@@ -79,7 +79,6 @@ const RunCompilerAsync = compiler =>
 	});
 
 describe("ProgressPlugin", function () {
-	jest.setTimeout(10000);
 	let stderr;
 	let stdout;
 
