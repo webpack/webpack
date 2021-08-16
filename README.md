@@ -138,25 +138,13 @@ or are automatically applied via regex from your webpack configuration.
 
 #### Files
 
-|        Name         |   Status    | Install Size | Description                                                                               |
-| :-----------------: | :---------: | :----------: | :---------------------------------------------------------------------------------------- |
-|  [raw-loader][raw]  | ![raw-npm]  | ![raw-size]  | Loads raw content of a file (utf-8)                                                       |
-|  [val-loader][val]  | ![val-npm]  | ![val-size]  | Executes code as module and considers exports as JS code                                  |
-|  [url-loader][url]  | ![url-npm]  | ![url-size]  | Works like the file loader, but can return a Data Url if the file is smaller than a limit |
-| [file-loader][file] | ![file-npm] | ![file-size] | Emits the file into the output folder and returns the (relative) url                      |
+|       Name        |   Status   | Install Size | Description                                              |
+| :---------------: | :--------: | :----------: | :------------------------------------------------------- |
+| [val-loader][val] | ![val-npm] | ![val-size]  | Executes code as module and considers exports as JS code |
 
-[raw]: https://github.com/webpack-contrib/raw-loader
-[raw-npm]: https://img.shields.io/npm/v/raw-loader.svg
-[raw-size]: https://packagephobia.com/badge?p=raw-loader
 [val]: https://github.com/webpack-contrib/val-loader
 [val-npm]: https://img.shields.io/npm/v/val-loader.svg
 [val-size]: https://packagephobia.com/badge?p=val-loader
-[url]: https://github.com/webpack-contrib/url-loader
-[url-npm]: https://img.shields.io/npm/v/url-loader.svg
-[url-size]: https://packagephobia.com/badge?p=url-loader
-[file]: https://github.com/webpack-contrib/file-loader
-[file-npm]: https://img.shields.io/npm/v/file-loader.svg
-[file-size]: https://packagephobia.com/badge?p=file-loader
 
 #### JSON
 
