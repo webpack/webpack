@@ -2388,6 +2388,17 @@ declare class ContextExclusionPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare interface ContextFileSystemInfoEntry {
+	safeTime: number;
+	timestampHash?: string;
+	resolved?: ResolvedContextFileSystemInfoEntry;
+	symlinks?: Set<string>;
+}
+declare interface ContextHash {
+	hash: string;
+	resolved?: string;
+	symlinks?: Set<string>;
+}
 type ContextMode =
 	| "sync"
 	| "eager"
@@ -2454,6 +2465,13 @@ declare class ContextReplacementPlugin {
 	newContentRecursive: any;
 	newContentRegExp: any;
 	apply(compiler?: any): void;
+}
+declare interface ContextTimestampAndHash {
+	safeTime: number;
+	timestampHash?: string;
+	hash: string;
+	resolved?: ResolvedContextTimestampAndHash;
+	symlinks?: Set<string>;
 }
 type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
 	Record<string, any>;
@@ -3250,6 +3268,11 @@ declare interface Experiments {
 	asyncWebAssembly?: boolean;
 
 	/**
+	 * Build http(s): urls using a lockfile and resource content cache.
+	 */
+	buildHttp?: boolean | HttpUriOptions;
+
+	/**
 	 * Enable build-time execution of modules from the module graph for plugins and loaders.
 	 */
 	executeModule?: boolean;
@@ -3968,8 +3991,13 @@ declare abstract class FileSystemInfo {
 	logger?: WebpackLogger;
 	fileTimestampQueue: AsyncQueue<string, string, null | FileSystemInfoEntry>;
 	fileHashQueue: AsyncQueue<string, string, null | string>;
-	contextTimestampQueue: AsyncQueue<string, string, null | FileSystemInfoEntry>;
-	contextHashQueue: AsyncQueue<string, string, null | string>;
+	contextTimestampQueue: AsyncQueue<
+		string,
+		string,
+		null | ContextFileSystemInfoEntry
+	>;
+	contextHashQueue: AsyncQueue<string, string, null | ContextHash>;
+	contextTshQueue: AsyncQueue<string, string, null | ContextTimestampAndHash>;
 	managedItemQueue: AsyncQueue<string, string, null | string>;
 	managedItemDirectoryQueue: AsyncQueue<string, string, Set<string>>;
 	managedPaths: string[];
@@ -3997,7 +4025,7 @@ declare abstract class FileSystemInfo {
 		path: string,
 		callback: (
 			arg0?: WebpackError,
-			arg1?: null | FileSystemInfoEntry | "ignore"
+			arg1?: null | "ignore" | ResolvedContextFileSystemInfoEntry
 		) => void
 	): void;
 	getFileHash(
@@ -4007,6 +4035,13 @@ declare abstract class FileSystemInfo {
 	getContextHash(
 		path: string,
 		callback: (arg0?: WebpackError, arg1?: string) => void
+	): void;
+	getContextTsh(
+		path: string,
+		callback: (
+			arg0?: WebpackError,
+			arg1?: ResolvedContextTimestampAndHash
+		) => void
 	): void;
 	resolveBuildDependencies(
 		context: string,
@@ -4045,7 +4080,6 @@ declare abstract class FileSystemInfo {
 declare interface FileSystemInfoEntry {
 	safeTime: number;
 	timestamp?: number;
-	timestampHash?: string;
 }
 declare interface FileSystemStats {
 	isDirectory: () => boolean;
@@ -4290,16 +4324,53 @@ declare interface HotModuleReplacementPluginLoaderContext {
 declare class HotUpdateChunk extends Chunk {
 	constructor();
 }
-declare class HttpUriPlugin {
-	constructor();
+
+/**
+ * Options for building http resources.
+ */
+declare interface HttpUriOptions {
+	/**
+	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
+	 */
+	cacheLocation?: string | false;
 
 	/**
-	 * Apply the plugin
+	 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
 	 */
-	apply(compiler: Compiler): void;
+	frozen?: boolean;
+
+	/**
+	 * Location of the lockfile.
+	 */
+	lockfileLocation?: string;
+
+	/**
+	 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
+	 */
+	upgrade?: boolean;
 }
-declare class HttpsUriPlugin {
-	constructor();
+declare class HttpUriPlugin {
+	constructor(options?: {
+		/**
+		 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
+		 */
+		cacheLocation?: string | false;
+		/**
+		 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
+		 */
+		frozen?: boolean;
+		/**
+		 * Location of the lockfile.
+		 */
+		lockfileLocation?: string;
+		/**
+		 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
+		 */
+		upgrade?: boolean;
+		hashFunction?: string | typeof Hash;
+		hashDigest?: string;
+		hashDigestLength?: number;
+	});
 
 	/**
 	 * Apply the plugin
@@ -4464,6 +4535,10 @@ declare interface InputFileSystem {
 		) => void
 	) => void;
 	stat: (
+		arg0: string,
+		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
+	) => void;
+	lstat?: (
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
 	) => void;
@@ -4747,21 +4822,44 @@ declare class JavascriptParser extends Parser {
 			boolean | void
 		>;
 		label: HookMap<SyncBailHook<[LabeledStatement], boolean | void>>;
-		import: SyncBailHook<[Statement, ImportSource], boolean | void>;
+		import: SyncBailHook<[ImportDeclaration, ImportSource], boolean | void>;
 		importSpecifier: SyncBailHook<
-			[Statement, ImportSource, string, string],
+			[ImportDeclaration, ImportSource, string, string],
 			boolean | void
 		>;
-		export: SyncBailHook<[Statement], boolean | void>;
-		exportImport: SyncBailHook<[Statement, ImportSource], boolean | void>;
-		exportDeclaration: SyncBailHook<[Statement, Declaration], boolean | void>;
-		exportExpression: SyncBailHook<[Statement, Declaration], boolean | void>;
+		export: SyncBailHook<
+			[ExportNamedDeclaration | ExportAllDeclaration],
+			boolean | void
+		>;
+		exportImport: SyncBailHook<
+			[ExportNamedDeclaration | ExportAllDeclaration, ImportSource],
+			boolean | void
+		>;
+		exportDeclaration: SyncBailHook<
+			[ExportNamedDeclaration | ExportAllDeclaration, Declaration],
+			boolean | void
+		>;
+		exportExpression: SyncBailHook<
+			[ExportDefaultDeclaration, Declaration],
+			boolean | void
+		>;
 		exportSpecifier: SyncBailHook<
-			[Statement, string, string, undefined | number],
+			[
+				ExportNamedDeclaration | ExportAllDeclaration,
+				string,
+				string,
+				undefined | number
+			],
 			boolean | void
 		>;
 		exportImportSpecifier: SyncBailHook<
-			[Statement, ImportSource, string, string, undefined | number],
+			[
+				ExportNamedDeclaration | ExportAllDeclaration,
+				ImportSource,
+				string,
+				string,
+				undefined | number
+			],
 			boolean | void
 		>;
 		preDeclarator: SyncBailHook<
@@ -6391,6 +6489,7 @@ declare class ModuleDependency extends Dependency {
 	request: string;
 	userRequest: string;
 	range: any;
+	assertions?: Record<string, any>;
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
@@ -6942,6 +7041,7 @@ declare class NaturalModuleIdsPlugin {
 	apply(compiler: Compiler): void;
 }
 declare interface NeedBuildContext {
+	compilation: Compilation;
 	fileSystemInfo: FileSystemInfo;
 	valueCacheVersions: Map<string, string | Set<string>>;
 }
@@ -7126,6 +7226,10 @@ declare class NormalModule extends Module {
 		 */
 		resourceResolveData?: Record<string, any>;
 		/**
+		 * context directory for resolving
+		 */
+		context: string;
+		/**
 		 * path + query of the matched resource (virtual)
 		 */
 		matchResource?: string;
@@ -7208,11 +7312,15 @@ declare interface NormalModuleCompilationHooks {
 	readResourceForScheme: HookMap<
 		AsyncSeriesBailHook<[string, NormalModule], string | Buffer>
 	>;
+	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		resolve: AsyncSeriesBailHook<[ResolveData], any>;
 		resolveForScheme: HookMap<
+			AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], true | void>
+		>;
+		resolveInScheme: HookMap<
 			AsyncSeriesBailHook<[ResourceDataWithData, ResolveData], true | void>
 		>;
 		factorize: AsyncSeriesBailHook<[ResolveData], any>;
@@ -8400,6 +8508,7 @@ declare interface ParserOptionsByModuleTypeUnknown {
 }
 type ParserState = Record<string, any> & ParserStateBase;
 declare interface ParserStateBase {
+	source: string | Buffer;
 	current: NormalModule;
 	module: NormalModule;
 	compilation: Compilation;
@@ -8952,7 +9061,9 @@ declare interface ResolveData {
 	resolveOptions?: ResolveOptionsWebpackOptions;
 	context: string;
 	request: string;
+	assertions?: Record<string, any>;
 	dependencies: ModuleDependency[];
+	dependencyType: string;
 	createData: Object;
 	fileDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
@@ -9182,6 +9293,15 @@ declare interface ResolvePluginInstance {
 	apply: (resolver: Resolver) => void;
 }
 type ResolveRequest = BaseResolveRequest & Partial<ParsedIdentifier>;
+declare interface ResolvedContextFileSystemInfoEntry {
+	safeTime: number;
+	timestampHash?: string;
+}
+declare interface ResolvedContextTimestampAndHash {
+	safeTime: number;
+	timestampHash?: string;
+	hash: string;
+}
 declare abstract class Resolver {
 	fileSystem: FileSystem;
 	options: ResolveOptionsTypes;
@@ -9276,6 +9396,7 @@ declare interface ResourceDataWithData {
 	path: string;
 	query: string;
 	fragment: string;
+	context?: string;
 	data: Record<string, any>;
 }
 type Rule = string | RegExp;
@@ -9363,6 +9484,11 @@ declare interface RuleSetLogicalConditionsAbsolute {
  * A rule description with conditions and effects for modules.
  */
 declare interface RuleSetRule {
+	/**
+	 * Match on import assertions of the dependency.
+	 */
+	assert?: { [index: string]: RuleSetConditionOrConditions };
+
 	/**
 	 * Match the child compiler name.
 	 */
@@ -10247,9 +10373,9 @@ declare abstract class Snapshot {
 	fileTimestamps?: Map<string, FileSystemInfoEntry>;
 	fileHashes?: Map<string, string>;
 	fileTshs?: Map<string, string | TimestampAndHash>;
-	contextTimestamps?: Map<string, FileSystemInfoEntry>;
+	contextTimestamps?: Map<string, ResolvedContextFileSystemInfoEntry>;
 	contextHashes?: Map<string, string>;
-	contextTshs?: Map<string, string | TimestampAndHash>;
+	contextTshs?: Map<string, ResolvedContextTimestampAndHash>;
 	missingExistence?: Map<string, boolean>;
 	managedItemInfo?: Map<string, string>;
 	managedFiles?: Set<string>;
@@ -11163,7 +11289,6 @@ declare class Template {
 declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
-	timestampHash?: string;
 	hash: string;
 }
 
@@ -11957,6 +12082,7 @@ declare namespace exports {
 		export let hmrDownloadUpdateHandlers: string;
 		export let hmrModuleData: string;
 		export let hmrInvalidateModuleHandlers: string;
+		export let hmrRuntimeStatePrefix: string;
 		export let amdDefine: string;
 		export let amdOptions: string;
 		export let system: string;
@@ -12169,7 +12295,7 @@ declare namespace exports {
 	}
 	export namespace experiments {
 		export namespace schemes {
-			export { HttpUriPlugin, HttpsUriPlugin };
+			export { HttpUriPlugin };
 		}
 	}
 	export type WebpackPluginFunction = (

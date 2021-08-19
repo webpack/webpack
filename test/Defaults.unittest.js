@@ -91,7 +91,12 @@ describe("Defaults", () => {
 		    },
 		  },
 		  "experiments": Object {
+		    "asset": false,
 		    "asyncWebAssembly": false,
+		    "buildHttp": false,
+		    "executeModule": false,
+		    "layers": false,
+		    "lazyCompilation": false,
 		    "outputModule": false,
 		    "syncWebAssembly": false,
 		    "topLevelAwait": false,
@@ -190,6 +195,12 @@ describe("Defaults", () => {
 		            "type": "asset/resource",
 		          },
 		        ],
+		      },
+		      Object {
+		        "assert": Object {
+		          "type": "json",
+		        },
+		        "type": "json",
 		      },
 		    ],
 		    "generator": Object {},
@@ -819,8 +830,6 @@ describe("Defaults", () => {
 		-     "syncWebAssembly": false,
 		+     "syncWebAssembly": true,
 		@@ ... @@
-		+           },
-		+         ],
 		+       },
 		+       Object {
 		+         "rules": Array [
@@ -845,9 +854,9 @@ describe("Defaults", () => {
 		+             },
 		+             "resolve": Object {
 		+               "fullySpecified": true,
-		@@ ... @@
+		+             },
 		+           },
-		@@ ... @@
+		+         ],
 		+         "type": "webassembly/sync",
 	`)
 	);
@@ -891,8 +900,6 @@ describe("Defaults", () => {
 		-     "asyncWebAssembly": false,
 		+     "asyncWebAssembly": true,
 		@@ ... @@
-		+           },
-		+         ],
 		+       },
 		+       Object {
 		+         "rules": Array [
@@ -917,9 +924,9 @@ describe("Defaults", () => {
 		+             },
 		+             "resolve": Object {
 		+               "fullySpecified": true,
-		@@ ... @@
+		+             },
 		+           },
-		@@ ... @@
+		+         ],
 		+         "type": "webassembly/async",
 	`)
 	);
@@ -938,8 +945,6 @@ describe("Defaults", () => {
 			-     "syncWebAssembly": false,
 			+     "syncWebAssembly": true,
 			@@ ... @@
-			+           },
-			+         ],
 			+       },
 			+       Object {
 			+         "rules": Array [
@@ -954,7 +959,7 @@ describe("Defaults", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			@@ ... @@
+			+       },
 			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
@@ -966,7 +971,7 @@ describe("Defaults", () => {
 			+               "fullySpecified": true,
 			+             },
 			+           },
-			@@ ... @@
+			+         ],
 			+         "type": "webassembly/async",
 		`)
 	);
@@ -1511,7 +1516,7 @@ describe("Defaults", () => {
 +     },
 +     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
 +     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-none",
-+     "compression": "gzip",
++     "compression": false,
 +     "hashAlgorithm": "md4",
 +     "idleTimeout": 60000,
 +     "idleTimeoutAfterLargeChanges": 1000,
@@ -1555,7 +1560,9 @@ describe("Defaults", () => {
 +     },
 +     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
 +     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-development",
-+     "compression": false,
++     "
+
+": false,
 +     "hashAlgorithm": "md4",
 +     "idleTimeout": 60000,
 +     "idleTimeoutAfterLargeChanges": 1000,
@@ -1804,7 +1811,7 @@ describe("Defaults", () => {
 +     },
 +     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
 +     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-none",
-+     "compression": "gzip",
++     "compression": false,
 +     "hashAlgorithm": "md4",
 +     "idleTimeout": 60000,
 +     "idleTimeoutAfterLargeChanges": 1000,

@@ -186,6 +186,8 @@
     "redeclaration",
     "kaios",
     "parallelism",
+    "gitattributes",
+    "hashbang",
 
     "webassemblyjs",
     "fsevents",
@@ -201,6 +203,7 @@
     "atlaskit",
     "xxhashjs",
     "systemjs",
+    "skypack",
 
     "sokra",
     "Koppers",
@@ -228,5 +231,9 @@
     "pnpm"
   ],
   "ignoreRegExpList": ["/Author.+/", "/data:.*/", "/\"mappings\":\".+\"/"],
-  "ignorePaths": ["**/dist/**", "examples/**/README.md"]
+  "ignorePaths": [
+    "**/dist/**",
+    "examples/**/README.md",
+    "**/webpack.lock.data/**"
+  ]
 }

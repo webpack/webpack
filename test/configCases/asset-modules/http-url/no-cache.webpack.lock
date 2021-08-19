@@ -1,0 +1,18 @@
+{
+  "http://localhost:9990/asset.txt": { "integrity": "sha512-LHT9F+2v2A6ER7DUZ0HuJDt+t03SFJoKsbkkb7MDgvJ+hT2FhXGeDmfL2g2qj1FnEGRhXWRa4nrLFb+xRH9Fmw==", "contentType": "text/css" },
+  "http://localhost:9990/asset.txt?query": { "integrity": "sha512-LHT9F+2v2A6ER7DUZ0HuJDt+t03SFJoKsbkkb7MDgvJ+hT2FhXGeDmfL2g2qj1FnEGRhXWRa4nrLFb+xRH9Fmw==", "contentType": "text/css" },
+  "http://localhost:9990/fallback.js": { "integrity": "sha512-BCkBS4Wb0EreudEceuobqZZwTE7SeVUJ2vVHxDQKm8xW6dGJRcUrrSWcjd/61zijOeYAW0P+boOg7u0vxrGwYg==", "contentType": "text/javascript" },
+  "http://localhost:9990/folder/dependency.js": { "integrity": "sha512-N0En4W3aNPY82MPu16+50P4PqLLyPLI6l33wR2a3ue8VCRjY8RJl8erRB8ztWSEYNad7yRDPrqlYT+IBtoOA9w==", "contentType": "text/javascript" },
+  "http://localhost:9990/folder/sub-dependency.js": { "integrity": "sha512-Jjmwazwmg67EwNPViCBwvSIxhENfS6gwufXoQLrB0B/JDA4v1p+p2S5Y6IGP4SzZqqVTsROlU8meD6ep3q6MTA==", "contentType": "text/javascript" },
+  "http://localhost:9990/folder/sub-dependency2.js": { "integrity": "sha512-BDZKEwlnwBabeHEwmMd02NxFEjYy+QwKAKP0S8zMMesX7dUsvh11hM7LUOPPFOS+nIEFZPtnc7kFwmnojVUw5A==", "contentType": "text/javascript" },
+  "http://localhost:9990/index.css?cache": { "integrity": "sha512-sqhF9JAEi5h3ziP48SBnzQnaeei8cf/pfYJBdKL4F7xdu3v5yr71eQ0kCL11/jWRFjLG4TKOudUnS/u6WLMqYw==", "contentType": "text/css" },
+  "http://localhost:9990/index.css?no-cache": "no-cache",
+  "http://localhost:9990/index.css?query#fragment": { "integrity": "sha512-sqhF9JAEi5h3ziP48SBnzQnaeei8cf/pfYJBdKL4F7xdu3v5yr71eQ0kCL11/jWRFjLG4TKOudUnS/u6WLMqYw==", "contentType": "text/css" },
+  "http://localhost:9990/redirect": { "resolved": "http://localhost:9990/redirect.js", "integrity": "sha512-BV/MK/QTq+NHRve1XpZyQ8V6cjRP/fwbtJvENRdm5C73qNYZ4i2/fw+soj7J4qxzBXMHDbvOnA6E0ShnX2hc1w==", "contentType": "text/javascript" },
+  "http://localhost:9990/redirect.js": { "integrity": "sha512-BV/MK/QTq+NHRve1XpZyQ8V6cjRP/fwbtJvENRdm5C73qNYZ4i2/fw+soj7J4qxzBXMHDbvOnA6E0ShnX2hc1w==", "contentType": "text/javascript" },
+  "http://localhost:9990/resolve.js": { "integrity": "sha512-6J9zBO2hXSMTO1EtXJOxSRB2nVPHCoNmNHS8an1QeehzJFc3uoBPRWu6hqHPc54gv2/QME9RBR/BXIan68virg==", "contentType": "text/javascript" },
+  "http://localhost:9990/url.js": { "integrity": "sha512-Dlw99Gtp/ZRxWvGlqD2EKnvbo1i6j/slwQO4WV8RIRhYZx9ErI+rndpyDMaKykSnq20HCp5H73TJ+dtO+wDyEg==", "contentType": "text/javascript" },
+  "https://raw.githubusercontent.com//webpack//webpack//main/CODE_OF_CONDUCT.md": { "resolved": "https://raw.githubusercontent.com/webpack/webpack/main/CODE_OF_CONDUCT.md", "integrity": "sha512-OLJ9q6iSO652hVBkTLsMLtQnFBBTzEbFqLGyWD62nPga/0DZ9bc3oOFb5OYT8RIPzmlOX4WzK2uiLgc1NSGtBA==", "contentType": "text/plain; charset=utf-8" },
+  "https://raw.githubusercontent.com/webpack/webpack/main/CODE_OF_CONDUCT.md": { "integrity": "sha512-OLJ9q6iSO652hVBkTLsMLtQnFBBTzEbFqLGyWD62nPga/0DZ9bc3oOFb5OYT8RIPzmlOX4WzK2uiLgc1NSGtBA==", "contentType": "text/plain; charset=utf-8" },
+  "version": 1
+}
