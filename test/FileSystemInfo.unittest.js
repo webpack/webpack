@@ -18,13 +18,17 @@ describe("FileSystemInfo", () => {
 		"/path/circular/circular/file2.txt",
 		"/path/nested/deep/symlink/file.txt",
 		"/path/context+files/sub/symlink/file.txt",
-		"/path/context/sub/symlink/file.txt"
+		"/path/context/sub/symlink/file.txt",
+		"/path/missing.txt"
 	];
 	const directories = [
 		"/path/context+files",
 		"/path/context",
+		"/path/missing",
 		"/path/node_modules/package",
-		"/path/cache/package-1234"
+		"/path/node_modules/missing",
+		"/path/cache/package-1234",
+		"/path/cache/package-missing"
 	];
 	const missing = [
 		"/path/package.json",
