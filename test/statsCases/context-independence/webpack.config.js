@@ -3,7 +3,6 @@ const path = require("path");
 const base = {
 	mode: "production",
 	devtool: "source-map",
-	entry: "./index",
 	module: {
 		rules: [
 			{
@@ -15,6 +14,9 @@ const base = {
 	},
 	stats: {
 		relatedAssets: true
+	},
+	experiments: {
+		layers: true
 	}
 };
 
@@ -23,10 +25,21 @@ const base2 = {
 	devtool: "eval-source-map"
 };
 
+const base3 = {
+	...base,
+	devtool: "eval"
+};
+
 /** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{
 		...base,
+		entry: {
+			main: {
+				import: "./index",
+				layer: path.resolve(__dirname, "a")
+			}
+		},
 		context: path.resolve(__dirname, "a"),
 		output: {
 			path: path.resolve(__dirname, "../../js/stats/context-independence/a"),
@@ -35,6 +48,12 @@ module.exports = [
 	},
 	{
 		...base,
+		entry: {
+			main: {
+				import: "./index",
+				layer: path.resolve(__dirname, "b")
+			}
+		},
 		context: path.resolve(__dirname, "b"),
 		output: {
 			path: path.resolve(__dirname, "../../js/stats/context-independence/b"),
@@ -43,6 +62,46 @@ module.exports = [
 	},
 	{
 		...base2,
+		entry: {
+			main: {
+				import: "./index",
+				layer: path.resolve(__dirname, "a")
+			}
+		},
+		context: path.resolve(__dirname, "a"),
+		output: {
+			path: path.resolve(
+				__dirname,
+				"../../js/stats/context-independence/eval-source-map-a"
+			),
+			filename: "[name]-[chunkhash].js"
+		}
+	},
+	{
+		...base2,
+		entry: {
+			main: {
+				import: "./index",
+				layer: path.resolve(__dirname, "b")
+			}
+		},
+		context: path.resolve(__dirname, "b"),
+		output: {
+			path: path.resolve(
+				__dirname,
+				"../../js/stats/context-independence/eval-source-map-b"
+			),
+			filename: "[name]-[chunkhash].js"
+		}
+	},
+	{
+		...base3,
+		entry: {
+			main: {
+				import: "./index",
+				layer: path.resolve(__dirname, "a")
+			}
+		},
 		context: path.resolve(__dirname, "a"),
 		output: {
 			path: path.resolve(
@@ -53,7 +112,13 @@ module.exports = [
 		}
 	},
 	{
-		...base2,
+		...base3,
+		entry: {
+			main: {
+				import: "./index",
+				layer: path.resolve(__dirname, "b")
+			}
+		},
 		context: path.resolve(__dirname, "b"),
 		output: {
 			path: path.resolve(
