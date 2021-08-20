@@ -58,15 +58,13 @@ module.exports = (env = "development") => ({
   \******************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: top-level-this-exports */
-/*! CommonJS bailout: this is used directly at 1:22-26 */
+/*! CommonJS bailout: this is used directly at 1:21-25 */
 /***/ (function() {
 
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
+var __spreadArray = (this && this.__spreadArray) || function (to, from) {
+    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+        to[j] = from[i];
+    return to;
 };
 var myName = "Junya";
 var age = 22;
@@ -75,7 +73,7 @@ function getArray() {
     for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
     }
-    return __spreadArrays(args);
+    return __spreadArray([], args);
 }
 console.log(getArray("foo", "bar"));
 console.log(getArray(1, 2, 3));
@@ -95,8 +93,9 @@ console.log(getArray(1, 2, 3));
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -118,6 +117,8 @@ console.log(getArray(1, 2, 3));
 </details>
 
 ``` js
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
@@ -137,25 +138,25 @@ console.log(__webpack_require__(/*! ./index */ 1));
 ## Unoptimized
 
 ```
-asset output.js 2.18 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 652 bytes [entry] [rendered]
+asset output.js 2.22 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 513 bytes [entry] [rendered]
   > ./example.js main
-  dependent modules 619 bytes [dependent] 1 module
+  dependent modules 480 bytes [dependent] 1 module
   ./example.js 33 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 524 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 652 bytes [entry] [rendered]
+asset output.js 438 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 513 bytes [entry] [rendered]
   > ./example.js main
-  dependent modules 619 bytes [dependent] 1 module
+  dependent modules 480 bytes [dependent] 1 module
   ./example.js 33 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

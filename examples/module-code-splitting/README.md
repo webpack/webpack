@@ -43,7 +43,6 @@ export function reset() {
 # dist/output.js
 
 ```javascript
-/******/ "use strict";
 /******/ var __webpack_modules__ = ({});
 ```
 
@@ -140,6 +139,27 @@ export function reset() {
 /******/ 		0: 0
 /******/ 	};
 /******/ 	
+/******/ 	var installChunk = (data) => {
+/******/ 		var {ids, modules, runtime} = data;
+/******/ 		// add "modules" to the modules object,
+/******/ 		// then flag all "ids" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0;
+/******/ 		for(moduleId in modules) {
+/******/ 			if(__webpack_require__.o(modules, moduleId)) {
+/******/ 				__webpack_require__.m[moduleId] = modules[moduleId];
+/******/ 			}
+/******/ 		}
+/******/ 		if(runtime) runtime(__webpack_require__);
+/******/ 		for(;i < ids.length; i++) {
+/******/ 			chunkId = ids[i];
+/******/ 			if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 				installedChunks[chunkId][0]();
+/******/ 			}
+/******/ 			installedChunks[ids[i]] = 0;
+/******/ 		}
+/******/ 	
+/******/ 	}
+/******/ 	
 /******/ 	__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 			// import() chunk loading for javascript
 /******/ 			var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
@@ -151,26 +171,7 @@ export function reset() {
 /******/ 				} else {
 /******/ 					if(true) { // all chunks have JS
 /******/ 						// setup Promise in chunk cache
-/******/ 						var promise = import("./" + __webpack_require__.u(chunkId)).then((data) => {
-/******/ 							var {ids, modules, runtime} = data;
-/******/ 							// add "modules" to the modules object,
-/******/ 							// then flag all "ids" as loaded and fire callback
-/******/ 							var moduleId, chunkId, i = 0;
-/******/ 							for(moduleId in modules) {
-/******/ 								if(__webpack_require__.o(modules, moduleId)) {
-/******/ 									__webpack_require__.m[moduleId] = modules[moduleId];
-/******/ 								}
-/******/ 							}
-/******/ 							if(runtime) runtime(__webpack_require__);
-/******/ 							for(;i < ids.length; i++) {
-/******/ 								chunkId = ids[i];
-/******/ 								if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-/******/ 									installedChunks[chunkId][0]();
-/******/ 								}
-/******/ 								installedChunks[ids[i]] = 0;
-/******/ 							}
-/******/ 	
-/******/ 						}, (e) => {
+/******/ 						var promise = import("./" + __webpack_require__.u(chunkId)).then(installChunk, (e) => {
 /******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
 /******/ 							throw e;
 /******/ 						});
@@ -180,6 +181,8 @@ export function reset() {
 /******/ 				}
 /******/ 			}
 /******/ 	};
+/******/ 	
+/******/ 	// no external install chunk
 /******/ 	
 /******/ 	// no on chunks loaded
 /******/ })();
@@ -222,7 +225,7 @@ setTimeout(async () => {
 # dist/output.js (production)
 
 ```javascript
-var e,o={},t={};function r(e){var n=t[e];if(void 0!==n)return n.exports;var i=t[e]={exports:{}};return o[e](i,i.exports,r),i.exports}r.m=o,r.d=(e,o)=>{for(var t in o)r.o(o,t)&&!r.o(e,t)&&Object.defineProperty(e,t,{enumerable:!0,get:o[t]})},r.f={},r.e=e=>Promise.all(Object.keys(r.f).reduce(((o,t)=>(r.f[t](e,o),o)),[])),r.u=e=>e+".output.js",r.o=(e,o)=>Object.prototype.hasOwnProperty.call(e,o),r.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},e={179:0},r.f.j=(o,t)=>{var n=r.o(e,o)?e[o]:void 0;if(0!==n)if(n)t.push(n[1]);else{var i=import("./"+r.u(o)).then((o=>{var t,n,{ids:i,modules:a,runtime:s}=o,u=0;for(t in a)r.o(a,t)&&(r.m[t]=a[t]);for(s&&s(r);u<i.length;u++)n=i[u],r.o(e,n)&&e[n]&&e[n][0](),e[i[u]]=0}),(t=>{throw 0!==e[o]&&(e[o]=void 0),t}));i=Promise.race([i,new Promise((t=>n=e[o]=[t]))]),t.push(n[1]=i)}};const n=e=>console.log(e);setTimeout((async()=>{const e=await r.e(946).then(r.bind(r,946));n(e.value),e.increment(),e.increment(),e.increment(),n(e.value),await(async()=>{(await r.e(946).then(r.bind(r,946))).reset()})(),n(e.value)}),100);
+var e,o,t={},r={};function n(e){var o=r[e];if(void 0!==o)return o.exports;var i=r[e]={exports:{}};return t[e](i,i.exports,n),i.exports}n.m=t,n.d=(e,o)=>{for(var t in o)n.o(o,t)&&!n.o(e,t)&&Object.defineProperty(e,t,{enumerable:!0,get:o[t]})},n.f={},n.e=e=>Promise.all(Object.keys(n.f).reduce(((o,t)=>(n.f[t](e,o),o)),[])),n.u=e=>e+".output.js",n.o=(e,o)=>Object.prototype.hasOwnProperty.call(e,o),n.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},e={179:0},o=o=>{var t,r,{ids:i,modules:a,runtime:s}=o,u=0;for(t in a)n.o(a,t)&&(n.m[t]=a[t]);for(s&&s(n);u<i.length;u++)r=i[u],n.o(e,r)&&e[r]&&e[r][0](),e[i[u]]=0},n.f.j=(t,r)=>{var i=n.o(e,t)?e[t]:void 0;if(0!==i)if(i)r.push(i[1]);else{var a=import("./"+n.u(t)).then(o,(o=>{throw 0!==e[t]&&(e[t]=void 0),o}));a=Promise.race([a,new Promise((o=>i=e[t]=[o]))]),r.push(i[1]=a)}};const i=e=>console.log(e);setTimeout((async()=>{const e=await n.e(946).then(n.bind(n,946));i(e.value),e.increment(),e.increment(),e.increment(),i(e.value),await(async()=>{(await n.e(946).then(n.bind(n,946))).reset()})(),i(e.value)}),100);
 ```
 
 # Info
@@ -230,11 +233,11 @@ var e,o={},t={};function r(e){var n=t[e];if(void 0!==n)return n.exports;var i=t[
 ## Unoptimized
 
 ```
-asset output.js 6.35 KiB [emitted] [javascript module] (name: main)
-asset 1.output.js 1.36 KiB [emitted] [javascript module]
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.9 KiB (runtime) [entry] [rendered]
+asset output.js 6.34 KiB [emitted] [javascript module] (name: main)
+asset 1.output.js 1.35 KiB [emitted] [javascript module]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.87 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.9 KiB 6 modules
+  runtime modules 2.87 KiB 6 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]
@@ -247,7 +250,7 @@ chunk (runtime: main) 1.output.js 146 bytes [rendered]
     [exports: decrement, increment, reset, value]
     import() ./counter ./example.js + 1 modules ./example.js 4:23-42
     import() ./counter ./example.js + 1 modules ./methods.js 2:8-27
-webpack 5.40.0 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
@@ -255,9 +258,9 @@ webpack 5.40.0 compiled successfully
 ```
 asset output.js 1.15 KiB [emitted] [javascript module] [minimized] (name: main)
 asset 946.output.js 213 bytes [emitted] [javascript module] [minimized]
-chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.9 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 420 bytes (javascript) 2.87 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.9 KiB 6 modules
+  runtime modules 2.87 KiB 6 modules
   ./example.js + 1 modules 420 bytes [built] [code generated]
     [no exports]
     [no exports used]
@@ -270,5 +273,5 @@ chunk (runtime: main) 946.output.js 146 bytes [rendered]
     [exports: decrement, increment, reset, value]
     import() ./counter ./example.js + 1 modules ./example.js 4:23-42
     import() ./counter ./example.js + 1 modules ./methods.js 2:8-27
-webpack 5.40.0 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

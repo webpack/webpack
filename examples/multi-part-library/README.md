@@ -63,48 +63,45 @@ module.exports = "alpha";
 
 <details><summary><code>/* webpack runtime code */</code></summary>
 
-```js
+``` js
 /************************************************************************/
-/******/ // The module cache
-/******/ var __webpack_module_cache__ = {};
-/******/
-/******/ // The require function
-/******/ function __webpack_require__(moduleId) {
-	/******/ // Check if module is in cache
-	/******/ if (__webpack_module_cache__[moduleId]) {
-		/******/ return __webpack_module_cache__[moduleId].exports;
-		/******/
-	}
-	/******/ // Create a new module (and put it into the cache)
-	/******/ var module = (__webpack_module_cache__[moduleId] = {
-		/******/ // no module.id needed
-		/******/ // no module.loaded needed
-		/******/ exports: {}
-		/******/
-	});
-	/******/
-	/******/ // Execute the module function
-	/******/ __webpack_modules__[moduleId](
-		module,
-		module.exports,
-		__webpack_require__
-	);
-	/******/
-	/******/ // Return the exports of the module
-	/******/ return module.exports;
-	/******/
-}
-/******/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
 /************************************************************************/
 ```
 
 </details>
 
-```js
-/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+``` js
+/******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	
+/******/ 	return __webpack_exports__;
 /******/ })()
 ;
 });
@@ -143,48 +140,45 @@ module.exports = "beta";
 
 <details><summary><code>/* webpack runtime code */</code></summary>
 
-```js
+``` js
 /************************************************************************/
-/******/ // The module cache
-/******/ var __webpack_module_cache__ = {};
-/******/
-/******/ // The require function
-/******/ function __webpack_require__(moduleId) {
-	/******/ // Check if module is in cache
-	/******/ if (__webpack_module_cache__[moduleId]) {
-		/******/ return __webpack_module_cache__[moduleId].exports;
-		/******/
-	}
-	/******/ // Create a new module (and put it into the cache)
-	/******/ var module = (__webpack_module_cache__[moduleId] = {
-		/******/ // no module.id needed
-		/******/ // no module.loaded needed
-		/******/ exports: {}
-		/******/
-	});
-	/******/
-	/******/ // Execute the module function
-	/******/ __webpack_modules__[moduleId](
-		module,
-		module.exports,
-		__webpack_require__
-	);
-	/******/
-	/******/ // Return the exports of the module
-	/******/ return module.exports;
-	/******/
-}
-/******/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
 /************************************************************************/
 ```
 
 </details>
 
-```js
-/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+``` js
+/******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(1);
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(1);
+/******/ 	
+/******/ 	return __webpack_exports__;
 /******/ })()
 ;
 });
@@ -195,8 +189,8 @@ module.exports = "beta";
 ## Unoptimized
 
 ```
-asset MyLibrary.beta.js 1.96 KiB [emitted] (name: beta)
-asset MyLibrary.alpha.js 1.95 KiB [emitted] (name: alpha)
+asset MyLibrary.beta.js 2.07 KiB [emitted] (name: beta)
+asset MyLibrary.alpha.js 2.06 KiB [emitted] (name: alpha)
 chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
   > ./alpha alpha
   ./alpha.js 25 bytes [built] [code generated]
@@ -211,14 +205,14 @@ chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     cjs self exports reference ./beta.js 1:0-14
     entry ./beta beta
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset MyLibrary.alpha.js 415 bytes [emitted] [minimized] (name: alpha)
-asset MyLibrary.beta.js 411 bytes [emitted] [minimized] (name: beta)
+asset MyLibrary.alpha.js 429 bytes [emitted] [minimized] (name: alpha)
+asset MyLibrary.beta.js 425 bytes [emitted] [minimized] (name: beta)
 chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
   > ./alpha alpha
   ./alpha.js 25 bytes [built] [code generated]
@@ -233,5 +227,5 @@ chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     cjs self exports reference ./beta.js 1:0-14
     entry ./beta beta
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

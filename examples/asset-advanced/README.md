@@ -74,48 +74,7 @@ module.exports = {
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
-/* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! namespace exports */
-/*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _images_file_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images/file.svg */ 1);
-
-
-const container = document.createElement("div");
-Object.assign(container.style, {
-	display: "flex",
-	justifyContent: "center"
-});
-document.body.appendChild(container);
-
-function createImageElement(title, src) {
-	const div = document.createElement("div");
-	div.style.textAlign = "center";
-
-	const h2 = document.createElement("h2");
-	h2.textContent = title;
-	div.appendChild(h2);
-
-	const img = document.createElement("img");
-	img.setAttribute("src", src);
-	img.setAttribute("width", "150");
-	div.appendChild(img);
-
-	container.appendChild(div);
-}
-
-[_images_file_svg__WEBPACK_IMPORTED_MODULE_0__].forEach(src => {
-	createImageElement(src.split(".").pop(), src);
-});
-
-
-/***/ }),
+/* 0 */,
 /* 1 */
 /*!*************************!*\
   !*** ./images/file.svg ***!
@@ -141,8 +100,9 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -176,10 +136,48 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 </details>
 
 ``` js
-/******/ 	// startup
-/******/ 	// Load entry module
-/******/ 	__webpack_require__(0);
-/******/ 	// This entry module used 'exports' so it can't be inlined
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! namespace exports */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _images_file_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images/file.svg */ 1);
+
+
+const container = document.createElement("div");
+Object.assign(container.style, {
+	display: "flex",
+	justifyContent: "center"
+});
+document.body.appendChild(container);
+
+function createImageElement(title, src) {
+	const div = document.createElement("div");
+	div.style.textAlign = "center";
+
+	const h2 = document.createElement("h2");
+	h2.textContent = title;
+	div.appendChild(h2);
+
+	const img = document.createElement("img");
+	img.setAttribute("src", src);
+	img.setAttribute("width", "150");
+	div.appendChild(img);
+
+	container.appendChild(div);
+}
+
+[_images_file_svg__WEBPACK_IMPORTED_MODULE_0__].forEach(src => {
+	createImageElement(src.split(".").pop(), src);
+});
+
+})();
+
 /******/ })()
 ;
 ```
@@ -189,7 +187,7 @@ module.exports = "data:image/svg+xml,%3csvg xmlns='http://www.w3.or...3c/svg%3e"
 ## webpack output
 
 ```
-asset output.js 3.86 KiB [emitted] (name: main)
+asset output.js 3.81 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 1.54 KiB (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 915 bytes [dependent] 1 module
@@ -198,5 +196,5 @@ chunk (runtime: main) output.js (main) 1.54 KiB (javascript) 274 bytes (runtime)
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

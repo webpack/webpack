@@ -126,8 +126,9 @@ __webpack_unused_export__ = function multiply() {
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -149,6 +150,8 @@ __webpack_unused_export__ = function multiply() {
 </details>
 
 ``` js
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
@@ -169,14 +172,14 @@ inc(a); // 2
 
 ```javascript
 /*! For license information please see output.js.LICENSE.txt */
-(()=>{var r=[,(r,n,t)=>{const e=t(2).I;n.nP=function(r){return e(r,1)}},(r,n)=>{n.I=function(){for(var r=0,n=0,t=arguments,e=t.length;n<e;)r+=t[n++];return r}}],n={};(0,function t(e){if(n[e])return n[e].exports;var o=n[e]={exports:{}};return r[e](o,o.exports,t),o.exports}(1).nP)(1)})();
+(()=>{var r=[,(r,n,t)=>{const o=t(2).I;n.nP=function(r){return o(r,1)}},(r,n)=>{n.I=function(){for(var r=0,n=0,t=arguments,o=t.length;n<o;)r+=t[n++];return r}}],n={};(0,function t(o){var e=n[o];if(void 0!==e)return e.exports;var u=n[o]={exports:{}};return r[o](u,u.exports,t),u.exports}(1).nP)(1)})();
 ```
 
 # dist/without.js (same without tree shaking)
 
 ```javascript
 /*! For license information please see without.js.LICENSE.txt */
-(()=>{var n=[,(n,r,t)=>{const e=t(2).add;r.increment=function(n){return e(n,1)},r.incrementBy2=function(n){return e(n,2)},r.decrement=function(n){return e(n,1)}},(n,r)=>{r.add=function(){for(var n=0,r=0,t=arguments,e=t.length;r<e;)n+=t[r++];return n},r.multiply=function(){for(var n=0,r=arguments,t=r.length;n<t;)sum*=r[n++];return sum}}],r={};(0,function t(e){if(r[e])return r[e].exports;var u=r[e]={exports:{}};return n[e](u,u.exports,t),u.exports}(1).increment)(1)})();
+(()=>{var n=[,(n,r,t)=>{const e=t(2).add;r.increment=function(n){return e(n,1)},r.incrementBy2=function(n){return e(n,2)},r.decrement=function(n){return e(n,1)}},(n,r)=>{r.add=function(){for(var n=0,r=0,t=arguments,e=t.length;r<e;)n+=t[r++];return n},r.multiply=function(){for(var n=0,r=arguments,t=r.length;n<t;)sum*=r[n++];return sum}}],r={};(0,function t(e){var u=r[e];if(void 0!==u)return u.exports;var o=r[e]={exports:{}};return n[e](o,o.exports,t),o.exports}(1).increment)(1)})();
 ```
 
 # Info
@@ -184,43 +187,43 @@ inc(a); // 2
 ## Unoptimized
 
 ```
-asset output.js 2.76 KiB [emitted] (name: main)
+asset output.js 2.93 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
   ./example.js 70 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 
-asset without.js 2.91 KiB [emitted] (name: main)
+asset without.js 3.08 KiB [emitted] (name: main)
 chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
   ./example.js 70 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 351 bytes [emitted] [minimized] (name: main) 1 related asset
+asset output.js 365 bytes [emitted] [minimized] (name: main) 1 related asset
 chunk (runtime: main) output.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
   ./example.js 70 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 
-asset without.js 537 bytes [emitted] [minimized] (name: main) 1 related asset
+asset without.js 551 bytes [emitted] [minimized] (name: main) 1 related asset
 chunk (runtime: main) without.js (main) 634 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
   ./example.js 70 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
