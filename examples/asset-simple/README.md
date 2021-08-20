@@ -61,52 +61,7 @@ module.exports = {
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
-/* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! namespace exports */
-/*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _images_file_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images/file.png */ 1);
-/* harmony import */ var _images_file_jpg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./images/file.jpg */ 2);
-/* harmony import */ var _images_file_svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./images/file.svg */ 3);
-
-
-
-
-const container = document.createElement("div");
-Object.assign(container.style, {
-	display: "flex",
-	justifyContent: "center"
-});
-document.body.appendChild(container);
-
-function createImageElement(title, src) {
-	const div = document.createElement("div");
-	div.style.textAlign = "center";
-
-	const h2 = document.createElement("h2");
-	h2.textContent = title;
-	div.appendChild(h2);
-
-	const img = document.createElement("img");
-	img.setAttribute("src", src);
-	img.setAttribute("width", "150");
-	div.appendChild(img);
-
-	container.appendChild(div);
-}
-
-[_images_file_png__WEBPACK_IMPORTED_MODULE_0__, _images_file_jpg__WEBPACK_IMPORTED_MODULE_1__, _images_file_svg__WEBPACK_IMPORTED_MODULE_2__].forEach(src => {
-	createImageElement(src.split(".").pop(), src);
-});
-
-
-/***/ }),
+/* 0 */,
 /* 1 */
 /*!*************************!*\
   !*** ./images/file.png ***!
@@ -156,8 +111,9 @@ module.exports = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDo...vc3ZnPgo="
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -196,10 +152,52 @@ module.exports = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDo...vc3ZnPgo="
 </details>
 
 ``` js
-/******/ 	// startup
-/******/ 	// Load entry module
-/******/ 	__webpack_require__(0);
-/******/ 	// This entry module used 'exports' so it can't be inlined
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! namespace exports */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _images_file_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images/file.png */ 1);
+/* harmony import */ var _images_file_jpg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./images/file.jpg */ 2);
+/* harmony import */ var _images_file_svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./images/file.svg */ 3);
+
+
+
+
+const container = document.createElement("div");
+Object.assign(container.style, {
+	display: "flex",
+	justifyContent: "center"
+});
+document.body.appendChild(container);
+
+function createImageElement(title, src) {
+	const div = document.createElement("div");
+	div.style.textAlign = "center";
+
+	const h2 = document.createElement("h2");
+	h2.textContent = title;
+	div.appendChild(h2);
+
+	const img = document.createElement("img");
+	img.setAttribute("src", src);
+	img.setAttribute("width", "150");
+	div.appendChild(img);
+
+	container.appendChild(div);
+}
+
+[_images_file_png__WEBPACK_IMPORTED_MODULE_0__, _images_file_jpg__WEBPACK_IMPORTED_MODULE_1__, _images_file_svg__WEBPACK_IMPORTED_MODULE_2__].forEach(src => {
+	createImageElement(src.split(".").pop(), src);
+});
+
+})();
+
 /******/ })()
 ;
 ```
@@ -219,5 +217,5 @@ chunk (runtime: main) output.js (main) 9.58 KiB (javascript) 14.6 KiB (asset) 30
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

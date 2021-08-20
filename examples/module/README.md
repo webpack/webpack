@@ -40,7 +40,6 @@ export function reset() {
 # dist/output.js
 
 ```javascript
-/******/ "use strict";
 /******/ // The require scope
 /******/ var __webpack_require__ = {};
 /******/ 
@@ -134,7 +133,7 @@ var e={d:(o,r)=>{for(var t in r)e.o(r,t)&&!e.o(o,t)&&Object.defineProperty(o,t,{
 ## Unoptimized
 
 ```
-asset output.js 2.05 KiB [emitted] [javascript module] (name: main)
+asset output.js 2.03 KiB [emitted] [javascript module] (name: main)
 chunk (runtime: main) output.js (main) 453 bytes (javascript) 396 bytes (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 396 bytes 2 modules
@@ -143,7 +142,7 @@ chunk (runtime: main) output.js (main) 453 bytes (javascript) 396 bytes (runtime
     [all exports used]
     entry ./example.js main
     used as library export
-webpack 5.20.2 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
@@ -158,5 +157,5 @@ chunk (runtime: main) output.js (main) 453 bytes (javascript) 396 bytes (runtime
     [all exports used]
     entry ./example.js main
     used as library export
-webpack 5.20.2 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
