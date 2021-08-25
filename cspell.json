@@ -228,7 +228,9 @@
     "dependabot",
     "browserslist",
     "samsunginternet",
-    "pnpm"
+    "pnpm",
+    "commithash",
+    "gitlab"
   ],
   "ignoreRegExpList": ["/Author.+/", "/data:.*/", "/\"mappings\":\".+\"/"],
   "ignorePaths": [
