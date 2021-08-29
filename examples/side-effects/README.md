@@ -60,32 +60,7 @@ console.log("side effect");
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
-/* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! namespace exports */
-/*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/*! Statement (ExpressionStatement) with side effects in source code at 4:0-9:2 */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var big_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! big-module */ 1);
-/* harmony import */ var big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! big-module-with-flag */ 5);
-/* harmony import */ var big_module_with_flag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! big-module-with-flag */ 6);
-
-
-
-console.log(
-	big_module__WEBPACK_IMPORTED_MODULE_0__.a,
-	big_module__WEBPACK_IMPORTED_MODULE_0__.b,
-	big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__.a,
-	big_module_with_flag__WEBPACK_IMPORTED_MODULE_2__.b
-);
-
-
-/***/ }),
+/* 0 */,
 /* 1 */
 /*!******************************************!*\
   !*** ./node_modules/big-module/index.js ***!
@@ -101,9 +76,9 @@ console.log(
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => /* reexport safe */ _a__WEBPACK_IMPORTED_MODULE_0__.a,
-/* harmony export */   "b": () => /* reexport safe */ _b__WEBPACK_IMPORTED_MODULE_1__.b,
-/* harmony export */   "c": () => /* reexport safe */ _c__WEBPACK_IMPORTED_MODULE_2__.c
+/* harmony export */   "a": () => (/* reexport safe */ _a__WEBPACK_IMPORTED_MODULE_0__.a),
+/* harmony export */   "b": () => (/* reexport safe */ _b__WEBPACK_IMPORTED_MODULE_1__.b),
+/* harmony export */   "c": () => (/* reexport safe */ _c__WEBPACK_IMPORTED_MODULE_2__.c)
 /* harmony export */ });
 /* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */ 2);
 /* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */ 3);
@@ -128,7 +103,7 @@ console.log("side effect");
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => /* binding */ a
+/* harmony export */   "a": () => (/* binding */ a)
 /* harmony export */ });
 const a = "a";
 
@@ -146,7 +121,7 @@ const a = "a";
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "b": () => /* binding */ b
+/* harmony export */   "b": () => (/* binding */ b)
 /* harmony export */ });
 const b = "b";
 
@@ -164,7 +139,7 @@ const b = "b";
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "c": () => /* binding */ c
+/* harmony export */   "c": () => (/* binding */ c)
 /* harmony export */ });
 const c = "c";
 
@@ -182,7 +157,7 @@ const c = "c";
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => /* binding */ a
+/* harmony export */   "a": () => (/* binding */ a)
 /* harmony export */ });
 const a = "a";
 
@@ -200,7 +175,7 @@ const a = "a";
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "b": () => /* binding */ b
+/* harmony export */   "b": () => (/* binding */ b)
 /* harmony export */ });
 const b = "b";
 
@@ -219,8 +194,9 @@ const b = "b";
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -251,7 +227,7 @@ const b = "b";
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
@@ -271,10 +247,32 @@ const b = "b";
 </details>
 
 ``` js
-/******/ 	// startup
-/******/ 	// Load entry module
-/******/ 	__webpack_require__(0);
-/******/ 	// This entry module used 'exports' so it can't be inlined
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! namespace exports */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
+/*! Statement (ExpressionStatement) with side effects in source code at 4:0-9:2 */
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var big_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! big-module */ 1);
+/* harmony import */ var big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! big-module-with-flag */ 5);
+/* harmony import */ var big_module_with_flag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! big-module-with-flag */ 6);
+
+
+
+console.log(
+	big_module__WEBPACK_IMPORTED_MODULE_0__.a,
+	big_module__WEBPACK_IMPORTED_MODULE_0__.b,
+	big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__.a,
+	big_module_with_flag__WEBPACK_IMPORTED_MODULE_2__.b
+);
+
+})();
+
 /******/ })()
 ;
 ```
@@ -284,16 +282,16 @@ const b = "b";
 ## Unoptimized
 
 ```
-asset output.js 8.58 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 354 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+asset output.js 8.55 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 354 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 214 bytes [dependent] 6 modules
-  runtime modules 668 bytes 3 modules
+  runtime modules 670 bytes 3 modules
   ./example.js 140 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
@@ -306,5 +304,5 @@ chunk (runtime: main) output.js (main) 332 bytes [entry] [rendered]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

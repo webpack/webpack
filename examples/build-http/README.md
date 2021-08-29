@@ -30,7 +30,7 @@ module.exports = {
 ## Unoptimized
 
 ```
-asset output.js 61.7 KiB [emitted] (name: main)
+asset output.js 61.9 KiB [emitted] (name: main)
 runtime modules 670 bytes 3 modules
 modules by path https:// 21.9 KiB
   modules by path https://jspm.dev/ 8.43 KiB
@@ -62,7 +62,7 @@ modules by path https:// 21.9 KiB
   [no exports]
   [used exports unknown]
   entry ./example.js main
-webpack 5.48.0 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
@@ -74,5 +74,5 @@ orphan modules 21.9 KiB [orphan] 25 modules
   [no exports]
   [no exports used]
   entry ./example.js main
-webpack 5.48.0 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

@@ -35,7 +35,7 @@ module.exports = {
 # dist/MyDll.alpha.js
 
 ```javascript
-var alpha_bb584d575dc33696660b;alpha_bb584d575dc33696660b =
+var alpha_32ae439e7568b31a353c;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -90,48 +90,45 @@ module.exports = "module";
 
 <details><summary><code>/* webpack runtime code */</code></summary>
 
-```js
+``` js
 /************************************************************************/
-/******/ // The module cache
-/******/ var __webpack_module_cache__ = {};
-/******/
-/******/ // The require function
-/******/ function __webpack_require__(moduleId) {
-	/******/ // Check if module is in cache
-	/******/ if (__webpack_module_cache__[moduleId]) {
-		/******/ return __webpack_module_cache__[moduleId].exports;
-		/******/
-	}
-	/******/ // Create a new module (and put it into the cache)
-	/******/ var module = (__webpack_module_cache__[moduleId] = {
-		/******/ // no module.id needed
-		/******/ // no module.loaded needed
-		/******/ exports: {}
-		/******/
-	});
-	/******/
-	/******/ // Execute the module function
-	/******/ __webpack_modules__[moduleId](
-		module,
-		module.exports,
-		__webpack_require__
-	);
-	/******/
-	/******/ // Return the exports of the module
-	/******/ return module.exports;
-	/******/
-}
-/******/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
 /************************************************************************/
 ```
 
 </details>
 
-```js
-/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+``` js
+/******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	alpha_32ae439e7568b31a353c = __webpack_exports__;
+/******/ 	
 /******/ })()
 ;
 ```
@@ -139,7 +136,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ```javascript
-{"name":"alpha_bb584d575dc33696660b","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
+{"name":"alpha_32ae439e7568b31a353c","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
 ```
 
 # Info
@@ -147,8 +144,8 @@ module.exports = "module";
 ## Unoptimized
 
 ```
-asset MyDll.alpha.js 2.46 KiB [emitted] (name: alpha)
-asset MyDll.beta.js 2.43 KiB [emitted] (name: beta)
+asset MyDll.alpha.js 2.58 KiB [emitted] (name: alpha)
+asset MyDll.beta.js 2.55 KiB [emitted] (name: beta)
 chunk (runtime: alpha) MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
   > alpha
   dependent modules 72 bytes [dependent] 3 modules
@@ -163,14 +160,14 @@ chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset MyDll.alpha.js 302 bytes [emitted] [minimized] (name: alpha)
-asset MyDll.beta.js 292 bytes [emitted] [minimized] (name: beta)
+asset MyDll.alpha.js 313 bytes [emitted] [minimized] (name: alpha)
+asset MyDll.beta.js 303 bytes [emitted] [minimized] (name: beta)
 chunk (runtime: alpha) MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
   > alpha
   dependent modules 72 bytes [dependent] 3 modules
@@ -183,5 +180,5 @@ chunk (runtime: beta) MyDll.beta.js (beta) 80 bytes [entry] [rendered]
   dll beta 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

@@ -129,8 +129,8 @@ module.exports = {
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "x": () => /* binding */ x,
-  "y": () => /* reexport */ y
+  "x": () => (/* binding */ x),
+  "y": () => (/* reexport */ y)
 });
 
 ;// CONCATENATED MODULE: ./node_modules/shared2.js
@@ -157,8 +157,9 @@ var x = "x";
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -214,7 +215,7 @@ var x = "x";
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
@@ -222,7 +223,7 @@ var x = "x";
 /******/ 		var inProgress = {};
 /******/ 		// data-webpack is not used as build has no uniqueName
 /******/ 		// loadScript function to load a script via script tag
-/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
 /******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
@@ -252,7 +253,7 @@ var x = "x";
 /******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			;
@@ -285,11 +286,10 @@ var x = "x";
 /******/ 		
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 		// Promise = chunk loading, 0 = chunk loaded
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			179: 0
 /******/ 		};
-/******/ 		
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 				// JSONP chunk loading for javascript
@@ -302,9 +302,7 @@ var x = "x";
 /******/ 					} else {
 /******/ 						if(true) { // all chunks have JS
 /******/ 							// setup Promise in chunk cache
-/******/ 							var promise = new Promise((resolve, reject) => {
-/******/ 								installedChunkData = installedChunks[chunkId] = [resolve, reject];
-/******/ 							});
+/******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
 /******/ 							// start chunk loading
@@ -326,7 +324,7 @@ var x = "x";
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -340,30 +338,29 @@ var x = "x";
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		// no deferred startup
+/******/ 		// no on chunks loaded
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
 /******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0, resolves = [];
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
 /******/ 			for(;i < chunkIds.length; i++) {
 /******/ 				chunkId = chunkIds[i];
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-/******/ 					resolves.push(installedChunks[chunkId][0]);
+/******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkId] = 0;
-/******/ 			}
-/******/ 			for(moduleId in moreModules) {
-/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
-/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
-/******/ 				}
-/******/ 			}
-/******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			while(resolves.length) {
-/******/ 				resolves.shift()();
+/******/ 				installedChunks[chunkIds[i]] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
@@ -371,8 +368,6 @@ var x = "x";
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
-/******/ 		
-/******/ 		// no deferred startup
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -381,6 +376,8 @@ var x = "x";
 </details>
 
 ``` js
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
@@ -436,7 +433,7 @@ __webpack_require__.e(/*! import() */ 872).then(__webpack_require__.bind(__webpa
 /*! other exports [not provided] [maybe used in main (runtime-defined)] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__, __webpack_require__.* */
 /*! ModuleConcatenation bailout: Cannot concat with ./node_modules/cjs.js: Module is not an ECMAScript module */
-/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js: Module ./node_modules/shared.js is not in the same chunk(s) (expected in chunk(s) unnamed chunk(s), module is in chunk(s) main) */
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js: Module ./node_modules/shared.js is not in the same chunk(s) (expected in chunk(s) unnamed chunk(s), module is in chunk(s) ) */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -445,17 +442,17 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "c": () => /* reexport */ c,
-  "d": () => /* reexport */ d_namespaceObject,
-  "x": () => /* reexport */ shared.x,
-  "y": () => /* reexport */ shared.y
+  "c": () => (/* reexport */ c),
+  "d": () => (/* reexport */ d_namespaceObject),
+  "x": () => (/* reexport */ shared.x),
+  "y": () => (/* reexport */ shared.y)
 });
 
 // NAMESPACE OBJECT: ./node_modules/d.js
 var d_namespaceObject = {};
 __webpack_require__.r(d_namespaceObject);
 __webpack_require__.d(d_namespaceObject, {
-  "a": () => a
+  "a": () => (a)
 });
 
 // EXTERNAL MODULE: ./node_modules/cjs.js
@@ -510,8 +507,8 @@ Minimized
 ## Unoptimized
 
 ```
-asset output.js 11.1 KiB [emitted] (name: main)
-asset 872.output.js 2.73 KiB [emitted]
+asset output.js 11.2 KiB [emitted] (name: main)
+asset 872.output.js 2.74 KiB [emitted]
 chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 5.54 KiB 8 modules
@@ -526,13 +523,13 @@ chunk (runtime: main) 872.output.js 263 bytes [rendered]
   ./lazy.js + 2 modules 221 bytes [built] [code generated]
     [exports: c, d, x, y]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.1 KiB [emitted] [minimized] (name: main)
+asset output.js 2.11 KiB [emitted] [minimized] (name: main)
 asset 872.output.js 270 bytes [emitted] [minimized]
 chunk (runtime: main) output.js (main) 367 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
@@ -548,5 +545,5 @@ chunk (runtime: main) 872.output.js 263 bytes [rendered]
   ./lazy.js + 2 modules 221 bytes [built] [code generated]
     [exports: c, d, x, y]
     import() ./lazy ./example.js + 2 modules ./example.js 4:0-16
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

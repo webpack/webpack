@@ -18,7 +18,7 @@
           ]
         },
         "frozen": {
-          "description": "When set, anything that would lead to an modification of the lockfile or any resource content, will result in an error.",
+          "description": "When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.",
           "type": "boolean"
         },
         "lockfileLocation": {

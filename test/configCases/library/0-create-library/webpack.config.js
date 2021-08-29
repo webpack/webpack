@@ -4,6 +4,7 @@ const webpack = require("../../../../");
 module.exports = (env, { testPath }) => [
 	{
 		output: {
+			uniqueName: "esm",
 			filename: "esm.js",
 			libraryTarget: "module"
 		},
@@ -19,6 +20,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "esm-runtimeChunk",
 			filename: "esm-runtimeChunk/[name].js",
 			libraryTarget: "module"
 		},
@@ -37,6 +39,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "commonjs",
 			filename: "commonjs.js",
 			libraryTarget: "commonjs",
 			iife: false
@@ -49,6 +52,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "commonjs-iife",
 			filename: "commonjs-iife.js",
 			libraryTarget: "commonjs",
 			iife: true
@@ -61,6 +65,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "amd",
 			filename: "amd.js",
 			libraryTarget: "amd",
 			iife: false
@@ -73,6 +78,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "amd-iife",
 			filename: "amd-iife.js",
 			libraryTarget: "amd",
 			iife: true
@@ -85,6 +91,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "amd-runtimeChunk",
 			filename: "amd-runtimeChunk/[name].js",
 			libraryTarget: "amd",
 			globalObject: "global",
@@ -102,6 +109,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "amd-iife-runtimeChunk",
 			filename: "amd-iife-runtimeChunk/[name].js",
 			libraryTarget: "amd",
 			globalObject: "global",
@@ -119,6 +127,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "umd",
 			filename: "umd.js",
 			libraryTarget: "umd"
 		},
@@ -130,6 +139,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "umd-default",
 			filename: "umd-default.js",
 			libraryTarget: "umd",
 			libraryExport: "default"
@@ -142,6 +152,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "this",
 			filename: "this.js",
 			libraryTarget: "this",
 			iife: false
@@ -154,6 +165,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "this-iife",
 			filename: "this-iife.js",
 			libraryTarget: "this",
 			iife: true
@@ -166,6 +178,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "var",
 			filename: "var.js",
 			library: ["globalName", "x", "y"],
 			iife: false
@@ -184,6 +197,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "var-iife",
 			filename: "var-iife.js",
 			library: ["globalName", "x", "y"],
 			iife: true
@@ -203,6 +217,7 @@ module.exports = (env, { testPath }) => [
 	{
 		entry: "./nested.js",
 		output: {
+			uniqueName: "commonjs-nested",
 			filename: "commonjs-nested.js",
 			libraryTarget: "commonjs",
 			libraryExport: "NS",
@@ -217,6 +232,7 @@ module.exports = (env, { testPath }) => [
 	{
 		entry: "./nested.js",
 		output: {
+			uniqueName: "commonjs-nested-iife",
 			filename: "commonjs-nested-iife.js",
 			libraryTarget: "commonjs",
 			libraryExport: "NS",
@@ -230,6 +246,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "commonjs2-external",
 			filename: "commonjs2-external.js",
 			libraryTarget: "commonjs2",
 			iife: false
@@ -238,6 +255,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "commonjs2-external-no-concat",
 			filename: "commonjs2-external-no-concat.js",
 			libraryTarget: "commonjs2",
 			iife: false
@@ -249,6 +267,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "commonjs2-iife-external",
 			filename: "commonjs2-iife-external.js",
 			libraryTarget: "commonjs2",
 			iife: true
@@ -258,6 +277,7 @@ module.exports = (env, { testPath }) => [
 	{
 		mode: "development",
 		output: {
+			uniqueName: "commonjs2-external-eval",
 			filename: "commonjs2-external-eval.js",
 			libraryTarget: "commonjs2"
 		},
@@ -266,6 +286,7 @@ module.exports = (env, { testPath }) => [
 	{
 		mode: "development",
 		output: {
+			uniqueName: "commonjs2-external-eval-source-map",
 			filename: "commonjs2-external-eval-source-map.js",
 			libraryTarget: "commonjs2"
 		},
@@ -274,6 +295,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "index",
 			filename: "index.js",
 			path: path.resolve(testPath, "commonjs2-split-chunks"),
 			libraryTarget: "commonjs2"
@@ -299,6 +321,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "commonjs2-runtimeChunk",
 			filename: "commonjs2-runtimeChunk/[name].js",
 			libraryTarget: "commonjs2",
 			iife: false
@@ -314,6 +337,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "commonjs2-iife-runtimeChunk",
 			filename: "commonjs2-iife-runtimeChunk/[name].js",
 			libraryTarget: "commonjs2",
 			iife: true
@@ -329,6 +353,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "global-runtimeChunk",
 			filename: "global-runtimeChunk/[name].js",
 			library: ["globalName", "x", "y"],
 			libraryTarget: "global",
@@ -346,6 +371,7 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "global-iife-runtimeChunk",
 			filename: "global-iife-runtimeChunk/[name].js",
 			library: ["globalName", "x", "y"],
 			libraryTarget: "global",
@@ -384,6 +410,7 @@ module.exports = (env, { testPath }) => [
 			library: {
 				type: "commonjs-module"
 			},
+			uniqueName: "commonjs-module",
 			filename: "[name].js"
 		},
 		resolve: {
