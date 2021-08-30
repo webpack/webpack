@@ -285,16 +285,17 @@ Object {
   "cache-store": Object {
     "configs": Array [
       Object {
-        "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
+        "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file, false: don't store the cache in the filesystem).",
         "multiple": false,
         "path": "cache.store",
         "type": "enum",
         "values": Array [
           "pack",
+          false,
         ],
       },
     ],
-    "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
+    "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file, false: don't store the cache in the filesystem).",
     "multiple": false,
     "simpleType": "string",
   },
