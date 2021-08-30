@@ -30,13 +30,6 @@ const createMultiCompiler = options => {
 	return compiler;
 };
 
-const close = (watching, compiler, done) => {
-	watching.close(err => {
-		if (err) return done(err);
-		compiler.close(done);
-	});
-};
-
 describe("MultiCompiler", function () {
 	jest.setTimeout(20000);
 
@@ -59,12 +52,12 @@ describe("MultiCompiler", function () {
 		let called = 0;
 
 		compiler.hooks.watchRun.tap("MultiCompiler test", () => called++);
-		const watching = compiler.watch(1000, err => {
+		compiler.watch(1000, err => {
 			if (err) {
 				throw err;
 			}
 			expect(called).toBe(2);
-			close(watching, compiler, done);
+			compiler.close(done);
 		});
 	});
 
@@ -81,12 +74,12 @@ describe("MultiCompiler", function () {
 	});
 	it("should not be running twice at a time (watch)", done => {
 		const compiler = createMultiCompiler();
-		const watching = compiler.watch({}, (err, stats) => {
+		compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
 		});
 		compiler.watch({}, (err, stats) => {
 			if (err) {
-				close(watching, compiler, done);
+				compiler.close(done);
 			}
 		});
 	});
@@ -103,13 +96,12 @@ describe("MultiCompiler", function () {
 	});
 	it("should not be running twice at a time (watch - run)", done => {
 		const compiler = createMultiCompiler();
-		let watching;
-		watching = compiler.watch({}, (err, stats) => {
+		compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
 		});
 		compiler.run((err, stats) => {
 			if (err) {
-				close(watching, compiler, done);
+				compiler.close(done);
 			}
 		});
 	});
@@ -149,10 +141,9 @@ describe("MultiCompiler", function () {
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 
-			let watching;
-			watching = compiler.watch({}, (err, stats) => {
+			compiler.watch({}, (err, stats) => {
 				if (err) return done(err);
-				close(watching, compiler, done);
+				compiler.close(done);
 			});
 		});
 	});
@@ -174,9 +165,9 @@ describe("MultiCompiler", function () {
 			if (err) return done(err);
 		});
 		watching.close(() => {
-			const watching2 = compiler.watch({}, (err, stats) => {
+			compiler.watch({}, (err, stats) => {
 				if (err) return done(err);
-				close(watching2, compiler, done);
+				compiler.close(done);
 			});
 		});
 	});
@@ -274,7 +265,7 @@ describe("MultiCompiler", function () {
 		});
 
 		let update = 0;
-		const watching = compiler.watch({}, (err, stats) => {
+		compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
 			const info = () => stats.toString({ preset: "summary", version: false });
 			switch (update++) {
@@ -380,7 +371,7 @@ describe("MultiCompiler", function () {
 				]
 			`);
 					events.length = 0;
-					close(watching, compiler, done);
+					compiler.close(done);
 					break;
 				default:
 					done(new Error("unexpected"));
@@ -458,7 +449,7 @@ describe("MultiCompiler", function () {
 					events.length = 0;
 					expect(state).toBe(1);
 					setTimeout(() => {
-						close(watching, compiler, done);
+						compiler.close(done);
 					}, 1000);
 				} catch (e) {
 					console.error(e);
@@ -537,7 +528,7 @@ describe("MultiCompiler", function () {
 					events.length = 0;
 					expect(state).toBe(1);
 					setTimeout(() => {
-						close(watching, compiler, done);
+						compiler.close(done);
 					}, 1000);
 				} catch (e) {
 					console.error(e);
@@ -579,7 +570,7 @@ describe("MultiCompiler", function () {
 
 			watching.invalidate(err => {
 				if (err) return done(err);
-				close(watching, compiler, done);
+				compiler.close(done);
 			});
 		});
 	}, 2000);
@@ -626,9 +617,9 @@ describe("MultiCompiler", function () {
 				}
 			}
 		};
-		const watching = compiler.watch({}, (err, stats) => {
+		compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
-			close(watching, compiler, done);
+			compiler.close(done);
 		});
 	});
 });
