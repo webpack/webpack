@@ -1036,8 +1036,8 @@
           "type": "boolean"
         },
         "store": {
-          "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).",
-          "enum": ["pack"]
+          "description": "When to store data to the filesystem. (pack: Store data when compiler is idle in a single file, false: don't store the cache in the filesystem).",
+          "enum": ["pack", false]
         },
         "type": {
           "description": "Filesystem caching.",

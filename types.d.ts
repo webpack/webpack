@@ -3910,9 +3910,9 @@ declare interface FileCacheOptions {
 	profile?: boolean;
 
 	/**
-	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
+	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file, false: don't store the cache in the filesystem).
 	 */
-	store?: "pack";
+	store?: false | "pack";
 
 	/**
 	 * Filesystem caching.
