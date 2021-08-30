@@ -41,7 +41,7 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_d696c7b4f72a4a70f39b;vendor_lib_d696c7b4f72a4a70f39b =
+var vendor_lib_51062e5e93ee3a0507e7;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -68,7 +68,7 @@ module.exports = __webpack_require__;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "square": () => /* binding */ square
+/* harmony export */   "square": () => (/* binding */ square)
 /* harmony export */ });
 function square(n) {
 	return n * n;
@@ -89,8 +89,9 @@ function square(n) {
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -121,7 +122,7 @@ function square(n) {
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
@@ -141,10 +142,13 @@ function square(n) {
 </details>
 
 ``` js
-/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	vendor_lib_51062e5e93ee3a0507e7 = __webpack_exports__;
+/******/ 	
 /******/ })()
 ;
 ```
@@ -152,7 +156,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_d696c7b4f72a4a70f39b","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
+{"name":"vendor_lib_51062e5e93ee3a0507e7","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
 ```
 
 # Info
@@ -160,28 +164,28 @@ function square(n) {
 ## Unoptimized
 
 ```
-asset vendor.js 3.56 KiB [emitted] (name: main)
-chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+asset vendor.js 3.68 KiB [emitted] (name: main)
+chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > main
-  runtime modules 668 bytes 3 modules
+  runtime modules 670 bytes 3 modules
   dependent modules 45 bytes [dependent] 1 module
   dll main 12 bytes [built] [code generated]
     [used exports unknown]
     dll entry
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset vendor.js 638 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 668 bytes (runtime) [entry] [rendered]
+asset vendor.js 653 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) vendor.js (main) 57 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > main
-  runtime modules 668 bytes 3 modules
+  runtime modules 670 bytes 3 modules
   dependent modules 45 bytes [dependent] 1 module
   dll main 12 bytes [built] [code generated]
     dll entry
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

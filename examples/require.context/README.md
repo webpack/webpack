@@ -122,8 +122,9 @@ module.exports = function() {
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -142,7 +143,7 @@ module.exports = function() {
 /************************************************************************/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -151,6 +152,8 @@ module.exports = function() {
 </details>
 
 ``` js
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
@@ -173,29 +176,29 @@ console.log(getTemplate("b"));
 ## Unoptimized
 
 ```
-asset output.js 3.62 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 603 bytes (javascript) 86 bytes (runtime) [entry] [rendered]
+asset output.js 3.8 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 603 bytes (javascript) 88 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 457 bytes [dependent] 4 modules
-  runtime modules 86 bytes 1 module
+  runtime modules 88 bytes 1 module
   ./example.js 146 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 819 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 603 bytes (javascript) 86 bytes (runtime) [entry] [rendered]
+asset output.js 833 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 603 bytes (javascript) 88 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 457 bytes [dependent] 4 modules
-  runtime modules 86 bytes 1 module
+  runtime modules 88 bytes 1 module
   ./example.js 146 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 # Code Splitting

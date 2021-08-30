@@ -79,7 +79,7 @@ function webpackAsyncContext(req) {
 		return __webpack_require__(id);
 	});
 }
-webpackAsyncContext.keys = () => Object.keys(map);
+webpackAsyncContext.keys = () => (Object.keys(map));
 webpackAsyncContext.id = 1;
 module.exports = webpackAsyncContext;
 
@@ -97,8 +97,9 @@ module.exports = webpackAsyncContext;
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -154,7 +155,7 @@ module.exports = webpackAsyncContext;
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
@@ -162,7 +163,7 @@ module.exports = webpackAsyncContext;
 /******/ 		var inProgress = {};
 /******/ 		// data-webpack is not used as build has no uniqueName
 /******/ 		// loadScript function to load a script via script tag
-/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
 /******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
@@ -192,7 +193,7 @@ module.exports = webpackAsyncContext;
 /******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			;
@@ -225,11 +226,10 @@ module.exports = webpackAsyncContext;
 /******/ 		
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 		// Promise = chunk loading, 0 = chunk loaded
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			179: 0
 /******/ 		};
-/******/ 		
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 				// JSONP chunk loading for javascript
@@ -242,9 +242,7 @@ module.exports = webpackAsyncContext;
 /******/ 					} else {
 /******/ 						if(true) { // all chunks have JS
 /******/ 							// setup Promise in chunk cache
-/******/ 							var promise = new Promise((resolve, reject) => {
-/******/ 								installedChunkData = installedChunks[chunkId] = [resolve, reject];
-/******/ 							});
+/******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
 /******/ 							// start chunk loading
@@ -266,7 +264,7 @@ module.exports = webpackAsyncContext;
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -280,30 +278,29 @@ module.exports = webpackAsyncContext;
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		// no deferred startup
+/******/ 		// no on chunks loaded
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
 /******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0, resolves = [];
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
 /******/ 			for(;i < chunkIds.length; i++) {
 /******/ 				chunkId = chunkIds[i];
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-/******/ 					resolves.push(installedChunks[chunkId][0]);
+/******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkId] = 0;
-/******/ 			}
-/******/ 			for(moduleId in moreModules) {
-/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
-/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
-/******/ 				}
-/******/ 			}
-/******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			while(resolves.length) {
-/******/ 				resolves.shift()();
+/******/ 				installedChunks[chunkIds[i]] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
@@ -311,8 +308,6 @@ module.exports = webpackAsyncContext;
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
-/******/ 		
-/******/ 		// no deferred startup
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -321,6 +316,8 @@ module.exports = webpackAsyncContext;
 </details>
 
 ``` js
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
@@ -354,10 +351,10 @@ __webpack_require__(1)("./ba" + createContextVar).then(function(bar) {
 ## Unoptimized
 
 ```
-asset output.js 11.2 KiB [emitted] (name: main)
-asset 548.output.js 856 bytes [emitted] (name: chunk-bar-baz2)
-asset 791.output.js 856 bytes [emitted] (name: chunk-bar-baz0)
-asset 930.output.js 856 bytes [emitted] (name: chunk-foo)
+asset output.js 11.3 KiB [emitted] (name: main)
+asset 548.output.js 858 bytes [emitted] (name: chunk-bar-baz2)
+asset 791.output.js 858 bytes [emitted] (name: chunk-bar-baz0)
+asset 930.output.js 858 bytes [emitted] (name: chunk-foo)
 chunk (runtime: main) output.js (main) 565 bytes (javascript) 5.54 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 5.54 KiB 8 modules
@@ -371,16 +368,16 @@ chunk (runtime: main) 548.output.js (chunk-bar-baz2) 38 bytes [rendered]
   ./templates/baz.js 38 bytes [optional] [built] [code generated]
     [exports: default]
     [used exports unknown]
-    context element ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
-    context element ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
+    import() context element ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
+    import() context element ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
 chunk (runtime: main) 791.output.js (chunk-bar-baz0) 38 bytes [rendered]
   > ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
   > ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
   ./templates/bar.js 38 bytes [optional] [built] [code generated]
     [exports: default]
     [used exports unknown]
-    context element ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
-    context element ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
+    import() context element ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
+    import() context element ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
 chunk (runtime: main) 930.output.js (chunk-foo) 38 bytes [rendered]
   > ./templates/foo ./example.js 1:0-62
   > ./example.js 5:0-8:16
@@ -389,13 +386,13 @@ chunk (runtime: main) 930.output.js (chunk-foo) 38 bytes [rendered]
     [used exports unknown]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.44 KiB [emitted] [minimized] (name: main)
+asset output.js 2.45 KiB [emitted] [minimized] (name: main)
 asset 548.output.js 130 bytes [emitted] [minimized] (name: chunk-bar-baz2)
 asset 791.output.js 130 bytes [emitted] [minimized] (name: chunk-bar-baz0)
 asset 930.output.js 130 bytes [emitted] [minimized] (name: chunk-foo)
@@ -411,15 +408,15 @@ chunk (runtime: main) 548.output.js (chunk-bar-baz2) 38 bytes [rendered]
   > ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
   ./templates/baz.js 38 bytes [optional] [built] [code generated]
     [exports: default]
-    context element ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
-    context element ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
+    import() context element ./baz ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz
+    import() context element ./baz.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./baz.js
 chunk (runtime: main) 791.output.js (chunk-bar-baz0) 38 bytes [rendered]
   > ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
   > ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
   ./templates/bar.js 38 bytes [optional] [built] [code generated]
     [exports: default]
-    context element ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
-    context element ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
+    import() context element ./bar ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar
+    import() context element ./bar.js ./templates/ lazy ^\.\/ba.*$ chunkName: chunk-bar-baz namespace object ./bar.js
 chunk (runtime: main) 930.output.js (chunk-foo) 38 bytes [rendered]
   > ./templates/foo ./example.js 1:0-62
   > ./example.js 5:0-8:16
@@ -427,5 +424,5 @@ chunk (runtime: main) 930.output.js (chunk-foo) 38 bytes [rendered]
     [exports: default]
     import() ./templates/foo ./example.js 1:0-62
     cjs require ./templates/foo ./example.js 6:11-37
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

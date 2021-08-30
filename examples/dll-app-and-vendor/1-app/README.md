@@ -50,28 +50,10 @@ console.log(new square(7));
 ```javascript
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
-/* 0 */
-/*!************************!*\
-  !*** ./example-app.js ***!
-  \************************/
-/*! namespace exports */
-/*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var example_vendor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! example-vendor */ 1);
-
-
-console.log((0,example_vendor__WEBPACK_IMPORTED_MODULE_0__.square)(7));
-console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
-
-
-/***/ }),
+/* 0 */,
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_d696c7b4f72a4a70f39b ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_51062e5e93ee3a0507e7 ***!
   \******************************************************************************************************/
 /*! namespace exports */
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
@@ -79,12 +61,12 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_d696c7b4f72a4a70f39b */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_51062e5e93ee3a0507e7 */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_d696c7b4f72a4a70f39b" ***!
+  !*** external "vendor_lib_51062e5e93ee3a0507e7" ***!
   \**************************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -92,7 +74,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_lib_d696c7b4f72a4
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_d696c7b4f72a4a70f39b;
+module.exports = vendor_lib_51062e5e93ee3a0507e7;
 
 /***/ })
 /******/ 	]);
@@ -108,8 +90,9 @@ module.exports = vendor_lib_d696c7b4f72a4a70f39b;
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -143,10 +126,25 @@ module.exports = vendor_lib_d696c7b4f72a4a70f39b;
 </details>
 
 ``` js
-/******/ 	// startup
-/******/ 	// Load entry module
-/******/ 	__webpack_require__(0);
-/******/ 	// This entry module used 'exports' so it can't be inlined
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+/*!************************!*\
+  !*** ./example-app.js ***!
+  \************************/
+/*! namespace exports */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var example_vendor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! example-vendor */ 1);
+
+
+console.log((0,example_vendor__WEBPACK_IMPORTED_MODULE_0__.square)(7));
+console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
+
+})();
+
 /******/ })()
 ;
 ```
@@ -156,7 +154,7 @@ module.exports = vendor_lib_d696c7b4f72a4a70f39b;
 ## Unoptimized
 
 ```
-asset app.js 3.52 KiB [emitted] (name: main)
+asset app.js 3.44 KiB [emitted] (name: main)
 chunk (runtime: main) app.js (main) 178 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules
@@ -165,13 +163,13 @@ chunk (runtime: main) app.js (main) 178 bytes (javascript) 274 bytes (runtime) [
     [no exports]
     [used exports unknown]
     entry ./example-app main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset app.js 319 bytes [emitted] [minimized] (name: main)
+asset app.js 333 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules
@@ -179,7 +177,7 @@ chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
     [no exports]
     [no exports used]
     entry ./example-app main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 <!-- @TODO:

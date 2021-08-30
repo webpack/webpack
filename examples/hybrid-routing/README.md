@@ -134,9 +134,9 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 
 /***/ }),
 /* 4 */
-/*!*******************************************************************!*\
-  !*** .// lazy ^\.\/.*Page$ chunkName: [request] namespace object ***!
-  \*******************************************************************/
+/*!********************************************************************!*\
+  !*** ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ***!
+  \********************************************************************/
 /*! default exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_require__.o, __webpack_require__, __webpack_require__.e, __webpack_require__.t, __webpack_require__.* */
@@ -163,10 +163,10 @@ function webpackAsyncContext(req) {
 
 	var ids = map[req], id = ids[0];
 	return __webpack_require__.e(ids[1]).then(() => {
-		return __webpack_require__.t(id, 7);
+		return __webpack_require__.t(id, 7 | 16);
 	});
 }
-webpackAsyncContext.keys = () => Object.keys(map);
+webpackAsyncContext.keys = () => (Object.keys(map));
 webpackAsyncContext.id = 4;
 module.exports = webpackAsyncContext;
 
@@ -205,8 +205,9 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -225,13 +226,42 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
-/******/ 	// the startup function
-/******/ 	// It's empty as some runtime module handles the default behavior
-/******/ 	__webpack_require__.x = x => {}
 /************************************************************************/
+/******/ 	/* webpack/runtime/chunk loaded */
+/******/ 	(() => {
+/******/ 		var deferred = [];
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
+/******/ 			if(chunkIds) {
+/******/ 				priority = priority || 0;
+/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
+/******/ 				deferred[i] = [chunkIds, fn, priority];
+/******/ 				return;
+/******/ 			}
+/******/ 			var notFulfilled = Infinity;
+/******/ 			for (var i = 0; i < deferred.length; i++) {
+/******/ 				var [chunkIds, fn, priority] = deferred[i];
+/******/ 				var fulfilled = true;
+/******/ 				for (var j = 0; j < chunkIds.length; j++) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 						chunkIds.splice(j--, 1);
+/******/ 					} else {
+/******/ 						fulfilled = false;
+/******/ 						if(priority < notFulfilled) notFulfilled = priority;
+/******/ 					}
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferred.splice(i--, 1)
+/******/ 					var r = fn();
+/******/ 					if (r !== undefined) result = r;
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/create fake namespace object */
 /******/ 	(() => {
-/******/ 		var getProto = Object.getPrototypeOf ? (obj) => Object.getPrototypeOf(obj) : (obj) => obj.__proto__;
+/******/ 		var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
 /******/ 		var leafPrototypes;
 /******/ 		// create a fake namespace object
 /******/ 		// mode & 1: value is a module id, require it
@@ -251,9 +281,9 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 			var def = {};
 /******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
 /******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
-/******/ 				Object.getOwnPropertyNames(current).forEach(key => def[key] = () => value[key]);
+/******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
 /******/ 			}
-/******/ 			def['default'] = () => value;
+/******/ 			def['default'] = () => (value);
 /******/ 			__webpack_require__.d(ns, def);
 /******/ 			return ns;
 /******/ 		};
@@ -295,7 +325,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
@@ -303,7 +333,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 		var inProgress = {};
 /******/ 		// data-webpack is not used as build has no uniqueName
 /******/ 		// loadScript function to load a script via script tag
-/******/ 		__webpack_require__.l = (url, done, key) => {
+/******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
 /******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
@@ -333,7 +363,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach((fn) => fn(event));
+/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
 /******/ 			;
@@ -366,15 +396,11 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 		
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 		// Promise = chunk loading, 0 = chunk loaded
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			"pageA": 0
 /******/ 		};
 /******/ 		
-/******/ 		var deferredModules = [
-/******/ 			[0,"router_js","aPage"],
-/******/ 			[3,"router_js","aPage"]
-/******/ 		];
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 				// JSONP chunk loading for javascript
 /******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
@@ -386,9 +412,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 					} else {
 /******/ 						if(true) { // all chunks have JS
 /******/ 							// setup Promise in chunk cache
-/******/ 							var promise = new Promise((resolve, reject) => {
-/******/ 								installedChunkData = installedChunks[chunkId] = [resolve, reject];
-/******/ 							});
+/******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
 /******/ 							// start chunk loading
@@ -410,7 +434,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 									}
 /******/ 								}
 /******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId);
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
 /******/ 						} else installedChunks[chunkId] = 0;
 /******/ 					}
 /******/ 				}
@@ -424,69 +448,36 @@ render(__webpack_require__(/*! ./aPage */ 2));
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		var checkDeferredModules = x => {};
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
 /******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
-/******/ 			var [chunkIds, moreModules, runtime, executeModules] = data;
+/******/ 			var [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0, resolves = [];
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
 /******/ 			for(;i < chunkIds.length; i++) {
 /******/ 				chunkId = chunkIds[i];
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-/******/ 					resolves.push(installedChunks[chunkId][0]);
+/******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkId] = 0;
+/******/ 				installedChunks[chunkIds[i]] = 0;
 /******/ 			}
-/******/ 			for(moduleId in moreModules) {
-/******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
-/******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
-/******/ 				}
-/******/ 			}
-/******/ 			if(runtime) runtime(__webpack_require__);
-/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			while(resolves.length) {
-/******/ 				resolves.shift()();
-/******/ 			}
-/******/ 		
-/******/ 			// add entry modules from loaded chunk to deferred list
-/******/ 			if(executeModules) deferredModules.push.apply(deferredModules, executeModules);
-/******/ 		
-/******/ 			// run deferred modules when all chunks ready
-/******/ 			return checkDeferredModules();
+/******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
 /******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
 /******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
 /******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
-/******/ 		
-/******/ 		function checkDeferredModulesImpl() {
-/******/ 			var result;
-/******/ 			for(var i = 0; i < deferredModules.length; i++) {
-/******/ 				var deferredModule = deferredModules[i];
-/******/ 				var fulfilled = true;
-/******/ 				for(var j = 1; j < deferredModule.length; j++) {
-/******/ 					var depId = deferredModule[j];
-/******/ 					if(installedChunks[depId] !== 0) fulfilled = false;
-/******/ 				}
-/******/ 				if(fulfilled) {
-/******/ 					deferredModules.splice(i--, 1);
-/******/ 					result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
-/******/ 				}
-/******/ 			}
-/******/ 			if(deferredModules.length === 0) {
-/******/ 				__webpack_require__.x();
-/******/ 				__webpack_require__.x = x => {};
-/******/ 			}
-/******/ 			return result;
-/******/ 		}
-/******/ 		var startup = __webpack_require__.x;
-/******/ 		__webpack_require__.x = () => {
-/******/ 			// reset startup function so it can be called again when more startup code is added
-/******/ 			__webpack_require__.x = startup || (x => {});
-/******/ 			return (checkDeferredModules = checkDeferredModulesImpl)();
-/******/ 		};
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -495,8 +486,14 @@ render(__webpack_require__(/*! ./aPage */ 2));
 </details>
 
 ``` js
-/******/ 	// run startup
-/******/ 	return __webpack_require__.x();
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
+/******/ 	__webpack_require__.O(undefined, ["router_js","aPage"], () => (__webpack_require__(0)))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["router_js","aPage"], () => (__webpack_require__(3)))
+/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ 	
 /******/ })()
 ;
 ```
@@ -529,42 +526,42 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-asset pageB.bundle.js 12.9 KiB [emitted] (name: pageB)
-asset pageA.bundle.js 12.9 KiB [emitted] (name: pageA)
-asset router_js.bundle.js 2.44 KiB [emitted]
+asset pageB.bundle.js 13 KiB [emitted] (name: pageB)
+asset pageA.bundle.js 13 KiB [emitted] (name: pageA)
+asset router_js.bundle.js 2.45 KiB [emitted]
 asset aPage.bundle.js 392 bytes [emitted] (name: aPage)
 asset bPage.bundle.js 392 bytes [emitted] (name: bPage)
-Entrypoint pageA 15.7 KiB = router_js.bundle.js 2.44 KiB aPage.bundle.js 392 bytes pageA.bundle.js 12.9 KiB
-Entrypoint pageB 15.7 KiB = router_js.bundle.js 2.44 KiB bPage.bundle.js 392 bytes pageB.bundle.js 12.9 KiB
+Entrypoint pageA 15.9 KiB = router_js.bundle.js 2.45 KiB aPage.bundle.js 392 bytes pageA.bundle.js 13 KiB
+Entrypoint pageB 15.9 KiB = router_js.bundle.js 2.45 KiB bPage.bundle.js 392 bytes pageB.bundle.js 13 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
-  > ./aPage .// lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
+  > ./aPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
   > ./router pageA
   ./aPage.js 59 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./aPage ./aEntry.js 3:7-25
     cjs self exports reference ./aPage.js 1:0-14
-    context element ./aPage .// lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
+    import() context element ./aPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
 chunk (runtime: pageA, pageB) bPage.bundle.js (bPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
-  > ./bPage .// lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
+  > ./bPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
   > ./bEntry pageB
   > ./router pageB
   ./bPage.js 59 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./bPage ./bEntry.js 3:7-25
     cjs self exports reference ./bPage.js 1:0-14
-    context element ./bPage .// lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
-chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 7.75 KiB (runtime) [entry] [rendered]
+    import() context element ./bPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
+chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 7.61 KiB (runtime) [entry] [rendered]
   > ./aEntry pageA
   > ./router pageA
-  runtime modules 7.75 KiB 9 modules
+  runtime modules 7.61 KiB 10 modules
   ./aEntry.js 87 bytes [built] [code generated]
     [used exports unknown]
     entry ./aEntry pageA
-chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 7.75 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 7.61 KiB (runtime) [entry] [rendered]
   > ./bEntry pageB
   > ./router pageB
-  runtime modules 7.75 KiB 9 modules
+  runtime modules 7.61 KiB 10 modules
   ./bEntry.js 87 bytes [built] [code generated]
     [used exports unknown]
     entry ./bEntry pageB
@@ -578,48 +575,48 @@ chunk (runtime: pageA, pageB) router_js.bundle.js 951 bytes [initial] [rendered]
     [used exports unknown]
     entry ./router pageA
     entry ./router pageB
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset pageA.bundle.js 2.69 KiB [emitted] [minimized] (name: pageA)
-asset pageB.bundle.js 2.69 KiB [emitted] [minimized] (name: pageB)
-asset router_js.bundle.js 543 bytes [emitted] [minimized]
+asset pageA.bundle.js 2.83 KiB [emitted] [minimized] (name: pageA)
+asset pageB.bundle.js 2.83 KiB [emitted] [minimized] (name: pageB)
+asset router_js.bundle.js 544 bytes [emitted] [minimized]
 asset aPage.bundle.js 117 bytes [emitted] [minimized] (name: aPage)
 asset bPage.bundle.js 117 bytes [emitted] [minimized] (name: bPage)
-Entrypoint pageA 3.34 KiB = router_js.bundle.js 543 bytes aPage.bundle.js 117 bytes pageA.bundle.js 2.69 KiB
-Entrypoint pageB 3.34 KiB = router_js.bundle.js 543 bytes bPage.bundle.js 117 bytes pageB.bundle.js 2.69 KiB
+Entrypoint pageA 3.48 KiB = router_js.bundle.js 544 bytes aPage.bundle.js 117 bytes pageA.bundle.js 2.83 KiB
+Entrypoint pageB 3.48 KiB = router_js.bundle.js 544 bytes bPage.bundle.js 117 bytes pageB.bundle.js 2.83 KiB
 chunk (runtime: pageA, pageB) aPage.bundle.js (aPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
-  > ./aPage .// lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
+  > ./aPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
   > ./aEntry pageA
   > ./router pageA
   ./aPage.js 59 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./aPage ./aEntry.js 3:7-25
     cjs self exports reference ./aPage.js 1:0-14
-    context element ./aPage .// lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
+    import() context element ./aPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./aPage
 chunk (runtime: pageA, pageB) bPage.bundle.js (bPage) 59 bytes [initial] [rendered] reused as split chunk (cache group: default)
-  > ./bPage .// lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
+  > ./bPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
   > ./bEntry pageB
   > ./router pageB
   ./bPage.js 59 bytes [built] [code generated]
     [used exports unknown]
     cjs require ./bPage ./bEntry.js 3:7-25
     cjs self exports reference ./bPage.js 1:0-14
-    context element ./bPage .// lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
-chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 7.76 KiB (runtime) [entry] [rendered]
+    import() context element ./bPage ././ lazy ^\.\/.*Page$ chunkName: [request] namespace object ./bPage
+chunk (runtime: pageA) pageA.bundle.js (pageA) 87 bytes (javascript) 7.61 KiB (runtime) [entry] [rendered]
   > ./aEntry pageA
   > ./router pageA
-  runtime modules 7.76 KiB 9 modules
+  runtime modules 7.61 KiB 10 modules
   ./aEntry.js 87 bytes [built] [code generated]
     [no exports used]
     entry ./aEntry pageA
-chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 7.76 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.bundle.js (pageB) 87 bytes (javascript) 7.61 KiB (runtime) [entry] [rendered]
   > ./bEntry pageB
   > ./router pageB
-  runtime modules 7.76 KiB 9 modules
+  runtime modules 7.61 KiB 10 modules
   ./bEntry.js 87 bytes [built] [code generated]
     [no exports used]
     entry ./bEntry pageB
@@ -633,5 +630,5 @@ chunk (runtime: pageA, pageB) router_js.bundle.js 951 bytes [initial] [rendered]
     [no exports used]
     entry ./router pageA
     entry ./router pageB
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

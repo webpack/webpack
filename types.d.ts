@@ -2388,6 +2388,17 @@ declare class ContextExclusionPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare interface ContextFileSystemInfoEntry {
+	safeTime: number;
+	timestampHash?: string;
+	resolved?: ResolvedContextFileSystemInfoEntry;
+	symlinks?: Set<string>;
+}
+declare interface ContextHash {
+	hash: string;
+	resolved?: string;
+	symlinks?: Set<string>;
+}
 type ContextMode =
 	| "sync"
 	| "eager"
@@ -2454,6 +2465,13 @@ declare class ContextReplacementPlugin {
 	newContentRecursive: any;
 	newContentRegExp: any;
 	apply(compiler?: any): void;
+}
+declare interface ContextTimestampAndHash {
+	safeTime: number;
+	timestampHash?: string;
+	hash: string;
+	resolved?: ResolvedContextTimestampAndHash;
+	symlinks?: Set<string>;
 }
 type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
 	Record<string, any>;
@@ -3968,8 +3986,13 @@ declare abstract class FileSystemInfo {
 	logger?: WebpackLogger;
 	fileTimestampQueue: AsyncQueue<string, string, null | FileSystemInfoEntry>;
 	fileHashQueue: AsyncQueue<string, string, null | string>;
-	contextTimestampQueue: AsyncQueue<string, string, null | FileSystemInfoEntry>;
-	contextHashQueue: AsyncQueue<string, string, null | string>;
+	contextTimestampQueue: AsyncQueue<
+		string,
+		string,
+		null | ContextFileSystemInfoEntry
+	>;
+	contextHashQueue: AsyncQueue<string, string, null | ContextHash>;
+	contextTshQueue: AsyncQueue<string, string, null | ContextTimestampAndHash>;
 	managedItemQueue: AsyncQueue<string, string, null | string>;
 	managedItemDirectoryQueue: AsyncQueue<string, string, Set<string>>;
 	managedPaths: string[];
@@ -3997,7 +4020,7 @@ declare abstract class FileSystemInfo {
 		path: string,
 		callback: (
 			arg0?: WebpackError,
-			arg1?: null | FileSystemInfoEntry | "ignore"
+			arg1?: null | "ignore" | ResolvedContextFileSystemInfoEntry
 		) => void
 	): void;
 	getFileHash(
@@ -4007,6 +4030,13 @@ declare abstract class FileSystemInfo {
 	getContextHash(
 		path: string,
 		callback: (arg0?: WebpackError, arg1?: string) => void
+	): void;
+	getContextTsh(
+		path: string,
+		callback: (
+			arg0?: WebpackError,
+			arg1?: ResolvedContextTimestampAndHash
+		) => void
 	): void;
 	resolveBuildDependencies(
 		context: string,
@@ -4045,7 +4075,6 @@ declare abstract class FileSystemInfo {
 declare interface FileSystemInfoEntry {
 	safeTime: number;
 	timestamp?: number;
-	timestampHash?: string;
 }
 declare interface FileSystemStats {
 	isDirectory: () => boolean;
@@ -4501,6 +4530,10 @@ declare interface InputFileSystem {
 		) => void
 	) => void;
 	stat: (
+		arg0: string,
+		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
+	) => void;
+	lstat?: (
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
 	) => void;
@@ -9255,6 +9288,15 @@ declare interface ResolvePluginInstance {
 	apply: (resolver: Resolver) => void;
 }
 type ResolveRequest = BaseResolveRequest & Partial<ParsedIdentifier>;
+declare interface ResolvedContextFileSystemInfoEntry {
+	safeTime: number;
+	timestampHash?: string;
+}
+declare interface ResolvedContextTimestampAndHash {
+	safeTime: number;
+	timestampHash?: string;
+	hash: string;
+}
 declare abstract class Resolver {
 	fileSystem: FileSystem;
 	options: ResolveOptionsTypes;
@@ -10326,9 +10368,9 @@ declare abstract class Snapshot {
 	fileTimestamps?: Map<string, FileSystemInfoEntry>;
 	fileHashes?: Map<string, string>;
 	fileTshs?: Map<string, string | TimestampAndHash>;
-	contextTimestamps?: Map<string, FileSystemInfoEntry>;
+	contextTimestamps?: Map<string, ResolvedContextFileSystemInfoEntry>;
 	contextHashes?: Map<string, string>;
-	contextTshs?: Map<string, string | TimestampAndHash>;
+	contextTshs?: Map<string, ResolvedContextTimestampAndHash>;
 	missingExistence?: Map<string, boolean>;
 	managedItemInfo?: Map<string, string>;
 	managedFiles?: Set<string>;
@@ -11242,7 +11284,6 @@ declare class Template {
 declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
-	timestampHash?: string;
 	hash: string;
 }
 
@@ -12036,6 +12077,7 @@ declare namespace exports {
 		export let hmrDownloadUpdateHandlers: string;
 		export let hmrModuleData: string;
 		export let hmrInvalidateModuleHandlers: string;
+		export let hmrRuntimeStatePrefix: string;
 		export let amdDefine: string;
 		export let amdOptions: string;
 		export let system: string;

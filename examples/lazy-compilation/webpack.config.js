@@ -10,13 +10,13 @@ module.exports = {
 		idleTimeout: 5000
 	},
 	experiments: {
-		lazyCompilation: {
-			entries: false
-		}
+		lazyCompilation: true
 	},
 	devServer: {
 		hot: true,
-		publicPath: "/dist/"
+		devMiddleware: {
+			publicPath: "/dist/"
+		}
 	},
 	plugins: [new HotModuleReplacementPlugin()]
 };
