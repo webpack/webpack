@@ -9229,7 +9229,7 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Plugins for the resolver.
 	 */
-	plugins?: ("..." | ResolvePluginInstance)[];
+	plugins?: (ResolvePluginInstance | "...")[];
 
 	/**
 	 * Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.
@@ -12360,6 +12360,7 @@ declare namespace exports {
 		LibraryOptions,
 		ModuleOptions,
 		ResolveOptionsWebpackOptions as ResolveOptions,
+		ResolvePluginInstance,
 		RuleSetCondition,
 		RuleSetConditionAbsolute,
 		RuleSetRule,
