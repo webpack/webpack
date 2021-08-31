@@ -1127,11 +1127,13 @@ export interface Experiments {
 					| ((
 							compiler: import("../lib/Compiler"),
 							client: string,
+							port: number,
 							callback: (err?: Error, api?: any) => void
 					  ) => void)
 					| ((
 							compiler: import("../lib/Compiler"),
-							client: string
+							client: string,
+							port: number
 					  ) => Promise<any>);
 				/**
 				 * A custom client.
@@ -1145,6 +1147,10 @@ export interface Experiments {
 				 * Enable/disable lazy compilation for import() modules.
 				 */
 				imports?: boolean;
+				/**
+				 * Custom port for lazy compilation backend. If not defined, random port will be used.
+				 */
+				port?: number;
 				/**
 				 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
 				 */

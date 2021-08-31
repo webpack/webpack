@@ -720,7 +720,7 @@
                 "backend": {
                   "description": "A custom backend.",
                   "instanceof": "Function",
-                  "tsType": "(((compiler: import('../lib/Compiler'), client: string, callback: (err?: Error, api?: any) => void) => void) | ((compiler: import('../lib/Compiler'), client: string) => Promise<any>))"
+                  "tsType": "(((compiler: import('../lib/Compiler'), client: string, port: number, callback: (err?: Error, api?: any) => void) => void) | ((compiler: import('../lib/Compiler'), client: string, port: number) => Promise<any>))"
                 },
                 "client": {
                   "description": "A custom client.",
@@ -733,6 +733,10 @@
                 "imports": {
                   "description": "Enable/disable lazy compilation for import() modules.",
                   "type": "boolean"
+                },
+                "port": {
+                  "description": "Custom port for lazy compilation backend. If not defined, random port will be used.",
+                  "type": "number"
                 },
                 "test": {
                   "description": "Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.",

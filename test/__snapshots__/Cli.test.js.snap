@@ -602,6 +602,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-lazy-compilation-port": Object {
+    "configs": Array [
+      Object {
+        "description": "Custom port for lazy compilation backend. If not defined, random port will be used.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation.port",
+        "type": "number",
+      },
+    ],
+    "description": "Custom port for lazy compilation backend. If not defined, random port will be used.",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "experiments-lazy-compilation-test": Object {
     "configs": Array [
       Object {
