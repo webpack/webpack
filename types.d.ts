@@ -767,6 +767,10 @@ declare class ChunkGraph {
 	attachModules(chunk: Chunk, modules: Iterable<Module>): void;
 	attachRuntimeModules(chunk: Chunk, modules: Iterable<RuntimeModule>): void;
 	attachFullHashModules(chunk: Chunk, modules: Iterable<RuntimeModule>): void;
+	attachDependentHashModules(
+		chunk: Chunk,
+		modules: Iterable<RuntimeModule>
+	): void;
 	replaceModule(oldModule: Module, newModule: Module): void;
 	isModuleInChunk(module: Module, chunk: Chunk): boolean;
 	isModuleInChunkGroup(module: Module, chunkGroup: ChunkGroup): boolean;
@@ -780,6 +784,7 @@ declare class ChunkGraph {
 	getNumberOfModuleChunks(module: Module): number;
 	getModuleRuntimes(module: Module): RuntimeSpecSet;
 	getNumberOfChunkModules(chunk: Chunk): number;
+	getNumberOfChunkFullHashModules(chunk: Chunk): number;
 	getChunkModulesIterable(chunk: Chunk): Iterable<Module>;
 	getChunkModulesIterableBySourceType(
 		chunk: Chunk,
@@ -831,6 +836,7 @@ declare class ChunkGraph {
 	): number;
 	canChunksBeIntegrated(chunkA: Chunk, chunkB: Chunk): boolean;
 	integrateChunks(chunkA: Chunk, chunkB: Chunk): void;
+	upgradeDependentToFullHashModules(chunk: Chunk): void;
 	isEntryModuleInChunk(module: Module, chunk: Chunk): boolean;
 	connectChunkAndEntryModule(
 		chunk: Chunk,
@@ -839,6 +845,7 @@ declare class ChunkGraph {
 	): void;
 	connectChunkAndRuntimeModule(chunk: Chunk, module: RuntimeModule): void;
 	addFullHashModuleToChunk(chunk: Chunk, module: RuntimeModule): void;
+	addDependentHashModuleToChunk(chunk: Chunk, module: RuntimeModule): void;
 	disconnectChunkAndEntryModule(chunk: Chunk, module: Module): void;
 	disconnectChunkAndRuntimeModule(chunk: Chunk, module: RuntimeModule): void;
 	disconnectEntryModule(module: Module): void;
@@ -856,6 +863,9 @@ declare class ChunkGraph {
 	getChunkFullHashModulesSet(
 		chunk: Chunk
 	): undefined | ReadonlySet<RuntimeModule>;
+	getChunkDependentHashModulesIterable(
+		chunk: Chunk
+	): undefined | Iterable<RuntimeModule>;
 	getChunkEntryModulesWithChunkGroupIterable(
 		chunk: Chunk
 	): Iterable<[Module, undefined | Entrypoint]>;
@@ -9779,6 +9789,7 @@ declare class RuntimeModule extends Module {
 	chunk: Chunk;
 	chunkGraph: ChunkGraph;
 	fullHash: boolean;
+	dependentHash: boolean;
 	attach(compilation: Compilation, chunk: Chunk, chunkGraph?: ChunkGraph): void;
 	generate(): string;
 	getGeneratedCode(): string;
