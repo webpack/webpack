@@ -970,6 +970,10 @@ export interface FileCacheOptions {
 	 * Version of the cache data. Different versions won't allow to reuse the cache and override existing content. Update the version when config changed in a way which doesn't allow to reuse cache. This will invalidate the cache.
 	 */
 	version?: string;
+	/**
+	 * When you want to only restore file caches and not store them, possible optimization when you only want to read cache.
+	 */
+	restoreOnly?: boolean;
 }
 /**
  * Options for the webpack-dev-server.
