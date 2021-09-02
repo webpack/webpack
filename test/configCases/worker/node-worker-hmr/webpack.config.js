@@ -1,3 +1,5 @@
+const webpack = require("../../../../");
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
@@ -8,5 +10,6 @@ module.exports = {
 	},
 	output: {
 		filename: "[name].[contenthash].js"
-	}
+	},
+	plugins: [new webpack.HotModuleReplacementPlugin()]
 };
