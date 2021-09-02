@@ -29,14 +29,14 @@ exports[`ConfigCacheTestCases records issue-2991 exported tests should write rel
   \\"modules\\": {
     \\"byIdentifier\\": {
       \\"./test.js\\": 393,
-      \\"external \\\\\\"fs\\\\\\"\\": 747,
-      \\"external \\\\\\"path\\\\\\"\\": 622,
+      \\"external node-commonjs \\\\\\"fs\\\\\\"\\": 147,
+      \\"external node-commonjs \\\\\\"path\\\\\\"\\": 17,
       \\"ignored|./.|pkgs/somepackage/foo\\": 802
     },
     \\"usedIds\\": [
+      17,
+      147,
       393,
-      622,
-      747,
       802
     ]
   }
@@ -62,16 +62,16 @@ exports[`ConfigCacheTestCases records issue-7339 exported tests should write rel
       \\"./dependencies/foo.js\\": 117,
       \\"./dependencies|sync|/^\\\\\\\\.\\\\\\\\/.*$/\\": 412,
       \\"./test.js\\": 393,
-      \\"external \\\\\\"fs\\\\\\"\\": 747,
-      \\"external \\\\\\"path\\\\\\"\\": 622
+      \\"external node-commonjs \\\\\\"fs\\\\\\"\\": 147,
+      \\"external node-commonjs \\\\\\"path\\\\\\"\\": 17
     },
     \\"usedIds\\": [
+      17,
       117,
+      147,
       379,
       393,
-      412,
-      622,
-      747
+      412
     ]
   }
 }"
