@@ -41,9 +41,6 @@ module.exports = {
 			}
 		]
 	},
-	experiments: {
-		executeModule: true
-	},
 	plugins: [
 		compiler =>
 			compiler.hooks.done.tap("test case", stats => {
