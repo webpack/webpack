@@ -1107,10 +1107,6 @@ export interface Experiments {
 	 */
 	buildHttp?: boolean | HttpUriOptions;
 	/**
-	 * Enable build-time execution of modules from the module graph for plugins and loaders.
-	 */
-	executeModule?: boolean;
-	/**
 	 * Enable module and chunk layers.
 	 */
 	layers?: boolean;
