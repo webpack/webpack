@@ -486,7 +486,7 @@ const describeCases = config => {
 																		"unlinked",
 																		referencingModule
 																	),
-																	module.context,
+																	referencingModule.context,
 																	true
 																);
 															}

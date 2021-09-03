@@ -4512,6 +4512,8 @@ declare abstract class InitFragment<Context> {
 	endContent?: string | Source;
 	getContent(context: Context): string | Source;
 	getEndContent(context: Context): undefined | string | Source;
+	serialize(context?: any): void;
+	deserialize(context?: any): void;
 	merge: any;
 }
 declare interface InputFileSystem {

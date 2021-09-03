@@ -14,9 +14,9 @@ module.exports = async (something, context, unlinked) => {
 	const code = [...new Set(["default", ...Object.keys(something)])]
 		.map(
 			name =>
-				`const _${name} = ${SYNTHETIC_MODULES_STORE}[${i}][${JSON.stringify(
-					name
-				)}]; export { _${name} as ${name}};`
+				`const _${name} = ${SYNTHETIC_MODULES_STORE}[${i}]${
+					name === "default" ? "" : `[${JSON.stringify(name)}]`
+				}; export { _${name} as ${name}};`
 		)
 		.join("\n");
 	const m = new vm.SourceTextModule(code, {
