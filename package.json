@@ -58,7 +58,7 @@
     "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-jsdoc": "^33.0.0",
     "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-prettier": "^4.0.0",
     "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^6.0.5",
     "husky": "^6.0.0",
