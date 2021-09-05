@@ -699,10 +699,6 @@
             }
           ]
         },
-        "executeModule": {
-          "description": "Enable build-time execution of modules from the module graph for plugins and loaders.",
-          "type": "boolean"
-        },
         "layers": {
           "description": "Enable module and chunk layers.",
           "type": "boolean"
