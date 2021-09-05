@@ -18,13 +18,12 @@ describe("normalize dep version", () => {
 		"git+ssh://git@github.com:npm/cli#semver:^5.0": "^5.0",
 		"git://github.com/npm/cli.git#v1.0.27": "v1.0.27",
 		"git+https://isaacs@github.com/npm/cli.git": "",
+		"http://github.com/npm/cli.git#v1.0": "v1.0",
 		"v1.2": "v1.2",
 		"^1.2.0": "^1.2.0",
 		"git://localhost:12345/foo/bar#v1.0": "v1.0",
 		"localhost:foo/bar#v1.0": "v1.0"
 	};
-
-	// TODO 增加 非 正常协议、非正常 domain  的case
 
 	const githubInvalid = [
 		// foo/bar shorthand but specifying auth
