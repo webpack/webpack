@@ -2,7 +2,7 @@
 
 "use strict";
 
-if (typeof EventSource !== "function") {
+if (!/^function|object$/.test(typeof EventSource)) {
 	throw new Error(
 		"Environment doesn't support lazy compilation (requires EventSource)"
 	);
