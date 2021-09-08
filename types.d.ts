@@ -6139,6 +6139,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
+	 *
 	 * In the example:
 	 * [
 	 *   { request: "/abc/loader1.js?xyz",
@@ -12062,7 +12063,9 @@ declare namespace exports {
 		export let uncaughtErrorHandler: string;
 		export let scriptNonce: string;
 		export let loadScript: string;
+		export let createScript: string;
 		export let createScriptUrl: string;
+		export let getTrustedTypesPolicy: string;
 		export let chunkName: string;
 		export let runtimeId: string;
 		export let getChunkScriptFilename: string;
