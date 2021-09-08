@@ -16,4 +16,4 @@ module.exports = [
 		},
 		devtool: "eval"
 	}
-]
+];
