@@ -1,5 +1,7 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
+
 const _ = require("lodash");
 const path = require("path");
 const { createFsFromVolume, Volume } = require("memfs");
