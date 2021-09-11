@@ -4438,13 +4438,13 @@ type IgnorePluginOptions =
 			/**
 			 * A RegExp to test the request against.
 			 */
-			resourceRegExp?: RegExp;
+			resourceRegExp: RegExp;
 	  }
 	| {
 			/**
 			 * A filter function for resource and context.
 			 */
-			checkResource?: (resource: string, context: string) => boolean;
+			checkResource: (resource: string, context: string) => boolean;
 	  };
 declare interface ImportModuleOptions {
 	/**
