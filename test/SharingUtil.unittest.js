@@ -19,6 +19,11 @@ describe("normalize dep version", () => {
 		"git://github.com/npm/cli.git#v1.0.27": "v1.0.27",
 		"git+https://isaacs@github.com/npm/cli.git": "",
 		"http://github.com/npm/cli.git#v1.0": "v1.0",
+		// for uppercase
+		"http://GITHUB.com/npm/cli.git#v1.0": "v1.0",
+		"HTTP://github.com/npm/cli.git#v1.0": "v1.0",
+		"FILE://foo/bar": "",
+		"file://foo/bar": "",
 		"v1.2": "v1.2",
 		"^1.2.0": "^1.2.0",
 		"git://localhost:12345/foo/bar#v1.0": "v1.0",
