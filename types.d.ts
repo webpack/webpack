@@ -7161,12 +7161,12 @@ declare interface NodeOptions {
 	/**
 	 * Include a polyfill for the '__dirname' variable.
 	 */
-	__dirname?: boolean | "warn-mock" | "mock" | "eval-only";
+	__dirname?: boolean | "warn-mock" | "mock" | "node-module" | "eval-only";
 
 	/**
 	 * Include a polyfill for the '__filename' variable.
 	 */
-	__filename?: boolean | "warn-mock" | "mock" | "eval-only";
+	__filename?: boolean | "warn-mock" | "mock" | "node-module" | "eval-only";
 
 	/**
 	 * Include a polyfill for the 'global' variable.
