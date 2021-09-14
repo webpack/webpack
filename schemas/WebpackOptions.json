@@ -699,6 +699,10 @@
             }
           ]
         },
+        "futureDefaults": {
+          "description": "Apply defaults of next major version.",
+          "type": "boolean"
+        },
         "layers": {
           "description": "Enable module and chunk layers.",
           "type": "boolean"
@@ -1940,15 +1944,15 @@
       "properties": {
         "__dirname": {
           "description": "Include a polyfill for the '__dirname' variable.",
-          "enum": [false, true, "mock", "eval-only"]
+          "enum": [false, true, "warn-mock", "mock", "eval-only"]
         },
         "__filename": {
           "description": "Include a polyfill for the '__filename' variable.",
-          "enum": [false, true, "mock", "eval-only"]
+          "enum": [false, true, "warn-mock", "mock", "eval-only"]
         },
         "global": {
           "description": "Include a polyfill for the 'global' variable.",
-          "type": "boolean"
+          "enum": [false, true, "warn"]
         }
       }
     },

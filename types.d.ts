@@ -3283,6 +3283,11 @@ declare interface Experiments {
 	buildHttp?: boolean | HttpUriOptions;
 
 	/**
+	 * Apply defaults of next major version.
+	 */
+	futureDefaults?: boolean;
+
+	/**
 	 * Enable module and chunk layers.
 	 */
 	layers?: boolean;
@@ -7156,17 +7161,17 @@ declare interface NodeOptions {
 	/**
 	 * Include a polyfill for the '__dirname' variable.
 	 */
-	__dirname?: boolean | "mock" | "eval-only";
+	__dirname?: boolean | "warn-mock" | "mock" | "eval-only";
 
 	/**
 	 * Include a polyfill for the '__filename' variable.
 	 */
-	__filename?: boolean | "mock" | "eval-only";
+	__filename?: boolean | "warn-mock" | "mock" | "eval-only";
 
 	/**
 	 * Include a polyfill for the 'global' variable.
 	 */
-	global?: boolean;
+	global?: boolean | "warn";
 }
 declare class NodeSourcePlugin {
 	constructor();

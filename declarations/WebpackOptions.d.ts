@@ -1107,6 +1107,10 @@ export interface Experiments {
 	 */
 	buildHttp?: boolean | HttpUriOptions;
 	/**
+	 * Apply defaults of next major version.
+	 */
+	futureDefaults?: boolean;
+	/**
 	 * Enable module and chunk layers.
 	 */
 	layers?: boolean;
@@ -1629,15 +1633,15 @@ export interface NodeOptions {
 	/**
 	 * Include a polyfill for the '__dirname' variable.
 	 */
-	__dirname?: false | true | "mock" | "eval-only";
+	__dirname?: false | true | "warn-mock" | "mock" | "eval-only";
 	/**
 	 * Include a polyfill for the '__filename' variable.
 	 */
-	__filename?: false | true | "mock" | "eval-only";
+	__filename?: false | true | "warn-mock" | "mock" | "eval-only";
 	/**
 	 * Include a polyfill for the 'global' variable.
 	 */
-	global?: boolean;
+	global?: false | true | "warn";
 }
 /**
  * Enables/Disables integrated optimizations.

@@ -94,6 +94,7 @@ Object {
     "asset": false,
     "asyncWebAssembly": false,
     "buildHttp": false,
+    "futureDefaults": false,
     "layers": false,
     "lazyCompilation": false,
     "outputModule": false,
@@ -1873,6 +1874,31 @@ Object {
 			+       "require",
 			@@ ... @@
 			+       "async-node",
+		`)
+	);
+
+	test(
+		"experiments.futureDefaults",
+		{
+			experiments: {
+				futureDefaults: true
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "futureDefaults": false,
+			+     "futureDefaults": true,
+			@@ ... @@
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			-     "global": true,
+			+     "__dirname": "warn-mock",
+			+     "__filename": "warn-mock",
+			+     "global": "warn",
 		`)
 	);
 });
