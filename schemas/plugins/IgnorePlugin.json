@@ -15,7 +15,8 @@
           "instanceof": "RegExp",
           "tsType": "RegExp"
         }
-      }
+      },
+      "required": ["resourceRegExp"]
     },
     {
       "type": "object",
@@ -26,7 +27,8 @@
           "instanceof": "Function",
           "tsType": "((resource: string, context: string) => boolean)"
         }
-      }
+      },
+      "required": ["checkResource"]
     }
   ]
 }
