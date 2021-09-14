@@ -2662,6 +2662,11 @@ declare interface DependencyTemplateContext {
 	 * when in a concatenated module, information about other concatenated modules
 	 */
 	concatenationScope?: ConcatenationScope;
+
+	/**
+	 * getData
+	 */
+	getData: () => Map<any, any>;
 }
 declare abstract class DependencyTemplates {
 	get(dependency: DependencyConstructor): DependencyTemplate;
