@@ -1,2 +1,0 @@
-import "./empty";
-require("./empty");

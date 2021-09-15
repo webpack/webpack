@@ -1,0 +1,5 @@
+{
+  "name": "cjs",
+  "type": "commonjs",
+  "main": "./index.js"
+}
