@@ -12,6 +12,61 @@ module.exports = {
 				},
 				shared2: {
 					import: false
+				},
+				shared3: {
+					import: false,
+					strictVersion: true
+				},
+				shared4: {
+					import: false
+				},
+				shared5: {
+					import: false,
+					strictVersion: true
+				},
+				shared6: {
+					import: false,
+					strictVersion: true
+				},
+				shared7: {
+					import: false,
+					strictVersion: true
+				},
+				shared8: {
+					import: false,
+					strictVersion: true
+				},
+				shared9: {
+					import: false,
+					strictVersion: true
+				},
+				shared10: {
+					import: false,
+					strictVersion: true
+				},
+				shared11: {
+					import: false,
+					strictVersion: true
+				},
+				shared12: {
+					import: false
+				},
+				shared13: {
+					import: false
+				},
+				shared14: {
+					import: false
+				},
+				shared15: {
+					import: false,
+					strictVersion: true
+				},
+				shared16: {
+					import: false
+				},
+				shared17: {
+					import: false,
+					strictVersion: true
 				}
 			}
 		})

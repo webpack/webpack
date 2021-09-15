@@ -201,7 +201,6 @@ describe("normalize dep version", () => {
 
 		// inputs that are not quite proper but we accept anyway
 		"https://www.github.com/foo/bar": "",
-		// xxx by liulangyu 这是否合理？ 有没有 case 验证
 		"foo/bar#branch with space": "branch with space",
 		"https://github.com/foo/bar/tree/branch": "branch",
 		"user..blerg--/..foo-js# . . . . . some . tags / / /":
