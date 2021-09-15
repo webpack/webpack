@@ -11474,6 +11474,11 @@ declare interface VariableInfoInterface {
 	freeName: string | true;
 	tagInfo?: TagInfo;
 }
+declare class WarnNonEsmSourceTypePlugin {
+	constructor(filter?: string | RegExp);
+	filter?: string | RegExp;
+	apply(compiler: Compiler): void;
+}
 type WarningFilterItemTypes =
 	| string
 	| RegExp
@@ -12362,6 +12367,7 @@ declare namespace exports {
 		Stats,
 		Template,
 		WatchIgnorePlugin,
+		WarnNonEsmSourceTypePlugin,
 		WebpackError,
 		WebpackOptionsApply,
 		WebpackOptionsDefaulter,
