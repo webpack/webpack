@@ -1,6 +1,6 @@
 import { trackA, results } from "./tracker";
 import "./b.js";
-import "./wasm.wasm";
+import "./wasm.wat";
 
 trackA();
 

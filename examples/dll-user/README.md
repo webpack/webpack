@@ -2,11 +2,11 @@
 
 [DllPlugin documentation](https://webpack.js.org/plugins/dll-plugin)
 
-This is the _user_ bundle, which uses the manifest from [dll-reference example](https://github.com/webpack/webpack/tree/master/examples/dll)
+This is the _user_ bundle, which uses the manifest from [dll-reference example](https://github.com/webpack/webpack/tree/main/examples/dll)
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
@@ -27,7 +27,7 @@ module.exports = {
 
 # example.js
 
-``` javascript
+```javascript
 console.log(require("../dll/alpha"));
 console.log(require("../dll/a"));
 
@@ -40,93 +40,147 @@ console.log(require("module"));
 
 # dist/output.js
 
-<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+```javascript
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ([
+/* 0 */,
+/* 1 */
+/*!**************************************************************************!*\
+  !*** delegated ./alpha.js from dll-reference alpha_32ae439e7568b31a353c ***!
+  \**************************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements: module, __webpack_require__ */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-``` javascript
-/******/ (function(modules) { // webpackBootstrap
+module.exports = (__webpack_require__(/*! dll-reference alpha_32ae439e7568b31a353c */ 2))(1);
+
+/***/ }),
+/* 2 */
+/*!*********************************************!*\
+  !*** external "alpha_32ae439e7568b31a353c" ***!
+  \*********************************************/
+/*! dynamic exports */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module */
+/***/ ((module) => {
+
+"use strict";
+module.exports = alpha_32ae439e7568b31a353c;
+
+/***/ }),
+/* 3 */
+/*!**********************************************************************!*\
+  !*** delegated ./a.js from dll-reference alpha_32ae439e7568b31a353c ***!
+  \**********************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements: module, __webpack_require__ */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = (__webpack_require__(/*! dll-reference alpha_32ae439e7568b31a353c */ 2))(2);
+
+/***/ }),
+/* 4 */
+/*!************************************************************************!*\
+  !*** delegated ./beta.js from dll-reference beta_32ae439e7568b31a353c ***!
+  \************************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements: module, __webpack_require__ */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = (__webpack_require__(/*! dll-reference beta_32ae439e7568b31a353c */ 5))(5);
+
+/***/ }),
+/* 5 */
+/*!********************************************!*\
+  !*** external "beta_32ae439e7568b31a353c" ***!
+  \********************************************/
+/*! dynamic exports */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module */
+/***/ ((module) => {
+
+"use strict";
+module.exports = beta_32ae439e7568b31a353c;
+
+/***/ }),
+/* 6 */
+/*!*********************************************************************!*\
+  !*** delegated ./b.js from dll-reference beta_32ae439e7568b31a353c ***!
+  \*********************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements: module, __webpack_require__ */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = (__webpack_require__(/*! dll-reference beta_32ae439e7568b31a353c */ 5))(6);
+
+/***/ }),
+/* 7 */
+/*!**********************************************************************!*\
+  !*** delegated ./c.jsx from dll-reference beta_32ae439e7568b31a353c ***!
+  \**********************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements: module, __webpack_require__ */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = (__webpack_require__(/*! dll-reference beta_32ae439e7568b31a353c */ 5))(7);
+
+/***/ }),
+/* 8 */
+/*!*****************************************************************************************!*\
+  !*** delegated ../node_modules/module.js from dll-reference alpha_32ae439e7568b31a353c ***!
+  \*****************************************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements: module, __webpack_require__ */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = (__webpack_require__(/*! dll-reference alpha_32ae439e7568b31a353c */ 2))(3);
+
+/***/ })
+/******/ 	]);
+```
+
+<details><summary><code>/* webpack runtime code */</code></summary>
+
+``` js
+/************************************************************************/
 /******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/
+/******/ 	
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "dist/";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
-/******/ })
+/******/ 	
 /************************************************************************/
 ```
 
 </details>
 
-``` javascript
-/******/ ([
-/* 0 */
+``` js
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements: __webpack_require__ */
 console.log(__webpack_require__(/*! ../dll/alpha */ 1));
 console.log(__webpack_require__(/*! ../dll/a */ 3));
 
@@ -136,89 +190,10 @@ console.log(__webpack_require__(/*! beta/c */ 7));
 
 console.log(__webpack_require__(/*! module */ 8));
 
+})();
 
-/***/ }),
-/* 1 */
-/*!**************************************************************************!*\
-  !*** delegated ./alpha.js from dll-reference alpha_ae937b5d3e880b635a69 ***!
-  \**************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = (__webpack_require__(/*! dll-reference alpha_ae937b5d3e880b635a69 */ 2))(1);
-
-/***/ }),
-/* 2 */
-/*!*********************************************!*\
-  !*** external "alpha_ae937b5d3e880b635a69" ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = alpha_ae937b5d3e880b635a69;
-
-/***/ }),
-/* 3 */
-/*!**********************************************************************!*\
-  !*** delegated ./a.js from dll-reference alpha_ae937b5d3e880b635a69 ***!
-  \**********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = (__webpack_require__(/*! dll-reference alpha_ae937b5d3e880b635a69 */ 2))(2);
-
-/***/ }),
-/* 4 */
-/*!************************************************************************!*\
-  !*** delegated ./beta.js from dll-reference beta_ae937b5d3e880b635a69 ***!
-  \************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = (__webpack_require__(/*! dll-reference beta_ae937b5d3e880b635a69 */ 5))(5);
-
-/***/ }),
-/* 5 */
-/*!********************************************!*\
-  !*** external "beta_ae937b5d3e880b635a69" ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = beta_ae937b5d3e880b635a69;
-
-/***/ }),
-/* 6 */
-/*!*********************************************************************!*\
-  !*** delegated ./b.js from dll-reference beta_ae937b5d3e880b635a69 ***!
-  \*********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = (__webpack_require__(/*! dll-reference beta_ae937b5d3e880b635a69 */ 5))(6);
-
-/***/ }),
-/* 7 */
-/*!**********************************************************************!*\
-  !*** delegated ./c.jsx from dll-reference beta_ae937b5d3e880b635a69 ***!
-  \**********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = (__webpack_require__(/*! dll-reference beta_ae937b5d3e880b635a69 */ 5))(7);
-
-/***/ }),
-/* 8 */
-/*!*****************************************************************************************!*\
-  !*** delegated ../node_modules/module.js from dll-reference alpha_ae937b5d3e880b635a69 ***!
-  \*****************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = (__webpack_require__(/*! dll-reference alpha_ae937b5d3e880b635a69 */ 2))(3);
-
-/***/ })
-/******/ ]);
+/******/ })()
+;
 ```
 
 # Info
@@ -226,67 +201,25 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_ae937b5d3e880b635a
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
-    Asset      Size  Chunks             Chunk Names
-output.js  6.19 KiB       0  [emitted]  main
-Entrypoint main = output.js
-chunk    {0} output.js (main) 549 bytes [entry] [rendered]
-    > .\example.js main
-    [0] ./example.js 213 bytes {0} [built]
-        single entry .\example.js  main
-    [1] delegated ./alpha.js from dll-reference alpha_ae937b5d3e880b635a69 42 bytes {0} [built]
-        cjs require ../dll/alpha [0] ./example.js 1:12-35
-    [2] external "alpha_ae937b5d3e880b635a69" 42 bytes {0} [built]
-        delegated source dll-reference alpha_ae937b5d3e880b635a69 [1] delegated ./alpha.js from dll-reference alpha_ae937b5d3e880b635a69
-        delegated source dll-reference alpha_ae937b5d3e880b635a69 [3] delegated ./a.js from dll-reference alpha_ae937b5d3e880b635a69
-        delegated source dll-reference alpha_ae937b5d3e880b635a69 [8] delegated ../node_modules/module.js from dll-reference alpha_ae937b5d3e880b635a69
-    [3] delegated ./a.js from dll-reference alpha_ae937b5d3e880b635a69 42 bytes {0} [built]
-        cjs require ../dll/a [0] ./example.js 2:12-31
-    [4] delegated ./beta.js from dll-reference beta_ae937b5d3e880b635a69 42 bytes {0} [built]
-        cjs require beta/beta [0] ./example.js 4:12-32
-    [5] external "beta_ae937b5d3e880b635a69" 42 bytes {0} [built]
-        delegated source dll-reference beta_ae937b5d3e880b635a69 [4] delegated ./beta.js from dll-reference beta_ae937b5d3e880b635a69
-        delegated source dll-reference beta_ae937b5d3e880b635a69 [6] delegated ./b.js from dll-reference beta_ae937b5d3e880b635a69
-        delegated source dll-reference beta_ae937b5d3e880b635a69 [7] delegated ./c.jsx from dll-reference beta_ae937b5d3e880b635a69
-    [6] delegated ./b.js from dll-reference beta_ae937b5d3e880b635a69 42 bytes {0} [built]
-        cjs require beta/b [0] ./example.js 5:12-29
-    [7] delegated ./c.jsx from dll-reference beta_ae937b5d3e880b635a69 42 bytes {0} [built]
-        cjs require beta/c [0] ./example.js 6:12-29
-    [8] delegated ../node_modules/module.js from dll-reference alpha_ae937b5d3e880b635a69 42 bytes {0} [built]
-        cjs require module [0] ./example.js 8:12-29
+asset output.js 5.51 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 541 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 336 bytes [dependent] 8 modules
+  ./example.js 205 bytes [built] [code generated]
+    [used exports unknown]
+    entry ./example.js main
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
-    Asset       Size  Chunks             Chunk Names
-output.js  972 bytes       0  [emitted]  main
-Entrypoint main = output.js
-chunk    {0} output.js (main) 549 bytes [entry] [rendered]
-    > .\example.js main
-    [0] external "beta_ae937b5d3e880b635a69" 42 bytes {0} [built]
-        delegated source dll-reference beta_ae937b5d3e880b635a69 [3] delegated ./c.jsx from dll-reference beta_ae937b5d3e880b635a69
-        delegated source dll-reference beta_ae937b5d3e880b635a69 [4] delegated ./b.js from dll-reference beta_ae937b5d3e880b635a69
-        delegated source dll-reference beta_ae937b5d3e880b635a69 [5] delegated ./beta.js from dll-reference beta_ae937b5d3e880b635a69
-    [1] external "alpha_ae937b5d3e880b635a69" 42 bytes {0} [built]
-        delegated source dll-reference alpha_ae937b5d3e880b635a69 [2] delegated ../node_modules/module.js from dll-reference alpha_ae937b5d3e880b635a69
-        delegated source dll-reference alpha_ae937b5d3e880b635a69 [6] delegated ./a.js from dll-reference alpha_ae937b5d3e880b635a69
-        delegated source dll-reference alpha_ae937b5d3e880b635a69 [7] delegated ./alpha.js from dll-reference alpha_ae937b5d3e880b635a69
-    [2] delegated ../node_modules/module.js from dll-reference alpha_ae937b5d3e880b635a69 42 bytes {0} [built]
-        cjs require module [8] ./example.js 8:12-29
-    [3] delegated ./c.jsx from dll-reference beta_ae937b5d3e880b635a69 42 bytes {0} [built]
-        cjs require beta/c [8] ./example.js 6:12-29
-    [4] delegated ./b.js from dll-reference beta_ae937b5d3e880b635a69 42 bytes {0} [built]
-        cjs require beta/b [8] ./example.js 5:12-29
-    [5] delegated ./beta.js from dll-reference beta_ae937b5d3e880b635a69 42 bytes {0} [built]
-        cjs require beta/beta [8] ./example.js 4:12-32
-    [6] delegated ./a.js from dll-reference alpha_ae937b5d3e880b635a69 42 bytes {0} [built]
-        cjs require ../dll/a [8] ./example.js 2:12-31
-    [7] delegated ./alpha.js from dll-reference alpha_ae937b5d3e880b635a69 42 bytes {0} [built]
-        cjs require ../dll/alpha [8] ./example.js 1:12-35
-    [8] ./example.js 213 bytes {0} [built]
-        single entry .\example.js  main
+asset output.js 587 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 541 bytes [entry] [rendered]
+  > ./example.js main
+  dependent modules 336 bytes [dependent] 8 modules
+  ./example.js 205 bytes [built] [code generated]
+    [no exports used]
+    entry ./example.js main
+webpack 5.51.1 compiled successfully
 ```

@@ -1,7 +1,9 @@
 "use strict";
 
-const webpack = require("../../../../");
-
+/** @type {import("../../../../").Configuration} */
 module.exports = {
-	plugins: [new webpack.optimize.ModuleConcatenationPlugin()]
+	mode: "production",
+	optimization: {
+		minimize: false
+	}
 };

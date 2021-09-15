@@ -30,9 +30,9 @@ function c() {}
 function d() {}
 function e() {}
 function f() {}
-`
+`;
 
-for(let i = 0; i < 2; i++) {
+for (let i = 0; i < 2; i++) {
 	avgJs += `(function() {${avgJs}}());`;
 }
 
@@ -50,20 +50,33 @@ function createTree(fs, count, folder) {
 	let remaining = count - 1;
 
 	function make(prefix, count, depth) {
-		if(count === 0) {
+		if (count === 0) {
 			fs.writeFileSync(`${folder}/${prefix}.js`, `export default 1;\n${avgJs}`);
 		} else {
 			const list = [];
-			for(let i = 0; i < count; i++) {
-				if(remaining-- <= 0) break;
-				if(depth <= 4 && i >= 3 && i <= 4) {
-					list.push(`const module${i} = import("./${prefix}-${i}");\ncounter += module${i};`);
+			for (let i = 0; i < count; i++) {
+				if (remaining-- <= 0) break;
+				if (depth <= 4 && i >= 3 && i <= 4) {
+					list.push(
+						`const module${i} = import("./${prefix}-${i}");\ncounter += module${i};`
+					);
 				} else {
-					list.push(`import module${i} from "./${prefix}-${i}";\ncounter += module${i};`);
+					list.push(
+						`import module${i} from "./${prefix}-${i}";\ncounter += module${i};`
+					);
 				}
-				make(`${prefix}-${i}`, depth > 4 || count > 30 ? 0 : count + depth + i ** 2, depth + 1);
+				make(
+					`${prefix}-${i}`,
+					depth > 4 || count > 30 ? 0 : count + depth + Math.pow(i, 2),
+					depth + 1
+				);
 			}
-			fs.writeFileSync(`${folder}/${prefix}.js`, `let counter = 0;\n${list.join("\n")};\nexport default counter;\n${avgJs}`)
+			fs.writeFileSync(
+				`${folder}/${prefix}.js`,
+				`let counter = 0;\n${list.join(
+					"\n"
+				)};\nexport default counter;\n${avgJs}`
+			);
 		}
 	}
 	make("index", 2, 0);

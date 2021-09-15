@@ -1,0 +1,10 @@
+{
+  "title": "Custom Loader Name configuration",
+  "additionalProperties": false,
+  "properties": {
+    "arg": {
+      "enum": [true]
+    }
+  },
+  "type": "object"
+}

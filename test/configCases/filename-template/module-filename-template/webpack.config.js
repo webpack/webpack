@@ -1,8 +1,8 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
 	output: {
-		devtoolLineToLine: true,
-		devtoolModuleFilenameTemplate: function(info) {
+		devtoolModuleFilenameTemplate: function (info) {
 			return "dummy:///" + info.resourcePath;
 		}
 	},

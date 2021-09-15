@@ -1,3 +1,4 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	module: {
 		rules: [
@@ -7,13 +8,14 @@ module.exports = {
 						test: {
 							and: [/a.\.js$/, /b\.js$/]
 						},
-						loader: "./loader?first"
+						loader: "./loader",
+						options: "first"
 					},
 					{
 						test: [require.resolve("./a"), require.resolve("./c")],
 						issuer: require.resolve("./b"),
 						use: data => [
-							"./loader?second-1",
+							"./loader",
 							{
 								loader: "./loader",
 								options: "second-2"
@@ -21,7 +23,7 @@ module.exports = {
 							{
 								loader: "./loader",
 								options: {
-									get: function() {
+									get: function () {
 										return "second-3";
 									}
 								}

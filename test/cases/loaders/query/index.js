@@ -1,6 +1,6 @@
 it("should pass query to loader", function() {
 	var result = require("./loaders/queryloader?query!./a?resourcequery");
-	result.should.be.eql({
+	expect(result).toEqual({
 		resourceQuery: "?resourcequery",
 		query: "?query",
 		prev: "module.exports = \"a\";"
@@ -9,7 +9,7 @@ it("should pass query to loader", function() {
 
 it("should pass query to loader without resource with resource query", function() {
 	var result = require("./loaders/queryloader?query!?resourcequery");
-	result.should.be.eql({
+	expect(result).toEqual({
 		resourceQuery: "?resourcequery",
 		query: "?query",
 		prev: null
@@ -18,7 +18,7 @@ it("should pass query to loader without resource with resource query", function(
 
 it("should pass query to loader without resource", function() {
 	var result = require("./loaders/queryloader?query!");
-	result.should.be.eql({
+	expect(result).toEqual({
 		query: "?query",
 		prev: null
 	});
@@ -26,10 +26,10 @@ it("should pass query to loader without resource", function() {
 
 it("should pass query to multiple loaders", function() {
 	var result = require("./loaders/queryloader?query1!./loaders/queryloader?query2!./a?resourcequery");
-	result.should.have.type("object");
-	result.should.have.property("resourceQuery").be.eql("?resourcequery");
-	result.should.have.property("query").be.eql("?query1");
-	result.should.have.property("prev").be.eql("module.exports = " + JSON.stringify({
+	expect(result).toBeTypeOf("object");
+	expect(result).toHaveProperty("resourceQuery", "?resourcequery");
+	expect(result).toHaveProperty("query", "?query1");
+	expect(result).toHaveProperty("prev", "module.exports = " + JSON.stringify({
 		resourceQuery: "?resourcequery",
 		query: "?query2",
 		prev: "module.exports = \"a\";"
@@ -39,7 +39,7 @@ it("should pass query to multiple loaders", function() {
 it("should pass query to loader over context", function() {
 	var test = "test";
 	var result = require("./loaders/queryloader?query!./context-query-test/" + test);
-	result.should.be.eql({
+	expect(result).toEqual({
 		resourceQuery: "",
 		query: "?query",
 		prev: "test content"

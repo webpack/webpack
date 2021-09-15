@@ -1,1 +1,1 @@
-module.exports = require("./wrong");
+module.exports = require("./wrong") + require("./normal") + require("./wrong2");

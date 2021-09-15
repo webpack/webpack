@@ -1,6 +1,5 @@
 "use strict";
 
-require("should");
 const formatLocation = require("../lib/formatLocation");
 
 describe("formatLocation", () => {
@@ -14,16 +13,6 @@ describe("formatLocation", () => {
 			name: "null",
 			loc: null,
 			result: ""
-		},
-		{
-			name: "string",
-			loc: "str",
-			result: "str"
-		},
-		{
-			name: "number",
-			loc: 12,
-			result: "12"
 		},
 		{
 			name: "line-column",
@@ -64,32 +53,16 @@ describe("formatLocation", () => {
 			result: "5:6"
 		},
 		{
-			name: "start-end string",
-			loc: {
-				start: "start",
-				end: "end"
-			},
-			result: "start-end"
-		},
-		{
-			name: "start-end number",
-			loc: {
-				start: 9,
-				end: 7
-			},
-			result: "9-7"
-		},
-		{
 			name: "line",
 			loc: {
 				start: {
 					line: 10
 				},
 				end: {
-					index: 20
+					line: 20
 				}
 			},
-			result: "10:?-+20"
+			result: "10-20"
 		},
 		{
 			name: "line",
@@ -102,7 +75,7 @@ describe("formatLocation", () => {
 	];
 	testCases.forEach(testCase => {
 		it(`should format location correctly for ${testCase.name}`, () => {
-			formatLocation(testCase.loc).should.be.eql(testCase.result);
+			expect(formatLocation(testCase.loc)).toEqual(testCase.result);
 		});
 	});
 });

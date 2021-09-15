@@ -1,4 +1,5 @@
-var ProvidePlugin = require("../../../../lib/ProvidePlugin");
+var ProvidePlugin = require("../../../../").ProvidePlugin;
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
 		new ProvidePlugin({
@@ -10,7 +11,8 @@ module.exports = {
 			es2015_name: ["./harmony", "default"],
 			es2015_alias: ["./harmony", "alias"],
 			es2015_year: ["./harmony", "year"],
-			"this.aaa": "./aaa"
+			"this.aaa": "./aaa",
+			esm: "./esm.js"
 		})
 	]
 };

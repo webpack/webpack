@@ -1,3 +1,3 @@
-import "./x";
-import "./y";
-export default "a";
+import x from "./x";
+import y from "./y";
+export default "a" + x + y;

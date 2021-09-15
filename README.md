@@ -11,12 +11,20 @@
 [![deps][deps]][deps-url]
 [![tests][tests]][tests-url]
 [![builds][builds]][builds-url]
+[![builds2][builds2]][builds2-url]
 [![coverage][cover]][cover-url]
 [![licenses][licenses]][licenses-url]
+[![PR's welcome][prs]][prs-url]
 
   <br>
-	<a href="https://npmjs.com/package/webpack">
+  <a href="https://dependabot.com/compatibility-score.html?dependency-name=webpack&package-manager=npm_and_yarn&new-version=latest">
+    <img src="https://api.dependabot.com/badges/compatibility_score?dependency-name=webpack&package-manager=npm_and_yarn&version-scheme=semver&target-version=latest">
+  </a>
+	<a href="https://npmcharts.com/compare/webpack?minimal=true">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
+	</a>
+	<a href="https://packagephobia.com/result?p=webpack">
+		<img src="https://packagephobia.com/badge?p=webpack" alt="install size">
 	</a>
 	<a href="https://opencollective.com/webpack#backer">
 		<img src="https://opencollective.com/webpack/backers/badge.svg">
@@ -32,9 +40,26 @@
 	</a>
   <h1>webpack</h1>
   <p>
-    webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
-  <p>
+    Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
+  </p>
 </div>
+
+## Table of Contents
+
+1. [Install](#install)
+2. [Introduction](#introduction)
+3. [Concepts](#concepts)
+4. [Contributing](#contributing)
+5. [Support](#support)
+6. [Core Team](#core-team)
+7. [Sponsoring](#sponsoring)
+8. [Premium Partners](#premium-partners)
+9. [Other Backers and Sponsors](#other-backers-and-sponsors)
+10. [Gold Sponsors](#gold-sponsors)
+11. [Silver Sponsors](#silver-sponsors)
+12. [Bronze Sponsors](#bronze-sponsors)
+13. [Backers](#backers)
+14. [Special Thanks](#special-thanks-to)
 
 <h2 align="center">Install</h2>
 
@@ -52,58 +77,59 @@ yarn add webpack --dev
 
 <h2 align="center">Introduction</h2>
 
-> This README reflects Webpack v2.x and v3.x. The Webpack v1.x documentation has been deprecated and deleted.
-
-webpack is a bundler for modules. The main purpose is to bundle JavaScript
+Webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
 or packaging just about any resource or asset.
 
 **TL;DR**
 
-* Bundles [ES Modules](http://www.2ality.com/2014/09/es6-modules-final.html), [CommonJS](http://wiki.commonjs.org/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
-* Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
-* Dependencies are resolved during compilation, reducing the runtime size.
-* Loaders can preprocess files while compiling, e.g. TypeScript to JavaScript, Handlebars strings to compiled functions, images to Base64, etc.
-* Highly modular plugin system to do whatever else your application requires.
+- Bundles [ES Modules](https://www.2ality.com/2014/09/es6-modules-final.html), [CommonJS](http://wiki.commonjs.org/), and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
+- Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
+- Dependencies are resolved during compilation, reducing the runtime size.
+- Loaders can preprocess files while compiling, e.g. TypeScript to JavaScript, Handlebars strings to compiled functions, images to Base64, etc.
+- Highly modular plugin system to do whatever else your application requires.
 
 ### Get Started
 
-Check out webpack's quick [**Get Started**](https://webpack.js.org/get-started/) guide and the [other guides](https://webpack.js.org/guides/).
+Check out webpack's quick [**Get Started**](https://webpack.js.org/guides/getting-started) guide and the [other guides](https://webpack.js.org/guides/).
+
+### Browser Compatibility
+
+Webpack supports all browsers that are [ES5-compliant](https://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+Webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
 
 <h2 align="center">Concepts</h2>
 
 ### [Plugins](https://webpack.js.org/plugins/)
 
-webpack has a [rich plugin
+Webpack has a [rich plugin
 interface](https://webpack.js.org/plugins/). Most of the features
 within webpack itself use this plugin interface. This makes webpack very
 **flexible**.
 
-|Name|Status|Description|
-|:--:|:----:|:----------|
-|[common-chunks-webpack-plugin][common]|![common-npm]|Generates chunks of common modules shared between entry points and splits them into separate  bundles (e.g vendor.bundle.js && app.bundle.js)|
-|[extract-text-webpack-plugin][extract]|![extract-npm]|Extracts Text (CSS) from your bundles into a separate file (app.bundle.css)|
-|[compression-webpack-plugin][compression]|![compression-npm]|Prepares compressed versions of assets to serve them with Content-Encoding|
-|[i18n-webpack-plugin][i18n]|![i18n-npm]|Adds i18n support to your bundles|
-|[html-webpack-plugin][html-plugin]|![html-plugin-npm]| Simplifies creation of HTML files (`index.html`) to serve your bundles|
+|                   Name                    |       Status       |    Install Size     | Description                                                                             |
+| :---------------------------------------: | :----------------: | :-----------------: | :-------------------------------------------------------------------------------------- |
+|    [mini-css-extract-plugin][mini-css]    |  ![mini-css-npm]   |  ![mini-css-size]   | Extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. |
+| [compression-webpack-plugin][compression] | ![compression-npm] | ![compression-size] | Prepares compressed versions of assets to serve them with Content-Encoding              |
+|    [html-webpack-plugin][html-plugin]     | ![html-plugin-npm] | ![html-plugin-size] | Simplifies creation of HTML files (`index.html`) to serve your bundles                  |
 
-
-[common]: https://github.com/webpack/webpack/blob/master/lib/optimize/CommonsChunkPlugin.js
 [common-npm]: https://img.shields.io/npm/v/webpack.svg
-[extract]: https://github.com/webpack/extract-text-webpack-plugin
-[extract-npm]: https://img.shields.io/npm/v/extract-text-webpack-plugin.svg
-[component]: https://github.com/webpack/component-webpack-plugin
+[mini-css]: https://github.com/webpack-contrib/mini-css-extract-plugin
+[mini-css-npm]: https://img.shields.io/npm/v/mini-css-extract-plugin.svg
+[mini-css-size]: https://packagephobia.com/badge?p=mini-css-extract-plugin
+[component]: https://github.com/webpack-contrib/component-webpack-plugin
 [component-npm]: https://img.shields.io/npm/v/component-webpack-plugin.svg
-[compression]: https://github.com/webpack/compression-webpack-plugin
+[component-size]: https://packagephobia.com/badge?p=component-webpack-plugin
+[compression]: https://github.com/webpack-contrib/compression-webpack-plugin
 [compression-npm]: https://img.shields.io/npm/v/compression-webpack-plugin.svg
-[i18n]: https://github.com/webpack/i18n-webpack-plugin
-[i18n-npm]: https://img.shields.io/npm/v/i18n-webpack-plugin.svg
-[html-plugin]: https://github.com/ampedandwired/html-webpack-plugin
+[compression-size]: https://packagephobia.com/badge?p=compression-webpack-plugin
+[html-plugin]: https://github.com/jantimon/html-webpack-plugin
 [html-plugin-npm]: https://img.shields.io/npm/v/html-webpack-plugin.svg
+[html-plugin-size]: https://packagephobia.com/badge?p=html-webpack-plugin
 
 ### [Loaders](https://webpack.js.org/loaders/)
 
-webpack enables use of loaders to preprocess files. This allows you to bundle
+Webpack enables the use of loaders to preprocess files. This allows you to bundle
 **any static resource** way beyond JavaScript. You can easily [write your own
 loaders](https://webpack.js.org/api/loaders/) using Node.js.
 
@@ -112,141 +138,122 @@ or are automatically applied via regex from your webpack configuration.
 
 #### Files
 
-|Name|Status|Description|
-|:--:|:----:|:----------|
-|[raw-loader][raw]|![raw-npm]|Loads raw content of a file (utf-8)|
-|[val-loader][val]|![val-npm]|Executes code as module and considers exports as JS code|
-|[url-loader][url]|![url-npm]|Works like the file loader, but can return a Data Url if the file is smaller than a limit|
-|[file-loader][file]|![file-npm]|Emits the file into the output folder and returns the (relative) url|
+|       Name        |   Status   | Install Size | Description                                              |
+| :---------------: | :--------: | :----------: | :------------------------------------------------------- |
+| [val-loader][val] | ![val-npm] | ![val-size]  | Executes code as module and considers exports as JS code |
 
-
-[raw]: https://github.com/webpack/raw-loader
-[raw-npm]: https://img.shields.io/npm/v/raw-loader.svg
-[val]: https://github.com/webpack/val-loader
+[val]: https://github.com/webpack-contrib/val-loader
 [val-npm]: https://img.shields.io/npm/v/val-loader.svg
-[url]: https://github.com/webpack/url-loader
-[url-npm]: https://img.shields.io/npm/v/url-loader.svg
-[file]: https://github.com/webpack/file-loader
-[file-npm]: https://img.shields.io/npm/v/file-loader.svg
+[val-size]: https://packagephobia.com/badge?p=val-loader
 
 #### JSON
 
-|Name|Status|Description|
-|:--:|:----:|:----------|
-|<a href="https://github.com/webpack/json-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/json.svg"></a>|![json-npm]|Loads a JSON file (included by default)|
-|<a href="https://github.com/webpack/json5-loader"><img width="48" height="10.656" src="https://cdn.rawgit.com/json5/json5-logo/master/json5-logo.svg"></a>|![json5-npm]|Loads and transpiles a JSON 5 file|
-|<a href="https://github.com/awnist/cson-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>|![cson-npm]|Loads and transpiles a CSON file|
+|                                                                   Name                                                                    |   Status    | Install Size |           Description            |
+| :---------------------------------------------------------------------------------------------------------------------------------------: | :---------: | :----------: | :------------------------------: |
+| <a href="https://github.com/awnist/cson-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a> | ![cson-npm] | ![cson-size] | Loads and transpiles a CSON file |
 
-
-[json-npm]: https://img.shields.io/npm/v/json-loader.svg
-[json5-npm]: https://img.shields.io/npm/v/json5-loader.svg
 [cson-npm]: https://img.shields.io/npm/v/cson-loader.svg
+[cson-size]: https://packagephobia.com/badge?p=cson-loader
 
 #### Transpiling
 
-|Name|Status|Description|
-|:--:|:----:|:----------|
-|<a href="https://github.com/webpack/script-loader">`<script>`</a>|![script-npm]|Executes a JavaScript file once in global context (like in script tag), `require()`s are not parsed|
-|<a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a>|![babel-npm]|Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a>|
-|<a href="https://github.com/jupl/traceur-loader"><img width="48" height="48" src="https://google.github.com/traceur-compiler/logo/tc.svg"></a>|![traceur-npm]|Loads ES2015+ code and transpiles to ES5 using [Traceur](https://github.com/google/traceur-compiler)|
-|<a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>|![type-npm]|Loads TypeScript like JavaScript|
-|[`awesome-typescript-loader`](https://github.com/s-panferov/awesome-typescript-loader)|![awesome-typescript-npm]|Awesome TypeScript loader for webpack|
-|<a href="https://github.com/webpack/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>|![coffee-npm]|Loads CoffeeScript like JavaScript|
+|                                                                            Name                                                                            |    Status     |  Install Size  | Description                                                                                       |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------: | :------------: | :------------------------------------------------------------------------------------------------ |
+| <a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a> | ![babel-npm]  | ![babel-size]  | Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a> |
+|  <a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>  |  ![type-npm]  |  ![type-size]  | Loads TypeScript like JavaScript                                                                  |
+|    <a href="https://github.com/webpack-contrib/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>    | ![coffee-npm] | ![coffee-size] | Loads CoffeeScript like JavaScript                                                                |
 
-
-[script-npm]: https://img.shields.io/npm/v/script-loader.svg
 [babel-npm]: https://img.shields.io/npm/v/babel-loader.svg
-[traceur-npm]: https://img.shields.io/npm/v/traceur-loader.svg
+[babel-size]: https://packagephobia.com/badge?p=babel-loader
 [coffee-npm]: https://img.shields.io/npm/v/coffee-loader.svg
+[coffee-size]: https://packagephobia.com/badge?p=coffee-loader
 [type-npm]: https://img.shields.io/npm/v/ts-loader.svg
-[awesome-typescript-npm]: https://img.shields.io/npm/v/awesome-typescript-loader.svg
+[type-size]: https://packagephobia.com/badge?p=ts-loader
 
 #### Templating
 
-|Name|Status|Description|
-|:--:|:----:|:----------|
-|<a href="https://github.com/webpack/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>|![html-npm]|Exports HTML as string, requires references to static resources|
-|<a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>|![pug-npm]|Loads Pug templates and returns a function|
-|<a href="https://github.com/webpack/jade-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/jade-3.svg"></a>|![jade-npm]|Loads Jade templates and returns a function|
-|<a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/markdown.svg"></a>|![md-npm]|Compiles Markdown to HTML|
-|<a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="http://posthtml.github.io/posthtml/logo.svg"></a>|![posthtml-npm]|Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml)|
-|<a href="https://github.com/altano/handlebars-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/handlebars-1.svg"></a>|![hbs-npm]| Compiles Handlebars to HTML|
-
+|                                                                                 Name                                                                                  |     Status      |   Install Size   | Description                                                                             |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :-------------------------------------------------------------------------------------- |
+|              <a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>              |   ![html-npm]   |   ![html-size]   | Exports HTML as string, requires references to static resources                         |
+| <a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a> |   ![pug-npm]    |   ![pug-size]    | Loads Pug templates and returns a function                                              |
+|              <a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/markdown.svg"></a>              |    ![md-npm]    |    ![md-size]    | Compiles Markdown to HTML                                                               |
+|               <a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="https://posthtml.github.io/posthtml/logo.svg"></a>               | ![posthtml-npm] | ![posthtml-size] | Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml) |
+|           <a href="https://github.com/pcardune/handlebars-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/handlebars-1.svg"></a>           |   ![hbs-npm]    |   ![hbs-size]    | Compiles Handlebars to HTML                                                             |
 
 [html-npm]: https://img.shields.io/npm/v/html-loader.svg
+[html-size]: https://packagephobia.com/badge?p=html-loader
 [pug-npm]: https://img.shields.io/npm/v/pug-loader.svg
+[pug-size]: https://packagephobia.com/badge?p=pug-loader
 [jade-npm]: https://img.shields.io/npm/v/jade-loader.svg
+[jade-size]: https://packagephobia.com/badge?p=jade-loader
 [md-npm]: https://img.shields.io/npm/v/markdown-loader.svg
+[md-size]: https://packagephobia.com/badge?p=markdown-loader
 [posthtml-npm]: https://img.shields.io/npm/v/posthtml-loader.svg
+[posthtml-size]: https://packagephobia.com/badge?p=posthtml-loader
 [hbs-npm]: https://img.shields.io/npm/v/handlebars-loader.svg
+[hbs-size]: https://packagephobia.com/badge?p=handlebars-loader
 
 #### Styling
 
-|Name|Status|Description|
-|:--:|:----:|:----------|
-|<a href="https://github.com/webpack/style-loader">`<style>`|![style-npm]|Add exports of a module as style to DOM|
-|<a href="https://github.com/webpack/css-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/css-3.svg"></a>|![css-npm]|Loads CSS file with resolved imports and returns CSS code|
-|<a href="https://github.com/webpack/less-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/less-63.svg"></a>|![less-npm]|Loads and compiles a LESS file|
-|<a href="https://github.com/jtangelder/sass-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/sass-1.svg"></a>|![sass-npm]|Loads and compiles a SASS/SCSS file|
-|<a href="https://github.com/shama/stylus-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/stylus.svg"></a>|![stylus-npm]|Loads and compiles a Stylus file|
-|<a href="https://github.com/postcss/postcss-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/postcss.svg"></a>|![postcss-npm]|Loads and transforms a CSS/SSS file using [PostCSS](http://postcss.org)|
-
+|                                                                     Name                                                                      |     Status     |  Install Size   | Description                                                              |
+| :-------------------------------------------------------------------------------------------------------------------------------------------: | :------------: | :-------------: | :----------------------------------------------------------------------- |
+|                                    <a href="https://github.com/webpack-contrib/style-loader">`<style>`</a>                                    |  ![style-npm]  |  ![style-size]  | Add exports of a module as style to DOM                                  |
+|  <a href="https://github.com/webpack-contrib/css-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/css-3.svg"></a>   |   ![css-npm]   |   ![css-size]   | Loads CSS file with resolved imports and returns CSS code                |
+| <a href="https://github.com/webpack-contrib/less-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/less-63.svg"></a> |  ![less-npm]   |  ![less-size]   | Loads and compiles a LESS file                                           |
+| <a href="https://github.com/webpack-contrib/sass-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/sass-1.svg"></a>  |  ![sass-npm]   |  ![sass-size]   | Loads and compiles a Sass/SCSS file                                      |
+|     <a href="https://github.com/shama/stylus-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/stylus.svg"></a>      | ![stylus-npm]  | ![stylus-size]  | Loads and compiles a Stylus file                                         |
+|   <a href="https://github.com/postcss/postcss-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/postcss.svg"></a>    | ![postcss-npm] | ![postcss-size] | Loads and transforms a CSS/SSS file using [PostCSS](https://postcss.org) |
 
 [style-npm]: https://img.shields.io/npm/v/style-loader.svg
+[style-size]: https://packagephobia.com/badge?p=style-loader
 [css-npm]: https://img.shields.io/npm/v/css-loader.svg
+[css-size]: https://packagephobia.com/badge?p=css-loader
 [less-npm]: https://img.shields.io/npm/v/less-loader.svg
+[less-size]: https://packagephobia.com/badge?p=less-loader
 [sass-npm]: https://img.shields.io/npm/v/sass-loader.svg
+[sass-size]: https://packagephobia.com/badge?p=sass-loader
 [stylus-npm]: https://img.shields.io/npm/v/stylus-loader.svg
+[stylus-size]: https://packagephobia.com/badge?p=stylus-loader
 [postcss-npm]: https://img.shields.io/npm/v/postcss-loader.svg
-
-#### Linting & Testing
-
-|Name|Status|Description|
-|:--:|:----:|:----------|
-|<a href="https://github.com/webpack/mocha-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/mocha.svg"></a>|![mocha-npm]|Tests with mocha (Browser/NodeJS)|
-|<a href="https://github.com/MoOx/eslint-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/eslint.svg"></a>|![eslint-npm]|PreLoader for linting code using ESLint|
-|<a href="https://github.com/webpack-contrib/jshint-loader"><img width="48" height="20.64" src="http://jshint.com/res/jshint-dark.png"></a>|![jshint-npm]|PreLoader for linting code using JSHint|
-
-[mocha-npm]: https://img.shields.io/npm/v/mocha-loader.svg
-[eslint-npm]: https://img.shields.io/npm/v/eslint-loader.svg
-[jshint-npm]: https://img.shields.io/npm/v/jshint-loader.svg
-[jscs-npm]: https://img.shields.io/npm/v/jscs-loader.svg
+[postcss-size]: https://packagephobia.com/badge?p=postcss-loader
 
 #### Frameworks
 
-|Name|Status|Description|
-|:--:|:----:|:----------|
-|<a href="https://github.com/vuejs/vue-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/vue-9.svg"></a>|![vue-npm]|Loads and compiles Vue Components|
-|<a href="https://github.com/webpack-contrib/polymer-webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg"></a>|![polymer-npm]|Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules|
-|<a href="https://github.com/TheLarkInn/angular2-template-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/angular-icon-1.svg"></a>|![angular-npm]| Loads and compiles Angular 2 Components|
-|<a href="https://github.com/riot/tag-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/riot.svg"></a>|![riot-npm]| Riot official webpack loader|
-
-
+|                                                                             Name                                                                             |     Status     |  Install Size   | Description                                                                                            |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------: | :-------------: | :----------------------------------------------------------------------------------------------------- |
+|               <a href="https://github.com/vuejs/vue-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/vue-9.svg"></a>               |   ![vue-npm]   |   ![vue-size]   | Loads and compiles Vue Components                                                                      |
+|   <a href="https://github.com/webpack-contrib/polymer-webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg"></a>   | ![polymer-npm] | ![polymer-size] | Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules |
+| <a href="https://github.com/TheLarkInn/angular2-template-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/angular-icon-1.svg"></a> | ![angular-npm] | ![angular-size] | Loads and compiles Angular 2 Components                                                                |
+|              <a href="https://github.com/riot/webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/riot.svg"></a>              |  ![riot-npm]   |  ![riot-size]   | Riot official webpack loader                                                                           |
 
 [vue-npm]: https://img.shields.io/npm/v/vue-loader.svg
+[vue-size]: https://packagephobia.com/badge?p=vue-loader
 [polymer-npm]: https://img.shields.io/npm/v/polymer-webpack-loader.svg
+[polymer-size]: https://packagephobia.com/badge?p=polymer-webpack-loader
 [angular-npm]: https://img.shields.io/npm/v/angular2-template-loader.svg
+[angular-size]: https://packagephobia.com/badge?p=angular2-template-loader
 [riot-npm]: https://img.shields.io/npm/v/riot-tag-loader.svg
+[riot-size]: https://packagephobia.com/badge?p=riot-tag-loader
 
 ### Performance
 
-webpack uses async I/O and has multiple caching levels. This makes webpack fast
+Webpack uses async I/O and has multiple caching levels. This makes webpack fast
 and incredibly **fast** on incremental compilations.
 
 ### Module Formats
 
-webpack supports ES2015+, CommonJS and AMD modules **out of the box**. It performs clever static
+Webpack supports ES2015+, CommonJS and AMD modules **out of the box**. It performs clever static
 analysis on the AST of your code. It even has an evaluation engine to evaluate
 simple expressions. This allows you to **support most existing libraries** out of the box.
 
 ### [Code Splitting](https://webpack.js.org/guides/code-splitting/)
 
-webpack allows you to split your codebase into multiple chunks. Chunks are
+Webpack allows you to split your codebase into multiple chunks. Chunks are
 loaded asynchronously at runtime. This reduces the initial loading time.
 
 ### [Optimizations](https://webpack.js.org/guides/production-build/)
 
-webpack can do many optimizations to **reduce the output size of your
+Webpack can do many optimizations to **reduce the output size of your
 JavaScript** by deduplicating frequently used modules, minifying, and giving
 you full control of what is loaded initially and what is loaded at runtime
 through code splitting. It can also make your code chunks **cache
@@ -254,19 +261,21 @@ friendly** by using hashes.
 
 <h2 align="center">Contributing</h2>
 
-**We want contributing to webpack to be fun, enjoyable, and educational for anyone, and everyone.** We have a [vibrant ecosystem](https://medium.com/webpack/contributors-guide/home) that spans beyond this single repo. We welcome you to check out any of the repositories in [our organization](http://github.com/webpack) or [webpack-contrib organization](http://github.com/webpack-contrib) which houses all of our loaders and plugins.
+**We want contributing to webpack to be fun, enjoyable, and educational for anyone, and everyone.** We have a [vibrant ecosystem](https://medium.com/webpack/contributors-guide/home) that spans beyond this single repo. We welcome you to check out any of the repositories in [our organization](https://github.com/webpack) or [webpack-contrib organization](https://github.com/webpack-contrib) which houses all of our loaders and plugins.
 
 Contributions go far beyond pull requests and commits. Although we love giving you the opportunity to put your stamp on webpack, we also are thrilled to receive a variety of other contributions including:
 
-* [Documentation](https://github.com/webpack/webpack.js.org) updates, enhancements, designs, or bugfixes
-* Spelling or grammar fixes
-* README.md corrections or redesigns
-* Adding unit, or functional tests
-* Triaging GitHub issues -- especially determining whether an issue still persists or is reproducible.
-* [Searching #webpack on twitter](https://twitter.com/search?q=webpack) and helping someone else who needs help
-* Teaching others how to contribute to one of the many webpack's repos!
-* [Blogging, speaking about, or creating tutorials](https://github.com/webpack-contrib/awesome-webpack) about one of webpack's many features.
-* Helping others in our webpack [gitter channel](https://gitter.im/webpack/webpack).
+- [Documentation](https://github.com/webpack/webpack.js.org) updates, enhancements, designs, or bugfixes
+- Spelling or grammar fixes
+- README.md corrections or redesigns
+- Adding unit, or functional tests
+- Triaging GitHub issues -- especially determining whether an issue still persists or is reproducible.
+- [Searching #webpack on twitter](https://twitter.com/search?q=webpack) and helping someone else who needs help
+- Teaching others how to contribute to one of the many webpack's repos!
+- [Blogging, speaking about, or creating tutorials](https://github.com/webpack-contrib/awesome-webpack) about one of webpack's many features.
+- Helping others in our webpack [gitter channel](https://gitter.im/webpack/webpack).
+
+To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/main/CONTRIBUTING.md).
 
 If you are worried or don't know where to start, you can **always** reach out to [Sean Larkin (@TheLarkInn) on Twitter](https://twitter.com/thelarkinn) or simply submit an issue and a maintainer can help give you guidance!
 
@@ -280,9 +289,11 @@ If you create a loader or plugin, we would <3 for you to open source it, and put
 
 <h2 align="center">Support</h2>
 
-We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of it's flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
+We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of its flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways to improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
 
 If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high level overview that is great for beginners!!
+
+Looking for webpack 1 docs? Please check out the old [wiki](https://github.com/webpack/docs/wiki/contents), but note that this deprecated version is no longer supported.
 
 If you want to discuss something or just need help, [here is our Gitter room](https://gitter.im/webpack/webpack) where there are always individuals looking to help out!
 
@@ -327,24 +338,12 @@ If you have discovered a 🐜 or have a feature suggestion, feel free to create 
         <p>Founder of the core team</p>
       </td>
       <td align="center" valign="top">
-        <img width="150" height="150" src="https://github.com/bebraw.png?s=150">
-        <br>
-        <a href="https://github.com/bebraw">Juho Vepsäläinen</a>
-        <p>Documentation</p>
-        <br>
-        <p>Author</p>
-        <a href="https://leanpub.com/survivejs-webpack">
-          <img height="15" src="https://cloud.githubusercontent.com/assets/1365881/20286923/93e325c0-aac9-11e6-964d-cabe218c584c.png">
-        </a>
-		<br>
-      </td>
-      <td align="center" valign="top">
         <img width="150" height="150" src="https://github.com/spacek33z.png?s=150">
         <br>
         <a href="https://github.com/spacek33z">Kees Kluskens</a>
         <p>Development</p>
         <br>
-        <p>Sponsor<p>
+        <p>Sponsor</p>
         <a href="https://codeyellow.nl/">
           <img height="15px" src="https://cloud.githubusercontent.com/assets/1365881/20286583/ad62eb04-aac7-11e6-9c14-a0fef35b9b56.png">
         </a>
@@ -360,18 +359,17 @@ Most of the core team members, webpack contributors and contributors in the ecos
 
 This is how we use the donations:
 
-* Allow the core team to work on webpack
-* Thank contributors if they invested a large amount of time in contributing
-* Support projects in the ecosystem that are of great value for users
-* Support projects that are voted most (work in progress)
-* Infrastructure cost
-* Fees for money handling
-
+- Allow the core team to work on webpack
+- Thank contributors if they invested a large amount of time in contributing
+- Support projects in the ecosystem that are of great value for users
+- Support projects that are voted most (work in progress)
+- Infrastructure cost
+- Fees for money handling
 
 <h2 align="center">Premium Partners</h2>
 
 <div align="center">
-	
+
 <a href="https://www.ag-grid.com/?utm_source=webpack&utm_medium=banner&utm_campaign=sponsorship" target="_blank"><img align="center" src="https://raw.githubusercontent.com/webpack/media/2b399d58/horiz-banner-ad-ag-grid.png">
 </a>
 
@@ -382,11 +380,12 @@ This is how we use the donations:
 Before we started using OpenCollective, donations were made anonymously. Now that we have made the switch, we would like to acknowledge these sponsors (and the ones who continue to donate using OpenCollective). If we've missed someone, please send us a PR, and we'll add you to this list.
 
 <div align="center">
-	
-[Google Angular Team](https://angular.io/), [Architects.io](http://architects.io/),
-<a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img 
-src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a> 
-<a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img 
+
+<a href="https://angular.io/" target="_blank" title="JS framework"><img
+src="https://cdn.worldvectorlogo.com/logos/angular-icon-1.svg" height="30" alt="Angular"></a>
+<a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img
+src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a>
+<a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img
 src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 </div>
@@ -685,37 +684,34 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 <a href="https://opencollective.com/webpack/backer/99/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/99/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/backer/100/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/100/avatar.svg?requireActive=false"></a>
 
-<h2 align="center">Thanks to</h2>
+<h2 align="center">Special Thanks to</h2>
 <p align="center">(In chronological order)</p>
 
-* @google for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
-* @medikoo for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webmake. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
-* @substack for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
-* @jrburke for [require.js](http://requirejs.org/), which is a similar project and source for many ideas.
-* @defunctzombie for the [browser-field spec](https://gist.github.com/defunctzombie/4339901), which makes modules available for node.js, browserify and webpack.
-* Every early webpack user, which contributed to webpack by writing issues or PRs. You influenced the direction...
-* @shama, @jhnns and @sokra for maintaining this project
-* Everyone who has written a loader for webpack. You are the ecosystem...
-* Everyone I forgot to mention here, but also influenced webpack.
-
+- [@google](https://github.com/google) for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
+- [@medikoo](https://github.com/medikoo) for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webmake. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
+- [@substack](https://github.com/substack) for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
+- [@jrburke](https://github.com/jrburke) for [require.js](https://requirejs.org/), which is a similar project and source for many ideas.
+- [@defunctzombie](https://github.com/defunctzombie) for the [browser-field spec](https://github.com/defunctzombie/package-browser-field-spec), which makes modules available for node.js, browserify and webpack.
+- Every early webpack user, which contributed to webpack by writing issues or PRs. You influenced the direction...
+- [@shama](https://github.com/shama), [@jhnns](https://github.com/jhnns) and [@sokra](https://github.com/sokra) for maintaining this project
+- Everyone who has written a loader for webpack. You are the ecosystem...
+- Everyone I forgot to mention here, but also influenced webpack.
 
 [npm]: https://img.shields.io/npm/v/webpack.svg
 [npm-url]: https://npmjs.com/package/webpack
-
 [node]: https://img.shields.io/node/v/webpack.svg
 [node-url]: https://nodejs.org
-
 [deps]: https://img.shields.io/david/webpack/webpack.svg
 [deps-url]: https://david-dm.org/webpack/webpack
-
-[tests]: https://img.shields.io/travis/webpack/webpack/master.svg
+[tests]: https://img.shields.io/travis/webpack/webpack/main.svg
 [tests-url]: https://travis-ci.org/webpack/webpack
-
-[builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
+[prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
+[prs-url]: https://webpack.js.org/contribute/
+[builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/main
 [builds]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
-
+[builds2]: https://dev.azure.com/webpack/webpack/_apis/build/status/webpack.webpack
+[builds2-url]: https://dev.azure.com/webpack/webpack/_build/latest?definitionId=3
 [licenses-url]: https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_shield
 [licenses]: https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack.svg?type=shield
-
 [cover]: https://img.shields.io/coveralls/webpack/webpack.svg
 [cover-url]: https://coveralls.io/r/webpack/webpack/

@@ -1,8 +1,10 @@
-var DelegatedPlugin = require("../../../../lib/DelegatedPlugin");
-var HashedModuleIdsPlugin = require("../../../../lib/HashedModuleIdsPlugin");
+var DelegatedPlugin = require("../../../../").DelegatedPlugin;
+/** @type {import("../../../../").Configuration} */
 module.exports = {
+	optimization: {
+		moduleIds: "hashed"
+	},
 	plugins: [
-		new HashedModuleIdsPlugin(),
 		new DelegatedPlugin({
 			source: "./bundle",
 			type: "require",

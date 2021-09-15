@@ -2,7 +2,7 @@ import { x, y } from "./b";
 
 it("should pass when required by CommonJS module", function () {
 	var test1 = require('./a').default;
-	test1().should.be.eql("OK");
+	expect(test1()).toBe("OK");
 });
 
 it("should pass when use babeljs transpiler", function() {
@@ -13,18 +13,18 @@ it("should pass when use babeljs transpiler", function() {
 	var _test2 = _interopRequireDefault(_test);
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	var test2 = (0, _test2.default)();
-	test2.should.be.eql("OK");
+	expect(test2).toBe("OK");
 });
 
 it("should double reexport from non-harmony modules correctly", function() {
-	y.should.be.eql("y");
-	x.should.be.eql("x");
+	expect(y).toBe("y");
+	expect(x).toBe("x");
 });
 
 
 import { a, b } from "./reexport"
 
 it("should be possible to reexport a module with unknown exports", function() {
-	a.should.be.eql("a");
-	b.should.be.eql("b");
+	expect(a).toBe("a");
+	expect(b).toBe("b");
 });

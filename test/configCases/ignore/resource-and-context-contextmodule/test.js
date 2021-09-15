@@ -6,9 +6,9 @@ it("should ignore context modules that match resource regex and context", functi
 		require("./folder-b/" + mod);
 	};
 
-	(function() {
+	expect(function() {
 		folderBContext("normal-module");
-	}).should.throw();
+	}).toThrowError();
 });
 
 it("should not ignore context modules that dont match the resource", function() {
@@ -16,9 +16,9 @@ it("should not ignore context modules that dont match the resource", function() 
 		require("./folder-b/" + mod);
 	};
 
-	(function() {
+	expect(function() {
 		folderBContext("only-context-match");
-	}).should.not.throw();
+	}).not.toThrowError();
 });
 
 it("should not ignore context modules that dont match the context", function() {
@@ -26,10 +26,10 @@ it("should not ignore context modules that dont match the context", function() {
 		require("./folder-a/" + mod);
 	};
 
-	(function() {
+	expect(function() {
 		folderBContext("normal-module");
-	}).should.not.throw();
-	(function() {
+	}).not.toThrowError();
+	expect(function() {
 		folderBContext("ignored-module");
-	}).should.not.throw();
+	}).not.toThrowError();
 });

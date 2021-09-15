@@ -1,8 +1,5 @@
 "use strict";
 
-const util = require("util");
-
-require("should");
 const WebpackError = require("../lib/WebpackError");
 
 describe("WebpackError", () => {
@@ -18,12 +15,9 @@ describe("WebpackError", () => {
 		}
 	}
 
-	it("Should provide inspect method for use by for util.inspect", function() {
-		const errorStr = util.inspect(new CustomError("Message"));
-		const errorArr = errorStr.split("\n");
-
-		errorArr[0].should.equal("CustomError: CustomMessage");
-		errorArr[1].should.containEql("WebpackError.unittest.js");
-		errorArr[errorArr.length - 1].should.equal("CustomDetails");
+	it("Should provide inspect method for use by for util.inspect", () => {
+		const error = new CustomError("Message");
+		expect(error.toString()).toContain("CustomError: CustomMessage");
+		expect(error.stack).toContain(__filename);
 	});
 });

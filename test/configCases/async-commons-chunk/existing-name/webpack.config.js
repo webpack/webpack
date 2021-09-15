@@ -1,14 +1,12 @@
-var webpack = require("../../../../");
-
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	performance: {
 		hints: false
 	},
 	optimization: {
 		splitChunks: {
-			minSize: 1,
-			name: true
-		}
-	},
-	plugins: [new webpack.NamedChunksPlugin()]
+			minSize: 1
+		},
+		chunkIds: "named"
+	}
 };

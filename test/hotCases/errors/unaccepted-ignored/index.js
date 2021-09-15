@@ -3,22 +3,22 @@ import get from "./b";
 
 var options = { ignoreUnaccepted: true };
 
-it("should ignore unaccepted module updates", function(done) {
+it("should ignore unaccepted module updates", (done) => {
 	function waitForUpdate(fn) {
 		NEXT(require("../../update")(done, options, fn));
 	}
 
-	a.should.be.eql(2);
-	get().should.be.eql(1);
-	waitForUpdate(function() {
-		a.should.be.eql(2);
-		get().should.be.eql(1);
-		waitForUpdate(function() {
-			a.should.be.eql(2);
-			get().should.be.eql(2);
-			waitForUpdate(function() {
-				a.should.be.eql(2);
-				get().should.be.eql(3);
+	expect(a).toBe(2);
+	expect(get()).toBe(1);
+	waitForUpdate(() => {
+		expect(a).toBe(2);
+		expect(get()).toBe(1);
+		waitForUpdate(() => {
+			expect(a).toBe(2);
+			expect(get()).toBe(2);
+			waitForUpdate(() => {
+				expect(a).toBe(2);
+				expect(get()).toBe(3);
 				done();
 			});
 		});

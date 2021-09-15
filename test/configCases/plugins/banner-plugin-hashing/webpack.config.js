@@ -2,6 +2,7 @@
 
 const webpack = require("../../../../");
 
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	node: {
 		__dirname: false,
@@ -17,7 +18,7 @@ module.exports = {
 	plugins: [
 		new webpack.BannerPlugin({
 			banner:
-				"hash:[hash], chunkhash:[chunkhash], name:[name], filebase:[filebase], query:[query], file:[file]"
+				"fullhash:[fullhash], chunkhash:[chunkhash], name:[name], base:[base], query:[query], file:[file], path:[path], ext:[ext]"
 		})
 	]
 };

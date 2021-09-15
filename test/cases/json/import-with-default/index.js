@@ -6,16 +6,16 @@ import e from "../data/e.json";
 import f from "../data/f.json";
 
 it("should be possible to import json data", function() {
-	({a}).should.be.eql({a: null});
-	b.should.be.eql(123);
-	c.should.be.eql([1, 2, 3, 4]);
-	d.should.be.eql({});
-	e.should.be.eql({
+	expect({a}).toEqual({a: null});
+	expect(b).toBe(123);
+	expect(c).toEqual([1, 2, 3, 4]);
+	expect(d).toEqual({});
+	expect(e).toEqual({
 		aa: 1,
 		bb: 2,
 		"1": "x"
 	});
-	f.should.be.eql({
+	expect(f).toEqual({
 		named: "named",
 		"default": "default",
 		__esModule: true

@@ -1,25 +1,24 @@
-/* globals describe, it */
 "use strict";
 
-const should = require("should");
-const LocalModulesHelpers = require("../lib/dependencies/LocalModulesHelpers");
+const {
+	addLocalModule,
+	getLocalModule
+} = require("../lib/dependencies/LocalModulesHelpers");
 
 describe("LocalModulesHelpers", () => {
 	describe("addLocalModule", () => {
 		it("returns a module var without special characters", () => {
 			const state = {
-				module: "module_sample",
 				localModules: ["first", "second"]
 			};
-			should(LocalModulesHelpers.addLocalModule(state, "local_module_sample"))
-				.be.an.instanceOf(Object)
-				.and.have.properties({
-					module: "module_sample",
-					name: "local_module_sample",
-					idx: 2,
-					used: false
-				});
-			should(state.localModules.length).be.eql(3);
+			const localModule = addLocalModule(state, "local_module_sample");
+			expect(localModule).toBeInstanceOf(Object);
+			expect(localModule).toMatchObject({
+				name: "local_module_sample",
+				idx: 2,
+				used: false
+			});
+			expect(state.localModules.length).toBe(3);
 		});
 	});
 
@@ -36,9 +35,7 @@ describe("LocalModulesHelpers", () => {
 					}
 				]
 			};
-			should(
-				LocalModulesHelpers.getLocalModule(state, "local_module_sample")
-			).be.eql(null);
+			expect(getLocalModule(state, "local_module_sample")).toBe(null);
 		});
 
 		it("returns local module information", () => {
@@ -53,7 +50,7 @@ describe("LocalModulesHelpers", () => {
 					}
 				]
 			};
-			should(LocalModulesHelpers.getLocalModule(state, "first")).be.eql({
+			expect(getLocalModule(state, "first")).toEqual({
 				name: "first"
 			});
 		});

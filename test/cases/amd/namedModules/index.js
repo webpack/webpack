@@ -16,14 +16,14 @@ define("named4", [], function() {
 
 define(["named1", "named2"], function(named1, named2) {
 	it("should load the named modules in defined dependencies", function() {
-		named1.should.be.eql("named1");
-		named2.should.be.eql("named2");
+		expect(named1).toBe("named1");
+		expect(named2).toBe("named2");
 	});
 
 	it("should load the named modules in require dependencies", function(done) {
 		require(["named3", "named4"], function (named3, named4) {
-			named3.should.be.eql("named3");
-			named4.should.be.eql("named4");
+			expect(named3).toBe("named3");
+			expect(named4).toBe("named4");
 			done();
 		});
 	});

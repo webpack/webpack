@@ -1,0 +1,58 @@
+BAD:
+
+module.exports = abc; module.exports.xxx = abc; abc.xxx;
+exports = abc;
+module.exports
+exports
+this
+function f() { return this; } module.exports = { f }; module.exports.xxx = abc;
+
+
+EXPORTS:
+
+exports.xxx = abc;
+
+module.exports.xxx = abc;
+this.xxx = abc
+Object.defineProperty(exports, "xxx", { ... })
+Object.defineProperty(module.exports, "xxx", { ... })
+Object.defineProperty(this, "xxx", { ... })
+module.exports.xxx
+exports.xxx
+this.xxx
+module.exports = function() {}; module.exports.xxx = abc;
+module.exports = { ... }; module.exports.xxx = abc;
+
+OBJECTS:
+
+module.exports = { xxx: abc };
+
+IMPORT:
+
+require(x).xxx
+var { xxx } = require(x);
+var x = require(x); x.xxx;
+
+REEXPORT:
+
+module.exports.xxx = require(x);
+module.exports.xxx = require(x).xxx;
+exports.xxx = require(x);
+exports.xxx = require(x).xxx;
+module.exports = { xxx2: require(x) };
+module.exports = { xxx2: require(x).xxx };
+var xxx = require(x); exports.xxx = xxx;
+var xxx = require(x); exports.xxx = xxx.xxx;
+var xxx = require(x); module.exports = { xxx };
+var xxx = require(x); module.exports = { xxx: xxx.xxx };
+
+TRANSPILED:
+
+TypeScript:
+function __export(m) { for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p]; }
+__export(require(x));
+
+Babel:
+var xxx = _interopRequireDefault(require(x));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+xxx.xxx;

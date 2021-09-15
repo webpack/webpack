@@ -1,12 +1,13 @@
 var webpack = require("../../../");
+/** @type {import("../../../").Configuration[]} */
 module.exports = ["fitting", "content-change"].map(type => ({
 	name: type,
 	mode: "production",
 	cache: true, // AggressiveSplittingPlugin rebuilds multiple times, we need to cache the assets
 	entry: "./index",
 	output: {
-		filename: "[chunkhash].js",
-		chunkFilename: "[chunkhash].js"
+		filename: `${type}-[chunkhash].js`,
+		chunkFilename: `${type}-[chunkhash].js`
 	},
 	plugins: [
 		new webpack.optimize.AggressiveSplittingPlugin({
@@ -21,6 +22,7 @@ module.exports = ["fitting", "content-change"].map(type => ({
 	stats: {
 		chunks: true,
 		chunkModules: true,
+		dependentModules: true,
 		chunkOrigins: true,
 		entrypoints: true,
 		modules: false,

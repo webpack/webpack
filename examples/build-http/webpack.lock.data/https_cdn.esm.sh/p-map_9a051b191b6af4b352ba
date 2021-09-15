@@ -1,0 +1,3 @@
+/* esm.sh - p-map@5.1.0 */
+export * from "https://cdn.esm.sh/v43/p-map@5.1.0/es2015/p-map.js";
+export { default } from "https://cdn.esm.sh/v43/p-map@5.1.0/es2015/p-map.js";

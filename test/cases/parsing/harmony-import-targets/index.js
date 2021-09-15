@@ -1,9 +1,9 @@
 import {x, f} from "./x";
 
 it("should import into object literal", function() {
-	({ x: x }).should.be.eql({x: 1});
+	(expect({ x: x })).toEqual({x: 1});
 	var obj = { x: x };
-	obj.should.be.eql({x: 1});
+	expect(obj).toEqual({x: 1});
 });
 
 function func(z) {
@@ -11,21 +11,21 @@ function func(z) {
 }
 
 it("should import into function argument", function() {
-	func(x).should.be.eql(1);
-	f(x).should.be.eql(1);
-	func({x:x}).should.be.eql({x:1});
-	f({x:x}).should.be.eql({x:1});
+	expect(func(x)).toBe(1);
+	expect(f(x)).toBe(1);
+	expect(func({x:x})).toEqual({x:1});
+	expect(f({x:x})).toEqual({x:1});
 	var y = f(x);
-	y.should.be.eql(1);
+	expect(y).toBe(1);
 	y = function() {
 		return x;
 	};
-	y().should.be.eql(1);
+	expect(y()).toBe(1);
 });
 
 it("should import into array literal", function() {
-	([x, f(2)]).should.be.eql([1, 2]);
-	([{
+	expect([x, f(2)]).toEqual([1, 2]);
+	expect([{
 		value: x
-	}]).should.be.eql([{ value: x }]);
+	}]).toEqual([{ value: x }]);
 });

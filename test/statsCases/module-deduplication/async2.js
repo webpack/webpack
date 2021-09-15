@@ -1,2 +1,3 @@
-import "./b";
-import "./f";
+import b from "./b";
+import f from "./f";
+console.log(b, f);

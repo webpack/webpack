@@ -13,7 +13,7 @@ it("should handle named chunks", function(done) {
 		require.ensure([], function(require) {
 			require("./empty?c");
 			require("./empty?d");
-			sync.should.be.ok();
+			expect(sync).toBeTruthy();
 			done();
 		}, "named-chunk");
 	}
@@ -22,10 +22,10 @@ it("should handle named chunks", function(done) {
 it("should handle empty named chunks", function(done) {
 	var sync = false;
 	require.ensure([], function(require) {
-		sync.should.be.ok();
+		expect(sync).toBeTruthy();
 	}, "empty-named-chunk");
 	require.ensure([], function(require) {
-		sync.should.be.ok();
+		expect(sync).toBeTruthy();
 		done();
 	}, "empty-named-chunk");
 	sync = true;
@@ -49,7 +49,7 @@ it("should handle named chunks when there is an error callback", function(done) 
 		require.ensure([], function(require) {
 			require("./empty?g");
 			require("./empty?h");
-			sync.should.be.ok();
+			expect(sync).toBeTruthy();
 			done();
 		}, function(error) {}, "named-chunk-for-error-callback");
 	}
@@ -58,10 +58,10 @@ it("should handle named chunks when there is an error callback", function(done) 
 it("should handle empty named chunks when there is an error callback", function(done) {
 	var sync = false;
 	require.ensure([], function(require) {
-		sync.should.be.ok();
+		expect(sync).toBeTruthy();
 	}, function(error) {}, "empty-named-chunk-for-error-callback");
 	require.ensure([], function(require) {
-		sync.should.be.ok();
+		expect(sync).toBeTruthy();
 		done();
 	}, function(error) {}, "empty-named-chunk-for-error-callback");
 	sync = true;
@@ -75,13 +75,13 @@ it("should be able to use named chunks in import()", function(done) {
 	import("./empty?import1-in-chunk1" /* webpackChunkName: "import-named-chunk-1" */).then(function(result){
 		var i = 0;
 		import("./empty?import2-in-chunk1" /* webpackChunkName: "import-named-chunk-1" */).then(function(result){
-			sync.should.be.ok();
+			expect(sync).toBeTruthy();
 			if(i++ > 0) done();
 		}).catch(function(err){
 			done(err);
 		});
 		import("./empty?import3-in-chunk2" /* webpackChunkName: "import-named-chunk-2" */).then(function(result){
-			sync.should.not.be.ok();
+			expect(sync).toBeFalsy();
 			if(i++ > 0) done();
 		}).catch(function(err){
 			done(err);
@@ -99,13 +99,13 @@ it("should be able to use named chunk in context import()", function(done) {
 	import("./e" + mpty + "2" /* webpackChunkName: "context-named-chunk" */).then(function(result) {
 		var i = 0;
 		import("./e" + mpty + "3" /* webpackChunkName: "context-named-chunk" */).then(function(result){
-			sync.should.be.ok();
+			expect(sync).toBeTruthy();
 			if(i++ > 0) done();
 		}).catch(function(err){
 			done(err);
 		});
 		import("./e" + mpty + "4" /* webpackChunkName: "context-named-chunk-2" */).then(function(result){
-			sync.should.not.be.ok();
+			expect(sync).toBeFalsy();
 			if(i++ > 0) done();
 		}).catch(function(err){
 			done(err);

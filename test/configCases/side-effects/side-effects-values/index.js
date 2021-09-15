@@ -4,13 +4,13 @@ import { log as globValueModuleLog } from "glob-value-module/tracker";
 import globValueModule from "glob-value-module";
 
 it("should handle a boolean", function() {
-	booleanValueModule.should.be.eql("def");
-	booleanValueModuleLog.should.be.eql(["index.js"]);
+	expect(booleanValueModule).toBe("def");
+	expect(booleanValueModuleLog).toEqual(["index.js"]);
 });
 
 it("should handle globs", function() {
-	globValueModule.should.be.eql("def");
-	globValueModuleLog.should.be.eql([
+	expect(globValueModule).toBe("def");
+	expect(globValueModuleLog).toEqual([
 		"./src/a.js",
 		"a.js",
 		"index.js",

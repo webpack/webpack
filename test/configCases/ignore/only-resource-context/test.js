@@ -6,16 +6,16 @@ it("should ignore ignored resources", function() {
 		require("./src/" + mod);
 	};
 
-	(function() {
+	expect(function() {
 		folderBContext("ignored-module");
-	}).should.throw();
+	}).toThrowError();
 });
 it("should not ignore resources that do not match", function() {
 	const folderBContext = function(mod) {
 		require("./src/" + mod);
 	};
 
-	(function() {
+	expect(function() {
 		folderBContext("normal-module");
-	}).should.not.throw();
+	}).not.toThrowError();
 });

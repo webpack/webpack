@@ -1,2 +1,3 @@
-import "./common_lazy";
-import "./common_lazy_shared";
+import a from "./common_lazy";
+import b from "./common_lazy_shared";
+export default a + b;

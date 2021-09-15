@@ -1,5 +1,5 @@
 it("should check existing variables when renaming", function() {
-	require("./module").d.x().should.be.eql("ok");
-	require("./module").c.a().should.be.eql("ok");
-	require("./module").test().should.be.eql("ok");
+	expect(require("./module").d.x()).toBe("ok");
+	expect(require("./module").c.a()).toBe("ok");
+	expect(require("./module").test()).toBe("ok");
 });

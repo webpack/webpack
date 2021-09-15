@@ -1,5 +1,5 @@
 codecov:
-  branch: master
+  branch: main
 coverage:
   precision: 2
   round: down
@@ -7,28 +7,43 @@ coverage:
   status:
     project:
       default: off
+      basic:
+        flags: basic
+        target: auto
       integration:
         flags: integration
         target: auto
-      unit:
-        flags: unit
+      lintunit:
+        flags: lintunit
         target: 0%
     patch:
       default: off
+      basic:
+        flags: basic
+        target: 90%
+        base: pr
       integration:
         flags: integration
         target: 90%
         base: pr
-      unit:
-        flags: unit
+      lintunit:
+        flags: lintunit
         target: 0%
         base: pr
     changes:
       default: off
+      basic:
+        flags: basic
+        target: 0%
       integration:
         flags: integration
         target: 0%
-      unit:
-        flags: unit
+      lintunit:
+        flags: lintunit
         target: 0%
 comment: off
+flags:
+  basic:
+    joined: false
+  lintunit:
+    joined: false

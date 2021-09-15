@@ -1,5 +1,5 @@
 it("should not crash on importing missing modules", function() {
-	(function() {
+	expect(function() {
 		require("./module");
-	}).should.throw();
+	}).toThrowError();
 });

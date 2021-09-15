@@ -1,6 +1,6 @@
 "use strict";
 
-const EnvironmentPlugin = require("../../../../lib/EnvironmentPlugin");
+const EnvironmentPlugin = require("../../../../").EnvironmentPlugin;
 
 process.env.AAA = "aaa";
 process.env.BBB = "bbb";
@@ -10,6 +10,7 @@ process.env.FFF = "fff";
 process.env.GGG = "ggg";
 process.env.III = "";
 
+/** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
 		name: "aaa",

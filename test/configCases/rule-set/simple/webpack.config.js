@@ -1,3 +1,4 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	module: {
 		rules: [
@@ -5,15 +6,17 @@ module.exports = {
 				oneOf: [
 					{
 						test: {
-							and: [/a.\.js$/, /b\.js$/]
+							and: [/a.\.js$/, /b\.js$/, { not: /not-/ }]
 						},
-						loader: "./loader?first"
+						resourceQuery: { not: /not/ },
+						loader: "./loader",
+						options: "first"
 					},
 					{
 						test: [require.resolve("./a"), require.resolve("./c")],
 						issuer: require.resolve("./b"),
 						use: [
-							"./loader?second-1",
+							"./loader",
 							{
 								loader: "./loader",
 								options: "second-2"
@@ -21,7 +24,7 @@ module.exports = {
 							{
 								loader: "./loader",
 								options: {
-									get: function() {
+									get: function () {
 										return "second-3";
 									}
 								}

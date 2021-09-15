@@ -13,18 +13,18 @@ function lessStrict(regExpStr) {
 	return regExpStr;
 }
 
-const runtimeRegexp = /(```\s*(?:js|javascript)\n)?(.*)(\/\*\*\*\*\*\*\/ \(function\(modules\) \{ \/\/ webpackBootstrap\n(?:.|\n)*?\n\/\*\*\*\*\*\*\/ \}\)\n\/\**\/\n)/;
-const timeRegexp = /\s*Time: \d+ms/g;
-const buildAtRegexp = /\s*Built at: .+/mg;
-const hashRegexp = /Hash: [a-f0-9]+/g;
+const runtimeModulesRegexp = /(\/\*{72}\/\n(?:\/(?:\*{6}|\*{72})\/.*\n)*\/\*{72}\/\n)/g;
+const timeRegexp = / in \d+ ms/g;
+const dataUrlRegexp = /("data:[^"]+")/g;
 
 exports.replaceBase = (template) => {
 
-	let cwd = process.cwd();
+	const cwd = process.cwd();
 	let webpack = path.join(__dirname, "..");
 	let webpackParent = path.join(__dirname, "..", "..");
-	cwd = lessStrict(cwd.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
-	cwd = new RegExp(cwd, "g");
+	const cwdRegExpStr = lessStrict(cwd.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
+	const cwdRegExp = new RegExp(cwdRegExpStr, "g");
+	const cwdSlashRegExp = new RegExp(cwdRegExpStr + "[\\/\\\\]", "g");
 	webpack = lessStrict(webpack.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
 	webpack = new RegExp(webpack, "g");
 	webpackParent = lessStrict(webpackParent.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
@@ -33,33 +33,41 @@ exports.replaceBase = (template) => {
 	return template
 		.replace(/\r\n/g, "\n")
 		.replace(/\r/g, "\n")
-		.replace(cwd, ".")
+		.replace(/\[webpack-cli\].+\n/g, "")
+		.replace(cwdSlashRegExp, "./")
+		.replace(cwdRegExp, ".")
 		.replace(webpack, "(webpack)")
 		.replace(webpackParent, "(webpack)/~")
 		.replace(timeRegexp, "")
-		.replace(buildAtRegexp, "")
-		.replace(hashRegexp, "Hash: 0a1b2c3d4e5f6a7b8c9d")
+		.replace(dataUrlRegexp, function(match) {
+			if(match.length < 100) return match;
+			return match.slice(0, 50) + "..." + match.slice(-10);
+		})
 		.replace(/\.chunkhash\./g, ".[chunkhash].")
-		.replace(runtimeRegexp, function(match) {
-			match = runtimeRegexp.exec(match);
-			const prefix = match[1] ? "" : "```\n";
-			const inner = match[1] ? match[1] : "``` js\n";
-			return prefix + "<details><summary><code>" + match[2] + "/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>\n\n" + inner + match[2] + match[3] + "```\n\n</details>\n\n" + inner;
+		.replace(runtimeModulesRegexp, function(match, content) {
+			return "```\n\n<details><summary>"+
+			"<code>/* webpack runtime code */</code>"+
+			"</summary>\n\n``` js\n" + content + "```\n\n</details>\n\n``` js\n";
 		});
 };
 
 exports.needResults = (template, prefix) => {
-	const regExp = prefix ? new RegExp(`\\{\\{${prefix}:`) : /\{\{/;
+	const regExp = prefix ? new RegExp(`_\\{\\{${prefix}:`) : /_\{\{/;
 	return regExp.test(template);
 };
 
 exports.replaceResults = (template, baseDir, stdout, prefix) => {
-	const regexp = new RegExp("\\{\\{" + (prefix ? prefix + ":" : "") + "([^:\\}]+)\\}\\}", "g");
+	const regexp = new RegExp("_\\{\\{" + (prefix ? prefix + ":" : "") + "([^:\\}]+)\\}\\}_", "g");
 
 	return template.replace(regexp, function(match) {
-		match = match.substr(2 + (prefix ? prefix.length + 1 : 0), match.length - 4 - (prefix ? prefix.length + 1 : 0));
+		match = match.substr(3 + (prefix ? prefix.length + 1 : 0), match.length - 6 - (prefix ? prefix.length + 1 : 0));
 		if(match === "stdout")
 			return stdout;
-		return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");
+		try {
+			return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");
+		} catch(e) {
+			e.message += `\nwhile reading '${match}' in '${baseDir}`;
+			throw e;
+		}
 	});
 };

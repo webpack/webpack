@@ -1,5 +1,11 @@
-it("should handle the css loader correctly", function() {
-	(require("!css-loader!../_css/stylesheet.css") + "").indexOf(".rule-direct").should.not.be.eql(-1);
-	(require("!css-loader!../_css/stylesheet.css") + "").indexOf(".rule-import1").should.not.be.eql(-1);
-	(require("!css-loader!../_css/stylesheet.css") + "").indexOf(".rule-import2").should.not.be.eql(-1);
+it("should handle the css loader correctly", function () {
+	expect(require("!css-loader!../_css/stylesheet.css").default + "").toContain(
+		".rule-direct"
+	);
+	expect(require("!css-loader!../_css/stylesheet.css").default + "").toContain(
+		".rule-import1"
+	);
+	expect(require("!css-loader!../_css/stylesheet.css").default + "").toContain(
+		".rule-import2"
+	);
 });

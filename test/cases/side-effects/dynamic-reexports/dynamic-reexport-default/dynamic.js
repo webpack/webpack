@@ -1,0 +1,1 @@
+Object(exports).default = "dynamic";

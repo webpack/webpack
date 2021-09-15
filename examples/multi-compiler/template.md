@@ -1,26 +1,25 @@
-
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # webpack.config.js
 
-``` javascript
-{{webpack.config.js}}
+```javascript
+_{{webpack.config.js}}_
 ```
 
 # dist/desktop.js
 
-``` javascript
-{{dist/desktop.js}}
+```javascript
+_{{dist/desktop.js}}_
 ```
 
 # dist/mobile.js
 
-``` javascript
-{{dist/mobile.js}}
+```javascript
+_{{dist/mobile.js}}_
 ```
 
 # Info
@@ -28,11 +27,11 @@
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

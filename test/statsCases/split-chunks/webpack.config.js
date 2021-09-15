@@ -4,10 +4,12 @@ const stats = {
 	builtAt: false,
 	assets: false,
 	chunks: true,
+	chunkRelations: true,
 	chunkOrigins: true,
 	entrypoints: true,
 	modules: false
 };
+/** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{
 		name: "default",
@@ -39,7 +41,7 @@ module.exports = [
 			c: "./c"
 		},
 		output: {
-			filename: "default/[name].js"
+			filename: "all-chunks/[name].js"
 		},
 		optimization: {
 			splitChunks: {
@@ -55,13 +57,12 @@ module.exports = [
 		mode: "production",
 		entry: {
 			main: "./",
-			a: "./a",
-			b: "./b",
-			c: "./c",
-			vendors: ["x", "y", "z"]
+			a: ["x", "y", "z", "./a"],
+			b: ["x", "y", "z", "./b"],
+			c: ["x", "y", "z", "./c"]
 		},
 		output: {
-			filename: "default/[name].js"
+			filename: "manual/[name].js"
 		},
 		optimization: {
 			splitChunks: {
@@ -70,7 +71,7 @@ module.exports = [
 				cacheGroups: {
 					default: false,
 					vendors: {
-						test: "vendors",
+						test: /[\\/]node_modules[\\/]/,
 						name: "vendors",
 						enforce: true
 					}
@@ -89,12 +90,64 @@ module.exports = [
 			cccccccccccccccccccccccccccccc: "./c"
 		},
 		output: {
-			filename: "[name].js"
+			filename: "name-too-long/[name].js"
 		},
 		optimization: {
 			splitChunks: {
 				minSize: 0,
+				maxInitialRequests: Infinity,
 				chunks: "all"
+			}
+		},
+		stats
+	},
+
+	{
+		name: "custom-chunks-filter",
+		mode: "production",
+		entry: {
+			main: "./",
+			a: "./a",
+			b: "./b",
+			c: "./c"
+		},
+		output: {
+			filename: "custom-chunks-filter/[name].js"
+		},
+		optimization: {
+			splitChunks: {
+				minSize: 0,
+				chunks: chunk => chunk.name !== "a"
+			}
+		},
+		stats
+	},
+
+	{
+		name: "custom-chunks-filter-in-cache-groups",
+		mode: "production",
+		entry: {
+			main: "./",
+			a: ["x", "y", "z", "./a"],
+			b: ["x", "y", "z", "./b"],
+			c: ["x", "y", "z", "./c"]
+		},
+		output: {
+			filename: "custom-chunks-filter-in-cache-groups/[name].js"
+		},
+		optimization: {
+			splitChunks: {
+				minSize: 0,
+				chunks: "all",
+				cacheGroups: {
+					default: false,
+					vendors: {
+						test: /[\\/]node_modules[\\/]/,
+						name: "vendors",
+						enforce: true,
+						chunks: chunk => chunk.name !== "a"
+					}
+				}
 			}
 		},
 		stats

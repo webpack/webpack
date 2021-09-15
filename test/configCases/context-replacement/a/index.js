@@ -5,7 +5,7 @@ it("should replace a context with a new resource and reqExp", function(done) {
 		});
 	}
 	rqInContext("replaced", function(r) {
-		r.should.be.eql("ok");
+		expect(r).toBe("ok");
 		done();
 	});
 });

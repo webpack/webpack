@@ -2,7 +2,7 @@ This example demonstrates various types of source-maps.
 
 # example.coffee
 
-``` coffeescript
+```coffeescript
 # Taken from http://coffeescript.org/
 
 # Objects:
@@ -18,28 +18,30 @@ race = (winner, runners...) ->
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 
 module.exports = [
-	"cheap-eval-source-map",
-	"cheap-module-eval-source-map",
-	"cheap-module-source-map",
-	"cheap-source-map",
 	"eval",
+	"eval-cheap-source-map",
+	"eval-cheap-module-source-map",
 	"eval-source-map",
-	"hidden-source-map",
-	"inline-source-map",
-	"nosources-source-map",
+	"cheap-source-map",
+	"cheap-module-source-map",
+	"inline-cheap-source-map",
+	"inline-cheap-module-source-map",
 	"source-map",
+	"inline-source-map",
+	"hidden-source-map",
+	"nosources-source-map"
 ].map(devtool => ({
 	mode: "development",
 	entry: {
-		bundle: "coffee-loader!./example.coffee",
+		bundle: "coffee-loader!./example.coffee"
 	},
 	output: {
 		path: path.join(__dirname, "dist"),
-		filename: `./[name]-${devtool}.js`,
+		filename: `./[name]-${devtool}.js`
 	},
 	devtool,
 	optimization: {
@@ -51,17 +53,21 @@ module.exports = [
 # Generated source-maps
 
 ## source-map.js and source-map.js.map
-``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
-/* 0 */
-/*!*************************************************************!*\
-  !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
 
-var math, race,
-  slice = [].slice;
+```javascript
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[0],[
+/* 0 */
+/*!*********************************************************************!*\
+  !*** ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee ***!
+  \*********************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements:  */
+/***/ (() => {
+
+// Taken from http://coffeescript.org/
+
+// Objects:
+var math, race;
 
 math = {
   root: Math.sqrt,
@@ -71,34 +77,42 @@ math = {
   }
 };
 
-race = function() {
-  var runners, winner;
-  winner = arguments[0], runners = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+// Splats:
+race = function(winner, ...runners) {
   return print(winner, runners);
 };
 
 
 /***/ })
-],[[0,1]]]);
+],
+/******/ __webpack_require__ => { // webpackRuntimeModules
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exports__ = (__webpack_exec__(0));
+/******/ }
+]);
 //# sourceMappingURL=bundle-source-map.js.map
 ```
 
-``` javascript
-{"version":3,"sources":["webpack:///./example.coffee"],"names":[],"mappings":";;;;;;;;AAGA;EAAA;;AAAA,OACE;EAAA,MAAQ,IAAI,CAAC,IAAb;EACA,QAAQ,MADR;EAEA,MAAQ,SAAC,CAAD;WAAO,IAAI,OAAO,CAAP;EAAX,CAFR;;;AAKF,OAAO;AACL;EADM,uBAAQ;SACd,MAAM,MAAN,EAAc,OAAd;AADK","file":"./bundle-source-map.js","sourcesContent":["# Taken from http://coffeescript.org/\r\n\r\n# Objects:\r\nmath =\r\n  root:   Math.sqrt\r\n  square: square\r\n  cube:   (x) -> x * square x\r\n\r\n# Splats:\r\nrace = (winner, runners...) ->\r\n  print winner, runners\r\n"],"sourceRoot":""}
+```json
+{"version":3,"file":"./bundle-source-map.js","mappings":";;;;;;;;;AAEU;;;AAAA;;AACV,OACE;EAAA,MAAQ,IAAI,CAAC,IAAb;EACA,QAAQ,MADR;EAEA,MAAQ,SAAC,CAAD;WAAO,IAAI,OAAO,CAAP;EAAX;AAFR,EAFQ;;;AAOV,OAAO,SAAC,MAAD,KAAS,OAAT;SACL,MAAM,MAAN,EAAc,OAAd;AADK","sources":["webpack:///./example.coffee"],"sourcesContent":["# Taken from http://coffeescript.org/\n\n# Objects:\nmath =\n  root:   Math.sqrt\n  square: square\n  cube:   (x) -> x * square x\n\n# Splats:\nrace = (winner, runners...) ->\n  print winner, runners\n"],"names":[],"sourceRoot":""}
 ```
 
 ## hidden-source-map.js and hidden-source-map.js.map
-``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
-/* 0 */
-/*!*************************************************************!*\
-  !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
 
-var math, race,
-  slice = [].slice;
+```javascript
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[0],[
+/* 0 */
+/*!*********************************************************************!*\
+  !*** ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee ***!
+  \*********************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements:  */
+/***/ (() => {
+
+// Taken from http://coffeescript.org/
+
+// Objects:
+var math, race;
 
 math = {
   root: Math.sqrt,
@@ -108,33 +122,41 @@ math = {
   }
 };
 
-race = function() {
-  var runners, winner;
-  winner = arguments[0], runners = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+// Splats:
+race = function(winner, ...runners) {
   return print(winner, runners);
 };
 
 
 /***/ })
-],[[0,1]]]);
+],
+/******/ __webpack_require__ => { // webpackRuntimeModules
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exports__ = (__webpack_exec__(0));
+/******/ }
+]);
 ```
 
-``` javascript
-{"version":3,"sources":["webpack:///./example.coffee"],"names":[],"mappings":";;;;;;;;AAGA;EAAA;;AAAA,OACE;EAAA,MAAQ,IAAI,CAAC,IAAb;EACA,QAAQ,MADR;EAEA,MAAQ,SAAC,CAAD;WAAO,IAAI,OAAO,CAAP;EAAX,CAFR;;;AAKF,OAAO;AACL;EADM,uBAAQ;SACd,MAAM,MAAN,EAAc,OAAd;AADK","file":"./bundle-hidden-source-map.js","sourcesContent":["# Taken from http://coffeescript.org/\r\n\r\n# Objects:\r\nmath =\r\n  root:   Math.sqrt\r\n  square: square\r\n  cube:   (x) -> x * square x\r\n\r\n# Splats:\r\nrace = (winner, runners...) ->\r\n  print winner, runners\r\n"],"sourceRoot":""}
+```json
+{"version":3,"file":"./bundle-hidden-source-map.js","mappings":";;;;;;;;;AAEU;;;AAAA;;AACV,OACE;EAAA,MAAQ,IAAI,CAAC,IAAb;EACA,QAAQ,MADR;EAEA,MAAQ,SAAC,CAAD;WAAO,IAAI,OAAO,CAAP;EAAX;AAFR,EAFQ;;;AAOV,OAAO,SAAC,MAAD,KAAS,OAAT;SACL,MAAM,MAAN,EAAc,OAAd;AADK","sources":["webpack:///./example.coffee"],"sourcesContent":["# Taken from http://coffeescript.org/\n\n# Objects:\nmath =\n  root:   Math.sqrt\n  square: square\n  cube:   (x) -> x * square x\n\n# Splats:\nrace = (winner, runners...) ->\n  print winner, runners\n"],"names":[],"sourceRoot":""}
 ```
 
 ## inline-source-map.js
-``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
-/* 0 */
-/*!*************************************************************!*\
-  !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
 
-var math, race,
-  slice = [].slice;
+```javascript
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[0],[
+/* 0 */
+/*!*********************************************************************!*\
+  !*** ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee ***!
+  \*********************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements:  */
+/***/ (() => {
+
+// Taken from http://coffeescript.org/
+
+// Objects:
+var math, race;
 
 math = {
   root: Math.sqrt,
@@ -144,230 +166,320 @@ math = {
   }
 };
 
-race = function() {
-  var runners, winner;
-  winner = arguments[0], runners = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+// Splats:
+race = function(winner, ...runners) {
   return print(winner, runners);
 };
 
 
 /***/ })
-],[[0,1]]]);
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9leGFtcGxlLmNvZmZlZSJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7OztBQUdBO0VBQUE7O0FBQUEsT0FDRTtFQUFBLE1BQVEsSUFBSSxDQUFDLElBQWI7RUFDQSxRQUFRLE1BRFI7RUFFQSxNQUFRLFNBQUMsQ0FBRDtXQUFPLElBQUksT0FBTyxDQUFQO0VBQVgsQ0FGUjs7O0FBS0YsT0FBTztBQUNMO0VBRE0sdUJBQVE7U0FDZCxNQUFNLE1BQU4sRUFBYyxPQUFkO0FBREsiLCJmaWxlIjoiLi9idW5kbGUtaW5saW5lLXNvdXJjZS1tYXAuanMiLCJzb3VyY2VzQ29udGVudCI6WyIjIFRha2VuIGZyb20gaHR0cDovL2NvZmZlZXNjcmlwdC5vcmcvXHJcblxyXG4jIE9iamVjdHM6XHJcbm1hdGggPVxyXG4gIHJvb3Q6ICAgTWF0aC5zcXJ0XHJcbiAgc3F1YXJlOiBzcXVhcmVcclxuICBjdWJlOiAgICh4KSAtPiB4ICogc3F1YXJlIHhcclxuXHJcbiMgU3BsYXRzOlxyXG5yYWNlID0gKHdpbm5lciwgcnVubmVycy4uLikgLT5cclxuICBwcmludCB3aW5uZXIsIHJ1bm5lcnNcclxuIl0sInNvdXJjZVJvb3QiOiIifQ==
+],
+/******/ __webpack_require__ => { // webpackRuntimeModules
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exports__ = (__webpack_exec__(0));
+/******/ }
+]);
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9idW5kbGUtaW5saW5lLXNvdXJjZS1tYXAuanMiLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7O0FBRVU7OztBQUFBOztBQUNWLE9BQ0U7RUFBQSxNQUFRLElBQUksQ0FBQyxJQUFiO0VBQ0EsUUFBUSxNQURSO0VBRUEsTUFBUSxTQUFDLENBQUQ7V0FBTyxJQUFJLE9BQU8sQ0FBUDtFQUFYO0FBRlIsRUFGUTs7O0FBT1YsT0FBTyxTQUFDLE1BQUQsS0FBUyxPQUFUO1NBQ0wsTUFBTSxNQUFOLEVBQWMsT0FBZDtBQURLIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vZXhhbXBsZS5jb2ZmZWUiXSwic291cmNlc0NvbnRlbnQiOlsiIyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xuXG4jIE9iamVjdHM6XG5tYXRoID1cbiAgcm9vdDogICBNYXRoLnNxcnRcbiAgc3F1YXJlOiBzcXVhcmVcbiAgY3ViZTogICAoeCkgLT4geCAqIHNxdWFyZSB4XG5cbiMgU3BsYXRzOlxucmFjZSA9ICh3aW5uZXIsIHJ1bm5lcnMuLi4pIC0+XG4gIHByaW50IHdpbm5lciwgcnVubmVyc1xuIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9
 ```
 
 ## nosources-source-map.js.map
-``` javascript
-{"version":3,"sources":["webpack:///./example.coffee"],"names":[],"mappings":";;;;;;;;AAGA;EAAA;;AAAA,OACE;EAAA,MAAQ,IAAI,CAAC,IAAb;EACA,QAAQ,MADR;EAEA,MAAQ,SAAC,CAAD;WAAO,IAAI,OAAO,CAAP;EAAX,CAFR;;;AAKF,OAAO;AACL;EADM,uBAAQ;SACd,MAAM,MAAN,EAAc,OAAd;AADK","file":"./bundle-nosources-source-map.js","sourceRoot":""}
+
+```json
+{"version":3,"file":"./bundle-nosources-source-map.js","mappings":";;;;;;;;;AAEU;;;AAAA;;AACV,OACE;EAAA,MAAQ,IAAI,CAAC,IAAb;EACA,QAAQ,MADR;EAEA,MAAQ,SAAC,CAAD;WAAO,IAAI,OAAO,CAAP;EAAX;AAFR,EAFQ;;;AAOV,OAAO,SAAC,MAAD,KAAS,OAAT;SACL,MAAM,MAAN,EAAc,OAAd;AADK","sources":["webpack:///./example.coffee"],"names":[],"sourceRoot":""}
 ```
 
 ## eval-source-map.js
-``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
-/* 0 */
-/*!*************************************************************!*\
-  !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
 
-eval("var math, race,\n  slice = [].slice;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\nrace = function() {\n  var runners, winner;\n  winner = arguments[0], runners = 2 <= arguments.length ? slice.call(arguments, 1) : [];\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9leGFtcGxlLmNvZmZlZT85MWU1Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUdBO0VBQUE7O0FBQUEsT0FDRTtFQUFBLE1BQVEsSUFBSSxDQUFDLElBQWI7RUFDQSxRQUFRLE1BRFI7RUFFQSxNQUFRLFNBQUMsQ0FBRDtXQUFPLElBQUksT0FBTyxDQUFQO0VBQVgsQ0FGUjs7O0FBS0YsT0FBTztBQUNMO0VBRE0sdUJBQVE7U0FDZCxNQUFNLE1BQU4sRUFBYyxPQUFkO0FBREsiLCJmaWxlIjoiMC5qcyIsInNvdXJjZXNDb250ZW50IjpbIiMgVGFrZW4gZnJvbSBodHRwOi8vY29mZmVlc2NyaXB0Lm9yZy9cclxuXHJcbiMgT2JqZWN0czpcclxubWF0aCA9XHJcbiAgcm9vdDogICBNYXRoLnNxcnRcclxuICBzcXVhcmU6IHNxdWFyZVxyXG4gIGN1YmU6ICAgKHgpIC0+IHggKiBzcXVhcmUgeFxyXG5cclxuIyBTcGxhdHM6XHJcbnJhY2UgPSAod2lubmVyLCBydW5uZXJzLi4uKSAtPlxyXG4gIHByaW50IHdpbm5lciwgcnVubmVyc1xyXG4iXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///0\n");
+```javascript
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[0],[
+/* 0 */
+/*!*********************************************************************!*\
+  !*** ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee ***!
+  \*********************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements:  */
+/***/ (() => {
+
+eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vZXhhbXBsZS5jb2ZmZWU/MjQxNiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFFVTs7O0FBQUEsSUFBQSxJQUFBLEVBQUE7O0FBQ1YsSUFBQSxHQUNFO0VBQUEsSUFBQSxFQUFRLElBQUksQ0FBQyxJQUFiO0VBQ0EsTUFBQSxFQUFRLE1BRFI7RUFFQSxJQUFBLEVBQVEsUUFBQSxDQUFDLENBQUQsQ0FBQTtXQUFPLENBQUEsR0FBSSxNQUFBLENBQU8sQ0FBUDtFQUFYO0FBRlIsRUFGUTs7O0FBT1YsSUFBQSxHQUFPLFFBQUEsQ0FBQyxNQUFELEVBQUEsR0FBUyxPQUFULENBQUE7U0FDTCxLQUFBLENBQU0sTUFBTixFQUFjLE9BQWQ7QUFESyIsInNvdXJjZXNDb250ZW50IjpbIiMgVGFrZW4gZnJvbSBodHRwOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuIyBPYmplY3RzOlxubWF0aCA9XG4gIHJvb3Q6ICAgTWF0aC5zcXJ0XG4gIHNxdWFyZTogc3F1YXJlXG4gIGN1YmU6ICAgKHgpIC0+IHggKiBzcXVhcmUgeFxuXG4jIFNwbGF0czpcbnJhY2UgPSAod2lubmVyLCBydW5uZXJzLi4uKSAtPlxuICBwcmludCB3aW5uZXIsIHJ1bm5lcnNcbiJdLCJmaWxlIjoiMC5qcyJ9\n//# sourceURL=webpack-internal:///0\n");
 
 /***/ })
-],[[0,1]]]);
+],
+/******/ __webpack_require__ => { // webpackRuntimeModules
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exports__ = (__webpack_exec__(0));
+/******/ }
+]);
 ```
 
 ## eval.js
-``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
-/* 0 */
-/*!*************************************************************!*\
-  !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
 
-eval("var math, race,\n  slice = [].slice;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\nrace = function() {\n  var runners, winner;\n  winner = arguments[0], runners = 2 <= arguments.length ? slice.call(arguments, 1) : [];\n  return print(winner, runners);\n};\n\n\n//# sourceURL=webpack:///./example.coffee?(webpack)/node_modules/coffee-loader");
+```javascript
+/*
+ * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[0],[
+/* 0 */
+/*!*********************************************************************!*\
+  !*** ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee ***!
+  \*********************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements:  */
+/***/ (() => {
+
+eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n\n\n//# sourceURL=webpack:///./example.coffee?../../node_modules/coffee-loader/dist/cjs.js");
 
 /***/ })
-],[[0,1]]]);
+],
+/******/ __webpack_require__ => { // webpackRuntimeModules
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exports__ = (__webpack_exec__(0));
+/******/ }
+]);
 ```
 
-## cheap-eval-source-map.js
-``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
-/* 0 */
-/*!*************************************************************!*\
-  !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+## eval-cheap-source-map.js
 
-eval("var math, race,\n  slice = [].slice;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\nrace = function() {\n  var runners, winner;\n  winner = arguments[0], runners = 2 <= arguments.length ? slice.call(arguments, 1) : [];\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2V4YW1wbGUuY29mZmVlPzA5MjciXSwic291cmNlc0NvbnRlbnQiOlsidmFyIG1hdGgsIHJhY2UsXG4gIHNsaWNlID0gW10uc2xpY2U7XG5cbm1hdGggPSB7XG4gIHJvb3Q6IE1hdGguc3FydCxcbiAgc3F1YXJlOiBzcXVhcmUsXG4gIGN1YmU6IGZ1bmN0aW9uKHgpIHtcbiAgICByZXR1cm4geCAqIHNxdWFyZSh4KTtcbiAgfVxufTtcblxucmFjZSA9IGZ1bmN0aW9uKCkge1xuICB2YXIgcnVubmVycywgd2lubmVyO1xuICB3aW5uZXIgPSBhcmd1bWVudHNbMF0sIHJ1bm5lcnMgPSAyIDw9IGFyZ3VtZW50cy5sZW5ndGggPyBzbGljZS5jYWxsKGFyZ3VtZW50cywgMSkgOiBbXTtcbiAgcmV0dXJuIHByaW50KHdpbm5lciwgcnVubmVycyk7XG59O1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTsiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///0\n");
+```javascript
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[0],[
+/* 0 */
+/*!*********************************************************************!*\
+  !*** ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee ***!
+  \*********************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements:  */
+/***/ (() => {
+
+eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vZXhhbXBsZS5jb2ZmZWU/ZWU1OCJdLCJzb3VyY2VzQ29udGVudCI6WyIvLyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xuXG4vLyBPYmplY3RzOlxudmFyIG1hdGgsIHJhY2U7XG5cbm1hdGggPSB7XG4gIHJvb3Q6IE1hdGguc3FydCxcbiAgc3F1YXJlOiBzcXVhcmUsXG4gIGN1YmU6IGZ1bmN0aW9uKHgpIHtcbiAgICByZXR1cm4geCAqIHNxdWFyZSh4KTtcbiAgfVxufTtcblxuLy8gU3BsYXRzOlxucmFjZSA9IGZ1bmN0aW9uKHdpbm5lciwgLi4ucnVubmVycykge1xuICByZXR1cm4gcHJpbnQod2lubmVyLCBydW5uZXJzKTtcbn07XG4iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///0\n");
 
 /***/ })
-],[[0,1]]]);
+],
+/******/ __webpack_require__ => { // webpackRuntimeModules
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exports__ = (__webpack_exec__(0));
+/******/ }
+]);
 ```
 
-## cheap-module-eval-source-map.js
-``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
-/* 0 */
-/*!*************************************************************!*\
-  !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+## eval-cheap-module-source-map.js
 
-eval("var math, race,\n  slice = [].slice;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\nrace = function() {\n  var runners, winner;\n  winner = arguments[0], runners = 2 <= arguments.length ? slice.call(arguments, 1) : [];\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2V4YW1wbGUuY29mZmVlPzkxZTUiXSwic291cmNlc0NvbnRlbnQiOlsiIyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xyXG5cclxuIyBPYmplY3RzOlxyXG5tYXRoID1cclxuICByb290OiAgIE1hdGguc3FydFxyXG4gIHNxdWFyZTogc3F1YXJlXHJcbiAgY3ViZTogICAoeCkgLT4geCAqIHNxdWFyZSB4XHJcblxyXG4jIFNwbGF0czpcclxucmFjZSA9ICh3aW5uZXIsIHJ1bm5lcnMuLi4pIC0+XHJcbiAgcHJpbnQgd2lubmVyLCBydW5uZXJzXHJcbiJdLCJtYXBwaW5ncyI6IkFBR0E7QUFBQTtBQUNBO0FBREE7QUFDQTtBQUNBO0FBQ0E7QUFBQTtBQUFBOzs7QUFHQTtBQUNBO0FBREE7QUFDQTtBQURBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///0\n");
+```javascript
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+(self["webpackChunk"] = self["webpackChunk"] || []).push([[0],[
+/* 0 */
+/*!*********************************************************************!*\
+  !*** ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee ***!
+  \*********************************************************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements:  */
+/***/ (() => {
+
+eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vZXhhbXBsZS5jb2ZmZWU/MjQxNiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFFVTs7O0FBQUEsSUFBQSxJQUFBLEVBQUE7O0FBQ1YsSUFBQSxHQUNFO0VBQUEsSUFBQSxFQUFRLElBQUksQ0FBQyxJQUFiO0VBQ0EsTUFBQSxFQUFRLE1BRFI7RUFFQSxJQUFBLEVBQVEsUUFBQSxDQUFDLENBQUQsQ0FBQTtXQUFPLENBQUEsR0FBSSxNQUFBLENBQU8sQ0FBUDtFQUFYO0FBRlIsRUFGUTs7O0FBT1YsSUFBQSxHQUFPLFFBQUEsQ0FBQyxNQUFELEVBQUEsR0FBUyxPQUFULENBQUE7U0FDTCxLQUFBLENBQU0sTUFBTixFQUFjLE9BQWQ7QUFESyIsInNvdXJjZXNDb250ZW50IjpbIiMgVGFrZW4gZnJvbSBodHRwOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuIyBPYmplY3RzOlxubWF0aCA9XG4gIHJvb3Q6ICAgTWF0aC5zcXJ0XG4gIHNxdWFyZTogc3F1YXJlXG4gIGN1YmU6ICAgKHgpIC0+IHggKiBzcXVhcmUgeFxuXG4jIFNwbGF0czpcbnJhY2UgPSAod2lubmVyLCBydW5uZXJzLi4uKSAtPlxuICBwcmludCB3aW5uZXIsIHJ1bm5lcnNcbiJdLCJmaWxlIjoiMC5qcyJ9\n//# sourceURL=webpack-internal:///0\n");
 
 /***/ })
-],[[0,1]]]);
+],
+/******/ __webpack_require__ => { // webpackRuntimeModules
+/******/ var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+/******/ var __webpack_exports__ = (__webpack_exec__(0));
+/******/ }
+]);
 ```
 
 ## cheap-module-source-map.js.map
-``` javascript
-{"version":3,"file":"./bundle-cheap-module-source-map.js","sources":["webpack:///./example.coffee"],"sourcesContent":["# Taken from http://coffeescript.org/\r\n\r\n# Objects:\r\nmath =\r\n  root:   Math.sqrt\r\n  square: square\r\n  cube:   (x) -> x * square x\r\n\r\n# Splats:\r\nrace = (winner, runners...) ->\r\n  print winner, runners\r\n"],"mappings":";;;;;;;;AAGA;AAAA;AACA;AADA;AACA;AACA;AACA;AAAA;AAAA;;;AAGA;AACA;AADA;AACA;AADA;;;;A","sourceRoot":""}
+
+```json
+{"version":3,"file":"./bundle-cheap-module-source-map.js","mappings":";;;;;;;;;AAEA;;;AAAA;;AACA;AACA;AACA;AACA;AAAA;AAAA;AAFA;;;AAKA;AACA;AADA","sources":["webpack:///./example.coffee"],"sourcesContent":["# Taken from http://coffeescript.org/\n\n# Objects:\nmath =\n  root:   Math.sqrt\n  square: square\n  cube:   (x) -> x * square x\n\n# Splats:\nrace = (winner, runners...) ->\n  print winner, runners\n"],"names":[],"sourceRoot":""}
 ```
 
 ## cheap-source-map.js.map
-``` javascript
-{"version":3,"file":"./bundle-cheap-source-map.js","sources":["webpack:///./example.coffee"],"sourcesContent":["var math, race,\n  slice = [].slice;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\nrace = function() {\n  var runners, winner;\n  winner = arguments[0], runners = 2 <= arguments.length ? slice.call(arguments, 1) : [];\n  return print(winner, runners);\n};\n"],"mappings":";;;;;;;;AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;A","sourceRoot":""}
+
+```json
+{"version":3,"file":"./bundle-cheap-source-map.js","mappings":";;;;;;;;;AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA","sources":["webpack:///./example.coffee"],"sourcesContent":["// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n"],"names":[],"sourceRoot":""}
 ```
 
 # webpack output
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
-Child
-    Hash: 0a1b2c3d4e5f6a7b8c9d
-                                        Asset      Size  Chunks             Chunk Names
-            ./bundle-cheap-eval-source-map.js   1.5 KiB       0  [emitted]  bundle
-    ./runtime~bundle-cheap-eval-source-map.js  4.93 KiB       1  [emitted]  runtime~bundle
-    Entrypoint bundle = ./runtime~bundle-cheap-eval-source-map.js ./bundle-cheap-eval-source-map.js
-    chunk    {0} ./bundle-cheap-eval-source-map.js (bundle) 308 bytes ={1}= [initial] [rendered]
-        > coffee-loader!./example.coffee bundle
-        [0] (webpack)/node_modules/coffee-loader!./example.coffee 308 bytes {0} [built]
-            single entry coffee-loader!./example.coffee  bundle
-    chunk    {1} ./runtime~bundle-cheap-eval-source-map.js (runtime~bundle) 0 bytes ={0}= [entry] [rendered]
-        > coffee-loader!./example.coffee bundle
-Child
-    Hash: 0a1b2c3d4e5f6a7b8c9d
-                                               Asset      Size  Chunks             Chunk Names
-            ./bundle-cheap-module-eval-source-map.js  1.36 KiB       0  [emitted]  bundle
-    ./runtime~bundle-cheap-module-eval-source-map.js  4.93 KiB       1  [emitted]  runtime~bundle
-    Entrypoint bundle = ./runtime~bundle-cheap-module-eval-source-map.js ./bundle-cheap-module-eval-source-map.js
-    chunk    {0} ./bundle-cheap-module-eval-source-map.js (bundle) 308 bytes ={1}= [initial] [rendered]
-        > coffee-loader!./example.coffee bundle
-        [0] (webpack)/node_modules/coffee-loader!./example.coffee 308 bytes {0} [built]
-            single entry coffee-loader!./example.coffee  bundle
-    chunk    {1} ./runtime~bundle-cheap-module-eval-source-map.js (runtime~bundle) 0 bytes ={0}= [entry] [rendered]
-        > coffee-loader!./example.coffee bundle
-Child
-    Hash: 0a1b2c3d4e5f6a7b8c9d
-                                              Asset       Size  Chunks             Chunk Names
-                ./bundle-cheap-module-source-map.js  733 bytes       0  [emitted]  bundle
-        ./runtime~bundle-cheap-module-source-map.js      5 KiB       1  [emitted]  runtime~bundle
-            ./bundle-cheap-module-source-map.js.map  459 bytes       0  [emitted]  bundle
-    ./runtime~bundle-cheap-module-source-map.js.map   4.92 KiB       1  [emitted]  runtime~bundle
-    Entrypoint bundle = ./runtime~bundle-cheap-module-source-map.js ./runtime~bundle-cheap-module-source-map.js.map ./bundle-cheap-module-source-map.js ./bundle-cheap-module-source-map.js.map
-    chunk    {0} ./bundle-cheap-module-source-map.js, ./bundle-cheap-module-source-map.js.map (bundle) 308 bytes ={1}= [initial] [rendered]
-        > coffee-loader!./example.coffee bundle
-        [0] (webpack)/node_modules/coffee-loader!./example.coffee 308 bytes {0} [built]
-            single entry coffee-loader!./example.coffee  bundle
-    chunk    {1} ./runtime~bundle-cheap-module-source-map.js, ./runtime~bundle-cheap-module-source-map.js.map (runtime~bundle) 0 bytes ={0}= [entry] [rendered]
-        > coffee-loader!./example.coffee bundle
-Child
-    Hash: 0a1b2c3d4e5f6a7b8c9d
-                                       Asset       Size  Chunks             Chunk Names
-                ./bundle-cheap-source-map.js  726 bytes       0  [emitted]  bundle
-        ./runtime~bundle-cheap-source-map.js   4.99 KiB       1  [emitted]  runtime~bundle
-            ./bundle-cheap-source-map.js.map  561 bytes       0  [emitted]  bundle
-    ./runtime~bundle-cheap-source-map.js.map   4.91 KiB       1  [emitted]  runtime~bundle
-    Entrypoint bundle = ./runtime~bundle-cheap-source-map.js ./runtime~bundle-cheap-source-map.js.map ./bundle-cheap-source-map.js ./bundle-cheap-source-map.js.map
-    chunk    {0} ./bundle-cheap-source-map.js, ./bundle-cheap-source-map.js.map (bundle) 308 bytes ={1}= [initial] [rendered]
-        > coffee-loader!./example.coffee bundle
-        [0] (webpack)/node_modules/coffee-loader!./example.coffee 308 bytes {0} [built]
-            single entry coffee-loader!./example.coffee  bundle
-    chunk    {1} ./runtime~bundle-cheap-source-map.js, ./runtime~bundle-cheap-source-map.js.map (runtime~bundle) 0 bytes ={0}= [entry] [rendered]
-        > coffee-loader!./example.coffee bundle
-Child
-    Hash: 0a1b2c3d4e5f6a7b8c9d
-                       Asset       Size  Chunks             Chunk Names
-            ./bundle-eval.js  781 bytes       0  [emitted]  bundle
-    ./runtime~bundle-eval.js   4.93 KiB       1  [emitted]  runtime~bundle
-    Entrypoint bundle = ./runtime~bundle-eval.js ./bundle-eval.js
-    chunk    {0} ./bundle-eval.js (bundle) 308 bytes ={1}= [initial] [rendered]
-        > coffee-loader!./example.coffee bundle
-        [0] (webpack)/node_modules/coffee-loader!./example.coffee 308 bytes {0} [built]
-            single entry coffee-loader!./example.coffee  bundle
-    chunk    {1} ./runtime~bundle-eval.js (runtime~bundle) 0 bytes ={0}= [entry] [rendered]
-        > coffee-loader!./example.coffee bundle
-Child
-    Hash: 0a1b2c3d4e5f6a7b8c9d
-                                  Asset      Size  Chunks             Chunk Names
-            ./bundle-eval-source-map.js  1.49 KiB       0  [emitted]  bundle
-    ./runtime~bundle-eval-source-map.js  4.93 KiB       1  [emitted]  runtime~bundle
-    Entrypoint bundle = ./runtime~bundle-eval-source-map.js ./bundle-eval-source-map.js
-    chunk    {0} ./bundle-eval-source-map.js (bundle) 308 bytes ={1}= [initial] [rendered]
-        > coffee-loader!./example.coffee bundle
-        [0] (webpack)/node_modules/coffee-loader!./example.coffee 308 bytes {0} [built]
-            single entry coffee-loader!./example.coffee  bundle
-    chunk    {1} ./runtime~bundle-eval-source-map.js (runtime~bundle) 0 bytes ={0}= [entry] [rendered]
-        > coffee-loader!./example.coffee bundle
-Child
-    Hash: 0a1b2c3d4e5f6a7b8c9d
-                                        Asset       Size  Chunks             Chunk Names
-                ./bundle-hidden-source-map.js  674 bytes       0  [emitted]  bundle
-        ./runtime~bundle-hidden-source-map.js   4.93 KiB       1  [emitted]  runtime~bundle
-            ./bundle-hidden-source-map.js.map  556 bytes       0  [emitted]  bundle
-    ./runtime~bundle-hidden-source-map.js.map   4.96 KiB       1  [emitted]  runtime~bundle
-    Entrypoint bundle = ./runtime~bundle-hidden-source-map.js ./runtime~bundle-hidden-source-map.js.map ./bundle-hidden-source-map.js ./bundle-hidden-source-map.js.map
-    chunk    {0} ./bundle-hidden-source-map.js, ./bundle-hidden-source-map.js.map (bundle) 308 bytes ={1}= [initial] [rendered]
-        > coffee-loader!./example.coffee bundle
-        [0] (webpack)/node_modules/coffee-loader!./example.coffee 308 bytes {0} [built]
-            single entry coffee-loader!./example.coffee  bundle
-    chunk    {1} ./runtime~bundle-hidden-source-map.js, ./runtime~bundle-hidden-source-map.js.map (runtime~bundle) 0 bytes ={0}= [entry] [rendered]
-        > coffee-loader!./example.coffee bundle
-Child
-    Hash: 0a1b2c3d4e5f6a7b8c9d
-                                    Asset      Size  Chunks             Chunk Names
-            ./bundle-inline-source-map.js  1.45 KiB       0  [emitted]  bundle
-    ./runtime~bundle-inline-source-map.js  11.6 KiB       1  [emitted]  runtime~bundle
-    Entrypoint bundle = ./runtime~bundle-inline-source-map.js ./bundle-inline-source-map.js
-    chunk    {0} ./bundle-inline-source-map.js (bundle) 308 bytes ={1}= [initial] [rendered]
-        > coffee-loader!./example.coffee bundle
-        [0] (webpack)/node_modules/coffee-loader!./example.coffee 308 bytes {0} [built]
-            single entry coffee-loader!./example.coffee  bundle
-    chunk    {1} ./runtime~bundle-inline-source-map.js (runtime~bundle) 0 bytes ={0}= [entry] [rendered]
-        > coffee-loader!./example.coffee bundle
-Child
-    Hash: 0a1b2c3d4e5f6a7b8c9d
-                                           Asset       Size  Chunks             Chunk Names
-                ./bundle-nosources-source-map.js  730 bytes       0  [emitted]  bundle
-        ./runtime~bundle-nosources-source-map.js      5 KiB       1  [emitted]  runtime~bundle
-            ./bundle-nosources-source-map.js.map  314 bytes       0  [emitted]  bundle
-    ./runtime~bundle-nosources-source-map.js.map  838 bytes       1  [emitted]  runtime~bundle
-    Entrypoint bundle = ./runtime~bundle-nosources-source-map.js ./runtime~bundle-nosources-source-map.js.map ./bundle-nosources-source-map.js ./bundle-nosources-source-map.js.map
-    chunk    {0} ./bundle-nosources-source-map.js, ./bundle-nosources-source-map.js.map (bundle) 308 bytes ={1}= [initial] [rendered]
-        > coffee-loader!./example.coffee bundle
-        [0] (webpack)/node_modules/coffee-loader!./example.coffee 308 bytes {0} [built]
-            single entry coffee-loader!./example.coffee  bundle
-    chunk    {1} ./runtime~bundle-nosources-source-map.js, ./runtime~bundle-nosources-source-map.js.map (runtime~bundle) 0 bytes ={0}= [entry] [rendered]
-        > coffee-loader!./example.coffee bundle
-Child
-    Hash: 0a1b2c3d4e5f6a7b8c9d
-                                 Asset       Size  Chunks             Chunk Names
-                ./bundle-source-map.js  720 bytes       0  [emitted]  bundle
-        ./runtime~bundle-source-map.js   4.99 KiB       1  [emitted]  runtime~bundle
-            ./bundle-source-map.js.map  549 bytes       0  [emitted]  bundle
-    ./runtime~bundle-source-map.js.map   4.95 KiB       1  [emitted]  runtime~bundle
-    Entrypoint bundle = ./runtime~bundle-source-map.js ./runtime~bundle-source-map.js.map ./bundle-source-map.js ./bundle-source-map.js.map
-    chunk    {0} ./bundle-source-map.js, ./bundle-source-map.js.map (bundle) 308 bytes ={1}= [initial] [rendered]
-        > coffee-loader!./example.coffee bundle
-        [0] (webpack)/node_modules/coffee-loader!./example.coffee 308 bytes {0} [built]
-            single entry coffee-loader!./example.coffee  bundle
-    chunk    {1} ./runtime~bundle-source-map.js, ./runtime~bundle-source-map.js.map (runtime~bundle) 0 bytes ={0}= [entry] [rendered]
-        > coffee-loader!./example.coffee bundle
+asset ./runtime~bundle-eval.js 5.46 KiB [emitted] (name: runtime~bundle)
+asset ./bundle-eval.js 1.53 KiB [emitted] (name: bundle)
+Entrypoint bundle 6.99 KiB = ./runtime~bundle-eval.js 5.46 KiB ./bundle-eval.js 1.53 KiB
+chunk (runtime: runtime~bundle) ./bundle-eval.js (bundle) 256 bytes [initial] [rendered]
+  > coffee-loader!./example.coffee bundle
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+    [used exports unknown]
+    entry coffee-loader!./example.coffee bundle
+chunk (runtime: runtime~bundle) ./runtime~bundle-eval.js (runtime~bundle) 2.46 KiB [entry] [rendered]
+  > coffee-loader!./example.coffee bundle
+  runtime modules 2.46 KiB 3 modules
+webpack 5.51.1 compiled successfully
+
+asset ./runtime~bundle-eval-cheap-source-map.js 5.46 KiB [emitted] (name: runtime~bundle)
+asset ./bundle-eval-cheap-source-map.js 2.2 KiB [emitted] (name: bundle)
+Entrypoint bundle 7.66 KiB = ./runtime~bundle-eval-cheap-source-map.js 5.46 KiB ./bundle-eval-cheap-source-map.js 2.2 KiB
+chunk (runtime: runtime~bundle) ./bundle-eval-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
+  > coffee-loader!./example.coffee bundle
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+    [used exports unknown]
+    entry coffee-loader!./example.coffee bundle
+chunk (runtime: runtime~bundle) ./runtime~bundle-eval-cheap-source-map.js (runtime~bundle) 2.46 KiB [entry] [rendered]
+  > coffee-loader!./example.coffee bundle
+  runtime modules 2.46 KiB 3 modules
+webpack 5.51.1 compiled successfully
+
+asset ./runtime~bundle-eval-cheap-module-source-map.js 5.46 KiB [emitted] (name: runtime~bundle)
+asset ./bundle-eval-cheap-module-source-map.js 2.33 KiB [emitted] (name: bundle)
+Entrypoint bundle 7.79 KiB = ./runtime~bundle-eval-cheap-module-source-map.js 5.46 KiB ./bundle-eval-cheap-module-source-map.js 2.33 KiB
+chunk (runtime: runtime~bundle) ./bundle-eval-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
+  > coffee-loader!./example.coffee bundle
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+    [used exports unknown]
+    entry coffee-loader!./example.coffee bundle
+chunk (runtime: runtime~bundle) ./runtime~bundle-eval-cheap-module-source-map.js (runtime~bundle) 2.46 KiB [entry] [rendered]
+  > coffee-loader!./example.coffee bundle
+  runtime modules 2.46 KiB 3 modules
+webpack 5.51.1 compiled successfully
+
+asset ./runtime~bundle-eval-source-map.js 5.46 KiB [emitted] (name: runtime~bundle)
+asset ./bundle-eval-source-map.js 2.33 KiB [emitted] (name: bundle)
+Entrypoint bundle 7.79 KiB = ./runtime~bundle-eval-source-map.js 5.46 KiB ./bundle-eval-source-map.js 2.33 KiB
+chunk (runtime: runtime~bundle) ./bundle-eval-source-map.js (bundle) 256 bytes [initial] [rendered]
+  > coffee-loader!./example.coffee bundle
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+    [used exports unknown]
+    entry coffee-loader!./example.coffee bundle
+chunk (runtime: runtime~bundle) ./runtime~bundle-eval-source-map.js (runtime~bundle) 2.46 KiB [entry] [rendered]
+  > coffee-loader!./example.coffee bundle
+  runtime modules 2.46 KiB 3 modules
+webpack 5.51.1 compiled successfully
+
+asset ./runtime~bundle-cheap-source-map.js 4.97 KiB [emitted] (name: runtime~bundle) 1 related asset
+asset ./bundle-cheap-source-map.js 938 bytes [emitted] (name: bundle) 1 related asset
+Entrypoint bundle 5.89 KiB (4.84 KiB) = ./runtime~bundle-cheap-source-map.js 4.97 KiB ./bundle-cheap-source-map.js 938 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
+  > coffee-loader!./example.coffee bundle
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+    [used exports unknown]
+    entry coffee-loader!./example.coffee bundle
+chunk (runtime: runtime~bundle) ./runtime~bundle-cheap-source-map.js (runtime~bundle) 2.46 KiB [entry] [rendered]
+  > coffee-loader!./example.coffee bundle
+  runtime modules 2.46 KiB 3 modules
+webpack 5.51.1 compiled successfully
+
+asset ./runtime~bundle-cheap-module-source-map.js 4.98 KiB [emitted] (name: runtime~bundle) 1 related asset
+asset ./bundle-cheap-module-source-map.js 945 bytes [emitted] (name: bundle) 1 related asset
+Entrypoint bundle 5.9 KiB (4.76 KiB) = ./runtime~bundle-cheap-module-source-map.js 4.98 KiB ./bundle-cheap-module-source-map.js 945 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
+  > coffee-loader!./example.coffee bundle
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+    [used exports unknown]
+    entry coffee-loader!./example.coffee bundle
+chunk (runtime: runtime~bundle) ./runtime~bundle-cheap-module-source-map.js (runtime~bundle) 2.46 KiB [entry] [rendered]
+  > coffee-loader!./example.coffee bundle
+  runtime modules 2.46 KiB 3 modules
+webpack 5.51.1 compiled successfully
+
+asset ./runtime~bundle-inline-cheap-source-map.js 10.8 KiB [emitted] (name: runtime~bundle)
+asset ./bundle-inline-cheap-source-map.js 1.62 KiB [emitted] (name: bundle)
+Entrypoint bundle 12.4 KiB = ./runtime~bundle-inline-cheap-source-map.js 10.8 KiB ./bundle-inline-cheap-source-map.js 1.62 KiB
+chunk (runtime: runtime~bundle) ./bundle-inline-cheap-source-map.js (bundle) 256 bytes [initial] [rendered]
+  > coffee-loader!./example.coffee bundle
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+    [used exports unknown]
+    entry coffee-loader!./example.coffee bundle
+chunk (runtime: runtime~bundle) ./runtime~bundle-inline-cheap-source-map.js (runtime~bundle) 2.46 KiB [entry] [rendered]
+  > coffee-loader!./example.coffee bundle
+  runtime modules 2.46 KiB 3 modules
+webpack 5.51.1 compiled successfully
+
+asset ./runtime~bundle-inline-cheap-module-source-map.js 10.8 KiB [emitted] (name: runtime~bundle)
+asset ./bundle-inline-cheap-module-source-map.js 1.51 KiB [emitted] (name: bundle)
+Entrypoint bundle 12.3 KiB = ./runtime~bundle-inline-cheap-module-source-map.js 10.8 KiB ./bundle-inline-cheap-module-source-map.js 1.51 KiB
+chunk (runtime: runtime~bundle) ./bundle-inline-cheap-module-source-map.js (bundle) 256 bytes [initial] [rendered]
+  > coffee-loader!./example.coffee bundle
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+    [used exports unknown]
+    entry coffee-loader!./example.coffee bundle
+chunk (runtime: runtime~bundle) ./runtime~bundle-inline-cheap-module-source-map.js (runtime~bundle) 2.46 KiB [entry] [rendered]
+  > coffee-loader!./example.coffee bundle
+  runtime modules 2.46 KiB 3 modules
+webpack 5.51.1 compiled successfully
+
+asset ./runtime~bundle-source-map.js 4.96 KiB [emitted] (name: runtime~bundle) 1 related asset
+asset ./bundle-source-map.js 932 bytes [emitted] (name: bundle) 1 related asset
+Entrypoint bundle 5.88 KiB (4.86 KiB) = ./runtime~bundle-source-map.js 4.96 KiB ./bundle-source-map.js 932 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-source-map.js (bundle) 256 bytes [initial] [rendered]
+  > coffee-loader!./example.coffee bundle
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+    [used exports unknown]
+    entry coffee-loader!./example.coffee bundle
+chunk (runtime: runtime~bundle) ./runtime~bundle-source-map.js (runtime~bundle) 2.46 KiB [entry] [rendered]
+  > coffee-loader!./example.coffee bundle
+  runtime modules 2.46 KiB 3 modules
+webpack 5.51.1 compiled successfully
+
+asset ./runtime~bundle-inline-source-map.js 10.8 KiB [emitted] (name: runtime~bundle)
+asset ./bundle-inline-source-map.js 1.64 KiB [emitted] (name: bundle)
+Entrypoint bundle 12.4 KiB = ./runtime~bundle-inline-source-map.js 10.8 KiB ./bundle-inline-source-map.js 1.64 KiB
+chunk (runtime: runtime~bundle) ./bundle-inline-source-map.js (bundle) 256 bytes [initial] [rendered]
+  > coffee-loader!./example.coffee bundle
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+    [used exports unknown]
+    entry coffee-loader!./example.coffee bundle
+chunk (runtime: runtime~bundle) ./runtime~bundle-inline-source-map.js (runtime~bundle) 2.46 KiB [entry] [rendered]
+  > coffee-loader!./example.coffee bundle
+  runtime modules 2.46 KiB 3 modules
+webpack 5.51.1 compiled successfully
+
+asset ./runtime~bundle-hidden-source-map.js 4.91 KiB [emitted] (name: runtime~bundle) 1 related asset
+asset ./bundle-hidden-source-map.js 886 bytes [emitted] (name: bundle) 1 related asset
+Entrypoint bundle 5.78 KiB (4.87 KiB) = ./runtime~bundle-hidden-source-map.js 4.91 KiB ./bundle-hidden-source-map.js 886 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-hidden-source-map.js (bundle) 256 bytes [initial] [rendered]
+  > coffee-loader!./example.coffee bundle
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+    [used exports unknown]
+    entry coffee-loader!./example.coffee bundle
+chunk (runtime: runtime~bundle) ./runtime~bundle-hidden-source-map.js (runtime~bundle) 2.46 KiB [entry] [rendered]
+  > coffee-loader!./example.coffee bundle
+  runtime modules 2.46 KiB 3 modules
+webpack 5.51.1 compiled successfully
+
+asset ./runtime~bundle-nosources-source-map.js 4.97 KiB [emitted] (name: runtime~bundle) 1 related asset
+asset ./bundle-nosources-source-map.js 942 bytes [emitted] (name: bundle) 1 related asset
+Entrypoint bundle 5.89 KiB (1.24 KiB) = ./runtime~bundle-nosources-source-map.js 4.97 KiB ./bundle-nosources-source-map.js 942 bytes 2 auxiliary assets
+chunk (runtime: runtime~bundle) ./bundle-nosources-source-map.js (bundle) 256 bytes [initial] [rendered]
+  > coffee-loader!./example.coffee bundle
+  ../../node_modules/coffee-loader/dist/cjs.js!./example.coffee 256 bytes [built] [code generated]
+    [used exports unknown]
+    entry coffee-loader!./example.coffee bundle
+chunk (runtime: runtime~bundle) ./runtime~bundle-nosources-source-map.js (runtime~bundle) 2.46 KiB [entry] [rendered]
+  > coffee-loader!./example.coffee bundle
+  runtime modules 2.46 KiB 3 modules
+webpack 5.51.1 compiled successfully
 ```

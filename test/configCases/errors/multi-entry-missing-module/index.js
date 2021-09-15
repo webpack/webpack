@@ -1,10 +1,9 @@
-it("Should use WebpackMissingModule when module is missing with multiple entry setup", function() {
-  var fs = require("fs");
-  var path = require("path");
-  var source = fs.readFileSync(path.join(__dirname, "b.js"), "utf-8");
-  source.should.containEql("!(function webpackMissingModule() { var e = new Error(\"Cannot find module \\\"./intentionally-missing-module.js\\\"\"); e.code = 'MODULE_NOT_FOUND'; throw e; }());");
+it("should ignore missing modules as entries", function() {
+	// a.js and b.js should be evaulated correctly
+});
 
-  (function() {
+it("should use WebpackMissingModule when evaluating missing modules", function() {
+  expect(function() {
     require("./intentionally-missing-module");
-  }).should.throw("Cannot find module \"./intentionally-missing-module\"");
+  }).toThrowError("Cannot find module './intentionally-missing-module'");
 });

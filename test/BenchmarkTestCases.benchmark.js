@@ -1,16 +1,14 @@
 "use strict";
 
-require("should");
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const asyncLib = require("neo-async");
-var Test = require("mocha/lib/test");
-
 const Benchmark = require("benchmark");
+const { remove } = require("./helpers/remove");
 
-describe("BenchmarkTestCases", function() {
+describe("BenchmarkTestCases", function () {
 	const casesPath = path.join(__dirname, "benchmarkCases");
-	const tests = fs.readdirSync(casesPath).filter(function(folder) {
+	const tests = fs.readdirSync(casesPath).filter(function (folder) {
 		return (
 			folder.indexOf("_") < 0 &&
 			fs.existsSync(path.resolve(casesPath, folder, "webpack.config.js"))
@@ -27,8 +25,7 @@ describe("BenchmarkTestCases", function() {
 		fs.mkdirSync(baselinesPath);
 	} catch (e) {} // eslint-disable-line no-empty
 
-	before(function(done) {
-		this.timeout(270000);
+	beforeAll(function (done) {
 		const git = require("simple-git");
 		const rootPath = path.join(__dirname, "..");
 		getBaselineRevs(rootPath, (err, baselineRevisions) => {
@@ -65,7 +62,11 @@ describe("BenchmarkTestCases", function() {
 											err => {
 												if (err) return callback(err);
 												fs.writeFileSync(gitIndex, index);
-												doLoadWebpack();
+												try {
+													doLoadWebpack();
+												} catch (err) {
+													callback(err);
+												}
 											}
 										);
 									}
@@ -75,10 +76,9 @@ describe("BenchmarkTestCases", function() {
 					}
 
 					function doLoadWebpack() {
-						const baselineWebpack = require(path.resolve(
-							baselinePath,
-							"lib/webpack.js"
-						));
+						const baselineWebpack = jest.requireActual(
+							path.resolve(baselinePath, "lib/index.js")
+						);
 						baselines.push({
 							name: baselineInfo.name,
 							rev: baselineRevision,
@@ -87,9 +87,20 @@ describe("BenchmarkTestCases", function() {
 						callback();
 					}
 				},
-				done
+				err => {
+					if (err) {
+						done(err);
+						return;
+					}
+					createTests();
+					done();
+				}
 			);
 		});
+	}, 270000);
+
+	afterAll(() => {
+		remove(baselinesPath);
 	});
 
 	function getBaselineRevs(rootPath, callback) {
@@ -160,51 +171,15 @@ describe("BenchmarkTestCases", function() {
 		if (n <= 30) {
 			//            1      2      ...
 			const data = [
-				6.314,
-				2.92,
-				2.353,
-				2.132,
-				2.015,
-				1.943,
-				1.895,
-				1.86,
-				1.833,
-				1.812,
-				1.796,
-				1.782,
-				1.771,
-				1.761,
-				1.753,
-				1.746,
-				1.74,
-				1.734,
-				1.729,
-				1.725,
-				1.721,
-				1.717,
-				1.714,
-				1.711,
-				1.708,
-				1.706,
-				1.703,
-				1.701,
-				1.699,
-				1.697
+				6.314, 2.92, 2.353, 2.132, 2.015, 1.943, 1.895, 1.86, 1.833, 1.812,
+				1.796, 1.782, 1.771, 1.761, 1.753, 1.746, 1.74, 1.734, 1.729, 1.725,
+				1.721, 1.717, 1.714, 1.711, 1.708, 1.706, 1.703, 1.701, 1.699, 1.697
 			];
 			return data[n - 1];
 		} else if (n <= 120) {
 			//            30     40     50     60     70     80     90     100    110    120
 			const data = [
-				1.697,
-				1.684,
-				1.676,
-				1.671,
-				1.667,
-				1.664,
-				1.662,
-				1.66,
-				1.659,
-				1.658
+				1.697, 1.684, 1.676, 1.671, 1.667, 1.664, 1.662, 1.66, 1.659, 1.658
 			];
 			var a = data[Math.floor(n / 10) - 3];
 			var b = data[Math.ceil(n / 10) - 3];
@@ -220,7 +195,7 @@ describe("BenchmarkTestCases", function() {
 		const warmupCompiler = webpack(config, (err, stats) => {
 			warmupCompiler.purgeInputFileSystem();
 			const bench = new Benchmark(
-				function(deferred) {
+				function (deferred) {
 					const compiler = webpack(config, (err, stats) => {
 						compiler.purgeInputFileSystem();
 						if (err) {
@@ -238,18 +213,18 @@ describe("BenchmarkTestCases", function() {
 					maxTime: 30,
 					defer: true,
 					initCount: 1,
-					onComplete: function() {
+					onComplete: function () {
 						const stats = bench.stats;
 						const n = stats.sample.length;
 						const nSqrt = Math.sqrt(n);
 						const z = tDistribution(n - 1);
-						stats.minConfidence = stats.mean - z * stats.deviation / nSqrt;
-						stats.maxConfidence = stats.mean + z * stats.deviation / nSqrt;
-						stats.text = `${Math.round(stats.mean * 1000)}ms ± ${Math.round(
+						stats.minConfidence = stats.mean - (z * stats.deviation) / nSqrt;
+						stats.maxConfidence = stats.mean + (z * stats.deviation) / nSqrt;
+						stats.text = `${Math.round(stats.mean * 1000)} ms ± ${Math.round(
 							stats.deviation * 1000
-						)}ms [${Math.round(stats.minConfidence * 1000)}ms; ${Math.round(
+						)} ms [${Math.round(stats.minConfidence * 1000)} ms; ${Math.round(
 							stats.maxConfidence * 1000
-						)}ms]`;
+						)} ms]`;
 						callback(null, bench.stats);
 					},
 					onError: callback
@@ -261,64 +236,82 @@ describe("BenchmarkTestCases", function() {
 		});
 	}
 
-	tests.forEach(testName => {
-		const testDirectory = path.join(casesPath, testName);
-		let headStats = null;
-		const suite = describe(testName, function() {});
-		it(`${testName} create benchmarks`, function() {
-			baselines.forEach(baseline => {
-				let baselineStats = null;
+	function createTests() {
+		tests.forEach(testName => {
+			const testDirectory = path.join(casesPath, testName);
+			let headStats = null;
+			describe(`${testName} create benchmarks`, function () {
+				baselines.forEach(baseline => {
+					let baselineStats = null;
+					it(`should benchmark ${baseline.name} (${baseline.rev})`, function (done) {
+						const outputDirectory = path.join(
+							__dirname,
+							"js",
+							"benchmark",
+							`baseline-${baseline.name}`,
+							testName
+						);
+						const config =
+							Object.create(
+								jest.requireActual(
+									path.join(testDirectory, "webpack.config.js")
+								)
+							) || {};
+						config.output = Object.create(config.output || {});
+						if (!config.context) config.context = testDirectory;
+						if (!config.output.path) config.output.path = outputDirectory;
+						runBenchmark(baseline.webpack, config, (err, stats) => {
+							if (err) return done(err);
+							process.stderr.write(`        ${baseline.name} ${stats.text}`);
+							if (baseline.name === "HEAD") headStats = stats;
+							else baselineStats = stats;
+							done();
+						});
+					}, 180000);
 
-				function it(title, fn) {
-					const test = new Test(title, fn);
-					suite.addTest(test);
-				}
-				it(`should benchmark ${baseline.name} (${baseline.rev})`, function(
-					done
-				) {
-					this.timeout(180000);
-					const outputDirectory = path.join(
-						__dirname,
-						"js",
-						"benchmark",
-						`baseline-${baseline.name}`,
-						testName
-					);
-					const config = Object.create(
-						require(path.join(testDirectory, "webpack.config.js"))
-					);
-					config.output = Object.create(config.output || {});
-					if (!config.context) config.context = testDirectory;
-					if (!config.output.path) config.output.path = outputDirectory;
-					runBenchmark(baseline.webpack, config, (err, stats) => {
-						if (err) return done(err);
-						console.log(`        ${baseline.name} ${stats.text}`);
-						if (baseline.name === "HEAD") headStats = stats;
-						else baselineStats = stats;
-						done();
-					});
+					it(`should benchmark ${baseline.name} (${baseline.rev})`, done => {
+						const outputDirectory = path.join(
+							__dirname,
+							"js",
+							"benchmark",
+							`baseline-${baseline.name}`,
+							testName
+						);
+						const config =
+							jest.requireActual(
+								path.join(testDirectory, "webpack.config.js")
+							) || {};
+						config.output = config.output || {};
+						if (!config.context) config.context = testDirectory;
+						if (!config.output.path) config.output.path = outputDirectory;
+						runBenchmark(baseline.webpack, config, (err, stats) => {
+							if (err) return done(err);
+							process.stderr.write(`        ${baseline.name} ${stats.text}`);
+							if (baseline.name === "HEAD") headStats = stats;
+							else baselineStats = stats;
+							done();
+						});
+					}, 180000);
+
+					if (baseline.name !== "HEAD") {
+						it(`HEAD should not be slower than ${baseline.name} (${baseline.rev})`, function () {
+							if (baselineStats.maxConfidence < headStats.minConfidence) {
+								throw new Error(
+									`HEAD (${headStats.text}) is slower than ${baseline.name} (${baselineStats.text}) (90% confidence)`
+								);
+							} else if (
+								baselineStats.minConfidence > headStats.maxConfidence
+							) {
+								console.log(
+									`======> HEAD is ${Math.round(
+										(baselineStats.mean / headStats.mean) * 100 - 100
+									)}% faster than ${baseline.name} (90% confidence)!`
+								);
+							}
+						});
+					}
 				});
-
-				if (baseline.name !== "HEAD") {
-					it(`HEAD should not be slower than ${baseline.name} (${
-						baseline.rev
-					})`, function() {
-						if (baselineStats.maxConfidence < headStats.minConfidence) {
-							throw new Error(
-								`HEAD (${headStats.text}) is slower than ${baseline.name} (${
-									baselineStats.text
-								}) (90% confidence)`
-							);
-						} else if (baselineStats.minConfidence > headStats.maxConfidence) {
-							console.log(
-								`======> HEAD is ${Math.round(
-									baselineStats.mean / headStats.mean * 100 - 100
-								)}% faster than ${baseline.name} (90% confidence)!`
-							);
-						}
-					});
-				}
 			});
 		});
-	});
+	}
 });

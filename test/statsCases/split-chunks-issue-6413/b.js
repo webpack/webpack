@@ -1,1 +1,1 @@
-import "./common";
+export { default } from "./common";

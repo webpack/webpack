@@ -1,0 +1,85 @@
+{
+  "UNUSEDKEY": "UNUSEDVALUE",
+  "nested": {
+    "UNUSEDKEY": "UNUSEDVALUE",
+    "key": "value",
+    "key2": "value2",
+    "array": [1, 2, 3],
+    "array2": [1, 2, 3],
+    "array3": ["UNUSEDVALUE", "ok", "UNUSEDVALUE"],
+    "array4": [
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "ok"
+    ],
+    "array5": [
+      "ok",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE"
+    ],
+    "array6": ["UNUSEDVALUE", "ok", "UNUSEDVALUE"],
+    "array7": [
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "ok"
+    ],
+    "array8": [
+      "ok",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE",
+      "UNUSEDVALUE"
+    ],
+    "object": {
+      "test": "TESTVALUE"
+    },
+    "object2": {},
+    "object3": {},
+    "number": 42
+  },
+  "nestedArray": [
+    "UNUSEDVALUE",
+    [
+      "UNUSEDVALUE",
+      {
+        "UNUSEDKEY": "UNUSEDVALUE",
+        "deep": {
+          "UNUSEDKEY": "UNUSEDVALUE",
+          "deep": "ok"
+        }
+      },
+      "UNUSEDVALUE"
+    ],
+    "UNUSEDVALUE"
+  ]
+}

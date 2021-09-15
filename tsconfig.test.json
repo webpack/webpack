@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "commonjs",
+    "lib": ["es2017", "dom"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": false,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "types": ["node", "jest"],
+    "esModuleInterop": true
+  },
+  "include": [
+    "test/**/webpack.config.js",
+    "test/cases/**/*loader*.js",
+    "test/watchCases/**/*loader*.js",
+    "test/configCases/**/*loader*.js",
+    "test/hotCases/**/*loader*.js",
+    "declarations.test.d.ts"
+  ]
+}

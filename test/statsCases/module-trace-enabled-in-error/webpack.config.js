@@ -1,8 +1,10 @@
+/** @type {import("../../../").Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./index",
 	stats: {
 		hash: false,
-		moduleTrace: true
+		moduleTrace: true,
+		errorDetails: false
 	}
 };

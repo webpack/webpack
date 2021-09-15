@@ -12,7 +12,7 @@
 **If the current behavior is a bug, please provide the steps to reproduce.**
 
 <!-- A great way to do this is to provide your configuration via a GitHub gist. -->
-<!-- Best provide a minimal reproduceable repo -->
+<!-- Best provide a minimal reproducible repo -->
 <!-- If your issue is caused by a plugin or loader file the issue on the plugin/loader repo -->
 
 **What is the expected behavior?**

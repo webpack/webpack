@@ -1,7 +1,9 @@
-var webpack = require("../../../../");
+/** @type {import("../../../../").Configuration} */
 module.exports = {
-	plugins: [
-		new webpack.NamedModulesPlugin(),
-		new webpack.optimize.ModuleConcatenationPlugin()
-	]
+	optimization: {
+		moduleIds: "named",
+		usedExports: true,
+		providedExports: true,
+		concatenateModules: true
+	}
 };

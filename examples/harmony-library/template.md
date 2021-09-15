@@ -1,13 +1,13 @@
 # webpack.config.js
 
-``` javascript
-{{webpack.config.js}}
+```javascript
+_{{webpack.config.js}}_
 ```
 
 # dist/MyLibrary.umd.js
 
-``` javascript
-{{dist/MyLibrary.umd.js}}
+```javascript
+_{{dist/MyLibrary.umd.js}}_
 ```
 
 # Info
@@ -15,11 +15,11 @@
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

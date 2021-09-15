@@ -1,6 +1,6 @@
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -16,7 +16,7 @@ module.exports = {
 
 # dist/MyLibrary.umd.js
 
-``` javascript
+```javascript
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -26,108 +26,77 @@ module.exports = {
 		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = factory();
-})(window, function() {
+})(self, function() {
+return /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/ 	
 ```
-<details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
+<details><summary><code>/* webpack runtime code */</code></summary>
 
 ``` js
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
 /******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "dist/";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
-/******/ })
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /************************************************************************/
 ```
 
 </details>
 
 ``` js
-/******/ ([
-/* 0 */
+var __webpack_exports__ = {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports provided: value, increment, default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
+/*! namespace exports */
+/*! export default [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
+/*! export increment [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
+/*! export value [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used in main (runtime-defined)] */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "value", function() { return value; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "increment", function() { return increment; });
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "value": () => (/* binding */ value),
+/* harmony export */   "increment": () => (/* binding */ increment),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 var value = 0;
 function increment() {
 	value++;
 }
-/* harmony default export */ __webpack_exports__["default"] = ("MyLibrary");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("MyLibrary");
 
-
-/***/ })
-/******/ ]);
+/******/ 	return __webpack_exports__;
+/******/ })()
+;
 });
 ```
 
@@ -136,29 +105,28 @@ function increment() {
 ## Unoptimized
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
-           Asset      Size  Chunks             Chunk Names
-MyLibrary.umd.js  3.56 KiB       0  [emitted]  main
-Entrypoint main = MyLibrary.umd.js
-chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
-    > ./example main
-    [0] ./example.js 97 bytes {0} [built]
-        [exports: value, increment, default]
-        single entry ./example  main
+asset MyLibrary.umd.js 2.89 KiB [emitted] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
+  > ./example main
+  runtime modules 670 bytes 3 modules
+  ./example.js 92 bytes [built] [code generated]
+    [exports: default, increment, value]
+    [used exports unknown]
+    entry ./example main
+    used as library export
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
-           Asset       Size  Chunks             Chunk Names
-MyLibrary.umd.js  926 bytes       0  [emitted]  main
-Entrypoint main = MyLibrary.umd.js
-chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
-    > ./example main
-    [0] ./example.js 97 bytes {0} [built]
-        [exports: value, increment, default]
-        single entry ./example  main
+asset MyLibrary.umd.js 688 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
+  > ./example main
+  runtime modules 670 bytes 3 modules
+  ./example.js 92 bytes [built] [code generated]
+    [exports: default, increment, value]
+    entry ./example main
+    used as library export
+webpack 5.51.1 compiled successfully
 ```

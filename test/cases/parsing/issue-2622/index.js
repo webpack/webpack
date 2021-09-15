@@ -9,8 +9,8 @@ var func2 = function(x = a, y = b) {
 }
 
 it("should import into default parameters", function() {
-	func().should.be.eql(["a", "b"]);
-	func2().should.be.eql(["a", "b"]);
-	func(1).should.be.eql([1, "b"]);
-	func2(2).should.be.eql([2, "b"]);
+	expect(func()).toEqual(["a", "b"]);
+	expect(func2()).toEqual(["a", "b"]);
+	expect(func(1)).toEqual([1, "b"]);
+	expect(func2(2)).toEqual([2, "b"]);
 });

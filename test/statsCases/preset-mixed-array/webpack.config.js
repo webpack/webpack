@@ -1,8 +1,12 @@
+/** @type {import("../../../").Configuration[]} */
 module.exports = [
 	{
 		name: "minimal",
 		mode: "production",
 		entry: "./index",
+		output: {
+			filename: "minimal.js"
+		},
 		stats: "minimal"
 	},
 
@@ -10,6 +14,9 @@ module.exports = [
 		name: "none",
 		mode: "production",
 		entry: "./index",
+		output: {
+			filename: "none.js"
+		},
 		stats: false
 	},
 
@@ -17,6 +24,9 @@ module.exports = [
 		name: "verbose",
 		mode: "production",
 		entry: "./index",
+		output: {
+			filename: "verbose.js"
+		},
 		stats: {
 			entrypoints: true,
 			hash: false,

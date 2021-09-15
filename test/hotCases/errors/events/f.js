@@ -1,5 +1,6 @@
 import g from "./g";
+export default g;
 
-if(module.hot) {
+if (module.hot) {
 	module.hot.decline("./g");
 }

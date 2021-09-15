@@ -4,8 +4,8 @@ import p from "pmodule";
 import n from "nmodule";
 
 it("should be able to override side effects", function() {
-	p.should.be.eql("def");
-	n.should.be.eql("def");
-	plog.should.be.eql(["a.js", "b.js", "c.js", "index.js"]);
-	nlog.should.be.eql(["index.js"]);
+	expect(p).toBe("def");
+	expect(n).toBe("def");
+	expect(plog).toEqual(["a.js", "b.js", "c.js", "index.js"]);
+	expect(nlog).toEqual(["index.js"]);
 });

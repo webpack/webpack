@@ -1,0 +1,4 @@
+{
+  "main": "index.js",
+  "sideEffects": false
+}

@@ -2,10 +2,10 @@ import importOne from './import-one';
 import importTwo from './import-two';
 
 it("should concatenate modules default exports and empty array values", function() {
-	importOne.length.should.be.eql(2);
-	(typeof importOne[0]).should.be.eql('undefined');
-	(typeof importOne[1]).should.be.eql('function');
-	importTwo.length.should.be.eql(2);
-	(typeof importTwo[0]).should.be.eql('undefined');
-	(typeof importTwo[1]).should.be.eql('function');
+	expect(importOne.length).toBe(2);
+	expect(typeof importOne[0]).toBe('undefined');
+	expect(typeof importOne[1]).toBe('function');
+	expect(importTwo.length).toBe(2);
+	expect(typeof importTwo[0]).toBe('undefined');
+	expect(typeof importTwo[1]).toBe('function');
 });

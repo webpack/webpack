@@ -1,20 +1,18 @@
 var path = require("path");
-var LibManifestPlugin = require("../../../../lib/LibManifestPlugin");
+var LibManifestPlugin = require("../../../../").LibManifestPlugin;
 
-module.exports = {
+/** @type {function(any, any): import("../../../../").Configuration} */
+module.exports = (env, { testPath }) => ({
 	entry: {
 		bundle0: ["./"]
 	},
 	plugins: [
 		new LibManifestPlugin({
-			path: path.resolve(
-				__dirname,
-				"../../../js/config/plugins/lib-manifest-plugin/[name]-manifest.json"
-			),
-			name: "[name]_[hash]"
+			path: path.resolve(testPath, "[name]-manifest.json"),
+			name: "[name]_[fullhash]"
 		})
 	],
 	node: {
 		__dirname: false
 	}
-};
+});

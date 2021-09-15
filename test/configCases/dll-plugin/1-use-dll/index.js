@@ -1,40 +1,46 @@
-var should = require("should");
 import d from "dll/d";
 import { x1, y2 } from "./e";
 import { x2, y1 } from "dll/e";
+import { B } from "dll/h";
 
 it("should load a module from dll", function() {
-	require("dll/a").should.be.eql("a");
+	expect(require("dll/a")).toBe("a");
 });
 
 it("should load a module of non-default type without extension from dll", function() {
-	require("dll/f").should.be.eql("f");
+	expect(require("dll/f")).toBe("f");
 });
 
 it("should load an async module from dll", function(done) {
-	require("dll/b")().then(function(c) {
-		c.should.be.eql({ default: "c" });
-		done();
-	}).catch(done);
+	require("dll/b")()
+		.then(function(c) {
+			expect(c).toEqual(nsObj({ default: "c" }));
+			done();
+		})
+		.catch(done);
 });
 
 it("should load an harmony module from dll (default export)", function() {
-	d.should.be.eql("d");
+	expect(d).toBe("d");
 });
 
 it("should load an harmony module from dll (star export)", function() {
-	x1.should.be.eql(123);
-	x2.should.be.eql(123);
-	y1.should.be.eql(456);
-	y2.should.be.eql(456);
+	expect(x1).toBe(123);
+	expect(x2).toBe(123);
+	expect(y1).toBe(456);
+	expect(y2).toBe(456);
 });
 
 it("should load a module with loader applied", function() {
-	require("dll/g.abc.js").should.be.eql("number");
+	expect(require("dll/g.abc.js")).toBe("number");
 });
 
 it("should give modules the correct ids", function() {
-	Object.keys(__webpack_modules__).filter(m => !m.startsWith("../..")).should.be.eql([
+	expect(
+		Object.keys(__webpack_modules__)
+			.filter(m => !m.startsWith("../.."))
+			.sort()
+	).toEqual([
 		"./index.js",
 		"dll-reference ../0-create-dll/dll.js",
 		"dll/a.js",
@@ -44,6 +50,11 @@ it("should give modules the correct ids", function() {
 		"dll/e1.js",
 		"dll/e2.js",
 		"dll/f.jsx",
-		"dll/g.abc.js"
-    ]);
+		"dll/g.abc.js",
+		"dll/h.js"
+	]);
+});
+
+it("should not crash on side-effect-free modules", function() {
+	expect(B).toBe("B");
 });

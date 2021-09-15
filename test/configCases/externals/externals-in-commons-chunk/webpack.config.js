@@ -1,10 +1,11 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	entry: {
 		main: "./index",
 		other: "./other"
 	},
 	externals: {
-		fs: "commonjs fs",
+		fs: "node-commonjs fs",
 		external: "1+2",
 		external2: "3+4",
 		external3: "5+6"

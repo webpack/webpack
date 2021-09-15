@@ -2,8 +2,8 @@ import { log } from "pmodule/tracker";
 import { a, x, z } from "pmodule";
 
 it("should evaluate all modules", function() {
-	a.should.be.eql("a");
-	x.should.be.eql("x");
-	z.should.be.eql("z");
-	log.should.be.eql(["a.js", "b.js", "c.js"]);
+	expect(a).toBe("a");
+	expect(x).toBe("x");
+	expect(z).toBe("z");
+	expect(log).toEqual(["a.js", "b.js", "c.js"]);
 });

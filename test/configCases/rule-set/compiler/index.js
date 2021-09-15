@@ -1,6 +1,6 @@
 it("should match rule with compiler name", function() {
 	var a = require("./a");
-	a.should.be.eql("loader matched");
+	expect(a).toBe("loader matched");
 	var b = require("./b");
-	b.should.be.eql("loader not matched");
+	expect(b).toBe("loader not matched");
 });

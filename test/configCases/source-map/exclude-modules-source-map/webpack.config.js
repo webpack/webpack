@@ -1,4 +1,5 @@
 var webpack = require("../../../../");
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	node: {
 		__dirname: false,

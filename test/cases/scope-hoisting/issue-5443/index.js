@@ -1,8 +1,8 @@
 import { module } from "./reexport";
 
 it("should have the correct values", function() {
-	module.should.be.eql({
+	expect(module).toEqual(nsObj({
 		default: "default",
 		named: "named"
-	});
+	}));
 });

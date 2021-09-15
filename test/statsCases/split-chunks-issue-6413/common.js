@@ -1,1 +1,3 @@
-import "x"
+export { default } from "x";
+
+console.log();

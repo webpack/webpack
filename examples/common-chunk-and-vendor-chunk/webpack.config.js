@@ -8,6 +8,7 @@ module.exports = {
 		pageC: "./pageC"
 	},
 	optimization: {
+		chunkIds: "named",
 		splitChunks: {
 			cacheGroups: {
 				commons: {

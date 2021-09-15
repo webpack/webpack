@@ -1,4 +1,10 @@
+/** @type {import("../../../../").Configuration} */
 module.exports = {
+	resolve: {
+		alias: {
+			"./wrong2": "./ok2"
+		}
+	},
 	module: {
 		rules: [
 			{
@@ -6,7 +12,23 @@ module.exports = {
 				resolve: {
 					alias: {
 						"./wrong": "./ok"
-					}
+					},
+					extensions: [".js", ".ok.js"]
+				}
+			},
+			{
+				test: require.resolve("./b"),
+				resolve: {
+					alias: {
+						"./wrong": "./ok"
+					},
+					extensions: ["...", ".ok.js"]
+				}
+			},
+			{
+				test: require.resolve("./b"),
+				resolve: {
+					extensions: [".yes.js", "..."]
 				}
 			}
 		]

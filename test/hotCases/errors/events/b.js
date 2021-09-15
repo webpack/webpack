@@ -1,5 +1,6 @@
-import c from "./c"
+import c from "./c";
+export default c;
 
-if(module.hot) {
+if (module.hot) {
 	module.hot.accept("./c");
 }

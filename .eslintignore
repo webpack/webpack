@@ -1,0 +1,27 @@
+# Ignore node_modules
+node_modules
+
+# Ignore some folders
+benchmark
+coverage
+
+# Ignore not supported files
+!.*.js
+.eslintrc.js
+*.d.ts
+
+# Ignore precompiled schemas
+schemas/**/*.check.js
+
+# Ignore some test files
+test/*
+!test/*Cases
+!test/helpers
+!test/*.js
+test/*Cases/**/*.js
+!test/*Cases/**/webpack.config.js
+
+# Ignore some examples files
+examples/**/*.js
+!examples/*/webpack.config.js
+

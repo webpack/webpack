@@ -1,29 +1,15 @@
 "use strict";
 
-const NamedChunksPlugin = require("../../../lib/NamedChunksPlugin");
-const RequestShortener = require("../../../lib/RequestShortener");
+const {
+	ids: { NamedChunkIdsPlugin }
+} = require("../../../");
 
+/** @type {import("../../../").Configuration} */
 module.exports = {
 	mode: "production",
+	optimization: { chunkIds: false },
 	entry: {
 		entry: "./entry"
 	},
-	plugins: [
-		new NamedChunksPlugin(function(chunk) {
-			if (chunk.name) {
-				return chunk.name;
-			}
-			const chunkModulesToName = chunk =>
-				Array.from(chunk.modulesIterable, mod => {
-					const rs = new RequestShortener(mod.context);
-					return rs.shorten(mod.request).replace(/[./\\]/g, "_");
-				}).join("-");
-
-			if (chunk.getNumberOfModules() > 0) {
-				return `chunk-containing-${chunkModulesToName(chunk)}`;
-			}
-
-			return null;
-		})
-	]
+	plugins: [new NamedChunkIdsPlugin()]
 };

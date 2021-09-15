@@ -1,4 +1,5 @@
-var DelegatedPlugin = require("../../../../lib/DelegatedPlugin");
+var DelegatedPlugin = require("../../../../").DelegatedPlugin;
+/** @type {import("../../../../").Configuration} */
 module.exports = {
 	plugins: [
 		new DelegatedPlugin({
