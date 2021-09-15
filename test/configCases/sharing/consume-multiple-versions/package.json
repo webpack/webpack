@@ -1,8 +1,8 @@
 {
   "dependencies": {
     "shared2": "1.2.3 3.2.1",
-    "shared3": "git+ssh://git@github.com:foor/bar.git#v1.0.0",
-    "shared4": "git+ssh://git@gitlab.com:foor/bar.git#semver:^1.0.0",
+    "shared3": "git+ssh://git@github.com:foo/bar.git#v1.0.0",
+    "shared4": "git+ssh://git@gitlab.com:foo/bar.git#semver:^1.0.0",
     "shared5": "foo/bar#v1.0.0",
     "shared6": "github:foo/bar#v1.0.0",
     "shared7": "git://user:password@github.com/foo/bar#v1.0.0",
@@ -15,7 +15,14 @@
     "shared14": "https://bitbucket.org/foo/bar/get/archive.tar.gz",
     "shared15": "git+ssh://:password@bitbucket.org:foo/bar.git#v1.1.1",
     "shared16": "https://gist.github.com/foo/feedbeef/raw/fix%2Fbug/",
-    "shared17": "git+ssh://git@other.com:foor/bar.git#v1.0.0"
+    "shared17": "git+ssh://git@other.com:foo/bar.git#v1.0.0",
+    "shared18": "github.com:foo/bar#v1.0.0",
+    "shared19": "https://github.com/foo/bar/tree/branch",
+    "shared20": "github:foo%0N/bar",
+    "shared21": "other:foo/bar",
+    "shared22": "https://foo/bar",
+    "shared23": "https://github.com//bar/tree/branch",
+    "shared24": "git+https://gitlab.com//bar"
   },
   "peerDependencies": {
     "shared": "^1.0.0"

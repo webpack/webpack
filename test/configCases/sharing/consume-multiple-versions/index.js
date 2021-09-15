@@ -111,6 +111,41 @@ it("should be able to consume different shared module version depending on conte
 			"1.0.0": {
 				get: () => () => "shared17@1.0.0"
 			}
+		},
+		shared18: {
+			"1.0.0": {
+				get: () => () => "shared18@1.0.0"
+			}
+		},
+		shared19: {
+			"1.0.0": {
+				get: () => () => "shared19@1.0.0"
+			}
+		},
+		shared20: {
+			"1.0.0": {
+				get: () => () => "shared20@1.0.0"
+			}
+		},
+		shared21: {
+			"1.0.0": {
+				get: () => () => "shared21@1.0.0"
+			}
+		},
+		shared22: {
+			"1.0.0": {
+				get: () => () => "shared22@1.0.0"
+			}
+		},
+		shared23: {
+			"1.0.0": {
+				get: () => () => "shared23@1.0.0"
+			}
+		},
+		shared24: {
+			"1.0.0": {
+				get: () => () => "shared24@1.0.0"
+			}
 		}
 	};
 	expect(require("shared")).toBe("shared@1.9.9");
@@ -141,4 +176,14 @@ it("should be able to consume different shared module version depending on conte
 	expect(require("shared15")).toBe("shared15@1.1.1");
 	expect(require("shared16")).toBe("shared16@1.0.0");
 	expect(require("shared17")).toBe("shared17@1.0.0");
+	expect(require("shared18")).toBe("shared18@1.0.0");
+	expect(require("shared19")).toBe("shared19@1.0.0");
+	expectWarning(
+		/No satisfying version \(\^branch\) of shared module shared19 found in shared scope default/
+	);
+	expect(require("shared20")).toBe("shared20@1.0.0");
+	expect(require("shared21")).toBe("shared21@1.0.0");
+	expect(require("shared22")).toBe("shared22@1.0.0");
+	expect(require("shared23")).toBe("shared23@1.0.0");
+	expect(require("shared24")).toBe("shared24@1.0.0");
 });

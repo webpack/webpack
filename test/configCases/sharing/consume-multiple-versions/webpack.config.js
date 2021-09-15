@@ -67,6 +67,27 @@ module.exports = {
 				shared17: {
 					import: false,
 					strictVersion: true
+				},
+				shared18: {
+					import: false
+				},
+				shared19: {
+					import: false
+				},
+				shared20: {
+					import: false
+				},
+				shared21: {
+					import: false
+				},
+				shared22: {
+					import: false
+				},
+				shared23: {
+					import: false
+				},
+				shared24: {
+					import: false
 				}
 			}
 		})
