@@ -11476,7 +11476,8 @@ declare interface VariableInfoInterface {
 }
 declare class WarnNonEsmSourceTypePlugin {
 	constructor(filter?: string | RegExp);
-	filter?: string | RegExp;
+	filterFunction?: (resource?: any) => any;
+	warn(module: NormalModule): void;
 	apply(compiler: Compiler): void;
 }
 type WarningFilterItemTypes =
