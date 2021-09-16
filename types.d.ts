@@ -80,6 +80,7 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
+import { ServerOptions as ServerOptionsImport } from "http";
 import { validate as validateFunction } from "schema-utils";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
 import { ValidationErrorConfiguration } from "schema-utils/declarations/validate";
@@ -95,6 +96,7 @@ import {
 	SyncHook,
 	SyncWaterfallHook
 } from "tapable";
+import { SecureContextOptions, TlsOptions } from "tls";
 
 declare class AbstractLibraryPlugin<T> {
 	constructor(__0: {
@@ -384,6 +386,22 @@ declare class AutomaticPrefetchPlugin {
 	apply(compiler: Compiler): void;
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
+declare interface BackendConfiguration {
+	/**
+	 * Options to be passed to the Node.js HTTP module.
+	 */
+	httpServerOptions: ServerOptionsImport;
+
+	/**
+	 * Options to be passed to the Node.js HTTPS module.
+	 */
+	httpsServerOptions: ServerOptionsHttps;
+
+	/**
+	 * Custom port for lazy compilation backend. If not defined, a random port will be used.
+	 */
+	port: null | number;
+}
 declare class BannerPlugin {
 	constructor(options: BannerPluginArgument);
 	options: BannerPluginOptions;
@@ -3308,6 +3326,10 @@ declare interface Experiments {
 							callback: (err?: Error, api?: any) => void
 					  ) => void)
 					| ((compiler: Compiler, client: string) => Promise<any>);
+				/**
+				 * Additional configuration to pass to the backend server.
+				 */
+				backendConfiguration?: BackendConfiguration;
 				/**
 				 * A custom client.
 				 */
@@ -10279,6 +10301,9 @@ declare abstract class Serializer {
 	serialize(obj?: any, context?: any): any;
 	deserialize(value?: any, context?: any): any;
 }
+type ServerOptionsHttps = SecureContextOptions &
+	TlsOptions &
+	ServerOptionsImport;
 declare class SharePlugin {
 	constructor(options: SharePluginOptions);
 

@@ -1134,6 +1134,10 @@ export interface Experiments {
 							client: string
 					  ) => Promise<any>);
 				/**
+				 * Additional configuration to pass to the backend server.
+				 */
+				backendConfiguration?: import("../lib/hmr/lazyCompilationBackend").BackendConfiguration;
+				/**
 				 * A custom client.
 				 */
 				client?: string;

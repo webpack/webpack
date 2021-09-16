@@ -722,6 +722,10 @@
                   "instanceof": "Function",
                   "tsType": "(((compiler: import('../lib/Compiler'), client: string, callback: (err?: Error, api?: any) => void) => void) | ((compiler: import('../lib/Compiler'), client: string) => Promise<any>))"
                 },
+                "backendConfiguration": {
+                  "description": "Additional configuration to pass to the backend server.",
+                  "tsType": "import('../lib/hmr/lazyCompilationBackend').BackendConfiguration"
+                },
                 "client": {
                   "description": "A custom client.",
                   "type": "string"
