@@ -9783,6 +9783,7 @@ declare class RuntimeChunkPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type RuntimeCondition = undefined | string | boolean | SortableSet<string>;
 declare class RuntimeModule extends Module {
 	constructor(name: string, stage?: number);
 	name: string;
@@ -9829,7 +9830,8 @@ declare interface RuntimeRequirementsContext {
 	codeGenerationResults: CodeGenerationResults;
 }
 type RuntimeSpec = undefined | string | SortableSet<string>;
-declare abstract class RuntimeSpecMap<T> {
+declare class RuntimeSpecMap<T> {
+	constructor(clone?: RuntimeSpecMap<T>);
 	get(runtime: RuntimeSpec): T;
 	has(runtime: RuntimeSpec): boolean;
 	set(runtime?: any, value?: any): void;
@@ -9840,7 +9842,8 @@ declare abstract class RuntimeSpecMap<T> {
 	values(): IterableIterator<T>;
 	readonly size?: number;
 }
-declare abstract class RuntimeSpecSet {
+declare class RuntimeSpecSet {
+	constructor(iterable?: any);
 	add(runtime?: any): void;
 	has(runtime?: any): boolean;
 	[Symbol.iterator](): IterableIterator<RuntimeSpec>;
@@ -11299,6 +11302,10 @@ declare interface TimestampAndHash {
 	timestamp?: number;
 	hash: string;
 }
+declare class TopLevelSymbol {
+	constructor(name: string);
+	name: string;
+}
 
 /**
  * Use a Trusted Types policy to create urls for chunks.
@@ -12142,6 +12149,52 @@ declare namespace exports {
 		};
 	}
 	export namespace optimize {
+		export namespace InnerGraph {
+			export let bailout: (parserState: ParserState) => void;
+			export let enable: (parserState: ParserState) => void;
+			export let isEnabled: (parserState: ParserState) => boolean;
+			export let addUsage: (
+				state: ParserState,
+				symbol: null | TopLevelSymbol,
+				usage: string | true | TopLevelSymbol
+			) => void;
+			export let addVariableUsage: (
+				parser: JavascriptParser,
+				name: string,
+				usage: string | true | TopLevelSymbol
+			) => void;
+			export let inferDependencyUsage: (state: ParserState) => void;
+			export let onUsage: (
+				state: ParserState,
+				onUsageCallback: (arg0?: boolean | Set<string>) => void
+			) => void;
+			export let setTopLevelSymbol: (
+				state: ParserState,
+				symbol: TopLevelSymbol
+			) => void;
+			export let getTopLevelSymbol: (
+				state: ParserState
+			) => void | TopLevelSymbol;
+			export let tagTopLevelSymbol: (
+				parser: JavascriptParser,
+				name: string
+			) => TopLevelSymbol;
+			export let isDependencyUsedByExports: (
+				dependency: Dependency,
+				usedByExports: boolean | Set<string>,
+				moduleGraph: ModuleGraph,
+				runtime: RuntimeSpec
+			) => boolean;
+			export let getDependencyUsedByExportsCondition: (
+				dependency: Dependency,
+				usedByExports: boolean | Set<string>,
+				moduleGraph: ModuleGraph
+			) =>
+				| null
+				| false
+				| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState);
+			export { TopLevelSymbol, topLevelSymbolTag };
+		}
 		export {
 			AggressiveMergingPlugin,
 			AggressiveSplittingPlugin,
@@ -12266,6 +12319,59 @@ declare namespace exports {
 				a: DependencyLocation,
 				b: DependencyLocation
 			) => 0 | 1 | -1;
+		}
+		export namespace runtime {
+			export let getEntryRuntime: (
+				compilation: Compilation,
+				name: string,
+				options?: EntryOptions
+			) => RuntimeSpec;
+			export let forEachRuntime: (
+				runtime: RuntimeSpec,
+				fn: (arg0: string) => void,
+				deterministicOrder?: boolean
+			) => void;
+			export let getRuntimeKey: (runtime: RuntimeSpec) => string;
+			export let keyToRuntime: (key: string) => RuntimeSpec;
+			export let runtimeToString: (runtime: RuntimeSpec) => string;
+			export let runtimeConditionToString: (
+				runtimeCondition: RuntimeCondition
+			) => string;
+			export let runtimeEqual: (a: RuntimeSpec, b: RuntimeSpec) => boolean;
+			export let compareRuntime: (a: RuntimeSpec, b: RuntimeSpec) => 0 | 1 | -1;
+			export let mergeRuntime: (a: RuntimeSpec, b: RuntimeSpec) => RuntimeSpec;
+			export let mergeRuntimeCondition: (
+				a: RuntimeCondition,
+				b: RuntimeCondition,
+				runtime: RuntimeSpec
+			) => RuntimeCondition;
+			export let mergeRuntimeConditionNonFalse: (
+				a: undefined | string | true | SortableSet<string>,
+				b: undefined | string | true | SortableSet<string>,
+				runtime: RuntimeSpec
+			) => undefined | string | true | SortableSet<string>;
+			export let mergeRuntimeOwned: (
+				a: RuntimeSpec,
+				b: RuntimeSpec
+			) => RuntimeSpec;
+			export let intersectRuntime: (
+				a: RuntimeSpec,
+				b: RuntimeSpec
+			) => RuntimeSpec;
+			export let subtractRuntime: (
+				a: RuntimeSpec,
+				b: RuntimeSpec
+			) => RuntimeSpec;
+			export let subtractRuntimeCondition: (
+				a: RuntimeCondition,
+				b: RuntimeCondition,
+				runtime: RuntimeSpec
+			) => RuntimeCondition;
+			export let filterRuntime: (
+				runtime: RuntimeSpec,
+				filter: (arg0: RuntimeSpec) => boolean
+			) => undefined | string | boolean | SortableSet<string>;
+			export { RuntimeSpecMap, RuntimeSpecSet };
 		}
 		export namespace serialization {
 			export const register: (
@@ -12409,5 +12515,6 @@ declare namespace exports {
 		LoaderContext
 	};
 }
+declare const topLevelSymbolTag: unique symbol;
 
 export = exports;
