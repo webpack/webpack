@@ -531,8 +531,8 @@ declare abstract class BasicEvaluatedExpression {
 		kind?: any
 	): BasicEvaluatedExpression;
 	templateStringKind: any;
-	setTruthy(state: boolean): BasicEvaluatedExpression;
-	setFalsy(state: boolean): BasicEvaluatedExpression;
+	setTruthy(): BasicEvaluatedExpression;
+	setFalsy(): BasicEvaluatedExpression;
 	setNullish(value?: any): BasicEvaluatedExpression;
 	setRange(range?: any): BasicEvaluatedExpression;
 	setSideEffects(sideEffects?: boolean): BasicEvaluatedExpression;
