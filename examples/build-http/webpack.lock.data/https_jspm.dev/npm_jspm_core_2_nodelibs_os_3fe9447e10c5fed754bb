@@ -1,0 +1,3 @@
+import "/npm:@jspm/core@2.0.0-beta.11/nodelibs/process";
+export * from "/npm:@jspm/core@2.0.0-beta.11/nodelibs/os";
+export { default } from "/npm:@jspm/core@2.0.0-beta.11/nodelibs/os";
