@@ -1886,19 +1886,22 @@ Object {
 		},
 		e =>
 			e.toMatchInlineSnapshot(`
-			- Expected
-			+ Received
+- Expected
++ Received
 
-			@@ ... @@
-			-     "futureDefaults": false,
-			+     "futureDefaults": true,
-			@@ ... @@
-			-     "__dirname": "mock",
-			-     "__filename": "mock",
-			-     "global": true,
-			+     "__dirname": "warn-mock",
-			+     "__filename": "warn-mock",
-			+     "global": "warn",
-		`)
+@@ ... @@
+-     "futureDefaults": false,
++     "futureDefaults": true,
+@@ ... @@
+-     "__dirname": "mock",
+-     "__filename": "mock",
+-     "global": true,
++     "__dirname": "warn-mock",
++     "__filename": "warn-mock",
++     "global": "warn",
+@@ ... @@
+-     "hashFunction": "md4",
++     "hashFunction": "xxhash64",
+`)
 	);
 });
