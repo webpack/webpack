@@ -46,7 +46,7 @@ module.exports = [
 # dist/vendor.js
 
 ```javascript
-var vendor_7d1747242b2946e98b24;vendor_7d1747242b2946e98b24 =
+var vendor_5993716ff0c3ad2aef3c;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -97,8 +97,9 @@ module.exports = "Vendor2";
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -120,10 +121,13 @@ module.exports = "Vendor2";
 </details>
 
 ``` js
-/******/ 	// module exports must be returned from runtime so entry inlining is disabled
+/******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	vendor_5993716ff0c3ad2aef3c = __webpack_exports__;
+/******/ 	
 /******/ })()
 ;
 ```
@@ -148,18 +152,18 @@ module.exports = "pageA";
 /***/ }),
 /* 1 */
 /*!****************************************************************************!*\
-  !*** delegated ./vendor.js from dll-reference vendor_7d1747242b2946e98b24 ***!
+  !*** delegated ./vendor.js from dll-reference vendor_5993716ff0c3ad2aef3c ***!
   \****************************************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_7d1747242b2946e98b24 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_5993716ff0c3ad2aef3c */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**********************************************!*\
-  !*** external "vendor_7d1747242b2946e98b24" ***!
+  !*** external "vendor_5993716ff0c3ad2aef3c" ***!
   \**********************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -167,7 +171,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_7d1747242b2946e98
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_7d1747242b2946e98b24;
+module.exports = vendor_5993716ff0c3ad2aef3c;
 
 /***/ })
 /******/ 	]);
@@ -183,8 +187,9 @@ module.exports = vendor_7d1747242b2946e98b24;
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -206,10 +211,12 @@ module.exports = vendor_7d1747242b2946e98b24;
 </details>
 
 ``` js
+/******/ 	
 /******/ 	// startup
-/******/ 	// Load entry module
+/******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	__webpack_require__(0);
+/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	
 /******/ })()
 ;
 ```
@@ -220,7 +227,7 @@ module.exports = vendor_7d1747242b2946e98b24;
 
 ```
 vendor:
-  asset vendor.js 2.16 KiB [emitted] (name: main)
+  asset vendor.js 2.28 KiB [emitted] (name: main)
   chunk (runtime: main) vendor.js (main) 65 bytes [entry] [rendered]
     > main
     dependent modules 53 bytes [dependent] 2 modules
@@ -228,12 +235,12 @@ vendor:
       [used exports unknown]
       dll entry
       used as library export
-  vendor (webpack 5.11.1) compiled successfully
+  vendor (webpack 5.51.1) compiled successfully
 
 app:
-  asset pageB.js 2.53 KiB [emitted] (name: pageB)
-  asset pageA.js 2.51 KiB [emitted] (name: pageA)
-  asset pageC.js 1.51 KiB [emitted] (name: pageC)
+  asset pageB.js 2.63 KiB [emitted] (name: pageB)
+  asset pageA.js 2.61 KiB [emitted] (name: pageA)
+  asset pageC.js 1.61 KiB [emitted] (name: pageC)
   chunk (runtime: pageA) pageA.js (pageA) 143 bytes [entry] [rendered]
     > ./pageA pageA
     dependent modules 84 bytes [dependent] 2 modules
@@ -254,26 +261,26 @@ app:
       [used exports unknown]
       cjs self exports reference ./pageC.js 1:0-14
       entry ./pageC pageC
-  app (webpack 5.11.1) compiled successfully
+  app (webpack 5.51.1) compiled successfully
 ```
 
 ## Production mode
 
 ```
 vendor:
-  asset vendor.js 283 bytes [emitted] [minimized] (name: main)
+  asset vendor.js 294 bytes [emitted] [minimized] (name: main)
   chunk (runtime: main) vendor.js (main) 65 bytes [entry] [rendered]
     > main
     dependent modules 53 bytes [dependent] 2 modules
     dll main 12 bytes [built] [code generated]
       dll entry
       used as library export
-  vendor (webpack 5.11.1) compiled successfully
+  vendor (webpack 5.51.1) compiled successfully
 
 app:
-  asset pageA.js 283 bytes [emitted] [minimized] (name: pageA)
-  asset pageB.js 283 bytes [emitted] [minimized] (name: pageB)
-  asset pageC.js 160 bytes [emitted] [minimized] (name: pageC)
+  asset pageA.js 297 bytes [emitted] [minimized] (name: pageA)
+  asset pageB.js 297 bytes [emitted] [minimized] (name: pageB)
+  asset pageC.js 174 bytes [emitted] [minimized] (name: pageC)
   chunk (runtime: pageB) pageB.js (pageB) 144 bytes [entry] [rendered]
     > ./pageB pageB
     dependent modules 84 bytes [dependent] 2 modules
@@ -294,5 +301,5 @@ app:
       [used exports unknown]
       cjs self exports reference ./pageA.js 2:0-14
       entry ./pageA pageA
-  app (webpack 5.11.1) compiled successfully
+  app (webpack 5.51.1) compiled successfully
 ```

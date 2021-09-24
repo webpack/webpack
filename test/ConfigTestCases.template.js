@@ -1,12 +1,12 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
-const { URL } = require("url");
+const { URL, pathToFileURL, fileURLToPath } = require("url");
 const rimraf = require("rimraf");
-const webpack = require("..");
-const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
@@ -16,6 +16,7 @@ const CurrentScript = require("./helpers/CurrentScript");
 const prepareOptions = require("./helpers/prepareOptions");
 const { parseResource } = require("../lib/util/identifier");
 const captureStdio = require("./helpers/captureStdio");
+const asModule = require("./helpers/asModule");
 
 const casesPath = path.join(__dirname, "configCases");
 const categories = fs.readdirSync(casesPath).map(cat => {
@@ -72,7 +73,7 @@ const describeCases = config => {
 									options.optimization.minimize = false;
 								if (options.optimization.minimizer === undefined) {
 									options.optimization.minimizer = [
-										new TerserPlugin({
+										new (require("terser-webpack-plugin"))({
 											parallel: false
 										})
 									];
@@ -84,7 +85,12 @@ const describeCases = config => {
 								if (typeof options.output.pathinfo === "undefined")
 									options.output.pathinfo = true;
 								if (!options.output.filename)
-									options.output.filename = "bundle" + idx + ".js";
+									options.output.filename =
+										"bundle" +
+										idx +
+										(options.experiments && options.experiments.outputModule
+											? ".mjs"
+											: ".js");
 								if (config.cache) {
 									options.cache = {
 										cacheDirectory,
@@ -124,6 +130,12 @@ const describeCases = config => {
 							}
 							if (testConfig.timeout) setDefaultTimeout(testConfig.timeout);
 						});
+						afterAll(() => {
+							// cleanup
+							options = undefined;
+							optionsArr = undefined;
+							testConfig = undefined;
+						});
 						beforeAll(() => {
 							rimraf.sync(cacheDirectory);
 						});
@@ -156,8 +168,17 @@ const describeCases = config => {
 								rimraf.sync(outputDirectory);
 								fs.mkdirSync(outputDirectory, { recursive: true });
 								const deprecationTracker = deprecationTracking.start();
-								webpack(options, err => {
+								require("..")(options, err => {
 									deprecationTracker();
+									const infrastructureLogging = stderr.toString();
+									if (infrastructureLogging) {
+										return done(
+											new Error(
+												"Errors/Warnings during build:\n" +
+													infrastructureLogging
+											)
+										);
+									}
 									if (err) return handleFatalError(err, done);
 									done();
 								});
@@ -166,7 +187,7 @@ const describeCases = config => {
 								rimraf.sync(outputDirectory);
 								fs.mkdirSync(outputDirectory, { recursive: true });
 								const deprecationTracker = deprecationTracking.start();
-								webpack(options, (err, stats) => {
+								require("..")(options, (err, stats) => {
 									deprecationTracker();
 									if (err) return handleFatalError(err, done);
 									const { modules, children, errorsCount } = stats.toJson({
@@ -175,6 +196,15 @@ const describeCases = config => {
 										errorsCount: true
 									});
 									if (errorsCount === 0) {
+										const infrastructureLogging = stderr.toString();
+										if (infrastructureLogging) {
+											return done(
+												new Error(
+													"Errors/Warnings during build:\n" +
+														infrastructureLogging
+												)
+											);
+										}
 										const allModules = children
 											? children.reduce(
 													(all, { modules }) => all.concat(modules),
@@ -199,13 +229,13 @@ const describeCases = config => {
 									}
 									done();
 								});
-							}, 20000);
+							}, 40000);
 						}
 						it(`${testName} should compile`, done => {
 							rimraf.sync(outputDirectory);
 							fs.mkdirSync(outputDirectory, { recursive: true });
 							const deprecationTracker = deprecationTracking.start();
-							webpack(options, (err, stats) => {
+							const onCompiled = (err, stats) => {
 								const deprecations = deprecationTracker();
 								if (err) return handleFatalError(err, done);
 								const statOptions = {
@@ -250,7 +280,7 @@ const describeCases = config => {
 								}
 								const infrastructureLogging = stderr.toString();
 								if (infrastructureLogging) {
-									done(
+									return done(
 										new Error(
 											"Errors/Warnings during build:\n" + infrastructureLogging
 										)
@@ -295,7 +325,18 @@ const describeCases = config => {
 
 										const requireCache = Object.create(null);
 										// eslint-disable-next-line no-loop-func
-										const _require = (currentDirectory, options, module) => {
+										const _require = (
+											currentDirectory,
+											options,
+											module,
+											esmMode,
+											parentModule
+										) => {
+											if (testConfig === undefined) {
+												throw new Error(
+													`_require(${module}) called after all tests have completed`
+												);
+											}
 											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 												let content;
 												let p;
@@ -339,35 +380,13 @@ const describeCases = config => {
 												};
 												requireCache[p] = m;
 												let runInNewContext = false;
-												let oldCurrentScript = document.currentScript;
-												document.currentScript = new CurrentScript(subPath);
 
 												const moduleScope = {
-													require: _require.bind(
-														null,
-														path.dirname(p),
-														options
-													),
-													importScripts: url => {
-														expect(url).toMatch(
-															/^https:\/\/test\.cases\/path\//
-														);
-														_require(
-															outputDirectory,
-															options,
-															`.${url.slice("https://test.cases/path".length)}`
-														);
-													},
-													module: m,
-													exports: m.exports,
-													__dirname: path.dirname(p),
-													__filename: p,
 													it: _it,
 													beforeEach: _beforeEach,
 													afterEach: _afterEach,
 													expect,
 													jest,
-													_globalAssign: { expect },
 													__STATS__: jsonStats,
 													nsObj: m => {
 														Object.defineProperty(m, Symbol.toStringTag, {
@@ -376,6 +395,36 @@ const describeCases = config => {
 														return m;
 													}
 												};
+												const isModule =
+													p.endsWith(".mjs") &&
+													options.experiments &&
+													options.experiments.outputModule;
+												if (!isModule) {
+													Object.assign(moduleScope, {
+														require: _require.bind(
+															null,
+															path.dirname(p),
+															options
+														),
+														importScripts: url => {
+															expect(url).toMatch(
+																/^https:\/\/test\.cases\/path\//
+															);
+															_require(
+																outputDirectory,
+																options,
+																`.${url.slice(
+																	"https://test.cases/path".length
+																)}`
+															);
+														},
+														module: m,
+														exports: m.exports,
+														__dirname: path.dirname(p),
+														__filename: p,
+														_globalAssign: { expect }
+													});
+												}
 												if (
 													options.target === "web" ||
 													options.target === "webworker"
@@ -392,33 +441,110 @@ const describeCases = config => {
 												if (testConfig.moduleScope) {
 													testConfig.moduleScope(moduleScope);
 												}
-												const args = Object.keys(moduleScope);
-												const argValues = args.map(arg => moduleScope[arg]);
-												if (!runInNewContext)
-													content = `Object.assign(global, _globalAssign); ${content}`;
-												const code = `(function(${args.join(
-													", "
-												)}) {${content}\n})`;
-												const fn = runInNewContext
-													? vm.runInNewContext(code, globalContext, p)
-													: vm.runInThisContext(code, p);
-												fn.call(m.exports, ...argValues);
+												if (isModule) {
+													if (!vm.SourceTextModule)
+														throw new Error(
+															"Running this test requires '--experimental-vm-modules'.\nRun with 'node --experimental-vm-modules node_modules/jest-cli/bin/jest'."
+														);
+													const esm = new vm.SourceTextModule(content, {
+														identifier: p,
+														url: pathToFileURL(p).href,
+														context:
+															(parentModule && parentModule.context) ||
+															vm.createContext(moduleScope, {
+																name: `context for ${p}`
+															}),
+														initializeImportMeta: (meta, module) => {
+															meta.url = pathToFileURL(p).href;
+														},
+														importModuleDynamically: async (
+															specifier,
+															module
+														) => {
+															const result = await _require(
+																path.dirname(p),
+																options,
+																specifier,
+																"evaluated",
+																module
+															);
+															return await asModule(result, module.context);
+														}
+													});
+													if (esmMode === "unlinked") return esm;
+													return (async () => {
+														await esm.link(
+															async (specifier, referencingModule) => {
+																return await asModule(
+																	await _require(
+																		path.dirname(
+																			referencingModule.identifier ||
+																				fileURLToPath(referencingModule.url)
+																		),
+																		options,
+																		specifier,
+																		"unlinked",
+																		referencingModule
+																	),
+																	referencingModule.context,
+																	true
+																);
+															}
+														);
+														// node.js 10 needs instantiate
+														if (esm.instantiate) esm.instantiate();
+														await esm.evaluate();
+														if (esmMode === "evaluated") return esm;
+														const ns = esm.namespace;
+														return ns.default && ns.default instanceof Promise
+															? ns.default
+															: ns;
+													})();
+												} else {
+													if (!runInNewContext)
+														content = `Object.assign(global, _globalAssign); ${content}`;
+													const args = Object.keys(moduleScope);
+													const argValues = args.map(arg => moduleScope[arg]);
+													const code = `(function(${args.join(
+														", "
+													)}) {${content}\n})`;
 
-												//restore state
-												document.currentScript = oldCurrentScript;
-
+													let oldCurrentScript = document.currentScript;
+													document.currentScript = new CurrentScript(subPath);
+													const fn = runInNewContext
+														? vm.runInNewContext(code, globalContext, p)
+														: vm.runInThisContext(code, p);
+													fn.call(m.exports, ...argValues);
+													document.currentScript = oldCurrentScript;
+												}
 												return m.exports;
 											} else if (
 												testConfig.modules &&
 												module in testConfig.modules
 											) {
 												return testConfig.modules[module];
-											} else return require(module);
+											} else {
+												return require(module.startsWith("node:")
+													? module.slice(5)
+													: module);
+											}
 										};
 
-										results.push(
-											_require(outputDirectory, optionsArr[i], bundlePath)
-										);
+										if (Array.isArray(bundlePath)) {
+											for (const bundlePathItem of bundlePath) {
+												results.push(
+													_require(
+														outputDirectory,
+														optionsArr[i],
+														"./" + bundlePathItem
+													)
+												);
+											}
+										} else {
+											results.push(
+												_require(outputDirectory, optionsArr[i], bundlePath)
+											);
+										}
 									}
 								}
 								// give a free pass to compilation that generated an error
@@ -435,14 +561,35 @@ const describeCases = config => {
 								Promise.all(results)
 									.then(() => {
 										if (testConfig.afterExecute) testConfig.afterExecute();
+										for (const key of Object.keys(global)) {
+											if (key.includes("webpack")) delete global[key];
+										}
 										if (getNumberOfTests() < filesCount) {
 											return done(new Error("No tests exported by test case"));
 										}
 										done();
 									})
 									.catch(done);
-							});
-						});
+							};
+							if (config.cache) {
+								try {
+									const compiler = require("..")(options);
+									compiler.run(err => {
+										if (err) return handleFatalError(err, done);
+										compiler.run((error, stats) => {
+											compiler.close(err => {
+												if (err) return handleFatalError(err, done);
+												onCompiled(error, stats);
+											});
+										});
+									});
+								} catch (e) {
+									handleFatalError(e, done);
+								}
+							} else {
+								require("..")(options, onCompiled);
+							}
+						}, 30000);
 
 						const {
 							it: _it,
@@ -450,7 +597,7 @@ const describeCases = config => {
 							afterEach: _afterEach,
 							setDefaultTimeout,
 							getNumberOfTests
-						} = createLazyTestEnv(jasmine.getEnv(), 10000);
+						} = createLazyTestEnv(10000);
 					});
 				}
 			});

@@ -372,21 +372,11 @@ declare module "browserslist" {
 }
 
 // TODO remove that when @types/estree is updated
-declare type PrivateIdentifierNode = {
-	type: "PrivateIdentifier";
-	name: string;
-	loc?: import("estree").SourceLocation | null;
-	range?: [number, number];
-};
-declare type PropertyDefinitionNode = {
-	type: "PropertyDefinition";
-	key: import("estree").Expression | PrivateIdentifierNode;
-	value: import("estree").Expression | null;
-	computed: boolean;
-	static: boolean;
-	loc?: import("estree").SourceLocation | null;
-	range?: [number, number];
-};
+interface ImportAttributeNode {
+	type: "ImportAttribute";
+	key: import("estree").Identifier | import("estree").Literal;
+	value: import("estree").Literal;
+}
 
 type TODO = any;
 

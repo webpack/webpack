@@ -5,7 +5,7 @@ import "external4";
  * Also that when System provides the external variables to webpack that the variables get plumbed
  * through correctly and are usable by the webpack bundle.
  */
-it("should get an external from System", function() {
+it("should get an external from System", function () {
 	const external1 = require("external1");
 	expect(external1.default).toBe("the external1 value");
 
@@ -14,4 +14,8 @@ it("should get an external from System", function() {
 
 	expect(external3Default).toBe("the external3 default export");
 	expect(namedThing).toBe("the external3 named export");
+
+	const external5 = require("./reexport-external.js");
+	expect(external5.default).toBe("the external5 default export");
+	expect(external5.namedThing).toBe("the external5 named export");
 });

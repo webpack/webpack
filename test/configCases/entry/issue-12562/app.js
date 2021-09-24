@@ -1,1 +1,1 @@
-import("./test.js");
+it("should load", () => import("./test.js"));

@@ -12,6 +12,18 @@
         }
       ]
     },
+    "EntryRuntime": {
+      "description": "The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.",
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
     "Exposes": {
       "description": "Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.",
       "anyOf": [
@@ -108,7 +120,8 @@
         "system",
         "promise",
         "import",
-        "script"
+        "script",
+        "node-commonjs"
       ]
     },
     "LibraryCustomUmdCommentObject": {
@@ -482,6 +495,9 @@
     },
     "remotes": {
       "$ref": "#/definitions/Remotes"
+    },
+    "runtime": {
+      "$ref": "#/definitions/EntryRuntime"
     },
     "shareScope": {
       "description": "Share scope name used for all shared modules (defaults to 'default').",

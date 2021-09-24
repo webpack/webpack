@@ -1,10 +1,12 @@
 "use strict";
 
-const webpack = require("..");
+require("./helpers/warmup-webpack");
+
 const { createFsFromVolume, Volume } = require("memfs");
 
 const compile = options => {
 	return new Promise((resolve, reject) => {
+		const webpack = require("..");
 		const compiler = webpack(options);
 		compiler.outputFileSystem = createFsFromVolume(new Volume());
 		compiler.run((err, stats) => {
@@ -173,10 +175,10 @@ describe("Stats", () => {
 			      "assets": Array [
 			        Object {
 			          "name": "entryB.js",
-			          "size": 2938,
+			          "size": 2964,
 			        },
 			      ],
-			      "assetsSize": 2938,
+			      "assetsSize": 2964,
 			      "auxiliaryAssets": undefined,
 			      "auxiliaryAssetsSize": 0,
 			      "childAssets": undefined,
@@ -221,10 +223,10 @@ describe("Stats", () => {
 			      "info": Object {
 			        "javascriptModule": false,
 			        "minimized": true,
-			        "size": 2938,
+			        "size": 2964,
 			      },
 			      "name": "entryB.js",
-			      "size": 2938,
+			      "size": 2964,
 			      "type": "asset",
 			    },
 			    Object {

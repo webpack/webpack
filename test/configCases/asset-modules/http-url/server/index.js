@@ -1,31 +1,44 @@
 const http = require("http");
 const fs = require("fs");
+const path = require("path");
 
 /**
- * @param {number} port port
- * @returns {Promise<import("http").Server>} server instance
+ * @returns {import("http").Server} server instance
  */
-function createServer(port) {
-	const file = fs.readFileSync("./test/configCases/asset-modules/http-url/server/index.css").toString().trim();
-
+function createServer() {
 	const server = http.createServer((req, res) => {
-		if (req.url !== "/index.css") {
+		let file;
+		const pathname = "." + req.url.replace(/\?.*$/, "");
+		if (req.url.endsWith("?no-cache")) {
+			res.setHeader("Cache-Control", "no-cache, max-age=60");
+		} else {
+			res.setHeader("Cache-Control", "public, immutable, max-age=600");
+		}
+		try {
+			file = fs
+				.readFileSync(path.resolve(__dirname, pathname))
+				.toString()
+				.replace(/\r\n?/g, "\n")
+				.trim();
+		} catch (e) {
+			if (fs.existsSync(path.resolve(__dirname, pathname + ".js"))) {
+				res.statusCode = 301;
+				res.setHeader("Location", pathname.slice(1) + ".js");
+				res.end();
+				return;
+			}
 			res.statusCode = 404;
 			res.end();
-		} else {
-			res.end(file);
+			return;
 		}
+		res.setHeader(
+			"Content-Type",
+			pathname.endsWith(".js") ? "text/javascript" : "text/css"
+		);
+		res.end(file);
 	});
-
-	return new Promise((resolve, reject) => {
-		server.listen(port, (err) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(server);
-			}
-		});
-	});
+	server.unref();
+	return server;
 }
 
 class ServerPlugin {
@@ -34,27 +47,41 @@ class ServerPlugin {
 	 */
 	constructor(port) {
 		this.port = port;
+		this.refs = 0;
+		this.server = undefined;
 	}
 
 	/**
 	 * @param {import("../../../../../").Compiler} compiler
 	 */
 	apply(compiler) {
-		const serverPromise = createServer(this.port);
-
-		serverPromise
-			.then(server => server.unref());
+		compiler.hooks.beforeRun.tapPromise(
+			"ServerPlugin",
+			async (compiler, callback) => {
+				this.refs++;
+				if (!this.server) {
+					this.server = createServer();
+					await new Promise((resolve, reject) => {
+						this.server.listen(this.port, err => {
+							if (err) {
+								reject(err);
+							} else {
+								resolve();
+							}
+						});
+					});
+				}
+			}
+		);
 
 		compiler.hooks.done.tapAsync("ServerPlugin", (stats, callback) => {
-			serverPromise
-				.then(server => server.close(callback))
-				.catch(callback)
-		});
-
-		compiler.hooks.beforeRun.tapAsync("ServerPlugin", (compiler, callback) => {
-			serverPromise
-				.then(() => callback())
-				.catch(callback)
+			const s = this.server;
+			if (s && --this.refs === 0) {
+				this.server = undefined;
+				s.close(callback);
+			} else {
+				callback();
+			}
 		});
 	}
 }

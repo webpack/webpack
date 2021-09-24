@@ -23,9 +23,10 @@
 19. [Scope Hoisting](#scope-hoisting)
 20. [Side Effects](#side-effects)
 21. [Source Map](#source-map)
-22. [Web Worker](#web-worker)
-23. [Requests](#requests)
-24. [Building an Example](#building-an-example)
+22. [WebAssembly](#webassembly)
+23. [Web Worker](#web-worker)
+24. [Requests](#requests)
+25. [Building an Example](#building-an-example)
 
 
 ## Aggressive Merging
@@ -129,6 +130,10 @@
 
 ## Source Map
 [source-map](source-map)
+
+## WebAssembly
+[wasm-simple](wasm-simple) example demonstrating simple import from a WebAssembly module
+[wasm-complex](wasm-complex) example demonstrating top-level await and import of WebAssembly text format with wast-loader
 
 ## Web Worker
 [web-worker](worker) example demonstrating creating WebWorkers with webpack.

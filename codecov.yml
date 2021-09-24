@@ -1,5 +1,5 @@
 codecov:
-  branch: master
+  branch: main
 coverage:
   precision: 2
   round: down

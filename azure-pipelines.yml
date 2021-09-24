@@ -38,6 +38,8 @@ jobs:
           yarn test:basic --ci --reporters=default --reporters=jest-junit
           export JEST_JUNIT_OUTPUT_NAME=unit-junit.xml
           yarn test:unit --ci --reporters=default --reporters=jest-junit
+        env:
+          CI: "true"
         displayName: "Run basic tests"
       - task: PublishTestResults@2
         inputs:
@@ -88,8 +90,11 @@ jobs:
           yarn special-lint
           yarn type-lint
           yarn typings-lint
+          yarn yarn-lint
           yarn pretty-lint
           yarn spellcheck
+        env:
+          CI: "true"
         displayName: "Run linting"
       - task: PublishTestResults@2
         inputs:
@@ -105,14 +110,26 @@ jobs:
     pool:
       vmImage: windows-latest
     strategy:
-      maxParallel: 3
+      maxParallel: 6
       matrix:
-        node-10:
+        node-10-a:
           node_version: ^10.13.0
-        node-12:
+          part: a
+        node-10-b:
+          node_version: ^10.13.0
+          part: b
+        node-12-a:
           node_version: ^12.4.0
-        node-16:
+          part: a
+        node-12-b:
+          node_version: ^12.4.0
+          part: b
+        node-16-a:
           node_version: ^16.0.0
+          part: a
+        node-16-b:
+          node_version: ^16.0.0
+          part: b
     steps:
       - task: NodeTool@0
         inputs:
@@ -138,8 +155,10 @@ jobs:
       - script: yarn link webpack --frozen-lockfile
         displayName: "Link webpack into node_modules"
       - script: |
-          yarn cover:integration --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
+          yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit || yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit -f
           yarn cover:merge
+        env:
+          CI: "true"
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
         inputs:
@@ -147,6 +166,7 @@ jobs:
           testResultsFiles: "**/junit.xml"
         condition: succeededOrFailed()
         displayName: "Publish test results"
+
   - job: Linux
     dependsOn:
       - basic
@@ -154,16 +174,26 @@ jobs:
     pool:
       vmImage: ubuntu-latest
     strategy:
-      maxParallel: 4
+      maxParallel: 6
       matrix:
-        node-10:
+        node-10-a:
           node_version: ^10.13.0
-        node-12:
+          part: a
+        node-10-b:
+          node_version: ^10.13.0
+          part: b
+        node-12-a:
           node_version: ^12.4.0
-        node-14:
+          part: a
+        node-14-a:
           node_version: ^14.0.0
-        node-16:
+          part: a
+        node-16-a:
           node_version: ^16.0.0
+          part: a
+        node-16-b:
+          node_version: ^16.0.0
+          part: b
     steps:
       - task: NodeTool@0
         inputs:
@@ -193,8 +223,10 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn cover:integration --ci --maxWorkers=2 --reporters=default --reporters=jest-junit
+          yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit || yarn cover:integration:$(part) --ci --maxWorkers=2 --reporters=default --reporters=jest-junit -f
           yarn cover:merge
+        env:
+          CI: "true"
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
         inputs:
@@ -210,12 +242,20 @@ jobs:
     pool:
       vmImage: macOS-latest
     strategy:
-      maxParallel: 2
+      maxParallel: 4
       matrix:
-        node-12:
+        node-12-a:
           node_version: ^12.4.0
-        node-16:
+          part: a
+        node-12-b:
+          node_version: ^12.4.0
+          part: b
+        node-16-a:
           node_version: ^16.0.0
+          part: a
+        node-16-b:
+          node_version: ^16.0.0
+          part: b
     steps:
       - task: NodeTool@0
         inputs:
@@ -245,8 +285,10 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn cover:integration --ci --reporters=default --reporters=jest-junit
+          yarn cover:integration:$(part) --ci --reporters=default --reporters=jest-junit || yarn cover:integration:$(part) --ci --reporters=default --reporters=jest-junit -f
           yarn cover:merge
+        env:
+          CI: "true"
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
         inputs:

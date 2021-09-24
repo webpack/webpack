@@ -1,6 +1,6 @@
 const { describeCases } = require("./TestCases.template");
 
-describe("TestCases", () => {
+describe("TestCasesProdGlobalUsed", () => {
 	describeCases({
 		name: "production with usedExports global",
 		mode: "production",

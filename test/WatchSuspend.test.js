@@ -1,9 +1,9 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("fs");
-
-const webpack = require("../");
 
 describe("WatchSuspend", () => {
 	if (process.env.NO_WATCH_TESTS) {
@@ -41,6 +41,7 @@ describe("WatchSuspend", () => {
 			} catch (e) {
 				// skip
 			}
+			const webpack = require("../");
 			compiler = webpack({
 				mode: "development",
 				entry: filePath,

@@ -243,10 +243,10 @@
       ]
     },
     "ChunkFormat": {
-      "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+      "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).",
       "anyOf": [
         {
-          "enum": ["array-push", "commonjs", false]
+          "enum": ["array-push", "commonjs", "module", false]
         },
         {
           "type": "string"
@@ -258,7 +258,7 @@
       "type": "number"
     },
     "ChunkLoading": {
-      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
       "anyOf": [
         {
           "enum": [false]
@@ -273,10 +273,10 @@
       "type": "string"
     },
     "ChunkLoadingType": {
-      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
       "anyOf": [
         {
-          "enum": ["jsonp", "import-scripts", "require", "async-node"]
+          "enum": ["jsonp", "import-scripts", "require", "async-node", "import"]
         },
         {
           "type": "string"
@@ -599,8 +599,15 @@
     },
     "EntryRuntime": {
       "description": "The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.",
-      "type": "string",
-      "minLength": 1
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
     },
     "EntryStatic": {
       "description": "A static entry description.",
@@ -681,8 +688,19 @@
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
           "type": "boolean"
         },
-        "executeModule": {
-          "description": "Enable build-time execution of modules from the module graph for plugins and loaders.",
+        "buildHttp": {
+          "description": "Build http(s): urls using a lockfile and resource content cache.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/HttpUriOptions"
+            }
+          ]
+        },
+        "futureDefaults": {
+          "description": "Apply defaults of next major version.",
           "type": "boolean"
         },
         "layers": {
@@ -807,6 +825,10 @@
           "type": "object",
           "tsType": "import('../lib/ModuleFactory').ModuleFactoryCreateDataContextInfo"
         },
+        "dependencyType": {
+          "description": "The category of the referencing dependencies.",
+          "type": "string"
+        },
         "getResolve": {
           "description": "Get a resolve function with the current resolver options.",
           "instanceof": "Function",
@@ -916,7 +938,8 @@
         "system",
         "promise",
         "import",
-        "script"
+        "script",
+        "node-commonjs"
       ]
     },
     "FileCacheOptions": {
@@ -951,17 +974,26 @@
           "type": "string",
           "absolutePath": true
         },
+        "compression": {
+          "description": "Compression type used for the cache files.",
+          "enum": [false, "gzip", "brotli"]
+        },
         "hashAlgorithm": {
           "description": "Algorithm used for generation the hash (see node.js crypto package).",
           "type": "string"
         },
         "idleTimeout": {
-          "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
+          "description": "Time in ms after which idle period the cache storing should happen.",
+          "type": "number",
+          "minimum": 0
+        },
+        "idleTimeoutAfterLargeChanges": {
+          "description": "Time in ms after which idle period the cache storing should happen when larger changes has been detected (cumulative build time > 2 x avg cache store time).",
           "type": "number",
           "minimum": 0
         },
         "idleTimeoutForInitialStore": {
-          "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
+          "description": "Time in ms after which idle period the initial cache storing should happen.",
           "type": "number",
           "minimum": 0
         },
@@ -1162,6 +1194,38 @@
       "description": "The filename of the Hot Update Main File. It is inside the 'output.path' directory.",
       "type": "string",
       "absolutePath": false
+    },
+    "HttpUriOptions": {
+      "description": "Options for building http resources.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cacheLocation": {
+          "description": "Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "string",
+              "absolutePath": true
+            }
+          ]
+        },
+        "frozen": {
+          "description": "When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.",
+          "type": "boolean"
+        },
+        "lockfileLocation": {
+          "description": "Location of the lockfile.",
+          "type": "string",
+          "absolutePath": true
+        },
+        "upgrade": {
+          "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
+          "type": "boolean"
+        }
+      }
     },
     "IgnoreWarnings": {
       "description": "Ignore specific warnings.",
@@ -1880,15 +1944,15 @@
       "properties": {
         "__dirname": {
           "description": "Include a polyfill for the '__dirname' variable.",
-          "enum": [false, true, "mock", "eval-only"]
+          "enum": [false, true, "warn-mock", "mock", "eval-only"]
         },
         "__filename": {
           "description": "Include a polyfill for the '__filename' variable.",
-          "enum": [false, true, "mock", "eval-only"]
+          "enum": [false, true, "warn-mock", "mock", "eval-only"]
         },
         "global": {
           "description": "Include a polyfill for the 'global' variable.",
-          "type": "boolean"
+          "enum": [false, true, "warn"]
         }
       }
     },
@@ -3564,6 +3628,13 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "assert": {
+          "description": "Match on import assertions of the dependency.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/RuleSetConditionOrConditions"
+          }
+        },
         "compiler": {
           "description": "Match the child compiler name.",
           "oneOf": [
@@ -4189,6 +4260,10 @@
           "description": "Group modules by their type.",
           "type": "boolean"
         },
+        "groupReasonsByOrigin": {
+          "description": "Group reasons by their origin module.",
+          "type": "boolean"
+        },
         "hash": {
           "description": "Add the hash of the compilation.",
           "type": "boolean"
@@ -4292,6 +4367,10 @@
         "reasons": {
           "description": "Add information about the reasons why modules are included.",
           "type": "boolean"
+        },
+        "reasonsSpace": {
+          "description": "Space to display reasons (groups will be collapsed to fit this space).",
+          "type": "number"
         },
         "relatedAssets": {
           "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",

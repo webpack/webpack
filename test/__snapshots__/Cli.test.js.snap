@@ -95,6 +95,24 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "cache-compression": Object {
+    "configs": Array [
+      Object {
+        "description": "Compression type used for the cache files.",
+        "multiple": false,
+        "path": "cache.compression",
+        "type": "enum",
+        "values": Array [
+          false,
+          "gzip",
+          "brotli",
+        ],
+      },
+    ],
+    "description": "Compression type used for the cache files.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "cache-hash-algorithm": Object {
     "configs": Array [
       Object {
@@ -111,26 +129,39 @@ Object {
   "cache-idle-timeout": Object {
     "configs": Array [
       Object {
-        "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
+        "description": "Time in ms after which idle period the cache storing should happen.",
         "multiple": false,
         "path": "cache.idleTimeout",
         "type": "number",
       },
     ],
-    "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
+    "description": "Time in ms after which idle period the cache storing should happen.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "cache-idle-timeout-after-large-changes": Object {
+    "configs": Array [
+      Object {
+        "description": "Time in ms after which idle period the cache storing should happen when larger changes has been detected (cumulative build time > 2 x avg cache store time).",
+        "multiple": false,
+        "path": "cache.idleTimeoutAfterLargeChanges",
+        "type": "number",
+      },
+    ],
+    "description": "Time in ms after which idle period the cache storing should happen when larger changes has been detected (cumulative build time > 2 x avg cache store time).",
     "multiple": false,
     "simpleType": "number",
   },
   "cache-idle-timeout-for-initial-store": Object {
     "configs": Array [
       Object {
-        "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
+        "description": "Time in ms after which idle period the initial cache storing should happen.",
         "multiple": false,
         "path": "cache.idleTimeoutForInitialStore",
         "type": "number",
       },
     ],
-    "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
+    "description": "Time in ms after which idle period the initial cache storing should happen.",
     "multiple": false,
     "simpleType": "number",
   },
@@ -150,13 +181,13 @@ Object {
   "cache-immutable-paths-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+        "description": "Clear all items provided in 'cache.immutablePaths' configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
         "multiple": false,
         "path": "cache.immutablePaths",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+    "description": "Clear all items provided in 'cache.immutablePaths' configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -176,13 +207,13 @@ Object {
   "cache-managed-paths-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+        "description": "Clear all items provided in 'cache.managedPaths' configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
         "multiple": false,
         "path": "cache.managedPaths",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+    "description": "Clear all items provided in 'cache.managedPaths' configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -334,13 +365,13 @@ Object {
   "dependencies-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. References to other configurations to depend on.",
+        "description": "Clear all items provided in 'dependencies' configuration. References to other configurations to depend on.",
         "multiple": false,
         "path": "dependencies",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. References to other configurations to depend on.",
+    "description": "Clear all items provided in 'dependencies' configuration. References to other configurations to depend on.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -383,13 +414,13 @@ Object {
   "entry-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. All modules are loaded upon startup. The last one is exported.",
+        "description": "Clear all items provided in 'entry' configuration. All modules are loaded upon startup. The last one is exported.",
         "multiple": false,
         "path": "entry",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. All modules are loaded upon startup. The last one is exported.",
+    "description": "Clear all items provided in 'entry' configuration. All modules are loaded upon startup. The last one is exported.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -419,16 +450,90 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-execute-module": Object {
+  "experiments-build-http": Object {
     "configs": Array [
       Object {
-        "description": "Enable build-time execution of modules from the module graph for plugins and loaders.",
+        "description": "Build http(s): urls using a lockfile and resource content cache.",
         "multiple": false,
-        "path": "experiments.executeModule",
+        "path": "experiments.buildHttp",
         "type": "boolean",
       },
     ],
-    "description": "Enable build-time execution of modules from the module graph for plugins and loaders.",
+    "description": "Build http(s): urls using a lockfile and resource content cache.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-build-http-cache-location": Object {
+    "configs": Array [
+      Object {
+        "description": "Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.",
+        "multiple": false,
+        "path": "experiments.buildHttp.cacheLocation",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.",
+        "multiple": false,
+        "path": "experiments.buildHttp.cacheLocation",
+        "type": "path",
+      },
+    ],
+    "description": "Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "experiments-build-http-frozen": Object {
+    "configs": Array [
+      Object {
+        "description": "When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.",
+        "multiple": false,
+        "path": "experiments.buildHttp.frozen",
+        "type": "boolean",
+      },
+    ],
+    "description": "When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-build-http-lockfile-location": Object {
+    "configs": Array [
+      Object {
+        "description": "Location of the lockfile.",
+        "multiple": false,
+        "path": "experiments.buildHttp.lockfileLocation",
+        "type": "path",
+      },
+    ],
+    "description": "Location of the lockfile.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "experiments-build-http-upgrade": Object {
+    "configs": Array [
+      Object {
+        "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
+        "multiple": false,
+        "path": "experiments.buildHttp.upgrade",
+        "type": "boolean",
+      },
+    ],
+    "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-future-defaults": Object {
+    "configs": Array [
+      Object {
+        "description": "Apply defaults of next major version.",
+        "multiple": false,
+        "path": "experiments.futureDefaults",
+        "type": "boolean",
+      },
+    ],
+    "description": "Apply defaults of next major version.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -681,13 +786,13 @@ Object {
   "externals-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on \`output.libraryTarget\`.",
+        "description": "Clear all items provided in 'externals' configuration. Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on \`output.libraryTarget\`.",
         "multiple": false,
         "path": "externals",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on \`output.libraryTarget\`.",
+    "description": "Clear all items provided in 'externals' configuration. Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on \`output.libraryTarget\`.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -718,6 +823,7 @@ Object {
           "promise",
           "import",
           "script",
+          "node-commonjs",
         ],
       },
     ],
@@ -780,13 +886,13 @@ Object {
   "ignore-warnings-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Ignore specific warnings.",
+        "description": "Clear all items provided in 'ignoreWarnings' configuration. Ignore specific warnings.",
         "multiple": false,
         "path": "ignoreWarnings",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Ignore specific warnings.",
+    "description": "Clear all items provided in 'ignoreWarnings' configuration. Ignore specific warnings.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -844,13 +950,13 @@ Object {
   "infrastructure-logging-debug-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Enable debug logging for specific loggers.",
+        "description": "Clear all items provided in 'infrastructureLogging.debug' configuration. Enable debug logging for specific loggers.",
         "multiple": false,
         "path": "infrastructureLogging.debug",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Enable debug logging for specific loggers.",
+    "description": "Clear all items provided in 'infrastructureLogging.debug' configuration. Enable debug logging for specific loggers.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1111,13 +1217,13 @@ Object {
   "module-no-parse-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Don't parse files matching. It's matched against the full resolved request.",
+        "description": "Clear all items provided in 'module.noParse' configuration. Don't parse files matching. It's matched against the full resolved request.",
         "multiple": false,
         "path": "module.noParse",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Don't parse files matching. It's matched against the full resolved request.",
+    "description": "Clear all items provided in 'module.noParse' configuration. Don't parse files matching. It's matched against the full resolved request.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1315,6 +1421,7 @@ Object {
         "values": Array [
           false,
           true,
+          "warn-mock",
           "mock",
           "eval-only",
         ],
@@ -1334,6 +1441,7 @@ Object {
         "values": Array [
           false,
           true,
+          "warn-mock",
           "mock",
           "eval-only",
         ],
@@ -1349,12 +1457,17 @@ Object {
         "description": "Include a polyfill for the 'global' variable.",
         "multiple": false,
         "path": "module.parser.javascript/auto.node.global",
-        "type": "boolean",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "warn",
+        ],
       },
     ],
     "description": "Include a polyfill for the 'global' variable.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-auto-require-context": Object {
     "configs": Array [
@@ -1549,13 +1662,13 @@ Object {
   "module-parser-javascript-auto-worker-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "description": "Clear all items provided in 'module.parser.javascript/auto.worker' configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
         "multiple": false,
         "path": "module.parser.javascript/auto.worker",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "description": "Clear all items provided in 'module.parser.javascript/auto.worker' configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1802,6 +1915,7 @@ Object {
         "values": Array [
           false,
           true,
+          "warn-mock",
           "mock",
           "eval-only",
         ],
@@ -1821,6 +1935,7 @@ Object {
         "values": Array [
           false,
           true,
+          "warn-mock",
           "mock",
           "eval-only",
         ],
@@ -1836,12 +1951,17 @@ Object {
         "description": "Include a polyfill for the 'global' variable.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.node.global",
-        "type": "boolean",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "warn",
+        ],
       },
     ],
     "description": "Include a polyfill for the 'global' variable.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-require-context": Object {
     "configs": Array [
@@ -2036,13 +2156,13 @@ Object {
   "module-parser-javascript-dynamic-worker-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "description": "Clear all items provided in 'module.parser.javascript/dynamic.worker' configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.worker",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "description": "Clear all items provided in 'module.parser.javascript/dynamic.worker' configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2250,6 +2370,7 @@ Object {
         "values": Array [
           false,
           true,
+          "warn-mock",
           "mock",
           "eval-only",
         ],
@@ -2269,6 +2390,7 @@ Object {
         "values": Array [
           false,
           true,
+          "warn-mock",
           "mock",
           "eval-only",
         ],
@@ -2284,12 +2406,17 @@ Object {
         "description": "Include a polyfill for the 'global' variable.",
         "multiple": false,
         "path": "module.parser.javascript/esm.node.global",
-        "type": "boolean",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "warn",
+        ],
       },
     ],
     "description": "Include a polyfill for the 'global' variable.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-esm-require-context": Object {
     "configs": Array [
@@ -2484,13 +2611,13 @@ Object {
   "module-parser-javascript-esm-worker-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "description": "Clear all items provided in 'module.parser.javascript/esm.worker' configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
         "multiple": false,
         "path": "module.parser.javascript/esm.worker",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "description": "Clear all items provided in 'module.parser.javascript/esm.worker' configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2643,6 +2770,7 @@ Object {
         "values": Array [
           false,
           true,
+          "warn-mock",
           "mock",
           "eval-only",
         ],
@@ -2662,6 +2790,7 @@ Object {
         "values": Array [
           false,
           true,
+          "warn-mock",
           "mock",
           "eval-only",
         ],
@@ -2677,12 +2806,17 @@ Object {
         "description": "Include a polyfill for the 'global' variable.",
         "multiple": false,
         "path": "module.parser.javascript.node.global",
-        "type": "boolean",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "warn",
+        ],
       },
     ],
     "description": "Include a polyfill for the 'global' variable.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-require-context": Object {
     "configs": Array [
@@ -2877,13 +3011,13 @@ Object {
   "module-parser-javascript-worker-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+        "description": "Clear all items provided in 'module.parser.javascript.worker' configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
         "multiple": false,
         "path": "module.parser.javascript.worker",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "description": "Clear all items provided in 'module.parser.javascript.worker' configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3276,13 +3410,13 @@ Object {
   "module-rules-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. A list of rules.",
+        "description": "Clear all items provided in 'module.rules' configuration. A list of rules.",
         "multiple": false,
         "path": "module.rules",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. A list of rules.",
+    "description": "Clear all items provided in 'module.rules' configuration. A list of rules.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -3729,6 +3863,7 @@ Object {
         "values": Array [
           false,
           true,
+          "warn-mock",
           "mock",
           "eval-only",
         ],
@@ -3748,6 +3883,7 @@ Object {
         "values": Array [
           false,
           true,
+          "warn-mock",
           "mock",
           "eval-only",
         ],
@@ -3763,12 +3899,17 @@ Object {
         "description": "Include a polyfill for the 'global' variable.",
         "multiple": false,
         "path": "node.global",
-        "type": "boolean",
+        "type": "enum",
+        "values": Array [
+          false,
+          true,
+          "warn",
+        ],
       },
     ],
     "description": "Include a polyfill for the 'global' variable.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-check-wasm-types": Object {
     "configs": Array [
@@ -4147,13 +4288,13 @@ Object {
   "optimization-split-chunks-default-size-types-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Sets the size types which are used when a number is used for sizes.",
+        "description": "Clear all items provided in 'optimization.splitChunks.defaultSizeTypes' configuration. Sets the size types which are used when a number is used for sizes.",
         "multiple": false,
         "path": "optimization.splitChunks.defaultSizeTypes",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Sets the size types which are used when a number is used for sizes.",
+    "description": "Clear all items provided in 'optimization.splitChunks.defaultSizeTypes' configuration. Sets the size types which are used when a number is used for sizes.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4464,24 +4605,25 @@ Object {
   "output-chunk-format": Object {
     "configs": Array [
       Object {
-        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).",
         "multiple": false,
         "path": "output.chunkFormat",
         "type": "enum",
         "values": Array [
           "array-push",
           "commonjs",
+          "module",
           false,
         ],
       },
       Object {
-        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+        "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).",
         "multiple": false,
         "path": "output.chunkFormat",
         "type": "string",
       },
     ],
-    "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+    "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -4501,7 +4643,7 @@ Object {
   "output-chunk-loading": Object {
     "configs": Array [
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": false,
         "path": "output.chunkLoading",
         "type": "enum",
@@ -4510,7 +4652,7 @@ Object {
         ],
       },
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": false,
         "path": "output.chunkLoading",
         "type": "enum",
@@ -4519,16 +4661,17 @@ Object {
           "import-scripts",
           "require",
           "async-node",
+          "import",
         ],
       },
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": false,
         "path": "output.chunkLoading",
         "type": "string",
       },
     ],
-    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -4663,7 +4806,7 @@ Object {
   "output-enabled-chunk-loading-types": Object {
     "configs": Array [
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": true,
         "path": "output.enabledChunkLoadingTypes[]",
         "type": "enum",
@@ -4672,29 +4815,30 @@ Object {
           "import-scripts",
           "require",
           "async-node",
+          "import",
         ],
       },
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": true,
         "path": "output.enabledChunkLoadingTypes[]",
         "type": "string",
       },
     ],
-    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
     "multiple": true,
     "simpleType": "string",
   },
   "output-enabled-chunk-loading-types-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. List of chunk loading types enabled for use by entry points.",
+        "description": "Clear all items provided in 'output.enabledChunkLoadingTypes' configuration. List of chunk loading types enabled for use by entry points.",
         "multiple": false,
         "path": "output.enabledChunkLoadingTypes",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. List of chunk loading types enabled for use by entry points.",
+    "description": "Clear all items provided in 'output.enabledChunkLoadingTypes' configuration. List of chunk loading types enabled for use by entry points.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4739,13 +4883,13 @@ Object {
   "output-enabled-library-types-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. List of library types enabled for use by entry points.",
+        "description": "Clear all items provided in 'output.enabledLibraryTypes' configuration. List of library types enabled for use by entry points.",
         "multiple": false,
         "path": "output.enabledLibraryTypes",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. List of library types enabled for use by entry points.",
+    "description": "Clear all items provided in 'output.enabledLibraryTypes' configuration. List of library types enabled for use by entry points.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4776,13 +4920,13 @@ Object {
   "output-enabled-wasm-loading-types-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. List of wasm loading types enabled for use by entry points.",
+        "description": "Clear all items provided in 'output.enabledWasmLoadingTypes' configuration. List of wasm loading types enabled for use by entry points.",
         "multiple": false,
         "path": "output.enabledWasmLoadingTypes",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. List of wasm loading types enabled for use by entry points.",
+    "description": "Clear all items provided in 'output.enabledWasmLoadingTypes' configuration. List of wasm loading types enabled for use by entry points.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5153,13 +5297,13 @@ Object {
   "output-library-export-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Specify which export should be exposed as library.",
+        "description": "Clear all items provided in 'output.library.export' configuration. Specify which export should be exposed as library.",
         "multiple": false,
         "path": "output.library.export",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Specify which export should be exposed as library.",
+    "description": "Clear all items provided in 'output.library.export' configuration. Specify which export should be exposed as library.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5205,13 +5349,13 @@ Object {
   "output-library-name-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. The name of the library (some types allow unnamed libraries too).",
+        "description": "Clear all items provided in 'output.library.name' configuration. The name of the library (some types allow unnamed libraries too).",
         "multiple": false,
         "path": "output.library.name",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. The name of the library (some types allow unnamed libraries too).",
+    "description": "Clear all items provided in 'output.library.name' configuration. The name of the library (some types allow unnamed libraries too).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5231,26 +5375,26 @@ Object {
   "output-library-name-root-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Name of the property exposed globally by a UMD library.",
+        "description": "Clear all items provided in 'output.library.name.root' configuration. Name of the property exposed globally by a UMD library.",
         "multiple": false,
         "path": "output.library.name.root",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Name of the property exposed globally by a UMD library.",
+    "description": "Clear all items provided in 'output.library.name.root' configuration. Name of the property exposed globally by a UMD library.",
     "multiple": false,
     "simpleType": "boolean",
   },
   "output-library-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. The name of the library (some types allow unnamed libraries too).",
+        "description": "Clear all items provided in 'output.library' configuration. The name of the library (some types allow unnamed libraries too).",
         "multiple": false,
         "path": "output.library",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. The name of the library (some types allow unnamed libraries too).",
+    "description": "Clear all items provided in 'output.library' configuration. The name of the library (some types allow unnamed libraries too).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5270,13 +5414,13 @@ Object {
   "output-library-root-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Name of the property exposed globally by a UMD library.",
+        "description": "Clear all items provided in 'output.library.root' configuration. Name of the property exposed globally by a UMD library.",
         "multiple": false,
         "path": "output.library.root",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Name of the property exposed globally by a UMD library.",
+    "description": "Clear all items provided in 'output.library.root' configuration. Name of the property exposed globally by a UMD library.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5568,7 +5712,7 @@ Object {
   "output-worker-chunk-loading": Object {
     "configs": Array [
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": false,
         "path": "output.workerChunkLoading",
         "type": "enum",
@@ -5577,7 +5721,7 @@ Object {
         ],
       },
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": false,
         "path": "output.workerChunkLoading",
         "type": "enum",
@@ -5586,16 +5730,17 @@ Object {
           "import-scripts",
           "require",
           "async-node",
+          "import",
         ],
       },
       Object {
-        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+        "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
         "multiple": false,
         "path": "output.workerChunkLoading",
         "type": "string",
       },
     ],
-    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -5822,13 +5967,13 @@ Object {
   "resolve-alias-fields-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
+        "description": "Clear all items provided in 'resolve.aliasFields' configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
         "multiple": false,
         "path": "resolve.aliasFields",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
+    "description": "Clear all items provided in 'resolve.aliasFields' configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5861,13 +6006,13 @@ Object {
   "resolve-alias-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Redirect module requests.",
+        "description": "Clear all items provided in 'resolve.alias' configuration. Redirect module requests.",
         "multiple": false,
         "path": "resolve.alias",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Redirect module requests.",
+    "description": "Clear all items provided in 'resolve.alias' configuration. Redirect module requests.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5913,13 +6058,13 @@ Object {
   "resolve-condition-names-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Condition names for exports field entry point.",
+        "description": "Clear all items provided in 'resolve.conditionNames' configuration. Condition names for exports field entry point.",
         "multiple": false,
         "path": "resolve.conditionNames",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Condition names for exports field entry point.",
+    "description": "Clear all items provided in 'resolve.conditionNames' configuration. Condition names for exports field entry point.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5939,13 +6084,13 @@ Object {
   "resolve-description-files-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Filenames used to find a description file (like a package.json).",
+        "description": "Clear all items provided in 'resolve.descriptionFiles' configuration. Filenames used to find a description file (like a package.json).",
         "multiple": false,
         "path": "resolve.descriptionFiles",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Filenames used to find a description file (like a package.json).",
+    "description": "Clear all items provided in 'resolve.descriptionFiles' configuration. Filenames used to find a description file (like a package.json).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5978,13 +6123,13 @@ Object {
   "resolve-exports-fields-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
+        "description": "Clear all items provided in 'resolve.exportsFields' configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
         "multiple": false,
         "path": "resolve.exportsFields",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
+    "description": "Clear all items provided in 'resolve.exportsFields' configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6004,13 +6149,13 @@ Object {
   "resolve-extensions-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
+        "description": "Clear all items provided in 'resolve.extensions' configuration. Extensions added to the request when trying to find the file.",
         "multiple": false,
         "path": "resolve.extensions",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
+    "description": "Clear all items provided in 'resolve.extensions' configuration. Extensions added to the request when trying to find the file.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6065,13 +6210,13 @@ Object {
   "resolve-fallback-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Redirect module requests.",
+        "description": "Clear all items provided in 'resolve.fallback' configuration. Redirect module requests.",
         "multiple": false,
         "path": "resolve.fallback",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Redirect module requests.",
+    "description": "Clear all items provided in 'resolve.fallback' configuration. Redirect module requests.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6104,13 +6249,13 @@ Object {
   "resolve-imports-fields-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+        "description": "Clear all items provided in 'resolve.importsFields' configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
         "multiple": false,
         "path": "resolve.importsFields",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+    "description": "Clear all items provided in 'resolve.importsFields' configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6152,13 +6297,13 @@ Object {
   "resolve-loader-alias-fields-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
+        "description": "Clear all items provided in 'resolveLoader.aliasFields' configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
         "multiple": false,
         "path": "resolveLoader.aliasFields",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
+    "description": "Clear all items provided in 'resolveLoader.aliasFields' configuration. Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6191,13 +6336,13 @@ Object {
   "resolve-loader-alias-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Redirect module requests.",
+        "description": "Clear all items provided in 'resolveLoader.alias' configuration. Redirect module requests.",
         "multiple": false,
         "path": "resolveLoader.alias",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Redirect module requests.",
+    "description": "Clear all items provided in 'resolveLoader.alias' configuration. Redirect module requests.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6243,13 +6388,13 @@ Object {
   "resolve-loader-condition-names-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Condition names for exports field entry point.",
+        "description": "Clear all items provided in 'resolveLoader.conditionNames' configuration. Condition names for exports field entry point.",
         "multiple": false,
         "path": "resolveLoader.conditionNames",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Condition names for exports field entry point.",
+    "description": "Clear all items provided in 'resolveLoader.conditionNames' configuration. Condition names for exports field entry point.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6269,13 +6414,13 @@ Object {
   "resolve-loader-description-files-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Filenames used to find a description file (like a package.json).",
+        "description": "Clear all items provided in 'resolveLoader.descriptionFiles' configuration. Filenames used to find a description file (like a package.json).",
         "multiple": false,
         "path": "resolveLoader.descriptionFiles",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Filenames used to find a description file (like a package.json).",
+    "description": "Clear all items provided in 'resolveLoader.descriptionFiles' configuration. Filenames used to find a description file (like a package.json).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6308,13 +6453,13 @@ Object {
   "resolve-loader-exports-fields-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
+        "description": "Clear all items provided in 'resolveLoader.exportsFields' configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
         "multiple": false,
         "path": "resolveLoader.exportsFields",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
+    "description": "Clear all items provided in 'resolveLoader.exportsFields' configuration. Field names from the description file (usually package.json) which are used to provide entry points of a package.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6334,13 +6479,13 @@ Object {
   "resolve-loader-extensions-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
+        "description": "Clear all items provided in 'resolveLoader.extensions' configuration. Extensions added to the request when trying to find the file.",
         "multiple": false,
         "path": "resolveLoader.extensions",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Extensions added to the request when trying to find the file.",
+    "description": "Clear all items provided in 'resolveLoader.extensions' configuration. Extensions added to the request when trying to find the file.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6395,13 +6540,13 @@ Object {
   "resolve-loader-fallback-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Redirect module requests.",
+        "description": "Clear all items provided in 'resolveLoader.fallback' configuration. Redirect module requests.",
         "multiple": false,
         "path": "resolveLoader.fallback",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Redirect module requests.",
+    "description": "Clear all items provided in 'resolveLoader.fallback' configuration. Redirect module requests.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6434,13 +6579,13 @@ Object {
   "resolve-loader-imports-fields-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+        "description": "Clear all items provided in 'resolveLoader.importsFields' configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
         "multiple": false,
         "path": "resolveLoader.importsFields",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+    "description": "Clear all items provided in 'resolveLoader.importsFields' configuration. Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6460,13 +6605,13 @@ Object {
   "resolve-loader-main-fields-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the default entry point.",
+        "description": "Clear all items provided in 'resolveLoader.mainFields' configuration. Field names from the description file (package.json) which are used to find the default entry point.",
         "multiple": false,
         "path": "resolveLoader.mainFields",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the default entry point.",
+    "description": "Clear all items provided in 'resolveLoader.mainFields' configuration. Field names from the description file (package.json) which are used to find the default entry point.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6486,13 +6631,13 @@ Object {
   "resolve-loader-main-files-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Filenames used to find the default entry point if there is no description file or main field.",
+        "description": "Clear all items provided in 'resolveLoader.mainFiles' configuration. Filenames used to find the default entry point if there is no description file or main field.",
         "multiple": false,
         "path": "resolveLoader.mainFiles",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Filenames used to find the default entry point if there is no description file or main field.",
+    "description": "Clear all items provided in 'resolveLoader.mainFiles' configuration. Filenames used to find the default entry point if there is no description file or main field.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6512,13 +6657,13 @@ Object {
   "resolve-loader-modules-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
+        "description": "Clear all items provided in 'resolveLoader.modules' configuration. Folder names or directory paths where to find modules.",
         "multiple": false,
         "path": "resolveLoader.modules",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
+    "description": "Clear all items provided in 'resolveLoader.modules' configuration. Folder names or directory paths where to find modules.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6570,13 +6715,13 @@ Object {
   "resolve-loader-restrictions-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
+        "description": "Clear all items provided in 'resolveLoader.restrictions' configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
         "multiple": false,
         "path": "resolveLoader.restrictions",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
+    "description": "Clear all items provided in 'resolveLoader.restrictions' configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6596,13 +6741,13 @@ Object {
   "resolve-loader-roots-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
+        "description": "Clear all items provided in 'resolveLoader.roots' configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
         "multiple": false,
         "path": "resolveLoader.roots",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
+    "description": "Clear all items provided in 'resolveLoader.roots' configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6661,13 +6806,13 @@ Object {
   "resolve-main-fields-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the default entry point.",
+        "description": "Clear all items provided in 'resolve.mainFields' configuration. Field names from the description file (package.json) which are used to find the default entry point.",
         "multiple": false,
         "path": "resolve.mainFields",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Field names from the description file (package.json) which are used to find the default entry point.",
+    "description": "Clear all items provided in 'resolve.mainFields' configuration. Field names from the description file (package.json) which are used to find the default entry point.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6687,13 +6832,13 @@ Object {
   "resolve-main-files-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Filenames used to find the default entry point if there is no description file or main field.",
+        "description": "Clear all items provided in 'resolve.mainFiles' configuration. Filenames used to find the default entry point if there is no description file or main field.",
         "multiple": false,
         "path": "resolve.mainFiles",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Filenames used to find the default entry point if there is no description file or main field.",
+    "description": "Clear all items provided in 'resolve.mainFiles' configuration. Filenames used to find the default entry point if there is no description file or main field.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6713,13 +6858,13 @@ Object {
   "resolve-modules-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
+        "description": "Clear all items provided in 'resolve.modules' configuration. Folder names or directory paths where to find modules.",
         "multiple": false,
         "path": "resolve.modules",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Folder names or directory paths where to find modules.",
+    "description": "Clear all items provided in 'resolve.modules' configuration. Folder names or directory paths where to find modules.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6771,13 +6916,13 @@ Object {
   "resolve-restrictions-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
+        "description": "Clear all items provided in 'resolve.restrictions' configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
         "multiple": false,
         "path": "resolve.restrictions",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
+    "description": "Clear all items provided in 'resolve.restrictions' configuration. A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6797,13 +6942,13 @@ Object {
   "resolve-roots-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
+        "description": "Clear all items provided in 'resolve.roots' configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
         "multiple": false,
         "path": "resolve.roots",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
+    "description": "Clear all items provided in 'resolve.roots' configuration. A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6888,13 +7033,13 @@ Object {
   "snapshot-immutable-paths-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+        "description": "Clear all items provided in 'snapshot.immutablePaths' configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
         "multiple": false,
         "path": "snapshot.immutablePaths",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+    "description": "Clear all items provided in 'snapshot.immutablePaths' configuration. List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -6914,13 +7059,13 @@ Object {
   "snapshot-managed-paths-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+        "description": "Clear all items provided in 'snapshot.managedPaths' configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
         "multiple": false,
         "path": "snapshot.managedPaths",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+    "description": "Clear all items provided in 'snapshot.managedPaths' configuration. List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -7526,13 +7671,13 @@ Object {
   "stats-exclude-assets-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
+        "description": "Clear all items provided in 'stats.excludeAssets' configuration. Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
         "multiple": false,
         "path": "stats.excludeAssets",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
+    "description": "Clear all items provided in 'stats.excludeAssets' configuration. Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -7564,13 +7709,13 @@ Object {
   "stats-exclude-modules-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+        "description": "Clear all items provided in 'stats.excludeModules' configuration. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
         "multiple": false,
         "path": "stats.excludeModules",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+    "description": "Clear all items provided in 'stats.excludeModules' configuration. Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -7717,6 +7862,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-group-reasons-by-origin": Object {
+    "configs": Array [
+      Object {
+        "description": "Group reasons by their origin module.",
+        "multiple": false,
+        "path": "stats.groupReasonsByOrigin",
+        "type": "boolean",
+      },
+    ],
+    "description": "Group reasons by their origin module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats-hash": Object {
     "configs": Array [
       Object {
@@ -7798,13 +7956,13 @@ Object {
   "stats-logging-debug-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+        "description": "Clear all items provided in 'stats.loggingDebug' configuration. Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
         "multiple": false,
         "path": "stats.loggingDebug",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+    "description": "Clear all items provided in 'stats.loggingDebug' configuration. Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -8022,6 +8180,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-reasons-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display reasons (groups will be collapsed to fit this space).",
+        "multiple": false,
+        "path": "stats.reasonsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display reasons (groups will be collapsed to fit this space).",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "stats-related-assets": Object {
     "configs": Array [
       Object {
@@ -8161,13 +8332,13 @@ Object {
   "stats-warnings-filter-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
+        "description": "Clear all items provided in 'stats.warningsFilter' configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
         "multiple": false,
         "path": "stats.warningsFilter",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
+    "description": "Clear all items provided in 'stats.warningsFilter' configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -8196,13 +8367,13 @@ Object {
   "target-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Environment to build for. An array of environments to build for all of them when possible.",
+        "description": "Clear all items provided in 'target' configuration. Environment to build for. An array of environments to build for all of them when possible.",
         "multiple": false,
         "path": "target",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Environment to build for. An array of environments to build for all of them when possible.",
+    "description": "Clear all items provided in 'target' configuration. Environment to build for. An array of environments to build for all of them when possible.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -8267,13 +8438,13 @@ Object {
   "watch-options-ignored-reset": Object {
     "configs": Array [
       Object {
-        "description": "Clear all items provided in configuration. Ignore some files from watching (glob pattern or regexp).",
+        "description": "Clear all items provided in 'watchOptions.ignored' configuration. Ignore some files from watching (glob pattern or regexp).",
         "multiple": false,
         "path": "watchOptions.ignored",
         "type": "reset",
       },
     ],
-    "description": "Clear all items provided in configuration. Ignore some files from watching (glob pattern or regexp).",
+    "description": "Clear all items provided in 'watchOptions.ignored' configuration. Ignore some files from watching (glob pattern or regexp).",
     "multiple": false,
     "simpleType": "boolean",
   },

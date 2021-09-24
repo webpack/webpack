@@ -19,6 +19,7 @@
     "preloading",
     "preloaded",
     "gzipping",
+    "brotli",
     "submodule",
     "submodules",
     "typeof",
@@ -185,8 +186,11 @@
     "redeclaration",
     "kaios",
     "parallelism",
+    "gitattributes",
+    "hashbang",
 
     "webassemblyjs",
+    "assemblyscript",
     "fsevents",
     "watchpack",
     "tapable",
@@ -198,8 +202,10 @@
     "MCEP",
     "traceur",
     "atlaskit",
+    "xxhash",
     "xxhashjs",
     "systemjs",
+    "skypack",
 
     "sokra",
     "Koppers",
@@ -230,6 +236,7 @@
   "ignorePaths": [
     "**/dist/**",
     "examples/**/README.md",
+    "**/webpack.lock.data/**",
     "examples/wasm-bindgen*/pkg/*_bg.js"
   ]
 }

@@ -1,11 +1,12 @@
 "use strict";
 
-const webpack = require("..");
+require("./helpers/warmup-webpack");
 
 describe("Validation", () => {
 	const createTestCase = (name, config, fn) => {
 		it("should fail validation for " + name, () => {
 			try {
+				const webpack = require("..");
 				webpack(config);
 			} catch (err) {
 				if (err.name !== "ValidationError") throw err;
@@ -46,7 +47,7 @@ describe("Validation", () => {
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.entry should be an non-empty string.
+			 - configuration.entry should be a non-empty string.
 			   -> The string is resolved to a module which is loaded upon startup."
 		`)
 	);
@@ -61,7 +62,7 @@ describe("Validation", () => {
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.entry['bundle'] should be an non-empty array.
+			 - configuration.entry['bundle'] should be a non-empty array.
 			   -> All modules are loaded upon startup. The last one is exported."
 		`)
 	);
@@ -181,7 +182,7 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.module.rules[0].oneOf[0] has an unknown property 'passer'. These properties are valid:
-			   object { compiler?, dependency?, descriptionData?, enforce?, exclude?, generator?, include?, issuer?, issuerLayer?, layer?, loader?, mimetype?, oneOf?, options?, parser?, realResource?, resolve?, resource?, resourceFragment?, resourceQuery?, rules?, scheme?, sideEffects?, test?, type?, use? }
+			   object { assert?, compiler?, dependency?, descriptionData?, enforce?, exclude?, generator?, include?, issuer?, issuerLayer?, layer?, loader?, mimetype?, oneOf?, options?, parser?, realResource?, resolve?, resource?, resourceFragment?, resourceQuery?, rules?, scheme?, sideEffects?, test?, type?, use? }
 			   -> A rule description with conditions and effects for modules."
 		`)
 	);

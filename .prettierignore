@@ -9,3 +9,6 @@ test/*.*
 # Ignore example fixtures
 examples/*.*
 !examples/**/webpack.config.js
+
+# Ignore generated files
+*.check.js

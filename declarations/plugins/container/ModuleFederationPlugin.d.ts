@@ -78,7 +78,8 @@ export type ExternalsType =
 	| "system"
 	| "promise"
 	| "import"
-	| "script";
+	| "script"
+	| "node-commonjs";
 /**
  * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
  */
@@ -91,6 +92,10 @@ export type RemotesItem = string;
  * Container locations from which modules should be resolved and loaded at runtime.
  */
 export type RemotesItems = RemotesItem[];
+/**
+ * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+ */
+export type EntryRuntime = false | string;
 /**
  * Modules that should be shared in the share scope. When provided, property names are used to match requested modules in this compilation.
  */
@@ -125,6 +130,10 @@ export interface ModuleFederationPluginOptions {
 	 * Container locations and request scopes from which modules should be resolved and loaded at runtime. When provided, property name is used as request scope, otherwise request scope is automatically inferred from container location.
 	 */
 	remotes?: Remotes;
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: EntryRuntime;
 	/**
 	 * Share scope name used for all shared modules (defaults to 'default').
 	 */

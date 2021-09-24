@@ -64,8 +64,9 @@ module.exports = "Vendor1";
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -87,10 +88,12 @@ module.exports = "Vendor1";
 </details>
 
 ``` js
+/******/ 	
 /******/ 	// startup
-/******/ 	// Load entry module
+/******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	__webpack_require__(0);
+/******/ 	var __webpack_exports__ = __webpack_require__(0);
+/******/ 	
 /******/ })()
 ;
 ```
@@ -139,8 +142,9 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -162,10 +166,12 @@ __webpack_require__(/*! ./vendor1 */ 0);
 </details>
 
 ``` js
+/******/ 	
 /******/ 	// startup
-/******/ 	// Load entry module
+/******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	__webpack_require__(1);
+/******/ 	var __webpack_exports__ = __webpack_require__(1);
+/******/ 	
 /******/ })()
 ;
 ```
@@ -229,8 +235,9 @@ __webpack_require__(/*! ./vendor2 */ 1);
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -252,10 +259,12 @@ __webpack_require__(/*! ./vendor2 */ 1);
 </details>
 
 ``` js
+/******/ 	
 /******/ 	// startup
-/******/ 	// Load entry module
+/******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	__webpack_require__(2);
+/******/ 	var __webpack_exports__ = __webpack_require__(2);
+/******/ 	
 /******/ })()
 ;
 ```
@@ -265,11 +274,11 @@ __webpack_require__(/*! ./vendor2 */ 1);
 ## Unoptimized
 
 ```
-asset pageA.js 2.33 KiB [emitted] (name: pageA)
-asset vendor2.js 1.9 KiB [emitted] (name: vendor2)
-asset vendor1.js 1.51 KiB [emitted] (name: vendor1)
-asset pageB.js 1.51 KiB [emitted] (name: pageB)
-asset pageC.js 1.51 KiB [emitted] (name: pageC)
+asset pageA.js 2.43 KiB [emitted] (name: pageA)
+asset vendor2.js 2 KiB [emitted] (name: vendor2)
+asset vendor1.js 1.61 KiB [emitted] (name: vendor1)
+asset pageB.js 1.61 KiB [emitted] (name: pageB)
+asset pageC.js 1.61 KiB [emitted] (name: pageC)
 chunk (runtime: pageA) pageA.js (pageA) 147 bytes [entry] [rendered]
   > ./pageA pageA
   dependent modules 77 bytes [dependent] 2 modules
@@ -305,17 +314,17 @@ chunk (runtime: vendor2) vendor2.js (vendor2) 77 bytes [entry] [rendered]
     cjs require ./vendor2 ./pageA.js 3:0-20
     cjs self exports reference ./vendor2.js 1:0-14
     entry ./vendor2 vendor2
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset pageA.js 251 bytes [emitted] [minimized] (name: pageA)
-asset vendor2.js 204 bytes [emitted] [minimized] (name: vendor2)
-asset vendor1.js 162 bytes [emitted] [minimized] (name: vendor1)
-asset pageB.js 160 bytes [emitted] [minimized] (name: pageB)
-asset pageC.js 160 bytes [emitted] [minimized] (name: pageC)
+asset pageA.js 265 bytes [emitted] [minimized] (name: pageA)
+asset vendor2.js 218 bytes [emitted] [minimized] (name: vendor2)
+asset vendor1.js 176 bytes [emitted] [minimized] (name: vendor1)
+asset pageB.js 174 bytes [emitted] [minimized] (name: pageB)
+asset pageC.js 174 bytes [emitted] [minimized] (name: pageC)
 chunk (runtime: pageB) pageB.js (pageB) 25 bytes [entry] [rendered]
   > ./pageB pageB
   ./pageB.js 25 bytes [built] [code generated]
@@ -351,5 +360,5 @@ chunk (runtime: vendor1) vendor1.js (vendor1) 27 bytes [entry] [rendered]
     cjs self exports reference ./vendor1.js 1:0-14
     cjs require ./vendor1 ./vendor2.js 2:0-20
     entry ./vendor1 vendor1
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

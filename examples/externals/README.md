@@ -61,22 +61,7 @@ module.exports = {
 })(self, function(__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
-/* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! default exports */
-/*! export exampleValue [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
-/*! other exports [not provided] [maybe used in main (runtime-defined)] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__ */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-var add = __webpack_require__(/*! add */ 1);
-var subtract = __webpack_require__(/*! subtract */ 2);
-
-exports.exampleValue = subtract(add(42, 2), 2);
-
-/***/ }),
+/* 0 */,
 /* 1 */
 /*!**********************!*\
   !*** external "add" ***!
@@ -116,8 +101,9 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -139,10 +125,24 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 </details>
 
 ``` js
-/******/ 	// module exports must be returned from runtime so entry inlining is disabled
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+var exports = __webpack_exports__;
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! default exports */
+/*! export exampleValue [provided] [maybe used in main (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used in main (runtime-defined)] */
+/*! runtime requirements: __webpack_exports__, __webpack_require__ */
+var add = __webpack_require__(/*! add */ 1);
+var subtract = __webpack_require__(/*! subtract */ 2);
+
+exports.exampleValue = subtract(add(42, 2), 2);
+})();
+
+/******/ 	return __webpack_exports__;
 /******/ })()
 ;
 });
@@ -153,7 +153,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 ## Unoptimized
 
 ```
-asset output.js 3.29 KiB [emitted] (name: main)
+asset output.js 3.28 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 84 bytes [dependent] 2 modules
@@ -162,13 +162,13 @@ chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
     [used exports unknown]
     entry ./example.js main
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 650 bytes [emitted] [minimized] (name: main)
+asset output.js 679 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 84 bytes [dependent] 2 modules
@@ -176,5 +176,5 @@ chunk (runtime: main) output.js (main) 194 bytes [entry] [rendered]
     [exports: exampleValue]
     entry ./example.js main
     used as library export
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
