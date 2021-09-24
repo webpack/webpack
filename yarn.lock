@@ -1382,6 +1382,14 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
+assemblyscript@^0.19.16:
+  version "0.19.16"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.19.16.tgz#fc06c9892755775e8e31a59249fbc361fd49e1d1"
+  integrity sha512-AMNdwcat+EEsxjkVQ5vOE/lDbXBvy1swQKAuMG2Ken+DZufZH7wKHIAVKR5liteW/jLL3T971l1MN+onP/bixA==
+  dependencies:
+    binaryen "101.0.0-nightly.20210904"
+    long "^4.0.0"
+
 assert-never@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/assert-never/-/assert-never-1.2.1.tgz#11f0e363bf146205fb08193b5c7b90f4d1cf44fe"
@@ -1529,6 +1537,11 @@ binary-extensions@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.1.0.tgz#30fa40c9e7fe07dbc895678cd287024dea241dd9"
   integrity sha512-1Yj8h9Q+QDF5FzhMs/c9+6UntbD5MkRfRwac8DoEm9ZfUBZ7tZ55YcGVAzEe4bXsdQHEk+s9S5wsOKVdZrw0tQ==
+
+binaryen@101.0.0-nightly.20210904:
+  version "101.0.0-nightly.20210904"
+  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-101.0.0-nightly.20210904.tgz#58a7990d6d64b16567f376a1fe47d8aea6698b14"
+  integrity sha512-2AvJhErttuoMvgNcYPPpPy7C12PSvDdtZWtEeX/Otm/Vtf4ePvBpT3UIA00hGAh8HNaGr+dzFNstxTUvjNwZTg==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -3011,6 +3024,11 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+hash-wasm@^4.9.0:
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/hash-wasm/-/hash-wasm-4.9.0.tgz#7e9dcc9f7d6bd0cc802f2a58f24edce999744206"
+  integrity sha512-7SW7ejyfnRxuOc7ptQHSf4LDoZaWOivfzqw+5rpcQku0nHfmicPKE51ra9BiRLAmT8+gGLestr1XroUkqdjL6w==
+
 hasha@^5.0.0:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/hasha/-/hasha-5.2.2.tgz#a48477989b3b327aea3c04f53096d816d97522a1"
@@ -4188,6 +4206,11 @@ log-update@^4.0.0:
     cli-cursor "^3.1.0"
     slice-ansi "^4.0.0"
     wrap-ansi "^6.2.0"
+
+long@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
+  integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
 
 loose-envify@^1.1.0:
   version "1.4.0"
@@ -5787,9 +5810,9 @@ toml@^3.0.0:
   resolved "https://registry.yarnpkg.com/toml/-/toml-3.0.0.tgz#342160f1af1904ec9d204d03a5d61222d762c5ee"
   integrity sha512-y/mWCZinnvxjTKYhJ+pYxwD0mRLVvOtdS2Awbgxln6iEnt4rk0yBxeSBHkGJcPucRiG0e55mwWp+g/05rsrd6w==
 
-tooling@webpack/tooling#v1.19.0:
-  version "1.19.0"
-  resolved "https://codeload.github.com/webpack/tooling/tar.gz/6b7567edcd6d93f5e5dc1df8364e0b1204edcac3"
+tooling@webpack/tooling#v1.20.0:
+  version "1.20.0"
+  resolved "https://codeload.github.com/webpack/tooling/tar.gz/ddaacde8cbc468eb6473bee0c3547477d365f3f2"
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     ajv "^8.1.0"

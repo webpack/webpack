@@ -759,7 +759,7 @@ declare class Chunk {
 	): Record<string | number, Record<string, (string | number)[]>>;
 }
 declare class ChunkGraph {
-	constructor(moduleGraph: ModuleGraph);
+	constructor(moduleGraph: ModuleGraph, hashFunction?: string | typeof Hash);
 	moduleGraph: ModuleGraph;
 	connectChunkAndModule(chunk: Chunk, module: Module): void;
 	disconnectChunkAndModule(chunk: Chunk, module: Module): void;
@@ -4306,7 +4306,7 @@ declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The hashing algorithm to use, defaults to 'md4'. All functions from Node.JS' crypto.createHash are supported.
 	 */
-	hashFunction?: string;
+	hashFunction?: string | typeof Hash;
 }
 declare abstract class HelperRuntimeModule extends RuntimeModule {}
 declare class HotModuleReplacementPlugin {
@@ -12022,10 +12022,23 @@ declare namespace exports {
 		export let NAMESPACE: string;
 		export let REGEXP_NAMESPACE: RegExp;
 		export let createFilename: (
-			module: any,
+			module: string | Module,
 			options: any,
-			__2: { requestShortener: any; chunkGraph: any }
-		) => any;
+			__2: {
+				/**
+				 * requestShortener
+				 */
+				requestShortener: RequestShortener;
+				/**
+				 * chunk graph
+				 */
+				chunkGraph: ChunkGraph;
+				/**
+				 * the hash function to use
+				 */
+				hashFunction: string | typeof Hash;
+			}
+		) => string;
 		export let replaceDuplicates: (
 			array?: any,
 			fn?: any,
@@ -12281,7 +12294,10 @@ declare namespace exports {
 			export const registerNotSerializable: (Constructor: Constructor) => void;
 			export const NOT_SERIALIZABLE: object;
 			export const buffersSerializer: Serializer;
-			export let createFileSerializer: (fs?: any) => Serializer;
+			export let createFileSerializer: (
+				fs?: any,
+				hashFunction?: any
+			) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
 		export const cleverMerge: <T, O>(first: T, second: O) => T | O | (T & O);
