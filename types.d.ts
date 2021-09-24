@@ -891,7 +891,8 @@ declare class ChunkGraph {
 	addModuleRuntimeRequirements(
 		module: Module,
 		runtime: RuntimeSpec,
-		items: Set<string>
+		items: Set<string>,
+		transferOwnership?: boolean
 	): void;
 	addChunkRuntimeRequirements(chunk: Chunk, items: Set<string>): void;
 	addTreeRuntimeRequirements(chunk: Chunk, items: Iterable<string>): void;
@@ -1458,6 +1459,8 @@ declare class Compilation {
 	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: { javascript: ModuleTemplate };
+	memCache?: MemCache;
+	moduleMemCaches?: WeakMap<Module, MemCache>;
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
 	codeGenerationResults: CodeGenerationResults;
@@ -1594,7 +1597,7 @@ declare class Compilation {
 	reportDependencyErrorsAndWarnings(
 		module: Module,
 		blocks: DependenciesBlock[]
-	): void;
+	): boolean;
 	codeGeneration(callback?: any): void;
 	processRuntimeRequirements(__0?: {
 		/**
@@ -1894,6 +1897,7 @@ declare class Compiler {
 	context: string;
 	requestShortener: RequestShortener;
 	cache: Cache;
+	moduleMemCaches?: WeakMap<Module, { hash: string; memCache: MemCache }>;
 	compilerPath: string;
 	running: boolean;
 	idle: boolean;
@@ -3283,6 +3287,11 @@ declare interface Experiments {
 	buildHttp?: boolean | HttpUriOptions;
 
 	/**
+	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 */
+	cacheUnaffected?: boolean;
+
+	/**
 	 * Apply defaults of next major version.
 	 */
 	futureDefaults?: boolean;
@@ -3908,6 +3917,11 @@ declare interface FileCacheOptions {
 	 * Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.
 	 */
 	maxMemoryGenerations?: number;
+
+	/**
+	 * Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.
+	 */
+	memoryCacheUnaffected?: boolean;
 
 	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
@@ -6299,11 +6313,21 @@ declare interface MapOptions {
 	columns?: boolean;
 	module?: boolean;
 }
+declare abstract class MemCache {
+	get<T extends any[], V>(...args: T): undefined | V;
+	set<T extends [any, ...any[]]>(...args: T): void;
+	provide<T extends [any, ...((...args: any[]) => V)[]], V>(...args: T): V;
+}
 
 /**
  * Options object for in-memory caching.
  */
 declare interface MemoryCacheOptions {
+	/**
+	 * Additionally cache computation of modules that are unchanged and reference only unchanged modules.
+	 */
+	cacheUnaffected?: boolean;
+
 	/**
 	 * Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).
 	 */
