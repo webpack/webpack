@@ -1268,15 +1268,15 @@ asset <CLR=32,BOLD>main.js</CLR> 84 bytes <CLR=32,BOLD>[emitted]</CLR> (name: ma
 <CLR=31,BOLD>DEBUG</CLR> <CLR=BOLD>LOG from ./node_modules/custom-loader/index.js Named Logger ./node_modules/custom-loader/index.js!./index.js</CLR>
     Message with named logger
 
-<CLR=BOLD>LOG from webpack.FlagDependencyExportsPlugin</CLR>
-    <CLR=BOLD>0% of exports of modules have been determined (1 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 additional calculations due to dependencies)</CLR>
-+ 3 hidden lines
-
 <CLR=BOLD>LOG from webpack.Compilation</CLR>
-    <CLR=BOLD>1 modules hashed (1 variants per module in average)</CLR>
+    <CLR=BOLD>1 modules hashed, 0 from cache (1 variants per module in average)</CLR>
     <CLR=BOLD>100% code generated (1 generated, 0 from cache)</CLR>
     <CLR=BOLD>NaN% code generated (0 generated, 0 from cache)</CLR>
-+ 19 hidden lines
++ 23 hidden lines
+
+<CLR=BOLD>LOG from webpack.FlagDependencyExportsPlugin</CLR>
+    <CLR=BOLD>0% of exports of modules have been determined (1 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 from mem cache, 0 additional calculations due to dependencies)</CLR>
++ 3 hidden lines
 
 <CLR=BOLD>LOG from webpack.buildChunkGraph</CLR>
     <CLR=BOLD>2 queue items processed (1 blocks)</CLR>
@@ -2057,15 +2057,15 @@ LOG from LogTestPlugin
     End
 + 6 hidden lines
 
-LOG from webpack.FlagDependencyExportsPlugin
-    0% of exports of modules have been determined (6 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 additional calculations due to dependencies)
-+ 3 hidden lines
-
 LOG from webpack.Compilation
-    6 modules hashed (1 variants per module in average)
+    6 modules hashed, 0 from cache (1 variants per module in average)
     100% code generated (6 generated, 0 from cache)
     100% code generated (7 generated, 0 from cache)
-+ 19 hidden lines
++ 23 hidden lines
+
+LOG from webpack.FlagDependencyExportsPlugin
+    0% of exports of modules have been determined (6 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 from mem cache, 0 additional calculations due to dependencies)
++ 3 hidden lines
 
 LOG from webpack.buildChunkGraph
     15 queue items processed (9 blocks)
@@ -2371,15 +2371,19 @@ LOG from webpack.Compiler
 
 LOG from webpack.Compilation
 <t> finish module profiles: X ms
+<t> compute affected modules: X ms
 <t> finish modules: X ms
 <t> report dependency errors and warnings: X ms
 <t> optimize dependencies: X ms
 <t> create chunks: X ms
 <t> optimize: X ms
-    6 modules hashed (1 variants per module in average)
+    6 modules hashed, 0 from cache (1 variants per module in average)
 <t> module hashing: X ms
     100% code generated (6 generated, 0 from cache)
 <t> code generation: X ms
+<t> runtime requirements.modules: X ms
+<t> runtime requirements.chunks: X ms
+<t> runtime requirements.entries: X ms
 <t> runtime requirements: X ms
 <t> hashing: initialize hash: X ms
 <t> hashing: sort chunks: X ms
@@ -2397,7 +2401,7 @@ LOG from webpack.Compilation
 LOG from webpack.FlagDependencyExportsPlugin
 <t> restore cached provided exports: X ms
 <t> figure out provided exports: X ms
-    0% of exports of modules have been determined (6 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 additional calculations due to dependencies)
+    0% of exports of modules have been determined (6 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 from mem cache, 0 additional calculations due to dependencies)
 <t> store provided exports into cache: X ms
 
 LOG from webpack.InnerGraphPlugin
