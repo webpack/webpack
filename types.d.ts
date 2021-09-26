@@ -759,7 +759,7 @@ declare class Chunk {
 	): Record<string | number, Record<string, (string | number)[]>>;
 }
 declare class ChunkGraph {
-	constructor(moduleGraph: ModuleGraph);
+	constructor(moduleGraph: ModuleGraph, hashFunction?: string | typeof Hash);
 	moduleGraph: ModuleGraph;
 	connectChunkAndModule(chunk: Chunk, module: Module): void;
 	disconnectChunkAndModule(chunk: Chunk, module: Module): void;
@@ -891,7 +891,8 @@ declare class ChunkGraph {
 	addModuleRuntimeRequirements(
 		module: Module,
 		runtime: RuntimeSpec,
-		items: Set<string>
+		items: Set<string>,
+		transferOwnership?: boolean
 	): void;
 	addChunkRuntimeRequirements(chunk: Chunk, items: Set<string>): void;
 	addTreeRuntimeRequirements(chunk: Chunk, items: Iterable<string>): void;
@@ -1458,6 +1459,8 @@ declare class Compilation {
 	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: { javascript: ModuleTemplate };
+	memCache?: MemCache;
+	moduleMemCaches?: WeakMap<Module, MemCache>;
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
 	codeGenerationResults: CodeGenerationResults;
@@ -1594,7 +1597,7 @@ declare class Compilation {
 	reportDependencyErrorsAndWarnings(
 		module: Module,
 		blocks: DependenciesBlock[]
-	): void;
+	): boolean;
 	codeGeneration(callback?: any): void;
 	processRuntimeRequirements(__0?: {
 		/**
@@ -1894,6 +1897,7 @@ declare class Compiler {
 	context: string;
 	requestShortener: RequestShortener;
 	cache: Cache;
+	moduleMemCaches?: WeakMap<Module, { hash: string; memCache: MemCache }>;
 	compilerPath: string;
 	running: boolean;
 	idle: boolean;
@@ -3283,6 +3287,11 @@ declare interface Experiments {
 	buildHttp?: boolean | HttpUriOptions;
 
 	/**
+	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 */
+	cacheUnaffected?: boolean;
+
+	/**
 	 * Apply defaults of next major version.
 	 */
 	futureDefaults?: boolean;
@@ -3910,6 +3919,11 @@ declare interface FileCacheOptions {
 	maxMemoryGenerations?: number;
 
 	/**
+	 * Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.
+	 */
+	memoryCacheUnaffected?: boolean;
+
+	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
 	 */
 	name?: string;
@@ -4306,7 +4320,7 @@ declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The hashing algorithm to use, defaults to 'md4'. All functions from Node.JS' crypto.createHash are supported.
 	 */
-	hashFunction?: string;
+	hashFunction?: string | typeof Hash;
 }
 declare abstract class HelperRuntimeModule extends RuntimeModule {}
 declare class HotModuleReplacementPlugin {
@@ -6299,11 +6313,21 @@ declare interface MapOptions {
 	columns?: boolean;
 	module?: boolean;
 }
+declare abstract class MemCache {
+	get<T extends any[], V>(...args: T): undefined | V;
+	set<T extends [any, ...any[]]>(...args: T): void;
+	provide<T extends [any, ...((...args: any[]) => V)[]], V>(...args: T): V;
+}
 
 /**
  * Options object for in-memory caching.
  */
 declare interface MemoryCacheOptions {
+	/**
+	 * Additionally cache computation of modules that are unchanged and reference only unchanged modules.
+	 */
+	cacheUnaffected?: boolean;
+
 	/**
 	 * Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).
 	 */
@@ -9783,6 +9807,7 @@ declare class RuntimeChunkPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type RuntimeCondition = undefined | string | boolean | SortableSet<string>;
 declare class RuntimeModule extends Module {
 	constructor(name: string, stage?: number);
 	name: string;
@@ -9829,7 +9854,8 @@ declare interface RuntimeRequirementsContext {
 	codeGenerationResults: CodeGenerationResults;
 }
 type RuntimeSpec = undefined | string | SortableSet<string>;
-declare abstract class RuntimeSpecMap<T> {
+declare class RuntimeSpecMap<T> {
+	constructor(clone?: RuntimeSpecMap<T>);
 	get(runtime: RuntimeSpec): T;
 	has(runtime: RuntimeSpec): boolean;
 	set(runtime?: any, value?: any): void;
@@ -9840,7 +9866,8 @@ declare abstract class RuntimeSpecMap<T> {
 	values(): IterableIterator<T>;
 	readonly size?: number;
 }
-declare abstract class RuntimeSpecSet {
+declare class RuntimeSpecSet {
+	constructor(iterable?: any);
 	add(runtime?: any): void;
 	has(runtime?: any): boolean;
 	[Symbol.iterator](): IterableIterator<RuntimeSpec>;
@@ -11299,6 +11326,10 @@ declare interface TimestampAndHash {
 	timestamp?: number;
 	hash: string;
 }
+declare class TopLevelSymbol {
+	constructor(name: string);
+	name: string;
+}
 
 /**
  * Use a Trusted Types policy to create urls for chunks.
@@ -12022,10 +12053,23 @@ declare namespace exports {
 		export let NAMESPACE: string;
 		export let REGEXP_NAMESPACE: RegExp;
 		export let createFilename: (
-			module: any,
+			module: string | Module,
 			options: any,
-			__2: { requestShortener: any; chunkGraph: any }
-		) => any;
+			__2: {
+				/**
+				 * requestShortener
+				 */
+				requestShortener: RequestShortener;
+				/**
+				 * chunk graph
+				 */
+				chunkGraph: ChunkGraph;
+				/**
+				 * the hash function to use
+				 */
+				hashFunction: string | typeof Hash;
+			}
+		) => string;
 		export let replaceDuplicates: (
 			array?: any,
 			fn?: any,
@@ -12142,6 +12186,52 @@ declare namespace exports {
 		};
 	}
 	export namespace optimize {
+		export namespace InnerGraph {
+			export let bailout: (parserState: ParserState) => void;
+			export let enable: (parserState: ParserState) => void;
+			export let isEnabled: (parserState: ParserState) => boolean;
+			export let addUsage: (
+				state: ParserState,
+				symbol: null | TopLevelSymbol,
+				usage: string | true | TopLevelSymbol
+			) => void;
+			export let addVariableUsage: (
+				parser: JavascriptParser,
+				name: string,
+				usage: string | true | TopLevelSymbol
+			) => void;
+			export let inferDependencyUsage: (state: ParserState) => void;
+			export let onUsage: (
+				state: ParserState,
+				onUsageCallback: (arg0?: boolean | Set<string>) => void
+			) => void;
+			export let setTopLevelSymbol: (
+				state: ParserState,
+				symbol: TopLevelSymbol
+			) => void;
+			export let getTopLevelSymbol: (
+				state: ParserState
+			) => void | TopLevelSymbol;
+			export let tagTopLevelSymbol: (
+				parser: JavascriptParser,
+				name: string
+			) => TopLevelSymbol;
+			export let isDependencyUsedByExports: (
+				dependency: Dependency,
+				usedByExports: boolean | Set<string>,
+				moduleGraph: ModuleGraph,
+				runtime: RuntimeSpec
+			) => boolean;
+			export let getDependencyUsedByExportsCondition: (
+				dependency: Dependency,
+				usedByExports: boolean | Set<string>,
+				moduleGraph: ModuleGraph
+			) =>
+				| null
+				| false
+				| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState);
+			export { TopLevelSymbol, topLevelSymbolTag };
+		}
 		export {
 			AggressiveMergingPlugin,
 			AggressiveSplittingPlugin,
@@ -12267,6 +12357,59 @@ declare namespace exports {
 				b: DependencyLocation
 			) => 0 | 1 | -1;
 		}
+		export namespace runtime {
+			export let getEntryRuntime: (
+				compilation: Compilation,
+				name: string,
+				options?: EntryOptions
+			) => RuntimeSpec;
+			export let forEachRuntime: (
+				runtime: RuntimeSpec,
+				fn: (arg0: string) => void,
+				deterministicOrder?: boolean
+			) => void;
+			export let getRuntimeKey: (runtime: RuntimeSpec) => string;
+			export let keyToRuntime: (key: string) => RuntimeSpec;
+			export let runtimeToString: (runtime: RuntimeSpec) => string;
+			export let runtimeConditionToString: (
+				runtimeCondition: RuntimeCondition
+			) => string;
+			export let runtimeEqual: (a: RuntimeSpec, b: RuntimeSpec) => boolean;
+			export let compareRuntime: (a: RuntimeSpec, b: RuntimeSpec) => 0 | 1 | -1;
+			export let mergeRuntime: (a: RuntimeSpec, b: RuntimeSpec) => RuntimeSpec;
+			export let mergeRuntimeCondition: (
+				a: RuntimeCondition,
+				b: RuntimeCondition,
+				runtime: RuntimeSpec
+			) => RuntimeCondition;
+			export let mergeRuntimeConditionNonFalse: (
+				a: undefined | string | true | SortableSet<string>,
+				b: undefined | string | true | SortableSet<string>,
+				runtime: RuntimeSpec
+			) => undefined | string | true | SortableSet<string>;
+			export let mergeRuntimeOwned: (
+				a: RuntimeSpec,
+				b: RuntimeSpec
+			) => RuntimeSpec;
+			export let intersectRuntime: (
+				a: RuntimeSpec,
+				b: RuntimeSpec
+			) => RuntimeSpec;
+			export let subtractRuntime: (
+				a: RuntimeSpec,
+				b: RuntimeSpec
+			) => RuntimeSpec;
+			export let subtractRuntimeCondition: (
+				a: RuntimeCondition,
+				b: RuntimeCondition,
+				runtime: RuntimeSpec
+			) => RuntimeCondition;
+			export let filterRuntime: (
+				runtime: RuntimeSpec,
+				filter: (arg0: RuntimeSpec) => boolean
+			) => undefined | string | boolean | SortableSet<string>;
+			export { RuntimeSpecMap, RuntimeSpecSet };
+		}
 		export namespace serialization {
 			export const register: (
 				Constructor: Constructor,
@@ -12281,7 +12424,10 @@ declare namespace exports {
 			export const registerNotSerializable: (Constructor: Constructor) => void;
 			export const NOT_SERIALIZABLE: object;
 			export const buffersSerializer: Serializer;
-			export let createFileSerializer: (fs?: any) => Serializer;
+			export let createFileSerializer: (
+				fs?: any,
+				hashFunction?: any
+			) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
 		export const cleverMerge: <T, O>(first: T, second: O) => T | O | (T & O);
@@ -12409,5 +12555,6 @@ declare namespace exports {
 		LoaderContext
 	};
 }
+declare const topLevelSymbolTag: unique symbol;
 
 export = exports;

@@ -699,6 +699,10 @@
             }
           ]
         },
+        "cacheUnaffected": {
+          "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
+          "type": "boolean"
+        },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
           "type": "boolean"
@@ -1026,6 +1030,10 @@
           "description": "Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.",
           "type": "number",
           "minimum": 0
+        },
+        "memoryCacheUnaffected": {
+          "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.",
+          "type": "boolean"
         },
         "name": {
           "description": "Name for the cache. Different names will lead to different coexisting caches.",
@@ -1655,6 +1663,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "cacheUnaffected": {
+          "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules.",
+          "type": "boolean"
+        },
         "maxGenerations": {
           "description": "Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).",
           "type": "number",

@@ -94,6 +94,7 @@ Object {
     "asset": false,
     "asyncWebAssembly": false,
     "buildHttp": false,
+    "cacheUnaffected": false,
     "futureDefaults": false,
     "layers": false,
     "lazyCompilation": false,
@@ -778,48 +779,49 @@ Object {
 	);
 	test("development", { mode: "development" }, e =>
 		e.toMatchInlineSnapshot(`
-		- Expected
-		+ Received
+- Expected
++ Received
 
-		@@ ... @@
-		-   "cache": false,
-		+   "cache": Object {
-		+     "maxGenerations": Infinity,
-		+     "type": "memory",
-		+   },
-		@@ ... @@
-		-   "devtool": false,
-		+   "devtool": "eval",
-		@@ ... @@
-		-   "mode": "none",
-		+   "mode": "development",
-		@@ ... @@
-		-     "unsafeCache": false,
-		+     "unsafeCache": [Function anonymous],
-		@@ ... @@
-		-     "chunkIds": "natural",
-		+     "chunkIds": "named",
-		@@ ... @@
-		-     "moduleIds": "natural",
-		-     "nodeEnv": false,
-		+     "moduleIds": "named",
-		+     "nodeEnv": "development",
-		@@ ... @@
-		-       "minRemainingSize": undefined,
-		+       "minRemainingSize": 0,
-		@@ ... @@
-		-     "pathinfo": false,
-		+     "pathinfo": true,
-		@@ ... @@
-		-     "cache": false,
-		+     "cache": true,
-		@@ ... @@
-		-       "production",
-		+       "development",
-		@@ ... @@
-		-     "cache": false,
-		+     "cache": true,
-	`)
+@@ ... @@
+-   "cache": false,
++   "cache": Object {
++     "cacheUnaffected": false,
++     "maxGenerations": Infinity,
++     "type": "memory",
++   },
+@@ ... @@
+-   "devtool": false,
++   "devtool": "eval",
+@@ ... @@
+-   "mode": "none",
++   "mode": "development",
+@@ ... @@
+-     "unsafeCache": false,
++     "unsafeCache": [Function anonymous],
+@@ ... @@
+-     "chunkIds": "natural",
++     "chunkIds": "named",
+@@ ... @@
+-     "moduleIds": "natural",
+-     "nodeEnv": false,
++     "moduleIds": "named",
++     "nodeEnv": "development",
+@@ ... @@
+-       "minRemainingSize": undefined,
++       "minRemainingSize": 0,
+@@ ... @@
+-     "pathinfo": false,
++     "pathinfo": true,
+@@ ... @@
+-     "cache": false,
++     "cache": true,
+@@ ... @@
+-       "production",
++       "development",
+@@ ... @@
+-     "cache": false,
++     "cache": true,
+`)
 	);
 	test("sync wasm", { experiments: { syncWebAssembly: true } }, e =>
 		e.toMatchInlineSnapshot(`
@@ -1480,25 +1482,26 @@ Object {
 	);
 	test("cache true", { cache: true }, e =>
 		e.toMatchInlineSnapshot(`
-		- Expected
-		+ Received
+- Expected
++ Received
 
-		@@ ... @@
-		-   "cache": false,
-		+   "cache": Object {
-		+     "maxGenerations": Infinity,
-		+     "type": "memory",
-		+   },
-		@@ ... @@
-		-     "unsafeCache": false,
-		+     "unsafeCache": [Function anonymous],
-		@@ ... @@
-		-     "cache": false,
-		+     "cache": true,
-		@@ ... @@
-		-     "cache": false,
-		+     "cache": true,
-	`)
+@@ ... @@
+-   "cache": false,
++   "cache": Object {
++     "cacheUnaffected": false,
++     "maxGenerations": Infinity,
++     "type": "memory",
++   },
+@@ ... @@
+-     "unsafeCache": false,
++     "unsafeCache": [Function anonymous],
+@@ ... @@
+-     "cache": false,
++     "cache": true,
+@@ ... @@
+-     "cache": false,
++     "cache": true,
+`)
 	);
 	test("cache filesystem", { cache: { type: "filesystem" } }, e =>
 		e.toMatchInlineSnapshot(`
@@ -1523,6 +1526,7 @@ Object {
 +     "idleTimeoutForInitialStore": 5000,
 +     "maxAge": 5184000000,
 +     "maxMemoryGenerations": Infinity,
++     "memoryCacheUnaffected": false,
 +     "name": "default-none",
 +     "profile": false,
 +     "store": "pack",
@@ -1545,66 +1549,67 @@ Object {
 		{ mode: "development", cache: { type: "filesystem" } },
 		e =>
 			e.toMatchInlineSnapshot(`
-			- Expected
-			+ Received
+- Expected
++ Received
 
-			@@ ... @@
-			-   "cache": false,
-			+   "cache": Object {
-			+     "allowCollectingMemory": true,
-			+     "buildDependencies": Object {
-			+       "defaultWebpack": Array [
-			+         "<cwd>/lib/",
-			+       ],
-			+     },
-			+     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
-			+     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-development",
-			+     "compression": false,
-			+     "hashAlgorithm": "md4",
-			+     "idleTimeout": 60000,
-			+     "idleTimeoutAfterLargeChanges": 1000,
-			+     "idleTimeoutForInitialStore": 5000,
-			+     "maxAge": 5184000000,
-			+     "maxMemoryGenerations": 5,
-			+     "name": "default-development",
-			+     "profile": false,
-			+     "store": "pack",
-			+     "type": "filesystem",
-			+     "version": "",
-			+   },
-			@@ ... @@
-			-   "devtool": false,
-			+   "devtool": "eval",
-			@@ ... @@
-			-   "mode": "none",
-			+   "mode": "development",
-			@@ ... @@
-			-     "unsafeCache": false,
-			+     "unsafeCache": [Function anonymous],
-			@@ ... @@
-			-     "chunkIds": "natural",
-			+     "chunkIds": "named",
-			@@ ... @@
-			-     "moduleIds": "natural",
-			-     "nodeEnv": false,
-			+     "moduleIds": "named",
-			+     "nodeEnv": "development",
-			@@ ... @@
-			-       "minRemainingSize": undefined,
-			+       "minRemainingSize": 0,
-			@@ ... @@
-			-     "pathinfo": false,
-			+     "pathinfo": true,
-			@@ ... @@
-			-     "cache": false,
-			+     "cache": true,
-			@@ ... @@
-			-       "production",
-			+       "development",
-			@@ ... @@
-			-     "cache": false,
-			+     "cache": true,
-		`)
+@@ ... @@
+-   "cache": false,
++   "cache": Object {
++     "allowCollectingMemory": true,
++     "buildDependencies": Object {
++       "defaultWebpack": Array [
++         "<cwd>/lib/",
++       ],
++     },
++     "cacheDirectory": "<cwd>/node_modules/.cache/webpack",
++     "cacheLocation": "<cwd>/node_modules/.cache/webpack/default-development",
++     "compression": false,
++     "hashAlgorithm": "md4",
++     "idleTimeout": 60000,
++     "idleTimeoutAfterLargeChanges": 1000,
++     "idleTimeoutForInitialStore": 5000,
++     "maxAge": 5184000000,
++     "maxMemoryGenerations": 5,
++     "memoryCacheUnaffected": false,
++     "name": "default-development",
++     "profile": false,
++     "store": "pack",
++     "type": "filesystem",
++     "version": "",
++   },
+@@ ... @@
+-   "devtool": false,
++   "devtool": "eval",
+@@ ... @@
+-   "mode": "none",
++   "mode": "development",
+@@ ... @@
+-     "unsafeCache": false,
++     "unsafeCache": [Function anonymous],
+@@ ... @@
+-     "chunkIds": "natural",
++     "chunkIds": "named",
+@@ ... @@
+-     "moduleIds": "natural",
+-     "nodeEnv": false,
++     "moduleIds": "named",
++     "nodeEnv": "development",
+@@ ... @@
+-       "minRemainingSize": undefined,
++       "minRemainingSize": 0,
+@@ ... @@
+-     "pathinfo": false,
++     "pathinfo": true,
+@@ ... @@
+-     "cache": false,
++     "cache": true,
+@@ ... @@
+-       "production",
++       "development",
+@@ ... @@
+-     "cache": false,
++     "cache": true,
+`)
 	);
 
 	test(
@@ -1814,6 +1819,7 @@ Object {
 +     "idleTimeoutForInitialStore": 5000,
 +     "maxAge": 5184000000,
 +     "maxMemoryGenerations": Infinity,
++     "memoryCacheUnaffected": false,
 +     "name": "default-none",
 +     "profile": false,
 +     "store": "pack",
@@ -1886,19 +1892,24 @@ Object {
 		},
 		e =>
 			e.toMatchInlineSnapshot(`
-			- Expected
-			+ Received
+- Expected
++ Received
 
-			@@ ... @@
-			-     "futureDefaults": false,
-			+     "futureDefaults": true,
-			@@ ... @@
-			-     "__dirname": "mock",
-			-     "__filename": "mock",
-			-     "global": true,
-			+     "__dirname": "warn-mock",
-			+     "__filename": "warn-mock",
-			+     "global": "warn",
-		`)
+@@ ... @@
+-     "cacheUnaffected": false,
+-     "futureDefaults": false,
++     "cacheUnaffected": true,
++     "futureDefaults": true,
+@@ ... @@
+-     "__dirname": "mock",
+-     "__filename": "mock",
+-     "global": true,
++     "__dirname": "warn-mock",
++     "__filename": "warn-mock",
++     "global": "warn",
+@@ ... @@
+-     "hashFunction": "md4",
++     "hashFunction": "xxhash64",
+`)
 	);
 });

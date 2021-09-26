@@ -881,6 +881,10 @@ export interface WebpackOptions {
  */
 export interface MemoryCacheOptions {
 	/**
+	 * Additionally cache computation of modules that are unchanged and reference only unchanged modules.
+	 */
+	cacheUnaffected?: boolean;
+	/**
 	 * Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).
 	 */
 	maxGenerations?: number;
@@ -950,6 +954,10 @@ export interface FileCacheOptions {
 	 * Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.
 	 */
 	maxMemoryGenerations?: number;
+	/**
+	 * Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.
+	 */
+	memoryCacheUnaffected?: boolean;
 	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
 	 */
@@ -1106,6 +1114,10 @@ export interface Experiments {
 	 * Build http(s): urls using a lockfile and resource content cache.
 	 */
 	buildHttp?: boolean | HttpUriOptions;
+	/**
+	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 */
+	cacheUnaffected?: boolean;
 	/**
 	 * Apply defaults of next major version.
 	 */

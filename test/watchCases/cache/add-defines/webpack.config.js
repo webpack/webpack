@@ -4,7 +4,8 @@ const currentWatchStep = require("../../../helpers/currentWatchStep");
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	cache: {
-		type: "memory"
+		type: "memory",
+		cacheUnaffected: false
 	},
 	plugins: [
 		compiler => {

@@ -190,6 +190,7 @@
     "hashbang",
 
     "webassemblyjs",
+    "assemblyscript",
     "fsevents",
     "watchpack",
     "tapable",
@@ -201,6 +202,7 @@
     "MCEP",
     "traceur",
     "atlaskit",
+    "xxhash",
     "xxhashjs",
     "systemjs",
     "skypack",

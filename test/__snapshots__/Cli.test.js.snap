@@ -95,6 +95,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "cache-cache-unaffected": Object {
+    "configs": Array [
+      Object {
+        "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules.",
+        "multiple": false,
+        "path": "cache.cacheUnaffected",
+        "type": "boolean",
+      },
+    ],
+    "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "cache-compression": Object {
     "configs": Array [
       Object {
@@ -255,6 +268,19 @@ Object {
     "description": "Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.",
     "multiple": false,
     "simpleType": "number",
+  },
+  "cache-memory-cache-unaffected": Object {
+    "configs": Array [
+      Object {
+        "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.",
+        "multiple": false,
+        "path": "cache.memoryCacheUnaffected",
+        "type": "boolean",
+      },
+    ],
+    "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "cache-name": Object {
     "configs": Array [
@@ -521,6 +547,19 @@ Object {
       },
     ],
     "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-cache-unaffected": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
+        "multiple": false,
+        "path": "experiments.cacheUnaffected",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
     "multiple": false,
     "simpleType": "boolean",
   },

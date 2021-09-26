@@ -111,7 +111,8 @@ describe("FileSystemInfo", () => {
 		const fsInfo = new FileSystemInfo(fs, {
 			logger,
 			managedPaths,
-			immutablePaths
+			immutablePaths,
+			hashFunction: "sha256"
 		});
 		for (const method of ["warn", "info", "log", "debug"]) {
 			fsInfo.logs = [];
