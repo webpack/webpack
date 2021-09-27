@@ -1299,7 +1299,7 @@ declare class Compilation {
 	/**
 	 * Creates an instance of Compilation.
 	 */
-	constructor(compiler: Compiler);
+	constructor(compiler: Compiler, params: CompilationParams);
 	hooks: Readonly<{
 		buildModule: SyncHook<[Module]>;
 		rebuildModule: SyncHook<[Module]>;
@@ -1455,6 +1455,7 @@ declare class Compilation {
 	outputOptions: OutputNormalized;
 	bail: boolean;
 	profile: boolean;
+	params: CompilationParams;
 	mainTemplate: MainTemplate;
 	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
@@ -1465,7 +1466,11 @@ declare class Compilation {
 	codeGenerationResults: CodeGenerationResults;
 	processDependenciesQueue: AsyncQueue<Module, Module, Module>;
 	addModuleQueue: AsyncQueue<Module, string, Module>;
-	factorizeQueue: AsyncQueue<FactorizeModuleOptions, string, Module>;
+	factorizeQueue: AsyncQueue<
+		FactorizeModuleOptions,
+		string,
+		Module | ModuleFactoryResult
+	>;
 	buildQueue: AsyncQueue<Module, Module, Module>;
 	rebuildQueue: AsyncQueue<Module, Module, Module>;
 
@@ -1546,10 +1551,6 @@ declare class Compilation {
 	processModuleDependenciesNonRecursive(module: Module): void;
 	handleModuleCreation(
 		__0: HandleModuleCreationOptions,
-		callback: (err?: WebpackError, result?: Module) => void
-	): void;
-	factorizeModule(
-		options: FactorizeModuleOptions,
 		callback: (err?: WebpackError, result?: Module) => void
 	): void;
 	addModuleChain(
@@ -1718,6 +1719,16 @@ declare class Compilation {
 		callback: (err?: WebpackError, result?: ExecuteModuleResult) => void
 	): void;
 	checkConstraints(): void;
+	factorizeModule: {
+		(
+			options: FactorizeModuleOptions & { factoryResult?: false },
+			callback: (err?: WebpackError, result?: Module) => void
+		): void;
+		(
+			options: FactorizeModuleOptions & { factoryResult: true },
+			callback: (err?: WebpackError, result?: ModuleFactoryResult) => void
+		): void;
+	};
 
 	/**
 	 * Add additional assets to the compilation.
@@ -1923,7 +1934,7 @@ declare class Compiler {
 		plugins?: WebpackPluginInstance[]
 	): Compiler;
 	isChild(): boolean;
-	createCompilation(): Compilation;
+	createCompilation(params?: any): Compilation;
 	newCompilation(params: CompilationParams): Compilation;
 	createNormalModuleFactory(): NormalModuleFactory;
 	createContextModuleFactory(): ContextModuleFactory;
@@ -3824,6 +3835,11 @@ declare interface FactorizeModuleOptions {
 	currentProfile: ModuleProfile;
 	factory: ModuleFactory;
 	dependencies: Dependency[];
+
+	/**
+	 * return full ModuleFactoryResult instead of only module
+	 */
+	factoryResult?: boolean;
 	originModule: null | Module;
 	contextInfo?: Partial<ModuleFactoryCreateDataContextInfo>;
 	context?: string;
@@ -6551,6 +6567,11 @@ declare interface ModuleFactoryResult {
 	fileDependencies?: Set<string>;
 	contextDependencies?: Set<string>;
 	missingDependencies?: Set<string>;
+
+	/**
+	 * allow to use the unsafe cache
+	 */
+	cacheable?: boolean;
 }
 declare class ModuleFederationPlugin {
 	constructor(options: ModuleFederationPluginOptions);
@@ -7371,8 +7392,6 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	}>;
 	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
-	unsafeCache: boolean;
-	cachePredicate: Function;
 	context: string;
 	fs: InputFileSystem;
 	parserCache: Map<string, WeakMap<Object, any>>;
