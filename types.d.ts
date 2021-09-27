@@ -2243,6 +2243,7 @@ declare class ConstDependency extends NullDependency {
 	static Template: typeof ConstDependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
@@ -2556,6 +2557,7 @@ declare class Dependency {
 	readonly category: string;
 	loc: DependencyLocation;
 	getResourceIdentifier(): null | string;
+	couldAffectReferencingModule(): boolean | typeof TRANSITIVE;
 
 	/**
 	 * Returns the referenced module and export
@@ -2610,6 +2612,7 @@ declare class Dependency {
 	readonly disconnect: any;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
@@ -6521,6 +6524,7 @@ declare class ModuleDependency extends Dependency {
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare abstract class ModuleFactory {
 	create(
@@ -7508,6 +7512,7 @@ declare class NullDependency extends Dependency {
 	static Template: typeof NullDependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -11280,6 +11285,7 @@ declare interface SyntheticDependencyLocation {
 	index?: number;
 }
 declare const TOMBSTONE: unique symbol;
+declare const TRANSITIVE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
 declare interface TagInfo {
 	tag: any;
