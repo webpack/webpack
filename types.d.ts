@@ -1459,8 +1459,7 @@ declare class Compilation {
 	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: { javascript: ModuleTemplate };
-	memCache?: MemCache;
-	moduleMemCaches?: WeakMap<Module, MemCache>;
+	moduleMemCaches?: WeakMap<Module, WeakTupleMap<any, any>>;
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
 	codeGenerationResults: CodeGenerationResults;
@@ -1897,7 +1896,10 @@ declare class Compiler {
 	context: string;
 	requestShortener: RequestShortener;
 	cache: Cache;
-	moduleMemCaches?: WeakMap<Module, { hash: string; memCache: MemCache }>;
+	moduleMemCaches?: WeakMap<
+		Module,
+		{ hash: string; memCache: WeakTupleMap<any, any> }
+	>;
 	compilerPath: string;
 	running: boolean;
 	idle: boolean;
@@ -6312,11 +6314,6 @@ declare abstract class MainTemplate {
 declare interface MapOptions {
 	columns?: boolean;
 	module?: boolean;
-}
-declare abstract class MemCache {
-	get<T extends any[], V>(...args: T): undefined | V;
-	set<T extends [any, ...any[]]>(...args: T): void;
-	provide<T extends [any, ...((...args: any[]) => V)[]], V>(...args: T): V;
 }
 
 /**
@@ -11646,6 +11643,14 @@ declare abstract class Watching {
 	suspend(): void;
 	resume(): void;
 	close(callback: CallbackFunction<void>): void;
+}
+declare abstract class WeakTupleMap<T extends any[], V> {
+	set(...args: [T, ...V[]]): void;
+	has(...args: T): boolean;
+	get(...args: T): V;
+	provide(...args: [T, ...(() => V)[]]): V;
+	delete(...args: T): void;
+	clear(): void;
 }
 declare interface WebAssemblyRenderContext {
 	/**
