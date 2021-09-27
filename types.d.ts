@@ -6708,12 +6708,16 @@ declare class ModuleGraph {
 	setAsync(module: Module): void;
 	getMeta(thing?: any): Object;
 	getMetaIfExisting(thing?: any): Object;
-	freeze(): void;
+	freeze(cacheStage?: string): void;
 	unfreeze(): void;
 	cached<T extends any[], V>(
 		fn: (moduleGraph: ModuleGraph, ...args: T) => V,
 		...args: T
 	): V;
+	setModuleMemCaches(
+		moduleMemCaches: WeakMap<Module, WeakTupleMap<any, any>>
+	): void;
+	dependencyCacheProvide(dependency: Dependency, ...args: any[]): any;
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
