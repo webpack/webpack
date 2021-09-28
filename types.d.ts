@@ -1459,8 +1459,7 @@ declare class Compilation {
 	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: { javascript: ModuleTemplate };
-	memCache?: MemCache;
-	moduleMemCaches?: WeakMap<Module, MemCache>;
+	moduleMemCaches?: WeakMap<Module, WeakTupleMap<any, any>>;
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
 	codeGenerationResults: CodeGenerationResults;
@@ -1897,7 +1896,10 @@ declare class Compiler {
 	context: string;
 	requestShortener: RequestShortener;
 	cache: Cache;
-	moduleMemCaches?: WeakMap<Module, { hash: string; memCache: MemCache }>;
+	moduleMemCaches?: WeakMap<
+		Module,
+		{ hash: string; memCache: WeakTupleMap<any, any> }
+	>;
 	compilerPath: string;
 	running: boolean;
 	idle: boolean;
@@ -2241,6 +2243,7 @@ declare class ConstDependency extends NullDependency {
 	static Template: typeof ConstDependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
@@ -2554,6 +2557,7 @@ declare class Dependency {
 	readonly category: string;
 	loc: DependencyLocation;
 	getResourceIdentifier(): null | string;
+	couldAffectReferencingModule(): boolean | typeof TRANSITIVE;
 
 	/**
 	 * Returns the referenced module and export
@@ -2608,6 +2612,7 @@ declare class Dependency {
 	readonly disconnect: any;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
@@ -6313,11 +6318,6 @@ declare interface MapOptions {
 	columns?: boolean;
 	module?: boolean;
 }
-declare abstract class MemCache {
-	get<T extends any[], V>(...args: T): undefined | V;
-	set<T extends [any, ...any[]]>(...args: T): void;
-	provide<T extends [any, ...((...args: any[]) => V)[]], V>(...args: T): V;
-}
 
 /**
  * Options object for in-memory caching.
@@ -6524,6 +6524,7 @@ declare class ModuleDependency extends Dependency {
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare abstract class ModuleFactory {
 	create(
@@ -6707,12 +6708,16 @@ declare class ModuleGraph {
 	setAsync(module: Module): void;
 	getMeta(thing?: any): Object;
 	getMetaIfExisting(thing?: any): Object;
-	freeze(): void;
+	freeze(cacheStage?: string): void;
 	unfreeze(): void;
 	cached<T extends any[], V>(
 		fn: (moduleGraph: ModuleGraph, ...args: T) => V,
 		...args: T
 	): V;
+	setModuleMemCaches(
+		moduleMemCaches: WeakMap<Module, WeakTupleMap<any, any>>
+	): void;
+	dependencyCacheProvide(dependency: Dependency, ...args: any[]): any;
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
@@ -7511,6 +7516,7 @@ declare class NullDependency extends Dependency {
 	static Template: typeof NullDependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -11283,6 +11289,7 @@ declare interface SyntheticDependencyLocation {
 	index?: number;
 }
 declare const TOMBSTONE: unique symbol;
+declare const TRANSITIVE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
 declare interface TagInfo {
 	tag: any;
@@ -11646,6 +11653,14 @@ declare abstract class Watching {
 	suspend(): void;
 	resume(): void;
 	close(callback: CallbackFunction<void>): void;
+}
+declare abstract class WeakTupleMap<T extends any[], V> {
+	set(...args: [T, ...V[]]): void;
+	has(...args: T): boolean;
+	get(...args: T): V;
+	provide(...args: [T, ...(() => V)[]]): V;
+	delete(...args: T): void;
+	clear(): void;
 }
 declare interface WebAssemblyRenderContext {
 	/**
