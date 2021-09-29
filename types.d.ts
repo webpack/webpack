@@ -1909,7 +1909,11 @@ declare class Compiler {
 	cache: Cache;
 	moduleMemCaches?: WeakMap<
 		Module,
-		{ hash: string; memCache: WeakTupleMap<any, any> }
+		{
+			hash: string;
+			references: WeakMap<Dependency, Module>;
+			memCache: WeakTupleMap<any, any>;
+		}
 	>;
 	compilerPath: string;
 	running: boolean;
