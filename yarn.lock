@@ -759,10 +759,21 @@
     source-map "^0.6.1"
     write-file-atomic "^3.0.0"
 
-"@jest/types@^27.1.0", "@jest/types@^27.1.1":
+"@jest/types@^27.1.0":
   version "27.1.1"
   resolved "https://registry.yarnpkg.com/@jest/types/-/types-27.1.1.tgz#77a3fc014f906c65752d12123a0134359707c0ad"
   integrity sha512-yqJPDDseb0mXgKqmNqypCsb85C22K1aY5+LUxh7syIM9n/b0AsaltxNy+o6tt29VcfGDpYEve175bm3uOhcehA==
+  dependencies:
+    "@types/istanbul-lib-coverage" "^2.0.0"
+    "@types/istanbul-reports" "^3.0.0"
+    "@types/node" "*"
+    "@types/yargs" "^16.0.0"
+    chalk "^4.0.0"
+
+"@jest/types@^27.2.4":
+  version "27.2.4"
+  resolved "https://registry.yarnpkg.com/@jest/types/-/types-27.2.4.tgz#2430042a66e00dc5b140c3636f4474d464c21ee8"
+  integrity sha512-IDO2ezTxeMvQAHxzG/ZvEyA47q0aVfzT95rGFl7bZs/Go0aIucvfDbS2rmnoEdXxlLQhcolmoG/wvL/uKx4tKA==
   dependencies:
     "@types/istanbul-lib-coverage" "^2.0.0"
     "@types/istanbul-reports" "^3.0.0"
@@ -3511,14 +3522,14 @@ jest-config@^27.1.0:
     pretty-format "^27.1.0"
 
 jest-diff@^27.0.0, jest-diff@^27.0.2, jest-diff@^27.1.0:
-  version "27.1.0"
-  resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-27.1.0.tgz#c7033f25add95e2218f3c7f4c3d7b634ab6b3cd2"
-  integrity sha512-rjfopEYl58g/SZTsQFmspBODvMSytL16I+cirnScWTLkQVXYVZfxm78DFfdIIXc05RCYuGjxJqrdyG4PIFzcJg==
+  version "27.2.4"
+  resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-27.2.4.tgz#171c51d3d2c105c457100fee6e7bf7cee51c8d8c"
+  integrity sha512-bLAVlDSCR3gqUPGv+4nzVpEXGsHh98HjUL7Vb2hVyyuBDoQmja8eJb0imUABsuxBeUVmf47taJSAd9nDrwWKEg==
   dependencies:
     chalk "^4.0.0"
     diff-sequences "^27.0.6"
     jest-get-type "^27.0.6"
-    pretty-format "^27.1.0"
+    pretty-format "^27.2.4"
 
 jest-docblock@^27.0.6:
   version "27.0.6"
@@ -4844,12 +4855,12 @@ prettier@^2.0.5, prettier@^2.2.0:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.4.0.tgz#85bdfe0f70c3e777cf13a4ffff39713ca6f64cba"
   integrity sha512-DsEPLY1dE5HF3BxCRBmD4uYZ+5DCbvatnolqTqcxEgKVZnL2kUfyu7b8pPQ5+hTBkdhU9SLUmK0/pHb07RE4WQ==
 
-pretty-format@^27.0.0, pretty-format@^27.0.2, pretty-format@^27.1.0:
-  version "27.2.2"
-  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-27.2.2.tgz#c080f1ab7ac64302e4d438f208596fc649dbeeb3"
-  integrity sha512-+DdLh+rtaElc2SQOE/YPH8k2g3Rf2OXWEpy06p8Szs3hdVSYD87QOOlYRHWAeb/59XTmeVmRKvDD0svHqf6ycA==
+pretty-format@^27.0.0, pretty-format@^27.0.2, pretty-format@^27.1.0, pretty-format@^27.2.4:
+  version "27.2.4"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-27.2.4.tgz#08ea39c5eab41b082852d7093059a091f6ddc748"
+  integrity sha512-NUjw22WJHldzxyps2YjLZkUj6q1HvjqFezkB9Y2cklN8NtVZN/kZEXGZdFw4uny3oENzV5EEMESrkI0YDUH8vg==
   dependencies:
-    "@jest/types" "^27.1.1"
+    "@jest/types" "^27.2.4"
     ansi-regex "^5.0.1"
     ansi-styles "^5.0.0"
     react-is "^17.0.1"
