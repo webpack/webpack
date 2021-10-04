@@ -3741,6 +3741,10 @@ declare class ExternalModule extends Module {
 	request: string | string[] | Record<string, string | string[]>;
 	externalType: string;
 	userRequest: string;
+	restoreFromUnsafeCache(
+		unsafeCacheData?: any,
+		normalModuleFactory?: any
+	): void;
 }
 declare interface ExternalModuleInfo {
 	index: number;
