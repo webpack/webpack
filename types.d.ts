@@ -6669,10 +6669,12 @@ declare class ModuleGraph {
 	setParents(
 		dependency: Dependency,
 		block: DependenciesBlock,
-		module: Module
+		module: Module,
+		indexInBlock?: number
 	): void;
 	getParentModule(dependency: Dependency): Module;
 	getParentBlock(dependency: Dependency): DependenciesBlock;
+	getParentBlockIndex(dependency: Dependency): number;
 	setResolvedModule(
 		originModule: Module,
 		dependency: Dependency,

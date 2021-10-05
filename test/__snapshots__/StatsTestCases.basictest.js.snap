@@ -2072,7 +2072,7 @@ LOG from webpack.buildChunkGraph
     3 chunk groups connected
     3 chunk groups processed for merging (3 module sets, 0 forked, 0 + 0 modules forked, 0 + 0 modules merged into fork, 0 resulting modules)
     3 chunk group info updated (0 already connected chunk groups reconnected)
-+ 13 hidden lines
++ 15 hidden lines
 
 LOG from webpack.FileSystemInfo
     6 new snapshots created
@@ -2421,10 +2421,12 @@ LOG from webpack.buildChunkGraph
 <t> visitModules: calculating available modules: X ms
 <t> visitModules: merging available modules: X ms
 <t> visitModules: check modules for revisit: X ms
+<t> visitModules: prepare: X ms
 <t> visitModules: visiting: X ms
 <t> visitModules: calculating available modules: X ms
 <t> visitModules: merging available modules: X ms
 <t> visitModules: check modules for revisit: X ms
+<t> visitModules: prepare: X ms
 <t> visitModules: visiting: X ms
     15 queue items processed (9 blocks)
     3 chunk groups connected
