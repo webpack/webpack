@@ -1,20 +1,15 @@
 const path = require("path");
 
-/** @type {import("../../../../").Configuration} */
-module.exports = {
+/** @type {function(any, any): import("../../../../").Configuration} */
+module.exports = (env, { srcPath }) => ({
 	mode: "development",
 	cache: {
 		type: "memory"
 	},
 	snapshot: {
-		managedPaths: [
-			path.resolve(
-				__dirname,
-				"../../../js/watch-src/cache/managedPath/node_modules"
-			)
-		]
+		managedPaths: [path.resolve(srcPath, "node_modules")]
 	},
 	module: {
 		unsafeCache: false
 	}
-};
+});
