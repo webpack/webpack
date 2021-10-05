@@ -1911,7 +1911,7 @@ declare class Compiler {
 	moduleMemCaches?: Map<
 		Module,
 		{
-			hash: string;
+			buildInfo: object;
 			references: WeakMap<Dependency, Module>;
 			memCache: WeakTupleMap<any, any>;
 		}
