@@ -1272,7 +1272,7 @@ asset <CLR=32,BOLD>main.js</CLR> 84 bytes <CLR=32,BOLD>[emitted]</CLR> (name: ma
     <CLR=BOLD>1 modules hashed, 0 from cache (1 variants per module in average)</CLR>
     <CLR=BOLD>100% code generated (1 generated, 0 from cache)</CLR>
     <CLR=BOLD>NaN% code generated (0 generated, 0 from cache)</CLR>
-+ 23 hidden lines
++ 24 hidden lines
 
 <CLR=BOLD>LOG from webpack.FlagDependencyExportsPlugin</CLR>
     <CLR=BOLD>0% of exports of modules have been determined (1 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 from mem cache, 0 additional calculations due to dependencies)</CLR>
@@ -2061,7 +2061,7 @@ LOG from webpack.Compilation
     6 modules hashed, 0 from cache (1 variants per module in average)
     100% code generated (6 generated, 0 from cache)
     100% code generated (7 generated, 0 from cache)
-+ 23 hidden lines
++ 24 hidden lines
 
 LOG from webpack.FlagDependencyExportsPlugin
     0% of exports of modules have been determined (6 no declared exports, 0 not cached, 0 flagged uncacheable, 0 from cache, 0 from mem cache, 0 additional calculations due to dependencies)
@@ -2376,6 +2376,7 @@ LOG from webpack.Compilation
 <t> report dependency errors and warnings: X ms
 <t> optimize dependencies: X ms
 <t> create chunks: X ms
+<t> compute affected modules with chunk graph: X ms
 <t> optimize: X ms
     6 modules hashed, 0 from cache (1 variants per module in average)
 <t> module hashing: X ms
