@@ -335,7 +335,6 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 	};
 	loc?: SyntheticDependencyLocation | RealDependencyLocation;
 	request?: string;
-	parent: DependenciesBlock;
 	chunkName: string;
 	module: any;
 }
@@ -2544,6 +2543,8 @@ declare interface DepConstructor {
 declare abstract class DependenciesBlock {
 	dependencies: Dependency[];
 	blocks: AsyncDependenciesBlock[];
+	parent: DependenciesBlock;
+	getRootBlock(): DependenciesBlock;
 
 	/**
 	 * Adds a DependencyBlock to DependencyBlock relationship.
@@ -6669,10 +6670,12 @@ declare class ModuleGraph {
 	setParents(
 		dependency: Dependency,
 		block: DependenciesBlock,
-		module: Module
+		module: Module,
+		indexInBlock?: number
 	): void;
 	getParentModule(dependency: Dependency): Module;
 	getParentBlock(dependency: Dependency): DependenciesBlock;
+	getParentBlockIndex(dependency: Dependency): number;
 	setResolvedModule(
 		originModule: Module,
 		dependency: Dependency,
