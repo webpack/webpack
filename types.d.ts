@@ -6513,6 +6513,7 @@ declare class Module extends DependenciesBlock {
 	getSideEffectsConnectionState(moduleGraph: ModuleGraph): ConnectionState;
 	codeGeneration(context: CodeGenerationContext): CodeGenerationResult;
 	chunkCondition(chunk: Chunk, compilation: Compilation): boolean;
+	hasChunkCondition(): boolean;
 
 	/**
 	 * Assuming this module is in the cache. Update the (cached) module with
