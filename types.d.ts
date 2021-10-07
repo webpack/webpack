@@ -757,6 +757,17 @@ declare class Chunk {
 		filterFn?: (c: Chunk, chunkGraph: ChunkGraph) => boolean
 	): Record<string | number, Record<string, (string | number)[]>>;
 }
+declare abstract class ChunkCombination {
+	debugId: number;
+	size: number;
+	readonly chunksIterable: Iterable<Chunk>;
+	with(chunk: Chunk): ChunkCombination;
+	without(chunk: Chunk): ChunkCombination;
+	withAll(other?: any): any;
+	hasSharedChunks(other?: any): boolean;
+	isSubset(other: ChunkCombination): boolean;
+	getChunks(): Chunk[];
+}
 declare class ChunkGraph {
 	constructor(moduleGraph: ModuleGraph, hashFunction?: string | typeof Hash);
 	moduleGraph: ModuleGraph;
@@ -774,6 +785,7 @@ declare class ChunkGraph {
 	isModuleInChunk(module: Module, chunk: Chunk): boolean;
 	isModuleInChunkGroup(module: Module, chunkGroup: ChunkGroup): boolean;
 	isEntryModule(module: Module): boolean;
+	getModuleChunkCombination(module: Module): ChunkCombination;
 	getModuleChunksIterable(module: Module): Iterable<Chunk>;
 	getOrderedModuleChunksIterable(
 		module: Module,
@@ -1645,6 +1657,7 @@ declare class Compilation {
 	 */
 	addChunk(name?: string): Chunk;
 	assignDepth(module: Module): void;
+	assignDepths(modules: Set<Module>): void;
 	getDependencyReferencedExports(
 		dependency: Dependency,
 		runtime: RuntimeSpec
@@ -6501,6 +6514,7 @@ declare class Module extends DependenciesBlock {
 	getSideEffectsConnectionState(moduleGraph: ModuleGraph): ConnectionState;
 	codeGeneration(context: CodeGenerationContext): CodeGenerationResult;
 	chunkCondition(chunk: Chunk, compilation: Compilation): boolean;
+	hasChunkCondition(): boolean;
 
 	/**
 	 * Assuming this module is in the cache. Update the (cached) module with
