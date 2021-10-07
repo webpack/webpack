@@ -1390,6 +1390,10 @@
         "node": {
           "$ref": "#/definitions/Node"
         },
+        "reexportExportsPresence": {
+          "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+          "enum": ["error", "warn", false]
+        },
         "requireContext": {
           "description": "Enable/disable parsing of require.context syntax.",
           "type": "boolean"

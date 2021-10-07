@@ -1508,6 +1508,24 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-auto-reexport-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.reexportExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-require-context": Object {
     "configs": Array [
       Object {
@@ -2002,6 +2020,24 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-reexport-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.reexportExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-require-context": Object {
     "configs": Array [
       Object {
@@ -2457,6 +2493,24 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-esm-reexport-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.reexportExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-require-context": Object {
     "configs": Array [
       Object {
@@ -2854,6 +2908,24 @@ Object {
       },
     ],
     "description": "Include a polyfill for the 'global' variable.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-reexport-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+        "multiple": false,
+        "path": "module.parser.javascript.reexportExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
     "multiple": false,
     "simpleType": "string",
   },

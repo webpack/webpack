@@ -217,6 +217,7 @@ Object {
         "exprContextRecursive": true,
         "exprContextRegExp": false,
         "exprContextRequest": ".",
+        "reexportExportsPresence": "warn",
         "strictExportPresence": false,
         "strictThisContextOnImports": false,
         "unknownContextCritical": true,

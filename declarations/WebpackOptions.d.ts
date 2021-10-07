@@ -2875,6 +2875,10 @@ export interface JavascriptParserOptions {
 	 */
 	node?: Node;
 	/**
+	 * Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).
+	 */
+	reexportExportsPresence?: "error" | "warn" | false;
+	/**
 	 * Enable/disable parsing of require.context syntax.
 	 */
 	requireContext?: boolean;
