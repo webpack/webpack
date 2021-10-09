@@ -52,7 +52,7 @@ export function update(length: u32): void {
 	let s3 = state3;
 
 	do {
-		s0 = processSingle(s0, load<u64>(dataPtr));
+		s0 = processSingle(s0, load<u64>(dataPtr + 0));
 		s1 = processSingle(s1, load<u64>(dataPtr + 8));
 		s2 = processSingle(s2, load<u64>(dataPtr + 16));
 		s3 = processSingle(s3, load<u64>(dataPtr + 24));
@@ -115,11 +115,11 @@ export function final(length: u32): void {
 function u32ToHex(x: u64): u64 {
 	// from https://johnnylee-sde.github.io/Fast-unsigned-integer-to-hex-string/
 
-	x = ((x & 0xffff) << 32) | ((x & 0xffff0000) >> 16);
-	x = ((x & 0x0000ff000000ff00) >> 8) | ((x & 0x000000ff000000ff) << 16);
-	x = ((x & 0x00f000f000f000f0) >> 4) | ((x & 0x000f000f000f000f) << 8);
+	x = (x & 0xffff) << 32 | (x & 0xffff0000) >> 16;
+	x = (x & 0x0000ff000000ff00) >> 8 | (x & 0x000000ff000000ff) << 16;
+	x = (x & 0x00f000f000f000f0) >> 4 | (x & 0x000f000f000f000f) << 8;
 
-	const mask = ((x + 0x0606060606060606) >> 4) & 0x0101010101010101;
+	const mask = (x + 0x0606060606060606) >> 4 & 0x0101010101010101;
 
 	x |= 0x3030303030303030;
 
