@@ -33,8 +33,8 @@ const files = ["lib/util/hash/xxhash64.js"];
 				asc.main(
 					[
 						sourcePath,
-						// cspell:word Ospeed
-						"-Ospeed",
+						// cspell:word O3
+						"-O3",
 						"--noAssert",
 						"--converge",
 						"--textFile",
