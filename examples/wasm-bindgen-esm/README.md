@@ -1,7 +1,7 @@
 This is a simple example that shows the usage of an ES module packaging around a Rust module, built by wasm-pack.
 
-WebAssembly modules can be imported like other async modules with `import` or `import()`.
-When importing, they are downloaded and instantiated in a streaming way.
+The ES module can be imported like other async modules with `import` or `import()`.
+When importing, the underlying WebAssembly module is downloaded and instantiated in a streaming way.
 
 # example.js
 
