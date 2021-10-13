@@ -10448,12 +10448,12 @@ declare class SizeOnlySource extends Source {
 }
 declare abstract class Snapshot {
 	startTime?: number;
-	fileTimestamps?: Map<string, FileSystemInfoEntry>;
-	fileHashes?: Map<string, string>;
-	fileTshs?: Map<string, string | TimestampAndHash>;
-	contextTimestamps?: Map<string, ResolvedContextFileSystemInfoEntry>;
-	contextHashes?: Map<string, string>;
-	contextTshs?: Map<string, ResolvedContextTimestampAndHash>;
+	fileTimestamps?: Map<string, null | FileSystemInfoEntry>;
+	fileHashes?: Map<string, null | string>;
+	fileTshs?: Map<string, null | string | TimestampAndHash>;
+	contextTimestamps?: Map<string, null | ResolvedContextFileSystemInfoEntry>;
+	contextHashes?: Map<string, null | string>;
+	contextTshs?: Map<string, null | ResolvedContextTimestampAndHash>;
 	missingExistence?: Map<string, boolean>;
 	managedItemInfo?: Map<string, string>;
 	managedFiles?: Set<string>;
