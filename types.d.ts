@@ -335,7 +335,6 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 	};
 	loc?: SyntheticDependencyLocation | RealDependencyLocation;
 	request?: string;
-	parent: DependenciesBlock;
 	chunkName: string;
 	module: any;
 }
@@ -1299,7 +1298,7 @@ declare class Compilation {
 	/**
 	 * Creates an instance of Compilation.
 	 */
-	constructor(compiler: Compiler);
+	constructor(compiler: Compiler, params: CompilationParams);
 	hooks: Readonly<{
 		buildModule: SyncHook<[Module]>;
 		rebuildModule: SyncHook<[Module]>;
@@ -1455,18 +1454,23 @@ declare class Compilation {
 	outputOptions: OutputNormalized;
 	bail: boolean;
 	profile: boolean;
+	params: CompilationParams;
 	mainTemplate: MainTemplate;
 	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: { javascript: ModuleTemplate };
-	memCache?: MemCache;
-	moduleMemCaches?: WeakMap<Module, MemCache>;
+	moduleMemCaches?: Map<Module, WeakTupleMap<any, any>>;
+	moduleMemCaches2?: Map<Module, WeakTupleMap<any, any>>;
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
 	codeGenerationResults: CodeGenerationResults;
 	processDependenciesQueue: AsyncQueue<Module, Module, Module>;
 	addModuleQueue: AsyncQueue<Module, string, Module>;
-	factorizeQueue: AsyncQueue<FactorizeModuleOptions, string, Module>;
+	factorizeQueue: AsyncQueue<
+		FactorizeModuleOptions,
+		string,
+		Module | ModuleFactoryResult
+	>;
 	buildQueue: AsyncQueue<Module, Module, Module>;
 	rebuildQueue: AsyncQueue<Module, Module, Module>;
 
@@ -1547,10 +1551,6 @@ declare class Compilation {
 	processModuleDependenciesNonRecursive(module: Module): void;
 	handleModuleCreation(
 		__0: HandleModuleCreationOptions,
-		callback: (err?: WebpackError, result?: Module) => void
-	): void;
-	factorizeModule(
-		options: FactorizeModuleOptions,
 		callback: (err?: WebpackError, result?: Module) => void
 	): void;
 	addModuleChain(
@@ -1645,6 +1645,7 @@ declare class Compilation {
 	 */
 	addChunk(name?: string): Chunk;
 	assignDepth(module: Module): void;
+	assignDepths(modules: Set<Module>): void;
 	getDependencyReferencedExports(
 		dependency: Dependency,
 		runtime: RuntimeSpec
@@ -1719,6 +1720,16 @@ declare class Compilation {
 		callback: (err?: WebpackError, result?: ExecuteModuleResult) => void
 	): void;
 	checkConstraints(): void;
+	factorizeModule: {
+		(
+			options: FactorizeModuleOptions & { factoryResult?: false },
+			callback: (err?: WebpackError, result?: Module) => void
+		): void;
+		(
+			options: FactorizeModuleOptions & { factoryResult: true },
+			callback: (err?: WebpackError, result?: ModuleFactoryResult) => void
+		): void;
+	};
 
 	/**
 	 * Add additional assets to the compilation.
@@ -1897,7 +1908,14 @@ declare class Compiler {
 	context: string;
 	requestShortener: RequestShortener;
 	cache: Cache;
-	moduleMemCaches?: WeakMap<Module, { hash: string; memCache: MemCache }>;
+	moduleMemCaches?: Map<
+		Module,
+		{
+			buildInfo: object;
+			references: WeakMap<Dependency, Module>;
+			memCache: WeakTupleMap<any, any>;
+		}
+	>;
 	compilerPath: string;
 	running: boolean;
 	idle: boolean;
@@ -1921,7 +1939,7 @@ declare class Compiler {
 		plugins?: WebpackPluginInstance[]
 	): Compiler;
 	isChild(): boolean;
-	createCompilation(): Compilation;
+	createCompilation(params?: any): Compilation;
 	newCompilation(params: CompilationParams): Compilation;
 	createNormalModuleFactory(): NormalModuleFactory;
 	createContextModuleFactory(): ContextModuleFactory;
@@ -2241,6 +2259,7 @@ declare class ConstDependency extends NullDependency {
 	static Template: typeof ConstDependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
@@ -2525,6 +2544,8 @@ declare interface DepConstructor {
 declare abstract class DependenciesBlock {
 	dependencies: Dependency[];
 	blocks: AsyncDependenciesBlock[];
+	parent: DependenciesBlock;
+	getRootBlock(): DependenciesBlock;
 
 	/**
 	 * Adds a DependencyBlock to DependencyBlock relationship.
@@ -2554,6 +2575,7 @@ declare class Dependency {
 	readonly category: string;
 	loc: DependencyLocation;
 	getResourceIdentifier(): null | string;
+	couldAffectReferencingModule(): boolean | typeof TRANSITIVE;
 
 	/**
 	 * Returns the referenced module and export
@@ -2608,6 +2630,7 @@ declare class Dependency {
 	readonly disconnect: any;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
@@ -3721,6 +3744,10 @@ declare class ExternalModule extends Module {
 	request: string | string[] | Record<string, string | string[]>;
 	externalType: string;
 	userRequest: string;
+	restoreFromUnsafeCache(
+		unsafeCacheData?: any,
+		normalModuleFactory?: any
+	): void;
 }
 declare interface ExternalModuleInfo {
 	index: number;
@@ -3819,6 +3846,11 @@ declare interface FactorizeModuleOptions {
 	currentProfile: ModuleProfile;
 	factory: ModuleFactory;
 	dependencies: Dependency[];
+
+	/**
+	 * return full ModuleFactoryResult instead of only module
+	 */
+	factoryResult?: boolean;
 	originModule: null | Module;
 	contextInfo?: Partial<ModuleFactoryCreateDataContextInfo>;
 	context?: string;
@@ -6313,11 +6345,6 @@ declare interface MapOptions {
 	columns?: boolean;
 	module?: boolean;
 }
-declare abstract class MemCache {
-	get<T extends any[], V>(...args: T): undefined | V;
-	set<T extends [any, ...any[]]>(...args: T): void;
-	provide<T extends [any, ...((...args: any[]) => V)[]], V>(...args: T): V;
-}
 
 /**
  * Options object for in-memory caching.
@@ -6475,6 +6502,7 @@ declare class Module extends DependenciesBlock {
 	getSideEffectsConnectionState(moduleGraph: ModuleGraph): ConnectionState;
 	codeGeneration(context: CodeGenerationContext): CodeGenerationResult;
 	chunkCondition(chunk: Chunk, compilation: Compilation): boolean;
+	hasChunkCondition(): boolean;
 
 	/**
 	 * Assuming this module is in the cache. Update the (cached) module with
@@ -6524,6 +6552,7 @@ declare class ModuleDependency extends Dependency {
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare abstract class ModuleFactory {
 	create(
@@ -6550,6 +6579,11 @@ declare interface ModuleFactoryResult {
 	fileDependencies?: Set<string>;
 	contextDependencies?: Set<string>;
 	missingDependencies?: Set<string>;
+
+	/**
+	 * allow to use the unsafe cache
+	 */
+	cacheable?: boolean;
 }
 declare class ModuleFederationPlugin {
 	constructor(options: ModuleFederationPluginOptions);
@@ -6638,10 +6672,12 @@ declare class ModuleGraph {
 	setParents(
 		dependency: Dependency,
 		block: DependenciesBlock,
-		module: Module
+		module: Module,
+		indexInBlock?: number
 	): void;
 	getParentModule(dependency: Dependency): Module;
 	getParentBlock(dependency: Dependency): DependenciesBlock;
+	getParentBlockIndex(dependency: Dependency): number;
 	setResolvedModule(
 		originModule: Module,
 		dependency: Dependency,
@@ -6673,7 +6709,10 @@ declare class ModuleGraph {
 	getOutgoingConnections(module: Module): Iterable<ModuleGraphConnection>;
 	getIncomingConnectionsByOriginModule(
 		module: Module
-	): Map<Module, ReadonlyArray<ModuleGraphConnection>>;
+	): Map<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
+	getOutgoingConnectionsByModule(
+		module: Module
+	): undefined | Map<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
 	getProfile(module: Module): null | ModuleProfile;
 	setProfile(module: Module, profile: null | ModuleProfile): void;
 	getIssuer(module: Module): null | Module;
@@ -6707,12 +6746,16 @@ declare class ModuleGraph {
 	setAsync(module: Module): void;
 	getMeta(thing?: any): Object;
 	getMetaIfExisting(thing?: any): Object;
-	freeze(): void;
+	freeze(cacheStage?: string): void;
 	unfreeze(): void;
 	cached<T extends any[], V>(
 		fn: (moduleGraph: ModuleGraph, ...args: T) => V,
 		...args: T
 	): V;
+	setModuleMemCaches(
+		moduleMemCaches: Map<Module, WeakTupleMap<any, any>>
+	): void;
+	dependencyCacheProvide(dependency: Dependency, ...args: any[]): any;
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
@@ -7343,6 +7386,7 @@ declare interface NormalModuleCompilationHooks {
 	readResourceForScheme: HookMap<
 		AsyncSeriesBailHook<[string, NormalModule], string | Buffer>
 	>;
+	readResource: HookMap<AsyncSeriesBailHook<[object], string | Buffer>>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
@@ -7366,8 +7410,6 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	}>;
 	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
-	unsafeCache: boolean;
-	cachePredicate: Function;
 	context: string;
 	fs: InputFileSystem;
 	parserCache: Map<string, WeakMap<Object, any>>;
@@ -7511,6 +7553,7 @@ declare class NullDependency extends Dependency {
 	static Template: typeof NullDependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -10405,12 +10448,12 @@ declare class SizeOnlySource extends Source {
 }
 declare abstract class Snapshot {
 	startTime?: number;
-	fileTimestamps?: Map<string, FileSystemInfoEntry>;
-	fileHashes?: Map<string, string>;
-	fileTshs?: Map<string, string | TimestampAndHash>;
-	contextTimestamps?: Map<string, ResolvedContextFileSystemInfoEntry>;
-	contextHashes?: Map<string, string>;
-	contextTshs?: Map<string, ResolvedContextTimestampAndHash>;
+	fileTimestamps?: Map<string, null | FileSystemInfoEntry>;
+	fileHashes?: Map<string, null | string>;
+	fileTshs?: Map<string, null | string | TimestampAndHash>;
+	contextTimestamps?: Map<string, null | ResolvedContextFileSystemInfoEntry>;
+	contextHashes?: Map<string, null | string>;
+	contextTshs?: Map<string, null | ResolvedContextTimestampAndHash>;
 	missingExistence?: Map<string, boolean>;
 	managedItemInfo?: Map<string, string>;
 	managedFiles?: Set<string>;
@@ -11283,6 +11326,7 @@ declare interface SyntheticDependencyLocation {
 	index?: number;
 }
 declare const TOMBSTONE: unique symbol;
+declare const TRANSITIVE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
 declare interface TagInfo {
 	tag: any;
@@ -11646,6 +11690,14 @@ declare abstract class Watching {
 	suspend(): void;
 	resume(): void;
 	close(callback: CallbackFunction<void>): void;
+}
+declare abstract class WeakTupleMap<T extends any[], V> {
+	set(...args: [T, ...V[]]): void;
+	has(...args: T): boolean;
+	get(...args: T): V;
+	provide(...args: [T, ...(() => V)[]]): V;
+	delete(...args: T): void;
+	clear(): void;
 }
 declare interface WebAssemblyRenderContext {
 	/**

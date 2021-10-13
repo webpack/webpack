@@ -6,5 +6,8 @@ module.exports = (env, { srcPath }) => ({
 	},
 	snapshot: {
 		managedPaths: [path.resolve(srcPath, "node_modules")]
+	},
+	module: {
+		unsafeCache: false
 	}
 });
