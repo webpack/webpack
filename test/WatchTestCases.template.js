@@ -136,7 +136,7 @@ const describeCases = config => {
 										srcPath: tempDirectory
 									});
 								}
-								const applyConfig = options => {
+								const applyConfig = (options, idx) => {
 									if (!options.mode) options.mode = "development";
 									if (!options.context) options.context = tempDirectory;
 									if (!options.entry) options.entry = "./index.js";
@@ -148,6 +148,11 @@ const describeCases = config => {
 										options.output.pathinfo = true;
 									if (!options.output.filename)
 										options.output.filename = "bundle.js";
+									if (options.cache && options.cache.type === "filesystem") {
+										const cacheDirectory = path.join(tempDirectory, ".cache");
+										options.cache.cacheDirectory = cacheDirectory;
+										options.cache.name = `config-${idx}`;
+									}
 									if (config.experiments) {
 										if (!options.experiments) options.experiments = {};
 										for (const key of Object.keys(config.experiments)) {
@@ -166,7 +171,7 @@ const describeCases = config => {
 								if (Array.isArray(options)) {
 									options.forEach(applyConfig);
 								} else {
-									applyConfig(options);
+									applyConfig(options, 0);
 								}
 
 								const state = {};
@@ -194,7 +199,7 @@ const describeCases = config => {
 											triggeringFilename = filename;
 										}
 									);
-									const watching = compiler.watch(
+									compiler.watch(
 										{
 											aggregateTimeout: 1000
 										},
@@ -391,10 +396,10 @@ const describeCases = config => {
 																done
 															)
 														) {
-															watching.close();
+															compiler.close();
 															return;
 														}
-														watching.close(done);
+														compiler.close(done);
 													}
 												},
 												45000
