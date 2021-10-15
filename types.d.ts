@@ -5001,6 +5001,7 @@ declare class JavascriptParser extends Parser {
 		| ForOfStatement
 	)[];
 	prevStatement: any;
+	currentVariableDeclarator?: VariableDeclarator;
 	currentTagData: any;
 	getRenameIdentifier(expr?: any): undefined | string;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
@@ -5193,6 +5194,8 @@ declare class JavascriptParser extends Parser {
 		commentsStartPos: number
 	): boolean;
 	getComments(range?: any): any[];
+	getUsedPropertiesIfAny(): undefined | string[];
+	getUsedObjectProperties(pattern: ObjectPattern): undefined | string[];
 	isAsiPosition(pos: number): boolean;
 	unsetAsiPosition(pos: number): void;
 	isStatementLevelExpression(expr?: any): boolean;
@@ -7221,6 +7224,7 @@ type NodeEstreeIndex =
 	| PropertyDefinition
 	| VariableDeclarator
 	| Program
+	| ObjectPattern
 	| Super
 	| SwitchCase
 	| CatchClause
@@ -7228,7 +7232,6 @@ type NodeEstreeIndex =
 	| AssignmentProperty
 	| TemplateElement
 	| SpreadElement
-	| ObjectPattern
 	| ArrayPattern
 	| RestElement
 	| AssignmentPattern
