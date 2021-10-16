@@ -37,24 +37,23 @@ it("should track return in function declaration", () => {
 	expect(result).toBe(0);
 });
 
-// TODO
 it("should track return in function expression", () => {
 	let result = 0;
 	const a1 = function () {
 		return;
-		result = require("./a");
+		result = require("./b");
 	}
 
 	const a2 = function () {
 		if (true) return;
-		result = require("./a");
+		result = require("./b");
 	}
 
 	const a3 = function () {
 		{
 			{
 				if (true) return;
-				result = require("./a");
+				result = require("./b");
 			}
 		}
 	}
@@ -64,7 +63,7 @@ it("should track return in function expression", () => {
 			{
 				{}
 				return;
-				result = require("./a");
+				result = require("./b");
 			}
 		}
 	}
@@ -77,24 +76,23 @@ it("should track return in function expression", () => {
 	expect(result).toBe(0);
 });
 
-// TODO
 it("should track return in arrow function expression", () => {
 	let result = 0;
 	const a1 = () => {
 		return;
-		result = require("./a");
+		result = require("./c");
 	}
 
 	const a2 = () => {
 		if (true) return;
-		result = require("./a");
+		result = require("./c");
 	}
 
 	const a3 = () => {
 		{
 			{
 				if (true) return;
-				result = require("./a");
+				result = require("./c");
 			}
 		}
 	}
@@ -104,7 +102,7 @@ it("should track return in arrow function expression", () => {
 			{
 				{}
 				return;
-				result = require("./a");
+				result = require("./c");
 			}
 		}
 	}
