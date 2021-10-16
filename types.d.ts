@@ -5150,7 +5150,7 @@ declare class JavascriptParser extends Parser {
 	inScope(params: any, fn: () => void): void;
 	inExecutedPath(state?: any, fn?: any): void;
 	inFunctionScope(hasThis?: any, params?: any, fn?: any): void;
-	inBlockScope(fn?: any, executedPath?: any): void;
+	inBlockScope(fn?: any, executedPath?: boolean): void;
 	detectMode(statements?: any): void;
 	enterPatterns(patterns?: any, onIdent?: any): void;
 	enterPattern(pattern?: any, onIdent?: any): void;
