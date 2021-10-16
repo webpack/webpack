@@ -1,3 +1,7 @@
+function rand() {
+	return Math.random() > 0.5;
+}
+
 it("should track return in function declaration", () => {
 	let result = 0;
 	function a1() {
@@ -29,10 +33,18 @@ it("should track return in function declaration", () => {
 		}
 	}
 
+	function a5() {
+		if (rand()) {
+			return;
+			throw require("./a");
+		}
+	}
+
 	a1();
 	a2();
 	a3();
 	a4();
+	a5();
 
 	expect(result).toBe(0);
 });
@@ -68,10 +80,18 @@ it("should track return in function expression", () => {
 		}
 	}
 
+	const a5 = function () {
+		if (rand()) {
+			return;
+			throw require("./b");
+		}
+	}
+
 	a1();
 	a2();
 	a3();
 	a4();
+	a5();
 
 	expect(result).toBe(0);
 });
@@ -107,10 +127,37 @@ it("should track return in arrow function expression", () => {
 		}
 	}
 
+	const a5 = () => {
+		if (rand()) {
+			return;
+			throw require("./c");
+		}
+	}
+
 	a1();
 	a2();
 	a3();
 	a4();
+	a5();
 
 	expect(result).toBe(0);
+});
+
+it("should work correct for try catch", () => {
+	try {
+		throw 1;
+	} catch (e) {
+		require('./used');
+	}
+
+	for(let i = 0; i < 1; i++)
+		if (rand())
+			require('./used1');
+
+	try {
+		if (rand()) {
+			if (true) return;
+			require("./c");
+		}
+	} catch {}
 });

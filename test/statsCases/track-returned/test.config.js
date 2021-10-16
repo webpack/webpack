@@ -1,5 +1,5 @@
 module.exports = {
 	validate(stats) {
-		expect(stats.compilation.modules.size).toBe(1)
+		expect(stats.compilation.modules.size).toBe(3)
 	}
 };
