@@ -4379,10 +4379,11 @@ global:
 `;
 
 exports[`StatsTestCases should print correct stats for track-returned 1`] = `
-"asset bundle.js 4.92 KiB [emitted] (name: main)
-./index.js 1.92 KiB [built] [code generated]
+"asset bundle.js 5.45 KiB [emitted] (name: main)
+./index.js 2.18 KiB [built] [code generated]
 ./used.js 21 bytes [built] [code generated]
 ./used1.js 21 bytes [built] [code generated]
+./used2.js 21 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 

@@ -143,7 +143,7 @@ it("should track return in arrow function expression", () => {
 	expect(result).toBe(0);
 });
 
-it("should work correct for try catch", () => {
+it("should work correct for try catch and loops", () => {
 	try {
 		throw 1;
 	} catch (e) {
@@ -160,4 +160,19 @@ it("should work correct for try catch", () => {
 			require("./c");
 		}
 	} catch {}
+});
+
+it("should handle edge case with switch case", () => {
+	const a = rand() ? 1 : 2;
+	switch (a) {
+		case 1: {
+			if (true) return;
+			return require('./c');
+		}
+		case 2:
+			if (true) return;
+			return require('./c');
+		default:
+			require('./used2');
+	}
 });
