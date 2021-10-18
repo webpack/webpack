@@ -488,16 +488,35 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-build-http": Object {
+  "experiments-build-http-allowed-uris": Object {
     "configs": Array [
       Object {
-        "description": "Build http(s): urls using a lockfile and resource content cache.",
-        "multiple": false,
-        "path": "experiments.buildHttp",
-        "type": "boolean",
+        "description": "Allowed URI pattern.",
+        "multiple": true,
+        "path": "experiments.buildHttp.allowedUris[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Allowed URI (resp. the beginning of it).",
+        "multiple": true,
+        "path": "experiments.buildHttp.allowedUris[]",
+        "type": "string",
       },
     ],
-    "description": "Build http(s): urls using a lockfile and resource content cache.",
+    "description": "Allowed URI pattern. Allowed URI (resp. the beginning of it).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "experiments-build-http-allowed-uris-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'experiments.buildHttp.allowedUris' configuration. List of allowed URIs (resp. the beginning of them).",
+        "multiple": false,
+        "path": "experiments.buildHttp.allowedUris",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'experiments.buildHttp.allowedUris' configuration. List of allowed URIs (resp. the beginning of them).",
     "multiple": false,
     "simpleType": "boolean",
   },

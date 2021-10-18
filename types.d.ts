@@ -3289,11 +3289,12 @@ declare interface ExecuteModuleResult {
 	missingDependencies: LazySet<string>;
 	buildDependencies: LazySet<string>;
 }
+type Experiments = ExperimentsCommon & ExperimentsExtra;
 
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
  */
-declare interface Experiments {
+declare interface ExperimentsCommon {
 	/**
 	 * Allow module type 'asset' to generate assets.
 	 */
@@ -3303,11 +3304,6 @@ declare interface Experiments {
 	 * Support WebAssembly as asynchronous EcmaScript Module.
 	 */
 	asyncWebAssembly?: boolean;
-
-	/**
-	 * Build http(s): urls using a lockfile and resource content cache.
-	 */
-	buildHttp?: boolean | HttpUriOptions;
 
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
@@ -3325,40 +3321,6 @@ declare interface Experiments {
 	layers?: boolean;
 
 	/**
-	 * Compile entrypoints and import()s only when they are accessed.
-	 */
-	lazyCompilation?:
-		| boolean
-		| {
-				/**
-				 * A custom backend.
-				 */
-				backend?:
-					| ((
-							compiler: Compiler,
-							client: string,
-							callback: (err?: Error, api?: any) => void
-					  ) => void)
-					| ((compiler: Compiler, client: string) => Promise<any>);
-				/**
-				 * A custom client.
-				 */
-				client?: string;
-				/**
-				 * Enable/disable lazy compilation for entries.
-				 */
-				entries?: boolean;
-				/**
-				 * Enable/disable lazy compilation for import() modules.
-				 */
-				imports?: boolean;
-				/**
-				 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
-				 */
-				test?: string | RegExp | ((module: Module) => boolean);
-		  };
-
-	/**
 	 * Allow output javascript files as module source type.
 	 */
 	outputModule?: boolean;
@@ -3372,6 +3334,37 @@ declare interface Experiments {
 	 * Allow using top-level-await in EcmaScript Modules.
 	 */
 	topLevelAwait?: boolean;
+}
+
+/**
+ * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+ */
+declare interface ExperimentsExtra {
+	/**
+	 * Build http(s): urls using a lockfile and resource content cache.
+	 */
+	buildHttp?: HttpUriOptions | (string | RegExp | ((uri: string) => boolean))[];
+
+	/**
+	 * Compile entrypoints and import()s only when they are accessed.
+	 */
+	lazyCompilation?: boolean | LazyCompilationOptions;
+}
+type ExperimentsNormalized = ExperimentsCommon & ExperimentsNormalizedExtra;
+
+/**
+ * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+ */
+declare interface ExperimentsNormalizedExtra {
+	/**
+	 * Build http(s): urls using a lockfile and resource content cache.
+	 */
+	buildHttp?: HttpUriOptions;
+
+	/**
+	 * Compile entrypoints and import()s only when they are accessed.
+	 */
+	lazyCompilation?: LazyCompilationOptions;
 }
 declare abstract class ExportInfo {
 	name: string;
@@ -4383,6 +4376,11 @@ declare class HotUpdateChunk extends Chunk {
  */
 declare interface HttpUriOptions {
 	/**
+	 * List of allowed URIs (resp. the beginning of them).
+	 */
+	allowedUris: (string | RegExp | ((uri: string) => boolean))[];
+
+	/**
 	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
 	 */
 	cacheLocation?: string | false;
@@ -4403,27 +4401,7 @@ declare interface HttpUriOptions {
 	upgrade?: boolean;
 }
 declare class HttpUriPlugin {
-	constructor(options?: {
-		/**
-		 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
-		 */
-		cacheLocation?: string | false;
-		/**
-		 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
-		 */
-		frozen?: boolean;
-		/**
-		 * Location of the lockfile.
-		 */
-		lockfileLocation?: string;
-		/**
-		 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
-		 */
-		upgrade?: boolean;
-		hashFunction?: string | typeof Hash;
-		hashDigest?: string;
-		hashDigestLength?: number;
-	});
+	constructor(options: HttpUriOptions);
 
 	/**
 	 * Apply the plugin
@@ -5813,6 +5791,42 @@ declare interface KnownStatsProfile {
 	additionalIntegration: number;
 	factory: number;
 	dependencies: number;
+}
+
+/**
+ * Options for compiling entrypoints and import()s only when they are accessed.
+ */
+declare interface LazyCompilationOptions {
+	/**
+	 * A custom backend.
+	 */
+	backend?:
+		| ((
+				compiler: Compiler,
+				client: string,
+				callback: (err?: Error, api?: any) => void
+		  ) => void)
+		| ((compiler: Compiler, client: string) => Promise<any>);
+
+	/**
+	 * A custom client.
+	 */
+	client?: string;
+
+	/**
+	 * Enable/disable lazy compilation for entries.
+	 */
+	entries?: boolean;
+
+	/**
+	 * Enable/disable lazy compilation for import() modules.
+	 */
+	imports?: boolean;
+
+	/**
+	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
+	 */
+	test?: string | RegExp | ((module: Module) => boolean);
 }
 declare class LazySet<T> {
 	constructor(iterable?: Iterable<T>);
@@ -11837,7 +11851,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
 	 */
-	experiments: Experiments;
+	experiments: ExperimentsNormalized;
 
 	/**
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
