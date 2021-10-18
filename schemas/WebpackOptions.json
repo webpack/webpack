@@ -1005,20 +1005,40 @@
           "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
           "type": "array",
           "items": {
-            "description": "A path to a immutable directory (usually a package manager cache directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
+            "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to a immutable directory (usually a package manager cache directory).",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         },
         "managedPaths": {
           "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
           "type": "array",
           "items": {
-            "description": "A path to a managed directory (usually a node_modules directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
+            "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash)",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to a managed directory (usually a node_modules directory).",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         },
         "maxAge": {
@@ -3952,20 +3972,40 @@
           "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
           "type": "array",
           "items": {
-            "description": "A path to a immutable directory (usually a package manager cache directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
+            "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to a immutable directory (usually a package manager cache directory).",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         },
         "managedPaths": {
           "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
           "type": "array",
           "items": {
-            "description": "A path to a managed directory (usually a node_modules directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
+            "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash)",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to a managed directory (usually a node_modules directory).",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         },
         "module": {

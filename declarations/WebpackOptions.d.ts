@@ -941,11 +941,11 @@ export interface FileCacheOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: string[];
+	immutablePaths?: (RegExp | string)[];
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: string[];
+	managedPaths?: (RegExp | string)[];
 	/**
 	 * Time for which unused cache entries stay in the filesystem cache at minimum (in milliseconds).
 	 */
@@ -2276,11 +2276,11 @@ export interface SnapshotOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: string[];
+	immutablePaths?: (RegExp | string)[];
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: string[];
+	managedPaths?: (RegExp | string)[];
 	/**
 	 * Options for snapshotting dependencies of modules to determine if they need to be built again.
 	 */

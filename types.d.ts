@@ -1895,8 +1895,8 @@ declare class Compiler {
 	recordsInputPath: null | string;
 	recordsOutputPath: null | string;
 	records: object;
-	managedPaths: Set<string>;
-	immutablePaths: Set<string>;
+	managedPaths: Set<string | RegExp>;
+	immutablePaths: Set<string | RegExp>;
 	modifiedFiles: ReadonlySet<string>;
 	removedFiles: ReadonlySet<string>;
 	fileTimestamps: ReadonlyMap<string, null | FileSystemInfoEntry | "ignore">;
@@ -3933,12 +3933,12 @@ declare interface FileCacheOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: string[];
+	immutablePaths?: (string | RegExp)[];
 
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: string[];
+	managedPaths?: (string | RegExp)[];
 
 	/**
 	 * Time for which unused cache entries stay in the filesystem cache at minimum (in milliseconds).
@@ -4051,10 +4051,12 @@ declare abstract class FileSystemInfo {
 	contextTshQueue: AsyncQueue<string, string, null | ContextTimestampAndHash>;
 	managedItemQueue: AsyncQueue<string, string, null | string>;
 	managedItemDirectoryQueue: AsyncQueue<string, string, Set<string>>;
-	managedPaths: string[];
+	managedPaths: (string | RegExp)[];
 	managedPathsWithSlash: string[];
-	immutablePaths: string[];
+	managedPathsRegExps: RegExp[];
+	immutablePaths: (string | RegExp)[];
 	immutablePathsWithSlash: string[];
+	immutablePathsRegExps: RegExp[];
 	logStatistics(): void;
 	clear(): void;
 	addFileTimestamps(
@@ -10516,12 +10518,12 @@ declare interface SnapshotOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: string[];
+	immutablePaths?: (string | RegExp)[];
 
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: string[];
+	managedPaths?: (string | RegExp)[];
 
 	/**
 	 * Options for snapshotting dependencies of modules to determine if they need to be built again.
