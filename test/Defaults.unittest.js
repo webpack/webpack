@@ -1910,6 +1910,9 @@ Object {
 @@ ... @@
 -     "hashFunction": "md4",
 +     "hashFunction": "xxhash64",
+@@ ... @@
+-       "<cwd>/node_modules",
++       /^(.+?[\\\\/]node_modules[\\\\/])/,
 `)
 	);
 });

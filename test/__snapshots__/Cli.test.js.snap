@@ -181,13 +181,19 @@ Object {
   "cache-immutable-paths": Object {
     "configs": Array [
       Object {
+        "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+        "multiple": true,
+        "path": "cache.immutablePaths[]",
+        "type": "RegExp",
+      },
+      Object {
         "description": "A path to a immutable directory (usually a package manager cache directory).",
         "multiple": true,
         "path": "cache.immutablePaths[]",
         "type": "path",
       },
     ],
-    "description": "A path to a immutable directory (usually a package manager cache directory).",
+    "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash) A path to a immutable directory (usually a package manager cache directory).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -207,13 +213,19 @@ Object {
   "cache-managed-paths": Object {
     "configs": Array [
       Object {
+        "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash)",
+        "multiple": true,
+        "path": "cache.managedPaths[]",
+        "type": "RegExp",
+      },
+      Object {
         "description": "A path to a managed directory (usually a node_modules directory).",
         "multiple": true,
         "path": "cache.managedPaths[]",
         "type": "path",
       },
     ],
-    "description": "A path to a managed directory (usually a node_modules directory).",
+    "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash) A path to a managed directory (usually a node_modules directory).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -7059,13 +7071,19 @@ Object {
   "snapshot-immutable-paths": Object {
     "configs": Array [
       Object {
+        "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+        "multiple": true,
+        "path": "snapshot.immutablePaths[]",
+        "type": "RegExp",
+      },
+      Object {
         "description": "A path to a immutable directory (usually a package manager cache directory).",
         "multiple": true,
         "path": "snapshot.immutablePaths[]",
         "type": "path",
       },
     ],
-    "description": "A path to a immutable directory (usually a package manager cache directory).",
+    "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash) A path to a immutable directory (usually a package manager cache directory).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -7085,13 +7103,19 @@ Object {
   "snapshot-managed-paths": Object {
     "configs": Array [
       Object {
+        "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash)",
+        "multiple": true,
+        "path": "snapshot.managedPaths[]",
+        "type": "RegExp",
+      },
+      Object {
         "description": "A path to a managed directory (usually a node_modules directory).",
         "multiple": true,
         "path": "snapshot.managedPaths[]",
         "type": "path",
       },
     ],
-    "description": "A path to a managed directory (usually a node_modules directory).",
+    "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash) A path to a managed directory (usually a node_modules directory).",
     "multiple": true,
     "simpleType": "string",
   },
