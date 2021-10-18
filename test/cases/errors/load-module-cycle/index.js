@@ -19,3 +19,13 @@ it("should error loadModule when requesting itself", () => {
 		["./a.json", "err: There is a circular build dependency, which makes it impossible to create this module"]
 	]);
 });
+it("should not report a cycle when loadModule is used twice (https://github.com/webpack/webpack/issues/14379)", () => {
+	expect(require("./loader!./4/a")).toEqual([
+		["./b.json", [
+			["./c.json", []]
+		]],
+		["./b.json", [
+			["./c.json", []]
+		]]
+	]);
+});
