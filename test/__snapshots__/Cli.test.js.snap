@@ -4446,6 +4446,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "optimization-split-chunks-fallback-cache-group-min-size-reduction": Object {
+    "configs": Array [
+      Object {
+        "description": "Size of the javascript part of the chunk.",
+        "multiple": false,
+        "path": "optimization.splitChunks.fallbackCacheGroup.minSizeReduction",
+        "type": "number",
+      },
+    ],
+    "description": "Size of the javascript part of the chunk.",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "optimization-split-chunks-filename": Object {
     "configs": Array [
       Object {
@@ -4569,6 +4582,19 @@ Object {
         "description": "Size of the javascript part of the chunk.",
         "multiple": false,
         "path": "optimization.splitChunks.minSize",
+        "type": "number",
+      },
+    ],
+    "description": "Size of the javascript part of the chunk.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "optimization-split-chunks-min-size-reduction": Object {
+    "configs": Array [
+      Object {
+        "description": "Size of the javascript part of the chunk.",
+        "multiple": false,
+        "path": "optimization.splitChunks.minSizeReduction",
         "type": "number",
       },
     ],
