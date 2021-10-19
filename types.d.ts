@@ -5195,7 +5195,10 @@ declare class JavascriptParser extends Parser {
 	): boolean;
 	getComments(range?: any): any[];
 	getUsedPropertiesIfAny(): undefined | string[];
-	getUsedObjectProperties(pattern: ObjectPattern): undefined | string[];
+	getUsedObjectProperties(
+		pattern: ObjectPattern,
+		used?: Set<string>
+	): undefined | Set<string>;
 	isAsiPosition(pos: number): boolean;
 	unsetAsiPosition(pos: number): void;
 	isStatementLevelExpression(expr?: any): boolean;

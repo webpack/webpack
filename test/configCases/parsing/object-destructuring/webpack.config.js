@@ -36,7 +36,8 @@ module.exports = {
 								}, {});
 							};
 
-							["a", "b", "c", "d"].forEach(prop => {
+							new Array(20).fill(0).forEach((_, i) => {
+								const prop = `_${i}`;
 								parser.hooks.expression
 									.for(`_DEFINE_.${prop}`)
 									.tap("DefineUsed", toConstExpression(defineUsed(prop)));
