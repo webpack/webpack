@@ -4292,6 +4292,37 @@ enforce-min-size:
   enforce-min-size (webpack x.x.x) compiled successfully"
 `;
 
+exports[`StatsTestCases should print correct stats for split-chunks-min-size-reduction 1`] = `
+"Entrypoint main 11.5 KiB = default/main.js
+chunk (runtime: main) default/async-d.js (async-d) 50 bytes <{179}> ={821}= [rendered]
+  > ./d ./index.js 4:0-47
+  ./d.js 50 bytes [built] [code generated]
+chunk (runtime: main) default/main.js (main) 245 bytes (javascript) 6.68 KiB (runtime) >{31}< >{334}< >{383}< >{449}< >{794}< >{821}< [entry] [rendered]
+  > ./ main
+  runtime modules 6.68 KiB 9 modules
+  ./index.js 245 bytes [built] [code generated]
+chunk (runtime: main) default/async-b.js (async-b) 176 bytes <{179}> [rendered]
+  > ./b ./index.js 2:0-47
+  ./b.js 50 bytes [built] [code generated]
+  ./node_modules/shared.js?1 126 bytes [dependent] [built] [code generated]
+chunk (runtime: main) default/async-c.js (async-c) 50 bytes <{179}> ={821}= [rendered]
+  > ./c ./index.js 3:0-47
+  ./c.js 50 bytes [built] [code generated]
+chunk (runtime: main) default/async-e.js (async-e) 50 bytes <{179}> ={821}= [rendered]
+  > ./e ./index.js 5:0-47
+  ./e.js 50 bytes [built] [code generated]
+chunk (runtime: main) default/async-a.js (async-a) 176 bytes <{179}> [rendered]
+  > ./a ./index.js 1:0-47
+  ./a.js 50 bytes [built] [code generated]
+  ./node_modules/shared.js?1 126 bytes [dependent] [built] [code generated]
+chunk (runtime: main) default/821.js (id hint: vendors) 126 bytes <{179}> ={31}= ={383}= ={449}= [rendered] split chunk (cache group: defaultVendors)
+  > ./c ./index.js 3:0-47
+  > ./d ./index.js 4:0-47
+  > ./e ./index.js 5:0-47
+  ./node_modules/shared.js?2 126 bytes [built] [code generated]
+webpack x.x.x compiled successfully"
+`;
+
 exports[`StatsTestCases should print correct stats for split-chunks-prefer-bigger-splits 1`] = `
 "Entrypoint main 11.2 KiB = default/main.js
 chunk (runtime: main) default/118.js 150 bytes <{179}> ={334}= ={383}= [rendered] split chunk (cache group: default)

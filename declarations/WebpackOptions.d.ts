@@ -1751,6 +1751,10 @@ export interface OptimizationSplitChunksOptions {
 		 * Minimal size for the created chunk.
 		 */
 		minSize?: OptimizationSplitChunksSizes;
+		/**
+		 * Minimum size reduction due to the created chunk.
+		 */
+		minSizeReduction?: OptimizationSplitChunksSizes;
 	};
 	/**
 	 * Sets the template for the filename for created chunks.
@@ -1797,6 +1801,10 @@ export interface OptimizationSplitChunksOptions {
 	 * Minimal size for the created chunks.
 	 */
 	minSize?: OptimizationSplitChunksSizes;
+	/**
+	 * Minimum size reduction due to the created chunk.
+	 */
+	minSizeReduction?: OptimizationSplitChunksSizes;
 	/**
 	 * Give chunks created a name (chunks with equal name are merged).
 	 */
@@ -1877,6 +1885,10 @@ export interface OptimizationSplitChunksCacheGroup {
 	 * Minimal size for the created chunk.
 	 */
 	minSize?: OptimizationSplitChunksSizes;
+	/**
+	 * Minimum size reduction due to the created chunk.
+	 */
+	minSizeReduction?: OptimizationSplitChunksSizes;
 	/**
 	 * Give chunks for this cache group a name (chunks with equal name are merged).
 	 */

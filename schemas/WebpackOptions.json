@@ -2458,6 +2458,14 @@
             }
           ]
         },
+        "minSizeReduction": {
+          "description": "Minimum size reduction due to the created chunk.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
+        },
         "name": {
           "description": "Give chunks for this cache group a name (chunks with equal name are merged).",
           "anyOf": [
@@ -2654,6 +2662,14 @@
                   "$ref": "#/definitions/OptimizationSplitChunksSizes"
                 }
               ]
+            },
+            "minSizeReduction": {
+              "description": "Minimum size reduction due to the created chunk.",
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/OptimizationSplitChunksSizes"
+                }
+              ]
             }
           }
         },
@@ -2724,6 +2740,14 @@
         },
         "minSize": {
           "description": "Minimal size for the created chunks.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
+        },
+        "minSizeReduction": {
+          "description": "Minimum size reduction due to the created chunk.",
           "oneOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"

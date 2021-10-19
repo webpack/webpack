@@ -631,6 +631,7 @@ declare interface CacheGroupSource {
 	chunksFilter?: (chunk: Chunk) => boolean;
 	enforce?: boolean;
 	minSize: SplitChunksSizes;
+	minSizeReduction: SplitChunksSizes;
 	minRemainingSize: SplitChunksSizes;
 	enforceSizeThreshold: SplitChunksSizes;
 	maxAsyncSize: SplitChunksSizes;
@@ -7823,6 +7824,11 @@ declare interface OptimizationSplitChunksCacheGroup {
 	minSize?: number | { [index: string]: number };
 
 	/**
+	 * Minimum size reduction due to the created chunk.
+	 */
+	minSizeReduction?: number | { [index: string]: number };
+
+	/**
 	 * Give chunks for this cache group a name (chunks with equal name are merged).
 	 */
 	name?: string | false | Function;
@@ -7913,6 +7919,10 @@ declare interface OptimizationSplitChunksOptions {
 		 * Minimal size for the created chunk.
 		 */
 		minSize?: number | { [index: string]: number };
+		/**
+		 * Minimum size reduction due to the created chunk.
+		 */
+		minSizeReduction?: number | { [index: string]: number };
 	};
 
 	/**
@@ -7964,6 +7974,11 @@ declare interface OptimizationSplitChunksOptions {
 	 * Minimal size for the created chunks.
 	 */
 	minSize?: number | { [index: string]: number };
+
+	/**
+	 * Minimum size reduction due to the created chunk.
+	 */
+	minSizeReduction?: number | { [index: string]: number };
 
 	/**
 	 * Give chunks created a name (chunks with equal name are merged).
@@ -10726,6 +10741,7 @@ declare interface SplitChunksOptions {
 	chunksFilter: (chunk: Chunk) => boolean;
 	defaultSizeTypes: string[];
 	minSize: SplitChunksSizes;
+	minSizeReduction: SplitChunksSizes;
 	minRemainingSize: SplitChunksSizes;
 	enforceSizeThreshold: SplitChunksSizes;
 	maxInitialSize: SplitChunksSizes;
