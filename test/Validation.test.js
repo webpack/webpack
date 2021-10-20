@@ -453,18 +453,18 @@ describe("Validation", () => {
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.optimization.splitChunks.cacheGroups should not be object { test, … }.
-			   -> Using the cacheGroup shorthand syntax with a cache group named 'test' is a potential config error
-			   Did you intent to define a cache group with a test instead?
-			   cacheGroups: {
-			     <name>: {
-			       test: ...
-			     }
-			   }.
-			   object { <key>: false | RegExp | string | function | object { automaticNameDelimiter?, chunks?, enforce?, enforceSizeThreshold?, filename?, idHint?, layer?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name?, priority?, reuseExistingChunk?, test?, type?, usedExports? } }
-			   -> Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.optimization.splitChunks.cacheGroups should not be object { test, … }.
+   -> Using the cacheGroup shorthand syntax with a cache group named 'test' is a potential config error
+   Did you intent to define a cache group with a test instead?
+   cacheGroups: {
+     <name>: {
+       test: ...
+     }
+   }.
+   object { <key>: false | RegExp | string | function | object { automaticNameDelimiter?, chunks?, enforce?, enforceSizeThreshold?, filename?, idHint?, layer?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, minSizeReduction?, name?, priority?, reuseExistingChunk?, test?, type?, usedExports? } }
+   -> Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')."
+`)
 	);
 
 	createTestCase(
@@ -661,11 +661,11 @@ describe("Validation", () => {
 			},
 			msg =>
 				expect(msg).toMatchInlineSnapshot(`
-			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
-			 - configuration.optimization.splitChunks has an unknown property 'automaticNamePrefix'. These properties are valid:
-			   object { automaticNameDelimiter?, cacheGroups?, chunks?, defaultSizeTypes?, enforceSizeThreshold?, fallbackCacheGroup?, filename?, hidePathInfo?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name?, usedExports? }
-			   -> Options object for splitting chunks into smaller chunks."
-		`)
+"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
+ - configuration.optimization.splitChunks has an unknown property 'automaticNamePrefix'. These properties are valid:
+   object { automaticNameDelimiter?, cacheGroups?, chunks?, defaultSizeTypes?, enforceSizeThreshold?, fallbackCacheGroup?, filename?, hidePathInfo?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, minSizeReduction?, name?, usedExports? }
+   -> Options object for splitting chunks into smaller chunks."
+`)
 		);
 	});
 });

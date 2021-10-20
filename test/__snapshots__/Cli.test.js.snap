@@ -95,6 +95,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "cache-cache-unaffected": Object {
+    "configs": Array [
+      Object {
+        "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules.",
+        "multiple": false,
+        "path": "cache.cacheUnaffected",
+        "type": "boolean",
+      },
+    ],
+    "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "cache-compression": Object {
     "configs": Array [
       Object {
@@ -168,13 +181,19 @@ Object {
   "cache-immutable-paths": Object {
     "configs": Array [
       Object {
+        "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+        "multiple": true,
+        "path": "cache.immutablePaths[]",
+        "type": "RegExp",
+      },
+      Object {
         "description": "A path to a immutable directory (usually a package manager cache directory).",
         "multiple": true,
         "path": "cache.immutablePaths[]",
         "type": "path",
       },
     ],
-    "description": "A path to a immutable directory (usually a package manager cache directory).",
+    "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash) A path to a immutable directory (usually a package manager cache directory).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -194,13 +213,19 @@ Object {
   "cache-managed-paths": Object {
     "configs": Array [
       Object {
+        "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash)",
+        "multiple": true,
+        "path": "cache.managedPaths[]",
+        "type": "RegExp",
+      },
+      Object {
         "description": "A path to a managed directory (usually a node_modules directory).",
         "multiple": true,
         "path": "cache.managedPaths[]",
         "type": "path",
       },
     ],
-    "description": "A path to a managed directory (usually a node_modules directory).",
+    "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash) A path to a managed directory (usually a node_modules directory).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -255,6 +280,19 @@ Object {
     "description": "Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.",
     "multiple": false,
     "simpleType": "number",
+  },
+  "cache-memory-cache-unaffected": Object {
+    "configs": Array [
+      Object {
+        "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.",
+        "multiple": false,
+        "path": "cache.memoryCacheUnaffected",
+        "type": "boolean",
+      },
+    ],
+    "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "cache-name": Object {
     "configs": Array [
@@ -450,16 +488,35 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-build-http": Object {
+  "experiments-build-http-allowed-uris": Object {
     "configs": Array [
       Object {
-        "description": "Build http(s): urls using a lockfile and resource content cache.",
-        "multiple": false,
-        "path": "experiments.buildHttp",
-        "type": "boolean",
+        "description": "Allowed URI pattern.",
+        "multiple": true,
+        "path": "experiments.buildHttp.allowedUris[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "Allowed URI (resp. the beginning of it).",
+        "multiple": true,
+        "path": "experiments.buildHttp.allowedUris[]",
+        "type": "string",
       },
     ],
-    "description": "Build http(s): urls using a lockfile and resource content cache.",
+    "description": "Allowed URI pattern. Allowed URI (resp. the beginning of it).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "experiments-build-http-allowed-uris-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'experiments.buildHttp.allowedUris' configuration. List of allowed URIs (resp. the beginning of them).",
+        "multiple": false,
+        "path": "experiments.buildHttp.allowedUris",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'experiments.buildHttp.allowedUris' configuration. List of allowed URIs (resp. the beginning of them).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -521,6 +578,19 @@ Object {
       },
     ],
     "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-cache-unaffected": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
+        "multiple": false,
+        "path": "experiments.cacheUnaffected",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4376,6 +4446,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "optimization-split-chunks-fallback-cache-group-min-size-reduction": Object {
+    "configs": Array [
+      Object {
+        "description": "Size of the javascript part of the chunk.",
+        "multiple": false,
+        "path": "optimization.splitChunks.fallbackCacheGroup.minSizeReduction",
+        "type": "number",
+      },
+    ],
+    "description": "Size of the javascript part of the chunk.",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "optimization-split-chunks-filename": Object {
     "configs": Array [
       Object {
@@ -4499,6 +4582,19 @@ Object {
         "description": "Size of the javascript part of the chunk.",
         "multiple": false,
         "path": "optimization.splitChunks.minSize",
+        "type": "number",
+      },
+    ],
+    "description": "Size of the javascript part of the chunk.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "optimization-split-chunks-min-size-reduction": Object {
+    "configs": Array [
+      Object {
+        "description": "Size of the javascript part of the chunk.",
+        "multiple": false,
+        "path": "optimization.splitChunks.minSizeReduction",
         "type": "number",
       },
     ],
@@ -7020,13 +7116,19 @@ Object {
   "snapshot-immutable-paths": Object {
     "configs": Array [
       Object {
+        "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+        "multiple": true,
+        "path": "snapshot.immutablePaths[]",
+        "type": "RegExp",
+      },
+      Object {
         "description": "A path to a immutable directory (usually a package manager cache directory).",
         "multiple": true,
         "path": "snapshot.immutablePaths[]",
         "type": "path",
       },
     ],
-    "description": "A path to a immutable directory (usually a package manager cache directory).",
+    "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash) A path to a immutable directory (usually a package manager cache directory).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -7046,13 +7148,19 @@ Object {
   "snapshot-managed-paths": Object {
     "configs": Array [
       Object {
+        "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash)",
+        "multiple": true,
+        "path": "snapshot.managedPaths[]",
+        "type": "RegExp",
+      },
+      Object {
         "description": "A path to a managed directory (usually a node_modules directory).",
         "multiple": true,
         "path": "snapshot.managedPaths[]",
         "type": "path",
       },
     ],
-    "description": "A path to a managed directory (usually a node_modules directory).",
+    "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash) A path to a managed directory (usually a node_modules directory).",
     "multiple": true,
     "simpleType": "string",
   },

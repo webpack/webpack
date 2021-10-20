@@ -678,6 +678,7 @@
     "Experiments": {
       "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
       "type": "object",
+      "implements": ["#/definitions/ExperimentsCommon"],
       "additionalProperties": false,
       "properties": {
         "asset": {
@@ -692,12 +693,16 @@
           "description": "Build http(s): urls using a lockfile and resource content cache.",
           "anyOf": [
             {
-              "type": "boolean"
+              "$ref": "#/definitions/HttpUriAllowedUris"
             },
             {
               "$ref": "#/definitions/HttpUriOptions"
             }
           ]
+        },
+        "cacheUnaffected": {
+          "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
+          "type": "boolean"
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
@@ -714,43 +719,102 @@
               "type": "boolean"
             },
             {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "backend": {
-                  "description": "A custom backend.",
-                  "instanceof": "Function",
-                  "tsType": "(((compiler: import('../lib/Compiler'), client: string, callback: (err?: Error, api?: any) => void) => void) | ((compiler: import('../lib/Compiler'), client: string) => Promise<any>))"
-                },
-                "client": {
-                  "description": "A custom client.",
-                  "type": "string"
-                },
-                "entries": {
-                  "description": "Enable/disable lazy compilation for entries.",
-                  "type": "boolean"
-                },
-                "imports": {
-                  "description": "Enable/disable lazy compilation for import() modules.",
-                  "type": "boolean"
-                },
-                "test": {
-                  "description": "Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.",
-                  "anyOf": [
-                    {
-                      "instanceof": "RegExp",
-                      "tsType": "RegExp"
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "instanceof": "Function",
-                      "tsType": "((module: import('../lib/Module')) => boolean)"
-                    }
-                  ]
-                }
-              }
+              "$ref": "#/definitions/LazyCompilationOptions"
+            }
+          ]
+        },
+        "outputModule": {
+          "description": "Allow output javascript files as module source type.",
+          "type": "boolean"
+        },
+        "syncWebAssembly": {
+          "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
+          "type": "boolean"
+        },
+        "topLevelAwait": {
+          "description": "Allow using top-level-await in EcmaScript Modules.",
+          "type": "boolean"
+        }
+      }
+    },
+    "ExperimentsCommon": {
+      "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "asset": {
+          "description": "Allow module type 'asset' to generate assets.",
+          "type": "boolean"
+        },
+        "asyncWebAssembly": {
+          "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+          "type": "boolean"
+        },
+        "cacheUnaffected": {
+          "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
+          "type": "boolean"
+        },
+        "futureDefaults": {
+          "description": "Apply defaults of next major version.",
+          "type": "boolean"
+        },
+        "layers": {
+          "description": "Enable module and chunk layers.",
+          "type": "boolean"
+        },
+        "outputModule": {
+          "description": "Allow output javascript files as module source type.",
+          "type": "boolean"
+        },
+        "syncWebAssembly": {
+          "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
+          "type": "boolean"
+        },
+        "topLevelAwait": {
+          "description": "Allow using top-level-await in EcmaScript Modules.",
+          "type": "boolean"
+        }
+      }
+    },
+    "ExperimentsNormalized": {
+      "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
+      "type": "object",
+      "implements": ["#/definitions/ExperimentsCommon"],
+      "additionalProperties": false,
+      "properties": {
+        "asset": {
+          "description": "Allow module type 'asset' to generate assets.",
+          "type": "boolean"
+        },
+        "asyncWebAssembly": {
+          "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+          "type": "boolean"
+        },
+        "buildHttp": {
+          "description": "Build http(s): urls using a lockfile and resource content cache.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HttpUriOptions"
+            }
+          ]
+        },
+        "cacheUnaffected": {
+          "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
+          "type": "boolean"
+        },
+        "futureDefaults": {
+          "description": "Apply defaults of next major version.",
+          "type": "boolean"
+        },
+        "layers": {
+          "description": "Enable module and chunk layers.",
+          "type": "boolean"
+        },
+        "lazyCompilation": {
+          "description": "Compile entrypoints and import()s only when they are accessed.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/LazyCompilationOptions"
             }
           ]
         },
@@ -1001,20 +1065,40 @@
           "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
           "type": "array",
           "items": {
-            "description": "A path to a immutable directory (usually a package manager cache directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
+            "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to a immutable directory (usually a package manager cache directory).",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         },
         "managedPaths": {
           "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
           "type": "array",
           "items": {
-            "description": "A path to a managed directory (usually a node_modules directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
+            "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash)",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to a managed directory (usually a node_modules directory).",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         },
         "maxAge": {
@@ -1026,6 +1110,10 @@
           "description": "Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.",
           "type": "number",
           "minimum": 0
+        },
+        "memoryCacheUnaffected": {
+          "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.",
+          "type": "boolean"
         },
         "name": {
           "description": "Name for the cache. Different names will lead to different coexisting caches.",
@@ -1195,11 +1283,25 @@
       "type": "string",
       "absolutePath": false
     },
+    "HttpUriAllowedUris": {
+      "description": "List of allowed URIs for building http resources.",
+      "cli": {
+        "exclude": true
+      },
+      "oneOf": [
+        {
+          "$ref": "#/definitions/HttpUriOptionsAllowedUris"
+        }
+      ]
+    },
     "HttpUriOptions": {
       "description": "Options for building http resources.",
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "allowedUris": {
+          "$ref": "#/definitions/HttpUriOptionsAllowedUris"
+        },
         "cacheLocation": {
           "description": "Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.",
           "anyOf": [
@@ -1225,6 +1327,31 @@
           "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
           "type": "boolean"
         }
+      },
+      "required": ["allowedUris"]
+    },
+    "HttpUriOptionsAllowedUris": {
+      "description": "List of allowed URIs (resp. the beginning of them).",
+      "type": "array",
+      "items": {
+        "description": "List of allowed URIs (resp. the beginning of them).",
+        "anyOf": [
+          {
+            "description": "Allowed URI pattern.",
+            "instanceof": "RegExp",
+            "tsType": "RegExp"
+          },
+          {
+            "description": "Allowed URI (resp. the beginning of it).",
+            "type": "string",
+            "pattern": "^https?://"
+          },
+          {
+            "description": "Allowed URI filter function.",
+            "instanceof": "Function",
+            "tsType": "((uri: string) => boolean)"
+          }
+        ]
       }
     },
     "IgnoreWarnings": {
@@ -1488,6 +1615,46 @@
         }
       ]
     },
+    "LazyCompilationOptions": {
+      "description": "Options for compiling entrypoints and import()s only when they are accessed.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "description": "A custom backend.",
+          "instanceof": "Function",
+          "tsType": "(((compiler: import('../lib/Compiler'), client: string, callback: (err?: Error, api?: any) => void) => void) | ((compiler: import('../lib/Compiler'), client: string) => Promise<any>))"
+        },
+        "client": {
+          "description": "A custom client.",
+          "type": "string"
+        },
+        "entries": {
+          "description": "Enable/disable lazy compilation for entries.",
+          "type": "boolean"
+        },
+        "imports": {
+          "description": "Enable/disable lazy compilation for import() modules.",
+          "type": "boolean"
+        },
+        "test": {
+          "description": "Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.",
+          "anyOf": [
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((module: import('../lib/Module')) => boolean)"
+            }
+          ]
+        }
+      }
+    },
     "Library": {
       "description": "Make the output files a library, exporting the exports of the entry point.",
       "anyOf": [
@@ -1655,6 +1822,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "cacheUnaffected": {
+          "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules.",
+          "type": "boolean"
+        },
         "maxGenerations": {
           "description": "Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).",
           "type": "number",
@@ -2287,6 +2458,14 @@
             }
           ]
         },
+        "minSizeReduction": {
+          "description": "Minimum size reduction due to the created chunk.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
+        },
         "name": {
           "description": "Give chunks for this cache group a name (chunks with equal name are merged).",
           "anyOf": [
@@ -2483,6 +2662,14 @@
                   "$ref": "#/definitions/OptimizationSplitChunksSizes"
                 }
               ]
+            },
+            "minSizeReduction": {
+              "description": "Minimum size reduction due to the created chunk.",
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/OptimizationSplitChunksSizes"
+                }
+              ]
             }
           }
         },
@@ -2553,6 +2740,14 @@
         },
         "minSize": {
           "description": "Minimal size for the created chunks.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
+        },
+        "minSizeReduction": {
+          "description": "Minimum size reduction due to the created chunk.",
           "oneOf": [
             {
               "$ref": "#/definitions/OptimizationSplitChunksSizes"
@@ -3940,20 +4135,40 @@
           "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
           "type": "array",
           "items": {
-            "description": "A path to a immutable directory (usually a package manager cache directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
+            "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to a immutable directory (usually a package manager cache directory).",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         },
         "managedPaths": {
           "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
           "type": "array",
           "items": {
-            "description": "A path to a managed directory (usually a node_modules directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
+            "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash)",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to a managed directory (usually a node_modules directory).",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         },
         "module": {
@@ -4651,7 +4866,7 @@
           "$ref": "#/definitions/EntryNormalized"
         },
         "experiments": {
-          "$ref": "#/definitions/Experiments"
+          "$ref": "#/definitions/ExperimentsNormalized"
         },
         "externals": {
           "$ref": "#/definitions/Externals"

@@ -335,7 +335,6 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 	};
 	loc?: SyntheticDependencyLocation | RealDependencyLocation;
 	request?: string;
-	parent: DependenciesBlock;
 	chunkName: string;
 	module: any;
 }
@@ -632,6 +631,7 @@ declare interface CacheGroupSource {
 	chunksFilter?: (chunk: Chunk) => boolean;
 	enforce?: boolean;
 	minSize: SplitChunksSizes;
+	minSizeReduction: SplitChunksSizes;
 	minRemainingSize: SplitChunksSizes;
 	enforceSizeThreshold: SplitChunksSizes;
 	maxAsyncSize: SplitChunksSizes;
@@ -759,7 +759,7 @@ declare class Chunk {
 	): Record<string | number, Record<string, (string | number)[]>>;
 }
 declare class ChunkGraph {
-	constructor(moduleGraph: ModuleGraph);
+	constructor(moduleGraph: ModuleGraph, hashFunction?: string | typeof Hash);
 	moduleGraph: ModuleGraph;
 	connectChunkAndModule(chunk: Chunk, module: Module): void;
 	disconnectChunkAndModule(chunk: Chunk, module: Module): void;
@@ -891,7 +891,8 @@ declare class ChunkGraph {
 	addModuleRuntimeRequirements(
 		module: Module,
 		runtime: RuntimeSpec,
-		items: Set<string>
+		items: Set<string>,
+		transferOwnership?: boolean
 	): void;
 	addChunkRuntimeRequirements(chunk: Chunk, items: Set<string>): void;
 	addTreeRuntimeRequirements(chunk: Chunk, items: Iterable<string>): void;
@@ -1298,7 +1299,7 @@ declare class Compilation {
 	/**
 	 * Creates an instance of Compilation.
 	 */
-	constructor(compiler: Compiler);
+	constructor(compiler: Compiler, params: CompilationParams);
 	hooks: Readonly<{
 		buildModule: SyncHook<[Module]>;
 		rebuildModule: SyncHook<[Module]>;
@@ -1454,16 +1455,23 @@ declare class Compilation {
 	outputOptions: OutputNormalized;
 	bail: boolean;
 	profile: boolean;
+	params: CompilationParams;
 	mainTemplate: MainTemplate;
 	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: { javascript: ModuleTemplate };
+	moduleMemCaches?: Map<Module, WeakTupleMap<any, any>>;
+	moduleMemCaches2?: Map<Module, WeakTupleMap<any, any>>;
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
 	codeGenerationResults: CodeGenerationResults;
 	processDependenciesQueue: AsyncQueue<Module, Module, Module>;
 	addModuleQueue: AsyncQueue<Module, string, Module>;
-	factorizeQueue: AsyncQueue<FactorizeModuleOptions, string, Module>;
+	factorizeQueue: AsyncQueue<
+		FactorizeModuleOptions,
+		string,
+		Module | ModuleFactoryResult
+	>;
 	buildQueue: AsyncQueue<Module, Module, Module>;
 	rebuildQueue: AsyncQueue<Module, Module, Module>;
 
@@ -1546,10 +1554,6 @@ declare class Compilation {
 		__0: HandleModuleCreationOptions,
 		callback: (err?: WebpackError, result?: Module) => void
 	): void;
-	factorizeModule(
-		options: FactorizeModuleOptions,
-		callback: (err?: WebpackError, result?: Module) => void
-	): void;
 	addModuleChain(
 		context: string,
 		dependency: Dependency,
@@ -1594,7 +1598,7 @@ declare class Compilation {
 	reportDependencyErrorsAndWarnings(
 		module: Module,
 		blocks: DependenciesBlock[]
-	): void;
+	): boolean;
 	codeGeneration(callback?: any): void;
 	processRuntimeRequirements(__0?: {
 		/**
@@ -1642,6 +1646,7 @@ declare class Compilation {
 	 */
 	addChunk(name?: string): Chunk;
 	assignDepth(module: Module): void;
+	assignDepths(modules: Set<Module>): void;
 	getDependencyReferencedExports(
 		dependency: Dependency,
 		runtime: RuntimeSpec
@@ -1716,6 +1721,16 @@ declare class Compilation {
 		callback: (err?: WebpackError, result?: ExecuteModuleResult) => void
 	): void;
 	checkConstraints(): void;
+	factorizeModule: {
+		(
+			options: FactorizeModuleOptions & { factoryResult?: false },
+			callback: (err?: WebpackError, result?: Module) => void
+		): void;
+		(
+			options: FactorizeModuleOptions & { factoryResult: true },
+			callback: (err?: WebpackError, result?: ModuleFactoryResult) => void
+		): void;
+	};
 
 	/**
 	 * Add additional assets to the compilation.
@@ -1881,8 +1896,8 @@ declare class Compiler {
 	recordsInputPath: null | string;
 	recordsOutputPath: null | string;
 	records: object;
-	managedPaths: Set<string>;
-	immutablePaths: Set<string>;
+	managedPaths: Set<string | RegExp>;
+	immutablePaths: Set<string | RegExp>;
 	modifiedFiles: ReadonlySet<string>;
 	removedFiles: ReadonlySet<string>;
 	fileTimestamps: ReadonlyMap<string, null | FileSystemInfoEntry | "ignore">;
@@ -1894,6 +1909,14 @@ declare class Compiler {
 	context: string;
 	requestShortener: RequestShortener;
 	cache: Cache;
+	moduleMemCaches?: Map<
+		Module,
+		{
+			buildInfo: object;
+			references: WeakMap<Dependency, Module>;
+			memCache: WeakTupleMap<any, any>;
+		}
+	>;
 	compilerPath: string;
 	running: boolean;
 	idle: boolean;
@@ -1917,7 +1940,7 @@ declare class Compiler {
 		plugins?: WebpackPluginInstance[]
 	): Compiler;
 	isChild(): boolean;
-	createCompilation(): Compilation;
+	createCompilation(params?: any): Compilation;
 	newCompilation(params: CompilationParams): Compilation;
 	createNormalModuleFactory(): NormalModuleFactory;
 	createContextModuleFactory(): ContextModuleFactory;
@@ -2237,6 +2260,7 @@ declare class ConstDependency extends NullDependency {
 	static Template: typeof ConstDependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
@@ -2521,6 +2545,8 @@ declare interface DepConstructor {
 declare abstract class DependenciesBlock {
 	dependencies: Dependency[];
 	blocks: AsyncDependenciesBlock[];
+	parent: DependenciesBlock;
+	getRootBlock(): DependenciesBlock;
 
 	/**
 	 * Adds a DependencyBlock to DependencyBlock relationship.
@@ -2550,6 +2576,7 @@ declare class Dependency {
 	readonly category: string;
 	loc: DependencyLocation;
 	getResourceIdentifier(): null | string;
+	couldAffectReferencingModule(): boolean | typeof TRANSITIVE;
 
 	/**
 	 * Returns the referenced module and export
@@ -2604,6 +2631,7 @@ declare class Dependency {
 	readonly disconnect: any;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare interface DependencyConstructor {
 	new (...args: any[]): Dependency;
@@ -3262,11 +3290,12 @@ declare interface ExecuteModuleResult {
 	missingDependencies: LazySet<string>;
 	buildDependencies: LazySet<string>;
 }
+type Experiments = ExperimentsCommon & ExperimentsExtra;
 
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
  */
-declare interface Experiments {
+declare interface ExperimentsCommon {
 	/**
 	 * Allow module type 'asset' to generate assets.
 	 */
@@ -3278,9 +3307,9 @@ declare interface Experiments {
 	asyncWebAssembly?: boolean;
 
 	/**
-	 * Build http(s): urls using a lockfile and resource content cache.
+	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
 	 */
-	buildHttp?: boolean | HttpUriOptions;
+	cacheUnaffected?: boolean;
 
 	/**
 	 * Apply defaults of next major version.
@@ -3291,40 +3320,6 @@ declare interface Experiments {
 	 * Enable module and chunk layers.
 	 */
 	layers?: boolean;
-
-	/**
-	 * Compile entrypoints and import()s only when they are accessed.
-	 */
-	lazyCompilation?:
-		| boolean
-		| {
-				/**
-				 * A custom backend.
-				 */
-				backend?:
-					| ((
-							compiler: Compiler,
-							client: string,
-							callback: (err?: Error, api?: any) => void
-					  ) => void)
-					| ((compiler: Compiler, client: string) => Promise<any>);
-				/**
-				 * A custom client.
-				 */
-				client?: string;
-				/**
-				 * Enable/disable lazy compilation for entries.
-				 */
-				entries?: boolean;
-				/**
-				 * Enable/disable lazy compilation for import() modules.
-				 */
-				imports?: boolean;
-				/**
-				 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
-				 */
-				test?: string | RegExp | ((module: Module) => boolean);
-		  };
 
 	/**
 	 * Allow output javascript files as module source type.
@@ -3340,6 +3335,37 @@ declare interface Experiments {
 	 * Allow using top-level-await in EcmaScript Modules.
 	 */
 	topLevelAwait?: boolean;
+}
+
+/**
+ * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+ */
+declare interface ExperimentsExtra {
+	/**
+	 * Build http(s): urls using a lockfile and resource content cache.
+	 */
+	buildHttp?: HttpUriOptions | (string | RegExp | ((uri: string) => boolean))[];
+
+	/**
+	 * Compile entrypoints and import()s only when they are accessed.
+	 */
+	lazyCompilation?: boolean | LazyCompilationOptions;
+}
+type ExperimentsNormalized = ExperimentsCommon & ExperimentsNormalizedExtra;
+
+/**
+ * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+ */
+declare interface ExperimentsNormalizedExtra {
+	/**
+	 * Build http(s): urls using a lockfile and resource content cache.
+	 */
+	buildHttp?: HttpUriOptions;
+
+	/**
+	 * Compile entrypoints and import()s only when they are accessed.
+	 */
+	lazyCompilation?: LazyCompilationOptions;
 }
 declare abstract class ExportInfo {
 	name: string;
@@ -3712,6 +3738,10 @@ declare class ExternalModule extends Module {
 	request: string | string[] | Record<string, string | string[]>;
 	externalType: string;
 	userRequest: string;
+	restoreFromUnsafeCache(
+		unsafeCacheData?: any,
+		normalModuleFactory?: any
+	): void;
 }
 declare interface ExternalModuleInfo {
 	index: number;
@@ -3810,6 +3840,11 @@ declare interface FactorizeModuleOptions {
 	currentProfile: ModuleProfile;
 	factory: ModuleFactory;
 	dependencies: Dependency[];
+
+	/**
+	 * return full ModuleFactoryResult instead of only module
+	 */
+	factoryResult?: boolean;
 	originModule: null | Module;
 	contextInfo?: Partial<ModuleFactoryCreateDataContextInfo>;
 	context?: string;
@@ -3892,12 +3927,12 @@ declare interface FileCacheOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: string[];
+	immutablePaths?: (string | RegExp)[];
 
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: string[];
+	managedPaths?: (string | RegExp)[];
 
 	/**
 	 * Time for which unused cache entries stay in the filesystem cache at minimum (in milliseconds).
@@ -3908,6 +3943,11 @@ declare interface FileCacheOptions {
 	 * Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.
 	 */
 	maxMemoryGenerations?: number;
+
+	/**
+	 * Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.
+	 */
+	memoryCacheUnaffected?: boolean;
 
 	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
@@ -4005,10 +4045,12 @@ declare abstract class FileSystemInfo {
 	contextTshQueue: AsyncQueue<string, string, null | ContextTimestampAndHash>;
 	managedItemQueue: AsyncQueue<string, string, null | string>;
 	managedItemDirectoryQueue: AsyncQueue<string, string, Set<string>>;
-	managedPaths: string[];
+	managedPaths: (string | RegExp)[];
 	managedPathsWithSlash: string[];
-	immutablePaths: string[];
+	managedPathsRegExps: RegExp[];
+	immutablePaths: (string | RegExp)[];
 	immutablePathsWithSlash: string[];
+	immutablePathsRegExps: RegExp[];
 	logStatistics(): void;
 	clear(): void;
 	addFileTimestamps(
@@ -4306,7 +4348,7 @@ declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The hashing algorithm to use, defaults to 'md4'. All functions from Node.JS' crypto.createHash are supported.
 	 */
-	hashFunction?: string;
+	hashFunction?: string | typeof Hash;
 }
 declare abstract class HelperRuntimeModule extends RuntimeModule {}
 declare class HotModuleReplacementPlugin {
@@ -4335,6 +4377,11 @@ declare class HotUpdateChunk extends Chunk {
  */
 declare interface HttpUriOptions {
 	/**
+	 * List of allowed URIs (resp. the beginning of them).
+	 */
+	allowedUris: (string | RegExp | ((uri: string) => boolean))[];
+
+	/**
 	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
 	 */
 	cacheLocation?: string | false;
@@ -4355,27 +4402,7 @@ declare interface HttpUriOptions {
 	upgrade?: boolean;
 }
 declare class HttpUriPlugin {
-	constructor(options?: {
-		/**
-		 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
-		 */
-		cacheLocation?: string | false;
-		/**
-		 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
-		 */
-		frozen?: boolean;
-		/**
-		 * Location of the lockfile.
-		 */
-		lockfileLocation?: string;
-		/**
-		 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
-		 */
-		upgrade?: boolean;
-		hashFunction?: string | typeof Hash;
-		hashDigest?: string;
-		hashDigestLength?: number;
-	});
+	constructor(options: HttpUriOptions);
 
 	/**
 	 * Apply the plugin
@@ -5766,6 +5793,42 @@ declare interface KnownStatsProfile {
 	factory: number;
 	dependencies: number;
 }
+
+/**
+ * Options for compiling entrypoints and import()s only when they are accessed.
+ */
+declare interface LazyCompilationOptions {
+	/**
+	 * A custom backend.
+	 */
+	backend?:
+		| ((
+				compiler: Compiler,
+				client: string,
+				callback: (err?: Error, api?: any) => void
+		  ) => void)
+		| ((compiler: Compiler, client: string) => Promise<any>);
+
+	/**
+	 * A custom client.
+	 */
+	client?: string;
+
+	/**
+	 * Enable/disable lazy compilation for entries.
+	 */
+	entries?: boolean;
+
+	/**
+	 * Enable/disable lazy compilation for import() modules.
+	 */
+	imports?: boolean;
+
+	/**
+	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
+	 */
+	test?: string | RegExp | ((module: Module) => boolean);
+}
 declare class LazySet<T> {
 	constructor(iterable?: Iterable<T>);
 	readonly size: number;
@@ -6305,6 +6368,11 @@ declare interface MapOptions {
  */
 declare interface MemoryCacheOptions {
 	/**
+	 * Additionally cache computation of modules that are unchanged and reference only unchanged modules.
+	 */
+	cacheUnaffected?: boolean;
+
+	/**
 	 * Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).
 	 */
 	maxGenerations?: number;
@@ -6451,6 +6519,7 @@ declare class Module extends DependenciesBlock {
 	getSideEffectsConnectionState(moduleGraph: ModuleGraph): ConnectionState;
 	codeGeneration(context: CodeGenerationContext): CodeGenerationResult;
 	chunkCondition(chunk: Chunk, compilation: Compilation): boolean;
+	hasChunkCondition(): boolean;
 
 	/**
 	 * Assuming this module is in the cache. Update the (cached) module with
@@ -6500,6 +6569,7 @@ declare class ModuleDependency extends Dependency {
 	static Template: typeof DependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare abstract class ModuleFactory {
 	create(
@@ -6526,6 +6596,11 @@ declare interface ModuleFactoryResult {
 	fileDependencies?: Set<string>;
 	contextDependencies?: Set<string>;
 	missingDependencies?: Set<string>;
+
+	/**
+	 * allow to use the unsafe cache
+	 */
+	cacheable?: boolean;
 }
 declare class ModuleFederationPlugin {
 	constructor(options: ModuleFederationPluginOptions);
@@ -6614,10 +6689,12 @@ declare class ModuleGraph {
 	setParents(
 		dependency: Dependency,
 		block: DependenciesBlock,
-		module: Module
+		module: Module,
+		indexInBlock?: number
 	): void;
 	getParentModule(dependency: Dependency): Module;
 	getParentBlock(dependency: Dependency): DependenciesBlock;
+	getParentBlockIndex(dependency: Dependency): number;
 	setResolvedModule(
 		originModule: Module,
 		dependency: Dependency,
@@ -6649,7 +6726,10 @@ declare class ModuleGraph {
 	getOutgoingConnections(module: Module): Iterable<ModuleGraphConnection>;
 	getIncomingConnectionsByOriginModule(
 		module: Module
-	): Map<Module, ReadonlyArray<ModuleGraphConnection>>;
+	): Map<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
+	getOutgoingConnectionsByModule(
+		module: Module
+	): undefined | Map<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
 	getProfile(module: Module): null | ModuleProfile;
 	setProfile(module: Module, profile: null | ModuleProfile): void;
 	getIssuer(module: Module): null | Module;
@@ -6683,12 +6763,16 @@ declare class ModuleGraph {
 	setAsync(module: Module): void;
 	getMeta(thing?: any): Object;
 	getMetaIfExisting(thing?: any): Object;
-	freeze(): void;
+	freeze(cacheStage?: string): void;
 	unfreeze(): void;
 	cached<T extends any[], V>(
 		fn: (moduleGraph: ModuleGraph, ...args: T) => V,
 		...args: T
 	): V;
+	setModuleMemCaches(
+		moduleMemCaches: Map<Module, WeakTupleMap<any, any>>
+	): void;
+	dependencyCacheProvide(dependency: Dependency, ...args: any[]): any;
 	static getModuleGraphForModule(
 		module: Module,
 		deprecateMessage: string,
@@ -7285,12 +7369,6 @@ declare class NormalModule extends Module {
 		sourceMap?: any,
 		associatedObjectForCache?: Object
 	): Source;
-	createLoaderContext(
-		resolver: ResolverWithOptions,
-		options: WebpackOptionsNormalized,
-		compilation: Compilation,
-		fs: InputFileSystem
-	): NormalModuleLoaderContext<any>;
 	getCurrentLoader(loaderContext?: any, index?: any): null | LoaderItem;
 	createSource(
 		context: string,
@@ -7298,13 +7376,6 @@ declare class NormalModule extends Module {
 		sourceMap?: any,
 		associatedObjectForCache?: Object
 	): Source;
-	doBuild(
-		options: WebpackOptionsNormalized,
-		compilation: Compilation,
-		resolver: ResolverWithOptions,
-		fs: InputFileSystem,
-		callback: (arg0?: WebpackError) => void
-	): void;
 	markModuleAsErrored(error: WebpackError): void;
 	applyNoParseRule(rule?: any, content?: any): any;
 	shouldPreventParsing(noParseRule?: any, request?: any): any;
@@ -7316,9 +7387,12 @@ declare class NormalModule extends Module {
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[object, NormalModule]>;
 	beforeLoaders: SyncHook<[LoaderItem[], NormalModule, object]>;
+	beforeParse: SyncHook<[NormalModule]>;
+	beforeSnapshot: SyncHook<[NormalModule]>;
 	readResourceForScheme: HookMap<
 		AsyncSeriesBailHook<[string, NormalModule], string | Buffer>
 	>;
+	readResource: HookMap<AsyncSeriesBailHook<[object], string | Buffer>>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
 declare abstract class NormalModuleFactory extends ModuleFactory {
@@ -7342,8 +7416,6 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	}>;
 	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
-	unsafeCache: boolean;
-	cachePredicate: Function;
 	context: string;
 	fs: InputFileSystem;
 	parserCache: Map<string, WeakMap<Object, any>>;
@@ -7487,6 +7559,7 @@ declare class NullDependency extends Dependency {
 	static Template: typeof NullDependencyTemplate;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
 }
 declare class NullDependencyTemplate extends DependencyTemplate {
 	constructor();
@@ -7751,6 +7824,11 @@ declare interface OptimizationSplitChunksCacheGroup {
 	minSize?: number | { [index: string]: number };
 
 	/**
+	 * Minimum size reduction due to the created chunk.
+	 */
+	minSizeReduction?: number | { [index: string]: number };
+
+	/**
 	 * Give chunks for this cache group a name (chunks with equal name are merged).
 	 */
 	name?: string | false | Function;
@@ -7841,6 +7919,10 @@ declare interface OptimizationSplitChunksOptions {
 		 * Minimal size for the created chunk.
 		 */
 		minSize?: number | { [index: string]: number };
+		/**
+		 * Minimum size reduction due to the created chunk.
+		 */
+		minSizeReduction?: number | { [index: string]: number };
 	};
 
 	/**
@@ -7892,6 +7974,11 @@ declare interface OptimizationSplitChunksOptions {
 	 * Minimal size for the created chunks.
 	 */
 	minSize?: number | { [index: string]: number };
+
+	/**
+	 * Minimum size reduction due to the created chunk.
+	 */
+	minSizeReduction?: number | { [index: string]: number };
 
 	/**
 	 * Give chunks created a name (chunks with equal name are merged).
@@ -9783,6 +9870,7 @@ declare class RuntimeChunkPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type RuntimeCondition = undefined | string | boolean | SortableSet<string>;
 declare class RuntimeModule extends Module {
 	constructor(name: string, stage?: number);
 	name: string;
@@ -9829,7 +9917,8 @@ declare interface RuntimeRequirementsContext {
 	codeGenerationResults: CodeGenerationResults;
 }
 type RuntimeSpec = undefined | string | SortableSet<string>;
-declare abstract class RuntimeSpecMap<T> {
+declare class RuntimeSpecMap<T> {
+	constructor(clone?: RuntimeSpecMap<T>);
 	get(runtime: RuntimeSpec): T;
 	has(runtime: RuntimeSpec): boolean;
 	set(runtime?: any, value?: any): void;
@@ -9840,7 +9929,8 @@ declare abstract class RuntimeSpecMap<T> {
 	values(): IterableIterator<T>;
 	readonly size?: number;
 }
-declare abstract class RuntimeSpecSet {
+declare class RuntimeSpecSet {
+	constructor(iterable?: any);
 	add(runtime?: any): void;
 	has(runtime?: any): boolean;
 	[Symbol.iterator](): IterableIterator<RuntimeSpec>;
@@ -10378,12 +10468,12 @@ declare class SizeOnlySource extends Source {
 }
 declare abstract class Snapshot {
 	startTime?: number;
-	fileTimestamps?: Map<string, FileSystemInfoEntry>;
-	fileHashes?: Map<string, string>;
-	fileTshs?: Map<string, string | TimestampAndHash>;
-	contextTimestamps?: Map<string, ResolvedContextFileSystemInfoEntry>;
-	contextHashes?: Map<string, string>;
-	contextTshs?: Map<string, ResolvedContextTimestampAndHash>;
+	fileTimestamps?: Map<string, null | FileSystemInfoEntry>;
+	fileHashes?: Map<string, null | string>;
+	fileTshs?: Map<string, null | string | TimestampAndHash>;
+	contextTimestamps?: Map<string, null | ResolvedContextFileSystemInfoEntry>;
+	contextHashes?: Map<string, null | string>;
+	contextTshs?: Map<string, null | ResolvedContextTimestampAndHash>;
 	missingExistence?: Map<string, boolean>;
 	managedItemInfo?: Map<string, string>;
 	managedFiles?: Set<string>;
@@ -10446,12 +10536,12 @@ declare interface SnapshotOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: string[];
+	immutablePaths?: (string | RegExp)[];
 
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: string[];
+	managedPaths?: (string | RegExp)[];
 
 	/**
 	 * Options for snapshotting dependencies of modules to determine if they need to be built again.
@@ -10651,6 +10741,7 @@ declare interface SplitChunksOptions {
 	chunksFilter: (chunk: Chunk) => boolean;
 	defaultSizeTypes: string[];
 	minSize: SplitChunksSizes;
+	minSizeReduction: SplitChunksSizes;
 	minRemainingSize: SplitChunksSizes;
 	enforceSizeThreshold: SplitChunksSizes;
 	maxInitialSize: SplitChunksSizes;
@@ -11256,6 +11347,7 @@ declare interface SyntheticDependencyLocation {
 	index?: number;
 }
 declare const TOMBSTONE: unique symbol;
+declare const TRANSITIVE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
 declare interface TagInfo {
 	tag: any;
@@ -11298,6 +11390,10 @@ declare interface TimestampAndHash {
 	safeTime: number;
 	timestamp?: number;
 	hash: string;
+}
+declare class TopLevelSymbol {
+	constructor(name: string);
+	name: string;
 }
 
 /**
@@ -11616,6 +11712,14 @@ declare abstract class Watching {
 	resume(): void;
 	close(callback: CallbackFunction<void>): void;
 }
+declare abstract class WeakTupleMap<T extends any[], V> {
+	set(...args: [T, ...V[]]): void;
+	has(...args: T): boolean;
+	get(...args: T): V;
+	provide(...args: [T, ...(() => V)[]]): V;
+	delete(...args: T): void;
+	clear(): void;
+}
 declare interface WebAssemblyRenderContext {
 	/**
 	 * the chunk
@@ -11763,7 +11867,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
 	 */
-	experiments: Experiments;
+	experiments: ExperimentsNormalized;
 
 	/**
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
@@ -12022,10 +12126,23 @@ declare namespace exports {
 		export let NAMESPACE: string;
 		export let REGEXP_NAMESPACE: RegExp;
 		export let createFilename: (
-			module: any,
+			module: string | Module,
 			options: any,
-			__2: { requestShortener: any; chunkGraph: any }
-		) => any;
+			__2: {
+				/**
+				 * requestShortener
+				 */
+				requestShortener: RequestShortener;
+				/**
+				 * chunk graph
+				 */
+				chunkGraph: ChunkGraph;
+				/**
+				 * the hash function to use
+				 */
+				hashFunction: string | typeof Hash;
+			}
+		) => string;
 		export let replaceDuplicates: (
 			array?: any,
 			fn?: any,
@@ -12144,6 +12261,52 @@ declare namespace exports {
 		};
 	}
 	export namespace optimize {
+		export namespace InnerGraph {
+			export let bailout: (parserState: ParserState) => void;
+			export let enable: (parserState: ParserState) => void;
+			export let isEnabled: (parserState: ParserState) => boolean;
+			export let addUsage: (
+				state: ParserState,
+				symbol: null | TopLevelSymbol,
+				usage: string | true | TopLevelSymbol
+			) => void;
+			export let addVariableUsage: (
+				parser: JavascriptParser,
+				name: string,
+				usage: string | true | TopLevelSymbol
+			) => void;
+			export let inferDependencyUsage: (state: ParserState) => void;
+			export let onUsage: (
+				state: ParserState,
+				onUsageCallback: (arg0?: boolean | Set<string>) => void
+			) => void;
+			export let setTopLevelSymbol: (
+				state: ParserState,
+				symbol: TopLevelSymbol
+			) => void;
+			export let getTopLevelSymbol: (
+				state: ParserState
+			) => void | TopLevelSymbol;
+			export let tagTopLevelSymbol: (
+				parser: JavascriptParser,
+				name: string
+			) => TopLevelSymbol;
+			export let isDependencyUsedByExports: (
+				dependency: Dependency,
+				usedByExports: boolean | Set<string>,
+				moduleGraph: ModuleGraph,
+				runtime: RuntimeSpec
+			) => boolean;
+			export let getDependencyUsedByExportsCondition: (
+				dependency: Dependency,
+				usedByExports: boolean | Set<string>,
+				moduleGraph: ModuleGraph
+			) =>
+				| null
+				| false
+				| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState);
+			export { TopLevelSymbol, topLevelSymbolTag };
+		}
 		export {
 			AggressiveMergingPlugin,
 			AggressiveSplittingPlugin,
@@ -12269,6 +12432,59 @@ declare namespace exports {
 				b: DependencyLocation
 			) => 0 | 1 | -1;
 		}
+		export namespace runtime {
+			export let getEntryRuntime: (
+				compilation: Compilation,
+				name: string,
+				options?: EntryOptions
+			) => RuntimeSpec;
+			export let forEachRuntime: (
+				runtime: RuntimeSpec,
+				fn: (arg0: string) => void,
+				deterministicOrder?: boolean
+			) => void;
+			export let getRuntimeKey: (runtime: RuntimeSpec) => string;
+			export let keyToRuntime: (key: string) => RuntimeSpec;
+			export let runtimeToString: (runtime: RuntimeSpec) => string;
+			export let runtimeConditionToString: (
+				runtimeCondition: RuntimeCondition
+			) => string;
+			export let runtimeEqual: (a: RuntimeSpec, b: RuntimeSpec) => boolean;
+			export let compareRuntime: (a: RuntimeSpec, b: RuntimeSpec) => 0 | 1 | -1;
+			export let mergeRuntime: (a: RuntimeSpec, b: RuntimeSpec) => RuntimeSpec;
+			export let mergeRuntimeCondition: (
+				a: RuntimeCondition,
+				b: RuntimeCondition,
+				runtime: RuntimeSpec
+			) => RuntimeCondition;
+			export let mergeRuntimeConditionNonFalse: (
+				a: undefined | string | true | SortableSet<string>,
+				b: undefined | string | true | SortableSet<string>,
+				runtime: RuntimeSpec
+			) => undefined | string | true | SortableSet<string>;
+			export let mergeRuntimeOwned: (
+				a: RuntimeSpec,
+				b: RuntimeSpec
+			) => RuntimeSpec;
+			export let intersectRuntime: (
+				a: RuntimeSpec,
+				b: RuntimeSpec
+			) => RuntimeSpec;
+			export let subtractRuntime: (
+				a: RuntimeSpec,
+				b: RuntimeSpec
+			) => RuntimeSpec;
+			export let subtractRuntimeCondition: (
+				a: RuntimeCondition,
+				b: RuntimeCondition,
+				runtime: RuntimeSpec
+			) => RuntimeCondition;
+			export let filterRuntime: (
+				runtime: RuntimeSpec,
+				filter: (arg0: RuntimeSpec) => boolean
+			) => undefined | string | boolean | SortableSet<string>;
+			export { RuntimeSpecMap, RuntimeSpecSet };
+		}
 		export namespace serialization {
 			export const register: (
 				Constructor: Constructor,
@@ -12283,7 +12499,10 @@ declare namespace exports {
 			export const registerNotSerializable: (Constructor: Constructor) => void;
 			export const NOT_SERIALIZABLE: object;
 			export const buffersSerializer: Serializer;
-			export let createFileSerializer: (fs?: any) => Serializer;
+			export let createFileSerializer: (
+				fs?: any,
+				hashFunction?: any
+			) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
 		export const cleverMerge: <T, O>(first: T, second: O) => T | O | (T & O);
@@ -12411,5 +12630,6 @@ declare namespace exports {
 		LoaderContext
 	};
 }
+declare const topLevelSymbolTag: unique symbol;
 
 export = exports;
