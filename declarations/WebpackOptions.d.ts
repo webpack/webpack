@@ -604,6 +604,7 @@ export type StatsValue =
 			| "summary"
 			| "errors-only"
 			| "errors-warnings"
+			| "manifest"
 			| "minimal"
 			| "normal"
 			| "detailed"
