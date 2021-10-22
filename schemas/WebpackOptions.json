@@ -723,6 +723,10 @@
             }
           ]
         },
+        "manifest": {
+          "description": "Allow to output manifest, request child manifest in compilation.",
+          "type": "boolean"
+        },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
           "type": "boolean"
@@ -817,6 +821,10 @@
               "$ref": "#/definitions/LazyCompilationOptions"
             }
           ]
+        },
+        "manifest": {
+          "description": "Allow to output manifest, request child manifest in compilation.",
+          "type": "boolean"
         },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
@@ -1816,6 +1824,17 @@
     "Loader": {
       "description": "Custom values available in the loader context.",
       "type": "object"
+    },
+    "Manifest": {
+      "description": "Options for manifest.",
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
     "MemoryCacheOptions": {
       "description": "Options object for in-memory caching.",
@@ -4887,6 +4906,9 @@
         "loader": {
           "$ref": "#/definitions/Loader"
         },
+        "manifest": {
+          "$ref": "#/definitions/Manifest"
+        },
         "mode": {
           "$ref": "#/definitions/Mode"
         },
@@ -5032,6 +5054,9 @@
     },
     "loader": {
       "$ref": "#/definitions/Loader"
+    },
+    "manifest": {
+      "$ref": "#/definitions/Manifest"
     },
     "mode": {
       "$ref": "#/definitions/Mode"

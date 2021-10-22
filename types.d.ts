@@ -2132,6 +2132,11 @@ declare interface Configuration {
 	loader?: Loader;
 
 	/**
+	 * Options for manifest.
+	 */
+	manifest?: string | false;
+
+	/**
 	 * Enable production optimizations or development hints.
 	 */
 	mode?: "development" | "production" | "none";
@@ -3351,6 +3356,11 @@ declare interface ExperimentsExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
+
+	/**
+	 * Allow to output manifest, request child manifest in compilation.
+	 */
+	manifest?: boolean;
 }
 type ExperimentsNormalized = ExperimentsCommon & ExperimentsNormalizedExtra;
 
@@ -3367,6 +3377,11 @@ declare interface ExperimentsNormalizedExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: LazyCompilationOptions;
+
+	/**
+	 * Allow to output manifest, request child manifest in compilation.
+	 */
+	manifest?: boolean;
 }
 declare abstract class ExportInfo {
 	name: string;
@@ -7069,6 +7084,7 @@ declare class MultiCompiler {
 	intermediateFileSystem: IntermediateFileSystem;
 	getInfrastructureLogger(name?: any): WebpackLogger;
 	setDependencies(compiler: Compiler, dependencies: string[]): void;
+	applyDependencies(compiler: Compiler, dependencies: Compiler[]): void;
 	validateDependencies(callback: CallbackFunction<MultiStats>): boolean;
 	runWithDependencies(
 		compilers: Compiler[],
@@ -11923,6 +11939,11 @@ declare interface WebpackOptionsNormalized {
 	 * Custom values available in the loader context.
 	 */
 	loader?: Loader;
+
+	/**
+	 * Options for manifest.
+	 */
+	manifest?: string | false;
 
 	/**
 	 * Enable production optimizations or development hints.
