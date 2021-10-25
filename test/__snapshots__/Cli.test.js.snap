@@ -633,16 +633,72 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-lazy-compilation-client": Object {
+  "experiments-lazy-compilation-backend-client": Object {
     "configs": Array [
       Object {
         "description": "A custom client.",
         "multiple": false,
-        "path": "experiments.lazyCompilation.client",
+        "path": "experiments.lazyCompilation.backend.client",
         "type": "string",
       },
     ],
     "description": "A custom client.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "experiments-lazy-compilation-backend-listen": Object {
+    "configs": Array [
+      Object {
+        "description": "A port.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation.backend.listen",
+        "type": "number",
+      },
+    ],
+    "description": "A port.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "experiments-lazy-compilation-backend-listen-host": Object {
+    "configs": Array [
+      Object {
+        "description": "A host.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation.backend.listen.host",
+        "type": "number",
+      },
+    ],
+    "description": "A host.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "experiments-lazy-compilation-backend-listen-port": Object {
+    "configs": Array [
+      Object {
+        "description": "A port.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation.backend.listen.port",
+        "type": "number",
+      },
+    ],
+    "description": "A port.",
+    "multiple": false,
+    "simpleType": "number",
+  },
+  "experiments-lazy-compilation-backend-protocol": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the protocol the client should use to connect to the server.",
+        "multiple": false,
+        "path": "experiments.lazyCompilation.backend.protocol",
+        "type": "enum",
+        "values": Array [
+          "http",
+          "https",
+        ],
+      },
+    ],
+    "description": "Specifies the protocol the client should use to connect to the server.",
     "multiple": false,
     "simpleType": "string",
   },

@@ -80,6 +80,8 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
+import { ServerOptions as ServerOptionsImport } from "http";
+import { ListenOptions, Server } from "net";
 import { validate as validateFunction } from "schema-utils";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
 import { ValidationErrorConfiguration } from "schema-utils/declarations/validate";
@@ -95,6 +97,7 @@ import {
 	SyncHook,
 	SyncWaterfallHook
 } from "tapable";
+import { SecureContextOptions, TlsOptions } from "tls";
 
 declare class AbstractLibraryPlugin<T> {
 	constructor(__0: {
@@ -383,6 +386,10 @@ declare class AutomaticPrefetchPlugin {
 	apply(compiler: Compiler): void;
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
+declare interface BackendApi {
+	dispose: (arg0?: Error) => void;
+	module: (arg0: Module) => { client: string; data: string; active: boolean };
+}
 declare class BannerPlugin {
 	constructor(options: BannerPluginArgument);
 	options: BannerPluginOptions;
@@ -5795,24 +5802,44 @@ declare interface KnownStatsProfile {
 }
 
 /**
- * Options for compiling entrypoints and import()s only when they are accessed.
+ * Options for the default backend.
  */
-declare interface LazyCompilationOptions {
-	/**
-	 * A custom backend.
-	 */
-	backend?:
-		| ((
-				compiler: Compiler,
-				client: string,
-				callback: (err?: Error, api?: any) => void
-		  ) => void)
-		| ((compiler: Compiler, client: string) => Promise<any>);
-
+declare interface LazyCompilationDefaultBackendOptions {
 	/**
 	 * A custom client.
 	 */
 	client?: string;
+
+	/**
+	 * Specifies where to listen to from the server.
+	 */
+	listen?: number | ListenOptions | ((server: typeof Server) => void);
+
+	/**
+	 * Specifies the protocol the client should use to connect to the server.
+	 */
+	protocol?: "http" | "https";
+
+	/**
+	 * Specifies how to create the server handling the EventSource requests.
+	 */
+	server?: ServerOptionsImport | ServerOptionsHttps | (() => typeof Server);
+}
+
+/**
+ * Options for compiling entrypoints and import()s only when they are accessed.
+ */
+declare interface LazyCompilationOptions {
+	/**
+	 * Specifies the backend that should be used for handling client keep alive.
+	 */
+	backend?:
+		| ((
+				compiler: Compiler,
+				callback: (err?: Error, api?: BackendApi) => void
+		  ) => void)
+		| ((compiler: Compiler) => Promise<BackendApi>)
+		| LazyCompilationDefaultBackendOptions;
 
 	/**
 	 * Enable/disable lazy compilation for entries.
@@ -10369,6 +10396,9 @@ declare abstract class Serializer {
 	serialize(obj?: any, context?: any): any;
 	deserialize(value?: any, context?: any): any;
 }
+type ServerOptionsHttps = SecureContextOptions &
+	TlsOptions &
+	ServerOptionsImport;
 declare class SharePlugin {
 	constructor(options: SharePluginOptions);
 
