@@ -1117,43 +1117,7 @@ export interface Experiments {
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
-	lazyCompilation?:
-		| boolean
-		| {
-				/**
-				 * A custom backend.
-				 */
-				backend?:
-					| ((
-							compiler: import("../lib/Compiler"),
-							client: string,
-							callback: (err?: Error, api?: any) => void
-					  ) => void)
-					| ((
-							compiler: import("../lib/Compiler"),
-							client: string
-					  ) => Promise<any>);
-				/**
-				 * Additional configuration to pass to the backend server.
-				 */
-				backendConfiguration?: import("../lib/hmr/lazyCompilationBackend").BackendConfiguration;
-				/**
-				 * A custom client.
-				 */
-				client?: string;
-				/**
-				 * Enable/disable lazy compilation for entries.
-				 */
-				entries?: boolean;
-				/**
-				 * Enable/disable lazy compilation for import() modules.
-				 */
-				imports?: boolean;
-				/**
-				 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
-				 */
-				test?: RegExp | string | ((module: import("../lib/Module")) => boolean);
-		  };
+	lazyCompilation?: boolean | LazyCompilationOptions;
 	/**
 	 * Allow output javascript files as module source type.
 	 */
@@ -1187,6 +1151,65 @@ export interface HttpUriOptions {
 	 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
 	 */
 	upgrade?: boolean;
+}
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "LazyCompilationOptions".
+ */
+export interface LazyCompilationOptions {
+	backend?:
+		| (
+				| ((
+						compiler: import("../lib/Compiler"),
+						callback: (
+							err?: Error,
+							api?: import("../lib/hmr/LazyCompilationPlugin").BackendApi
+						) => void
+				  ) => void)
+				| ((
+						compiler: import("../lib/Compiler")
+				  ) => Promise<import("../lib/hmr/LazyCompilationPlugin").BackendApi>)
+		  )
+		| LazyCompilationDefaultBackendOptions;
+	/**
+	 * Enable/disable lazy compilation for entries.
+	 */
+	entries?: boolean;
+	/**
+	 * Enable/disable lazy compilation for import() modules.
+	 */
+	imports?: boolean;
+	/**
+	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
+	 */
+	test?: RegExp | string | ((module: import("../lib/Module")) => boolean);
+}
+/**
+ * Options for the default backend.
+ */
+export interface LazyCompilationDefaultBackendOptions {
+	/**
+	 * A custom client.
+	 */
+	client?: string;
+	/**
+	 * Specifies where to listen to from the server.
+	 */
+	listen?:
+		| number
+		| import("net").ListenOptions
+		| ((server: import("net").Server) => void);
+	/**
+	 * Specifies the protocol the client should use to connect to the server.
+	 */
+	protocol?: "http" | "https";
+	/**
+	 * Specifies how to create the server handling the EventSource requests.
+	 */
+	server?:
+		| (import("https").ServerOptions | import("http").ServerOptions)
+		| (() => import("net").Server);
+	[k: string]: any;
 }
 /**
  * Enable presets of externals for specific targets.

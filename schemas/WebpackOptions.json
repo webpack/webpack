@@ -714,47 +714,7 @@
               "type": "boolean"
             },
             {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "backend": {
-                  "description": "A custom backend.",
-                  "instanceof": "Function",
-                  "tsType": "(((compiler: import('../lib/Compiler'), client: string, callback: (err?: Error, api?: any) => void) => void) | ((compiler: import('../lib/Compiler'), client: string) => Promise<any>))"
-                },
-                "backendConfiguration": {
-                  "description": "Additional configuration to pass to the backend server.",
-                  "tsType": "import('../lib/hmr/lazyCompilationBackend').BackendConfiguration"
-                },
-                "client": {
-                  "description": "A custom client.",
-                  "type": "string"
-                },
-                "entries": {
-                  "description": "Enable/disable lazy compilation for entries.",
-                  "type": "boolean"
-                },
-                "imports": {
-                  "description": "Enable/disable lazy compilation for import() modules.",
-                  "type": "boolean"
-                },
-                "test": {
-                  "description": "Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.",
-                  "anyOf": [
-                    {
-                      "instanceof": "RegExp",
-                      "tsType": "RegExp"
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "instanceof": "Function",
-                      "tsType": "((module: import('../lib/Module')) => boolean)"
-                    }
-                  ]
-                }
-              }
+              "$ref": "#/definitions/LazyCompilationOptions"
             }
           ]
         },
@@ -1491,6 +1451,109 @@
           "minLength": 1
         }
       ]
+    },
+    "LazyCompilationDefaultBackendOptions": {
+      "description": "Options for the default backend.",
+      "type": "object",
+      "properties": {
+        "client": {
+          "description": "A custom client.",
+          "type": "string"
+        },
+        "listen": {
+          "description": "Specifies where to listen to from the server.",
+          "anyOf": [
+            {
+              "description": "A port.",
+              "type": "number"
+            },
+            {
+              "description": "Listen options.",
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "host": {
+                  "description": "A host.",
+                  "type": "number"
+                },
+                "port": {
+                  "description": "A port.",
+                  "type": "number"
+                }
+              },
+              "tsType": "import(\"net\").ListenOptions"
+            },
+            {
+              "description": "A custom listen function.",
+              "instanceof": "Function",
+              "tsType": "((server: import(\"net\").Server) => void)"
+            }
+          ]
+        },
+        "protocol": {
+          "description": "Specifies the protocol the client should use to connect to the server.",
+          "enum": ["http", "https"]
+        },
+        "server": {
+          "description": "Specifies how to create the server handling the EventSource requests.",
+          "anyOf": [
+            {
+              "description": "ServerOptions for the http or https createServer call.",
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {},
+              "tsType": "(import(\"https\").ServerOptions | import(\"http\").ServerOptions)"
+            },
+            {
+              "description": "A custom create server function.",
+              "instanceof": "Function",
+              "tsType": "(() => import(\"net\").Server)"
+            }
+          ]
+        }
+      }
+    },
+    "LazyCompilationOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "anyOf": [
+            {
+              "description": "A custom backend.",
+              "instanceof": "Function",
+              "tsType": "(((compiler: import('../lib/Compiler'), callback: (err?: Error, api?: import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi) => void) => void) | ((compiler: import('../lib/Compiler')) => Promise<import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi>))"
+            },
+            {
+              "$ref": "#/definitions/LazyCompilationDefaultBackendOptions"
+            }
+          ]
+        },
+        "entries": {
+          "description": "Enable/disable lazy compilation for entries.",
+          "type": "boolean"
+        },
+        "imports": {
+          "description": "Enable/disable lazy compilation for import() modules.",
+          "type": "boolean"
+        },
+        "test": {
+          "description": "Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.",
+          "anyOf": [
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((module: import('../lib/Module')) => boolean)"
+            }
+          ]
+        }
+      }
     },
     "Library": {
       "description": "Make the output files a library, exporting the exports of the entry point.",

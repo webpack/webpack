@@ -81,6 +81,7 @@ import {
 	YieldExpression
 } from "estree";
 import { ServerOptions as ServerOptionsImport } from "http";
+import { ListenOptions, Server } from "net";
 import { validate as validateFunction } from "schema-utils";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
 import { ValidationErrorConfiguration } from "schema-utils/declarations/validate";
@@ -386,21 +387,9 @@ declare class AutomaticPrefetchPlugin {
 	apply(compiler: Compiler): void;
 }
 type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
-declare interface BackendConfiguration {
-	/**
-	 * Options to be passed to the Node.js HTTP module.
-	 */
-	httpServerOptions: ServerOptionsImport;
-
-	/**
-	 * Options to be passed to the Node.js HTTPS module.
-	 */
-	httpsServerOptions: ServerOptionsHttps;
-
-	/**
-	 * Custom port for lazy compilation backend. If not defined, a random port will be used.
-	 */
-	port: null | number;
+declare interface BackendApi {
+	dispose: (arg0?: Error) => void;
+	module: (arg0: Module) => { client: string; data: string; active: boolean };
 }
 declare class BannerPlugin {
 	constructor(options: BannerPluginArgument);
@@ -3313,40 +3302,7 @@ declare interface Experiments {
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
-	lazyCompilation?:
-		| boolean
-		| {
-				/**
-				 * A custom backend.
-				 */
-				backend?:
-					| ((
-							compiler: Compiler,
-							client: string,
-							callback: (err?: Error, api?: any) => void
-					  ) => void)
-					| ((compiler: Compiler, client: string) => Promise<any>);
-				/**
-				 * Additional configuration to pass to the backend server.
-				 */
-				backendConfiguration?: BackendConfiguration;
-				/**
-				 * A custom client.
-				 */
-				client?: string;
-				/**
-				 * Enable/disable lazy compilation for entries.
-				 */
-				entries?: boolean;
-				/**
-				 * Enable/disable lazy compilation for import() modules.
-				 */
-				imports?: boolean;
-				/**
-				 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
-				 */
-				test?: string | RegExp | ((module: Module) => boolean);
-		  };
+	lazyCompilation?: boolean | LazyCompilationOptions;
 
 	/**
 	 * Allow output javascript files as module source type.
@@ -5787,6 +5743,62 @@ declare interface KnownStatsProfile {
 	additionalIntegration: number;
 	factory: number;
 	dependencies: number;
+}
+
+/**
+ * Options for the default backend.
+ */
+declare interface LazyCompilationDefaultBackendOptions {
+	[index: string]: any;
+
+	/**
+	 * A custom client.
+	 */
+	client?: string;
+
+	/**
+	 * Specifies where to listen to from the server.
+	 */
+	listen?: number | ListenOptions | ((server: typeof Server) => void);
+
+	/**
+	 * Specifies the protocol the client should use to connect to the server.
+	 */
+	protocol?: "http" | "https";
+
+	/**
+	 * Specifies how to create the server handling the EventSource requests.
+	 */
+	server?: ServerOptionsImport | ServerOptionsHttps | (() => typeof Server);
+}
+
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "LazyCompilationOptions".
+ */
+declare interface LazyCompilationOptions {
+	backend?:
+		| ((
+				compiler: Compiler,
+				callback: (err?: Error, api?: BackendApi) => void
+		  ) => void)
+		| ((compiler: Compiler) => Promise<BackendApi>)
+		| LazyCompilationDefaultBackendOptions;
+
+	/**
+	 * Enable/disable lazy compilation for entries.
+	 */
+	entries?: boolean;
+
+	/**
+	 * Enable/disable lazy compilation for import() modules.
+	 */
+	imports?: boolean;
+
+	/**
+	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
+	 */
+	test?: string | RegExp | ((module: Module) => boolean);
 }
 declare class LazySet<T> {
 	constructor(iterable?: Iterable<T>);
