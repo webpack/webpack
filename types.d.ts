@@ -1424,7 +1424,7 @@ declare class Compilation {
 		chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 		moduleAsset: SyncHook<[Module, string]>;
 		chunkAsset: SyncHook<[Chunk, string]>;
-		assetPath: SyncWaterfallHook<[string, object, AssetInfo]>;
+		assetPath: SyncWaterfallHook<[string, PathData, AssetInfo]>;
 		needAdditionalPass: SyncBailHook<[], boolean>;
 		childCompiler: SyncHook<[Compiler, string, number]>;
 		log: SyncBailHook<[string, LogEntry], true>;
@@ -1491,6 +1491,9 @@ declare class Compilation {
 	namedChunks: Map<string, Chunk>;
 	modules: Set<Module>;
 	records: any;
+	hash?: string;
+	fullHash?: string;
+	index?: number;
 	additionalChunkAssets: string[];
 	assets: CompilationAssets;
 	assetsInfo: Map<string, AssetInfo>;
@@ -1667,8 +1670,6 @@ declare class Compilation {
 		runtime: RuntimeSpec;
 		runtimes: RuntimeSpec[];
 	}[];
-	fullHash?: string;
-	hash?: string;
 	emitAsset(file: string, source: Source, assetInfo?: AssetInfo): void;
 	updateAsset(
 		file: string,
@@ -8611,6 +8612,7 @@ declare interface ParserStateBase {
 declare interface PathData {
 	chunkGraph?: ChunkGraph;
 	hash?: string;
+	index?: string;
 	hashWithLength?: (arg0: number) => string;
 	chunk?: Chunk | ChunkPathData;
 	module?: Module | ModulePathData;
@@ -9056,6 +9058,7 @@ declare interface RenderManifestOptions {
 	 * the chunk used to render
 	 */
 	chunk: Chunk;
+	index: string;
 	hash: string;
 	fullHash: string;
 	outputOptions: Output;
@@ -11419,7 +11422,7 @@ declare interface UpdateHashContextGenerator {
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
 }
-type UsageStateType = 0 | 1 | 2 | 3 | 4;
+type UsageStateType = 0 | 2 | 3 | 1 | 4;
 declare interface UserResolveOptions {
 	/**
 	 * A list of module alias configurations or an object which maps key to value
@@ -12179,6 +12182,7 @@ declare namespace exports {
 		export let harmonyModuleDecorator: string;
 		export let nodeModuleDecorator: string;
 		export let getFullHash: string;
+		export let compilationIndex: string;
 		export let wasmInstances: string;
 		export let instantiateWasm: string;
 		export let uncaughtErrorHandler: string;
