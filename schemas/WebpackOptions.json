@@ -1618,6 +1618,7 @@
     "LazyCompilationDefaultBackendOptions": {
       "description": "Options for the default backend.",
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "client": {
           "description": "A custom client.",
@@ -1682,6 +1683,7 @@
       "additionalProperties": false,
       "properties": {
         "backend": {
+          "description": "Specifies the backend that should be used for handling client keep alive.",
           "anyOf": [
             {
               "description": "A custom backend.",

@@ -2962,12 +2962,14 @@ export interface LazyCompilationDefaultBackendOptions {
 	server?:
 		| (import("https").ServerOptions | import("http").ServerOptions)
 		| (() => import("net").Server);
-	[k: string]: any;
 }
 /**
  * Options for compiling entrypoints and import()s only when they are accessed.
  */
 export interface LazyCompilationOptions {
+	/**
+	 * Specifies the backend that should be used for handling client keep alive.
+	 */
 	backend?:
 		| (
 				| ((

@@ -5805,8 +5805,6 @@ declare interface KnownStatsProfile {
  * Options for the default backend.
  */
 declare interface LazyCompilationDefaultBackendOptions {
-	[index: string]: any;
-
 	/**
 	 * A custom client.
 	 */
@@ -5832,6 +5830,9 @@ declare interface LazyCompilationDefaultBackendOptions {
  * Options for compiling entrypoints and import()s only when they are accessed.
  */
 declare interface LazyCompilationOptions {
+	/**
+	 * Specifies the backend that should be used for handling client keep alive.
+	 */
 	backend?:
 		| ((
 				compiler: Compiler,
