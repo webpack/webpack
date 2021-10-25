@@ -2112,6 +2112,21 @@ LOG from LogTestPlugin
 webpack compiled successfully"
 `;
 
+exports[`StatsTestCases should print correct stats for preset-manifest 1`] = `
+"PublicPath: auto
+asset main.js 12.8 KiB {179} [emitted] (name: main)
+asset 140.js 568 bytes {140} [emitted]
+asset 585.js 462 bytes {585} [emitted]
+asset 847.js 462 bytes {847} [emitted]
+asset 391.js 110 bytes {391} [emitted]
+Entrypoint main 12.8 KiB = main.js
+chunk {140} (runtime: main) 140.js 34 bytes <{179}> >{391}< [rendered]
+chunk {179} (runtime: main) main.js (main) 84 bytes (javascript) 7.68 KiB (runtime) >{140}< >{585}< >{847}< [entry] [rendered]
+chunk {391} (runtime: main) 391.js 1 bytes <{140}> [rendered]
+chunk {585} (runtime: main) 585.js 18 bytes <{179}> [rendered]
+chunk {847} (runtime: main) 847.js 18 bytes <{179}> [rendered]"
+`;
+
 exports[`StatsTestCases should print correct stats for preset-minimal 1`] = `
 "<e> [LogTestPlugin] Error
 <w> [LogTestPlugin] Warning

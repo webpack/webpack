@@ -98,6 +98,7 @@ Object {
     "futureDefaults": false,
     "layers": false,
     "lazyCompilation": undefined,
+    "manifest": false,
     "outputModule": false,
     "syncWebAssembly": false,
     "topLevelAwait": false,
@@ -118,6 +119,7 @@ Object {
   "loader": Object {
     "target": "web",
   },
+  "manifest": false,
   "mode": "none",
   "module": Object {
     "defaultRules": Array [

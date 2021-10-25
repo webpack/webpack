@@ -232,6 +232,10 @@ export type FilterTypes = FilterItemTypes[] | FilterItemTypes;
  */
 export type FilterItemTypes = RegExp | string | ((value: string) => boolean);
 /**
+ * Options for manifest.
+ */
+export type Manifest = false | string;
+/**
  * Enable production optimizations or development hints.
  */
 export type Mode = "development" | "production" | "none";
@@ -604,6 +608,7 @@ export type StatsValue =
 			| "summary"
 			| "errors-only"
 			| "errors-warnings"
+			| "manifest"
 			| "minimal"
 			| "normal"
 			| "detailed"
@@ -816,6 +821,10 @@ export interface WebpackOptions {
 	 * Custom values available in the loader context.
 	 */
 	loader?: Loader;
+	/**
+	 * Options for manifest.
+	 */
+	manifest?: Manifest;
 	/**
 	 * Enable production optimizations or development hints.
 	 */
@@ -3247,6 +3256,10 @@ export interface WebpackOptionsNormalized {
 	 */
 	loader?: Loader;
 	/**
+	 * Options for manifest.
+	 */
+	manifest?: Manifest;
+	/**
 	 * Enable production optimizations or development hints.
 	 */
 	mode?: Mode;
@@ -3335,6 +3348,10 @@ export interface ExperimentsExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
+	/**
+	 * Allow to output manifest, request child manifest in compilation.
+	 */
+	manifest?: boolean;
 }
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
@@ -3348,6 +3365,10 @@ export interface ExperimentsNormalizedExtra {
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: LazyCompilationOptions;
+	/**
+	 * Allow to output manifest, request child manifest in compilation.
+	 */
+	manifest?: boolean;
 }
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.

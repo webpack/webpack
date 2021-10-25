@@ -691,6 +691,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "experiments-manifest": Object {
+    "configs": Array [
+      Object {
+        "description": "Allow to output manifest, request child manifest in compilation.",
+        "multiple": false,
+        "path": "experiments.manifest",
+        "type": "boolean",
+      },
+    ],
+    "description": "Allow to output manifest, request child manifest in compilation.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-output-module": Object {
     "configs": Array [
       Object {
@@ -1048,6 +1061,28 @@ Object {
       },
     ],
     "description": "Log level.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "manifest": Object {
+    "configs": Array [
+      Object {
+        "description": "Options for manifest.",
+        "multiple": false,
+        "path": "manifest",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+      Object {
+        "description": "Options for manifest.",
+        "multiple": false,
+        "path": "manifest",
+        "type": "string",
+      },
+    ],
+    "description": "Options for manifest.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -7267,6 +7302,7 @@ Object {
           "summary",
           "errors-only",
           "errors-warnings",
+          "manifest",
           "minimal",
           "normal",
           "detailed",
