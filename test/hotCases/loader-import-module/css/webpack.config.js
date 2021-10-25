@@ -8,9 +8,15 @@ module.exports = {
 		},
 		rules: [
 			{
-				test: /\.css\.js$/,
-				use: "./loader",
-				type: "asset/source"
+				oneOf: [
+					{
+						test: /\.css\.js$/,
+						use: "./loader",
+						type: "asset/source"
+					},
+					{ test: /\.(js|jpg|png)$/ },
+					{ type: "asset/resource" }
+				]
 			}
 		]
 	},

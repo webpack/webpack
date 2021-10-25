@@ -8,6 +8,10 @@ module.exports = {
 				type: "asset/inline"
 			},
 			{
+				mimetype: "image/svg+xml",
+				type: "asset/inline"
+			},
+			{
 				test: /\.jpg$/,
 				type: "asset",
 				parser: {

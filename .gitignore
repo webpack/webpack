@@ -4,9 +4,12 @@
 /test/fixtures/temp-*
 /test/temp
 /test/ChangesAndRemovals
+/test/**/dev-defaults.webpack.lock
 /benchmark/js
 /benchmark/fixtures
 /examples/**/dist
+/assembly/**/*.wat
+/assembly/**/*.wasm
 /coverage
 /.nyc_output
 /.jest-cache

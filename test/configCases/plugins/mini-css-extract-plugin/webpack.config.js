@@ -14,8 +14,14 @@ const config = (i, options) => ({
 	module: {
 		rules: [
 			{
-				test: /\.css$/,
-				use: [MCEP.loader, "css-loader"]
+				oneOf: [
+					{
+						test: /\.css$/,
+						use: [MCEP.loader, "css-loader"]
+					},
+					{ test: /\.js$/ },
+					{ type: "asset" }
+				]
 			}
 		]
 	},
