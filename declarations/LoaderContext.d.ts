@@ -40,7 +40,7 @@ export interface NormalModuleLoaderContext<OptionsType> {
 	utils: {
 		absolutify: (context: string, request: string) => string;
 		contextify: (context: string, request: string) => string;
-		createHash: (algorithm: string) => Hash;
+		createHash: (algorithm?: string) => Hash;
 	};
 	rootContext: string;
 	fs: InputFileSystem;
