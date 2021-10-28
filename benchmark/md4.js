@@ -45,8 +45,8 @@ const compare = (n1, f1, n2, f2) => {
 };
 
 for (const size of [
-	1, 2, 4, 8, 10, 20, 40, 60, 80, 100, 200, 1000, 5000, 10000, 20000, 50000,
-	100000, 200000, 500000
+	1, 2, 4, 8, 10, 20, 40, 60, 80, 100, 200, 1000, 5000, 8183, 8184, 8185, 10000,
+	20000, 32768, 32769, 50000, 100000, 200000, 500000
 ]) {
 	const longString = require("crypto").randomBytes(size).toString("hex");
 	const buffer = require("crypto").randomBytes(size * 2);
