@@ -11,16 +11,16 @@ for (const size of [
 	console.log(
 		`string ${longString.length} chars: ` +
 			compare(
-				"native md4",
+				"wasm xxhash64",
 				() => {
-					const hash = createHash("native-md4");
+					const hash = createHash("xxhash64");
 					hash.update(longString);
 					hash.update(longString);
 					return hash.digest("hex");
 				},
-				"wasm md4",
+				"native md4",
 				() => {
-					const hash = createHash("md4");
+					const hash = createHash("native-md4");
 					hash.update(longString);
 					hash.update(longString);
 					return hash.digest("hex");
@@ -30,16 +30,16 @@ for (const size of [
 	console.log(
 		`buffer ${buffer.length} bytes: ` +
 			compare(
-				"native md4",
+				"wasm xxhash64",
 				() => {
-					const hash = createHash("native-md4");
+					const hash = createHash("xxhash64");
 					hash.update(buffer);
 					hash.update(buffer);
 					return hash.digest("hex");
 				},
-				"wasm md4",
+				"native md4",
 				() => {
-					const hash = createHash("md4");
+					const hash = createHash("native-md4");
 					hash.update(buffer);
 					hash.update(buffer);
 					return hash.digest("hex");
