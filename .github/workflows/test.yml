@@ -21,8 +21,8 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 16.x
-          cache: 'yarn'
+          node-version: 17.x
+          cache: "yarn"
       - run: yarn --frozen-lockfile
       - uses: actions/cache@v1
         with:
@@ -37,8 +37,8 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 16.x
-          cache: 'yarn'
+          node-version: 17.x
+          cache: "yarn"
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
@@ -54,8 +54,8 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 16.x
-          cache: 'yarn'
+          node-version: 17.x
+          cache: "yarn"
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
@@ -75,9 +75,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [10.x, 16.x]
+        node-version: [10.x, 17.x]
         part: [a, b]
         include:
+          - os: ubuntu-latest
+            node-version: 16.x
+            part: a
           - os: ubuntu-latest
             node-version: 14.x
             part: a
@@ -91,7 +94,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
+          cache: "yarn"
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile

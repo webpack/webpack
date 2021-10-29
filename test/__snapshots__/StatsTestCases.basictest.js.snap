@@ -952,9 +952,9 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
 "hidden assets 34 bytes 1 asset
-asset bundle.js 5.28 KiB [emitted] (name: main)
+asset bundle.js 5.25 KiB [emitted] (name: main)
 runtime modules 1.72 KiB 5 modules
-hidden modules 123 bytes 2 modules
+hidden modules 99 bytes 2 modules
 cacheable modules 119 bytes
   ./index.js 77 bytes [built] [code generated]
   ./a.txt 42 bytes [built] [code generated]
