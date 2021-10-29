@@ -15,7 +15,10 @@ const wasmHashes = {
 		const createMd4Hash = require("../lib/util/hash/md4");
 		return {
 			createHash: createMd4Hash,
-			createReferenceHash: async () => createHash("md4"),
+			createReferenceHash:
+				parseInt(process.version.slice(1), 10) < 17
+					? async () => createHash("md4")
+					: createMd4Hash,
 			regExp: /^[0-9a-f]{32}$/
 		};
 	}
