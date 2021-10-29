@@ -665,12 +665,12 @@ Object {
         "description": "A host.",
         "multiple": false,
         "path": "experiments.lazyCompilation.backend.listen.host",
-        "type": "number",
+        "type": "string",
       },
     ],
     "description": "A host.",
     "multiple": false,
-    "simpleType": "number",
+    "simpleType": "string",
   },
   "experiments-lazy-compilation-backend-listen-port": Object {
     "configs": Array [

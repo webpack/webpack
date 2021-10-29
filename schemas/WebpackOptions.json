@@ -1638,13 +1638,14 @@
               "properties": {
                 "host": {
                   "description": "A host.",
-                  "type": "number"
+                  "type": "string"
                 },
                 "port": {
                   "description": "A port.",
                   "type": "number"
                 }
               },
+              "required": ["host", "port"],
               "tsType": "import(\"net\").ListenOptions"
             },
             {
