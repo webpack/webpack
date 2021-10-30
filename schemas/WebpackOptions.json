@@ -1645,7 +1645,6 @@
                   "type": "number"
                 }
               },
-              "required": ["host", "port"],
               "tsType": "import(\"net\").ListenOptions"
             },
             {
