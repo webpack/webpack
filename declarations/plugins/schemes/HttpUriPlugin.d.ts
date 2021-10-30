@@ -5,11 +5,23 @@
  */
 
 export type HttpUriPluginOptions = HttpUriOptions;
+/**
+ * List of allowed URIs (resp. the beginning of them).
+ */
+export type HttpUriOptionsAllowedUris = (
+	| RegExp
+	| string
+	| ((uri: string) => boolean)
+)[];
 
 /**
  * Options for building http resources.
  */
 export interface HttpUriOptions {
+	/**
+	 * List of allowed URIs (resp. the beginning of them).
+	 */
+	allowedUris: HttpUriOptionsAllowedUris;
 	/**
 	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
 	 */

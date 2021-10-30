@@ -6,5 +6,8 @@ module.exports = {
 	},
 	module: {
 		unsafeCache: true
+	},
+	externals: {
+		external: "var 123"
 	}
 };
