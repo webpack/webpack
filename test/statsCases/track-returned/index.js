@@ -146,6 +146,7 @@ it("should track return in arrow function expression", () => {
 it("should work correct for try catch and loops", () => {
 	try {
 		throw 1;
+		require("./c");
 	} catch (e) {
 		require('./used');
 	}
@@ -159,7 +160,10 @@ it("should work correct for try catch and loops", () => {
 			if (true) return;
 			require("./c");
 		}
+		return;
 	} catch {}
+
+	require("./c");
 });
 
 it("should handle edge case with switch case", () => {

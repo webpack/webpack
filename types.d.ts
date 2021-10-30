@@ -10327,7 +10327,7 @@ declare interface ScopeInfo {
 	 * false for unknown state
 	 */
 	executedPath: boolean;
-	returned: boolean;
+	terminated?: "return" | "throw";
 }
 declare interface Selector<A, B> {
 	(input: A): B;
