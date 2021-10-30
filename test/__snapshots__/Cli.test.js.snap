@@ -181,19 +181,19 @@ Object {
   "cache-immutable-paths": Object {
     "configs": Array [
       Object {
-        "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+        "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash)",
         "multiple": true,
         "path": "cache.immutablePaths[]",
         "type": "RegExp",
       },
       Object {
-        "description": "A path to a immutable directory (usually a package manager cache directory).",
+        "description": "A path to an immutable directory (usually a package manager cache directory).",
         "multiple": true,
         "path": "cache.immutablePaths[]",
         "type": "path",
       },
     ],
-    "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash) A path to a immutable directory (usually a package manager cache directory).",
+    "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash) A path to an immutable directory (usually a package manager cache directory).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -7172,19 +7172,19 @@ Object {
   "snapshot-immutable-paths": Object {
     "configs": Array [
       Object {
-        "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+        "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash)",
         "multiple": true,
         "path": "snapshot.immutablePaths[]",
         "type": "RegExp",
       },
       Object {
-        "description": "A path to a immutable directory (usually a package manager cache directory).",
+        "description": "A path to an immutable directory (usually a package manager cache directory).",
         "multiple": true,
         "path": "snapshot.immutablePaths[]",
         "type": "path",
       },
     ],
-    "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash) A path to a immutable directory (usually a package manager cache directory).",
+    "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash) A path to an immutable directory (usually a package manager cache directory).",
     "multiple": true,
     "simpleType": "string",
   },
