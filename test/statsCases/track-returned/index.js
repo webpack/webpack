@@ -38,6 +38,9 @@ it("should track return in function declaration", () => {
 			return;
 			throw require("./a");
 		}
+
+		if (rand()) return;
+		require("./used3");
 	}
 
 	a1();
