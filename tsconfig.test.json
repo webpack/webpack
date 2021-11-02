@@ -12,13 +12,14 @@
     "types": ["node", "jest", "./client-types"],
     "esModuleInterop": true
   },
+  "exclude": ["test/typesCases/meta/*"],
   "include": [
     "test/**/webpack.config.js",
     "test/cases/**/*loader*.js",
     "test/watchCases/**/*loader*.js",
     "test/configCases/**/*loader*.js",
     "test/hotCases/**/*loader*.js",
-    "test/types/**/*.ts",
+    "test/typesCases/**/*.ts",
     "declarations.test.d.ts"
   ]
 }
