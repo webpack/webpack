@@ -5290,6 +5290,11 @@ declare interface JavascriptParserOptions {
 	commonjsMagicComments?: boolean;
 
 	/**
+	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
+	 */
+	exportsPresence?: false | "error" | "warn" | "auto";
+
+	/**
 	 * Enable warnings for full dynamic dependencies.
 	 */
 	exprContextCritical?: boolean;
@@ -5320,14 +5325,19 @@ declare interface JavascriptParserOptions {
 	import?: boolean;
 
 	/**
+	 * Specifies the behavior of invalid export names in "import ... from ...".
+	 */
+	importExportsPresence?: false | "error" | "warn" | "auto";
+
+	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
 	node?: false | NodeOptions;
 
 	/**
-	 * Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).
+	 * Specifies the behavior of invalid export names in "export ... from ...". This might be useful to disable during the migration from "export ... from ..." to "export type ... from ..." when reexporting types in TypeScript.
 	 */
-	reexportExportsPresence?: false | "error" | "warn";
+	reexportExportsPresence?: false | "error" | "warn" | "auto";
 
 	/**
 	 * Enable/disable parsing of require.context syntax.
@@ -5350,7 +5360,7 @@ declare interface JavascriptParserOptions {
 	requireJs?: boolean;
 
 	/**
-	 * Emit errors instead of warnings when imported names don't exist in imported module.
+	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
 	 */
 	strictExportPresence?: boolean;
 

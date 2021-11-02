@@ -1437,6 +1437,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.exportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-expr-context-critical": Object {
     "configs": Array [
       Object {
@@ -1521,6 +1539,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-import-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-node": Object {
     "configs": Array [
       Object {
@@ -1598,7 +1634,7 @@ Object {
   "module-parser-javascript-auto-reexport-exports-presence": Object {
     "configs": Array [
       Object {
-        "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+        "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
         "multiple": false,
         "path": "module.parser.javascript/auto.reexportExportsPresence",
         "type": "enum",
@@ -1609,7 +1645,7 @@ Object {
         ],
       },
     ],
-    "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+    "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -1668,13 +1704,13 @@ Object {
   "module-parser-javascript-auto-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
         "multiple": false,
         "path": "module.parser.javascript/auto.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1949,6 +1985,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.exportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-expr-context-critical": Object {
     "configs": Array [
       Object {
@@ -2033,6 +2087,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-import-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-node": Object {
     "configs": Array [
       Object {
@@ -2110,7 +2182,7 @@ Object {
   "module-parser-javascript-dynamic-reexport-exports-presence": Object {
     "configs": Array [
       Object {
-        "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+        "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.reexportExportsPresence",
         "type": "enum",
@@ -2121,7 +2193,7 @@ Object {
         ],
       },
     ],
-    "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+    "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2180,13 +2252,13 @@ Object {
   "module-parser-javascript-dynamic-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2422,6 +2494,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.exportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-expr-context-critical": Object {
     "configs": Array [
       Object {
@@ -2506,6 +2596,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-import-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-node": Object {
     "configs": Array [
       Object {
@@ -2583,7 +2691,7 @@ Object {
   "module-parser-javascript-esm-reexport-exports-presence": Object {
     "configs": Array [
       Object {
-        "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+        "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
         "multiple": false,
         "path": "module.parser.javascript/esm.reexportExportsPresence",
         "type": "enum",
@@ -2594,7 +2702,7 @@ Object {
         ],
       },
     ],
-    "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+    "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2653,13 +2761,13 @@ Object {
   "module-parser-javascript-esm-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
         "multiple": false,
         "path": "module.parser.javascript/esm.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2840,6 +2948,24 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript.exportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-expr-context-critical": Object {
     "configs": Array [
       Object {
@@ -2924,6 +3050,24 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-import-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript.importExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-node": Object {
     "configs": Array [
       Object {
@@ -3001,7 +3145,7 @@ Object {
   "module-parser-javascript-reexport-exports-presence": Object {
     "configs": Array [
       Object {
-        "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+        "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
         "multiple": false,
         "path": "module.parser.javascript.reexportExportsPresence",
         "type": "enum",
@@ -3012,7 +3156,7 @@ Object {
         ],
       },
     ],
-    "description": "Determines how parser handles of export-import failures (usually due to TypeScript import elision failures).",
+    "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -3071,13 +3215,13 @@ Object {
   "module-parser-javascript-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
         "multiple": false,
         "path": "module.parser.javascript.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
     "multiple": false,
     "simpleType": "boolean",
   },
