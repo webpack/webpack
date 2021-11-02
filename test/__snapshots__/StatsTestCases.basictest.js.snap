@@ -494,7 +494,7 @@ webpack x.x.x compiled successfully in X ms"
 exports[`StatsTestCases should print correct stats for chunks 1`] = `
 "PublicPath: auto
 asset bundle.js 10.2 KiB [emitted] (name: main)
-asset 460.bundle.js 320 bytes [emitted]
+asset 460.bundle.js 323 bytes [emitted]
 asset 524.bundle.js 206 bytes [emitted]
 asset 996.bundle.js 138 bytes [emitted]
 chunk (runtime: main) bundle.js (main) 73 bytes (javascript) 6.01 KiB (runtime) >{460}< >{996}< [entry] [rendered]
@@ -952,9 +952,9 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
 "hidden assets 34 bytes 1 asset
-asset bundle.js 5.28 KiB [emitted] (name: main)
+asset bundle.js 5.25 KiB [emitted] (name: main)
 runtime modules 1.72 KiB 5 modules
-hidden modules 123 bytes 2 modules
+hidden modules 99 bytes 2 modules
 cacheable modules 119 bytes
   ./index.js 77 bytes [built] [code generated]
   ./a.txt 42 bytes [built] [code generated]
@@ -1171,7 +1171,7 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
 "1 chunks:
-  asset bundle1.js 4.84 KiB [emitted] (name: main)
+  asset bundle1.js 4.85 KiB [emitted] (name: main)
   chunk (runtime: main) bundle1.js (main) 219 bytes (javascript) 1.77 KiB (runtime) <{179}> >{179}< [entry] [rendered]
     runtime modules 1.77 KiB 4 modules
     cacheable modules 219 bytes
@@ -1645,10 +1645,10 @@ webpack x.x.x compiled with 1 error and 1 warning in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for optimize-chunks 1`] = `
-"asset main.js 11 KiB {179} [emitted] (name: main)
-asset cir2 from cir1.js 374 bytes {288}, {289} [emitted] (name: cir2 from cir1)
-asset cir1.js 330 bytes {592} [emitted] (name: cir1)
-asset cir2.js 330 bytes {289} [emitted] (name: cir2)
+"asset main.js 11.1 KiB {179} [emitted] (name: main)
+asset cir2 from cir1.js 377 bytes {288}, {289} [emitted] (name: cir2 from cir1)
+asset cir1.js 333 bytes {592} [emitted] (name: cir1)
+asset cir2.js 333 bytes {289} [emitted] (name: cir2)
 asset abd.js 193 bytes {90}, {374} [emitted] (name: abd)
 asset chunk.js 154 bytes {284}, {753} [emitted] (name: chunk)
 asset ab.js 149 bytes {90} [emitted] (name: ab)
@@ -1798,7 +1798,7 @@ webpack x.x.x compiled with 3 warnings in X ms"
 
 exports[`StatsTestCases should print correct stats for performance-disabled 1`] = `
 "asset <CLR=32,BOLD>main.js</CLR> 303 KiB <CLR=32,BOLD>[emitted]</CLR> (name: main)
-asset <CLR=32,BOLD>460.js</CLR> 320 bytes <CLR=32,BOLD>[emitted]</CLR>
+asset <CLR=32,BOLD>460.js</CLR> 323 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>524.js</CLR> 206 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>996.js</CLR> 138 bytes <CLR=32,BOLD>[emitted]</CLR>
 Entrypoint <CLR=BOLD>main</CLR> 303 KiB = <CLR=32,BOLD>main.js</CLR>
@@ -1815,7 +1815,7 @@ webpack x.x.x compiled <CLR=32,BOLD>successfully</CLR> in X ms"
 
 exports[`StatsTestCases should print correct stats for performance-error 1`] = `
 "asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>303 KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main)
-asset <CLR=32,BOLD>460.js</CLR> 320 bytes <CLR=32,BOLD>[emitted]</CLR>
+asset <CLR=32,BOLD>460.js</CLR> 323 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>524.js</CLR> 206 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>996.js</CLR> 138 bytes <CLR=32,BOLD>[emitted]</CLR>
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> 303 KiB = <CLR=32,BOLD>main.js</CLR>
@@ -1874,7 +1874,7 @@ webpack x.x.x compiled with <CLR=33,BOLD>3 warnings</CLR> in X ms"
 
 exports[`StatsTestCases should print correct stats for performance-no-hints 1`] = `
 "asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>303 KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main)
-asset <CLR=32,BOLD>460.js</CLR> 320 bytes <CLR=32,BOLD>[emitted]</CLR>
+asset <CLR=32,BOLD>460.js</CLR> 323 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>524.js</CLR> 206 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>996.js</CLR> 138 bytes <CLR=32,BOLD>[emitted]</CLR>
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> 303 KiB = <CLR=32,BOLD>main.js</CLR>
@@ -1982,7 +1982,7 @@ exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
     [LogTestPlugin] End
 PublicPath: auto
 asset main.js 10.2 KiB {179} [emitted] (name: main)
-asset 460.js 320 bytes {460} [emitted]
+asset 460.js 323 bytes {460} [emitted]
 asset 524.js 206 bytes {524} [emitted]
 asset 996.js 138 bytes {996} [emitted]
 Entrypoint main 10.2 KiB = main.js
@@ -2160,7 +2160,7 @@ exports[`StatsTestCases should print correct stats for preset-normal 1`] = `
 <w> [LogTestPlugin] Warning
 <i> [LogTestPlugin] Info
 asset main.js 10.2 KiB [emitted] (name: main)
-asset 460.js 320 bytes [emitted]
+asset 460.js 323 bytes [emitted]
 asset 524.js 206 bytes [emitted]
 asset 996.js 138 bytes [emitted]
 runtime modules 6 KiB 7 modules
@@ -2183,7 +2183,7 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for preset-normal-performance 1`] = `
 "asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>303 KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main)
-asset <CLR=32,BOLD>460.js</CLR> 320 bytes <CLR=32,BOLD>[emitted]</CLR>
+asset <CLR=32,BOLD>460.js</CLR> 323 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>524.js</CLR> 206 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>996.js</CLR> 138 bytes <CLR=32,BOLD>[emitted]</CLR>
 runtime modules 6 KiB 7 modules
@@ -2211,7 +2211,7 @@ webpack x.x.x compiled with <CLR=33,BOLD>2 warnings</CLR> in X ms"
 
 exports[`StatsTestCases should print correct stats for preset-normal-performance-ensure-filter-sourcemaps 1`] = `
 "asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>303 KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main) 1 related asset
-asset <CLR=32,BOLD>460.js</CLR> 352 bytes <CLR=32,BOLD>[emitted]</CLR> 1 related asset
+asset <CLR=32,BOLD>460.js</CLR> 355 bytes <CLR=32,BOLD>[emitted]</CLR> 1 related asset
 asset <CLR=32,BOLD>524.js</CLR> 238 bytes <CLR=32,BOLD>[emitted]</CLR> 1 related asset
 asset <CLR=32,BOLD>996.js</CLR> 170 bytes <CLR=32,BOLD>[emitted]</CLR> 1 related asset
 runtime modules 6 KiB 7 modules
@@ -2258,7 +2258,7 @@ exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
     [LogTestPlugin] End
 PublicPath: auto
 asset main.js 10.2 KiB {179} [emitted] (name: main)
-asset 460.js 320 bytes {460} [emitted]
+asset 460.js 323 bytes {460} [emitted]
 asset 524.js 206 bytes {524} [emitted]
 asset 996.js 138 bytes {996} [emitted]
 Entrypoint main 10.2 KiB = main.js
@@ -4290,6 +4290,37 @@ enforce-min-size:
     ./node_modules/small.js?1 66 bytes [built] [code generated]
     ./node_modules/small.js?2 66 bytes [built] [code generated]
   enforce-min-size (webpack x.x.x) compiled successfully"
+`;
+
+exports[`StatsTestCases should print correct stats for split-chunks-min-size-reduction 1`] = `
+"Entrypoint main 11.5 KiB = default/main.js
+chunk (runtime: main) default/async-d.js (async-d) 50 bytes <{179}> ={821}= [rendered]
+  > ./d ./index.js 4:0-47
+  ./d.js 50 bytes [built] [code generated]
+chunk (runtime: main) default/main.js (main) 245 bytes (javascript) 6.68 KiB (runtime) >{31}< >{334}< >{383}< >{449}< >{794}< >{821}< [entry] [rendered]
+  > ./ main
+  runtime modules 6.68 KiB 9 modules
+  ./index.js 245 bytes [built] [code generated]
+chunk (runtime: main) default/async-b.js (async-b) 176 bytes <{179}> [rendered]
+  > ./b ./index.js 2:0-47
+  ./b.js 50 bytes [built] [code generated]
+  ./node_modules/shared.js?1 126 bytes [dependent] [built] [code generated]
+chunk (runtime: main) default/async-c.js (async-c) 50 bytes <{179}> ={821}= [rendered]
+  > ./c ./index.js 3:0-47
+  ./c.js 50 bytes [built] [code generated]
+chunk (runtime: main) default/async-e.js (async-e) 50 bytes <{179}> ={821}= [rendered]
+  > ./e ./index.js 5:0-47
+  ./e.js 50 bytes [built] [code generated]
+chunk (runtime: main) default/async-a.js (async-a) 176 bytes <{179}> [rendered]
+  > ./a ./index.js 1:0-47
+  ./a.js 50 bytes [built] [code generated]
+  ./node_modules/shared.js?1 126 bytes [dependent] [built] [code generated]
+chunk (runtime: main) default/821.js (id hint: vendors) 126 bytes <{179}> ={31}= ={383}= ={449}= [rendered] split chunk (cache group: defaultVendors)
+  > ./c ./index.js 3:0-47
+  > ./d ./index.js 4:0-47
+  > ./e ./index.js 5:0-47
+  ./node_modules/shared.js?2 126 bytes [built] [code generated]
+webpack x.x.x compiled successfully"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-prefer-bigger-splits 1`] = `

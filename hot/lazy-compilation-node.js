@@ -9,7 +9,9 @@ exports.keepAlive = function (options) {
 	var active = options.active;
 	var module = options.module;
 	var response;
-	var request = require("http").request(
+	var request = (
+		urlBase.startsWith("https") ? require("https") : require("http")
+	).request(
 		urlBase + data,
 		{
 			agent: false,

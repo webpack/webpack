@@ -29,6 +29,10 @@ const base = {
 };
 
 const frozen = true;
+const allowedUris = [
+	"http://localhost:9990/",
+	"https://raw.githubusercontent.com/"
+];
 
 module.exports = [
 	{
@@ -37,6 +41,7 @@ module.exports = [
 		plugins: [
 			serverPlugin,
 			new HttpUriPlugin({
+				allowedUris,
 				upgrade: true,
 				frozen
 			})
@@ -48,7 +53,8 @@ module.exports = [
 		plugins: [
 			serverPlugin,
 			new HttpUriPlugin({
-				upgrade: true,
+				allowedUris,
+				upgrade: false,
 				frozen: false
 			})
 		]
@@ -59,6 +65,7 @@ module.exports = [
 		plugins: [
 			serverPlugin,
 			new HttpUriPlugin({
+				allowedUris,
 				upgrade: false,
 				frozen
 			})
@@ -70,6 +77,7 @@ module.exports = [
 		plugins: [
 			serverPlugin,
 			new HttpUriPlugin({
+				allowedUris,
 				cacheLocation: false,
 				frozen
 			})
@@ -82,6 +90,7 @@ module.exports = [
 		plugins: [
 			serverPlugin,
 			new HttpUriPlugin({
+				allowedUris,
 				upgrade: true,
 				frozen: true
 			})

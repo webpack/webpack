@@ -93,11 +93,11 @@ Object {
   "experiments": Object {
     "asset": false,
     "asyncWebAssembly": false,
-    "buildHttp": false,
+    "buildHttp": undefined,
     "cacheUnaffected": false,
     "futureDefaults": false,
     "layers": false,
-    "lazyCompilation": false,
+    "lazyCompilation": undefined,
     "outputModule": false,
     "syncWebAssembly": false,
     "topLevelAwait": false,
@@ -1911,6 +1911,9 @@ Object {
 @@ ... @@
 -     "hashFunction": "md4",
 +     "hashFunction": "xxhash64",
+@@ ... @@
+-       "<cwd>/node_modules",
++       /^(.+?[\\\\/]node_modules[\\\\/])/,
 `)
 	);
 });
