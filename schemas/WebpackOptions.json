@@ -1068,12 +1068,12 @@
             "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
             "anyOf": [
               {
-                "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+                "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash)",
                 "instanceof": "RegExp",
                 "tsType": "RegExp"
               },
               {
-                "description": "A path to a immutable directory (usually a package manager cache directory).",
+                "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
                 "absolutePath": true,
                 "minLength": 1
@@ -4204,12 +4204,12 @@
             "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
             "anyOf": [
               {
-                "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+                "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash)",
                 "instanceof": "RegExp",
                 "tsType": "RegExp"
               },
               {
-                "description": "A path to a immutable directory (usually a package manager cache directory).",
+                "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
                 "absolutePath": true,
                 "minLength": 1
