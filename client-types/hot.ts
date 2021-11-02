@@ -1,6 +1,6 @@
 type Accept = (
 	module: string|string[],
-	callback: () => void,
+	callback?: () => void,
 	errorHandler?: (err: Error, ids: {moduleId: string | number, dependencyId: string | number}) => void
 ) => void;
 type SelfAccept = (
@@ -26,14 +26,14 @@ interface ApplyInfo {
 }
 
 interface ApplyOptions {
-	ignoreUnaccepted: boolean;
-	ignoreDeclined: boolean;
-	ignoreErrored: boolean;
-	onDeclined(callback: (info: ApplyInfo) => void): void;
-	onUnaccepted(callback: (info: ApplyInfo) => void): void;
-	onAccepted(callback: (info: ApplyInfo) => void): void;
-	onDisposed(callback: (info: ApplyInfo) => void): void;
-	onErrored(callback: (info: ApplyInfo) => void): void;
+	ignoreUnaccepted?: boolean;
+	ignoreDeclined?: boolean;
+	ignoreErrored?: boolean;
+	onDeclined?(callback: (info: ApplyInfo) => void): void;
+	onUnaccepted?(callback: (info: ApplyInfo) => void): void;
+	onAccepted?(callback: (info: ApplyInfo) => void): void;
+	onDisposed?(callback: (info: ApplyInfo) => void): void;
+	onErrored?(callback: (info: ApplyInfo) => void): void;
 }
 
 enum HotUpdateStatus {
@@ -57,5 +57,5 @@ export interface Hot {
 	removeStatusHandler(callback: () => void): void;
 	data: any;
 	check(autoApply: boolean | any): Promise<any[]>;
-	apply(options: ApplyOptions): Promise<any[]>;
+	apply(options?: ApplyOptions): Promise<any[]>;
 }

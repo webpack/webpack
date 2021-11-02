@@ -7,7 +7,7 @@ interface ExportInfo {
 }
 
 interface ExportsInfo {
-	[k: string]: ExportInfo & {[k: string]: ExportInfo}
+	[k: string]: ExportInfo & ExportsInfo
 }
 
 declare global {

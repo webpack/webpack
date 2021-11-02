@@ -9,7 +9,7 @@
     "strict": false,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    "types": ["node", "jest"],
+    "types": ["node", "jest", "./client-types"],
     "esModuleInterop": true
   },
   "include": [
@@ -18,6 +18,7 @@
     "test/watchCases/**/*loader*.js",
     "test/configCases/**/*loader*.js",
     "test/hotCases/**/*loader*.js",
+    "test/types/**/*.ts",
     "declarations.test.d.ts"
   ]
 }

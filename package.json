@@ -131,6 +131,7 @@
     "bin/",
     "hot/",
     "schemas/",
+    "client-types/",
     "SECURITY.md",
     "types.d.ts"
   ],
