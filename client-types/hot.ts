@@ -1,24 +1,35 @@
 type Accept = (
-	module: string|string[],
+	module: string | string[],
 	callback?: () => void,
-	errorHandler?: (err: Error, ids: {moduleId: string | number, dependencyId: string | number}) => void
+	errorHandler?: (
+		err: Error,
+		ids: { moduleId: string | number; dependencyId: string | number }
+	) => void
 ) => void;
 type SelfAccept = (
-	errorHandler: (err: Error, ids: {moduleId: string | number, module: any}) => void
+	errorHandler: (
+		err: Error,
+		ids: { moduleId: string | number; module: any }
+	) => void
 ) => void;
 
 interface ApplyInfo {
-	type: 'self-declined' | 'declined' |
-		'unaccepted' | 'accepted' |
-		'disposed' | 'accept-errored' |
-		'self-accept-errored' | 'self-accept-error-handler-errored';
+	type:
+		| "self-declined"
+		| "declined"
+		| "unaccepted"
+		| "accepted"
+		| "disposed"
+		| "accept-errored"
+		| "self-accept-errored"
+		| "self-accept-error-handler-errored";
 	moduleId: number; // The module in question.
 	dependencyId: number; // For errors: the module id owning the accept handler.
 	chain: number[]; // For declined/accepted/unaccepted: the chain from where the update was propagated.
 	parentId: number; // For declined: the module id of the declining parent
 	outdatedModules: number[]; // For accepted: the modules that are outdated and will be disposed
 	outdatedDependencies: {
-		[id: number]: number[]
+		[id: number]: number[];
 	};
 	error: Error; // For errors: the thrown error
 	originalError: Error; // For self-accept-error-handler-errored:
@@ -50,7 +61,7 @@ enum HotUpdateStatus {
 export interface Hot {
 	accept: Accept & SelfAccept;
 	status(): HotUpdateStatus;
-	decline(module?: string|string[]): void;
+	decline(module?: string | string[]): void;
 	dispose(callback: (data: any) => void);
 	invalidate(): void;
 	addStatusHandler(callback: (status: HotUpdateStatus) => void);

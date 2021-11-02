@@ -7,13 +7,13 @@ interface ExportInfo {
 }
 
 interface ExportsInfo {
-	[k: string]: ExportInfo & ExportsInfo
+	[k: string]: ExportInfo & ExportsInfo;
 }
 
 interface Context {
-	resolve(dependency: string): string|number;
+	resolve(dependency: string): string | number;
 	keys(): Array<string>;
-	id: string|number;
+	id: string | number;
 	(dependency: string): any;
 }
 
@@ -32,8 +32,8 @@ declare global {
 	var __webpack_runtime_id__: string;
 	var __webpack_hash__: string;
 	var __webpack_modules__: object;
-	var __webpack_require__: (id: string|number) => any;
-	var __webpack_chunk_load__: (id: string|number) => Promise<any>;
+	var __webpack_require__: (id: string | number) => any;
+	var __webpack_chunk_load__: (id: string | number) => Promise<any>;
 	var __non_webpack_require__: (id: string) => any;
 	var __webpack_is_included__: (module: string) => boolean;
 	var __webpack_exports_info__: ExportsInfo;
@@ -42,7 +42,7 @@ declare global {
 
 	namespace NodeJS {
 		interface Module {
-			hot: import("./hot").Hot
+			hot: import("./hot").Hot;
 		}
 
 		interface Require {
@@ -56,7 +56,7 @@ declare global {
 				ctx: string,
 				includeSubdirs?: boolean,
 				filter?: RegExp,
-				mode?: 'sync' | 'eager' | 'weak' | 'lazy' | 'lazy-once'
+				mode?: "sync" | "eager" | "weak" | "lazy" | "lazy-once"
 			): Context;
 			include(dependency: string): void;
 			resolveWeak(dependency: string): void;
