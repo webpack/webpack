@@ -4289,7 +4289,16 @@ enforce-min-size:
     ./node_modules/big.js?1 267 bytes [built] [code generated]
     ./node_modules/small.js?1 66 bytes [built] [code generated]
     ./node_modules/small.js?2 66 bytes [built] [code generated]
-  enforce-min-size (webpack x.x.x) compiled successfully"
+  enforce-min-size (webpack x.x.x) compiled successfully
+
+only-async:
+  Entrypoint main 27.1 KiB = only-async-main.js
+  chunk (runtime: main) only-async-main.js (main) 12.7 KiB (javascript) 663 bytes (runtime) [entry] [rendered]
+    > ./ main
+    dependent modules 11.5 KiB [dependent] 44 modules
+    runtime modules 663 bytes 3 modules
+    ./index.js 1.19 KiB [built] [code generated]
+  only-async (webpack x.x.x) compiled successfully"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-min-size-reduction 1`] = `

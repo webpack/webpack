@@ -2697,6 +2697,18 @@
               "type": "string",
               "minLength": 1
             },
+            "chunks": {
+              "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML).",
+              "anyOf": [
+                {
+                  "enum": ["initial", "async", "all"]
+                },
+                {
+                  "instanceof": "Function",
+                  "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+                }
+              ]
+            },
             "maxAsyncSize": {
               "description": "Maximal size hint for the on-demand chunks.",
               "oneOf": [
