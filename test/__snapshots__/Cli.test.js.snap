@@ -4450,6 +4450,24 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-split-chunks-fallback-cache-group-chunks": Object {
+    "configs": Array [
+      Object {
+        "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
+        "multiple": false,
+        "path": "optimization.splitChunks.fallbackCacheGroup.chunks",
+        "type": "enum",
+        "values": Array [
+          "initial",
+          "async",
+          "all",
+        ],
+      },
+    ],
+    "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-split-chunks-fallback-cache-group-max-async-size": Object {
     "configs": Array [
       Object {
