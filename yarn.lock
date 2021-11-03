@@ -1774,9 +1774,9 @@ coffee-loader@^1.0.0:
     schema-utils "^3.0.0"
 
 coffeescript@^2.5.1:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/coffeescript/-/coffeescript-2.6.0.tgz#927d52aa03df17d445c93c1afb66b081d26e1fa0"
-  integrity sha512-gCGXhR72sTAdEr+oZh3FcOj04DrcMc9lZYSJUBNudkQ4tQXuPKE3cvcYVbK/HiVW+zFzLmnZdHexuJ33ufLZOg==
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/coffeescript/-/coffeescript-2.6.1.tgz#f9e5d4930e1b8a1c5cfba7f95eebd18694ce58fd"
+  integrity sha512-GG5nkF93qII8HmHqnnibkgpp/SV7PSnSPiWsbinwya7nNOe95aE/x2xrKZJFks8Qpko3TNrC+/LahaKgrz5YCg==
 
 collect-v8-coverage@^1.0.0:
   version "1.0.1"
@@ -2112,9 +2112,9 @@ data-urls@^2.0.0:
     whatwg-url "^8.0.0"
 
 date-fns@^2.15.0:
-  version "2.23.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.23.0.tgz#4e886c941659af0cf7b30fafdd1eaa37e88788a9"
-  integrity sha512-5ycpauovVyAk0kXNZz6ZoB9AYMZB4DObse7P3BPWmyEjXNORTI8EJ6X0uaSAq4sCHzM1uajzrkr6HnsLQpxGXA==
+  version "2.25.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.25.0.tgz#8c5c8f1d958be3809a9a03f4b742eba894fc5680"
+  integrity sha512-ovYRFnTrbGPD4nqaEqescPEv1mNwvt+UTqI3Ay9SzNtey9NZnYu6E2qCcBBgJ6/2VF1zGGygpyTDITqpQQ5e+w==
 
 debug@4, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2:
   version "4.3.2"
