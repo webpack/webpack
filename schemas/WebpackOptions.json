@@ -1068,12 +1068,12 @@
             "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
             "anyOf": [
               {
-                "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+                "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash)",
                 "instanceof": "RegExp",
                 "tsType": "RegExp"
               },
               {
-                "description": "A path to a immutable directory (usually a package manager cache directory).",
+                "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
                 "absolutePath": true,
                 "minLength": 1
@@ -2697,6 +2697,18 @@
               "type": "string",
               "minLength": 1
             },
+            "chunks": {
+              "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML).",
+              "anyOf": [
+                {
+                  "enum": ["initial", "async", "all"]
+                },
+                {
+                  "instanceof": "Function",
+                  "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+                }
+              ]
+            },
             "maxAsyncSize": {
               "description": "Maximal size hint for the on-demand chunks.",
               "oneOf": [
@@ -4204,12 +4216,12 @@
             "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
             "anyOf": [
               {
-                "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+                "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash)",
                 "instanceof": "RegExp",
                 "tsType": "RegExp"
               },
               {
-                "description": "A path to a immutable directory (usually a package manager cache directory).",
+                "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
                 "absolutePath": true,
                 "minLength": 1
