@@ -86,13 +86,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn -s run code-lint --format junit > junit.xml
-          yarn special-lint
-          yarn type-lint
-          yarn typings-lint
-          yarn yarn-lint
-          yarn pretty-lint
-          yarn spellcheck
+          yarn lint
         env:
           CI: "true"
         displayName: "Run linting"
