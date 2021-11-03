@@ -217,7 +217,7 @@ Object {
         "exprContextRecursive": true,
         "exprContextRegExp": false,
         "exprContextRequest": ".",
-        "strictExportPresence": false,
+        "strictExportPresence": undefined,
         "strictThisContextOnImports": false,
         "unknownContextCritical": true,
         "unknownContextRecursive": true,
