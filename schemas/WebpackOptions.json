@@ -1638,7 +1638,7 @@
               "properties": {
                 "host": {
                   "description": "A host.",
-                  "type": "number"
+                  "type": "string"
                 },
                 "port": {
                   "description": "A port.",
