@@ -1447,6 +1447,7 @@ Object {
         "values": Array [
           "error",
           "warn",
+          "auto",
           false,
         ],
       },
@@ -1549,6 +1550,7 @@ Object {
         "values": Array [
           "error",
           "warn",
+          "auto",
           false,
         ],
       },
@@ -1641,6 +1643,7 @@ Object {
         "values": Array [
           "error",
           "warn",
+          "auto",
           false,
         ],
       },
@@ -1704,13 +1707,13 @@ Object {
   "module-parser-javascript-auto-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
+        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
         "multiple": false,
         "path": "module.parser.javascript/auto.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
+    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1995,6 +1998,7 @@ Object {
         "values": Array [
           "error",
           "warn",
+          "auto",
           false,
         ],
       },
@@ -2097,6 +2101,7 @@ Object {
         "values": Array [
           "error",
           "warn",
+          "auto",
           false,
         ],
       },
@@ -2189,6 +2194,7 @@ Object {
         "values": Array [
           "error",
           "warn",
+          "auto",
           false,
         ],
       },
@@ -2252,13 +2258,13 @@ Object {
   "module-parser-javascript-dynamic-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
+        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
+    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2504,6 +2510,7 @@ Object {
         "values": Array [
           "error",
           "warn",
+          "auto",
           false,
         ],
       },
@@ -2606,6 +2613,7 @@ Object {
         "values": Array [
           "error",
           "warn",
+          "auto",
           false,
         ],
       },
@@ -2698,6 +2706,7 @@ Object {
         "values": Array [
           "error",
           "warn",
+          "auto",
           false,
         ],
       },
@@ -2761,13 +2770,13 @@ Object {
   "module-parser-javascript-esm-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
+        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
         "multiple": false,
         "path": "module.parser.javascript/esm.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
+    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2958,6 +2967,7 @@ Object {
         "values": Array [
           "error",
           "warn",
+          "auto",
           false,
         ],
       },
@@ -3060,6 +3070,7 @@ Object {
         "values": Array [
           "error",
           "warn",
+          "auto",
           false,
         ],
       },
@@ -3152,6 +3163,7 @@ Object {
         "values": Array [
           "error",
           "warn",
+          "auto",
           false,
         ],
       },
@@ -3215,13 +3227,13 @@ Object {
   "module-parser-javascript-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
+        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
         "multiple": false,
         "path": "module.parser.javascript.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module. ",
+    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
     "multiple": false,
     "simpleType": "boolean",
   },
