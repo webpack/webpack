@@ -1736,6 +1736,12 @@ export interface OptimizationSplitChunksOptions {
 		 */
 		automaticNameDelimiter?: string;
 		/**
+		 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
+		 */
+		chunks?:
+			| ("initial" | "async" | "all")
+			| ((chunk: import("../lib/Chunk")) => boolean);
+		/**
 		 * Maximal size hint for the on-demand chunks.
 		 */
 		maxAsyncSize?: OptimizationSplitChunksSizes;

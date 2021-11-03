@@ -665,12 +665,12 @@ Object {
         "description": "A host.",
         "multiple": false,
         "path": "experiments.lazyCompilation.backend.listen.host",
-        "type": "number",
+        "type": "string",
       },
     ],
     "description": "A host.",
     "multiple": false,
-    "simpleType": "number",
+    "simpleType": "string",
   },
   "experiments-lazy-compilation-backend-listen-port": Object {
     "configs": Array [
@@ -4675,6 +4675,24 @@ Object {
       },
     ],
     "description": "Sets the name delimiter for created chunks.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "optimization-split-chunks-fallback-cache-group-chunks": Object {
+    "configs": Array [
+      Object {
+        "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
+        "multiple": false,
+        "path": "optimization.splitChunks.fallbackCacheGroup.chunks",
+        "type": "enum",
+        "values": Array [
+          "initial",
+          "async",
+          "all",
+        ],
+      },
+    ],
+    "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
     "multiple": false,
     "simpleType": "string",
   },

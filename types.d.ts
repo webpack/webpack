@@ -3859,6 +3859,7 @@ declare interface FactorizeModuleOptions {
 type FakeHook<T> = T & FakeHookMarker;
 declare interface FakeHookMarker {}
 declare interface FallbackCacheGroup {
+	chunksFilter: (chunk: Chunk) => boolean;
 	minSize: SplitChunksSizes;
 	maxAsyncSize: SplitChunksSizes;
 	maxInitialSize: SplitChunksSizes;
@@ -7946,6 +7947,10 @@ declare interface OptimizationSplitChunksOptions {
 		 * Sets the name delimiter for created chunks.
 		 */
 		automaticNameDelimiter?: string;
+		/**
+		 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
+		 */
+		chunks?: "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
 		/**
 		 * Maximal size hint for the on-demand chunks.
 		 */
