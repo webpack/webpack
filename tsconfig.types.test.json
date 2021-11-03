@@ -9,17 +9,15 @@
     "strict": false,
     "noImplicitThis": true,
     "alwaysStrict": true,
-    "types": ["node", "jest", "./client-types"],
+    "types": ["node", "jest"],
     "esModuleInterop": true
   },
-  "exclude": ["test/typesCases/meta/*"],
   "include": [
     "test/**/webpack.config.js",
     "test/cases/**/*loader*.js",
     "test/watchCases/**/*loader*.js",
     "test/configCases/**/*loader*.js",
     "test/hotCases/**/*loader*.js",
-    "test/typesCases/**/*.ts",
     "declarations.test.d.ts"
   ]
 }
