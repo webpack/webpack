@@ -11,6 +11,15 @@ const wasmHashes = {
 			regExp: /^[0-9a-f]{16}$/
 		};
 	},
+	"xxhash64-createHash": () => {
+		const createXxHash = require("../lib/util/hash/xxhash64");
+		const createHash = require("../lib/util/createHash");
+		return {
+			createHash: () => createHash("xxhash64"),
+			createReferenceHash: createXxHash,
+			regExp: /^[0-9a-f]{16}$/
+		};
+	},
 	md4: () => {
 		const createMd4Hash = require("../lib/util/hash/md4");
 		return {
@@ -19,6 +28,15 @@ const wasmHashes = {
 				parseInt(process.version.slice(1), 10) < 17
 					? async () => createHash("md4")
 					: createMd4Hash,
+			regExp: /^[0-9a-f]{32}$/
+		};
+	},
+	"md4-createHash": () => {
+		const createMd4Hash = require("../lib/util/hash/md4");
+		const createHash = require("../lib/util/createHash");
+		return {
+			createHash: () => createHash("md4"),
+			createReferenceHash: createMd4Hash,
 			regExp: /^[0-9a-f]{32}$/
 		};
 	}
@@ -95,5 +113,46 @@ for (const name of Object.keys(wasmHashes)) {
 		test(`many updates 2`, sizes.slice().reverse());
 		test(`many updates 3`, sizes.concat(sizes.slice().reverse()));
 		test(`many updates 4`, sizes.slice().reverse().concat(sizes));
+
+		const unicodeTest = (name, codePoints) => {
+			it(name + " should hash unicode chars correctly", async () => {
+				const hash = createHash();
+				const reference = await createReferenceHash();
+				const str =
+					typeof codePoints === "string"
+						? codePoints
+						: String.fromCodePoint(...codePoints);
+				hash.update(str);
+				reference.update(str);
+				const result = hash.digest("hex");
+				expect(result).toMatch(regExp);
+				const expected = reference.digest("hex");
+				expect(result).toBe(expected);
+			});
+		};
+
+		const uncodeRangeTest = (name, start, end) => {
+			const codePoints = [];
+			for (let i = start; i <= end; i++) {
+				codePoints.push(i);
+			}
+			unicodeTest(name, codePoints);
+		};
+
+		uncodeRangeTest("Latin-1 Supplement", 0xa0, 0xff);
+		uncodeRangeTest("Latin Extended", 0x100, 0x24f);
+		uncodeRangeTest("Thaana", 0x780, 0x7bf);
+		uncodeRangeTest("Devanagari", 0x900, 0x97f);
+		uncodeRangeTest("Emoticons", 0x1f600, 0x1f64f);
+
+		unicodeTest("with zero char", "abc\0💩");
+		unicodeTest("weird code point after long code point", [1497, 243248]);
+
+		for (let i = 0; i < 1000; i++) {
+			const chars = Array.from({ length: 20 }, () =>
+				Math.floor(Math.random() * 0x10ffff)
+			);
+			unicodeTest(`fuzzy ${JSON.stringify(chars)}`, chars);
+		}
 	});
 }
