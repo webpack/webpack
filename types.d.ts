@@ -691,7 +691,7 @@ declare interface CallbackWebpack<T> {
 }
 type Cell<T> = undefined | T;
 declare class Chunk {
-	constructor(name?: string);
+	constructor(name?: string, backCompat?: boolean);
 	id: null | string | number;
 	ids: null | (string | number)[];
 	debugId: number;
@@ -1857,7 +1857,7 @@ declare interface CompilationParams {
 	contextModuleFactory: ContextModuleFactory;
 }
 declare class Compiler {
-	constructor(context: string);
+	constructor(context: string, options?: WebpackOptionsNormalized);
 	hooks: Readonly<{
 		initialize: SyncHook<[]>;
 		shouldEmit: SyncBailHook<[Compilation], boolean>;
@@ -3304,14 +3304,14 @@ type Experiments = ExperimentsCommon & ExperimentsExtra;
  */
 declare interface ExperimentsCommon {
 	/**
-	 * Allow module type 'asset' to generate assets.
-	 */
-	asset?: boolean;
-
-	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module.
 	 */
 	asyncWebAssembly?: boolean;
+
+	/**
+	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 */
+	backCompat?: boolean;
 
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
@@ -3324,7 +3324,7 @@ declare interface ExperimentsCommon {
 	futureDefaults?: boolean;
 
 	/**
-	 * Enable module and chunk layers.
+	 * Enable module layers.
 	 */
 	layers?: boolean;
 
