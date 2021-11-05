@@ -462,19 +462,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-asset": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow module type 'asset' to generate assets.",
-        "multiple": false,
-        "path": "experiments.asset",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow module type 'asset' to generate assets.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "experiments-async-web-assembly": Object {
     "configs": Array [
       Object {
@@ -485,6 +472,19 @@ Object {
       },
     ],
     "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-back-compat": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
+        "multiple": false,
+        "path": "experiments.backCompat",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -610,13 +610,13 @@ Object {
   "experiments-layers": Object {
     "configs": Array [
       Object {
-        "description": "Enable module and chunk layers.",
+        "description": "Enable module layers.",
         "multiple": false,
         "path": "experiments.layers",
         "type": "boolean",
       },
     ],
-    "description": "Enable module and chunk layers.",
+    "description": "Enable module layers.",
     "multiple": false,
     "simpleType": "boolean",
   },
