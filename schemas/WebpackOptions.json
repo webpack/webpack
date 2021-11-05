@@ -681,12 +681,12 @@
       "implements": ["#/definitions/ExperimentsCommon"],
       "additionalProperties": false,
       "properties": {
-        "asset": {
-          "description": "Allow module type 'asset' to generate assets.",
-          "type": "boolean"
-        },
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+          "type": "boolean"
+        },
+        "backCompat": {
+          "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
           "type": "boolean"
         },
         "buildHttp": {
@@ -709,7 +709,7 @@
           "type": "boolean"
         },
         "layers": {
-          "description": "Enable module and chunk layers.",
+          "description": "Enable module layers.",
           "type": "boolean"
         },
         "lazyCompilation": {
@@ -742,12 +742,12 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "asset": {
-          "description": "Allow module type 'asset' to generate assets.",
-          "type": "boolean"
-        },
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+          "type": "boolean"
+        },
+        "backCompat": {
+          "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
           "type": "boolean"
         },
         "cacheUnaffected": {
@@ -759,7 +759,7 @@
           "type": "boolean"
         },
         "layers": {
-          "description": "Enable module and chunk layers.",
+          "description": "Enable module layers.",
           "type": "boolean"
         },
         "outputModule": {
@@ -782,12 +782,12 @@
       "implements": ["#/definitions/ExperimentsCommon"],
       "additionalProperties": false,
       "properties": {
-        "asset": {
-          "description": "Allow module type 'asset' to generate assets.",
-          "type": "boolean"
-        },
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+          "type": "boolean"
+        },
+        "backCompat": {
+          "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
           "type": "boolean"
         },
         "buildHttp": {
@@ -807,7 +807,7 @@
           "type": "boolean"
         },
         "layers": {
-          "description": "Enable module and chunk layers.",
+          "description": "Enable module layers.",
           "type": "boolean"
         },
         "lazyCompilation": {
