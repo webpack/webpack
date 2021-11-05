@@ -157,6 +157,38 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 		expect(cacheFiles.length).toBeGreaterThan(4);
 	}, 120000);
 
+	it("should delete old unused packs", async () => {
+		const data = {
+			"a.js": 'import "react-dom";',
+			"b.js": 'import "acorn";',
+			"c.js": 'import "core-js";',
+			"d.js": 'import "date-fns";',
+			"e.js": 'import "lodash";'
+		};
+		await updateSrc(data);
+		const _10sec = 10 * 1000;
+		const _11sec = 11 * 1000;
+		const sleep = time => new Promise(resolve => setTimeout(resolve, time));
+		const c = items => {
+			const entry = {};
+			for (const item of items.split("")) entry[item] = `./src/${item}.js`;
+			return compile({ entry, cache: { compression: false, maxAge: _10sec } });
+		};
+		await c("ab");
+		let cacheFiles = await readdir(cachePath);
+		// 0 and index, no index.old
+		expect(cacheFiles.length).toBe(2);
+		// 0, 1 and index, index.old
+		await c("c");
+		cacheFiles = await readdir(cachePath);
+		expect(cacheFiles.length).toBe(4);
+		await sleep(_11sec);
+		// 2 and index
+		await c("cde");
+		cacheFiles = await readdir(cachePath);
+		expect(cacheFiles.length).toBe(2);
+	}, 120000);
+
 	it("should allow persistent caching of container related objects", async () => {
 		const data = {
 			"index.js":
