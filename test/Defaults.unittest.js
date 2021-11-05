@@ -1923,14 +1923,13 @@ describe("Defaults", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
 			+           Object {
 			+             "descriptionData": Object {
 			+               "type": "module",
-			@@ ... @@
+			+             },
 			+             "resolve": Object {
 			+               "fullySpecified": true,
 			+             },
@@ -1938,6 +1937,9 @@ describe("Defaults", () => {
 			+         ],
 			+         "type": "webassembly/async",
 			+       },
+			+       Object {
+			@@ ... @@
+			+         "exportPresence": "error",
 			@@ ... @@
 			-     "__dirname": "mock",
 			-     "__filename": "mock",
