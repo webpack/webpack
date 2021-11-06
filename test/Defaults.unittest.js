@@ -1939,7 +1939,7 @@ describe("Defaults", () => {
 			+       },
 			+       Object {
 			@@ ... @@
-			+         "exportPresence": "error",
+			+         "exportsPresence": "error",
 			@@ ... @@
 			-     "__dirname": "mock",
 			-     "__filename": "mock",
