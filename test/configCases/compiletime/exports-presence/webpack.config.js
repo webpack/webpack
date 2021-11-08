@@ -6,27 +6,27 @@ module.exports = {
 			{
 				test: /aaa/,
 				parser: {
-					exportPresence: false
+					exportsPresence: false
 				}
 			},
 			{
 				test: /bbb/,
 				parser: {
-					exportPresence: "warn"
+					exportsPresence: "warn"
 				}
 			},
 			{
 				test: /ccc/,
 				parser: {
-					exportPresence: "error"
+					exportsPresence: "error"
 				}
 			},
 			{
 				test: /ddd/,
 				parser: {
-					exportPresence: "error",
-					importExportPresence: "warn",
-					reexportExportPresence: false
+					exportsPresence: "error",
+					importExportsPresence: "warn",
+					reexportExportsPresence: false
 				}
 			}
 		]
