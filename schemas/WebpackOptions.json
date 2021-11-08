@@ -3086,7 +3086,8 @@
           "$ref": "#/definitions/ChunkLoading"
         },
         "workerCrossOriginLoading": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "This option enables cross-origin loading of workers."
         },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
