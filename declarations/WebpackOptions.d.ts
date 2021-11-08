@@ -1059,6 +1059,10 @@ export interface EntryDescription {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: WasmLoading;
+	/**
+	 * This option enables cross-origin loading of workers.
+	 */
+	workerCrossOriginLoading?: boolean;
 }
 /**
  * Options for library.
@@ -2125,6 +2129,10 @@ export interface Output {
 	 */
 	workerChunkLoading?: ChunkLoading;
 	/**
+	 * This option enables cross-origin loading of workers.
+	 */
+	workerCrossOriginLoading?: boolean;
+	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	workerWasmLoading?: WasmLoading;
@@ -2736,6 +2744,10 @@ export interface EntryDescriptionNormalized {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	wasmLoading?: WasmLoading;
+	/**
+	 * This option enables cross-origin loading of workers.
+	 */
+	workerCrossOriginLoading?: boolean;
 }
 /**
  * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
@@ -3240,6 +3252,10 @@ export interface OutputNormalized {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: ChunkLoading;
+	/**
+	 * This option enables cross-origin loading of workers.
+	 */
+	workerCrossOriginLoading?: boolean;
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */

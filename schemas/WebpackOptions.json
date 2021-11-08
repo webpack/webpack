@@ -3085,6 +3085,9 @@
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
+        "workerCrossOriginLoading": {
+          "type": "boolean"
+        },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         }
