@@ -6155,6 +6155,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-worker-cross-origin-loading": Object {
+    "configs": Array [
+      Object {
+        "description": "This option enables cross-origin loading of workers.",
+        "multiple": false,
+        "path": "output.workerCrossOriginLoading",
+        "type": "boolean",
+      },
+    ],
+    "description": "This option enables cross-origin loading of workers.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-worker-wasm-loading": Object {
     "configs": Array [
       Object {

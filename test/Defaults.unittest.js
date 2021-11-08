@@ -352,6 +352,7 @@ describe("Defaults", () => {
 		    "wasmLoading": "fetch",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
 		    "workerChunkLoading": "import-scripts",
+		    "workerCrossOriginLoading": false,
 		    "workerWasmLoading": "fetch",
 		  },
 		  "parallelism": 100,
@@ -1085,8 +1086,9 @@ describe("Defaults", () => {
 		+     "wasmLoading": "async-node",
 		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
-		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
+		@@ ... @@
+		-     "workerWasmLoading": "fetch",
 		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -1226,8 +1228,9 @@ describe("Defaults", () => {
 		+     "wasmLoading": "async-node",
 		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
-		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
+		@@ ... @@
+		-     "workerWasmLoading": "fetch",
 		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -1349,8 +1352,9 @@ describe("Defaults", () => {
 		+     "wasmLoading": "async-node",
 		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
-		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
+		@@ ... @@
+		-     "workerWasmLoading": "fetch",
 		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
