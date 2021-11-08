@@ -4,9 +4,29 @@ module.exports = ({ outputDirectory }) =>
 	class Worker {
 		constructor(url, options = {}) {
 			expect(url).toBeInstanceOf(URL);
-			expect(url.origin).toBe("https://test.cases");
-			expect(url.pathname.startsWith("/path/")).toBe(true);
-			const file = url.pathname.slice(6);
+			let file;
+			if (url.protocol === "data:") {
+				const protocolPrefix = "application/javascript,";
+				const importScriptsPrefix = 'importScripts("https://test.cases/path/';
+				expect(url.pathname.startsWith(protocolPrefix)).toBe(true);
+				const decodedData = decodeURIComponent(
+					url.pathname.slice(protocolPrefix.length)
+				);
+				expect(decodedData.includes(importScriptsPrefix)).toBe(true);
+				file = decodedData.slice(
+					decodedData.indexOf(importScriptsPrefix) + importScriptsPrefix.length,
+					decodedData.indexOf(
+						'"',
+						decodedData.indexOf(importScriptsPrefix) +
+							importScriptsPrefix.length
+					)
+				);
+			} else {
+				expect(url.origin).toBe("https://test.cases");
+				expect(url.pathname.startsWith("/path/")).toBe(true);
+				file = url.pathname.slice(6);
+			}
+
 			const workerBootstrap = `
 const { parentPort } = require("worker_threads");
 const { URL } = require("url");
@@ -15,6 +35,8 @@ const fs = require("fs");
 global.self = global;
 self.URL = URL;
 self.location = new URL(${JSON.stringify(url.toString())});
+__webpack_public_path__ = '/path/';
+__webpack_base_uri__ = 'https://test.cases/';
 const urlToPath = url => {
 	if(url.startsWith("https://test.cases/path/")) url = url.slice(24);
 	return path.resolve(${JSON.stringify(outputDirectory)}, \`./\${url}\`);
