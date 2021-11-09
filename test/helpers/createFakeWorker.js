@@ -35,8 +35,7 @@ const fs = require("fs");
 global.self = global;
 self.URL = URL;
 self.location = new URL(${JSON.stringify(url.toString())});
-__webpack_public_path__ = '/path/';
-__webpack_base_uri__ = 'https://test.cases/';
+__webpack_base_uri__ = 'https://test.cases/path/';
 const urlToPath = url => {
 	if(url.startsWith("https://test.cases/path/")) url = url.slice(24);
 	return path.resolve(${JSON.stringify(outputDirectory)}, \`./\${url}\`);

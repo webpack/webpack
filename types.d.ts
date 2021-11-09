@@ -3035,6 +3035,11 @@ declare interface EntryDescription {
 	chunkLoading?: string | false;
 
 	/**
+	 * Use cross-origin loading technique for this entry.
+	 */
+	crossOriginLoading?: boolean;
+
+	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
 	dependOn?: string | string[];
@@ -3088,6 +3093,11 @@ declare interface EntryDescriptionNormalized {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: string | false;
+
+	/**
+	 * Use cross-origin loading technique for this entry.
+	 */
+	crossOriginLoading?: boolean;
 
 	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
@@ -12266,6 +12276,7 @@ declare namespace exports {
 		export let scriptNonce: string;
 		export let loadScript: string;
 		export let createScriptUrl: string;
+		export let createScriptBlob: string;
 		export let chunkName: string;
 		export let runtimeId: string;
 		export let getChunkScriptFilename: string;
@@ -12295,6 +12306,7 @@ declare namespace exports {
 		export let hasOwnProperty: string;
 		export let systemContext: string;
 		export let baseURI: string;
+		export let scriptUrl: string;
 		export let relativeUrl: string;
 		export let asyncModule: string;
 	}

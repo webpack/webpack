@@ -441,6 +441,10 @@
         "chunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
+        "crossOriginLoading": {
+          "description": "Use cross-origin loading technique for this entry.",
+          "type": "boolean"
+        },
         "dependOn": {
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",
           "anyOf": [
@@ -497,6 +501,10 @@
         },
         "chunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
+        },
+        "crossOriginLoading": {
+          "description": "Use cross-origin loading technique for this entry.",
+          "type": "boolean"
         },
         "dependOn": {
           "description": "The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.",

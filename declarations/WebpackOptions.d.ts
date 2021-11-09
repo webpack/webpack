@@ -1028,6 +1028,10 @@ export interface EntryDescription {
 	 */
 	chunkLoading?: ChunkLoading;
 	/**
+	 * Use cross-origin loading technique for this entry.
+	 */
+	crossOriginLoading?: boolean;
+	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
 	dependOn?: string[] | string;
@@ -2708,6 +2712,10 @@ export interface EntryDescriptionNormalized {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: ChunkLoading;
+	/**
+	 * Use cross-origin loading technique for this entry.
+	 */
+	crossOriginLoading?: boolean;
 	/**
 	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
 	 */
