@@ -60,7 +60,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "^14.0.0"
+          versionSpec: "^16.0.0"
         displayName: "Install Node.js"
       - script: |
           curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -106,23 +106,17 @@ jobs:
     strategy:
       maxParallel: 6
       matrix:
-        node-10-a:
-          node_version: ^10.13.0
-          part: a
-        node-10-b:
-          node_version: ^10.13.0
-          part: b
-        node-12-a:
-          node_version: ^12.4.0
-          part: a
-        node-12-b:
-          node_version: ^12.4.0
-          part: b
         node-16-a:
-          node_version: ^16.0.0
+          node_version: ^16.13.0
           part: a
         node-16-b:
-          node_version: ^16.0.0
+          node_version: ^16.13.0
+          part: b
+        node-17-a:
+          node_version: ^17.0.0
+          part: a
+        node-17-b:
+          node_version: ^17.0.0
           part: b
     steps:
       - task: NodeTool@0
@@ -170,23 +164,17 @@ jobs:
     strategy:
       maxParallel: 6
       matrix:
-        node-10-a:
-          node_version: ^10.13.0
-          part: a
-        node-10-b:
-          node_version: ^10.13.0
-          part: b
-        node-12-a:
-          node_version: ^12.4.0
-          part: a
-        node-14-a:
-          node_version: ^14.0.0
-          part: a
         node-16-a:
-          node_version: ^16.0.0
+          node_version: ^16.13.0
           part: a
         node-16-b:
-          node_version: ^16.0.0
+          node_version: ^16.13.0
+          part: b
+        node-17-a:
+          node_version: ^17.0.0
+          part: a
+        node-17-b:
+          node_version: ^17.0.0
           part: b
     steps:
       - task: NodeTool@0
@@ -238,17 +226,17 @@ jobs:
     strategy:
       maxParallel: 4
       matrix:
-        node-12-a:
-          node_version: ^12.4.0
-          part: a
-        node-12-b:
-          node_version: ^12.4.0
-          part: b
         node-16-a:
-          node_version: ^16.0.0
+          node_version: ^16.13.0
           part: a
         node-16-b:
-          node_version: ^16.0.0
+          node_version: ^16.13.0
+          part: b
+        node-17-a:
+          node_version: ^17.0.0
+          part: a
+        node-17-b:
+          node_version: ^17.0.0
           part: b
     steps:
       - task: NodeTool@0
