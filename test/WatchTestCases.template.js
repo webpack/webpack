@@ -8,8 +8,8 @@ const vm = require("vm");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
-const { remove } = require("./helpers/remove");
 const prepareOptions = require("./helpers/prepareOptions");
+const { remove } = require("./helpers/remove");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const FakeDocument = require("./helpers/FakeDocument");
 
@@ -141,6 +141,9 @@ const describeCases = config => {
 									if (!options.context) options.context = tempDirectory;
 									if (!options.entry) options.entry = "./index.js";
 									if (!options.target) options.target = "async-node";
+									if (!options.module) options.module = {};
+									if (!("unsafeCache" in options.module))
+										options.module.unsafeCache = false;
 									if (!options.output) options.output = {};
 									if (!options.output.path)
 										options.output.path = outputDirectory;

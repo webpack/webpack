@@ -11,8 +11,7 @@ import { value, valueUsed } from "./dedupe-target";
 import * as DefaultExport from "./default-export";
 import {
 	value as valueDirect,
-	value2 as value2Direct,
-	default as Default1
+	value2 as value2Direct
 } from "./direct-export";
 import {
 	value as valueChecked,
@@ -63,7 +62,6 @@ it("should handle checked dynamic export when reexporting", () => {
 });
 
 it("should handle default export correctly", () => {
-	expect(Default1).toBe(undefined);
 	expect(Default2).toBe("static");
 });
 

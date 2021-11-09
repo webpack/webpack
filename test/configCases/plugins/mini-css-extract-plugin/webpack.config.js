@@ -29,9 +29,6 @@ const config = (i, options) => ({
 		chunkIds: "named"
 	},
 	target: "web",
-	node: {
-		__dirname: false
-	},
 	plugins: [
 		new MCEP(options),
 		compiler => {
@@ -44,9 +41,9 @@ const config = (i, options) => ({
 					"a",
 					"b",
 					"c",
-					"chunk_js-_43b60",
-					"chunk_js-_43b61",
-					"chunk_js-_43b62",
+					"chunk_js-_5cc70",
+					"chunk_js-_5cc71",
+					"chunk_js-_5cc72",
 					"d_css",
 					"x"
 				]);

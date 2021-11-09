@@ -41,8 +41,8 @@ module.exports = {
 							)
 							.source()
 					).toMatch(/should compile with deprecations/);
-					expect(m.hash).toMatch(/^[0-9a-f]{32}$/);
-					expect(m.renderedHash).toMatch(/^[0-9a-f]{20}$/);
+					expect(m.hash).toMatch(/^[0-9a-f]{16}$/);
+					expect(m.renderedHash).toMatch(/^[0-9a-f]{16}$/);
 					expect(m.profile).toBe(undefined);
 					expect(m.index).toBe(0);
 					m.index = 1000;

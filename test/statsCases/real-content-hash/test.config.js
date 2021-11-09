@@ -31,11 +31,11 @@ module.exports = {
 				const asset = statsData.assets.find(hashedFiles[name]);
 				expect(asset).not.toBe(undefined);
 				const content = fs.readFileSync(path.resolve(__dirname, "a", name));
-				const hash = createHash("md4")
+				const hash = createHash("xxhash64")
 					.update(content)
 					.digest("hex")
-					.slice(0, 20);
-				expect(asset.name.slice(0, 20)).toBe(hash);
+					.slice(0, 16);
+				expect(asset.name.slice(0, 16)).toBe(hash);
 			}
 		}
 	}

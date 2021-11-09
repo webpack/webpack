@@ -4,8 +4,10 @@ export { aa };
 
 export { default as bb } from './b.json';
 
-import { a } from './a.json';
+import bbb from './b.json';
 
-export { a };
+const a = aa.a;
+const b = bbb.b;
 
-export { b } from './b.json';
+export { a, b };
+

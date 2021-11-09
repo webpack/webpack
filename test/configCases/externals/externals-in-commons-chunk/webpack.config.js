@@ -6,6 +6,7 @@ module.exports = {
 	},
 	externals: {
 		fs: "node-commonjs fs",
+		path: "node-commonjs path",
 		external: "1+2",
 		external2: "3+4",
 		external3: "5+6"
@@ -13,10 +14,6 @@ module.exports = {
 	target: "web",
 	output: {
 		filename: "[name].js"
-	},
-	node: {
-		__dirname: false,
-		__filename: false
 	},
 	optimization: {
 		minimize: false,

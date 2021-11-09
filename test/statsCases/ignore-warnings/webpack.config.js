@@ -1,6 +1,13 @@
 /** @type {import("../../../").Configuration} */
 module.exports = {
 	entry: "./index.js",
+	module: {
+		parser: {
+			javascript: {
+				exportsPresence: "warn"
+			}
+		}
+	},
 	ignoreWarnings: [
 		{
 			module: /module2\.js\?[34]/

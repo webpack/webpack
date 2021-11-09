@@ -1,6 +1,6 @@
 it("should have __webpack_hash__", function() {
 	expect(__webpack_hash__).toBeTypeOf("string");
-	expect(__webpack_hash__).toMatch(/^[0-9a-f]{20}$/);
+	expect(__webpack_hash__).toMatch(/^[0-9a-f]{16}$/);
 	return import("./chunk").then(({ hash }) => {
 		expect(hash).toBe(__webpack_hash__);
 	});

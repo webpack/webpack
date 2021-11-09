@@ -5,10 +5,7 @@ module.exports = {
 		filename: "[name].js"
 	},
 	externals: {
-		fs: "commonjs2 fs"
-	},
-	node: {
-		__filename: false,
-		__dirname: false
+		fs: "commonjs2 fs",
+		path: "commonjs2 path"
 	}
 };

@@ -21,7 +21,7 @@ it("a should load a chunk with css", () => {
 	const css = fs
 		.readFileSync(
 			path.resolve(
-				__dirname,
+				__output_dirname__,
 				links[0].href.replace("https://test.cases/path", ".")
 			),
 			"utf-8"
@@ -37,7 +37,7 @@ it("a should load a chunk with css", () => {
 });
 
 it("a should generate correct css", () => {
-	const css = fs.readFileSync(path.resolve(__dirname, "a.css"), "utf-8").trim();
+	const css = fs.readFileSync(path.resolve(__output_dirname__, "a.css"), "utf-8").trim();
 	expect(css).toMatchInlineSnapshot(`
 		".dependency {
 			color: red;
@@ -50,7 +50,7 @@ it("a should generate correct css", () => {
 });
 
 it("c should generate correct css", () => {
-	const css = fs.readFileSync(path.resolve(__dirname, "c.css"), "utf-8").trim();
+	const css = fs.readFileSync(path.resolve(__output_dirname__, "c.css"), "utf-8").trim();
 	expect(css).toMatchInlineSnapshot(`
 		".dependency {
 			color: red;

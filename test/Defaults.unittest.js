@@ -213,6 +213,7 @@ describe("Defaults", () => {
 		        },
 		      },
 		      "javascript": Object {
+		        "exportsPresence": "error",
 		        "exprContextCritical": true,
 		        "exprContextRecursive": true,
 		        "exprContextRegExp": false,
@@ -233,9 +234,9 @@ describe("Defaults", () => {
 		  },
 		  "name": undefined,
 		  "node": Object {
-		    "__dirname": "mock",
-		    "__filename": "mock",
-		    "global": true,
+		    "__dirname": false,
+		    "__filename": false,
+		    "global": false,
 		  },
 		  "optimization": Object {
 		    "checkWasmTypes": false,
@@ -329,7 +330,7 @@ describe("Defaults", () => {
 		    "globalObject": "self",
 		    "hashDigest": "hex",
 		    "hashDigestLength": 20,
-		    "hashFunction": "md4",
+		    "hashFunction": "xxhash64",
 		    "hashSalt": undefined,
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 		    "hotUpdateGlobal": "webpackHotUpdatewebpack",
@@ -598,7 +599,7 @@ describe("Defaults", () => {
 		    },
 		    "immutablePaths": Array [],
 		    "managedPaths": Array [
-		      "<cwd>/node_modules",
+		      /\\^\\(\\.\\+\\?\\[\\\\\\\\/\\]node_modules\\[\\\\\\\\/\\]\\)/,
 		    ],
 		    "module": Object {
 		      "timestamp": true,
@@ -1054,12 +1055,10 @@ describe("Defaults", () => {
 		-     "target": "web",
 		+     "target": "node",
 		@@ ... @@
-		-     "__dirname": "mock",
-		-     "__filename": "mock",
-		-     "global": true,
+		-     "__dirname": false,
+		-     "__filename": false,
 		+     "__dirname": "eval-only",
 		+     "__filename": "eval-only",
-		+     "global": false,
 		@@ ... @@
 		-     "chunkFormat": "array-push",
 		+     "chunkFormat": "commonjs",
@@ -1195,12 +1194,10 @@ describe("Defaults", () => {
 		-     "target": "web",
 		+     "target": "electron-main",
 		@@ ... @@
-		-     "__dirname": "mock",
-		-     "__filename": "mock",
-		-     "global": true,
+		-     "__dirname": false,
+		-     "__filename": false,
 		+     "__dirname": "eval-only",
 		+     "__filename": "eval-only",
-		+     "global": false,
 		@@ ... @@
 		-     "chunkFormat": "array-push",
 		+     "chunkFormat": "commonjs",
@@ -1318,12 +1315,10 @@ describe("Defaults", () => {
 		-     "target": "web",
 		+     "target": "electron-preload",
 		@@ ... @@
-		-     "__dirname": "mock",
-		-     "__filename": "mock",
-		-     "global": true,
+		-     "__dirname": false,
+		-     "__filename": false,
 		+     "__dirname": "eval-only",
 		+     "__filename": "eval-only",
-		+     "global": false,
 		@@ ... @@
 		-     "chunkFormat": "array-push",
 		+     "chunkFormat": "commonjs",
@@ -1630,9 +1625,9 @@ describe("Defaults", () => {
 			+   "amd": false,
 			@@ ... @@
 			-   "node": Object {
-			-     "__dirname": "mock",
-			-     "__filename": "mock",
-			-     "global": true,
+			-     "__dirname": false,
+			-     "__filename": false,
+			-     "global": false,
 			-   },
 			+   "node": false,
 			@@ ... @@
@@ -1923,7 +1918,8 @@ describe("Defaults", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
 			+           Object {
@@ -1936,23 +1932,6 @@ describe("Defaults", () => {
 			+           },
 			+         ],
 			+         "type": "webassembly/async",
-			+       },
-			+       Object {
-			@@ ... @@
-			+         "exportsPresence": "error",
-			@@ ... @@
-			-     "__dirname": "mock",
-			-     "__filename": "mock",
-			-     "global": true,
-			+     "__dirname": "warn-mock",
-			+     "__filename": "warn-mock",
-			+     "global": "warn",
-			@@ ... @@
-			-     "hashFunction": "md4",
-			+     "hashFunction": "xxhash64",
-			@@ ... @@
-			-       "<cwd>/node_modules",
-			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
 		`)
 	);
 });
