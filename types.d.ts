@@ -1134,17 +1134,6 @@ declare interface ChunkSizeOptions {
 	 */
 	entryChunkMultiplicator?: number;
 }
-declare abstract class ChunkTemplate {
-	hooks: Readonly<{
-		renderManifest: { tap: (options?: any, fn?: any) => void };
-		modules: { tap: (options?: any, fn?: any) => void };
-		render: { tap: (options?: any, fn?: any) => void };
-		renderWithEntry: { tap: (options?: any, fn?: any) => void };
-		hash: { tap: (options?: any, fn?: any) => void };
-		hashForChunk: { tap: (options?: any, fn?: any) => void };
-	}>;
-	readonly outputOptions: Output;
-}
 
 /**
  * Advanced options for cleaning assets.
@@ -1463,8 +1452,6 @@ declare class Compilation {
 	bail: boolean;
 	profile: boolean;
 	params: CompilationParams;
-	mainTemplate: MainTemplate;
-	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: { javascript: ModuleTemplate };
 	moduleMemCaches?: Map<Module, WeakTupleMap<any, any>>;
@@ -6361,46 +6348,6 @@ declare interface MainRenderContext {
 	 */
 	strictMode: boolean;
 }
-declare abstract class MainTemplate {
-	hooks: Readonly<{
-		renderManifest: { tap: (options?: any, fn?: any) => void };
-		modules: { tap: () => never };
-		moduleObj: { tap: () => never };
-		require: { tap: (options?: any, fn?: any) => void };
-		beforeStartup: { tap: () => never };
-		startup: { tap: () => never };
-		afterStartup: { tap: () => never };
-		render: { tap: (options?: any, fn?: any) => void };
-		renderWithEntry: { tap: (options?: any, fn?: any) => void };
-		assetPath: {
-			tap: (options?: any, fn?: any) => void;
-			call: (filename?: any, options?: any) => string;
-		};
-		hash: { tap: (options?: any, fn?: any) => void };
-		hashForChunk: { tap: (options?: any, fn?: any) => void };
-		globalHashPaths: { tap: () => void };
-		globalHash: { tap: () => void };
-		hotBootstrap: { tap: () => never };
-		bootstrap: SyncWaterfallHook<
-			[string, Chunk, string, ModuleTemplate, DependencyTemplates]
-		>;
-		localVars: SyncWaterfallHook<[string, Chunk, string]>;
-		requireExtensions: SyncWaterfallHook<[string, Chunk, string]>;
-		requireEnsure: SyncWaterfallHook<[string, Chunk, string, string]>;
-		readonly jsonpScript: SyncWaterfallHook<[string, Chunk]>;
-		readonly linkPrefetch: SyncWaterfallHook<[string, Chunk]>;
-		readonly linkPreload: SyncWaterfallHook<[string, Chunk]>;
-	}>;
-	renderCurrentHashCode: (hash: string, length?: number) => string;
-	getPublicPath: (options: object) => string;
-	getAssetPath: (path?: any, options?: any) => string;
-	getAssetPathWithInfo: (
-		path?: any,
-		options?: any
-	) => { path: string; info: AssetInfo };
-	readonly requireFn: "__webpack_require__";
-	readonly outputOptions: Output;
-}
 declare interface MapOptions {
 	columns?: boolean;
 	module?: boolean;
@@ -6860,11 +6807,11 @@ declare class ModuleGraphConnection {
 	): void;
 	addExplanation(explanation: string): void;
 	readonly explanation: string;
-	active: void;
 	isActive(runtime: RuntimeSpec): boolean;
 	isTargetActive(runtime: RuntimeSpec): boolean;
 	getActiveState(runtime: RuntimeSpec): ConnectionState;
 	setActive(value: boolean): void;
+	active: any;
 	static addConnectionStates: (
 		a: ConnectionState,
 		b: ConnectionState
