@@ -2,6 +2,7 @@
   "definitions": {
     "Amd": {
       "description": "Set the value of `require.amd` and `define.amd`. Or disable AMD support.",
+      "link": "https://webpack.js.org/configuration/other-options/#amd",
       "anyOf": [
         {
           "description": "You can pass `false` to disable AMD support.",
@@ -125,6 +126,7 @@
     },
     "AssetModuleFilename": {
       "description": "The filename of asset modules as relative path inside the 'output.path' directory.",
+      "link": "https://webpack.js.org/configuration/output/#outputassetmodulefilename",
       "anyOf": [
         {
           "type": "string",
@@ -189,6 +191,7 @@
     },
     "AuxiliaryComment": {
       "description": "Add a comment in the UMD wrapper.",
+      "link": "https://webpack.js.org/configuration/output/#outputauxiliarycomment",
       "anyOf": [
         {
           "description": "Append the same comment above each import style.",
@@ -201,6 +204,7 @@
     },
     "Bail": {
       "description": "Report the first error as a hard error instead of tolerating it.",
+      "link": "https://webpack.js.org/configuration/other-options/#bail",
       "type": "boolean"
     },
     "CacheOptions": {
@@ -232,10 +236,12 @@
     },
     "Charset": {
       "description": "Add charset attribute for script tag.",
+      "link": "https://webpack.js.org/configuration/output/#outputcharset",
       "type": "boolean"
     },
     "ChunkFilename": {
       "description": "Specifies the filename template of output files of non-initial chunks on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "link": "https://webpack.js.org/configuration/output/#outputchunkfilename",
       "oneOf": [
         {
           "$ref": "#/definitions/FilenameTemplate"
@@ -244,6 +250,7 @@
     },
     "ChunkFormat": {
       "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).",
+      "link": "https://webpack.js.org/configuration/output/#outputchunkformat",
       "anyOf": [
         {
           "enum": ["array-push", "commonjs", "module", false]
@@ -255,10 +262,12 @@
     },
     "ChunkLoadTimeout": {
       "description": "Number of milliseconds before chunk request expires.",
+      "link": "https://webpack.js.org/configuration/output/#outputchunkloadtimeout",
       "type": "number"
     },
     "ChunkLoading": {
       "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "link": "https://webpack.js.org/configuration/output/#outputchunkloading",
       "anyOf": [
         {
           "enum": [false]
@@ -270,6 +279,7 @@
     },
     "ChunkLoadingGlobal": {
       "description": "The global variable used by webpack for loading of chunks.",
+      "link": "https://webpack.js.org/configuration/output/#outputchunkloadingglobal",
       "type": "string"
     },
     "ChunkLoadingType": {
@@ -285,6 +295,7 @@
     },
     "Clean": {
       "description": "Clean the output directory before emit.",
+      "link": "https://webpack.js.org/configuration/output/#outputclean",
       "anyOf": [
         {
           "type": "boolean"
@@ -328,15 +339,18 @@
     },
     "Context": {
       "description": "The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.",
+      "link": "https://webpack.js.org/configuration/entry-context/#context",
       "type": "string",
       "absolutePath": true
     },
     "CrossOriginLoading": {
       "description": "This option enables cross-origin loading of chunks.",
+      "link": "https://webpack.js.org/configuration/output/#outputcrossoriginloading",
       "enum": [false, "anonymous", "use-credentials"]
     },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
+      "link": "https://webpack.js.org/configuration/other-options/#dependencies",
       "type": "array",
       "items": {
         "description": "References to another configuration to depend on.",
@@ -361,6 +375,7 @@
     },
     "DevtoolFallbackModuleFilenameTemplate": {
       "description": "Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.",
+      "link": "https://webpack.js.org/configuration/output/#outputdevtoolfallbackmodulefilenametemplate",
       "anyOf": [
         {
           "type": "string"
@@ -373,6 +388,7 @@
     },
     "DevtoolModuleFilenameTemplate": {
       "description": "Filename template string of function for the sources array in a generated SourceMap.",
+      "link": "https://webpack.js.org/configuration/output/#outputdevtoolmodulefilenametemplate",
       "anyOf": [
         {
           "type": "string"
@@ -385,6 +401,7 @@
     },
     "DevtoolNamespace": {
       "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
+      "link": "https://webpack.js.org/configuration/output/#outputdevtoolnamespace",
       "type": "string"
     },
     "EmptyGeneratorOptions": {
@@ -399,6 +416,7 @@
     },
     "EnabledChunkLoadingTypes": {
       "description": "List of chunk loading types enabled for use by entry points.",
+      "link": "https://webpack.js.org/configuration/output/#outputenabledchunkloadingtypes",
       "type": "array",
       "items": {
         "$ref": "#/definitions/ChunkLoadingType"
@@ -420,6 +438,7 @@
     },
     "Entry": {
       "description": "The entry point(s) of the compilation.",
+      "link": "https://webpack.js.org/configuration/entry-context/#entry",
       "anyOf": [
         {
           "$ref": "#/definitions/EntryDynamic"
@@ -534,6 +553,7 @@
     },
     "EntryDynamic": {
       "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
+      "link": "https://webpack.js.org/configuration/entry-context/#dynamic-entry",
       "instanceof": "Function",
       "tsType": "(() => EntryStatic | Promise<EntryStatic>)"
     },
@@ -1140,6 +1160,7 @@
     },
     "Filename": {
       "description": "Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "link": "https://webpack.js.org/configuration/output/#outputfilename",
       "oneOf": [
         {
           "$ref": "#/definitions/FilenameTemplate"
@@ -1239,20 +1260,24 @@
     },
     "GlobalObject": {
       "description": "An expression which is used to address the global object/scope in runtime code.",
+      "link": "https://webpack.js.org/configuration/output/#outputglobalobject",
       "type": "string",
       "minLength": 1
     },
     "HashDigest": {
       "description": "Digest type used for the hash.",
+      "link": "https://webpack.js.org/configuration/output/#outputhashdigest",
       "type": "string"
     },
     "HashDigestLength": {
       "description": "Number of chars which are used for the hash.",
+      "link": "https://webpack.js.org/configuration/output/#outputhashdigestlength",
       "type": "number",
       "minimum": 1
     },
     "HashFunction": {
       "description": "Algorithm used for generation the hash (see node.js crypto package).",
+      "link": "https://webpack.js.org/configuration/output/#outputhashfunction",
       "anyOf": [
         {
           "type": "string",
@@ -1266,20 +1291,24 @@
     },
     "HashSalt": {
       "description": "Any string which is added to the hash to salt it.",
+      "link": "https://webpack.js.org/configuration/output/#outputhashsalt",
       "type": "string",
       "minLength": 1
     },
     "HotUpdateChunkFilename": {
       "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
+      "link": "https://webpack.js.org/configuration/output/#outputhotupdatechunkfilename",
       "type": "string",
       "absolutePath": false
     },
     "HotUpdateGlobal": {
       "description": "The global variable used by webpack for loading of hot update chunks.",
+      "link": "https://webpack.js.org/configuration/output/#outputhotupdateglobal",
       "type": "string"
     },
     "HotUpdateMainFilename": {
       "description": "The filename of the Hot Update Main File. It is inside the 'output.path' directory.",
+      "link": "https://webpack.js.org/configuration/output/#outputhotupdatemainfilename",
       "type": "string",
       "absolutePath": false
     },
@@ -1356,6 +1385,7 @@
     },
     "IgnoreWarnings": {
       "description": "Ignore specific warnings.",
+      "link": "https://webpack.js.org/configuration/other-options/#ignorewarnings",
       "type": "array",
       "items": {
         "description": "Ignore specific warnings.",
@@ -1405,10 +1435,12 @@
     },
     "Iife": {
       "description": "Wrap javascript code into IIFE's to avoid leaking into global scope.",
+      "link": "https://webpack.js.org/configuration/output/#outputiife",
       "type": "boolean"
     },
     "ImportFunctionName": {
       "description": "The name of the native import() function (can be exchanged for a polyfill).",
+      "link": "https://webpack.js.org/configuration/output/#outputimportfunctionname",
       "type": "string"
     },
     "ImportMetaName": {
@@ -1417,23 +1449,28 @@
     },
     "InfrastructureLogging": {
       "description": "Options for infrastructure level logging.",
+      "link": "https://webpack.js.org/configuration/other-options/#infrastructurelogging",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "appendOnly": {
           "description": "Only appends lines to the output. Avoids updating existing output e. g. for status messages. This option is only used when no custom console is provided.",
+          "link": "https://webpack.js.org/configuration/other-options/#appendonly",
           "type": "boolean"
         },
         "colors": {
           "description": "Enables/Disables colorful output. This option is only used when no custom console is provided.",
+          "link": "https://webpack.js.org/configuration/other-options/#colors",
           "type": "boolean"
         },
         "console": {
           "description": "Custom console used for logging.",
+          "link": "https://webpack.js.org/configuration/other-options/#console",
           "tsType": "Console"
         },
         "debug": {
           "description": "Enable debug logging for specific loggers.",
+          "link": "https://webpack.js.org/configuration/other-options/#debug",
           "anyOf": [
             {
               "description": "Enable/Disable debug logging for all loggers.",
@@ -1446,10 +1483,12 @@
         },
         "level": {
           "description": "Log level.",
+          "link": "https://webpack.js.org/configuration/other-options/#level",
           "enum": ["none", "error", "warn", "info", "log", "verbose"]
         },
         "stream": {
           "description": "Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.",
+          "link": "https://webpack.js.org/configuration/other-options/#stream",
           "tsType": "NodeJS.WritableStream"
         }
       }
@@ -1735,6 +1774,7 @@
     },
     "Library": {
       "description": "Make the output files a library, exporting the exports of the entry point.",
+      "link": "https://webpack.js.org/configuration/output/#outputlibrary",
       "anyOf": [
         {
           "$ref": "#/definitions/LibraryName"
@@ -1803,6 +1843,7 @@
     },
     "LibraryExport": {
       "description": "Specify which export should be exposed as library.",
+      "link": "https://webpack.js.org/configuration/output/#outputlibraryexport-1",
       "anyOf": [
         {
           "type": "array",
@@ -1864,6 +1905,7 @@
     },
     "LibraryType": {
       "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+      "link": "https://webpack.js.org/configuration/output/#outputlibrarytarget",
       "anyOf": [
         {
           "enum": [
@@ -1893,6 +1935,7 @@
     },
     "Loader": {
       "description": "Custom values available in the loader context.",
+      "link": "https://webpack.js.org/configuration/other-options/#loader",
       "type": "object"
     },
     "MemoryCacheOptions": {
@@ -1918,6 +1961,7 @@
     },
     "Mode": {
       "description": "Enable production optimizations or development hints.",
+      "link": "https://webpack.js.org/configuration/mode/",
       "enum": ["development", "production", "none"]
     },
     "ModuleFilterItemTypes": {
@@ -2131,6 +2175,7 @@
     },
     "Name": {
       "description": "Name of the configuration. Used when loading multiple configurations.",
+      "link": "https://webpack.js.org/configuration/other-options/#name",
       "type": "string"
     },
     "NoParse": {
@@ -2885,6 +2930,7 @@
     },
     "Output": {
       "description": "Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.",
+      "link": "https://webpack.js.org/configuration/output/",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -3037,6 +3083,7 @@
         },
         "trustedTypes": {
           "description": "Use a Trusted Types policy to create urls for chunks. 'output.uniqueName' is used a default policy name. Passing a string sets a custom policy name.",
+          "link": "https://webpack.js.org/configuration/output/#outputtrustedtypes",
           "anyOf": [
             {
               "enum": [true]
@@ -3080,6 +3127,7 @@
     },
     "OutputModule": {
       "description": "Output javascript files as module source type.",
+      "link": "https://webpack.js.org/configuration/output/#outputmodule",
       "type": "boolean"
     },
     "OutputNormalized": {
@@ -3226,6 +3274,7 @@
     },
     "Parallelism": {
       "description": "The number of parallel processed modules in the compilation.",
+      "link": "https://webpack.js.org/configuration/other-options/#parallelism",
       "type": "number",
       "minimum": 1
     },
@@ -3266,11 +3315,13 @@
     },
     "Path": {
       "description": "The output directory as **absolute path** (required).",
+      "link": "https://webpack.js.org/configuration/output/#outputpath",
       "type": "string",
       "absolutePath": true
     },
     "Pathinfo": {
       "description": "Include comments with information about the modules.",
+      "link": "https://webpack.js.org/configuration/output/#outputpathinfo",
       "anyOf": [
         {
           "enum": ["verbose"]
@@ -3282,6 +3333,7 @@
     },
     "Performance": {
       "description": "Configuration for web performance recommendations.",
+      "link": "https://webpack.js.org/configuration/performance/",
       "anyOf": [
         {
           "enum": [false]
@@ -3298,25 +3350,30 @@
       "properties": {
         "assetFilter": {
           "description": "Filter function to select assets that are checked.",
+          "link": "https://webpack.js.org/configuration/performance/#performanceassetfilter",
           "instanceof": "Function",
           "tsType": "Function"
         },
         "hints": {
           "description": "Sets the format of the hints: warnings, errors or nothing at all.",
+          "link": "https://webpack.js.org/configuration/performance/#performancehints",
           "enum": [false, "warning", "error"]
         },
         "maxAssetSize": {
           "description": "File size limit (in bytes) when exceeded, that webpack will provide performance hints.",
+          "link": "https://webpack.js.org/configuration/performance/#performancemaxassetsize",
           "type": "number"
         },
         "maxEntrypointSize": {
           "description": "Total size of an entry point (in bytes).",
+          "link": "https://webpack.js.org/configuration/performance/#performancemaxentrypointsize",
           "type": "number"
         }
       }
     },
     "Plugins": {
       "description": "Add additional plugins to the compiler.",
+      "link": "https://webpack.js.org/configuration/plugins/",
       "type": "array",
       "items": {
         "description": "Plugin of type object or instanceof Function.",
@@ -3332,10 +3389,12 @@
     },
     "Profile": {
       "description": "Capture timing information for each module.",
+      "link": "https://webpack.js.org/configuration/other-options/#profile",
       "type": "boolean"
     },
     "PublicPath": {
       "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
+      "link": "https://webpack.js.org/configuration/output/#outputpublicpath",
       "anyOf": [
         {
           "enum": ["auto"]
@@ -3359,6 +3418,7 @@
     },
     "RecordsInputPath": {
       "description": "Store compiler state to a json file.",
+      "link": "https://webpack.js.org/configuration/other-options/#recordsinputpath",
       "anyOf": [
         {
           "enum": [false]
@@ -3371,6 +3431,7 @@
     },
     "RecordsOutputPath": {
       "description": "Load compiler state from a json file.",
+      "link": "https://webpack.js.org/configuration/other-options/#recordsoutputpath",
       "anyOf": [
         {
           "enum": [false]
@@ -3383,6 +3444,7 @@
     },
     "RecordsPath": {
       "description": "Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.",
+      "link": "https://webpack.js.org/configuration/other-options/#recordspath",
       "anyOf": [
         {
           "enum": [false]
@@ -3395,6 +3457,7 @@
     },
     "Resolve": {
       "description": "Options for the resolver.",
+      "link": "https://webpack.js.org/configuration/resolve/",
       "oneOf": [
         {
           "$ref": "#/definitions/ResolveOptions"
@@ -3403,6 +3466,7 @@
     },
     "ResolveAlias": {
       "description": "Redirect module requests.",
+      "link": "https://webpack.js.org/configuration/resolve/#resolvealias",
       "anyOf": [
         {
           "type": "array",
@@ -3492,6 +3556,7 @@
         },
         "aliasFields": {
           "description": "Fields in the description file (usually package.json) which are used to redirect requests inside the module.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvealiasfields",
           "type": "array",
           "items": {
             "description": "Field in the description file (usually package.json) which are used to redirect requests inside the module.",
@@ -3513,6 +3578,7 @@
         },
         "byDependency": {
           "description": "Extra resolve options per dependency category. Typical categories are \"commonjs\", \"amd\", \"esm\".",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvebydependency",
           "type": "object",
           "additionalProperties": {
             "description": "Options object for resolving requests.",
@@ -3529,15 +3595,18 @@
         },
         "cachePredicate": {
           "description": "Predicate function to decide which requests should be cached.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvecachepredicate",
           "instanceof": "Function",
           "tsType": "((request: import('enhanced-resolve').ResolveRequest) => boolean)"
         },
         "cacheWithContext": {
           "description": "Include the context information in the cache identifier when caching.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvecachewithcontext",
           "type": "boolean"
         },
         "conditionNames": {
           "description": "Condition names for exports field entry point.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveconditionnames",
           "type": "array",
           "items": {
             "description": "Condition names for exports field entry point.",
@@ -3546,6 +3615,7 @@
         },
         "descriptionFiles": {
           "description": "Filenames used to find a description file (like a package.json).",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvedescriptionfiles",
           "type": "array",
           "items": {
             "description": "Filename used to find a description file (like a package.json).",
@@ -3555,10 +3625,12 @@
         },
         "enforceExtension": {
           "description": "Enforce the resolver to use one of the extensions from the extensions option (User must specify requests without extension).",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveenforceextension",
           "type": "boolean"
         },
         "exportsFields": {
           "description": "Field names from the description file (usually package.json) which are used to provide entry points of a package.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveexportsfields",
           "type": "array",
           "items": {
             "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
@@ -3567,6 +3639,7 @@
         },
         "extensions": {
           "description": "Extensions added to the request when trying to find the file.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveextensions",
           "type": "array",
           "items": {
             "description": "Extension added to the request when trying to find the file.",
@@ -3575,6 +3648,7 @@
         },
         "fallback": {
           "description": "Redirect module requests when normal resolving fails.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvefallback",
           "oneOf": [
             {
               "$ref": "#/definitions/ResolveAlias"
@@ -3591,6 +3665,7 @@
         },
         "importsFields": {
           "description": "Field names from the description file (usually package.json) which are used to provide internal request of a package (requests starting with # are considered as internal).",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveimportsfields",
           "type": "array",
           "items": {
             "description": "Field name from the description file (usually package.json) which is used to provide internal request of a package (requests starting with # are considered as internal).",
@@ -3599,6 +3674,7 @@
         },
         "mainFields": {
           "description": "Field names from the description file (package.json) which are used to find the default entry point.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvemainfields",
           "type": "array",
           "items": {
             "description": "Field name from the description file (package.json) which are used to find the default entry point.",
@@ -3620,6 +3696,7 @@
         },
         "mainFiles": {
           "description": "Filenames used to find the default entry point if there is no description file or main field.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvemainfiles",
           "type": "array",
           "items": {
             "description": "Filename used to find the default entry point if there is no description file or main field.",
@@ -3629,6 +3706,7 @@
         },
         "modules": {
           "description": "Folder names or directory paths where to find modules.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvemodules",
           "type": "array",
           "items": {
             "description": "Folder name or directory path where to find modules.",
@@ -3638,6 +3716,7 @@
         },
         "plugins": {
           "description": "Plugins for the resolver.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveplugins",
           "type": "array",
           "cli": {
             "exclude": true
@@ -3656,10 +3735,12 @@
         },
         "preferAbsolute": {
           "description": "Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvepreferabsolute",
           "type": "boolean"
         },
         "preferRelative": {
           "description": "Prefer to resolve module requests as relative request and fallback to resolving as module.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvepreferrelative",
           "type": "boolean"
         },
         "resolver": {
@@ -3668,6 +3749,7 @@
         },
         "restrictions": {
           "description": "A list of resolve restrictions. Resolve results must fulfill all of these restrictions to resolve successfully. Other resolve paths are taken when restrictions are not met.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolverestrictions",
           "type": "array",
           "items": {
             "description": "Resolve restriction. Resolve result must fulfill this restriction.",
@@ -3686,6 +3768,7 @@
         },
         "roots": {
           "description": "A list of directories in which requests that are server-relative URLs (starting with '/') are resolved.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveroots",
           "type": "array",
           "items": {
             "description": "Directory in which requests that are server-relative URLs (starting with '/') are resolved.",
@@ -3694,10 +3777,12 @@
         },
         "symlinks": {
           "description": "Enable resolving symlinks to the original location.",
+          "link": "https://webpack.js.org/configuration/resolve/#resolvesymlinks",
           "type": "boolean"
         },
         "unsafeCache": {
           "description": "Enable caching of successfully resolved requests (cache entries are not revalidated).",
+          "link": "https://webpack.js.org/configuration/resolve/#resolveunsafecache",
           "anyOf": [
             {
               "type": "boolean"
@@ -4199,15 +4284,18 @@
     },
     "ScriptType": {
       "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\".",
+      "link": "https://webpack.js.org/configuration/output/#outputscripttype",
       "enum": [false, "text/javascript", "module"]
     },
     "SnapshotOptions": {
       "description": "Options affecting how file system snapshots are created and validated.",
+      "link": "https://webpack.js.org/configuration/other-options/#snapshot",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "buildDependencies": {
           "description": "Options for snapshotting build dependencies to determine if the whole cache need to be invalidated.",
+          "link": "https://webpack.js.org/configuration/other-options/#builddependencies",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -4223,6 +4311,7 @@
         },
         "immutablePaths": {
           "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+          "link": "https://webpack.js.org/configuration/other-options/#immutablepaths",
           "type": "array",
           "items": {
             "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
@@ -4243,6 +4332,7 @@
         },
         "managedPaths": {
           "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+          "link": "https://webpack.js.org/configuration/other-options/#managedpaths",
           "type": "array",
           "items": {
             "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
@@ -4263,6 +4353,7 @@
         },
         "module": {
           "description": "Options for snapshotting dependencies of modules to determine if they need to be built again.",
+          "link": "https://webpack.js.org/configuration/other-options/#module",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -4278,6 +4369,7 @@
         },
         "resolve": {
           "description": "Options for snapshotting dependencies of request resolving to determine if requests need to be re-resolved.",
+          "link": "https://webpack.js.org/configuration/other-options/#resolve",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -4293,6 +4385,7 @@
         },
         "resolveBuildDependencies": {
           "description": "Options for snapshotting the resolving of build dependencies to determine if the build dependencies need to be re-resolved.",
+          "link": "https://webpack.js.org/configuration/other-options/#resolvebuilddependencies",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -4310,11 +4403,13 @@
     },
     "SourceMapFilename": {
       "description": "The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.",
+      "link": "https://webpack.js.org/configuration/output/#outputsourcemapfilename",
       "type": "string",
       "absolutePath": false
     },
     "SourcePrefix": {
       "description": "Prefixes every line of the source in the bundle with this string.",
+      "link": "https://webpack.js.org/configuration/output/#outputsourceprefix",
       "type": "string"
     },
     "StatsOptions": {
@@ -4324,82 +4419,102 @@
       "properties": {
         "all": {
           "description": "Fallback value for stats options when an option is not defined (has precedence over local webpack defaults).",
+          "link": "https://webpack.js.org/configuration/stats/#statsall",
           "type": "boolean"
         },
         "assets": {
           "description": "Add assets information.",
+          "link": "https://webpack.js.org/configuration/stats/#statsassets",
           "type": "boolean"
         },
         "assetsSort": {
           "description": "Sort the assets by that field.",
+          "link": "https://webpack.js.org/configuration/stats/#statsassetssort",
           "type": "string"
         },
         "assetsSpace": {
           "description": "Space to display assets (groups will be collapsed to fit this space).",
+          "link": "https://webpack.js.org/configuration/stats/#statsassetsspace",
           "type": "number"
         },
         "builtAt": {
           "description": "Add built at time information.",
+          "link": "https://webpack.js.org/configuration/stats/#statsbuiltat",
           "type": "boolean"
         },
         "cached": {
           "description": "Add information about cached (not built) modules (deprecated: use 'cachedModules' instead).",
+          "link": "https://webpack.js.org/configuration/stats/#statscached",
           "type": "boolean"
         },
         "cachedAssets": {
           "description": "Show cached assets (setting this to `false` only shows emitted files).",
+          "link": "https://webpack.js.org/configuration/stats/#statscachedassets",
           "type": "boolean"
         },
         "cachedModules": {
           "description": "Add information about cached (not built) modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statscachedmodules",
           "type": "boolean"
         },
         "children": {
           "description": "Add children information.",
+          "link": "https://webpack.js.org/configuration/stats/#statschildren",
           "type": "boolean"
         },
         "chunkGroupAuxiliary": {
           "description": "Display auxiliary assets in chunk groups.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkgroupauxiliary",
           "type": "boolean"
         },
         "chunkGroupChildren": {
           "description": "Display children of chunk groups.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkgroupchildren",
           "type": "boolean"
         },
         "chunkGroupMaxAssets": {
           "description": "Limit of assets displayed in chunk groups.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkgroupmaxassets",
           "type": "number"
         },
         "chunkGroups": {
           "description": "Display all chunk groups with the corresponding bundles.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkgroups",
           "type": "boolean"
         },
         "chunkModules": {
           "description": "Add built modules information to chunk information.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkmodules",
           "type": "boolean"
         },
         "chunkModulesSpace": {
           "description": "Space to display chunk modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkmodulesspace",
           "type": "number"
         },
         "chunkOrigins": {
           "description": "Add the origins of chunks and chunk merging info.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkorigins",
           "type": "boolean"
         },
         "chunkRelations": {
           "description": "Add information about parent, children and sibling chunks to chunk information.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkrelations",
           "type": "boolean"
         },
         "chunks": {
           "description": "Add chunk information.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunks",
           "type": "boolean"
         },
         "chunksSort": {
           "description": "Sort the chunks by that field.",
+          "link": "https://webpack.js.org/configuration/stats/#statschunkssort",
           "type": "string"
         },
         "colors": {
           "description": "Enables/Disables colorful output.",
+          "link": "https://webpack.js.org/configuration/stats/#statscolors",
           "anyOf": [
             {
               "description": "Enables/Disables colorful output.",
@@ -4439,19 +4554,23 @@
         },
         "context": {
           "description": "Context directory for request shortening.",
+          "link": "https://webpack.js.org/configuration/stats/#statscontext",
           "type": "string",
           "absolutePath": true
         },
         "dependentModules": {
           "description": "Show chunk modules that are dependencies of other modules of the chunk.",
+          "link": "https://webpack.js.org/configuration/stats/#statsdependentmodules",
           "type": "boolean"
         },
         "depth": {
           "description": "Add module depth in module graph.",
+          "link": "https://webpack.js.org/configuration/stats/#statsdepth",
           "type": "boolean"
         },
         "entrypoints": {
           "description": "Display the entry points with the corresponding bundles.",
+          "link": "https://webpack.js.org/configuration/stats/#statsentrypoints",
           "anyOf": [
             {
               "enum": ["auto"]
@@ -4463,10 +4582,12 @@
         },
         "env": {
           "description": "Add --env information.",
+          "link": "https://webpack.js.org/configuration/stats/#statsenv",
           "type": "boolean"
         },
         "errorDetails": {
           "description": "Add details to errors (like resolving log).",
+          "link": "https://webpack.js.org/configuration/stats/#statserrordetails",
           "anyOf": [
             {
               "enum": ["auto"]
@@ -4478,18 +4599,22 @@
         },
         "errorStack": {
           "description": "Add internal stack trace to errors.",
+          "link": "https://webpack.js.org/configuration/stats/#statserrorstack",
           "type": "boolean"
         },
         "errors": {
           "description": "Add errors.",
+          "link": "https://webpack.js.org/configuration/stats/#statserrors",
           "type": "boolean"
         },
         "errorsCount": {
           "description": "Add errors count.",
+          "link": "https://webpack.js.org/configuration/stats/#statserrorscount",
           "type": "boolean"
         },
         "exclude": {
           "description": "Please use excludeModules instead.",
+          "link": "https://webpack.js.org/configuration/stats/#statsexclude",
           "cli": {
             "exclude": true
           },
@@ -4504,6 +4629,7 @@
         },
         "excludeAssets": {
           "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions.",
+          "link": "https://webpack.js.org/configuration/stats/#statsexcludeassets",
           "oneOf": [
             {
               "$ref": "#/definitions/AssetFilterTypes"
@@ -4512,6 +4638,7 @@
         },
         "excludeModules": {
           "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions.",
+          "link": "https://webpack.js.org/configuration/stats/#statsexcludemodules",
           "anyOf": [
             {
               "type": "boolean"
@@ -4523,10 +4650,12 @@
         },
         "groupAssetsByChunk": {
           "description": "Group assets by how their are related to chunks.",
+          "link": "https://webpack.js.org/configuration/stats/#statsgroupassetsbychunk",
           "type": "boolean"
         },
         "groupAssetsByEmitStatus": {
           "description": "Group assets by their status (emitted, compared for emit or cached).",
+          "link": "https://webpack.js.org/configuration/stats/#statsgroupassetsbyemitstatus",
           "type": "boolean"
         },
         "groupAssetsByExtension": {
@@ -4535,6 +4664,7 @@
         },
         "groupAssetsByInfo": {
           "description": "Group assets by their asset info (immutable, development, hotModuleReplacement, etc).",
+          "link": "https://webpack.js.org/configuration/stats/#statsgroupassetsbyinfo",
           "type": "boolean"
         },
         "groupAssetsByPath": {
@@ -4543,6 +4673,7 @@
         },
         "groupModulesByAttributes": {
           "description": "Group modules by their attributes (errors, warnings, assets, optional, orphan, or dependent).",
+          "link": "https://webpack.js.org/configuration/stats/#statsgroupmodulesbyattributes",
           "type": "boolean"
         },
         "groupModulesByCacheStatus": {
@@ -4567,18 +4698,22 @@
         },
         "groupReasonsByOrigin": {
           "description": "Group reasons by their origin module.",
+          "link": "https://webpack.js.org/configuration/stats/#statsgroupreasonsbyorigin",
           "type": "boolean"
         },
         "hash": {
           "description": "Add the hash of the compilation.",
+          "link": "https://webpack.js.org/configuration/stats/#statshash",
           "type": "boolean"
         },
         "ids": {
           "description": "Add ids.",
+          "link": "https://webpack.js.org/configuration/stats/#statsids",
           "type": "boolean"
         },
         "logging": {
           "description": "Add logging output.",
+          "link": "https://webpack.js.org/configuration/stats/#statslogging",
           "anyOf": [
             {
               "description": "Specify log level of logging output.",
@@ -4592,6 +4727,7 @@
         },
         "loggingDebug": {
           "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.",
+          "link": "https://webpack.js.org/configuration/stats/#statsloggingdebug",
           "anyOf": [
             {
               "description": "Enable/Disable debug logging for all loggers.",
@@ -4604,26 +4740,32 @@
         },
         "loggingTrace": {
           "description": "Add stack traces to logging output.",
+          "link": "https://webpack.js.org/configuration/stats/#statsloggingtrace",
           "type": "boolean"
         },
         "moduleAssets": {
           "description": "Add information about assets inside modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statsmoduleassets",
           "type": "boolean"
         },
         "moduleTrace": {
           "description": "Add dependencies and origin of warnings/errors.",
+          "link": "https://webpack.js.org/configuration/stats/#statsmoduletrace",
           "type": "boolean"
         },
         "modules": {
           "description": "Add built modules information.",
+          "link": "https://webpack.js.org/configuration/stats/#statsmodules",
           "type": "boolean"
         },
         "modulesSort": {
           "description": "Sort the modules by that field.",
+          "link": "https://webpack.js.org/configuration/stats/#statsmodulessort",
           "type": "string"
         },
         "modulesSpace": {
           "description": "Space to display modules (groups will be collapsed to fit this space, value is in number of modules/groups).",
+          "link": "https://webpack.js.org/configuration/stats/#statsmodulesspace",
           "type": "number"
         },
         "nestedModules": {
@@ -4632,6 +4774,7 @@
         },
         "nestedModulesSpace": {
           "description": "Space to display modules nested within other modules (groups will be collapsed to fit this space, value is in number of modules/group).",
+          "link": "https://webpack.js.org/configuration/stats/#statsnestedmodulesspace",
           "type": "number"
         },
         "optimizationBailout": {
@@ -4640,18 +4783,22 @@
         },
         "orphanModules": {
           "description": "Add information about orphan modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statsorphanmodules",
           "type": "boolean"
         },
         "outputPath": {
           "description": "Add output path information.",
+          "link": "https://webpack.js.org/configuration/stats/#statsoutputpath",
           "type": "boolean"
         },
         "performance": {
           "description": "Add performance hint flags.",
+          "link": "https://webpack.js.org/configuration/stats/#statsperformance",
           "type": "boolean"
         },
         "preset": {
           "description": "Preset for the default values.",
+          "link": "https://webpack.js.org/configuration/stats/#statspreset",
           "anyOf": [
             {
               "type": "boolean"
@@ -4663,22 +4810,27 @@
         },
         "providedExports": {
           "description": "Show exports provided by modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statsprovidedexports",
           "type": "boolean"
         },
         "publicPath": {
           "description": "Add public path information.",
+          "link": "https://webpack.js.org/configuration/stats/#statspublicpath",
           "type": "boolean"
         },
         "reasons": {
           "description": "Add information about the reasons why modules are included.",
+          "link": "https://webpack.js.org/configuration/stats/#statsreasons",
           "type": "boolean"
         },
         "reasonsSpace": {
           "description": "Space to display reasons (groups will be collapsed to fit this space).",
+          "link": "https://webpack.js.org/configuration/stats/#statsreasonsspace",
           "type": "number"
         },
         "relatedAssets": {
           "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
+          "link": "https://webpack.js.org/configuration/stats/#statsrelatedassets",
           "type": "boolean"
         },
         "runtime": {
@@ -4687,34 +4839,42 @@
         },
         "runtimeModules": {
           "description": "Add information about runtime modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statsruntimemodules",
           "type": "boolean"
         },
         "source": {
           "description": "Add the source code of modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statssource",
           "type": "boolean"
         },
         "timings": {
           "description": "Add timing information.",
+          "link": "https://webpack.js.org/configuration/stats/#statstimings",
           "type": "boolean"
         },
         "usedExports": {
           "description": "Show exports used by modules.",
+          "link": "https://webpack.js.org/configuration/stats/#statsusedexports",
           "type": "boolean"
         },
         "version": {
           "description": "Add webpack version information.",
+          "link": "https://webpack.js.org/configuration/stats/#statsversion",
           "type": "boolean"
         },
         "warnings": {
           "description": "Add warnings.",
+          "link": "https://webpack.js.org/configuration/stats/#statswarnings",
           "type": "boolean"
         },
         "warningsCount": {
           "description": "Add warnings count.",
+          "link": "https://webpack.js.org/configuration/stats/#statswarningscount",
           "type": "boolean"
         },
         "warningsFilter": {
           "description": "Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
+          "link": "https://webpack.js.org/configuration/stats/#statswarningsfilter",
           "oneOf": [
             {
               "$ref": "#/definitions/WarningFilterTypes"
@@ -4725,6 +4885,7 @@
     },
     "StatsValue": {
       "description": "Stats options object or preset name.",
+      "link": "https://webpack.js.org/configuration/stats/",
       "anyOf": [
         {
           "enum": [
@@ -4748,14 +4909,17 @@
     },
     "StrictModuleErrorHandling": {
       "description": "Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.",
+      "link": "https://webpack.js.org/configuration/output/#outputsourceprefix",
       "type": "boolean"
     },
     "StrictModuleExceptionHandling": {
       "description": "Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.",
+      "link": "https://webpack.js.org/configuration/output/#outputstrictmoduleexceptionhandling",
       "type": "boolean"
     },
     "Target": {
       "description": "Environment to build for. An array of environments to build for all of them when possible.",
+      "link": "https://webpack.js.org/configuration/target/",
       "anyOf": [
         {
           "type": "array",
@@ -4789,10 +4953,12 @@
     },
     "UmdNamedDefine": {
       "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
+      "link": "https://webpack.js.org/configuration/output/#outputumdnameddefine",
       "type": "boolean"
     },
     "UniqueName": {
       "description": "A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.",
+      "link": "https://webpack.js.org/configuration/output/#outputuniquename",
       "type": "string",
       "minLength": 1
     },
@@ -4865,23 +5031,28 @@
     },
     "Watch": {
       "description": "Enter watch mode, which rebuilds on file change.",
+      "link": "https://webpack.js.org/configuration/watch/",
       "type": "boolean"
     },
     "WatchOptions": {
       "description": "Options for the watcher.",
+      "link": "https://webpack.js.org/configuration/watch/#watchoptions",
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "aggregateTimeout": {
           "description": "Delay the rebuilt after the first change. Value is a time in ms.",
+          "link": "https://webpack.js.org/configuration/watch/#watchoptionsaggregatetimeout",
           "type": "number"
         },
         "followSymlinks": {
           "description": "Resolve symlinks and watch symlink and real file. This is usually not needed as webpack already resolves symlinks ('resolve.symlinks').",
+          "link": "https://webpack.js.org/configuration/watch/#watchoptionsfollowsymlinks",
           "type": "boolean"
         },
         "ignored": {
           "description": "Ignore some files from watching (glob pattern or regexp).",
+          "link": "https://webpack.js.org/configuration/watch/#watchoptionsignored",
           "anyOf": [
             {
               "type": "array",
@@ -4904,6 +5075,7 @@
         },
         "poll": {
           "description": "Enable polling mode for watching.",
+          "link": "https://webpack.js.org/configuration/watch/#watchoptionspoll",
           "anyOf": [
             {
               "description": "`number`: use polling with specified interval.",
