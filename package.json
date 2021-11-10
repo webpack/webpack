@@ -110,7 +110,7 @@
     "yarn-deduplicate": "^3.1.0"
   },
   "engines": {
-    "node": ">=10.13.0"
+    "node": ">=16.13.0"
   },
   "repository": {
     "type": "git",

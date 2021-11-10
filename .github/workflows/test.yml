@@ -75,18 +75,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [10.x, 17.x]
+        node-version: [16.x, 17.x]
         part: [a, b]
-        include:
-          - os: ubuntu-latest
-            node-version: 16.x
-            part: a
-          - os: ubuntu-latest
-            node-version: 14.x
-            part: a
-          - os: ubuntu-latest
-            node-version: 12.x
-            part: a
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
