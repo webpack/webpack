@@ -8348,6 +8348,10 @@ declare interface OutputFileSystem {
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
 	) => void;
+	lstat?: (
+		arg0: string,
+		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
+	) => void;
 	readFile: (
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
