@@ -136,9 +136,10 @@ module.exports = definitions.map((defs, i) => ({
 							return new LocalizationGenerator();
 						});
 
-					compilation.chunkTemplate.hooks.renderManifest.tap(
+					compilation.hooks.renderManifest.tap(
 						"LocalizationPlugin",
 						(result, { chunk, chunkGraph }) => {
+							if (chunk.hasRuntime()) return result;
 							const localizationModules = [];
 							for (const module of chunkGraph.getChunkModulesIterable(chunk)) {
 								if (module.getSourceTypes().has("localization"))
