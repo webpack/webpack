@@ -296,6 +296,7 @@ describe("Defaults", () => {
 		  },
 		  "output": Object {
 		    "assetModuleFilename": "[hash][ext][query]",
+		    "asyncChunks": true,
 		    "charset": true,
 		    "chunkFilename": "[name].js",
 		    "chunkFormat": "array-push",

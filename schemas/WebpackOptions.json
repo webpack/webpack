@@ -434,6 +434,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "asyncChunks": {
+          "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
+        },
         "chunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
@@ -487,6 +491,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "asyncChunks": {
+          "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
+        },
         "chunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
@@ -2891,6 +2899,10 @@
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
+        "asyncChunks": {
+          "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
+        },
         "auxiliaryComment": {
           "cli": {
             "exclude": true
@@ -3089,6 +3101,10 @@
       "properties": {
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
+        },
+        "asyncChunks": {
+          "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
         },
         "charset": {
           "$ref": "#/definitions/Charset"
