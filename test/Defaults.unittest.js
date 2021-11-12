@@ -599,7 +599,7 @@ describe("Defaults", () => {
 		    },
 		    "immutablePaths": Array [],
 		    "managedPaths": Array [
-		      "<cwd>/node_modules",
+		      "<cwd>/node_modules/",
 		    ],
 		    "module": Object {
 		      "timestamp": true,
@@ -1952,7 +1952,7 @@ describe("Defaults", () => {
 			-     "hashFunction": "md4",
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			-       "<cwd>/node_modules",
+			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
 		`)
 	);
