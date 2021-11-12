@@ -3994,13 +3994,49 @@ declare interface FileCacheOptions {
 }
 declare interface FileSystem {
 	readFile: {
-		(arg0: string, arg1: FileSystemCallback<string | Buffer>): void;
+		(arg0: string | number, arg1: FileSystemCallback<string | Buffer>): void;
 		(
-			arg0: string,
+			arg0: string | number,
 			arg1: object,
 			arg2: FileSystemCallback<string | Buffer>
 		): void;
 	};
+	open?: {
+		(
+			arg0: string,
+			arg1: string | number,
+			arg2: FileSystemCallback<number>
+		): void;
+		(
+			arg0: string,
+			arg1: string | number,
+			arg2: string | number,
+			arg3: FileSystemCallback<number>
+		): void;
+	};
+	fstat?: {
+		(arg0: number, arg1: FileSystemCallback<FileSystemStats>): void;
+		(
+			arg0: number,
+			arg1: object,
+			arg2: FileSystemCallback<string | Buffer>
+		): void;
+	};
+	read?: (
+		arg0: number,
+		arg1: Buffer | Uint8Array,
+		arg2: number,
+		arg3: number,
+		arg4: number,
+		arg5: (
+			arg0?: null | (PossibleFileSystemError & Error),
+			arg1?: number
+		) => void
+	) => void;
+	close?: (
+		arg0: number,
+		arg1: (arg0?: null | (PossibleFileSystemError & Error)) => void
+	) => void;
 	readdir: {
 		(
 			arg0: string,
