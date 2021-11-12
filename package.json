@@ -76,7 +76,7 @@
     "less": "^4.0.0",
     "less-loader": "^8.0.0",
     "lint-staged": "^11.0.0",
-    "loader-utils": "^2.0.0",
+    "loader-utils": "^3.2.0",
     "lodash": "^4.17.19",
     "lodash-es": "^4.17.15",
     "memfs": "^3.2.0",
