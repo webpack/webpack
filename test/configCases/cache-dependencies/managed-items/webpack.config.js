@@ -23,8 +23,5 @@ module.exports = {
 				expect(fileDeps).toContain(path.resolve(__dirname, "index.js"));
 			});
 		}
-	],
-	module: {
-		unsafeCache: false
-	}
+	]
 };
