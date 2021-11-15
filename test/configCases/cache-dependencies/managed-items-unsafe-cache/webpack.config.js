@@ -19,12 +19,11 @@ module.exports = {
 					path.resolve(__dirname, "node_modules/package/package.json")
 				);
 				expect(fileDeps).toContain(path.resolve(__dirname, "extra.js"));
-				expect(fileDeps).toContain(path.resolve(__dirname, "loader.js"));
 				expect(fileDeps).toContain(path.resolve(__dirname, "index.js"));
 			});
 		}
 	],
 	module: {
-		unsafeCache: false
+		unsafeCache: true
 	}
 };
