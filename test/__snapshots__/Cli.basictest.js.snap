@@ -4974,6 +4974,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-async-chunks": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable creating async chunks that are loaded on demand.",
+        "multiple": false,
+        "path": "output.asyncChunks",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable creating async chunks that are loaded on demand.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-charset": Object {
     "configs": Array [
       Object {

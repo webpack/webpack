@@ -3012,6 +3012,11 @@ declare abstract class EntryDependency extends ModuleDependency {}
  */
 declare interface EntryDescription {
 	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: string | false;
@@ -3061,6 +3066,11 @@ declare interface EntryDescription {
  * An object with entry point description.
  */
 declare interface EntryDescriptionNormalized {
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+
 	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
@@ -8010,6 +8020,11 @@ declare interface Output {
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+
+	/**
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: string | LibraryCustomUmdCommentObject;
@@ -8280,6 +8295,10 @@ declare interface OutputFileSystem {
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
 	) => void;
+	lstat?: (
+		arg0: string,
+		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
+	) => void;
 	readFile: (
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
@@ -8299,6 +8318,11 @@ declare interface OutputNormalized {
 	assetModuleFilename?:
 		| string
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
 
 	/**
 	 * Add charset attribute for script tag.
