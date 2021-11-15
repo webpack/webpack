@@ -104,7 +104,7 @@ declare namespace webpack {
 				) => void
 			): void;
 			(
-				errorHandler: (
+				errorHandler?: (
 					err: Error,
 					ids: { moduleId: string | number; module: NodeJS.Module }
 				) => void
