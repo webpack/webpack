@@ -1,0 +1,1 @@
+exports.property = 42;
