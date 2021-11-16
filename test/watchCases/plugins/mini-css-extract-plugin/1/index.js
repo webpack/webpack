@@ -29,7 +29,10 @@ it("should load a chunk with css", () => {
 		)
 		.trim();
 	expect(css).toMatchInlineSnapshot(`
-		".chunk {
+		"/*!**************************************************************************!*\\\\
+		  !*** css ../../../../../node_modules/css-loader/dist/cjs.js!./chunk.css ***!
+		  \\\\**************************************************************************/
+		.chunk {
 			color: red;
 		}"
 	`);
@@ -42,14 +45,23 @@ it("should generate correct css", () => {
 		.readFileSync(path.resolve(__dirname, "main.css"), "utf-8")
 		.trim();
 	expect(css).toMatchInlineSnapshot(`
-		".dependency {
+		"/*!*******************************************************************************!*\\\\
+		  !*** css ../../../../../node_modules/css-loader/dist/cjs.js!./dependency.css ***!
+		  \\\\*******************************************************************************/
+		.dependency {
 			color: ${WATCH_STEP === "1" ? "red" : "green"};
 		}
 
+		/*!**********************************************************************!*\\\\
+		  !*** css ../../../../../node_modules/css-loader/dist/cjs.js!./a.css ***!
+		  \\\\**********************************************************************/
 		.a {
 			color: red;
 		}
 
+		/*!**********************************************************************!*\\\\
+		  !*** css ../../../../../node_modules/css-loader/dist/cjs.js!./b.css ***!
+		  \\\\**********************************************************************/
 		.b {
 			color: ${WATCH_STEP === "1" ? "red" : "green"};
 		}"
