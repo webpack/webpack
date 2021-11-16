@@ -9,7 +9,6 @@
 
 [![node][node]][node-url]
 [![deps][deps]][deps-url]
-[![tests][tests]][tests-url]
 [![builds2][builds2]][builds2-url]
 [![coverage][cover]][cover-url]
 [![licenses][licenses]][licenses-url]
@@ -702,8 +701,6 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 [node-url]: https://nodejs.org
 [deps]: https://img.shields.io/david/webpack/webpack.svg
 [deps-url]: https://david-dm.org/webpack/webpack
-[tests]: https://img.shields.io/travis/webpack/webpack/main.svg
-[tests-url]: https://travis-ci.org/webpack/webpack
 [prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
 [prs-url]: https://webpack.js.org/contribute/
 [builds2]: https://dev.azure.com/webpack/webpack/_apis/build/status/webpack.webpack
