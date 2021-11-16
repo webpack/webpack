@@ -12,7 +12,8 @@ import * as DefaultExport from "./default-export";
 import {
 	value as valueDirect,
 	value2 as value2Direct,
-	defaultProvided
+	defaultProvided,
+	defaultProvided2
 } from "./direct-export";
 import {
 	value as valueChecked,
@@ -63,7 +64,8 @@ it("should handle checked dynamic export when reexporting", () => {
 });
 
 it("should handle default export correctly", () => {
-	expect(defaultProvided).toBe(undefined);
+	expect(defaultProvided).toBe(false);
+	expect(defaultProvided2).toBe(false);
 	expect(Default2).toBe("static");
 });
 
