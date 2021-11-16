@@ -108,8 +108,6 @@ export function final(length: u32): void {
 	result *= Prime3;
 	result ^= result >> 32;
 
-	store<u64>(0, result);
-
 	store<u64>(0, u32ToHex(result >> 32));
 	store<u64>(8, u32ToHex(result & 0xffffffff));
 }

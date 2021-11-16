@@ -25,7 +25,10 @@ describe("Profiling Plugin", function () {
 					new webpack.debug.ProfilingPlugin({
 						outputPath: finalPath
 					})
-				]
+				],
+				experiments: {
+					backCompat: false
+				}
 			});
 			compiler.run(err => {
 				if (err) return done(err);

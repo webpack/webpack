@@ -154,6 +154,10 @@ export type WasmLoadingType =
  */
 export type EntryUnnamed = EntryItem;
 /**
+ * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+ */
+export type Experiments = ExperimentsCommon & ExperimentsExtra;
+/**
  * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
  */
 export type Externals = ExternalItem[] | ExternalItem;
@@ -694,6 +698,11 @@ export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
  */
 export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
 /**
+ * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+ */
+export type ExperimentsNormalized = ExperimentsCommon &
+	ExperimentsNormalizedExtra;
+/**
  * The dependency used for the external.
  */
 export type ExternalItemValue =
@@ -703,6 +712,18 @@ export type ExternalItemValue =
 	| {
 			[k: string]: any;
 	  };
+/**
+ * List of allowed URIs for building http resources.
+ */
+export type HttpUriAllowedUris = HttpUriOptionsAllowedUris;
+/**
+ * List of allowed URIs (resp. the beginning of them).
+ */
+export type HttpUriOptionsAllowedUris = (
+	| RegExp
+	| string
+	| ((uri: string) => boolean)
+)[];
 /**
  * Ignore specific warnings.
  */
@@ -941,11 +962,11 @@ export interface FileCacheOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: string[];
+	immutablePaths?: (RegExp | string)[];
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: string[];
+	managedPaths?: (RegExp | string)[];
 	/**
 	 * Time for which unused cache entries stay in the filesystem cache at minimum (in milliseconds).
 	 */
@@ -998,6 +1019,10 @@ export interface EntryObject {
  * An object with entry point description.
  */
 export interface EntryDescription {
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
 	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
@@ -1097,104 +1122,6 @@ export interface LibraryCustomUmdObject {
 	 * Name of the property exposed globally by a UMD library.
 	 */
 	root?: string[] | string;
-}
-/**
- * Enables/Disables experiments (experimental features with relax SemVer compatibility).
- */
-export interface Experiments {
-	/**
-	 * Allow module type 'asset' to generate assets.
-	 */
-	asset?: boolean;
-	/**
-	 * Support WebAssembly as asynchronous EcmaScript Module.
-	 */
-	asyncWebAssembly?: boolean;
-	/**
-	 * Build http(s): urls using a lockfile and resource content cache.
-	 */
-	buildHttp?: boolean | HttpUriOptions;
-	/**
-	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
-	 */
-	cacheUnaffected?: boolean;
-	/**
-	 * Apply defaults of next major version.
-	 */
-	futureDefaults?: boolean;
-	/**
-	 * Enable module and chunk layers.
-	 */
-	layers?: boolean;
-	/**
-	 * Compile entrypoints and import()s only when they are accessed.
-	 */
-	lazyCompilation?:
-		| boolean
-		| {
-				/**
-				 * A custom backend.
-				 */
-				backend?:
-					| ((
-							compiler: import("../lib/Compiler"),
-							client: string,
-							callback: (err?: Error, api?: any) => void
-					  ) => void)
-					| ((
-							compiler: import("../lib/Compiler"),
-							client: string
-					  ) => Promise<any>);
-				/**
-				 * A custom client.
-				 */
-				client?: string;
-				/**
-				 * Enable/disable lazy compilation for entries.
-				 */
-				entries?: boolean;
-				/**
-				 * Enable/disable lazy compilation for import() modules.
-				 */
-				imports?: boolean;
-				/**
-				 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
-				 */
-				test?: RegExp | string | ((module: import("../lib/Module")) => boolean);
-		  };
-	/**
-	 * Allow output javascript files as module source type.
-	 */
-	outputModule?: boolean;
-	/**
-	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
-	 */
-	syncWebAssembly?: boolean;
-	/**
-	 * Allow using top-level-await in EcmaScript Modules.
-	 */
-	topLevelAwait?: boolean;
-}
-/**
- * Options for building http resources.
- */
-export interface HttpUriOptions {
-	/**
-	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
-	 */
-	cacheLocation?: false | string;
-	/**
-	 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
-	 */
-	frozen?: boolean;
-	/**
-	 * Location of the lockfile.
-	 */
-	lockfileLocation?: string;
-	/**
-	 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
-	 */
-	upgrade?: boolean;
 }
 /**
  * Enable presets of externals for specific targets.
@@ -1813,6 +1740,12 @@ export interface OptimizationSplitChunksOptions {
 		 */
 		automaticNameDelimiter?: string;
 		/**
+		 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
+		 */
+		chunks?:
+			| ("initial" | "async" | "all")
+			| ((chunk: import("../lib/Chunk")) => boolean);
+		/**
 		 * Maximal size hint for the on-demand chunks.
 		 */
 		maxAsyncSize?: OptimizationSplitChunksSizes;
@@ -1828,6 +1761,10 @@ export interface OptimizationSplitChunksOptions {
 		 * Minimal size for the created chunk.
 		 */
 		minSize?: OptimizationSplitChunksSizes;
+		/**
+		 * Minimum size reduction due to the created chunk.
+		 */
+		minSizeReduction?: OptimizationSplitChunksSizes;
 	};
 	/**
 	 * Sets the template for the filename for created chunks.
@@ -1874,6 +1811,10 @@ export interface OptimizationSplitChunksOptions {
 	 * Minimal size for the created chunks.
 	 */
 	minSize?: OptimizationSplitChunksSizes;
+	/**
+	 * Minimum size reduction due to the created chunk.
+	 */
+	minSizeReduction?: OptimizationSplitChunksSizes;
 	/**
 	 * Give chunks created a name (chunks with equal name are merged).
 	 */
@@ -1955,6 +1896,10 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	minSize?: OptimizationSplitChunksSizes;
 	/**
+	 * Minimum size reduction due to the created chunk.
+	 */
+	minSizeReduction?: OptimizationSplitChunksSizes;
+	/**
 	 * Give chunks for this cache group a name (chunks with equal name are merged).
 	 */
 	name?: false | string | Function;
@@ -1987,6 +1932,10 @@ export interface Output {
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */
@@ -2276,11 +2225,11 @@ export interface SnapshotOptions {
 	/**
 	 * List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.
 	 */
-	immutablePaths?: string[];
+	immutablePaths?: (RegExp | string)[];
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not be modified otherwise.
 	 */
-	managedPaths?: string[];
+	managedPaths?: (RegExp | string)[];
 	/**
 	 * Options for snapshotting dependencies of modules to determine if they need to be built again.
 	 */
@@ -2748,6 +2697,10 @@ export interface EmptyParserOptions {}
  */
 export interface EntryDescriptionNormalized {
 	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: ChunkLoading;
@@ -2794,6 +2747,43 @@ export interface EntryStaticNormalized {
 	[k: string]: EntryDescriptionNormalized;
 }
 /**
+ * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+ */
+export interface ExperimentsCommon {
+	/**
+	 * Support WebAssembly as asynchronous EcmaScript Module.
+	 */
+	asyncWebAssembly?: boolean;
+	/**
+	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 */
+	backCompat?: boolean;
+	/**
+	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
+	 */
+	cacheUnaffected?: boolean;
+	/**
+	 * Apply defaults of next major version.
+	 */
+	futureDefaults?: boolean;
+	/**
+	 * Enable module layers.
+	 */
+	layers?: boolean;
+	/**
+	 * Allow output javascript files as module source type.
+	 */
+	outputModule?: boolean;
+	/**
+	 * Support WebAssembly as synchronous EcmaScript Module (outdated).
+	 */
+	syncWebAssembly?: boolean;
+	/**
+	 * Allow using top-level-await in EcmaScript Modules.
+	 */
+	topLevelAwait?: boolean;
+}
+/**
  * Data object passed as argument when a function is set for 'externals'.
  */
 export interface ExternalItemFunctionData {
@@ -2827,6 +2817,31 @@ export interface ExternalItemFunctionData {
 	request?: string;
 }
 /**
+ * Options for building http resources.
+ */
+export interface HttpUriOptions {
+	/**
+	 * List of allowed URIs (resp. the beginning of them).
+	 */
+	allowedUris: HttpUriOptionsAllowedUris;
+	/**
+	 * Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.
+	 */
+	cacheLocation?: false | string;
+	/**
+	 * When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.
+	 */
+	frozen?: boolean;
+	/**
+	 * Location of the lockfile.
+	 */
+	lockfileLocation?: string;
+	/**
+	 * When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.
+	 */
+	upgrade?: boolean;
+}
+/**
  * Parser options for javascript modules.
  */
 export interface JavascriptParserOptions {
@@ -2846,6 +2861,10 @@ export interface JavascriptParserOptions {
 	 * Enable/disable parsing of magic comments in CommonJs syntax.
 	 */
 	commonjsMagicComments?: boolean;
+	/**
+	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
+	 */
+	exportsPresence?: "error" | "warn" | "auto" | false;
 	/**
 	 * Enable warnings for full dynamic dependencies.
 	 */
@@ -2871,9 +2890,17 @@ export interface JavascriptParserOptions {
 	 */
 	import?: boolean;
 	/**
+	 * Specifies the behavior of invalid export names in "import ... from ...".
+	 */
+	importExportsPresence?: "error" | "warn" | "auto" | false;
+	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
 	node?: Node;
+	/**
+	 * Specifies the behavior of invalid export names in "export ... from ...". This might be useful to disable during the migration from "export ... from ..." to "export type ... from ..." when reexporting types in TypeScript.
+	 */
+	reexportExportsPresence?: "error" | "warn" | "auto" | false;
 	/**
 	 * Enable/disable parsing of require.context syntax.
 	 */
@@ -2891,7 +2918,7 @@ export interface JavascriptParserOptions {
 	 */
 	requireJs?: boolean;
 	/**
-	 * Emit errors instead of warnings when imported names don't exist in imported module.
+	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
 	 */
 	strictExportPresence?: boolean;
 	/**
@@ -2941,6 +2968,66 @@ export interface JavascriptParserOptions {
 	[k: string]: any;
 }
 /**
+ * Options for the default backend.
+ */
+export interface LazyCompilationDefaultBackendOptions {
+	/**
+	 * A custom client.
+	 */
+	client?: string;
+	/**
+	 * Specifies where to listen to from the server.
+	 */
+	listen?:
+		| number
+		| import("net").ListenOptions
+		| ((server: import("net").Server) => void);
+	/**
+	 * Specifies the protocol the client should use to connect to the server.
+	 */
+	protocol?: "http" | "https";
+	/**
+	 * Specifies how to create the server handling the EventSource requests.
+	 */
+	server?:
+		| (import("https").ServerOptions | import("http").ServerOptions)
+		| (() => import("net").Server);
+}
+/**
+ * Options for compiling entrypoints and import()s only when they are accessed.
+ */
+export interface LazyCompilationOptions {
+	/**
+	 * Specifies the backend that should be used for handling client keep alive.
+	 */
+	backend?:
+		| (
+				| ((
+						compiler: import("../lib/Compiler"),
+						callback: (
+							err?: Error,
+							api?: import("../lib/hmr/LazyCompilationPlugin").BackendApi
+						) => void
+				  ) => void)
+				| ((
+						compiler: import("../lib/Compiler")
+				  ) => Promise<import("../lib/hmr/LazyCompilationPlugin").BackendApi>)
+		  )
+		| LazyCompilationDefaultBackendOptions;
+	/**
+	 * Enable/disable lazy compilation for entries.
+	 */
+	entries?: boolean;
+	/**
+	 * Enable/disable lazy compilation for import() modules.
+	 */
+	imports?: boolean;
+	/**
+	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
+	 */
+	test?: RegExp | string | ((module: import("../lib/Module")) => boolean);
+}
+/**
  * Options affecting the normal modules (`NormalModuleFactory`).
  */
 export interface ModuleOptionsNormalized {
@@ -2977,6 +3064,10 @@ export interface OutputNormalized {
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
 	/**
 	 * Add charset attribute for script tag.
 	 */
@@ -3193,7 +3284,7 @@ export interface WebpackOptionsNormalized {
 	/**
 	 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
 	 */
-	experiments: Experiments;
+	experiments: ExperimentsNormalized;
 	/**
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
@@ -3294,6 +3385,32 @@ export interface WebpackOptionsNormalized {
 	 * Options for the watcher.
 	 */
 	watchOptions: WatchOptions;
+}
+/**
+ * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+ */
+export interface ExperimentsExtra {
+	/**
+	 * Build http(s): urls using a lockfile and resource content cache.
+	 */
+	buildHttp?: HttpUriAllowedUris | HttpUriOptions;
+	/**
+	 * Compile entrypoints and import()s only when they are accessed.
+	 */
+	lazyCompilation?: boolean | LazyCompilationOptions;
+}
+/**
+ * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+ */
+export interface ExperimentsNormalizedExtra {
+	/**
+	 * Build http(s): urls using a lockfile and resource content cache.
+	 */
+	buildHttp?: HttpUriOptions;
+	/**
+	 * Compile entrypoints and import()s only when they are accessed.
+	 */
+	lazyCompilation?: LazyCompilationOptions;
 }
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.

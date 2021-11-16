@@ -55,6 +55,10 @@ function run({ default: value2, asyncDep: value3 }) {
 				level: "verbose",
 				debug: /PackFile/
 			},
+			snapshot: {
+				// TODO remove webpack 6
+				managedPaths: [/^(.+?[\\/]node_modules[\\/])/]
+			},
 			cache: {
 				type: "filesystem",
 				cacheDirectory: path.resolve(__dirname, "../../js/buildDepsCache"),
