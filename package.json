@@ -56,7 +56,7 @@
     "es6-promise-polyfill": "^1.2.0",
     "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-jest": "^25.2.3",
+    "eslint-plugin-jest": "^25.2.4",
     "eslint-plugin-jsdoc": "^37.0.3",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-prettier": "^4.0.0",
