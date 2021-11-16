@@ -39,10 +39,49 @@ const exec = (n, options = {}) => {
 		p.stderr.on("data", chunk => chunks.push(chunk));
 		p.stdout.on("data", chunk => chunks.push(chunk));
 		p.once("exit", code => {
-			const stdout = chunks.join("");
+			const errors = [];
+			const warnings = [];
+			const rawStdout = chunks.join("");
+			const stdout = rawStdout.replace(
+				// This warning is expected
+				/<([ew])> \[.+\n(?:<([ew])> [^[].+\n)*/g,
+				(message, type) => {
+					(type === "e" ? errors : warnings).push(message);
+					return "";
+				}
+			);
+			if (errors.length > 0) {
+				return reject(
+					new Error(
+						`Unexpected errors in ${n} output:\n${errors.join(
+							"\n"
+						)}\n\n${rawStdout}`
+					)
+				);
+			}
+			for (const regexp of options.warnings || []) {
+				const idx = warnings.findIndex(w => regexp.test(w));
+				if (idx < 0) {
+					return reject(
+						new Error(
+							`Warning ${regexp} was not found in ${n} output:\n${rawStdout}`
+						)
+					);
+				}
+				warnings.splice(idx, 1);
+			}
+			if (warnings.length > 0) {
+				return reject(
+					new Error(
+						`Unexpected warnings in ${n} output:\n${warnings.join(
+							"\n"
+						)}\n\n${rawStdout}`
+					)
+				);
+			}
 			if (code === 0) {
 				if (!options.ignoreErrors && /<[ew]>/.test(stdout))
-					return reject(stdout);
+					return reject(new Error(stdout));
 				resolve(stdout);
 			} else {
 				reject(new Error(`Code ${code}: ${stdout}`));
@@ -99,7 +138,7 @@ describe("BuildDependencies", () => {
 		await exec("0", {
 			invalidBuildDepdencies: true,
 			buildTwice: true,
-			ignoreErrors: true
+			warnings: [/Can't resolve 'should-fail-resolving'/]
 		});
 		fs.writeFileSync(
 			path.resolve(inputDirectory, "loader-dependency.js"),
@@ -113,13 +152,21 @@ describe("BuildDependencies", () => {
 			path.resolve(inputDirectory, "esm-dependency.js"),
 			"module.exports = 1;"
 		);
-		await exec("1");
+		await exec("1", {
+			warnings: supportsEsm && [
+				/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
+			]
+		});
 		fs.writeFileSync(
 			path.resolve(inputDirectory, "loader-dependency.js"),
 			"module.exports = Date.now();"
 		);
 		const now1 = Date.now();
-		const output2 = await exec("2");
+		const output2 = await exec("2", {
+			warnings: supportsEsm && [
+				/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
+			]
+		});
 		expect(output2).toMatch(/but build dependencies have changed/);
 		expect(output2).toMatch(/Captured build dependencies/);
 		expect(output2).not.toMatch(/Assuming/);
@@ -137,7 +184,11 @@ describe("BuildDependencies", () => {
 				version: "2.0.0"
 			})
 		);
-		const output4 = await exec("4");
+		const output4 = await exec("4", {
+			warnings: supportsEsm && [
+				/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
+			]
+		});
 		expect(output4).toMatch(/resolving of build dependencies is invalid/);
 		expect(output4).not.toMatch(/but build dependencies have changed/);
 		expect(output4).toMatch(/Captured build dependencies/);
@@ -146,7 +197,11 @@ describe("BuildDependencies", () => {
 			"module.exports = Date.now();"
 		);
 		const now2 = Date.now();
-		await exec("5");
+		await exec("5", {
+			warnings: supportsEsm && [
+				/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
+			]
+		});
 		const now3 = Date.now();
 		await exec("6");
 		await exec("7", {
@@ -160,7 +215,10 @@ describe("BuildDependencies", () => {
 			);
 			now4 = Date.now();
 			await exec("8", {
-				definedValue: "other"
+				definedValue: "other",
+				warnings: [
+					/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
+				]
 			});
 			fs.writeFileSync(
 				path.resolve(inputDirectory, "esm-async-dependency.mjs"),
@@ -169,7 +227,10 @@ describe("BuildDependencies", () => {
 			now5 = Date.now();
 
 			await exec("9", {
-				definedValue: "other"
+				definedValue: "other",
+				warnings: [
+					/Managed item .+dep-without-package\.json isn't a directory or doesn't contain a package\.json/
+				]
 			});
 		}
 		const results = Array.from({ length: supportsEsm ? 10 : 8 }).map((_, i) =>

@@ -99,10 +99,11 @@ const describeCases = config => {
 										...config.cache
 									};
 								}
-								if (config.snapshot) {
-									options.snapshot = {
-										...config.snapshot
-									};
+								if (!options.snapshot) options.snapshot = {};
+								if (!options.snapshot.managedPaths) {
+									options.snapshot.managedPaths = [
+										path.resolve(__dirname, "../node_modules")
+									];
 								}
 							});
 							testConfig = {

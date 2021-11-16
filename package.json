@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.63.0",
+  "version": "5.64.1",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -16,7 +16,7 @@
     "chrome-trace-event": "^1.0.2",
     "enhanced-resolve": "^5.8.3",
     "es-module-lexer": "^0.9.0",
-    "eslint-scope": "5.1.1",
+    "eslint-scope": "6.0.0",
     "events": "^3.2.0",
     "glob-to-regexp": "^0.4.1",
     "graceful-fs": "^4.2.4",
@@ -28,7 +28,7 @@
     "tapable": "^2.1.1",
     "terser-webpack-plugin": "^5.1.3",
     "watchpack": "^2.2.0",
-    "webpack-sources": "^3.2.0"
+    "webpack-sources": "^3.2.2"
   },
   "peerDependenciesMeta": {
     "webpack-cli": {
@@ -54,17 +54,17 @@
     "date-fns": "^2.15.0",
     "es5-ext": "^0.10.53",
     "es6-promise-polyfill": "^1.2.0",
-    "eslint": "^7.14.0",
+    "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-jest": "^24.3.6",
-    "eslint-plugin-jsdoc": "^33.0.0",
+    "eslint-plugin-jest": "^25.2.4",
+    "eslint-plugin-jsdoc": "^37.0.3",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^6.0.5",
     "hash-wasm": "^4.9.0",
-    "husky": "^6.0.0",
-    "is-ci": "^3.0.0",
+    "husky": "^7.0.4",
+    "is-ci": "^3.0.1",
     "istanbul": "^0.4.5",
     "jest": "^27.3.1",
     "jest-circus": "^27.3.1",
@@ -75,7 +75,7 @@
     "json5": "^2.1.3",
     "less": "^4.0.0",
     "less-loader": "^8.0.0",
-    "lint-staged": "^11.0.0",
+    "lint-staged": "^12.0.2",
     "loader-utils": "^2.0.0",
     "lodash": "^4.17.19",
     "lodash-es": "^4.17.15",
@@ -84,7 +84,7 @@
     "mini-svg-data-uri": "^1.2.3",
     "nyc": "^15.1.0",
     "open-cli": "^6.0.1",
-    "prettier": "^2.2.0",
+    "prettier": "^2.4.1",
     "pretty-format": "^27.0.2",
     "pug": "^3.0.0",
     "pug-loader": "^2.4.0",
@@ -96,7 +96,7 @@
     "simple-git": "^2.17.0",
     "strip-ansi": "^6.0.0",
     "style-loader": "^2.0.0",
-    "terser": "^5.7.0",
+    "terser": "^5.9.0",
     "toml": "^3.0.0",
     "tooling": "webpack/tooling#v1.20.0",
     "ts-loader": "^8.0.2",
@@ -110,7 +110,7 @@
     "yarn-deduplicate": "^3.1.0"
   },
   "engines": {
-    "node": ">=10.13.0"
+    "node": ">=16.13.0"
   },
   "repository": {
     "type": "git",

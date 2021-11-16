@@ -1134,17 +1134,6 @@ declare interface ChunkSizeOptions {
 	 */
 	entryChunkMultiplicator?: number;
 }
-declare abstract class ChunkTemplate {
-	hooks: Readonly<{
-		renderManifest: { tap: (options?: any, fn?: any) => void };
-		modules: { tap: (options?: any, fn?: any) => void };
-		render: { tap: (options?: any, fn?: any) => void };
-		renderWithEntry: { tap: (options?: any, fn?: any) => void };
-		hash: { tap: (options?: any, fn?: any) => void };
-		hashForChunk: { tap: (options?: any, fn?: any) => void };
-	}>;
-	readonly outputOptions: Output;
-}
 
 /**
  * Advanced options for cleaning assets.
@@ -1463,8 +1452,6 @@ declare class Compilation {
 	bail: boolean;
 	profile: boolean;
 	params: CompilationParams;
-	mainTemplate: MainTemplate;
-	chunkTemplate: ChunkTemplate;
 	runtimeTemplate: RuntimeTemplate;
 	moduleTemplates: { javascript: ModuleTemplate };
 	moduleMemCaches?: Map<Module, WeakTupleMap<any, any>>;
@@ -3025,6 +3012,11 @@ declare abstract class EntryDependency extends ModuleDependency {}
  */
 declare interface EntryDescription {
 	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: string | false;
@@ -3074,6 +3066,11 @@ declare interface EntryDescription {
  * An object with entry point description.
  */
 declare interface EntryDescriptionNormalized {
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+
 	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
@@ -6361,46 +6358,6 @@ declare interface MainRenderContext {
 	 */
 	strictMode: boolean;
 }
-declare abstract class MainTemplate {
-	hooks: Readonly<{
-		renderManifest: { tap: (options?: any, fn?: any) => void };
-		modules: { tap: () => never };
-		moduleObj: { tap: () => never };
-		require: { tap: (options?: any, fn?: any) => void };
-		beforeStartup: { tap: () => never };
-		startup: { tap: () => never };
-		afterStartup: { tap: () => never };
-		render: { tap: (options?: any, fn?: any) => void };
-		renderWithEntry: { tap: (options?: any, fn?: any) => void };
-		assetPath: {
-			tap: (options?: any, fn?: any) => void;
-			call: (filename?: any, options?: any) => string;
-		};
-		hash: { tap: (options?: any, fn?: any) => void };
-		hashForChunk: { tap: (options?: any, fn?: any) => void };
-		globalHashPaths: { tap: () => void };
-		globalHash: { tap: () => void };
-		hotBootstrap: { tap: () => never };
-		bootstrap: SyncWaterfallHook<
-			[string, Chunk, string, ModuleTemplate, DependencyTemplates]
-		>;
-		localVars: SyncWaterfallHook<[string, Chunk, string]>;
-		requireExtensions: SyncWaterfallHook<[string, Chunk, string]>;
-		requireEnsure: SyncWaterfallHook<[string, Chunk, string, string]>;
-		readonly jsonpScript: SyncWaterfallHook<[string, Chunk]>;
-		readonly linkPrefetch: SyncWaterfallHook<[string, Chunk]>;
-		readonly linkPreload: SyncWaterfallHook<[string, Chunk]>;
-	}>;
-	renderCurrentHashCode: (hash: string, length?: number) => string;
-	getPublicPath: (options: object) => string;
-	getAssetPath: (path?: any, options?: any) => string;
-	getAssetPathWithInfo: (
-		path?: any,
-		options?: any
-	) => { path: string; info: AssetInfo };
-	readonly requireFn: "__webpack_require__";
-	readonly outputOptions: Output;
-}
 declare interface MapOptions {
 	columns?: boolean;
 	module?: boolean;
@@ -6860,11 +6817,11 @@ declare class ModuleGraphConnection {
 	): void;
 	addExplanation(explanation: string): void;
 	readonly explanation: string;
-	active: void;
 	isActive(runtime: RuntimeSpec): boolean;
 	isTargetActive(runtime: RuntimeSpec): boolean;
 	getActiveState(runtime: RuntimeSpec): ConnectionState;
 	setActive(value: boolean): void;
+	active: any;
 	static addConnectionStates: (
 		a: ConnectionState,
 		b: ConnectionState
@@ -8063,6 +8020,11 @@ declare interface Output {
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+
+	/**
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: string | LibraryCustomUmdCommentObject;
@@ -8333,6 +8295,10 @@ declare interface OutputFileSystem {
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
 	) => void;
+	lstat?: (
+		arg0: string,
+		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
+	) => void;
 	readFile: (
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
@@ -8352,6 +8318,11 @@ declare interface OutputNormalized {
 	assetModuleFilename?:
 		| string
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
 
 	/**
 	 * Add charset attribute for script tag.

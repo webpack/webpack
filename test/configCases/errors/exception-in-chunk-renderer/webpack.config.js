@@ -1,12 +1,14 @@
+/** @typedef {import("../../../../").Compiler} Compiler */
+
 class ThrowsExceptionInRender {
+	/**
+	 * @param {Compiler} compiler the compiler
+	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("ThrowsException", compilation => {
-			compilation.mainTemplate.hooks.requireExtensions.tap(
-				"ThrowsException",
-				() => {
-					throw new Error("Test exception");
-				}
-			);
+			compilation.hooks.renderManifest.tap("ThrowsException", () => {
+				throw new Error("Test exception");
+			});
 		});
 	}
 }

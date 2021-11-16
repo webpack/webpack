@@ -453,7 +453,7 @@ Entrypoint parent 84 bytes = parent.js
   assets by status 84 bytes [cached] 1 asset
   Entrypoint child = child.js
   ./child.js 1 bytes [built] [code generated]
-    
+
   Child TestApplyEntryOptionPlugin compiled successfully
 
 WARNING in configuration
@@ -1727,7 +1727,7 @@ exports[`StatsTestCases should print correct stats for performance-different-mod
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   warning.pro-web.js (294 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1735,7 +1735,7 @@ Entrypoints:
   main (294 KiB)
       warning.pro-web.js
 
-WARNING in webpack performance recommendations: 
+WARNING in webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
@@ -1746,7 +1746,7 @@ asset warning.pro-webworker.js 294 KiB [emitted] [big] (name: main)
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   warning.pro-webworker.js (294 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1754,7 +1754,7 @@ Entrypoints:
   main (294 KiB)
       warning.pro-webworker.js
 
-WARNING in webpack performance recommendations: 
+WARNING in webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
@@ -1781,7 +1781,7 @@ asset warning.pro-node-with-hints-set.js 294 KiB [emitted] [big] (name: main)
 
 WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   warning.pro-node-with-hints-set.js (294 KiB)
 
 WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1789,7 +1789,7 @@ Entrypoints:
   main (294 KiB)
       warning.pro-node-with-hints-set.js
 
-WARNING in webpack performance recommendations: 
+WARNING in webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/
 
@@ -1830,7 +1830,7 @@ cacheable modules 293 KiB
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (303 KiB)</CLR>
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1856,7 +1856,7 @@ Entrypoint <CLR=BOLD>sec</CLR> 1.53 KiB = <CLR=32,BOLD>sec.js</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (294 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1865,7 +1865,7 @@ Entrypoints:
       main.js
 </CLR>
 
-<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>webpack performance recommendations: 
+<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
 
@@ -1900,7 +1900,7 @@ Entrypoint <CLR=BOLD>sec</CLR> <CLR=33,BOLD>[big]</CLR> 294 KiB = <CLR=32,BOLD>s
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (294 KiB)
   sec.js (294 KiB)</CLR>
 
@@ -1912,7 +1912,7 @@ Entrypoints:
       sec.js
 </CLR>
 
-<CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>webpack performance recommendations: 
+<CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
 
@@ -2197,7 +2197,7 @@ cacheable modules 293 KiB
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (303 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -2225,7 +2225,7 @@ cacheable modules 293 KiB
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (303 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -2342,7 +2342,7 @@ chunk {996} (runtime: main) 996.js 22 bytes <{179}> [rendered]
     amd require ./b [10] ./index.js 2:0-16
     X ms [10] ->
     X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
-  
+
 
 LOG from LogTestPlugin
 <-> Group
