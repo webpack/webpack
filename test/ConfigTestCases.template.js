@@ -17,6 +17,7 @@ const prepareOptions = require("./helpers/prepareOptions");
 const { parseResource } = require("../lib/util/identifier");
 const captureStdio = require("./helpers/captureStdio");
 const asModule = require("./helpers/asModule");
+const { isWebTarget } = require("./helpers/target");
 
 const casesPath = path.join(__dirname, "configCases");
 const categories = fs.readdirSync(casesPath).map(cat => {
@@ -389,6 +390,7 @@ const describeCases = config => {
 													expect,
 													jest,
 													__STATS__: jsonStats,
+													__output_dirname__: options.output.path,
 													nsObj: m => {
 														Object.defineProperty(m, Symbol.toStringTag, {
 															value: "Module"
@@ -421,15 +423,16 @@ const describeCases = config => {
 														},
 														module: m,
 														exports: m.exports,
-														__dirname: path.dirname(p),
-														__filename: p,
+														__dirname: isWebTarget(options.target)
+															? undefined
+															: path.dirname(p),
+														__filename: isWebTarget(options.target)
+															? undefined
+															: p,
 														_globalAssign: { expect }
 													});
 												}
-												if (
-													options.target === "web" ||
-													options.target === "webworker"
-												) {
+												if (isWebTarget(options.target)) {
 													moduleScope.window = globalContext;
 													moduleScope.self = globalContext;
 													moduleScope.URL = URL;

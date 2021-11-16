@@ -15,9 +15,9 @@ it("should result in the correct HTML", () => {
 	expect(content).toMatch(/For license information please see inline-/);
 
 	// contains references to normal-[contenthash].js
-	expect(content).toMatch(/normal-.{20}\.js/);
+	expect(content).toMatch(/normal-.{16}\.js/);
 
-	const [filename] = /normal-.{20}\.js/.exec(content);
+	const [filename] = /normal-.{16}\.js/.exec(content);
 	const normalJs = fs.readFileSync(path.resolve(__dirname, filename));
 	const hash = crypto.createHash("sha512");
 	hash.update(normalJs);

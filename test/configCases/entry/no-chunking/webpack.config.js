@@ -21,9 +21,7 @@ module.exports = {
 	},
 	target: "web",
 	externals: {
-		fs: "commonjs fs"
-	},
-	node: {
-		__filename: false
+		fs: "commonjs fs",
+		path: "commonjs path"
 	}
 };

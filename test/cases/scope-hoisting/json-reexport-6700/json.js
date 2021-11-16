@@ -4,8 +4,6 @@ export { aa };
 
 export { default as bb } from './b.json';
 
-import { a } from './a.json';
+import bbb from './b.json';
 
-export { a };
-
-export { b } from './b.json';
+export { bbb };
