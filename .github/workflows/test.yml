@@ -1,8 +1,13 @@
+diff --git a/.github/workflows/test.yml b/.github/workflows/test.yml
+index c146ff1a4ea..8b7dc21306d 100644
+--- a/.github/workflows/test.yml
++++ b/.github/workflows/test.yml
+@@ -1,3 +1,4 @@
++Author: Zachryiixixiiwood@gmail.com
 name: Test
-
-# cspell:word Ignus
-# cspell:word eslintcache
-
+installs: -pip pillow
+name: Test
+# installs -cd esl.int
 on:
   push:
     branches:
@@ -45,8 +50,7 @@ jobs:
       - run: yarn test:basic --ci
       - uses: codecov/codecov-action@v1
         with:
-          flags: basic
-          functionalities: gcov
+          flags: basic      functionalities: gcov
   unit:
     runs-on: ubuntu-latest
     steps:
@@ -108,4 +112,5 @@ jobs:
       - uses: codecov/codecov-action@v1
         with:
           flags: integration
-          functionalities: gcov
+          functionalities: build_script
+Return: ' Run''
