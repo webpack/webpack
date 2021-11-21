@@ -3246,6 +3246,16 @@ declare interface Environment {
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
+
+	/**
+	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
+	 */
+	optionalChaining?: boolean;
+
+	/**
+	 * The environment supports template literals.
+	 */
+	templateLiteral?: boolean;
 }
 declare class EnvironmentPlugin {
 	constructor(...keys: any[]);
@@ -10016,14 +10026,16 @@ declare abstract class RuntimeTemplate {
 	isModule(): undefined | boolean;
 	supportsConst(): undefined | boolean;
 	supportsArrowFunction(): undefined | boolean;
+	supportsOptionalChaining(): undefined | boolean;
 	supportsForOf(): undefined | boolean;
 	supportsDestructuring(): undefined | boolean;
 	supportsBigIntLiteral(): undefined | boolean;
 	supportsDynamicImport(): undefined | boolean;
 	supportsEcmaScriptModuleSyntax(): undefined | boolean;
-	supportTemplateLiteral(): boolean;
+	supportTemplateLiteral(): undefined | boolean;
 	returningFunction(returnValue?: any, args?: string): string;
 	basicFunction(args?: any, body?: any): string;
+	templateString(strings?: any, runtimeValues?: any): string;
 	expressionFunction(expression?: any, args?: string): string;
 	emptyFunction(): "x => {}" | "function() {}";
 	destructureArray(items?: any, value?: any): string;

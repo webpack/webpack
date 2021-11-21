@@ -680,6 +680,14 @@
         "module": {
           "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
           "type": "boolean"
+        },
+        "optionalChaining": {
+          "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
+          "type": "boolean"
+        },
+        "templateLiteral": {
+          "description": "The environment supports template literals.",
+          "type": "boolean"
         }
       }
     },

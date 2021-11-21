@@ -1,6 +1,11 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	mode: "development",
+	output: {
+		environment: {
+			templateLiteral: false
+		}
+	},
 	module: {
 		rules: [
 			{
