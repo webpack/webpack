@@ -25,7 +25,7 @@ module.exports = class TestChildCompilationFailurePlugin {
 				new EntryPlugin(
 					compiler.options.context,
 					compiler.options.entry.main.import[0],
-					"child"
+					{ name: "child" }
 				).apply(child);
 				child.runAsChild(cb);
 			}

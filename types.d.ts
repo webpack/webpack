@@ -385,7 +385,6 @@ declare class AutomaticPrefetchPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
 declare interface BackendApi {
 	dispose: (arg0?: Error) => void;
 	module: (arg0: Module) => { client: string; data: string; active: boolean };
@@ -3150,10 +3149,10 @@ declare class EntryPlugin {
 	 * An entry plugin which will handle
 	 * creation of the EntryDependency
 	 */
-	constructor(context: string, entry: string, options?: string | EntryOptions);
+	constructor(context: string, entry: string, options: EntryOptions);
 	context: string;
 	entry: string;
-	options: string | EntryOptions;
+	options: EntryOptions;
 
 	/**
 	 * Apply the plugin
@@ -3161,7 +3160,7 @@ declare class EntryPlugin {
 	apply(compiler: Compiler): void;
 	static createDependency(
 		entry: string,
-		options: string | EntryOptions
+		options: EntryOptions
 	): EntryDependency;
 }
 type EntryStatic = string | EntryObject | string[];
@@ -5959,8 +5958,6 @@ declare interface LibraryCustomUmdObject {
 	 */
 	root?: string | string[];
 }
-type LibraryExport = string | string[];
-type LibraryName = string | string[] | LibraryCustomUmdObject;
 
 /**
  * Options for library.
@@ -5990,27 +5987,6 @@ declare interface LibraryOptions {
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
 	 */
 	umdNamedDefine?: boolean;
-}
-declare class LibraryTemplatePlugin {
-	constructor(
-		name: LibraryName,
-		target: string,
-		umdNamedDefine: boolean,
-		auxiliaryComment: AuxiliaryComment,
-		exportProperty: LibraryExport
-	);
-	library: {
-		type: string;
-		name: LibraryName;
-		umdNamedDefine: boolean;
-		auxiliaryComment: AuxiliaryComment;
-		export: LibraryExport;
-	};
-
-	/**
-	 * Apply the plugin
-	 */
-	apply(compiler: Compiler): void;
 }
 declare class LimitChunkCountPlugin {
 	constructor(options?: LimitChunkCountPluginOptions);
@@ -7069,11 +7045,6 @@ declare class MultiCompiler {
 	getInfrastructureLogger(name?: any): WebpackLogger;
 	setDependencies(compiler: Compiler, dependencies: string[]): void;
 	validateDependencies(callback: CallbackFunction<MultiStats>): boolean;
-	runWithDependencies(
-		compilers: Compiler[],
-		fn: (compiler: Compiler, callback: CallbackFunction<MultiStats>) => any,
-		callback: CallbackFunction<MultiStats>
-	): void;
 	watch(
 		watchOptions: WatchOptions | WatchOptions[],
 		handler: CallbackFunction<MultiStats>
@@ -8283,11 +8254,11 @@ declare interface OutputFileSystem {
 			arg1?: (string | Buffer)[] | IDirent[]
 		) => void
 	) => void;
-	rmdir?: (
+	rmdir: (
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException) => void
 	) => void;
-	unlink?: (
+	unlink: (
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException) => void
 	) => void;
@@ -12583,7 +12554,6 @@ declare namespace exports {
 		IgnorePlugin,
 		JavascriptModulesPlugin,
 		LibManifestPlugin,
-		LibraryTemplatePlugin,
 		LoaderOptionsPlugin,
 		LoaderTargetPlugin,
 		Module,
