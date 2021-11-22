@@ -10035,7 +10035,7 @@ declare abstract class RuntimeTemplate {
 	supportTemplateLiteral(): undefined | boolean;
 	returningFunction(returnValue?: any, args?: string): string;
 	basicFunction(args?: any, body?: any): string;
-	templateString(strings?: any, runtimeValues?: any): string;
+	concatenation(...args: (string | { expr: string })[]): string;
 	expressionFunction(expression?: any, args?: string): string;
 	emptyFunction(): "x => {}" | "function() {}";
 	destructureArray(items?: any, value?: any): string;
