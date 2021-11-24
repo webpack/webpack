@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.64.1",
+  "version": "5.64.3",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -98,7 +98,7 @@
     "style-loader": "^2.0.0",
     "terser": "^5.7.0",
     "toml": "^3.0.0",
-    "tooling": "webpack/tooling#v1.20.0",
+    "tooling": "webpack/tooling#v1.20.1",
     "ts-loader": "^8.0.2",
     "typescript": "^4.2.0-beta",
     "url-loader": "^4.1.0",
