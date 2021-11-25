@@ -543,6 +543,10 @@ declare abstract class BasicEvaluatedExpression {
 	setRange(range?: any): BasicEvaluatedExpression;
 	setSideEffects(sideEffects?: boolean): BasicEvaluatedExpression;
 	setExpression(expression?: any): BasicEvaluatedExpression;
+	add(data?: any): void;
+	inGuard(data?: any): boolean;
+	getGuard(): undefined | Set<any>;
+	clear(): void;
 }
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
@@ -5158,6 +5162,7 @@ declare class JavascriptParser extends Parser {
 	): R;
 	inScope(params: any, fn: () => void): void;
 	inFunctionScope(hasThis?: any, params?: any, fn?: any): void;
+	maybeGuarded(fn?: any): void;
 	inBlockScope(fn?: any): void;
 	detectMode(statements?: any): void;
 	enterPatterns(patterns?: any, onIdent?: any): void;
@@ -5260,6 +5265,8 @@ declare class JavascriptParser extends Parser {
 		name: string;
 		info: string | VariableInfo;
 	};
+	inGuard(tagInfoData?: any): boolean;
+	guardBy(guard?: Set<any>): void;
 	getMemberExpressionInfo(
 		expression: MemberExpression,
 		allowedTypes: number
@@ -10426,6 +10433,7 @@ declare interface RuntimeValueOptions {
 declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
 	topLevelScope: boolean | "arrow";
+	guards: Set<any>[];
 	inShorthand: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
