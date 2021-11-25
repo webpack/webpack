@@ -305,6 +305,7 @@ const describeCases = config => {
 								if (testConfig.beforeExecute) testConfig.beforeExecute();
 								const results = [];
 								for (let i = 0; i < optionsArr.length; i++) {
+									const options = optionsArr[i];
 									const bundlePath = testConfig.findBundle(i, optionsArr[i]);
 									if (bundlePath) {
 										filesCount++;
@@ -327,6 +328,43 @@ const describeCases = config => {
 										const requireCache = Object.create(null);
 										const esmCache = new Map();
 										const esmIdentifier = `${category.name}-${testName}-${i}`;
+										const baseModuleScope = {
+											console: console,
+											it: _it,
+											beforeEach: _beforeEach,
+											afterEach: _afterEach,
+											expect,
+											jest,
+											__STATS__: jsonStats,
+											nsObj: m => {
+												Object.defineProperty(m, Symbol.toStringTag, {
+													value: "Module"
+												});
+												return m;
+											}
+										};
+
+										let runInNewContext = false;
+										if (
+											options.target === "web" ||
+											options.target === "webworker"
+										) {
+											baseModuleScope.window = globalContext;
+											baseModuleScope.self = globalContext;
+											baseModuleScope.URL = URL;
+											baseModuleScope.Worker =
+												require("./helpers/createFakeWorker")({
+													outputDirectory
+												});
+											runInNewContext = true;
+										}
+										if (testConfig.moduleScope) {
+											testConfig.moduleScope(baseModuleScope);
+										}
+										const esmContext = vm.createContext(baseModuleScope, {
+											name: "context for esm"
+										});
+
 										// eslint-disable-next-line no-loop-func
 										const _require = (
 											currentDirectory,
@@ -380,41 +418,7 @@ const describeCases = config => {
 													options.experiments &&
 													options.experiments.outputModule;
 
-												let runInNewContext = false;
-
-												const moduleScope = {
-													console: console,
-													it: _it,
-													beforeEach: _beforeEach,
-													afterEach: _afterEach,
-													expect,
-													jest,
-													__STATS__: jsonStats,
-													nsObj: m => {
-														Object.defineProperty(m, Symbol.toStringTag, {
-															value: "Module"
-														});
-														return m;
-													}
-												};
-
-												if (
-													options.target === "web" ||
-													options.target === "webworker"
-												) {
-													moduleScope.window = globalContext;
-													moduleScope.self = globalContext;
-													moduleScope.URL = URL;
-													moduleScope.Worker =
-														require("./helpers/createFakeWorker")({
-															outputDirectory
-														});
-													runInNewContext = true;
-												}
 												if (isModule) {
-													if (testConfig.moduleScope) {
-														testConfig.moduleScope(moduleScope);
-													}
 													if (!vm.SourceTextModule)
 														throw new Error(
 															"Running this test requires '--experimental-vm-modules'.\nRun with 'node --experimental-vm-modules node_modules/jest-cli/bin/jest'."
@@ -424,11 +428,7 @@ const describeCases = config => {
 														esm = new vm.SourceTextModule(content, {
 															identifier: esmIdentifier + "-" + p,
 															url: pathToFileURL(p).href + "?" + esmIdentifier,
-															context:
-																(parentModule && parentModule.context) ||
-																vm.createContext(moduleScope, {
-																	name: `context for ${p}`
-																}),
+															context: esmContext,
 															initializeImportMeta: (meta, module) => {
 																meta.url = pathToFileURL(p).href;
 															},
@@ -488,7 +488,8 @@ const describeCases = config => {
 														exports: {}
 													};
 													requireCache[p] = m;
-													Object.assign(moduleScope, {
+													const moduleScope = {
+														...baseModuleScope,
 														require: _require.bind(
 															null,
 															path.dirname(p),
@@ -511,7 +512,7 @@ const describeCases = config => {
 														__dirname: path.dirname(p),
 														__filename: p,
 														_globalAssign: { expect }
-													});
+													};
 													if (testConfig.moduleScope) {
 														testConfig.moduleScope(moduleScope);
 													}
@@ -549,14 +550,14 @@ const describeCases = config => {
 												results.push(
 													_require(
 														outputDirectory,
-														optionsArr[i],
+														options,
 														"./" + bundlePathItem
 													)
 												);
 											}
 										} else {
 											results.push(
-												_require(outputDirectory, optionsArr[i], bundlePath)
+												_require(outputDirectory, options, bundlePath)
 											);
 										}
 									}

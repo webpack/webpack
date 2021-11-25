@@ -1,9 +1,9 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	output: {
-		filename: "[name].js"
+		filename: "[name].mjs"
 	},
-	target: "web",
+	target: ["web", "es2020"],
 	experiments: {
 		outputModule: true
 	},
