@@ -1,5 +1,6 @@
 const { ModuleFederationPlugin } = require("../../../../").container;
 
+/** @type {ConstructorParameters<typeof ModuleFederationPlugin>[0]} */
 const common = {
 	name: "container",
 	exposes: {

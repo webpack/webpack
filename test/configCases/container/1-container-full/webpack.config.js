@@ -9,6 +9,8 @@ const common = {
 		runtimeChunk: "single"
 	}
 };
+
+/** @type {ConstructorParameters<typeof ModuleFederationPlugin>[0]} */
 const commonMF = {
 	runtime: false,
 	exposes: {
