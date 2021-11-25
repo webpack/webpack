@@ -3,6 +3,9 @@ const { ModuleFederationPlugin } = require("../../../../").container;
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
+	output: {
+		uniqueName: "2-container-full"
+	},
 	plugins: [
 		new ModuleFederationPlugin({
 			name: "main",

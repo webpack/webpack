@@ -7,7 +7,8 @@ module.exports = {
 		bundle0: "./index.js"
 	},
 	output: {
-		filename: "[name].js"
+		filename: "[name].js",
+		uniqueName: "1-container-full"
 	},
 	plugins: [
 		new ModuleFederationPlugin({
