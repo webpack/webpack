@@ -325,6 +325,7 @@ const describeCases = config => {
 										};
 
 										const requireCache = Object.create(null);
+										const esmCache = new Map();
 										// eslint-disable-next-line no-loop-func
 										const _require = (
 											currentDirectory,
@@ -373,13 +374,11 @@ const describeCases = config => {
 														);
 													}
 												}
-												if (p in requireCache) {
-													return requireCache[p].exports;
-												}
-												const m = {
-													exports: {}
-												};
-												requireCache[p] = m;
+												const isModule =
+													p.endsWith(".mjs") &&
+													options.experiments &&
+													options.experiments.outputModule;
+
 												let runInNewContext = false;
 
 												const moduleScope = {
@@ -396,36 +395,7 @@ const describeCases = config => {
 														return m;
 													}
 												};
-												const isModule =
-													p.endsWith(".mjs") &&
-													options.experiments &&
-													options.experiments.outputModule;
-												if (!isModule) {
-													Object.assign(moduleScope, {
-														require: _require.bind(
-															null,
-															path.dirname(p),
-															options
-														),
-														importScripts: url => {
-															expect(url).toMatch(
-																/^https:\/\/test\.cases\/path\//
-															);
-															_require(
-																outputDirectory,
-																options,
-																`.${url.slice(
-																	"https://test.cases/path".length
-																)}`
-															);
-														},
-														module: m,
-														exports: m.exports,
-														__dirname: path.dirname(p),
-														__filename: p,
-														_globalAssign: { expect }
-													});
-												}
+
 												if (
 													options.target === "web" ||
 													options.target === "webworker"
@@ -439,39 +409,43 @@ const describeCases = config => {
 														});
 													runInNewContext = true;
 												}
-												if (testConfig.moduleScope) {
-													testConfig.moduleScope(moduleScope);
-												}
 												if (isModule) {
+													if (testConfig.moduleScope) {
+														testConfig.moduleScope(moduleScope);
+													}
 													if (!vm.SourceTextModule)
 														throw new Error(
 															"Running this test requires '--experimental-vm-modules'.\nRun with 'node --experimental-vm-modules node_modules/jest-cli/bin/jest'."
 														);
-													const esm = new vm.SourceTextModule(content, {
-														identifier: p,
-														url: pathToFileURL(p).href,
-														context:
-															(parentModule && parentModule.context) ||
-															vm.createContext(moduleScope, {
-																name: `context for ${p}`
-															}),
-														initializeImportMeta: (meta, module) => {
-															meta.url = pathToFileURL(p).href;
-														},
-														importModuleDynamically: async (
-															specifier,
-															module
-														) => {
-															const result = await _require(
-																path.dirname(p),
-																options,
+													let esm = esmCache.get(p);
+													if (!esm) {
+														esm = new vm.SourceTextModule(content, {
+															identifier: p,
+															url: pathToFileURL(p).href,
+															context:
+																(parentModule && parentModule.context) ||
+																vm.createContext(moduleScope, {
+																	name: `context for ${p}`
+																}),
+															initializeImportMeta: (meta, module) => {
+																meta.url = pathToFileURL(p).href;
+															},
+															importModuleDynamically: async (
 																specifier,
-																"evaluated",
 																module
-															);
-															return await asModule(result, module.context);
-														}
-													});
+															) => {
+																const result = await _require(
+																	path.dirname(p),
+																	options,
+																	specifier,
+																	"evaluated",
+																	module
+																);
+																return await asModule(result, module.context);
+															}
+														});
+														esmCache.set(p, esm);
+													}
 													if (esmMode === "unlinked") return esm;
 													return (async () => {
 														await esm.link(
@@ -502,6 +476,40 @@ const describeCases = config => {
 															: ns;
 													})();
 												} else {
+													if (p in requireCache) {
+														return requireCache[p].exports;
+													}
+													const m = {
+														exports: {}
+													};
+													requireCache[p] = m;
+													Object.assign(moduleScope, {
+														require: _require.bind(
+															null,
+															path.dirname(p),
+															options
+														),
+														importScripts: url => {
+															expect(url).toMatch(
+																/^https:\/\/test\.cases\/path\//
+															);
+															_require(
+																outputDirectory,
+																options,
+																`.${url.slice(
+																	"https://test.cases/path".length
+																)}`
+															);
+														},
+														module: m,
+														exports: m.exports,
+														__dirname: path.dirname(p),
+														__filename: p,
+														_globalAssign: { expect }
+													});
+													if (testConfig.moduleScope) {
+														testConfig.moduleScope(moduleScope);
+													}
 													if (!runInNewContext)
 														content = `Object.assign(global, _globalAssign); ${content}`;
 													const args = Object.keys(moduleScope);
@@ -517,8 +525,8 @@ const describeCases = config => {
 														: vm.runInThisContext(code, p);
 													fn.call(m.exports, ...argValues);
 													document.currentScript = oldCurrentScript;
+													return m.exports;
 												}
-												return m.exports;
 											} else if (
 												testConfig.modules &&
 												module in testConfig.modules
