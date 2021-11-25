@@ -11,8 +11,8 @@ module.exports = {
 	},
 	target: "web",
 	plugins: [
-		new EntryPlugin(__dirname, "./fail", "main"),
-		new EntryPlugin(__dirname, "./ok", "main"),
-		new EntryPlugin(__dirname, "./fail", "main")
+		new EntryPlugin(__dirname, "./fail", { name: "main" }),
+		new EntryPlugin(__dirname, "./ok", { name: "main" }),
+		new EntryPlugin(__dirname, "./fail", { name: "main" })
 	]
 };

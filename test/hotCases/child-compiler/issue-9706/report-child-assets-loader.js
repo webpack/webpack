@@ -16,7 +16,7 @@ module.exports = function (source) {
 			},
 			[
 				new NodeTemplatePlugin(),
-				new SingleEntryPlugin(this.context, this.resource)
+				new SingleEntryPlugin(this.context, this.resource, { name: "child" })
 			]
 		);
 		compilerCache.set(this._compiler, childCompiler);
