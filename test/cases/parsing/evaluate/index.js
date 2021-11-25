@@ -3,6 +3,12 @@ it("should evaluate null", function () {
 	if (null) require("fail");
 });
 
+it("should evaluate undefined", function () {
+	const y = undefined ? require("fail") : require("./a");
+	if (undefined) require("fail");
+	undefined && require("fail");
+});
+
 it("should evaluate logical expression", function () {
 	const value1 = "hello" || require("fail");
 	const value2 = typeof require === "function" || require("fail");
