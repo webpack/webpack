@@ -20,7 +20,8 @@ const common = {
 module.exports = [
 	{
 		output: {
-			filename: "[name].js"
+			filename: "[name].js",
+			uniqueName: "0-container-full"
 		},
 		plugins: [
 			new ModuleFederationPlugin({
@@ -40,7 +41,8 @@ module.exports = [
 			outputModule: true
 		},
 		output: {
-			filename: "module/[name].mjs"
+			filename: "module/[name].mjs",
+			uniqueName: "0-container-full-mjs"
 		},
 		plugins: [
 			new ModuleFederationPlugin({

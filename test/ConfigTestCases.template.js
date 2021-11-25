@@ -326,6 +326,7 @@ const describeCases = config => {
 
 										const requireCache = Object.create(null);
 										const esmCache = new Map();
+										const esmIdentifier = `${category.name}-${testName}-${i}`;
 										// eslint-disable-next-line no-loop-func
 										const _require = (
 											currentDirectory,
@@ -336,7 +337,7 @@ const describeCases = config => {
 										) => {
 											if (testConfig === undefined) {
 												throw new Error(
-													`_require(${module}) called after all tests have completed`
+													`_require(${module}) called after all tests from ${category.name} ${testName} have completed`
 												);
 											}
 											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
@@ -382,6 +383,7 @@ const describeCases = config => {
 												let runInNewContext = false;
 
 												const moduleScope = {
+													console: console,
 													it: _it,
 													beforeEach: _beforeEach,
 													afterEach: _afterEach,
@@ -420,8 +422,8 @@ const describeCases = config => {
 													let esm = esmCache.get(p);
 													if (!esm) {
 														esm = new vm.SourceTextModule(content, {
-															identifier: p,
-															url: pathToFileURL(p).href,
+															identifier: esmIdentifier + "-" + p,
+															url: pathToFileURL(p).href + "?" + esmIdentifier,
 															context:
 																(parentModule && parentModule.context) ||
 																vm.createContext(moduleScope, {
@@ -453,8 +455,11 @@ const describeCases = config => {
 																return await asModule(
 																	await _require(
 																		path.dirname(
-																			referencingModule.identifier ||
-																				fileURLToPath(referencingModule.url)
+																			referencingModule.identifier
+																				? referencingModule.identifier.slice(
+																						esmIdentifier.length + 1
+																				  )
+																				: fileURLToPath(referencingModule.url)
 																		),
 																		options,
 																		specifier,

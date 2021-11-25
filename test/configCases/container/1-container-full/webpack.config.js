@@ -48,7 +48,7 @@ module.exports = [
 		},
 		output: {
 			filename: "module/[name].mjs",
-			uniqueName: "1-container-full"
+			uniqueName: "1-container-full-mjs"
 		},
 		plugins: [
 			new ModuleFederationPlugin({
