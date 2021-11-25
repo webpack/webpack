@@ -325,6 +325,8 @@ const describeCases = config => {
 										};
 
 										const requireCache = Object.create(null);
+										const esmCache = new Map();
+										const esmIdentifier = `${category.name}-${testName}-${i}`;
 										// eslint-disable-next-line no-loop-func
 										const _require = (
 											currentDirectory,
@@ -335,7 +337,7 @@ const describeCases = config => {
 										) => {
 											if (testConfig === undefined) {
 												throw new Error(
-													`_require(${module}) called after all tests have completed`
+													`_require(${module}) called after all tests from ${category.name} ${testName} have completed`
 												);
 											}
 											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
@@ -373,16 +375,15 @@ const describeCases = config => {
 														);
 													}
 												}
-												if (p in requireCache) {
-													return requireCache[p].exports;
-												}
-												const m = {
-													exports: {}
-												};
-												requireCache[p] = m;
+												const isModule =
+													p.endsWith(".mjs") &&
+													options.experiments &&
+													options.experiments.outputModule;
+
 												let runInNewContext = false;
 
 												const moduleScope = {
+													console: console,
 													it: _it,
 													beforeEach: _beforeEach,
 													afterEach: _afterEach,
@@ -396,11 +397,97 @@ const describeCases = config => {
 														return m;
 													}
 												};
-												const isModule =
-													p.endsWith(".mjs") &&
-													options.experiments &&
-													options.experiments.outputModule;
-												if (!isModule) {
+
+												if (
+													options.target === "web" ||
+													options.target === "webworker"
+												) {
+													moduleScope.window = globalContext;
+													moduleScope.self = globalContext;
+													moduleScope.URL = URL;
+													moduleScope.Worker =
+														require("./helpers/createFakeWorker")({
+															outputDirectory
+														});
+													runInNewContext = true;
+												}
+												if (isModule) {
+													if (testConfig.moduleScope) {
+														testConfig.moduleScope(moduleScope);
+													}
+													if (!vm.SourceTextModule)
+														throw new Error(
+															"Running this test requires '--experimental-vm-modules'.\nRun with 'node --experimental-vm-modules node_modules/jest-cli/bin/jest'."
+														);
+													let esm = esmCache.get(p);
+													if (!esm) {
+														esm = new vm.SourceTextModule(content, {
+															identifier: esmIdentifier + "-" + p,
+															url: pathToFileURL(p).href + "?" + esmIdentifier,
+															context:
+																(parentModule && parentModule.context) ||
+																vm.createContext(moduleScope, {
+																	name: `context for ${p}`
+																}),
+															initializeImportMeta: (meta, module) => {
+																meta.url = pathToFileURL(p).href;
+															},
+															importModuleDynamically: async (
+																specifier,
+																module
+															) => {
+																const result = await _require(
+																	path.dirname(p),
+																	options,
+																	specifier,
+																	"evaluated",
+																	module
+																);
+																return await asModule(result, module.context);
+															}
+														});
+														esmCache.set(p, esm);
+													}
+													if (esmMode === "unlinked") return esm;
+													return (async () => {
+														await esm.link(
+															async (specifier, referencingModule) => {
+																return await asModule(
+																	await _require(
+																		path.dirname(
+																			referencingModule.identifier
+																				? referencingModule.identifier.slice(
+																						esmIdentifier.length + 1
+																				  )
+																				: fileURLToPath(referencingModule.url)
+																		),
+																		options,
+																		specifier,
+																		"unlinked",
+																		referencingModule
+																	),
+																	referencingModule.context,
+																	true
+																);
+															}
+														);
+														// node.js 10 needs instantiate
+														if (esm.instantiate) esm.instantiate();
+														await esm.evaluate();
+														if (esmMode === "evaluated") return esm;
+														const ns = esm.namespace;
+														return ns.default && ns.default instanceof Promise
+															? ns.default
+															: ns;
+													})();
+												} else {
+													if (p in requireCache) {
+														return requireCache[p].exports;
+													}
+													const m = {
+														exports: {}
+													};
+													requireCache[p] = m;
 													Object.assign(moduleScope, {
 														require: _require.bind(
 															null,
@@ -425,83 +512,9 @@ const describeCases = config => {
 														__filename: p,
 														_globalAssign: { expect }
 													});
-												}
-												if (
-													options.target === "web" ||
-													options.target === "webworker"
-												) {
-													moduleScope.window = globalContext;
-													moduleScope.self = globalContext;
-													moduleScope.URL = URL;
-													moduleScope.Worker =
-														require("./helpers/createFakeWorker")({
-															outputDirectory
-														});
-													runInNewContext = true;
-												}
-												if (testConfig.moduleScope) {
-													testConfig.moduleScope(moduleScope);
-												}
-												if (isModule) {
-													if (!vm.SourceTextModule)
-														throw new Error(
-															"Running this test requires '--experimental-vm-modules'.\nRun with 'node --experimental-vm-modules node_modules/jest-cli/bin/jest'."
-														);
-													const esm = new vm.SourceTextModule(content, {
-														identifier: p,
-														url: pathToFileURL(p).href,
-														context:
-															(parentModule && parentModule.context) ||
-															vm.createContext(moduleScope, {
-																name: `context for ${p}`
-															}),
-														initializeImportMeta: (meta, module) => {
-															meta.url = pathToFileURL(p).href;
-														},
-														importModuleDynamically: async (
-															specifier,
-															module
-														) => {
-															const result = await _require(
-																path.dirname(p),
-																options,
-																specifier,
-																"evaluated",
-																module
-															);
-															return await asModule(result, module.context);
-														}
-													});
-													if (esmMode === "unlinked") return esm;
-													return (async () => {
-														await esm.link(
-															async (specifier, referencingModule) => {
-																return await asModule(
-																	await _require(
-																		path.dirname(
-																			referencingModule.identifier ||
-																				fileURLToPath(referencingModule.url)
-																		),
-																		options,
-																		specifier,
-																		"unlinked",
-																		referencingModule
-																	),
-																	referencingModule.context,
-																	true
-																);
-															}
-														);
-														// node.js 10 needs instantiate
-														if (esm.instantiate) esm.instantiate();
-														await esm.evaluate();
-														if (esmMode === "evaluated") return esm;
-														const ns = esm.namespace;
-														return ns.default && ns.default instanceof Promise
-															? ns.default
-															: ns;
-													})();
-												} else {
+													if (testConfig.moduleScope) {
+														testConfig.moduleScope(moduleScope);
+													}
 													if (!runInNewContext)
 														content = `Object.assign(global, _globalAssign); ${content}`;
 													const args = Object.keys(moduleScope);
@@ -517,8 +530,8 @@ const describeCases = config => {
 														: vm.runInThisContext(code, p);
 													fn.call(m.exports, ...argValues);
 													document.currentScript = oldCurrentScript;
+													return m.exports;
 												}
-												return m.exports;
 											} else if (
 												testConfig.modules &&
 												module in testConfig.modules
