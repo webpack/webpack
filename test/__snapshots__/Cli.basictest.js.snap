@@ -5432,6 +5432,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-optional-chaining": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
+        "multiple": false,
+        "path": "output.environment.optionalChaining",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-template-literal": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports template literals.",
+        "multiple": false,
+        "path": "output.environment.templateLiteral",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports template literals.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-filename": Object {
     "configs": Array [
       Object {
