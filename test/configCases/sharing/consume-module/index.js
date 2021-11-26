@@ -193,7 +193,8 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 		},
 		singleton: {
 			"1.1.1": {
-				get: () => () => "shared singleton"
+				get: () => () => "shared singleton",
+				from: 'container-a'
 			}
 		}
 	};
@@ -230,7 +231,7 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 		const result = await import("singleton");
 		expect(result.default).toBe("shared singleton");
 		expectWarning(
-			/Unsatisfied version 1\.1\.1 of shared singleton module singleton \(required =1\.1\.0\)/
+			/Unsatisfied version 1\.1\.1 from container-a of shared singleton module singleton \(required =1\.1\.0\)/
 		);
 	}
 });
