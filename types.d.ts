@@ -10012,6 +10012,7 @@ declare abstract class RuntimeTemplate {
 	compilation: Compilation;
 	outputOptions: OutputNormalized;
 	requestShortener: RequestShortener;
+	globalObject: string;
 	isIIFE(): undefined | boolean;
 	isModule(): undefined | boolean;
 	supportsConst(): undefined | boolean;
