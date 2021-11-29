@@ -1910,10 +1910,9 @@ describe("Defaults", () => {
 			-     "topLevelAwait": false,
 			+     "topLevelAwait": true,
 			@@ ... @@
-			+       },
 			+       Object {
 			+         "rules": Array [
-			+           Object {
+			@@ ... @@
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -1924,7 +1923,8 @@ describe("Defaults", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
 			+           Object {
@@ -1949,7 +1949,9 @@ describe("Defaults", () => {
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
 			@@ ... @@
+			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
+			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
 			-       "<cwd>/node_modules/",
