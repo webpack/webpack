@@ -444,6 +444,10 @@ export type CompareBeforeEmit = boolean;
  */
 export type CrossOriginLoading = false | "anonymous" | "use-credentials";
 /**
+ * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+ */
+export type CssFilename = FilenameTemplate;
+/**
  * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
  */
 export type DevtoolFallbackModuleFilenameTemplate = string | Function;
@@ -1977,6 +1981,10 @@ export interface Output {
 	 */
 	crossOriginLoading?: CrossOriginLoading;
 	/**
+	 * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	cssFilename?: CssFilename;
+	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?: DevtoolFallbackModuleFilenameTemplate;
@@ -2693,6 +2701,14 @@ export interface AssetResourceGeneratorOptions {
 	publicPath?: RawPublicPath;
 }
 /**
+ * Generator options for css modules.
+ */
+export interface CssGeneratorOptions {}
+/**
+ * Parser options for css modules.
+ */
+export interface CssParserOptions {}
+/**
  * No generator options are supported for this module type.
  */
 export interface EmptyGeneratorOptions {}
@@ -2770,6 +2786,10 @@ export interface ExperimentsCommon {
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
 	 */
 	cacheUnaffected?: boolean;
+	/**
+	 * Enable css support.
+	 */
+	css?: boolean;
 	/**
 	 * Apply defaults of next major version.
 	 */
@@ -3112,6 +3132,10 @@ export interface OutputNormalized {
 	 * This option enables cross-origin loading of chunks.
 	 */
 	crossOriginLoading?: CrossOriginLoading;
+	/**
+	 * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	cssFilename?: CssFilename;
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */

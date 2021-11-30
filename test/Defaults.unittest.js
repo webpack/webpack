@@ -95,6 +95,7 @@ describe("Defaults", () => {
 		    "backCompat": true,
 		    "buildHttp": undefined,
 		    "cacheUnaffected": false,
+		    "css": false,
 		    "futureDefaults": false,
 		    "layers": false,
 		    "lazyCompilation": undefined,
@@ -306,6 +307,7 @@ describe("Defaults", () => {
 		    "clean": undefined,
 		    "compareBeforeEmit": true,
 		    "crossOriginLoading": false,
+		    "cssFilename": "[name].css",
 		    "devtoolFallbackModuleFilenameTemplate": undefined,
 		    "devtoolModuleFilenameTemplate": undefined,
 		    "devtoolNamespace": "webpack",
@@ -987,6 +989,9 @@ describe("Defaults", () => {
 		-     "chunkFilename": "[name].js",
 		+     "chunkFilename": "[id].bundle.js",
 		@@ ... @@
+		-     "cssFilename": "[name].css",
+		+     "cssFilename": "[id].bundle.css",
+		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": "bundle.js",
 	`)
@@ -999,6 +1004,9 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "chunkFilename": "[name].js",
 		+     "chunkFilename": "[id].js",
+		@@ ... @@
+		-     "cssFilename": "[name].css",
+		+     "cssFilename": "[id].css",
 		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": [Function filename],
@@ -1903,16 +1911,19 @@ describe("Defaults", () => {
 			+     "backCompat": false,
 			@@ ... @@
 			-     "cacheUnaffected": false,
+			-     "css": false,
 			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
+			+     "css": true,
 			+     "futureDefaults": true,
 			@@ ... @@
 			-     "topLevelAwait": false,
 			+     "topLevelAwait": true,
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "rules": Array [
-			@@ ... @@
+			+           Object {
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -1933,12 +1944,27 @@ describe("Defaults", () => {
 			+             },
 			+             "resolve": Object {
 			+               "fullySpecified": true,
-			+             },
+			@@ ... @@
 			+           },
 			+         ],
 			+         "type": "webassembly/async",
 			+       },
 			+       Object {
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "test": /\\.css$/i,
+			+         "type": "css",
+			+       },
+			+       Object {
+			+         "mimetype": "text/css",
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css",
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -1948,6 +1974,8 @@ describe("Defaults", () => {
 			+     "__dirname": "warn-mock",
 			+     "__filename": "warn-mock",
 			+     "global": "warn",
+			@@ ... @@
+			+         "css",
 			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",
