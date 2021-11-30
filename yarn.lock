@@ -5382,9 +5382,9 @@ signal-exit@^3.0.2, signal-exit@^3.0.3:
   integrity sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
 
 simple-git@^2.17.0:
-  version "2.47.0"
-  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-2.47.0.tgz#9693b471de7911901f703b4c403fc3e8774cd9be"
-  integrity sha512-+HfCpqPBEZTPWiW9fPdbiPJDslM22MLqrktfzNKyI2pWaJa6DhfNVx4Mds04KZzVv5vjC9/ksw3y5gVf8ECWDg==
+  version "2.47.1"
+  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-2.47.1.tgz#59a5c1af598b30b6234b98c9e22f8c01e5b7e06c"
+  integrity sha512-DF4rnBr4uzMQsreqxHg8t1wN4Pi3kj/shBVT1OO+aBkBnscCZ02tynKHc9cx3StNPnItHWAaoN31qkRNDhh5Ow==
   dependencies:
     "@kwsites/file-exists" "^1.1.1"
     "@kwsites/promise-deferred" "^1.1.1"
