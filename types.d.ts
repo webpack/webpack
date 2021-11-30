@@ -2706,6 +2706,11 @@ declare interface DependencyTemplateContext {
 	 * when in a concatenated module, information about other concatenated modules
 	 */
 	concatenationScope?: ConcatenationScope;
+
+	/**
+	 * the code generation results
+	 */
+	codeGenerationResults: CodeGenerationResults;
 }
 declare abstract class DependencyTemplates {
 	get(dependency: DependencyConstructor): DependencyTemplate;
@@ -10454,9 +10459,17 @@ declare abstract class RuntimeTemplate {
 		 */
 		module: Module;
 		/**
-		 * the chunk graph
+		 * the public path
 		 */
-		chunkGraph: ChunkGraph;
+		publicPath: string;
+		/**
+		 * runtime
+		 */
+		runtime?: RuntimeSpec;
+		/**
+		 * the code generation results
+		 */
+		codeGenerationResults: CodeGenerationResults;
 	}): string;
 }
 declare abstract class RuntimeValue {
