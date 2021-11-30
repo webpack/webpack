@@ -494,7 +494,7 @@ webpack x.x.x compiled successfully in X ms"
 exports[`StatsTestCases should print correct stats for chunks 1`] = `
 "PublicPath: auto
 asset bundle.js 10.2 KiB [emitted] (name: main)
-asset 460.bundle.js 320 bytes [emitted]
+asset 460.bundle.js 323 bytes [emitted]
 asset 524.bundle.js 206 bytes [emitted]
 asset 996.bundle.js 138 bytes [emitted]
 chunk (runtime: main) bundle.js (main) 73 bytes (javascript) 6.01 KiB (runtime) >{460}< >{996}< [entry] [rendered]
@@ -1171,7 +1171,7 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
 "1 chunks:
-  asset bundle1.js 4.84 KiB [emitted] (name: main)
+  asset bundle1.js 4.85 KiB [emitted] (name: main)
   chunk (runtime: main) bundle1.js (main) 219 bytes (javascript) 1.77 KiB (runtime) <{179}> >{179}< [entry] [rendered]
     runtime modules 1.77 KiB 4 modules
     cacheable modules 219 bytes
@@ -1645,10 +1645,10 @@ webpack x.x.x compiled with 1 error and 1 warning in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for optimize-chunks 1`] = `
-"asset main.js 11 KiB {179} [emitted] (name: main)
-asset cir2 from cir1.js 374 bytes {288}, {289} [emitted] (name: cir2 from cir1)
-asset cir1.js 330 bytes {592} [emitted] (name: cir1)
-asset cir2.js 330 bytes {289} [emitted] (name: cir2)
+"asset main.js 11.1 KiB {179} [emitted] (name: main)
+asset cir2 from cir1.js 377 bytes {288}, {289} [emitted] (name: cir2 from cir1)
+asset cir1.js 333 bytes {592} [emitted] (name: cir1)
+asset cir2.js 333 bytes {289} [emitted] (name: cir2)
 asset abd.js 193 bytes {90}, {374} [emitted] (name: abd)
 asset chunk.js 154 bytes {284}, {753} [emitted] (name: chunk)
 asset ab.js 149 bytes {90} [emitted] (name: ab)
@@ -1798,7 +1798,7 @@ webpack x.x.x compiled with 3 warnings in X ms"
 
 exports[`StatsTestCases should print correct stats for performance-disabled 1`] = `
 "asset <CLR=32,BOLD>main.js</CLR> 303 KiB <CLR=32,BOLD>[emitted]</CLR> (name: main)
-asset <CLR=32,BOLD>460.js</CLR> 320 bytes <CLR=32,BOLD>[emitted]</CLR>
+asset <CLR=32,BOLD>460.js</CLR> 323 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>524.js</CLR> 206 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>996.js</CLR> 138 bytes <CLR=32,BOLD>[emitted]</CLR>
 Entrypoint <CLR=BOLD>main</CLR> 303 KiB = <CLR=32,BOLD>main.js</CLR>
@@ -1815,7 +1815,7 @@ webpack x.x.x compiled <CLR=32,BOLD>successfully</CLR> in X ms"
 
 exports[`StatsTestCases should print correct stats for performance-error 1`] = `
 "asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>303 KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main)
-asset <CLR=32,BOLD>460.js</CLR> 320 bytes <CLR=32,BOLD>[emitted]</CLR>
+asset <CLR=32,BOLD>460.js</CLR> 323 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>524.js</CLR> 206 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>996.js</CLR> 138 bytes <CLR=32,BOLD>[emitted]</CLR>
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> 303 KiB = <CLR=32,BOLD>main.js</CLR>
@@ -1874,7 +1874,7 @@ webpack x.x.x compiled with <CLR=33,BOLD>3 warnings</CLR> in X ms"
 
 exports[`StatsTestCases should print correct stats for performance-no-hints 1`] = `
 "asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>303 KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main)
-asset <CLR=32,BOLD>460.js</CLR> 320 bytes <CLR=32,BOLD>[emitted]</CLR>
+asset <CLR=32,BOLD>460.js</CLR> 323 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>524.js</CLR> 206 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>996.js</CLR> 138 bytes <CLR=32,BOLD>[emitted]</CLR>
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> 303 KiB = <CLR=32,BOLD>main.js</CLR>
@@ -1982,7 +1982,7 @@ exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
     [LogTestPlugin] End
 PublicPath: auto
 asset main.js 10.2 KiB {179} [emitted] (name: main)
-asset 460.js 320 bytes {460} [emitted]
+asset 460.js 323 bytes {460} [emitted]
 asset 524.js 206 bytes {524} [emitted]
 asset 996.js 138 bytes {996} [emitted]
 Entrypoint main 10.2 KiB = main.js
@@ -2160,7 +2160,7 @@ exports[`StatsTestCases should print correct stats for preset-normal 1`] = `
 <w> [LogTestPlugin] Warning
 <i> [LogTestPlugin] Info
 asset main.js 10.2 KiB [emitted] (name: main)
-asset 460.js 320 bytes [emitted]
+asset 460.js 323 bytes [emitted]
 asset 524.js 206 bytes [emitted]
 asset 996.js 138 bytes [emitted]
 runtime modules 6 KiB 7 modules
@@ -2183,7 +2183,7 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for preset-normal-performance 1`] = `
 "asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>303 KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main)
-asset <CLR=32,BOLD>460.js</CLR> 320 bytes <CLR=32,BOLD>[emitted]</CLR>
+asset <CLR=32,BOLD>460.js</CLR> 323 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>524.js</CLR> 206 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>996.js</CLR> 138 bytes <CLR=32,BOLD>[emitted]</CLR>
 runtime modules 6 KiB 7 modules
@@ -2211,7 +2211,7 @@ webpack x.x.x compiled with <CLR=33,BOLD>2 warnings</CLR> in X ms"
 
 exports[`StatsTestCases should print correct stats for preset-normal-performance-ensure-filter-sourcemaps 1`] = `
 "asset <CLR=33,BOLD>main.js</CLR> <CLR=33,BOLD>303 KiB</CLR> <CLR=32,BOLD>[emitted]</CLR> <CLR=33,BOLD>[big]</CLR> (name: main) 1 related asset
-asset <CLR=32,BOLD>460.js</CLR> 352 bytes <CLR=32,BOLD>[emitted]</CLR> 1 related asset
+asset <CLR=32,BOLD>460.js</CLR> 355 bytes <CLR=32,BOLD>[emitted]</CLR> 1 related asset
 asset <CLR=32,BOLD>524.js</CLR> 238 bytes <CLR=32,BOLD>[emitted]</CLR> 1 related asset
 asset <CLR=32,BOLD>996.js</CLR> 170 bytes <CLR=32,BOLD>[emitted]</CLR> 1 related asset
 runtime modules 6 KiB 7 modules
@@ -2258,7 +2258,7 @@ exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
     [LogTestPlugin] End
 PublicPath: auto
 asset main.js 10.2 KiB {179} [emitted] (name: main)
-asset 460.js 320 bytes {460} [emitted]
+asset 460.js 323 bytes {460} [emitted]
 asset 524.js 206 bytes {524} [emitted]
 asset 996.js 138 bytes {996} [emitted]
 Entrypoint main 10.2 KiB = main.js
@@ -2493,7 +2493,7 @@ exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
 
 b-normal:
   assets by path *.js 3.23 KiB
-    asset 72965507c7b4c0b4fc29-729655.js 2.75 KiB [emitted] [immutable] [minimized] (name: runtime)
+    asset 415ca114e6dbdbc5f84c-415ca1.js 2.75 KiB [emitted] [immutable] [minimized] (name: runtime)
     asset a6d438a0676f93383d79-a6d438.js 262 bytes [emitted] [immutable] [minimized] (name: lazy)
     asset cbb9c74e42f00ada40f7-cbb9c7.js 212 bytes [emitted] [immutable] [minimized] (name: index)
     asset 666f2b8847021ccc7608-666f2b.js 21 bytes [emitted] [immutable] [minimized] (name: a, b)
@@ -2501,7 +2501,7 @@ b-normal:
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
     asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index 2.96 KiB (5.89 KiB) = 72965507c7b4c0b4fc29-729655.js 2.75 KiB cbb9c74e42f00ada40f7-cbb9c7.js 212 bytes 1 auxiliary asset
+  Entrypoint index 2.96 KiB (5.89 KiB) = 415ca114e6dbdbc5f84c-415ca1.js 2.75 KiB cbb9c74e42f00ada40f7-cbb9c7.js 212 bytes 1 auxiliary asset
   Entrypoint a 21 bytes = 666f2b8847021ccc7608-666f2b.js
   Entrypoint b 21 bytes = 666f2b8847021ccc7608-666f2b.js
   runtime modules 7.29 KiB 9 modules
@@ -2520,8 +2520,8 @@ b-normal:
 
 a-source-map:
   assets by path *.js 3.45 KiB
-    asset 338f50bd5a2d2dac263f-338f50.js 2.81 KiB [emitted] [immutable] [minimized] (name: runtime)
-      sourceMap 338f50bd5a2d2dac263f-338f50.js.map 14.5 KiB [emitted] [dev] (auxiliary name: runtime)
+    asset d618b31bb631bdbaee8e-d618b3.js 2.81 KiB [emitted] [immutable] [minimized] (name: runtime)
+      sourceMap d618b31bb631bdbaee8e-d618b3.js.map 14.5 KiB [emitted] [dev] (auxiliary name: runtime)
     asset da6ceedb86c86e79a49a-da6cee.js 318 bytes [emitted] [immutable] [minimized] (name: lazy)
       sourceMap da6ceedb86c86e79a49a-da6cee.js.map 401 bytes [emitted] [dev] (auxiliary name: lazy)
     asset 9e0ae6ff74fb2c3c821b-9e0ae6.js 268 bytes [emitted] [immutable] [minimized] (name: index)
@@ -2532,7 +2532,7 @@ a-source-map:
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
     asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index 3.07 KiB (20.7 KiB) = 338f50bd5a2d2dac263f-338f50.js 2.81 KiB 9e0ae6ff74fb2c3c821b-9e0ae6.js 268 bytes 3 auxiliary assets
+  Entrypoint index 3.07 KiB (20.7 KiB) = d618b31bb631bdbaee8e-d618b3.js 2.81 KiB 9e0ae6ff74fb2c3c821b-9e0ae6.js 268 bytes 3 auxiliary assets
   Entrypoint a 77 bytes (254 bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
   Entrypoint b 77 bytes (254 bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
   runtime modules 7.29 KiB 9 modules
@@ -2551,8 +2551,8 @@ a-source-map:
 
 b-source-map:
   assets by path *.js 3.45 KiB
-    asset d618b31bb631bdbaee8e-d618b3.js 2.81 KiB [emitted] [immutable] [minimized] (name: runtime)
-      sourceMap d618b31bb631bdbaee8e-d618b3.js.map 14.5 KiB [emitted] [dev] (auxiliary name: runtime)
+    asset 338f50bd5a2d2dac263f-338f50.js 2.81 KiB [emitted] [immutable] [minimized] (name: runtime)
+      sourceMap 338f50bd5a2d2dac263f-338f50.js.map 14.5 KiB [emitted] [dev] (auxiliary name: runtime)
     asset da6ceedb86c86e79a49a-da6cee.js 318 bytes [emitted] [immutable] [minimized] (name: lazy)
       sourceMap da6ceedb86c86e79a49a-da6cee.js.map 397 bytes [emitted] [dev] (auxiliary name: lazy)
     asset 9e0ae6ff74fb2c3c821b-9e0ae6.js 268 bytes [emitted] [immutable] [minimized] (name: index)
@@ -2563,7 +2563,7 @@ b-source-map:
     asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: lazy)
     asset 7382fad5b015914e0811.jpg?query 5.89 KiB [cached] [immutable] [from: file.jpg?query] (auxiliary name: lazy)
   asset 7382fad5b015914e0811.jpg 5.89 KiB [emitted] [immutable] [from: file.jpg] (auxiliary name: index)
-  Entrypoint index 3.07 KiB (20.7 KiB) = d618b31bb631bdbaee8e-d618b3.js 2.81 KiB 9e0ae6ff74fb2c3c821b-9e0ae6.js 268 bytes 3 auxiliary assets
+  Entrypoint index 3.07 KiB (20.7 KiB) = 338f50bd5a2d2dac263f-338f50.js 2.81 KiB 9e0ae6ff74fb2c3c821b-9e0ae6.js 268 bytes 3 auxiliary assets
   Entrypoint a 77 bytes (254 bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
   Entrypoint b 77 bytes (254 bytes) = 222c2acc68675174e6b2-222c2a.js 1 auxiliary asset
   runtime modules 7.29 KiB 9 modules
@@ -4289,7 +4289,16 @@ enforce-min-size:
     ./node_modules/big.js?1 267 bytes [built] [code generated]
     ./node_modules/small.js?1 66 bytes [built] [code generated]
     ./node_modules/small.js?2 66 bytes [built] [code generated]
-  enforce-min-size (webpack x.x.x) compiled successfully"
+  enforce-min-size (webpack x.x.x) compiled successfully
+
+only-async:
+  Entrypoint main 27.1 KiB = only-async-main.js
+  chunk (runtime: main) only-async-main.js (main) 12.7 KiB (javascript) 663 bytes (runtime) [entry] [rendered]
+    > ./ main
+    dependent modules 11.5 KiB [dependent] 44 modules
+    runtime modules 663 bytes 3 modules
+    ./index.js 1.19 KiB [built] [code generated]
+  only-async (webpack x.x.x) compiled successfully"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-min-size-reduction 1`] = `

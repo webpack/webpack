@@ -434,6 +434,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "asyncChunks": {
+          "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
+        },
         "chunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
@@ -487,6 +491,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "asyncChunks": {
+          "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
+        },
         "chunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
@@ -672,6 +680,14 @@
         "module": {
           "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
           "type": "boolean"
+        },
+        "optionalChaining": {
+          "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
+          "type": "boolean"
+        },
+        "templateLiteral": {
+          "description": "The environment supports template literals.",
+          "type": "boolean"
         }
       }
     },
@@ -681,12 +697,12 @@
       "implements": ["#/definitions/ExperimentsCommon"],
       "additionalProperties": false,
       "properties": {
-        "asset": {
-          "description": "Allow module type 'asset' to generate assets.",
-          "type": "boolean"
-        },
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+          "type": "boolean"
+        },
+        "backCompat": {
+          "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
           "type": "boolean"
         },
         "buildHttp": {
@@ -709,7 +725,7 @@
           "type": "boolean"
         },
         "layers": {
-          "description": "Enable module and chunk layers.",
+          "description": "Enable module layers.",
           "type": "boolean"
         },
         "lazyCompilation": {
@@ -742,12 +758,12 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "asset": {
-          "description": "Allow module type 'asset' to generate assets.",
-          "type": "boolean"
-        },
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+          "type": "boolean"
+        },
+        "backCompat": {
+          "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
           "type": "boolean"
         },
         "cacheUnaffected": {
@@ -759,7 +775,7 @@
           "type": "boolean"
         },
         "layers": {
-          "description": "Enable module and chunk layers.",
+          "description": "Enable module layers.",
           "type": "boolean"
         },
         "outputModule": {
@@ -782,12 +798,12 @@
       "implements": ["#/definitions/ExperimentsCommon"],
       "additionalProperties": false,
       "properties": {
-        "asset": {
-          "description": "Allow module type 'asset' to generate assets.",
-          "type": "boolean"
-        },
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+          "type": "boolean"
+        },
+        "backCompat": {
+          "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
           "type": "boolean"
         },
         "buildHttp": {
@@ -807,7 +823,7 @@
           "type": "boolean"
         },
         "layers": {
-          "description": "Enable module and chunk layers.",
+          "description": "Enable module layers.",
           "type": "boolean"
         },
         "lazyCompilation": {
@@ -1068,12 +1084,12 @@
             "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
             "anyOf": [
               {
-                "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+                "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash)",
                 "instanceof": "RegExp",
                 "tsType": "RegExp"
               },
               {
-                "description": "A path to a immutable directory (usually a package manager cache directory).",
+                "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
                 "absolutePath": true,
                 "minLength": 1
@@ -1474,6 +1490,10 @@
           "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
           "type": "boolean"
         },
+        "exportsPresence": {
+          "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
+          "enum": ["error", "warn", "auto", false]
+        },
         "exprContextCritical": {
           "description": "Enable warnings for full dynamic dependencies.",
           "type": "boolean"
@@ -1506,8 +1526,16 @@
           "description": "Enable/disable parsing of import() syntax.",
           "type": "boolean"
         },
+        "importExportsPresence": {
+          "description": "Specifies the behavior of invalid export names in \"import ... from ...\".",
+          "enum": ["error", "warn", "auto", false]
+        },
         "node": {
           "$ref": "#/definitions/Node"
+        },
+        "reexportExportsPresence": {
+          "description": "Specifies the behavior of invalid export names in \"export ... from ...\". This might be useful to disable during the migration from \"export ... from ...\" to \"export type ... from ...\" when reexporting types in TypeScript.",
+          "enum": ["error", "warn", "auto", false]
         },
         "requireContext": {
           "description": "Enable/disable parsing of require.context syntax.",
@@ -1526,7 +1554,7 @@
           "type": "boolean"
         },
         "strictExportPresence": {
-          "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+          "description": "Deprecated in favor of \"exportsPresence\". Emit errors instead of warnings when imported names don't exist in imported module.",
           "type": "boolean"
         },
         "strictThisContextOnImports": {
@@ -1638,7 +1666,7 @@
               "properties": {
                 "host": {
                   "description": "A host.",
-                  "type": "number"
+                  "type": "string"
                 },
                 "port": {
                   "description": "A port.",
@@ -2697,6 +2725,18 @@
               "type": "string",
               "minLength": 1
             },
+            "chunks": {
+              "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML).",
+              "anyOf": [
+                {
+                  "enum": ["initial", "async", "all"]
+                },
+                {
+                  "instanceof": "Function",
+                  "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+                }
+              ]
+            },
             "maxAsyncSize": {
               "description": "Maximal size hint for the on-demand chunks.",
               "oneOf": [
@@ -2866,6 +2906,10 @@
       "properties": {
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
+        },
+        "asyncChunks": {
+          "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
         },
         "auxiliaryComment": {
           "cli": {
@@ -3065,6 +3109,10 @@
       "properties": {
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
+        },
+        "asyncChunks": {
+          "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
         },
         "charset": {
           "$ref": "#/definitions/Charset"
@@ -4204,12 +4252,12 @@
             "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
             "anyOf": [
               {
-                "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+                "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash)",
                 "instanceof": "RegExp",
                 "tsType": "RegExp"
               },
               {
-                "description": "A path to a immutable directory (usually a package manager cache directory).",
+                "description": "A path to an immutable directory (usually a package manager cache directory).",
                 "type": "string",
                 "absolutePath": true,
                 "minLength": 1

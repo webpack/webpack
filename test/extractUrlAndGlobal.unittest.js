@@ -21,4 +21,15 @@ describe("extractUrlAndGlobal", () => {
 			"_"
 		]);
 	});
+	it("should throw error if starts with @", () => {
+		expect(() => extractUrlAndGlobal("@something")).toThrow();
+	});
+
+	it("should throw error if ends with @", () => {
+		expect(() => extractUrlAndGlobal("something@")).toThrow();
+	});
+
+	it("should throw error if do not have @", () => {
+		expect(() => extractUrlAndGlobal("something")).toThrow();
+	});
 });

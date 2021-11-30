@@ -181,19 +181,19 @@ Object {
   "cache-immutable-paths": Object {
     "configs": Array [
       Object {
-        "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+        "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash)",
         "multiple": true,
         "path": "cache.immutablePaths[]",
         "type": "RegExp",
       },
       Object {
-        "description": "A path to a immutable directory (usually a package manager cache directory).",
+        "description": "A path to an immutable directory (usually a package manager cache directory).",
         "multiple": true,
         "path": "cache.immutablePaths[]",
         "type": "path",
       },
     ],
-    "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash) A path to a immutable directory (usually a package manager cache directory).",
+    "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash) A path to an immutable directory (usually a package manager cache directory).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -462,19 +462,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-asset": Object {
-    "configs": Array [
-      Object {
-        "description": "Allow module type 'asset' to generate assets.",
-        "multiple": false,
-        "path": "experiments.asset",
-        "type": "boolean",
-      },
-    ],
-    "description": "Allow module type 'asset' to generate assets.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "experiments-async-web-assembly": Object {
     "configs": Array [
       Object {
@@ -485,6 +472,19 @@ Object {
       },
     ],
     "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-back-compat": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
+        "multiple": false,
+        "path": "experiments.backCompat",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -610,13 +610,13 @@ Object {
   "experiments-layers": Object {
     "configs": Array [
       Object {
-        "description": "Enable module and chunk layers.",
+        "description": "Enable module layers.",
         "multiple": false,
         "path": "experiments.layers",
         "type": "boolean",
       },
     ],
-    "description": "Enable module and chunk layers.",
+    "description": "Enable module layers.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -665,12 +665,12 @@ Object {
         "description": "A host.",
         "multiple": false,
         "path": "experiments.lazyCompilation.backend.listen.host",
-        "type": "number",
+        "type": "string",
       },
     ],
     "description": "A host.",
     "multiple": false,
-    "simpleType": "number",
+    "simpleType": "string",
   },
   "experiments-lazy-compilation-backend-listen-port": Object {
     "configs": Array [
@@ -1437,6 +1437,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.exportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-expr-context-critical": Object {
     "configs": Array [
       Object {
@@ -1521,6 +1540,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-import-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-node": Object {
     "configs": Array [
       Object {
@@ -1597,6 +1635,25 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-auto-reexport-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.reexportExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-require-context": Object {
     "configs": Array [
       Object {
@@ -1652,13 +1709,13 @@ Object {
   "module-parser-javascript-auto-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
         "multiple": false,
         "path": "module.parser.javascript/auto.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1933,6 +1990,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.exportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-expr-context-critical": Object {
     "configs": Array [
       Object {
@@ -2017,6 +2093,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-import-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-node": Object {
     "configs": Array [
       Object {
@@ -2093,6 +2188,25 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-reexport-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.reexportExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-require-context": Object {
     "configs": Array [
       Object {
@@ -2148,13 +2262,13 @@ Object {
   "module-parser-javascript-dynamic-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2390,6 +2504,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.exportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-expr-context-critical": Object {
     "configs": Array [
       Object {
@@ -2474,6 +2607,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-import-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-node": Object {
     "configs": Array [
       Object {
@@ -2550,6 +2702,25 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-esm-reexport-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.reexportExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-esm-require-context": Object {
     "configs": Array [
       Object {
@@ -2605,13 +2776,13 @@ Object {
   "module-parser-javascript-esm-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
         "multiple": false,
         "path": "module.parser.javascript/esm.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -2792,6 +2963,25 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript.exportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\" and \\"export ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-expr-context-critical": Object {
     "configs": Array [
       Object {
@@ -2876,6 +3066,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-import-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+        "multiple": false,
+        "path": "module.parser.javascript.importExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-node": Object {
     "configs": Array [
       Object {
@@ -2952,6 +3161,25 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-reexport-exports-presence": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
+        "multiple": false,
+        "path": "module.parser.javascript.reexportExportsPresence",
+        "type": "enum",
+        "values": Array [
+          "error",
+          "warn",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies the behavior of invalid export names in \\"export ... from ...\\". This might be useful to disable during the migration from \\"export ... from ...\\" to \\"export type ... from ...\\" when reexporting types in TypeScript.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-require-context": Object {
     "configs": Array [
       Object {
@@ -3007,13 +3235,13 @@ Object {
   "module-parser-javascript-strict-export-presence": Object {
     "configs": Array [
       Object {
-        "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+        "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
         "multiple": false,
         "path": "module.parser.javascript.strictExportPresence",
         "type": "boolean",
       },
     ],
-    "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+    "description": "Deprecated in favor of \\"exportsPresence\\". Emit errors instead of warnings when imported names don't exist in imported module.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -4460,6 +4688,24 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "optimization-split-chunks-fallback-cache-group-chunks": Object {
+    "configs": Array [
+      Object {
+        "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
+        "multiple": false,
+        "path": "optimization.splitChunks.fallbackCacheGroup.chunks",
+        "type": "enum",
+        "values": Array [
+          "initial",
+          "async",
+          "all",
+        ],
+      },
+    ],
+    "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "optimization-split-chunks-fallback-cache-group-max-async-size": Object {
     "configs": Array [
       Object {
@@ -4737,6 +4983,19 @@ Object {
     "description": "The filename of asset modules as relative path inside the 'output.path' directory.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "output-async-chunks": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable creating async chunks that are loaded on demand.",
+        "multiple": false,
+        "path": "output.asyncChunks",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable creating async chunks that are loaded on demand.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "output-charset": Object {
     "configs": Array [
@@ -5180,6 +5439,32 @@ Object {
       },
     ],
     "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-optional-chaining": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
+        "multiple": false,
+        "path": "output.environment.optionalChaining",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-template-literal": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports template literals.",
+        "multiple": false,
+        "path": "output.environment.templateLiteral",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports template literals.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -7182,19 +7467,19 @@ Object {
   "snapshot-immutable-paths": Object {
     "configs": Array [
       Object {
-        "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash)",
+        "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash)",
         "multiple": true,
         "path": "snapshot.immutablePaths[]",
         "type": "RegExp",
       },
       Object {
-        "description": "A path to a immutable directory (usually a package manager cache directory).",
+        "description": "A path to an immutable directory (usually a package manager cache directory).",
         "multiple": true,
         "path": "snapshot.immutablePaths[]",
         "type": "path",
       },
     ],
-    "description": "A RegExp matching a immutable directory (usually a package manager cache directory, including the tailing slash) A path to a immutable directory (usually a package manager cache directory).",
+    "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash) A path to an immutable directory (usually a package manager cache directory).",
     "multiple": true,
     "simpleType": "string",
   },

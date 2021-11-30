@@ -691,7 +691,7 @@ declare interface CallbackWebpack<T> {
 }
 type Cell<T> = undefined | T;
 declare class Chunk {
-	constructor(name?: string);
+	constructor(name?: string, backCompat?: boolean);
 	id: null | string | number;
 	ids: null | (string | number)[];
 	debugId: number;
@@ -1393,22 +1393,22 @@ declare class Compilation {
 		additionalChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
-				"tap" | "tapAsync" | "tapPromise" | "name"
+				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
 		additionalAssets: FakeHook<
-			Pick<AsyncSeriesHook<[]>, "tap" | "tapAsync" | "tapPromise" | "name">
+			Pick<AsyncSeriesHook<[]>, "name" | "tap" | "tapAsync" | "tapPromise">
 		>;
 		optimizeChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
-				"tap" | "tapAsync" | "tapPromise" | "name"
+				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
 		afterOptimizeChunkAssets: FakeHook<
 			Pick<
 				AsyncSeriesHook<[Set<Chunk>]>,
-				"tap" | "tapAsync" | "tapPromise" | "name"
+				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
 		optimizeAssets: AsyncSeriesHook<
@@ -1857,7 +1857,7 @@ declare interface CompilationParams {
 	contextModuleFactory: ContextModuleFactory;
 }
 declare class Compiler {
-	constructor(context: string);
+	constructor(context: string, options?: WebpackOptionsNormalized);
 	hooks: Readonly<{
 		initialize: SyncHook<[]>;
 		shouldEmit: SyncBailHook<[Compilation], boolean>;
@@ -2455,7 +2455,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 		alternatives: FakeHook<
 			Pick<
 				AsyncSeriesWaterfallHook<[any[]]>,
-				"tap" | "tapAsync" | "tapPromise" | "name"
+				"name" | "tap" | "tapAsync" | "tapPromise"
 			>
 		>;
 		alternativeRequests: AsyncSeriesWaterfallHook<
@@ -3030,6 +3030,11 @@ declare abstract class EntryDependency extends ModuleDependency {}
  */
 declare interface EntryDescription {
 	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: string | false;
@@ -3079,6 +3084,11 @@ declare interface EntryDescription {
  * An object with entry point description.
  */
 declare interface EntryDescriptionNormalized {
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+
 	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
@@ -3241,6 +3251,16 @@ declare interface Environment {
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
+
+	/**
+	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
+	 */
+	optionalChaining?: boolean;
+
+	/**
+	 * The environment supports template literals.
+	 */
+	templateLiteral?: boolean;
 }
 declare class EnvironmentPlugin {
 	constructor(...keys: any[]);
@@ -3309,14 +3329,14 @@ type Experiments = ExperimentsCommon & ExperimentsExtra;
  */
 declare interface ExperimentsCommon {
 	/**
-	 * Allow module type 'asset' to generate assets.
-	 */
-	asset?: boolean;
-
-	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module.
 	 */
 	asyncWebAssembly?: boolean;
+
+	/**
+	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 */
+	backCompat?: boolean;
 
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
@@ -3329,7 +3349,7 @@ declare interface ExperimentsCommon {
 	futureDefaults?: boolean;
 
 	/**
-	 * Enable module and chunk layers.
+	 * Enable module layers.
 	 */
 	layers?: boolean;
 
@@ -3864,6 +3884,7 @@ declare interface FactorizeModuleOptions {
 type FakeHook<T> = T & FakeHookMarker;
 declare interface FakeHookMarker {}
 declare interface FallbackCacheGroup {
+	chunksFilter: (chunk: Chunk) => boolean;
 	minSize: SplitChunksSizes;
 	maxAsyncSize: SplitChunksSizes;
 	maxInitialSize: SplitChunksSizes;
@@ -5295,6 +5316,11 @@ declare interface JavascriptParserOptions {
 	commonjsMagicComments?: boolean;
 
 	/**
+	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
+	 */
+	exportsPresence?: false | "error" | "warn" | "auto";
+
+	/**
 	 * Enable warnings for full dynamic dependencies.
 	 */
 	exprContextCritical?: boolean;
@@ -5325,9 +5351,19 @@ declare interface JavascriptParserOptions {
 	import?: boolean;
 
 	/**
+	 * Specifies the behavior of invalid export names in "import ... from ...".
+	 */
+	importExportsPresence?: false | "error" | "warn" | "auto";
+
+	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
 	node?: false | NodeOptions;
+
+	/**
+	 * Specifies the behavior of invalid export names in "export ... from ...". This might be useful to disable during the migration from "export ... from ..." to "export type ... from ..." when reexporting types in TypeScript.
+	 */
+	reexportExportsPresence?: false | "error" | "warn" | "auto";
 
 	/**
 	 * Enable/disable parsing of require.context syntax.
@@ -5350,7 +5386,7 @@ declare interface JavascriptParserOptions {
 	requireJs?: boolean;
 
 	/**
-	 * Emit errors instead of warnings when imported names don't exist in imported module.
+	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
 	 */
 	strictExportPresence?: boolean;
 
@@ -7937,6 +7973,10 @@ declare interface OptimizationSplitChunksOptions {
 		 */
 		automaticNameDelimiter?: string;
 		/**
+		 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
+		 */
+		chunks?: "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
+		/**
 		 * Maximal size hint for the on-demand chunks.
 		 */
 		maxAsyncSize?: number | { [index: string]: number };
@@ -8046,6 +8086,11 @@ declare interface Output {
 	assetModuleFilename?:
 		| string
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
 
 	/**
 	 * Add a comment in the UMD wrapper.
@@ -8318,6 +8363,10 @@ declare interface OutputFileSystem {
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
 	) => void;
+	lstat?: (
+		arg0: string,
+		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
+	) => void;
 	readFile: (
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
@@ -8337,6 +8386,11 @@ declare interface OutputNormalized {
 	assetModuleFilename?:
 		| string
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
 
 	/**
 	 * Add charset attribute for script tag.
@@ -9973,18 +10027,21 @@ declare abstract class RuntimeTemplate {
 	compilation: Compilation;
 	outputOptions: OutputNormalized;
 	requestShortener: RequestShortener;
+	globalObject: string;
 	isIIFE(): undefined | boolean;
 	isModule(): undefined | boolean;
 	supportsConst(): undefined | boolean;
 	supportsArrowFunction(): undefined | boolean;
+	supportsOptionalChaining(): undefined | boolean;
 	supportsForOf(): undefined | boolean;
 	supportsDestructuring(): undefined | boolean;
 	supportsBigIntLiteral(): undefined | boolean;
 	supportsDynamicImport(): undefined | boolean;
 	supportsEcmaScriptModuleSyntax(): undefined | boolean;
-	supportTemplateLiteral(): boolean;
+	supportTemplateLiteral(): undefined | boolean;
 	returningFunction(returnValue?: any, args?: string): string;
 	basicFunction(args?: any, body?: any): string;
+	concatenation(...args: (string | { expr: string })[]): string;
 	expressionFunction(expression?: any, args?: string): string;
 	emptyFunction(): "x => {}" | "function() {}";
 	destructureArray(items?: any, value?: any): string;
@@ -11702,6 +11759,32 @@ declare interface Watcher {
 	 * get info about directories
 	 */
 	getContextTimeInfoEntries: () => Map<string, FileSystemInfoEntry | "ignore">;
+
+	/**
+	 * get info about timestamps and changes
+	 */
+	getInfo?: () => WatcherInfo;
+}
+declare interface WatcherInfo {
+	/**
+	 * get current aggregated changes that have not yet send to callback
+	 */
+	changes: Set<string>;
+
+	/**
+	 * get current aggregated removals that have not yet send to callback
+	 */
+	removals: Set<string>;
+
+	/**
+	 * get info about files
+	 */
+	fileTimeInfoEntries: Map<string, FileSystemInfoEntry | "ignore">;
+
+	/**
+	 * get info about directories
+	 */
+	contextTimeInfoEntries: Map<string, FileSystemInfoEntry | "ignore">;
 }
 declare abstract class Watching {
 	startTime: null | number;

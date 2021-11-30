@@ -5,7 +5,8 @@ module.exports = {
 		type: "memory"
 	},
 	optimization: {
-		sideEffects: false
+		sideEffects: false,
+		providedExports: false
 	},
 	module: {
 		rules: [
@@ -16,6 +17,7 @@ module.exports = {
 		]
 	},
 	experiments: {
+		cacheUnaffected: true,
 		layers: true
 	}
 };

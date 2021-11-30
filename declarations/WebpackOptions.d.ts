@@ -1020,6 +1020,10 @@ export interface EntryObject {
  */
 export interface EntryDescription {
 	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: ChunkLoading;
@@ -1742,6 +1746,12 @@ export interface OptimizationSplitChunksOptions {
 		 */
 		automaticNameDelimiter?: string;
 		/**
+		 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
+		 */
+		chunks?:
+			| ("initial" | "async" | "all")
+			| ((chunk: import("../lib/Chunk")) => boolean);
+		/**
 		 * Maximal size hint for the on-demand chunks.
 		 */
 		maxAsyncSize?: OptimizationSplitChunksSizes;
@@ -1928,6 +1938,10 @@ export interface Output {
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */
@@ -2166,6 +2180,14 @@ export interface Environment {
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
+	/**
+	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
+	 */
+	optionalChaining?: boolean;
+	/**
+	 * The environment supports template literals.
+	 */
+	templateLiteral?: boolean;
 }
 /**
  * Use a Trusted Types policy to create urls for chunks.
@@ -2689,6 +2711,10 @@ export interface EmptyParserOptions {}
  */
 export interface EntryDescriptionNormalized {
 	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: ChunkLoading;
@@ -2739,13 +2765,13 @@ export interface EntryStaticNormalized {
  */
 export interface ExperimentsCommon {
 	/**
-	 * Allow module type 'asset' to generate assets.
-	 */
-	asset?: boolean;
-	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module.
 	 */
 	asyncWebAssembly?: boolean;
+	/**
+	 * Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.
+	 */
+	backCompat?: boolean;
 	/**
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
 	 */
@@ -2755,7 +2781,7 @@ export interface ExperimentsCommon {
 	 */
 	futureDefaults?: boolean;
 	/**
-	 * Enable module and chunk layers.
+	 * Enable module layers.
 	 */
 	layers?: boolean;
 	/**
@@ -2850,6 +2876,10 @@ export interface JavascriptParserOptions {
 	 */
 	commonjsMagicComments?: boolean;
 	/**
+	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
+	 */
+	exportsPresence?: "error" | "warn" | "auto" | false;
+	/**
 	 * Enable warnings for full dynamic dependencies.
 	 */
 	exprContextCritical?: boolean;
@@ -2874,9 +2904,17 @@ export interface JavascriptParserOptions {
 	 */
 	import?: boolean;
 	/**
+	 * Specifies the behavior of invalid export names in "import ... from ...".
+	 */
+	importExportsPresence?: "error" | "warn" | "auto" | false;
+	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
 	node?: Node;
+	/**
+	 * Specifies the behavior of invalid export names in "export ... from ...". This might be useful to disable during the migration from "export ... from ..." to "export type ... from ..." when reexporting types in TypeScript.
+	 */
+	reexportExportsPresence?: "error" | "warn" | "auto" | false;
 	/**
 	 * Enable/disable parsing of require.context syntax.
 	 */
@@ -2894,7 +2932,7 @@ export interface JavascriptParserOptions {
 	 */
 	requireJs?: boolean;
 	/**
-	 * Emit errors instead of warnings when imported names don't exist in imported module.
+	 * Deprecated in favor of "exportsPresence". Emit errors instead of warnings when imported names don't exist in imported module.
 	 */
 	strictExportPresence?: boolean;
 	/**
@@ -3040,6 +3078,10 @@ export interface OutputNormalized {
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
 	/**
 	 * Add charset attribute for script tag.
 	 */
