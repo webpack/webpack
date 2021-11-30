@@ -2699,9 +2699,9 @@ declare interface DependencyTemplateContext {
 	concatenationScope?: ConcatenationScope;
 
 	/**
-	 * getData
+	 * chunkInitFragments
 	 */
-	getData: () => Map<any, any>;
+	chunkInitFragments: InitFragment<GenerateContext>[];
 }
 declare abstract class DependencyTemplates {
 	get(dependency: DependencyConstructor): DependencyTemplate;
