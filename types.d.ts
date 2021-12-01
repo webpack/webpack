@@ -2591,6 +2591,12 @@ declare class Dependency {
 	readonly type: string;
 	readonly category: string;
 	loc: DependencyLocation;
+	setLoc(
+		startLine?: any,
+		startColumn?: any,
+		endLine?: any,
+		endColumn?: any
+	): void;
 	getResourceIdentifier(): null | string;
 	couldAffectReferencingModule(): boolean | typeof TRANSITIVE;
 
@@ -4219,7 +4225,7 @@ declare interface GenerateContext {
 	/**
 	 * code generation results of other modules (need to have a codeGenerationDependency to use that)
 	 */
-	codeGenerationResults?: any;
+	codeGenerationResults?: CodeGenerationResults;
 
 	/**
 	 * which kind of code should be generated
