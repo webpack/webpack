@@ -9,6 +9,8 @@ import("./lazy-style.css");
 # style.css
 
 ```javascript
+@import "style-imported.css";
+
 body {
 	background: green;
 }
@@ -19,7 +21,22 @@ body {
 ```javascript
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({});
+/******/ 	var __webpack_modules__ = ({
+
+/***/ 3:
+/*!*************************!*\
+  !*** ./images/file.png ***!
+  \*************************/
+/*! default exports */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: module, __webpack_require__.p, __webpack_require__.* */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = "" + __webpack_require__.p + "89a353e9c515885abd8e.png";
+
+/***/ })
+
+/******/ 	});
 ```
 
 <details><summary><code>/* webpack runtime code */</code></summary>
@@ -54,48 +71,6 @@ body {
 /******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/create fake namespace object */
-/******/ 	(() => {
-/******/ 		var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
-/******/ 		var leafPrototypes;
-/******/ 		// create a fake namespace object
-/******/ 		// mode & 1: value is a module id, require it
-/******/ 		// mode & 2: merge all properties of value into the ns
-/******/ 		// mode & 4: return value when already ns object
-/******/ 		// mode & 16: return value when it's Promise-like
-/******/ 		// mode & 8|1: behave like require
-/******/ 		__webpack_require__.t = function(value, mode) {
-/******/ 			if(mode & 1) value = this(value);
-/******/ 			if(mode & 8) return value;
-/******/ 			if(typeof value === 'object' && value) {
-/******/ 				if((mode & 4) && value.__esModule) return value;
-/******/ 				if((mode & 16) && typeof value.then === 'function') return value;
-/******/ 			}
-/******/ 			var ns = Object.create(null);
-/******/ 			__webpack_require__.r(ns);
-/******/ 			var def = {};
-/******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
-/******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
-/******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
-/******/ 			}
-/******/ 			def['default'] = () => (value);
-/******/ 			__webpack_require__.d(ns, def);
-/******/ 			return ns;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/ensure chunk */
 /******/ 	(() => {
 /******/ 		__webpack_require__.f = {};
@@ -213,8 +188,8 @@ body {
 /******/ 			}
 /******/ 			token && tokens.push(token);
 /******/ 			tokens.forEach((token) => {
-/******/ 				__webpack_require__.m[token.slice(1)] = (module) => {
-/******/ 					module.exports = {};
+/******/ 				__webpack_require__.m[token.slice(1)] = (module, exports) => {
+/******/ 					__webpack_require__.r(exports);
 /******/ 				};
 /******/ 			});
 /******/ 			installedChunks[chunkId] = 0;
@@ -402,18 +377,22 @@ body {
 
 ``` js
 var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.t, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ 1);
-/* harmony import */ var _style2_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style2.css */ 2);
+/* harmony import */ var _style2_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style2.css */ 4);
 
 
-__webpack_require__.e(/*! import() */ 1).then(__webpack_require__.t.bind(__webpack_require__, /*! ./lazy-style.css */ 3, 17));
+__webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./lazy-style.css */ 5));
+
+})();
 
 /******/ })()
 ;
@@ -422,6 +401,14 @@ __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.t.bind(__webpa
 # dist/0.output.css
 
 ```javascript
+.img {
+	width: 150px;
+	height: 150px;
+	background: url("89a353e9c515885abd8e.png");
+}
+
+
+
 body {
 	background: green;
 }
@@ -430,7 +417,7 @@ body {
 	background: red;
 }
 
-head{--webpack-0:_1 _2;}
+head{--webpack-0:_2 _1 _4;}
 ```
 
 # dist/1.output.css
@@ -440,7 +427,7 @@ body {
 	color: blue;
 }
 
-head{--webpack-1:_3;}
+head{--webpack-1:_5;}
 ```
 
 # Info
@@ -448,14 +435,16 @@ head{--webpack-1:_3;}
 ## Unoptimized
 
 ```
-asset output.js 17 KiB [emitted] (name: main)
-asset 0.output.css 82 bytes [emitted] (name: main)
+assets by chunk 15.8 KiB (name: main)
+  asset output.js 15.6 KiB [emitted] (name: main)
+  asset 0.output.css 174 bytes [emitted] (name: main)
+asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 1.output.css 45 bytes [emitted]
-Entrypoint main 17.1 KiB = output.js 17 KiB 0.output.css 82 bytes
-chunk (runtime: main) output.js, 0.output.css (main) 73 bytes (javascript) 56 bytes (css) 10.8 KiB (runtime) [entry] [rendered]
+Entrypoint main 15.8 KiB (14.6 KiB) = output.js 15.6 KiB 0.output.css 174 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, 0.output.css (main) 115 bytes (javascript) 166 bytes (css) 14.6 KiB (asset) 9.37 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 10.8 KiB 11 modules
-  dependent modules 56 bytes [dependent] 2 modules
+  runtime modules 9.37 KiB 9 modules
+  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 166 bytes (css) [dependent] 4 modules
   ./example.js 73 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -463,7 +452,7 @@ chunk (runtime: main) output.js, 0.output.css (main) 73 bytes (javascript) 56 by
 chunk (runtime: main) 1.output.css 23 bytes
   > ./lazy-style.css ./example.js 3:0-26
   ./lazy-style.css 23 bytes [built] [code generated]
-    [exports: default]
+    [no exports]
     [used exports unknown]
     import() ./lazy-style.css ./example.js 3:0-26
 webpack 5.64.4 compiled successfully
@@ -472,19 +461,21 @@ webpack 5.64.4 compiled successfully
 ## Production mode
 
 ```
-asset output.js 4 KiB [emitted] [minimized] (name: main)
-asset 179.output.css 88 bytes [emitted] (name: main)
+assets by chunk 3.69 KiB (name: main)
+  asset output.js 3.51 KiB [emitted] [minimized] (name: main)
+  asset 179.output.css 182 bytes [emitted] (name: main)
+asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 159.output.css 49 bytes [emitted]
-Entrypoint main 4.09 KiB = output.js 4 KiB 179.output.css 88 bytes
+Entrypoint main 3.69 KiB (14.6 KiB) = output.js 3.51 KiB 179.output.css 182 bytes 1 auxiliary asset
 chunk (runtime: main) 159.output.css 23 bytes
   > ./lazy-style.css ./example.js 3:0-26
   ./lazy-style.css 23 bytes [built] [code generated]
-    [exports: default]
+    [no exports]
     import() ./lazy-style.css ./example.js 3:0-26
-chunk (runtime: main) output.js, 179.output.css (main) 73 bytes (javascript) 56 bytes (css) 10.8 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, 179.output.css (main) 115 bytes (javascript) 166 bytes (css) 14.6 KiB (asset) 9.37 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 10.8 KiB 11 modules
-  dependent modules 56 bytes [dependent] 2 modules
+  runtime modules 9.37 KiB 9 modules
+  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 166 bytes (css) [dependent] 4 modules
   ./example.js 73 bytes [built] [code generated]
     [no exports]
     [no exports used]

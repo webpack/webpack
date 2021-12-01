@@ -41,6 +41,10 @@ describe("walkCssTokens", () => {
 					results.push(["pseudoFunction", input.slice(s, e)]);
 					return e;
 				},
+				atKeyword: (input, s, e) => {
+					results.push(["atKeyword", input.slice(s, e)]);
+					return e;
+				},
 				class: (input, s, e) => {
 					results.push(["class", input.slice(s, e)]);
 					return e;
@@ -70,70 +74,70 @@ describe("walkCssTokens", () => {
 }`,
 		e =>
 			e.toMatchInlineSnapshot(`
-Array [
-  Array [
-    "identifier",
-    "body",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "identifier",
-    "background",
-  ],
-  Array [
-    "url",
-    "url(
-		https://example\\\\2f4a8f.com/image.png
-	)",
-    "https://example\\\\2f4a8f.com/image.png",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "identifier",
-    "--element\\\\ name",
-  ],
-  Array [
-    "class",
-    ".class\\\\ name",
-  ],
-  Array [
-    "id",
-    "#_id",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "identifier",
-    "background",
-  ],
-  Array [
-    "url",
-    "url(  \\"https://example.com/some url \\\\\\"with\\\\\\" 'spaces'.png\\"   )",
-    "https://example.com/some url \\\\\\"with\\\\\\" 'spaces'.png",
-  ],
-  Array [
-    "url",
-    "url('https://example.com/\\\\'\\"quotes\\"\\\\'.png')",
-    "https://example.com/\\\\'\\"quotes\\"\\\\'.png",
-  ],
-  Array [
-    "semicolon",
-    ";",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-]
-`)
+			Array [
+			  Array [
+			    "identifier",
+			    "body",
+			  ],
+			  Array [
+			    "leftCurlyBracket",
+			    "{",
+			  ],
+			  Array [
+			    "identifier",
+			    "background",
+			  ],
+			  Array [
+			    "url",
+			    "url(
+					https://example\\\\2f4a8f.com/image.png
+				)",
+			    "https://example\\\\2f4a8f.com/image.png",
+			  ],
+			  Array [
+			    "rightCurlyBracket",
+			    "}",
+			  ],
+			  Array [
+			    "identifier",
+			    "--element\\\\ name",
+			  ],
+			  Array [
+			    "class",
+			    ".class\\\\ name",
+			  ],
+			  Array [
+			    "id",
+			    "#_id",
+			  ],
+			  Array [
+			    "leftCurlyBracket",
+			    "{",
+			  ],
+			  Array [
+			    "identifier",
+			    "background",
+			  ],
+			  Array [
+			    "url",
+			    "url(  \\"https://example.com/some url \\\\\\"with\\\\\\" 'spaces'.png\\"   )",
+			    "https://example.com/some url \\\\\\"with\\\\\\" 'spaces'.png",
+			  ],
+			  Array [
+			    "url",
+			    "url('https://example.com/\\\\'\\"quotes\\"\\\\'.png')",
+			    "https://example.com/\\\\'\\"quotes\\"\\\\'.png",
+			  ],
+			  Array [
+			    "semicolon",
+			    ";",
+			  ],
+			  Array [
+			    "rightCurlyBracket",
+			    "}",
+			  ],
+			]
+		`)
 	);
 
 	test(
@@ -142,88 +146,157 @@ Array [
 :import(something from ":somewhere") {}`,
 		e =>
 			e.toMatchInlineSnapshot(`
-Array [
-  Array [
-    "pseudoFunction",
-    ":local(",
-  ],
-  Array [
-    "class",
-    ".class",
-  ],
-  Array [
-    "id",
-    "#id",
-  ],
-  Array [
-    "comma",
-    ",",
-  ],
-  Array [
-    "class",
-    ".class",
-  ],
-  Array [
-    "pseudoFunction",
-    ":not(",
-  ],
-  Array [
-    "pseudoClass",
-    ":hover",
-  ],
-  Array [
-    "rightParenthesis",
-    ")",
-  ],
-  Array [
-    "rightParenthesis",
-    ")",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "identifier",
-    "color",
-  ],
-  Array [
-    "identifier",
-    "red",
-  ],
-  Array [
-    "semicolon",
-    ";",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-  Array [
-    "pseudoFunction",
-    ":import(",
-  ],
-  Array [
-    "identifier",
-    "something",
-  ],
-  Array [
-    "identifier",
-    "from",
-  ],
-  Array [
-    "rightParenthesis",
-    ")",
-  ],
-  Array [
-    "leftCurlyBracket",
-    "{",
-  ],
-  Array [
-    "rightCurlyBracket",
-    "}",
-  ],
-]
-`)
+			Array [
+			  Array [
+			    "pseudoFunction",
+			    ":local(",
+			  ],
+			  Array [
+			    "class",
+			    ".class",
+			  ],
+			  Array [
+			    "id",
+			    "#id",
+			  ],
+			  Array [
+			    "comma",
+			    ",",
+			  ],
+			  Array [
+			    "class",
+			    ".class",
+			  ],
+			  Array [
+			    "pseudoFunction",
+			    ":not(",
+			  ],
+			  Array [
+			    "pseudoClass",
+			    ":hover",
+			  ],
+			  Array [
+			    "rightParenthesis",
+			    ")",
+			  ],
+			  Array [
+			    "rightParenthesis",
+			    ")",
+			  ],
+			  Array [
+			    "leftCurlyBracket",
+			    "{",
+			  ],
+			  Array [
+			    "identifier",
+			    "color",
+			  ],
+			  Array [
+			    "identifier",
+			    "red",
+			  ],
+			  Array [
+			    "semicolon",
+			    ";",
+			  ],
+			  Array [
+			    "rightCurlyBracket",
+			    "}",
+			  ],
+			  Array [
+			    "pseudoFunction",
+			    ":import(",
+			  ],
+			  Array [
+			    "identifier",
+			    "something",
+			  ],
+			  Array [
+			    "identifier",
+			    "from",
+			  ],
+			  Array [
+			    "rightParenthesis",
+			    ")",
+			  ],
+			  Array [
+			    "leftCurlyBracket",
+			    "{",
+			  ],
+			  Array [
+			    "rightCurlyBracket",
+			    "}",
+			  ],
+			]
+		`)
+	);
+
+	test(
+		"parse at rules",
+		`@media (max-size: 100px) {
+	@import "external.css";
+	body { color: red; }
+}`,
+		e =>
+			e.toMatchInlineSnapshot(`
+			Array [
+			  Array [
+			    "atKeyword",
+			    "@media",
+			  ],
+			  Array [
+			    "leftParenthesis",
+			    "(",
+			  ],
+			  Array [
+			    "identifier",
+			    "max-size",
+			  ],
+			  Array [
+			    "rightParenthesis",
+			    ")",
+			  ],
+			  Array [
+			    "leftCurlyBracket",
+			    "{",
+			  ],
+			  Array [
+			    "atKeyword",
+			    "@import",
+			  ],
+			  Array [
+			    "semicolon",
+			    ";",
+			  ],
+			  Array [
+			    "identifier",
+			    "body",
+			  ],
+			  Array [
+			    "leftCurlyBracket",
+			    "{",
+			  ],
+			  Array [
+			    "identifier",
+			    "color",
+			  ],
+			  Array [
+			    "identifier",
+			    "red",
+			  ],
+			  Array [
+			    "semicolon",
+			    ";",
+			  ],
+			  Array [
+			    "rightCurlyBracket",
+			    "}",
+			  ],
+			  Array [
+			    "rightCurlyBracket",
+			    "}",
+			  ],
+			]
+		`)
 	);
 });

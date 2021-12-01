@@ -1,9 +1,5 @@
+@import "style-imported.css";
+
 body {
 	background: green;
-}
-
-.img {
-	width: 150px;
-	height: 150px;
-	background: url("./images/file.png");
 }
