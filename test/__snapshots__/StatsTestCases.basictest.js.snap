@@ -1326,13 +1326,46 @@ webpack x.x.x compiled <CLR=32,BOLD>successfully</CLR> in X ms"
 
 exports[`StatsTestCases should print correct stats for max-modules 1`] = `
 "asset main.js 5.47 KiB [emitted] (name: main)
-31 modules
+./index.js 181 bytes [built] [code generated]
+./a.js?1 33 bytes [built] [code generated]
+./a.js?2 33 bytes [built] [code generated]
+./a.js?3 33 bytes [built] [code generated]
+./a.js?4 33 bytes [built] [code generated]
+./a.js?5 33 bytes [built] [code generated]
+./a.js?6 33 bytes [built] [code generated]
+./a.js?7 33 bytes [built] [code generated]
+./a.js?8 33 bytes [built] [code generated]
+./a.js?9 33 bytes [built] [code generated]
+./a.js?10 33 bytes [built] [code generated]
+./c.js?1 33 bytes [built] [code generated]
+./c.js?2 33 bytes [built] [code generated]
+./c.js?3 33 bytes [built] [code generated]
+./c.js?4 33 bytes [built] [code generated]
+./c.js?5 33 bytes [built] [code generated]
+./c.js?6 33 bytes [built] [code generated]
+./c.js?7 33 bytes [built] [code generated]
+./c.js?8 33 bytes [built] [code generated]
+12 modules
 webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for max-modules-default 1`] = `
 "asset main.js 5.47 KiB [emitted] (name: main)
-31 modules
+./index.js 181 bytes [built] [code generated]
+./a.js?1 33 bytes [built] [code generated]
+./a.js?2 33 bytes [built] [code generated]
+./a.js?3 33 bytes [built] [code generated]
+./a.js?4 33 bytes [built] [code generated]
+./a.js?5 33 bytes [built] [code generated]
+./a.js?6 33 bytes [built] [code generated]
+./a.js?7 33 bytes [built] [code generated]
+./a.js?8 33 bytes [built] [code generated]
+./a.js?9 33 bytes [built] [code generated]
+./a.js?10 33 bytes [built] [code generated]
+./c.js?1 33 bytes [built] [code generated]
+./c.js?2 33 bytes [built] [code generated]
+./c.js?3 33 bytes [built] [code generated]
+17 modules
 webpack x.x.x compiled successfully in X ms"
 `;
 
@@ -3052,7 +3085,23 @@ exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1
 "runtime modules 6.83 KiB 10 modules
 built modules 615 bytes [built]
   code generated modules 530 bytes [code generated]
-    modules by path ./*.js 377 bytes 7 modules
+    modules by path ./*.js 377 bytes
+      ./index.js 150 bytes [built] [code generated]
+        Statement (ExpressionStatement) with side effects in source code at 7:0-25
+        ModuleConcatenation bailout: Cannot concat with ./cjs.js: Module is not an ECMAScript module
+        ModuleConcatenation bailout: Cannot concat with ./eval.js: Module uses eval()
+        ModuleConcatenation bailout: Cannot concat with ./module-id.js: Module uses module.id
+        ModuleConcatenation bailout: Cannot concat with ./module-loaded.js: Module uses module.loaded
+      ./entry.js 32 bytes [built] [code generated]
+      ./cjs.js 59 bytes [built] [code generated]
+        CommonJS bailout: module.exports is used directly at 3:0-14
+        Statement (ExpressionStatement) with side effects in source code at 1:0-26
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+      ./ref-from-cjs.js 45 bytes [built] [code generated]
+      ./eval.js 35 bytes [built] [code generated]
+        Statement (ExportDefaultDeclaration) with side effects in source code at 1:0-34
+        ModuleConcatenation bailout: Module uses eval()
+      2 modules
     ./concatenated.js + 2 modules 111 bytes [built] [code generated]
       ModuleConcatenation bailout: Cannot concat with external \\"external\\": Module external \\"external\\" is not in the same chunk(s) (expected in chunk(s) unnamed chunk(s), module is in chunk(s) index)
     external \\"external\\" 42 bytes [built] [code generated]
@@ -3087,12 +3136,13 @@ Entrypoint second 13.5 KiB = b-vendor.js 419 bytes b-second.js 13.1 KiB
 runtime modules 15.1 KiB 20 modules
 cacheable modules 975 bytes
   code generated modules 857 bytes [code generated]
-    modules by path ./*.js + 1 modules 459 bytes 3 modules
+    modules by path ./*.js + 1 modules 459 bytes
+      ./second.js + 1 modules 227 bytes [built] [code generated]
+        ModuleConcatenation bailout: Cannot concat with ./vendor.js: Module ./vendor.js is not in the same chunk(s) (expected in chunk(s) second, module is in chunk(s) vendor)
+      2 modules
     modules by path ./*.js 106 bytes
       ./vendor.js 25 bytes [built] [code generated]
-      ./lazy_shared.js 56 bytes [built] [code generated]
-        ModuleConcatenation bailout: Cannot concat with ./common_lazy_shared.js: Module ./common_lazy_shared.js is referenced from different chunks by these modules: ./lazy_first.js, ./lazy_second.js
-      ./common_lazy_shared.js 25 bytes [built] [code generated]
+      2 modules
     ./first.js + 2 modules 292 bytes [built] [code generated]
       ModuleConcatenation bailout: Cannot concat with ./vendor.js: Module ./vendor.js is not in the same chunk(s) (expected in chunk(s) first, module is in chunk(s) vendor)
   orphan modules 118 bytes [orphan]
@@ -4073,8 +4123,16 @@ switched:
     ./index.js 1.19 KiB [built] [code generated]
   chunk (runtime: main) switched-main-879072e3.js (main-879072e3) 1.68 KiB ={1}= ={59}= ={318}= ={410}= ={520}= ={663}= ={869}= ={997}= [initial] [rendered]
     > ./ main
-    modules by path ./subfolder/*.js 1.1 KiB 11 modules
-    modules by path ./*.js 594 bytes 9 modules
+    modules by path ./subfolder/*.js 1.1 KiB
+      ./subfolder/big.js?1 267 bytes [built] [code generated]
+      ./subfolder/big.js?2 267 bytes [built] [code generated]
+      ./subfolder/small.js?1 66 bytes [built] [code generated]
+      8 modules
+    modules by path ./*.js 594 bytes
+      ./small.js?1 66 bytes [built] [code generated]
+      ./small.js?2 66 bytes [built] [code generated]
+      ./small.js?3 66 bytes [built] [code generated]
+      6 modules
   chunk (runtime: main) switched-main-12217e1d.js (main-12217e1d) 1.57 KiB (javascript) 3.02 KiB (runtime) ={1}= ={59}= ={318}= ={410}= ={520}= ={581}= ={869}= ={997}= [entry] [rendered]
     > ./ main
     runtime modules 3.02 KiB 5 modules
@@ -4086,13 +4144,13 @@ switched:
     ./node_modules/small.js?2 66 bytes [built] [code generated]
   chunk (runtime: main) switched-main-7aeafcb2.js (main-7aeafcb2) 1.62 KiB ={1}= ={59}= ={318}= ={410}= ={520}= ={581}= ={663}= ={869}= [initial] [rendered]
     > ./ main
-    modules by path ./inner-module/*.js 594 bytes 9 modules
+    modules by path ./inner-module/*.js 594 bytes
+      ./inner-module/small.js?1 66 bytes [built] [code generated]
+      8 modules
     modules by path ./in-some-directory/*.js 531 bytes
       ./in-some-directory/big.js?1 267 bytes [built] [code generated]
       ./in-some-directory/small.js?1 66 bytes [built] [code generated]
-      ./in-some-directory/small.js?2 66 bytes [built] [code generated]
-      ./in-some-directory/small.js?3 66 bytes [built] [code generated]
-      ./in-some-directory/small.js?4 66 bytes [built] [code generated]
+      3 modules
     modules by path ./*.js 534 bytes
       ./big.js?1 267 bytes [built] [code generated]
       ./big.js?2 267 bytes [built] [code generated]
