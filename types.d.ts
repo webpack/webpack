@@ -2141,7 +2141,7 @@ declare interface Configuration {
 	/**
 	 * Enable production optimizations or development hints.
 	 */
-	mode?: "development" | "production" | "none";
+	mode?: "none" | "development" | "production";
 
 	/**
 	 * Options affecting the normal modules (`NormalModuleFactory`).
@@ -2226,15 +2226,15 @@ declare interface Configuration {
 	 */
 	stats?:
 		| boolean
+		| StatsOptions
 		| "none"
+		| "verbose"
 		| "summary"
 		| "errors-only"
 		| "errors-warnings"
 		| "minimal"
 		| "normal"
-		| "detailed"
-		| "verbose"
-		| StatsOptions;
+		| "detailed";
 
 	/**
 	 * Environment to build for. An array of environments to build for all of them when possible.
@@ -4557,7 +4557,7 @@ declare interface InfrastructureLogging {
 	/**
 	 * Log level.
 	 */
-	level?: "none" | "verbose" | "error" | "warn" | "info" | "log";
+	level?: "none" | "error" | "warn" | "info" | "log" | "verbose";
 
 	/**
 	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
@@ -4703,7 +4703,7 @@ declare class JavascriptModulesPlugin {
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
 declare class JavascriptParser extends Parser {
-	constructor(sourceType?: "module" | "script" | "auto");
+	constructor(sourceType?: "module" | "auto" | "script");
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
 			SyncBailHook<
@@ -4973,7 +4973,7 @@ declare class JavascriptParser extends Parser {
 		program: SyncBailHook<[Program, Comment[]], boolean | void>;
 		finish: SyncBailHook<[Program, Comment[]], boolean | void>;
 	}>;
-	sourceType: "module" | "script" | "auto";
+	sourceType: "module" | "auto" | "script";
 	scope: ScopeInfo;
 	state: ParserState;
 	comments: any;
@@ -5313,7 +5313,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
 	 */
-	exportsPresence?: false | "error" | "warn" | "auto";
+	exportsPresence?: false | "auto" | "error" | "warn";
 
 	/**
 	 * Enable warnings for full dynamic dependencies.
@@ -5348,7 +5348,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Specifies the behavior of invalid export names in "import ... from ...".
 	 */
-	importExportsPresence?: false | "error" | "warn" | "auto";
+	importExportsPresence?: false | "auto" | "error" | "warn";
 
 	/**
 	 * Include polyfills or mocks for various node stuff.
@@ -5358,7 +5358,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Specifies the behavior of invalid export names in "export ... from ...". This might be useful to disable during the migration from "export ... from ..." to "export type ... from ..." when reexporting types in TypeScript.
 	 */
-	reexportExportsPresence?: false | "error" | "warn" | "auto";
+	reexportExportsPresence?: false | "auto" | "error" | "warn";
 
 	/**
 	 * Enable/disable parsing of require.context syntax.
@@ -5595,7 +5595,7 @@ declare interface KnownNormalizedStatsOptions {
 	modulesSpace: number;
 	chunkModulesSpace: number;
 	nestedModulesSpace: number;
-	logging: false | "none" | "verbose" | "error" | "warn" | "info" | "log";
+	logging: false | "none" | "error" | "warn" | "info" | "log" | "verbose";
 	loggingDebug: ((value: string) => boolean)[];
 	loggingTrace: boolean;
 }
@@ -7553,7 +7553,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	rootContext: string;
 	fs: InputFileSystem;
 	sourceMap?: boolean;
-	mode: "development" | "production" | "none";
+	mode: "none" | "development" | "production";
 	webpack?: boolean;
 	_module?: NormalModule;
 	_compilation?: Compilation;
@@ -9410,7 +9410,7 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Plugins for the resolver.
 	 */
-	plugins?: ("..." | ResolvePluginInstance)[];
+	plugins?: (ResolvePluginInstance | "...")[];
 
 	/**
 	 * Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.
@@ -11252,7 +11252,7 @@ declare interface StatsOptions {
 	/**
 	 * Add logging output.
 	 */
-	logging?: boolean | "none" | "verbose" | "error" | "warn" | "info" | "log";
+	logging?: boolean | "none" | "error" | "warn" | "info" | "log" | "verbose";
 
 	/**
 	 * Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.
@@ -11421,15 +11421,15 @@ type StatsPrinterContext = KnownStatsPrinterContext & Record<string, any>;
 type StatsProfile = KnownStatsProfile & Record<string, any>;
 type StatsValue =
 	| boolean
+	| StatsOptions
 	| "none"
+	| "verbose"
 	| "summary"
 	| "errors-only"
 	| "errors-warnings"
 	| "minimal"
 	| "normal"
-	| "detailed"
-	| "verbose"
-	| StatsOptions;
+	| "detailed";
 declare interface SyntheticDependencyLocation {
 	name: string;
 	index?: number;
@@ -12039,7 +12039,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Enable production optimizations or development hints.
 	 */
-	mode?: "development" | "production" | "none";
+	mode?: "none" | "development" | "production";
 
 	/**
 	 * Options affecting the normal modules (`NormalModuleFactory`).
@@ -12711,6 +12711,7 @@ declare namespace exports {
 		RuleSetRule,
 		RuleSetUse,
 		RuleSetUseItem,
+		StatsOptions,
 		Configuration,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance,
@@ -12718,6 +12719,8 @@ declare namespace exports {
 		AssetInfo,
 		MultiStats,
 		ParserState,
+		ResolvePluginInstance,
+		Resolver,
 		Watching,
 		StatsAsset,
 		StatsChunk,
