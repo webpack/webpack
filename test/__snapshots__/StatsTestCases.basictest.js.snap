@@ -166,7 +166,7 @@ asset modules 9.07 KiB (javascript) 14.6 KiB (asset)
     ./images/file.svg 915 bytes [built] [code generated]
     ./images/file.jpg 7.92 KiB [built] [code generated]
     ./static/file.html 42 bytes (javascript) 12 bytes (asset) [built] [code generated]
-  modules by path data:text/ 172 bytes
+  modules by mime type text/plain 172 bytes
     data:text/plain;base64,szsaAAdsadasdfaf.. 72.2 bytes [built] [code generated]
     data:text/plain,asd= 41.4 bytes [built] [code generated]
     data:text/plain,XXXXXXXXXXXXXXX.. 58.8 bytes [built] [code generated]
