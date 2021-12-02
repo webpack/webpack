@@ -184,7 +184,7 @@ module.exports = "" + __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 			data = data.getPropertyValue("--webpack-" + chunkId);
 /******/ 			for(; i < data.length; i++) {
 /******/ 				var cc = data.charCodeAt(i);
-/******/ 				if(cc == 32) { tokens.push(token); token = ""; }
+/******/ 				if(cc == 44) { tokens.push(token); token = ""; }
 /******/ 				else if(cc == 92) { token += data[++i] }
 /******/ 				else { token += data[i]; }
 /******/ 			}
@@ -420,7 +420,7 @@ body {
 	background: red;
 }
 
-head{--webpack-0:_4 _2 _1 _5;}
+head{--webpack-0:_4,_2,_1,_5;}
 ```
 
 # dist/1.output.css
