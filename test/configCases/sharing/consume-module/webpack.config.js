@@ -54,6 +54,10 @@ module.exports = {
 					requiredVersion: "1.1.0",
 					singleton: true,
 					strictVersion: false
+				},
+				singletonWithoutVersion: {
+					requiredVersion: false,
+					singleton: true
 				}
 			}
 		})
