@@ -10,9 +10,11 @@ import("./lazy-style.css");
 
 ```javascript
 @import "style-imported.css";
+@import "https://fonts.googleapis.com/css?family=Open+Sans";
 
 body {
 	background: green;
+	font-family: "Open Sans";
 }
 ```
 
@@ -387,10 +389,10 @@ var __webpack_exports__ = {};
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ 1);
-/* harmony import */ var _style2_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style2.css */ 4);
+/* harmony import */ var _style2_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style2.css */ 5);
 
 
-__webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./lazy-style.css */ 5));
+__webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./lazy-style.css */ 6));
 
 })();
 
@@ -401,6 +403,7 @@ __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack
 # dist/0.output.css
 
 ```javascript
+@import url("https://fonts.googleapis.com/css?family=Open+Sans");
 .img {
 	width: 150px;
 	height: 150px;
@@ -408,16 +411,16 @@ __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack
 }
 
 
-
 body {
 	background: green;
+	font-family: "Open Sans";
 }
 
 body {
 	background: red;
 }
 
-head{--webpack-0:_2 _1 _4;}
+head{--webpack-0:_4 _2 _1 _5;}
 ```
 
 # dist/1.output.css
@@ -427,7 +430,7 @@ body {
 	color: blue;
 }
 
-head{--webpack-1:_5;}
+head{--webpack-1:_6;}
 ```
 
 # Info
@@ -437,14 +440,14 @@ head{--webpack-1:_5;}
 ```
 assets by chunk 15.8 KiB (name: main)
   asset output.js 15.6 KiB [emitted] (name: main)
-  asset 0.output.css 174 bytes [emitted] (name: main)
+  asset 0.output.css 269 bytes [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 1.output.css 45 bytes [emitted]
-Entrypoint main 15.8 KiB (14.6 KiB) = output.js 15.6 KiB 0.output.css 174 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, 0.output.css (main) 115 bytes (javascript) 166 bytes (css) 14.6 KiB (asset) 9.37 KiB (runtime) [entry] [rendered]
+Entrypoint main 15.8 KiB (14.6 KiB) = output.js 15.6 KiB 0.output.css 269 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, 0.output.css (main) 115 bytes (javascript) 254 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.37 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 9.37 KiB 9 modules
-  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 166 bytes (css) [dependent] 4 modules
+  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 254 bytes (css) 42 bytes (css-import) [dependent] 5 modules
   ./example.js 73 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -461,21 +464,21 @@ webpack 5.64.4 compiled successfully
 ## Production mode
 
 ```
-assets by chunk 3.69 KiB (name: main)
+assets by chunk 3.79 KiB (name: main)
   asset output.js 3.51 KiB [emitted] [minimized] (name: main)
-  asset 179.output.css 182 bytes [emitted] (name: main)
+  asset 179.output.css 279 bytes [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 159.output.css 49 bytes [emitted]
-Entrypoint main 3.69 KiB (14.6 KiB) = output.js 3.51 KiB 179.output.css 182 bytes 1 auxiliary asset
+Entrypoint main 3.79 KiB (14.6 KiB) = output.js 3.51 KiB 179.output.css 279 bytes 1 auxiliary asset
 chunk (runtime: main) 159.output.css 23 bytes
   > ./lazy-style.css ./example.js 3:0-26
   ./lazy-style.css 23 bytes [built] [code generated]
     [no exports]
     import() ./lazy-style.css ./example.js 3:0-26
-chunk (runtime: main) output.js, 179.output.css (main) 115 bytes (javascript) 166 bytes (css) 14.6 KiB (asset) 9.37 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, 179.output.css (main) 115 bytes (javascript) 254 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.37 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 9.37 KiB 9 modules
-  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 166 bytes (css) [dependent] 4 modules
+  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 254 bytes (css) 42 bytes (css-import) [dependent] 5 modules
   ./example.js 73 bytes [built] [code generated]
     [no exports]
     [no exports used]

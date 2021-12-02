@@ -157,37 +157,44 @@ class FakeSheet {
 				currentRule[property] = value;
 			}
 		};
-		walkCssTokens(
-			fs.readFileSync(
+		let css = fs.readFileSync(
+			path.resolve(
+				this._basePath,
+				this._element.href.replace(/^https:\/\/test\.cases\/path\//, "")
+			),
+			"utf-8"
+		);
+		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
+			return fs.readFileSync(
 				path.resolve(
 					this._basePath,
-					this._element.href.replace(/^https:\/\/test\.cases\/path\//, "")
+					url.replace(/^https:\/\/test\.cases\/path\//, "")
 				),
 				"utf-8"
-			),
-			{
-				leftCurlyBracket(source, start, end) {
-					if (selector === undefined) {
-						selector = source.slice(last, start).trim();
-						last = end;
-					}
-					return end;
-				},
-				rightCurlyBracket(source, start, end) {
-					processDeclaration(source.slice(last, start));
+			);
+		});
+		walkCssTokens(css, {
+			leftCurlyBracket(source, start, end) {
+				if (selector === undefined) {
+					selector = source.slice(last, start).trim();
 					last = end;
-					rules.push({ selectorText: selector, style: currentRule });
-					selector = undefined;
-					currentRule = { getPropertyValue };
-					return end;
-				},
-				semicolon(source, start, end) {
-					processDeclaration(source.slice(last, start));
-					last = end;
-					return end;
 				}
+				return end;
+			},
+			rightCurlyBracket(source, start, end) {
+				processDeclaration(source.slice(last, start));
+				last = end;
+				rules.push({ selectorText: selector, style: currentRule });
+				selector = undefined;
+				currentRule = { getPropertyValue };
+				return end;
+			},
+			semicolon(source, start, end) {
+				processDeclaration(source.slice(last, start));
+				last = end;
+				return end;
 			}
-		);
+		});
 		return rules;
 	}
 }
