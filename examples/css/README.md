@@ -34,7 +34,7 @@ body {
 /*! runtime requirements: module, __webpack_require__.p, __webpack_require__.* */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = "" + __webpack_require__.p + "89a353e9c515885abd8e.png";
+module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 
 /***/ })
 
@@ -182,6 +182,7 @@ module.exports = "" + __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 			var data, tokens = [], token = "", i = 0;
 /******/ 			try { if(!link) link = loadStylesheet(chunkId); data = link.sheet.cssRules; data = data[data.length - 1].style; } catch(e) { data = getComputedStyle(document.head); }
 /******/ 			data = data.getPropertyValue("--webpack-" + chunkId);
+/******/ 			if(!data) return;
 /******/ 			for(; i < data.length; i++) {
 /******/ 				var cc = data.charCodeAt(i);
 /******/ 				if(cc == 44) { tokens.push(token); token = ""; }
@@ -190,7 +191,7 @@ module.exports = "" + __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 			}
 /******/ 			token && tokens.push(token);
 /******/ 			tokens.forEach((token) => {
-/******/ 				__webpack_require__.m[token.slice(1)] = (module, exports) => {
+/******/ 				__webpack_require__.m[token.replace(/^_/, "")] = (module, exports) => {
 /******/ 					__webpack_require__.r(exports);
 /******/ 				};
 /******/ 			});
@@ -407,7 +408,7 @@ __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack
 .img {
 	width: 150px;
 	height: 150px;
-	background: url("89a353e9c515885abd8e.png");
+	background: url(89a353e9c515885abd8e.png);
 }
 
 
@@ -438,15 +439,15 @@ head{--webpack-1:_6;}
 ## Unoptimized
 
 ```
-assets by chunk 15.8 KiB (name: main)
+assets by chunk 15.9 KiB (name: main)
   asset output.js 15.6 KiB [emitted] (name: main)
-  asset 0.output.css 269 bytes [emitted] (name: main)
+  asset 0.output.css 267 bytes [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 1.output.css 45 bytes [emitted]
-Entrypoint main 15.8 KiB (14.6 KiB) = output.js 15.6 KiB 0.output.css 269 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, 0.output.css (main) 115 bytes (javascript) 254 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.37 KiB (runtime) [entry] [rendered]
+Entrypoint main 15.9 KiB (14.6 KiB) = output.js 15.6 KiB 0.output.css 267 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, 0.output.css (main) 115 bytes (javascript) 254 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.4 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 9.37 KiB 9 modules
+  runtime modules 9.4 KiB 9 modules
   dependent modules 42 bytes (javascript) 14.6 KiB (asset) 254 bytes (css) 42 bytes (css-import) [dependent] 5 modules
   ./example.js 73 bytes [built] [code generated]
     [no exports]
@@ -464,20 +465,20 @@ webpack 5.64.4 compiled successfully
 ## Production mode
 
 ```
-assets by chunk 3.79 KiB (name: main)
-  asset output.js 3.51 KiB [emitted] [minimized] (name: main)
-  asset 179.output.css 279 bytes [emitted] (name: main)
+assets by chunk 3.8 KiB (name: main)
+  asset output.js 3.53 KiB [emitted] [minimized] (name: main)
+  asset 179.output.css 277 bytes [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 159.output.css 49 bytes [emitted]
-Entrypoint main 3.79 KiB (14.6 KiB) = output.js 3.51 KiB 179.output.css 279 bytes 1 auxiliary asset
+Entrypoint main 3.8 KiB (14.6 KiB) = output.js 3.53 KiB 179.output.css 277 bytes 1 auxiliary asset
 chunk (runtime: main) 159.output.css 23 bytes
   > ./lazy-style.css ./example.js 3:0-26
   ./lazy-style.css 23 bytes [built] [code generated]
     [no exports]
     import() ./lazy-style.css ./example.js 3:0-26
-chunk (runtime: main) output.js, 179.output.css (main) 115 bytes (javascript) 254 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.37 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, 179.output.css (main) 115 bytes (javascript) 254 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.4 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 9.37 KiB 9 modules
+  runtime modules 9.4 KiB 9 modules
   dependent modules 42 bytes (javascript) 14.6 KiB (asset) 254 bytes (css) 42 bytes (css-import) [dependent] 5 modules
   ./example.js 73 bytes [built] [code generated]
     [no exports]
