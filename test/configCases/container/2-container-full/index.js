@@ -30,7 +30,7 @@ const expectWarning = regexp => {
 it("should load the component from container", () => {
 	return import("./App").then(({ default: App }) => {
 		expectWarning(
-			/Unsatisfied version 8 of shared singleton module react \(required \^2\)/
+			/Unsatisfied version 8 from 2-container-full of shared singleton module react \(required \^2\)/
 		);
 		const rendered = App();
 		expect(rendered).toBe(

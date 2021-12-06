@@ -330,7 +330,7 @@ describe("Defaults", () => {
 		    "filename": "[name].js",
 		    "globalObject": "self",
 		    "hashDigest": "hex",
-		    "hashDigestLength": 20,
+		    "hashDigestLength": 16,
 		    "hashFunction": "xxhash64",
 		    "hashSalt": undefined,
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",

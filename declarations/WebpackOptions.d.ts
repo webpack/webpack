@@ -2174,6 +2174,14 @@ export interface Environment {
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
+	/**
+	 * The environment supports optional chaining ('obj?.a' or 'obj?.()').
+	 */
+	optionalChaining?: boolean;
+	/**
+	 * The environment supports template literals.
+	 */
+	templateLiteral?: boolean;
 }
 /**
  * Use a Trusted Types policy to create urls for chunks.
