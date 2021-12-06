@@ -765,7 +765,7 @@ declare class Chunk {
 	): Record<string | number, Record<string, (string | number)[]>>;
 }
 declare class ChunkGraph {
-	constructor(moduleGraph: ModuleGraph, hashFunction?: string | typeof Hash);
+	constructor(moduleGraph: ModuleGraph, hashFunction: string | typeof Hash);
 	moduleGraph: ModuleGraph;
 	connectChunkAndModule(chunk: Chunk, module: Module): void;
 	disconnectChunkAndModule(chunk: Chunk, module: Module): void;
@@ -12528,7 +12528,8 @@ declare namespace exports {
 			) => void;
 			export const registerNotSerializable: (Constructor: Constructor) => void;
 			export const NOT_SERIALIZABLE: object;
-			export const buffersSerializer: Serializer;
+			export const buffersSerializer: void;
+			export let createBuffersSerializer: (hashFunction?: any) => Serializer;
 			export let createFileSerializer: (
 				fs?: any,
 				hashFunction?: any

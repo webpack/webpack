@@ -7,9 +7,12 @@ const SerializerMiddleware = require("../lib/serialization/SerializerMiddleware"
 
 const binaryMiddleware = new BinaryMiddleware();
 
-const serializer = new Serializer([binaryMiddleware, new FileMiddleware(fs)]);
+const serializer = new Serializer([
+	binaryMiddleware,
+	new FileMiddleware(fs, "xxhash64")
+]);
 
-const rawSerializer = new Serializer([new FileMiddleware(fs)]);
+const rawSerializer = new Serializer([new FileMiddleware(fs, "xxhash64")]);
 
 const lazySizes = [];
 

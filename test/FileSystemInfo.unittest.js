@@ -3,9 +3,10 @@
 const { createFsFromVolume, Volume } = require("memfs");
 const util = require("util");
 const FileSystemInfo = require("../lib/FileSystemInfo");
-const { buffersSerializer } = require("../lib/util/serialization");
+const { createBuffersSerializer } = require("../lib/util/serialization");
 
 describe("FileSystemInfo", () => {
+	const buffersSerializer = createBuffersSerializer("xxhash64");
 	const files = [
 		"/path/file.txt",
 		"/path/nested/deep/file.txt",
