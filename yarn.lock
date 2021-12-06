@@ -4828,9 +4828,9 @@ prettier-linter-helpers@^1.0.0:
     fast-diff "^1.1.2"
 
 prettier@^2.0.5, prettier@^2.2.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.5.0.tgz#a6370e2d4594e093270419d9cc47f7670488f893"
-  integrity sha512-FM/zAKgWTxj40rH03VxzIPdXmj39SwSjwG0heUcNFwI+EMZJnY93yAiKXM3dObIKAM5TA88werc8T/EwhB45eg==
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.5.1.tgz#fff75fa9d519c54cf0fce328c1017d94546bc56a"
+  integrity sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==
 
 pretty-format@^27.0.0, pretty-format@^27.0.2, pretty-format@^27.3.1:
   version "27.3.1"
@@ -6075,9 +6075,9 @@ wast-loader@^1.11.0:
     wabt "1.0.0-nightly.20180421"
 
 watchpack@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.3.0.tgz#a41bca3da6afaff31e92a433f4c856a0c25ea0c4"
-  integrity sha512-MnN0Q1OsvB/GGHETrFeZPQaOelWh/7O+EiFlj8sM9GPjtQkis7k01aAxrg/18kTfoIVcLL+haEVFlXDaSRwKRw==
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.3.1.tgz#4200d9447b401156eeca7767ee610f8809bc9d25"
+  integrity sha512-x0t0JuydIo8qCNctdDrn1OzH/qDzk2+rdCOC3YzumZ42fiMqmQ7T3xQurykYMhYfHaPHTp4ZxAx2NfUo1K6QaA==
   dependencies:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"
