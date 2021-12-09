@@ -1378,12 +1378,12 @@ asn1@~0.2.3:
     safer-buffer "~2.1.0"
 
 assemblyscript@^0.19.16:
-  version "0.19.20"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.19.20.tgz#b8d63b8319eac8a13ec34c0737c2de1bea5d5b7d"
-  integrity sha512-uull/pqWqKZkBC8pQM+oujNoRKC4bN+gv/cJ2Dl71fOzvCXqQN+q/36RpMzN4v5nryt8XoKwXQ8dbv4zGU1nbQ==
+  version "0.19.21"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.19.21.tgz#4518ff7a2c4a343441f441e4caf0054f3d5b8c57"
+  integrity sha512-D77X+xNB/PklGQI72DxvssHCviOadktgwpmErq/lNPfQ0wWW6EWlEcu4k2fjuAaGuy9EH01bZ+u0AhIfQrN8rQ==
   dependencies:
     binaryen "102.0.0-nightly.20211028"
-    long "^5.1.0"
+    long "^5.2.0"
     source-map-support "^0.5.20"
 
 assert-never@^1.2.1:
@@ -4207,10 +4207,10 @@ log-update@^4.0.0:
     slice-ansi "^4.0.0"
     wrap-ansi "^6.2.0"
 
-long@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/long/-/long-5.1.0.tgz#5c0b82eaeea5907176b34bbd3bdcd1bf203ba714"
-  integrity sha512-eNc10JP6ezXp/qxXZlKS4OHAKNae3je9LUkjmXPDEa+Iidlz0n4nFi/9LT+GOgcayMWhykLoISN+v0THeOiWQQ==
+long@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/long/-/long-5.2.0.tgz#2696dadf4b4da2ce3f6f6b89186085d94d52fd61"
+  integrity sha512-9RTUNjK60eJbx3uz+TEGF7fUr29ZDxR5QzXcyDpeSfeH28S9ycINflOgOlppit5U+4kNTe83KQnMEerw7GmE8w==
 
 loose-envify@^1.1.0:
   version "1.4.0"
