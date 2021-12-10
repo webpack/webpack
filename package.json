@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
+    "@babel/eslint-parser": "^7.16.3",
     "@babel/preset-react": "^7.10.4",
     "@types/es-module-lexer": "^0.4.1",
     "@types/jest": "^27.0.2",
@@ -155,7 +156,7 @@
     "pretest": "yarn lint",
     "prelint": "yarn setup",
     "lint": "yarn code-lint && yarn special-lint && yarn type-lint && yarn typings-test && yarn module-typings-test && yarn yarn-lint && yarn pretty-lint && yarn spellcheck",
-    "code-lint": "eslint . --ext '.js' --cache",
+    "code-lint": "eslint . --cache",
     "type-lint": "tsc",
     "typings-test": "tsc -p tsconfig.types.test.json",
     "module-typings-test": "tsc -p tsconfig.module.test.json",
@@ -184,7 +185,7 @@
     "cover:report": "nyc report -t coverage"
   },
   "lint-staged": {
-    "*.js|{lib,setup,bin,hot,tooling,schemas}/**/*.js|test/*.js|{test,examples}/**/webpack.config.js}": [
+    "*.js|*.mjs": [
       "eslint --cache"
     ],
     "*.{ts,json,yml,yaml,md}|examples/*.md": [

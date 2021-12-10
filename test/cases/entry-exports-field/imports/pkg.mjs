@@ -1,1 +1,1 @@
-export default 'pkg';
+export default "pkg";

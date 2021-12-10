@@ -1,3 +1,4 @@
 export default function foo() {
-    return esm;
+	// eslint-disable-next-line no-undef
+	return esm;
 }

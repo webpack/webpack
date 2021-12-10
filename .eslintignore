@@ -6,8 +6,6 @@ benchmark
 coverage
 
 # Ignore not supported files
-!.*.js
-.eslintrc.js
 *.d.ts
 
 # Ignore precompiled schemas

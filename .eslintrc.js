@@ -23,7 +23,6 @@ module.exports = {
 		"eol-last": "error",
 		"no-extra-bind": "warn",
 		"no-process-exit": "warn",
-		"no-use-before-define": "off",
 		"no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true }],
 		"no-loop-func": "off",
 		"node/no-missing-require": ["error", { allowModules: ["webpack"] }],
@@ -91,13 +90,31 @@ module.exports = {
 			}
 		},
 		{
-			files: ["test/**/*.js"],
+			files: ["test/**/*.js", "test/**/*.mjs"],
 			env: {
 				"jest/globals": true
 			},
 			globals: {
 				nsObj: false,
 				jasmine: false
+			}
+		},
+		{
+			files: ["test/**/*.mjs"],
+			parser: "@babel/eslint-parser",
+			parserOptions: {
+				requireConfigFile: false,
+				ecmaVersion: 2021
+			},
+			rules: {
+				"node/no-missing-import": "off",
+				"node/no-unsupported-features/es-syntax": "off"
+			}
+		},
+		{
+			files: ["test/cases/parsing/hashbang/file.mjs"],
+			rules: {
+				"node/shebang": "off"
 			}
 		}
 	]
