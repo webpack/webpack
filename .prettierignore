@@ -1,14 +1,15 @@
 package.json
 
 # Ignore test fixtures
-test/*.*
+test/
 !test/*.js
 !test/**/webpack.config.js
 !test/**/deprecations.js
 
 # Ignore example fixtures
-examples/*.*
+examples/
 !examples/**/webpack.config.js
 
 # Ignore generated files
 *.check.js
+*.d.ts
