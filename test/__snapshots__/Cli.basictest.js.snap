@@ -8931,3 +8931,49 @@ Object {
   },
 }
 `;
+
+exports[`Cli should generate the correct cli flags with custom schema 1`] = `
+Object {
+  "with-both-cli-and-negative-description": Object {
+    "configs": Array [
+      Object {
+        "description": "description for CLI option",
+        "multiple": false,
+        "negatedDescription": "custom negative description",
+        "path": "with-both-cli-and-negative-description",
+        "type": "boolean",
+      },
+    ],
+    "description": "description for CLI option",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "with-cli-description": Object {
+    "configs": Array [
+      Object {
+        "description": "description for CLI option",
+        "multiple": false,
+        "path": "with-cli-description",
+        "type": "string",
+      },
+    ],
+    "description": "description for CLI option",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "with-negative-description": Object {
+    "configs": Array [
+      Object {
+        "description": "original description",
+        "multiple": false,
+        "negatedDescription": "custom negative description",
+        "path": "with-negative-description",
+        "type": "boolean",
+      },
+    ],
+    "description": "original description",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+}
+`;
