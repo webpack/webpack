@@ -111,7 +111,7 @@ describe("ProgressPlugin", function () {
 		nanTest(createMultiCompiler)
 	);
 	it(
-		"should not contain NaN as a percentage when it is applied to MultiCompiler (paralellism: 1)",
+		"should not contain NaN as a percentage when it is applied to MultiCompiler (parallelism: 1)",
 		nanTest(() => createMultiCompiler(undefined, { parallelism: 1 }))
 	);
 

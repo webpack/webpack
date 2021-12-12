@@ -28,7 +28,7 @@ import {
 	named6 as snamed6
 } from "./named-with-namespace-no-side";
 
-it("should point out conflicts from named to namespace (without sideeffects)", () => {
+it("should point out conflicts from named to namespace (without side effects)", () => {
 	expect(snamed1).toBe(1);
 	expect(snamed2).toBe(2);
 	expect(snamed3).toBe(2);

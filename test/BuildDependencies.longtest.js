@@ -136,7 +136,7 @@ describe("BuildDependencies", () => {
 			"export default 0;"
 		);
 		await exec("0", {
-			invalidBuildDepdencies: true,
+			invalidBuildDependencies: true,
 			buildTwice: true,
 			warnings: [/Can't resolve 'should-fail-resolving'/]
 		});

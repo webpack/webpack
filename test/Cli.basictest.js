@@ -264,6 +264,7 @@ describe("Cli", () => {
 		`)
 	);
 
+	// cspell:ignore filsystem
 	test(
 		"errors",
 		{
