@@ -4584,9 +4584,9 @@ webpack x.x.x compiled with 1 warning in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"assets by path *.js 22.2 KiB
+"assets by path *.js 22.5 KiB
   asset bundle.js 16.7 KiB [emitted] (name: main)
-  asset 325.bundle.js 3.9 KiB [emitted]
+  asset 325.bundle.js 4.16 KiB [emitted]
   asset 795.bundle.js 557 bytes [emitted]
   asset 526.bundle.js 366 bytes [emitted] (id hint: vendors)
   asset 189.bundle.js 243 bytes [emitted]
