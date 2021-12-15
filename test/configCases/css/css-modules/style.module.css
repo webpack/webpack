@@ -31,3 +31,18 @@
 	animation-name: localkeyframes;
 	animation: 3s ease-in 1s 2 reverse both paused localkeyframes, localkeyframes;
 } */
+
+/* .composed {
+	composes: local1;
+	composes: local2;
+} */
+
+/* .vars {
+	color: var(--local-color);
+	--local-color: red;
+}
+
+.globalVars :global {
+	color: var(--global-color);
+	--global-color: red;
+} */
