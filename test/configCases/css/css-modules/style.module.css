@@ -12,13 +12,13 @@
 	color: yellow;
 }
 
-/* .local5:global(.global).local6 {
+.local5:global(.global).local6 {
 	color: blue;
-} */
+}
 
-/* :global(:global(:local(.nested1)).nested2).nested3 {
+:global(:global(:local(.nested1)).nested2).nested3 {
 	color: pink;
-} */
+}
 
 /* @keyframes localkeyframes {
 	0% {

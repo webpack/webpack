@@ -3,7 +3,10 @@
 ```javascript
 import "./style.css";
 import "./style2.css";
+import { main } from "./style.module.css";
 import("./lazy-style.css");
+
+document.getElementsByTagName("main")[0].className = main;
 ```
 
 # style.css
@@ -179,22 +182,20 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 		var installedChunks = {};
 /******/ 		
 /******/ 		var loadCssChunkData = (chunkId, link) => {
-/******/ 			var data, tokens = [], token = "", i = 0;
+/******/ 			var data, token = "", token2, exports = {}, i = 0, cc = 1;
 /******/ 			try { if(!link) link = loadStylesheet(chunkId); data = link.sheet.cssRules; data = data[data.length - 1].style; } catch(e) { data = getComputedStyle(document.head); }
 /******/ 			data = data.getPropertyValue("--webpack-" + chunkId);
 /******/ 			if(!data) return;
-/******/ 			for(; i < data.length; i++) {
-/******/ 				var cc = data.charCodeAt(i);
-/******/ 				if(cc == 44) { tokens.push(token); token = ""; }
+/******/ 			for(; cc; i++) {
+/******/ 				cc = data.charCodeAt(i);
+/******/ 				if(cc == 40) { token2 = token; token = ""; }
+/******/ 				else if(cc == 41) { exports[token2.replace(/^_/, "")] = token.replace(/^_/, ""); token = ""; }
+/******/ 				else if(!cc || cc == 44) { __webpack_require__.r(exports); __webpack_require__.m[token.replace(/^_/, "")] = ((exports, module) => {
+/******/ 					module.exports = exports;
+/******/ 				}).bind(null, exports); token = ""; exports = {}; }
 /******/ 				else if(cc == 92) { token += data[++i] }
 /******/ 				else { token += data[i]; }
 /******/ 			}
-/******/ 			token && tokens.push(token);
-/******/ 			tokens.forEach((token) => {
-/******/ 				__webpack_require__.m[token.replace(/^_/, "")] = (module, exports) => {
-/******/ 					__webpack_require__.r(exports);
-/******/ 				};
-/******/ 			});
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		var loadingAttribute = "data-webpack-loading";
@@ -391,9 +392,13 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ 1);
 /* harmony import */ var _style2_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style2.css */ 5);
+/* harmony import */ var _style_module_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.module.css */ 6);
 
 
-__webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./lazy-style.css */ 6));
+
+__webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./lazy-style.css */ 7));
+
+document.getElementsByTagName("main")[0].className = _style_module_css__WEBPACK_IMPORTED_MODULE_2__.main;
 
 })();
 
@@ -421,7 +426,12 @@ body {
 	background: red;
 }
 
-head{--webpack-0:_4,_2,_1,_5;}
+.main_6 {
+	font-size: large;
+	color: darkblue;
+}
+
+head{--webpack-0:_4,_2,_1,_5,main(main_6)_6;}
 ```
 
 # dist/1.output.css
@@ -431,7 +441,7 @@ body {
 	color: blue;
 }
 
-head{--webpack-1:_6;}
+head{--webpack-1:_7;}
 ```
 
 # Info
@@ -439,48 +449,48 @@ head{--webpack-1:_6;}
 ## Unoptimized
 
 ```
-assets by chunk 15.9 KiB (name: main)
-  asset output.js 15.6 KiB [emitted] (name: main)
-  asset 0.output.css 267 bytes [emitted] (name: main)
+assets by chunk 16.3 KiB (name: main)
+  asset output.js 16 KiB [emitted] (name: main)
+  asset 0.output.css 332 bytes [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 1.output.css 45 bytes [emitted]
-Entrypoint main 15.9 KiB (14.6 KiB) = output.js 15.6 KiB 0.output.css 267 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, 0.output.css (main) 115 bytes (javascript) 254 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.4 KiB (runtime) [entry] [rendered]
+Entrypoint main 16.3 KiB (14.6 KiB) = output.js 16 KiB 0.output.css 332 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, 0.output.css (main) 218 bytes (javascript) 301 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.52 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 9.4 KiB 9 modules
-  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 254 bytes (css) 42 bytes (css-import) [dependent] 5 modules
-  ./example.js 73 bytes [built] [code generated]
+  runtime modules 9.52 KiB 9 modules
+  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 301 bytes (css) 42 bytes (css-import) [dependent] 6 modules
+  ./example.js 176 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
 chunk (runtime: main) 1.output.css 23 bytes
-  > ./lazy-style.css ./example.js 3:0-26
+  > ./lazy-style.css ./example.js 4:0-26
   ./lazy-style.css 23 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
-    import() ./lazy-style.css ./example.js 3:0-26
+    import() ./lazy-style.css ./example.js 4:0-26
 webpack 5.64.4 compiled successfully
 ```
 
 ## Production mode
 
 ```
-assets by chunk 3.8 KiB (name: main)
-  asset output.js 3.53 KiB [emitted] [minimized] (name: main)
-  asset 179.output.css 277 bytes [emitted] (name: main)
+assets by chunk 3.99 KiB (name: main)
+  asset output.js 3.66 KiB [emitted] [minimized] (name: main)
+  asset 179.output.css 339 bytes [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 159.output.css 49 bytes [emitted]
-Entrypoint main 3.8 KiB (14.6 KiB) = output.js 3.53 KiB 179.output.css 277 bytes 1 auxiliary asset
+Entrypoint main 3.99 KiB (14.6 KiB) = output.js 3.66 KiB 179.output.css 339 bytes 1 auxiliary asset
 chunk (runtime: main) 159.output.css 23 bytes
-  > ./lazy-style.css ./example.js 3:0-26
+  > ./lazy-style.css ./example.js 4:0-26
   ./lazy-style.css 23 bytes [built] [code generated]
     [no exports]
-    import() ./lazy-style.css ./example.js 3:0-26
-chunk (runtime: main) output.js, 179.output.css (main) 115 bytes (javascript) 254 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.4 KiB (runtime) [entry] [rendered]
+    import() ./lazy-style.css ./example.js 4:0-26
+chunk (runtime: main) output.js, 179.output.css (main) 218 bytes (javascript) 301 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.53 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 9.4 KiB 9 modules
-  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 254 bytes (css) 42 bytes (css-import) [dependent] 5 modules
-  ./example.js 73 bytes [built] [code generated]
+  runtime modules 9.53 KiB 9 modules
+  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 301 bytes (css) 42 bytes (css-import) [dependent] 6 modules
+  ./example.js 176 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
