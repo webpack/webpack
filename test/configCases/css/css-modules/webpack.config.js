@@ -10,6 +10,9 @@ module.exports = [
 	{
 		target: "web",
 		mode: "production",
+		output: {
+			uniqueName: "my-app"
+		},
 		experiments: {
 			css: true
 		}

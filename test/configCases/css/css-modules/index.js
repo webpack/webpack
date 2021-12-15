@@ -8,16 +8,16 @@ it("should allow to create css modules", done => {
 		try {
 			expect(x).toEqual({
 				global: undefined,
-				class: prod ? "S_491" : "class_./style.module.css",
+				class: prod ? "my-app-491-S" : "./style.module.css-class",
 				local: prod
-					? "Zw_491 yl_491 J__491 gc_491"
-					: "local1_./style.module.css local2_./style.module.css local3_./style.module.css local4_./style.module.css",
+					? "my-app-491-Zw my-app-491-yl my-app-491-J_ my-app-491-gc"
+					: "./style.module.css-local1 ./style.module.css-local2 ./style.module.css-local3 ./style.module.css-local4",
 				local2: prod
-					? "Xg_491 AY_491"
-					: "local5_./style.module.css local6_./style.module.css",
+					? "my-app-491-Xg my-app-491-AY"
+					: "./style.module.css-local5 ./style.module.css-local6",
 				nested: prod
-					? "RX_491 undefined X2_491"
-					: "nested1_./style.module.css undefined nested3_./style.module.css"
+					? "my-app-491-RX undefined my-app-491-X2"
+					: "./style.module.css-nested1 undefined ./style.module.css-nested3"
 			});
 		} catch (e) {
 			return done(e);
