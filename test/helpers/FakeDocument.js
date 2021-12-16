@@ -174,6 +174,9 @@ class FakeSheet {
 			);
 		});
 		walkCssTokens(css, {
+			isSelector() {
+				return selector === undefined;
+			},
 			leftCurlyBracket(source, start, end) {
 				if (selector === undefined) {
 					selector = source.slice(last, start).trim();

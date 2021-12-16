@@ -1,4 +1,8 @@
+:root {
+	--large: 72px;
+}
+
 .main {
-	font-size: large;
+	font-size: var(--large);
 	color: darkblue;
 }

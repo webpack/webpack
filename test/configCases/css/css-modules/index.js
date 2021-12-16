@@ -17,7 +17,13 @@ it("should allow to create css modules", done => {
 					: "./style.module.css-local5 ./style.module.css-local6",
 				nested: prod
 					? "my-app-491-RX undefined my-app-491-X2"
-					: "./style.module.css-nested1 undefined ./style.module.css-nested3"
+					: "./style.module.css-nested1 undefined ./style.module.css-nested3",
+				ident: prod ? "my-app-491-yR" : "./style.module.css-ident",
+				keyframes: prod ? "my-app-491-y3" : "./style.module.css-localkeyframes",
+				animation: prod ? "my-app-491-oQ" : "./style.module.css-animation",
+				vars: prod
+					? "--my-app-491-y4 my-app-491-gR undefined my-app-491-xk"
+					: "--./style.module.css-local-color ./style.module.css-vars undefined ./style.module.css-globalVars"
 			});
 		} catch (e) {
 			return done(e);

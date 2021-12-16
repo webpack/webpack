@@ -5,6 +5,7 @@ describe("walkCssTokens", () => {
 		it(`should ${name}`, () => {
 			const results = [];
 			walkCssTokens(content, {
+				isSelector: () => true,
 				url: (input, s, e, cs, ce) => {
 					results.push(["url", input.slice(s, e), input.slice(cs, ce)]);
 					return e;

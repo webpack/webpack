@@ -22,6 +22,12 @@ _{{dist/output.js}}_
 _{{dist/0.output.css}}_
 ```
 
+## production
+
+```javascript
+_{{production:dist/179.output.css}}_
+```
+
 # dist/1.output.css
 
 ```javascript
