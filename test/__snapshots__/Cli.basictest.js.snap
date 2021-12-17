@@ -1283,6 +1283,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-asset-output-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit the asset in the specified folder instead relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
+        "multiple": false,
+        "path": "module.generator.asset.outputPath",
+        "type": "string",
+      },
+    ],
+    "description": "Emit the asset in the specified folder instead relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-asset-public-path": Object {
     "configs": Array [
       Object {
@@ -1319,6 +1332,19 @@ Object {
       },
     ],
     "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-resource-output-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit the asset in the specified folder instead relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
+        "multiple": false,
+        "path": "module.generator.asset/resource.outputPath",
+        "type": "string",
+      },
+    ],
+    "description": "Emit the asset in the specified folder instead relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
     "multiple": false,
     "simpleType": "string",
   },

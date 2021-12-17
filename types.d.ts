@@ -322,6 +322,11 @@ declare interface AssetResourceGeneratorOptions {
 	filename?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
+	 * Emit the asset in the specified folder instead relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.
+	 */
+	outputPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */
 	publicPath?: string | ((pathData: PathData, assetInfo?: AssetInfo) => string);
