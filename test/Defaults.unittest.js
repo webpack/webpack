@@ -1944,20 +1944,37 @@ describe("Defaults", () => {
 			+             },
 			+             "resolve": Object {
 			+               "fullySpecified": true,
-			@@ ... @@
+			+             },
 			+           },
 			+         ],
 			+         "type": "webassembly/async",
 			+       },
 			+       Object {
-			+         "resolve": Object {
-			+           "fullySpecified": true,
-			+           "preferRelative": true,
-			+         },
+			+         "oneOf": Array [
+			+           Object {
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+             "test": /\\.module\\.css$/i,
+			+             "type": "css/module",
+			+           },
+			+           Object {
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			+             "type": "css",
+			+           },
+			+         ],
 			+         "test": /\\.css$/i,
-			+         "type": "css",
 			+       },
 			+       Object {
+			+         "mimetype": "text/css+module",
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+         },
+			+         "type": "css/module",
+			@@ ... @@
 			+         "mimetype": "text/css",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -1965,6 +1982,7 @@ describe("Defaults", () => {
 			+         },
 			+         "type": "css",
 			+       },
+			+       Object {
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
