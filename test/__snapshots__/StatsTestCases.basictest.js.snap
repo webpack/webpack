@@ -357,9 +357,9 @@ multiple-vendors:
     > ./c ./index.js 3:0-47
     > ./c c
     ./node_modules/z.js 20 bytes [built] [code generated]
-  chunk (runtime: a) multiple-vendors/a.js (a) 165 bytes (javascript) 7.58 KiB (runtime) [entry] [rendered]
+  chunk (runtime: a) multiple-vendors/a.js (a) 165 bytes (javascript) 7.59 KiB (runtime) [entry] [rendered]
     > ./a a
-    runtime modules 7.58 KiB 10 modules
+    runtime modules 7.59 KiB 10 modules
     ./a.js 165 bytes [built] [code generated]
   chunk (runtime: main) multiple-vendors/async-a.js (async-a) 165 bytes [rendered]
     > ./a ./index.js 1:0-47
@@ -1930,7 +1930,7 @@ asset normal.js 109 bytes {30} [emitted] (name: normal)
 Entrypoint main 16.8 KiB = main.js
   prefetch: prefetched2.js {379} (name: prefetched2), prefetched.js {505} (name: prefetched), prefetched3.js {220} (name: prefetched3)
 chunk {30} (runtime: main) normal.js (normal) 1 bytes <{179}> [rendered]
-chunk {179} (runtime: main) main.js (main) 436 bytes (javascript) 9.94 KiB (runtime) >{30}< >{220}< >{379}< >{505}< (prefetch: {379} {505} {220}) [entry] [rendered]
+chunk {179} (runtime: main) main.js (main) 436 bytes (javascript) 9.95 KiB (runtime) >{30}< >{220}< >{379}< >{505}< (prefetch: {379} {505} {220}) [entry] [rendered]
 chunk {220} (runtime: main) prefetched3.js (prefetched3) 1 bytes <{179}> [rendered]
 chunk {379} (runtime: main) prefetched2.js (prefetched2) 1 bytes <{179}> [rendered]
 chunk {505} (runtime: main) prefetched.js (prefetched) 228 bytes <{179}> >{641}< >{746}< (prefetch: {641} {746}) [rendered]
@@ -2013,7 +2013,7 @@ runtime modules 6 KiB
   webpack/runtime/load script 1.37 KiB {179} [code generated]
     [no exports]
     [used exports unknown]
-  webpack/runtime/publicPath 867 bytes {179} [code generated]
+  webpack/runtime/publicPath 868 bytes {179} [code generated]
     [no exports]
     [used exports unknown]
 cacheable modules 193 bytes
@@ -2084,7 +2084,7 @@ LOG from webpack.FileSystemInfo
     Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations
     Managed items info in cache: 0 items
 
-1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (c7a4e3bf1797f14ec5d7)"
+1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (9399ea1d1278bddc4a80)"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-errors-only 1`] = `""`;
@@ -2283,7 +2283,7 @@ chunk {179} (runtime: main) main.js (main) 73 bytes (javascript) 6 KiB (runtime)
     webpack/runtime/load script 1.37 KiB {179} [code generated]
       [no exports]
       [used exports unknown]
-    webpack/runtime/publicPath 867 bytes {179} [code generated]
+    webpack/runtime/publicPath 868 bytes {179} [code generated]
       [no exports]
       [used exports unknown]
   cacheable modules 73 bytes
@@ -2460,7 +2460,7 @@ LOG from webpack.FileSystemInfo
     Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations
     Managed items info in cache: 0 items
 
-1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (c7a4e3bf1797f14ec5d7)"
+1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (9399ea1d1278bddc4a80)"
 `;
 
 exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
@@ -3614,9 +3614,9 @@ custom-chunks-filter:
     > ./c ./index.js 3:0-47
     > ./c c
     ./node_modules/z.js 20 bytes [built] [code generated]
-  chunk (runtime: a) custom-chunks-filter/a.js (a) 245 bytes (javascript) 6.66 KiB (runtime) >{137}< >{568}< [entry] [rendered]
+  chunk (runtime: a) custom-chunks-filter/a.js (a) 245 bytes (javascript) 6.67 KiB (runtime) >{137}< >{568}< [entry] [rendered]
     > ./a a
-    runtime modules 6.66 KiB 9 modules
+    runtime modules 6.67 KiB 9 modules
     dependent modules 60 bytes [dependent] 3 modules
     ./a.js + 1 modules 185 bytes [built] [code generated]
   chunk (runtime: main) custom-chunks-filter/async-a.js (async-a) 185 bytes <{179}> ={282}= ={767}= ={954}= >{137}< >{568}< [rendered]
@@ -3654,9 +3654,9 @@ custom-chunks-filter-in-cache-groups:
     ./node_modules/x.js 20 bytes [built] [code generated]
     ./node_modules/y.js 20 bytes [built] [code generated]
     ./node_modules/z.js 20 bytes [built] [code generated]
-  chunk (runtime: main) custom-chunks-filter-in-cache-groups/main.js (main) 147 bytes (javascript) 6.69 KiB (runtime) >{216}< >{334}< >{383}< >{794}< [entry] [rendered]
+  chunk (runtime: main) custom-chunks-filter-in-cache-groups/main.js (main) 147 bytes (javascript) 6.7 KiB (runtime) >{216}< >{334}< >{383}< >{794}< [entry] [rendered]
     > ./ main
-    runtime modules 6.69 KiB 9 modules
+    runtime modules 6.7 KiB 9 modules
     ./index.js 147 bytes [built] [code generated]
   chunk (runtime: b, c, main) custom-chunks-filter-in-cache-groups/vendors.js (vendors) (id hint: vendors) 60 bytes <{179}> ={128}= ={334}= ={383}= ={459}= ={794}= >{137}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
     > ./a ./index.js 1:0-47
@@ -3832,9 +3832,9 @@ default (webpack x.x.x) compiled successfully"
 
 exports[`StatsTestCases should print correct stats for split-chunks-issue-6696 1`] = `
 "Entrypoint main 13.3 KiB = vendors.js 414 bytes main.js 12.9 KiB
-chunk (runtime: main) main.js (main) 134 bytes (javascript) 7.55 KiB (runtime) ={216}= >{334}< >{794}< [entry] [rendered]
+chunk (runtime: main) main.js (main) 134 bytes (javascript) 7.56 KiB (runtime) ={216}= >{334}< >{794}< [entry] [rendered]
   > ./ main
-  runtime modules 7.55 KiB 10 modules
+  runtime modules 7.56 KiB 10 modules
   ./index.js 134 bytes [built] [code generated]
 chunk (runtime: main) vendors.js (vendors) (id hint: vendors) 20 bytes ={179}= >{334}< >{794}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
   > ./ main
@@ -3854,9 +3854,9 @@ exports[`StatsTestCases should print correct stats for split-chunks-issue-7401 1
 "Entrypoint a 6.43 KiB = 282.js 414 bytes a.js 6.02 KiB
 Entrypoint b 10.9 KiB = b.js
 Chunk Group c 797 bytes = 282.js 414 bytes c.js 383 bytes
-chunk (runtime: b) b.js (b) 43 bytes (javascript) 6.59 KiB (runtime) >{282}< >{459}< [entry] [rendered]
+chunk (runtime: b) b.js (b) 43 bytes (javascript) 6.6 KiB (runtime) >{282}< >{459}< [entry] [rendered]
   > ./b b
-  runtime modules 6.59 KiB 9 modules
+  runtime modules 6.6 KiB 9 modules
   ./b.js 43 bytes [built] [code generated]
 chunk (runtime: a, b) 282.js (id hint: vendors) 20 bytes <{128}> ={459}= ={786}= [initial] [rendered] split chunk (cache group: defaultVendors)
   > ./c ./b.js 1:0-41
