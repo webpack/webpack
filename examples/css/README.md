@@ -407,7 +407,7 @@ document.getElementsByTagName("main")[0].className = _style_module_css__WEBPACK_
 ;
 ```
 
-# dist/0.output.css
+# dist/output.css
 
 ```javascript
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");
@@ -488,11 +488,11 @@ head{--webpack-app-1:_7;}
 ```
 assets by chunk 16.8 KiB (name: main)
   asset output.js 16.4 KiB [emitted] (name: main)
-  asset 0.output.css 385 bytes [emitted] (name: main)
+  asset output.css 385 bytes [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 1.output.css 49 bytes [emitted]
-Entrypoint main 16.8 KiB (14.6 KiB) = output.js 16.4 KiB 0.output.css 385 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, 0.output.css (main) 218 bytes (javascript) 335 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.94 KiB (runtime) [entry] [rendered]
+Entrypoint main 16.8 KiB (14.6 KiB) = output.js 16.4 KiB output.css 385 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 335 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.94 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 9.94 KiB 9 modules
   dependent modules 42 bytes (javascript) 14.6 KiB (asset) 335 bytes (css) 42 bytes (css-import) [dependent] 6 modules
@@ -514,16 +514,16 @@ webpack 5.64.4 compiled successfully
 ```
 assets by chunk 4.2 KiB (name: main)
   asset output.js 3.82 KiB [emitted] [minimized] (name: main)
-  asset 179.output.css 385 bytes [emitted] (name: main)
+  asset output.css 385 bytes [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 159.output.css 53 bytes [emitted]
-Entrypoint main 4.2 KiB (14.6 KiB) = output.js 3.82 KiB 179.output.css 385 bytes 1 auxiliary asset
+Entrypoint main 4.2 KiB (14.6 KiB) = output.js 3.82 KiB output.css 385 bytes 1 auxiliary asset
 chunk (runtime: main) 159.output.css 23 bytes
   > ./lazy-style.css ./example.js 4:0-26
   ./lazy-style.css 23 bytes [built] [code generated]
     [no exports]
     import() ./lazy-style.css ./example.js 4:0-26
-chunk (runtime: main) output.js, 179.output.css (main) 218 bytes (javascript) 335 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 335 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.95 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 9.95 KiB 9 modules
   dependent modules 42 bytes (javascript) 14.6 KiB (asset) 335 bytes (css) 42 bytes (css-import) [dependent] 6 modules

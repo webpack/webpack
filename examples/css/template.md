@@ -16,16 +16,16 @@ _{{style.css}}_
 _{{dist/output.js}}_
 ```
 
-# dist/0.output.css
+# dist/output.css
 
 ```javascript
-_{{dist/0.output.css}}_
+_{{dist/output.css}}_
 ```
 
 ## production
 
 ```javascript
-_{{production:dist/179.output.css}}_
+_{{production:dist/output.css}}_
 ```
 
 # dist/1.output.css

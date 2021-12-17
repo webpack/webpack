@@ -307,6 +307,7 @@ describe("Defaults", () => {
 		    "clean": undefined,
 		    "compareBeforeEmit": true,
 		    "crossOriginLoading": false,
+		    "cssChunkFilename": "[name].css",
 		    "cssFilename": "[name].css",
 		    "devtoolFallbackModuleFilenameTemplate": undefined,
 		    "devtoolModuleFilenameTemplate": undefined,
@@ -989,8 +990,10 @@ describe("Defaults", () => {
 		-     "chunkFilename": "[name].js",
 		+     "chunkFilename": "[id].bundle.js",
 		@@ ... @@
+		-     "cssChunkFilename": "[name].css",
 		-     "cssFilename": "[name].css",
-		+     "cssFilename": "[id].bundle.css",
+		+     "cssChunkFilename": "[id].bundle.css",
+		+     "cssFilename": "bundle.css",
 		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": "bundle.js",
@@ -1005,7 +1008,9 @@ describe("Defaults", () => {
 		-     "chunkFilename": "[name].js",
 		+     "chunkFilename": "[id].js",
 		@@ ... @@
+		-     "cssChunkFilename": "[name].css",
 		-     "cssFilename": "[name].css",
+		+     "cssChunkFilename": "[id].css",
 		+     "cssFilename": "[id].css",
 		@@ ... @@
 		-     "filename": "[name].js",
