@@ -2,43 +2,29 @@
 
 "use strict";
 
-if (typeof EventSource !== "function") {
-	throw new Error(
-		"Environment doesn't support lazy compilation (requires EventSource)"
-	);
-}
-
 var urlBase = decodeURIComponent(__resourceQuery.slice(1));
-var activeEventSource;
+var activePing;
 var activeKeys = new Map();
 var errorHandlers = new Set();
 
-var updateEventSource = function updateEventSource() {
-	if (activeEventSource) activeEventSource.close();
+var updatePing = function updatePing() {
 	if (activeKeys.size) {
-		activeEventSource = new EventSource(
-			urlBase + Array.from(activeKeys.keys()).join("@")
-		);
-		activeEventSource.onerror = function (event) {
+		activePing = fetch(urlBase + Array.from(activeKeys.keys()).join("@"), {
+			mode: "no-cors"
+		}).then(function (response) {
+			if (response.status >= 400 && response.status < 600) {
+				throw new Error("Bad response from server: " + response.status);
+			}
+			return response;
+		});
+		activePing.catch(function (err) {
+			console.error("Problem in lazy compilation:");
 			errorHandlers.forEach(function (onError) {
-				onError(
-					new Error(
-						"Problem communicating active modules to the server: " +
-							event.message +
-							" " +
-							event.filename +
-							":" +
-							event.lineno +
-							":" +
-							event.colno +
-							" " +
-							event.error
-					)
-				);
+				onError(new Error(err));
 			});
-		};
+		});
 	} else {
-		activeEventSource = undefined;
+		activePing = undefined;
 	}
 };
 
@@ -51,7 +37,7 @@ exports.keepAlive = function (options) {
 	var value = activeKeys.get(data) || 0;
 	activeKeys.set(data, value + 1);
 	if (value === 0) {
-		updateEventSource();
+		updatePing();
 	}
 	if (!active && !module.hot) {
 		console.log(
@@ -65,7 +51,7 @@ exports.keepAlive = function (options) {
 			var value = activeKeys.get(data);
 			if (value === 1) {
 				activeKeys.delete(data);
-				updateEventSource();
+				updatePing();
 			} else {
 				activeKeys.set(data, value - 1);
 			}
