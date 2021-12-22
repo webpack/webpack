@@ -675,19 +675,19 @@ declare interface CallExpressionInfo {
 	getMembers: () => string[];
 }
 declare interface CallbackAsyncQueue<T> {
-	(err?: WebpackError, result?: T): any;
+	(err: WebpackError | null, result?: T): any;
 }
 declare interface CallbackCache<T> {
-	(err?: WebpackError, result?: T): void;
+	(err: WebpackError | null, result?: T): void;
 }
 declare interface CallbackFunction<T> {
-	(err?: Error, result?: T): any;
+	(err: Error | null, result?: T): any;
 }
 declare interface CallbackNormalErrorCache<T> {
-	(err?: Error, result?: T): void;
+	(err: Error | null, result?: T): void;
 }
 declare interface CallbackWebpack<T> {
-	(err?: Error, stats?: T): void;
+	(err: Error | null, stats?: T): void;
 }
 type Cell<T> = undefined | T;
 declare class Chunk {
@@ -1541,7 +1541,7 @@ declare class Compilation {
 	getLogger(name: string | (() => string)): WebpackLogger;
 	addModule(
 		module: Module,
-		callback: (err?: WebpackError, result?: Module) => void
+		callback: (err: WebpackError | null, result?: Module) => void
 	): void;
 
 	/**
@@ -1559,21 +1559,21 @@ declare class Compilation {
 	 */
 	buildModule(
 		module: Module,
-		callback: (err?: WebpackError, result?: Module) => void
+		callback: (err: WebpackError | null, result?: Module) => void
 	): void;
 	processModuleDependencies(
 		module: Module,
-		callback: (err?: WebpackError, result?: Module) => void
+		callback: (err: WebpackError | null, result?: Module) => void
 	): void;
 	processModuleDependenciesNonRecursive(module: Module): void;
 	handleModuleCreation(
 		__0: HandleModuleCreationOptions,
-		callback: (err?: WebpackError, result?: Module) => void
+		callback: (err: WebpackError | null, result?: Module) => void
 	): void;
 	addModuleChain(
 		context: string,
 		dependency: Dependency,
-		callback: (err?: WebpackError, result?: Module) => void
+		callback: (err: WebpackError | null, result?: Module) => void
 	): void;
 	addModuleTree(
 		__0: {
@@ -1590,27 +1590,27 @@ declare class Compilation {
 			 */
 			contextInfo?: Partial<ModuleFactoryCreateDataContextInfo>;
 		},
-		callback: (err?: WebpackError, result?: Module) => void
+		callback: (err: WebpackError | null, result?: Module) => void
 	): void;
 	addEntry(
 		context: string,
 		entry: Dependency,
 		optionsOrName: string | EntryOptions,
-		callback: (err?: WebpackError, result?: Module) => void
+		callback: (err: WebpackError | null, result?: Module) => void
 	): void;
 	addInclude(
 		context: string,
 		dependency: Dependency,
 		options: EntryOptions,
-		callback: (err?: WebpackError, result?: Module) => void
+		callback: (err: WebpackError | null, result?: Module) => void
 	): void;
 	rebuildModule(
 		module: Module,
-		callback: (err?: WebpackError, result?: Module) => void
+		callback: (err: WebpackError | null, result?: Module) => void
 	): void;
 	finish(callback?: any): void;
 	unseal(): void;
-	seal(callback: (err?: WebpackError) => void): void;
+	seal(callback: (err: WebpackError | null) => void): void;
 	reportDependencyErrorsAndWarnings(
 		module: Module,
 		blocks: DependenciesBlock[]
@@ -1698,7 +1698,7 @@ declare class Compilation {
 	clearAssets(): void;
 	createModuleAssets(): void;
 	getRenderManifest(options: RenderManifestOptions): RenderManifestEntry[];
-	createChunkAssets(callback: (err?: WebpackError) => void): void;
+	createChunkAssets(callback: (err: WebpackError | null) => void): void;
 	getPath(
 		filename: string | ((arg0: PathData, arg1?: AssetInfo) => string),
 		data?: PathData
@@ -1734,17 +1734,17 @@ declare class Compilation {
 	executeModule(
 		module: Module,
 		options: ExecuteModuleOptions,
-		callback: (err?: WebpackError, result?: ExecuteModuleResult) => void
+		callback: (err: WebpackError | null, result?: ExecuteModuleResult) => void
 	): void;
 	checkConstraints(): void;
 	factorizeModule: {
 		(
 			options: FactorizeModuleOptions & { factoryResult?: false },
-			callback: (err?: WebpackError, result?: Module) => void
+			callback: (err: WebpackError | null, result?: Module) => void
 		): void;
 		(
 			options: FactorizeModuleOptions & { factoryResult: true },
-			callback: (err?: WebpackError, result?: ModuleFactoryResult) => void
+			callback: (err: WebpackError | null, result?: ModuleFactoryResult) => void
 		): void;
 	};
 
@@ -1942,7 +1942,11 @@ declare class Compiler {
 	watch(watchOptions: WatchOptions, handler: CallbackFunction<Stats>): Watching;
 	run(callback: CallbackFunction<Stats>): void;
 	runAsChild(
-		callback: (err?: Error, entries?: Chunk[], compilation?: Compilation) => any
+		callback: (
+			err: Error | null,
+			entries?: Chunk[],
+			compilation?: Compilation
+		) => any
 	): void;
 	purgeInputFileSystem(): void;
 	emitAssets(compilation: Compilation, callback: CallbackFunction<void>): void;
@@ -2079,7 +2083,7 @@ declare interface Configuration {
 		| ((
 				data: ExternalItemFunctionData,
 				callback: (
-					err?: Error,
+					err: Error,
 					result?: string | boolean | string[] | { [index: string]: any }
 				) => void
 		  ) => void)
@@ -2475,7 +2479,10 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 	resolveDependencies(
 		fs: InputFileSystem,
 		options: ContextModuleOptions,
-		callback: (err?: Error, dependencies?: ContextElementDependency[]) => any
+		callback: (
+			err: Error | null,
+			dependencies?: ContextElementDependency[]
+		) => any
 	): void;
 }
 
@@ -3722,7 +3729,7 @@ type ExternalItem =
 	| ((
 			data: ExternalItemFunctionData,
 			callback: (
-				err?: Error,
+				err: Error | null,
 				result?: string | boolean | string[] | { [index: string]: any }
 			) => void
 	  ) => void)
@@ -3756,7 +3763,7 @@ declare interface ExternalItemFunctionData {
 		| ((
 				context: string,
 				request: string,
-				callback: (err?: Error, result?: string) => void
+				callback: (err: Error | null, result?: string) => void
 		  ) => void)
 		| ((context: string, request: string) => Promise<string>);
 
@@ -3807,7 +3814,7 @@ type Externals =
 	| ((
 			data: ExternalItemFunctionData,
 			callback: (
-				err?: Error,
+				err: Error | null,
 				result?: string | boolean | string[] | { [index: string]: any }
 			) => void
 	  ) => void)
@@ -4077,7 +4084,7 @@ declare interface FileSystem {
 	};
 }
 declare interface FileSystemCallback<T> {
-	(err?: null | (PossibleFileSystemError & Error), result?: T): any;
+	(err: null | (PossibleFileSystemError & Error), result?: T): any;
 }
 declare interface FileSystemDirent {
 	name: string | Buffer;
@@ -4117,29 +4124,29 @@ declare abstract class FileSystemInfo {
 	getFileTimestamp(
 		path: string,
 		callback: (
-			arg0?: WebpackError,
+			arg0?: WebpackError | null,
 			arg1?: null | FileSystemInfoEntry | "ignore"
 		) => void
 	): void;
 	getContextTimestamp(
 		path: string,
 		callback: (
-			arg0?: WebpackError,
+			arg0?: WebpackError | null,
 			arg1?: null | "ignore" | ResolvedContextFileSystemInfoEntry
 		) => void
 	): void;
 	getFileHash(
 		path: string,
-		callback: (arg0?: WebpackError, arg1?: string) => void
+		callback: (arg0?: WebpackError | null, arg1?: string) => void
 	): void;
 	getContextHash(
 		path: string,
-		callback: (arg0?: WebpackError, arg1?: string) => void
+		callback: (arg0?: WebpackError | null, arg1?: string) => void
 	): void;
 	getContextTsh(
 		path: string,
 		callback: (
-			arg0?: WebpackError,
+			arg0?: WebpackError | null,
 			arg1?: ResolvedContextTimestampAndHash
 		) => void
 	): void;
@@ -4167,12 +4174,12 @@ declare abstract class FileSystemInfo {
 			 */
 			timestamp?: boolean;
 		},
-		callback: (arg0?: WebpackError, arg1?: Snapshot) => void
+		callback: (arg0?: WebpackError | null, arg1?: Snapshot) => void
 	): void;
 	mergeSnapshots(snapshot1: Snapshot, snapshot2: Snapshot): Snapshot;
 	checkSnapshotValid(
 		snapshot: Snapshot,
-		callback: (arg0?: WebpackError, arg1?: boolean) => void
+		callback: (arg0?: WebpackError | null, arg1?: boolean) => void
 	): void;
 	getDeprecatedFileTimestamps(): Map<any, any>;
 	getDeprecatedContextTimestamps(): Map<any, any>;
@@ -5902,7 +5909,7 @@ declare interface LazyCompilationOptions {
 	backend?:
 		| ((
 				compiler: Compiler,
-				callback: (err?: Error, api?: BackendApi) => void
+				callback: (err: Error | null, api?: BackendApi) => void
 		  ) => void)
 		| ((compiler: Compiler) => Promise<BackendApi>)
 		| LazyCompilationDefaultBackendOptions;
@@ -6208,7 +6215,7 @@ declare interface LoaderPluginLoaderContext {
 	loadModule(
 		request: string,
 		callback: (
-			err: null | Error,
+			err: Error | null,
 			source: string,
 			sourceMap: any,
 			module: NormalModule
@@ -6217,7 +6224,7 @@ declare interface LoaderPluginLoaderContext {
 	importModule(
 		request: string,
 		options: ImportModuleOptions,
-		callback: (err?: Error, exports?: any) => any
+		callback: (err: Error | null, exports?: any) => any
 	): void;
 	importModule(request: string, options?: ImportModuleOptions): Promise<any>;
 }
@@ -6243,7 +6250,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	 * Make this loader async.
 	 */
 	async(): (
-		err?: null | Error,
+		err: null | Error,
 		content?: string | Buffer,
 		sourceMap?: string | SourceMap,
 		additionalData?: AdditionalData
@@ -6257,7 +6264,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	 */
 	cacheable(flag?: boolean): void;
 	callback: (
-		err?: null | Error,
+		err: Error | null,
 		content?: string | Buffer,
 		sourceMap?: string | SourceMap,
 		additionalData?: AdditionalData
@@ -6583,7 +6590,7 @@ declare class Module extends DependenciesBlock {
 	hasReasons(moduleGraph: ModuleGraph, runtime: RuntimeSpec): boolean;
 	needBuild(
 		context: NeedBuildContext,
-		callback: (arg0?: WebpackError, arg1?: boolean) => void
+		callback: (arg0?: WebpackError | null, arg1?: boolean) => void
 	): void;
 	needRebuild(
 		fileTimestamps: Map<string, null | number>,
@@ -6597,7 +6604,7 @@ declare class Module extends DependenciesBlock {
 		compilation: Compilation,
 		resolver: ResolverWithOptions,
 		fs: InputFileSystem,
-		callback: (arg0?: WebpackError) => void
+		callback: (arg0?: WebpackError | null) => void
 	): void;
 	getSourceTypes(): Set<string>;
 	source(
@@ -7452,7 +7459,7 @@ declare class NormalModule extends Module {
 	resourceResolveData?: Record<string, any>;
 	matchResource?: string;
 	loaders: LoaderItem[];
-	error?: WebpackError;
+	error?: WebpackError | null;
 	restoreFromUnsafeCache(
 		unsafeCacheData?: any,
 		normalModuleFactory?: any
@@ -11977,7 +11984,7 @@ declare class WebpackError extends Error {
 	 * Optional override for formatting stack traces
 	 */
 	static prepareStackTrace?: (
-		err: Error,
+		err: Error | null,
 		stackTraces: NodeJS.CallSite[]
 	) => any;
 	static stackTraceLimit: number;
