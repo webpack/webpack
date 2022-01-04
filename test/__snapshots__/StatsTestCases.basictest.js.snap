@@ -741,7 +741,7 @@ cacheable modules 106 bytes
 webpack x.x.x compiled successfully in X ms
 
 asset main-ae1f2717fd5d1cb5ac68.js 11.3 KiB [emitted] [immutable] (name: main)
-asset 695-ace208366ce0ce2556ef.js 1.12 KiB [emitted] [immutable]
+asset 695-ace208366ce0ce2556ef.js 1.01 KiB [emitted] [immutable]
 runtime modules 6.3 KiB 8 modules
 orphan modules 19 bytes [orphan] 1 module
 cacheable modules 106 bytes
@@ -750,7 +750,7 @@ cacheable modules 106 bytes
 webpack x.x.x compiled successfully in X ms
 
 asset main-ae1f2717fd5d1cb5ac68.js 11.3 KiB [emitted] [immutable] (name: main)
-asset 695-ace208366ce0ce2556ef.js 1.12 KiB [emitted] [immutable]
+asset 695-ace208366ce0ce2556ef.js 1.01 KiB [emitted] [immutable]
 runtime modules 6.3 KiB 8 modules
 orphan modules 19 bytes [orphan] 1 module
 cacheable modules 106 bytes
