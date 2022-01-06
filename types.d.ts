@@ -7378,68 +7378,7 @@ declare class NodeTemplatePlugin {
 }
 type NodeWebpackOptions = false | NodeOptions;
 declare class NormalModule extends Module {
-	constructor(__0: {
-		/**
-		 * an optional layer in which the module is
-		 */
-		layer?: string;
-		/**
-		 * module type
-		 */
-		type: string;
-		/**
-		 * request string
-		 */
-		request: string;
-		/**
-		 * request intended by user (without loaders from config)
-		 */
-		userRequest: string;
-		/**
-		 * request without resolving
-		 */
-		rawRequest: string;
-		/**
-		 * list of loaders
-		 */
-		loaders: LoaderItem[];
-		/**
-		 * path + query of the real resource
-		 */
-		resource: string;
-		/**
-		 * resource resolve data
-		 */
-		resourceResolveData?: Record<string, any>;
-		/**
-		 * context directory for resolving
-		 */
-		context: string;
-		/**
-		 * path + query of the matched resource (virtual)
-		 */
-		matchResource?: string;
-		/**
-		 * the parser used
-		 */
-		parser: Parser;
-		/**
-		 * the options of the parser used
-		 */
-		parserOptions: object;
-		/**
-		 * the generator used
-		 */
-		generator: Generator;
-		/**
-		 * the options of the generator used
-		 */
-		generatorOptions: object;
-		/**
-		 * options used for resolving requests from this module
-		 */
-		resolveOptions: Object;
-	});
+	constructor(__0: NormalModuleCreateData);
 	request: string;
 	userRequest: string;
 	rawRequest: string;
@@ -7490,6 +7429,82 @@ declare interface NormalModuleCompilationHooks {
 	readResource: HookMap<AsyncSeriesBailHook<[object], string | Buffer>>;
 	needBuild: AsyncSeriesBailHook<[NormalModule, NeedBuildContext], boolean>;
 }
+declare interface NormalModuleCreateData {
+	/**
+	 * an optional layer in which the module is
+	 */
+	layer?: string;
+
+	/**
+	 * module type
+	 */
+	type: string;
+
+	/**
+	 * request string
+	 */
+	request: string;
+
+	/**
+	 * request intended by user (without loaders from config)
+	 */
+	userRequest: string;
+
+	/**
+	 * request without resolving
+	 */
+	rawRequest: string;
+
+	/**
+	 * list of loaders
+	 */
+	loaders: LoaderItem[];
+
+	/**
+	 * path + query of the real resource
+	 */
+	resource: string;
+
+	/**
+	 * resource resolve data
+	 */
+	resourceResolveData?: Record<string, any>;
+
+	/**
+	 * context directory for resolving
+	 */
+	context: string;
+
+	/**
+	 * path + query of the matched resource (virtual)
+	 */
+	matchResource?: string;
+
+	/**
+	 * the parser used
+	 */
+	parser: Parser;
+
+	/**
+	 * the options of the parser used
+	 */
+	parserOptions: object;
+
+	/**
+	 * the generator used
+	 */
+	generator: Generator;
+
+	/**
+	 * the options of the generator used
+	 */
+	generatorOptions: object;
+
+	/**
+	 * options used for resolving requests from this module
+	 */
+	resolveOptions: Object;
+}
 declare abstract class NormalModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		resolve: AsyncSeriesBailHook<[ResolveData], any>;
@@ -7502,8 +7517,14 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		factorize: AsyncSeriesBailHook<[ResolveData], any>;
 		beforeResolve: AsyncSeriesBailHook<[ResolveData], any>;
 		afterResolve: AsyncSeriesBailHook<[ResolveData], any>;
-		createModule: AsyncSeriesBailHook<[Object, ResolveData], any>;
-		module: SyncWaterfallHook<[Module, Object, ResolveData], any>;
+		createModule: AsyncSeriesBailHook<
+			[NormalModuleCreateData, ResolveData],
+			any
+		>;
+		module: SyncWaterfallHook<
+			[Module, NormalModuleCreateData, ResolveData],
+			any
+		>;
 		createParser: HookMap<SyncBailHook<any, any>>;
 		parser: HookMap<SyncHook<any>>;
 		createGenerator: HookMap<SyncBailHook<any, any>>;
@@ -9300,7 +9321,7 @@ declare interface ResolveData {
 	assertions?: Record<string, any>;
 	dependencies: ModuleDependency[];
 	dependencyType: string;
-	createData: Object;
+	createData: NormalModuleCreateData;
 	fileDependencies: LazySet<string>;
 	missingDependencies: LazySet<string>;
 	contextDependencies: LazySet<string>;
