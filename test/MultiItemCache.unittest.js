@@ -32,7 +32,7 @@ describe("MultiItemCache", () => {
 		const multiItemCache = new MultiItemCache(itemCaches);
 		let callbacks = 0;
 		const callback = (err, res) => {
-			expect(err).toBeUndefined();
+			expect(err).toBeNull();
 			expect(res).toBeUndefined();
 			++callbacks;
 		};
