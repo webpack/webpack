@@ -675,15 +675,12 @@ declare interface CallExpressionInfo {
 	getMembers: () => string[];
 }
 declare interface CallbackAsyncQueue<T> {
-	(err?: WebpackError, result?: T): any;
+	(err?: null | WebpackError, result?: T): any;
 }
 declare interface CallbackCache<T> {
 	(err?: null | WebpackError, result?: T): void;
 }
-declare interface CallbackFunction_1<T> {
-	(err?: Error, result?: T): any;
-}
-declare interface CallbackFunction_2<T> {
+declare interface CallbackFunction<T> {
 	(err?: null | Error, result?: T): any;
 }
 declare interface CallbackNormalErrorCache<T> {
@@ -1945,11 +1942,8 @@ declare class Compiler {
 	watchMode: boolean;
 	getCache(name: string): CacheFacade;
 	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
-	watch(
-		watchOptions: WatchOptions,
-		handler: CallbackFunction_2<Stats>
-	): Watching;
-	run(callback: CallbackFunction_2<Stats>): void;
+	watch(watchOptions: WatchOptions, handler: CallbackFunction<Stats>): Watching;
+	run(callback: CallbackFunction<Stats>): void;
 	runAsChild(
 		callback: (
 			err?: null | Error,
@@ -1958,12 +1952,9 @@ declare class Compiler {
 		) => any
 	): void;
 	purgeInputFileSystem(): void;
-	emitAssets(
-		compilation: Compilation,
-		callback: CallbackFunction_2<void>
-	): void;
-	emitRecords(callback: CallbackFunction_2<void>): void;
-	readRecords(callback: CallbackFunction_2<void>): void;
+	emitAssets(compilation: Compilation, callback: CallbackFunction<void>): void;
+	emitRecords(callback: CallbackFunction<void>): void;
+	readRecords(callback: CallbackFunction<void>): void;
 	createChildCompiler(
 		compilation: Compilation,
 		compilerName: string,
@@ -1980,8 +1971,8 @@ declare class Compiler {
 		normalModuleFactory: NormalModuleFactory;
 		contextModuleFactory: ContextModuleFactory;
 	};
-	compile(callback: CallbackFunction_2<Compilation>): void;
-	close(callback: CallbackFunction_2<void>): void;
+	compile(callback: CallbackFunction<Compilation>): void;
+	close(callback: CallbackFunction<void>): void;
 }
 declare class ConcatSource extends Source {
 	constructor(...args: (string | Source)[]);
@@ -7186,19 +7177,19 @@ declare class MultiCompiler {
 	intermediateFileSystem: IntermediateFileSystem;
 	getInfrastructureLogger(name?: any): WebpackLogger;
 	setDependencies(compiler: Compiler, dependencies: string[]): void;
-	validateDependencies(callback: CallbackFunction_2<MultiStats>): boolean;
+	validateDependencies(callback: CallbackFunction<MultiStats>): boolean;
 	runWithDependencies(
 		compilers: Compiler[],
-		fn: (compiler: Compiler, callback: CallbackFunction_2<MultiStats>) => any,
-		callback: CallbackFunction_2<MultiStats>
+		fn: (compiler: Compiler, callback: CallbackFunction<MultiStats>) => any,
+		callback: CallbackFunction<MultiStats>
 	): void;
 	watch(
 		watchOptions: WatchOptions | WatchOptions[],
-		handler: CallbackFunction_2<MultiStats>
+		handler: CallbackFunction<MultiStats>
 	): MultiWatching;
-	run(callback: CallbackFunction_2<MultiStats>): void;
+	run(callback: CallbackFunction<MultiStats>): void;
 	purgeInputFileSystem(): void;
-	close(callback: CallbackFunction_2<void>): void;
+	close(callback: CallbackFunction<void>): void;
 }
 declare interface MultiCompilerOptions {
 	/**
@@ -7220,7 +7211,7 @@ declare abstract class MultiWatching {
 	invalidate(callback?: any): void;
 	suspend(): void;
 	resume(): void;
-	close(callback: CallbackFunction_1<void>): void;
+	close(callback: CallbackFunction<void>): void;
 }
 declare class NamedChunkIdsPlugin {
 	constructor(options?: any);
@@ -11885,8 +11876,8 @@ declare interface WatcherInfo {
 declare abstract class Watching {
 	startTime: null | number;
 	invalid: boolean;
-	handler: CallbackFunction_1<Stats>;
-	callbacks: CallbackFunction_1<void>[];
+	handler: CallbackFunction<Stats>;
+	callbacks: CallbackFunction<void>[];
 	closed: boolean;
 	suspended: boolean;
 	blocked: boolean;
@@ -11922,10 +11913,10 @@ declare abstract class Watching {
 		dirs: Iterable<string>,
 		missing: Iterable<string>
 	): void;
-	invalidate(callback?: CallbackFunction_1<void>): void;
+	invalidate(callback?: CallbackFunction<void>): void;
 	suspend(): void;
 	resume(): void;
-	close(callback: CallbackFunction_1<void>): void;
+	close(callback: CallbackFunction<void>): void;
 }
 declare abstract class WeakTupleMap<T extends any[], V> {
 	set(...args: [T, ...V[]]): void;
