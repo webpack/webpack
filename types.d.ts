@@ -12385,6 +12385,7 @@ declare namespace exports {
 		export let runtimeId: string;
 		export let getChunkScriptFilename: string;
 		export let getChunkCssFilename: string;
+		export let hasCssModules: string;
 		export let getChunkUpdateScriptFilename: string;
 		export let getChunkUpdateCssFilename: string;
 		export let startup: string;

@@ -365,7 +365,7 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
@@ -486,6 +486,17 @@ head{--webpack-app-1:_7;}
 ## Unoptimized
 
 ```
+main Set(9) {
+  '__webpack_require__',
+  '__webpack_require__.r',
+  '__webpack_exports__',
+  '__webpack_require__.e',
+  '__webpack_require__.*',
+  'has css modules',
+  'module',
+  '__webpack_require__.p',
+  'webpackChunk'
+}
 assets by chunk 16.8 KiB (name: main)
   asset output.js 16.4 KiB [emitted] (name: main)
   asset output.css 385 bytes [emitted] (name: main)
@@ -506,12 +517,21 @@ chunk (runtime: main) 1.output.css 23 bytes
     [no exports]
     [used exports unknown]
     import() ./lazy-style.css ./example.js 4:0-26
-webpack 5.64.4 compiled successfully
+webpack 5.66.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
+main Set(7) {
+  '__webpack_require__',
+  '__webpack_require__.e',
+  '__webpack_require__.*',
+  'has css modules',
+  'module',
+  '__webpack_require__.p',
+  'webpackChunk'
+}
 assets by chunk 4.2 KiB (name: main)
   asset output.js 3.82 KiB [emitted] [minimized] (name: main)
   asset output.css 385 bytes [emitted] (name: main)
@@ -523,13 +543,13 @@ chunk (runtime: main) 159.output.css 23 bytes
   ./lazy-style.css 23 bytes [built] [code generated]
     [no exports]
     import() ./lazy-style.css ./example.js 4:0-26
-chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 335 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 335 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.94 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 9.95 KiB 9 modules
+  runtime modules 9.94 KiB 9 modules
   dependent modules 42 bytes (javascript) 14.6 KiB (asset) 335 bytes (css) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 176 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.64.4 compiled successfully
+webpack 5.66.0 compiled successfully
 ```
