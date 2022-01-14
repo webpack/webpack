@@ -123,17 +123,54 @@ chunk (runtime: main) c5861419d7f3f6ea6c19.js 899 bytes [rendered]
 webpack x.x.x compiled successfully in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for all-stats 1`] = `
+"PublicPath: auto
+asset bundle.js 3.47 KiB {main} [emitted] (name: main)
+Entrypoint main 3.47 KiB = bundle.js
+chunk {main} (runtime: main) bundle.js (main) 154 bytes (javascript) 274 bytes (runtime) [entry] [rendered]
+  > ./index.js main
+  ./index.js 82 bytes {main} [depth 0] [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./index.js main
+  data:text/plain;base64,szsaAAdsadasdfaf.. 72.2 bytes {main} [depth 1] [dependent] [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    harmony side effect evaluation data:text/plain;base64,szsaAAdsadasdfaf.. [./index.js] 1:0-81
+  webpack/runtime/make namespace object 274 bytes {main} [code generated]
+    [no exports]
+    [used exports unknown]
+./index.js 82 bytes {main} [depth 0] [built] [code generated]
+  [no exports]
+  [used exports unknown]
+  entry ./index.js main
+data:text/plain;base64,szsaAAdsadasdfaf.. 72.2 bytes {main} [depth 1] [built] [code generated]
+  [no exports]
+  [used exports unknown]
+  harmony side effect evaluation data:text/plain;base64,szsaAAdsadasdfaf.. [./index.js] 1:0-81
+webpack/runtime/make namespace object 274 bytes {main} [code generated]
+  [no exports]
+  [used exports unknown]
+  
+1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (d0d97703a88fdf5418be)"
+`;
+
 exports[`StatsTestCases should print correct stats for asset 1`] = `
 "asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-asset bundle.js 12.4 KiB [emitted] (name: main)
+asset bundle.js 13.1 KiB [emitted] (name: main)
 asset static/file.html 12 bytes [emitted] [from: static/file.html] (auxiliary name: main)
 runtime modules 1.06 KiB 2 modules
-asset modules 8.9 KiB (javascript) 14.6 KiB (asset)
-  ./images/file.png 42 bytes (javascript) 14.6 KiB (asset) [built] [code generated]
-  ./images/file.svg 915 bytes [built] [code generated]
-  ./images/file.jpg 7.92 KiB [built] [code generated]
-  ./static/file.html 42 bytes (javascript) 12 bytes (asset) [built] [code generated]
-./index.js 150 bytes [built] [code generated]
+asset modules 9.07 KiB (javascript) 14.6 KiB (asset)
+  modules by path ./ 8.9 KiB (javascript) 14.6 KiB (asset)
+    ./images/file.png 42 bytes (javascript) 14.6 KiB (asset) [built] [code generated]
+    ./images/file.svg 915 bytes [built] [code generated]
+    ./images/file.jpg 7.92 KiB [built] [code generated]
+    ./static/file.html 42 bytes (javascript) 12 bytes (asset) [built] [code generated]
+  modules by mime type text/plain 172 bytes
+    data:text/plain;base64,szsaAAdsadasdfaf.. 72.2 bytes [built] [code generated]
+    data:text/plain,asd= 41.4 bytes [built] [code generated]
+    data:text/plain,XXXXXXXXXXXXXXX.. 58.8 bytes [built] [code generated]
+./index.js 339 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 
