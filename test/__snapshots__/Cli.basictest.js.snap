@@ -8975,5 +8975,31 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "with-reset-description": Object {
+    "configs": Array [
+      Object {
+        "description": "original description",
+        "multiple": true,
+        "path": "with-reset-description[]",
+        "type": "string",
+      },
+    ],
+    "description": "original description",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "with-reset-description-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "custom reset",
+        "multiple": false,
+        "path": "with-reset-description",
+        "type": "reset",
+      },
+    ],
+    "description": "custom reset",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
 }
 `;

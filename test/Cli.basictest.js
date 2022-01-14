@@ -11,21 +11,37 @@ describe("Cli", () => {
 			type: "object",
 			additionalProperties: false,
 			properties: {
+				"with-reset-description": {
+					type: "array",
+					items: {
+						type: "string"
+					},
+					description: "original description",
+					cli: {
+						resetDescription: "custom reset"
+					}
+				},
 				"with-cli-description": {
 					type: "string",
 					description: "original description",
-					cliDescription: "description for CLI option"
+					cli: {
+						description: "description for CLI option"
+					}
 				},
 				"with-negative-description": {
 					type: "boolean",
 					description: "original description",
-					negatedDescription: "custom negative description"
+					cli: {
+						negatedDescription: "custom negative description"
+					}
 				},
 				"with-both-cli-and-negative-description": {
 					type: "boolean",
 					description: "original description",
-					cliDescription: "description for CLI option",
-					negatedDescription: "custom negative description"
+					cli: {
+						description: "description for CLI option",
+						negatedDescription: "custom negative description"
+					}
 				}
 			}
 		};
