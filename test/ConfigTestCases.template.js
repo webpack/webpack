@@ -309,13 +309,15 @@ const describeCases = config => {
 									const bundlePath = testConfig.findBundle(i, optionsArr[i]);
 									if (bundlePath) {
 										filesCount++;
-										const document = new FakeDocument();
+										const document = new FakeDocument(outputDirectory);
 										const globalContext = {
 											console: console,
 											expect: expect,
 											setTimeout: setTimeout,
 											clearTimeout: clearTimeout,
 											document,
+											getComputedStyle:
+												document.getComputedStyle.bind(document),
 											location: {
 												href: "https://test.cases/path/index.html",
 												origin: "https://test.cases",

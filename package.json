@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.65.0",
+  "version": "5.66.0",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -19,7 +19,7 @@
     "eslint-scope": "5.1.1",
     "events": "^3.2.0",
     "glob-to-regexp": "^0.4.1",
-    "graceful-fs": "^4.2.4",
+    "graceful-fs": "^4.2.9",
     "json-parse-better-errors": "^1.0.2",
     "loader-runner": "^4.2.0",
     "mime-types": "^2.1.27",
