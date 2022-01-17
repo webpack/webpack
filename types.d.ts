@@ -215,6 +215,7 @@ declare interface Argument {
 }
 declare interface ArgumentConfig {
 	description: string;
+	negatedDescription?: string;
 	path: string;
 	multiple: boolean;
 	type: "string" | "number" | "boolean" | "path" | "enum" | "RegExp" | "reset";
