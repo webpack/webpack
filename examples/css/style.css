@@ -1,0 +1,7 @@
+@import "style-imported.css";
+@import "https://fonts.googleapis.com/css?family=Open+Sans";
+
+body {
+	background: green;
+	font-family: "Open Sans";
+}

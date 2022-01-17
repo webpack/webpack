@@ -1,0 +1,71 @@
+.class {
+	color: red;
+}
+
+.local1,
+.local2 :global .global,
+.local3 {
+	color: green;
+}
+
+:global .global :local .local4 {
+	color: yellow;
+}
+
+.local5:global(.global).local6 {
+	color: blue;
+}
+
+:global(:global(:local(.nested1)).nested2).nested3 {
+	color: pink;
+}
+
+#ident {
+	color: purple;
+}
+
+@keyframes localkeyframes {
+	0% {
+		left: var(--pos1x);
+		top: var(--pos1y);
+		color: var(--theme-color1);
+	}
+	100% {
+		left: var(--pos2x);
+		top: var(--pos2y);
+		color: var(--theme-color2);
+	}
+}
+
+@keyframes localkeyframes2 {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.animation {
+	animation-name: localkeyframes;
+	animation: 3s ease-in 1s 2 reverse both paused localkeyframes, localkeyframes2;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
+}
+
+/* .composed {
+	composes: local1;
+	composes: local2;
+} */
+
+.vars {
+	color: var(--local-color);
+	--local-color: red;
+}
+
+.globalVars :global {
+	color: var(--global-color);
+	--global-color: red;
+}

@@ -280,6 +280,23 @@ module.exports = (env, { testPath }) => [
 			alias: {
 				library: path.resolve(
 					testPath,
+					"../0-create-library/commonjs-static-external.js"
+				),
+				external: path.resolve(__dirname, "node_modules/external.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("commonjs-static with external"),
+				TEST_EXTERNAL: true
+			})
+		]
+	},
+	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					testPath,
 					"../0-create-library/commonjs2-split-chunks/"
 				),
 				external: path.resolve(__dirname, "node_modules/external.js")

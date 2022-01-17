@@ -215,6 +215,7 @@ declare interface Argument {
 }
 declare interface ArgumentConfig {
 	description: string;
+	negatedDescription?: string;
 	path: string;
 	multiple: boolean;
 	type: "string" | "number" | "boolean" | "path" | "enum" | "RegExp" | "reset";
@@ -699,6 +700,10 @@ declare class Chunk {
 	idNameHints: SortableSet<string>;
 	preventIntegration: boolean;
 	filenameTemplate:
+		| null
+		| string
+		| ((arg0: PathData, arg1?: AssetInfo) => string);
+	cssFilenameTemplate:
 		| null
 		| string
 		| ((arg0: PathData, arg1?: AssetInfo) => string);
@@ -1217,6 +1222,11 @@ declare interface CodeGenerationContext {
 	 * when in concatenated module, information about other concatenated modules
 	 */
 	concatenationScope?: ConcatenationScope;
+
+	/**
+	 * code generation results of other modules (need to have a codeGenerationDependency to use that)
+	 */
+	codeGenerationResults: CodeGenerationResults;
 }
 declare interface CodeGenerationResult {
 	/**
@@ -2095,6 +2105,7 @@ declare interface Configuration {
 		| "commonjs"
 		| "commonjs2"
 		| "commonjs-module"
+		| "commonjs-static"
 		| "amd"
 		| "amd-require"
 		| "umd"
@@ -2141,7 +2152,7 @@ declare interface Configuration {
 	/**
 	 * Enable production optimizations or development hints.
 	 */
-	mode?: "development" | "production" | "none";
+	mode?: "none" | "development" | "production";
 
 	/**
 	 * Options affecting the normal modules (`NormalModuleFactory`).
@@ -2226,15 +2237,15 @@ declare interface Configuration {
 	 */
 	stats?:
 		| boolean
+		| StatsOptions
 		| "none"
+		| "verbose"
 		| "summary"
 		| "errors-only"
 		| "errors-warnings"
 		| "minimal"
 		| "normal"
-		| "detailed"
-		| "verbose"
-		| StatsOptions;
+		| "detailed";
 
 	/**
 	 * Environment to build for. An array of environments to build for all of them when possible.
@@ -2582,6 +2593,12 @@ declare class Dependency {
 	readonly type: string;
 	readonly category: string;
 	loc: DependencyLocation;
+	setLoc(
+		startLine?: any,
+		startColumn?: any,
+		endLine?: any,
+		endColumn?: any
+	): void;
 	getResourceIdentifier(): null | string;
 	couldAffectReferencingModule(): boolean | typeof TRANSITIVE;
 
@@ -2697,6 +2714,11 @@ declare interface DependencyTemplateContext {
 	 * when in a concatenated module, information about other concatenated modules
 	 */
 	concatenationScope?: ConcatenationScope;
+
+	/**
+	 * the code generation results
+	 */
+	codeGenerationResults: CodeGenerationResults;
 }
 declare abstract class DependencyTemplates {
 	get(dependency: DependencyConstructor): DependencyTemplate;
@@ -3339,6 +3361,11 @@ declare interface ExperimentsCommon {
 	cacheUnaffected?: boolean;
 
 	/**
+	 * Enable css support.
+	 */
+	css?: boolean;
+
+	/**
 	 * Apply defaults of next major version.
 	 */
 	futureDefaults?: boolean;
@@ -3853,6 +3880,7 @@ type ExternalsType =
 	| "commonjs"
 	| "commonjs2"
 	| "commonjs-module"
+	| "commonjs-static"
 	| "amd"
 	| "amd-require"
 	| "umd"
@@ -4196,6 +4224,11 @@ declare interface GenerateContext {
 	 * when in concatenated module, information about other concatenated modules
 	 */
 	concatenationScope?: ConcatenationScope;
+
+	/**
+	 * code generation results of other modules (need to have a codeGenerationDependency to use that)
+	 */
+	codeGenerationResults?: CodeGenerationResults;
 
 	/**
 	 * which kind of code should be generated
@@ -4557,7 +4590,7 @@ declare interface InfrastructureLogging {
 	/**
 	 * Log level.
 	 */
-	level?: "none" | "verbose" | "error" | "warn" | "info" | "log";
+	level?: "none" | "error" | "warn" | "info" | "log" | "verbose";
 
 	/**
 	 * Stream used for logging output. Defaults to process.stderr. This option is only used when no custom console is provided.
@@ -4703,7 +4736,7 @@ declare class JavascriptModulesPlugin {
 	static chunkHasJs: (chunk: Chunk, chunkGraph: ChunkGraph) => boolean;
 }
 declare class JavascriptParser extends Parser {
-	constructor(sourceType?: "module" | "script" | "auto");
+	constructor(sourceType?: "module" | "auto" | "script");
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
 			SyncBailHook<
@@ -4973,7 +5006,7 @@ declare class JavascriptParser extends Parser {
 		program: SyncBailHook<[Program, Comment[]], boolean | void>;
 		finish: SyncBailHook<[Program, Comment[]], boolean | void>;
 	}>;
-	sourceType: "module" | "script" | "auto";
+	sourceType: "module" | "auto" | "script";
 	scope: ScopeInfo;
 	state: ParserState;
 	comments: any;
@@ -5313,7 +5346,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
 	 */
-	exportsPresence?: false | "error" | "warn" | "auto";
+	exportsPresence?: false | "auto" | "error" | "warn";
 
 	/**
 	 * Enable warnings for full dynamic dependencies.
@@ -5348,7 +5381,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Specifies the behavior of invalid export names in "import ... from ...".
 	 */
-	importExportsPresence?: false | "error" | "warn" | "auto";
+	importExportsPresence?: false | "auto" | "error" | "warn";
 
 	/**
 	 * Include polyfills or mocks for various node stuff.
@@ -5358,7 +5391,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Specifies the behavior of invalid export names in "export ... from ...". This might be useful to disable during the migration from "export ... from ..." to "export type ... from ..." when reexporting types in TypeScript.
 	 */
-	reexportExportsPresence?: false | "error" | "warn" | "auto";
+	reexportExportsPresence?: false | "auto" | "error" | "warn";
 
 	/**
 	 * Enable/disable parsing of require.context syntax.
@@ -5595,7 +5628,7 @@ declare interface KnownNormalizedStatsOptions {
 	modulesSpace: number;
 	chunkModulesSpace: number;
 	nestedModulesSpace: number;
-	logging: false | "none" | "verbose" | "error" | "warn" | "info" | "log";
+	logging: false | "none" | "error" | "warn" | "info" | "log" | "verbose";
 	loggingDebug: ((value: string) => boolean)[];
 	loggingTrace: boolean;
 }
@@ -6005,7 +6038,7 @@ declare interface LibraryOptions {
 	name?: string | string[] | LibraryCustomUmdObject;
 
 	/**
-	 * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
+	 * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
 	 */
 	type: string;
 
@@ -6492,6 +6525,7 @@ declare class Module extends DependenciesBlock {
 	buildMeta: BuildMeta;
 	buildInfo: Record<string, any>;
 	presentationalDependencies?: Dependency[];
+	codeGenerationDependencies?: Dependency[];
 	id: string | number;
 	readonly hash: string;
 	readonly renderedHash: string;
@@ -6521,6 +6555,7 @@ declare class Module extends DependenciesBlock {
 		strict: boolean
 	): "namespace" | "default-only" | "default-with-named" | "dynamic";
 	addPresentationalDependency(presentationalDependency: Dependency): void;
+	addCodeGenerationDependency(codeGenerationDependency: Dependency): void;
 	addWarning(warning: WebpackError): void;
 	getWarnings(): undefined | Iterable<WebpackError>;
 	getNumberOfWarnings(): number;
@@ -6708,6 +6743,7 @@ declare interface ModuleFederationPluginOptions {
 		| "commonjs"
 		| "commonjs2"
 		| "commonjs-module"
+		| "commonjs-static"
 		| "amd"
 		| "amd-require"
 		| "umd"
@@ -7553,7 +7589,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	rootContext: string;
 	fs: InputFileSystem;
 	sourceMap?: boolean;
-	mode: "development" | "production" | "none";
+	mode: "none" | "development" | "production";
 	webpack?: boolean;
 	_module?: NormalModule;
 	_compilation?: Compilation;
@@ -8140,6 +8176,20 @@ declare interface Output {
 	crossOriginLoading?: false | "anonymous" | "use-credentials";
 
 	/**
+	 * Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	cssChunkFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	cssFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?: string | Function;
@@ -8245,7 +8295,7 @@ declare interface Output {
 	libraryExport?: string | string[];
 
 	/**
-	 * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
+	 * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
 	 */
 	libraryTarget?: string;
 
@@ -8433,6 +8483,20 @@ declare interface OutputNormalized {
 	 * This option enables cross-origin loading of chunks.
 	 */
 	crossOriginLoading?: false | "anonymous" | "use-credentials";
+
+	/**
+	 * Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	cssChunkFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	cssFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
@@ -9410,7 +9474,7 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Plugins for the resolver.
 	 */
-	plugins?: ("..." | ResolvePluginInstance)[];
+	plugins?: (ResolvePluginInstance | "...")[];
 
 	/**
 	 * Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.
@@ -10413,6 +10477,24 @@ declare abstract class RuntimeTemplate {
 		 */
 		runtimeRequirements: Set<string>;
 	}): string;
+	assetUrl(__0: {
+		/**
+		 * the module
+		 */
+		module: Module;
+		/**
+		 * the public path
+		 */
+		publicPath: string;
+		/**
+		 * runtime
+		 */
+		runtime?: RuntimeSpec;
+		/**
+		 * the code generation results
+		 */
+		codeGenerationResults: CodeGenerationResults;
+	}): string;
 }
 declare abstract class RuntimeValue {
 	fn: (arg0: {
@@ -11252,7 +11334,7 @@ declare interface StatsOptions {
 	/**
 	 * Add logging output.
 	 */
-	logging?: boolean | "none" | "verbose" | "error" | "warn" | "info" | "log";
+	logging?: boolean | "none" | "error" | "warn" | "info" | "log" | "verbose";
 
 	/**
 	 * Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions.
@@ -11421,15 +11503,15 @@ type StatsPrinterContext = KnownStatsPrinterContext & Record<string, any>;
 type StatsProfile = KnownStatsProfile & Record<string, any>;
 type StatsValue =
 	| boolean
+	| StatsOptions
 	| "none"
+	| "verbose"
 	| "summary"
 	| "errors-only"
 	| "errors-warnings"
 	| "minimal"
 	| "normal"
-	| "detailed"
-	| "verbose"
-	| StatsOptions;
+	| "detailed";
 declare interface SyntheticDependencyLocation {
 	name: string;
 	index?: number;
@@ -12007,6 +12089,7 @@ declare interface WebpackOptionsNormalized {
 		| "commonjs"
 		| "commonjs2"
 		| "commonjs-module"
+		| "commonjs-static"
 		| "amd"
 		| "amd-require"
 		| "umd"
@@ -12039,7 +12122,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Enable production optimizations or development hints.
 	 */
-	mode?: "development" | "production" | "none";
+	mode?: "none" | "development" | "production";
 
 	/**
 	 * Options affecting the normal modules (`NormalModuleFactory`).
@@ -12302,7 +12385,10 @@ declare namespace exports {
 		export let chunkName: string;
 		export let runtimeId: string;
 		export let getChunkScriptFilename: string;
+		export let getChunkCssFilename: string;
+		export let hasCssModules: string;
 		export let getChunkUpdateScriptFilename: string;
+		export let getChunkUpdateCssFilename: string;
 		export let startup: string;
 		export let startupNoDefault: string;
 		export let startupOnlyAfter: string;
@@ -12711,6 +12797,7 @@ declare namespace exports {
 		RuleSetRule,
 		RuleSetUse,
 		RuleSetUseItem,
+		StatsOptions,
 		Configuration,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance,
@@ -12718,6 +12805,8 @@ declare namespace exports {
 		AssetInfo,
 		MultiStats,
 		ParserState,
+		ResolvePluginInstance,
+		Resolver,
 		Watching,
 		StatsAsset,
 		StatsChunk,
