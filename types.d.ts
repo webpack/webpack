@@ -1644,6 +1644,7 @@ declare class Compilation {
 		module: RuntimeModule,
 		chunkGraph?: ChunkGraph
 	): void;
+	addChunkInGroup(groupOptions: string | ChunkGroupOptions): ChunkGroup;
 	addChunkInGroup(
 		groupOptions: string | ChunkGroupOptions,
 		module: Module,
