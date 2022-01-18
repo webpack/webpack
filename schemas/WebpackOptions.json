@@ -335,6 +335,34 @@
       "description": "This option enables cross-origin loading of chunks.",
       "enum": [false, "anonymous", "use-credentials"]
     },
+    "CssChunkFilename": {
+      "description": "Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/FilenameTemplate"
+        }
+      ]
+    },
+    "CssFilename": {
+      "description": "Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/FilenameTemplate"
+        }
+      ]
+    },
+    "CssGeneratorOptions": {
+      "description": "Generator options for css modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "CssParserOptions": {
+      "description": "Parser options for css modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
       "type": "array",
@@ -720,6 +748,10 @@
           "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
           "type": "boolean"
         },
+        "css": {
+          "description": "Enable css support.",
+          "type": "boolean"
+        },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
           "type": "boolean"
@@ -770,6 +802,10 @@
           "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
           "type": "boolean"
         },
+        "css": {
+          "description": "Enable css support.",
+          "type": "boolean"
+        },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
           "type": "boolean"
@@ -816,6 +852,10 @@
         },
         "cacheUnaffected": {
           "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
+          "type": "boolean"
+        },
+        "css": {
+          "description": "Enable css support.",
           "type": "boolean"
         },
         "futureDefaults": {
@@ -1010,6 +1050,7 @@
         "commonjs",
         "commonjs2",
         "commonjs-module",
+        "commonjs-static",
         "amd",
         "amd-require",
         "umd",
@@ -1879,7 +1920,7 @@
       "required": ["type"]
     },
     "LibraryType": {
-      "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+      "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
       "anyOf": [
         {
           "enum": [
@@ -1894,6 +1935,7 @@
             "commonjs",
             "commonjs2",
             "commonjs-module",
+            "commonjs-static",
             "amd",
             "amd-require",
             "umd",
@@ -2948,6 +2990,12 @@
         "crossOriginLoading": {
           "$ref": "#/definitions/CrossOriginLoading"
         },
+        "cssChunkFilename": {
+          "$ref": "#/definitions/CssChunkFilename"
+        },
+        "cssFilename": {
+          "$ref": "#/definitions/CssFilename"
+        },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
         },
@@ -3140,6 +3188,12 @@
         },
         "crossOriginLoading": {
           "$ref": "#/definitions/CrossOriginLoading"
+        },
+        "cssChunkFilename": {
+          "$ref": "#/definitions/CssChunkFilename"
+        },
+        "cssFilename": {
+          "$ref": "#/definitions/CssFilename"
         },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
