@@ -190,6 +190,7 @@ describe("ProgressPlugin", function () {
 
 			expect(logs.length).toBeGreaterThan(20);
 			logs.forEach(log => expect(log.length).toBeLessThanOrEqual(35));
+			// cspell:ignore mization nsPlugin
 			expect(logs).toContain(
 				"75% sealing ...mization ...nsPlugin",
 				"trims each detail string equally"

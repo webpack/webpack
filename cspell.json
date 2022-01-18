@@ -5,6 +5,7 @@
     "absolutify",
     "acircular",
     "amdmodule",
+    "asmjs",
     "assemblyscript",
     "asyncloader",
     "atlaskit",
@@ -12,6 +13,7 @@
     "babeljs",
     "backport",
     "backported",
+    "basictest",
     "bigint",
     "Biró",
     "bitfield",
@@ -277,7 +279,12 @@
     "xxhashjs",
     "Yann"
   ],
-  "ignoreRegExpList": ["/Author.+/", "/data:.*/", "/\"mappings\":\".+\"/"],
+  "ignoreRegExpList": [
+    "/Author.+/",
+    "/data:.*/",
+    "/\"mappings\":\".+\"/",
+    "/toMatchInlineSnapshot\\(\\s*`[^`]*`\\s*\\)/"
+  ],
   "ignorePaths": [
     "**/dist/**",
     "examples/**/README.md",
@@ -288,8 +295,14 @@
     "**/**/*.snap",
     "test/cases/json/weird-properties/globals.json",
     "**/*.svg",
+    "*.log",
     "**/*.wasm",
+    "coverage/**",
     "test/**/module.js",
-    "test/**"
+    "test/js/**",
+    "test/cases/**",
+    "test/configCases/**",
+    "test/statsCases/**",
+    "test/fixtures/**"
   ]
 }

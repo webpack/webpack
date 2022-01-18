@@ -139,6 +139,7 @@ for (const name of Object.keys(wasmHashes)) {
 			unicodeTest(name, codePoints);
 		};
 
+		// cspell:word Thaana
 		unicodeRangeTest("Latin-1 Supplement", 0xa0, 0xff);
 		unicodeRangeTest("Latin Extended", 0x100, 0x24f);
 		unicodeRangeTest("Thaana", 0x780, 0x7bf);
