@@ -208,7 +208,7 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 			var links = document.getElementsByTagName("link");
 /******/ 			for(var i = 0; i < links.length; i++) {
 /******/ 				var l = links[i];
-/******/ 				if(l.href == url || l.getAttribute("href") == url || l.getAttribute("data-webpack") == uniqueName + ":" + key) { link = l; break; }
+/******/ 				if(l.rel == "stylesheet" && (l.href == url || l.getAttribute("href") == url || l.getAttribute("data-webpack") == uniqueName + ":" + key)) { link = l; break; }
 /******/ 			}
 /******/ 			if(!done) return link;
 /******/ 		
@@ -233,6 +233,7 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 				link.onerror = onLinkComplete.bind(null, link.onerror);
 /******/ 				link.onload = onLinkComplete.bind(null, link.onload);
 /******/ 			} else onLinkComplete(undefined, { type: 'load', target: link });
+/******/ 		
 /******/ 			needAttach && document.head.appendChild(link);
 /******/ 			return link;
 /******/ 		};
@@ -486,12 +487,12 @@ head{--webpack-app-1:_7;}
 ## Unoptimized
 
 ```
-assets by chunk 16.8 KiB (name: main)
-  asset output.js 16.4 KiB [emitted] (name: main)
+assets by chunk 16.9 KiB (name: main)
+  asset output.js 16.5 KiB [emitted] (name: main)
   asset output.css 385 bytes [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 1.output.css 49 bytes [emitted]
-Entrypoint main 16.8 KiB (14.6 KiB) = output.js 16.4 KiB output.css 385 bytes 1 auxiliary asset
+Entrypoint main 16.9 KiB (14.6 KiB) = output.js 16.5 KiB output.css 385 bytes 1 auxiliary asset
 chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 335 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 10 KiB (runtime) [entry] [rendered]
   > ./example.js main
   runtime modules 10 KiB 9 modules
@@ -512,12 +513,12 @@ webpack 5.66.0 compiled successfully
 ## Production mode
 
 ```
-assets by chunk 4.23 KiB (name: main)
-  asset output.js 3.85 KiB [emitted] [minimized] (name: main)
+assets by chunk 4.25 KiB (name: main)
+  asset output.js 3.87 KiB [emitted] [minimized] (name: main)
   asset output.css 385 bytes [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 159.output.css 53 bytes [emitted]
-Entrypoint main 4.23 KiB (14.6 KiB) = output.js 3.85 KiB output.css 385 bytes 1 auxiliary asset
+Entrypoint main 4.25 KiB (14.6 KiB) = output.js 3.87 KiB output.css 385 bytes 1 auxiliary asset
 chunk (runtime: main) 159.output.css 23 bytes
   > ./lazy-style.css ./example.js 4:0-26
   ./lazy-style.css 23 bytes [built] [code generated]
