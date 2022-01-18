@@ -1644,12 +1644,15 @@ declare class Compilation {
 		module: RuntimeModule,
 		chunkGraph?: ChunkGraph
 	): void;
-	addChunkInGroup(groupOptions: string | ChunkGroupOptions): ChunkGroup;
+
+	/**
+	 * If `module` is passed, `loc` and `request` must also be passed.
+	 */
 	addChunkInGroup(
 		groupOptions: string | ChunkGroupOptions,
-		module: Module,
-		loc: DependencyLocation,
-		request: string
+		module?: Module,
+		loc?: SyntheticDependencyLocation | RealDependencyLocation,
+		request?: string
 	): ChunkGroup;
 	addAsyncEntrypoint(
 		options: EntryOptions,
