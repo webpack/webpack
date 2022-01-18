@@ -12528,8 +12528,13 @@ declare namespace exports {
 			) => void;
 			export const registerNotSerializable: (Constructor: Constructor) => void;
 			export const NOT_SERIALIZABLE: object;
-			export const buffersSerializer: void;
-			export let createBuffersSerializer: (hashFunction?: any) => Serializer;
+			export const buffersSerializer: Serializer;
+			export let createBuffersSerializer: (__0: {
+				/**
+				 * hash function
+				 */
+				hashFunction?: string | typeof Hash;
+			}) => Serializer;
 			export let createFileSerializer: (
 				fs?: any,
 				hashFunction?: any
