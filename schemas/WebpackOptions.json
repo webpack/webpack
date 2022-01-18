@@ -362,6 +362,17 @@
         }
       ]
     },
+    "CssExperimentOptions": {
+      "description": "Options for css handling.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsOnly": {
+          "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+          "type": "boolean"
+        }
+      }
+    },
     "CssFilename": {
       "description": "Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
       "oneOf": [
@@ -769,7 +780,14 @@
         },
         "css": {
           "description": "Enable css support.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/CssExperimentOptions"
+            }
+          ]
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
@@ -819,10 +837,6 @@
         },
         "cacheUnaffected": {
           "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
-          "type": "boolean"
-        },
-        "css": {
-          "description": "Enable css support.",
           "type": "boolean"
         },
         "futureDefaults": {
@@ -875,7 +889,11 @@
         },
         "css": {
           "description": "Enable css support.",
-          "type": "boolean"
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CssExperimentOptions"
+            }
+          ]
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",

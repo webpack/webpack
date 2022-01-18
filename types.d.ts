@@ -2546,6 +2546,16 @@ declare interface ContextTimestampAndHash {
 }
 type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
 	Record<string, any>;
+
+/**
+ * Options for css handling.
+ */
+declare interface CssExperimentOptions {
+	/**
+	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+	 */
+	exportsOnly?: boolean;
+}
 type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
 declare class DefinePlugin {
 	/**
@@ -2759,8 +2769,58 @@ declare class DeterministicChunkIdsPlugin {
 	apply(compiler: Compiler): void;
 }
 declare class DeterministicModuleIdsPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options?: {
+		/**
+		 * context relative to which module identifiers are computed
+		 */
+		context?: string;
+		/**
+		 * selector function for modules
+		 */
+		test?: (arg0: Module) => boolean;
+		/**
+		 * maximum id length in digits (used as starting point)
+		 */
+		maxLength?: number;
+		/**
+		 * hash salt for ids
+		 */
+		salt?: number;
+		/**
+		 * do not increase the maxLength to find an optimal id space size
+		 */
+		fixedLength?: boolean;
+		/**
+		 * throw an error when id conflicts occur (instead of rehashing)
+		 */
+		failOnConflict?: boolean;
+	});
+	options: {
+		/**
+		 * context relative to which module identifiers are computed
+		 */
+		context?: string;
+		/**
+		 * selector function for modules
+		 */
+		test?: (arg0: Module) => boolean;
+		/**
+		 * maximum id length in digits (used as starting point)
+		 */
+		maxLength?: number;
+		/**
+		 * hash salt for ids
+		 */
+		salt?: number;
+		/**
+		 * do not increase the maxLength to find an optimal id space size
+		 */
+		fixedLength?: boolean;
+		/**
+		 * throw an error when id conflicts occur (instead of rehashing)
+		 */
+		failOnConflict?: boolean;
+	};
 
 	/**
 	 * Apply the plugin
@@ -3380,11 +3440,6 @@ declare interface ExperimentsCommon {
 	cacheUnaffected?: boolean;
 
 	/**
-	 * Enable css support.
-	 */
-	css?: boolean;
-
-	/**
 	 * Apply defaults of next major version.
 	 */
 	futureDefaults?: boolean;
@@ -3420,6 +3475,11 @@ declare interface ExperimentsExtra {
 	buildHttp?: HttpUriOptions | (string | RegExp | ((uri: string) => boolean))[];
 
 	/**
+	 * Enable css support.
+	 */
+	css?: boolean | CssExperimentOptions;
+
+	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
@@ -3434,6 +3494,11 @@ declare interface ExperimentsNormalizedExtra {
 	 * Build http(s): urls using a lockfile and resource content cache.
 	 */
 	buildHttp?: HttpUriOptions;
+
+	/**
+	 * Enable css support.
+	 */
+	css?: CssExperimentOptions;
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.

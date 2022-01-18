@@ -607,6 +607,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-css-exports-only": Object {
+    "configs": Array [
+      Object {
+        "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+        "multiple": false,
+        "path": "experiments.css.exportsOnly",
+        "type": "boolean",
+      },
+    ],
+    "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-future-defaults": Object {
     "configs": Array [
       Object {

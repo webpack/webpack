@@ -1,16 +1,21 @@
+const path = require("path");
 const webpack = require("../../../../");
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{
-		target: "web",
+		context: path.join(__dirname, "../css-modules"),
+		entry: "../css-modules-in-node/index.js",
+		target: "node",
 		mode: "development",
 		experiments: {
 			css: true
 		}
 	},
 	{
-		target: "web",
+		context: path.join(__dirname, "../css-modules"),
+		entry: "../css-modules-in-node/index.js",
+		target: "node",
 		mode: "production",
 		output: {
 			uniqueName: "my-app"
