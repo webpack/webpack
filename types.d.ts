@@ -701,6 +701,10 @@ declare class Chunk {
 		| null
 		| string
 		| ((arg0: PathData, arg1?: AssetInfo) => string);
+	cssFilenameTemplate:
+		| null
+		| string
+		| ((arg0: PathData, arg1?: AssetInfo) => string);
 	runtime: RuntimeSpec;
 	files: Set<string>;
 	auxiliaryFiles: Set<string>;
@@ -1205,6 +1209,11 @@ declare interface CodeGenerationContext {
 	 * when in concatenated module, information about other concatenated modules
 	 */
 	concatenationScope?: ConcatenationScope;
+
+	/**
+	 * code generation results of other modules (need to have a codeGenerationDependency to use that)
+	 */
+	codeGenerationResults: CodeGenerationResults;
 }
 declare interface CodeGenerationResult {
 	/**
@@ -2081,6 +2090,7 @@ declare interface Configuration {
 		| "commonjs"
 		| "commonjs2"
 		| "commonjs-module"
+		| "commonjs-static"
 		| "amd"
 		| "amd-require"
 		| "umd"
@@ -2568,6 +2578,12 @@ declare class Dependency {
 	readonly type: string;
 	readonly category: string;
 	loc: DependencyLocation;
+	setLoc(
+		startLine?: any,
+		startColumn?: any,
+		endLine?: any,
+		endColumn?: any
+	): void;
 	getResourceIdentifier(): null | string;
 	couldAffectReferencingModule(): boolean | typeof TRANSITIVE;
 
@@ -2683,6 +2699,11 @@ declare interface DependencyTemplateContext {
 	 * when in a concatenated module, information about other concatenated modules
 	 */
 	concatenationScope?: ConcatenationScope;
+
+	/**
+	 * the code generation results
+	 */
+	codeGenerationResults: CodeGenerationResults;
 }
 declare abstract class DependencyTemplates {
 	get(dependency: DependencyConstructor): DependencyTemplate;
@@ -3325,6 +3346,11 @@ declare interface ExperimentsCommon {
 	cacheUnaffected?: boolean;
 
 	/**
+	 * Enable css support.
+	 */
+	css?: boolean;
+
+	/**
 	 * Apply defaults of next major version.
 	 */
 	futureDefaults?: boolean;
@@ -3839,6 +3865,7 @@ type ExternalsType =
 	| "commonjs"
 	| "commonjs2"
 	| "commonjs-module"
+	| "commonjs-static"
 	| "amd"
 	| "amd-require"
 	| "umd"
@@ -4182,6 +4209,11 @@ declare interface GenerateContext {
 	 * when in concatenated module, information about other concatenated modules
 	 */
 	concatenationScope?: ConcatenationScope;
+
+	/**
+	 * code generation results of other modules (need to have a codeGenerationDependency to use that)
+	 */
+	codeGenerationResults?: CodeGenerationResults;
 
 	/**
 	 * which kind of code should be generated
@@ -5989,7 +6021,7 @@ declare interface LibraryOptions {
 	name?: string | string[] | LibraryCustomUmdObject;
 
 	/**
-	 * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
+	 * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
 	 */
 	type: string;
 
@@ -6415,6 +6447,7 @@ declare class Module extends DependenciesBlock {
 	buildMeta: BuildMeta;
 	buildInfo: Record<string, any>;
 	presentationalDependencies?: Dependency[];
+	codeGenerationDependencies?: Dependency[];
 	id: string | number;
 	readonly hash: string;
 	readonly renderedHash: string;
@@ -6444,6 +6477,7 @@ declare class Module extends DependenciesBlock {
 		strict: boolean
 	): "namespace" | "default-only" | "default-with-named" | "dynamic";
 	addPresentationalDependency(presentationalDependency: Dependency): void;
+	addCodeGenerationDependency(codeGenerationDependency: Dependency): void;
 	addWarning(warning: WebpackError): void;
 	getWarnings(): undefined | Iterable<WebpackError>;
 	getNumberOfWarnings(): number;
@@ -6631,6 +6665,7 @@ declare interface ModuleFederationPluginOptions {
 		| "commonjs"
 		| "commonjs2"
 		| "commonjs-module"
+		| "commonjs-static"
 		| "amd"
 		| "amd-require"
 		| "umd"
@@ -8058,6 +8093,20 @@ declare interface Output {
 	crossOriginLoading?: false | "anonymous" | "use-credentials";
 
 	/**
+	 * Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	cssChunkFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	cssFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?: string | Function;
@@ -8163,7 +8212,7 @@ declare interface Output {
 	libraryExport?: string | string[];
 
 	/**
-	 * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
+	 * Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).
 	 */
 	libraryTarget?: string;
 
@@ -8351,6 +8400,20 @@ declare interface OutputNormalized {
 	 * This option enables cross-origin loading of chunks.
 	 */
 	crossOriginLoading?: false | "anonymous" | "use-credentials";
+
+	/**
+	 * Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	cssChunkFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	cssFilename?:
+		| string
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
@@ -10331,6 +10394,24 @@ declare abstract class RuntimeTemplate {
 		 */
 		runtimeRequirements: Set<string>;
 	}): string;
+	assetUrl(__0: {
+		/**
+		 * the module
+		 */
+		module: Module;
+		/**
+		 * the public path
+		 */
+		publicPath: string;
+		/**
+		 * runtime
+		 */
+		runtime?: RuntimeSpec;
+		/**
+		 * the code generation results
+		 */
+		codeGenerationResults: CodeGenerationResults;
+	}): string;
 }
 declare abstract class RuntimeValue {
 	fn: (arg0: {
@@ -11925,6 +12006,7 @@ declare interface WebpackOptionsNormalized {
 		| "commonjs"
 		| "commonjs2"
 		| "commonjs-module"
+		| "commonjs-static"
 		| "amd"
 		| "amd-require"
 		| "umd"
@@ -12220,7 +12302,9 @@ declare namespace exports {
 		export let chunkName: string;
 		export let runtimeId: string;
 		export let getChunkScriptFilename: string;
+		export let getChunkCssFilename: string;
 		export let getChunkUpdateScriptFilename: string;
+		export let getChunkUpdateCssFilename: string;
 		export let startup: string;
 		export let startupNoDefault: string;
 		export let startupOnlyAfter: string;
