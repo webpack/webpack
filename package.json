@@ -28,7 +28,7 @@
     "tapable": "^2.1.1",
     "terser-webpack-plugin": "^5.1.3",
     "watchpack": "^2.3.1",
-    "webpack-sources": "^3.2.2"
+    "webpack-sources": "^3.2.3"
   },
   "peerDependenciesMeta": {
     "webpack-cli": {
@@ -75,7 +75,7 @@
     "json5": "^2.1.3",
     "less": "^4.0.0",
     "less-loader": "^8.0.0",
-    "lint-staged": "^11.0.0",
+    "lint-staged": "^12.2.1",
     "loader-utils": "^2.0.0",
     "lodash": "^4.17.19",
     "lodash-es": "^4.17.15",
@@ -152,7 +152,7 @@
     "type-lint": "tsc",
     "typings-test": "tsc -p tsconfig.types.test.json",
     "module-typings-test": "tsc -p tsconfig.module.test.json",
-    "spellcheck": "cspell \"{.github,benchmark,bin,examples,hot,lib,schemas,setup,tooling}/**/*.{md,yml,yaml,js,json}\" \"*.md\"",
+    "spellcheck": "cspell \"**/*\"",
     "special-lint": "node node_modules/tooling/lockfile-lint && node node_modules/tooling/schemas-lint && node node_modules/tooling/inherit-types && node node_modules/tooling/format-schemas && node tooling/generate-runtime-code.js && node tooling/generate-wasm-code.js && node node_modules/tooling/format-file-header && node node_modules/tooling/compile-to-definitions && node node_modules/tooling/precompile-schemas && node node_modules/tooling/generate-types --no-template-literals",
     "special-lint-fix": "node node_modules/tooling/inherit-types --write && node node_modules/tooling/format-schemas --write && node tooling/generate-runtime-code.js --write && node tooling/generate-wasm-code.js --write && node node_modules/tooling/format-file-header --write && node node_modules/tooling/compile-to-definitions --write && node node_modules/tooling/precompile-schemas --write && node node_modules/tooling/generate-types --no-template-literals --write",
     "fix": "yarn code-lint --fix && yarn special-lint-fix && yarn pretty-lint-fix",
