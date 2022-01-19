@@ -1900,6 +1900,8 @@ declare class Compiler {
 		make: AsyncParallelHook<[Compilation]>;
 		finishMake: AsyncParallelHook<[Compilation]>;
 		afterCompile: AsyncSeriesHook<[Compilation]>;
+		readRecords: AsyncSeriesHook<[]>;
+		emitRecords: AsyncSeriesHook<[]>;
 		watchRun: AsyncSeriesHook<[Compiler]>;
 		failed: SyncHook<[Error]>;
 		invalid: SyncHook<[null | string, number]>;
@@ -11599,6 +11601,31 @@ type StatsValue =
 	| "minimal"
 	| "normal"
 	| "detailed";
+declare class SyncModuleIdsPlugin {
+	constructor(__0: {
+		/**
+		 * path to file
+		 */
+		path: string;
+		/**
+		 * context for module names
+		 */
+		context?: string;
+		/**
+		 * selector for modules
+		 */
+		test: (arg0: Module) => boolean;
+		/**
+		 * operation mode (defaults to merge)
+		 */
+		mode?: "read" | "create" | "merge" | "update";
+	});
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 declare interface SyntheticDependencyLocation {
 	name: string;
 	index?: number;
@@ -12810,6 +12837,9 @@ declare namespace exports {
 	export namespace experiments {
 		export namespace schemes {
 			export { HttpUriPlugin };
+		}
+		export namespace ids {
+			export { SyncModuleIdsPlugin };
 		}
 	}
 	export type WebpackPluginFunction = (

@@ -1,8 +1,8 @@
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration[]} */
-module.exports = [
+/** @type {function(any, any): import("../../../../").Configuration[]} */
+module.exports = (env, { testPath }) => [
 	{
 		context: path.join(__dirname, "../css-modules"),
 		entry: "../css-modules-in-node/index.js",
@@ -29,6 +29,25 @@ module.exports = [
 				failOnConflict: true,
 				fixedLength: true,
 				test: m => m.type.startsWith("css")
+			})
+		]
+	},
+	{
+		context: path.join(__dirname, "../css-modules"),
+		entry: "../css-modules-in-node/index.js",
+		target: "node",
+		mode: "production",
+		output: {
+			uniqueName: "my-app"
+		},
+		experiments: {
+			css: true
+		},
+		plugins: [
+			new webpack.experiments.ids.SyncModuleIdsPlugin({
+				test: m => m.type.startsWith("css"),
+				path: path.resolve(testPath, "../css-modules/module-ids.json"),
+				mode: "read"
 			})
 		]
 	}
