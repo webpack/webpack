@@ -1286,13 +1286,13 @@ Object {
   "module-generator-asset-output-path": Object {
     "configs": Array [
       Object {
-        "description": "Emit the asset in the specified folder instead relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
+        "description": "Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
         "multiple": false,
         "path": "module.generator.asset.outputPath",
         "type": "string",
       },
     ],
-    "description": "Emit the asset in the specified folder instead relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
+    "description": "Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -1338,13 +1338,13 @@ Object {
   "module-generator-asset-resource-output-path": Object {
     "configs": Array [
       Object {
-        "description": "Emit the asset in the specified folder instead relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
+        "description": "Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
         "multiple": false,
         "path": "module.generator.asset/resource.outputPath",
         "type": "string",
       },
     ],
-    "description": "Emit the asset in the specified folder instead relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
+    "description": "Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
     "multiple": false,
     "simpleType": "string",
   },

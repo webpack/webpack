@@ -693,7 +693,7 @@ export type AssetGeneratorDataUrlFunction = (
 export type AssetGeneratorOptions = AssetInlineGeneratorOptions &
 	AssetResourceGeneratorOptions;
 /**
- * Emit the asset in the specified folder instead relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.
+ * Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.
  */
 export type AssetModuleOutputPath =
 	| string
@@ -2715,7 +2715,7 @@ export interface AssetResourceGeneratorOptions {
 	 */
 	filename?: FilenameTemplate;
 	/**
-	 * Emit the asset in the specified folder instead relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.
+	 * Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.
 	 */
 	outputPath?: AssetModuleOutputPath;
 	/**
