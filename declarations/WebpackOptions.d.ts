@@ -693,6 +693,15 @@ export type AssetGeneratorDataUrlFunction = (
 export type AssetGeneratorOptions = AssetInlineGeneratorOptions &
 	AssetResourceGeneratorOptions;
 /**
+ * Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.
+ */
+export type AssetModuleOutputPath =
+	| string
+	| ((
+			pathData: import("../lib/Compilation").PathData,
+			assetInfo?: import("../lib/Compilation").AssetInfo
+	  ) => string);
+/**
  * Function that executes for module and should return whenever asset should be inlined as DataUrl.
  */
 export type AssetParserDataUrlFunction = (
@@ -2705,6 +2714,10 @@ export interface AssetResourceGeneratorOptions {
 	 * Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
 	 */
 	filename?: FilenameTemplate;
+	/**
+	 * Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.
+	 */
+	outputPath?: AssetModuleOutputPath;
 	/**
 	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
 	 */

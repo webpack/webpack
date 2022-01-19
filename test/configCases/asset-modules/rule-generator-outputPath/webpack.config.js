@@ -2,7 +2,7 @@
 module.exports = {
 	mode: "development",
 	output: {
-		assetModuleFilename: "images/file[ext]"
+		assetModuleFilename: "file[ext]"
 	},
 	module: {
 		rules: [
@@ -10,12 +10,9 @@ module.exports = {
 				test: /\.png$/,
 				type: "asset/resource",
 				generator: {
-					emit: false
+					publicPath: "https://cdn/assets/",
+					outputPath: "cdn-assets/"
 				}
-			},
-			{
-				test: /\.jpg$/,
-				type: "asset/resource"
 			}
 		]
 	}
