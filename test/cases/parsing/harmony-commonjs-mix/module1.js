@@ -14,6 +14,6 @@ expect(function() {
 export default 1234;
 
 if(eval("typeof exports !== \"undefined\"")) {
-	// exports is node.js exports and not webpacks
+	// exports is node.js exports and not webpack's
 	expect(Object.keys(exports)).toEqual([]);
 }

@@ -6,7 +6,7 @@ it("should allow to import a variable named define (call)", () => {
 	expect(define()).toBe("ok");
 });
 
-it("should allow to import a variable named define (expresion)", () => {
+it("should allow to import a variable named define (expression)", () => {
 	const d = i(define);
 	expect(d()).toBe("ok");
 });
