@@ -944,10 +944,6 @@ export interface FileCacheOptions {
 	 */
 	compression?: false | "gzip" | "brotli";
 	/**
-	 * Algorithm used for generation the hash (see node.js crypto package).
-	 */
-	hashAlgorithm?: string;
-	/**
 	 * Time in ms after which idle period the cache storing should happen.
 	 */
 	idleTimeout?: number;

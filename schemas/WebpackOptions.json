@@ -1058,10 +1058,6 @@
           "description": "Compression type used for the cache files.",
           "enum": [false, "gzip", "brotli"]
         },
-        "hashAlgorithm": {
-          "description": "Algorithm used for generation the hash (see node.js crypto package).",
-          "type": "string"
-        },
         "idleTimeout": {
           "description": "Time in ms after which idle period the cache storing should happen.",
           "type": "number",

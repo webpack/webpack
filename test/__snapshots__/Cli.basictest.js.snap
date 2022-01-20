@@ -126,19 +126,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "cache-hash-algorithm": Object {
-    "configs": Array [
-      Object {
-        "description": "Algorithm used for generation the hash (see node.js crypto package).",
-        "multiple": false,
-        "path": "cache.hashAlgorithm",
-        "type": "string",
-      },
-    ],
-    "description": "Algorithm used for generation the hash (see node.js crypto package).",
-    "multiple": false,
-    "simpleType": "string",
-  },
   "cache-idle-timeout": Object {
     "configs": Array [
       Object {
