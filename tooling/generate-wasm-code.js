@@ -6,7 +6,7 @@ const asc = require("assemblyscript/cli/asc");
 // Otherwise it only prints outdated files
 const doWrite = process.argv.includes("--write");
 
-const files = ["lib/util/hash/xxhash64.js"];
+const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 
 (async () => {
 	await asc.ready;

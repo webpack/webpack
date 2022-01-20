@@ -8,6 +8,10 @@ module.exports = {
 				type: "asset/inline"
 			},
 			{
+				mimetype: "image/svg+xml",
+				type: "asset/inline"
+			},
+			{
 				test: /\.jpg$/,
 				type: "asset",
 				parser: {
@@ -15,6 +19,11 @@ module.exports = {
 						maxSize: Infinity
 					}
 				}
+			},
+			{
+				mimetype: "text/plain",
+				type: "asset/inline",
+				loader: "./loader"
 			}
 		]
 	}

@@ -14,6 +14,10 @@ module.exports = {
 				generator: {
 					filename: "static/[name][ext]"
 				}
+			},
+			{
+				mimetype: "text/plain",
+				type: "asset"
 			}
 		]
 	},

@@ -111,7 +111,7 @@ describe("ProgressPlugin", function () {
 		nanTest(createMultiCompiler)
 	);
 	it(
-		"should not contain NaN as a percentage when it is applied to MultiCompiler (paralellism: 1)",
+		"should not contain NaN as a percentage when it is applied to MultiCompiler (parallelism: 1)",
 		nanTest(() => createMultiCompiler(undefined, { parallelism: 1 }))
 	);
 
@@ -190,6 +190,7 @@ describe("ProgressPlugin", function () {
 
 			expect(logs.length).toBeGreaterThan(20);
 			logs.forEach(log => expect(log.length).toBeLessThanOrEqual(35));
+			// cspell:ignore mization nsPlugin
 			expect(logs).toContain(
 				"75% sealing ...mization ...nsPlugin",
 				"trims each detail string equally"

@@ -185,6 +185,7 @@ const describeCases = config => {
 								experiments: {
 									asyncWebAssembly: true,
 									topLevelAwait: true,
+									backCompat: false,
 									...(config.module ? { outputModule: true } : {})
 								}
 							};

@@ -4,7 +4,7 @@ const path = require("path");
 const ProfilingPlugin = require("../lib/debug/ProfilingPlugin");
 
 describe("Profiling Plugin", () => {
-	it("should persist the passed outpath", () => {
+	it("should persist the passed output path", () => {
 		const outputPath = path.join(__dirname, "invest_in_doge_coin");
 		const plugin = new ProfilingPlugin({
 			outputPath: outputPath
@@ -34,7 +34,7 @@ describe("Profiling Plugin", () => {
 
 	it("handles sending a profiling message when no session", () => {
 		const profiler = new ProfilingPlugin.Profiler();
-		return profiler.sendCommand("randy", "is a puppers");
+		return profiler.sendCommand("randy", "is awesome");
 	});
 
 	it("handles destroying when no session", () => {

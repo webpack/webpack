@@ -1,136 +1,5 @@
 bot: "webpack-bot"
 rules:
-  # Add ci-ok, ci-not-ok labels depending on travis status
-  # comment to point the user to the results
-  # comment in case of success
-  - filters:
-      open: true
-      pull_request:
-        mergeable: true
-      check_1:
-        name: "webpack.webpack"
-      status_2:
-        context: "continuous-integration/appveyor/pr"
-      ensure_1:
-        value: "{{check_1.conclusion}}"
-        equals: "success"
-      ensure_2:
-        value: "{{status_2.state}}"
-        equals: "success"
-    actions:
-      label:
-        add: "PR: CI-ok"
-        remove: "PR: CI-not-ok"
-      comment:
-        identifier: "ci-result"
-        message: |-
-          Thank you for your pull request! The most important CI builds succeeded, we’ll review the pull request soon.
-  - filters:
-      open: true
-      pull_request:
-        mergeable: true
-      check_1:
-        name: "webpack.webpack"
-      status_2:
-        context: "continuous-integration/appveyor/pr"
-      any:
-        ensure_1:
-          value: "{{check_1.conclusion}}"
-          equals: "failure"
-        ensure_2:
-          value: "{{status_2.state}}"
-          equals: "failure"
-      not:
-        any:
-          ensure_3:
-            value: "{{check_1.conclusion}}"
-            equals: "pending"
-          ensure_4:
-            value: "{{status_2.state}}"
-            equals: "pending"
-    actions:
-      label:
-        add: "PR: CI-not-ok"
-        remove: "PR: CI-ok"
-      set:
-        id: report_ci
-        value: yep
-
-  # Report a general error message
-  - filters:
-      ensure:
-        value: "{{report_ci}}"
-        equals: yep
-      commit: true
-      check_1:
-        name: "webpack.webpack"
-      status_2:
-        context: "continuous-integration/appveyor/pr"
-    actions:
-      comment:
-        identifier: "ci-result"
-        message: |-
-          @{{commit.author.login}} The most important CI builds failed. This way your PR can't be merged.
-
-          Please take a look at the CI results from azure ({{{check_1.output.summary}}}) and [appveyor]({{status_2.target_url}}) ({{status_2.state}}) and fix these issues.
-
-  # Add tests-needed label depending on codecov status
-  # comment to point the user writing test cases
-  # comment in case of success
-  - filters:
-      open: true
-      pull_request:
-        mergeable: true
-      status:
-        context: "codecov/patch/integration"
-      ensure:
-        value: "{{status.state}}"
-        equals: "success"
-      label: "PR: tests-needed"
-    actions:
-      label:
-        remove: "PR: tests-needed"
-      comment:
-        identifier: "tests-result"
-        message: |-
-          The minimum test ratio has been reached. Thanks!
-  - filters:
-      open: true
-      pull_request:
-        mergeable: true
-      status:
-        context: "codecov/patch/integration"
-      ensure:
-        value: "{{status.state}}"
-        equals: "failure"
-    actions:
-      label:
-        add: "PR: tests-needed"
-  - filters:
-      open: true
-      pull_request:
-        mergeable: true
-      status:
-        context: "codecov/patch/integration"
-      ensure:
-        value: "{{status.state}}"
-        equals: "failure"
-      age:
-        value: "{{status.created_at}}"
-        minimum: 1h
-      permission: "read|none"
-    actions:
-      comment:
-        identifier: "tests-result"
-        message: |-
-          It looks like this Pull Request doesn't include [enough test cases]({{status.target_url}}) (based on Code Coverage analysis of the PR diff).
-
-          A PR need to be covered by tests if you add a new feature (we want to make sure that your feature is working) or if you fix a bug (we want to make sure that we don't run into a regression in future).
-
-          @{{issue.user.login}} Please check if this is appliable to your PR and if you can add more test cases.
-
-          Read the [test readme](https://github.com/webpack/webpack/blob/main/test/README.md) for details how to write test cases.
-
   # add conflict label to pull requests with conflict
   # on conflict all result labels are removed
   - filters:
@@ -140,10 +9,6 @@ rules:
     actions:
       label:
         add: "PR: conflict"
-        remove:
-          - "PR: tests-needed"
-          - "PR: CI-ok"
-          - "PR: CI-not-ok"
   - filters:
       open: true
       pull_request:
@@ -229,12 +94,23 @@ rules:
     actions:
       label: "PR: unreviewed"
 
-  # add non-main, webpack-4 and next label to pull request to other branch
+  # add non-main, dev-1, webpack-4 and next label to pull request to other branch
   - filters:
       pull_request:
         base_ref: "^main$"
     actions:
       label:
+        remove:
+          - "PR: next"
+          - "PR: dev-1"
+          - "PR: webpack-4"
+          - "PR: non-main"
+  - filters:
+      pull_request:
+        base_ref: "^dev-1$"
+    actions:
+      label:
+        add: "PR: dev-1"
         remove:
           - "PR: next"
           - "PR: webpack-4"
@@ -246,6 +122,7 @@ rules:
       label:
         add: "PR: next"
         remove:
+          - "PR: dev-1"
           - "PR: webpack-4"
           - "PR: non-main"
   - filters:
@@ -255,6 +132,7 @@ rules:
       label:
         add: "PR: webpack-4"
         remove:
+          - "PR: dev-1"
           - "PR: next"
           - "PR: non-main"
   - filters:
@@ -264,10 +142,11 @@ rules:
       label:
         add: "PR: non-main"
         remove:
+          - "PR: dev-1"
           - "PR: next"
           - "PR: webpack-4"
 
-  # add non-main label to pull request to other branch
+  # show hint about contributing
   - filters:
       open: true
       age:
@@ -288,31 +167,6 @@ rules:
           > Don't submit pull request from your own `main` branch. It's recommended to create a feature branch for the PR.
 
           *You don't have to change it for this PR, just make sure to follow this hint the next time you submit a PR.*
-
-  # skip CLA for dependabot
-  - filters:
-      open: true
-      pull_request:
-        author: "^dependabot(-preview)?\\[bot\\]$"
-      status:
-        context: "licence/cla"
-        state: "pending"
-    actions:
-      status:
-        context: "licence/cla"
-        description: "Contributor License Agreement is not needed for this user."
-        state: "success"
-
-  # merge dependabot PRs automatically
-  - filters:
-      open: true
-      pull_request:
-        author: "^dependabot(-preview)?\\[bot\\]$"
-        mergeable_state: clean
-        merged: false
-      label: "PR: CI-ok"
-    actions:
-      merge: true
 
   # add "Send a PR" label when somebody with write permission say it
   - filters:
@@ -465,158 +319,6 @@ rules:
         identifier: admin-action-webpack-4-backport-executed
         message: |-
           I've created an issue to backport this.
-
-  # Ask for tags on new issues
-  - filters:
-      open: true
-      issue: true
-      age:
-        maximum: 1w
-      any:
-        not_1:
-          any:
-            label_1: webpack-4
-            label_2: webpack-5
-        not_2:
-          any:
-            label_1: bug
-            label_2: critical-bug
-            label_3: enhancement
-            label_4: documentation
-            label_5: performance
-            label_6: dependencies
-            label_7: question
-      not:
-        comment:
-          author: webpack-bot
-          matching: admin-actions
-    actions:
-      comment:
-        identifier: admin-actions
-        edit: true
-        message: |-
-          *For maintainers only:*
-
-          * [ ] webpack-4
-          * [ ] webpack-5
-          * [ ] bug
-          * [ ] critical-bug
-          * [ ] enhancement
-          * [ ] documentation
-          * [ ] performance
-          * [ ] dependencies
-          * [ ] question
-
-  # Apply selected tags
-  - filters:
-      open: true
-      issue: true
-      comment:
-        author: webpack-bot
-        matching: "\\* \\[x\\] webpack-4"
-    actions:
-      label: webpack-4
-  - filters:
-      open: true
-      issue: true
-      comment:
-        author: webpack-bot
-        matching: "\\* \\[x\\] webpack-5"
-    actions:
-      label: webpack-5
-  - filters:
-      open: true
-      issue: true
-      comment:
-        author: webpack-bot
-        matching: "\\* \\[x\\] bug"
-    actions:
-      label: bug
-  - filters:
-      open: true
-      issue: true
-      comment:
-        author: webpack-bot
-        matching: "\\* \\[x\\] critical-bug"
-    actions:
-      label: critical-bug
-  - filters:
-      open: true
-      issue: true
-      comment:
-        author: webpack-bot
-        matching: "\\* \\[x\\] enhancement"
-    actions:
-      label: enhancement
-  - filters:
-      open: true
-      issue: true
-      comment:
-        author: webpack-bot
-        matching: "\\* \\[x\\] performance"
-    actions:
-      label: performance
-  - filters:
-      open: true
-      issue: true
-      comment:
-        author: webpack-bot
-        matching: "\\* \\[x\\] dependencies"
-    actions:
-      label: dependencies
-  - filters:
-      open: true
-      issue: true
-      comment:
-        author: webpack-bot
-        matching: "\\* \\[x\\] question"
-    actions:
-      label: question
-
-  # Remove question about tags again
-  - filters:
-      open: true
-      issue: true
-      any_1:
-        label_1: webpack-4
-        label_2: webpack-5
-      any_2:
-        label_1: bug
-        label_2: critical-bug
-        label_3: enhancement
-        label_4: documentation
-        label_5: performance
-        label_6: dependencies
-        label_7: question
-      comment:
-        author: webpack-bot
-        matching: admin-actions
-    actions:
-      schedule: 30s
-  - filters:
-      open: true
-      issue: true
-      any_1:
-        label_1: webpack-4
-        label_2: webpack-5
-      any_2:
-        label_1: bug
-        label_2: critical-bug
-        label_3: enhancement
-        label_4: documentation
-        label_5: performance
-        label_6: dependencies
-        label_7: question
-      comment:
-        author: webpack-bot
-        matching: admin-actions
-      last_action_age:
-        minimum: 30s
-        includeBotActions: true
-    actions:
-      comment:
-        identifier: admin-actions
-        message: ""
 
   # Check open issues and pull requests every day
   - filters:

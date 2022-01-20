@@ -8,7 +8,9 @@
 module.exports = class EventSource {
 	constructor(url) {
 		this.response = undefined;
-		const request = require("http").request(
+		const request = (
+			url.startsWith("https:") ? require("https") : require("http")
+		).request(
 			url,
 			{
 				agent: false,
