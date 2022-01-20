@@ -2724,6 +2724,15 @@ export interface AssetResourceGeneratorOptions {
 	publicPath?: RawPublicPath;
 }
 /**
+ * Options for css handling.
+ */
+export interface CssExperimentOptions {
+	/**
+	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+	 */
+	exportsOnly?: boolean;
+}
+/**
  * Generator options for css modules.
  */
 export interface CssGeneratorOptions {}
@@ -2809,10 +2818,6 @@ export interface ExperimentsCommon {
 	 * Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.
 	 */
 	cacheUnaffected?: boolean;
-	/**
-	 * Enable css support.
-	 */
-	css?: boolean;
 	/**
 	 * Apply defaults of next major version.
 	 */
@@ -3454,6 +3459,10 @@ export interface ExperimentsExtra {
 	 */
 	buildHttp?: HttpUriAllowedUris | HttpUriOptions;
 	/**
+	 * Enable css support.
+	 */
+	css?: boolean | CssExperimentOptions;
+	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
@@ -3466,6 +3475,10 @@ export interface ExperimentsNormalizedExtra {
 	 * Build http(s): urls using a lockfile and resource content cache.
 	 */
 	buildHttp?: HttpUriOptions;
+	/**
+	 * Enable css support.
+	 */
+	css?: CssExperimentOptions;
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */

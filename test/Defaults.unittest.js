@@ -95,7 +95,7 @@ describe("Defaults", () => {
 		    "backCompat": true,
 		    "buildHttp": undefined,
 		    "cacheUnaffected": false,
-		    "css": false,
+		    "css": undefined,
 		    "futureDefaults": false,
 		    "layers": false,
 		    "lazyCompilation": undefined,
@@ -1916,10 +1916,12 @@ describe("Defaults", () => {
 			+     "backCompat": false,
 			@@ ... @@
 			-     "cacheUnaffected": false,
-			-     "css": false,
+			-     "css": undefined,
 			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
-			+     "css": true,
+			+     "css": Object {
+			+       "exportsOnly": false,
+			+     },
 			+     "futureDefaults": true,
 			@@ ... @@
 			-     "topLevelAwait": false,
@@ -1979,15 +1981,14 @@ describe("Defaults", () => {
 			+           "fullySpecified": true,
 			+         },
 			+         "type": "css/module",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": "text/css",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
-			+       },
-			+       Object {
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
