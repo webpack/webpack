@@ -404,6 +404,7 @@ describe("Validation", () => {
 		`)
 	);
 
+	// cspell:Ignore protuction
 	createTestCase(
 		"invalid mode",
 		{
@@ -603,7 +604,7 @@ describe("Validation", () => {
 		`)
 		);
 		createTestCase(
-			"opimization.moduleIds",
+			"optimization.moduleIds",
 			{
 				optimization: {
 					hashedModuleIds: true

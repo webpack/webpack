@@ -9,24 +9,24 @@ const stripAnsi = require("strip-ansi");
  * @param {string} str String to quote
  * @returns {string} Escaped string
  */
-const quotemeta = str => {
+const quoteMeta = str => {
 	return str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 };
 
 describe("Defaults", () => {
 	const cwd = process.cwd();
 	const cwdRegExp = new RegExp(
-		`${quotemeta(cwd)}((?:\\\\)?(?:[a-zA-Z.\\-_]+\\\\)*)`,
+		`${quoteMeta(cwd)}((?:\\\\)?(?:[a-zA-Z.\\-_]+\\\\)*)`,
 		"g"
 	);
 	const escapedCwd = JSON.stringify(cwd).slice(1, -1);
 	const escapedCwdRegExp = new RegExp(
-		`${quotemeta(escapedCwd)}((?:\\\\\\\\)?(?:[a-zA-Z.\\-_]+\\\\\\\\)*)`,
+		`${quoteMeta(escapedCwd)}((?:\\\\\\\\)?(?:[a-zA-Z.\\-_]+\\\\\\\\)*)`,
 		"g"
 	);
 	const normalize = str => {
 		if (cwd.startsWith("/")) {
-			str = str.replace(new RegExp(quotemeta(cwd), "g"), "<cwd>");
+			str = str.replace(new RegExp(quoteMeta(cwd), "g"), "<cwd>");
 		} else {
 			str = str.replace(cwdRegExp, (m, g) => `<cwd>${g.replace(/\\/g, "/")}`);
 			str = str.replace(
@@ -1452,7 +1452,7 @@ describe("Defaults", () => {
 		+   "recordsOutputPath": "some-path",
 	`)
 	);
-	test("ecamVersion", { output: { ecmaVersion: 2020 } }, e =>
+	test("ecmaVersion", { output: { ecmaVersion: 2020 } }, e =>
 		e.toMatchInlineSnapshot(`Compared values have no visual difference.`)
 	);
 	test("single runtimeChunk", { optimization: { runtimeChunk: "single" } }, e =>

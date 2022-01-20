@@ -108,6 +108,9 @@
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
         },
+        "outputPath": {
+          "$ref": "#/definitions/AssetModuleOutputPath"
+        },
         "publicPath": {
           "$ref": "#/definitions/RawPublicPath"
         }
@@ -125,6 +128,19 @@
     },
     "AssetModuleFilename": {
       "description": "The filename of asset modules as relative path inside the 'output.path' directory.",
+      "anyOf": [
+        {
+          "type": "string",
+          "absolutePath": false
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+        }
+      ]
+    },
+    "AssetModuleOutputPath": {
+      "description": "Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
       "anyOf": [
         {
           "type": "string",
@@ -181,6 +197,9 @@
         },
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
+        },
+        "outputPath": {
+          "$ref": "#/definitions/AssetModuleOutputPath"
         },
         "publicPath": {
           "$ref": "#/definitions/RawPublicPath"

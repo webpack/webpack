@@ -19,6 +19,11 @@ module.exports = {
 						maxSize: Infinity
 					}
 				}
+			},
+			{
+				mimetype: "text/plain",
+				type: "asset/inline",
+				loader: "./loader"
 			}
 		]
 	}
