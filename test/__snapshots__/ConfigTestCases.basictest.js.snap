@@ -1,5 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ConfigTestCases css urls exported tests should be able to handle styles in spacing.css 1`] = `
+Object {
+  "a": " url(img.7bc91c245a8a10a4.png)",
+  "b": " url(img.7bc91c245a8a10a4.png)",
+  "c": " url(img.7bc91c245a8a10a4.png)",
+  "d": " url(img.7bc91c245a8a10a4.png#hash)",
+  "e": " url(img.7bc91c245a8a10a4.png)",
+  "f": " green url(img.7bc91c245a8a10a4.png) xyz",
+  "g": " green url(img.7bc91c245a8a10a4.png) xyz",
+  "getPropertyValue": [Function],
+  "h": " green url(img.7bc91c245a8a10a4.png) xyz",
+  "i": " green url(img.7bc91c245a8a10a4.png) url(img.7bc91c245a8a10a4.png) xyz",
+  "j": " green url(img\\\\ img.7bc91c245a8a10a4.png) xyz",
+  "k": " green url(img\\\\ img.7bc91c245a8a10a4.png) xyz",
+  "l": " green url(img.7bc91c245a8a10a4.png) xyz",
+}
+`;
+
 exports[`ConfigTestCases custom-modules json-custom exported tests should transform toml to json 1`] = `
 Object {
   "owner": Object {

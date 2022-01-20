@@ -95,6 +95,7 @@ describe("Defaults", () => {
 		    "backCompat": true,
 		    "buildHttp": undefined,
 		    "cacheUnaffected": false,
+		    "css": false,
 		    "futureDefaults": false,
 		    "layers": false,
 		    "lazyCompilation": undefined,
@@ -307,6 +308,8 @@ describe("Defaults", () => {
 		    "clean": undefined,
 		    "compareBeforeEmit": true,
 		    "crossOriginLoading": false,
+		    "cssChunkFilename": "[name].css",
+		    "cssFilename": "[name].css",
 		    "devtoolFallbackModuleFilenameTemplate": undefined,
 		    "devtoolModuleFilenameTemplate": undefined,
 		    "devtoolNamespace": "webpack",
@@ -988,6 +991,11 @@ describe("Defaults", () => {
 		-     "chunkFilename": "[name].js",
 		+     "chunkFilename": "[id].bundle.js",
 		@@ ... @@
+		-     "cssChunkFilename": "[name].css",
+		-     "cssFilename": "[name].css",
+		+     "cssChunkFilename": "[id].bundle.css",
+		+     "cssFilename": "bundle.css",
+		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": "bundle.js",
 	`)
@@ -1000,6 +1008,11 @@ describe("Defaults", () => {
 		@@ ... @@
 		-     "chunkFilename": "[name].js",
 		+     "chunkFilename": "[id].js",
+		@@ ... @@
+		-     "cssChunkFilename": "[name].css",
+		-     "cssFilename": "[name].css",
+		+     "cssChunkFilename": "[id].css",
+		+     "cssFilename": "[id].css",
 		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": [Function filename],
@@ -1895,17 +1908,18 @@ describe("Defaults", () => {
 			+     "backCompat": false,
 			@@ ... @@
 			-     "cacheUnaffected": false,
+			-     "css": false,
 			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
+			+     "css": true,
 			+     "futureDefaults": true,
 			@@ ... @@
 			-     "topLevelAwait": false,
 			+     "topLevelAwait": true,
 			@@ ... @@
-			+       },
 			+       Object {
 			+         "rules": Array [
-			+           Object {
+			@@ ... @@
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -1930,6 +1944,44 @@ describe("Defaults", () => {
 			+           },
 			+         ],
 			+         "type": "webassembly/async",
+			+       },
+			+       Object {
+			+         "oneOf": Array [
+			+           Object {
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+             "test": /\\.module\\.css$/i,
+			+             "type": "css/module",
+			+           },
+			+           Object {
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+               "preferRelative": true,
+			+             },
+			+             "type": "css",
+			+           },
+			+         ],
+			+         "test": /\\.css$/i,
+			+       },
+			+       Object {
+			+         "mimetype": "text/css+module",
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+         },
+			+         "type": "css/module",
+			+       },
+			+       Object {
+			+         "mimetype": "text/css",
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css",
+			+       },
+			+       Object {
+			@@ ... @@
+			+         "css",
 		`)
 	);
 });
