@@ -38,7 +38,36 @@ export type Dependencies = string[];
 /**
  * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
  */
-export type DevTool = (false | "eval") | string;
+export type DevTool =
+	| (
+			| false
+			| "eval"
+			| "eval-cheap-source-map"
+			| "eval-cheap-module-source-map"
+			| "eval-nosources-cheap-source-map"
+			| "eval-nosources-cheap-module-source-map"
+			| "eval-nosources-source-map"
+			| "eval-source-map"
+			| "cheap-source-map"
+			| "cheap-module-source-map"
+			| "source-map"
+			| "inline-cheap-source-map"
+			| "inline-cheap-module-source-map"
+			| "inline-source-map"
+			| "inline-nosources-cheap-source-map"
+			| "inline-nosources-cheap-module-source-map"
+			| "inline-nosources-source-map"
+			| "nosources-cheap-source-map"
+			| "nosources-cheap-module-source-map"
+			| "nosources-source-map"
+			| "hidden-nosources-cheap-source-map"
+			| "hidden-nosources-cheap-module-source-map"
+			| "hidden-nosources-source-map"
+			| "hidden-cheap-source-map"
+			| "hidden-cheap-module-source-map"
+			| "hidden-source-map"
+	  )
+	| string;
 /**
  * The entry point(s) of the compilation.
  */
