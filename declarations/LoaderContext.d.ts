@@ -187,6 +187,7 @@ export interface LoaderRunnerLoaderContext<OptionsType> {
 		data: object | undefined;
 		pitchExecuted: boolean;
 		normalExecuted: boolean;
+		type?: "commonjs" | "module" | undefined;
 	}[];
 
 	/**
