@@ -1,6 +1,7 @@
 import imported from "./imported.mjs";
 import value from "./module";
 import { metaUrl } from "./meta";
+const localMetaUrl = import.meta.url;
 
 it("should allow to use externals in concatenated modules", () => {
 	expect(imported).toBe(42);
@@ -8,6 +9,5 @@ it("should allow to use externals in concatenated modules", () => {
 });
 
 it("all bundled files should have same url, when module.importMeta.url === false", () => {
-	export const localMetaUrl = import.meta.url;
 	expect(localMetaUrl).toBe(metaUrl)
 });
