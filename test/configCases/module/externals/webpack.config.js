@@ -1,5 +1,10 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
+	module: {
+		importMeta: {
+			url: false
+		}
+	},
 	entry: {
 		main: "./index.js",
 		imported: {

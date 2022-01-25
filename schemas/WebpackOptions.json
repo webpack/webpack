@@ -1505,9 +1505,31 @@
       "description": "The name of the native import() function (can be exchanged for a polyfill).",
       "type": "string"
     },
+    "ImportMeta": {
+      "description": "Options object for es6 import.meta features.",
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "$ref": "#/definitions/ImportMetaOptions"
+        }
+      ]
+    },
     "ImportMetaName": {
       "description": "The name of the native import.meta object (can be exchanged for a polyfill).",
       "type": "string"
+    },
+    "ImportMetaOptions": {
+      "description": "Options object for es6 import.meta features.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "description": "Include a polyfill for the 'import.meta.url' variable.",
+          "enum": [false, true]
+        }
+      }
     },
     "InfrastructureLogging": {
       "description": "Options for infrastructure level logging.",
@@ -2103,6 +2125,9 @@
         "generator": {
           "$ref": "#/definitions/GeneratorOptionsByModuleType"
         },
+        "importMeta": {
+          "$ref": "#/definitions/ImportMeta"
+        },
         "noParse": {
           "$ref": "#/definitions/NoParse"
         },
@@ -2194,6 +2219,9 @@
         },
         "generator": {
           "$ref": "#/definitions/GeneratorOptionsByModuleType"
+        },
+        "importMeta": {
+          "$ref": "#/definitions/ImportMeta"
         },
         "noParse": {
           "$ref": "#/definitions/NoParse"

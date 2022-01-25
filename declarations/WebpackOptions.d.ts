@@ -352,6 +352,10 @@ export type RuleSetRules = ("..." | RuleSetRule)[];
 export type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
 	GeneratorOptionsByModuleTypeUnknown;
 /**
+ * Options object for es6 import.meta features.
+ */
+export type ImportMeta = false | ImportMetaOptions;
+/**
  * Don't parse files matching. It's matched against the full resolved request.
  */
 export type NoParse =
@@ -1243,6 +1247,10 @@ export interface ModuleOptions {
 	 */
 	generator?: GeneratorOptionsByModuleType;
 	/**
+	 * Options object for es6 import.meta features.
+	 */
+	importMeta?: ImportMeta;
+	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
 	noParse?: NoParse;
@@ -1583,6 +1591,15 @@ export interface ResolvePluginInstance {
 	 */
 	apply: (resolver: import("enhanced-resolve").Resolver) => void;
 	[k: string]: any;
+}
+/**
+ * Options object for es6 import.meta features.
+ */
+export interface ImportMetaOptions {
+	/**
+	 * Include a polyfill for the 'import.meta.url' variable.
+	 */
+	url?: false | true;
 }
 /**
  * Options object for node compatibility features.
@@ -3095,6 +3112,10 @@ export interface ModuleOptionsNormalized {
 	 * Specify options for each generator.
 	 */
 	generator: GeneratorOptionsByModuleType;
+	/**
+	 * Options object for es6 import.meta features.
+	 */
+	importMeta?: ImportMeta;
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
