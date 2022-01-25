@@ -80,6 +80,7 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
+import { Options as AcornOptions } from "acorn";
 import { ServerOptions as ServerOptionsImport } from "http";
 import { ListenOptions, Server } from "net";
 import { validate as validateFunction } from "schema-utils";
@@ -4826,6 +4827,13 @@ declare class JavascriptModulesPlugin {
 }
 declare class JavascriptParser extends Parser {
 	constructor(sourceType?: "module" | "auto" | "script");
+	static _parse(
+		code: string,
+		options: Omit<AcornOptions, "sourceType" | "ecmaVersion"> & {
+			sourceType: "module" | "script" | "auto";
+			ecmaVersion?: AcornOptions["ecmaVersion"];
+		}
+	): Program;
 	hooks: Readonly<{
 		evaluateTypeof: HookMap<
 			SyncBailHook<
