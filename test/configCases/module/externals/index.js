@@ -8,6 +8,6 @@ it("should allow to use externals in concatenated modules", () => {
 	expect(value).toBe(40);
 });
 
-it("all bundled files should have same url, when module.importMeta.url === false", () => {
+it("all bundled files should have same url, when parser.javascript.importMeta === false", () => {
 	expect(localMetaUrl).toBe(metaUrl)
 });

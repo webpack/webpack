@@ -1,8 +1,10 @@
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	module: {
-		importMeta: {
-			url: false
+		parser: {
+			javascript: {
+				importMeta: false
+			}
 		}
 	},
 	entry: {

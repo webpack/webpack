@@ -4628,16 +4628,6 @@ type IgnorePluginOptions =
 			 */
 			checkResource: (resource: string, context: string) => boolean;
 	  };
-
-/**
- * Options object for es6 import.meta features.
- */
-declare interface ImportMetaOptions {
-	/**
-	 * Include a polyfill for the 'import.meta.url' variable.
-	 */
-	url?: boolean;
-}
 declare interface ImportModuleOptions {
 	/**
 	 * the target layer
@@ -5481,6 +5471,11 @@ declare interface JavascriptParserOptions {
 	 * Specifies the behavior of invalid export names in "import ... from ...".
 	 */
 	importExportsPresence?: false | "auto" | "error" | "warn";
+
+	/**
+	 * Enable/disable evaluating import.meta.
+	 */
+	importMeta?: boolean;
 
 	/**
 	 * Include polyfills or mocks for various node stuff.
@@ -6402,7 +6397,6 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
-	 *
 	 * In the example:
 	 * [
 	 *   { request: "/abc/loader1.js?xyz",
@@ -7065,11 +7059,6 @@ declare interface ModuleOptions {
 	generator?: GeneratorOptionsByModuleType;
 
 	/**
-	 * Options object for es6 import.meta features.
-	 */
-	importMeta?: false | ImportMetaOptions;
-
-	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
 	noParse?: string | Function | RegExp | (string | Function | RegExp)[];
@@ -7148,11 +7137,6 @@ declare interface ModuleOptionsNormalized {
 	 * Specify options for each generator.
 	 */
 	generator: GeneratorOptionsByModuleType;
-
-	/**
-	 * Options object for es6 import.meta features.
-	 */
-	importMeta?: false | ImportMetaOptions;
 
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
