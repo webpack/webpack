@@ -80,6 +80,10 @@ export interface ContainerPluginOptions {
 	 */
 	name: string;
 	/**
+	 * List of remotes
+	 */
+	remotes?: any[];
+	/**
 	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
 	 */
 	runtime?: EntryRuntime;

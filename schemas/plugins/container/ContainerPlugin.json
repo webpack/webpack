@@ -273,6 +273,10 @@
       "type": "string",
       "minLength": 1
     },
+    "remotes": {
+      "description": "List of remotes",
+      "type": "array"
+    },
     "runtime": {
       "$ref": "#/definitions/EntryRuntime"
     },
