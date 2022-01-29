@@ -274,7 +274,7 @@
       "minLength": 1
     },
     "remotes": {
-      "description": "List of remotes",
+      "description": "List of remotes.",
       "type": "array"
     },
     "runtime": {

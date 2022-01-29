@@ -2413,7 +2413,7 @@ declare interface ContainerPluginOptions {
 	name: string;
 
 	/**
-	 * List of remotes
+	 * List of remotes.
 	 */
 	remotes?: any[];
 
