@@ -218,6 +218,7 @@ describe("Defaults", () => {
 		        "exprContextRecursive": true,
 		        "exprContextRegExp": false,
 		        "exprContextRequest": ".",
+		        "importMeta": true,
 		        "strictExportPresence": undefined,
 		        "strictThisContextOnImports": false,
 		        "unknownContextCritical": true,

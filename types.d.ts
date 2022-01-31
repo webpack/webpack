@@ -5473,6 +5473,11 @@ declare interface JavascriptParserOptions {
 	importExportsPresence?: false | "auto" | "error" | "warn";
 
 	/**
+	 * Enable/disable evaluating import.meta.
+	 */
+	importMeta?: boolean;
+
+	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
 	node?: false | NodeOptions;

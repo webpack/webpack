@@ -2950,6 +2950,10 @@ export interface JavascriptParserOptions {
 	 */
 	importExportsPresence?: "error" | "warn" | "auto" | false;
 	/**
+	 * Enable/disable evaluating import.meta.
+	 */
+	importMeta?: boolean;
+	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
 	node?: Node;

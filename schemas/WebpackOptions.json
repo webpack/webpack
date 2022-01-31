@@ -1608,6 +1608,10 @@
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\".",
           "enum": ["error", "warn", "auto", false]
         },
+        "importMeta": {
+          "description": "Enable/disable evaluating import.meta.",
+          "type": "boolean"
+        },
         "node": {
           "$ref": "#/definitions/Node"
         },
