@@ -1612,6 +1612,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-auto-import-meta": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-node": Object {
     "configs": Array [
       Object {
@@ -2163,6 +2176,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-import-meta": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-node": Object {
     "configs": Array [
       Object {
@@ -2675,6 +2701,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-esm-import-meta": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-node": Object {
     "configs": Array [
       Object {
@@ -3131,6 +3170,19 @@ Object {
     "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-javascript-import-meta": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-javascript-node": Object {
     "configs": Array [
