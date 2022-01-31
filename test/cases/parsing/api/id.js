@@ -1,1 +1,1 @@
-export default __webpack_module_id__;
+export default __webpack_module__.id;
