@@ -2,9 +2,9 @@ import id from "./id";
 import mod from "./module";
 import modType from "./typeof-module";
 
-it("should support __webpack_module_id__", () => {
+it("should support __webpack_module__.id", () => {
 	expect(typeof id).toMatch(/^(string|number)$/);
-	expect(id).not.toBe(__webpack_module_id__);
+	expect(id).not.toBe(__webpack_module__.id);
 });
 
 it("should support __webpack_module__", () => {
