@@ -882,6 +882,9 @@ describe("Defaults", () => {
 		-     "chunkFilename": "[name].js",
 		+     "chunkFilename": "[name].mjs",
 		@@ ... @@
+		-       "module": undefined,
+		+       "module": true,
+		@@ ... @@
 		-     "filename": "[name].js",
 		+     "filename": "[name].mjs",
 		@@ ... @@
