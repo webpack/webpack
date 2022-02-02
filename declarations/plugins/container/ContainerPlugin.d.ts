@@ -102,10 +102,6 @@ export interface ExposesObject {
  */
 export interface ExposesConfig {
 	/**
-	 * Include the provided and fallback module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.
-	 */
-	eager?: boolean;
-	/**
 	 * Request to a module that should be exposed by this container.
 	 */
 	import: ExposesItem | ExposesItems;
@@ -113,6 +109,10 @@ export interface ExposesConfig {
 	 * Custom chunk name for the exposed module.
 	 */
 	name?: string;
+	/**
+	 * Include the provided and fallback module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.
+	 */
+	shared?: boolean;
 }
 /**
  * Options for library.
