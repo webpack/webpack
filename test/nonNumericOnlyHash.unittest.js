@@ -23,5 +23,9 @@ it("0111", () => {
 });
 
 it("911a", () => {
-	expect(nonNumericOnlyHash("911a", 3)).toBe("j11");
+	expect(nonNumericOnlyHash("911a", 3)).toBe("d11");
+});
+
+it("511a", () => {
+	expect(nonNumericOnlyHash("511a", 3)).toBe("f11");
 });
