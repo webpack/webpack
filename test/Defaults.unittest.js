@@ -882,6 +882,9 @@ describe("Defaults", () => {
 		-     "chunkFilename": "[name].js",
 		+     "chunkFilename": "[name].mjs",
 		@@ ... @@
+		-       "dynamicImport": undefined,
+		+       "dynamicImport": true,
+		@@ ... @@
 		-       "module": undefined,
 		+       "module": true,
 		@@ ... @@
