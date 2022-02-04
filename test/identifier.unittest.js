@@ -94,6 +94,7 @@ describe("util/identifier", () => {
 		// [input, expectedPath, expectedQuery]
 		/** @type {[string, string, string][]} */
 		const cases = [
+			["path#hash?query", "path#hash", "?query"],
 			["path?query#hash", "path", "?query#hash"],
 			["\0#path\0??\0#query#hash", "#path?", "?#query#hash"],
 			[
