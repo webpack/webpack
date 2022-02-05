@@ -1054,6 +1054,145 @@ describe("Defaults", () => {
 		+     "uniqueName": "myLib.awesome",
 	`)
 	);
+	test(
+		"library contains [name] placeholder",
+		{
+			output: {
+				library: ["myLib", "[name]"]
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-     "chunkLoadingGlobal": "webpackChunkwebpack",
+		+     "chunkLoadingGlobal": "webpackChunkmyLib",
+		@@ ... @@
+		-     "devtoolNamespace": "webpack",
+		+     "devtoolNamespace": "myLib",
+		@@ ... @@
+		-     "enabledLibraryTypes": Array [],
+		+     "enabledLibraryTypes": Array [
+		+       "var",
+		+     ],
+		@@ ... @@
+		-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+		+     "hotUpdateGlobal": "webpackHotUpdatemyLib",
+		@@ ... @@
+		-     "library": undefined,
+		+     "library": Object {
+		+       "auxiliaryComment": undefined,
+		+       "export": undefined,
+		+       "name": Array [
+		+         "myLib",
+		+         "[name]",
+		+       ],
+		+       "type": "var",
+		+       "umdNamedDefine": undefined,
+		+     },
+		@@ ... @@
+		-     "uniqueName": "webpack",
+		+     "uniqueName": "myLib",
+	`)
+	);
+	test(
+		"library.name contains [name] placeholder",
+		{
+			output: {
+				library: {
+					name: ["myLib", "[name]"],
+					type: "var"
+				}
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-     "chunkLoadingGlobal": "webpackChunkwebpack",
+		+     "chunkLoadingGlobal": "webpackChunkmyLib",
+		@@ ... @@
+		-     "devtoolNamespace": "webpack",
+		+     "devtoolNamespace": "myLib",
+		@@ ... @@
+		-     "enabledLibraryTypes": Array [],
+		+     "enabledLibraryTypes": Array [
+		+       "var",
+		+     ],
+		@@ ... @@
+		-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+		+     "hotUpdateGlobal": "webpackHotUpdatemyLib",
+		@@ ... @@
+		-     "library": undefined,
+		+     "library": Object {
+		+       "auxiliaryComment": undefined,
+		+       "export": undefined,
+		+       "name": Array [
+		+         "myLib",
+		+         "[name]",
+		+       ],
+		+       "type": "var",
+		+       "umdNamedDefine": undefined,
+		+     },
+		@@ ... @@
+		-     "uniqueName": "webpack",
+		+     "uniqueName": "myLib",
+	`)
+	);
+	test(
+		"library.name.root contains [name] placeholder",
+		{
+			output: {
+				library: {
+					name: {
+						root: ["myLib", "[name]"]
+					},
+					type: "var"
+				}
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-     "chunkLoadingGlobal": "webpackChunkwebpack",
+		+     "chunkLoadingGlobal": "webpackChunkmyLib",
+		@@ ... @@
+		-     "devtoolNamespace": "webpack",
+		+     "devtoolNamespace": "myLib",
+		@@ ... @@
+		-     "enabledLibraryTypes": Array [],
+		+     "enabledLibraryTypes": Array [
+		+       "var",
+		+     ],
+		@@ ... @@
+		-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+		+     "hotUpdateGlobal": "webpackHotUpdatemyLib",
+		@@ ... @@
+		-     "library": undefined,
+		+     "library": Object {
+		+       "auxiliaryComment": undefined,
+		+       "export": undefined,
+		+       "name": Object {
+		+         "root": Array [
+		+           "myLib",
+		+           "[name]",
+		+         ],
+		+       },
+		+       "type": "var",
+		+       "umdNamedDefine": undefined,
+		+     },
+		@@ ... @@
+		-     "uniqueName": "webpack",
+		+     "uniqueName": "myLib",
+	`)
+	);
 	test("target node", { target: "node" }, e =>
 		e.toMatchInlineSnapshot(`
 		- Expected
