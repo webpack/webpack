@@ -1,5 +1,7 @@
 import "./a";
 
+setTimeout(() => {}, 0);
+
 const doc = console;
 
 export default 1;
