@@ -475,6 +475,7 @@ declare abstract class BasicEvaluatedExpression {
 	identifier?: string;
 	rootInfo: VariableInfoInterface;
 	getMembers: () => string[];
+	getMembersOptions: () => boolean[];
 	expression: NodeEstreeIndex;
 	isUnknown(): boolean;
 	isNull(): boolean;
@@ -526,7 +527,8 @@ declare abstract class BasicEvaluatedExpression {
 	setIdentifier(
 		identifier?: any,
 		rootInfo?: any,
-		getMembers?: any
+		getMembers?: any,
+		getMembersOptions?: any
 	): BasicEvaluatedExpression;
 	setWrapped(
 		prefix?: any,
@@ -679,6 +681,7 @@ declare interface CallExpressionInfo {
 	getCalleeMembers: () => string[];
 	name: string;
 	getMembers: () => string[];
+	getMembersOptions: () => boolean[];
 }
 declare interface CallbackAsyncQueue<T> {
 	(err?: null | WebpackError, result?: T): any;
@@ -3802,6 +3805,7 @@ declare interface ExpressionExpressionInfo {
 	rootInfo: string | VariableInfo;
 	name: string;
 	getMembers: () => string[];
+	getMembersOptions: () => boolean[];
 }
 type ExternalItem =
 	| string
@@ -5067,7 +5071,7 @@ declare class JavascriptParser extends Parser {
 		topLevelAwait: SyncBailHook<[Expression], boolean | void>;
 		call: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		callMemberChain: HookMap<
-			SyncBailHook<[CallExpression, string[]], boolean | void>
+			SyncBailHook<[CallExpression, string[], boolean[]], boolean | void>
 		>;
 		memberChainOfCallMemberChain: HookMap<
 			SyncBailHook<
@@ -5085,7 +5089,7 @@ declare class JavascriptParser extends Parser {
 		new: HookMap<SyncBailHook<[NewExpression], boolean | void>>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
-			SyncBailHook<[Expression, string[]], boolean | void>
+			SyncBailHook<[Expression, string[], boolean[]], boolean | void>
 		>;
 		unhandledExpressionMemberChain: HookMap<
 			SyncBailHook<[Expression, string[]], boolean | void>
@@ -5387,6 +5391,7 @@ declare class JavascriptParser extends Parser {
 			| ImportExpression
 			| ChainExpression
 			| Super;
+		membersOptions: boolean[];
 	};
 	getFreeInfoFromVariable(varName: string): {
 		name: string;
