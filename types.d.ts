@@ -4,6 +4,7 @@
  * Run `yarn special-lint-fix` to update
  */
 
+import { Buffer } from "buffer";
 import {
 	ArrayExpression,
 	ArrayPattern,
@@ -63,6 +64,7 @@ import {
 	SimpleCallExpression,
 	SimpleLiteral,
 	SpreadElement,
+	StaticBlock,
 	Super,
 	SwitchCase,
 	SwitchStatement,
@@ -4488,7 +4490,7 @@ declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.
 	 */
-	hashDigest?: "base64" | "latin1" | "hex";
+	hashDigest?: "latin1" | "hex" | "base64";
 
 	/**
 	 * The prefix length of the hash digest to use, defaults to 4.
@@ -4902,6 +4904,7 @@ declare class JavascriptParser extends Parser {
 				| ClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
+				| StaticBlock
 				| EmptyStatement
 				| DebuggerStatement
 				| WithStatement
@@ -4932,6 +4935,7 @@ declare class JavascriptParser extends Parser {
 				| ClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
+				| StaticBlock
 				| EmptyStatement
 				| DebuggerStatement
 				| WithStatement
@@ -4962,6 +4966,7 @@ declare class JavascriptParser extends Parser {
 				| ClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
+				| StaticBlock
 				| EmptyStatement
 				| DebuggerStatement
 				| WithStatement
@@ -5133,6 +5138,7 @@ declare class JavascriptParser extends Parser {
 		| ClassDeclaration
 		| ExpressionStatement
 		| BlockStatement
+		| StaticBlock
 		| EmptyStatement
 		| DebuggerStatement
 		| WithStatement
@@ -7389,6 +7395,7 @@ type NodeEstreeIndex =
 	| PrivateIdentifier
 	| ExpressionStatement
 	| BlockStatement
+	| StaticBlock
 	| EmptyStatement
 	| DebuggerStatement
 	| WithStatement
@@ -11059,6 +11066,7 @@ type Statement =
 	| ClassDeclaration
 	| ExpressionStatement
 	| BlockStatement
+	| StaticBlock
 	| EmptyStatement
 	| DebuggerStatement
 	| WithStatement
