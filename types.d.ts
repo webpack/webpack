@@ -4,6 +4,7 @@
  * Run `yarn special-lint-fix` to update
  */
 
+import { Buffer } from "buffer";
 import {
 	ArrayExpression,
 	ArrayPattern,
@@ -63,6 +64,7 @@ import {
 	SimpleCallExpression,
 	SimpleLiteral,
 	SpreadElement,
+	StaticBlock,
 	Super,
 	SwitchCase,
 	SwitchStatement,
@@ -4462,12 +4464,12 @@ declare class Hash {
 	constructor();
 
 	/**
-	 * Update hash {@link https://nodejs.org/api/crypto.html#crypto_hash_update_data_inputencoding}
+	 * Update hash {@link https ://nodejs.org/api/crypto.html#crypto_hash_update_data_inputencoding}
 	 */
 	update(data: string | Buffer, inputEncoding?: string): Hash;
 
 	/**
-	 * Calculates the digest {@link https://nodejs.org/api/crypto.html#crypto_hash_digest_encoding}
+	 * Calculates the digest {@link https ://nodejs.org/api/crypto.html#crypto_hash_digest_encoding}
 	 */
 	digest(encoding?: string): string | Buffer;
 }
@@ -4488,7 +4490,7 @@ declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.
 	 */
-	hashDigest?: "base64" | "latin1" | "hex";
+	hashDigest?: "latin1" | "hex" | "base64";
 
 	/**
 	 * The prefix length of the hash digest to use, defaults to 4.
@@ -4902,6 +4904,7 @@ declare class JavascriptParser extends Parser {
 				| ClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
+				| StaticBlock
 				| EmptyStatement
 				| DebuggerStatement
 				| WithStatement
@@ -4932,6 +4935,7 @@ declare class JavascriptParser extends Parser {
 				| ClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
+				| StaticBlock
 				| EmptyStatement
 				| DebuggerStatement
 				| WithStatement
@@ -4962,6 +4966,7 @@ declare class JavascriptParser extends Parser {
 				| ClassDeclaration
 				| ExpressionStatement
 				| BlockStatement
+				| StaticBlock
 				| EmptyStatement
 				| DebuggerStatement
 				| WithStatement
@@ -5133,6 +5138,7 @@ declare class JavascriptParser extends Parser {
 		| ClassDeclaration
 		| ExpressionStatement
 		| BlockStatement
+		| StaticBlock
 		| EmptyStatement
 		| DebuggerStatement
 		| WithStatement
@@ -5355,7 +5361,7 @@ declare class JavascriptParser extends Parser {
 	setVariable(name: string, variableInfo: ExportedVariableInfo): void;
 	parseCommentOptions(
 		range?: any
-	): { options: null; errors: null } | { options: object; errors: any[] };
+	): { options: null; errors: null } | { options: object; errors: unknown[] };
 	extractMemberExpressionChain(expression: MemberExpression): {
 		members: string[];
 		object:
@@ -6034,9 +6040,8 @@ declare class LazySet<T> {
 	has(item: T): boolean;
 	keys(): IterableIterator<T>;
 	values(): IterableIterator<T>;
-	[Symbol.iterator](): IterableIterator<T>;
-	readonly [Symbol.toStringTag]: string;
 	serialize(__0: { write: any }): void;
+	[Symbol.iterator](): IterableIterator<T>;
 	static deserialize(__0: { read: any }): LazySet<any>;
 }
 declare interface LibIdentOptions {
@@ -7390,6 +7395,7 @@ type NodeEstreeIndex =
 	| PrivateIdentifier
 	| ExpressionStatement
 	| BlockStatement
+	| StaticBlock
 	| EmptyStatement
 	| DebuggerStatement
 	| WithStatement
@@ -7709,8 +7715,8 @@ type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 	Omit<
 		StatsOptions,
 		| "context"
-		| "requestShortener"
 		| "chunkGroups"
+		| "requestShortener"
 		| "chunksSort"
 		| "modulesSort"
 		| "chunkModulesSort"
@@ -8987,7 +8993,7 @@ declare class ProgressPlugin {
 	showModules?: boolean;
 	showDependencies?: boolean;
 	showActiveModules?: boolean;
-	percentBy?: null | "dependencies" | "modules" | "entries";
+	percentBy?: null | "modules" | "dependencies" | "entries";
 	apply(compiler: Compiler | MultiCompiler): void;
 	static getReporter(
 		compiler: Compiler
@@ -9048,7 +9054,7 @@ declare interface ProgressPluginOptions {
 	/**
 	 * Collect percent algorithm. By default it calculates by a median from modules, entries and dependencies percent.
 	 */
-	percentBy?: null | "dependencies" | "modules" | "entries";
+	percentBy?: null | "modules" | "dependencies" | "entries";
 
 	/**
 	 * Collect profile data for progress steps. Default: false.
@@ -10173,8 +10179,8 @@ declare class RuntimeSpecSet {
 	constructor(iterable?: any);
 	add(runtime?: any): void;
 	has(runtime?: any): boolean;
-	[Symbol.iterator](): IterableIterator<RuntimeSpec>;
 	readonly size: number;
+	[Symbol.iterator](): IterableIterator<RuntimeSpec>;
 }
 declare abstract class RuntimeTemplate {
 	compilation: Compilation;
@@ -10871,7 +10877,6 @@ declare abstract class SortableSet<T> extends Set<T> {
 	 * Iterates over values in the set.
 	 */
 	[Symbol.iterator](): IterableIterator<T>;
-	readonly [Symbol.toStringTag]: string;
 }
 declare class Source {
 	constructor();
@@ -11061,6 +11066,7 @@ type Statement =
 	| ClassDeclaration
 	| ExpressionStatement
 	| BlockStatement
+	| StaticBlock
 	| EmptyStatement
 	| DebuggerStatement
 	| WithStatement
