@@ -5,6 +5,7 @@ import other from "other/other";
 import otherSelf from "other/self";
 import self from "self/self";
 import selfOther from "self/other";
+import modulesNames from "self/modulesNames";
 
 export function test() {
 	expect(abc).toBe("abc ./system-hello-world");
@@ -16,4 +17,11 @@ export function test() {
 	expect(otherSelf).toBe("self and dep");
 	expect(self).toBe("self and dep");
 	expect(selfOther).toBe("other and dep");
+
+}
+
+export function testModulesNames() {
+	expect(modulesNames).toEqual([
+		"./other", "./self", "./dep"
+	]);
 }
