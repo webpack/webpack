@@ -8,10 +8,14 @@ module.exports = {
 		rules: [
 			{
 				test: /\.png$/,
-				type: "asset",
+				type: "asset/resource",
 				generator: {
 					emit: false
 				}
+			},
+			{
+				test: /\.jpg$/,
+				type: "asset/resource"
 			}
 		]
 	}

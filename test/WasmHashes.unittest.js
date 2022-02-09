@@ -131,7 +131,7 @@ for (const name of Object.keys(wasmHashes)) {
 			});
 		};
 
-		const uncodeRangeTest = (name, start, end) => {
+		const unicodeRangeTest = (name, start, end) => {
 			const codePoints = [];
 			for (let i = start; i <= end; i++) {
 				codePoints.push(i);
@@ -139,11 +139,12 @@ for (const name of Object.keys(wasmHashes)) {
 			unicodeTest(name, codePoints);
 		};
 
-		uncodeRangeTest("Latin-1 Supplement", 0xa0, 0xff);
-		uncodeRangeTest("Latin Extended", 0x100, 0x24f);
-		uncodeRangeTest("Thaana", 0x780, 0x7bf);
-		uncodeRangeTest("Devanagari", 0x900, 0x97f);
-		uncodeRangeTest("Emoticons", 0x1f600, 0x1f64f);
+		// cspell:word Thaana
+		unicodeRangeTest("Latin-1 Supplement", 0xa0, 0xff);
+		unicodeRangeTest("Latin Extended", 0x100, 0x24f);
+		unicodeRangeTest("Thaana", 0x780, 0x7bf);
+		unicodeRangeTest("Devanagari", 0x900, 0x97f);
+		unicodeRangeTest("Emoticons", 0x1f600, 0x1f64f);
 
 		unicodeTest("with zero char", "abc\0💩");
 		unicodeTest("weird code point after long code point", [1497, 243248]);

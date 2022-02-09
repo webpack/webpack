@@ -182,23 +182,24 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 		var installedChunks = {};
 /******/ 		
 /******/ 		var uniqueName = "app";
-/******/ 		var loadCssChunkData = (chunkId, link) => {
+/******/ 		var loadCssChunkData = (target, link, chunkId) => {
 /******/ 			var data, token = "", token2, exports = {}, exportsWithId = [], exportsWithDashes = [], i = 0, cc = 1;
 /******/ 			try { if(!link) link = loadStylesheet(chunkId); data = link.sheet.cssRules; data = data[data.length - 1].style; } catch(e) { data = getComputedStyle(document.head); }
 /******/ 			data = data.getPropertyValue("--webpack-" + uniqueName + "-" + chunkId);
-/******/ 			if(!data) return;
+/******/ 			if(!data) return [];
 /******/ 			for(; cc; i++) {
 /******/ 				cc = data.charCodeAt(i);
 /******/ 				if(cc == 40) { token2 = token; token = ""; }
 /******/ 				else if(cc == 41) { exports[token2.replace(/^_/, "")] = token.replace(/^_/, ""); token = ""; }
 /******/ 				else if(cc == 47 || cc == 37) { token = token.replace(/^_/, ""); exports[token] = token; exportsWithId.push(token); if(cc == 37) exportsWithDashes.push(token); token = ""; }
-/******/ 				else if(!cc || cc == 44) { token = token.replace(/^_/, ""); exportsWithId.forEach((x) => (exports[x] = uniqueName + "-" + token + "-" + exports[x])); exportsWithDashes.forEach((x) => (exports[x] = "--" + exports[x])); __webpack_require__.r(exports); __webpack_require__.m[token] = ((exports, module) => {
+/******/ 				else if(!cc || cc == 44) { token = token.replace(/^_/, ""); exportsWithId.forEach((x) => (exports[x] = uniqueName + "-" + token + "-" + exports[x])); exportsWithDashes.forEach((x) => (exports[x] = "--" + exports[x])); __webpack_require__.r(exports); target[token] = ((exports, module) => {
 /******/ 					module.exports = exports;
 /******/ 				}).bind(null, exports); token = ""; exports = {}; exportsWithId.length = 0; }
 /******/ 				else if(cc == 92) { token += data[++i] }
 /******/ 				else { token += data[i]; }
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
+/******/ 		
 /******/ 		}
 /******/ 		var loadingAttribute = "data-webpack-loading";
 /******/ 		var loadStylesheet = (chunkId, url, done) => {
@@ -207,9 +208,9 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 			var links = document.getElementsByTagName("link");
 /******/ 			for(var i = 0; i < links.length; i++) {
 /******/ 				var l = links[i];
-/******/ 				if(l.getAttribute("href") == url || l.getAttribute("data-webpack") == uniqueName + ":" + key) { link = l; break; }
+/******/ 				if(l.rel == "stylesheet" && (l.href == url || l.getAttribute("href") == url || l.getAttribute("data-webpack") == uniqueName + ":" + key)) { link = l; break; }
 /******/ 			}
-/******/ 			if(!url) return link;
+/******/ 			if(!done) return link;
 /******/ 		
 /******/ 			if(!link) {
 /******/ 				needAttach = true;
@@ -217,7 +218,6 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 				link.setAttribute("data-webpack", uniqueName + ":" + key);
 /******/ 				link.setAttribute(loadingAttribute, 1);
 /******/ 				link.rel = "stylesheet";
-/******/ 		
 /******/ 				link.href = url;
 /******/ 			}
 /******/ 			var onLinkComplete = (prev, event) => {
@@ -233,10 +233,11 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 				link.onerror = onLinkComplete.bind(null, link.onerror);
 /******/ 				link.onload = onLinkComplete.bind(null, link.onload);
 /******/ 			} else onLinkComplete(undefined, { type: 'load', target: link });
+/******/ 		
 /******/ 			needAttach && document.head.appendChild(link);
 /******/ 			return link;
 /******/ 		};
-/******/ 		loadCssChunkData(0);
+/******/ 		loadCssChunkData(__webpack_require__.m, 0, 0);
 /******/ 		
 /******/ 		__webpack_require__.f.css = (chunkId, promises) => {
 /******/ 			// css chunk loading
@@ -270,7 +271,7 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 										error.request = realSrc;
 /******/ 										installedChunkData[1](error);
 /******/ 									} else {
-/******/ 										loadCssChunkData(chunkId, link);
+/******/ 										loadCssChunkData(__webpack_require__.m, link, chunkId);
 /******/ 										installedChunkData[0]();
 /******/ 									}
 /******/ 								}
@@ -365,7 +366,7 @@ module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
-/******/ 				installedChunks[chunkIds[i]] = 0;
+/******/ 				installedChunks[chunkId] = 0;
 /******/ 			}
 /******/ 		
 /******/ 		}
@@ -486,15 +487,15 @@ head{--webpack-app-1:_7;}
 ## Unoptimized
 
 ```
-assets by chunk 16.8 KiB (name: main)
-  asset output.js 16.4 KiB [emitted] (name: main)
+assets by chunk 16.9 KiB (name: main)
+  asset output.js 16.5 KiB [emitted] (name: main)
   asset output.css 385 bytes [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 1.output.css 49 bytes [emitted]
-Entrypoint main 16.8 KiB (14.6 KiB) = output.js 16.4 KiB output.css 385 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 335 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.94 KiB (runtime) [entry] [rendered]
+Entrypoint main 16.9 KiB (14.6 KiB) = output.js 16.5 KiB output.css 385 bytes 1 auxiliary asset
+chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 335 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 10 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 9.94 KiB 9 modules
+  runtime modules 10 KiB 9 modules
   dependent modules 42 bytes (javascript) 14.6 KiB (asset) 335 bytes (css) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 176 bytes [built] [code generated]
     [no exports]
@@ -506,30 +507,30 @@ chunk (runtime: main) 1.output.css 23 bytes
     [no exports]
     [used exports unknown]
     import() ./lazy-style.css ./example.js 4:0-26
-webpack 5.64.4 compiled successfully
+webpack 5.66.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-assets by chunk 4.2 KiB (name: main)
-  asset output.js 3.82 KiB [emitted] [minimized] (name: main)
+assets by chunk 4.25 KiB (name: main)
+  asset output.js 3.87 KiB [emitted] [minimized] (name: main)
   asset output.css 385 bytes [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
 asset 159.output.css 53 bytes [emitted]
-Entrypoint main 4.2 KiB (14.6 KiB) = output.js 3.82 KiB output.css 385 bytes 1 auxiliary asset
+Entrypoint main 4.25 KiB (14.6 KiB) = output.js 3.87 KiB output.css 385 bytes 1 auxiliary asset
 chunk (runtime: main) 159.output.css 23 bytes
   > ./lazy-style.css ./example.js 4:0-26
   ./lazy-style.css 23 bytes [built] [code generated]
     [no exports]
     import() ./lazy-style.css ./example.js 4:0-26
-chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 335 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 9.95 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 335 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 10 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 9.95 KiB 9 modules
+  runtime modules 10 KiB 9 modules
   dependent modules 42 bytes (javascript) 14.6 KiB (asset) 335 bytes (css) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 176 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.64.4 compiled successfully
+webpack 5.66.0 compiled successfully
 ```

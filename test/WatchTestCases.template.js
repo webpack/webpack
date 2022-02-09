@@ -396,7 +396,7 @@ const describeCases = config => {
 																done
 															)
 														) {
-															compiler.close();
+															compiler.close(() => {});
 															return;
 														}
 														compiler.close(done);

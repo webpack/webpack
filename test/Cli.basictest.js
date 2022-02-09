@@ -5,6 +5,50 @@ describe("Cli", () => {
 		expect(getArguments()).toMatchSnapshot();
 	});
 
+	it("should generate the correct cli flags with custom schema", () => {
+		const schema = {
+			title: "custom CLI options",
+			type: "object",
+			additionalProperties: false,
+			properties: {
+				"with-reset-description": {
+					type: "array",
+					items: {
+						type: "string"
+					},
+					description: "original description",
+					cli: {
+						resetDescription: "custom reset"
+					}
+				},
+				"with-cli-description": {
+					type: "string",
+					description: "original description",
+					cli: {
+						description: "description for CLI option"
+					}
+				},
+				"with-negative-description": {
+					type: "boolean",
+					description: "original description",
+					cli: {
+						negatedDescription: "custom negative description"
+					}
+				},
+				"with-both-cli-and-negative-description": {
+					type: "boolean",
+					description: "original description",
+					cli: {
+						description: "description for CLI option",
+						negatedDescription: "custom negative description"
+					}
+				}
+			}
+		};
+
+		expect(getArguments(schema)).toMatchSnapshot();
+	});
+
 	const test = (name, values, config, fn) => {
 		it(`should correctly process arguments for ${name}`, () => {
 			const args = getArguments();
@@ -264,6 +308,7 @@ describe("Cli", () => {
 		`)
 	);
 
+	// cspell:ignore filsystem
 	test(
 		"errors",
 		{

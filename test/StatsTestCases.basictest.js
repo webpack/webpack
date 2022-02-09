@@ -12,7 +12,7 @@ const webpack = require("..");
  * @param {string} str String to quote
  * @returns {string} Escaped string
  */
-const quotemeta = str => {
+const quoteMeta = str => {
 	return str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 };
 
@@ -184,11 +184,12 @@ describe("StatsTestCases", () => {
 						.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>")
 						.replace(/[.0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2");
 				}
+				// cspell:ignore Xdir
 				const testPath = path.join(base, testName);
 				actual = actual
 					.replace(/\r\n?/g, "\n")
 					.replace(/webpack [^ )]+(\)?) compiled/g, "webpack x.x.x$1 compiled")
-					.replace(new RegExp(quotemeta(testPath), "g"), "Xdir/" + testName)
+					.replace(new RegExp(quoteMeta(testPath), "g"), "Xdir/" + testName)
 					.replace(/(\w)\\(\w)/g, "$1/$2")
 					.replace(/, additional resolving: X ms/g, "");
 				expect(actual).toMatchSnapshot();
