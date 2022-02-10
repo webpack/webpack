@@ -568,6 +568,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "experiments-build-http-proxy": Object {
+    "configs": Array [
+      Object {
+        "description": "Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.",
+        "multiple": false,
+        "path": "experiments.buildHttp.proxy",
+        "type": "string",
+      },
+    ],
+    "description": "Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "experiments-build-http-upgrade": Object {
     "configs": Array [
       Object {
