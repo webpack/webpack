@@ -28,11 +28,6 @@ describeCases({
 				// Pack got invalid because of write to: TerserWebpackPlugin|bundle0.js
 				category: "assets",
 				test: "delete-asset"
-			},
-			{
-				// Pack got invalid because of write to: webpack.HttpUriPlugin|https://raw.githubusercontent.com//webpack//webpack//main/CODE_OF_CONDUCT.md
-				category: "asset-modules",
-				test: "http-url"
 			}
 		],
 		filter: [logErrors.PERSISTENCE_CACHE_INVALIDATE_ERROR]
