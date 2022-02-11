@@ -1,2 +1,7 @@
 /** @type {import("../../../../").Configuration} */
-module.exports = {};
+module.exports = {
+	optimization: {
+		usedExports: true,
+		providedExports: true
+	}
+};

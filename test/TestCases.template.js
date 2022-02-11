@@ -12,6 +12,17 @@ const deprecationTracking = require("./helpers/deprecationTracking");
 const captureStdio = require("./helpers/captureStdio");
 const asModule = require("./helpers/asModule");
 
+const PERSISTENCE_CACHE_INVALIDATE_ERROR = (log, config) => {
+	if (config.run < 2) return;
+	const match =
+		/^\[webpack\.cache\.PackFileCacheStrategy\] Pack got invalid because of write to:(.+)$/.exec(
+			log
+		);
+	if (match) {
+		return `Pack got invalid because of write to: ${match[1].trim()}`;
+	}
+};
+
 const casesPath = path.join(__dirname, "cases");
 let categories = fs.readdirSync(casesPath);
 categories = categories.map(cat => {
@@ -23,7 +34,53 @@ categories = categories.map(cat => {
 	};
 });
 
+const createLogger = appendTarget => {
+	return {
+		log: l => appendTarget.push(l),
+		debug: l => appendTarget.push(l),
+		trace: l => appendTarget.push(l),
+		info: l => appendTarget.push(l),
+		warn: console.warn.bind(console),
+		error: console.error.bind(console),
+		logTime: () => {},
+		group: () => {},
+		groupCollapsed: () => {},
+		groupEnd: () => {},
+		profile: () => {},
+		profileEnd: () => {},
+		clear: () => {},
+		status: () => {}
+	};
+};
+
+const returnLogError = (logs, errorsFilter, config) => {
+	for (const log of logs) {
+		for (const filter of errorsFilter) {
+			const result = filter(log, config);
+			if (result) {
+				return new Error(result);
+			}
+		}
+	}
+};
+
 const describeCases = config => {
+	let allowErrorsMap;
+	if (config.infrastructureLogErrors) {
+		allowErrorsMap = new Map();
+		if (config.infrastructureLogErrors.allowList) {
+			for (const { category, test } of config.infrastructureLogErrors
+				.allowList) {
+				let byCategory = allowErrorsMap.get(category);
+				if (!byCategory) {
+					byCategory = new Set();
+					allowErrorsMap.set(category, byCategory);
+				}
+				byCategory.add(test);
+			}
+		}
+	}
+
 	describe(config.name, () => {
 		let stderr;
 		beforeEach(() => {
@@ -49,6 +106,13 @@ const describeCases = config => {
 						return true;
 					})
 					.forEach(testName => {
+						let infraStructureLog = [];
+						const inAllowErrorsList = () => {
+							const byCategory = allowErrorsMap.get(category.name);
+							if (!byCategory) return false;
+							return byCategory.has(testName);
+						};
+
 						describe(testName, () => {
 							const testDirectory = path.join(
 								casesPath,
@@ -187,6 +251,10 @@ const describeCases = config => {
 									topLevelAwait: true,
 									backCompat: false,
 									...(config.module ? { outputModule: true } : {})
+								},
+								infrastructureLogging: config.cache && {
+									debug: true,
+									console: createLogger(infraStructureLog)
 								}
 							};
 							const cleanups = [];
@@ -207,12 +275,28 @@ const describeCases = config => {
 											options.output.path,
 											"cache1"
 										);
+										infraStructureLog.length = 0;
 										const deprecationTracker = deprecationTracking.start();
 										const webpack = require("..");
 										webpack(options, err => {
 											deprecationTracker();
 											options.output.path = oldPath;
 											if (err) return done(err);
+											if (config.infrastructureLogErrors) {
+												if (!inAllowErrorsList()) {
+													const error = returnLogError(
+														infraStructureLog,
+														Array.isArray(config.infrastructureLogErrors.filter)
+															? config.infrastructureLogErrors.filter
+															: [config.infrastructureLogErrors.filter],
+														{
+															run: 1,
+															options
+														}
+													);
+													if (error) return done(error);
+												}
+											}
 											done();
 										});
 									},
@@ -226,12 +310,28 @@ const describeCases = config => {
 											options.output.path,
 											"cache2"
 										);
+										infraStructureLog.length = 0;
 										const deprecationTracker = deprecationTracking.start();
 										const webpack = require("..");
 										webpack(options, err => {
 											deprecationTracker();
 											options.output.path = oldPath;
 											if (err) return done(err);
+											if (config.infrastructureLogErrors) {
+												if (!inAllowErrorsList()) {
+													const error = returnLogError(
+														infraStructureLog,
+														Array.isArray(config.infrastructureLogErrors.filter)
+															? config.infrastructureLogErrors.filter
+															: [config.infrastructureLogErrors.filter],
+														{
+															run: 2,
+															options
+														}
+													);
+													if (error) return done(error);
+												}
+											}
 											done();
 										});
 									},
@@ -241,6 +341,7 @@ const describeCases = config => {
 							it(
 								testName + " should compile",
 								done => {
+									infraStructureLog.length = 0;
 									const webpack = require("..");
 									const compiler = webpack(options);
 									const run = () => {
@@ -248,6 +349,21 @@ const describeCases = config => {
 										compiler.run((err, stats) => {
 											const deprecations = deprecationTracker();
 											if (err) return done(err);
+											if (config.infrastructureLogErrors) {
+												if (!inAllowErrorsList()) {
+													const error = returnLogError(
+														infraStructureLog,
+														Array.isArray(config.infrastructureLogErrors.filter)
+															? config.infrastructureLogErrors.filter
+															: [config.infrastructureLogErrors.filter],
+														{
+															run: 3,
+															options
+														}
+													);
+													if (error) return done(error);
+												}
+											}
 											compiler.close(err => {
 												if (err) return done(err);
 												const statOptions = {
@@ -443,3 +559,6 @@ const describeCases = config => {
 };
 
 exports.describeCases = describeCases;
+exports.logErrors = {
+	PERSISTENCE_CACHE_INVALIDATE_ERROR
+};
