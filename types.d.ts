@@ -12866,7 +12866,6 @@ declare namespace exports {
 	) => void;
 	export {
 		Argument,
-		ArgumentConfig,
 		AutomaticPrefetchPlugin,
 		AsyncDependenciesBlock,
 		BannerPlugin,
