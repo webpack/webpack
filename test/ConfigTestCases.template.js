@@ -17,17 +17,7 @@ const prepareOptions = require("./helpers/prepareOptions");
 const { parseResource } = require("../lib/util/identifier");
 const captureStdio = require("./helpers/captureStdio");
 const asModule = require("./helpers/asModule");
-
-const PERSISTENCE_CACHE_INVALIDATE_ERROR = (log, config) => {
-	if (config.run < 2) return;
-	const match =
-		/^\[webpack\.cache\.PackFileCacheStrategy\] Pack got invalid because of write to:(.+)$/.exec(
-			log
-		);
-	if (match) {
-		return `Pack got invalid because of write to: ${match[1].trim()}`;
-	}
-};
+const createInfrastructureLogErrorsChecker = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "configCases");
 const categories = fs.readdirSync(casesPath).map(cat => {
@@ -59,34 +49,7 @@ const createLogger = appendTarget => {
 	};
 };
 
-const returnLogError = (logs, errorsFilter, config) => {
-	for (const log of logs) {
-		for (const filter of errorsFilter) {
-			const result = filter(log, config);
-			if (result) {
-				return new Error(result);
-			}
-		}
-	}
-};
-
 const describeCases = config => {
-	let allowErrorsMap;
-	if (config.infrastructureLogErrors) {
-		allowErrorsMap = new Map();
-		if (config.infrastructureLogErrors.allowList) {
-			for (const { category, test } of config.infrastructureLogErrors
-				.allowList) {
-				let byCategory = allowErrorsMap.get(category);
-				if (!byCategory) {
-					byCategory = new Set();
-					allowErrorsMap.set(category, byCategory);
-				}
-				byCategory.add(test);
-			}
-		}
-	}
-
 	describe(config.name, () => {
 		let stderr;
 		beforeEach(() => {
@@ -101,11 +64,11 @@ const describeCases = config => {
 			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
 				for (const testName of category.tests) {
-					const inAllowErrorsList = () => {
-						const byCategory = allowErrorsMap.get(category.name);
-						if (!byCategory) return false;
-						return byCategory.has(testName);
-					};
+					const infrastructureLogChecker = config.infrastructureLogErrors
+						? createInfrastructureLogErrorsChecker(
+								config.infrastructureLogErrors
+						  )
+						: undefined;
 					// eslint-disable-next-line no-loop-func
 					describe(testName, function () {
 						const testDirectory = path.join(casesPath, category.name, testName);
@@ -248,20 +211,17 @@ const describeCases = config => {
 											)
 										);
 									}
-									if (config.infrastructureLogErrors) {
-										if (!inAllowErrorsList()) {
-											const error = returnLogError(
-												infraStructureLog,
-												Array.isArray(config.infrastructureLogErrors.filter)
-													? config.infrastructureLogErrors.filter
-													: [config.infrastructureLogErrors.filter],
-												{
-													run: 1,
-													options
-												}
-											);
-											if (error) return done(error);
-										}
+									if (infrastructureLogChecker) {
+										const error = infrastructureLogChecker.check(
+											category.name,
+											testName,
+											infraStructureLog,
+											{
+												run: 1,
+												options
+											}
+										);
+										if (error) return done(error);
 									}
 									if (err) return handleFatalError(err, done);
 									done();
@@ -312,20 +272,17 @@ const describeCases = config => {
 											);
 										}
 									}
-									if (config.infrastructureLogErrors) {
-										if (!inAllowErrorsList()) {
-											const error = returnLogError(
-												infraStructureLog,
-												Array.isArray(config.infrastructureLogErrors.filter)
-													? config.infrastructureLogErrors.filter
-													: [config.infrastructureLogErrors.filter],
-												{
-													run: 2,
-													options
-												}
-											);
-											if (error) return done(error);
-										}
+									if (infrastructureLogChecker) {
+										const error = infrastructureLogChecker.check(
+											category.name,
+											testName,
+											infraStructureLog,
+											{
+												run: 2,
+												options
+											}
+										);
+										if (error) return done(error);
 									}
 									done();
 								});
@@ -398,20 +355,17 @@ const describeCases = config => {
 								) {
 									return;
 								}
-								if (config.infrastructureLogErrors) {
-									if (!inAllowErrorsList()) {
-										const error = returnLogError(
-											infraStructureLog,
-											Array.isArray(config.infrastructureLogErrors.filter)
-												? config.infrastructureLogErrors.filter
-												: [config.infrastructureLogErrors.filter],
-											{
-												run: 3,
-												options
-											}
-										);
-										if (error) return done(error);
-									}
+								if (infrastructureLogChecker) {
+									const error = infrastructureLogChecker.check(
+										category.name,
+										testName,
+										infraStructureLog,
+										{
+											run: 1,
+											options
+										}
+									);
+									if (error) return done(error);
 								}
 
 								let filesCount = 0;
@@ -738,6 +692,3 @@ const describeCases = config => {
 };
 
 exports.describeCases = describeCases;
-exports.logErrors = {
-	PERSISTENCE_CACHE_INVALIDATE_ERROR
-};
