@@ -664,7 +664,7 @@ declare interface CacheGroupsContext {
 	moduleGraph: ModuleGraph;
 	chunkGraph: ChunkGraph;
 }
-type CacheOptionsNormalized = false | MemoryCacheOptions | FileCacheOptions;
+type CacheOptionsNormalized = false | FileCacheOptions | MemoryCacheOptions;
 declare class CachedSource extends Source {
 	constructor(source: Source);
 	constructor(source: Source | (() => Source), cachedData?: any);
@@ -2058,7 +2058,7 @@ declare interface Configuration {
 	/**
 	 * Cache generated modules and chunks to improve performance for multiple incremental builds.
 	 */
-	cache?: boolean | MemoryCacheOptions | FileCacheOptions;
+	cache?: boolean | FileCacheOptions | MemoryCacheOptions;
 
 	/**
 	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
@@ -2115,6 +2115,7 @@ declare interface Configuration {
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
 	externalsType?:
+		| "import"
 		| "var"
 		| "module"
 		| "assign"
@@ -2133,7 +2134,6 @@ declare interface Configuration {
 		| "jsonp"
 		| "system"
 		| "promise"
-		| "import"
 		| "script"
 		| "node-commonjs";
 
@@ -2472,9 +2472,9 @@ declare interface ContextHash {
 	symlinks?: Set<string>;
 }
 type ContextMode =
+	| "weak"
 	| "sync"
 	| "eager"
-	| "weak"
 	| "async-weak"
 	| "lazy"
 	| "lazy-once";
@@ -3958,6 +3958,7 @@ declare interface ExternalsPresets {
 	webAsync?: boolean;
 }
 type ExternalsType =
+	| "import"
 	| "var"
 	| "module"
 	| "assign"
@@ -3976,7 +3977,6 @@ type ExternalsType =
 	| "jsonp"
 	| "system"
 	| "promise"
-	| "import"
 	| "script"
 	| "node-commonjs";
 declare interface FactorizeModuleOptions {
@@ -6832,6 +6832,7 @@ declare interface ModuleFederationPluginOptions {
 	 * The external type of the remote containers.
 	 */
 	remoteType?:
+		| "import"
 		| "var"
 		| "module"
 		| "assign"
@@ -6850,7 +6851,6 @@ declare interface ModuleFederationPluginOptions {
 		| "jsonp"
 		| "system"
 		| "promise"
-		| "import"
 		| "script"
 		| "node-commonjs";
 
@@ -12209,6 +12209,7 @@ declare interface WebpackOptionsNormalized {
 	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
 	 */
 	externalsType?:
+		| "import"
 		| "var"
 		| "module"
 		| "assign"
@@ -12227,7 +12228,6 @@ declare interface WebpackOptionsNormalized {
 		| "jsonp"
 		| "system"
 		| "promise"
-		| "import"
 		| "script"
 		| "node-commonjs";
 
@@ -12924,6 +12924,7 @@ declare namespace exports {
 		Entry,
 		EntryNormalized,
 		EntryObject,
+		FileCacheOptions,
 		LibraryOptions,
 		ModuleOptions,
 		ResolveOptionsWebpackOptions as ResolveOptions,
@@ -12938,11 +12939,15 @@ declare namespace exports {
 		WebpackPluginInstance,
 		Asset,
 		AssetInfo,
+		EntryOptions,
+		AssetEmittedInfo,
 		MultiStats,
 		ParserState,
 		ResolvePluginInstance,
 		Resolver,
 		Watching,
+		Argument,
+		Problem,
 		StatsAsset,
 		StatsChunk,
 		StatsChunkGroup,
