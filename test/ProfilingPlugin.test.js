@@ -13,6 +13,7 @@ describe("Profiling Plugin", function () {
 		const webpack = require("../");
 		const outputPath = path.join(__dirname, "js/profilingPath");
 		const finalPath = path.join(outputPath, "events.json");
+		let counter = 0;
 		rimraf(outputPath, () => {
 			const startTime = process.hrtime();
 			const compiler = webpack({
@@ -24,7 +25,27 @@ describe("Profiling Plugin", function () {
 				plugins: [
 					new webpack.debug.ProfilingPlugin({
 						outputPath: finalPath
-					})
+					}),
+					{
+						apply(compiler) {
+							const hook = compiler.hooks.make;
+							[
+								{ stage: 0, order: 1 },
+								{ stage: 1, order: 2 },
+								{ stage: -1, order: 0 }
+							].forEach(({ stage, order }) => {
+								hook.tap(
+									{
+										name: "RespectStageCheckerPlugin",
+										stage
+									},
+									() => {
+										expect(counter++).toBe(order);
+									}
+								);
+							});
+						}
+					}
 				],
 				experiments: {
 					backCompat: false
