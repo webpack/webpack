@@ -8,10 +8,6 @@ describeCases({
 			["missing-wasm-experiment"]:
 				/^Pack got invalid because of write to: Compilation\/modules.+wasm.wasm$/
 		},
-		["process-assets"]: {
-			["html-plugin"]:
-				/^Pack got invalid because of write to: RealContentHashPlugin|analyse|index.html$/
-		},
 		parsing: {
 			// Module parse failed
 			context:
@@ -19,12 +15,10 @@ describeCases({
 		},
 		loaders: {
 			// Error in loader
-			options:
-				/^Pack got invalid because of write to: Compilation\/modules.+loaders\/options\/error1\.js$/
-		},
-		assets: {
-			["delete-asset"]:
-				/^Pack got invalid because of write to: TerserWebpackPlugin|bundle0.js$/
+			options: [
+				/^Pack got invalid because of write to: Compilation\/modules.+loaders[/\\]options[/\\]error1\.js$/,
+				/^Pack got invalid because of write to: Compilation\/modules.+loaders[/\\]options[/\\]error2\.js$/
+			]
 		},
 		["asset-modules"]: {
 			["http-url"]:
