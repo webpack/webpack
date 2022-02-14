@@ -6702,6 +6702,7 @@ declare class Module extends DependenciesBlock {
 		callback: (arg0?: WebpackError) => void
 	): void;
 	getSourceTypes(): Set<string>;
+	resource: string;
 	source(
 		dependencyTemplates: DependencyTemplates,
 		runtimeTemplate: RuntimeTemplate,
