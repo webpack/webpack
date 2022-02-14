@@ -19,10 +19,6 @@ describeCases({
 				/^Pack got invalid because of write to: Compilation\/modules.+loaders[/\\]options[/\\]error1\.js$/,
 				/^Pack got invalid because of write to: Compilation\/modules.+loaders[/\\]options[/\\]error2\.js$/
 			]
-		},
-		["asset-modules"]: {
-			["http-url"]:
-				/^Pack got invalid because of write to: webpack\.HttpUriPlugin|https:\/\/raw.githubusercontent.com\/\/webpack\/\/webpack\/\/main\/CODE_OF_CONDUCT\.md$/
 		}
 	},
 	cache: {
