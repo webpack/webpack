@@ -17,7 +17,7 @@ const prepareOptions = require("./helpers/prepareOptions");
 const { parseResource } = require("../lib/util/identifier");
 const captureStdio = require("./helpers/captureStdio");
 const asModule = require("./helpers/asModule");
-const createInfrastructureLogErrorsChecker = require("./helpers/infrastructureLogErrors");
+const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "configCases");
 const categories = fs.readdirSync(casesPath).map(cat => {
@@ -64,11 +64,6 @@ const describeCases = config => {
 			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
 				for (const testName of category.tests) {
-					const infrastructureLogChecker = config.infrastructureLogErrors
-						? createInfrastructureLogErrorsChecker(
-								config.infrastructureLogErrors
-						  )
-						: undefined;
 					// eslint-disable-next-line no-loop-func
 					describe(testName, function () {
 						const testDirectory = path.join(casesPath, category.name, testName);
@@ -211,17 +206,25 @@ const describeCases = config => {
 											)
 										);
 									}
-									if (infrastructureLogChecker) {
-										const error = infrastructureLogChecker.check(
-											category.name,
-											testName,
-											infraStructureLog,
-											{
-												run: 1,
-												options
-											}
-										);
-										if (error) return done(error);
+									const infrastructureLogErrors = filterInfraStructureErrors(
+										infraStructureLog,
+										{
+											run: 1,
+											options
+										}
+									);
+									if (
+										infrastructureLogErrors.length &&
+										checkArrayExpectation(
+											testDirectory,
+											{ infrastructureLogs: infrastructureLogErrors },
+											"infrastructureLog",
+											"infrastructure-log",
+											"InfrastructureLog",
+											done
+										)
+									) {
+										return;
 									}
 									if (err) return handleFatalError(err, done);
 									done();
@@ -272,17 +275,25 @@ const describeCases = config => {
 											);
 										}
 									}
-									if (infrastructureLogChecker) {
-										const error = infrastructureLogChecker.check(
-											category.name,
-											testName,
-											infraStructureLog,
-											{
-												run: 2,
-												options
-											}
-										);
-										if (error) return done(error);
+									const infrastructureLogErrors = filterInfraStructureErrors(
+										infraStructureLog,
+										{
+											run: 2,
+											options
+										}
+									);
+									if (
+										infrastructureLogErrors.length &&
+										checkArrayExpectation(
+											testDirectory,
+											{ infrastructureLogs: infrastructureLogErrors },
+											"infrastructureLog",
+											"infrastructure-log",
+											"InfrastructureLog",
+											done
+										)
+									) {
+										return;
 									}
 									done();
 								});
@@ -355,17 +366,25 @@ const describeCases = config => {
 								) {
 									return;
 								}
-								if (infrastructureLogChecker) {
-									const error = infrastructureLogChecker.check(
-										category.name,
-										testName,
-										infraStructureLog,
-										{
-											run: 1,
-											options
-										}
-									);
-									if (error) return done(error);
+								const infrastructureLogErrors = filterInfraStructureErrors(
+									infraStructureLog,
+									{
+										run: 3,
+										options
+									}
+								);
+								if (
+									infrastructureLogErrors.length &&
+									checkArrayExpectation(
+										testDirectory,
+										{ infrastructureLogs: infrastructureLogErrors },
+										"infrastructureLog",
+										"infrastructure-log",
+										"InfrastructureLog",
+										done
+									)
+								) {
+									return;
 								}
 
 								let filesCount = 0;
