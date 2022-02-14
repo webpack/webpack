@@ -1050,6 +1050,11 @@ declare abstract class ChunkGroup {
 type ChunkGroupOptions = RawChunkGroupOptions & { name?: string };
 declare interface ChunkHashContext {
 	/**
+	 * results of code generation
+	 */
+	codeGenerationResults: CodeGenerationResults;
+
+	/**
 	 * the runtime template
 	 */
 	runtimeTemplate: RuntimeTemplate;
@@ -9220,6 +9225,11 @@ declare interface RenderBootstrapContext {
 	 * the chunk
 	 */
 	chunk: Chunk;
+
+	/**
+	 * results of code generation
+	 */
+	codeGenerationResults: CodeGenerationResults;
 
 	/**
 	 * the runtime template
