@@ -3304,7 +3304,7 @@ cacheable modules 1.22 KiB
     ModuleConcatenation bailout: Module is not an ECMAScript module
 webpack x.x.x compiled successfully in X ms
 
-asset main.no-side.js 979 bytes [emitted] [minimized] (name: main)
+asset main.no-side.js 993 bytes [emitted] [minimized] (name: main)
 runtime modules 1010 bytes 4 modules
 orphan modules 102 bytes [orphan] 2 modules
 cacheable modules 1.35 KiB
