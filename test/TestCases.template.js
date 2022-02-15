@@ -11,6 +11,7 @@ const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const captureStdio = require("./helpers/captureStdio");
 const asModule = require("./helpers/asModule");
+const createInfrastructureLogErrorsChecker = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "cases");
 let categories = fs.readdirSync(casesPath);
@@ -22,6 +23,25 @@ categories = categories.map(cat => {
 			.filter(folder => folder.indexOf("_") < 0)
 	};
 });
+
+const createLogger = appendTarget => {
+	return {
+		log: l => appendTarget.push(l),
+		debug: l => appendTarget.push(l),
+		trace: l => appendTarget.push(l),
+		info: l => appendTarget.push(l),
+		warn: console.warn.bind(console),
+		error: console.error.bind(console),
+		logTime: () => {},
+		group: () => {},
+		groupCollapsed: () => {},
+		groupEnd: () => {},
+		profile: () => {},
+		profileEnd: () => {},
+		clear: () => {},
+		status: () => {}
+	};
+};
 
 const describeCases = config => {
 	describe(config.name, () => {
@@ -49,6 +69,13 @@ const describeCases = config => {
 						return true;
 					})
 					.forEach(testName => {
+						let infraStructureLog = [];
+						const infrastructureLogChecker = config.infrastructureLogErrors
+							? createInfrastructureLogErrorsChecker(
+									config.infrastructureLogErrors
+							  )
+							: undefined;
+
 						describe(testName, () => {
 							const testDirectory = path.join(
 								casesPath,
@@ -187,6 +214,10 @@ const describeCases = config => {
 									topLevelAwait: true,
 									backCompat: false,
 									...(config.module ? { outputModule: true } : {})
+								},
+								infrastructureLogging: config.cache && {
+									debug: true,
+									console: createLogger(infraStructureLog)
 								}
 							};
 							const cleanups = [];
@@ -207,12 +238,25 @@ const describeCases = config => {
 											options.output.path,
 											"cache1"
 										);
+										infraStructureLog.length = 0;
 										const deprecationTracker = deprecationTracking.start();
 										const webpack = require("..");
 										webpack(options, err => {
 											deprecationTracker();
 											options.output.path = oldPath;
 											if (err) return done(err);
+											if (infrastructureLogChecker) {
+												const error = infrastructureLogChecker.check(
+													category.name,
+													testName,
+													infraStructureLog,
+													{
+														run: 1,
+														options
+													}
+												);
+												if (error) return done(error);
+											}
 											done();
 										});
 									},
@@ -226,12 +270,25 @@ const describeCases = config => {
 											options.output.path,
 											"cache2"
 										);
+										infraStructureLog.length = 0;
 										const deprecationTracker = deprecationTracking.start();
 										const webpack = require("..");
 										webpack(options, err => {
 											deprecationTracker();
 											options.output.path = oldPath;
 											if (err) return done(err);
+											if (infrastructureLogChecker) {
+												const error = infrastructureLogChecker.check(
+													category.name,
+													testName,
+													infraStructureLog,
+													{
+														run: 2,
+														options
+													}
+												);
+												if (error) return done(error);
+											}
 											done();
 										});
 									},
@@ -241,6 +298,7 @@ const describeCases = config => {
 							it(
 								testName + " should compile",
 								done => {
+									infraStructureLog.length = 0;
 									const webpack = require("..");
 									const compiler = webpack(options);
 									const run = () => {
@@ -248,6 +306,18 @@ const describeCases = config => {
 										compiler.run((err, stats) => {
 											const deprecations = deprecationTracker();
 											if (err) return done(err);
+											if (infrastructureLogChecker) {
+												const error = infrastructureLogChecker.check(
+													category.name,
+													testName,
+													infraStructureLog,
+													{
+														run: 3,
+														options
+													}
+												);
+												if (error) return done(error);
+											}
 											compiler.close(err => {
 												if (err) return done(err);
 												const statOptions = {
