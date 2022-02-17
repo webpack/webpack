@@ -737,92 +737,62 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
 `;
 
 exports[`StatsTestCases should print correct stats for context-independence 1`] = `
-"asset main-1aad2f42f93e93c4e0b4.js 12.7 KiB [emitted] [immutable] (name: main)
-  sourceMap main-1aad2f42f93e93c4e0b4.js.map 11.1 KiB [emitted] [dev] (auxiliary name: main)
+"asset main-9eb37fb0850a854f8074.js 10.4 KiB [emitted] [immutable] (name: main)
+  sourceMap main-9eb37fb0850a854f8074.js.map 9.26 KiB [emitted] [dev] (auxiliary name: main)
 asset 695-4dd37417c69a0af66bac.js 455 bytes [emitted] [immutable]
   sourceMap 695-4dd37417c69a0af66bac.js.map 342 bytes [emitted] [dev]
-runtime modules 6.6 KiB 9 modules
+runtime modules 6.29 KiB 8 modules
 orphan modules 19 bytes [orphan] 1 module
-built modules 500 bytes [built]
-  modules by layer 234 bytes
-    ./a/c/ ./a/cc/ eager ^\\\\.\\\\/.*$ namespace object 198 bytes [built] [code generated]
-    ./a/c/a.js 18 bytes [optional] [built] [code generated]
-    ./a/cc/b.js 18 bytes [optional] [built] [code generated]
-  modules by layer (in Xdir/context-independence/a) 266 bytes
-    ./a/index.js (in Xdir/context-independence/a) 200 bytes [built] [code generated]
-    ./a/chunk.js + 1 modules (in Xdir/context-independence/a) 66 bytes [built] [code generated]
+cacheable modules 106 bytes
+  ./a/index.js (in Xdir/context-independence/a) 40 bytes [built] [code generated]
+  ./a/chunk.js + 1 modules (in Xdir/context-independence/a) 66 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-1aad2f42f93e93c4e0b4.js 12.7 KiB [emitted] [immutable] (name: main)
-  sourceMap main-1aad2f42f93e93c4e0b4.js.map 11.1 KiB [emitted] [dev] (auxiliary name: main)
+asset main-9eb37fb0850a854f8074.js 10.4 KiB [emitted] [immutable] (name: main)
+  sourceMap main-9eb37fb0850a854f8074.js.map 9.26 KiB [emitted] [dev] (auxiliary name: main)
 asset 695-4dd37417c69a0af66bac.js 455 bytes [emitted] [immutable]
   sourceMap 695-4dd37417c69a0af66bac.js.map 342 bytes [emitted] [dev]
-runtime modules 6.6 KiB 9 modules
+runtime modules 6.29 KiB 8 modules
 orphan modules 19 bytes [orphan] 1 module
-built modules 500 bytes [built]
-  modules by layer 234 bytes
-    ./b/c/ ./b/cc/ eager ^\\\\.\\\\/.*$ namespace object 198 bytes [built] [code generated]
-    ./b/c/a.js 18 bytes [optional] [built] [code generated]
-    ./b/cc/b.js 18 bytes [optional] [built] [code generated]
-  modules by layer (in Xdir/context-independence/b) 266 bytes
-    ./b/index.js (in Xdir/context-independence/b) 200 bytes [built] [code generated]
-    ./b/chunk.js + 1 modules (in Xdir/context-independence/b) 66 bytes [built] [code generated]
+cacheable modules 106 bytes
+  ./b/index.js (in Xdir/context-independence/b) 40 bytes [built] [code generated]
+  ./b/chunk.js + 1 modules (in Xdir/context-independence/b) 66 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-488feb13e36da3e337fa.js 14.9 KiB [emitted] [immutable] (name: main)
+asset main-180aaac92930f4aab865.js 11.6 KiB [emitted] [immutable] (name: main)
 asset 695-828eb5c7418e1b8270bb.js 1.5 KiB [emitted] [immutable]
-runtime modules 6.6 KiB 9 modules
+runtime modules 6.29 KiB 8 modules
 orphan modules 19 bytes [orphan] 1 module
-built modules 500 bytes [built]
-  modules by layer 234 bytes
-    ./a/c/ ./a/cc/ eager ^\\\\.\\\\/.*$ namespace object 198 bytes [built] [code generated]
-    ./a/c/a.js 18 bytes [optional] [built] [code generated]
-    ./a/cc/b.js 18 bytes [optional] [built] [code generated]
-  modules by layer (in Xdir/context-independence/a) 266 bytes
-    ./a/index.js (in Xdir/context-independence/a) 200 bytes [built] [code generated]
-    ./a/chunk.js + 1 modules (in Xdir/context-independence/a) 66 bytes [built] [code generated]
+cacheable modules 106 bytes
+  ./a/index.js (in Xdir/context-independence/a) 40 bytes [built] [code generated]
+  ./a/chunk.js + 1 modules (in Xdir/context-independence/a) 66 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-488feb13e36da3e337fa.js 14.9 KiB [emitted] [immutable] (name: main)
+asset main-180aaac92930f4aab865.js 11.6 KiB [emitted] [immutable] (name: main)
 asset 695-828eb5c7418e1b8270bb.js 1.5 KiB [emitted] [immutable]
-runtime modules 6.6 KiB 9 modules
+runtime modules 6.29 KiB 8 modules
 orphan modules 19 bytes [orphan] 1 module
-built modules 500 bytes [built]
-  modules by layer 234 bytes
-    ./b/c/ ./b/cc/ eager ^\\\\.\\\\/.*$ namespace object 198 bytes [built] [code generated]
-    ./b/c/a.js 18 bytes [optional] [built] [code generated]
-    ./b/cc/b.js 18 bytes [optional] [built] [code generated]
-  modules by layer (in Xdir/context-independence/b) 266 bytes
-    ./b/index.js (in Xdir/context-independence/b) 200 bytes [built] [code generated]
-    ./b/chunk.js + 1 modules (in Xdir/context-independence/b) 66 bytes [built] [code generated]
+cacheable modules 106 bytes
+  ./b/index.js (in Xdir/context-independence/b) 40 bytes [built] [code generated]
+  ./b/chunk.js + 1 modules (in Xdir/context-independence/b) 66 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-c96ffcbdb3eefd9ed7c6.js 13.7 KiB [emitted] [immutable] (name: main)
+asset main-633b38bd6be14d7e5f1e.js 11.3 KiB [emitted] [immutable] (name: main)
 asset 695-ace208366ce0ce2556ef.js 1.01 KiB [emitted] [immutable]
-runtime modules 6.6 KiB 9 modules
+runtime modules 6.29 KiB 8 modules
 orphan modules 19 bytes [orphan] 1 module
-built modules 500 bytes [built]
-  modules by layer 234 bytes
-    ./a/c/ ./a/cc/ eager ^\\\\.\\\\/.*$ namespace object 198 bytes [built] [code generated]
-    ./a/c/a.js 18 bytes [optional] [built] [code generated]
-    ./a/cc/b.js 18 bytes [optional] [built] [code generated]
-  modules by layer (in Xdir/context-independence/a) 266 bytes
-    ./a/index.js (in Xdir/context-independence/a) 200 bytes [built] [code generated]
-    ./a/chunk.js + 1 modules (in Xdir/context-independence/a) 66 bytes [built] [code generated]
+cacheable modules 106 bytes
+  ./a/index.js (in Xdir/context-independence/a) 40 bytes [built] [code generated]
+  ./a/chunk.js + 1 modules (in Xdir/context-independence/a) 66 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-c96ffcbdb3eefd9ed7c6.js 13.7 KiB [emitted] [immutable] (name: main)
+asset main-633b38bd6be14d7e5f1e.js 11.3 KiB [emitted] [immutable] (name: main)
 asset 695-ace208366ce0ce2556ef.js 1.01 KiB [emitted] [immutable]
-runtime modules 6.6 KiB 9 modules
+runtime modules 6.29 KiB 8 modules
 orphan modules 19 bytes [orphan] 1 module
-built modules 500 bytes [built]
-  modules by layer 234 bytes
-    ./b/c/ ./b/cc/ eager ^\\\\.\\\\/.*$ namespace object 198 bytes [built] [code generated]
-    ./b/c/a.js 18 bytes [optional] [built] [code generated]
-    ./b/cc/b.js 18 bytes [optional] [built] [code generated]
-  modules by layer (in Xdir/context-independence/b) 266 bytes
-    ./b/index.js (in Xdir/context-independence/b) 200 bytes [built] [code generated]
-    ./b/chunk.js + 1 modules (in Xdir/context-independence/b) 66 bytes [built] [code generated]
+cacheable modules 106 bytes
+  ./b/index.js (in Xdir/context-independence/b) 40 bytes [built] [code generated]
+  ./b/chunk.js + 1 modules (in Xdir/context-independence/b) 66 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 

@@ -2526,7 +2526,7 @@ declare interface ContextModuleOptions {
 	 * exports referenced from modules (won't be mangled)
 	 */
 	referencedExports?: string[][];
-	resource: string | string[];
+	resource: string;
 	resourceQuery?: string;
 	resourceFragment?: string;
 	resolveOptions: any;
@@ -9405,11 +9405,6 @@ declare interface ResolveContext {
 	 * log function
 	 */
 	log?: (arg0: string) => void;
-
-	/**
-	 * yield result, if provided plugins can return several results
-	 */
-	yield?: (arg0: ResolveRequest) => void;
 }
 declare interface ResolveData {
 	contextInfo: ModuleFactoryCreateDataContextInfo;
@@ -11856,7 +11851,7 @@ declare interface UserResolveOptions {
 	restrictions?: (string | RegExp)[];
 
 	/**
-	 * Use only the sync constraints of the file system calls
+	 * Use only the sync constiants of the file system calls
 	 */
 	useSyncFileSystemCalls?: boolean;
 
