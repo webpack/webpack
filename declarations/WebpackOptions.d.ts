@@ -1043,6 +1043,10 @@ export interface EntryDescription {
 	 */
 	asyncChunks?: boolean;
 	/**
+	 * Base uri for this entry.
+	 */
+	baseUri?: string;
+	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	chunkLoading?: ChunkLoading;
@@ -2756,6 +2760,10 @@ export interface EntryDescriptionNormalized {
 	 * Enable/disable creating async chunks that are loaded on demand.
 	 */
 	asyncChunks?: boolean;
+	/**
+	 * Base uri for this entry.
+	 */
+	baseUri?: string;
 	/**
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */

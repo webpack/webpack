@@ -496,6 +496,10 @@
           "description": "Enable/disable creating async chunks that are loaded on demand.",
           "type": "boolean"
         },
+        "baseUri": {
+          "description": "Base uri for this entry.",
+          "type": "string"
+        },
         "chunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
@@ -552,6 +556,10 @@
         "asyncChunks": {
           "description": "Enable/disable creating async chunks that are loaded on demand.",
           "type": "boolean"
+        },
+        "baseUri": {
+          "description": "Base uri for this entry.",
+          "type": "string"
         },
         "chunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
