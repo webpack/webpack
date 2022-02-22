@@ -681,7 +681,7 @@ export type AssetGeneratorDataUrl =
 	| AssetGeneratorDataUrlOptions
 	| AssetGeneratorDataUrlFunction;
 /**
- * Function that executes for module and should return an DataUrl string.
+ * Function that executes for module and should return an DataUrl string. It can have a string as 'ident' property which contributes to the module hash.
  */
 export type AssetGeneratorDataUrlFunction = (
 	source: string | Buffer,

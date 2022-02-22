@@ -70,7 +70,7 @@
       ]
     },
     "AssetGeneratorDataUrlFunction": {
-      "description": "Function that executes for module and should return an DataUrl string.",
+      "description": "Function that executes for module and should return an DataUrl string. It can have a string as 'ident' property which contributes to the module hash.",
       "instanceof": "Function",
       "tsType": "((source: string | Buffer, context: { filename: string, module: import('../lib/Module') }) => string)"
     },
