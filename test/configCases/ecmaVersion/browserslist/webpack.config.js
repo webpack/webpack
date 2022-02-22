@@ -10,9 +10,9 @@ module.exports = {
 			  "bigIntLiteral": true,
 			  "const": true,
 			  "destructuring": true,
-			  "dynamicImport": false,
+			  "dynamicImport": true,
 			  "forOf": true,
-			  "module": false,
+			  "module": true,
 			}
 		`);
 				expect(compilation.options.externalsPresets).toMatchInlineSnapshot(`
