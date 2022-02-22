@@ -16,6 +16,7 @@ describe("Template", () => {
 			items.push(item);
 		}
 	});
+	// cspell:ignore sdfas sadfome
 	it("should generate sanitized path identifiers", () => {
 		expect(Template.toPath("path/to-sdfas/sadfome$$.js")).toBe(
 			"path-to-sdfas-sadfome$$-js"

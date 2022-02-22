@@ -185,6 +185,7 @@ describe("Compiler", () => {
 		});
 	});
 
+	// cspell:word asmjs
 	it("should not evaluate constants in asm.js", done => {
 		compile("./asmjs", {}, (stats, files) => {
 			expect(Object.keys(files)).toEqual(["/main.js"]);

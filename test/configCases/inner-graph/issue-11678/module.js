@@ -1438,7 +1438,7 @@ async function _createFormWidget(positionTypeId, headerPK, contentId = null) {
 			_isNewDataset
 		)
 	);
-	const renderFormInConainter = contentId ? contentId : _getFormSelector();
+	const renderFormInContainer = contentId ? contentId : _getFormSelector();
 	await form.initForm(
 		_getModuleName(),
 		positionTypeId,
@@ -1447,7 +1447,7 @@ async function _createFormWidget(positionTypeId, headerPK, contentId = null) {
 		_formData,
 		_staticData,
 		_isNewDataset,
-		renderFormInConainter,
+		renderFormInContainer,
 		headerPK
 	);
 }

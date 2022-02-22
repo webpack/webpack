@@ -594,6 +594,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "experiments-css": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable css support.",
+        "multiple": false,
+        "path": "experiments.css",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable css support.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "experiments-css-exports-only": Object {
+    "configs": Array [
+      Object {
+        "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+        "multiple": false,
+        "path": "experiments.css.exportsOnly",
+        "type": "boolean",
+      },
+    ],
+    "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "experiments-future-defaults": Object {
     "configs": Array [
       Object {
@@ -940,6 +966,7 @@ Object {
           "commonjs",
           "commonjs2",
           "commonjs-module",
+          "commonjs-static",
           "amd",
           "amd-require",
           "umd",
@@ -1269,6 +1296,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-asset-output-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
+        "multiple": false,
+        "path": "module.generator.asset.outputPath",
+        "type": "string",
+      },
+    ],
+    "description": "Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-asset-public-path": Object {
     "configs": Array [
       Object {
@@ -1305,6 +1345,19 @@ Object {
       },
     ],
     "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-generator-asset-resource-output-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
+        "multiple": false,
+        "path": "module.generator.asset/resource.outputPath",
+        "type": "string",
+      },
+    ],
+    "description": "Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -1558,6 +1611,19 @@ Object {
     "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-javascript-auto-import-meta": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMeta",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-javascript-auto-node": Object {
     "configs": Array [
@@ -2110,6 +2176,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-import-meta": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMeta",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-node": Object {
     "configs": Array [
       Object {
@@ -2622,6 +2701,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-esm-import-meta": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMeta",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-node": Object {
     "configs": Array [
       Object {
@@ -3078,6 +3170,19 @@ Object {
     "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-parser-javascript-import-meta": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMeta",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-parser-javascript-node": Object {
     "configs": Array [
@@ -5175,6 +5280,32 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-css-chunk-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+        "multiple": false,
+        "path": "output.cssChunkFilename",
+        "type": "string",
+      },
+    ],
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-css-filename": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+        "multiple": false,
+        "path": "output.cssFilename",
+        "type": "string",
+      },
+    ],
+    "description": "Specifies the filename template of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-devtool-fallback-module-filename-template": Object {
     "configs": Array [
       Object {
@@ -5256,7 +5387,7 @@ Object {
   "output-enabled-library-types": Object {
     "configs": Array [
       Object {
-        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
         "multiple": true,
         "path": "output.enabledLibraryTypes[]",
         "type": "enum",
@@ -5272,6 +5403,7 @@ Object {
           "commonjs",
           "commonjs2",
           "commonjs-module",
+          "commonjs-static",
           "amd",
           "amd-require",
           "umd",
@@ -5281,13 +5413,13 @@ Object {
         ],
       },
       Object {
-        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
         "multiple": true,
         "path": "output.enabledLibraryTypes[]",
         "type": "string",
       },
     ],
-    "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+    "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
     "multiple": true,
     "simpleType": "string",
   },
@@ -5864,7 +5996,7 @@ Object {
   "output-library-type": Object {
     "configs": Array [
       Object {
-        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
         "multiple": false,
         "path": "output.library.type",
         "type": "enum",
@@ -5880,6 +6012,7 @@ Object {
           "commonjs",
           "commonjs2",
           "commonjs-module",
+          "commonjs-static",
           "amd",
           "amd-require",
           "umd",
@@ -5889,13 +6022,13 @@ Object {
         ],
       },
       Object {
-        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+        "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
         "multiple": false,
         "path": "output.library.type",
         "type": "string",
       },
     ],
-    "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+    "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
     "multiple": false,
     "simpleType": "string",
   },
@@ -8926,6 +9059,78 @@ Object {
       },
     ],
     "description": "Stop watching when stdin stream has ended.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+}
+`;
+
+exports[`Cli should generate the correct cli flags with custom schema 1`] = `
+Object {
+  "with-both-cli-and-negative-description": Object {
+    "configs": Array [
+      Object {
+        "description": "description for CLI option",
+        "multiple": false,
+        "negatedDescription": "custom negative description",
+        "path": "with-both-cli-and-negative-description",
+        "type": "boolean",
+      },
+    ],
+    "description": "description for CLI option",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "with-cli-description": Object {
+    "configs": Array [
+      Object {
+        "description": "description for CLI option",
+        "multiple": false,
+        "path": "with-cli-description",
+        "type": "string",
+      },
+    ],
+    "description": "description for CLI option",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "with-negative-description": Object {
+    "configs": Array [
+      Object {
+        "description": "original description",
+        "multiple": false,
+        "negatedDescription": "custom negative description",
+        "path": "with-negative-description",
+        "type": "boolean",
+      },
+    ],
+    "description": "original description",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "with-reset-description": Object {
+    "configs": Array [
+      Object {
+        "description": "original description",
+        "multiple": true,
+        "path": "with-reset-description[]",
+        "type": "string",
+      },
+    ],
+    "description": "original description",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "with-reset-description-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "custom reset",
+        "multiple": false,
+        "path": "with-reset-description",
+        "type": "reset",
+      },
+    ],
+    "description": "custom reset",
     "multiple": false,
     "simpleType": "boolean",
   },

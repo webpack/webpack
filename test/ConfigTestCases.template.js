@@ -17,6 +17,7 @@ const prepareOptions = require("./helpers/prepareOptions");
 const { parseResource } = require("../lib/util/identifier");
 const captureStdio = require("./helpers/captureStdio");
 const asModule = require("./helpers/asModule");
+const createInfrastructureLogErrorsChecker = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "configCases");
 const categories = fs.readdirSync(casesPath).map(cat => {
@@ -28,6 +29,25 @@ const categories = fs.readdirSync(casesPath).map(cat => {
 			.sort()
 	};
 });
+
+const createLogger = appendTarget => {
+	return {
+		log: l => appendTarget.push(l),
+		debug: l => appendTarget.push(l),
+		trace: l => appendTarget.push(l),
+		info: l => appendTarget.push(l),
+		warn: console.warn.bind(console),
+		error: console.error.bind(console),
+		logTime: () => {},
+		group: () => {},
+		groupCollapsed: () => {},
+		groupEnd: () => {},
+		profile: () => {},
+		profileEnd: () => {},
+		clear: () => {},
+		status: () => {}
+	};
+};
 
 const describeCases = config => {
 	describe(config.name, () => {
@@ -44,6 +64,11 @@ const describeCases = config => {
 			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
 				for (const testName of category.tests) {
+					const infrastructureLogChecker = config.infrastructureLogErrors
+						? createInfrastructureLogErrorsChecker(
+								config.infrastructureLogErrors
+						  )
+						: undefined;
 					// eslint-disable-next-line no-loop-func
 					describe(testName, function () {
 						const testDirectory = path.join(casesPath, category.name, testName);
@@ -54,6 +79,7 @@ const describeCases = config => {
 							});
 							return;
 						}
+						const infraStructureLog = [];
 						const outBaseDir = path.join(__dirname, "js");
 						const testSubPath = path.join(config.name, category.name, testName);
 						const outputDirectory = path.join(outBaseDir, testSubPath);
@@ -96,6 +122,10 @@ const describeCases = config => {
 										cacheDirectory,
 										name: `config-${idx}`,
 										...config.cache
+									};
+									options.infrastructureLogging = {
+										debug: true,
+										console: createLogger(infraStructureLog)
 									};
 								}
 								if (!options.snapshot) options.snapshot = {};
@@ -168,6 +198,7 @@ const describeCases = config => {
 							it(`${testName} should pre-compile to fill disk cache (1st)`, done => {
 								rimraf.sync(outputDirectory);
 								fs.mkdirSync(outputDirectory, { recursive: true });
+								infraStructureLog.length = 0;
 								const deprecationTracker = deprecationTracking.start();
 								require("..")(options, err => {
 									deprecationTracker();
@@ -180,6 +211,18 @@ const describeCases = config => {
 											)
 										);
 									}
+									if (infrastructureLogChecker) {
+										const error = infrastructureLogChecker.check(
+											category.name,
+											testName,
+											infraStructureLog,
+											{
+												run: 1,
+												options
+											}
+										);
+										if (error) return done(error);
+									}
 									if (err) return handleFatalError(err, done);
 									done();
 								});
@@ -187,6 +230,7 @@ const describeCases = config => {
 							it(`${testName} should pre-compile to fill disk cache (2nd)`, done => {
 								rimraf.sync(outputDirectory);
 								fs.mkdirSync(outputDirectory, { recursive: true });
+								infraStructureLog.length = 0;
 								const deprecationTracker = deprecationTracking.start();
 								require("..")(options, (err, stats) => {
 									deprecationTracker();
@@ -228,6 +272,18 @@ const describeCases = config => {
 											);
 										}
 									}
+									if (infrastructureLogChecker) {
+										const error = infrastructureLogChecker.check(
+											category.name,
+											testName,
+											infraStructureLog,
+											{
+												run: 2,
+												options
+											}
+										);
+										if (error) return done(error);
+									}
 									done();
 								});
 							}, 40000);
@@ -235,6 +291,7 @@ const describeCases = config => {
 						it(`${testName} should compile`, done => {
 							rimraf.sync(outputDirectory);
 							fs.mkdirSync(outputDirectory, { recursive: true });
+							infraStructureLog.length = 0;
 							const deprecationTracker = deprecationTracking.start();
 							const onCompiled = (err, stats) => {
 								const deprecations = deprecationTracker();
@@ -298,6 +355,18 @@ const describeCases = config => {
 								) {
 									return;
 								}
+								if (infrastructureLogChecker) {
+									const error = infrastructureLogChecker.check(
+										category.name,
+										testName,
+										infraStructureLog,
+										{
+											run: 1,
+											options
+										}
+									);
+									if (error) return done(error);
+								}
 
 								let filesCount = 0;
 
@@ -309,13 +378,15 @@ const describeCases = config => {
 									const bundlePath = testConfig.findBundle(i, optionsArr[i]);
 									if (bundlePath) {
 										filesCount++;
-										const document = new FakeDocument();
+										const document = new FakeDocument(outputDirectory);
 										const globalContext = {
 											console: console,
 											expect: expect,
 											setTimeout: setTimeout,
 											clearTimeout: clearTimeout,
 											document,
+											getComputedStyle:
+												document.getComputedStyle.bind(document),
 											location: {
 												href: "https://test.cases/path/index.html",
 												origin: "https://test.cases",
