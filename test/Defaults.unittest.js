@@ -13,64 +13,64 @@ const quoteMeta = str => {
 	return str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 };
 
-describe("Defaults", () => {
-	const cwd = process.cwd();
-	const cwdRegExp = new RegExp(
-		`${quoteMeta(cwd)}((?:\\\\)?(?:[a-zA-Z.\\-_]+\\\\)*)`,
-		"g"
-	);
-	const escapedCwd = JSON.stringify(cwd).slice(1, -1);
-	const escapedCwdRegExp = new RegExp(
-		`${quoteMeta(escapedCwd)}((?:\\\\\\\\)?(?:[a-zA-Z.\\-_]+\\\\\\\\)*)`,
-		"g"
-	);
-	const normalize = str => {
-		if (cwd.startsWith("/")) {
-			str = str.replace(new RegExp(quoteMeta(cwd), "g"), "<cwd>");
-		} else {
-			str = str.replace(cwdRegExp, (m, g) => `<cwd>${g.replace(/\\/g, "/")}`);
-			str = str.replace(
-				escapedCwdRegExp,
-				(m, g) => `<cwd>${g.replace(/\\\\/g, "/")}`
-			);
-		}
-		str = str.replace(/@@ -\d+,\d+ \+\d+,\d+ @@/g, "@@ ... @@");
-		return str;
-	};
-
-	class Diff {
-		constructor(value) {
-			this.value = value;
-		}
+const cwd = process.cwd();
+const cwdRegExp = new RegExp(
+	`${quoteMeta(cwd)}((?:\\\\)?(?:[a-zA-Z.\\-_]+\\\\)*)`,
+	"g"
+);
+const escapedCwd = JSON.stringify(cwd).slice(1, -1);
+const escapedCwdRegExp = new RegExp(
+	`${quoteMeta(escapedCwd)}((?:\\\\\\\\)?(?:[a-zA-Z.\\-_]+\\\\\\\\)*)`,
+	"g"
+);
+const normalize = str => {
+	if (cwd.startsWith("/")) {
+		str = str.replace(new RegExp(quoteMeta(cwd), "g"), "<cwd>");
+	} else {
+		str = str.replace(cwdRegExp, (m, g) => `<cwd>${g.replace(/\\/g, "/")}`);
+		str = str.replace(
+			escapedCwdRegExp,
+			(m, g) => `<cwd>${g.replace(/\\\\/g, "/")}`
+		);
 	}
+	str = str.replace(/@@ -\d+,\d+ \+\d+,\d+ @@/g, "@@ ... @@");
+	return str;
+};
 
-	expect.addSnapshotSerializer({
-		test(value) {
-			return value instanceof Diff;
-		},
-		print(received) {
-			return normalize(received.value);
-		}
-	});
+class Diff {
+	constructor(value) {
+		this.value = value;
+	}
+}
 
-	expect.addSnapshotSerializer({
-		test(value) {
-			return typeof value === "string";
-		},
-		print(received) {
-			return JSON.stringify(normalize(received));
-		}
-	});
+expect.addSnapshotSerializer({
+	test(value) {
+		return value instanceof Diff;
+	},
+	print(received) {
+		return normalize(received.value);
+	}
+});
 
-	const getDefaultConfig = config => {
-		const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
-			require("..").config;
-		config = getNormalizedWebpackOptions(config);
-		applyWebpackOptionsDefaults(config);
-		process.chdir(cwd);
-		return config;
-	};
+expect.addSnapshotSerializer({
+	test(value) {
+		return typeof value === "string";
+	},
+	print(received) {
+		return JSON.stringify(normalize(received));
+	}
+});
 
+const getDefaultConfig = config => {
+	const { applyWebpackOptionsDefaults, getNormalizedWebpackOptions } =
+		require("..").config;
+	config = getNormalizedWebpackOptions(config);
+	applyWebpackOptionsDefaults(config);
+	process.chdir(cwd);
+	return config;
+};
+
+describe("snapshots", () => {
 	const baseConfig = getDefaultConfig({ mode: "none" });
 
 	it("should have the correct base config", () => {
@@ -2017,4 +2017,28 @@ describe("Defaults", () => {
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
 		`)
 	);
+});
+
+it("should result in the same target options for same target", () => {
+	const inlineTarget = getDefaultConfig({ target: "node12.17" });
+	const browserslistTarget = getDefaultConfig({
+		target: "browserslist: node 12.17"
+	});
+	const diff = stripAnsi(
+		jestDiff(inlineTarget, browserslistTarget, {
+			expand: false,
+			contextLines: 0
+		})
+	);
+
+	expect(inlineTarget.output.environment.module).toBe(true);
+	expect(inlineTarget.output.environment.dynamicImport).toBe(true);
+	expect(new Diff(diff)).toMatchInlineSnapshot(`
+		- Expected
+		+ Received
+
+		@@ ... @@
+		-   "target": "node12.17",
+		+   "target": "browserslist: node 12.17",
+	`);
 });
