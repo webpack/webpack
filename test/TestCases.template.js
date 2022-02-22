@@ -11,7 +11,7 @@ const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const captureStdio = require("./helpers/captureStdio");
 const asModule = require("./helpers/asModule");
-const createInfrastructureLogErrorsChecker = require("./helpers/infrastructureLogErrors");
+const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "cases");
 let categories = fs.readdirSync(casesPath);
@@ -70,11 +70,6 @@ const describeCases = config => {
 					})
 					.forEach(testName => {
 						let infraStructureLog = [];
-						const infrastructureLogChecker = config.infrastructureLogErrors
-							? createInfrastructureLogErrorsChecker(
-									config.infrastructureLogErrors
-							  )
-							: undefined;
 
 						describe(testName, () => {
 							const testDirectory = path.join(
@@ -245,17 +240,23 @@ const describeCases = config => {
 											deprecationTracker();
 											options.output.path = oldPath;
 											if (err) return done(err);
-											if (infrastructureLogChecker) {
-												const error = infrastructureLogChecker.check(
-													category.name,
-													testName,
-													infraStructureLog,
-													{
-														run: 1,
-														options
-													}
-												);
-												if (error) return done(error);
+											const infrastructureLogErrors =
+												filterInfraStructureErrors(infraStructureLog, {
+													run: 1,
+													options
+												});
+											if (
+												infrastructureLogErrors.length &&
+												checkArrayExpectation(
+													testDirectory,
+													{ infrastructureLogs: infrastructureLogErrors },
+													"infrastructureLog",
+													"infrastructure-log",
+													"InfrastructureLog",
+													done
+												)
+											) {
+												return;
 											}
 											done();
 										});
@@ -277,17 +278,23 @@ const describeCases = config => {
 											deprecationTracker();
 											options.output.path = oldPath;
 											if (err) return done(err);
-											if (infrastructureLogChecker) {
-												const error = infrastructureLogChecker.check(
-													category.name,
-													testName,
-													infraStructureLog,
-													{
-														run: 2,
-														options
-													}
-												);
-												if (error) return done(error);
+											const infrastructureLogErrors =
+												filterInfraStructureErrors(infraStructureLog, {
+													run: 2,
+													options
+												});
+											if (
+												infrastructureLogErrors.length &&
+												checkArrayExpectation(
+													testDirectory,
+													{ infrastructureLogs: infrastructureLogErrors },
+													"infrastructureLog",
+													"infrastructure-log",
+													"InfrastructureLog",
+													done
+												)
+											) {
+												return;
 											}
 											done();
 										});
@@ -306,17 +313,23 @@ const describeCases = config => {
 										compiler.run((err, stats) => {
 											const deprecations = deprecationTracker();
 											if (err) return done(err);
-											if (infrastructureLogChecker) {
-												const error = infrastructureLogChecker.check(
-													category.name,
-													testName,
-													infraStructureLog,
-													{
-														run: 3,
-														options
-													}
-												);
-												if (error) return done(error);
+											const infrastructureLogErrors =
+												filterInfraStructureErrors(infraStructureLog, {
+													run: 3,
+													options
+												});
+											if (
+												infrastructureLogErrors.length &&
+												checkArrayExpectation(
+													testDirectory,
+													{ infrastructureLogs: infrastructureLogErrors },
+													"infrastructureLog",
+													"infrastructure-log",
+													"InfrastructureLog",
+													done
+												)
+											) {
+												return;
 											}
 											compiler.close(err => {
 												if (err) return done(err);
