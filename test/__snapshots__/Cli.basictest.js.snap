@@ -8231,6 +8231,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-errors-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display errors (value is in number of lines).",
+        "multiple": false,
+        "path": "stats.errorsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display errors (value is in number of lines).",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "stats-exclude-assets": Object {
     "configs": Array [
       Object {
@@ -8923,6 +8936,19 @@ Object {
     "description": "Clear all items provided in 'stats.warningsFilter' configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "stats-warnings-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display warnings (value is in number of lines).",
+        "multiple": false,
+        "path": "stats.warningsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display warnings (value is in number of lines).",
+    "multiple": false,
+    "simpleType": "number",
   },
   "target": Object {
     "configs": Array [

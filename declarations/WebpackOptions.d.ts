@@ -2457,6 +2457,10 @@ export interface StatsOptions {
 	 */
 	errorsCount?: boolean;
 	/**
+	 * Space to display errors (value is in number of lines).
+	 */
+	errorsSpace?: number;
+	/**
 	 * Please use excludeModules instead.
 	 */
 	exclude?: boolean | ModuleFilterTypes;
@@ -2640,6 +2644,10 @@ export interface StatsOptions {
 	 * Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.
 	 */
 	warningsFilter?: WarningFilterTypes;
+	/**
+	 * Space to display warnings (value is in number of lines).
+	 */
+	warningsSpace?: number;
 }
 /**
  * Options for the watcher.
