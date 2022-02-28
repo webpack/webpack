@@ -1026,14 +1026,12 @@ assets by status 84 bytes [cached] 1 asset
 ERROR in ./index.js (./loader.js!./index.js)
 Module Error (from ./loader.js):
 loader error1
-stack1
-+2 hidden lines
 
 ERROR in ./index.js (./loader.js!./index.js)
 Module Error (from ./loader.js):
 loader error2
 
-1 error has detailed information that is not shown.
+2 errors have detailed information that is not shown.
 Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
 
 webpack x.x.x compiled with 2 errors in X ms
@@ -1045,8 +1043,7 @@ ERROR in ./index.js (./loader.js!./index.js)
 Module Error (from ./loader.js):
 loader error1
 stack1
-stack2
-+1 hidden line
++2 hidden lines
 
 ERROR in ./index.js (./loader.js!./index.js)
 Module Error (from ./loader.js):
