@@ -37,15 +37,16 @@ const createSimpleCompiler = progressOptions => {
 		entry: "./a.js",
 		infrastructureLogging: {
 			debug: /Progress/
-		}
+		},
+		plugins: [
+			new webpack.ProgressPlugin({
+				activeModules: true,
+				...progressOptions
+			})
+		]
 	});
 
 	compiler.outputFileSystem = createFsFromVolume(new Volume());
-
-	new webpack.ProgressPlugin({
-		activeModules: true,
-		...progressOptions
-	}).apply(compiler);
 
 	return compiler;
 };
@@ -114,6 +115,15 @@ describe("ProgressPlugin", function () {
 		"should not contain NaN as a percentage when it is applied to MultiCompiler (parallelism: 1)",
 		nanTest(() => createMultiCompiler(undefined, { parallelism: 1 }))
 	);
+
+	it("should start print only on call run/watch", done => {
+		const compiler = createSimpleCompiler();
+
+		const logs = getLogs(stderr.toString());
+		expect(logs.join("")).toHaveLength(0);
+
+		compiler.close(done);
+	});
 
 	it("should print profile information", () => {
 		const compiler = createSimpleCompiler({
