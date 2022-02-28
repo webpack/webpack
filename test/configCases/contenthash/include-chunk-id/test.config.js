@@ -1,25 +1,15 @@
-var fs = require("fs");
-
-var findFile = function(files, regex) {
-	return files.find(function(file) {
-		if (regex.test(file)) {
-			return true;
-		}
-	});
-};
+const findOutputFiles = require("../../../helpers/findOutputFiles");
 
 const allFilenameHashes = new Set();
 const allChunkHashes = new Set();
 
 module.exports = {
 	findBundle: function(i, options) {
-		var files = fs.readdirSync(options.output.path);
-
-		const filename = findFile(files, new RegExp(`^bundle${i}`));
+		const filename = findOutputFiles(options, new RegExp(`^bundle${i}`))[0];
 		const filenameHash = /\.([a-f0-9]+)\.js$/.exec(filename)[1];
 		allFilenameHashes.add(filenameHash);
 
-		const chunk = findFile(files, new RegExp(`^chunk${i}`));
+		const chunk = findOutputFiles(options, new RegExp(`^chunk${i}`))[0];
 		const chunkHash = /\.([a-f0-9]+)\.js$/.exec(chunk)[1];
 		allChunkHashes.add(chunkHash);
 
