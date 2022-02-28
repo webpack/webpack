@@ -129,6 +129,7 @@ declare namespace webpack {
 		used: boolean;
 		provideInfo: boolean | null | undefined;
 		useInfo: boolean | null | undefined;
+		canMangle: boolean;
 	}
 
 	interface ExportsInfo {
