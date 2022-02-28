@@ -1,8 +1,3 @@
-it("import.meta.webpackContext without arguments should work", function() {
-	const contextRequire = import.meta.webpackContext("./dir");
-	expect(contextRequire("./four")).toBe(4);
-});
-
 it("should not bundle context requires with asyncMode === 'weak'", function() {
 	const contextRequire = import.meta.webpackContext(".", {
 		recursive: false,

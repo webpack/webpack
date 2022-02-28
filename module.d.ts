@@ -152,6 +152,12 @@ interface ImportMeta {
 		options?: {
 			recursive?: boolean;
 			regExp?: RegExp;
+			include?: RegExp;
+			exclude?: RegExp;
+			preload?: boolean | number;
+			prefetch?: boolean | number;
+			chunkName?: string;
+			exports?: string | string[][];
 			mode?: "sync" | "eager" | "weak" | "lazy" | "lazy-once";
 		}
 	) => webpack.Context;
