@@ -475,7 +475,7 @@ declare abstract class BasicEvaluatedExpression {
 	identifier?: string;
 	rootInfo: VariableInfoInterface;
 	getMembers: () => string[];
-	getMembersOptions: () => boolean[];
+	getMembersOptionals: () => boolean[];
 	expression: NodeEstreeIndex;
 	isUnknown(): boolean;
 	isNull(): boolean;
@@ -528,7 +528,7 @@ declare abstract class BasicEvaluatedExpression {
 		identifier?: any,
 		rootInfo?: any,
 		getMembers?: any,
-		getMembersOptions?: any
+		getMembersOptionals?: any
 	): BasicEvaluatedExpression;
 	setWrapped(
 		prefix?: any,
@@ -681,7 +681,7 @@ declare interface CallExpressionInfo {
 	getCalleeMembers: () => string[];
 	name: string;
 	getMembers: () => string[];
-	getMembersOptions: () => boolean[];
+	getMembersOptionals: () => boolean[];
 }
 declare interface CallbackAsyncQueue<T> {
 	(err?: null | WebpackError, result?: T): any;
@@ -3805,7 +3805,7 @@ declare interface ExpressionExpressionInfo {
 	rootInfo: string | VariableInfo;
 	name: string;
 	getMembers: () => string[];
-	getMembersOptions: () => boolean[];
+	getMembersOptionals: () => boolean[];
 }
 type ExternalItem =
 	| string
@@ -5391,7 +5391,7 @@ declare class JavascriptParser extends Parser {
 			| ImportExpression
 			| ChainExpression
 			| Super;
-		membersOptions: boolean[];
+		membersOptionals: boolean[];
 	};
 	getFreeInfoFromVariable(varName: string): {
 		name: string;
