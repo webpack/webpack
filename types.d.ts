@@ -10276,6 +10276,7 @@ declare abstract class RuntimeTemplate {
 	outputOptions: OutputNormalized;
 	requestShortener: RequestShortener;
 	globalObject: string;
+	contentHashReplacement: string;
 	isIIFE(): undefined | boolean;
 	isModule(): undefined | boolean;
 	supportsConst(): undefined | boolean;
@@ -11802,6 +11803,7 @@ declare interface UpdateHashContextGenerator {
 	module: NormalModule;
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
+	runtimeTemplate?: RuntimeTemplate;
 }
 type UsageStateType = 0 | 1 | 2 | 3 | 4;
 declare interface UserResolveOptions {
