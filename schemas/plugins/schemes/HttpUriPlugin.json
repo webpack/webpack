@@ -29,6 +29,10 @@
           "type": "string",
           "absolutePath": true
         },
+        "proxy": {
+          "description": "Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.",
+          "type": "string"
+        },
         "upgrade": {
           "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
           "type": "boolean"
