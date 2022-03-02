@@ -1620,6 +1620,19 @@ You may need an appropriate loader to handle this file type, currently no loader
 webpack x.x.x compiled with 2 errors in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for multicompiler-mode-cache 1`] = `
+"1 asset
+1 module
+webpack x.x.x compiled successfully in X ms
+
+1 asset
+1 module
+
+WARNING in Compiler cache with name \\"name1\\" is already defined. Please set unique \\"cache.name\\" option.
+
+webpack x.x.x compiled with 1 warning in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for named-chunk-groups 1`] = `
 "Chunk Group main 11.7 KiB = a-main.js
 Chunk Group async-a 1.07 KiB = a-52.js 257 bytes a-async-a.js 836 bytes
