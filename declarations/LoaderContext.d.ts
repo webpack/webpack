@@ -47,6 +47,7 @@ export interface NormalModuleLoaderContext<OptionsType> {
 	sourceMap?: boolean;
 	mode: "development" | "production" | "none";
 	webpack?: boolean;
+	virtualResource: string;
 	_module?: NormalModule;
 	_compilation?: Compilation;
 	_compiler?: Compiler;
