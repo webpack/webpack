@@ -474,7 +474,7 @@ declare abstract class BasicEvaluatedExpression {
 	prefix?: BasicEvaluatedExpression;
 	postfix?: BasicEvaluatedExpression;
 	wrappedInnerExpressions: any;
-	identifier?: string;
+	identifier?: string | VariableInfoInterface;
 	rootInfo: VariableInfoInterface;
 	getMembers: () => string[];
 	expression: NodeEstreeIndex;
@@ -5113,6 +5113,7 @@ declare class JavascriptParser extends Parser {
 		>;
 		optionalChaining: SyncBailHook<[ChainExpression], boolean | void>;
 		new: HookMap<SyncBailHook<[NewExpression], boolean | void>>;
+		binaryExpression: SyncBailHook<[BinaryExpression], boolean | void>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
 			SyncBailHook<[Expression, string[]], boolean | void>
@@ -5183,7 +5184,7 @@ declare class JavascriptParser extends Parser {
 	)[];
 	prevStatement: any;
 	currentTagData: any;
-	getRenameIdentifier(expr?: any): undefined | string;
+	getRenameIdentifier(expr?: any): undefined | string | VariableInfoInterface;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
 	preWalkStatements(statements?: any): void;
 	blockPreWalkStatements(statements?: any): void;
