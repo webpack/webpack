@@ -99,6 +99,81 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 	}, 120000);
 
+	it("output.clean=true should keep 1 last update", done => {
+		const outputPath = path.join(__dirname, "js", "HotModuleReplacementPlugin");
+		const entryFile = path.join(outputPath, "entry.js");
+		const recordsFile = path.join(outputPath, "records.json");
+		let step = 0;
+		let firstUpdate;
+		try {
+			fs.mkdirSync(outputPath, { recursive: true });
+		} catch (e) {
+			// empty
+		}
+		fs.writeFileSync(entryFile, `${++step}`, "utf-8");
+		const updates = new Set();
+		const hasFile = file => {
+			try {
+				fs.statSync(path.join(outputPath, file));
+				return true;
+			} catch (err) {
+				return false;
+			}
+		};
+		const compiler = webpack({
+			mode: "development",
+			cache: false,
+			entry: {
+				0: entryFile
+			},
+			recordsPath: recordsFile,
+			output: {
+				path: outputPath,
+				clean: true
+			},
+			plugins: [new webpack.HotModuleReplacementPlugin()]
+		});
+		const callback = (err, stats) => {
+			if (err) return done(err);
+			const jsonStats = stats.toJson();
+			const hash = jsonStats.hash;
+			const hmrUpdateMainFileName = `0.${hash}.hot-update.json`;
+
+			switch (step) {
+				case 1:
+					expect(updates.size).toBe(0);
+					firstUpdate = hmrUpdateMainFileName;
+					break;
+				case 2:
+					expect(updates.size).toBe(1);
+					expect(updates.has(firstUpdate)).toBe(true);
+					expect(hasFile(firstUpdate)).toBe(true);
+					break;
+				case 3:
+					expect(updates.size).toBe(2);
+					for (const file of updates) {
+						expect(hasFile(file)).toBe(true);
+					}
+					return setTimeout(() => {
+						fs.writeFileSync(entryFile, `${++step}`, "utf-8");
+						compiler.run(err => {
+							if (err) return done(err);
+							for (const file of updates) {
+								expect(hasFile(file)).toBe(false);
+							}
+							done();
+						});
+					}, 10100);
+			}
+
+			updates.add(hmrUpdateMainFileName);
+			fs.writeFileSync(entryFile, `${++step}`, "utf-8");
+			compiler.run(callback);
+		};
+
+		compiler.run(callback);
+	}, 20000);
+
 	it("should correct working when entry is Object and key is a number", done => {
 		const outputPath = path.join(__dirname, "js", "HotModuleReplacementPlugin");
 		const entryFile = path.join(outputPath, "entry.js");

@@ -204,7 +204,7 @@ declare module "@webassemblyjs/ast" {
 		raw?: string
 	): FloatLiteral;
 	export function global(globalType: string, nodes: Node[]): Global;
-	export function identifier(indentifier: string): Identifier;
+	export function identifier(identifier: string): Identifier;
 	export function funcParam(valType: string, id: Identifier): FuncParam;
 	export function instruction(inst: string, args?: Node[]): Instruction;
 	export function callInstruction(funcIndex: Index): CallInstruction;

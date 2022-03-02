@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const crypto = require("crypto");
+const createHash = require("../../../lib/util/createHash");
 
 const hashedFiles = {
 	"file.jpg": a => a.name.endsWith(".jpg"),
@@ -31,8 +31,7 @@ module.exports = {
 				const asset = statsData.assets.find(hashedFiles[name]);
 				expect(asset).not.toBe(undefined);
 				const content = fs.readFileSync(path.resolve(__dirname, "a", name));
-				const hash = crypto
-					.createHash("md4")
+				const hash = createHash("md4")
 					.update(content)
 					.digest("hex")
 					.slice(0, 20);

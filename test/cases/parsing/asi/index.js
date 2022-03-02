@@ -41,5 +41,8 @@ it("should respect asi flag", () => {
 		return callme()
 	})()
 
+	;(donotcallme)
+	require("./b.json").prop
+
 	expect(getCount()).toBe(29)
 });

@@ -18,6 +18,9 @@ module.exports = {
 			{
 				test: /\.json/,
 				loader: "file-loader",
+				options: {
+					name: "[sha256:hash:8].[ext]"
+				},
 				type: "javascript/auto"
 			}
 		]

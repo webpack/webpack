@@ -9,8 +9,6 @@
 
 [![node][node]][node-url]
 [![deps][deps]][deps-url]
-[![tests][tests]][tests-url]
-[![builds][builds]][builds-url]
 [![builds2][builds2]][builds2-url]
 [![coverage][cover]][cover-url]
 [![licenses][licenses]][licenses-url]
@@ -689,7 +687,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 - [@google](https://github.com/google) for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
 - [@medikoo](https://github.com/medikoo) for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webmake. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
-- [@substack](https://github.com/substack) for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
+- [@substack](https://github.com/substack) for [browserify](https://browserify.org/), which is a similar project and source for many ideas.
 - [@jrburke](https://github.com/jrburke) for [require.js](https://requirejs.org/), which is a similar project and source for many ideas.
 - [@defunctzombie](https://github.com/defunctzombie) for the [browser-field spec](https://github.com/defunctzombie/package-browser-field-spec), which makes modules available for node.js, browserify and webpack.
 - Every early webpack user, which contributed to webpack by writing issues or PRs. You influenced the direction...
@@ -703,12 +701,8 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 [node-url]: https://nodejs.org
 [deps]: https://img.shields.io/david/webpack/webpack.svg
 [deps-url]: https://david-dm.org/webpack/webpack
-[tests]: https://img.shields.io/travis/webpack/webpack/main.svg
-[tests-url]: https://travis-ci.org/webpack/webpack
 [prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
 [prs-url]: https://webpack.js.org/contribute/
-[builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/main
-[builds]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
 [builds2]: https://dev.azure.com/webpack/webpack/_apis/build/status/webpack.webpack
 [builds2-url]: https://dev.azure.com/webpack/webpack/_build/latest?definitionId=3
 [licenses-url]: https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_shield

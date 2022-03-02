@@ -123,5 +123,22 @@ module.exports = [
 			}
 		},
 		stats
+	},
+	{
+		name: "only-async",
+		mode: "production",
+		entry: {
+			main: "./"
+		},
+		output: {
+			filename: "only-async-[name].js"
+		},
+		optimization: {
+			splitChunks: {
+				minSize: 100,
+				maxSize: 1000
+			}
+		},
+		stats
 	}
 ];

@@ -295,6 +295,15 @@ module.exports = (env, { testPath }) => [
 	},
 	{
 		output: {
+			uniqueName: "commonjs-static-external",
+			filename: "commonjs-static-external.js",
+			libraryTarget: "commonjs-static",
+			iife: false
+		},
+		externals: ["external"]
+	},
+	{
+		output: {
 			uniqueName: "index",
 			filename: "index.js",
 			path: path.resolve(testPath, "commonjs2-split-chunks"),

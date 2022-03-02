@@ -116,7 +116,7 @@ async function compile(options) {
 				});
 			});
 		} catch (err) {
-			// capture sync throwm errors
+			// capture sync thrown errors
 			reject(err);
 		}
 	});
@@ -644,6 +644,7 @@ describe("loaders", () => {
 				`);
 	});
 
+	// cspell:ignore doesnt
 	it("should emit error for doesnt-exist-loader", async () => {
 		await expect(compile({ entry: "./doesnt-exist-loader!./entry-point.js" }))
 			.resolves.toMatchInlineSnapshot(`

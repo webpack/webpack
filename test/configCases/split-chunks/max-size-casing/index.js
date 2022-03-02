@@ -1,4 +1,4 @@
-it("should ignore case insenstive chars when generating maxSize filenames", () =>
+it("should ignore case insensitive chars when generating maxSize filenames", () =>
 	import(/* webpackChunkName: "chunk" */ "./chunk").then(
 		({ default: value }) => {
 			expect(value).toContain("a111");

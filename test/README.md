@@ -25,7 +25,7 @@ See also: [Jest CLI docs](https://jestjs.io/docs/cli)
 We use Jest for our tests. For more information on Jest you can visit their [homepage](https://jestjs.io/)!
 
 ### Class Tests
-All test files can be found in *.test.js. There are many tests that simply test API's of a specific class/file (such as `Compiler`, `Errors`, Integration, `Parser`, `RuleSet`, Validation).
+All test files can be found in *.test.js. There are many tests that simply test APIs of a specific class/file (such as `Compiler`, `Errors`, Integration, `Parser`, `RuleSet`, Validation).
 If the feature you are contributing involves one of those classes, then best to start there to understand the structure.
 
 ### xCases
@@ -69,4 +69,4 @@ If you are still nervous or don't quite understand, please submit an issue and t
 
 
 ## Footnotes
-<sup>1</sup> webpack's parser supports the use of ES2015 features like arrow functions, harmony exports, etc. However as a library we follow NodeJS's timeline for dropping older versions of node. Because of this we expect your tests on Travis to pass all the way back to NodeJS v10; Therefore if you would like specific tests that use these features to be ignored if they are not supported, then you should add a `test.filter.js` file. This allows you to import the syntax needed for that test, meanwhile ignoring it on node versions (during CI) that don't support it. webpack has a variety of helpful examples you can refer to if you are just starting out. See the `./helpers` folder to find a list of the versions.
+<sup>1</sup> webpack's parser supports the use of ES2015 features like arrow functions, harmony exports, etc. However as a library we follow Node.js' timeline for dropping older versions of node. Because of this we expect your tests on GitHub Actions to pass all the way back to NodeJS v10; Therefore if you would like specific tests that use these features to be ignored if they are not supported, then you should add a `test.filter.js` file. This allows you to import the syntax needed for that test, meanwhile ignoring it on node versions (during CI) that don't support it. webpack has a variety of helpful examples you can refer to if you are just starting out. See the `./helpers` folder to find a list of the versions.

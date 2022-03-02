@@ -55,6 +55,10 @@ function run({ default: value2, asyncDep: value3 }) {
 				level: "verbose",
 				debug: /PackFile/
 			},
+			snapshot: {
+				// TODO remove webpack 6
+				managedPaths: [/^(.+?[\\/]node_modules[\\/])/]
+			},
 			cache: {
 				type: "filesystem",
 				cacheDirectory: path.resolve(__dirname, "../../js/buildDepsCache"),
@@ -64,7 +68,7 @@ function run({ default: value2, asyncDep: value3 }) {
 						__filename,
 						path.resolve(__dirname, "../../../node_modules/.yarn-integrity")
 					].concat(esm ? ["../../fixtures/buildDependencies/esm.mjs"] : []),
-					invalid: options.invalidBuildDepdencies
+					invalid: options.invalidBuildDependencies
 						? ["should-fail-resolving"]
 						: [],
 					optionalDepsTest: [

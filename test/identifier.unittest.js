@@ -89,4 +89,34 @@ describe("util/identifier", () => {
 			});
 		}
 	});
+
+	describe("parseResourceWithoutFragment", () => {
+		// [input, expectedPath, expectedQuery]
+		/** @type {[string, string, string][]} */
+		const cases = [
+			["path#hash?query", "path#hash", "?query"],
+			["path?query#hash", "path", "?query#hash"],
+			["\0#path\0??\0#query#hash", "#path?", "?#query#hash"],
+			[
+				'./loader.js?{"items":["a\0^","b\0!","c#","d"]}',
+				"./loader.js",
+				'?{"items":["a^","b!","c#","d"]}'
+			],
+			[
+				"C:\\Users\\\0#\\repo\\loader.js?",
+				"C:\\Users\\#\\repo\\loader.js",
+				"?"
+			],
+			["/Users/\0#/repo/loader-\0#.js", "/Users/#/repo/loader-#.js", ""]
+		];
+		cases.forEach(case_ => {
+			it(case_[0], () => {
+				const { resource, path, query } =
+					identifierUtil.parseResourceWithoutFragment(case_[0]);
+				expect(case_[0]).toBe(resource);
+				expect(case_[1]).toBe(path);
+				expect(case_[2]).toBe(query);
+			});
+		});
+	});
 });
