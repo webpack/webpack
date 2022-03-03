@@ -5509,6 +5509,11 @@ declare interface JavascriptParserOptions {
 	importMeta?: boolean;
 
 	/**
+	 * Enable/disable evaluating import.meta.webpackContext.
+	 */
+	importMetaContext?: boolean;
+
+	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
 	node?: false | NodeOptions;
