@@ -13,10 +13,13 @@ describe("contextModule", () => {
 			contextModule = new ContextModule(() => {}, {
 				type: "javascript/auto",
 				request,
+				resource: "a",
 				mode: "lazy",
 				regExp: /a|b/
 			});
-			expect(contextModule.identifier()).toContain("/a%7Cb/");
+			expect(contextModule.identifier()).toEqual(
+				expect.stringContaining("/a%7Cb/")
+			);
 		});
 	});
 });
