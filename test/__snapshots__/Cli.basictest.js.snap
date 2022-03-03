@@ -1638,6 +1638,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-import-meta-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpackContext.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.importMetaContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpackContext.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-node": Object {
     "configs": Array [
       Object {
@@ -2202,6 +2215,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-import-meta-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpackContext.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.importMetaContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpackContext.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-node": Object {
     "configs": Array [
       Object {
@@ -2727,6 +2753,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-import-meta-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpackContext.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.importMetaContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpackContext.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-node": Object {
     "configs": Array [
       Object {
@@ -3194,6 +3233,19 @@ Object {
       },
     ],
     "description": "Enable/disable evaluating import.meta.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-import-meta-context": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable evaluating import.meta.webpackContext.",
+        "multiple": false,
+        "path": "module.parser.javascript.importMetaContext",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable evaluating import.meta.webpackContext.",
     "multiple": false,
     "simpleType": "boolean",
   },
