@@ -6,6 +6,8 @@ import { b1, usedB1, usedB2, usedB3, usedB4 } from "./b.js";
 import { usedE1, usedE2 } from "./e.js";
 import { h } from "./h.js";
 import * as m from "./m";
+import * as o from "./o";
+import * as p from "./p";
 
 it("namespace export as from commonjs should override named export", function () {
 	expect(x).toBe(1);
@@ -38,7 +40,10 @@ it("complex case should work correctly", () => {
 });
 
 it("should handle 'm in n' case", () => {
-	expect("a" in m).toBe(true);
+	const obj = { a: "a" in m };
+	expect(obj.a).toBe(true);
+	expect("a" in o).toBe(true);
+	expect("a" in p).toBe(false);
 	expect("c" in m).toBe(false);
 	expect("c" in (false ? ({}) : m.d)).toBe(true);
 	expect("d" in m.d).toBe(false);
