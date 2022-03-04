@@ -1073,7 +1073,7 @@ ERROR in ./index.js (./loader.js!./index.js)
 Module Error (from ./loader.js):
 loader error1
 stack1
-+2 hidden lines
++ 2 hidden lines
 
 ERROR in ./index.js (./loader.js!./index.js)
 Module Error (from ./loader.js):
