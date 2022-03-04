@@ -1624,6 +1624,10 @@
           "description": "Enable/disable evaluating import.meta.",
           "type": "boolean"
         },
+        "importMetaContext": {
+          "description": "Enable/disable evaluating import.meta.webpackContext.",
+          "type": "boolean"
+        },
         "node": {
           "$ref": "#/definitions/Node"
         },

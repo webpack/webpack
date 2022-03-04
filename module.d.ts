@@ -148,6 +148,20 @@ interface ImportMeta {
 	url: string;
 	webpack: number;
 	webpackHot: webpack.Hot;
+	webpackContext: (
+		request: string,
+		options?: {
+			recursive?: boolean;
+			regExp?: RegExp;
+			include?: RegExp;
+			exclude?: RegExp;
+			preload?: boolean | number;
+			prefetch?: boolean | number;
+			chunkName?: string;
+			exports?: string | string[][];
+			mode?: "sync" | "eager" | "weak" | "lazy" | "lazy-once";
+		}
+	) => webpack.Context;
 }
 
 declare const __resourceQuery: string;
