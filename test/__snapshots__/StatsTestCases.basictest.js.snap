@@ -738,7 +738,7 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
 
 exports[`StatsTestCases should print correct stats for context-independence 1`] = `
 "asset main-1aad2f42f93e93c4e0b4.js 12.7 KiB [emitted] [immutable] (name: main)
-  sourceMap main-1aad2f42f93e93c4e0b4.js.map 11.1 KiB [emitted] [dev] (auxiliary name: main)
+  sourceMap main-1aad2f42f93e93c4e0b4.js.map 11 KiB [emitted] [dev] (auxiliary name: main)
 asset 695-4dd37417c69a0af66bac.js 455 bytes [emitted] [immutable]
   sourceMap 695-4dd37417c69a0af66bac.js.map 342 bytes [emitted] [dev]
 runtime modules 6.6 KiB 9 modules
@@ -754,7 +754,7 @@ built modules 500 bytes [built]
 webpack x.x.x compiled successfully in X ms
 
 asset main-1aad2f42f93e93c4e0b4.js 12.7 KiB [emitted] [immutable] (name: main)
-  sourceMap main-1aad2f42f93e93c4e0b4.js.map 11.1 KiB [emitted] [dev] (auxiliary name: main)
+  sourceMap main-1aad2f42f93e93c4e0b4.js.map 11 KiB [emitted] [dev] (auxiliary name: main)
 asset 695-4dd37417c69a0af66bac.js 455 bytes [emitted] [immutable]
   sourceMap 695-4dd37417c69a0af66bac.js.map 342 bytes [emitted] [dev]
 runtime modules 6.6 KiB 9 modules
