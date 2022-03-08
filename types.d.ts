@@ -1239,6 +1239,11 @@ declare interface CodeGenerationContext {
 	 * code generation results of other modules (need to have a codeGenerationDependency to use that)
 	 */
 	codeGenerationResults: CodeGenerationResults;
+
+	/**
+	 * the compilation
+	 */
+	compilation?: Compilation;
 }
 declare interface CodeGenerationResult {
 	/**
