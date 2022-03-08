@@ -5271,7 +5271,7 @@ declare class JavascriptParser extends Parser {
 	walkUnaryExpression(expression?: any): void;
 	walkLeftRightExpression(expression?: any): void;
 	walkBinaryExpression(expression?: any): void;
-	walkLogicalExpression(expression?: any): void;
+	walkLogicalExpression(expression: LogicalExpression): void;
 	walkAssignmentExpression(expression?: any): void;
 	walkConditionalExpression(expression?: any): void;
 	walkNewExpression(expression?: any): void;
@@ -5329,6 +5329,7 @@ declare class JavascriptParser extends Parser {
 		defined: () => any,
 		...args: AsArray<T>
 	): R;
+	inGuardPosition(fn: Function, state: boolean): void;
 	inScope(params: any, fn: () => void): void;
 	inFunctionScope(hasThis?: any, params?: any, fn?: any): void;
 	inBlockScope(fn?: any): void;
@@ -10729,11 +10730,13 @@ declare interface RuntimeValueOptions {
 }
 declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
+	guards: WriteOnlyStackedSet<string>;
 	topLevelScope: boolean | "arrow";
 	inShorthand: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
 	inTry: boolean;
+	inGuardPosition: boolean;
 }
 declare interface Selector<A, B> {
 	(input: A): B;
@@ -12477,6 +12480,12 @@ declare interface WithOptions {
 }
 declare interface WriteOnlySet<T> {
 	add: (T?: any) => void;
+}
+declare abstract class WriteOnlyStackedSet<T> {
+	add(el: T): void;
+	has(el: T): boolean;
+	clear(): void;
+	createChild(): WriteOnlyStackedSet<any>;
 }
 type __TypeWebpackOptions = (data: object) =>
 	| string
