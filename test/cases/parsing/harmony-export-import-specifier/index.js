@@ -8,6 +8,9 @@ import { h } from "./h.js";
 import * as m from "./m";
 import * as o from "./o";
 import * as p from "./p";
+import * as q from "./q";
+import * as so from "./side-effect-free/o";
+import * as sm from "./side-effect-free/m";
 
 it("namespace export as from commonjs should override named export", function () {
 	expect(x).toBe(1);
@@ -40,15 +43,20 @@ it("complex case should work correctly", () => {
 });
 
 it("should handle 'm in n' case", () => {
-	const obj = { a: "a" in m };
-	expect(obj.a).toBe(true);
-	expect("a" in o).toBe(true);
-	expect("a" in p).toBe(false);
-	expect("c" in m).toBe(false);
-	expect("c" in (false ? ({}) : m.d)).toBe(true);
-	expect("d" in m.d).toBe(false);
+	const obj = { aaa: "aaa" in m };
+	expect(obj.aaa).toBe(true);
+	expect("aaa" in o).toBe(true);
+	expect("aaa" in p).toBe(false);
+	expect("ccc" in m).toBe(false);
+	expect("aaa" in q).toBe(true);
+	expect("aaa" in so).toBe(true);
+	expect("ccc" in sm).toBe(false);
+	expect("ccc" in (false ? {} : m.ddd)).toBe(true);
+	expect("ccc" in (false ? {} : sm.ddd)).toBe(true);
+	expect("ddd" in m.ddd).toBe(false);
+	expect("ddd" in sm.ddd).toBe(false);
 	if (process.env.NODE_ENV === "production") {
-		expect(m.d.usedA).toBe(false);
+		expect(m.ddd.usedA).toBe(false);
 		expect(m.usedB).toBe(false);
 		expect(m.usedA).toBe(true);
 		expect(m.canMangleA).toBe(true);

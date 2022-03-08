@@ -1,2 +1,2 @@
-const exports_ = { a: 1, b: 2 };
+const exports_ = { aaa: 1, bbb: 2 };
 module.exports = exports_;

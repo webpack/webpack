@@ -1,6 +1,6 @@
-export const a = 1;
-export const b = 2;
-export * as d from "./n";
-export const usedA = __webpack_exports_info__.a.used;
-export const canMangleA = __webpack_exports_info__.c.canMangle;
-export const usedB = __webpack_exports_info__.b.used;
+export const aaa = 1;
+export const bbb = 2;
+export * as ddd from "./n";
+export const usedA = __webpack_exports_info__.aaa.used;
+export const canMangleA = __webpack_exports_info__.ccc.canMangle;
+export const usedB = __webpack_exports_info__.bbb.used;
