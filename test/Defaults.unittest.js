@@ -214,6 +214,8 @@ describe("snapshots", () => {
 		        },
 		      },
 		      "javascript": Object {
+		        "dynamicImportPrefetch": false,
+		        "dynamicImportPreload": false,
 		        "exprContextCritical": true,
 		        "exprContextRecursive": true,
 		        "exprContextRegExp": false,

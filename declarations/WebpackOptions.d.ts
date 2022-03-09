@@ -2930,6 +2930,24 @@ export interface JavascriptParserOptions {
 	 */
 	commonjsMagicComments?: boolean;
 	/**
+	 * Specifies global mode for dynamic import.
+	 */
+	dynamicImportMode?:
+		| "sync"
+		| "eager"
+		| "weak"
+		| "async-weak"
+		| "lazy"
+		| "lazy-once";
+	/**
+	 * Specifies global prefetch for dynamic import.
+	 */
+	dynamicImportPrefetch?: boolean;
+	/**
+	 * Specifies global preload for dynamic import.
+	 */
+	dynamicImportPreload?: boolean;
+	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
 	 */
 	exportsPresence?: "error" | "warn" | "auto" | false;

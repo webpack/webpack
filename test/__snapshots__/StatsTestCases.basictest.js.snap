@@ -1176,6 +1176,17 @@ cacheable modules 142 bytes
 webpack x.x.x compiled successfully in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for import-weak-parser-option 1`] = `
+"asset entry.js 13 KiB [emitted] (name: entry)
+asset 836.js 138 bytes [emitted]
+runtime modules 7.68 KiB 10 modules
+orphan modules 37 bytes [orphan] 1 module
+cacheable modules 116 bytes
+  ./entry.js 94 bytes [built] [code generated]
+  ./modules/b.js 22 bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for import-with-invalid-options-comments 1`] = `
 "runtime modules 8.6 KiB 12 modules
 cacheable modules 559 bytes

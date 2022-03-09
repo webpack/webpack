@@ -1580,6 +1580,18 @@
           "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
           "type": "boolean"
         },
+        "dynamicImportMode": {
+          "description": "Specifies global mode for dynamic import.",
+          "enum": ["sync", "eager", "weak", "async-weak", "lazy", "lazy-once"]
+        },
+        "dynamicImportPrefetch": {
+          "description": "Specifies global prefetch for dynamic import.",
+          "type": "boolean"
+        },
+        "dynamicImportPreload": {
+          "description": "Specifies global preload for dynamic import.",
+          "type": "boolean"
+        },
         "exportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
           "enum": ["error", "warn", "auto", false]
