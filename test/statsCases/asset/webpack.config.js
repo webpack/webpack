@@ -1,5 +1,5 @@
 /** @type {import("../../../").Configuration} */
-module.exports = {
+const base = {
 	mode: "production",
 	entry: "./index.js",
 	module: {
@@ -16,6 +16,14 @@ module.exports = {
 				}
 			},
 			{
+				test: /\.css$/,
+				type: "asset/source"
+			},
+			{
+				test: /\.source\.js$/,
+				type: "asset/inline"
+			},
+			{
 				mimetype: "text/plain",
 				type: "asset"
 			}
@@ -25,3 +33,13 @@ module.exports = {
 		filename: "bundle.js"
 	}
 };
+
+module.exports = [
+	{
+		...base,
+		optimization: {
+			concatenateModules: false
+		}
+	},
+	base
+];
