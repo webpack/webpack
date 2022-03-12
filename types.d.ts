@@ -4571,7 +4571,7 @@ declare interface FileSystem {
 			| "binary"
 			| ((
 					arg0?: null | NodeJS.ErrnoException,
-					arg1?: (string | Buffer)[] | Dirent[]
+					arg1?: (string | Buffer)[] | (typeof Dirent)[]
 			  ) => void)
 			| ReaddirOptions
 			| "utf-8"
@@ -4582,7 +4582,7 @@ declare interface FileSystem {
 			| "buffer",
 		arg2?: (
 			arg0?: null | NodeJS.ErrnoException,
-			arg1?: (string | Buffer)[] | Dirent[]
+			arg1?: (string | Buffer)[] | (typeof Dirent)[]
 		) => void
 	) => void;
 	readJson?: {
@@ -6345,6 +6345,11 @@ declare interface JavascriptParserOptions {
 	exprContextRequest?: string;
 
 	/**
+	 * Enable/Disable extracting source map.
+	 */
+	extractSourceMap?: boolean;
+
+	/**
 	 * Enable/disable parsing of EcmaScript Modules syntax.
 	 */
 	harmony?: boolean;
@@ -6896,7 +6901,7 @@ declare interface LazyCompilationDefaultBackendOptions {
 	/**
 	 * Specifies where to listen to from the server.
 	 */
-	listen?: number | ListenOptions | ((server: Server) => void);
+	listen?: number | ListenOptions | ((server: typeof Server) => void);
 
 	/**
 	 * Specifies the protocol the client should use to connect to the server.
@@ -6909,7 +6914,7 @@ declare interface LazyCompilationDefaultBackendOptions {
 	server?:
 		| ServerOptionsImport<typeof IncomingMessage>
 		| ServerOptionsHttps<typeof IncomingMessage, typeof ServerResponse>
-		| (() => Server);
+		| (() => typeof Server);
 }
 
 /**
@@ -8465,6 +8470,7 @@ declare class NormalModule extends Module {
 		sourceMap?: any,
 		associatedObjectForCache?: Object
 	): Source;
+	setSourceMap(sourceMap: SourceMap, context: string): void;
 	markModuleAsErrored(error: WebpackError): void;
 	applyNoParseRule(rule?: any, content?: any): any;
 	shouldPreventParsing(noParseRule?: any, request?: any): any;

@@ -1724,6 +1724,10 @@
           "description": "Set the default request for full dynamic dependencies.",
           "type": "string"
         },
+        "extractSourceMap": {
+          "description": "Enable/Disable extracting source map.",
+          "type": "boolean"
+        },
         "harmony": {
           "description": "Enable/disable parsing of EcmaScript Modules syntax.",
           "type": "boolean"

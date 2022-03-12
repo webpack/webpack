@@ -3083,6 +3083,10 @@ export interface JavascriptParserOptions {
 	 */
 	exprContextRequest?: string;
 	/**
+	 * Enable/Disable extracting source map.
+	 */
+	extractSourceMap?: boolean;
+	/**
 	 * Enable/disable parsing of EcmaScript Modules syntax.
 	 */
 	harmony?: boolean;
