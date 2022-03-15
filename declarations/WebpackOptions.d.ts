@@ -2932,21 +2932,15 @@ export interface JavascriptParserOptions {
 	/**
 	 * Specifies global mode for dynamic import.
 	 */
-	dynamicImportMode?:
-		| "sync"
-		| "eager"
-		| "weak"
-		| "async-weak"
-		| "lazy"
-		| "lazy-once";
+	dynamicImportMode?: "eager" | "weak" | "lazy" | "lazy-once";
 	/**
 	 * Specifies global prefetch for dynamic import.
 	 */
-	dynamicImportPrefetch?: boolean;
+	dynamicImportPrefetch?: number | boolean;
 	/**
 	 * Specifies global preload for dynamic import.
 	 */
-	dynamicImportPreload?: boolean;
+	dynamicImportPreload?: number | boolean;
 	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
 	 */

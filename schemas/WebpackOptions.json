@@ -1582,15 +1582,29 @@
         },
         "dynamicImportMode": {
           "description": "Specifies global mode for dynamic import.",
-          "enum": ["sync", "eager", "weak", "async-weak", "lazy", "lazy-once"]
+          "enum": ["eager", "weak", "lazy", "lazy-once"]
         },
         "dynamicImportPrefetch": {
           "description": "Specifies global prefetch for dynamic import.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "dynamicImportPreload": {
           "description": "Specifies global preload for dynamic import.",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "exportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",

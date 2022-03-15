@@ -2481,6 +2481,13 @@ declare interface ContextHash {
 	resolved?: string;
 	symlinks?: Set<string>;
 }
+type ContextMode =
+	| "weak"
+	| "eager"
+	| "lazy"
+	| "lazy-once"
+	| "sync"
+	| "async-weak";
 declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		beforeResolve: AsyncSeriesWaterfallHook<[any]>;
@@ -2508,7 +2515,7 @@ declare abstract class ContextModuleFactory extends ModuleFactory {
 }
 
 declare interface ContextModuleOptions {
-	mode?: "weak" | "sync" | "eager" | "async-weak" | "lazy" | "lazy-once";
+	mode: ContextMode;
 	recursive: boolean;
 	regExp: RegExp;
 	namespaceObject?: boolean | "strict";
@@ -5464,23 +5471,17 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Specifies global mode for dynamic import.
 	 */
-	dynamicImportMode?:
-		| "weak"
-		| "sync"
-		| "eager"
-		| "async-weak"
-		| "lazy"
-		| "lazy-once";
+	dynamicImportMode?: "weak" | "eager" | "lazy" | "lazy-once";
 
 	/**
 	 * Specifies global prefetch for dynamic import.
 	 */
-	dynamicImportPrefetch?: boolean;
+	dynamicImportPrefetch?: number | boolean;
 
 	/**
 	 * Specifies global preload for dynamic import.
 	 */
-	dynamicImportPreload?: boolean;
+	dynamicImportPreload?: number | boolean;
 
 	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".

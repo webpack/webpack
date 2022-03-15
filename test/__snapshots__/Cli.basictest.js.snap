@@ -1511,10 +1511,8 @@ Object {
         "path": "module.parser.javascript/auto.dynamicImportMode",
         "type": "enum",
         "values": Array [
-          "sync",
           "eager",
           "weak",
-          "async-weak",
           "lazy",
           "lazy-once",
         ],
@@ -1530,15 +1528,27 @@ Object {
         "description": "Specifies global prefetch for dynamic import.",
         "multiple": false,
         "path": "module.parser.javascript/auto.dynamicImportPrefetch",
+        "type": "number",
+      },
+      Object {
+        "description": "Specifies global prefetch for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicImportPrefetch",
         "type": "boolean",
       },
     ],
     "description": "Specifies global prefetch for dynamic import.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-auto-dynamic-import-preload": Object {
     "configs": Array [
+      Object {
+        "description": "Specifies global preload for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicImportPreload",
+        "type": "number",
+      },
       Object {
         "description": "Specifies global preload for dynamic import.",
         "multiple": false,
@@ -1548,7 +1558,7 @@ Object {
     ],
     "description": "Specifies global preload for dynamic import.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-auto-exports-presence": Object {
     "configs": Array [
@@ -2135,10 +2145,8 @@ Object {
         "path": "module.parser.javascript/dynamic.dynamicImportMode",
         "type": "enum",
         "values": Array [
-          "sync",
           "eager",
           "weak",
-          "async-weak",
           "lazy",
           "lazy-once",
         ],
@@ -2154,15 +2162,27 @@ Object {
         "description": "Specifies global prefetch for dynamic import.",
         "multiple": false,
         "path": "module.parser.javascript/dynamic.dynamicImportPrefetch",
+        "type": "number",
+      },
+      Object {
+        "description": "Specifies global prefetch for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicImportPrefetch",
         "type": "boolean",
       },
     ],
     "description": "Specifies global prefetch for dynamic import.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-dynamic-import-preload": Object {
     "configs": Array [
+      Object {
+        "description": "Specifies global preload for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicImportPreload",
+        "type": "number",
+      },
       Object {
         "description": "Specifies global preload for dynamic import.",
         "multiple": false,
@@ -2172,7 +2192,7 @@ Object {
     ],
     "description": "Specifies global preload for dynamic import.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-exports-presence": Object {
     "configs": Array [
@@ -2330,10 +2350,8 @@ Object {
         "path": "module.parser.javascript.dynamicImportMode",
         "type": "enum",
         "values": Array [
-          "sync",
           "eager",
           "weak",
-          "async-weak",
           "lazy",
           "lazy-once",
         ],
@@ -2349,15 +2367,27 @@ Object {
         "description": "Specifies global prefetch for dynamic import.",
         "multiple": false,
         "path": "module.parser.javascript.dynamicImportPrefetch",
+        "type": "number",
+      },
+      Object {
+        "description": "Specifies global prefetch for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicImportPrefetch",
         "type": "boolean",
       },
     ],
     "description": "Specifies global prefetch for dynamic import.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-import-preload": Object {
     "configs": Array [
+      Object {
+        "description": "Specifies global preload for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicImportPreload",
+        "type": "number",
+      },
       Object {
         "description": "Specifies global preload for dynamic import.",
         "multiple": false,
@@ -2367,7 +2397,7 @@ Object {
     ],
     "description": "Specifies global preload for dynamic import.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-node": Object {
     "configs": Array [
@@ -2767,10 +2797,8 @@ Object {
         "path": "module.parser.javascript/esm.dynamicImportMode",
         "type": "enum",
         "values": Array [
-          "sync",
           "eager",
           "weak",
-          "async-weak",
           "lazy",
           "lazy-once",
         ],
@@ -2786,15 +2814,27 @@ Object {
         "description": "Specifies global prefetch for dynamic import.",
         "multiple": false,
         "path": "module.parser.javascript/esm.dynamicImportPrefetch",
+        "type": "number",
+      },
+      Object {
+        "description": "Specifies global prefetch for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicImportPrefetch",
         "type": "boolean",
       },
     ],
     "description": "Specifies global prefetch for dynamic import.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-esm-dynamic-import-preload": Object {
     "configs": Array [
+      Object {
+        "description": "Specifies global preload for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicImportPreload",
+        "type": "number",
+      },
       Object {
         "description": "Specifies global preload for dynamic import.",
         "multiple": false,
@@ -2804,7 +2844,7 @@ Object {
     ],
     "description": "Specifies global preload for dynamic import.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "module-parser-javascript-esm-exports-presence": Object {
     "configs": Array [
