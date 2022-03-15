@@ -5335,12 +5335,10 @@ declare class JavascriptParser extends Parser {
 	enterArrayPattern(pattern?: any, onIdent?: any): void;
 	enterRestElement(pattern?: any, onIdent?: any): void;
 	enterAssignmentPattern(pattern?: any, onIdent?: any): void;
-	evaluateExpression(
-		expression: Expression
-	): undefined | BasicEvaluatedExpression;
+	evaluateExpression(expression: Expression): BasicEvaluatedExpression;
 	parseString(expression?: any): any;
 	parseCalculatedString(expression?: any): any;
-	evaluate(source?: any): undefined | BasicEvaluatedExpression;
+	evaluate(source: string): BasicEvaluatedExpression;
 	isPure(
 		expr:
 			| undefined
@@ -7486,11 +7484,11 @@ type NodeEstreeIndex =
 	| PropertyDefinition
 	| VariableDeclarator
 	| Program
-	| Super
 	| SwitchCase
 	| CatchClause
 	| Property
 	| AssignmentProperty
+	| Super
 	| TemplateElement
 	| SpreadElement
 	| ObjectPattern
