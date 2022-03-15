@@ -4,7 +4,7 @@
 */
 /*globals __resourceQuery */
 if (module.hot) {
-	var hotPollInterval = +__resourceQuery.substr(1) || 10 * 60 * 1000;
+	var hotPollInterval = +__resourceQuery.slice(1) || 10 * 60 * 1000;
 	var log = require("./log");
 
 	var checkForUpdate = function checkForUpdate(fromUpdate) {

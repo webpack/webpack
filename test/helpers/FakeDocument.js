@@ -104,9 +104,9 @@ class FakeElement {
 		if (/^\//.test(value)) {
 			return `https://test.cases${value}`;
 		} else if (/^\.\.\//.test(value)) {
-			return `https://test.cases${value.substr(2)}`;
+			return `https://test.cases${value.slice(2)}`;
 		} else if (/^\.\//.test(value)) {
-			return `https://test.cases/path${value.substr(1)}`;
+			return `https://test.cases/path${value.slice(1)}`;
 		} else if (/^\w+:\/\//.test(value)) {
 			return value;
 		} else if (/^\/\//.test(value)) {
