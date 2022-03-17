@@ -814,6 +814,8 @@ declare class ChunkGraph {
 		module: Module,
 		sourceTypes: Set<string>
 	): void;
+	getChunkModuleSourceTypes(chunk: Chunk, module: Module): Set<string>;
+	getModuleSourceTypes(module: Module): Set<string>;
 	getOrderedChunkModulesIterable(
 		chunk: Chunk,
 		comparator: (arg0: Module, arg1: Module) => 0 | 1 | -1
@@ -1249,6 +1251,11 @@ declare interface CodeGenerationContext {
 	 * the compilation
 	 */
 	compilation?: Compilation;
+
+	/**
+	 * source types
+	 */
+	sourceTypes?: Omit<Set<string>, "delete" | "add">;
 }
 declare interface CodeGenerationResult {
 	/**

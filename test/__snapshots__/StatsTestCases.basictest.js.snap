@@ -179,7 +179,7 @@ webpack x.x.x compiled successfully in X ms"
 
 exports[`StatsTestCases should print correct stats for asset-concat 1`] = `
 "asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-asset bundle.js 12.5 KiB [emitted] (name: main)
+asset bundle.js 11.7 KiB [emitted] (name: main)
 asset static/file.html 12 bytes [emitted] [from: static/file.html] (auxiliary name: main)
 orphan modules 9.05 KiB [orphan] 7 modules
 runtime modules 1.06 KiB 2 modules
