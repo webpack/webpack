@@ -4884,6 +4884,12 @@ declare class JavascriptParser extends Parser {
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
+		evaluateCallExpression: HookMap<
+			SyncBailHook<
+				[CallExpression],
+				undefined | null | BasicEvaluatedExpression
+			>
+		>;
 		evaluateCallExpressionMember: HookMap<
 			SyncBailHook<
 				[CallExpression, undefined | BasicEvaluatedExpression],
@@ -5392,6 +5398,7 @@ declare class JavascriptParser extends Parser {
 	isVariableDefined(name?: any): boolean;
 	getVariableInfo(name: string): ExportedVariableInfo;
 	setVariable(name: string, variableInfo: ExportedVariableInfo): void;
+	evaluatedVariable(tagInfo?: any): VariableInfo;
 	parseCommentOptions(
 		range?: any
 	): { options: null; errors: null } | { options: object; errors: unknown[] };
