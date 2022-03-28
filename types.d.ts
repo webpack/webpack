@@ -4885,6 +4885,9 @@ declare class JavascriptParser extends Parser {
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
+		evaluateNewExpression: HookMap<
+			SyncBailHook<[NewExpression], undefined | null | BasicEvaluatedExpression>
+		>;
 		evaluateCallExpression: HookMap<
 			SyncBailHook<
 				[CallExpression],
