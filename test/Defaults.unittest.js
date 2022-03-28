@@ -214,6 +214,7 @@ describe("snapshots", () => {
 		        },
 		      },
 		      "javascript": Object {
+		        "createRequire": false,
 		        "exprContextCritical": true,
 		        "exprContextRecursive": true,
 		        "exprContextRegExp": false,
@@ -1266,6 +1267,9 @@ describe("snapshots", () => {
 		-     "target": "web",
 		+     "target": "node",
 		@@ ... @@
+		-         "createRequire": false,
+		+         "createRequire": true,
+		@@ ... @@
 		-     "__dirname": "mock",
 		-     "__filename": "mock",
 		-     "global": true,
@@ -1407,6 +1411,9 @@ describe("snapshots", () => {
 		-     "target": "web",
 		+     "target": "electron-main",
 		@@ ... @@
+		-         "createRequire": false,
+		+         "createRequire": true,
+		@@ ... @@
 		-     "__dirname": "mock",
 		-     "__filename": "mock",
 		-     "global": true,
@@ -1529,6 +1536,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "electron-preload",
+		@@ ... @@
+		-         "createRequire": false,
+		+         "createRequire": true,
 		@@ ... @@
 		-     "__dirname": "mock",
 		-     "__filename": "mock",

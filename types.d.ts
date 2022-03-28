@@ -5480,6 +5480,11 @@ declare interface JavascriptParserOptions {
 	commonjsMagicComments?: boolean;
 
 	/**
+	 * Enable/disable parsing "import { createRequire } from "module"" and evaluating createRequire().
+	 */
+	createRequire?: string | boolean;
+
+	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
 	 */
 	exportsPresence?: false | "auto" | "error" | "warn";

@@ -2930,6 +2930,10 @@ export interface JavascriptParserOptions {
 	 */
 	commonjsMagicComments?: boolean;
 	/**
+	 * Enable/disable parsing "import { createRequire } from "module"" and evaluating createRequire().
+	 */
+	createRequire?: boolean | string;
+	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
 	 */
 	exportsPresence?: "error" | "warn" | "auto" | false;

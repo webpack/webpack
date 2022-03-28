@@ -1580,6 +1580,17 @@
           "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
           "type": "boolean"
         },
+        "createRequire": {
+          "description": "Enable/disable parsing \"import { createRequire } from \"module\"\" and evaluating createRequire().",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
         "exportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
           "enum": ["error", "warn", "auto", false]
