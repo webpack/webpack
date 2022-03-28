@@ -2462,7 +2462,7 @@ declare interface ContainerReferencePluginOptions {
 	shareScope?: string;
 }
 declare abstract class ContextElementDependency extends ModuleDependency {
-	referencedExports: any;
+	referencedExports?: string[][];
 }
 declare class ContextExclusionPlugin {
 	constructor(negativeMatcher: RegExp);
@@ -2645,6 +2645,7 @@ declare class Dependency {
 		endLine?: any,
 		endColumn?: any
 	): void;
+	getContext(): undefined | string;
 	getResourceIdentifier(): null | string;
 	couldAffectReferencingModule(): boolean | typeof TRANSITIVE;
 
