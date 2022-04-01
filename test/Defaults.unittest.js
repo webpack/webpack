@@ -323,6 +323,7 @@ describe("snapshots", () => {
 		    ],
 		    "environment": Object {
 		      "arrowFunction": true,
+		      "asyncFunction": true,
 		      "bigIntLiteral": undefined,
 		      "const": true,
 		      "destructuring": true,
@@ -1972,6 +1973,7 @@ describe("snapshots", () => {
 			+     "devtoolNamespace": "browserslist-test",
 			@@ ... @@
 			-       "arrowFunction": true,
+			-       "asyncFunction": true,
 			-       "bigIntLiteral": undefined,
 			-       "const": true,
 			-       "destructuring": true,
@@ -1979,6 +1981,7 @@ describe("snapshots", () => {
 			-       "forOf": true,
 			-       "module": undefined,
 			+       "arrowFunction": false,
+			+       "asyncFunction": false,
 			+       "bigIntLiteral": false,
 			+       "const": false,
 			+       "destructuring": false,

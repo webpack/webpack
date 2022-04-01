@@ -5551,6 +5551,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-async-function": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports async functions ('async () => { ... }').",
+        "multiple": false,
+        "path": "output.environment.asyncFunction",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports async functions ('async () => { ... }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-big-int-literal": Object {
     "configs": Array [
       Object {

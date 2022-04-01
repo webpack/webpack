@@ -3347,6 +3347,11 @@ declare interface Environment {
 	arrowFunction?: boolean;
 
 	/**
+	 * The environment supports async functions ('async () => { ... }').
+	 */
+	asyncFunction?: boolean;
+
+	/**
 	 * The environment supports BigInt as literal (123n).
 	 */
 	bigIntLiteral?: boolean;
@@ -5724,6 +5729,7 @@ declare interface KnownBuildMeta {
 	defaultObject?: false | "redirect" | "redirect-warn";
 	strictHarmonyModule?: boolean;
 	async?: boolean;
+	asyncReason?: string;
 	sideEffectFree?: boolean;
 }
 declare interface KnownCreateStatsOptionsContext {
@@ -10301,6 +10307,7 @@ declare abstract class RuntimeTemplate {
 	isModule(): undefined | boolean;
 	supportsConst(): undefined | boolean;
 	supportsArrowFunction(): undefined | boolean;
+	supportsAsyncFunction(): undefined | boolean;
 	supportsOptionalChaining(): undefined | boolean;
 	supportsForOf(): undefined | boolean;
 	supportsDestructuring(): undefined | boolean;
