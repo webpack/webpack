@@ -474,7 +474,7 @@ declare abstract class BasicEvaluatedExpression {
 	prefix?: BasicEvaluatedExpression;
 	postfix?: BasicEvaluatedExpression;
 	wrappedInnerExpressions: any;
-	identifier?: string;
+	identifier?: string | VariableInfoInterface;
 	rootInfo: VariableInfoInterface;
 	getMembers: () => string[];
 	getMembersOptionals: () => boolean[];
@@ -2462,7 +2462,7 @@ declare interface ContainerReferencePluginOptions {
 	shareScope?: string;
 }
 declare abstract class ContextElementDependency extends ModuleDependency {
-	referencedExports: any;
+	referencedExports?: string[][];
 }
 declare class ContextExclusionPlugin {
 	constructor(negativeMatcher: RegExp);
@@ -2645,6 +2645,7 @@ declare class Dependency {
 		endLine?: any,
 		endColumn?: any
 	): void;
+	getContext(): undefined | string;
 	getResourceIdentifier(): null | string;
 	couldAffectReferencingModule(): boolean | typeof TRANSITIVE;
 
@@ -5122,6 +5123,7 @@ declare class JavascriptParser extends Parser {
 		>;
 		optionalChaining: SyncBailHook<[ChainExpression], boolean | void>;
 		new: HookMap<SyncBailHook<[NewExpression], boolean | void>>;
+		binaryExpression: SyncBailHook<[BinaryExpression], boolean | void>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
 			SyncBailHook<[Expression, string[], boolean[]], boolean | void>
@@ -5192,7 +5194,7 @@ declare class JavascriptParser extends Parser {
 	)[];
 	prevStatement: any;
 	currentTagData: any;
-	getRenameIdentifier(expr?: any): undefined | string;
+	getRenameIdentifier(expr?: any): undefined | string | VariableInfoInterface;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
 	preWalkStatements(statements?: any): void;
 	blockPreWalkStatements(statements?: any): void;

@@ -619,7 +619,12 @@ const describeCases = config => {
 													const fn = runInNewContext
 														? vm.runInNewContext(code, globalContext, p)
 														: vm.runInThisContext(code, p);
-													fn.call(m.exports, ...argValues);
+													fn.call(
+														testConfig.nonEsmThis
+															? testConfig.nonEsmThis(module)
+															: m.exports,
+														...argValues
+													);
 													document.currentScript = oldCurrentScript;
 													return m.exports;
 												}
