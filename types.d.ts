@@ -431,6 +431,11 @@ declare interface BannerPluginOptions {
 	exclude?: string | RegExp | Rule[];
 
 	/**
+	 * If true, banner will be placed at the end of the output.
+	 */
+	footer?: boolean;
+
+	/**
 	 * Include all modules matching any of these conditions.
 	 */
 	include?: string | RegExp | Rule[];
