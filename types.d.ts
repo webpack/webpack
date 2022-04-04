@@ -1255,7 +1255,7 @@ declare interface CodeGenerationContext {
 	/**
 	 * source types
 	 */
-	sourceTypes?: Omit<Set<string>, "delete" | "add">;
+	sourceTypes?: ReadonlySet<string>;
 }
 declare interface CodeGenerationResult {
 	/**
