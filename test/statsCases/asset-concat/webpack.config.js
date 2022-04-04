@@ -29,9 +29,6 @@ module.exports = {
 			}
 		]
 	},
-	optimization: {
-		concatenateModules: false
-	},
 	output: {
 		filename: "bundle.js"
 	}
