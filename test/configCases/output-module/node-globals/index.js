@@ -1,11 +1,10 @@
-import { dir, file } from './cjs/file.js'
+import { dir, dir2, file } from './cjs/file.js'
 
 it("should generate correct __dirname", () => {
-	const match = dir.match(/[\\/][^\\/]+[\\/]$/);
-	expect(match && match[0]).toMatch(/[\\/]node-globals[\\/]/);
+	expect(dir).toMatch(/[\\/]node-globals$/);
+	expect(dir2).toMatch(/[\\/]node-globals\/$/);
 });
 
 it("should generate correct __filename", () => {
-	const match = file.match(/[\\/][^\\/]+$/);
-	expect(match && match[0]).toMatch(/[\\/]main.mjs$/);
+	expect(file).toMatch(/[\\/]main.mjs$/);
 });
