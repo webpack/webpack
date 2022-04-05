@@ -17,7 +17,7 @@ it("should parse fancy function calls with arrow functions", function() {
 
 it("should parse fancy AMD calls with arrow functions", function() {
 	require("./constructor ./a".split(" "));
-	require("-> module module exports *constructor *a".replace("module", "require").substr(3).replace(/\*/g, "./").split(" "), (require, module, exports, constructor, a) => {
+	require("-> module module exports *constructor *a".replace("module", "require").slice(3).replace(/\*/g, "./").split(" "), (require, module, exports, constructor, a) => {
 		expect((typeof require)).toBe("function");
 		expect((typeof module)).toBe("object");
 		expect((typeof exports)).toBe("object");
@@ -25,7 +25,7 @@ it("should parse fancy AMD calls with arrow functions", function() {
 		expect((typeof constructor)).toBe("function");
 		expect(a).toBe("a");
 	});
-	define("-> module module exports *constructor *a".replace("module", "require").substr(3).replace(/\*/g, "./").split(" "), (require, module, exports, constructor, a) => {
+	define("-> module module exports *constructor *a".replace("module", "require").slice(3).replace(/\*/g, "./").split(" "), (require, module, exports, constructor, a) => {
 		expect((typeof require)).toBe("function");
 		expect((typeof module)).toBe("object");
 		expect((typeof exports)).toBe("object");

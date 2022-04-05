@@ -70,7 +70,7 @@
       ]
     },
     "AssetGeneratorDataUrlFunction": {
-      "description": "Function that executes for module and should return an DataUrl string.",
+      "description": "Function that executes for module and should return an DataUrl string. It can have a string as 'ident' property which contributes to the module hash.",
       "instanceof": "Function",
       "tsType": "((source: string | Buffer, context: { filename: string, module: import('../lib/Module') }) => string)"
     },
@@ -108,6 +108,9 @@
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
         },
+        "outputPath": {
+          "$ref": "#/definitions/AssetModuleOutputPath"
+        },
         "publicPath": {
           "$ref": "#/definitions/RawPublicPath"
         }
@@ -125,6 +128,19 @@
     },
     "AssetModuleFilename": {
       "description": "The filename of asset modules as relative path inside the 'output.path' directory.",
+      "anyOf": [
+        {
+          "type": "string",
+          "absolutePath": false
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+        }
+      ]
+    },
+    "AssetModuleOutputPath": {
+      "description": "Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
       "anyOf": [
         {
           "type": "string",
@@ -181,6 +197,9 @@
         },
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
+        },
+        "outputPath": {
+          "$ref": "#/definitions/AssetModuleOutputPath"
         },
         "publicPath": {
           "$ref": "#/definitions/RawPublicPath"
@@ -335,6 +354,45 @@
       "description": "This option enables cross-origin loading of chunks.",
       "enum": [false, "anonymous", "use-credentials"]
     },
+    "CssChunkFilename": {
+      "description": "Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/FilenameTemplate"
+        }
+      ]
+    },
+    "CssExperimentOptions": {
+      "description": "Options for css handling.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsOnly": {
+          "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+          "type": "boolean"
+        }
+      }
+    },
+    "CssFilename": {
+      "description": "Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/FilenameTemplate"
+        }
+      ]
+    },
+    "CssGeneratorOptions": {
+      "description": "Generator options for css modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "CssParserOptions": {
+      "description": "Parser options for css modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
       "type": "array",
@@ -438,6 +496,10 @@
           "description": "Enable/disable creating async chunks that are loaded on demand.",
           "type": "boolean"
         },
+        "baseUri": {
+          "description": "Base uri for this entry.",
+          "type": "string"
+        },
         "chunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
@@ -494,6 +556,10 @@
         "asyncChunks": {
           "description": "Enable/disable creating async chunks that are loaded on demand.",
           "type": "boolean"
+        },
+        "baseUri": {
+          "description": "Base uri for this entry.",
+          "type": "string"
         },
         "chunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
@@ -720,6 +786,17 @@
           "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
           "type": "boolean"
         },
+        "css": {
+          "description": "Enable css support.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/CssExperimentOptions"
+            }
+          ]
+        },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
           "type": "boolean"
@@ -817,6 +894,14 @@
         "cacheUnaffected": {
           "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
           "type": "boolean"
+        },
+        "css": {
+          "description": "Enable css support.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/CssExperimentOptions"
+            }
+          ]
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
@@ -1010,6 +1095,7 @@
         "commonjs",
         "commonjs2",
         "commonjs-module",
+        "commonjs-static",
         "amd",
         "amd-require",
         "umd",
@@ -1339,6 +1425,10 @@
           "type": "string",
           "absolutePath": true
         },
+        "proxy": {
+          "description": "Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.",
+          "type": "string"
+        },
         "upgrade": {
           "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
           "type": "boolean"
@@ -1529,6 +1619,14 @@
         "importExportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\".",
           "enum": ["error", "warn", "auto", false]
+        },
+        "importMeta": {
+          "description": "Enable/disable evaluating import.meta.",
+          "type": "boolean"
+        },
+        "importMetaContext": {
+          "description": "Enable/disable evaluating import.meta.webpackContext.",
+          "type": "boolean"
         },
         "node": {
           "$ref": "#/definitions/Node"
@@ -1879,7 +1977,7 @@
       "required": ["type"]
     },
     "LibraryType": {
-      "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+      "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
       "anyOf": [
         {
           "enum": [
@@ -1894,6 +1992,7 @@
             "commonjs",
             "commonjs2",
             "commonjs-module",
+            "commonjs-static",
             "amd",
             "amd-require",
             "umd",
@@ -2948,6 +3047,12 @@
         "crossOriginLoading": {
           "$ref": "#/definitions/CrossOriginLoading"
         },
+        "cssChunkFilename": {
+          "$ref": "#/definitions/CssChunkFilename"
+        },
+        "cssFilename": {
+          "$ref": "#/definitions/CssFilename"
+        },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
         },
@@ -3140,6 +3245,12 @@
         },
         "crossOriginLoading": {
           "$ref": "#/definitions/CrossOriginLoading"
+        },
+        "cssChunkFilename": {
+          "$ref": "#/definitions/CssChunkFilename"
+        },
+        "cssFilename": {
+          "$ref": "#/definitions/CssFilename"
         },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"

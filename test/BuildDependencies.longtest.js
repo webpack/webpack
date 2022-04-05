@@ -133,10 +133,10 @@ describe("BuildDependencies", () => {
 		);
 		fs.writeFileSync(
 			path.resolve(inputDirectory, "esm-async-dependency.mjs"),
-			"export default 0;"
+			'import path from "node:path"; import vm from "vm"; export default 0;'
 		);
 		await exec("0", {
-			invalidBuildDepdencies: true,
+			invalidBuildDependencies: true,
 			buildTwice: true,
 			warnings: [/Can't resolve 'should-fail-resolving'/]
 		});

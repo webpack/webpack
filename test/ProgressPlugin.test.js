@@ -37,15 +37,16 @@ const createSimpleCompiler = progressOptions => {
 		entry: "./a.js",
 		infrastructureLogging: {
 			debug: /Progress/
-		}
+		},
+		plugins: [
+			new webpack.ProgressPlugin({
+				activeModules: true,
+				...progressOptions
+			})
+		]
 	});
 
 	compiler.outputFileSystem = createFsFromVolume(new Volume());
-
-	new webpack.ProgressPlugin({
-		activeModules: true,
-		...progressOptions
-	}).apply(compiler);
 
 	return compiler;
 };
@@ -111,9 +112,18 @@ describe("ProgressPlugin", function () {
 		nanTest(createMultiCompiler)
 	);
 	it(
-		"should not contain NaN as a percentage when it is applied to MultiCompiler (paralellism: 1)",
+		"should not contain NaN as a percentage when it is applied to MultiCompiler (parallelism: 1)",
 		nanTest(() => createMultiCompiler(undefined, { parallelism: 1 }))
 	);
+
+	it("should start print only on call run/watch", done => {
+		const compiler = createSimpleCompiler();
+
+		const logs = getLogs(stderr.toString());
+		expect(logs.join("")).toHaveLength(0);
+
+		compiler.close(done);
+	});
 
 	it("should print profile information", () => {
 		const compiler = createSimpleCompiler({
@@ -190,6 +200,7 @@ describe("ProgressPlugin", function () {
 
 			expect(logs.length).toBeGreaterThan(20);
 			logs.forEach(log => expect(log.length).toBeLessThanOrEqual(35));
+			// cspell:ignore mization nsPlugin
 			expect(logs).toContain(
 				"75% sealing ...mization ...nsPlugin",
 				"trims each detail string equally"

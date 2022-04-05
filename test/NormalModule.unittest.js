@@ -91,6 +91,7 @@ describe("NormalModule", () => {
 		});
 		describe("given a userRequest containing query parameters", () => {
 			it("ignores paths in query parameters", () => {
+				// cspell:word testpath
 				userRequest =
 					"F:\\some\\context\\loader?query=foo\\bar&otherPath=testpath/other";
 				normalModule = new NormalModule({
@@ -284,7 +285,7 @@ describe("NormalModule", () => {
 				});
 			});
 			describe("that is an array", () => {
-				describe("of strings and or regexs", () => {
+				describe("of strings and or regexps", () => {
 					let someRules;
 					beforeEach(() => {
 						someRules = ["some rule", /some rule1/, "some rule2"];

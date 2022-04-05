@@ -1,0 +1,25 @@
+:export {
+	a: a;
+}
+
+:export {
+	abc: a b c;
+	comments: abc/****/   /* hello world *//****/   def
+}
+
+:export
+
+
+{
+
+
+	white space
+
+	:
+
+	abc
+	def
+
+}
+
+:export{default:default}

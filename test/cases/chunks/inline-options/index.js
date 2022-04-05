@@ -60,7 +60,7 @@ it("should be able to combine chunks by name", function () {
 			case "d":
 				return import(/* webpackChunkName: "name-3" */ "./dir7/d");
 			default:
-				throw new Error("Unexcepted test data");
+				throw new Error("Unexpected test data");
 		}
 	}
 	return testChunkLoading(load, false, true);
@@ -86,7 +86,7 @@ it("should be able to use weak mode (without context)", function () {
 			case "c":
 				return import(/* webpackMode: "weak" */ "./dir9/c");
 			default:
-				throw new Error("Unexcepted test data");
+				throw new Error("Unexpected test data");
 		}
 	}
 	require("./dir9/a"); // chunks served manually by the user

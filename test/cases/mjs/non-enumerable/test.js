@@ -1,7 +1,7 @@
-import * as m1 from "./analysable-module.js";
+import * as m1 from "./analyzable-module.js";
 import * as m2 from "./weird-module.js";
 import * as m3 from "./esModule.js";
-import d1 from "./analysable-module.js";
+import d1 from "./analyzable-module.js";
 import d2 from "./weird-module.js";
 import d3 from "./esModule.js";
 
@@ -22,7 +22,7 @@ it("should include non-enumerable properties (non-mjs)", () => {
 });
 
 it("should include non-enumerable properties (non-mjs, promise)", () =>
-	import("./analysable-module").then(m1 => {
+	import("./analyzable-module").then(m1 => {
 		const ns = m1;
 
 		expect(m1.prop).toBe(true);
@@ -108,7 +108,7 @@ it("should include non-enumerable properties with __esModule (non-mjs)", () => {
 });
 
 it("should include non-enumerable properties with __esModule (non-mjs, promise)", () =>
-	import("./analysable-module").then(m3 => {
+	import("./analyzable-module").then(m3 => {
 		const ns = m3;
 
 		expect(m3.prop).toBe(true);

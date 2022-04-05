@@ -1,5 +1,6 @@
 "use strict";
 
+// cspell:ignore fghsub notry fghsub notry notry this's ijksub this's ijksub fghsub fghsub notry ijksub ijksub strrring strrring strr strrring strrring strr Sstrrringy strone stronetwo stronetwothree stronetwo stronetwothree stronetwothreefour onetwo onetwo twothree twothree twothree threefour onetwo onetwo threefour threefour fourfive startstrmid igmy igmyi igmya
 const BasicEvaluatedExpression = require("../lib/javascript/BasicEvaluatedExpression");
 const JavascriptParser = require("../lib/javascript/JavascriptParser");
 
@@ -255,7 +256,7 @@ describe("JavascriptParser", () => {
 	Object.keys(testCases).forEach(name => {
 		it("should parse " + name, () => {
 			let source = testCases[name][0].toString();
-			source = source.substr(13, source.length - 14).trim();
+			source = source.slice(13, -1).trim();
 			const state = testCases[name][1];
 
 			const testParser = new JavascriptParser({});
@@ -540,12 +541,12 @@ describe("JavascriptParser", () => {
 			"`start${'str'}mid${obj2}end`":
 				// eslint-disable-next-line no-template-curly-in-string
 				"template=[start${'str'}mid string=startstrmid],[end string=end]",
-			"'abc'.substr(1)": "string=bc",
-			"'abcdef'.substr(2, 3)": "string=cde",
+			"'abc'.slice(1)": "string=bc",
+			"'abcdef'.slice(2, 5)": "string=cde",
 			"'abcdef'.substring(2, 3)": "string=c",
 			"'abcdef'.substring(2, 3, 4)": "",
-			"'abc'[\"substr\"](1)": "string=bc",
-			"'abc'[substr](1)": "",
+			"'abc'[\"slice\"](1)": "string=bc",
+			"'abc'[slice](1)": "",
 			"'1,2+3'.split(/[,+]/)": "array=[1],[2],[3]",
 			"'1,2+3'.split(expr)": "",
 			"'a' + (expr + 'c')": "wrapped=['a' string=a]+['c' string=c]",
@@ -595,7 +596,7 @@ describe("JavascriptParser", () => {
 						const start = evalExpr.range[0] - 5;
 						const end = evalExpr.range[1] - 5;
 						return (
-							key.substr(start, end - start) +
+							key.slice(start, end) +
 							(result.length > 0 ? " " + result.join(" ") : "")
 						);
 					}
