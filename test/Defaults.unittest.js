@@ -300,7 +300,7 @@ describe("snapshots", () => {
 		    "assetModuleFilename": "[hash][ext][query]",
 		    "asyncChunks": true,
 		    "charset": true,
-		    "chunkFilename": "[name].js",
+		    "chunkFilename": "[root][name].js",
 		    "chunkFormat": "array-push",
 		    "chunkLoadTimeout": 120000,
 		    "chunkLoading": "jsonp",
@@ -308,8 +308,8 @@ describe("snapshots", () => {
 		    "clean": undefined,
 		    "compareBeforeEmit": true,
 		    "crossOriginLoading": false,
-		    "cssChunkFilename": "[name].css",
-		    "cssFilename": "[name].css",
+		    "cssChunkFilename": "[root][name].css",
+		    "cssFilename": "[root][name].css",
 		    "devtoolFallbackModuleFilenameTemplate": undefined,
 		    "devtoolModuleFilenameTemplate": undefined,
 		    "devtoolNamespace": "webpack",
@@ -330,7 +330,7 @@ describe("snapshots", () => {
 		      "forOf": true,
 		      "module": undefined,
 		    },
-		    "filename": "[name].js",
+		    "filename": "[root][name].js",
 		    "globalObject": "self",
 		    "hashDigest": "hex",
 		    "hashDigestLength": 20,
@@ -879,8 +879,8 @@ describe("snapshots", () => {
 		-   "externalsType": "var",
 		+   "externalsType": "module",
 		@@ ... @@
-		-     "chunkFilename": "[name].js",
-		+     "chunkFilename": "[name].mjs",
+		-     "chunkFilename": "[root][name].js",
+		+     "chunkFilename": "[root][name].mjs",
 		@@ ... @@
 		-       "dynamicImport": undefined,
 		+       "dynamicImport": true,
@@ -888,8 +888,8 @@ describe("snapshots", () => {
 		-       "module": undefined,
 		+       "module": true,
 		@@ ... @@
-		-     "filename": "[name].js",
-		+     "filename": "[name].mjs",
+		-     "filename": "[root][name].js",
+		+     "filename": "[root][name].mjs",
 		@@ ... @@
 		-     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 		+     "hotUpdateChunkFilename": "[id].[fullhash].hot-update.mjs",
@@ -994,15 +994,15 @@ describe("snapshots", () => {
 		+ Received
 
 		@@ ... @@
-		-     "chunkFilename": "[name].js",
+		-     "chunkFilename": "[root][name].js",
 		+     "chunkFilename": "[id].bundle.js",
 		@@ ... @@
-		-     "cssChunkFilename": "[name].css",
-		-     "cssFilename": "[name].css",
+		-     "cssChunkFilename": "[root][name].css",
+		-     "cssFilename": "[root][name].css",
 		+     "cssChunkFilename": "[id].bundle.css",
 		+     "cssFilename": "bundle.css",
 		@@ ... @@
-		-     "filename": "[name].js",
+		-     "filename": "[root][name].js",
 		+     "filename": "bundle.js",
 	`)
 	);
@@ -1012,15 +1012,15 @@ describe("snapshots", () => {
 		+ Received
 
 		@@ ... @@
-		-     "chunkFilename": "[name].js",
+		-     "chunkFilename": "[root][name].js",
 		+     "chunkFilename": "[id].js",
 		@@ ... @@
-		-     "cssChunkFilename": "[name].css",
-		-     "cssFilename": "[name].css",
+		-     "cssChunkFilename": "[root][name].css",
+		-     "cssFilename": "[root][name].css",
 		+     "cssChunkFilename": "[id].css",
 		+     "cssFilename": "[id].css",
 		@@ ... @@
-		-     "filename": "[name].js",
+		-     "filename": "[root][name].js",
 		+     "filename": [Function filename],
 	`)
 	);
