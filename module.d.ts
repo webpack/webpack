@@ -94,11 +94,11 @@ declare namespace webpack {
     ignoreUnaccepted?: boolean;
     ignoreDeclined?: boolean;
     ignoreErrored?: boolean;
-    onDeclined?: (info: DeclinedEvent) => void;
-    onUnaccepted?: (info: UnacceptedEvent) => void;
-    onAccepted?: (info: AcceptedEvent) => void;
-    onDisposed?: (info: DisposedEvent) => void;
-    onErrored?: (info: ErroredEvent) => void;
+    onDeclined?: (event: DeclinedEvent) => void;
+    onUnaccepted?: (event: UnacceptedEvent) => void;
+    onAccepted?: (event: AcceptedEvent) => void;
+    onDisposed?: (event: DisposedEvent) => void;
+    onErrored?: (event: ErroredEvent) => void;
   }
 
   const enum HotUpdateStatus {
