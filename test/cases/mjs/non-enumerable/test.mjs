@@ -61,6 +61,7 @@ it("should not include prototype properties and symbols (mjs)", () => {
 	expect(ns.default).toBeTypeOf("object");
 
 	expect(m2.__esModule).toBe(true);
+	expect(() => m2.__esModule.a).toThrow();
 	expect(ns.__esModule).toBe(true);
 });
 
