@@ -69,3 +69,16 @@
 	color: var(--global-color);
 	--global-color: red;
 }
+
+@media (min-width: 1600px) {
+	.wideScreenClass {
+		color: var(--local-color);
+		--local-color: green;
+	}
+}
+
+@supports (display: grid) {
+	.displayGridInSupports {
+		display: grid;
+	}
+}

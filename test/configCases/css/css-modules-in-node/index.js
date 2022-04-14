@@ -20,7 +20,13 @@ it("should allow to create css modules", done => {
 				animation: prod ? "my-app-491-oQ" : "./style.module.css-animation",
 				vars: prod
 					? "--my-app-491-y4 my-app-491-gR undefined my-app-491-xk"
-					: "--./style.module.css-local-color ./style.module.css-vars undefined ./style.module.css-globalVars"
+					: "--./style.module.css-local-color ./style.module.css-vars undefined ./style.module.css-globalVars",
+				media: prod
+					? "my-app-491-w7"
+					: "./style.module.css-wideScreenClass",
+				supports: prod
+					? "my-app-491-T$"
+					: "./style.module.css-displayGridInSupports",
 			});
 		} catch (e) {
 			return done(e);

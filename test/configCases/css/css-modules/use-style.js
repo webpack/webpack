@@ -10,5 +10,7 @@ export default {
 	ident,
 	keyframes: style.localkeyframes,
 	animation: style.animation,
-	vars: `${style["local-color"]} ${style.vars} ${style["global-color"]} ${style.globalVars}`
+	vars: `${style["local-color"]} ${style.vars} ${style["global-color"]} ${style.globalVars}`,
+	media: style.wideScreenClass,
+	supports: style.displayGridInSupports,
 };
