@@ -15,9 +15,6 @@
 [![PR's welcome][prs]][prs-url]
 
   <br>
-  <a href="https://dependabot.com/compatibility-score.html?dependency-name=webpack&package-manager=npm_and_yarn&new-version=latest">
-    <img src="https://api.dependabot.com/badges/compatibility_score?dependency-name=webpack&package-manager=npm_and_yarn&version-scheme=semver&target-version=latest">
-  </a>
 	<a href="https://npmcharts.com/compare/webpack?minimal=true">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
 	</a>
@@ -35,6 +32,9 @@
 	</a>
 	<a href="https://gitter.im/webpack/webpack">
 		<img src="https://badges.gitter.im/webpack/webpack.svg">
+	</a>
+  <a href="https://twitter.com/Webpack">
+		<img src="https://img.shields.io/twitter/follow/Webpack?style=social">
 	</a>
   <h1>webpack</h1>
   <p>
