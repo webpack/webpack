@@ -1009,7 +1009,7 @@ exports[`StatsTestCases should print correct stats for dll-reference-plugin-issu
 ./entry.js 29 bytes [built] [code generated]
 
 ERROR in Dll manifest ./blank-manifest.json
-Unexpected end of JSON input while parsing near ''
+Unexpected end of JSON input while parsing empty string
 
 webpack x.x.x compiled with 1 error in X ms"
 `;
