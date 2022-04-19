@@ -1,4 +1,5 @@
 name: Test
+permissions: {}
 
 # cspell:word Ignus
 # cspell:word eslintcache
