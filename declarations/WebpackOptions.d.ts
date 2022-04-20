@@ -1368,6 +1368,10 @@ export interface RuleSetRule {
 	 */
 	exclude?: RuleSetConditionOrConditionsAbsolute;
 	/**
+	 * Enable/Disable extracting source map.
+	 */
+	extractSourceMap?: boolean;
+	/**
 	 * The options for the module generator.
 	 */
 	generator?: {
@@ -3082,10 +3086,6 @@ export interface JavascriptParserOptions {
 	 * Set the default request for full dynamic dependencies.
 	 */
 	exprContextRequest?: string;
-	/**
-	 * Enable/Disable extracting source map.
-	 */
-	extractSourceMap?: boolean;
 	/**
 	 * Enable/disable parsing of EcmaScript Modules syntax.
 	 */

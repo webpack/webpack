@@ -1753,19 +1753,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "module-parser-javascript-auto-extract-source-map": Object {
-    "configs": Array [
-      Object {
-        "description": "Enable/Disable extracting source map.",
-        "multiple": false,
-        "path": "module.parser.javascript/auto.extractSourceMap",
-        "type": "boolean",
-      },
-    ],
-    "description": "Enable/Disable extracting source map.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "module-parser-javascript-auto-harmony": Object {
     "configs": Array [
       Object {
@@ -2458,19 +2445,6 @@ Object {
     "description": "Set the default request for full dynamic dependencies.",
     "multiple": false,
     "simpleType": "string",
-  },
-  "module-parser-javascript-dynamic-extract-source-map": Object {
-    "configs": Array [
-      Object {
-        "description": "Enable/Disable extracting source map.",
-        "multiple": false,
-        "path": "module.parser.javascript/dynamic.extractSourceMap",
-        "type": "boolean",
-      },
-    ],
-    "description": "Enable/Disable extracting source map.",
-    "multiple": false,
-    "simpleType": "boolean",
   },
   "module-parser-javascript-dynamic-harmony": Object {
     "configs": Array [
@@ -3183,19 +3157,6 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
-  "module-parser-javascript-esm-extract-source-map": Object {
-    "configs": Array [
-      Object {
-        "description": "Enable/Disable extracting source map.",
-        "multiple": false,
-        "path": "module.parser.javascript/esm.extractSourceMap",
-        "type": "boolean",
-      },
-    ],
-    "description": "Enable/Disable extracting source map.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "module-parser-javascript-esm-harmony": Object {
     "configs": Array [
       Object {
@@ -3680,19 +3641,6 @@ Object {
     "description": "Set the default request for full dynamic dependencies.",
     "multiple": false,
     "simpleType": "string",
-  },
-  "module-parser-javascript-extract-source-map": Object {
-    "configs": Array [
-      Object {
-        "description": "Enable/Disable extracting source map.",
-        "multiple": false,
-        "path": "module.parser.javascript.extractSourceMap",
-        "type": "boolean",
-      },
-    ],
-    "description": "Enable/Disable extracting source map.",
-    "multiple": false,
-    "simpleType": "boolean",
   },
   "module-parser-javascript-harmony": Object {
     "configs": Array [
@@ -4232,6 +4180,19 @@ Object {
     "description": "Logical NOT.",
     "multiple": true,
     "simpleType": "string",
+  },
+  "module-rules-extract-source-map": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/Disable extracting source map.",
+        "multiple": true,
+        "path": "module.rules[].extractSourceMap",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/Disable extracting source map.",
+    "multiple": true,
+    "simpleType": "boolean",
   },
   "module-rules-include": Object {
     "configs": Array [

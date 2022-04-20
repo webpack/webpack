@@ -6,9 +6,7 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				parser: {
-					extractSourceMap: true
-				}
+				extractSourceMap: true
 			}
 		]
 	}
