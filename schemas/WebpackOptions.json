@@ -723,6 +723,10 @@
           "description": "The environment supports arrow functions ('() => { ... }').",
           "type": "boolean"
         },
+        "asyncFunction": {
+          "description": "The environment supports async functions ('async () => { ... }').",
+          "type": "boolean"
+        },
         "bigIntLiteral": {
           "description": "The environment supports BigInt as literal (123n).",
           "type": "boolean"
