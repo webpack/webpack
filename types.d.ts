@@ -3543,7 +3543,7 @@ declare interface ExperimentsNormalizedExtra {
 	/**
 	 * Enable css support.
 	 */
-	css?: CssExperimentOptions;
+	css?: false | CssExperimentOptions;
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
