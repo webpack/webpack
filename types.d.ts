@@ -3548,7 +3548,7 @@ declare interface ExperimentsNormalizedExtra {
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
-	lazyCompilation?: LazyCompilationOptions;
+	lazyCompilation?: false | LazyCompilationOptions;
 }
 declare abstract class ExportInfo {
 	name: string;
