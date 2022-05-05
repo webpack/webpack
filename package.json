@@ -39,6 +39,8 @@
     "@babel/core": "^7.11.1",
     "@babel/preset-react": "^7.10.4",
     "@types/es-module-lexer": "^0.4.1",
+    "@types/eslint-scope": "^3.7.3",
+    "@types/estree": "^0.0.51",
     "@types/jest": "^27.4.0",
     "@types/node": "^17.0.16",
     "assemblyscript": "^0.19.16",
