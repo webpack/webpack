@@ -431,6 +431,11 @@ declare interface BannerPluginOptions {
 	exclude?: string | RegExp | Rule[];
 
 	/**
+	 * If true, banner will be placed at the end of the output.
+	 */
+	footer?: boolean;
+
+	/**
 	 * Include all modules matching any of these conditions.
 	 */
 	include?: string | RegExp | Rule[];
@@ -812,6 +817,13 @@ declare class ChunkGraph {
 		chunk: Chunk,
 		sourceType: string
 	): undefined | Iterable<Module>;
+	setChunkModuleSourceTypes(
+		chunk: Chunk,
+		module: Module,
+		sourceTypes: Set<string>
+	): void;
+	getChunkModuleSourceTypes(chunk: Chunk, module: Module): Set<string>;
+	getModuleSourceTypes(module: Module): Set<string>;
 	getOrderedChunkModulesIterable(
 		chunk: Chunk,
 		comparator: (arg0: Module, arg1: Module) => 0 | 1 | -1
@@ -1247,6 +1259,11 @@ declare interface CodeGenerationContext {
 	 * the compilation
 	 */
 	compilation?: Compilation;
+
+	/**
+	 * source types
+	 */
+	sourceTypes?: ReadonlySet<string>;
 }
 declare interface CodeGenerationResult {
 	/**
@@ -2486,11 +2503,11 @@ declare interface ContextHash {
 }
 type ContextMode =
 	| "weak"
-	| "sync"
 	| "eager"
-	| "async-weak"
 	| "lazy"
-	| "lazy-once";
+	| "lazy-once"
+	| "sync"
+	| "async-weak";
 declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		beforeResolve: AsyncSeriesWaterfallHook<[any]>;
@@ -5487,6 +5504,21 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable parsing "import { createRequire } from "module"" and evaluating createRequire().
 	 */
 	createRequire?: string | boolean;
+
+	/**
+	 * Specifies global mode for dynamic import.
+	 */
+	dynamicImportMode?: "weak" | "eager" | "lazy" | "lazy-once";
+
+	/**
+	 * Specifies global prefetch for dynamic import.
+	 */
+	dynamicImportPrefetch?: number | boolean;
+
+	/**
+	 * Specifies global preload for dynamic import.
+	 */
+	dynamicImportPreload?: number | boolean;
 
 	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
@@ -13061,6 +13093,7 @@ declare namespace exports {
 		Asset,
 		AssetInfo,
 		EntryOptions,
+		PathData,
 		AssetEmittedInfo,
 		MultiStats,
 		ParserState,
