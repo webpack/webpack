@@ -13063,6 +13063,7 @@ declare namespace exports {
 		Asset,
 		AssetInfo,
 		EntryOptions,
+		PathData,
 		AssetEmittedInfo,
 		MultiStats,
 		ParserState,
