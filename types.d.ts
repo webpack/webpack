@@ -7072,7 +7072,6 @@ declare class ModuleGraphConnection {
 	): void;
 	addExplanation(explanation: string): void;
 	readonly explanation: string;
-	active: void;
 	isActive(runtime: RuntimeSpec): boolean;
 	isTargetActive(runtime: RuntimeSpec): boolean;
 	getActiveState(runtime: RuntimeSpec): ConnectionState;
