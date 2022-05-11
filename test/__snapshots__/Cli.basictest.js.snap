@@ -1503,6 +1503,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-create-require": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.createRequire",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.createRequire",
+        "type": "string",
+      },
+    ],
+    "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-dynamic-import-mode": Object {
     "configs": Array [
       Object {
@@ -2082,6 +2101,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-create-require": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript.createRequire",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript.createRequire",
+        "type": "string",
+      },
+    ],
+    "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-amd": Object {
     "configs": Array [
       Object {
@@ -2136,6 +2174,25 @@ Object {
     "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-create-require": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.createRequire",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.createRequire",
+        "type": "string",
+      },
+    ],
+    "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-dynamic-import-mode": Object {
     "configs": Array [
@@ -2788,6 +2845,25 @@ Object {
     "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-create-require": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.createRequire",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.createRequire",
+        "type": "string",
+      },
+    ],
+    "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-esm-dynamic-import-mode": Object {
     "configs": Array [

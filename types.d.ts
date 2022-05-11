@@ -4902,6 +4902,15 @@ declare class JavascriptParser extends Parser {
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
+		evaluateNewExpression: HookMap<
+			SyncBailHook<[NewExpression], undefined | null | BasicEvaluatedExpression>
+		>;
+		evaluateCallExpression: HookMap<
+			SyncBailHook<
+				[CallExpression],
+				undefined | null | BasicEvaluatedExpression
+			>
+		>;
 		evaluateCallExpressionMember: HookMap<
 			SyncBailHook<
 				[CallExpression, undefined | BasicEvaluatedExpression],
@@ -5410,6 +5419,7 @@ declare class JavascriptParser extends Parser {
 	isVariableDefined(name?: any): boolean;
 	getVariableInfo(name: string): ExportedVariableInfo;
 	setVariable(name: string, variableInfo: ExportedVariableInfo): void;
+	evaluatedVariable(tagInfo?: any): VariableInfo;
 	parseCommentOptions(
 		range?: any
 	): { options: null; errors: null } | { options: object; errors: unknown[] };
@@ -5489,6 +5499,11 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable parsing of magic comments in CommonJs syntax.
 	 */
 	commonjsMagicComments?: boolean;
+
+	/**
+	 * Enable/disable parsing "import { createRequire } from "module"" and evaluating createRequire().
+	 */
+	createRequire?: string | boolean;
 
 	/**
 	 * Specifies global mode for dynamic import.

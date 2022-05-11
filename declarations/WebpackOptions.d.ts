@@ -2930,6 +2930,10 @@ export interface JavascriptParserOptions {
 	 */
 	commonjsMagicComments?: boolean;
 	/**
+	 * Enable/disable parsing "import { createRequire } from "module"" and evaluating createRequire().
+	 */
+	createRequire?: boolean | string;
+	/**
 	 * Specifies global mode for dynamic import.
 	 */
 	dynamicImportMode?: "eager" | "weak" | "lazy" | "lazy-once";
