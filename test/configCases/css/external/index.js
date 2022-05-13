@@ -7,7 +7,7 @@ it("should import an external css", done => {
 			" url(//example.com/image.png) url(https://example.com/image.png)"
 		);
 		expect(style.getPropertyValue("background-image")).toBe(
-			" url(http://example.com/image.png)"
+			" url(http://example.com/image.png) url(/custom-path/image.png)"
 		);
 		done();
 	}, done);

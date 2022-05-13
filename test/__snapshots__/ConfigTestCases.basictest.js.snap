@@ -14,7 +14,7 @@ Object {
   "i": " green url(img.09a1a1112c577c279435.png) url(img.09a1a1112c577c279435.png) xyz",
   "j": " green url(img\\\\ img.09a1a1112c577c279435.png) xyz",
   "k": " green url(img\\\\ img.09a1a1112c577c279435.png) xyz",
-  "l": " green url(img.09a1a1112c577c279435.png) xyz",
+  "l": " green url(/img.png) xyz",
 }
 `;
 
