@@ -9,6 +9,7 @@ process.env.EEE = "eee";
 process.env.FFF = "fff";
 process.env.GGG = "ggg";
 process.env.III = "";
+process.env.MY_ENV = "env1";
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
@@ -64,5 +65,10 @@ module.exports = [
 			unknownContextCritical: false
 		},
 		plugins: [new EnvironmentPlugin("III")]
+	},
+	{
+		name: "import-meta-env",
+		entry: "./support-import-meta-env",
+		plugins: [new EnvironmentPlugin("MY_ENV")]
 	}
 ];
