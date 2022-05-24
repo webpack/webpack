@@ -38,10 +38,16 @@ if (module.hot) {
 				if (["abort", "fail"].indexOf(status) >= 0) {
 					log(
 						"warning",
-						"[HMR] Cannot apply update. Need to do a full reload!"
+						`[HMR] Cannot apply update. ${(
+							typeof window !== "undefined"
+								? "Need to do a full reload!"
+								: "Please reload manually!"
+						)}`
 					);
 					log("warning", "[HMR] " + log.formatError(err));
-					window.location.reload();
+					if (typeof window !== "undefined") {
+						window.location.reload();
+					}
 				} else {
 					log("warning", "[HMR] Update failed: " + log.formatError(err));
 				}
