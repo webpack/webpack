@@ -14,12 +14,19 @@ if (module.hot) {
 			.check(true)
 			.then(function (updatedModules) {
 				if (!updatedModules) {
-					log("warning", "[HMR] Cannot find update. Need to do a full reload!");
+					log(
+						"warning",
+						"[HMR] Cannot find update. " + typeof window !== "undefined"
+							? "Need to do a full reload!"
+							: "Please reload manually!"
+					);
 					log(
 						"warning",
 						"[HMR] (Probably because of restarting the webpack-dev-server)"
 					);
-					window.location.reload();
+					if (typeof window !== "undefined") {
+						window.location.reload();
+					}
 					return;
 				}
 
