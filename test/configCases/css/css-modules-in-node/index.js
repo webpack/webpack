@@ -24,9 +24,21 @@ it("should allow to create css modules", done => {
 				media: prod
 					? "my-app-491-w7"
 					: "./style.module.css-wideScreenClass",
+				mediaWithOperator: prod
+					? "my-app-491-J"
+					: "./style.module.css-narrowScreenClass",
 				supports: prod
 					? "my-app-491-T$"
 					: "./style.module.css-displayGridInSupports",
+				supportsWithOperator: prod
+					? "my-app-491-zz"
+					: "./style.module.css-floatRightInNegativeSupports",
+				mediaInSupports: prod
+					? "my-app-491-Kr"
+					: "./style.module.css-displayFlexInMediaInSupports",
+				supportsInMedia: prod
+					? "my-app-491-SQ"
+					: "./style.module.css-displayFlexInSupportsInMedia",
 			});
 		} catch (e) {
 			return done(e);

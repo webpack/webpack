@@ -12,5 +12,9 @@ export default {
 	animation: style.animation,
 	vars: `${style["local-color"]} ${style.vars} ${style["global-color"]} ${style.globalVars}`,
 	media: style.wideScreenClass,
+	mediaWithOperator: style.narrowScreenClass,
 	supports: style.displayGridInSupports,
+	supportsWithOperator: style.floatRightInNegativeSupports,
+	mediaInSupports: style.displayFlexInMediaInSupports,
+	supportsInMedia: style.displayFlexInSupportsInMedia,
 };
