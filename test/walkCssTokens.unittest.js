@@ -10,6 +10,14 @@ describe("walkCssTokens", () => {
 					results.push(["url", input.slice(s, e), input.slice(cs, ce)]);
 					return e;
 				},
+				layer: (input, s, e, cs, ce) => {
+					results.push(["layer", input.slice(s, e), input.slice(cs, ce)]);
+					return e;
+				},
+				supports: (input, s, e, cs, ce) => {
+					results.push(["supports", input.slice(s, e), input.slice(cs, ce)]);
+					return e;
+				},
 				leftCurlyBracket: (input, s, e) => {
 					results.push(["leftCurlyBracket", input.slice(s, e)]);
 					return e;
@@ -296,6 +304,116 @@ describe("walkCssTokens", () => {
 			  Array [
 			    "rightCurlyBracket",
 			    "}",
+			  ],
+			]
+		`)
+	);
+
+	test(
+		"parse at import rules",
+		`@import url( "style.css" ) layer( my-layer ) supports( display: flex ) screen and (min-width: 1024px);
+@import url("style2.css") supports(not (display: flex) and selector(A > B));
+@import url("style3.css") supports((display: grid) and (not (display: inline-grid)));
+@import url("style4.css") supports((display: grid) or (display: inline-grid));`,
+		e =>
+			e.toMatchInlineSnapshot(`
+			Array [
+			  Array [
+			    "atKeyword",
+			    "@import",
+			  ],
+			  Array [
+			    "url",
+			    "url( \\"style.css\\" )",
+			    "style.css",
+			  ],
+			  Array [
+			    "layer",
+			    "layer( my-layer )",
+			    "my-layer",
+			  ],
+			  Array [
+			    "supports",
+			    "supports( display: flex )",
+			    "display: flex",
+			  ],
+			  Array [
+			    "identifier",
+			    "screen",
+			  ],
+			  Array [
+			    "identifier",
+			    "and",
+			  ],
+			  Array [
+			    "leftParenthesis",
+			    "(",
+			  ],
+			  Array [
+			    "identifier",
+			    "min-width",
+			  ],
+			  Array [
+			    "rightParenthesis",
+			    ")",
+			  ],
+			  Array [
+			    "semicolon",
+			    ";",
+			  ],
+			  Array [
+			    "atKeyword",
+			    "@import",
+			  ],
+			  Array [
+			    "url",
+			    "url(\\"style2.css\\")",
+			    "style2.css",
+			  ],
+			  Array [
+			    "supports",
+			    "supports(not (display: flex) and selector(A > B))",
+			    "not (display: flex) and selector(A > B)",
+			  ],
+			  Array [
+			    "semicolon",
+			    ";",
+			  ],
+			  Array [
+			    "atKeyword",
+			    "@import",
+			  ],
+			  Array [
+			    "url",
+			    "url(\\"style3.css\\")",
+			    "style3.css",
+			  ],
+			  Array [
+			    "supports",
+			    "supports((display: grid) and (not (display: inline-grid)))",
+			    "(display: grid) and (not (display: inline-grid))",
+			  ],
+			  Array [
+			    "semicolon",
+			    ";",
+			  ],
+			  Array [
+			    "atKeyword",
+			    "@import",
+			  ],
+			  Array [
+			    "url",
+			    "url(\\"style4.css\\")",
+			    "style4.css",
+			  ],
+			  Array [
+			    "supports",
+			    "supports((display: grid) or (display: inline-grid))",
+			    "(display: grid) or (display: inline-grid)",
+			  ],
+			  Array [
+			    "semicolon",
+			    ";",
 			  ],
 			]
 		`)

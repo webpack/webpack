@@ -1,7 +1,26 @@
 @import "style-imported.css";
-@import "https://fonts.googleapis.com/css?family=Open+Sans";
+@import "https://fonts.googleapis.com/css?family=Open+Sans" screen;
+@import "https://unpkg.com/jquery-ui@1.13.1/themes/base/draggable.css" supports(touch-action: none);
+@import url( "style3.css" ) layer( base ) supports( font-weight: bold ) screen and (min-width: 1024px);
+
+@layer base, special;
 
 body {
 	background: green;
 	font-family: "Open Sans";
+}
+
+@layer special {
+  .item {
+    color: rebeccapurple;
+  }
+}
+
+@layer base {
+  .item {
+    color: black;
+    border: 5px solid black;
+    font-size: 1.3em;
+    padding: .5em;
+  }
 }

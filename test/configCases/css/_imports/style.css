@@ -1,0 +1,7 @@
+@import "style-imported1.css" screen;
+@import "style-imported2.css" supports(display: flex);
+@import "style-imported3.css" supports(display: block) screen;
+
+body {
+	border: 1px solid red;
+}

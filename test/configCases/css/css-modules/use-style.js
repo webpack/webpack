@@ -29,6 +29,8 @@ export default {
 	supportsWithOperator: style.floatRightInNegativeSupports,
 	mediaInSupports: style.displayFlexInMediaInSupports,
 	supportsInMedia: style.displayFlexInSupportsInMedia,
-	displayFlexInSupportsInMediaUpperCase: style.displayFlexInSupportsInMediaUpperCase,
+	displayFlexInSupportsInMediaUpperCase:
+		style.displayFlexInSupportsInMediaUpperCase,
 	VARS: `${style["LOCAL-COLOR"]} ${style.VARS} ${style["GLOBAL-COLOR"]} ${style.globalVarsUpperCase}`,
+	layer: style.layer
 };

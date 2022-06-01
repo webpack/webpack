@@ -13,11 +13,30 @@ document.getElementsByTagName("main")[0].className = main;
 
 ```javascript
 @import "style-imported.css";
-@import "https://fonts.googleapis.com/css?family=Open+Sans";
+@import "https://fonts.googleapis.com/css?family=Open+Sans" screen;
+@import "https://unpkg.com/jquery-ui@1.13.1/themes/base/draggable.css" supports(touch-action: none);
+@import url( "style3.css" ) layer( base ) supports( font-weight: bold ) screen and (min-width: 1024px);
+
+@layer base, special;
 
 body {
 	background: green;
 	font-family: "Open Sans";
+}
+
+@layer special {
+  .item {
+    color: rebeccapurple;
+  }
+}
+
+@layer base {
+  .item {
+    color: black;
+    border: 5px solid black;
+    font-size: 1.3em;
+    padding: .5em;
+  }
 }
 ```
 
@@ -38,6 +57,19 @@ body {
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = __webpack_require__.p + "89a353e9c515885abd8e.png";
+
+/***/ }),
+
+/***/ 5:
+/*!****************************************************************************************************************!*\
+  !*** https://fonts.gstatic.com/s/opensans/v29/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVc.ttf ***!
+  \****************************************************************************************************************/
+/*! default exports */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.p, module, __webpack_require__.* */
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__.p + "8b49cef9eef7a6b1c4cb.ttf";
 
 /***/ })
 
@@ -392,12 +424,12 @@ var __webpack_exports__ = {};
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.e, __webpack_require__.* */
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./style.css */ 1);
-/* harmony import */ var _style2_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style2.css */ 5);
-/* harmony import */ var _style_module_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.module.css */ 6);
+/* harmony import */ var _style2_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style2.css */ 8);
+/* harmony import */ var _style_module_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.module.css */ 9);
 
 
 
-__webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./lazy-style.css */ 7));
+__webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(__webpack_require__, /*! ./lazy-style.css */ 10));
 
 document.getElementsByTagName("main")[0].className = _style_module_css__WEBPACK_IMPORTED_MODULE_2__.main;
 
@@ -410,7 +442,6 @@ document.getElementsByTagName("main")[0].className = _style_module_css__WEBPACK_
 # dist/output.css
 
 ```javascript
-@import url("https://fonts.googleapis.com/css?family=Open+Sans");
 .img {
 	width: 150px;
 	height: 150px;
@@ -418,9 +449,62 @@ document.getElementsByTagName("main")[0].className = _style_module_css__WEBPACK_
 }
 
 
+@media screen {
+	@font-face {
+	  font-family: 'Open Sans';
+	  font-style: normal;
+	  font-weight: 400;
+	  font-stretch: normal;
+	  src: url(8b49cef9eef7a6b1c4cb.ttf) format('truetype');
+	}
+}
+
+@supports(touch-action: none) {
+	/*!
+	 * jQuery UI Draggable 1.13.1
+	 * http://jqueryui.com
+	 *
+	 * Copyright jQuery Foundation and other contributors
+	 * Released under the MIT license.
+	 * http://jquery.org/license
+	 */
+	.ui-draggable-handle {
+		-ms-touch-action: none;
+		touch-action: none;
+	}
+}
+
+@layer base {
+	@supports(font-weight: bold) {
+		@media screen and (min-width: 1024px) {
+			body {
+				font-weight: bold;
+				text-decoration: underline;
+			}
+		}
+	}
+}
+
+@layer base, special;
+
 body {
 	background: green;
 	font-family: "Open Sans";
+}
+
+@layer special {
+  .item {
+    color: rebeccapurple;
+  }
+}
+
+@layer base {
+  .item {
+    color: black;
+    border: 5px solid black;
+    font-size: 1.3em;
+    padding: .5em;
+  }
 }
 
 body {
@@ -428,33 +512,32 @@ body {
 }
 
 :root {
-	--app-6-large: 72px;
+	--app-9-large: 72px;
 }
 
-.app-6-main {
-	font-size: var(--app-6-large);
+.app-9-main {
+	font-size: var(--app-9-large);
 	color: darkblue;
 }
 
 @media (min-width: 1024px) {
-	.app-6-main {
+	.app-9-main {
 		color: green;
 	}
 }
 
 @supports (display: grid) {
-	.app-6-main {
+	.app-9-main {
 		display: grid
 	}
 }
 
-head{--webpack-app-0:_4,_2,_1,_5,large%main/_6;}
+head{--webpack-app-0:_2,_4,_6,_7,_1,_8,large%main/_9;}
 ```
 
 ## production
 
 ```javascript
-@import url("https://fonts.googleapis.com/css?family=Open+Sans");
 .img {
 	width: 150px;
 	height: 150px;
@@ -462,9 +545,62 @@ head{--webpack-app-0:_4,_2,_1,_5,large%main/_6;}
 }
 
 
+@media screen {
+	@font-face {
+	  font-family: 'Open Sans';
+	  font-style: normal;
+	  font-weight: 400;
+	  font-stretch: normal;
+	  src: url(8b49cef9eef7a6b1c4cb.ttf) format('truetype');
+	}
+}
+
+@supports(touch-action: none) {
+	/*!
+	 * jQuery UI Draggable 1.13.1
+	 * http://jqueryui.com
+	 *
+	 * Copyright jQuery Foundation and other contributors
+	 * Released under the MIT license.
+	 * http://jquery.org/license
+	 */
+	.ui-draggable-handle {
+		-ms-touch-action: none;
+		touch-action: none;
+	}
+}
+
+@layer base {
+	@supports(font-weight: bold) {
+		@media screen and (min-width: 1024px) {
+			body {
+				font-weight: bold;
+				text-decoration: underline;
+			}
+		}
+	}
+}
+
+@layer base, special;
+
 body {
 	background: green;
 	font-family: "Open Sans";
+}
+
+@layer special {
+  .item {
+    color: rebeccapurple;
+  }
+}
+
+@layer base {
+  .item {
+    color: black;
+    border: 5px solid black;
+    font-size: 1.3em;
+    padding: .5em;
+  }
 }
 
 body {
@@ -492,7 +628,7 @@ body {
 	}
 }
 
-head{--webpack-app-179:_548,_431,_258,_268,b%D/_491;}
+head{--webpack-app-179:_431,_572,_863,_252,_258,_268,b%D/_491;}
 ```
 
 # dist/1.output.css
@@ -502,7 +638,7 @@ body {
 	color: blue;
 }
 
-head{--webpack-app-1:_7;}
+head{--webpack-app-1:_10;}
 ```
 
 # Info
@@ -510,16 +646,18 @@ head{--webpack-app-1:_7;}
 ## Unoptimized
 
 ```
-assets by chunk 17 KiB (name: main)
-  asset output.js 16.5 KiB [emitted] (name: main)
-  asset output.css 516 bytes [emitted] (name: main)
-asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
-asset 1.output.css 49 bytes [emitted]
-Entrypoint main 17 KiB (14.6 KiB) = output.js 16.5 KiB output.css 516 bytes 1 auxiliary asset
-chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 10 KiB (runtime) [entry] [rendered]
+assets by info 45.2 KiB [immutable]
+  asset 8b49cef9eef7a6b1c4cb.ttf 30.6 KiB [emitted] [immutable] [from: https://fonts.gstatic.com/s/opensans/v29/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVc.ttf] (auxiliary name: main)
+  asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
+assets by chunk 18.4 KiB (name: main)
+  asset output.js 17.1 KiB [emitted] (name: main)
+  asset output.css 1.29 KiB [emitted] (name: main)
+asset 1.output.css 50 bytes [emitted]
+Entrypoint main 18.4 KiB (45.2 KiB) = output.js 17.1 KiB output.css 1.29 KiB 2 auxiliary assets
+chunk (runtime: main) output.js, output.css (main) 260 bytes (javascript) 1.39 KiB (css) 45.2 KiB (asset) 10 KiB (runtime) [entry] [rendered]
   > ./example.js main
+  dependent modules 84 bytes (javascript) 45.2 KiB (asset) 1.39 KiB (css) [dependent] 9 modules
   runtime modules 10 KiB 9 modules
-  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 454 bytes (css) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 176 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -530,30 +668,32 @@ chunk (runtime: main) 1.output.css 23 bytes
     [no exports]
     [used exports unknown]
     import() ./lazy-style.css ./example.js 4:0-26
-webpack 5.78.0 compiled successfully
+webpack 5.79.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-assets by chunk 4.38 KiB (name: main)
-  asset output.js 3.88 KiB [emitted] [minimized] (name: main)
-  asset output.css 514 bytes [emitted] (name: main)
-asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
+assets by info 45.2 KiB [immutable]
+  asset 8b49cef9eef7a6b1c4cb.ttf 30.6 KiB [emitted] [immutable] [from: https://fonts.gstatic.com/s/opensans/v29/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVc.ttf] (auxiliary name: main)
+  asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: images/file.png] (auxiliary name: main)
+assets by chunk 5.22 KiB (name: main)
+  asset output.js 3.94 KiB [emitted] [minimized] (name: main)
+  asset output.css 1.29 KiB [emitted] (name: main)
 asset 159.output.css 53 bytes [emitted]
-Entrypoint main 4.38 KiB (14.6 KiB) = output.js 3.88 KiB output.css 514 bytes 1 auxiliary asset
+Entrypoint main 5.22 KiB (45.2 KiB) = output.js 3.94 KiB output.css 1.29 KiB 2 auxiliary assets
 chunk (runtime: main) 159.output.css 23 bytes
   > ./lazy-style.css ./example.js 4:0-26
   ./lazy-style.css 23 bytes [built] [code generated]
     [no exports]
     import() ./lazy-style.css ./example.js 4:0-26
-chunk (runtime: main) output.js, output.css (main) 218 bytes (javascript) 454 bytes (css) 14.6 KiB (asset) 42 bytes (css-import) 10 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js, output.css (main) 260 bytes (javascript) 1.39 KiB (css) 45.2 KiB (asset) 10 KiB (runtime) [entry] [rendered]
   > ./example.js main
+  dependent modules 84 bytes (javascript) 45.2 KiB (asset) 1.39 KiB (css) [dependent] 9 modules
   runtime modules 10 KiB 9 modules
-  dependent modules 42 bytes (javascript) 14.6 KiB (asset) 454 bytes (css) 42 bytes (css-import) [dependent] 6 modules
   ./example.js 176 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.79.0 compiled successfully
 ```

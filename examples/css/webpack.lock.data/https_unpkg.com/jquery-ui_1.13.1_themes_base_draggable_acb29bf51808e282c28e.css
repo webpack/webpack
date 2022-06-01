@@ -1,0 +1,12 @@
+/*!
+ * jQuery UI Draggable 1.13.1
+ * http://jqueryui.com
+ *
+ * Copyright jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ */
+.ui-draggable-handle {
+	-ms-touch-action: none;
+	touch-action: none;
+}

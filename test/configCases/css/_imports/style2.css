@@ -1,0 +1,19 @@
+@import "./style2-imported.css" layer(special);
+
+body {
+	color: green;
+}
+
+@layer base, special;
+
+@layer special {
+	body {
+		text-decoration: underline;
+	}
+}
+
+@layer base {
+	body {
+		color: green;
+	}
+}

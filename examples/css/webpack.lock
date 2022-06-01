@@ -1,0 +1,6 @@
+{
+  "https://fonts.googleapis.com/css?family=Open+Sans": { "integrity": "sha512-N58gP8WenQgxVpqofshprDTqvAh3tZ/OkhNgKd2uCcRAk6LXLVB8echZKWx78ETx6P9+C1KJfDYMuy9zpBYAfg==", "contentType": "text/css; charset=utf-8" },
+  "https://fonts.gstatic.com/s/opensans/v29/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVc.ttf": { "integrity": "sha512-PUea/AZwAh372fk4PYolSDpxSWNtgsJ0bzdL6LBVIxn+sRMONrSs3Po7qVk8veWuuJwZq0TZePsXUblXAZCz9w==", "contentType": "font/ttf" },
+  "https://unpkg.com/jquery-ui@1.13.1/themes/base/draggable.css": { "integrity": "sha512-ID6NYyrTEGxfWaVutJAR/C+668CmUVWh8htwDW3NuBfdFpezO0ANTzD4Hl2G7HO7BrK1B+OwzauU0vG2f6gSCw==", "contentType": "text/css; charset=utf-8" },
+  "version": 1
+}

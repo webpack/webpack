@@ -219,3 +219,9 @@
 	COLOR: VAR(--GLOBAR-COLOR);
 	--GLOBAR-COLOR: red;
 }
+
+@layer default {
+	.layer {
+		color: green;
+	}
+}
