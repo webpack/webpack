@@ -1,8 +1,11 @@
-import {b, a} from "dep";
+import { b, a, c } from "dep";
 
+c.cc();
 b.bbb();
 a.aa();
 
-it("should import modules in correct order", () => {
-	expect(global.second).toBe(2);
+import { order } from "dep/order.js";
+
+it("should import side-effect-free modules in deterministic order (usage order)", () => {
+	expect(order).toEqual(["c", "b", "a"]);
 });
