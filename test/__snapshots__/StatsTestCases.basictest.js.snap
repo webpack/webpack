@@ -4611,8 +4611,8 @@ webpack x.x.x compiled with 1 warning in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"assets by path *.js 22.2 KiB
-  asset bundle.js 16.7 KiB [emitted] (name: main)
+"assets by path *.js 21.8 KiB
+  asset bundle.js 16.3 KiB [emitted] (name: main)
   asset 325.bundle.js 3.9 KiB [emitted]
   asset 795.bundle.js 557 bytes [emitted]
   asset 526.bundle.js 366 bytes [emitted] (id hint: vendors)
@@ -4628,8 +4628,8 @@ assets by path *.wasm 1.37 KiB
   asset 0301cb3f9f4151b567f5.module.wasm 120 bytes [emitted] [immutable]
 chunk (runtime: main) 20.bundle.js 50 bytes (javascript) 531 bytes (webassembly) [rendered]
   ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) [built] [code generated]
-chunk (runtime: main) bundle.js (main) 586 bytes (javascript) 9.49 KiB (runtime) [entry] [rendered]
-  runtime modules 9.49 KiB 11 modules
+chunk (runtime: main) bundle.js (main) 586 bytes (javascript) 9.19 KiB (runtime) [entry] [rendered]
+  runtime modules 9.19 KiB 11 modules
   ./index.js 586 bytes [built] [code generated]
 chunk (runtime: main) 189.bundle.js 50 bytes (javascript) 156 bytes (webassembly) [rendered]
   ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) [built] [code generated]
@@ -4643,7 +4643,7 @@ chunk (runtime: main) 526.bundle.js (id hint: vendors) 34 bytes [rendered] split
 chunk (runtime: main) 795.bundle.js 110 bytes (javascript) 444 bytes (webassembly) [rendered]
   ./fact.wasm 50 bytes (javascript) 154 bytes (webassembly) [built] [code generated]
   ./fast-math.wasm 60 bytes (javascript) 290 bytes (webassembly) [built] [code generated]
-runtime modules 9.49 KiB 11 modules
+runtime modules 9.19 KiB 11 modules
 cacheable modules 2.31 KiB (javascript) 1.37 KiB (webassembly)
   webassembly modules 310 bytes (javascript) 1.37 KiB (webassembly)
     ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) [built] [code generated]
