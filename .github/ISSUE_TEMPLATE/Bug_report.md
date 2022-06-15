@@ -13,10 +13,10 @@ about: Create a report to help us improve
 <!-- https://gitter.im/webpack/webpack -->
 <!-- Issues which contain questions or support requests will be closed. -->
 
-**What is the current behavior?**
+## What is the current behavior?
 
 
-**If the current behavior is a bug, please provide the steps to reproduce.**
+## If the current behavior is a bug, please provide the steps to reproduce.
 
 
 <!-- A great way to do this is to provide your configuration via a GitHub repository -->
@@ -26,7 +26,7 @@ about: Create a report to help us improve
 <!-- https://gist.github.com is a good place for longer code snippets -->
 <!-- If your issue is caused by a plugin or loader, please create an issue on the loader/plugin repository instead -->
 
-**What is the expected behavior?**
+## What is the expected behavior?
 
 
 <!-- "It should work" is not a helpful explanation -->
