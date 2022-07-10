@@ -13,6 +13,9 @@ on:
       - main
       - dev-1
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     runs-on: ubuntu-latest
