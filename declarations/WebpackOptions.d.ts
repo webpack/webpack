@@ -1506,6 +1506,15 @@ export interface ResolveOptions {
 	 */
 	exportsFields?: string[];
 	/**
+	 * An object which maps extension to extension aliases.
+	 */
+	extensionAlias?: {
+		/**
+		 * Extension alias.
+		 */
+		[k: string]: string[] | string;
+	};
+	/**
 	 * Extensions added to the request when trying to find the file.
 	 */
 	extensions?: string[];
