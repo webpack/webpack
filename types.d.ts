@@ -9717,6 +9717,11 @@ declare interface ResolveOptionsWebpackOptions {
 	exportsFields?: string[];
 
 	/**
+	 * An object which maps extension to extension aliases.
+	 */
+	extensionAlias?: { [index: string]: string | string[] };
+
+	/**
 	 * Extensions added to the request when trying to find the file.
 	 */
 	extensions?: string[];
