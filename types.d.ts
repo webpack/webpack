@@ -4509,6 +4509,42 @@ declare interface HandleModuleCreationOptions {
 	 */
 	connectOrigin?: boolean;
 }
+declare class HarmonyImportDependency extends ModuleDependency {
+	constructor(
+		request: string,
+		sourceOrder: number,
+		assertions?: Record<string, any>
+	);
+	sourceOrder: number;
+	getImportVar(moduleGraph: ModuleGraph): string;
+	getImportStatement(
+		update: boolean,
+		__1: DependencyTemplateContext
+	): [string, string];
+	getLinkingErrors(
+		moduleGraph: ModuleGraph,
+		ids: string[],
+		additionalMessage: string
+	): undefined | WebpackError[];
+	static Template: typeof HarmonyImportDependencyTemplate;
+	static ExportPresenceModes: {
+		NONE: 0;
+		WARN: 1;
+		AUTO: 2;
+		ERROR: 3;
+		fromUserOption(str?: any): 0 | 1 | 2 | 3;
+	};
+	static NO_EXPORTS_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
+}
+declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
+	constructor();
+	static getImportEmittedRuntime(
+		module: Module,
+		referencedModule: Module
+	): undefined | string | boolean | SortableSet<string>;
+}
 declare class Hash {
 	constructor();
 
@@ -12734,7 +12770,12 @@ declare namespace exports {
 		) => void;
 	}
 	export namespace dependencies {
-		export { ModuleDependency, ConstDependency, NullDependency };
+		export {
+			ModuleDependency,
+			HarmonyImportDependency,
+			ConstDependency,
+			NullDependency
+		};
 	}
 	export namespace ids {
 		export {
