@@ -1014,6 +1014,24 @@ Unexpected end of JSON input while parsing empty string
 webpack x.x.x compiled with 1 error in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for dynamic-chunk-name-error 1`] = `
+"assets by status 8.29 KiB [cached] 3 assets
+runtime modules 3.54 KiB 8 modules
+cacheable modules 128 bytes
+  ./entry-1.js 63 bytes [built] [code generated]
+  ./entry-2.js 1 bytes [built] [code generated]
+  ./entry-3.js 63 bytes [built] [code generated]
+  ./dynamic.js 1 bytes [built] [code generated]
+
+ERROR in ./entry-1.js 1:7-58
+It's not allowed to load an initial chunk on demand. The chunk name \\"entry2\\" is already used by an entrypoint.
+
+ERROR in ./entry-3.js 1:7-58
+It's not allowed to load an initial chunk on demand. The chunk name \\"entry3\\" is already used by an entrypoint.
+
+webpack x.x.x compiled with 2 errors in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for entry-filename 1`] = `
 "PublicPath: auto
 asset a.js 1.4 KiB [emitted] (name: a)
