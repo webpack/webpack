@@ -897,7 +897,10 @@
         },
         "css": {
           "description": "Enable css support.",
-          "oneOf": [
+          "anyOf": [
+            {
+              "enum": [false]
+            },
             {
               "$ref": "#/definitions/CssExperimentOptions"
             }
@@ -913,7 +916,10 @@
         },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
-          "oneOf": [
+          "anyOf": [
+            {
+              "enum": [false]
+            },
             {
               "$ref": "#/definitions/LazyCompilationOptions"
             }
