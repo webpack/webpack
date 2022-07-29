@@ -1,17 +1,5 @@
 declare namespace webpack {
-	type HotEvent =
-		| {
-				type: "disposed";
-				/** The module in question. */
-				moduleId: number;
-		  }
-		| {
-				type: "self-declined" | "unaccepted";
-				/** The module in question. */
-				moduleId: number;
-				/** the chain from where the update was propagated. */
-				chain: number[];
-		  }
+	type DeclinedEvent =
 		| {
 				type: "declined";
 				/** The module in question. */
@@ -22,18 +10,42 @@ declare namespace webpack {
 				parentId: number;
 		  }
 		| {
-				type: "accepted";
+				type: "self-declined";
 				/** The module in question. */
 				moduleId: number;
 				/** the chain from where the update was propagated. */
 				chain: number[];
-				/** the modules that are outdated and will be disposed */
-				outdatedModules: number[];
-				/** the accepted dependencies that are outdated */
-				outdatedDependencies: {
-					[id: number]: number[];
-				};
-		  }
+		  };
+
+	type UnacceptedEvent = {
+		type: "unaccepted";
+		/** The module in question. */
+		moduleId: number;
+		/** the chain from where the update was propagated. */
+		chain: number[];
+	};
+
+	type AcceptedEvent = {
+		type: "accepted";
+		/** The module in question. */
+		moduleId: number;
+		/** the chain from where the update was propagated. */
+		chain: number[];
+		/** the modules that are outdated and will be disposed */
+		outdatedModules: number[];
+		/** the accepted dependencies that are outdated */
+		outdatedDependencies: {
+			[id: number]: number[];
+		};
+	};
+
+	type DisposedEvent = {
+		type: "disposed";
+		/** The module in question. */
+		moduleId: number;
+	};
+
+	type ErroredEvent =
 		| {
 				type: "accept-error-handler-errored";
 				/** The module in question. */
@@ -71,15 +83,22 @@ declare namespace webpack {
 				error: Error;
 		  };
 
+	type HotEvent =
+		| DeclinedEvent
+		| UnacceptedEvent
+		| AcceptedEvent
+		| DisposedEvent
+		| ErroredEvent;
+
 	interface ApplyOptions {
 		ignoreUnaccepted?: boolean;
 		ignoreDeclined?: boolean;
 		ignoreErrored?: boolean;
-		onDeclined?(callback: (info: HotEvent) => void): void;
-		onUnaccepted?(callback: (info: HotEvent) => void): void;
-		onAccepted?(callback: (info: HotEvent) => void): void;
-		onDisposed?(callback: (info: HotEvent) => void): void;
-		onErrored?(callback: (info: HotEvent) => void): void;
+		onDeclined?: (event: DeclinedEvent) => void;
+		onUnaccepted?: (event: UnacceptedEvent) => void;
+		onAccepted?: (event: AcceptedEvent) => void;
+		onDisposed?: (event: DisposedEvent) => void;
+		onErrored?: (event: ErroredEvent) => void;
 	}
 
 	const enum HotUpdateStatus {
