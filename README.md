@@ -15,8 +15,8 @@
 [![PR's welcome][prs]][prs-url]
 
   <br>
-  <a href="https://dependabot.com/compatibility-score.html?dependency-name=webpack&package-manager=npm_and_yarn&new-version=latest">
-    <img src="https://api.dependabot.com/badges/compatibility_score?dependency-name=webpack&package-manager=npm_and_yarn&version-scheme=semver&target-version=latest">
+  <a href="https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/about-dependabot-security-updates#about-compatibility-scores">
+    <img src="https://api.dependabot.com/badges/compatibility_score?dependency-name=webpack&package-manager=npm_and_yarn&previous-version=5.72.1&new-version=5.73.0">
   </a>
 	<a href="https://npmcharts.com/compare/webpack?minimal=true">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
@@ -110,6 +110,7 @@ within webpack itself use this plugin interface. This makes webpack very
 |    [mini-css-extract-plugin][mini-css]    |  ![mini-css-npm]   |  ![mini-css-size]   | Extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. |
 | [compression-webpack-plugin][compression] | ![compression-npm] | ![compression-size] | Prepares compressed versions of assets to serve them with Content-Encoding              |
 |    [html-webpack-plugin][html-plugin]     | ![html-plugin-npm] | ![html-plugin-size] | Simplifies creation of HTML files (`index.html`) to serve your bundles                  |
+|         [pug-plugin][pug-plugin]          | ![pug-plugin-npm]  | ![pug-plugin-size]  | Renders Pug files to HTML, extracts JS and CSS from sources specified directly in Pug.  |
 
 [common-npm]: https://img.shields.io/npm/v/webpack.svg
 [mini-css]: https://github.com/webpack-contrib/mini-css-extract-plugin
@@ -124,6 +125,9 @@ within webpack itself use this plugin interface. This makes webpack very
 [html-plugin]: https://github.com/jantimon/html-webpack-plugin
 [html-plugin-npm]: https://img.shields.io/npm/v/html-webpack-plugin.svg
 [html-plugin-size]: https://packagephobia.com/badge?p=html-webpack-plugin
+[pug-plugin]: https://github.com/webdiscus/pug-plugin
+[pug-plugin-npm]: https://img.shields.io/npm/v/pug-plugin.svg
+[pug-plugin-size]: https://packagephobia.com/badge?p=pug-plugin
 
 ### [Loaders](https://webpack.js.org/loaders/)
 
@@ -170,18 +174,21 @@ or are automatically applied via regex from your webpack configuration.
 
 #### Templating
 
-|                                                                                 Name                                                                                  |     Status      |   Install Size   | Description                                                                             |
-| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :-------------------------------------------------------------------------------------- |
-|              <a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>              |   ![html-npm]   |   ![html-size]   | Exports HTML as string, requires references to static resources                         |
-| <a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a> |   ![pug-npm]    |   ![pug-size]    | Loads Pug templates and returns a function                                              |
-|              <a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/markdown.svg"></a>              |    ![md-npm]    |    ![md-size]    | Compiles Markdown to HTML                                                               |
-|               <a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="https://posthtml.github.io/posthtml/logo.svg"></a>               | ![posthtml-npm] | ![posthtml-size] | Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml) |
-|           <a href="https://github.com/pcardune/handlebars-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/handlebars-1.svg"></a>           |   ![hbs-npm]    |   ![hbs-size]    | Compiles Handlebars to HTML                                                             |
+|                                                                                   Name                                                                                    |     Status      |   Install Size   | Description                                                                             |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :-------------------------------------------------------------------------------------- |
+|                <a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>                |   ![html-npm]   |   ![html-size]   | Exports HTML as string, requires references to static resources                         |
+|   <a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>   |   ![pug-npm]    |   ![pug-size]    | Loads Pug templates and returns a function                                              |
+| <a href="https://github.com/webdiscus/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a> |   ![pug3-npm]   |   ![pug3-size]   | Compiles Pug to a function or HTML string, useful for use with Vue, React, Angular      |
+|                <a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/markdown.svg"></a>                |    ![md-npm]    |    ![md-size]    | Compiles Markdown to HTML                                                               |
+|                 <a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="https://posthtml.github.io/posthtml/logo.svg"></a>                 | ![posthtml-npm] | ![posthtml-size] | Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml) |
+|             <a href="https://github.com/pcardune/handlebars-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/handlebars-1.svg"></a>             |   ![hbs-npm]    |   ![hbs-size]    | Compiles Handlebars to HTML                                                             |
 
 [html-npm]: https://img.shields.io/npm/v/html-loader.svg
 [html-size]: https://packagephobia.com/badge?p=html-loader
 [pug-npm]: https://img.shields.io/npm/v/pug-loader.svg
 [pug-size]: https://packagephobia.com/badge?p=pug-loader
+[pug3-npm]: https://img.shields.io/npm/v/@webdiscus/pug-loader.svg
+[pug3-size]: https://packagephobia.com/badge?p=@webdiscus/pug-loader
 [jade-npm]: https://img.shields.io/npm/v/jade-loader.svg
 [jade-size]: https://packagephobia.com/badge?p=jade-loader
 [md-npm]: https://img.shields.io/npm/v/markdown-loader.svg
