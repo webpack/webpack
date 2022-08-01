@@ -2503,11 +2503,11 @@ declare interface ContextHash {
 }
 type ContextMode =
 	| "weak"
-	| "sync"
 	| "eager"
-	| "async-weak"
 	| "lazy"
-	| "lazy-once";
+	| "lazy-once"
+	| "sync"
+	| "async-weak";
 declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		beforeResolve: AsyncSeriesWaterfallHook<[any]>;
@@ -3543,12 +3543,12 @@ declare interface ExperimentsNormalizedExtra {
 	/**
 	 * Enable css support.
 	 */
-	css?: CssExperimentOptions;
+	css?: false | CssExperimentOptions;
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
-	lazyCompilation?: LazyCompilationOptions;
+	lazyCompilation?: false | LazyCompilationOptions;
 }
 declare abstract class ExportInfo {
 	name: string;
@@ -3846,6 +3846,13 @@ declare interface ExpressionExpressionInfo {
 	name: string;
 	getMembers: () => string[];
 	getMembersOptionals: () => boolean[];
+}
+declare interface ExtensionAliasOption {
+	alias: string | string[];
+	extension: string;
+}
+declare interface ExtensionAliasOptions {
+	[index: string]: string | string[];
 }
 type ExternalItem =
 	| string
@@ -4502,6 +4509,42 @@ declare interface HandleModuleCreationOptions {
 	 */
 	connectOrigin?: boolean;
 }
+declare class HarmonyImportDependency extends ModuleDependency {
+	constructor(
+		request: string,
+		sourceOrder: number,
+		assertions?: Record<string, any>
+	);
+	sourceOrder: number;
+	getImportVar(moduleGraph: ModuleGraph): string;
+	getImportStatement(
+		update: boolean,
+		__1: DependencyTemplateContext
+	): [string, string];
+	getLinkingErrors(
+		moduleGraph: ModuleGraph,
+		ids: string[],
+		additionalMessage: string
+	): undefined | WebpackError[];
+	static Template: typeof HarmonyImportDependencyTemplate;
+	static ExportPresenceModes: {
+		NONE: 0;
+		WARN: 1;
+		AUTO: 2;
+		ERROR: 3;
+		fromUserOption(str?: any): 0 | 1 | 2 | 3;
+	};
+	static NO_EXPORTS_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
+}
+declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
+	constructor();
+	static getImportEmittedRuntime(
+		module: Module,
+		referencedModule: Module
+	): undefined | string | boolean | SortableSet<string>;
+}
 declare class Hash {
 	constructor();
 
@@ -4899,6 +4942,15 @@ declare class JavascriptParser extends Parser {
 		evaluateDefinedIdentifier: HookMap<
 			SyncBailHook<
 				[ThisExpression | MemberExpression | Identifier],
+				undefined | null | BasicEvaluatedExpression
+			>
+		>;
+		evaluateNewExpression: HookMap<
+			SyncBailHook<[NewExpression], undefined | null | BasicEvaluatedExpression>
+		>;
+		evaluateCallExpression: HookMap<
+			SyncBailHook<
+				[CallExpression],
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
@@ -5410,6 +5462,7 @@ declare class JavascriptParser extends Parser {
 	isVariableDefined(name?: any): boolean;
 	getVariableInfo(name: string): ExportedVariableInfo;
 	setVariable(name: string, variableInfo: ExportedVariableInfo): void;
+	evaluatedVariable(tagInfo?: any): VariableInfo;
 	parseCommentOptions(
 		range?: any
 	): { options: null; errors: null } | { options: object; errors: unknown[] };
@@ -5489,6 +5542,26 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable parsing of magic comments in CommonJs syntax.
 	 */
 	commonjsMagicComments?: boolean;
+
+	/**
+	 * Enable/disable parsing "import { createRequire } from "module"" and evaluating createRequire().
+	 */
+	createRequire?: string | boolean;
+
+	/**
+	 * Specifies global mode for dynamic import.
+	 */
+	dynamicImportMode?: "weak" | "eager" | "lazy" | "lazy-once";
+
+	/**
+	 * Specifies global prefetch for dynamic import.
+	 */
+	dynamicImportPrefetch?: number | boolean;
+
+	/**
+	 * Specifies global preload for dynamic import.
+	 */
+	dynamicImportPreload?: number | boolean;
 
 	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
@@ -9544,6 +9617,7 @@ declare interface ResolveOptionsTypes {
 	alias: AliasOption[];
 	fallback: AliasOption[];
 	aliasFields: Set<string | string[]>;
+	extensionAlias: ExtensionAliasOption[];
 	cachePredicate: (arg0: ResolveRequest) => boolean;
 	cacheWithContext: boolean;
 
@@ -9641,6 +9715,11 @@ declare interface ResolveOptionsWebpackOptions {
 	 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
 	 */
 	exportsFields?: string[];
+
+	/**
+	 * An object which maps extension to extension aliases.
+	 */
+	extensionAlias?: { [index: string]: string | string[] };
 
 	/**
 	 * Extensions added to the request when trying to find the file.
@@ -11855,6 +11934,11 @@ declare interface UserResolveOptions {
 	fallback?: AliasOption[] | AliasOptions;
 
 	/**
+	 * An object which maps extension to extension aliases
+	 */
+	extensionAlias?: ExtensionAliasOptions;
+
+	/**
 	 * A list of alias fields in description files
 	 */
 	aliasFields?: (string | string[])[];
@@ -12691,7 +12775,12 @@ declare namespace exports {
 		) => void;
 	}
 	export namespace dependencies {
-		export { ModuleDependency, ConstDependency, NullDependency };
+		export {
+			ModuleDependency,
+			HarmonyImportDependency,
+			ConstDependency,
+			NullDependency
+		};
 	}
 	export namespace ids {
 		export {
@@ -13063,6 +13152,7 @@ declare namespace exports {
 		Asset,
 		AssetInfo,
 		EntryOptions,
+		PathData,
 		AssetEmittedInfo,
 		MultiStats,
 		ParserState,

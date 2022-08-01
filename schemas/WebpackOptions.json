@@ -897,7 +897,10 @@
         },
         "css": {
           "description": "Enable css support.",
-          "oneOf": [
+          "anyOf": [
+            {
+              "enum": [false]
+            },
             {
               "$ref": "#/definitions/CssExperimentOptions"
             }
@@ -913,7 +916,10 @@
         },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
-          "oneOf": [
+          "anyOf": [
+            {
+              "enum": [false]
+            },
             {
               "$ref": "#/definitions/LazyCompilationOptions"
             }
@@ -1579,6 +1585,43 @@
         "commonjsMagicComments": {
           "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
           "type": "boolean"
+        },
+        "createRequire": {
+          "description": "Enable/disable parsing \"import { createRequire } from \"module\"\" and evaluating createRequire().",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "dynamicImportMode": {
+          "description": "Specifies global mode for dynamic import.",
+          "enum": ["eager", "weak", "lazy", "lazy-once"]
+        },
+        "dynamicImportPrefetch": {
+          "description": "Specifies global prefetch for dynamic import.",
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "dynamicImportPreload": {
+          "description": "Specifies global preload for dynamic import.",
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "exportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
@@ -3698,6 +3741,29 @@
           "items": {
             "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
             "type": "string"
+          }
+        },
+        "extensionAlias": {
+          "description": "An object which maps extension to extension aliases.",
+          "type": "object",
+          "additionalProperties": {
+            "description": "Extension alias.",
+            "anyOf": [
+              {
+                "description": "Multiple extensions.",
+                "type": "array",
+                "items": {
+                  "description": "Aliased extension.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              {
+                "description": "Aliased extension.",
+                "type": "string",
+                "minLength": 1
+              }
+            ]
           }
         },
         "extensions": {

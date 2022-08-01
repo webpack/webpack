@@ -363,4 +363,50 @@ ${details(snapshot)}`)
 			}
 		});
 	}
+
+	describe("stable iterables identity", () => {
+		const options = { timestamp: true };
+
+		/**
+		 * @param {function((WebpackError | null)=, (Snapshot | null)=): void} callback callback function
+		 */
+		function getSnapshot(callback) {
+			const fs = createFs();
+			const fsInfo = createFsInfo(fs);
+			fsInfo.createSnapshot(
+				Date.now() + 10000,
+				files,
+				directories,
+				missing,
+				options,
+				callback
+			);
+		}
+
+		it("should return same iterable for getFileIterable()", done => {
+			getSnapshot((err, snapshot) => {
+				if (err) done(err);
+				expect(snapshot.getFileIterable()).toEqual(snapshot.getFileIterable());
+				done();
+			});
+		});
+
+		it("should return same iterable for getContextIterable()", done => {
+			getSnapshot((err, snapshot) => {
+				if (err) done(err);
+				expect(snapshot.getContextIterable()).toEqual(
+					snapshot.getContextIterable()
+				);
+				done();
+			});
+		});
+
+		it("should return same iterable for getMissingIterable()", done => {
+			getSnapshot((err, snapshot) => {
+				if (err) done(err);
+				expect(snapshot.getFileIterable()).toEqual(snapshot.getFileIterable());
+				done();
+			});
+		});
+	});
 });

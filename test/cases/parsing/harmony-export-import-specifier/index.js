@@ -6,7 +6,7 @@ import { b1, usedB1, usedB2, usedB3, usedB4 } from "./b.js";
 import { usedE1, usedE2 } from "./e.js";
 import { h } from "./h.js";
 import * as m from "./m";
-import {object as obj} from "./m";
+import { object as obj } from "./m";
 import cjs from "./cjs2";
 import * as o from "./o";
 import * as p from "./p";
@@ -78,4 +78,13 @@ it("should handle 'm in n' case", () => {
 		expect(m.usedA).toBe(true);
 		expect(m.canMangleA).toBe(true);
 	}
+});
+
+it("issue-15759", () => {
+	function foo() {
+		// PLEASE CONFIRM there is no space after return
+		// prettier-ignore
+		return"usedA"in m;
+	}
+	expect(foo.call()).toBe(true);
 });
