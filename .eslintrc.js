@@ -56,7 +56,7 @@ module.exports = {
 				...["implements", "const", "memberof", "readonly", "yields"].reduce(
 					(acc, tag) => {
 						acc[tag] = {
-							message: `@${tag} currently not supported in Typescript`
+							message: `@${tag} currently not supported in TypeScript`
 						};
 						return acc;
 					},
