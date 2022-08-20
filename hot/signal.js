@@ -45,7 +45,7 @@ if (module.hot) {
 			});
 	};
 
-	process.on(__resourceQuery.substr(1) || "SIGUSR2", function () {
+	process.on(__resourceQuery.slice(1) || "SIGUSR2", function () {
 		if (module.hot.status() !== "idle") {
 			log(
 				"warning",

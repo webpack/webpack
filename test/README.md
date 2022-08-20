@@ -25,7 +25,7 @@ See also: [Jest CLI docs](https://jestjs.io/docs/cli)
 We use Jest for our tests. For more information on Jest you can visit their [homepage](https://jestjs.io/)!
 
 ### Class Tests
-All test files can be found in *.test.js. There are many tests that simply test API's of a specific class/file (such as `Compiler`, `Errors`, Integration, `Parser`, `RuleSet`, Validation).
+All test files can be found in *.test.js. There are many tests that simply test APIs of a specific class/file (such as `Compiler`, `Errors`, Integration, `Parser`, `RuleSet`, Validation).
 If the feature you are contributing involves one of those classes, then best to start there to understand the structure.
 
 ### xCases
@@ -38,12 +38,12 @@ To add a new case, create a new directory inside of the top level test groups, a
 
 By default this file will be the entry point for the test suite and you can add your `it()`'s there. This will also become bundled so that node env support happens as well.
 
-#### configCases (`ConfigTestCases.test.js`) <sup>1</sup>
+#### configCases (`ConfigTestCases.basictest.js`) <sup>1</sup>
 If you are trying to solve a bug which is reproducible when x and y properties are used together in a config, then configCases is the place to be!!!!
 
 In addition to an `index.js`, these configCases require a `webpack.config.js` is located inside of your test suite. This will run this specific config through `webpack` just as you were building individually. They will use the same loading/bundling technique of your `it()` tests, however you now have a more specific config use cases that you can write even before you start coding.
 
-#### statsCases (`StatsTestCases.test.js`)
+#### statsCases (`StatsTestCases.basictest.js`)
 Stats cases are similar to configCases except specifically focusing on the `expected` output of your stats. Instead of writing to the console, however the output of stats will be written to disk.
 
 By default, the "expected" outcome is a pain to write by hand so instead when statsCases are run, runner is checking output using jest's awesome snapshot functionality.
@@ -69,4 +69,4 @@ If you are still nervous or don't quite understand, please submit an issue and t
 
 
 ## Footnotes
-<sup>1</sup> webpack's parser supports the use of ES2015 features like arrow functions, harmony exports, etc. However as a library we follow NodeJS's timeline for dropping older versions of node. Because of this we expect your tests on Travis to pass all the way back to NodeJS v10; Therefore if you would like specific tests that use these features to be ignored if they are not supported, then you should add a `test.filter.js` file. This allows you to import the syntax needed for that test, meanwhile ignoring it on node versions (during CI) that don't support it. webpack has a variety of helpful examples you can refer to if you are just starting out. See the `./helpers` folder to find a list of the versions.
+<sup>1</sup> webpack's parser supports the use of ES2015 features like arrow functions, harmony exports, etc. However as a library we follow Node.js' timeline for dropping older versions of node. Because of this we expect your tests on GitHub Actions to pass all the way back to NodeJS v10; Therefore if you would like specific tests that use these features to be ignored if they are not supported, then you should add a `test.filter.js` file. This allows you to import the syntax needed for that test, meanwhile ignoring it on node versions (during CI) that don't support it. webpack has a variety of helpful examples you can refer to if you are just starting out. See the `./helpers` folder to find a list of the versions.

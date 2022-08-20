@@ -90,8 +90,9 @@ exports.add = function() {
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
@@ -113,6 +114,8 @@ exports.add = function() {
 </details>
 
 ``` js
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 /*!********************!*\
   !*** ./example.js ***!
@@ -134,25 +137,25 @@ inc(a); // 2
 ## Unoptimized
 
 ```
-asset output.js 2.34 KiB [emitted] (name: main)
+asset output.js 2.51 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 326 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 254 bytes [dependent] 2 modules
   ./example.js 72 bytes [built] [code generated]
     [used exports unknown]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 296 bytes [emitted] [minimized] (name: main)
+asset output.js 310 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 326 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 254 bytes [dependent] 2 modules
   ./example.js 72 bytes [built] [code generated]
     [no exports used]
     entry ./example.js main
-webpack 5.11.1 compiled successfully
+webpack 5.51.1 compiled successfully
 ```

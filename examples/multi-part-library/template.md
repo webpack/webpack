@@ -10,7 +10,7 @@ You can see that webpack automatically wraps your module so that it is consumabl
 
 Note: You can also use the `library` and `libraryTarget` options without multiple entry points. Then you don't need `[name]`.
 
-Note: When your library has dependencies that should not be included in the compiled version, you can use the `externals` option. See [externals example](https://github.com/webpack/webpack/tree/master/examples/externals).
+Note: When your library has dependencies that should not be included in the compiled version, you can use the `externals` option. See [externals example](https://github.com/webpack/webpack/tree/main/examples/externals).
 
 # webpack.config.js
 

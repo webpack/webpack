@@ -1,4 +1,2 @@
-it("should compile and evaluate fine", () => {});
-
-import("./a");
-import("./b");
+it("should compile and evaluate fine", () =>
+	Promise.all([import("./a"), import("./b")]));

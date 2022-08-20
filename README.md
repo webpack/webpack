@@ -9,16 +9,14 @@
 
 [![node][node]][node-url]
 [![deps][deps]][deps-url]
-[![tests][tests]][tests-url]
-[![builds][builds]][builds-url]
 [![builds2][builds2]][builds2-url]
 [![coverage][cover]][cover-url]
 [![licenses][licenses]][licenses-url]
 [![PR's welcome][prs]][prs-url]
 
   <br>
-  <a href="https://dependabot.com/compatibility-score.html?dependency-name=webpack&package-manager=npm_and_yarn&new-version=latest">
-    <img src="https://api.dependabot.com/badges/compatibility_score?dependency-name=webpack&package-manager=npm_and_yarn&version-scheme=semver&target-version=latest">
+  <a href="https://docs.github.com/en/code-security/dependabot/dependabot-security-updates/about-dependabot-security-updates#about-compatibility-scores">
+    <img src="https://api.dependabot.com/badges/compatibility_score?dependency-name=webpack&package-manager=npm_and_yarn&previous-version=5.72.1&new-version=5.73.0">
   </a>
 	<a href="https://npmcharts.com/compare/webpack?minimal=true">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
@@ -112,6 +110,7 @@ within webpack itself use this plugin interface. This makes webpack very
 |    [mini-css-extract-plugin][mini-css]    |  ![mini-css-npm]   |  ![mini-css-size]   | Extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. |
 | [compression-webpack-plugin][compression] | ![compression-npm] | ![compression-size] | Prepares compressed versions of assets to serve them with Content-Encoding              |
 |    [html-webpack-plugin][html-plugin]     | ![html-plugin-npm] | ![html-plugin-size] | Simplifies creation of HTML files (`index.html`) to serve your bundles                  |
+|         [pug-plugin][pug-plugin]          | ![pug-plugin-npm]  | ![pug-plugin-size]  | Renders Pug files to HTML, extracts JS and CSS from sources specified directly in Pug.  |
 
 [common-npm]: https://img.shields.io/npm/v/webpack.svg
 [mini-css]: https://github.com/webpack-contrib/mini-css-extract-plugin
@@ -126,6 +125,9 @@ within webpack itself use this plugin interface. This makes webpack very
 [html-plugin]: https://github.com/jantimon/html-webpack-plugin
 [html-plugin-npm]: https://img.shields.io/npm/v/html-webpack-plugin.svg
 [html-plugin-size]: https://packagephobia.com/badge?p=html-webpack-plugin
+[pug-plugin]: https://github.com/webdiscus/pug-plugin
+[pug-plugin-npm]: https://img.shields.io/npm/v/pug-plugin.svg
+[pug-plugin-size]: https://packagephobia.com/badge?p=pug-plugin
 
 ### [Loaders](https://webpack.js.org/loaders/)
 
@@ -138,25 +140,13 @@ or are automatically applied via regex from your webpack configuration.
 
 #### Files
 
-|        Name         |   Status    | Install Size | Description                                                                               |
-| :-----------------: | :---------: | :----------: | :---------------------------------------------------------------------------------------- |
-|  [raw-loader][raw]  | ![raw-npm]  | ![raw-size]  | Loads raw content of a file (utf-8)                                                       |
-|  [val-loader][val]  | ![val-npm]  | ![val-size]  | Executes code as module and considers exports as JS code                                  |
-|  [url-loader][url]  | ![url-npm]  | ![url-size]  | Works like the file loader, but can return a Data Url if the file is smaller than a limit |
-| [file-loader][file] | ![file-npm] | ![file-size] | Emits the file into the output folder and returns the (relative) url                      |
+|       Name        |   Status   | Install Size | Description                                              |
+| :---------------: | :--------: | :----------: | :------------------------------------------------------- |
+| [val-loader][val] | ![val-npm] | ![val-size]  | Executes code as module and considers exports as JS code |
 
-[raw]: https://github.com/webpack-contrib/raw-loader
-[raw-npm]: https://img.shields.io/npm/v/raw-loader.svg
-[raw-size]: https://packagephobia.com/badge?p=raw-loader
 [val]: https://github.com/webpack-contrib/val-loader
 [val-npm]: https://img.shields.io/npm/v/val-loader.svg
 [val-size]: https://packagephobia.com/badge?p=val-loader
-[url]: https://github.com/webpack-contrib/url-loader
-[url-npm]: https://img.shields.io/npm/v/url-loader.svg
-[url-size]: https://packagephobia.com/badge?p=url-loader
-[file]: https://github.com/webpack-contrib/file-loader
-[file-npm]: https://img.shields.io/npm/v/file-loader.svg
-[file-size]: https://packagephobia.com/badge?p=file-loader
 
 #### JSON
 
@@ -184,18 +174,21 @@ or are automatically applied via regex from your webpack configuration.
 
 #### Templating
 
-|                                                                                 Name                                                                                  |     Status      |   Install Size   | Description                                                                             |
-| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :-------------------------------------------------------------------------------------- |
-|              <a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>              |   ![html-npm]   |   ![html-size]   | Exports HTML as string, requires references to static resources                         |
-| <a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a> |   ![pug-npm]    |   ![pug-size]    | Loads Pug templates and returns a function                                              |
-|              <a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/markdown.svg"></a>              |    ![md-npm]    |    ![md-size]    | Compiles Markdown to HTML                                                               |
-|               <a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="https://posthtml.github.io/posthtml/logo.svg"></a>               | ![posthtml-npm] | ![posthtml-size] | Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml) |
-|           <a href="https://github.com/pcardune/handlebars-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/handlebars-1.svg"></a>           |   ![hbs-npm]    |   ![hbs-size]    | Compiles Handlebars to HTML                                                             |
+|                                                                                   Name                                                                                    |     Status      |   Install Size   | Description                                                                             |
+| :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------: | :--------------: | :-------------------------------------------------------------------------------------- |
+|                <a href="https://github.com/webpack-contrib/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>                |   ![html-npm]   |   ![html-size]   | Exports HTML as string, requires references to static resources                         |
+|   <a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>   |   ![pug-npm]    |   ![pug-size]    | Loads Pug templates and returns a function                                              |
+| <a href="https://github.com/webdiscus/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a> |   ![pug3-npm]   |   ![pug3-size]   | Compiles Pug to a function or HTML string, useful for use with Vue, React, Angular      |
+|                <a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/markdown.svg"></a>                |    ![md-npm]    |    ![md-size]    | Compiles Markdown to HTML                                                               |
+|                 <a href="https://github.com/posthtml/posthtml-loader"><img width="48" height="48" src="https://posthtml.github.io/posthtml/logo.svg"></a>                 | ![posthtml-npm] | ![posthtml-size] | Loads and transforms a HTML file using [PostHTML](https://github.com/posthtml/posthtml) |
+|             <a href="https://github.com/pcardune/handlebars-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/handlebars-1.svg"></a>             |   ![hbs-npm]    |   ![hbs-size]    | Compiles Handlebars to HTML                                                             |
 
 [html-npm]: https://img.shields.io/npm/v/html-loader.svg
 [html-size]: https://packagephobia.com/badge?p=html-loader
 [pug-npm]: https://img.shields.io/npm/v/pug-loader.svg
 [pug-size]: https://packagephobia.com/badge?p=pug-loader
+[pug3-npm]: https://img.shields.io/npm/v/@webdiscus/pug-loader.svg
+[pug3-size]: https://packagephobia.com/badge?p=@webdiscus/pug-loader
 [jade-npm]: https://img.shields.io/npm/v/jade-loader.svg
 [jade-size]: https://packagephobia.com/badge?p=jade-loader
 [md-npm]: https://img.shields.io/npm/v/markdown-loader.svg
@@ -287,7 +280,7 @@ Contributions go far beyond pull requests and commits. Although we love giving y
 - [Blogging, speaking about, or creating tutorials](https://github.com/webpack-contrib/awesome-webpack) about one of webpack's many features.
 - Helping others in our webpack [gitter channel](https://gitter.im/webpack/webpack).
 
-To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/master/CONTRIBUTING.md).
+To get started have a look at our [documentation on contributing](https://github.com/webpack/webpack/blob/main/CONTRIBUTING.md).
 
 If you are worried or don't know where to start, you can **always** reach out to [Sean Larkin (@TheLarkInn) on Twitter](https://twitter.com/thelarkinn) or simply submit an issue and a maintainer can help give you guidance!
 
@@ -701,7 +694,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 - [@google](https://github.com/google) for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
 - [@medikoo](https://github.com/medikoo) for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webmake. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
-- [@substack](https://github.com/substack) for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
+- [@substack](https://github.com/substack) for [browserify](https://browserify.org/), which is a similar project and source for many ideas.
 - [@jrburke](https://github.com/jrburke) for [require.js](https://requirejs.org/), which is a similar project and source for many ideas.
 - [@defunctzombie](https://github.com/defunctzombie) for the [browser-field spec](https://github.com/defunctzombie/package-browser-field-spec), which makes modules available for node.js, browserify and webpack.
 - Every early webpack user, which contributed to webpack by writing issues or PRs. You influenced the direction...
@@ -715,12 +708,8 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 [node-url]: https://nodejs.org
 [deps]: https://img.shields.io/david/webpack/webpack.svg
 [deps-url]: https://david-dm.org/webpack/webpack
-[tests]: https://img.shields.io/travis/webpack/webpack/master.svg
-[tests-url]: https://travis-ci.org/webpack/webpack
 [prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
 [prs-url]: https://webpack.js.org/contribute/
-[builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
-[builds]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
 [builds2]: https://dev.azure.com/webpack/webpack/_apis/build/status/webpack.webpack
 [builds2-url]: https://dev.azure.com/webpack/webpack/_build/latest?definitionId=3
 [licenses-url]: https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_shield

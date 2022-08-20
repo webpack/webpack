@@ -1,7 +1,7 @@
 var MCEP = require("mini-css-extract-plugin");
 
-/** @type {import("../../../../").Configuration} */
-module.exports = {
+/** @type {(number, any) => import("../../../../").Configuration} */
+const config = (i, options) => ({
 	entry: {
 		a: "./a",
 		b: "./b",
@@ -9,13 +9,19 @@ module.exports = {
 		x: "./x" // also imports chunk but with different exports
 	},
 	output: {
-		filename: "[name].js"
+		filename: `${i}_[name].js`
 	},
 	module: {
 		rules: [
 			{
-				test: /\.css$/,
-				use: [MCEP.loader, "css-loader"]
+				oneOf: [
+					{
+						test: /\.css$/,
+						use: [MCEP.loader, "css-loader"]
+					},
+					{ test: /\.js$/ },
+					{ type: "asset" }
+				]
 			}
 		]
 	},
@@ -27,7 +33,7 @@ module.exports = {
 		__dirname: false
 	},
 	plugins: [
-		new MCEP(),
+		new MCEP(options),
 		compiler => {
 			compiler.hooks.done.tap("Test", stats => {
 				const chunkIds = stats
@@ -47,4 +53,11 @@ module.exports = {
 			});
 		}
 	]
-};
+});
+
+module.exports = [
+	config(0),
+	config(1, {
+		experimentalUseImportModule: true
+	})
+];

@@ -193,7 +193,17 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 		},
 		singleton: {
 			"1.1.1": {
-				get: () => () => "shared singleton"
+				get: () => () => "shared singleton",
+				from: 'container-a'
+			}
+		},
+		singletonWithoutVersion: {
+			"1.0.0": {
+				get: () => () => "shared singleton v1.0.0",
+				loaded: true
+			},
+			"2.0.0": {
+				get: () => () => "shared singleton v2.0.0"
 			}
 		}
 	};
@@ -230,7 +240,25 @@ it("should handle version matching correctly in strict and singleton mode", asyn
 		const result = await import("singleton");
 		expect(result.default).toBe("shared singleton");
 		expectWarning(
-			/Unsatisfied version 1\.1\.1 of shared singleton module singleton \(required =1\.1\.0\)/
+			/Unsatisfied version 1\.1\.1 from container-a of shared singleton module singleton \(required =1\.1\.0\)/
 		);
+	}
+});
+
+it("should not instantiate multiple singletons even if a higher version exists", async () => {
+	__webpack_share_scopes__["default"] = {
+		singletonWithoutVersion: {
+			"1.0.0": {
+				get: () => () => "shared singleton v1.0.0",
+				loaded: true
+			},
+			"2.0.0": {
+				get: () => () => "shared singleton v2.0.0"
+			}
+		}
+	};
+	{
+		const result = await import("singletonWithoutVersion");
+		expect(result.default).toBe("shared singleton v1.0.0");
 	}
 });

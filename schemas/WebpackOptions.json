@@ -70,7 +70,7 @@
       ]
     },
     "AssetGeneratorDataUrlFunction": {
-      "description": "Function that executes for module and should return an DataUrl string.",
+      "description": "Function that executes for module and should return an DataUrl string. It can have a string as 'ident' property which contributes to the module hash.",
       "instanceof": "Function",
       "tsType": "((source: string | Buffer, context: { filename: string, module: import('../lib/Module') }) => string)"
     },
@@ -108,6 +108,9 @@
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
         },
+        "outputPath": {
+          "$ref": "#/definitions/AssetModuleOutputPath"
+        },
         "publicPath": {
           "$ref": "#/definitions/RawPublicPath"
         }
@@ -125,6 +128,19 @@
     },
     "AssetModuleFilename": {
       "description": "The filename of asset modules as relative path inside the 'output.path' directory.",
+      "anyOf": [
+        {
+          "type": "string",
+          "absolutePath": false
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
+        }
+      ]
+    },
+    "AssetModuleOutputPath": {
+      "description": "Emit the asset in the specified folder relative to 'output.path'. This should only be needed when custom 'publicPath' is specified to match the folder structure there.",
       "anyOf": [
         {
           "type": "string",
@@ -181,6 +197,9 @@
         },
         "filename": {
           "$ref": "#/definitions/FilenameTemplate"
+        },
+        "outputPath": {
+          "$ref": "#/definitions/AssetModuleOutputPath"
         },
         "publicPath": {
           "$ref": "#/definitions/RawPublicPath"
@@ -243,10 +262,10 @@
       ]
     },
     "ChunkFormat": {
-      "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), but others might be added by plugins).",
+      "description": "The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).",
       "anyOf": [
         {
-          "enum": ["array-push", "commonjs", false]
+          "enum": ["array-push", "commonjs", "module", false]
         },
         {
           "type": "string"
@@ -258,7 +277,7 @@
       "type": "number"
     },
     "ChunkLoading": {
-      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
       "anyOf": [
         {
           "enum": [false]
@@ -273,10 +292,10 @@
       "type": "string"
     },
     "ChunkLoadingType": {
-      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+      "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
       "anyOf": [
         {
-          "enum": ["jsonp", "import-scripts", "require", "async-node"]
+          "enum": ["jsonp", "import-scripts", "require", "async-node", "import"]
         },
         {
           "type": "string"
@@ -334,6 +353,45 @@
     "CrossOriginLoading": {
       "description": "This option enables cross-origin loading of chunks.",
       "enum": [false, "anonymous", "use-credentials"]
+    },
+    "CssChunkFilename": {
+      "description": "Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/FilenameTemplate"
+        }
+      ]
+    },
+    "CssExperimentOptions": {
+      "description": "Options for css handling.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsOnly": {
+          "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+          "type": "boolean"
+        }
+      }
+    },
+    "CssFilename": {
+      "description": "Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/FilenameTemplate"
+        }
+      ]
+    },
+    "CssGeneratorOptions": {
+      "description": "Generator options for css modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "CssParserOptions": {
+      "description": "Parser options for css modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
     },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
@@ -434,6 +492,14 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "asyncChunks": {
+          "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
+        },
+        "baseUri": {
+          "description": "Base uri for this entry.",
+          "type": "string"
+        },
         "chunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
@@ -487,6 +553,14 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "asyncChunks": {
+          "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
+        },
+        "baseUri": {
+          "description": "Base uri for this entry.",
+          "type": "string"
+        },
         "chunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
@@ -599,8 +673,15 @@
     },
     "EntryRuntime": {
       "description": "The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.",
-      "type": "string",
-      "minLength": 1
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
     },
     "EntryStatic": {
       "description": "A static entry description.",
@@ -665,28 +746,63 @@
         "module": {
           "description": "The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').",
           "type": "boolean"
+        },
+        "optionalChaining": {
+          "description": "The environment supports optional chaining ('obj?.a' or 'obj?.()').",
+          "type": "boolean"
+        },
+        "templateLiteral": {
+          "description": "The environment supports template literals.",
+          "type": "boolean"
         }
       }
     },
     "Experiments": {
       "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
       "type": "object",
+      "implements": ["#/definitions/ExperimentsCommon"],
       "additionalProperties": false,
       "properties": {
-        "asset": {
-          "description": "Allow module type 'asset' to generate assets.",
-          "type": "boolean"
-        },
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module.",
           "type": "boolean"
         },
-        "executeModule": {
-          "description": "Enable build-time execution of modules from the module graph for plugins and loaders.",
+        "backCompat": {
+          "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
+          "type": "boolean"
+        },
+        "buildHttp": {
+          "description": "Build http(s): urls using a lockfile and resource content cache.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/HttpUriAllowedUris"
+            },
+            {
+              "$ref": "#/definitions/HttpUriOptions"
+            }
+          ]
+        },
+        "cacheUnaffected": {
+          "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
+          "type": "boolean"
+        },
+        "css": {
+          "description": "Enable css support.",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/CssExperimentOptions"
+            }
+          ]
+        },
+        "futureDefaults": {
+          "description": "Apply defaults of next major version.",
           "type": "boolean"
         },
         "layers": {
-          "description": "Enable module and chunk layers.",
+          "description": "Enable module layers.",
           "type": "boolean"
         },
         "lazyCompilation": {
@@ -696,43 +812,116 @@
               "type": "boolean"
             },
             {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "backend": {
-                  "description": "A custom backend.",
-                  "instanceof": "Function",
-                  "tsType": "(((compiler: import('../lib/Compiler'), client: string, callback: (err?: Error, api?: any) => void) => void) | ((compiler: import('../lib/Compiler'), client: string) => Promise<any>))"
-                },
-                "client": {
-                  "description": "A custom client.",
-                  "type": "string"
-                },
-                "entries": {
-                  "description": "Enable/disable lazy compilation for entries.",
-                  "type": "boolean"
-                },
-                "imports": {
-                  "description": "Enable/disable lazy compilation for import() modules.",
-                  "type": "boolean"
-                },
-                "test": {
-                  "description": "Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.",
-                  "anyOf": [
-                    {
-                      "instanceof": "RegExp",
-                      "tsType": "RegExp"
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "instanceof": "Function",
-                      "tsType": "((module: import('../lib/Module')) => boolean)"
-                    }
-                  ]
-                }
-              }
+              "$ref": "#/definitions/LazyCompilationOptions"
+            }
+          ]
+        },
+        "outputModule": {
+          "description": "Allow output javascript files as module source type.",
+          "type": "boolean"
+        },
+        "syncWebAssembly": {
+          "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
+          "type": "boolean"
+        },
+        "topLevelAwait": {
+          "description": "Allow using top-level-await in EcmaScript Modules.",
+          "type": "boolean"
+        }
+      }
+    },
+    "ExperimentsCommon": {
+      "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "asyncWebAssembly": {
+          "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+          "type": "boolean"
+        },
+        "backCompat": {
+          "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
+          "type": "boolean"
+        },
+        "cacheUnaffected": {
+          "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
+          "type": "boolean"
+        },
+        "futureDefaults": {
+          "description": "Apply defaults of next major version.",
+          "type": "boolean"
+        },
+        "layers": {
+          "description": "Enable module layers.",
+          "type": "boolean"
+        },
+        "outputModule": {
+          "description": "Allow output javascript files as module source type.",
+          "type": "boolean"
+        },
+        "syncWebAssembly": {
+          "description": "Support WebAssembly as synchronous EcmaScript Module (outdated).",
+          "type": "boolean"
+        },
+        "topLevelAwait": {
+          "description": "Allow using top-level-await in EcmaScript Modules.",
+          "type": "boolean"
+        }
+      }
+    },
+    "ExperimentsNormalized": {
+      "description": "Enables/Disables experiments (experimental features with relax SemVer compatibility).",
+      "type": "object",
+      "implements": ["#/definitions/ExperimentsCommon"],
+      "additionalProperties": false,
+      "properties": {
+        "asyncWebAssembly": {
+          "description": "Support WebAssembly as asynchronous EcmaScript Module.",
+          "type": "boolean"
+        },
+        "backCompat": {
+          "description": "Enable backward-compat layer with deprecation warnings for many webpack 4 APIs.",
+          "type": "boolean"
+        },
+        "buildHttp": {
+          "description": "Build http(s): urls using a lockfile and resource content cache.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/HttpUriOptions"
+            }
+          ]
+        },
+        "cacheUnaffected": {
+          "description": "Enable additional in memory caching of modules that are unchanged and reference only unchanged modules.",
+          "type": "boolean"
+        },
+        "css": {
+          "description": "Enable css support.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "$ref": "#/definitions/CssExperimentOptions"
+            }
+          ]
+        },
+        "futureDefaults": {
+          "description": "Apply defaults of next major version.",
+          "type": "boolean"
+        },
+        "layers": {
+          "description": "Enable module layers.",
+          "type": "boolean"
+        },
+        "lazyCompilation": {
+          "description": "Compile entrypoints and import()s only when they are accessed.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "$ref": "#/definitions/LazyCompilationOptions"
             }
           ]
         },
@@ -806,6 +995,10 @@
           "description": "Contextual information.",
           "type": "object",
           "tsType": "import('../lib/ModuleFactory').ModuleFactoryCreateDataContextInfo"
+        },
+        "dependencyType": {
+          "description": "The category of the referencing dependencies.",
+          "type": "string"
         },
         "getResolve": {
           "description": "Get a resolve function with the current resolver options.",
@@ -908,6 +1101,7 @@
         "commonjs",
         "commonjs2",
         "commonjs-module",
+        "commonjs-static",
         "amd",
         "amd-require",
         "umd",
@@ -916,7 +1110,8 @@
         "system",
         "promise",
         "import",
-        "script"
+        "script",
+        "node-commonjs"
       ]
     },
     "FileCacheOptions": {
@@ -951,17 +1146,26 @@
           "type": "string",
           "absolutePath": true
         },
+        "compression": {
+          "description": "Compression type used for the cache files.",
+          "enum": [false, "gzip", "brotli"]
+        },
         "hashAlgorithm": {
           "description": "Algorithm used for generation the hash (see node.js crypto package).",
           "type": "string"
         },
         "idleTimeout": {
-          "description": "Time in ms after which idle period the cache storing should happen (only for store: 'pack').",
+          "description": "Time in ms after which idle period the cache storing should happen.",
+          "type": "number",
+          "minimum": 0
+        },
+        "idleTimeoutAfterLargeChanges": {
+          "description": "Time in ms after which idle period the cache storing should happen when larger changes has been detected (cumulative build time > 2 x avg cache store time).",
           "type": "number",
           "minimum": 0
         },
         "idleTimeoutForInitialStore": {
-          "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack').",
+          "description": "Time in ms after which idle period the initial cache storing should happen.",
           "type": "number",
           "minimum": 0
         },
@@ -969,20 +1173,40 @@
           "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
           "type": "array",
           "items": {
-            "description": "A path to a immutable directory (usually a package manager cache directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
+            "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash)",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to an immutable directory (usually a package manager cache directory).",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         },
         "managedPaths": {
           "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
           "type": "array",
           "items": {
-            "description": "A path to a managed directory (usually a node_modules directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
+            "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash)",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to a managed directory (usually a node_modules directory).",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         },
         "maxAge": {
@@ -994,6 +1218,10 @@
           "description": "Number of generations unused cache entries stay in memory cache at minimum (0 = no memory cache used, 1 = may be removed after unused for a single compilation, ..., Infinity: kept forever). Cache entries will be deserialized from disk when removed from memory cache.",
           "type": "number",
           "minimum": 0
+        },
+        "memoryCacheUnaffected": {
+          "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules in memory.",
+          "type": "boolean"
         },
         "name": {
           "description": "Name for the cache. Different names will lead to different coexisting caches.",
@@ -1163,6 +1391,81 @@
       "type": "string",
       "absolutePath": false
     },
+    "HttpUriAllowedUris": {
+      "description": "List of allowed URIs for building http resources.",
+      "cli": {
+        "exclude": true
+      },
+      "oneOf": [
+        {
+          "$ref": "#/definitions/HttpUriOptionsAllowedUris"
+        }
+      ]
+    },
+    "HttpUriOptions": {
+      "description": "Options for building http resources.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allowedUris": {
+          "$ref": "#/definitions/HttpUriOptionsAllowedUris"
+        },
+        "cacheLocation": {
+          "description": "Location where resource content is stored for lockfile entries. It's also possible to disable storing by passing false.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "type": "string",
+              "absolutePath": true
+            }
+          ]
+        },
+        "frozen": {
+          "description": "When set, anything that would lead to a modification of the lockfile or any resource content, will result in an error.",
+          "type": "boolean"
+        },
+        "lockfileLocation": {
+          "description": "Location of the lockfile.",
+          "type": "string",
+          "absolutePath": true
+        },
+        "proxy": {
+          "description": "Proxy configuration, which can be used to specify a proxy server to use for HTTP requests.",
+          "type": "string"
+        },
+        "upgrade": {
+          "description": "When set, resources of existing lockfile entries will be fetched and entries will be upgraded when resource content has changed.",
+          "type": "boolean"
+        }
+      },
+      "required": ["allowedUris"]
+    },
+    "HttpUriOptionsAllowedUris": {
+      "description": "List of allowed URIs (resp. the beginning of them).",
+      "type": "array",
+      "items": {
+        "description": "List of allowed URIs (resp. the beginning of them).",
+        "anyOf": [
+          {
+            "description": "Allowed URI pattern.",
+            "instanceof": "RegExp",
+            "tsType": "RegExp"
+          },
+          {
+            "description": "Allowed URI (resp. the beginning of it).",
+            "type": "string",
+            "pattern": "^https?://"
+          },
+          {
+            "description": "Allowed URI filter function.",
+            "instanceof": "Function",
+            "tsType": "((uri: string) => boolean)"
+          }
+        ]
+      }
+    },
     "IgnoreWarnings": {
       "description": "Ignore specific warnings.",
       "type": "array",
@@ -1283,6 +1586,47 @@
           "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
           "type": "boolean"
         },
+        "createRequire": {
+          "description": "Enable/disable parsing \"import { createRequire } from \"module\"\" and evaluating createRequire().",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "dynamicImportMode": {
+          "description": "Specifies global mode for dynamic import.",
+          "enum": ["eager", "weak", "lazy", "lazy-once"]
+        },
+        "dynamicImportPrefetch": {
+          "description": "Specifies global prefetch for dynamic import.",
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "dynamicImportPreload": {
+          "description": "Specifies global preload for dynamic import.",
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "exportsPresence": {
+          "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
+          "enum": ["error", "warn", "auto", false]
+        },
         "exprContextCritical": {
           "description": "Enable warnings for full dynamic dependencies.",
           "type": "boolean"
@@ -1315,8 +1659,24 @@
           "description": "Enable/disable parsing of import() syntax.",
           "type": "boolean"
         },
+        "importExportsPresence": {
+          "description": "Specifies the behavior of invalid export names in \"import ... from ...\".",
+          "enum": ["error", "warn", "auto", false]
+        },
+        "importMeta": {
+          "description": "Enable/disable evaluating import.meta.",
+          "type": "boolean"
+        },
+        "importMetaContext": {
+          "description": "Enable/disable evaluating import.meta.webpackContext.",
+          "type": "boolean"
+        },
         "node": {
           "$ref": "#/definitions/Node"
+        },
+        "reexportExportsPresence": {
+          "description": "Specifies the behavior of invalid export names in \"export ... from ...\". This might be useful to disable during the migration from \"export ... from ...\" to \"export type ... from ...\" when reexporting types in TypeScript.",
+          "enum": ["error", "warn", "auto", false]
         },
         "requireContext": {
           "description": "Enable/disable parsing of require.context syntax.",
@@ -1335,7 +1695,7 @@
           "type": "boolean"
         },
         "strictExportPresence": {
-          "description": "Emit errors instead of warnings when imported names don't exist in imported module.",
+          "description": "Deprecated in favor of \"exportsPresence\". Emit errors instead of warnings when imported names don't exist in imported module.",
           "type": "boolean"
         },
         "strictThisContextOnImports": {
@@ -1423,6 +1783,112 @@
           "minLength": 1
         }
       ]
+    },
+    "LazyCompilationDefaultBackendOptions": {
+      "description": "Options for the default backend.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "client": {
+          "description": "A custom client.",
+          "type": "string"
+        },
+        "listen": {
+          "description": "Specifies where to listen to from the server.",
+          "anyOf": [
+            {
+              "description": "A port.",
+              "type": "number"
+            },
+            {
+              "description": "Listen options.",
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "host": {
+                  "description": "A host.",
+                  "type": "string"
+                },
+                "port": {
+                  "description": "A port.",
+                  "type": "number"
+                }
+              },
+              "tsType": "import(\"net\").ListenOptions"
+            },
+            {
+              "description": "A custom listen function.",
+              "instanceof": "Function",
+              "tsType": "((server: import(\"net\").Server) => void)"
+            }
+          ]
+        },
+        "protocol": {
+          "description": "Specifies the protocol the client should use to connect to the server.",
+          "enum": ["http", "https"]
+        },
+        "server": {
+          "description": "Specifies how to create the server handling the EventSource requests.",
+          "anyOf": [
+            {
+              "description": "ServerOptions for the http or https createServer call.",
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {},
+              "tsType": "(import(\"https\").ServerOptions | import(\"http\").ServerOptions)"
+            },
+            {
+              "description": "A custom create server function.",
+              "instanceof": "Function",
+              "tsType": "(() => import(\"net\").Server)"
+            }
+          ]
+        }
+      }
+    },
+    "LazyCompilationOptions": {
+      "description": "Options for compiling entrypoints and import()s only when they are accessed.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "description": "Specifies the backend that should be used for handling client keep alive.",
+          "anyOf": [
+            {
+              "description": "A custom backend.",
+              "instanceof": "Function",
+              "tsType": "(((compiler: import('../lib/Compiler'), callback: (err?: Error, api?: import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi) => void) => void) | ((compiler: import('../lib/Compiler')) => Promise<import(\"../lib/hmr/LazyCompilationPlugin\").BackendApi>))"
+            },
+            {
+              "$ref": "#/definitions/LazyCompilationDefaultBackendOptions"
+            }
+          ]
+        },
+        "entries": {
+          "description": "Enable/disable lazy compilation for entries.",
+          "type": "boolean"
+        },
+        "imports": {
+          "description": "Enable/disable lazy compilation for import() modules.",
+          "type": "boolean"
+        },
+        "test": {
+          "description": "Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.",
+          "anyOf": [
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((module: import('../lib/Module')) => boolean)"
+            }
+          ]
+        }
+      }
     },
     "Library": {
       "description": "Make the output files a library, exporting the exports of the entry point.",
@@ -1554,7 +2020,7 @@
       "required": ["type"]
     },
     "LibraryType": {
-      "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+      "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
       "anyOf": [
         {
           "enum": [
@@ -1569,6 +2035,7 @@
             "commonjs",
             "commonjs2",
             "commonjs-module",
+            "commonjs-static",
             "amd",
             "amd-require",
             "umd",
@@ -1591,6 +2058,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "cacheUnaffected": {
+          "description": "Additionally cache computation of modules that are unchanged and reference only unchanged modules.",
+          "type": "boolean"
+        },
         "maxGenerations": {
           "description": "Number of generations unused cache entries stay in memory cache at minimum (1 = may be removed after unused for a single compilation, ..., Infinity: kept forever).",
           "type": "number",
@@ -1880,15 +2351,15 @@
       "properties": {
         "__dirname": {
           "description": "Include a polyfill for the '__dirname' variable.",
-          "enum": [false, true, "mock", "eval-only"]
+          "enum": [false, true, "warn-mock", "mock", "eval-only"]
         },
         "__filename": {
           "description": "Include a polyfill for the '__filename' variable.",
-          "enum": [false, true, "mock", "eval-only"]
+          "enum": [false, true, "warn-mock", "mock", "eval-only"]
         },
         "global": {
           "description": "Include a polyfill for the 'global' variable.",
-          "type": "boolean"
+          "enum": [false, true, "warn"]
         }
       }
     },
@@ -2223,6 +2694,14 @@
             }
           ]
         },
+        "minSizeReduction": {
+          "description": "Minimum size reduction due to the created chunk.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
+        },
         "name": {
           "description": "Give chunks for this cache group a name (chunks with equal name are merged).",
           "anyOf": [
@@ -2388,6 +2867,18 @@
               "type": "string",
               "minLength": 1
             },
+            "chunks": {
+              "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML).",
+              "anyOf": [
+                {
+                  "enum": ["initial", "async", "all"]
+                },
+                {
+                  "instanceof": "Function",
+                  "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+                }
+              ]
+            },
             "maxAsyncSize": {
               "description": "Maximal size hint for the on-demand chunks.",
               "oneOf": [
@@ -2414,6 +2905,14 @@
             },
             "minSize": {
               "description": "Minimal size for the created chunk.",
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/OptimizationSplitChunksSizes"
+                }
+              ]
+            },
+            "minSizeReduction": {
+              "description": "Minimum size reduction due to the created chunk.",
               "oneOf": [
                 {
                   "$ref": "#/definitions/OptimizationSplitChunksSizes"
@@ -2495,6 +2994,14 @@
             }
           ]
         },
+        "minSizeReduction": {
+          "description": "Minimum size reduction due to the created chunk.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
+        },
         "name": {
           "description": "Give chunks created a name (chunks with equal name are merged).",
           "anyOf": [
@@ -2542,6 +3049,10 @@
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
+        "asyncChunks": {
+          "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
+        },
         "auxiliaryComment": {
           "cli": {
             "exclude": true
@@ -2578,6 +3089,12 @@
         },
         "crossOriginLoading": {
           "$ref": "#/definitions/CrossOriginLoading"
+        },
+        "cssChunkFilename": {
+          "$ref": "#/definitions/CssChunkFilename"
+        },
+        "cssFilename": {
+          "$ref": "#/definitions/CssFilename"
         },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
@@ -2741,6 +3258,10 @@
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
+        "asyncChunks": {
+          "description": "Enable/disable creating async chunks that are loaded on demand.",
+          "type": "boolean"
+        },
         "charset": {
           "$ref": "#/definitions/Charset"
         },
@@ -2767,6 +3288,12 @@
         },
         "crossOriginLoading": {
           "$ref": "#/definitions/CrossOriginLoading"
+        },
+        "cssChunkFilename": {
+          "$ref": "#/definitions/CssChunkFilename"
+        },
+        "cssFilename": {
+          "$ref": "#/definitions/CssFilename"
         },
         "devtoolFallbackModuleFilenameTemplate": {
           "$ref": "#/definitions/DevtoolFallbackModuleFilenameTemplate"
@@ -3216,6 +3743,29 @@
             "type": "string"
           }
         },
+        "extensionAlias": {
+          "description": "An object which maps extension to extension aliases.",
+          "type": "object",
+          "additionalProperties": {
+            "description": "Extension alias.",
+            "anyOf": [
+              {
+                "description": "Multiple extensions.",
+                "type": "array",
+                "items": {
+                  "description": "Aliased extension.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              {
+                "description": "Aliased extension.",
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          }
+        },
         "extensions": {
           "description": "Extensions added to the request when trying to find the file.",
           "type": "array",
@@ -3564,6 +4114,13 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "assert": {
+          "description": "Match on import assertions of the dependency.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/RuleSetConditionOrConditions"
+          }
+        },
         "compiler": {
           "description": "Match the child compiler name.",
           "oneOf": [
@@ -3869,20 +4426,40 @@
           "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
           "type": "array",
           "items": {
-            "description": "A path to a immutable directory (usually a package manager cache directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
+            "description": "List of paths that are managed by a package manager and contain a version or hash in its path so all files are immutable.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching an immutable directory (usually a package manager cache directory, including the tailing slash)",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to an immutable directory (usually a package manager cache directory).",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         },
         "managedPaths": {
           "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
           "type": "array",
           "items": {
-            "description": "A path to a managed directory (usually a node_modules directory).",
-            "type": "string",
-            "absolutePath": true,
-            "minLength": 1
+            "description": "List of paths that are managed by a package manager and can be trusted to not be modified otherwise.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching a managed directory (usually a node_modules directory, including the tailing slash)",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to a managed directory (usually a node_modules directory).",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         },
         "module": {
@@ -4189,6 +4766,10 @@
           "description": "Group modules by their type.",
           "type": "boolean"
         },
+        "groupReasonsByOrigin": {
+          "description": "Group reasons by their origin module.",
+          "type": "boolean"
+        },
         "hash": {
           "description": "Add the hash of the compilation.",
           "type": "boolean"
@@ -4292,6 +4873,10 @@
         "reasons": {
           "description": "Add information about the reasons why modules are included.",
           "type": "boolean"
+        },
+        "reasonsSpace": {
+          "description": "Space to display reasons (groups will be collapsed to fit this space).",
+          "type": "number"
         },
         "relatedAssets": {
           "description": "Add information about assets that are related to other assets (like SourceMaps for assets).",
@@ -4572,7 +5157,7 @@
           "$ref": "#/definitions/EntryNormalized"
         },
         "experiments": {
-          "$ref": "#/definitions/Experiments"
+          "$ref": "#/definitions/ExperimentsNormalized"
         },
         "externals": {
           "$ref": "#/definitions/Externals"

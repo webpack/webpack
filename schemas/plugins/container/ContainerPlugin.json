@@ -12,6 +12,18 @@
         }
       ]
     },
+    "EntryRuntime": {
+      "description": "The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.",
+      "anyOf": [
+        {
+          "enum": [false]
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
     "Exposes": {
       "description": "Modules that should be exposed by this container. When provided, property name is used as public name, otherwise public name is automatically inferred from request.",
       "anyOf": [
@@ -206,7 +218,7 @@
       "required": ["type"]
     },
     "LibraryType": {
-      "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
+      "description": "Type of library (types included by default are 'var', 'module', 'assign', 'assign-properties', 'this', 'window', 'self', 'global', 'commonjs', 'commonjs2', 'commonjs-module', 'commonjs-static', 'amd', 'amd-require', 'umd', 'umd2', 'jsonp', 'system', but others might be added by plugins).",
       "anyOf": [
         {
           "enum": [
@@ -221,6 +233,7 @@
             "commonjs",
             "commonjs2",
             "commonjs-module",
+            "commonjs-static",
             "amd",
             "amd-require",
             "umd",
@@ -259,6 +272,9 @@
       "description": "The name for this container.",
       "type": "string",
       "minLength": 1
+    },
+    "runtime": {
+      "$ref": "#/definitions/EntryRuntime"
     },
     "shareScope": {
       "description": "The name of the share scope which is shared with the host (defaults to 'default').",

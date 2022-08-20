@@ -1,9 +1,11 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
+
 const path = require("path");
 const fs = require("graceful-fs");
 const webpack = require("..");
-const prettyFormat = require("pretty-format");
+const prettyFormat = require("pretty-format").default;
 
 const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
 const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/gm;
@@ -114,7 +116,7 @@ async function compile(options) {
 				});
 			});
 		} catch (err) {
-			// capture sync throwm errors
+			// capture sync thrown errors
 			reject(err);
 		}
 	});
@@ -159,7 +161,7 @@ it("should emit warning for missingFile", async () => {
 					  "warnings": Array [],
 					}
 				`);
-});
+}, 20000);
 
 it("should emit warning for require.extensions", async () => {
 	await expect(compile({ entry: "./require.extensions" })).resolves
@@ -642,6 +644,7 @@ describe("loaders", () => {
 				`);
 	});
 
+	// cspell:ignore doesnt
 	it("should emit error for doesnt-exist-loader", async () => {
 		await expect(compile({ entry: "./doesnt-exist-loader!./entry-point.js" }))
 			.resolves.toMatchInlineSnapshot(`

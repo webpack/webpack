@@ -94,6 +94,7 @@ it("should be able to use named chunks in import()", function(done) {
 });
 
 it("should be able to use named chunk in context import()", function(done) {
+	// cspell:ignore mpty
 	var mpty = "mpty";
 	var sync = false;
 	import("./e" + mpty + "2" /* webpackChunkName: "context-named-chunk" */).then(function(result) {

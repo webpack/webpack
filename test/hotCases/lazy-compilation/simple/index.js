@@ -20,9 +20,21 @@ it("should compile to lazy imported module", done => {
 							expect(generation).toBe(1);
 							import("./module").then(result => {
 								expect(result).toHaveProperty("default", 43);
-								setTimeout(() => {
-									done();
-								}, 1000);
+								expect(generation).toBe(1);
+								module.hot.accept("./module", () => {
+									generation += 10;
+								});
+								NEXT(
+									require("../../update")(done, true, () => {
+										import("./module").then(result => {
+											expect(result).toHaveProperty("default", 44);
+											expect(generation).toBe(11);
+											setTimeout(() => {
+												done();
+											}, 1000);
+										}, done);
+									})
+								);
 							}, done);
 						})
 					);

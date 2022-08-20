@@ -1,64 +1,92 @@
-// this function allows to release memory in fn context
-// after the function has been called.
-const createOnceFn = fn => {
-	if (!fn) return null;
-	if (fn.length >= 1) {
-		return done => {
-			fn(done);
+const STATE_SYM = Object.getOwnPropertySymbols(global).find(
+	Symbol("x").description
+		? s => s.description === "JEST_STATE_SYMBOL"
+		: s => s.toString() === "Symbol(JEST_STATE_SYMBOL)"
+);
+if (!STATE_SYM) {
+	throw new Error(
+		`Unable to find JEST_STATE_SYMBOL in ${Object.getOwnPropertySymbols(global)
+			.map(s => s.toString())
+			.join(", ")}`
+	);
+}
+
+module.exports = (globalTimeout = 2000, nameSuffix = "") => {
+	const state = global[STATE_SYM];
+	let currentDescribeBlock;
+	let currentlyRunningTest;
+	let runTests = -1;
+	const disposables = [];
+
+	// this function allows to release memory in fn context
+	// manually, usually after the suite has been run.
+	const createDisposableFn = (fn, isTest) => {
+		if (!fn) return null;
+		let rfn;
+		if (fn.length >= 1) {
+			rfn = done => {
+				fn((...args) => {
+					if (isTest) runTests++;
+					done(...args);
+				});
+			};
+		} else {
+			rfn = () => {
+				const r = fn();
+				if (isTest) runTests++;
+				return r;
+			};
+		}
+		disposables.push(() => {
 			fn = null;
-		};
-	}
-	return () => {
-		const r = fn();
-		fn = null;
-		return r;
+		});
+		return rfn;
 	};
-};
 
-// this function allows to release memory in fn context
-// manually, usually after the suite has been run.
-const createDisposableFn = fn => {
-	if (!fn) return null;
-	let rfn;
-	if (fn.length >= 1) {
-		rfn = done => {
-			fn(done);
-		};
-	} else {
-		rfn = () => {
-			return fn();
-		};
-	}
-	rfn.dispose = () => {
-		fn = null;
-	};
-	return rfn;
-};
-
-module.exports = (env, globalTimeout = 2000, nameSuffix = "") => {
-	const suite = env.describe(
+	describe(
 		nameSuffix ? `exported tests ${nameSuffix}` : "exported tests",
 		() => {
 			// this must have a child to be handled correctly
-			env.it("should run the exported tests", () => {});
+			it("should run the exported tests", () => {
+				runTests++;
+			});
+			afterAll(done => {
+				for (const dispose of disposables) {
+					dispose();
+				}
+				done();
+			});
+			currentDescribeBlock = state.currentDescribeBlock;
+			currentlyRunningTest = state.currentlyRunningTest;
 		}
 	);
 	let numberOfTests = 0;
-	const beforeAndAfterFns = () => {
-		let currentSuite = suite;
-		let afters = [];
-		let befores = [];
-
-		while (currentSuite) {
-			befores = befores.concat(currentSuite.beforeFns);
-			afters = afters.concat(currentSuite.afterFns);
-
-			currentSuite = currentSuite.parentSuite;
+	const inSuite = fn => {
+		const {
+			currentDescribeBlock: oldCurrentDescribeBlock,
+			currentlyRunningTest: oldCurrentlyRunningTest,
+			hasStarted: oldHasStarted
+		} = state;
+		state.currentDescribeBlock = currentDescribeBlock;
+		state.currentlyRunningTest = currentlyRunningTest;
+		state.hasStarted = false;
+		try {
+			fn();
+		} catch (e) {
+			// avoid leaking memory
+			e.stack;
+			throw e;
 		}
-
-		return {
-			befores: befores.reverse(),
-			afters: afters
+		state.currentDescribeBlock = oldCurrentDescribeBlock;
+		state.currentlyRunningTest = oldCurrentlyRunningTest;
+		state.hasStarted = oldHasStarted;
+	};
+	const fixAsyncError = block => {
+		// By default jest leaks memory as it stores asyncError
+		// for each "it" call to track the origin test suite
+		// We want to evaluate this early here to avoid leaking memory
+		block.asyncError = {
+			stack: block.asyncError.stack
 		};
 	};
 	return {
@@ -68,50 +96,38 @@ module.exports = (env, globalTimeout = 2000, nameSuffix = "") => {
 		getNumberOfTests() {
 			return numberOfTests;
 		},
-		it(title, fn, timeout = globalTimeout) {
-			fn = createOnceFn(fn);
+		it(...args) {
 			numberOfTests++;
-			let spec;
-			if (fn) {
-				spec = env.fit(title, fn, timeout);
-			} else {
-				spec = env.fit(title, () => {});
-				spec.pend("Skipped");
-			}
-			suite.addChild(spec);
-			spec.disabled = false;
-			spec.getSpecName = () => {
-				return `${suite.getFullName()} ${spec.description}`;
-			};
-			spec.beforeAndAfterFns = beforeAndAfterFns;
-			spec.result.fullName = spec.getFullName();
-		},
-		beforeEach(fn, timeout = globalTimeout) {
-			fn = createDisposableFn(fn);
-			suite.beforeEach({
-				fn,
-				timeout: () => timeout
-			});
-			suite.afterAll({
-				fn: done => {
-					fn.dispose();
-					done();
-				},
-				timeout: () => 1000
+			if (runTests >= numberOfTests) throw new Error("it called too late");
+			args[1] = createDisposableFn(args[1], true);
+			args[2] = args[2] || globalTimeout;
+			inSuite(() => {
+				it(...args);
+				fixAsyncError(
+					currentDescribeBlock.tests[currentDescribeBlock.tests.length - 1]
+				);
 			});
 		},
-		afterEach(fn, timeout = globalTimeout) {
-			fn = createDisposableFn(fn);
-			suite.afterEach({
-				fn,
-				timeout: () => timeout
+		beforeEach(...args) {
+			if (runTests >= numberOfTests)
+				throw new Error("beforeEach called too late");
+			args[0] = createDisposableFn(args[0]);
+			inSuite(() => {
+				beforeEach(...args);
+				fixAsyncError(
+					currentDescribeBlock.hooks[currentDescribeBlock.hooks.length - 1]
+				);
 			});
-			suite.afterAll({
-				fn: done => {
-					fn.dispose();
-					done();
-				},
-				timeout: () => 1000
+		},
+		afterEach(...args) {
+			if (runTests >= numberOfTests)
+				throw new Error("afterEach called too late");
+			args[0] = createDisposableFn(args[0]);
+			inSuite(() => {
+				afterEach(...args);
+				fixAsyncError(
+					currentDescribeBlock.hooks[currentDescribeBlock.hooks.length - 1]
+				);
 			});
 		}
 	};

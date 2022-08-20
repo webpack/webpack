@@ -1,9 +1,13 @@
 const path = require("path");
 
-const base = {
+/**
+ * @param {string} name name
+ * @param {string} devtool devtool
+ * @returns {import("../../../").Configuration} configuration
+ */
+const base = (name, devtool) => ({
 	mode: "production",
-	devtool: "source-map",
-	entry: "./index",
+	devtool,
 	module: {
 		rules: [
 			{
@@ -15,52 +19,40 @@ const base = {
 	},
 	stats: {
 		relatedAssets: true
+	},
+	experiments: {
+		layers: true
+	},
+	entry: {
+		main: {
+			import: "./index",
+			layer: path.resolve(__dirname, name)
+		}
+	},
+	context: path.resolve(__dirname, name),
+	output: {
+		path: path.resolve(
+			__dirname,
+			`../../js/stats/context-independence/${devtool}-${name}`
+		),
+		filename: "[name]-[chunkhash].js"
+	},
+	resolve: {
+		alias: {
+			c: [
+				path.resolve(__dirname, name, "c"),
+				path.resolve(__dirname, name, "cc")
+			]
+		}
 	}
-};
-
-const base2 = {
-	...base,
-	devtool: "eval-source-map"
-};
+});
 
 /** @type {import("../../../").Configuration[]} */
 module.exports = [
-	{
-		...base,
-		context: path.resolve(__dirname, "a"),
-		output: {
-			path: path.resolve(__dirname, "../../js/stats/context-independence/a"),
-			filename: "[name]-[chunkhash].js"
-		}
-	},
-	{
-		...base,
-		context: path.resolve(__dirname, "b"),
-		output: {
-			path: path.resolve(__dirname, "../../js/stats/context-independence/b"),
-			filename: "[name]-[chunkhash].js"
-		}
-	},
-	{
-		...base2,
-		context: path.resolve(__dirname, "a"),
-		output: {
-			path: path.resolve(
-				__dirname,
-				"../../js/stats/context-independence/eval-a"
-			),
-			filename: "[name]-[chunkhash].js"
-		}
-	},
-	{
-		...base2,
-		context: path.resolve(__dirname, "b"),
-		output: {
-			path: path.resolve(
-				__dirname,
-				"../../js/stats/context-independence/eval-b"
-			),
-			filename: "[name]-[chunkhash].js"
-		}
-	}
+	base("a", "source-map"),
+	base("b", "source-map"),
+	base("a", "eval-source-map"),
+	base("b", "eval-source-map"),
+	base("a", "eval"),
+	base("b", "eval")
 ];

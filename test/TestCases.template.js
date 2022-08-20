@@ -1,40 +1,17 @@
 "use strict";
 
+require("./helpers/warmup-webpack");
 const path = require("path");
 const fs = require("graceful-fs");
 const vm = require("vm");
+const { pathToFileURL, URL } = require("url");
 const rimraf = require("rimraf");
-const webpack = require("..");
-const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const deprecationTracking = require("./helpers/deprecationTracking");
 const captureStdio = require("./helpers/captureStdio");
-
-const terserForTesting = new TerserPlugin({
-	parallel: false
-});
-
-const DEFAULT_OPTIMIZATIONS = {
-	removeAvailableModules: true,
-	removeEmptyChunks: true,
-	mergeDuplicateChunks: true,
-	flagIncludedChunks: true,
-	sideEffects: true,
-	providedExports: true,
-	usedExports: true,
-	mangleExports: true,
-	emitOnErrors: true,
-	concatenateModules: false,
-	moduleIds: "size",
-	chunkIds: "size",
-	minimizer: [terserForTesting]
-};
-
-const NO_EMIT_ON_ERRORS_OPTIMIZATIONS = {
-	emitOnErrors: true,
-	minimizer: [terserForTesting]
-};
+const asModule = require("./helpers/asModule");
+const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "cases");
 let categories = fs.readdirSync(casesPath);
@@ -46,6 +23,25 @@ categories = categories.map(cat => {
 			.filter(folder => folder.indexOf("_") < 0)
 	};
 });
+
+const createLogger = appendTarget => {
+	return {
+		log: l => appendTarget.push(l),
+		debug: l => appendTarget.push(l),
+		trace: l => appendTarget.push(l),
+		info: l => appendTarget.push(l),
+		warn: console.warn.bind(console),
+		error: console.error.bind(console),
+		logTime: () => {},
+		group: () => {},
+		groupCollapsed: () => {},
+		groupEnd: () => {},
+		profile: () => {},
+		profileEnd: () => {},
+		clear: () => {},
+		status: () => {}
+	};
+};
 
 const describeCases = config => {
 	describe(config.name, () => {
@@ -73,6 +69,8 @@ const describeCases = config => {
 						return true;
 					})
 					.forEach(testName => {
+						let infraStructureLog = [];
+
 						describe(testName, () => {
 							const testDirectory = path.join(
 								casesPath,
@@ -93,19 +91,41 @@ const describeCases = config => {
 								category.name,
 								testName
 							);
-							const options = {
+							let testConfig = {};
+							const testConfigPath = path.join(testDirectory, "test.config.js");
+							if (fs.existsSync(testConfigPath)) {
+								testConfig = require(testConfigPath);
+							}
+							const TerserPlugin = require("terser-webpack-plugin");
+							const terserForTesting = new TerserPlugin({
+								parallel: false
+							});
+							let options = {
 								context: casesPath,
 								entry: "./" + category.name + "/" + testName + "/",
-								target: "async-node",
+								target: config.target || "async-node",
 								devtool: config.devtool,
 								mode: config.mode || "none",
 								optimization: config.mode
 									? {
-											...NO_EMIT_ON_ERRORS_OPTIMIZATIONS,
+											emitOnErrors: true,
+											minimizer: [terserForTesting],
 											...config.optimization
 									  }
 									: {
-											...DEFAULT_OPTIMIZATIONS,
+											removeAvailableModules: true,
+											removeEmptyChunks: true,
+											mergeDuplicateChunks: true,
+											flagIncludedChunks: true,
+											sideEffects: true,
+											providedExports: true,
+											usedExports: true,
+											mangleExports: true,
+											emitOnErrors: true,
+											concatenateModules: false,
+											moduleIds: "size",
+											chunkIds: "size",
+											minimizer: [terserForTesting],
 											...config.optimization
 									  },
 								performance: {
@@ -120,9 +140,9 @@ const describeCases = config => {
 									...config.cache
 								},
 								output: {
-									pathinfo: true,
+									pathinfo: "verbose",
 									path: outputDirectory,
-									filename: "bundle.js"
+									filename: config.module ? "bundle.mjs" : "bundle.js"
 								},
 								resolve: {
 									modules: ["web_modules", "node_modules"],
@@ -186,57 +206,138 @@ const describeCases = config => {
 								}),
 								experiments: {
 									asyncWebAssembly: true,
-									topLevelAwait: true
+									topLevelAwait: true,
+									backCompat: false,
+									...(config.module ? { outputModule: true } : {})
+								},
+								infrastructureLogging: config.cache && {
+									debug: true,
+									console: createLogger(infraStructureLog)
 								}
 							};
+							const cleanups = [];
+							afterAll(() => {
+								options = undefined;
+								testConfig = undefined;
+								for (const fn of cleanups) fn();
+							});
 							beforeAll(done => {
 								rimraf(cacheDirectory, done);
 							});
 							if (config.cache) {
-								it(`${testName} should pre-compile to fill disk cache (1st)`, done => {
-									const oldPath = options.output.path;
-									options.output.path = path.join(
-										options.output.path,
-										"cache1"
-									);
-									const deprecationTracker = deprecationTracking.start();
-									webpack(options, err => {
-										deprecationTracker();
-										options.output.path = oldPath;
-										if (err) return done(err);
-										done();
-									});
-								}, 60000);
-								it(`${testName} should pre-compile to fill disk cache (2nd)`, done => {
-									const oldPath = options.output.path;
-									options.output.path = path.join(
-										options.output.path,
-										"cache2"
-									);
-									const deprecationTracker = deprecationTracking.start();
-									webpack(options, err => {
-										deprecationTracker();
-										options.output.path = oldPath;
-										if (err) return done(err);
-										done();
-									});
-								}, 10000);
+								it(
+									`${testName} should pre-compile to fill disk cache (1st)`,
+									done => {
+										const oldPath = options.output.path;
+										options.output.path = path.join(
+											options.output.path,
+											"cache1"
+										);
+										infraStructureLog.length = 0;
+										const deprecationTracker = deprecationTracking.start();
+										const webpack = require("..");
+										webpack(options, err => {
+											deprecationTracker();
+											options.output.path = oldPath;
+											if (err) return done(err);
+											const infrastructureLogErrors =
+												filterInfraStructureErrors(infraStructureLog, {
+													run: 1,
+													options
+												});
+											if (
+												infrastructureLogErrors.length &&
+												checkArrayExpectation(
+													testDirectory,
+													{ infrastructureLogs: infrastructureLogErrors },
+													"infrastructureLog",
+													"infrastructure-log",
+													"InfrastructureLog",
+													done
+												)
+											) {
+												return;
+											}
+											done();
+										});
+									},
+									testConfig.timeout || 60000
+								);
+								it(
+									`${testName} should pre-compile to fill disk cache (2nd)`,
+									done => {
+										const oldPath = options.output.path;
+										options.output.path = path.join(
+											options.output.path,
+											"cache2"
+										);
+										infraStructureLog.length = 0;
+										const deprecationTracker = deprecationTracking.start();
+										const webpack = require("..");
+										webpack(options, err => {
+											deprecationTracker();
+											options.output.path = oldPath;
+											if (err) return done(err);
+											const infrastructureLogErrors =
+												filterInfraStructureErrors(infraStructureLog, {
+													run: 2,
+													options
+												});
+											if (
+												infrastructureLogErrors.length &&
+												checkArrayExpectation(
+													testDirectory,
+													{ infrastructureLogs: infrastructureLogErrors },
+													"infrastructureLog",
+													"infrastructure-log",
+													"InfrastructureLog",
+													done
+												)
+											) {
+												return;
+											}
+											done();
+										});
+									},
+									testConfig.cachedTimeout || testConfig.timeout || 10000
+								);
 							}
 							it(
 								testName + " should compile",
 								done => {
+									infraStructureLog.length = 0;
+									const webpack = require("..");
 									const compiler = webpack(options);
 									const run = () => {
 										const deprecationTracker = deprecationTracking.start();
 										compiler.run((err, stats) => {
 											const deprecations = deprecationTracker();
 											if (err) return done(err);
+											const infrastructureLogErrors =
+												filterInfraStructureErrors(infraStructureLog, {
+													run: 3,
+													options
+												});
+											if (
+												infrastructureLogErrors.length &&
+												checkArrayExpectation(
+													testDirectory,
+													{ infrastructureLogs: infrastructureLogErrors },
+													"infrastructureLog",
+													"infrastructure-log",
+													"InfrastructureLog",
+													done
+												)
+											) {
+												return;
+											}
 											compiler.close(err => {
 												if (err) return done(err);
 												const statOptions = {
 													preset: "verbose",
 													colors: false,
-													modules: true
+													modules: true,
+													reasonsSpace: 1000
 												};
 												fs.mkdirSync(outputDirectory, { recursive: true });
 												fs.writeFileSync(
@@ -300,52 +401,122 @@ const describeCases = config => {
 										run();
 									}
 								},
-								config.cache ? 20000 : 60000
+								testConfig.cachedTimeout ||
+									testConfig.timeout ||
+									(config.cache ? 20000 : 60000)
 							);
 
 							it(
 								testName + " should load the compiled tests",
 								done => {
-									function _require(module) {
-										if (module.substr(0, 2) === "./") {
+									const esmContext = vm.createContext({
+										it: _it,
+										expect,
+										process,
+										global,
+										URL,
+										Buffer,
+										setTimeout,
+										setImmediate,
+										nsObj: function (m) {
+											Object.defineProperty(m, Symbol.toStringTag, {
+												value: "Module"
+											});
+											return m;
+										}
+									});
+									cleanups.push(() => (esmContext.it = undefined));
+									function _require(module, esmMode) {
+										if (module.startsWith("./")) {
 											const p = path.join(outputDirectory, module);
-											const fn = vm.runInThisContext(
-												"(function(require, module, exports, __dirname, __filename, it, expect) {" +
-													"global.expect = expect;" +
-													'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
-													fs.readFileSync(p, "utf-8") +
-													"\n})",
-												p
-											);
-											const m = {
-												exports: {},
-												webpackTestSuiteModule: true
-											};
-											fn.call(
-												m.exports,
-												_require,
-												m,
-												m.exports,
-												outputDirectory,
-												p,
-												_it,
-												expect
-											);
-											return m.exports;
+											const content = fs.readFileSync(p, "utf-8");
+											if (p.endsWith(".mjs")) {
+												let esm;
+												try {
+													esm = new vm.SourceTextModule(content, {
+														identifier: p,
+														context: esmContext,
+														initializeImportMeta: (meta, module) => {
+															meta.url = pathToFileURL(p).href;
+														},
+														importModuleDynamically: async (
+															specifier,
+															module
+														) => {
+															const result = await _require(
+																specifier,
+																"evaluated"
+															);
+															return await asModule(result, module.context);
+														}
+													});
+													cleanups.push(() => (esmContext.it = undefined));
+												} catch (e) {
+													console.log(e);
+													e.message += `\nwhile parsing ${p}`;
+													throw e;
+												}
+												if (esmMode === "unlinked") return esm;
+												return (async () => {
+													await esm.link(async (specifier, module) => {
+														return await asModule(
+															await _require(specifier, "unlinked"),
+															module.context,
+															true
+														);
+													});
+													// node.js 10 needs instantiate
+													if (esm.instantiate) esm.instantiate();
+													await esm.evaluate();
+													if (esmMode === "evaluated") return esm;
+													const ns = esm.namespace;
+													return ns.default && ns.default instanceof Promise
+														? ns.default
+														: ns;
+												})();
+											} else {
+												const fn = vm.runInThisContext(
+													"(function(require, module, exports, __dirname, __filename, it, expect) {" +
+														"global.expect = expect;" +
+														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
+														content +
+														"\n})",
+													p
+												);
+												const m = {
+													exports: {},
+													webpackTestSuiteModule: true
+												};
+												fn.call(
+													m.exports,
+													_require,
+													m,
+													m.exports,
+													outputDirectory,
+													p,
+													_it,
+													expect
+												);
+												return m.exports;
+											}
 										} else return require(module);
 									}
 									_require.webpackTestSuiteRequire = true;
-									_require("./bundle.js");
-									if (getNumberOfTests() === 0)
-										return done(new Error("No tests exported by test case"));
-									done();
+									Promise.resolve()
+										.then(() => _require("./" + options.output.filename))
+										.then(() => {
+											if (getNumberOfTests() === 0)
+												return done(
+													new Error("No tests exported by test case")
+												);
+											done();
+										}, done);
 								},
 								10000
 							);
 
 							const { it: _it, getNumberOfTests } = createLazyTestEnv(
-								jasmine.getEnv(),
-								10000
+								testConfig.timeout || 10000
 							);
 						});
 					});

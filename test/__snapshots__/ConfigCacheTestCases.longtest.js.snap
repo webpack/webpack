@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConfigCacheTestCases css urls exported tests should be able to handle styles in spacing.css 1`] = `
+Object {
+  "a": " url(img.09a1a1112c577c279435.png)",
+  "b": " url(img.09a1a1112c577c279435.png)",
+  "c": " url(img.09a1a1112c577c279435.png)",
+  "d": " url(img.09a1a1112c577c279435.png#hash)",
+  "e": " url(img.09a1a1112c577c279435.png)",
+  "f": " green url(img.09a1a1112c577c279435.png) xyz",
+  "g": " green url(img.09a1a1112c577c279435.png) xyz",
+  "getPropertyValue": [Function],
+  "h": " green url(img.09a1a1112c577c279435.png) xyz",
+  "i": " green url(img.09a1a1112c577c279435.png) url(img.09a1a1112c577c279435.png) xyz",
+  "j": " green url(img\\\\ img.09a1a1112c577c279435.png) xyz",
+  "k": " green url(img\\\\ img.09a1a1112c577c279435.png) xyz",
+  "l": " green url(img.09a1a1112c577c279435.png) xyz",
+}
+`;
+
+exports[`ConfigCacheTestCases custom-modules json-custom exported tests should transform toml to json 1`] = `
+Object {
+  "owner": Object {
+    "bio": "GitHub Cofounder & CEO
+Likes tater tots and beer.",
+    "dob": "1979-05-27T07:32:00.000Z",
+    "name": "Tom Preston-Werner",
+    "organization": "GitHub",
+  },
+  "title": "TOML Example",
+}
+`;
+
+exports[`ConfigCacheTestCases records issue-2991 exported tests should write relative paths to records 1`] = `
+"{
+  \\"chunks\\": {
+    \\"byName\\": {
+      \\"main\\": 179
+    },
+    \\"bySource\\": {
+      \\"0 main\\": 179
+    },
+    \\"usedIds\\": [
+      179
+    ]
+  },
+  \\"modules\\": {
+    \\"byIdentifier\\": {
+      \\"./test.js\\": 393,
+      \\"external node-commonjs \\\\\\"fs\\\\\\"\\": 147,
+      \\"external node-commonjs \\\\\\"path\\\\\\"\\": 17,
+      \\"ignored|./.|pkgs/somepackage/foo\\": 802
+    },
+    \\"usedIds\\": [
+      17,
+      147,
+      393,
+      802
+    ]
+  }
+}"
+`;
+
+exports[`ConfigCacheTestCases records issue-7339 exported tests should write relative dynamic-require paths to records 1`] = `
+"{
+  \\"chunks\\": {
+    \\"byName\\": {
+      \\"main\\": 179
+    },
+    \\"bySource\\": {
+      \\"0 main\\": 179
+    },
+    \\"usedIds\\": [
+      179
+    ]
+  },
+  \\"modules\\": {
+    \\"byIdentifier\\": {
+      \\"./dependencies/bar.js\\": 379,
+      \\"./dependencies/foo.js\\": 117,
+      \\"./dependencies|sync|/^\\\\\\\\.\\\\\\\\/.*$/\\": 412,
+      \\"./test.js\\": 393,
+      \\"external node-commonjs \\\\\\"fs\\\\\\"\\": 147,
+      \\"external node-commonjs \\\\\\"path\\\\\\"\\": 17
+    },
+    \\"usedIds\\": [
+      17,
+      117,
+      147,
+      379,
+      393,
+      412
+    ]
+  }
+}"
+`;

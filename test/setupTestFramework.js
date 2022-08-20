@@ -122,10 +122,11 @@ if (process.env.DEBUG_INFO) {
 			}
 		};
 	};
-	const env = jasmine.getEnv();
-	env.it = addDebugInfo(env.it);
+	// eslint-disable-next-line no-global-assign
+	it = addDebugInfo(it);
 }
 
+// cspell:word wabt
 // Workaround for a memory leak in wabt
 // It leaks an Error object on construction
 // so it leaks the whole stack trace

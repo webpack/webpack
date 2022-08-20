@@ -7,8 +7,8 @@ it("should generate the correct output files", () => {
 			NORMAL1 && `634.bundle${INDEX}.js`,
 			NORMAL2 && `882.bundle${INDEX}.js`,
 			`bundle${INDEX}.js`,
-			"localization-219.js",
-			CONTENT2 && "localization-551.js",
+			CONTENT2 && "localization-264.js",
+			"localization-530.js",
 			NORMAL1 && "localization-634.js",
 			NORMAL2 && "localization-882.js"
 		].filter(Boolean)

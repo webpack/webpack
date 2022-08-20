@@ -4,6 +4,11 @@
  * Run `yarn special-lint-fix` to update
  */
 
+/**
+ * Algorithm used for generation the hash (see node.js crypto package).
+ */
+export type HashFunction = string | typeof import("../../lib/util/Hash");
+
 export interface HashedModuleIdsPluginOptions {
 	/**
 	 * The context directory for creating names.
@@ -20,5 +25,5 @@ export interface HashedModuleIdsPluginOptions {
 	/**
 	 * The hashing algorithm to use, defaults to 'md4'. All functions from Node.JS' crypto.createHash are supported.
 	 */
-	hashFunction?: string;
+	hashFunction?: HashFunction;
 }
