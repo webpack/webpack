@@ -7,9 +7,9 @@ it("should not include a module with a weak dependency using context", function(
 	var resolveWeakB = require.resolveWeak("./" + fileB);
 	var resolveWeakC = require.resolveWeak("./" + fileC);
 
-	var a = !!__webpack_modules__[resolveWeakA];
-	var b = !!__webpack_modules__[resolveWeakB];
-	var c = !!__webpack_modules__[resolveWeakC];
+	var a = Boolean(__webpack_modules__[resolveWeakA]);
+	var b = Boolean(__webpack_modules__[resolveWeakB]);
+	var c = Boolean(__webpack_modules__[resolveWeakC]);
 
 	require(["./b"]);
 	require("./c");

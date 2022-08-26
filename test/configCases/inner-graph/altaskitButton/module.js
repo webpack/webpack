@@ -150,14 +150,14 @@ var Button = function (_Component) {
       var buttonProps = getButtonProps(this);
       var StyledComponent = this.getStyledComponent();
 
-      var iconIsOnlyChild = !!(iconBefore && !iconAfter && !children || iconAfter && !iconBefore && !children);
+      var iconIsOnlyChild = Boolean(iconBefore && !iconAfter && !children || iconAfter && !iconBefore && !children);
 
       return React.createElement(
         StyledComponent,
         _extends({ innerRef: this.getInnerRef }, buttonProps),
         React.createElement(
           ButtonWrapper,
-          { onClick: this.onInnerClick, fit: !!shouldFitContainer },
+          { onClick: this.onInnerClick, fit: Boolean(shouldFitContainer) },
           isLoading ? React.createElement(LoadingSpinner, {
             spacing: spacing,
             appearance: appearance,
@@ -177,7 +177,7 @@ var Button = function (_Component) {
             ButtonContent,
             {
               isLoading: isLoading,
-              followsIcon: !!iconBefore,
+              followsIcon: Boolean(iconBefore),
               spacing: buttonProps.spacing
             },
             children
