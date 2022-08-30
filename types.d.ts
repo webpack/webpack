@@ -3133,6 +3133,17 @@ declare class EnableLibraryPlugin {
 	static setEnabled(compiler: Compiler, type: string): void;
 	static checkEnabled(compiler: Compiler, type: string): void;
 }
+declare class EnableWasmLoadingPlugin {
+	constructor(type: string);
+	type: string;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+	static setEnabled(compiler: Compiler, type: string): void;
+	static checkEnabled(compiler: Compiler, type: string): void;
+}
 type Entry =
 	| string
 	| (() => string | EntryObject | string[] | Promise<EntryStatic>)
@@ -12891,7 +12902,7 @@ declare namespace exports {
 		export { ElectronTargetPlugin };
 	}
 	export namespace wasm {
-		export { AsyncWebAssemblyModulesPlugin };
+		export { AsyncWebAssemblyModulesPlugin, EnableWasmLoadingPlugin };
 	}
 	export namespace library {
 		export { AbstractLibraryPlugin, EnableLibraryPlugin };
