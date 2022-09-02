@@ -4478,6 +4478,14 @@ declare class GetChunkFilenameRuntimeModule extends RuntimeModule {
 	 */
 	static STAGE_TRIGGER: number;
 }
+declare class GroupAssetsPlugin {
+	constructor();
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 declare interface GroupConfig {
 	getKeys: (arg0?: any) => string[];
 	createGroup: (arg0: string, arg1: any[], arg2: any[]) => object;
@@ -8708,6 +8716,11 @@ declare interface OutputFileSystem {
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
 	dirname?: (arg0: string) => string;
+	copyFile: (
+		arg0: string,
+		arg1: string,
+		arg2: (arg0?: null | NodeJS.ErrnoException) => void
+	) => void;
 }
 
 /**
@@ -13103,6 +13116,7 @@ declare namespace exports {
 		ExternalModule,
 		ExternalsPlugin,
 		Generator,
+		GroupAssetsPlugin,
 		HotUpdateChunk,
 		HotModuleReplacementPlugin,
 		IgnorePlugin,
