@@ -2795,8 +2795,34 @@ declare abstract class DependencyTemplates {
 	clone(): DependencyTemplates;
 }
 declare class DeterministicChunkIdsPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options: {
+		/**
+		 * context relative to which module identifiers are computed
+		 */
+		context?: string;
+		/**
+		 * maximum id length in digits (used as starting point)
+		 */
+		maxLength?: number;
+		/**
+		 * hash salt for ids
+		 */
+		salt?: number;
+	});
+	options: {
+		/**
+		 * context relative to which module identifiers are computed
+		 */
+		context?: string;
+		/**
+		 * maximum id length in digits (used as starting point)
+		 */
+		maxLength?: number;
+		/**
+		 * hash salt for ids
+		 */
+		salt?: number;
+	};
 
 	/**
 	 * Apply the plugin
