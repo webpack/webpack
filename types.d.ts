@@ -12925,6 +12925,9 @@ declare namespace exports {
 				a: Module,
 				b: Module
 			) => 0 | 1 | -1;
+			export let compareModulesByReadableIdentifier: (
+				requestShortener: RequestShortener
+			) => (a: Module, b: Module) => 0 | 1 | -1;
 			export let compareModulesById: ParameterizedComparator<
 				ChunkGraph,
 				Module
