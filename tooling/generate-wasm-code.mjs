@@ -2,6 +2,7 @@ import * as path from "path";
 import * as fs from "fs";
 import { fileURLToPath } from "url";
 
+// eslint-disable-next-line node/no-missing-import
 import asc from "assemblyscript/asc";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -13,7 +14,6 @@ const doWrite = process.argv.includes("--write");
 const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 
 (async () => {
-	// await asc.ready;
 	for (const file of files) {
 		const filePath = path.resolve(__dirname, "..", file);
 		const content = fs.readFileSync(filePath, "utf-8");
