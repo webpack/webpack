@@ -11,7 +11,7 @@ module.exports = {
 		es6: true
 	},
 	parserOptions: {
-		ecmaVersion: 2021
+		ecmaVersion: 2018
 	},
 	rules: {
 		"prettier/prettier": "error",
@@ -98,6 +98,12 @@ module.exports = {
 			globals: {
 				nsObj: false,
 				jasmine: false
+			}
+		},
+		{
+			files: ["tooling/**/*.mjs"],
+			parserOptions: {
+				ecmaVersion: 2021
 			}
 		}
 	]
