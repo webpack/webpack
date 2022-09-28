@@ -33,18 +33,23 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 				path.basename(sourcePath)
 			);
 
-			await asc.main([
-				sourcePath,
-				// cspell:word Ospeed
-				"-O3",
-				"--noAssert",
-				"--converge",
-				"--textFile",
-				sourcePathBase + ".wat",
-				"--outFile",
-				sourcePathBase + ".wasm",
-				...flags.split(" ").filter(Boolean)
-			]);
+			await asc.main(
+				[
+					sourcePath,
+					"-O3",
+					"--noAssert",
+					"--converge",
+					"--textFile",
+					sourcePathBase + ".wat",
+					"--outFile",
+					sourcePathBase + ".wasm",
+					...flags.split(" ").filter(Boolean)
+				],
+				{
+					stdout: process.stdout,
+					stderr: process.stderr
+				}
+			);
 
 			const wasm = fs.readFileSync(sourcePathBase + ".wasm");
 
@@ -70,11 +75,13 @@ const ${identifier} = new WebAssembly.Module(
 		if (newContent !== content) {
 			if (doWrite) {
 				fs.writeFileSync(filePath, newContent, "utf-8");
-				console.error(`${file} updated`);
+				console.error(`"${file}" updated`);
 			} else {
-				console.error(`${file} need to be updated`);
+				console.error(`"${file}" need to be updated`);
 				process.exitCode = 1;
 			}
+		} else {
+			console.error(`No changes. "${file}" is up-to-date`);
 		}
 	}
 })();
