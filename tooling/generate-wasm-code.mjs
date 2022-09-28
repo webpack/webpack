@@ -1,6 +1,10 @@
-const path = require("path");
-const fs = require("fs");
-const asc = require("assemblyscript/cli/asc");
+import * as path from "path";
+import * as fs from "fs";
+import { fileURLToPath } from "url";
+
+import asc from "assemblyscript/asc";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // When --write is set, files will be written in place
 // Otherwise it only prints outdated files
@@ -9,7 +13,7 @@ const doWrite = process.argv.includes("--write");
 const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 
 (async () => {
-	await asc.ready;
+	// await asc.ready;
 	for (const file of files) {
 		const filePath = path.resolve(__dirname, "..", file);
 		const content = fs.readFileSync(filePath, "utf-8");
@@ -29,31 +33,18 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 				path.basename(sourcePath)
 			);
 
-			await new Promise((resolve, reject) => {
-				asc.main(
-					[
-						sourcePath,
-						// cspell:word Ospeed
-						"-Ospeed",
-						"--noAssert",
-						"--converge",
-						"--textFile",
-						sourcePathBase + ".wat",
-						"--binaryFile",
-						sourcePathBase + ".wasm",
-						...flags.split(" ").filter(Boolean)
-					],
-					{
-						stdout: process.stdout,
-						stderr: process.stderr
-					},
-					err => {
-						if (err) return reject(err), 0;
-						resolve();
-						return 0;
-					}
-				);
-			});
+			await asc.main([
+				sourcePath,
+				// cspell:word Ospeed
+				"-O3",
+				"--noAssert",
+				"--converge",
+				"--textFile",
+				sourcePathBase + ".wat",
+				"--outFile",
+				sourcePathBase + ".wasm",
+				...flags.split(" ").filter(Boolean)
+			]);
 
 			const wasm = fs.readFileSync(sourcePathBase + ".wasm");
 

@@ -1380,14 +1380,13 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.19.16:
-  version "0.19.22"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.19.22.tgz#ef7eb8939864bd1b7603a9772e8f32e1fcfb8975"
-  integrity sha512-+Rclbx0+BI3qAe9fjc8XGbSUDaayTtjINnD19I4MmfpT2R43c9YTQERP36676shkPxb1fisDFZeSTL65Da8Q2g==
+assemblyscript@^0.21.4:
+  version "0.21.4"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.21.4.tgz#c51f4f9c005dbc473e475f2d65de1ee7cb1946f9"
+  integrity sha512-MGllYvPGFcxYy8R2k6dl7hTuDJ/ZodQBKv1cYwiAh6r4/K+xVVRJ8lzlfN3ajly6uYS4yKnx4X9cQn6DYCYBKw==
   dependencies:
-    binaryen "102.0.0-nightly.20211028"
+    binaryen "110.0.0-nightly.20220924"
     long "^5.2.0"
-    source-map-support "^0.5.20"
 
 assert-never@^1.2.1:
   version "1.2.1"
@@ -1537,10 +1536,10 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.1.0.tgz#30fa40c9e7fe07dbc895678cd287024dea241dd9"
   integrity sha512-1Yj8h9Q+QDF5FzhMs/c9+6UntbD5MkRfRwac8DoEm9ZfUBZ7tZ55YcGVAzEe4bXsdQHEk+s9S5wsOKVdZrw0tQ==
 
-binaryen@102.0.0-nightly.20211028:
-  version "102.0.0-nightly.20211028"
-  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-102.0.0-nightly.20211028.tgz#8f1efb0920afd34509e342e37f84313ec936afb2"
-  integrity sha512-GCJBVB5exbxzzvyt8MGDv/MeUjs6gkXDvf4xOIItRBptYl0Tz5sm1o/uG95YK0L0VeG5ajDu3hRtkBP2kzqC5w==
+binaryen@110.0.0-nightly.20220924:
+  version "110.0.0-nightly.20220924"
+  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-110.0.0-nightly.20220924.tgz#d61d55676cdd101c4aaae7bb6be0c314c662b323"
+  integrity sha512-zXHeJDpmBw4HNRUPTvdXo8p5U47ARb6nWbxmFk/R+HAeWLbd18UxtG1XWf2fQaOJzLYlrI7gURyjdAHz8x8IHw==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -5431,7 +5430,7 @@ source-list-map@^2.0.0:
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.1.tgz#3993bd873bfc48479cca9ea3a547835c7c154b34"
   integrity sha512-qnQ7gVMxGNxsiL4lEuJwe/To8UnK7fAnmbGEEH8RpLouuKbeEm0lhbQVFIrNSuB+G7tVrAlVsZgETT5nljf+Iw==
 
-source-map-support@^0.5.20, source-map-support@^0.5.6, source-map-support@~0.5.20:
+source-map-support@^0.5.6, source-map-support@~0.5.20:
   version "0.5.20"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.20.tgz#12166089f8f5e5e8c56926b377633392dd2cb6c9"
   integrity sha512-n1lZZ8Ve4ksRqizaBQgxXDgKwttHDhyfQjA6YZZn8+AroHbsIz+JjwxQDxbp+7y5OYCI8t1Yk7etjD9CRd2hIw==
