@@ -68,7 +68,7 @@
     "istanbul": "^0.4.5",
     "jest": "^27.5.0",
     "jest-circus": "^27.5.0",
-    "jest-cli": "^27.5.0",
+    "jest-cli": "^29.1.2",
     "jest-diff": "^27.5.0",
     "jest-junit": "^13.0.0",
     "json-loader": "^0.5.7",
