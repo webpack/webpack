@@ -1,5 +1,5 @@
 const wasmFeatures = require("webassembly-feature");
 
 module.exports = function(config) {
-	return wasmFeatures["simd"];
+	return wasmFeatures["JS-BigInt-integration"];
 };
