@@ -1,5 +1,5 @@
-const wasmFeatures = require("webassembly-feature");
+const supports = require("webassembly-feature");
 
 module.exports = function(config) {
-	return wasmFeatures["JS-BigInt-integration"];
+	return supports["JS-BigInt-integration"]();
 };
