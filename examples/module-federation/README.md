@@ -1021,11 +1021,15 @@ var init = (shareScope, initScope) => {
 	__webpack_require__.S[name] = shareScope;
 	return __webpack_require__.I(name, initScope);
 };
+var getExposedModules = () => {
+	return Object.keys(moduleMap);
+};
 
 // This exports getters to disallow modifications
 __webpack_require__.d(exports, {
 	get: () => (get),
-	init: () => (init)
+	init: () => (init),
+	getExposedModules: () => (getExposedModules)
 });
 
 /***/ })
@@ -1541,11 +1545,15 @@ var init = (shareScope, initScope) => {
 	__webpack_require__.S[name] = shareScope;
 	return __webpack_require__.I(name, initScope);
 };
+var getExposedModules = () => {
+	return Object.keys(moduleMap);
+};
 
 // This exports getters to disallow modifications
 __webpack_require__.d(exports, {
 	get: () => (get),
-	init: () => (init)
+	init: () => (init),
+	getExposedModules: () => (getExposedModules)
 });
 
 /***/ })
