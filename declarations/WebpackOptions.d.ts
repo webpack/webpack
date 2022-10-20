@@ -2097,6 +2097,10 @@ export interface Output {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
+	 * Ignore warnings in the browser.
+	 */
+	ignoreBrowserWarnings?: boolean;
+	/**
 	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
 	 */
 	iife?: Iife;
@@ -3305,6 +3309,10 @@ export interface OutputNormalized {
 	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
+	/**
+	 * Ignore warnings in the browser.
+	 */
+	ignoreBrowserWarnings?: boolean;
 	/**
 	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
 	 */

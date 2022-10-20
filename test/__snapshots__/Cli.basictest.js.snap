@@ -6076,6 +6076,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-ignore-browser-warnings": Object {
+    "configs": Array [
+      Object {
+        "description": "Ignore warnings in the browser.",
+        "multiple": false,
+        "path": "output.ignoreBrowserWarnings",
+        "type": "boolean",
+      },
+    ],
+    "description": "Ignore warnings in the browser.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-iife": Object {
     "configs": Array [
       Object {

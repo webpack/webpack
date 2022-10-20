@@ -679,7 +679,11 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			if(!__webpack_require__.o(__webpack_require__.S, name)) __webpack_require__.S[name] = {};
 /******/ 			// runs all init snippets from all modules reachable
 /******/ 			var scope = __webpack_require__.S[name];
-/******/ 			var warn = (msg) => (typeof console !== "undefined" && console.warn && console.warn(msg));
+/******/ 			var warn = (msg) => {
+/******/ 				typeof console !== "undefined" && console.warn ? console.warn(msg) : (() => {
+/******/ 		
+/******/ 				})()
+/******/ 			};
 /******/ 			var uniqueName = "module-federation-aaa";
 /******/ 			var register = (name, version, factory, eager) => {
 /******/ 				var versions = scope[name] = scope[name] || {};
@@ -789,8 +793,13 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			if(entry) return get(entry);
 /******/ 			throw new Error(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
 /******/ 		};
+/******/ 		var warn = (msg) => {
+/******/ 			typeof console !== "undefined" && console.warn ? console.warn(msg) : (() => {
+/******/ 		
+/******/ 			})()
+/******/ 		};
 /******/ 		var warnInvalidVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			typeof console !== "undefined" && console.warn && console.warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
+/******/ 			warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
 /******/ 		};
 /******/ 		var get = (entry) => {
 /******/ 			entry.loaded = 1;
@@ -1208,7 +1217,11 @@ __webpack_require__.d(exports, {
 /******/ 			if(!__webpack_require__.o(__webpack_require__.S, name)) __webpack_require__.S[name] = {};
 /******/ 			// runs all init snippets from all modules reachable
 /******/ 			var scope = __webpack_require__.S[name];
-/******/ 			var warn = (msg) => (typeof console !== "undefined" && console.warn && console.warn(msg));
+/******/ 			var warn = (msg) => {
+/******/ 				typeof console !== "undefined" && console.warn ? console.warn(msg) : (() => {
+/******/ 		
+/******/ 				})()
+/******/ 			};
 /******/ 			var uniqueName = "module-federation-bbb";
 /******/ 			var register = (name, version, factory, eager) => {
 /******/ 				var versions = scope[name] = scope[name] || {};
@@ -1289,7 +1302,7 @@ __webpack_require__.d(exports, {
 /******/ 		};
 /******/ 		var getSingletonVersion = (scope, scopeName, key, requiredVersion) => {
 /******/ 			var version = findSingletonVersionKey(scope, key);
-/******/ 			if (!satisfy(requiredVersion, version)) typeof console !== "undefined" && console.warn && console.warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
+/******/ 			if (!satisfy(requiredVersion, version)) warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
 /******/ 			return get(scope[key][version]);
 /******/ 		};
 /******/ 		var getStrictSingletonVersion = (scope, scopeName, key, requiredVersion) => {
@@ -1317,8 +1330,13 @@ __webpack_require__.d(exports, {
 /******/ 			if(entry) return get(entry);
 /******/ 			throw new Error(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
 /******/ 		};
+/******/ 		var warn = (msg) => {
+/******/ 			typeof console !== "undefined" && console.warn ? console.warn(msg) : (() => {
+/******/ 		
+/******/ 			})()
+/******/ 		};
 /******/ 		var warnInvalidVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			typeof console !== "undefined" && console.warn && console.warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
+/******/ 			warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
 /******/ 		};
 /******/ 		var get = (entry) => {
 /******/ 			entry.loaded = 1;
@@ -1754,7 +1772,11 @@ __webpack_require__.d(exports, {
 /******/ 			if(!__webpack_require__.o(__webpack_require__.S, name)) __webpack_require__.S[name] = {};
 /******/ 			// runs all init snippets from all modules reachable
 /******/ 			var scope = __webpack_require__.S[name];
-/******/ 			var warn = (msg) => (typeof console !== "undefined" && console.warn && console.warn(msg));
+/******/ 			var warn = (msg) => {
+/******/ 				typeof console !== "undefined" && console.warn ? console.warn(msg) : (() => {
+/******/ 		
+/******/ 				})()
+/******/ 			};
 /******/ 			var uniqueName = "module-federation-ccc";
 /******/ 			var register = (name, version, factory, eager) => {
 /******/ 				var versions = scope[name] = scope[name] || {};
@@ -1835,7 +1857,7 @@ __webpack_require__.d(exports, {
 /******/ 		};
 /******/ 		var getSingletonVersion = (scope, scopeName, key, requiredVersion) => {
 /******/ 			var version = findSingletonVersionKey(scope, key);
-/******/ 			if (!satisfy(requiredVersion, version)) typeof console !== "undefined" && console.warn && console.warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
+/******/ 			if (!satisfy(requiredVersion, version)) warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
 /******/ 			return get(scope[key][version]);
 /******/ 		};
 /******/ 		var getStrictSingletonVersion = (scope, scopeName, key, requiredVersion) => {
@@ -1863,8 +1885,13 @@ __webpack_require__.d(exports, {
 /******/ 			if(entry) return get(entry);
 /******/ 			throw new Error(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
 /******/ 		};
+/******/ 		var warn = (msg) => {
+/******/ 			typeof console !== "undefined" && console.warn ? console.warn(msg) : (() => {
+/******/ 		
+/******/ 			})()
+/******/ 		};
 /******/ 		var warnInvalidVersion = (scope, scopeName, key, requiredVersion) => {
-/******/ 			typeof console !== "undefined" && console.warn && console.warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
+/******/ 			warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion));
 /******/ 		};
 /******/ 		var get = (entry) => {
 /******/ 			entry.loaded = 1;
