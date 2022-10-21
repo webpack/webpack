@@ -570,6 +570,10 @@ export type UniqueName = string;
  */
 export type WebassemblyModuleFilename = string;
 /**
+ * Worker public path.
+ */
+export type WorkerPublicPath = string;
+/**
  * The number of parallel processed modules in the compilation.
  */
 export type Parallelism = number;
@@ -2164,6 +2168,10 @@ export interface Output {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: ChunkLoading;
+	/**
+	 * Worker public path.
+	 */
+	workerPublicPath?: WorkerPublicPath;
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */

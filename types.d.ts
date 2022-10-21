@@ -8664,6 +8664,11 @@ declare interface Output {
 	workerChunkLoading?: string | false;
 
 	/**
+	 * Worker public path.
+	 */
+	workerPublicPath?: string;
+
+	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	workerWasmLoading?: string | false;
