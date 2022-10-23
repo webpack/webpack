@@ -42,9 +42,9 @@ module.exports.setLogLevel = function (level) {
 module.exports.formatError = function (err) {
 	var message = err.message;
 	var stack = err.stack;
-	if (!stack) {
-		return message;
-	} else if (stack.indexOf(message) < 0) {
+	if (!stack) return message;
+
+	if (stack.includes(message)) {
 		return message + "\n" + stack;
 	} else {
 		return stack;
