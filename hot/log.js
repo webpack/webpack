@@ -3,7 +3,7 @@ var logLevel = "info";
 function dummy() {}
 
 function shouldLog(level) {
-	return typeof level === "string" && ["info", "warning", "error"].includes(level);
+	return typeof level === "string" && (level == "info"|| level == "warning" || level == "error");
 }
 
 function logGroup(logFn) {
