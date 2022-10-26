@@ -1,4 +1,4 @@
-let logLevel = "info";
+var logLevel = "info";
 
 function dummy() {}
 
@@ -24,7 +24,7 @@ module.exports = function (level, msg) {
 };
 
 /* eslint-disable node/no-unsupported-features/node-builtins */
-const group = console.group || dummy,
+var group = console.group || dummy,
   groupCollapsed = console.groupCollapsed || dummy,
   groupEnd = console.groupEnd || dummy;
 /* eslint-enable node/no-unsupported-features/node-builtins */
@@ -40,12 +40,12 @@ module.exports.setLogLevel = function (level) {
 };
 
 module.exports.formatError = function (err) {
-	const {message , stack} = err;
+	var {message , stack} = err;
 
 	if (!stack) return message;
-	if (stack.includes(message)) {
+	if (stack.indexOf(message) <= 0) {
 		return message + "\n" + stack;
-	} else {
-		return stack;
 	}
+	
+	return stack;
 };
