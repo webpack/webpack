@@ -64,7 +64,7 @@ const runCli = cli => {
 	const path = require("path");
 	const pkgPath = require.resolve(`${cli.package}/package.json`);
 	// eslint-disable-next-line node/no-missing-require
-	const pkg = require(pkgPath);
+	const pkg = import(pkgPath);
 	// eslint-disable-next-line node/no-missing-require
 	require(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName]));
 };
