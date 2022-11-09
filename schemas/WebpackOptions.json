@@ -897,7 +897,10 @@
         },
         "css": {
           "description": "Enable css support.",
-          "oneOf": [
+          "anyOf": [
+            {
+              "enum": [false]
+            },
             {
               "$ref": "#/definitions/CssExperimentOptions"
             }
@@ -913,7 +916,10 @@
         },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
-          "oneOf": [
+          "anyOf": [
+            {
+              "enum": [false]
+            },
             {
               "$ref": "#/definitions/LazyCompilationOptions"
             }
@@ -3735,6 +3741,29 @@
           "items": {
             "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
             "type": "string"
+          }
+        },
+        "extensionAlias": {
+          "description": "An object which maps extension to extension aliases.",
+          "type": "object",
+          "additionalProperties": {
+            "description": "Extension alias.",
+            "anyOf": [
+              {
+                "description": "Multiple extensions.",
+                "type": "array",
+                "items": {
+                  "description": "Aliased extension.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              {
+                "description": "Aliased extension.",
+                "type": "string",
+                "minLength": 1
+              }
+            ]
           }
         },
         "extensions": {

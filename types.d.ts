@@ -3133,6 +3133,17 @@ declare class EnableLibraryPlugin {
 	static setEnabled(compiler: Compiler, type: string): void;
 	static checkEnabled(compiler: Compiler, type: string): void;
 }
+declare class EnableWasmLoadingPlugin {
+	constructor(type: string);
+	type: string;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+	static setEnabled(compiler: Compiler, type: string): void;
+	static checkEnabled(compiler: Compiler, type: string): void;
+}
 type Entry =
 	| string
 	| (() => string | EntryObject | string[] | Promise<EntryStatic>)
@@ -3543,12 +3554,12 @@ declare interface ExperimentsNormalizedExtra {
 	/**
 	 * Enable css support.
 	 */
-	css?: CssExperimentOptions;
+	css?: false | CssExperimentOptions;
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
-	lazyCompilation?: LazyCompilationOptions;
+	lazyCompilation?: false | LazyCompilationOptions;
 }
 declare abstract class ExportInfo {
 	name: string;
@@ -4508,6 +4519,42 @@ declare interface HandleModuleCreationOptions {
 	 * connect the resolved module with the origin module
 	 */
 	connectOrigin?: boolean;
+}
+declare class HarmonyImportDependency extends ModuleDependency {
+	constructor(
+		request: string,
+		sourceOrder: number,
+		assertions?: Record<string, any>
+	);
+	sourceOrder: number;
+	getImportVar(moduleGraph: ModuleGraph): string;
+	getImportStatement(
+		update: boolean,
+		__1: DependencyTemplateContext
+	): [string, string];
+	getLinkingErrors(
+		moduleGraph: ModuleGraph,
+		ids: string[],
+		additionalMessage: string
+	): undefined | WebpackError[];
+	static Template: typeof HarmonyImportDependencyTemplate;
+	static ExportPresenceModes: {
+		NONE: 0;
+		WARN: 1;
+		AUTO: 2;
+		ERROR: 3;
+		fromUserOption(str?: any): 0 | 1 | 2 | 3;
+	};
+	static NO_EXPORTS_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
+}
+declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
+	constructor();
+	static getImportEmittedRuntime(
+		module: Module,
+		referencedModule: Module
+	): undefined | string | boolean | SortableSet<string>;
 }
 declare class Hash {
 	constructor();
@@ -9681,6 +9728,11 @@ declare interface ResolveOptionsWebpackOptions {
 	exportsFields?: string[];
 
 	/**
+	 * An object which maps extension to extension aliases.
+	 */
+	extensionAlias?: { [index: string]: string | string[] };
+
+	/**
 	 * Extensions added to the request when trying to find the file.
 	 */
 	extensions?: string[];
@@ -12734,7 +12786,12 @@ declare namespace exports {
 		) => void;
 	}
 	export namespace dependencies {
-		export { ModuleDependency, ConstDependency, NullDependency };
+		export {
+			ModuleDependency,
+			HarmonyImportDependency,
+			ConstDependency,
+			NullDependency
+		};
 	}
 	export namespace ids {
 		export {
@@ -12845,7 +12902,7 @@ declare namespace exports {
 		export { ElectronTargetPlugin };
 	}
 	export namespace wasm {
-		export { AsyncWebAssemblyModulesPlugin };
+		export { AsyncWebAssemblyModulesPlugin, EnableWasmLoadingPlugin };
 	}
 	export namespace library {
 		export { AbstractLibraryPlugin, EnableLibraryPlugin };

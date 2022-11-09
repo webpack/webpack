@@ -1506,6 +1506,15 @@ export interface ResolveOptions {
 	 */
 	exportsFields?: string[];
 	/**
+	 * An object which maps extension to extension aliases.
+	 */
+	extensionAlias?: {
+		/**
+		 * Extension alias.
+		 */
+		[k: string]: string[] | string;
+	};
+	/**
 	 * Extensions added to the request when trying to find the file.
 	 */
 	extensions?: string[];
@@ -3514,11 +3523,11 @@ export interface ExperimentsNormalizedExtra {
 	/**
 	 * Enable css support.
 	 */
-	css?: CssExperimentOptions;
+	css?: false | CssExperimentOptions;
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
-	lazyCompilation?: LazyCompilationOptions;
+	lazyCompilation?: false | LazyCompilationOptions;
 }
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.
