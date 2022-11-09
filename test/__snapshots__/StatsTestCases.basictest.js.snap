@@ -1365,7 +1365,6 @@ asset <CLR=32,BOLD>main.js</CLR> 84 bytes <CLR=32,BOLD>[emitted]</CLR> (name: ma
 <CLR=BOLD>LOG from webpack.Compilation</CLR>
     <CLR=BOLD>1 modules hashed, 0 from cache (1 variants per module in average)</CLR>
     <CLR=BOLD>100% code generated (1 generated, 0 from cache)</CLR>
-    <CLR=BOLD>NaN% code generated (0 generated, 0 from cache)</CLR>
 + 24 hidden lines
 
 <CLR=BOLD>LOG from webpack.FlagDependencyExportsPlugin</CLR>
