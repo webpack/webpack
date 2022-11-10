@@ -7890,10 +7890,10 @@ declare class NormalModuleReplacementPlugin {
 	 */
 	constructor(
 		resourceRegExp: RegExp,
-		newResource: string | ((arg0: { request: string }) => void)
+		newResource: string | ((arg0: ResolveData) => void)
 	);
 	resourceRegExp: RegExp;
-	newResource: string | ((arg0: { request: string }) => void);
+	newResource: string | ((arg0: ResolveData) => void);
 
 	/**
 	 * Apply the plugin
