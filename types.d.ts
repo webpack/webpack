@@ -5476,7 +5476,9 @@ declare class JavascriptParser extends Parser {
 	evaluatedVariable(tagInfo?: any): VariableInfo;
 	parseCommentOptions(
 		range?: any
-	): { options: null; errors: null } | { options: object; errors: unknown[] };
+	):
+		| { options: null; errors: null }
+		| { options: object; errors: { comment: any; cause: unknown }[] };
 	extractMemberExpressionChain(expression: MemberExpression): {
 		members: string[];
 		object:
