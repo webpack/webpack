@@ -20,3 +20,4 @@
 .cache
 .eslintcache
 package-lock.json
+/.vs
