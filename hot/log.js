@@ -3,11 +3,7 @@ var logLevel = "info";
 function dummy() {}
 
 function shouldLog(level) {
-	var shouldLog =
-		(logLevel === "info" && level === "info") ||
-		(["info", "warning"].indexOf(logLevel) >= 0 && level === "warning") ||
-		(["info", "warning", "error"].indexOf(logLevel) >= 0 && level === "error");
-	return shouldLog;
+	return typeof level === "string" && (level == "info"|| level == "warning" || level == "error");
 }
 
 function logGroup(logFn) {
@@ -19,21 +15,18 @@ function logGroup(logFn) {
 }
 
 module.exports = function (level, msg) {
-	if (shouldLog(level)) {
-		if (level === "info") {
-			console.log(msg);
-		} else if (level === "warning") {
-			console.warn(msg);
-		} else if (level === "error") {
-			console.error(msg);
-		}
-	}
+	if (!shouldLog(level)) return void 0;
+
+	if (level === "info") level = "log";
+	else if (level === "warning") level = "warn";
+
+	console[level](msg)
 };
 
 /* eslint-disable node/no-unsupported-features/node-builtins */
-var group = console.group || dummy;
-var groupCollapsed = console.groupCollapsed || dummy;
-var groupEnd = console.groupEnd || dummy;
+var group = console.group || dummy,
+  groupCollapsed = console.groupCollapsed || dummy,
+  groupEnd = console.groupEnd || dummy;
 /* eslint-enable node/no-unsupported-features/node-builtins */
 
 module.exports.group = logGroup(group);
@@ -47,13 +40,12 @@ module.exports.setLogLevel = function (level) {
 };
 
 module.exports.formatError = function (err) {
-	var message = err.message;
-	var stack = err.stack;
-	if (!stack) {
-		return message;
-	} else if (stack.indexOf(message) < 0) {
+	var {message , stack} = err;
+
+	if (!stack) return message;
+	if (stack.indexOf(message) <= 0) {
 		return message + "\n" + stack;
-	} else {
-		return stack;
 	}
+	
+	return stack;
 };
