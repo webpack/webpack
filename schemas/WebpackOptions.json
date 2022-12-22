@@ -2007,6 +2007,10 @@
         "export": {
           "$ref": "#/definitions/LibraryExport"
         },
+        "globalObject": {
+          "description": "Add a global object prefix in the AMD module.",
+          "type": "string"
+        },
         "name": {
           "$ref": "#/definitions/LibraryName"
         },

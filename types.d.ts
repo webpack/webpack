@@ -6273,6 +6273,11 @@ declare interface LibraryOptions {
 	export?: string | string[];
 
 	/**
+	 * Add a global object prefix in the AMD module.
+	 */
+	globalObject?: string;
+
+	/**
 	 * The name of the library (some types allow unnamed libraries too).
 	 */
 	name?: string | string[] | LibraryCustomUmdObject;
@@ -6543,6 +6548,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
+	 *
 	 * In the example:
 	 * [
 	 *   { request: "/abc/loader1.js?xyz",

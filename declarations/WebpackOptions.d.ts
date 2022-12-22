@@ -1096,6 +1096,10 @@ export interface LibraryOptions {
 	 */
 	export?: LibraryExport;
 	/**
+	 * Add a global object prefix in the AMD module.
+	 */
+	globalObject?: string;
+	/**
 	 * The name of the library (some types allow unnamed libraries too).
 	 */
 	name?: LibraryName;
