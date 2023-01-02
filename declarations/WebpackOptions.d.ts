@@ -83,6 +83,10 @@ export type FilenameTemplate =
  */
 export type Layer = null | string;
 /**
+ * Add a container for define/require functions in the AMD module.
+ */
+export type AmdContainer = string;
+/**
  * Add a comment in the UMD wrapper.
  */
 export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
@@ -1088,6 +1092,10 @@ export interface EntryDescription {
  */
 export interface LibraryOptions {
 	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: AmdContainer;
+	/**
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: AuxiliaryComment;
@@ -1095,10 +1103,6 @@ export interface LibraryOptions {
 	 * Specify which export should be exposed as library.
 	 */
 	export?: LibraryExport;
-	/**
-	 * Add a global object prefix in the AMD module.
-	 */
-	globalObject?: string;
 	/**
 	 * The name of the library (some types allow unnamed libraries too).
 	 */
@@ -1964,6 +1968,10 @@ export interface OptimizationSplitChunksCacheGroup {
  * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
  */
 export interface Output {
+	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: AmdContainer;
 	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */

@@ -13,6 +13,11 @@
         }
       ]
     },
+    "AmdContainer": {
+      "description": "Add a container for define/require functions in the AMD module.",
+      "type": "string",
+      "minLength": 1
+    },
     "AssetFilterItemTypes": {
       "description": "Filtering value, regexp or function.",
       "cli": {
@@ -2001,15 +2006,14 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "amdContainer": {
+          "$ref": "#/definitions/AmdContainer"
+        },
         "auxiliaryComment": {
           "$ref": "#/definitions/AuxiliaryComment"
         },
         "export": {
           "$ref": "#/definitions/LibraryExport"
-        },
-        "globalObject": {
-          "description": "Add a global object prefix in the AMD module.",
-          "type": "string"
         },
         "name": {
           "$ref": "#/definitions/LibraryName"
@@ -3050,6 +3054,16 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "amdContainer": {
+          "cli": {
+            "exclude": true
+          },
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AmdContainer"
+            }
+          ]
+        },
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },

@@ -6263,6 +6263,11 @@ type LibraryName = string | string[] | LibraryCustomUmdObject;
  */
 declare interface LibraryOptions {
 	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: string;
+
+	/**
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?: string | LibraryCustomUmdCommentObject;
@@ -6271,11 +6276,6 @@ declare interface LibraryOptions {
 	 * Specify which export should be exposed as library.
 	 */
 	export?: string | string[];
-
-	/**
-	 * Add a global object prefix in the AMD module.
-	 */
-	globalObject?: string;
 
 	/**
 	 * The name of the library (some types allow unnamed libraries too).
@@ -8416,6 +8416,11 @@ declare class OriginalSource extends Source {
  * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
  */
 declare interface Output {
+	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: string;
+
 	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */

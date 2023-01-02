@@ -6141,6 +6141,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-library-amd-container": Object {
+    "configs": Array [
+      Object {
+        "description": "Add a container for define/require functions in the AMD module.",
+        "multiple": false,
+        "path": "output.library.amdContainer",
+        "type": "string",
+      },
+    ],
+    "description": "Add a container for define/require functions in the AMD module.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-library-auxiliary-comment": Object {
     "configs": Array [
       Object {
@@ -6244,19 +6257,6 @@ Object {
     "description": "Clear all items provided in 'output.library.export' configuration. Specify which export should be exposed as library.",
     "multiple": false,
     "simpleType": "boolean",
-  },
-  "output-library-global-object": Object {
-    "configs": Array [
-      Object {
-        "description": "Add a global object prefix in the AMD module.",
-        "multiple": false,
-        "path": "output.library.globalObject",
-        "type": "string",
-      },
-    ],
-    "description": "Add a global object prefix in the AMD module.",
-    "multiple": false,
-    "simpleType": "string",
   },
   "output-library-name": Object {
     "configs": Array [
