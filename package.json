@@ -63,7 +63,7 @@
     "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^6.0.5",
     "hash-wasm": "^4.9.0",
-    "husky": "^6.0.0",
+    "husky": "^8.0.3",
     "is-ci": "^3.0.0",
     "istanbul": "^0.4.5",
     "jest": "^27.5.0",
