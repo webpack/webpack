@@ -2120,10 +2120,10 @@ date-fns@^2.15.0:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.28.0.tgz#9570d656f5fc13143e50c975a3b6bbeb46cd08b2"
   integrity sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==
 
-debug@4, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.2.tgz#f0a49c18ac8779e31d4a0c6029dfb76873c7428b"
-  integrity sha512-mOp8wKcvj7XxC78zLgw/ZA+6TSgkoE2C/ienthhRD298T7UNwAg9diBpLRxC0mOezLl4B0xV7M0cCO6P/O0Xhw==
+debug@4, debug@^4.0.1, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.4.tgz#1319f6579357f2338d3337d2cdd4914bb5dcc865"
+  integrity sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==
   dependencies:
     ms "2.1.2"
 
@@ -5389,14 +5389,14 @@ signal-exit@^3.0.2, signal-exit@^3.0.3:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.3.tgz#a1410c2edd8f077b08b4e253c8eacfcaf057461c"
   integrity sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
 
-simple-git@^2.17.0:
-  version "2.48.0"
-  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-2.48.0.tgz#87c262dba8f84d7b96bb3a713e9e34701c1f6e3b"
-  integrity sha512-z4qtrRuaAFJS4PUd0g+xy7aN4y+RvEt/QTJpR184lhJguBA1S/LsVlvE/CM95RsYMOFJG3NGGDjqFCzKU19S/A==
+simple-git@^3.16.0:
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-3.16.0.tgz#421773e24680f5716999cc4a1d60127b4b6a9dec"
+  integrity sha512-zuWYsOLEhbJRWVxpjdiXl6eyAyGo/KzVW+KFhhw9MqEEJttcq+32jTWSGyxTdf9e/YCohxRE+9xpWFj9FdiJNw==
   dependencies:
     "@kwsites/file-exists" "^1.1.1"
     "@kwsites/promise-deferred" "^1.1.1"
-    debug "^4.3.2"
+    debug "^4.3.4"
 
 sisteransi@^1.0.5:
   version "1.0.5"

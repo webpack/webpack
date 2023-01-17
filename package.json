@@ -93,7 +93,7 @@
     "react-dom": "^17.0.1",
     "rimraf": "^3.0.2",
     "script-loader": "^0.7.2",
-    "simple-git": "^2.17.0",
+    "simple-git": "^3.16.0",
     "strip-ansi": "^6.0.0",
     "style-loader": "^2.0.0",
     "terser": "^5.7.0",
