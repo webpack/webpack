@@ -3400,6 +3400,9 @@
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
+        "workerPublicPath": {
+          "$ref": "#/definitions/WorkerPublicPath"
+        },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         }
