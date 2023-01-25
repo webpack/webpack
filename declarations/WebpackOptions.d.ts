@@ -3361,6 +3361,10 @@ export interface OutputNormalized {
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	workerWasmLoading?: WasmLoading;
+	/**
+	 * Worker public path. Much like the public path, this sets the location that the worker script file is intended to be found at. If not set, Webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPath?: string;
 }
 /**
  * Normalized webpack options object.
