@@ -6543,6 +6543,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
+	 *
 	 * In the example:
 	 * [
 	 *   { request: "/abc/loader1.js?xyz",
@@ -8675,7 +8676,7 @@ declare interface Output {
 	workerChunkLoading?: string | false;
 
 	/**
-	 * Worker public path.
+	 * Worker public path. Much like the public path, this sets the location that the worker script file is intended to be found at. If not set, Webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
 	 */
 	workerPublicPath?: string;
 
