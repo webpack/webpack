@@ -69,7 +69,7 @@
     "jest": "^27.5.0",
     "jest-circus": "^27.5.0",
     "jest-cli": "^27.5.0",
-    "jest-diff": "^27.5.0",
+    "jest-diff": "^29.4.1",
     "jest-junit": "^13.0.0",
     "json-loader": "^0.5.7",
     "json5": "^2.1.3",
