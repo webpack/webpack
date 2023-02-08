@@ -67,7 +67,7 @@
     "is-ci": "^3.0.0",
     "istanbul": "^0.4.5",
     "jest": "^27.5.0",
-    "jest-circus": "^27.5.0",
+    "jest-circus": "^29.4.2",
     "jest-cli": "^27.5.0",
     "jest-diff": "^27.5.0",
     "jest-junit": "^13.0.0",
