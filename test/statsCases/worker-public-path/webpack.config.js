@@ -1,5 +1,6 @@
 const baseConfig = {
 	mode: "production",
+	cache: false,
 	entry: "./index.js",
 	output: {
 		filename: "[name]-[contenthash].js"
