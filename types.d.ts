@@ -6595,6 +6595,12 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	 * Example: "/abc/resource.js?query#frag"
 	 */
 	resource: string;
+
+	/**
+	 * Target of compilation.
+	 * Example: "web"
+	 */
+	target: string;
 }
 declare class LoaderTargetPlugin {
 	constructor(target: string);
