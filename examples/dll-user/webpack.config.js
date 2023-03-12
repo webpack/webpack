@@ -1,7 +1,7 @@
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	plugins: [
 		new webpack.DllReferencePlugin({
 			context: path.join(__dirname, "..", "dll"),

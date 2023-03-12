@@ -2,7 +2,7 @@ var path = require("path");
 var webpack = require("../../../");
 
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	context: __dirname,
 	entry: ["example-vendor"],
 	output: {

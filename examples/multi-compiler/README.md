@@ -15,7 +15,7 @@ var webpack = require("../../");
 module.exports = [
 	{
 		name: "mobile",
-		// mode: "development || "production",
+		// mode: "development" || "production",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "dist"),
@@ -30,7 +30,7 @@ module.exports = [
 
 	{
 		name: "desktop",
-		// mode: "development || "production",
+		// mode: "development" || "production",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "dist"),

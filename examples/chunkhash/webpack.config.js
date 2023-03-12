@@ -1,6 +1,6 @@
 var path = require("path");
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	entry: {
 		main: "./example"
 	},
