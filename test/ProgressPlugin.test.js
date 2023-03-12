@@ -218,7 +218,7 @@ describe("ProgressPlugin", function () {
 			const logs = getLogs(stderr.toString());
 
 			expect(logs.length).toBeGreaterThan(20);
-			expect(_.maxBy(logs, "length").length).toBeGreaterThan(50);
+			expect(_.maxBy(logs, "length").length).not.toBeGreaterThan(40);
 		});
 	});
 
