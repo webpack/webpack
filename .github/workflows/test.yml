@@ -40,7 +40,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 19.x
+          node-version: 18.x
           cache: "yarn"
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
@@ -78,12 +78,9 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [10.x, 19.x]
+        node-version: [10.x, 18.x]
         part: [a, b]
         include:
-          - os: ubuntu-latest
-            node-version: 18.x
-            part: a
           - os: ubuntu-latest
             node-version: 16.x
             part: a
