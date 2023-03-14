@@ -191,9 +191,9 @@ webpack x.x.x compiled successfully in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for async-commons-chunk 1`] = `
-"chunk (runtime: main) main.js (main) 515 bytes (javascript) 5.99 KiB (runtime) >{460}< >{847}< >{996}< [entry] [rendered]
+"chunk (runtime: main) main.js (main) 515 bytes (javascript) 6 KiB (runtime) >{460}< >{847}< >{996}< [entry] [rendered]
   > ./ main
-  runtime modules 5.99 KiB 7 modules
+  runtime modules 6 KiB 7 modules
   ./index.js 515 bytes [built] [code generated]
 chunk (runtime: main) 460.js 21 bytes <{179}> ={847}= [rendered]
   > ./index.js 17:1-21:3
@@ -220,9 +220,9 @@ exports[`StatsTestCases should print correct stats for async-commons-chunk-auto 
     > ./g ./a.js 6:0-47
     dependent modules 20 bytes [dependent] 1 module
     ./g.js 45 bytes [built] [code generated]
-  chunk (runtime: main) disabled/main.js (main) 147 bytes (javascript) 6.64 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) disabled/main.js (main) 147 bytes (javascript) 6.65 KiB (runtime) [entry] [rendered]
     > ./ main
-    runtime modules 6.64 KiB 9 modules
+    runtime modules 6.65 KiB 9 modules
     ./index.js 147 bytes [built] [code generated]
   chunk (runtime: main) disabled/async-b.js (async-b) 196 bytes [rendered]
     > ./b ./index.js 2:0-47
@@ -290,9 +290,9 @@ default:
   chunk (runtime: main) default/769.js (id hint: vendors) 20 bytes [rendered] split chunk (cache group: defaultVendors)
     > ./c ./index.js 3:0-47
     ./node_modules/z.js 20 bytes [built] [code generated]
-  chunk (runtime: a) default/a.js (a) 245 bytes (javascript) 6.64 KiB (runtime) [entry] [rendered]
+  chunk (runtime: a) default/a.js (a) 245 bytes (javascript) 6.65 KiB (runtime) [entry] [rendered]
     > ./a a
-    runtime modules 6.64 KiB 9 modules
+    runtime modules 6.65 KiB 9 modules
     dependent modules 60 bytes [dependent] 3 modules
     ./a.js + 1 modules 185 bytes [built] [code generated]
   chunk (runtime: main) default/async-a.js (async-a) 185 bytes [rendered]
@@ -318,9 +318,9 @@ vendors:
     > ./g ./a.js 6:0-47
     dependent modules 20 bytes [dependent] 1 module
     ./g.js 45 bytes [built] [code generated]
-  chunk (runtime: main) vendors/main.js (main) 147 bytes (javascript) 6.65 KiB (runtime) [entry] [rendered]
+  chunk (runtime: main) vendors/main.js (main) 147 bytes (javascript) 6.64 KiB (runtime) [entry] [rendered]
     > ./ main
-    runtime modules 6.65 KiB 9 modules
+    runtime modules 6.64 KiB 9 modules
     ./index.js 147 bytes [built] [code generated]
   chunk (runtime: a, b, c) vendors/vendors.js (vendors) (id hint: vendors) 60 bytes [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
     > ./a a
@@ -621,9 +621,9 @@ chunk (runtime: main) d_js-e_js.bundle.js 60 bytes <{c_js}> [rendered]
     cjs self exports reference ./e.js 2:0-14
     X ms -> X ms ->
     X ms (resolving: X ms, restoring: X ms, integration: X ms, building: X ms, storing: X ms)
-chunk (runtime: main) bundle.js (main) 73 bytes (javascript) 6.01 KiB (runtime) >{b_js}< >{c_js}< [entry] [rendered]
+chunk (runtime: main) bundle.js (main) 73 bytes (javascript) 6 KiB (runtime) >{b_js}< >{c_js}< [entry] [rendered]
   > ./index main
-  runtime modules 6.01 KiB 7 modules
+  runtime modules 6 KiB 7 modules
   cacheable modules 73 bytes
     ./a.js 22 bytes [dependent] [built] [code generated]
       cjs self exports reference ./a.js 1:0-14
@@ -640,8 +640,8 @@ webpack x.x.x compiled successfully in X ms"
 exports[`StatsTestCases should print correct stats for circular-correctness 1`] = `
 "chunk (runtime: main) 128.bundle.js (b) 49 bytes <{179}> <{459}> >{459}< [rendered]
   ./module-b.js 49 bytes [built] [code generated]
-chunk (runtime: main) bundle.js (main) 98 bytes (javascript) 7.69 KiB (runtime) >{128}< >{786}< [entry] [rendered]
-  runtime modules 7.69 KiB 10 modules
+chunk (runtime: main) bundle.js (main) 98 bytes (javascript) 7.68 KiB (runtime) >{128}< >{786}< [entry] [rendered]
+  runtime modules 7.68 KiB 10 modules
   ./index.js 98 bytes [built] [code generated]
 chunk (runtime: main) 459.bundle.js (c) 98 bytes <{128}> <{786}> >{128}< >{786}< [rendered]
   ./module-c.js 98 bytes [built] [code generated]
@@ -1298,8 +1298,8 @@ exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 
 2 chunks:
   asset bundle2.js 12.5 KiB [emitted] (name: main)
   asset 459.bundle2.js 664 bytes [emitted] (name: c)
-  chunk (runtime: main) bundle2.js (main) 101 bytes (javascript) 7.68 KiB (runtime) >{459}< [entry] [rendered]
-    runtime modules 7.68 KiB 10 modules
+  chunk (runtime: main) bundle2.js (main) 101 bytes (javascript) 7.69 KiB (runtime) >{459}< [entry] [rendered]
+    runtime modules 7.69 KiB 10 modules
     ./index.js 101 bytes [built] [code generated]
   chunk (runtime: main) 459.bundle2.js (c) 118 bytes <{179}> <{459}> >{459}< [rendered]
     dependent modules 44 bytes [dependent]
@@ -1314,8 +1314,8 @@ exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 
   asset bundle3.js 12.5 KiB [emitted] (name: main)
   asset 459.bundle3.js 528 bytes [emitted] (name: c)
   asset 524.bundle3.js 206 bytes [emitted]
-  chunk (runtime: main) bundle3.js (main) 101 bytes (javascript) 7.68 KiB (runtime) >{459}< [entry] [rendered]
-    runtime modules 7.68 KiB 10 modules
+  chunk (runtime: main) bundle3.js (main) 101 bytes (javascript) 7.69 KiB (runtime) >{459}< [entry] [rendered]
+    runtime modules 7.69 KiB 10 modules
     ./index.js 101 bytes [built] [code generated]
   chunk (runtime: main) 459.bundle3.js (c) 74 bytes <{179}> >{524}< [rendered]
     ./a.js 22 bytes [built] [code generated]
@@ -1331,8 +1331,8 @@ exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 
   asset 459.bundle4.js 392 bytes [emitted] (name: c)
   asset 394.bundle4.js 206 bytes [emitted]
   asset 524.bundle4.js 206 bytes [emitted]
-  chunk (runtime: main) bundle4.js (main) 101 bytes (javascript) 7.68 KiB (runtime) >{394}< >{459}< [entry] [rendered]
-    runtime modules 7.68 KiB 10 modules
+  chunk (runtime: main) bundle4.js (main) 101 bytes (javascript) 7.69 KiB (runtime) >{394}< >{459}< [entry] [rendered]
+    runtime modules 7.69 KiB 10 modules
     ./index.js 101 bytes [built] [code generated]
   chunk (runtime: main) 394.bundle4.js 44 bytes <{179}> [rendered]
     ./a.js 22 bytes [built] [code generated]
@@ -1494,13 +1494,13 @@ Chunk Group b 549 bytes (21 KiB) = b.js 549 bytes (2.png 21 KiB)
 chunk (runtime: main) b.js (b) 67 bytes [rendered]
   ./node_modules/a/2.png 49 bytes [dependent] [built] [code generated] [1 asset]
   ./node_modules/b/index.js 18 bytes [built] [code generated]
-chunk (runtime: main) main.js (main) 82 bytes (javascript) 6.28 KiB (runtime) [entry] [rendered]
-  runtime modules 6.28 KiB 8 modules
+chunk (runtime: main) main.js (main) 82 bytes (javascript) 6.29 KiB (runtime) [entry] [rendered]
+  runtime modules 6.29 KiB 8 modules
   ./index.js 82 bytes [built] [code generated]
 chunk (runtime: main) a.js (a) 134 bytes [rendered]
   ./node_modules/a/2.png 49 bytes [dependent] [built] [code generated] [1 asset]
   ./node_modules/a/index.js + 1 modules 85 bytes [built] [code generated] [1 asset]
-runtime modules 6.28 KiB 8 modules
+runtime modules 6.29 KiB 8 modules
 orphan modules 49 bytes [orphan] 1 module
 modules with assets 234 bytes
   modules by path ./node_modules/a/ 134 bytes
@@ -1695,7 +1695,7 @@ webpack x.x.x compiled with 2 errors in X ms"
 `;
 
 exports[`StatsTestCases should print correct stats for named-chunk-groups 1`] = `
-"Chunk Group main 11.6 KiB = a-main.js
+"Chunk Group main 11.7 KiB = a-main.js
 Chunk Group async-a 1.07 KiB = a-52.js 257 bytes a-async-a.js 836 bytes
 Chunk Group async-b 1.07 KiB = a-52.js 257 bytes a-async-b.js 836 bytes
 Chunk Group async-c 1.45 KiB = a-vendors.js 744 bytes a-async-c.js 741 bytes
@@ -1703,9 +1703,9 @@ chunk (runtime: main) a-52.js 149 bytes [rendered] split chunk (cache group: def
   > ./a ./index.js 1:0-47
   > ./b ./index.js 2:0-47
   ./shared.js 149 bytes [built] [code generated]
-chunk (runtime: main) a-main.js (main) 146 bytes (javascript) 6.91 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) a-main.js (main) 146 bytes (javascript) 6.9 KiB (runtime) [entry] [rendered]
   > ./ main
-  runtime modules 6.91 KiB 10 modules
+  runtime modules 6.9 KiB 10 modules
   ./index.js 146 bytes [built] [code generated]
 chunk (runtime: main) a-vendors.js (vendors) (id hint: vendors) 40 bytes [rendered] split chunk (cache group: vendors) (name: vendors)
   > ./c ./index.js 3:0-47
@@ -1722,7 +1722,7 @@ chunk (runtime: main) a-async-a.js (async-a) 175 bytes [rendered]
   ./a.js 175 bytes [built] [code generated]
 webpack x.x.x compiled successfully
 
-Entrypoint main 11.6 KiB = b-main.js
+Entrypoint main 11.7 KiB = b-main.js
 Chunk Group async-a 1.07 KiB = b-52.js 257 bytes b-async-a.js 836 bytes
 Chunk Group async-b 1.07 KiB = b-52.js 257 bytes b-async-b.js 836 bytes
 Chunk Group async-c 1.45 KiB = b-vendors.js 744 bytes b-async-c.js 741 bytes
@@ -1730,9 +1730,9 @@ chunk (runtime: main) b-52.js 149 bytes [rendered] split chunk (cache group: def
   > ./a ./index.js 1:0-47
   > ./b ./index.js 2:0-47
   ./shared.js 149 bytes [built] [code generated]
-chunk (runtime: main) b-main.js (main) 146 bytes (javascript) 6.91 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) b-main.js (main) 146 bytes (javascript) 6.9 KiB (runtime) [entry] [rendered]
   > ./ main
-  runtime modules 6.91 KiB 10 modules
+  runtime modules 6.9 KiB 10 modules
   ./index.js 146 bytes [built] [code generated]
 chunk (runtime: main) b-vendors.js (vendors) (id hint: vendors) 40 bytes [rendered] split chunk (cache group: vendors) (name: vendors)
   > ./c ./index.js 3:0-47
@@ -1946,7 +1946,7 @@ asset <CLR=32,BOLD>460.js</CLR> 323 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>524.js</CLR> 206 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>996.js</CLR> 138 bytes <CLR=32,BOLD>[emitted]</CLR>
 Entrypoint <CLR=BOLD>main</CLR> 303 KiB = <CLR=32,BOLD>main.js</CLR>
-runtime modules 5.99 KiB 7 modules
+runtime modules 6 KiB 7 modules
 cacheable modules 293 KiB
   <CLR=BOLD>./index.js</CLR> 52 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
   <CLR=BOLD>./a.js</CLR> 293 KiB <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
@@ -1963,7 +1963,7 @@ asset <CLR=32,BOLD>460.js</CLR> 323 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>524.js</CLR> 206 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>996.js</CLR> 138 bytes <CLR=32,BOLD>[emitted]</CLR>
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> 303 KiB = <CLR=32,BOLD>main.js</CLR>
-runtime modules 5.99 KiB 7 modules
+runtime modules 6 KiB 7 modules
 cacheable modules 293 KiB
   <CLR=BOLD>./index.js</CLR> 52 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
   <CLR=BOLD>./a.js</CLR> 293 KiB <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
@@ -2022,7 +2022,7 @@ asset <CLR=32,BOLD>460.js</CLR> 323 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>524.js</CLR> 206 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>996.js</CLR> 138 bytes <CLR=32,BOLD>[emitted]</CLR>
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> 303 KiB = <CLR=32,BOLD>main.js</CLR>
-runtime modules 5.99 KiB 7 modules
+runtime modules 6 KiB 7 modules
 cacheable modules 293 KiB
   <CLR=BOLD>./index.js</CLR> 52 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
   <CLR=BOLD>./a.js</CLR> 293 KiB <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
@@ -2130,7 +2130,7 @@ asset 460.js 323 bytes {460} [emitted]
 asset 524.js 206 bytes {524} [emitted]
 asset 996.js 138 bytes {996} [emitted]
 Entrypoint main 10.2 KiB = main.js
-chunk {179} (runtime: main) main.js (main) 73 bytes (javascript) 5.99 KiB (runtime) >{460}< >{996}< [entry] [rendered]
+chunk {179} (runtime: main) main.js (main) 73 bytes (javascript) 6 KiB (runtime) >{460}< >{996}< [entry] [rendered]
   > ./index main
 chunk {460} (runtime: main) 460.js 54 bytes <{179}> >{524}< [rendered]
   > ./c [10] ./index.js 3:0-16
@@ -2138,7 +2138,7 @@ chunk {524} (runtime: main) 524.js 44 bytes <{460}> [rendered]
   > [460] ./c.js 1:0-52
 chunk {996} (runtime: main) 996.js 22 bytes <{179}> [rendered]
   > ./b [10] ./index.js 2:0-16
-runtime modules 5.99 KiB
+runtime modules 6 KiB
   webpack/runtime/ensure chunk 326 bytes {179} [code generated]
     [no exports]
     [used exports unknown]
@@ -2228,7 +2228,7 @@ LOG from webpack.FileSystemInfo
     Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations
     Managed items info in cache: 0 items
 
-1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (470e5df7d5fc05a2cfff)"
+1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (44c013196446a1259957)"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-errors-only 1`] = `""`;
@@ -2307,7 +2307,7 @@ asset main.js 10.2 KiB [emitted] (name: main)
 asset 460.js 323 bytes [emitted]
 asset 524.js 206 bytes [emitted]
 asset 996.js 138 bytes [emitted]
-runtime modules 5.99 KiB 7 modules
+runtime modules 6 KiB 7 modules
 cacheable modules 193 bytes
   ./index.js 51 bytes [built] [code generated]
   ./a.js 22 bytes [built] [code generated]
@@ -2330,7 +2330,7 @@ exports[`StatsTestCases should print correct stats for preset-normal-performance
 asset <CLR=32,BOLD>460.js</CLR> 323 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>524.js</CLR> 206 bytes <CLR=32,BOLD>[emitted]</CLR>
 asset <CLR=32,BOLD>996.js</CLR> 138 bytes <CLR=32,BOLD>[emitted]</CLR>
-runtime modules 5.99 KiB 7 modules
+runtime modules 6 KiB 7 modules
 cacheable modules 293 KiB
   <CLR=BOLD>./index.js</CLR> 52 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
   <CLR=BOLD>./a.js</CLR> 293 KiB <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
@@ -2358,7 +2358,7 @@ exports[`StatsTestCases should print correct stats for preset-normal-performance
 asset <CLR=32,BOLD>460.js</CLR> 355 bytes <CLR=32,BOLD>[emitted]</CLR> 1 related asset
 asset <CLR=32,BOLD>524.js</CLR> 238 bytes <CLR=32,BOLD>[emitted]</CLR> 1 related asset
 asset <CLR=32,BOLD>996.js</CLR> 170 bytes <CLR=32,BOLD>[emitted]</CLR> 1 related asset
-runtime modules 5.99 KiB 7 modules
+runtime modules 6 KiB 7 modules
 cacheable modules 293 KiB
   <CLR=BOLD>./index.js</CLR> 52 bytes <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
   <CLR=BOLD>./a.js</CLR> 293 KiB <CLR=33,BOLD>[built]</CLR> <CLR=33,BOLD>[code generated]</CLR>
@@ -2406,9 +2406,9 @@ asset 460.js 323 bytes {460} [emitted]
 asset 524.js 206 bytes {524} [emitted]
 asset 996.js 138 bytes {996} [emitted]
 Entrypoint main 10.2 KiB = main.js
-chunk {179} (runtime: main) main.js (main) 73 bytes (javascript) 5.99 KiB (runtime) >{460}< >{996}< [entry] [rendered]
+chunk {179} (runtime: main) main.js (main) 73 bytes (javascript) 6 KiB (runtime) >{460}< >{996}< [entry] [rendered]
   > ./index main
-  runtime modules 5.99 KiB
+  runtime modules 6 KiB
     webpack/runtime/ensure chunk 326 bytes {179} [code generated]
       [no exports]
       [used exports unknown]
@@ -2604,7 +2604,7 @@ LOG from webpack.FileSystemInfo
     Directory info in cache: 0 timestamps 0 hashes 0 timestamp hash combinations
     Managed items info in cache: 0 items
 
-1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (5966d7136f537890a286)"
+1970-04-20 12:42:42: webpack x.x.x compiled successfully in X ms (44c013196446a1259957)"
 `;
 
 exports[`StatsTestCases should print correct stats for real-content-hash 1`] = `
@@ -2956,8 +2956,8 @@ exports[`StatsTestCases should print correct stats for runtime-specific-used-exp
   asset production-dy_js.js 1.14 KiB [emitted]
   asset production-dz_js.js 1.14 KiB [emitted]
   asset production-c.js 93 bytes [emitted] (name: c)
-  chunk (runtime: a) production-a.js (a) 605 bytes (javascript) 6.58 KiB (runtime) [entry] [rendered]
-    runtime modules 6.58 KiB 9 modules
+  chunk (runtime: a) production-a.js (a) 605 bytes (javascript) 6.57 KiB (runtime) [entry] [rendered]
+    runtime modules 6.57 KiB 9 modules
     cacheable modules 605 bytes
       ./a.js 261 bytes [built] [code generated]
         [no exports used]
@@ -2969,8 +2969,8 @@ exports[`StatsTestCases should print correct stats for runtime-specific-used-exp
         [only some exports used: x]
       ./reexport.js 37 bytes [dependent] [built] [code generated]
         [only some exports used: x]
-  chunk (runtime: b) production-b.js (b) 605 bytes (javascript) 6.58 KiB (runtime) [entry] [rendered]
-    runtime modules 6.58 KiB 9 modules
+  chunk (runtime: b) production-b.js (b) 605 bytes (javascript) 6.57 KiB (runtime) [entry] [rendered]
+    runtime modules 6.57 KiB 9 modules
     cacheable modules 605 bytes
       ./b.js 261 bytes [built] [code generated]
         [no exports used]
@@ -3005,7 +3005,7 @@ exports[`StatsTestCases should print correct stats for runtime-specific-used-exp
     ./dz.js 46 bytes [built] [code generated]
     ./module.js?chunk 122 bytes [dependent] [built] [code generated]
       [only some exports used: identity, w, x, z]
-  runtime modules 13.2 KiB 18 modules
+  runtime modules 13.1 KiB 18 modules
   cacheable modules 1.15 KiB
     ./a.js 261 bytes [built] [code generated]
       [no exports used]
@@ -3030,15 +3030,15 @@ exports[`StatsTestCases should print correct stats for runtime-specific-used-exp
   production (webpack x.x.x) compiled successfully in X ms
 
 development:
-  asset development-a.js 15.8 KiB [emitted] (name: a)
-  asset development-b.js 15.8 KiB [emitted] (name: b)
+  asset development-a.js 15.9 KiB [emitted] (name: a)
+  asset development-b.js 15.9 KiB [emitted] (name: b)
   asset development-dw_js.js 2.11 KiB [emitted]
   asset development-dx_js.js 2.11 KiB [emitted]
   asset development-dy_js.js 2.11 KiB [emitted]
   asset development-dz_js.js 2.11 KiB [emitted]
   asset development-c.js 1.13 KiB [emitted] (name: c)
-  chunk (runtime: a) development-a.js (a) 605 bytes (javascript) 6.57 KiB (runtime) [entry] [rendered]
-    runtime modules 6.57 KiB 9 modules
+  chunk (runtime: a) development-a.js (a) 605 bytes (javascript) 6.58 KiB (runtime) [entry] [rendered]
+    runtime modules 6.58 KiB 9 modules
     cacheable modules 605 bytes
       ./a.js 261 bytes [built] [code generated]
         [used exports unknown]
@@ -3050,8 +3050,8 @@ development:
         [used exports unknown]
       ./reexport.js 37 bytes [dependent] [built] [code generated]
         [used exports unknown]
-  chunk (runtime: b) development-b.js (b) 605 bytes (javascript) 6.57 KiB (runtime) [entry] [rendered]
-    runtime modules 6.57 KiB 9 modules
+  chunk (runtime: b) development-b.js (b) 605 bytes (javascript) 6.58 KiB (runtime) [entry] [rendered]
+    runtime modules 6.58 KiB 9 modules
     cacheable modules 605 bytes
       ./b.js 261 bytes [built] [code generated]
         [used exports unknown]
@@ -3086,7 +3086,7 @@ development:
       [used exports unknown]
     ./module.js?chunk 122 bytes [dependent] [built] [code generated]
       [used exports unknown]
-  runtime modules 13.1 KiB 18 modules
+  runtime modules 13.2 KiB 18 modules
   cacheable modules 1.15 KiB
     ./a.js 261 bytes [built] [code generated]
       [used exports unknown]
@@ -3193,7 +3193,7 @@ global:
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"runtime modules 6.83 KiB 10 modules
+"runtime modules 6.82 KiB 10 modules
 built modules 615 bytes [built]
   code generated modules 530 bytes [code generated]
     ./index.js 150 bytes [built] [code generated]
@@ -3495,9 +3495,9 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
   chunk (runtime: main) default/769.js (id hint: vendors) 20 bytes <{179}> ={282}= ={383}= ={568}= ={767}= [rendered] split chunk (cache group: defaultVendors)
     > ./c ./index.js 3:0-47
     ./node_modules/z.js 20 bytes [built] [code generated]
-  chunk (runtime: a) default/a.js (a) 245 bytes (javascript) 6.64 KiB (runtime) >{137}< >{568}< [entry] [rendered]
+  chunk (runtime: a) default/a.js (a) 245 bytes (javascript) 6.65 KiB (runtime) >{137}< >{568}< [entry] [rendered]
     > ./a a
-    runtime modules 6.64 KiB 9 modules
+    runtime modules 6.65 KiB 9 modules
     dependent modules 60 bytes [dependent] 3 modules
     ./a.js + 1 modules 185 bytes [built] [code generated]
   chunk (runtime: main) default/async-a.js (async-a) 185 bytes <{179}> ={282}= ={767}= ={954}= >{137}< >{568}< [rendered]
@@ -3724,7 +3724,7 @@ name-too-long:
   name-too-long (webpack x.x.x) compiled successfully
 
 custom-chunks-filter:
-  Entrypoint main 11.5 KiB = custom-chunks-filter/main.js
+  Entrypoint main 11.4 KiB = custom-chunks-filter/main.js
   Entrypoint a 12.5 KiB = custom-chunks-filter/a.js
   Entrypoint b 8.14 KiB = custom-chunks-filter/282.js 414 bytes custom-chunks-filter/954.js 414 bytes custom-chunks-filter/568.js 414 bytes custom-chunks-filter/767.js 414 bytes custom-chunks-filter/b.js 6.52 KiB
   Entrypoint c 8.14 KiB = custom-chunks-filter/282.js 414 bytes custom-chunks-filter/769.js 414 bytes custom-chunks-filter/568.js 414 bytes custom-chunks-filter/767.js 414 bytes custom-chunks-filter/c.js 6.52 KiB
@@ -3790,7 +3790,7 @@ custom-chunks-filter:
   custom-chunks-filter (webpack x.x.x) compiled successfully
 
 custom-chunks-filter-in-cache-groups:
-  Entrypoint main 11.3 KiB = custom-chunks-filter-in-cache-groups/main.js
+  Entrypoint main 11.2 KiB = custom-chunks-filter-in-cache-groups/main.js
   Entrypoint a 14.5 KiB = custom-chunks-filter-in-cache-groups/176.js 864 bytes custom-chunks-filter-in-cache-groups/a.js 13.7 KiB
   Entrypoint b 8.45 KiB = custom-chunks-filter-in-cache-groups/vendors.js 1.05 KiB custom-chunks-filter-in-cache-groups/b.js 7.4 KiB
   Entrypoint c 8.45 KiB = custom-chunks-filter-in-cache-groups/vendors.js 1.05 KiB custom-chunks-filter-in-cache-groups/c.js 7.4 KiB
