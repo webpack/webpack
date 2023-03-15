@@ -1,7 +1,7 @@
-import { dropRight } from 'lodash-es'
+import { dropRight } from "lodash-es";
 
-import './foo.css'
+import "./foo.css";
 
-const result = dropRight([10, 20, 30], 2)
+const result = dropRight([10, 20, 30], 2);
 
-export default result[0]
+export default result[0];

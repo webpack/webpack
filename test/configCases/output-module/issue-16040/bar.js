@@ -1,7 +1,7 @@
-import { countBy } from 'lodash-es'
+import { countBy } from "lodash-es";
 
-import './bar.css'
+import "./bar.css";
 
-const result = countBy([6.1, 4.2, 6.3], Math.floor)
+const result = countBy([6.1, 4.2, 6.3], Math.floor);
 
-export default result['6']
+export default result["6"];
