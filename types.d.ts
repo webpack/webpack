@@ -8675,7 +8675,7 @@ declare interface Output {
 	workerChunkLoading?: string | false;
 
 	/**
-	 * Worker public path. Much like the public path, this sets the location that the worker script file is intended to be found at. If not set, Webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
 	 */
 	workerPublicPath?: string;
 
@@ -8974,7 +8974,7 @@ declare interface OutputNormalized {
 	workerChunkLoading?: string | false;
 
 	/**
-	 * Worker public path. Much like the public path, this sets the location that the worker script file is intended to be found at. If not set, Webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
 	 */
 	workerPublicPath?: string;
 

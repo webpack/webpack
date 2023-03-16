@@ -1236,7 +1236,7 @@ Compilation error while processing magic comment(-s): /* webpackPrefetch: true, 
  @ ./index.js 1:0-49
 
 WARNING in ./chunk.js 4:11-77
-Compilation error while processing magic comment(-s): /* webpack Prefetch: 0, webpackChunkName: \\"notGoingToCompile-c\\" */: Unexpected identifier
+Compilation error while processing magic comment(-s): /* webpack Prefetch: 0, webpackChunkName: \\"notGoingToCompile-c\\" */: Unexpected identifier 'Prefetch'
  @ ./index.js 1:0-49
 
 WARNING in ./chunk.js 5:11-38
