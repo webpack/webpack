@@ -4586,7 +4586,7 @@ declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.
 	 */
-	hashDigest?: "latin1" | "hex" | "base64";
+	hashDigest?: "latin1" | "base64" | "hex";
 
 	/**
 	 * The prefix length of the hash digest to use, defaults to 4.
@@ -4819,9 +4819,27 @@ declare interface InputFileSystem {
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
 	) => void;
-	readdir: (
+	readdir?: (
 		arg0: string,
-		arg1: (
+		arg1?:
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| ((
+					arg0?: null | NodeJS.ErrnoException,
+					arg1?: (string | Buffer)[] | IDirent[]
+			  ) => void)
+			| ReaddirOptions
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex",
+		arg2?: (
 			arg0?: null | NodeJS.ErrnoException,
 			arg1?: (string | Buffer)[] | IDirent[]
 		) => void
@@ -8697,7 +8715,25 @@ declare interface OutputFileSystem {
 	) => void;
 	readdir?: (
 		arg0: string,
-		arg1: (
+		arg1?:
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| ((
+					arg0?: null | NodeJS.ErrnoException,
+					arg1?: (string | Buffer)[] | IDirent[]
+			  ) => void)
+			| ReaddirOptions
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex",
+		arg2?: (
 			arg0?: null | NodeJS.ErrnoException,
 			arg1?: (string | Buffer)[] | IDirent[]
 		) => void
@@ -9375,6 +9411,22 @@ declare class ReadFileCompileWasmPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface ReaddirOptions {
+	encoding?:
+		| null
+		| "ascii"
+		| "utf8"
+		| "utf16le"
+		| "ucs2"
+		| "latin1"
+		| "binary"
+		| "utf-8"
+		| "ucs-2"
+		| "base64"
+		| "base64url"
+		| "hex";
+	withFileTypes?: boolean;
 }
 declare class RealContentHashPlugin {
 	constructor(__0: { hashFunction: any; hashDigest: any });
