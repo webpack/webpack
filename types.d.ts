@@ -4819,7 +4819,7 @@ declare interface InputFileSystem {
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
 	) => void;
-	readdir?: (
+	readdir: (
 		arg0: string,
 		arg1?:
 			| null
@@ -8713,7 +8713,7 @@ declare interface OutputFileSystem {
 		arg0: string,
 		arg1: (arg0?: null | NodeJS.ErrnoException) => void
 	) => void;
-	readdir?: (
+	readdir: (
 		arg0: string,
 		arg1?:
 			| null
