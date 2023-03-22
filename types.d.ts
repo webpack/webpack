@@ -6595,6 +6595,12 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	 * Example: "/abc/resource.js?query#frag"
 	 */
 	resource: string;
+
+	/**
+	 * Target of compilation.
+	 * Example: "web"
+	 */
+	target: string;
 }
 declare class LoaderTargetPlugin {
 	constructor(target: string);
@@ -9362,6 +9368,15 @@ declare class RawSource extends Source {
 	constructor(source: string | Buffer, convertToString?: boolean);
 	isBuffer(): boolean;
 }
+declare interface RawSourceMap {
+	version: number;
+	sources: string[];
+	names: string[];
+	sourceRoot?: string;
+	sourcesContent?: string[];
+	mappings: string;
+	file: string;
+}
 declare class ReadFileCompileWasmPlugin {
 	constructor(options?: any);
 	options: any;
@@ -11108,7 +11123,7 @@ declare abstract class SortableSet<T> extends Set<T> {
 declare class Source {
 	constructor();
 	size(): number;
-	map(options?: MapOptions): Object;
+	map(options?: MapOptions): null | RawSourceMap;
 	sourceAndMap(options?: MapOptions): { source: string | Buffer; map: Object };
 	updateHash(hash: Hash): void;
 	source(): string | Buffer;

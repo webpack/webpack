@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.75.0",
+  "version": "5.76.2",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -76,7 +76,7 @@
     "less": "^4.0.0",
     "less-loader": "^8.0.0",
     "lint-staged": "^11.0.0",
-    "loader-utils": "^2.0.0",
+    "loader-utils": "^2.0.3",
     "lodash": "^4.17.19",
     "lodash-es": "^4.17.15",
     "memfs": "^3.2.0",
