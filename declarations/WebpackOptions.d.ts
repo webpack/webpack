@@ -570,6 +570,10 @@ export type UniqueName = string;
  */
 export type WebassemblyModuleFilename = string;
 /**
+ * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+ */
+export type WorkerPublicPath = string;
+/**
  * The number of parallel processed modules in the compilation.
  */
 export type Parallelism = number;
@@ -2165,6 +2169,10 @@ export interface Output {
 	 */
 	workerChunkLoading?: ChunkLoading;
 	/**
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPath?: WorkerPublicPath;
+	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	workerWasmLoading?: WasmLoading;
@@ -3349,6 +3357,10 @@ export interface OutputNormalized {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: ChunkLoading;
+	/**
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPath?: WorkerPublicPath;
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */

@@ -4675,3 +4675,13 @@ cacheable modules 2.31 KiB (javascript) 1.37 KiB (webassembly)
     ./node_modules/env.js 34 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
+
+exports[`StatsTestCases should print correct stats for worker-public-path 1`] = `
+"asset main-27d65b836727f9226214.js 3.51 KiB [emitted] [immutable] (name: main)
+asset 442-579eebb6602aecc20b13.js 219 bytes [emitted] [immutable]
+runtime modules 1.75 KiB 5 modules
+cacheable modules 250 bytes
+  ./index.js 115 bytes [built] [code generated]
+  ./worker.js 135 bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;

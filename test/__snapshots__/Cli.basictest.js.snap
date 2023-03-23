@@ -6683,6 +6683,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-worker-public-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
+        "multiple": false,
+        "path": "output.workerPublicPath",
+        "type": "string",
+      },
+    ],
+    "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-worker-wasm-loading": Object {
     "configs": Array [
       Object {
