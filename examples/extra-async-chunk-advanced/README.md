@@ -23,7 +23,7 @@ require.ensure(["./a", "./e"], function(require) {
 
 ```javascript
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	optimization: {
 		splitChunks: {
 			minSize: 0 // This example is too small

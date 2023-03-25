@@ -3259,6 +3259,9 @@
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
+        "workerPublicPath": {
+          "$ref": "#/definitions/WorkerPublicPath"
+        },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         }
@@ -3414,6 +3417,9 @@
         },
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
+        },
+        "workerPublicPath": {
+          "$ref": "#/definitions/WorkerPublicPath"
         },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
@@ -5289,6 +5295,10 @@
         }
       },
       "required": ["apply"]
+    },
+    "WorkerPublicPath": {
+      "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
+      "type": "string"
     }
   },
   "title": "WebpackOptions",

@@ -10,7 +10,7 @@ This is the _reference_ bundle (with the manifests) for [dll user example](https
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	resolve: {
 		extensions: [".js", ".jsx"]
 	},

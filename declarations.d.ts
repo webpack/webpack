@@ -246,10 +246,20 @@ declare module "@webassemblyjs/ast" {
 declare module "webpack-sources" {
 	export type MapOptions = { columns?: boolean; module?: boolean };
 
+	export type RawSourceMap = {
+		version: number;
+		sources: string[];
+		names: string[];
+		sourceRoot?: string;
+		sourcesContent?: string[];
+		mappings: string;
+		file: string;
+	};
+
 	export abstract class Source {
 		size(): number;
 
-		map(options?: MapOptions): Object;
+		map(options?: MapOptions): RawSourceMap | null;
 
 		sourceAndMap(options?: MapOptions): {
 			source: string | Buffer;
