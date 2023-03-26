@@ -16,6 +16,10 @@
 	color: blue;
 }
 
+.local7 div:not(.disabled, .mButtonDisabled, .tipOnly) {
+    p-events: initial !important;
+}
+
 :global(:global(:local(.nested1)).nested2).nested3 {
 	color: pink;
 }

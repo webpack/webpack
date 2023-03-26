@@ -15,6 +15,9 @@ it("should allow to create css modules", done => {
 				nested: prod
 					? "my-app-491-RX undefined my-app-491-X2"
 					: "./style.module.css-nested1 undefined ./style.module.css-nested3",
+				notWmultiParams: prod
+					? "my-app-491-Kw"
+					: "./style.module.css-local7",
 				ident: prod ? "my-app-491-yR" : "./style.module.css-ident",
 				keyframes: prod ? "my-app-491-y3" : "./style.module.css-localkeyframes",
 				animation: prod ? "my-app-491-oQ" : "./style.module.css-animation",

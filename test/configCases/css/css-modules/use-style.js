@@ -7,6 +7,7 @@ export default {
 	local: `${local1} ${local2} ${local3} ${local4}`,
 	local2: `${style.local5} ${style.local6}`,
 	nested: `${style.nested1} ${style.nested2} ${style.nested3}`,
+	notWmultiParams: `${style.local7}`,
 	ident,
 	keyframes: style.localkeyframes,
 	animation: style.animation,
