@@ -21,6 +21,9 @@ it("should allow to create css modules", done => {
 				notWmultiParams: prod
 					? "my-app-491-Kw"
 					: "./style.module.css-local7",
+				isWmultiParams: prod
+					? "my-app-491-rw"
+					: "./style.module.css-local8",
 				ident: prod ? "my-app-491-yR" : "./style.module.css-ident",
 				keyframes: prod ? "my-app-491-y3" : "./style.module.css-localkeyframes",
 				animation: prod ? "my-app-491-oQ" : "./style.module.css-animation",

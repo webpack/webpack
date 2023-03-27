@@ -8,6 +8,7 @@ export default {
 	local2: `${style.local5} ${style.local6}`,
 	nested: `${style.nested1} ${style.nested2} ${style.nested3}`,
 	notWmultiParams: `${style.local7}`,
+	isWmultiParams: `${style.local8}`,
 	ident,
 	keyframes: style.localkeyframes,
 	animation: style.animation,
