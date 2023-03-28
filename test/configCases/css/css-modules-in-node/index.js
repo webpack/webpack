@@ -6,6 +6,14 @@ it("should allow to create css modules", done => {
 			expect(x).toEqual({
 				global: undefined,
 				class: prod ? "my-app-491-S" : "./style.module.css-class",
+				currentWmultiParams: prod ? "my-app-491-yK" : "./style.module.css-local12",
+				futureWmultiParams:  prod ? "my-app-491-Y4" : "./style.module.css-local14",
+				hasWmultiParams:  prod ? "my-app-491-PK" : "./style.module.css-local11",
+				matchesWmultiParams:  prod ? "my-app-491-$Y" : "./style.module.css-local9",
+				mozAnyWmultiParams:  prod ? "my-app-491-TT" : "./style.module.css-local15",
+				pastWmultiParams:  prod ? "my-app-491-P_" : "./style.module.css-local13",
+				webkitAnyWmultiParams:  prod ? "my-app-491-rT" : "./style.module.css-local16",
+				whereWmultiParams:  prod ? "my-app-491-ie" : "./style.module.css-local10",
 				local: prod
 					? "my-app-491-Zw my-app-491-yl my-app-491-J_ my-app-491-gc"
 					: "./style.module.css-local1 ./style.module.css-local2 ./style.module.css-local3 ./style.module.css-local4",
