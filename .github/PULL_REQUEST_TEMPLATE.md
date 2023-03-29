@@ -10,4 +10,4 @@ copilot:summary
 
 ## Details 
 <!-- cspell:disable-next-line -->
-copliot:walkthrough
+copilot:walkthrough
