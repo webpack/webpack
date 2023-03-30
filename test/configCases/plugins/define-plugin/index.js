@@ -154,6 +154,20 @@ it("should define OBJECT.SUB.STRING", function() {
 		expect(sub.STRING).toBe("string");
 	})(OBJECT.SUB);
 });
+it("should handle unknown property in OBJECT", () => {
+	expect(typeof OBJECT.UNKNOWN).toBe("undefined");
+	const a = function () { return OBJECT.UNKNOWN.A; };
+	const b = function () { return OBJECT.SUB1.UNKNOWN; };
+	expect(a.toString()).toBe("function () { return undefined; }");
+	expect(b.toString()).toBe("function () { return undefined; }");
+	expect(OBJECT.SUB1.a).toBe(1);
+	expect(OBJECT.SUB2.a).toBe(1);
+	expect(OBJECT.SUB2.b).toBe(undefined);
+	expect(OBJECT.SUB2).toEqual({ a: 1 });
+	expect(NOT_DEFINED.SUB2.a).toBe(1);
+	expect(NOT_DEFINED.SUB2.b).toBe(undefined);
+	expect(NOT_DEFINED.SUB2).toEqual({ a: 1 });
+});
 it("should define ARRAY", function() {
 	(donotcallme)
 	ARRAY;

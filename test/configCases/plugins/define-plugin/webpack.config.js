@@ -33,8 +33,11 @@ module.exports = {
 					CODE: "(1+2)",
 					REGEXP: /abc/i,
 					STRING: JSON.stringify("string")
-				}
+				},
+				SUB1: { a: 1 }
 			},
+			"OBJECT.SUB2": { a: 1 },
+			"NOT_DEFINED.SUB2": { a: 1 },
 			ARRAY: [2, [JSON.stringify("six")]],
 			"process.env.DEFINED_NESTED_KEY": 5,
 			"process.env.DEFINED_NESTED_KEY_STRING": '"string"',
