@@ -15,19 +15,8 @@ Object {
   "j": " green url(img\\\\ img.09a1a1112c577c279435.png) xyz",
   "k": " green url(img\\\\ img.09a1a1112c577c279435.png) xyz",
   "l": " green url(img.09a1a1112c577c279435.png) xyz",
-}
-`;
-
-exports[`ConfigCacheTestCases custom-modules json-custom exported tests should transform toml to json 1`] = `
-Object {
-  "owner": Object {
-    "bio": "GitHub Cofounder & CEO
-Likes tater tots and beer.",
-    "dob": "1979-05-27T07:32:00.000Z",
-    "name": "Tom Preston-Werner",
-    "organization": "GitHub",
-  },
-  "title": "TOML Example",
+  "m": " green url(img.09a1a1112c577c279435.png) xyz",
+  "n": " green url(img.09a1a1112c577c279435.png) xyz",
 }
 `;
 
