@@ -69,3 +69,45 @@
 	color: var(--global-color);
 	--global-color: red;
 }
+
+@media (min-width: 1600px) {
+	.wideScreenClass {
+		color: var(--local-color);
+		--local-color: green;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.narrowScreenClass {
+		color: var(--local-color);
+		--local-color: purple;
+	}
+}
+
+@supports (display: grid) {
+	.displayGridInSupports {
+		display: grid;
+	}
+}
+
+@supports not (display: grid) {
+  .floatRightInNegativeSupports {
+    float: right;
+  }
+}
+
+@supports (display: flex) {
+  @media screen and (min-width: 900px) {
+    .displayFlexInMediaInSupports {
+      display: flex;
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+    .displayFlexInSupportsInMedia {
+      display: flex;
+    }
+  }
+}
