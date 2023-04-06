@@ -154,7 +154,7 @@
     "typings-test": "tsc -p tsconfig.types.test.json",
     "module-typings-test": "tsc -p tsconfig.module.test.json",
     "spellcheck": "cspell \"**/*\"",
-    "special-lint": "node node_modules/tooling/lockfile-lint && node node_modules/tooling/schemas-lint && node node_modules/tooling/inherit-types && node node_modules/tooling/format-schemas && node tooling/generate-runtime-code.js && node tooling/generate-wasm-code.js && node node_modules/tooling/format-file-header && node node_modules/tooling/compile-to-definitions && node node_modules/tooling/generate-types --no-template-literals",
+    "special-lint": "node node_modules/tooling/lockfile-lint && node node_modules/tooling/schemas-lint && node node_modules/tooling/inherit-types && node node_modules/tooling/format-schemas && node tooling/generate-runtime-code.js && node tooling/generate-wasm-code.js && node node_modules/tooling/format-file-header && node node_modules/tooling/compile-to-definitions && node node_modules/tooling/precompile-schemas && node node_modules/tooling/generate-types --no-template-literals",
     "special-lint-fix": "node node_modules/tooling/inherit-types --write && node node_modules/tooling/format-schemas --write && node tooling/generate-runtime-code.js --write && node tooling/generate-wasm-code.js --write && node node_modules/tooling/format-file-header --write && node node_modules/tooling/compile-to-definitions --write && node node_modules/tooling/precompile-schemas --write && node node_modules/tooling/generate-types --no-template-literals --write",
     "fix": "yarn code-lint --fix && yarn special-lint-fix && yarn pretty-lint-fix",
     "prepare": "husky install",
