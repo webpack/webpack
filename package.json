@@ -98,7 +98,7 @@
     "style-loader": "^2.0.0",
     "terser": "5.16.8",
     "toml": "^3.0.0",
-    "tooling": "webpack/tooling#cd0eba3950b867f2627635facb5ee31e77d9587c",
+    "tooling": "webpack/tooling#392b1228ded350f10df6ef2ef3cd72e85dd193a9",
     "ts-loader": "^8.0.2",
     "typescript": "^4.8.4",
     "url-loader": "^4.1.0",
