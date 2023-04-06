@@ -17,6 +17,10 @@ export type ExposesItem = string;
  */
 export type ExposesItems = ExposesItem[];
 /**
+ * Add a container for define/require functions in the AMD module.
+ */
+export type AmdContainer = string;
+/**
  * Add a comment in the UMD wrapper.
  */
 export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
@@ -114,6 +118,10 @@ export interface ExposesConfig {
  * Options for library.
  */
 export interface LibraryOptions {
+	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: AmdContainer;
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */

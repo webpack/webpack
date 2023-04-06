@@ -431,6 +431,11 @@ declare interface BannerPluginOptions {
 	exclude?: string | RegExp | Rule[];
 
 	/**
+	 * If true, banner will be placed at the end of the output.
+	 */
+	footer?: boolean;
+
+	/**
 	 * Include all modules matching any of these conditions.
 	 */
 	include?: string | RegExp | Rule[];
@@ -726,12 +731,12 @@ declare class Chunk {
 	renderedHash?: string;
 	chunkReason?: string;
 	extraAsync: boolean;
-	readonly entryModule?: Module;
+	get entryModule(): Module;
 	hasEntryModule(): boolean;
 	addModule(module: Module): boolean;
 	removeModule(module: Module): void;
 	getNumberOfModules(): number;
-	readonly modulesIterable: Iterable<Module>;
+	get modulesIterable(): Iterable<Module>;
 	compareTo(otherChunk: Chunk): 0 | 1 | -1;
 	containsModule(module: Module): boolean;
 	getModules(): Module[];
@@ -757,7 +762,7 @@ declare class Chunk {
 	removeGroup(chunkGroup: ChunkGroup): void;
 	isInGroup(chunkGroup: ChunkGroup): boolean;
 	getNumberOfGroups(): number;
-	readonly groupsIterable: Iterable<ChunkGroup>;
+	get groupsIterable(): Iterable<ChunkGroup>;
 	disconnectFromGroups(): void;
 	split(newChunk: Chunk): void;
 	updateHash(hash: Hash, chunkGraph: ChunkGraph): void;
@@ -812,6 +817,13 @@ declare class ChunkGraph {
 		chunk: Chunk,
 		sourceType: string
 	): undefined | Iterable<Module>;
+	setChunkModuleSourceTypes(
+		chunk: Chunk,
+		module: Module,
+		sourceTypes: Set<string>
+	): void;
+	getChunkModuleSourceTypes(chunk: Chunk, module: Module): Set<string>;
+	getModuleSourceTypes(module: Module): Set<string>;
 	getOrderedChunkModulesIterable(
 		chunk: Chunk,
 		comparator: (arg0: Module, arg1: Module) => 0 | 1 | -1
@@ -970,12 +982,12 @@ declare abstract class ChunkGroup {
 	/**
 	 * get a uniqueId for ChunkGroup, made up of its member Chunk debugId's
 	 */
-	readonly debugId: string;
+	get debugId(): string;
 
 	/**
 	 * get a unique id for ChunkGroup, made up of its member Chunk id's
 	 */
-	readonly id: string;
+	get id(): string;
 
 	/**
 	 * Performs an unshift of a specific chunk
@@ -997,20 +1009,20 @@ declare abstract class ChunkGroup {
 	addChild(group: ChunkGroup): boolean;
 	getChildren(): ChunkGroup[];
 	getNumberOfChildren(): number;
-	readonly childrenIterable: SortableSet<ChunkGroup>;
+	get childrenIterable(): SortableSet<ChunkGroup>;
 	removeChild(group: ChunkGroup): boolean;
 	addParent(parentChunk: ChunkGroup): boolean;
 	getParents(): ChunkGroup[];
 	getNumberOfParents(): number;
 	hasParent(parent: ChunkGroup): boolean;
-	readonly parentsIterable: SortableSet<ChunkGroup>;
+	get parentsIterable(): SortableSet<ChunkGroup>;
 	removeParent(chunkGroup: ChunkGroup): boolean;
 	addAsyncEntrypoint(entrypoint: Entrypoint): boolean;
-	readonly asyncEntrypointsIterable: SortableSet<ChunkGroup>;
+	get asyncEntrypointsIterable(): SortableSet<ChunkGroup>;
 	getBlocks(): any[];
 	getNumberOfBlocks(): number;
 	hasBlock(block?: any): boolean;
-	readonly blocksIterable: Iterable<AsyncDependenciesBlock>;
+	get blocksIterable(): Iterable<AsyncDependenciesBlock>;
 	addBlock(block: AsyncDependenciesBlock): boolean;
 	addOrigin(module: Module, loc: DependencyLocation, request: string): void;
 	getFiles(): string[];
@@ -1163,7 +1175,7 @@ declare abstract class ChunkTemplate {
 		hash: { tap: (options?: any, fn?: any) => void };
 		hashForChunk: { tap: (options?: any, fn?: any) => void };
 	}>;
-	readonly outputOptions: Output;
+	get outputOptions(): Output;
 }
 
 /**
@@ -1247,6 +1259,11 @@ declare interface CodeGenerationContext {
 	 * the compilation
 	 */
 	compilation?: Compilation;
+
+	/**
+	 * source types
+	 */
+	sourceTypes?: ReadonlySet<string>;
 }
 declare interface CodeGenerationResult {
 	/**
@@ -1475,7 +1492,7 @@ declare class Compilation {
 		>;
 		statsFactory: SyncHook<[StatsFactory, NormalizedStatsOptions]>;
 		statsPrinter: SyncHook<[StatsPrinter, NormalizedStatsOptions]>;
-		readonly normalModuleLoader: SyncHook<[object, NormalModule]>;
+		get normalModuleLoader(): SyncHook<[object, NormalModule]>;
 	}>;
 	name?: string;
 	startTime: any;
@@ -2486,11 +2503,11 @@ declare interface ContextHash {
 }
 type ContextMode =
 	| "weak"
-	| "sync"
 	| "eager"
-	| "async-weak"
 	| "lazy"
-	| "lazy-once";
+	| "lazy-once"
+	| "sync"
+	| "async-weak";
 declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		beforeResolve: AsyncSeriesWaterfallHook<[any]>;
@@ -2636,8 +2653,8 @@ declare class Dependency {
 	constructor();
 	weak: boolean;
 	optional: boolean;
-	readonly type: string;
-	readonly category: string;
+	get type(): string;
+	get category(): string;
 	loc: DependencyLocation;
 	setLoc(
 		startLine?: any,
@@ -2699,7 +2716,7 @@ declare class Dependency {
 	serialize(__0: { write: any }): void;
 	deserialize(__0: { read: any }): void;
 	module: any;
-	readonly disconnect: any;
+	get disconnect(): any;
 	static NO_EXPORTS_REFERENCED: string[][];
 	static EXPORTS_OBJECT_REFERENCED: string[][];
 	static TRANSITIVE: typeof TRANSITIVE;
@@ -3106,6 +3123,17 @@ declare class EnableChunkLoadingPlugin {
 	static checkEnabled(compiler: Compiler, type: string): void;
 }
 declare class EnableLibraryPlugin {
+	constructor(type: string);
+	type: string;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+	static setEnabled(compiler: Compiler, type: string): void;
+	static checkEnabled(compiler: Compiler, type: string): void;
+}
+declare class EnableWasmLoadingPlugin {
 	constructor(type: string);
 	type: string;
 
@@ -3526,12 +3554,12 @@ declare interface ExperimentsNormalizedExtra {
 	/**
 	 * Enable css support.
 	 */
-	css?: CssExperimentOptions;
+	css?: false | CssExperimentOptions;
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
-	lazyCompilation?: LazyCompilationOptions;
+	lazyCompilation?: false | LazyCompilationOptions;
 }
 declare abstract class ExportInfo {
 	name: string;
@@ -3564,7 +3592,7 @@ declare abstract class ExportInfo {
 	canMangleUse?: boolean;
 	exportsInfoOwned: boolean;
 	exportsInfo?: ExportsInfo;
-	readonly canMangle?: boolean;
+	get canMangle(): boolean;
 	setUsedInUnknownWay(runtime: RuntimeSpec): boolean;
 	setUsedWithoutInfo(runtime: RuntimeSpec): boolean;
 	setHasUseInfo(): void;
@@ -3685,11 +3713,11 @@ declare interface ExportSpec {
 }
 type ExportedVariableInfo = string | ScopeInfo | VariableInfo;
 declare abstract class ExportsInfo {
-	readonly ownedExports: Iterable<ExportInfo>;
-	readonly orderedOwnedExports: Iterable<ExportInfo>;
-	readonly exports: Iterable<ExportInfo>;
-	readonly orderedExports: Iterable<ExportInfo>;
-	readonly otherExportsInfo: ExportInfo;
+	get ownedExports(): Iterable<ExportInfo>;
+	get orderedOwnedExports(): Iterable<ExportInfo>;
+	get exports(): Iterable<ExportInfo>;
+	get orderedExports(): Iterable<ExportInfo>;
+	get otherExportsInfo(): ExportInfo;
 	setRedirectNamedTo(exportsInfo?: any): boolean;
 	setHasProvideInfo(): void;
 	setHasUseInfo(): void;
@@ -3829,6 +3857,13 @@ declare interface ExpressionExpressionInfo {
 	name: string;
 	getMembers: () => string[];
 	getMembersOptionals: () => boolean[];
+}
+declare interface ExtensionAliasOption {
+	alias: string | string[];
+	extension: string;
+}
+declare interface ExtensionAliasOptions {
+	[index: string]: string | string[];
 }
 type ExternalItem =
 	| string
@@ -4485,16 +4520,52 @@ declare interface HandleModuleCreationOptions {
 	 */
 	connectOrigin?: boolean;
 }
+declare class HarmonyImportDependency extends ModuleDependency {
+	constructor(
+		request: string,
+		sourceOrder: number,
+		assertions?: Record<string, any>
+	);
+	sourceOrder: number;
+	getImportVar(moduleGraph: ModuleGraph): string;
+	getImportStatement(
+		update: boolean,
+		__1: DependencyTemplateContext
+	): [string, string];
+	getLinkingErrors(
+		moduleGraph: ModuleGraph,
+		ids: string[],
+		additionalMessage: string
+	): undefined | WebpackError[];
+	static Template: typeof HarmonyImportDependencyTemplate;
+	static ExportPresenceModes: {
+		NONE: 0;
+		WARN: 1;
+		AUTO: 2;
+		ERROR: 3;
+		fromUserOption(str?: any): 0 | 1 | 2 | 3;
+	};
+	static NO_EXPORTS_REFERENCED: string[][];
+	static EXPORTS_OBJECT_REFERENCED: string[][];
+	static TRANSITIVE: typeof TRANSITIVE;
+}
+declare class HarmonyImportDependencyTemplate extends DependencyTemplate {
+	constructor();
+	static getImportEmittedRuntime(
+		module: Module,
+		referencedModule: Module
+	): undefined | string | boolean | SortableSet<string>;
+}
 declare class Hash {
 	constructor();
 
 	/**
-	 * Update hash {@link https ://nodejs.org/api/crypto.html#crypto_hash_update_data_inputencoding}
+	 * Update hash {@link https://nodejs.org/api/crypto.html#crypto_hash_update_data_inputencoding}
 	 */
 	update(data: string | Buffer, inputEncoding?: string): Hash;
 
 	/**
-	 * Calculates the digest {@link https ://nodejs.org/api/crypto.html#crypto_hash_digest_encoding}
+	 * Calculates the digest {@link https://nodejs.org/api/crypto.html#crypto_hash_digest_encoding}
 	 */
 	digest(encoding?: string): string | Buffer;
 }
@@ -4882,6 +4953,15 @@ declare class JavascriptParser extends Parser {
 		evaluateDefinedIdentifier: HookMap<
 			SyncBailHook<
 				[ThisExpression | MemberExpression | Identifier],
+				undefined | null | BasicEvaluatedExpression
+			>
+		>;
+		evaluateNewExpression: HookMap<
+			SyncBailHook<[NewExpression], undefined | null | BasicEvaluatedExpression>
+		>;
+		evaluateCallExpression: HookMap<
+			SyncBailHook<
+				[CallExpression],
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
@@ -5393,6 +5473,7 @@ declare class JavascriptParser extends Parser {
 	isVariableDefined(name?: any): boolean;
 	getVariableInfo(name: string): ExportedVariableInfo;
 	setVariable(name: string, variableInfo: ExportedVariableInfo): void;
+	evaluatedVariable(tagInfo?: any): VariableInfo;
 	parseCommentOptions(
 		range?: any
 	): { options: null; errors: null } | { options: object; errors: unknown[] };
@@ -5472,6 +5553,26 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable parsing of magic comments in CommonJs syntax.
 	 */
 	commonjsMagicComments?: boolean;
+
+	/**
+	 * Enable/disable parsing "import { createRequire } from "module"" and evaluating createRequire().
+	 */
+	createRequire?: string | boolean;
+
+	/**
+	 * Specifies global mode for dynamic import.
+	 */
+	dynamicImportMode?: "weak" | "eager" | "lazy" | "lazy-once";
+
+	/**
+	 * Specifies global prefetch for dynamic import.
+	 */
+	dynamicImportPrefetch?: number | boolean;
+
+	/**
+	 * Specifies global preload for dynamic import.
+	 */
+	dynamicImportPreload?: number | boolean;
 
 	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
@@ -6067,7 +6168,7 @@ declare interface LazyCompilationOptions {
 }
 declare class LazySet<T> {
 	constructor(iterable?: Iterable<T>);
-	readonly size: number;
+	get size(): number;
 	add(item: T): LazySet<T>;
 	addAll(iterable: LazySet<T> | Iterable<T>): LazySet<T>;
 	clear(): void;
@@ -6161,6 +6262,11 @@ type LibraryName = string | string[] | LibraryCustomUmdObject;
  * Options for library.
  */
 declare interface LibraryOptions {
+	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: string;
+
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */
@@ -6494,6 +6600,12 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	 * Example: "/abc/resource.js?query#frag"
 	 */
 	resource: string;
+
+	/**
+	 * Target of compilation.
+	 * Example: "web"
+	 */
+	target: string;
 }
 declare class LoaderTargetPlugin {
 	constructor(target: string);
@@ -6579,9 +6691,9 @@ declare abstract class MainTemplate {
 		localVars: SyncWaterfallHook<[string, Chunk, string]>;
 		requireExtensions: SyncWaterfallHook<[string, Chunk, string]>;
 		requireEnsure: SyncWaterfallHook<[string, Chunk, string, string]>;
-		readonly jsonpScript: SyncWaterfallHook<[string, Chunk]>;
-		readonly linkPrefetch: SyncWaterfallHook<[string, Chunk]>;
-		readonly linkPreload: SyncWaterfallHook<[string, Chunk]>;
+		get jsonpScript(): SyncWaterfallHook<[string, Chunk]>;
+		get linkPrefetch(): SyncWaterfallHook<[string, Chunk]>;
+		get linkPreload(): SyncWaterfallHook<[string, Chunk]>;
 	}>;
 	renderCurrentHashCode: (hash: string, length?: number) => string;
 	getPublicPath: (options: object) => string;
@@ -6590,8 +6702,8 @@ declare abstract class MainTemplate {
 		path?: any,
 		options?: any
 	) => { path: string; info: AssetInfo };
-	readonly requireFn: "__webpack_require__";
-	readonly outputOptions: Output;
+	get requireFn(): "__webpack_require__";
+	get outputOptions(): Output;
 }
 declare interface MapOptions {
 	columns?: boolean;
@@ -6666,29 +6778,29 @@ declare class Module extends DependenciesBlock {
 	presentationalDependencies?: Dependency[];
 	codeGenerationDependencies?: Dependency[];
 	id: string | number;
-	readonly hash: string;
-	readonly renderedHash: string;
+	get hash(): string;
+	get renderedHash(): string;
 	profile: null | ModuleProfile;
 	index: number;
 	index2: number;
 	depth: number;
 	issuer: null | Module;
-	readonly usedExports: null | boolean | SortableSet<string>;
-	readonly optimizationBailout: (
+	get usedExports(): null | boolean | SortableSet<string>;
+	get optimizationBailout(): (
 		| string
 		| ((requestShortener: RequestShortener) => string)
 	)[];
-	readonly optional: boolean;
+	get optional(): boolean;
 	addChunk(chunk?: any): boolean;
 	removeChunk(chunk?: any): void;
 	isInChunk(chunk?: any): boolean;
 	isEntryModule(): boolean;
 	getChunks(): Chunk[];
 	getNumberOfChunks(): number;
-	readonly chunksIterable: Iterable<Chunk>;
+	get chunksIterable(): Iterable<Chunk>;
 	isProvided(exportName: string): null | boolean;
-	readonly exportsArgument: string;
-	readonly moduleArgument: string;
+	get exportsArgument(): string;
+	get moduleArgument(): string;
 	getExportsType(
 		moduleGraph: ModuleGraph,
 		strict: boolean
@@ -6782,10 +6894,10 @@ declare class Module extends DependenciesBlock {
 		missingDependencies: LazySet<string>,
 		buildDependencies: LazySet<string>
 	): void;
-	readonly hasEqualsChunks: any;
-	readonly isUsed: any;
-	readonly errors: any;
-	readonly warnings: any;
+	get hasEqualsChunks(): any;
+	get isUsed(): any;
+	get errors(): any;
+	get warnings(): any;
 	used: any;
 }
 declare class ModuleConcatenationPlugin {
@@ -7054,7 +7166,7 @@ declare class ModuleGraphConnection {
 		) => ConnectionState
 	): void;
 	addExplanation(explanation: string): void;
-	readonly explanation: string;
+	get explanation(): string;
 	active: void;
 	isActive(runtime: RuntimeSpec): boolean;
 	isTargetActive(runtime: RuntimeSpec): boolean;
@@ -7311,7 +7423,7 @@ declare abstract class ModuleTemplate {
 		package: { tap: (options?: any, fn?: any) => void };
 		hash: { tap: (options?: any, fn?: any) => void };
 	}>;
-	readonly runtimeTemplate: any;
+	get runtimeTemplate(): any;
 }
 declare class MultiCompiler {
 	constructor(
@@ -7329,8 +7441,8 @@ declare class MultiCompiler {
 	compilers: Compiler[];
 	dependencies: WeakMap<Compiler, string[]>;
 	running: boolean;
-	readonly options: WebpackOptionsNormalized[] & MultiCompilerOptions;
-	readonly outputPath: string;
+	get options(): WebpackOptionsNormalized[] & MultiCompilerOptions;
+	get outputPath(): string;
 	inputFileSystem: InputFileSystem;
 	outputFileSystem: OutputFileSystem;
 	watchFileSystem: WatchFileSystem;
@@ -7359,7 +7471,7 @@ declare interface MultiCompilerOptions {
 }
 declare abstract class MultiStats {
 	stats: Stats[];
-	readonly hash: string;
+	get hash(): string;
 	hasErrors(): boolean;
 	hasWarnings(): boolean;
 	toJson(options?: any): StatsCompilation;
@@ -8311,6 +8423,11 @@ declare class OriginalSource extends Source {
  */
 declare interface Output {
 	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: string;
+
+	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?:
@@ -8572,6 +8689,11 @@ declare interface Output {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: string | false;
+
+	/**
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPath?: string;
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
@@ -8866,6 +8988,11 @@ declare interface OutputNormalized {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: string | false;
+
+	/**
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPath?: string;
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
@@ -9251,6 +9378,15 @@ declare class RawSource extends Source {
 	constructor(source: string | Buffer, convertToString?: boolean);
 	isBuffer(): boolean;
 }
+declare interface RawSourceMap {
+	version: number;
+	sources: string[];
+	names: string[];
+	sourceRoot?: string;
+	sourcesContent?: string[];
+	mappings: string;
+	file: string;
+}
 declare class ReadFileCompileWasmPlugin {
 	constructor(options?: any);
 	options: any;
@@ -9527,6 +9663,7 @@ declare interface ResolveOptionsTypes {
 	alias: AliasOption[];
 	fallback: AliasOption[];
 	aliasFields: Set<string | string[]>;
+	extensionAlias: ExtensionAliasOption[];
 	cachePredicate: (arg0: ResolveRequest) => boolean;
 	cacheWithContext: boolean;
 
@@ -9624,6 +9761,11 @@ declare interface ResolveOptionsWebpackOptions {
 	 * Field names from the description file (usually package.json) which are used to provide entry points of a package.
 	 */
 	exportsFields?: string[];
+
+	/**
+	 * An object which maps extension to extension aliases.
+	 */
+	extensionAlias?: { [index: string]: string | string[] };
 
 	/**
 	 * Extensions added to the request when trying to find the file.
@@ -10282,13 +10424,13 @@ declare class RuntimeSpecMap<T> {
 	update(runtime?: any, fn?: any): void;
 	keys(): RuntimeSpec[];
 	values(): IterableIterator<T>;
-	readonly size?: number;
+	get size(): number;
 }
 declare class RuntimeSpecSet {
 	constructor(iterable?: any);
 	add(runtime?: any): void;
 	has(runtime?: any): boolean;
-	readonly size: number;
+	get size(): number;
 	[Symbol.iterator](): IterableIterator<RuntimeSpec>;
 }
 declare abstract class RuntimeTemplate {
@@ -10713,7 +10855,7 @@ declare abstract class RuntimeValue {
 		readonly version?: string;
 	}) => CodeValuePrimitive;
 	options: true | RuntimeValueOptions;
-	readonly fileDependencies?: true | string[];
+	get fileDependencies(): true | string[];
 	exec(
 		parser: JavascriptParser,
 		valueCacheVersions: Map<string, string | Set<string>>,
@@ -10991,7 +11133,7 @@ declare abstract class SortableSet<T> extends Set<T> {
 declare class Source {
 	constructor();
 	size(): number;
-	map(options?: MapOptions): Object;
+	map(options?: MapOptions): null | RawSourceMap;
 	sourceAndMap(options?: MapOptions): { source: string | Buffer; map: Object };
 	updateHash(hash: Hash): void;
 	source(): string | Buffer;
@@ -11166,7 +11308,7 @@ declare abstract class StackedMap<K, V> {
 	asSet(): Set<K>;
 	asPairArray(): [K, Cell<V>][];
 	asMap(): Map<K, Cell<V>>;
-	readonly size: number;
+	get size(): number;
 	createChild(): StackedMap<K, V>;
 }
 type StartupRenderContext = RenderContext & { inlined: boolean };
@@ -11196,9 +11338,9 @@ type Statement =
 declare class Stats {
 	constructor(compilation: Compilation);
 	compilation: Compilation;
-	readonly hash?: string;
-	readonly startTime: any;
-	readonly endTime: any;
+	get hash(): string;
+	get startTime(): any;
+	get endTime(): any;
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
 	toJson(options?: string | StatsOptions): StatsCompilation;
@@ -11739,7 +11881,7 @@ declare class SyncModuleIdsPlugin {
 		/**
 		 * operation mode (defaults to merge)
 		 */
-		mode?: "read" | "create" | "merge" | "update";
+		mode?: "read" | "merge" | "create" | "update";
 	});
 
 	/**
@@ -11836,6 +11978,11 @@ declare interface UserResolveOptions {
 	 * A list of module alias configurations or an object which maps key to value, applied only after modules option
 	 */
 	fallback?: AliasOption[] | AliasOptions;
+
+	/**
+	 * An object which maps extension to extension aliases
+	 */
+	extensionAlias?: ExtensionAliasOptions;
 
 	/**
 	 * A list of alias fields in description files
@@ -12585,75 +12732,75 @@ declare namespace exports {
 		export let matchObject: (obj?: any, str?: any) => boolean;
 	}
 	export namespace RuntimeGlobals {
-		export let require: string;
-		export let requireScope: string;
-		export let exports: string;
-		export let thisAsExports: string;
-		export let returnExportsFromRuntime: string;
-		export let module: string;
-		export let moduleId: string;
-		export let moduleLoaded: string;
-		export let publicPath: string;
-		export let entryModuleId: string;
-		export let moduleCache: string;
-		export let moduleFactories: string;
-		export let moduleFactoriesAddOnly: string;
-		export let ensureChunk: string;
-		export let ensureChunkHandlers: string;
-		export let ensureChunkIncludeEntries: string;
-		export let prefetchChunk: string;
-		export let prefetchChunkHandlers: string;
-		export let preloadChunk: string;
-		export let preloadChunkHandlers: string;
-		export let definePropertyGetters: string;
-		export let makeNamespaceObject: string;
-		export let createFakeNamespaceObject: string;
-		export let compatGetDefaultExport: string;
-		export let harmonyModuleDecorator: string;
-		export let nodeModuleDecorator: string;
-		export let getFullHash: string;
-		export let wasmInstances: string;
-		export let instantiateWasm: string;
-		export let uncaughtErrorHandler: string;
-		export let scriptNonce: string;
-		export let loadScript: string;
-		export let createScript: string;
-		export let createScriptUrl: string;
-		export let getTrustedTypesPolicy: string;
-		export let chunkName: string;
-		export let runtimeId: string;
-		export let getChunkScriptFilename: string;
-		export let getChunkCssFilename: string;
-		export let hasCssModules: string;
-		export let getChunkUpdateScriptFilename: string;
-		export let getChunkUpdateCssFilename: string;
-		export let startup: string;
-		export let startupNoDefault: string;
-		export let startupOnlyAfter: string;
-		export let startupOnlyBefore: string;
-		export let chunkCallback: string;
-		export let startupEntrypoint: string;
-		export let onChunksLoaded: string;
-		export let externalInstallChunk: string;
-		export let interceptModuleExecution: string;
-		export let global: string;
-		export let shareScopeMap: string;
-		export let initializeSharing: string;
-		export let currentRemoteGetScope: string;
-		export let getUpdateManifestFilename: string;
-		export let hmrDownloadManifest: string;
-		export let hmrDownloadUpdateHandlers: string;
-		export let hmrModuleData: string;
-		export let hmrInvalidateModuleHandlers: string;
-		export let hmrRuntimeStatePrefix: string;
-		export let amdDefine: string;
-		export let amdOptions: string;
-		export let system: string;
-		export let hasOwnProperty: string;
-		export let systemContext: string;
-		export let baseURI: string;
-		export let relativeUrl: string;
-		export let asyncModule: string;
+		export let require: "__webpack_require__";
+		export let requireScope: "__webpack_require__.*";
+		export let exports: "__webpack_exports__";
+		export let thisAsExports: "top-level-this-exports";
+		export let returnExportsFromRuntime: "return-exports-from-runtime";
+		export let module: "module";
+		export let moduleId: "module.id";
+		export let moduleLoaded: "module.loaded";
+		export let publicPath: "__webpack_require__.p";
+		export let entryModuleId: "__webpack_require__.s";
+		export let moduleCache: "__webpack_require__.c";
+		export let moduleFactories: "__webpack_require__.m";
+		export let moduleFactoriesAddOnly: "__webpack_require__.m (add only)";
+		export let ensureChunk: "__webpack_require__.e";
+		export let ensureChunkHandlers: "__webpack_require__.f";
+		export let ensureChunkIncludeEntries: "__webpack_require__.f (include entries)";
+		export let prefetchChunk: "__webpack_require__.E";
+		export let prefetchChunkHandlers: "__webpack_require__.F";
+		export let preloadChunk: "__webpack_require__.G";
+		export let preloadChunkHandlers: "__webpack_require__.H";
+		export let definePropertyGetters: "__webpack_require__.d";
+		export let makeNamespaceObject: "__webpack_require__.r";
+		export let createFakeNamespaceObject: "__webpack_require__.t";
+		export let compatGetDefaultExport: "__webpack_require__.n";
+		export let harmonyModuleDecorator: "__webpack_require__.hmd";
+		export let nodeModuleDecorator: "__webpack_require__.nmd";
+		export let getFullHash: "__webpack_require__.h";
+		export let wasmInstances: "__webpack_require__.w";
+		export let instantiateWasm: "__webpack_require__.v";
+		export let uncaughtErrorHandler: "__webpack_require__.oe";
+		export let scriptNonce: "__webpack_require__.nc";
+		export let loadScript: "__webpack_require__.l";
+		export let createScript: "__webpack_require__.ts";
+		export let createScriptUrl: "__webpack_require__.tu";
+		export let getTrustedTypesPolicy: "__webpack_require__.tt";
+		export let chunkName: "__webpack_require__.cn";
+		export let runtimeId: "__webpack_require__.j";
+		export let getChunkScriptFilename: "__webpack_require__.u";
+		export let getChunkCssFilename: "__webpack_require__.k";
+		export let hasCssModules: "has css modules";
+		export let getChunkUpdateScriptFilename: "__webpack_require__.hu";
+		export let getChunkUpdateCssFilename: "__webpack_require__.hk";
+		export let startup: "__webpack_require__.x";
+		export let startupNoDefault: "__webpack_require__.x (no default handler)";
+		export let startupOnlyAfter: "__webpack_require__.x (only after)";
+		export let startupOnlyBefore: "__webpack_require__.x (only before)";
+		export let chunkCallback: "webpackChunk";
+		export let startupEntrypoint: "__webpack_require__.X";
+		export let onChunksLoaded: "__webpack_require__.O";
+		export let externalInstallChunk: "__webpack_require__.C";
+		export let interceptModuleExecution: "__webpack_require__.i";
+		export let global: "__webpack_require__.g";
+		export let shareScopeMap: "__webpack_require__.S";
+		export let initializeSharing: "__webpack_require__.I";
+		export let currentRemoteGetScope: "__webpack_require__.R";
+		export let getUpdateManifestFilename: "__webpack_require__.hmrF";
+		export let hmrDownloadManifest: "__webpack_require__.hmrM";
+		export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
+		export let hmrModuleData: "__webpack_require__.hmrD";
+		export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
+		export let hmrRuntimeStatePrefix: "__webpack_require__.hmrS";
+		export let amdDefine: "__webpack_require__.amdD";
+		export let amdOptions: "__webpack_require__.amdO";
+		export let system: "__webpack_require__.System";
+		export let hasOwnProperty: "__webpack_require__.o";
+		export let systemContext: "__webpack_require__.y";
+		export let baseURI: "__webpack_require__.b";
+		export let relativeUrl: "__webpack_require__.U";
+		export let asyncModule: "__webpack_require__.a";
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
@@ -12674,7 +12821,12 @@ declare namespace exports {
 		) => void;
 	}
 	export namespace dependencies {
-		export { ModuleDependency, ConstDependency, NullDependency };
+		export {
+			ModuleDependency,
+			HarmonyImportDependency,
+			ConstDependency,
+			NullDependency
+		};
 	}
 	export namespace ids {
 		export {
@@ -12785,7 +12937,7 @@ declare namespace exports {
 		export { ElectronTargetPlugin };
 	}
 	export namespace wasm {
-		export { AsyncWebAssemblyModulesPlugin };
+		export { AsyncWebAssemblyModulesPlugin, EnableWasmLoadingPlugin };
 	}
 	export namespace library {
 		export { AbstractLibraryPlugin, EnableLibraryPlugin };
@@ -13046,6 +13198,7 @@ declare namespace exports {
 		Asset,
 		AssetInfo,
 		EntryOptions,
+		PathData,
 		AssetEmittedInfo,
 		MultiStats,
 		ParserState,

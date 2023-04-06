@@ -13,6 +13,11 @@
         }
       ]
     },
+    "AmdContainer": {
+      "description": "Add a container for define/require functions in the AMD module.",
+      "type": "string",
+      "minLength": 1
+    },
     "AssetFilterItemTypes": {
       "description": "Filtering value, regexp or function.",
       "cli": {
@@ -897,7 +902,10 @@
         },
         "css": {
           "description": "Enable css support.",
-          "oneOf": [
+          "anyOf": [
+            {
+              "enum": [false]
+            },
             {
               "$ref": "#/definitions/CssExperimentOptions"
             }
@@ -913,7 +921,10 @@
         },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
-          "oneOf": [
+          "anyOf": [
+            {
+              "enum": [false]
+            },
             {
               "$ref": "#/definitions/LazyCompilationOptions"
             }
@@ -1580,6 +1591,43 @@
           "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
           "type": "boolean"
         },
+        "createRequire": {
+          "description": "Enable/disable parsing \"import { createRequire } from \"module\"\" and evaluating createRequire().",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "dynamicImportMode": {
+          "description": "Specifies global mode for dynamic import.",
+          "enum": ["eager", "weak", "lazy", "lazy-once"]
+        },
+        "dynamicImportPrefetch": {
+          "description": "Specifies global prefetch for dynamic import.",
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "dynamicImportPreload": {
+          "description": "Specifies global preload for dynamic import.",
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
         "exportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
           "enum": ["error", "warn", "auto", false]
@@ -1958,6 +2006,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "amdContainer": {
+          "$ref": "#/definitions/AmdContainer"
+        },
         "auxiliaryComment": {
           "$ref": "#/definitions/AuxiliaryComment"
         },
@@ -3003,6 +3054,16 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "amdContainer": {
+          "cli": {
+            "exclude": true
+          },
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AmdContainer"
+            }
+          ]
+        },
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
@@ -3198,6 +3259,9 @@
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
         },
+        "workerPublicPath": {
+          "$ref": "#/definitions/WorkerPublicPath"
+        },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
         }
@@ -3353,6 +3417,9 @@
         },
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
+        },
+        "workerPublicPath": {
+          "$ref": "#/definitions/WorkerPublicPath"
         },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
@@ -3698,6 +3765,29 @@
           "items": {
             "description": "Field name from the description file (usually package.json) which is used to provide entry points of a package.",
             "type": "string"
+          }
+        },
+        "extensionAlias": {
+          "description": "An object which maps extension to extension aliases.",
+          "type": "object",
+          "additionalProperties": {
+            "description": "Extension alias.",
+            "anyOf": [
+              {
+                "description": "Multiple extensions.",
+                "type": "array",
+                "items": {
+                  "description": "Aliased extension.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              {
+                "description": "Aliased extension.",
+                "type": "string",
+                "minLength": 1
+              }
+            ]
           }
         },
         "extensions": {
@@ -5205,6 +5295,10 @@
         }
       },
       "required": ["apply"]
+    },
+    "WorkerPublicPath": {
+      "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
+      "type": "string"
     }
   },
   "title": "WebpackOptions",

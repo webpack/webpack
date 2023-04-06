@@ -20,7 +20,7 @@ The backward compatibility (non-HTTP2 client) improves with bigger `maxSize`, as
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	cache: true, // better performance for the AggressiveSplittingPlugin
 	entry: "./example",
 	output: {
