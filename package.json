@@ -96,7 +96,7 @@
     "simple-git": "^2.17.0",
     "strip-ansi": "^6.0.0",
     "style-loader": "^2.0.0",
-    "terser": "5.16.8",
+    "terser": "^5.16.8",
     "toml": "^3.0.0",
     "tooling": "webpack/tooling#392b1228ded350f10df6ef2ef3cd72e85dd193a9",
     "ts-loader": "^8.0.2",
