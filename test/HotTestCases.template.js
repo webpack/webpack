@@ -249,7 +249,7 @@ const describeCases = config => {
 									}
 
 									function _require(module) {
-										if (module.substr(0, 2) === "./") {
+										if (module.startsWith("./")) {
 											const p = path.join(outputDirectory, module);
 											if (module.endsWith(".json")) {
 												return JSON.parse(fs.readFileSync(p, "utf-8"));

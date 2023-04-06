@@ -1,5 +1,5 @@
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	optimization: {
 		concatenateModules: false
 	}

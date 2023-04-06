@@ -28,7 +28,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 
 ```javascript
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	output: {
 		libraryTarget: "umd"
 	},

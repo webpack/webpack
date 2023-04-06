@@ -26,7 +26,7 @@ Note: decreasing `maxInitial/AsyncRequest` will increase duplication further to 
 
 ```
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	entry: {
 		pageA: "./pages/a",
 		pageB: "./pages/b",

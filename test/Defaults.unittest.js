@@ -214,6 +214,10 @@ describe("snapshots", () => {
 		        },
 		      },
 		      "javascript": Object {
+		        "createRequire": false,
+		        "dynamicImportMode": "lazy",
+		        "dynamicImportPrefetch": false,
+		        "dynamicImportPreload": false,
 		        "exprContextCritical": true,
 		        "exprContextRecursive": true,
 		        "exprContextRegExp": false,
@@ -356,6 +360,7 @@ describe("snapshots", () => {
 		    "wasmLoading": "fetch",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
 		    "workerChunkLoading": "import-scripts",
+		    "workerPublicPath": "",
 		    "workerWasmLoading": "fetch",
 		  },
 		  "parallelism": 100,
@@ -1046,6 +1051,7 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "library": undefined,
 		+     "library": Object {
+		+       "amdContainer": undefined,
 		+       "auxiliaryComment": undefined,
 		+       "export": undefined,
 		+       "name": Array [
@@ -1059,6 +1065,201 @@ describe("snapshots", () => {
 		-     "uniqueName": "webpack",
 		+     "uniqueName": "myLib.awesome",
 	`)
+	);
+	test(
+		"library contains [name] placeholder",
+		{
+			output: {
+				library: ["myLib", "[name]"]
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "chunkLoadingGlobal": "webpackChunkwebpack",
+			+     "chunkLoadingGlobal": "webpackChunkmyLib",
+			@@ ... @@
+			-     "devtoolNamespace": "webpack",
+			+     "devtoolNamespace": "myLib",
+			@@ ... @@
+			-     "enabledLibraryTypes": Array [],
+			+     "enabledLibraryTypes": Array [
+			+       "var",
+			+     ],
+			@@ ... @@
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": "webpackHotUpdatemyLib",
+			@@ ... @@
+			-     "library": undefined,
+			+     "library": Object {
+			+       "amdContainer": undefined,
+			+       "auxiliaryComment": undefined,
+			+       "export": undefined,
+			+       "name": Array [
+			+         "myLib",
+			+         "[name]",
+			+       ],
+			+       "type": "var",
+			+       "umdNamedDefine": undefined,
+			+     },
+			@@ ... @@
+			-     "uniqueName": "webpack",
+			+     "uniqueName": "myLib",
+		`)
+	);
+	test(
+		"library.name contains [name] placeholder",
+		{
+			output: {
+				library: {
+					name: ["my[name]Lib", "[name]", "lib"],
+					type: "var"
+				}
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "chunkLoadingGlobal": "webpackChunkwebpack",
+			+     "chunkLoadingGlobal": "webpackChunkmyLib_lib",
+			@@ ... @@
+			-     "devtoolNamespace": "webpack",
+			+     "devtoolNamespace": "myLib.lib",
+			@@ ... @@
+			-     "enabledLibraryTypes": Array [],
+			+     "enabledLibraryTypes": Array [
+			+       "var",
+			+     ],
+			@@ ... @@
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": "webpackHotUpdatemyLib_lib",
+			@@ ... @@
+			-     "library": undefined,
+			+     "library": Object {
+			+       "amdContainer": undefined,
+			+       "auxiliaryComment": undefined,
+			+       "export": undefined,
+			+       "name": Array [
+			+         "my[name]Lib",
+			+         "[name]",
+			+         "lib",
+			+       ],
+			+       "type": "var",
+			+       "umdNamedDefine": undefined,
+			+     },
+			@@ ... @@
+			-     "uniqueName": "webpack",
+			+     "uniqueName": "myLib.lib",
+		`)
+	);
+	test(
+		"library.name.root contains [name] placeholder",
+		{
+			output: {
+				library: {
+					name: {
+						root: ["[name]", "myLib"]
+					},
+					type: "var"
+				}
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "chunkLoadingGlobal": "webpackChunkwebpack",
+			+     "chunkLoadingGlobal": "webpackChunkmyLib",
+			@@ ... @@
+			-     "devtoolNamespace": "webpack",
+			+     "devtoolNamespace": "myLib",
+			@@ ... @@
+			-     "enabledLibraryTypes": Array [],
+			+     "enabledLibraryTypes": Array [
+			+       "var",
+			+     ],
+			@@ ... @@
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": "webpackHotUpdatemyLib",
+			@@ ... @@
+			-     "library": undefined,
+			+     "library": Object {
+			+       "amdContainer": undefined,
+			+       "auxiliaryComment": undefined,
+			+       "export": undefined,
+			+       "name": Object {
+			+         "root": Array [
+			+           "[name]",
+			+           "myLib",
+			+         ],
+			+       },
+			+       "type": "var",
+			+       "umdNamedDefine": undefined,
+			+     },
+			@@ ... @@
+			-     "uniqueName": "webpack",
+			+     "uniqueName": "myLib",
+		`)
+	);
+	test(
+		"library.name.root contains escaped placeholder",
+		{
+			output: {
+				library: {
+					name: {
+						root: ["[\\name\\]", "my[\\name\\]Lib[name]", "[\\name\\]"]
+					},
+					type: "var"
+				}
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "chunkLoadingGlobal": "webpackChunkwebpack",
+			+     "chunkLoadingGlobal": "webpackChunk_name_my_name_Lib_name_",
+			@@ ... @@
+			-     "devtoolNamespace": "webpack",
+			+     "devtoolNamespace": "[name].my[name]Lib.[name]",
+			@@ ... @@
+			-     "enabledLibraryTypes": Array [],
+			+     "enabledLibraryTypes": Array [
+			+       "var",
+			+     ],
+			@@ ... @@
+			-     "hotUpdateGlobal": "webpackHotUpdatewebpack",
+			+     "hotUpdateGlobal": "webpackHotUpdate_name_my_name_Lib_name_",
+			@@ ... @@
+			-     "library": undefined,
+			+     "library": Object {
+			+       "amdContainer": undefined,
+			+       "auxiliaryComment": undefined,
+			+       "export": undefined,
+			+       "name": Object {
+			+         "root": Array [
+			+           "[\\\\name\\\\]",
+			+           "my[\\\\name\\\\]Lib[name]",
+			+           "[\\\\name\\\\]",
+			+         ],
+			+       },
+			+       "type": "var",
+			+       "umdNamedDefine": undefined,
+			+     },
+			@@ ... @@
+			-     "uniqueName": "webpack",
+			+     "uniqueName": "[name].my[name]Lib.[name]",
+		`)
 	);
 	test("target node", { target: "node" }, e =>
 		e.toMatchInlineSnapshot(`
@@ -1074,6 +1275,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "target": "web",
 		+     "target": "node",
+		@@ ... @@
+		-         "createRequire": false,
+		+         "createRequire": true,
 		@@ ... @@
 		-     "__dirname": "mock",
 		-     "__filename": "mock",
@@ -1105,8 +1309,9 @@ describe("snapshots", () => {
 		+     "wasmLoading": "async-node",
 		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
-		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
+		@@ ... @@
+		-     "workerWasmLoading": "fetch",
 		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -1216,6 +1421,9 @@ describe("snapshots", () => {
 		-     "target": "web",
 		+     "target": "electron-main",
 		@@ ... @@
+		-         "createRequire": false,
+		+         "createRequire": true,
+		@@ ... @@
 		-     "__dirname": "mock",
 		-     "__filename": "mock",
 		-     "global": true,
@@ -1246,8 +1454,9 @@ describe("snapshots", () => {
 		+     "wasmLoading": "async-node",
 		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
-		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
+		@@ ... @@
+		-     "workerWasmLoading": "fetch",
 		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -1339,6 +1548,9 @@ describe("snapshots", () => {
 		-     "target": "web",
 		+     "target": "electron-preload",
 		@@ ... @@
+		-         "createRequire": false,
+		+         "createRequire": true,
+		@@ ... @@
 		-     "__dirname": "mock",
 		-     "__filename": "mock",
 		-     "global": true,
@@ -1369,8 +1581,9 @@ describe("snapshots", () => {
 		+     "wasmLoading": "async-node",
 		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
-		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
+		@@ ... @@
+		-     "workerWasmLoading": "fetch",
 		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -2007,6 +2220,84 @@ describe("snapshots", () => {
 			+     "global": "warn",
 			@@ ... @@
 			+         "css",
+			@@ ... @@
+			-     "hashDigestLength": 20,
+			-     "hashFunction": "md4",
+			+     "hashDigestLength": 16,
+			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			-       "<cwd>/node_modules/",
+			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
+		`)
+	);
+
+	test(
+		"experiments.futureDefaults w/ experiments.css disabled",
+		{
+			experiments: {
+				css: false,
+				futureDefaults: true
+			}
+		},
+		e =>
+			e.toMatchInlineSnapshot(`
+			- Expected
+			+ Received
+
+			@@ ... @@
+			-     "asyncWebAssembly": false,
+			-     "backCompat": true,
+			+     "asyncWebAssembly": true,
+			+     "backCompat": false,
+			@@ ... @@
+			-     "cacheUnaffected": false,
+			-     "css": undefined,
+			-     "futureDefaults": false,
+			+     "cacheUnaffected": true,
+			+     "css": false,
+			+     "futureDefaults": true,
+			@@ ... @@
+			-     "topLevelAwait": false,
+			+     "topLevelAwait": true,
+			@@ ... @@
+			+       },
+			+       Object {
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
+			+         "test": /\\.wasm$/i,
+			+         "type": "webassembly/async",
+			@@ ... @@
+			+         "mimetype": "application/wasm",
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
+			+         "type": "webassembly/async",
+			+       },
+			+       Object {
+			@@ ... @@
+			+         "exportsPresence": "error",
+			@@ ... @@
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			-     "global": true,
+			+     "__dirname": "warn-mock",
+			+     "__filename": "warn-mock",
+			+     "global": "warn",
 			@@ ... @@
 			-     "hashDigestLength": 20,
 			-     "hashFunction": "md4",

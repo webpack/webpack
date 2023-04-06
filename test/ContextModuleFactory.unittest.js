@@ -148,9 +148,10 @@ describe("ContextModuleFactory", () => {
 					expect(res).not.toStrictEqual([]);
 					expect(Array.isArray(res)).toBe(true);
 					expect(res.map(r => r.request)).toEqual([
-						"/a/B/a?query#hash",
-						"/b/A/b?query#hash"
+						"./B/a?query#hash",
+						"./A/b?query#hash"
 					]);
+					expect(res.map(r => r.getContext())).toEqual(["/a", "/b"]);
 					expect(res.map(r => r.userRequest)).toEqual(["./B/a", "./A/b"]);
 					done();
 				}

@@ -60,7 +60,7 @@ exports.replaceResults = (template, baseDir, stdout, prefix) => {
 	const regexp = new RegExp("_\\{\\{" + (prefix ? prefix + ":" : "") + "([^:\\}]+)\\}\\}_", "g");
 
 	return template.replace(regexp, function(match) {
-		match = match.substr(3 + (prefix ? prefix.length + 1 : 0), match.length - 6 - (prefix ? prefix.length + 1 : 0));
+		match = match.slice(3 + (prefix ? prefix.length + 1 : 0), -3);
 		if(match === "stdout")
 			return stdout;
 		try {
