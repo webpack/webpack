@@ -32,7 +32,6 @@ jobs:
           path: .eslintcache
           key: lint-${{ env.GITHUB_SHA }}
           restore-keys: lint-
-      - run: node tooling/debug.js
       - run: yarn lint
   basic:
     runs-on: ubuntu-latest
