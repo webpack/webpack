@@ -23,6 +23,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: Use Node.js
         uses: actions/setup-node@v3
+        with:
+          node-version: 17.x
+          cache: "yarn"
       - run: yarn --frozen-lockfile
       - uses: actions/cache@v3
         with:
