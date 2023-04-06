@@ -753,10 +753,10 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
 `;
 
 exports[`StatsTestCases should print correct stats for context-independence 1`] = `
-"asset main-5fe8293e1c67cc6234cb.js 12.7 KiB [emitted] [immutable] (name: main)
-  sourceMap main-5fe8293e1c67cc6234cb.js.map 11 KiB [emitted] [dev] (auxiliary name: main)
-asset 695-4dd37417c69a0af66bac.js 455 bytes [emitted] [immutable]
-  sourceMap 695-4dd37417c69a0af66bac.js.map 342 bytes [emitted] [dev]
+"asset main-5479233a626f640195f9.js 12.7 KiB [emitted] [immutable] (name: main)
+  sourceMap main-5479233a626f640195f9.js.map 11 KiB [emitted] [dev] (auxiliary name: main)
+asset 695-d9846ea7920868a759cd.js 455 bytes [emitted] [immutable]
+  sourceMap 695-d9846ea7920868a759cd.js.map 347 bytes [emitted] [dev]
 runtime modules 6.59 KiB 9 modules
 orphan modules 19 bytes [orphan] 1 module
 built modules 500 bytes [built]
@@ -769,10 +769,10 @@ built modules 500 bytes [built]
     ./a/chunk.js + 1 modules (in Xdir/context-independence/a) 66 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-5fe8293e1c67cc6234cb.js 12.7 KiB [emitted] [immutable] (name: main)
-  sourceMap main-5fe8293e1c67cc6234cb.js.map 11 KiB [emitted] [dev] (auxiliary name: main)
-asset 695-4dd37417c69a0af66bac.js 455 bytes [emitted] [immutable]
-  sourceMap 695-4dd37417c69a0af66bac.js.map 342 bytes [emitted] [dev]
+asset main-5479233a626f640195f9.js 12.7 KiB [emitted] [immutable] (name: main)
+  sourceMap main-5479233a626f640195f9.js.map 11 KiB [emitted] [dev] (auxiliary name: main)
+asset 695-d9846ea7920868a759cd.js 455 bytes [emitted] [immutable]
+  sourceMap 695-d9846ea7920868a759cd.js.map 347 bytes [emitted] [dev]
 runtime modules 6.59 KiB 9 modules
 orphan modules 19 bytes [orphan] 1 module
 built modules 500 bytes [built]
@@ -785,8 +785,8 @@ built modules 500 bytes [built]
     ./b/chunk.js + 1 modules (in Xdir/context-independence/b) 66 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-7c4bd4d93894bc8263e9.js 14.8 KiB [emitted] [immutable] (name: main)
-asset 695-828eb5c7418e1b8270bb.js 1.5 KiB [emitted] [immutable]
+asset main-afc6c97c5c3aafd6f882.js 14.8 KiB [emitted] [immutable] (name: main)
+asset 695-3a54289b6e0375f1e753.js 1.51 KiB [emitted] [immutable]
 runtime modules 6.59 KiB 9 modules
 orphan modules 19 bytes [orphan] 1 module
 built modules 500 bytes [built]
@@ -799,8 +799,8 @@ built modules 500 bytes [built]
     ./a/chunk.js + 1 modules (in Xdir/context-independence/a) 66 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset main-7c4bd4d93894bc8263e9.js 14.8 KiB [emitted] [immutable] (name: main)
-asset 695-828eb5c7418e1b8270bb.js 1.5 KiB [emitted] [immutable]
+asset main-afc6c97c5c3aafd6f882.js 14.8 KiB [emitted] [immutable] (name: main)
+asset 695-3a54289b6e0375f1e753.js 1.51 KiB [emitted] [immutable]
 runtime modules 6.59 KiB 9 modules
 orphan modules 19 bytes [orphan] 1 module
 built modules 500 bytes [built]

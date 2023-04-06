@@ -40,7 +40,7 @@
     "@babel/preset-react": "^7.10.4",
     "@types/es-module-lexer": "^0.4.1",
     "@types/jest": "^27.4.0",
-    "@types/node": "^17.0.16",
+    "@types/node": "^18.15.11",
     "assemblyscript": "^0.19.16",
     "babel-loader": "^8.1.0",
     "benchmark": "^2.1.4",

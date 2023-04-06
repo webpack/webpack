@@ -82,7 +82,11 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import { ServerOptions as ServerOptionsImport } from "http";
+import {
+	IncomingMessage,
+	ServerOptions as ServerOptionsImport,
+	ServerResponse
+} from "http";
 import { ListenOptions, Server } from "net";
 import { validate as validateFunction } from "schema-utils";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
@@ -6133,7 +6137,10 @@ declare interface LazyCompilationDefaultBackendOptions {
 	/**
 	 * Specifies how to create the server handling the EventSource requests.
 	 */
-	server?: ServerOptionsImport | ServerOptionsHttps | (() => typeof Server);
+	server?:
+		| ServerOptionsImport<typeof IncomingMessage>
+		| ServerOptionsHttps<typeof IncomingMessage, typeof ServerResponse>
+		| (() => typeof Server);
 }
 
 /**
@@ -10888,9 +10895,10 @@ declare abstract class Serializer {
 	serialize(obj?: any, context?: any): any;
 	deserialize(value?: any, context?: any): any;
 }
-type ServerOptionsHttps = SecureContextOptions &
-	TlsOptions &
-	ServerOptionsImport;
+type ServerOptionsHttps<
+	Request extends typeof IncomingMessage = typeof IncomingMessage,
+	Response extends typeof ServerResponse = typeof ServerResponse
+> = SecureContextOptions & TlsOptions & ServerOptionsImport<Request, Response>;
 declare class SharePlugin {
 	constructor(options: SharePluginOptions);
 
