@@ -107,7 +107,7 @@
     "webpack-cli": "^4.3.0",
     "xxhashjs": "^0.2.2",
     "yamljs": "^0.3.0",
-    "yarn-deduplicate": "^3.1.0"
+    "yarn-deduplicate": "^6.0.1"
   },
   "engines": {
     "node": ">=10.13.0"
