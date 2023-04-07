@@ -1195,7 +1195,7 @@ built modules 724 bytes [built]
     ./templates/baz.js 38 bytes [optional] [built] [code generated]
     ./templates/foo.js 38 bytes [optional] [built] [code generated]
   ./entry.js 450 bytes [built] [code generated]
-  ./templates/ lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ namespace object 160 bytes [optional] [built] [code generated]
+  ./templates/ lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ na...(truncated) 160 bytes [optional] [built] [code generated]
 webpack x.x.x compiled successfully in X ms"
 `;
 
