@@ -6,7 +6,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/eslint-scope": "^3.7.3",
-    "@types/estree": "^0.0.51",
+    "@types/estree": "^1.0.0",
     "@webassemblyjs/ast": "1.11.1",
     "@webassemblyjs/wasm-edit": "1.11.1",
     "@webassemblyjs/wasm-parser": "1.11.1",
