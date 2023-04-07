@@ -57,7 +57,7 @@
 ## Code Splitting
 [code-splitting](code-splitting) example demonstrating a very simple case of Code Splitting.
 
-[code-splitting-bundle-loader](code-splitting-bundle-loader) example demonstrating Code Splitting through the bunlde loader
+[code-splitting-bundle-loader](code-splitting-bundle-loader) example demonstrating Code Splitting through the bundle loader
 
 [code-splitting-harmony](code-splitting-harmony)
 
