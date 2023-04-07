@@ -61,7 +61,7 @@
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-prettier": "^4.2.1",
     "file-loader": "^6.0.0",
-    "fork-ts-checker-webpack-plugin": "^6.0.5",
+    "fork-ts-checker-webpack-plugin": "^8.0.0",
     "hash-wasm": "^4.9.0",
     "husky": "^6.0.0",
     "is-ci": "^3.0.0",
