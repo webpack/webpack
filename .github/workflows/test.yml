@@ -59,6 +59,7 @@ jobs:
         with:
           node-version: 10.x
           cache: "yarn"
+      - run: node -e "const content = require('./package.json');delete content.devDependencies;require('fs').writeFileSync('package.json', JSON.stringify(content, null, 2));"
       - run: yarn install --production --frozen-lockfile
   unit:
     runs-on: ubuntu-latest
