@@ -141,7 +141,7 @@ jobs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
         displayName: "Cache Yarn packages"
-      - script: yarn --frozen-lockfile
+      - script: yarn --frozen-lockfile --ignore-engines
         displayName: "Install dependencies"
       - script: yarn link --frozen-lockfile || true
         displayName: "Link webpack"
@@ -210,7 +210,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn --frozen-lockfile
+          yarn --frozen-lockfile --ignore-engines
           yarn link --frozen-lockfile || true
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
@@ -272,7 +272,7 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn --frozen-lockfile
+          yarn --frozen-lockfile --ignore-engines
           yarn link --frozen-lockfile || true
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
