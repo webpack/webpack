@@ -251,6 +251,7 @@ it("should expand properly", function() {
 
 it("destructuring assignment", () => {
 	const {used} = OBJECT2;
-	const {['used']: used2} = OBJECT2.sub;
+	const {['used']: used2, used: used3} = OBJECT2.sub;
 	expect(used).toBe(used2);
+	expect(used).toBe(used3);
 });
