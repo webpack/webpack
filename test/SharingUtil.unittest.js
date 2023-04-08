@@ -203,7 +203,7 @@ describe("normalize dep version", () => {
 		"https://www.github.com/foo/bar": "",
 		"foo/bar#branch with space": "branch with space",
 		"https://github.com/foo/bar/tree/branch": "branch",
-		"user..blerg--/..foo-js# . . . . . some . tags / / /":
+		"user..test--/..foo-js# . . . . . some . tags / / /":
 			" . . . . . some . tags / / /"
 	};
 
@@ -212,7 +212,7 @@ describe("normalize dep version", () => {
 		"https://gitlab.com/foo/-/something",
 		// missing project
 		"https://gitlab.com/foo",
-		// tarball, this should not parse so that it can be used for pacote's remote fetcher
+		// tarball, this should not parse so that it can be used for a remote package fetcher
 		"https://gitlab.com/foo/bar/repository/archive.tar.gz",
 		"https://gitlab.com/foo/bar/repository/archive.tar.gz?ref=49b393e2ded775f2df36ef2ffcb61b0359c194c9"
 	];
@@ -292,7 +292,7 @@ describe("normalize dep version", () => {
 		// git+ssh urls
 		//
 		// NOTE auth is accepted but ignored
-		// NOTE subprojects are accepted, but the subproject is treated as the project and the real project is lost
+		// NOTE sub projects are accepted, but the sub project is treated as the project and the real project is lost
 		"git+ssh://gitlab.com:foo/bar": "",
 		"git+ssh://gitlab.com:foo/bar#v1.0": "v1.0",
 		"git+ssh://user@gitlab.com:foo/bar": "",
@@ -332,7 +332,7 @@ describe("normalize dep version", () => {
 		// ssh urls
 		//
 		// NOTE auth is accepted but ignored
-		// NOTE subprojects are accepted, but the subproject is treated as the project and the real project is lost
+		// NOTE sub projects are accepted, but the sub project is treated as the project and the real project is lost
 		"ssh://gitlab.com:foo/bar": "",
 		"ssh://gitlab.com:foo/bar#v1.0": "v1.0",
 		"ssh://user@gitlab.com:foo/bar": "",
@@ -372,7 +372,7 @@ describe("normalize dep version", () => {
 		// git+https urls
 		//
 		// NOTE auth is accepted and respected
-		// NOTE subprojects are accepted, but the subproject is treated as the project and the real project is lost
+		// NOTE sub projects are accepted, but the sub project is treated as the project and the real project is lost
 		"git+https://gitlab.com/foo/bar": "",
 		"git+https://gitlab.com/foo/bar#v1.0": "v1.0",
 		"git+https://user@gitlab.com/foo/bar": "",
@@ -412,7 +412,7 @@ describe("normalize dep version", () => {
 		// https urls
 		//
 		// NOTE auth is accepted and respected
-		// NOTE subprojects are accepted, but the subproject is treated as the project and the real project is lost
+		// NOTE sub projects are accepted, but the sub project is treated as the project and the real project is lost
 		"https://gitlab.com/foo/bar": "",
 		"https://gitlab.com/foo/bar#v1.0": "v1.0",
 		"https://user@gitlab.com/foo/bar": "",
@@ -460,7 +460,7 @@ describe("normalize dep version", () => {
 	];
 
 	const bitbucketValid = {
-		// shortucts
+		// shortcuts
 		//
 		// NOTE auth is accepted but ignored
 		"bitbucket:foo/bar": "",
