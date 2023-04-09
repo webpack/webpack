@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: 16.x
           cache: "yarn"
-      - run: yarn --frozen-lockfile --ignore-engines
+      - run: yarn --frozen-lockfile
       - uses: actions/cache@v3
         with:
           path: .eslintcache
@@ -42,7 +42,7 @@ jobs:
         with:
           node-version: 16.x
           cache: "yarn"
-      - run: yarn --frozen-lockfile --ignore-engines
+      - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
       - run: yarn test:basic --ci
@@ -70,7 +70,7 @@ jobs:
         with:
           node-version: 16.x
           cache: "yarn"
-      - run: yarn --frozen-lockfile --ignore-engines
+      - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
       - uses: actions/cache@v3
