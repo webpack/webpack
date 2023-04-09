@@ -60,7 +60,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "^14.0.0"
+          versionSpec: "^16.0.0"
         displayName: "Install Node.js"
       - script: |
           curl -o- -L https://yarnpkg.com/install.sh | bash
