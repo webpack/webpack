@@ -2,6 +2,7 @@ import * as C from "./reexport-namespace";
 import { counter } from "./reexport-namespace";
 import { exportsInfo } from "./counter";
 import { exportsInfo as exportsInfo2 } from "./counter2";
+import * as counter3 from "./counter3";
 
 it("expect tree-shake unused exports #1", () => {
 	const { D } = C;
@@ -11,12 +12,21 @@ it("expect tree-shake unused exports #1", () => {
 });
 
 it("expect tree-shake unused exports #2", () => {
-	const { d } = C.counter;
+	const { d, c } = C.counter;
 	const { ['d']: d1 } = counter;
 	expect(d).toBe(1);
+	expect(c).toBe(1);
 	expect(d1).toBe(1);
 	expect(exportsInfo.d).toBe(true);
+	expect(exportsInfo.c).toBe(true);
 	expect(exportsInfo.counter).toBe(false);
+});
+
+it("expect tree-shake bailout when rest element is used", () => {
+	const { d, ...rest } = counter3;
+	expect(d).toBe(1);
+	expect(rest.exportsInfo.d).toBe(true);
+	expect(rest.exportsInfo.counter).toBe(true);
 });
 
 it("expect no support of \"deep\" tree-shaking", () => {
