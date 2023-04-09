@@ -5277,9 +5277,11 @@ declare class JavascriptParser extends Parser {
 		| ForOfStatement
 	)[];
 	prevStatement: any;
-	destructuringAssignmentKeys: WeakMap<Expression, Set<string>>;
+	destructuringAssignmentProperties: WeakMap<Expression, Set<string>>;
 	currentTagData: any;
-	destructuringAssignmentKeysFor(node: Expression): undefined | Set<string>;
+	destructuringAssignmentPropertiesFor(
+		node: Expression
+	): undefined | Set<string>;
 	getRenameIdentifier(expr?: any): undefined | string | VariableInfoInterface;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
 	preWalkStatements(statements?: any): void;
