@@ -235,7 +235,7 @@
       "<rootDir>/schemas",
       "<rootDir>/node_modules"
     ],
-    "testEnvironment": "node",
+    "testEnvironment": "./test/patch-node-env.js",
     "coverageReporters": [
       "json"
     ],
