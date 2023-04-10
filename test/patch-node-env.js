@@ -1,5 +1,8 @@
-// eslint-disable-next-line node/no-extraneous-require
-const NodeEnvironment = require("jest-environment-node").TestEnvironment;
+const NodeEnvironment =
+	// For jest@29
+	require("jest-environment-node").TestEnvironment ||
+	// For jest@27
+	require("jest-environment-node");
 
 class CustomEnvironment extends NodeEnvironment {
 	constructor(config, context) {
