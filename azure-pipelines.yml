@@ -141,7 +141,7 @@ jobs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
         displayName: "Cache Yarn packages"
-      - script: yarn upgrade jest@^27.5.0 jest-circus@27.5.0 jest-cli@27.5.0 jest-diff@27.5.0 jest-junit@13.0.0
+      - script: yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0
         displayName: "Install old jest version"
         condition: or(eq(variables['node_version'], '^10.13.0'), eq(variables['node_version'], '^12.4.0'))
       - script: yarn --frozen-lockfile
@@ -210,7 +210,7 @@ jobs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
         displayName: "Cache Yarn packages"
-      - script: yarn upgrade jest@^27.5.0 jest-circus@27.5.0 jest-cli@27.5.0 jest-diff@27.5.0 jest-junit@13.0.0
+      - script: yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0
         displayName: "Install old jest version"
         condition: or(eq(variables['node_version'], '^10.13.0'), eq(variables['node_version'], '^12.4.0'))
       - script: |
@@ -275,7 +275,7 @@ jobs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
         displayName: "Cache Yarn packages"
-      - script: yarn upgrade jest@^27.5.0 jest-circus@27.5.0 jest-cli@27.5.0 jest-diff@27.5.0 jest-junit@13.0.0
+      - script: yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0
         displayName: "Install old jest version"
         condition: or(eq(variables['node_version'], '^10.13.0'), eq(variables['node_version'], '^12.4.0'))
       - script: |

@@ -70,6 +70,7 @@
     "jest-circus": "^29.5.0",
     "jest-cli": "^29.5.0",
     "jest-diff": "^29.5.0",
+    "jest-environment-node": "^29.5.0",
     "jest-junit": "^15.0.0",
     "json-loader": "^0.5.7",
     "json5": "^2.1.3",
