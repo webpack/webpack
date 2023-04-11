@@ -114,12 +114,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
       # Install old `jest` version and ignore platform problem for legacy node versions
-      - run: yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 --ignore-engines
-        if: matrix.node-version == '10.x' || matrix.node-version == '12.x'
+      - run: yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 --frozen-lockfile --ignore-engines
+        if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x'
       - run: yarn --frozen-lockfile --ignore-engines
-        if: matrix.node-version == '10.x' || matrix.node-version == '12.x'
+        if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x'
       - run: yarn --frozen-lockfile
-        if: matrix.node-version != '10.x' && matrix.node-version != '12.x'
+        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x'
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
       - uses: actions/cache@v3
