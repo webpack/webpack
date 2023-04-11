@@ -67,7 +67,7 @@ const doCompileAndReplace = (args, prefix, callback) => {
 
 async.series([
 	callback => doCompileAndReplace("--mode production --env production", "production", callback),
-	callback => doCompileAndReplace("--mode development --env development --devtool none", "development", callback),
+	callback => doCompileAndReplace("--mode development --env development", "development", callback),
 	callback => doCompileAndReplace("--mode none --env none --output-pathinfo verbose", "", callback)
 ], () => {
 	readme = tc.replaceBase(readme);
