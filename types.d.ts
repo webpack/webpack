@@ -2717,8 +2717,8 @@ declare class Dependency {
 		moduleGraph: ModuleGraph
 	): ConnectionState;
 	createIgnoredModule(context: string): Module;
-	serialize(__0: {}): void;
-	deserialize(__0: {}): void;
+	serialize(__0: ObjectSerializerContext): void;
+	deserialize(__0: ObjectDeserializerContext): void;
 	module: any;
 	get disconnect(): any;
 	static NO_EXPORTS_REFERENCED: string[][];
@@ -3756,7 +3756,12 @@ declare abstract class ExportsInfo {
 	): string | false | string[];
 	updateHash(hash: Hash, runtime: RuntimeSpec): void;
 	getRestoreProvidedData(): any;
-	restoreProvided(__0: {}): void;
+	restoreProvided(__0: {
+		otherProvided: any;
+		otherCanMangleProvide: any;
+		otherTerminalBinding: any;
+		exports: any;
+	}): void;
 }
 declare interface ExportsSpec {
 	/**
@@ -6201,7 +6206,7 @@ declare class LazySet<T> {
 	values(): IterableIterator<T>;
 	serialize(__0: ObjectSerializerContext): void;
 	[Symbol.iterator](): IterableIterator<T>;
-	static deserialize(__0: {}): LazySet<any>;
+	static deserialize(__0: ObjectDeserializerContext): LazySet<any>;
 }
 declare interface LibIdentOptions {
 	/**
