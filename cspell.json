@@ -5,6 +5,8 @@
     "absolutify",
     "acircular",
     "amdmodule",
+    "analyse",
+    "analysed",
     "asmjs",
     "assemblyscript",
     "asyncloader",
@@ -181,6 +183,7 @@
     "preloaded",
     "preloading",
     "preparsed",
+    "preprocess",
     "prettierrc",
     "prewalking",
     "prioritise",
@@ -294,6 +297,7 @@
     "types.d.ts",
     "**/**/*.snap",
     "test/cases/json/weird-properties/globals.json",
+    "test/JavascriptParser.unittest.js",
     "**/*.svg",
     "*.log",
     "**/*.wasm",
@@ -303,6 +307,7 @@
     "test/cases/**",
     "test/configCases/**",
     "test/statsCases/**",
-    "test/fixtures/**"
+    "test/fixtures/**",
+    "test/memoryLimitCases/**"
   ]
 }

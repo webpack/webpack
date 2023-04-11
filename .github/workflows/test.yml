@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: 17.x
           cache: "yarn"
-      - run: yarn --frozen-lockfile
+      - run: yarn --frozen-lockfile --ignore-engines
       - uses: actions/cache@v3
         with:
           path: .eslintcache
@@ -42,7 +42,7 @@ jobs:
         with:
           node-version: 17.x
           cache: "yarn"
-      - run: yarn --frozen-lockfile
+      - run: yarn --frozen-lockfile --ignore-engines
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
       - run: yarn test:basic --ci
@@ -50,6 +50,17 @@ jobs:
         with:
           flags: basic
           functionalities: gcov
+  validate-legacy-node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 10.x
+          cache: "yarn"
+      - run: node -e "const content = require('./package.json');delete content.devDependencies;require('fs').writeFileSync('package.json', JSON.stringify(content, null, 2));"
+      - run: yarn install --production --frozen-lockfile
   unit:
     runs-on: ubuntu-latest
     steps:
@@ -59,7 +70,7 @@ jobs:
         with:
           node-version: 17.x
           cache: "yarn"
-      - run: yarn --frozen-lockfile
+      - run: yarn --frozen-lockfile --ignore-engines
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
       - uses: actions/cache@v3
@@ -98,7 +109,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
-      - run: yarn --frozen-lockfile
+      # Using `--ignore-engines` for Node.js 10 and 12
+      - run: yarn --frozen-lockfile --ignore-engines
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
       - uses: actions/cache@v3

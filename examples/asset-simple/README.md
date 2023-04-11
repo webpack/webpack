@@ -68,7 +68,7 @@ module.exports = {
   \*************************/
 /*! default exports */
 /*! exports [not provided] [no usage info] */
-/*! runtime requirements: module, __webpack_require__.p, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__.p, module, __webpack_require__.* */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = __webpack_require__.p + "images/89a353e9c515885abd8e.png";
@@ -217,5 +217,5 @@ chunk (runtime: main) output.js (main) 9.58 KiB (javascript) 14.6 KiB (asset) 30
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```
