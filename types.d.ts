@@ -2646,8 +2646,8 @@ declare abstract class DependenciesBlock {
 	 */
 	clearDependenciesAndBlocks(): void;
 	updateHash(hash: Hash, context: UpdateHashContextDependency): void;
-	serialize(__0: { write: any }): void;
-	deserialize(__0: { read: any }): void;
+	serialize(__0: {}): void;
+	deserialize(__0: {}): void;
 }
 declare interface DependenciesBlockLike {
 	dependencies: Dependency[];
@@ -2717,8 +2717,8 @@ declare class Dependency {
 		moduleGraph: ModuleGraph
 	): ConnectionState;
 	createIgnoredModule(context: string): Module;
-	serialize(__0: { write: any }): void;
-	deserialize(__0: { read: any }): void;
+	serialize(__0: {}): void;
+	deserialize(__0: {}): void;
 	module: any;
 	get disconnect(): any;
 	static NO_EXPORTS_REFERENCED: string[][];
@@ -3756,12 +3756,7 @@ declare abstract class ExportsInfo {
 	): string | false | string[];
 	updateHash(hash: Hash, runtime: RuntimeSpec): void;
 	getRestoreProvidedData(): any;
-	restoreProvided(__0: {
-		otherProvided: any;
-		otherCanMangleProvide: any;
-		otherTerminalBinding: any;
-		exports: any;
-	}): void;
+	restoreProvided(__0: {}): void;
 }
 declare interface ExportsSpec {
 	/**
@@ -6204,9 +6199,9 @@ declare class LazySet<T> {
 	has(item: T): boolean;
 	keys(): IterableIterator<T>;
 	values(): IterableIterator<T>;
-	serialize(__0: { write: any }): void;
+	serialize(__0: {}): void;
 	[Symbol.iterator](): IterableIterator<T>;
-	static deserialize(__0: { read: any }): LazySet<any>;
+	static deserialize(__0: {}): LazySet<any>;
 }
 declare interface LibIdentOptions {
 	/**
@@ -9243,7 +9238,7 @@ declare class ProgressPlugin {
 	showModules?: boolean;
 	showDependencies?: boolean;
 	showActiveModules?: boolean;
-	percentBy?: null | "modules" | "dependencies" | "entries";
+	percentBy?: null | "entries" | "modules" | "dependencies";
 	apply(compiler: Compiler | MultiCompiler): void;
 	static getReporter(
 		compiler: Compiler
@@ -9304,7 +9299,7 @@ declare interface ProgressPluginOptions {
 	/**
 	 * Collect percent algorithm. By default it calculates by a median from modules, entries and dependencies percent.
 	 */
-	percentBy?: null | "modules" | "dependencies" | "entries";
+	percentBy?: null | "entries" | "modules" | "dependencies";
 
 	/**
 	 * Collect profile data for progress steps. Default: false.
@@ -9437,7 +9432,7 @@ declare interface ReaddirOptions {
 	withFileTypes?: boolean;
 }
 declare class RealContentHashPlugin {
-	constructor(__0: { hashFunction: any; hashDigest: any });
+	constructor(__0: {});
 
 	/**
 	 * Apply the plugin
@@ -11071,8 +11066,8 @@ declare abstract class Snapshot {
 	hasChildren(): boolean;
 	setChildren(value?: any): void;
 	addChild(child?: any): void;
-	serialize(__0: { write: any }): void;
-	deserialize(__0: { read: any }): void;
+	serialize(__0: {}): void;
+	deserialize(__0: {}): void;
 	getFileIterable(): Iterable<string>;
 	getContextIterable(): Iterable<string>;
 	getMissingIterable(): Iterable<string>;
@@ -12400,8 +12395,8 @@ declare class WebpackError extends Error {
 	hideStack: boolean;
 	chunk: Chunk;
 	file: string;
-	serialize(__0: { write: any }): void;
-	deserialize(__0: { read: any }): void;
+	serialize(__0: {}): void;
+	deserialize(__0: {}): void;
 
 	/**
 	 * Create .stack property on a target object
