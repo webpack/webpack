@@ -223,7 +223,7 @@ jobs:
           yarn link --frozen-lockfile || true
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies (old node.js version)"
-        condition: or(eq(variables['node_version'], '^10.13.0'), eq(variables['node_version'], '^12.4.0'))
+        condition: or(eq(variables['node_version'], '^10.13.0'), eq(variables['node_version'], '^12.4.0'), eq(variables['node_version'], '^14.0.0'))
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
@@ -231,7 +231,7 @@ jobs:
           yarn link --frozen-lockfile || true
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
-        condition: and(not(eq(variables['node_version'], '^10.13.0')), not(eq(variables['node_version'], '^12.4.0')))
+        condition: and(not(eq(variables['node_version'], '^10.13.0')), not(eq(variables['node_version'], '^12.4.0')), not(eq(variables['node_version'], '^14.0.0')))
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
