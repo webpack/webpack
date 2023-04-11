@@ -2646,8 +2646,8 @@ declare abstract class DependenciesBlock {
 	 */
 	clearDependenciesAndBlocks(): void;
 	updateHash(hash: Hash, context: UpdateHashContextDependency): void;
-	serialize(__0: {}): void;
-	deserialize(__0: {}): void;
+	serialize(__0: ObjectSerializerContext): void;
+	deserialize(__0: ObjectDeserializerContext): void;
 }
 declare interface DependenciesBlockLike {
 	dependencies: Dependency[];
@@ -6199,7 +6199,7 @@ declare class LazySet<T> {
 	has(item: T): boolean;
 	keys(): IterableIterator<T>;
 	values(): IterableIterator<T>;
-	serialize(__0: {}): void;
+	serialize(__0: ObjectSerializerContext): void;
 	[Symbol.iterator](): IterableIterator<T>;
 	static deserialize(__0: {}): LazySet<any>;
 }
@@ -9432,7 +9432,16 @@ declare interface ReaddirOptions {
 	withFileTypes?: boolean;
 }
 declare class RealContentHashPlugin {
-	constructor(__0: {});
+	constructor(__0: {
+		/**
+		 * the hash function to use
+		 */
+		hashFunction: string | typeof Hash;
+		/**
+		 * the hash digest to use
+		 */
+		hashDigest: string;
+	});
 
 	/**
 	 * Apply the plugin
@@ -11066,8 +11075,8 @@ declare abstract class Snapshot {
 	hasChildren(): boolean;
 	setChildren(value?: any): void;
 	addChild(child?: any): void;
-	serialize(__0: {}): void;
-	deserialize(__0: {}): void;
+	serialize(__0: ObjectSerializerContext): void;
+	deserialize(__0: ObjectDeserializerContext): void;
 	getFileIterable(): Iterable<string>;
 	getContextIterable(): Iterable<string>;
 	getMissingIterable(): Iterable<string>;
@@ -12395,8 +12404,8 @@ declare class WebpackError extends Error {
 	hideStack: boolean;
 	chunk: Chunk;
 	file: string;
-	serialize(__0: {}): void;
-	deserialize(__0: {}): void;
+	serialize(__0: ObjectSerializerContext): void;
+	deserialize(__0: ObjectDeserializerContext): void;
 
 	/**
 	 * Create .stack property on a target object
