@@ -1,4 +1,4 @@
-This example shows how you use verbose stats in webpack.
+This example shows how you use the [`verbose` stats preset](https://webpack.js.org/configuration/stats/#stats-presets) in webpack.
 
 
 You see that everything is working nicely together.
