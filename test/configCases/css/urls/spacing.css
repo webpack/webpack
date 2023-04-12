@@ -486,3 +486,12 @@ mg.png\
   ');
 
 }
+
+.class {
+	background: url("  img.png  ");
+}
+
+
+.class {
+	background: url( img.png bug);
+}
