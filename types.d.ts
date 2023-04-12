@@ -5277,7 +5277,11 @@ declare class JavascriptParser extends Parser {
 		| ForOfStatement
 	)[];
 	prevStatement: any;
+	destructuringAssignmentProperties: WeakMap<Expression, Set<string>>;
 	currentTagData: any;
+	destructuringAssignmentPropertiesFor(
+		node: Expression
+	): undefined | Set<string>;
 	getRenameIdentifier(expr?: any): undefined | string | VariableInfoInterface;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
 	preWalkStatements(statements?: any): void;
@@ -5321,6 +5325,8 @@ declare class JavascriptParser extends Parser {
 	walkForOfStatement(statement?: any): void;
 	preWalkFunctionDeclaration(statement?: any): void;
 	walkFunctionDeclaration(statement?: any): void;
+	blockPreWalkExpressionStatement(statement?: any): void;
+	preWalkAssignmentExpression(expression?: any): void;
 	blockPreWalkImportDeclaration(statement?: any): void;
 	enterDeclaration(declaration?: any, onIdent?: any): void;
 	blockPreWalkExportNamedDeclaration(statement?: any): void;
@@ -5330,6 +5336,7 @@ declare class JavascriptParser extends Parser {
 	blockPreWalkExportAllDeclaration(statement?: any): void;
 	preWalkVariableDeclaration(statement?: any): void;
 	blockPreWalkVariableDeclaration(statement?: any): void;
+	preWalkVariableDeclarator(declarator?: any): void;
 	walkVariableDeclaration(statement?: any): void;
 	blockPreWalkClassDeclaration(statement?: any): void;
 	walkClassDeclaration(statement?: any): void;
