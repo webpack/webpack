@@ -47,3 +47,11 @@ spacing {
 spacing {
   l: green url(/img.png) xyz;
 }
+
+spacing {
+	m: green URL(/img.png) xyz;
+}
+
+spacing {
+	n: green uRl(/img.png) xyz;
+}

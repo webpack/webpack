@@ -24,7 +24,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 17.x
+          node-version: 16.x
           cache: "yarn"
       - run: yarn --frozen-lockfile
       - uses: actions/cache@v3
@@ -40,7 +40,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 17.x
+          node-version: 16.x
           cache: "yarn"
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
@@ -50,6 +50,18 @@ jobs:
         with:
           flags: basic
           functionalities: gcov
+  validate-legacy-node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 10.x
+          cache: "yarn"
+      # Remove `devDependencies` from `package.json` to avoid `yarn install` compatibility error
+      - run: node -e "const content = require('./package.json');delete content.devDependencies;require('fs').writeFileSync('package.json', JSON.stringify(content, null, 2));"
+      - run: yarn install --production --frozen-lockfile
   unit:
     runs-on: ubuntu-latest
     steps:
@@ -57,7 +69,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 17.x
+          node-version: 16.x
           cache: "yarn"
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
@@ -78,9 +90,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [10.x, 17.x]
+        node-version: [10.x, 19.x]
         part: [a, b]
         include:
+          - os: ubuntu-latest
+            node-version: 18.x
+            part: a
           - os: ubuntu-latest
             node-version: 16.x
             part: a
@@ -98,7 +113,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
+      # Install old `jest` version and deps for legacy node versions
+      - run: |
+          yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 --ignore-engines
+          yarn --frozen-lockfile --ignore-engines
+        if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x'
       - run: yarn --frozen-lockfile
+        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x'
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
       - uses: actions/cache@v3

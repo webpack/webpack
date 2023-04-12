@@ -248,3 +248,10 @@ it("should expand properly", function() {
 	expect(require("./dir/" + (tmp + A_DOT_J + tmp) + "s")).toBe(a);
 	expect(require("./dir/" + (tmp + A_DOT_J) + tmp + "s")).toBe(a);
 });
+
+it("destructuring assignment", () => {
+	const {used} = OBJECT2;
+	const {['used']: used2, used: used3} = OBJECT2.sub;
+	expect(used).toBe(used2);
+	expect(used).toBe(used3);
+});

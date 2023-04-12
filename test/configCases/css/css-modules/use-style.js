@@ -19,6 +19,8 @@ export default {
 	webkitAnyWmultiParams: `${style.local16}`,
 	ident,
 	keyframes: style.localkeyframes,
+	keyframesUPPERCASE: style.localkeyframesUPPERCASE,
+	localkeyframes2UPPPERCASE: style.localkeyframes2UPPPERCASE,
 	animation: style.animation,
 	vars: `${style["local-color"]} ${style.vars} ${style["global-color"]} ${style.globalVars}`,
 	media: style.wideScreenClass,
@@ -27,4 +29,6 @@ export default {
 	supportsWithOperator: style.floatRightInNegativeSupports,
 	mediaInSupports: style.displayFlexInMediaInSupports,
 	supportsInMedia: style.displayFlexInSupportsInMedia,
+	displayFlexInSupportsInMediaUpperCase: style.displayFlexInSupportsInMediaUpperCase,
+	VARS: `${style["LOCAL-COLOR"]} ${style.VARS} ${style["GLOBAL-COLOR"]} ${style.globalVarsUpperCase}`,
 };

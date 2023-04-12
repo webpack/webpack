@@ -160,7 +160,9 @@ class FakeSheet {
 		let css = fs.readFileSync(
 			path.resolve(
 				this._basePath,
-				this._element.href.replace(/^https:\/\/test\.cases\/path\//, "")
+				this._element.href
+					.replace(/^https:\/\/test\.cases\/path\//, "")
+					.replace(/^https:\/\/example\.com\//, "")
 			),
 			"utf-8"
 		);

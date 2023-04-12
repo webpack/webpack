@@ -53,6 +53,18 @@ it("should allow to create css modules", done => {
 				supportsInMedia: prod
 					? "my-app-491-SQ"
 					: "./style.module.css-displayFlexInSupportsInMedia",
+				displayFlexInSupportsInMediaUpperCase: prod
+					? "my-app-491-XM"
+					: "./style.module.css-displayFlexInSupportsInMediaUpperCase",
+				keyframesUPPERCASE: prod
+					? "my-app-491-T4"
+					: "./style.module.css-localkeyframesUPPERCASE",
+				localkeyframes2UPPPERCASE: prod
+					? "my-app-491-Xi"
+					: "./style.module.css-localkeyframes2UPPPERCASE",
+				VARS: prod
+					? "--my-app-491-DJ my-app-491-ms undefined my-app-491-cU"
+					: "--./style.module.css-LOCAL-COLOR ./style.module.css-VARS undefined ./style.module.css-globalVarsUpperCase",
 			});
 		} catch (e) {
 			return done(e);
