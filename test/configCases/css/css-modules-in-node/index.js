@@ -68,6 +68,9 @@ it("should allow to create css modules", done => {
 				inSupportScope: prod
 					? "my-app-491-FO"
 					: "./style.module.css-inSupportScope",
+				animationName: prod
+					? "my-app-491-w3"
+					: "./style.module.css-animationName",
 			});
 		} catch (e) {
 			return done(e);
