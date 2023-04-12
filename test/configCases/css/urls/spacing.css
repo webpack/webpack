@@ -495,3 +495,7 @@ mg.png\
 .class {
 	background: url( img.png bug);
 }
+
+.class {
+	background: url(img\n.png);
+}
