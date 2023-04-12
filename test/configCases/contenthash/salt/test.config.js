@@ -4,7 +4,7 @@ const allAssets = new Set();
 const allBundles = new Set();
 
 module.exports = {
-	findBundle: function(i, options) {
+	findBundle: function (i, options) {
 		const bundle = findOutputFiles(options, new RegExp(`^bundle${i}`))[0];
 		allBundles.add(/\.([^.]+)\./.exec(bundle)[1]);
 

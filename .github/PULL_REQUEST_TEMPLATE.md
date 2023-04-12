@@ -4,10 +4,14 @@
 <!-- Explain the **motivation** for making this change. What existing problem does the pull request solve? -->
 <!-- Try to link to an open issue for more information. -->
 
-## Summary 
+## Summary
+
 <!-- cspell:disable-next-line -->
+
 copilot:summary
 
-## Details 
+## Details
+
 <!-- cspell:disable-next-line -->
+
 copilot:walkthrough

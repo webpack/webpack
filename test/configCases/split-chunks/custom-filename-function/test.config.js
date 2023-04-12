@@ -1,5 +1,5 @@
 module.exports = {
-	findBundle: function(i, options) {
+	findBundle: function (i, options) {
 		return ["a.js"];
 	}
 };
