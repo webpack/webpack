@@ -256,3 +256,12 @@
 		background: red;
 	}
 }
+
+@-moz-keyframes mozAnimationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
