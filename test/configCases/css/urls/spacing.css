@@ -436,6 +436,7 @@ div {
 div {
 	background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="100%25" height="100%25" style="stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px" /%3E%3C/svg%3E');
 	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" style="stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px" /></svg>');
+	background-image: url('DATA:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" style="stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px" /></svg>');
 }
 
 div {
@@ -497,4 +498,9 @@ div {
 div {
 	background-image: url('      data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"\
 	                width="10" height="10"><rect fill="gray" width="5" height="5" y="0" x="0" /></svg>      ');
+}
+
+div {
+	background: url(http://example.com/image.jpg);
+	background: url(http://example.com/image.jpg);
 }
