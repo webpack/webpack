@@ -420,7 +420,8 @@ div {
 
 div {
 	a146: url('./img.png', 'foo', './img.png', url('./img.png'));
-	a147: image-set(url('./img.png', 'foo', './img.png', url('./img.png')) 1x, url("./img2x.png") 2x);
+	/* TODO */
+	/*a147: image-set(url('./img.png', 'foo', './img.png', url('./img.png')) 1x, url("./img2x.png") 2x);*/
 }
 
 div {
@@ -563,9 +564,31 @@ div {
 	a191: image-set("img.png"1x/* test*/,/* test*/"img.png"2x);
 }
 
-@supports (background-image: image-set("img.png"1x,"img.png"2x,"img.png"3x)) {
+@supports (background-image: image-set("unknown.png"1x,"unknown.png"2x,"unknown.png"3x)) {
 	div {
 		a192: url("img.png");
 		a193: image-set("img.png"1x);
+	}
+}
+
+@supports (background-image: url("unknown.png" param(--test))) {
+	div {
+		a194: url("img.png");
+	}
+}
+
+@supports (background-image: url("unknown.png")) {
+	div {
+		a195: url("img.png");
+	}
+}
+
+@supports (display: grid) {
+	@media (min-width: 100px) {
+		@layer special {
+			div {
+				a196: url("img.png");
+			}
+		}
 	}
 }

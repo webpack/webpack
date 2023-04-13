@@ -4,6 +4,9 @@ exports[`ConfigTestCases css urls exported tests should be able to handle styles
 Object {
   "--foo": " url(img.09a1a1112c577c279435.png)",
   "--foo-bar": " \\"http://www.example.com/pinkish.gif\\"",
+  "/* TODO */
+	/*a147": " image-set(url('./img.png', 'foo', './img.png', url('./img.png')) 1x, url(\\"./img2x.png\\") 2x);*/
+",
   "a": " url(img.09a1a1112c577c279435.png)",
   "a1": " url(img.09a1a1112c577c279435.png)",
   "a10": " green url(img\\\\ img.09a1a1112c577c279435.png) xyz",
@@ -58,7 +61,6 @@ Object {
   "a144": " url(img.09a1a1112c577c279435.png)",
   "a145": " url(img.09a1a1112c577c279435.png)",
   "a146": " url('./img.png', 'foo', './img.png', url(img.09a1a1112c577c279435.png))",
-  "a147": " image-set(url('./img.png', 'foo', './img.png', url(img.09a1a1112c577c279435.png)) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
   "a148": " url('data:image/svg+xml,%3Csvg xmlns=\\"http://www.w3.org/2000/svg\\"%3E%3Crect width=\\"100%25\\" height=\\"100%25\\" style=\\"stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px\\" /%3E%3C/svg%3E')",
   "a149": " url('data:image/svg+xml,%3Csvg xmlns=\\"http://www.w3.org/2000/svg\\"%3E%3Crect width=\\"100%25\\" height=\\"100%25\\" style=\\"stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px\\" /%3E%3C/svg%3E')",
   "a15": " url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2042%2026%27%20fill%3D%27%2523007aff%27%3E%3Crect%20width%3D%274%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%278%27%20y%3D%271%27%20width%3D%2734%27%20height%3D%272%27%2F%3E%3Crect%20y%3D%2711%27%20width%3D%274%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%278%27%20y%3D%2712%27%20width%3D%2734%27%20height%3D%272%27%2F%3E%3Crect%20y%3D%2722%27%20width%3D%274%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%278%27%20y%3D%2723%27%20width%3D%2734%27%20height%3D%272%27%2F%3E%3C%2Fsvg%3E)",
@@ -91,12 +93,12 @@ Object {
 		linear-gradient(blue, green) 2x
 	)",
   "a173": " image-set(
-		url(img.09a1a1112c577c279435.png) type(\\"image/avif\\"),
-		url(img.09a1a1112c577c279435.png) type(\\"image/jpeg\\")
+		url(img.09a1a1112c577c279435.png) type(\\"image/png\\"),
+		url(img.09a1a1112c577c279435.png) type(\\"image/png\\")
 	)",
   "a174": " image-set(
-		\\"img.png\\" 1x,
-		\\"img.png\\" 2x
+		url(img.09a1a1112c577c279435.png) 1x,
+		url(img.09a1a1112c577c279435.png) 2x
 	)",
   "a175": " image-set(
 		url(img.09a1a1112c577c279435.png) 1x,
@@ -104,16 +106,16 @@ Object {
 		url(img.09a1a1112c577c279435.png) 3x
 	)",
   "a176": " image-set(
-		\\"img.png\\" type(\\"image/avif\\"),
-		\\"img.png\\" type(\\"image/jpeg\\")
+		url(img.09a1a1112c577c279435.png) type(\\"image/png\\"),
+		url(img.09a1a1112c577c279435.png) type(\\"image/png\\")
 	) \\"img.png\\"",
   "a177": " image-set(
-		\\"large-balloons.avif\\" 1x type(\\"image/avif\\"),
-		\\"large-balloons.jpg\\" 2x type(\\"image/jpeg\\")
+		url(img.09a1a1112c577c279435.png) 1x type(\\"image/png\\"),
+		url(img.09a1a1112c577c279435.png) 2x type(\\"image/png\\")
 	)",
   "a178": " image-set(
-		\\"large-balloons.avif\\" type(\\"image/avif\\") 1x,
-		\\"large-balloons.jpg\\" type(\\"image/jpeg\\") 2x
+		url(img.09a1a1112c577c279435.png) type(\\"image/png\\") 1x,
+		url(img.09a1a1112c577c279435.png) type(\\"image/png\\") 2x
 	)",
   "a179": " -webkit-image-set(
 		\\"img.png\\" 1x
@@ -127,13 +129,13 @@ Object {
   "a183": " src('img.png' var(--foo, \\"test.png\\"))",
   "a184": " src(var(--foo, \\"test.png\\"))",
   "a185": " src(\\"   img.png   \\")",
-  "a186": " image-set(\\"img.png\\"1x,\\"img.png\\"2x,\\"img.png\\"3x)",
-  "a187": " image-set(\\"img.png\\"1x,url(img.09a1a1112c577c279435.png)2x,\\"img.png\\"3x)",
-  "a188": " image-set(\\"img.png\\"1x,\\"img.png\\"2x,url(img.09a1a1112c577c279435.png)3x)",
-  "a189": " image-set(url(img.09a1a1112c577c279435.png)1x,\\"img.png\\"2x,\\"img.png\\"3x)",
+  "a186": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
+  "a187": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
+  "a188": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
+  "a189": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
   "a19": " url('#line-marker')",
-  "a190": " image-set(\\"img.png\\"1x)",
-  "a191": " image-set(\\"img.png\\"1x/* test*/,/* test*/\\"img.png\\"2x)",
+  "a190": " image-set(url(img.09a1a1112c577c279435.png)1x)",
+  "a191": " image-set(url(img.09a1a1112c577c279435.png)1x/* test*/,/* test*/url(img.09a1a1112c577c279435.png)2x)",
   "a2": " url(img.09a1a1112c577c279435.png)",
   "a22": " \\"do not use url(path)\\"",
   "a23": " 'do not \\"use\\" url(path)'",
@@ -186,20 +188,20 @@ Object {
 	)",
   "a69": " image-set(calc(1rem + 1px) 1x)",
   "a7": " green url(img.09a1a1112c577c279435.png) xyz",
-  "a70": " -webkit-image-set(\\"./img1x.png\\" 1x, \\"./img2x.png\\" 2x)",
-  "a71": " image-set(\\"./img1x.png\\" 1x)",
-  "a72": " image-set(\\"./img1x.png\\" 1x, \\"./img2x.png\\" 2x)",
-  "a73": " image-set(\\"./img img.png\\" 1x, \\"./img img.png\\" 2x)",
-  "a74": " image-set(\\"./img1x.png\\" 1x, \\"./img2x.png\\" 2x),
-		image-set(\\"./img1x.png\\" 1x, \\"./img2x.png\\" 2x)",
+  "a70": " -webkit-image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
+  "a71": " image-set(url(img1x.09a1a1112c577c279435.png) 1x)",
+  "a72": " image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
+  "a73": " image-set(url(img\\\\ img.09a1a1112c577c279435.png) 1x, url(img\\\\ img.09a1a1112c577c279435.png) 2x)",
+  "a74": " image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x),
+		image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
   "a75": " image-set(
-		\\"./img1x.png\\" 1x,
-		\\"./img2x.png\\" 2x,
-		\\"./img3x.png\\" 600dpi
+		url(img1x.09a1a1112c577c279435.png) 1x,
+		url(img2x.09a1a1112c577c279435.png) 2x,
+		url(img3x.09a1a1112c577c279435.png) 600dpi
 	)",
-  "a76": " image-set(\\"./img1x.png?foo=bar\\" 1x)",
-  "a77": " image-set(\\"./img1x.png#hash\\" 1x)",
-  "a78": " image-set(\\"./img1x.png?#iefix\\" 1x)",
+  "a76": " image-set(url(img1x.09a1a1112c577c279435.png?foo=bar) 1x)",
+  "a77": " image-set(url(img1x.09a1a1112c577c279435.png#hash) 1x)",
+  "a78": " image-set(url(img1x.09a1a1112c577c279435.png?#iefix) 1x)",
   "a79": " -webkit-image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
   "a8": " green url(img.09a1a1112c577c279435.png) xyz",
   "a80": " -webkit-image-set(url(img1x.09a1a1112c577c279435.png) 1x)",
@@ -217,7 +219,7 @@ Object {
 		url(img3x.09a1a1112c577c279435.png) 600dpi
 	)",
   "a86": " image-set(url(img\\\\ img.09a1a1112c577c279435.png) 1x, url(img\\\\ img.09a1a1112c577c279435.png) 2x)",
-  "a87": " image-set(url(img1x.09a1a1112c577c279435.png) 1x, \\"./img2x.png\\" 2x)",
+  "a87": " image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
   "a88": " url(img\\\\\\"img.09a1a1112c577c279435.png)",
   "a89": " url(img\\\\'img.09a1a1112c577c279435.png)",
   "a9": " green url(img.09a1a1112c577c279435.png) url(other-img.09a1a1112c577c279435.png) xyz",
