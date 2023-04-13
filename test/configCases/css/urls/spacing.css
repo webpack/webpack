@@ -513,8 +513,8 @@ div {
 		linear-gradient(blue, green) 2x
 	);
 	a173: image-set(
-		url("img.png") type("image/avif"),
-		url("img.png") type("image/jpeg")
+		url("img.png") type("image/png"),
+		url("img.png") type("image/png")
 	);
 	a174: image-set(
 		"img.png" 1x,
@@ -525,4 +525,47 @@ div {
 		url("img.png") 2x,
 		url("img.png") 3x
 	);
+	a176: image-set(
+		"img.png" type("image/png"),
+		"img.png" type("image/png")
+	) "img.png";
+	a177: image-set(
+		"img.png" 1x type("image/png"),
+		"img.png" 2x type("image/png")
+	);
+	a178: image-set(
+		"img.png" type("image/png") 1x,
+		"img.png" type("image/png") 2x
+	);
+	a179: -webkit-image-set(
+		"img.png" 1x
+	);
+	a180: -webkit-image-set(
+		url("img.png" var(--foo, "test.png")) 1x
+	);
+}
+
+div {
+	a181: src("img.png");
+	a181: src(   "img.png"   );
+	a182: src('img.png');
+	a183: src('img.png' var(--foo, "test.png"));
+	a184: src(var(--foo, "test.png"));
+	a185: src("   img.png   ");
+}
+
+div {
+	a186: image-set("img.png"1x,"img.png"2x,"img.png"3x);
+	a187: image-set("img.png"1x,url("img.png")2x,"img.png"3x);
+	a188: image-set("img.png"1x,"img.png"2x,url("img.png")3x);
+	a189: image-set(url("img.png")1x,"img.png"2x,"img.png"3x);
+	a190: image-set("img.png"1x);
+	a191: image-set("img.png"1x/* test*/,/* test*/"img.png"2x);
+}
+
+@supports (background-image: image-set("img.png"1x,"img.png"2x,"img.png"3x)) {
+	div {
+		a192: url("img.png");
+		a193: image-set("img.png"1x);
+	}
 }

@@ -85,8 +85,55 @@ Object {
   "a169": " url(data:,)",
   "a17": " url(\\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%5C%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%5C%22%3E%3Cfilter%20id%3D%5C%22filter%5C%22%3E%3CfeGaussianBlur%20in%3D%5C%22SourceAlpha%5C%22%20stdDeviation%3D%5C%220%5C%22%20%2F%3E%3CfeOffset%20dx%3D%5C%221%5C%22%20dy%3D%5C%222%5C%22%20result%3D%5C%22offsetblur%5C%22%20%2F%3E%3CfeFlood%20flood-color%3D%5C%22rgba(255%2C255%2C255%2C1)%5C%22%20%2F%3E%3CfeComposite%20in2%3D%5C%22offsetblur%5C%22%20operator%3D%5C%22in%5C%22%20%2F%3E%3CfeMerge%3E%3CfeMergeNode%20%2F%3E%3CfeMergeNode%20in%3D%5C%22SourceGraphic%5C%22%20%2F%3E%3C%2FfeMerge%3E%3C%2Ffilter%3E%3C%2Fsvg%3E%23filter\\")",
   "a170": " url(data:,)",
+  "a171": " image(ltr 'img.png#xywh=0,0,16,16', red)",
+  "a172": " image-set(
+		linear-gradient(blue, white) 1x,
+		linear-gradient(blue, green) 2x
+	)",
+  "a173": " image-set(
+		url(img.09a1a1112c577c279435.png) type(\\"image/avif\\"),
+		url(img.09a1a1112c577c279435.png) type(\\"image/jpeg\\")
+	)",
+  "a174": " image-set(
+		\\"img.png\\" 1x,
+		\\"img.png\\" 2x
+	)",
+  "a175": " image-set(
+		url(img.09a1a1112c577c279435.png) 1x,
+		url(img.09a1a1112c577c279435.png) 2x,
+		url(img.09a1a1112c577c279435.png) 3x
+	)",
+  "a176": " image-set(
+		\\"img.png\\" type(\\"image/avif\\"),
+		\\"img.png\\" type(\\"image/jpeg\\")
+	) \\"img.png\\"",
+  "a177": " image-set(
+		\\"large-balloons.avif\\" 1x type(\\"image/avif\\"),
+		\\"large-balloons.jpg\\" 2x type(\\"image/jpeg\\")
+	)",
+  "a178": " image-set(
+		\\"large-balloons.avif\\" type(\\"image/avif\\") 1x,
+		\\"large-balloons.jpg\\" type(\\"image/jpeg\\") 2x
+	)",
+  "a179": " -webkit-image-set(
+		\\"img.png\\" 1x
+	)",
   "a18": " url(#highlight)",
+  "a180": " -webkit-image-set(
+		url(\\"img.png\\" var(--foo, \\"test.png\\")) 1x
+	)",
+  "a181": " src(   \\"img.png\\"   )",
+  "a182": " src('img.png')",
+  "a183": " src('img.png' var(--foo, \\"test.png\\"))",
+  "a184": " src(var(--foo, \\"test.png\\"))",
+  "a185": " src(\\"   img.png   \\")",
+  "a186": " image-set(\\"img.png\\"1x,\\"img.png\\"2x,\\"img.png\\"3x)",
+  "a187": " image-set(\\"img.png\\"1x,url(img.09a1a1112c577c279435.png)2x,\\"img.png\\"3x)",
+  "a188": " image-set(\\"img.png\\"1x,\\"img.png\\"2x,url(img.09a1a1112c577c279435.png)3x)",
+  "a189": " image-set(url(img.09a1a1112c577c279435.png)1x,\\"img.png\\"2x,\\"img.png\\"3x)",
   "a19": " url('#line-marker')",
+  "a190": " image-set(\\"img.png\\"1x)",
+  "a191": " image-set(\\"img.png\\"1x/* test*/,/* test*/\\"img.png\\"2x)",
   "a2": " url(img.09a1a1112c577c279435.png)",
   "a22": " \\"do not use url(path)\\"",
   "a23": " 'do not \\"use\\" url(path)'",
