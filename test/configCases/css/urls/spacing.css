@@ -501,3 +501,28 @@ div {
 	a169: url('data:,');
 	a170: url('data:,');
 }
+
+div {
+	a171: image(ltr 'img.png#xywh=0,0,16,16', red);
+	a172: cross-fade(20% url(img.png), url(img.png))
+}
+
+div {
+	a172: image-set(
+		linear-gradient(blue, white) 1x,
+		linear-gradient(blue, green) 2x
+	);
+	a173: image-set(
+		url("img.png") type("image/avif"),
+		url("img.png") type("image/jpeg")
+	);
+	a174: image-set(
+		"img.png" 1x,
+		"img.png" 2x
+	);
+	a175: image-set(
+		url("img.png") 1x,
+		url("img.png") 2x,
+		url("img.png") 3x
+	);
+}
