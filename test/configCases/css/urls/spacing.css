@@ -310,7 +310,7 @@ div {
 }
 
 div {
-	a88: url(./img\"img.png);
+	a88: url(./img\img.png);
 	a89: url(./img\'img.png);
 	a90: url(./img\'\'\'img.png);
 	a91: url(./img\(img.png);
@@ -319,7 +319,7 @@ div {
 	a94: url(./img\'\(\)\ img.png);
 
 	a95: image-set(
-		url(./img\"img.png) 1x,
+		url(./img\img.png) 1x,
 		url(./img\'\'\'img.png) 2x,
 		url(./img\'img.png) 3x,
 		url(./img\(img.png) 4x,

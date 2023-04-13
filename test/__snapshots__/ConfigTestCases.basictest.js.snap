@@ -220,7 +220,7 @@ Object {
 	)",
   "a86": " image-set(url(img\\\\ img.09a1a1112c577c279435.png) 1x, url(img\\\\ img.09a1a1112c577c279435.png) 2x)",
   "a87": " image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
-  "a88": " url(img\\\\\\"img.09a1a1112c577c279435.png)",
+  "a88": " url(imgimg.09a1a1112c577c279435.png)",
   "a89": " url(img\\\\'img.09a1a1112c577c279435.png)",
   "a9": " green url(img.09a1a1112c577c279435.png) url(other-img.09a1a1112c577c279435.png) xyz",
   "a90": " url(img\\\\'\\\\'\\\\'img.09a1a1112c577c279435.png)",
@@ -229,7 +229,7 @@ Object {
   "a93": " url(img\\\\ img.09a1a1112c577c279435.png)",
   "a94": " url(\\"img'() img.09a1a1112c577c279435.png\\")",
   "a95": " image-set(
-		url(img\\\\\\"img.09a1a1112c577c279435.png) 1x,
+		url(imgimg.09a1a1112c577c279435.png) 1x,
 		url(img\\\\'\\\\'\\\\'img.09a1a1112c577c279435.png) 2x,
 		url(img\\\\'img.09a1a1112c577c279435.png) 3x,
 		url(img\\\\(img.09a1a1112c577c279435.png) 4x,
