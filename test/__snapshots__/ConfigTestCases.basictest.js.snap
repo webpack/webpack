@@ -136,7 +136,11 @@ Object {
   "a19": " url('#line-marker')",
   "a190": " image-set(url(img.09a1a1112c577c279435.png)1x)",
   "a191": " image-set(url(img.09a1a1112c577c279435.png)1x/* test*/,/* test*/url(img.09a1a1112c577c279435.png)2x)",
+  "a197": " \\\\u\\\\r\\\\l(img.09a1a1112c577c279435.png)",
+  "a198": " \\\\image-\\\\set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
+  "a199": " \\\\-webk\\\\it-image-set(url(img.09a1a1112c577c279435.png)1x)",
   "a2": " url(img.09a1a1112c577c279435.png)",
+  "a200": "-webkit-image-set(url(img.09a1a1112c577c279435.png)1x)",
   "a22": " \\"do not use url(path)\\"",
   "a23": " 'do not \\"use\\" url(path)'",
   "a24": " -webkit-image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)

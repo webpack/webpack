@@ -592,3 +592,10 @@ div {
 		}
 	}
 }
+
+div {
+	a197: \u\r\l("img.png");
+	a198: \image-\set("img.png"1x,"img.png"2x,"img.png"3x);
+	a199: \-webk\it-image-set("img.png"1x);
+	a200:-webkit-image-set("img.png"1x);
+}
