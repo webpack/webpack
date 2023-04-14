@@ -17,6 +17,7 @@
     "backported",
     "basictest",
     "bigint",
+    "bindgen",
     "Biró",
     "bitfield",
     "bomfile",
@@ -291,6 +292,8 @@
   "ignorePaths": [
     "**/dist/**",
     "examples/**/README.md",
+    "examples/wasm-bindgen*/pkg/*_bg.js",
+    "examples/wasm-bindgen*/pkg/*_bg*.d.ts",
     "**/webpack.lock.data/**",
     "package.json",
     "yarn.lock",
