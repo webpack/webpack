@@ -6014,6 +6014,11 @@ declare interface JavascriptParserOptions {
 	createRequire?: string | boolean;
 
 	/**
+	 * Specifies global fetchPriority for dynamic import.
+	 */
+	dynamicImportFetchPriority?: boolean | "auto" | "low" | "high";
+
+	/**
 	 * Specifies global mode for dynamic import.
 	 */
 	dynamicImportMode?: "weak" | "eager" | "lazy" | "lazy-once";
@@ -9900,6 +9905,7 @@ declare interface ProvidesObject {
 declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
+	fetchPriority?: string;
 }
 type RawLoaderDefinition<
 	OptionsType = {},
