@@ -5,11 +5,15 @@ module.exports = {
 	beforeExecute() {
 		try {
 			fs.unlinkSync(path.join(__dirname, "dev-defaults.webpack.lock"));
-		} catch (e) {}
+		} catch (e) {
+			// Empty
+		}
 	},
 	afterExecute() {
 		try {
 			fs.unlinkSync(path.join(__dirname, "dev-defaults.webpack.lock"));
-		} catch (e) {}
+		} catch (e) {
+			// Empty
+		}
 	}
 };

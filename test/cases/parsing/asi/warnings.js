@@ -1,3 +1,1 @@
-module.exports = [
-	[/Critical dependency: Accessing import\.meta/]
-];
+module.exports = [[/Critical dependency: Accessing import\.meta/]];
