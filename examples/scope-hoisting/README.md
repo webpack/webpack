@@ -4,17 +4,17 @@ This is the dependency graph for the example: (solid lines express sync imports,
 
 ![](graph.png)
 
-All modules except `cjs` are EcmaScript modules. `cjs` is a CommonJs module.
+All modules except `cjs` are EcmaScript modules. `cjs` is a CommonJS module.
 
-The interesting thing here is that putting all modules in single scope won't work, because of multiple reasons:
+The interesting thing here is that putting all modules in a single scope won't work, because of multiple reasons:
 
 - Modules `lazy`, `c`, `d` and `cjs` need to be in a separate chunk
 - Module `shared` is accessed by two chunks (different scopes)
-- Module `cjs` is a CommonJs module
+- Module `cjs` is a CommonJS module
 
 ![](graph2.png)
 
-webpack therefore uses a approach called **"Partial Scope Hoisting"** or "Module concatenation", which chooses the largest possible subsets of ES modules which can be scope hoisted and combines them with the default webpack primitives.
+Webpack, therefore, uses an approach called **"Partial Scope Hoisting"** or "Module concatenation", which chooses the largest possible subsets of ES modules which can be scope hoisted and combines them with the default webpack primitives.
 
 ![](graph3.png)
 
