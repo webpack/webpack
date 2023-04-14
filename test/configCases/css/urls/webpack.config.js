@@ -17,6 +17,12 @@ module.exports = {
 					chunks: "all",
 					name: "main",
 					enforce: true
+				},
+				assetFixHack1: {
+					type: "asset/inline",
+					chunks: "all",
+					name: "main",
+					enforce: true
 				}
 			}
 		}

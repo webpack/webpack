@@ -16,6 +16,61 @@
 	color: blue;
 }
 
+.local7 div:not(.disabled, .mButtonDisabled, .tipOnly) {
+    pointer-events: initial !important;
+}
+
+.local8 :is(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local9 :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local10 :where(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local11 div:has(.disabled, .mButtonDisabled, .tipOnly) {
+    pointer-events: initial !important;
+}
+
+.local12 div:current(p, span) {
+	background-color: yellow;
+}
+
+.local13 div:past(p, span) {
+	display: none;
+}
+
+.local14 div:future(p, span) {
+	background-color: yellow;
+}
+
+.local15 div:-moz-any(ol, ul, menu, dir) {
+	list-style-type: square;
+}
+
+.local16 li:-webkit-any(:first-child, :last-child) {
+	background-color: aquamarine;
+}
+
 :global(:global(:local(.nested1)).nested2).nested3 {
 	color: pink;
 }
@@ -68,4 +123,99 @@
 .globalVars :global {
 	color: var(--global-color);
 	--global-color: red;
+}
+
+@media (min-width: 1600px) {
+	.wideScreenClass {
+		color: var(--local-color);
+		--local-color: green;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.narrowScreenClass {
+		color: var(--local-color);
+		--local-color: purple;
+	}
+}
+
+@supports (display: grid) {
+	.displayGridInSupports {
+		display: grid;
+	}
+}
+
+@supports not (display: grid) {
+  .floatRightInNegativeSupports {
+    float: right;
+  }
+}
+
+@supports (display: flex) {
+  @media screen and (min-width: 900px) {
+    .displayFlexInMediaInSupports {
+      display: flex;
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+    .displayFlexInSupportsInMedia {
+      display: flex;
+    }
+  }
+}
+
+@MEDIA screen and (min-width: 900px) {
+	@SUPPORTS (display: flex) {
+		.displayFlexInSupportsInMediaUpperCase {
+			display: flex;
+		}
+	}
+}
+
+.animationUpperCase {
+	ANIMATION-NAME: localkeyframesUPPERCASE;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused localkeyframesUPPERCASE, localkeyframes2UPPPERCASE;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
+}
+
+@KEYFRAMES localkeyframesUPPERCASE {
+	0% {
+		left: VAR(--pos1x);
+		top: VAR(--pos1y);
+		color: VAR(--theme-color1);
+	}
+	100% {
+		left: VAR(--pos2x);
+		top: VAR(--pos2y);
+		color: VAR(--theme-color2);
+	}
+}
+
+@KEYframes localkeyframes2UPPPERCASE {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+:GLOBAL .globalUpperCase :LOCAL .localUpperCase {
+	color: yellow;
+}
+
+.VARS {
+	color: VAR(--LOCAL-COLOR);
+	--LOCAL-COLOR: red;
+}
+
+.globalVarsUpperCase :GLOBAL {
+	COLOR: VAR(--GLOBAR-COLOR);
+	--GLOBAR-COLOR: red;
 }

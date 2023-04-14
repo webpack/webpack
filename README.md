@@ -35,6 +35,9 @@
 	<a href="https://gitter.im/webpack/webpack">
 		<img src="https://badges.gitter.im/webpack/webpack.svg">
 	</a>
+  <a href="https://twitter.com/Webpack">
+		<img src="https://img.shields.io/twitter/follow/Webpack?style=social">
+	</a>
   <h1>webpack</h1>
   <p>
     Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.

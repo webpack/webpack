@@ -1,3 +1,1 @@
-module.exports = [
-	[/hashed/, /deprecated/]
-];
+module.exports = [[/hashed/, /deprecated/]];

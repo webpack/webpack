@@ -1,3 +1,1 @@
-module.exports = [
-	[/Warning1/]
-];
+module.exports = [[/Warning1/]];

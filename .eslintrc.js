@@ -91,6 +91,13 @@ module.exports = {
 			}
 		},
 		{
+			files: ["tooling/**/*.js"],
+			env: { es6: true },
+			parserOptions: {
+				ecmaVersion: 2020
+			}
+		},
+		{
 			files: ["test/**/*.js"],
 			env: {
 				"jest/globals": true
