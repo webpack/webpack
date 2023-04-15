@@ -1,17 +1,14 @@
+const img = new URL("./img.png", import.meta.url);
+
 it("should allow to create css modules", done => {
-	// __non_webpack_require__("./common.js");
-    debugger;
-	import("./asyncChunk2").then(({ default: {default: x} }) => {
+	import("./asyncChunk2").then(({ default: x }) => {
 		try {
-			expect(x).toEqual({
-				"dis": "617-dis",
-				"item": "617-item",
-				"menuButtonDisabled": "617-menuButtonDisabled",
-				"toolOnly": "617-toolOnly",
-			});
+			expect(img.toString()).toBe("https://test.cases/path/img.png");
+			expect(x.default.class).toEqual("./test.module.css-class");
 		} catch (e) {
 			return done(e);
 		}
+
 		done();
 	}, done);
 });
