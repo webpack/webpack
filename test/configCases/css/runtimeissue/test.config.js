@@ -12,10 +12,10 @@ module.exports = {
 	findBundle: function (i, options) {
 		return [
 			"./common-share_js-img_png.js",
-			"./common-asyncChunk_js.js",
-			"./common-asyncChunk2_js.js",
+			"./asyncChunk_js.js",
 			"./main.js",
-			"./secondMain.js"
+			"./secondMain.js",
+			"./asyncChunk2_js.js"
 		];
 	}
 };
