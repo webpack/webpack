@@ -1577,13 +1577,13 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-assemblyscript@^0.25.2:
-  version "0.25.2"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.25.2.tgz#49de9cac3d2657d6419f4214e33c3de6253daa83"
-  integrity sha512-67TQOMvKo23htvSK6lhOzsoQjnplNKkdwgq925uBvQZLDbg9pHfAWhg/R8i8tqKrtk6GH8haOJbQY4oNSQqehA==
+assemblyscript@^0.27.2:
+  version "0.27.2"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.27.2.tgz#cf723d1218fbe3f6b7801ac56e4197fb7d363489"
+  integrity sha512-uTiUFkiXkVpsY3votMjmPuA9vvL/vHuUrtH+VtVKCl+BM+1OqXFO7j53FYA4L9QtVJA9KQDYXSVnZ5LFad668w==
   dependencies:
-    binaryen "110.0.0-nightly.20221105"
-    long "^5.2.0"
+    binaryen "112.0.0-nightly.20230411"
+    long "^5.2.1"
 
 assert-never@^1.2.1:
   version "1.2.1"
@@ -1732,10 +1732,10 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
 
-binaryen@110.0.0-nightly.20221105:
-  version "110.0.0-nightly.20221105"
-  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-110.0.0-nightly.20221105.tgz#9e3c47e8ffa31521acd125013dca3ceea143d0bf"
-  integrity sha512-OBESOc51q3SwgG8Uv8nMzGnSq7LJpSB/Fu8B3AjlZg6YtCEwRnlDWlnwNB6mdql+VdexfKmNcsrs4K7MYidmdQ==
+binaryen@112.0.0-nightly.20230411:
+  version "112.0.0-nightly.20230411"
+  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-112.0.0-nightly.20230411.tgz#2f85cff68c0fe3e89014d2dd4e933c4e7e313ef1"
+  integrity sha512-4V9r9x9fjAVFZdR2yvBFc3BEJJIBYvd2X8X8k0zAuJsao2gl9wNHDmpQ30QsLo6hgkRfRImkCbCjhXW3RDOYXQ==
 
 bplist-parser@^0.2.0:
   version "0.2.0"
@@ -4406,7 +4406,7 @@ log-update@^4.0.0:
     slice-ansi "^4.0.0"
     wrap-ansi "^6.2.0"
 
-long@^5.2.0:
+long@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/long/-/long-5.2.1.tgz#e27595d0083d103d2fa2c20c7699f8e0c92b897f"
   integrity sha512-GKSNGeNAtw8IryjjkhZxuKB3JzlcLTwjtiQCHKvqQet81I93kXslhDQruGI/QsddO83mcDToBVy7GqGS/zYf/A==

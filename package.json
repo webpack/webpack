@@ -41,7 +41,7 @@
     "@types/es-module-lexer": "^0.4.1",
     "@types/jest": "^29.5.0",
     "@types/node": "^18.15.11",
-    "assemblyscript": "^0.25.2",
+    "assemblyscript": "^0.27.2",
     "babel-loader": "^8.1.0",
     "benchmark": "^2.1.4",
     "bundle-loader": "^0.5.6",
