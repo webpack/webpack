@@ -219,3 +219,9 @@
 	COLOR: VAR(--GLOBAR-COLOR);
 	--GLOBAR-COLOR: red;
 }
+
+@supports (top: env(safe-area-inset-top, 0)) {
+	.inSupportScope {
+		color: red;
+	}
+}

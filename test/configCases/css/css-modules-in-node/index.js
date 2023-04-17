@@ -65,6 +65,9 @@ it("should allow to create css modules", done => {
 				VARS: prod
 					? "--my-app-491-DJ my-app-491-ms undefined my-app-491-cU"
 					: "--./style.module.css-LOCAL-COLOR ./style.module.css-VARS undefined ./style.module.css-globalVarsUpperCase",
+				inSupportScope: prod
+					? "my-app-491-FO"
+					: "./style.module.css-inSupportScope",
 			});
 		} catch (e) {
 			return done(e);
