@@ -31,4 +31,5 @@ export default {
 	supportsInMedia: style.displayFlexInSupportsInMedia,
 	displayFlexInSupportsInMediaUpperCase: style.displayFlexInSupportsInMediaUpperCase,
 	VARS: `${style["LOCAL-COLOR"]} ${style.VARS} ${style["GLOBAL-COLOR"]} ${style.globalVarsUpperCase}`,
+	inSupportScope: style.inSupportScope,
 };
