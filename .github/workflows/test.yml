@@ -1,6 +1,5 @@
 name: Test
 
-# cspell:word Ignus
 # cspell:word eslintcache
 
 on:
