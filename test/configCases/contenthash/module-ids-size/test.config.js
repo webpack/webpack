@@ -19,7 +19,6 @@ module.exports = {
 
 		if (asset) allAssets.add(asset);
 
-
 		return `./${bundle}`;
 	},
 	afterExecute: () => {
