@@ -90,7 +90,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [10.x, 19.x]
+        node-version: [10.x, 20.x]
         part: [a, b]
         include:
           - os: ubuntu-latest
