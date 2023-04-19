@@ -105,6 +105,11 @@ jobs:
           - os: ubuntu-latest
             node-version: 12.x
             part: a
+          # Test with main branches of webpack dependencies
+          - os: ubuntu-latest
+            node-version: 16.x
+            part: [a, b]
+            use_main_branches: 1
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -118,6 +123,10 @@ jobs:
           yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 --ignore-engines
           yarn --frozen-lockfile --ignore-engines
         if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x'
+      # Install main version of our deps
+      - run: yarn upgrade enhanced-resolve@webpack/enhanced-resolve#main loader-runner@webpack/loader-runner#main schema-utils@webpack/schema-utils#master webpack-sources@webpack/webpack-sources#main watchpack@webpack/watchpack#main tapable@webpack/tapable#master
+        if: matrix.use_main_branches == '1'
+      # Install dependencies for LTS node versions
       - run: yarn --frozen-lockfile
         if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x'
       - run: yarn link --frozen-lockfile || true
