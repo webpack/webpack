@@ -11593,6 +11593,11 @@ declare interface StatsOptions {
 	errorsCount?: boolean;
 
 	/**
+	 * Space to display errors (value is in number of lines).
+	 */
+	errorsSpace?: number;
+
+	/**
 	 * Please use excludeModules instead.
 	 */
 	exclude?:
@@ -11852,6 +11857,11 @@ declare interface StatsOptions {
 		| RegExp
 		| WarningFilterItemTypes[]
 		| ((warning: StatsError, value: string) => boolean);
+
+	/**
+	 * Space to display warnings (value is in number of lines).
+	 */
+	warningsSpace?: number;
 }
 declare abstract class StatsPrinter {
 	hooks: Readonly<{

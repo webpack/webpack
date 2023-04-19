@@ -1049,6 +1049,111 @@ chunk (runtime: a) a.js (a) 22 bytes [entry] [rendered]
 webpack x.x.x compiled successfully in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for errors-space-error 1`] = `
+"assets by status 84 bytes [cached] 1 asset
+./loader.js!./index.js 1 bytes [built] [code generated] [2 errors]
+
+ERROR in ./index.js (./loader.js!./index.js)
+Module Error (from ./loader.js):
+loader error1
+
+ERROR in ./index.js (./loader.js!./index.js)
+Module Error (from ./loader.js):
+loader error2
+
+2 errors have detailed information that is not shown.
+Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+webpack x.x.x compiled with 2 errors in X ms
+
+assets by status 84 bytes [cached] 1 asset
+./loader.js!./index.js 1 bytes [built] [code generated] [2 errors]
+
+ERROR in ./index.js (./loader.js!./index.js)
+Module Error (from ./loader.js):
+loader error1
+
+ERROR in ./index.js (./loader.js!./index.js)
+Module Error (from ./loader.js):
+loader error2
+
+2 errors have detailed information that is not shown.
+Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+webpack x.x.x compiled with 2 errors in X ms
+
+assets by status 84 bytes [cached] 1 asset
+./loader.js!./index.js 1 bytes [built] [code generated] [2 errors]
+
+ERROR in ./index.js (./loader.js!./index.js)
+Module Error (from ./loader.js):
+loader error1
+
+ERROR in ./index.js (./loader.js!./index.js)
+Module Error (from ./loader.js):
+loader error2
+
+2 errors have detailed information that is not shown.
+Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+webpack x.x.x compiled with 2 errors in X ms
+
+assets by status 84 bytes [cached] 1 asset
+./loader.js!./index.js 1 bytes [built] [code generated] [2 errors]
+
+ERROR in ./index.js (./loader.js!./index.js)
+Module Error (from ./loader.js):
+loader error1
+stack1
++ 2 hidden lines
+
+ERROR in ./index.js (./loader.js!./index.js)
+Module Error (from ./loader.js):
+loader error2
+
+1 error has detailed information that is not shown.
+Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+webpack x.x.x compiled with 2 errors in X ms
+
+assets by status 84 bytes [cached] 1 asset
+./loader.js!./index.js 1 bytes [built] [code generated] [2 errors]
+
+ERROR in ./index.js (./loader.js!./index.js)
+Module Error (from ./loader.js):
+loader error1
+stack1
+stack2
+stack3
+
+ERROR in ./index.js (./loader.js!./index.js)
+Module Error (from ./loader.js):
+loader error2
+
+1 error has detailed information that is not shown.
+Use 'stats.errorDetails: true' resp. '--stats-error-details' to show it.
+
+webpack x.x.x compiled with 2 errors in X ms
+
+assets by status 84 bytes [cached] 1 asset
+./loader.js!./index.js 1 bytes [built] [code generated] [2 errors]
+
+ERROR in ./index.js (./loader.js!./index.js)
+Module Error (from ./loader.js):
+loader error1
+stack1
+stack2
+stack3
+
+ERROR in ./index.js (./loader.js!./index.js)
+Module Error (from ./loader.js):
+loader error2
+stack1
+stack2
+
+webpack x.x.x compiled with 2 errors in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
 "hidden assets 34 bytes 1 asset
 asset bundle.js 5.25 KiB [emitted] (name: main)
@@ -4628,6 +4733,18 @@ cacheable modules 782 bytes
 
 WARNING in ./index.js 9:0-36
 require.include() is deprecated and will be removed soon.
+
+webpack x.x.x compiled with 1 warning in X ms"
+`;
+
+exports[`StatsTestCases should print correct stats for warnings-space-warning 1`] = `
+"asset main.js 1010 bytes [emitted] (name: main)
+orphan modules 20 bytes [orphan] 1 module
+runtime modules 274 bytes 1 module
+./index.js + 1 modules 64 bytes [built] [code generated]
+
+WARNING in ./index.js 3:12-14
+export 'bb' (imported as 'bb') was not found in './a' (possible exports: a)
 
 webpack x.x.x compiled with 1 warning in X ms"
 `;
