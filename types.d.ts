@@ -4191,17 +4191,31 @@ declare interface FileSystem {
 			arg2: FileSystemCallback<string | Buffer>
 		): void;
 	};
-	readdir: {
-		(
-			arg0: string,
-			arg1: FileSystemCallback<(string | Buffer)[] | FileSystemDirent[]>
-		): void;
-		(
-			arg0: string,
-			arg1: object,
-			arg2: FileSystemCallback<(string | Buffer)[] | FileSystemDirent[]>
-		): void;
-	};
+	readdir: (
+		arg0: string,
+		arg1?:
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| ((
+					arg0?: null | NodeJS.ErrnoException,
+					arg1?: any[] | (string | Buffer)[]
+			  ) => void)
+			| ReaddirOptions
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "hex"
+			| "buffer",
+		arg2?: (
+			arg0?: null | NodeJS.ErrnoException,
+			arg1?: any[] | (string | Buffer)[]
+		) => void
+	) => void;
 	readJson?: {
 		(arg0: string, arg1: FileSystemCallback<object>): void;
 		(arg0: string, arg1: object, arg2: FileSystemCallback<object>): void;
@@ -4233,11 +4247,6 @@ declare interface FileSystem {
 }
 declare interface FileSystemCallback<T> {
 	(err?: null | (PossibleFileSystemError & Error), result?: T): any;
-}
-declare interface FileSystemDirent {
-	name: string | Buffer;
-	isDirectory: () => boolean;
-	isFile: () => boolean;
 }
 declare abstract class FileSystemInfo {
 	fs: InputFileSystem;
@@ -4590,7 +4599,7 @@ declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.
 	 */
-	hashDigest?: "latin1" | "hex" | "base64";
+	hashDigest?: "latin1" | "base64" | "hex";
 
 	/**
 	 * The prefix length of the hash digest to use, defaults to 4.
@@ -9410,6 +9419,22 @@ declare class ReadFileCompileWasmPlugin {
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface ReaddirOptions {
+	encoding?:
+		| null
+		| "ascii"
+		| "utf8"
+		| "utf16le"
+		| "ucs2"
+		| "latin1"
+		| "binary"
+		| "utf-8"
+		| "ucs-2"
+		| "base64"
+		| "hex"
+		| "buffer";
+	withFileTypes?: boolean;
 }
 declare class RealContentHashPlugin {
 	constructor(__0: { hashFunction: any; hashDigest: any });
