@@ -13,7 +13,7 @@ module.exports = {
 
 		switch (i) {
 			case 0:
-				asset = findOutputFiles(options, /^1\.[^\.]*\.jpg$/, "img")[0];
+				asset = findOutputFiles(options, /^1\.[^.]*\.jpg$/, "img")[0];
 				break;
 		}
 
