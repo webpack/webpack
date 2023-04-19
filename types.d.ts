@@ -6589,6 +6589,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 		data?: object;
 		pitchExecuted: boolean;
 		normalExecuted: boolean;
+		type?: "module" | "commonjs";
 	}[];
 
 	/**
