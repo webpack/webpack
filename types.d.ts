@@ -12112,6 +12112,11 @@ declare class TopLevelSymbol {
  */
 declare interface TrustedTypes {
 	/**
+	 * If the call to `trustedTypes.createPolicy(...)` fails -- e.g., due to the policy name missing from the CSP `trusted-types` list, or it being a duplicate name, etc. -- controls whether to continue with loading in the hope that `require-trusted-types-for 'script'` isn't enforced yet, versus fail immediately. Default behavior is 'stop'.
+	 */
+	onPolicyCreationFailure?: "continue" | "stop";
+
+	/**
 	 * The name of the Trusted Types policy created by webpack to serve bundle chunks.
 	 */
 	policyName?: string;
