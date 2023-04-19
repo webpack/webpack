@@ -1,4 +1,4 @@
-This example is an generic project of source-maps.
+This example is a generic project of source-maps.
 
 # example.coffee
 
