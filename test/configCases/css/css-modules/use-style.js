@@ -32,4 +32,6 @@ export default {
 	displayFlexInSupportsInMediaUpperCase: style.displayFlexInSupportsInMediaUpperCase,
 	VARS: `${style["LOCAL-COLOR"]} ${style.VARS} ${style["GLOBAL-COLOR"]} ${style.globalVarsUpperCase}`,
 	inSupportScope: style.inSupportScope,
+	animationName: style.animationName,
+	mozAnimationName: style.mozAnimationName,
 };

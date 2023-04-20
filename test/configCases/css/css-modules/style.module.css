@@ -225,3 +225,49 @@
 		color: red;
 	}
 }
+
+.a {
+	animation: 3s animationName;
+	-webkit-animation: 3s animationName;
+}
+
+.b {
+	animation: animationName 3s;
+	-webkit-animation: animationName 3s;
+}
+
+.c {
+	animation-name: animationName;
+	-webkit-animation-name: animationName;
+}
+
+.d {
+	--animation-name: animationName;
+}
+
+@keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-webkit-keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-moz-keyframes mozAnimationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
