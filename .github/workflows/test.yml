@@ -108,7 +108,11 @@ jobs:
           # Test with main branches of webpack dependencies
           - os: ubuntu-latest
             node-version: 16.x
-            part: [a, b]
+            part: a
+            use_main_branches: 1
+          - os: ubuntu-latest
+            node-version: 16.x
+            part: b
             use_main_branches: 1
     runs-on: ${{ matrix.os }}
     steps:
