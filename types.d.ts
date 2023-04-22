@@ -13380,6 +13380,7 @@ declare namespace exports {
 		export let createScript: "__webpack_require__.ts";
 		export let createScriptUrl: "__webpack_require__.tu";
 		export let getTrustedTypesPolicy: "__webpack_require__.tt";
+		export let getFetchPriority: "__webpack_require__.fp";
 		export let chunkName: "__webpack_require__.cn";
 		export let runtimeId: "__webpack_require__.j";
 		export let getChunkScriptFilename: "__webpack_require__.u";
