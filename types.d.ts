@@ -6204,9 +6204,9 @@ declare class LazySet<T> {
 	has(item: T): boolean;
 	keys(): IterableIterator<T>;
 	values(): IterableIterator<T>;
-	serialize(__0: {}): void;
+	serialize(__0: ObjectSerializerContext): void;
 	[Symbol.iterator](): IterableIterator<T>;
-	static deserialize(__0: {}): LazySet<any>;
+	static deserialize<T>(__0: ObjectDeserializerContext): LazySet<T>;
 }
 declare interface LibIdentOptions {
 	/**
