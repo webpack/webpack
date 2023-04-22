@@ -100,7 +100,7 @@
     "toml": "^3.0.0",
     "tooling": "webpack/tooling#v1.22.1",
     "ts-loader": "^9.4.2",
-    "typescript": "^4.8.4",
+    "typescript": "^5.0.4",
     "url-loader": "^4.1.0",
     "wast-loader": "^1.11.5",
     "webassembly-feature": "1.3.0",
