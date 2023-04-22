@@ -33,4 +33,14 @@ it("should set fetchPriority", () => {
 	expect(document.head._children).toHaveLength(7);
 	const script7 = document.head._children[6];
 	expect(script7._attributes.fetchpriority).toBeUndefined();
+
+	// Webpack context
+	const loader = import.meta.webpackContext("./dir", {
+		mode: "lazy",
+		fetchPriority: "high"
+	});
+	loader("./a");
+	expect(document.head._children).toHaveLength(8);
+	const script8 = document.head._children[7];
+	expect(script8._attributes.fetchpriority).toBe("high");
 })
