@@ -6433,8 +6433,8 @@ declare interface LoaderModule<OptionsType = {}, ContextAdditions = {}> {
 	pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
 }
 declare class LoaderOptionsPlugin {
-	constructor(options?: LoaderOptionsPluginOptions);
-	options: LoaderOptionsPluginOptions;
+	constructor(options?: LoaderOptionsPluginOptions & MatchObject);
+	options: LoaderOptionsPluginOptions & MatchObject;
 
 	/**
 	 * Apply the plugin
@@ -6733,6 +6733,12 @@ declare interface MapOptions {
 	columns?: boolean;
 	module?: boolean;
 }
+declare interface MatchObject {
+	test?: string | RegExp | string[] | RegExp[];
+	include?: string | RegExp | string[] | RegExp[];
+	exclude?: string | RegExp | string[] | RegExp[];
+}
+type Matcher = string | RegExp | string[] | RegExp[];
 
 /**
  * Options object for in-memory caching.
@@ -12785,13 +12791,17 @@ declare namespace exports {
 				hashFunction: string | typeof Hash;
 			}
 		) => string;
-		export let replaceDuplicates: (
-			array?: any,
-			fn?: any,
-			comparator?: any
-		) => any;
-		export let matchPart: (str?: any, test?: any) => any;
-		export let matchObject: (obj?: any, str?: any) => boolean;
+		export let replaceDuplicates: <T>(
+			array: T[],
+			fn: (
+				duplicateItem: T,
+				duplicateItemIndex: number,
+				numberOfTimesReplaced: number
+			) => T,
+			comparator?: (firstElement: T, nextElement: T) => 0 | 1 | -1
+		) => T[];
+		export let matchPart: (str: string, test: Matcher) => boolean;
+		export let matchObject: (obj: MatchObject, str: string) => boolean;
 	}
 	export namespace RuntimeGlobals {
 		export let require: "__webpack_require__";
