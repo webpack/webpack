@@ -1010,7 +1010,8 @@ declare abstract class ChunkGroup {
 	replaceChunk(oldChunk: Chunk, newChunk: Chunk): boolean;
 	removeChunk(chunk: Chunk): boolean;
 	isInitial(): boolean;
-	addChild(group: ChunkGroup): boolean;
+	addChild(group: ChunkGroup, connectionType?: Set<string>): boolean;
+	getConnectionType(child: ChunkGroup): undefined | Set<string>;
 	getChildren(): ChunkGroup[];
 	getNumberOfChildren(): number;
 	get childrenIterable(): SortableSet<ChunkGroup>;

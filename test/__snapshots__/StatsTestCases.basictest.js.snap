@@ -2184,10 +2184,10 @@ asset normal.js 109 bytes {30} [emitted] (name: normal)
 Entrypoint main 16.8 KiB = main.js
   prefetch: prefetched2.js {379} (name: prefetched2), prefetched.js {505} (name: prefetched), prefetched3.js {220} (name: prefetched3)
 chunk {30} (runtime: main) normal.js (normal) 1 bytes <{179}> [rendered]
-chunk {179} (runtime: main) main.js (main) 436 bytes (javascript) 9.94 KiB (runtime) >{30}< >{220}< >{379}< >{505}< (prefetch: {379} {505} {220}) [entry] [rendered]
+chunk {179} (runtime: main) main.js (main) 436 bytes (javascript) 9.93 KiB (runtime) >{30}< >{220}< >{379}< >{505}< (prefetch: {379} {505} {220}) [entry] [rendered]
 chunk {220} (runtime: main) prefetched3.js (prefetched3) 1 bytes <{179}> [rendered]
 chunk {379} (runtime: main) prefetched2.js (prefetched2) 1 bytes <{179}> [rendered]
-chunk {505} (runtime: main) prefetched.js (prefetched) 228 bytes <{179}> >{641}< >{746}< (prefetch: {641} {746}) [rendered]
+chunk {505} (runtime: main) prefetched.js (prefetched) 228 bytes <{179}> >{641}< >{746}< (prefetch: {746}) [rendered]
 chunk {641} (runtime: main) inner2.js (inner2) 2 bytes <{505}> [rendered]
 chunk {746} (runtime: main) inner.js (inner) 1 bytes <{505}> [rendered]"
 `;
@@ -2217,12 +2217,12 @@ asset preloaded3.js 108 bytes [emitted] (name: preloaded3)
 Entrypoint main 15.2 KiB = main.js
   preload: preloaded2.js (name: preloaded2), preloaded.js (name: preloaded), preloaded3.js (name: preloaded3)
 chunk (runtime: main) normal.js (normal) 1 bytes [rendered]
-chunk (runtime: main) main.js (main) 424 bytes (javascript) 8.88 KiB (runtime) (preload: {363} {851} {355}) [entry] [rendered]
+chunk (runtime: main) main.js (main) 424 bytes (javascript) 8.87 KiB (runtime) (preload: {363} {851} {355}) [entry] [rendered]
 chunk (runtime: main) preloaded3.js (preloaded3) 1 bytes [rendered]
 chunk (runtime: main) preloaded2.js (preloaded2) 1 bytes [rendered]
 chunk (runtime: main) inner2.js (inner2) 2 bytes [rendered]
 chunk (runtime: main) inner.js (inner) 1 bytes [rendered]
-chunk (runtime: main) preloaded.js (preloaded) 226 bytes (preload: {641} {746}) [rendered]"
+chunk (runtime: main) preloaded.js (preloaded) 226 bytes (preload: {746}) [rendered]"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
