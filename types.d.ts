@@ -13260,6 +13260,7 @@ declare namespace exports {
 		ExternalItemValue,
 		Externals,
 		FileCacheOptions,
+		MemoryCacheOptions,
 		LibraryOptions,
 		ModuleOptions,
 		ResolveOptionsWebpackOptions as ResolveOptions,
