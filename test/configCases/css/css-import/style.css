@@ -43,8 +43,6 @@ style2.css?foo=9
 /*@import url();
 @import url('');
 @import url("");
-@import "style2.css?foo=10";
-@import 'style2.css?foo=11';
 @import '';
 @import "";
 @import "   ";
@@ -59,13 +57,9 @@ style2.css?foo=9
 @import url(style2.css)  screen and (orientation:landscape);
 @import url(style2.css) screen and (orientation:landscape);
 @import url(style2.css) (min-width: 100px);
-/*@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css);*/
-/*@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css);*/
-/*@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css#hash);*/
-/*@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css?#hash);*/
-/*@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css?foo=bar#hash);*/
-/*@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css) screen and (orientation:landscape);*/
-/*@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css) screen and (orientation:landscape);*/
+@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css);
+/*@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css) screen and (orientation:landscape);
+@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css) screen and (orientation:landscape);*/
 /*@import url("//example.com/style.css");*/
 /*@import url(~package/test.css);*/
 /*@import ;*/
@@ -92,33 +86,33 @@ le3.css?bar=3');
 \
 le3.css?=bar4');
 
-/*@import "./te'st.css";*/
-/*@import url("./te'st.css");*/
-/*@import './te\'st.css';*/
-/*@import url('./te\'st.css');*/
-/*@import './test test.css';*/
-/*@import url('./test test.css');*/
-/*@import './test\ test.css';*/
-/*@import url('./test\ test.css');*/
-/*@import './test%20test.css';*/
-/*@import url('./test%20test.css');*/
-/*@import './\74\65\73\74.css';*/
-/*@import url('./\74\65\73\74.css');*/
-/*@import './t\65\73\74.css';*/
-/*@import url('./t\65\73\74.css');*/
-/*@import url(./test\ test.css);*/
-/*@import url(./t\65st%20test.css);*/
-/*@import url('./t\65st%20test.css');*/
-/*@import url("./t\65st%20test.css");*/
-/*@import "./t\65st%20test.css";*/
-/*@import './t\65st%20test.css';*/
-/*@import url(                 test.css                      );*/
-/*@import nourl(test.css);*/
-/*@import '\*/
-/*\*/
-/*\*/
-/*';*/
-/*@import url('!!../../helpers/string-loader.js?esModule=false!~package/tilde.css');*/
+@import "./styl'le7.css";
+@import url("./styl'le7.css?foo=1");
+@import './styl\'le7.css';
+@import url('./styl\'le7.css');
+@import './test test.css';
+@import url('./test test.css?foo=1');
+@import './test\ test.css?foo=2';
+@import url('./test\ test.css?foo=3');
+@import './test%20test.css?foo=4';
+@import url('./test%20test.css?foo=5');
+@import './\74\65\73\74.css';
+@import url('./\74\65\73\74.css?foo=1');
+@import './t\65\73\74.css?foo=2';
+@import url('./t\65\73\74.css?foo=3');
+@import url(./test\ test.css?foo=6);
+@import url(./t\65st%20test.css?foo=7);
+@import url('./t\65st%20test.css?foo=8');
+@import url("./t\65st%20test.css?foo=9");
+@import "./t\65st%20test.css?fpp=10";
+@import './t\65st%20test.css?foo=11';
+@import url(                 style6.css?foo=bazz                      );
+/*@import nourl(test.css);
+@import '\
+\
+\
+';
+@import url('!!../../helpers/string-loader.js?esModule=false!~package/tilde.css');*/
 @import url(style4.css?foo=bar);
 @import url(style4.css?foo=bar#hash);
 @import url(style4.css?#hash);
