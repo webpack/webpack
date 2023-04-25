@@ -140,11 +140,14 @@ le3.css?=bar4');
 /*@import url(package/first.css);*/
 /*@import url(package/second.css);*/
 
-/*@import url("./style5.css") supports();*/
-/*@import url("./test.css") supports(unknown);*/
-/*@import url("./test.css") supports(display: flex);*/
-/*@import url("./test.css") supports(display: flex !important);*/
-/*@import url("./test.css") supports(display: flex) screen and (min-width: 400px);*/
+@import url("./style5.css?foo=1") supports();
+@import url("./style5.css?foo=2") supports(    );
+@import url("./style5.css?foo=3") supports(unknown);
+@import url("./style5.css?foo=4") supports(display: flex);
+@import url("./style5.css?foo=5") supports(display: flex !important);
+@import url("./style5.css?foo=6") supports(display: flex) screen and (min-width: 400px);
+@import url("./style5.css?foo=7") supports(selector(a b));
+@import url("./style5.css?foo=8") supports(   display: flex   );
 @import url("./layer.css?foo=1") layer;
 @import url("./layer.css?foo=2") layer(default);
 @import url("./layer.css?foo=3") layer(default) supports(display: flex) screen and (min-width: 400px);

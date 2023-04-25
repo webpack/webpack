@@ -221,6 +221,45 @@ a {
 	content: \\"style4.css\\";
 }
 
+.class {
+	content: \\"style5.css\\";
+}
+
+.class {
+	content: \\"style5.css\\";
+}
+
+@supports (unknown) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+@supports (display: flex) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+@supports (display: flex !important) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+@supports (display: flex) {
+	@media screen and (min-width: 400px) {
+		.class {
+			content: \\"style5.css\\";
+		}
+	}}
+@supports (selector(a b)) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+@supports (display: flex) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
 @layer {
 	.class {
 		content: \\"layer.css\\";
@@ -283,7 +322,7 @@ body {
 	background: red;
 }
 
-head{--webpack-main:\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,\\\\.\\\\/imported\\\\.css\\\\?2fc7,\\\\.\\\\/imported\\\\.css\\\\?8e23,\\\\.\\\\/imported\\\\.css\\\\?daf4,\\\\.\\\\/imported\\\\.css\\\\?7a8d,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style2\\\\.css\\\\?3989,\\\\.\\\\/style2\\\\.css\\\\?1933,\\\\.\\\\/style2\\\\.css\\\\?6611,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=1,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=2,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=3,\\\\.\\\\/style3\\\\.css\\\\?\\\\=bar4,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?14ba,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?0e0d,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?ee8c,\\\\.\\\\/style\\\\.css\\\\?8266,\\\\.\\\\/style\\\\.css\\\\?bc96;}",
+head{--webpack-main:\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,\\\\.\\\\/imported\\\\.css\\\\?2fc7,\\\\.\\\\/imported\\\\.css\\\\?8e23,\\\\.\\\\/imported\\\\.css\\\\?daf4,\\\\.\\\\/imported\\\\.css\\\\?7a8d,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style2\\\\.css\\\\?3989,\\\\.\\\\/style2\\\\.css\\\\?1933,\\\\.\\\\/style2\\\\.css\\\\?6611,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=1,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=2,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=3,\\\\.\\\\/style3\\\\.css\\\\?\\\\=bar4,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?14ba,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?0e0d,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?ee8c,\\\\.\\\\/style\\\\.css\\\\?8266,\\\\.\\\\/style\\\\.css\\\\?bc96;}",
 ]
 `;
 
