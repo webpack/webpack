@@ -21,6 +21,7 @@
 @import url(print.css?foo=18)   screen   ;
 @import url("print.css?foo=19")   screen   ;
 @import "print.css?foo=20"   screen  ;
+@import "print.css?foo=21"    ;
 
 body {
 	background: red;
