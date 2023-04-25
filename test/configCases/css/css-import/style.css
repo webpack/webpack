@@ -1,0 +1,21 @@
+@import "print.css?foo=1";
+@import url("print.css?foo=2");
+@import "print.css?foo=3" layer(default);
+@import url("print.css?foo=4") layer(default);
+@import "print.css?foo=5" supports(display: flex);
+@import url("print.css?foo=6") supports(display: flex);
+@import "print.css?foo=7" screen and (min-width: 400px);
+@import url("print.css?foo=8") screen and (min-width: 400px);
+@import "print.css?foo=9" layer(default) supports(display: flex);
+@import "print.css?foo=10" layer(default) screen and (min-width: 400px);
+@import "print.css?foo=11" supports(display: flex) screen and (min-width: 400px);
+@import "print.css?foo=12" layer(default) supports(display: flex) screen and (min-width: 400px);
+@import "print.css?foo=13"layer(default)supports(display: flex)screen and (min-width: 400px);
+@import url(print.css?foo=14)layer(default)supports(display: flex)screen and (min-width: 400px);
+@import url("print.css?foo=15")layer(default)supports(display: flex)screen and (min-width: 400px);
+@import url(print.css?foo=16)layer(default)supports(background: url(./img.png))screen and (min-width: 400px);
+@import url(print.css?foo=17)layer(default)supports(background: url("./img.png"))screen and (min-width: 400px);
+
+body {
+	background: red;
+}
