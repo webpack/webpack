@@ -15,6 +15,12 @@
 @import url("print.css?foo=15")layer(default)supports(display: flex)screen and (min-width: 400px);
 @import url(print.css?foo=16)layer(default)supports(background: url(./img.png))screen and (min-width: 400px);
 @import url(print.css?foo=17)layer(default)supports(background: url("./img.png"))screen and (min-width: 400px);
+@import url(print.css?foo=18)screen;
+@import url("print.css?foo=19")screen;
+@import "print.css?foo=20"screen;
+@import url(print.css?foo=18)   screen   ;
+@import url("print.css?foo=19")   screen   ;
+@import "print.css?foo=20"   screen  ;
 
 body {
 	background: red;
