@@ -191,6 +191,7 @@ le3.css?=bar4');
 
 /* All unknown parse as media for compatibility */
 @import url("./style.css") unknown(default) unknown(display: flex) unknown;
+@import url("./style.css") unknown(default);
 
 body {
 	background: red;
