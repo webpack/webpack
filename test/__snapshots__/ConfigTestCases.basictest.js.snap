@@ -128,12 +128,22 @@ body {
 		background: green;
 	}
 }
+@supports (display: flex) {
+	body {
+		background: green;
+	}
+}
+@media screen, print {
+	body {
+		background: green;
+	}
+}
 
 body {
 	background: red;
 }
 
-head{--webpack-main:\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,\\\\.\\\\/imported\\\\.css\\\\?2fc7,\\\\.\\\\/imported\\\\.css\\\\?8e23,\\\\.\\\\/style\\\\.css;}",
+head{--webpack-main:\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,\\\\.\\\\/imported\\\\.css\\\\?2fc7,\\\\.\\\\/imported\\\\.css\\\\?8e23,\\\\.\\\\/imported\\\\.css\\\\?daf4,\\\\.\\\\/imported\\\\.css\\\\?7a8d,\\\\.\\\\/style\\\\.css;}",
 ]
 `;
 

@@ -26,6 +26,8 @@
 /* Has the same URL */
 @import "imported.css";
 @import "imported.css" layer(base);
+@import "imported.css" supports(display: flex);
+@import "imported.css" screen, print;
 
 body {
 	background: red;
