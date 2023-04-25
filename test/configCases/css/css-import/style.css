@@ -23,6 +23,10 @@
 @import "print.css?foo=20"   screen  ;
 @import "print.css?foo=21"    ;
 
+/* Has the same URL */
+@import "imported.css";
+@import "imported.css" layer(base);
+
 body {
 	background: red;
 }
