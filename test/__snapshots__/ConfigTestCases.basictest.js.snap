@@ -10,30 +10,17 @@ body {
 	background: black;
 }
 
-body {
-	background: black;
+@layer (default) {
+	body {
+		background: black;
+	}
 }
-
-body {
-	background: black;
-}
-
-@supports (display: flex) {
+@layer (default) {
 	body {
 		background: black;
 	}
 }
 @supports (display: flex) {
-	body {
-		background: black;
-	}
-}
-@media screen and (min-width: 400px) {
-	body {
-		background: black;
-	}
-}
-@media screen and (min-width: 400px) {
 	body {
 		background: black;
 	}
@@ -48,7 +35,18 @@ body {
 		background: black;
 	}
 }
-@supports (display: flex) {
+@media screen and (min-width: 400px) {
+	body {
+		background: black;
+	}
+}
+@layer (default) {
+	@supports (display: flex) {
+		body {
+			background: black;
+		}
+	}}
+@layer (default) {
 	@media screen and (min-width: 400px) {
 		body {
 			background: black;
@@ -60,36 +58,48 @@ body {
 			background: black;
 		}
 	}}
-@supports (display: flex) {
-	@media screen and (min-width: 400px) {
-		body {
-			background: black;
-		}
-	}}
-@supports (display: flex) {
-	@media screen and (min-width: 400px) {
-		body {
-			background: black;
-		}
-	}}
-@supports (display: flex) {
-	@media screen and (min-width: 400px) {
-		body {
-			background: black;
-		}
-	}}
-@supports (background: url(./img.png)) {
-	@media screen and (min-width: 400px) {
-		body {
-			background: black;
-		}
-	}}
-@supports (background: url(\\"./img.png\\")) {
-	@media screen and (min-width: 400px) {
-		body {
-			background: black;
-		}
-	}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (background: url(./img.png)) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (background: url(\\"./img.png\\")) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
 @media screen {
 	body {
 		background: black;
@@ -123,30 +133,17 @@ body {
 	background: black;
 }
 
-body {
-	background: black;
+@layer (default) {
+	body {
+		background: black;
+	}
 }
-
-body {
-	background: black;
-}
-
-@supports (display: flex) {
+@layer (default) {
 	body {
 		background: black;
 	}
 }
 @supports (display: flex) {
-	body {
-		background: black;
-	}
-}
-@media screen and (min-width: 400px) {
-	body {
-		background: black;
-	}
-}
-@media screen and (min-width: 400px) {
 	body {
 		background: black;
 	}
@@ -161,7 +158,18 @@ body {
 		background: black;
 	}
 }
-@supports (display: flex) {
+@media screen and (min-width: 400px) {
+	body {
+		background: black;
+	}
+}
+@layer (default) {
+	@supports (display: flex) {
+		body {
+			background: black;
+		}
+	}}
+@layer (default) {
 	@media screen and (min-width: 400px) {
 		body {
 			background: black;
@@ -173,36 +181,48 @@ body {
 			background: black;
 		}
 	}}
-@supports (display: flex) {
-	@media screen and (min-width: 400px) {
-		body {
-			background: black;
-		}
-	}}
-@supports (display: flex) {
-	@media screen and (min-width: 400px) {
-		body {
-			background: black;
-		}
-	}}
-@supports (display: flex) {
-	@media screen and (min-width: 400px) {
-		body {
-			background: black;
-		}
-	}}
-@supports (background: url(./img.png)) {
-	@media screen and (min-width: 400px) {
-		body {
-			background: black;
-		}
-	}}
-@supports (background: url(\\"./img.png\\")) {
-	@media screen and (min-width: 400px) {
-		body {
-			background: black;
-		}
-	}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (background: url(./img.png)) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (background: url(\\"./img.png\\")) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
 @media screen {
 	body {
 		background: black;
