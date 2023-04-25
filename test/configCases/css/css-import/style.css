@@ -151,6 +151,8 @@ le3.css?=bar4');
 @import url("./layer.css?foo=3") layer supports(display: flex) screen and (min-width: 400px);
 @import url("./layer.css?foo=4") layer() supports(display: flex) screen and (min-width: 400px);
 @import url("./layer.css?foo=5") layer();
+@import url("./layer.css?foo=6") layer(   foo.bar.baz   );
+@import url("./layer.css?foo=7") layer(      );
 /*@import url("http://example.com/style.css") supports(display: flex) screen and (min-width: 400px);*/
 /*@import url("./test.css")layer(default)supports(display: flex)screen and (min-width:400px);*/
 /*@import url("./test.css")screen and (min-width: 400px);*/
