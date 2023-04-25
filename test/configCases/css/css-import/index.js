@@ -1,7 +1,13 @@
-import * as style from "./style.css";
+import "./style.css";
 
-it("should compile and load style on demand", done => {
-	const style = getComputedStyle(document.body);
-	expect(style.getPropertyValue("background")).toBe(" red");
+it("should compile", done => {
+	const links = document.getElementsByTagName("link");
+	const css = [];
+
+	for (const link of links) {
+		css.push(link.sheet.css);
+	}
+
+	expect(css).toMatchSnapshot();
 	done();
 });
