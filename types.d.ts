@@ -7853,6 +7853,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		parser: HookMap<SyncHook<any>>;
 		createGenerator: HookMap<SyncBailHook<any, any>>;
 		generator: HookMap<SyncHook<any>>;
+		createModuleClass: HookMap<SyncBailHook<any, any>>;
 	}>;
 	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
