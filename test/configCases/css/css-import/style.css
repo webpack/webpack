@@ -129,16 +129,11 @@ le3.css?=bar4');
 @import url('   ./style4.css?foo=4   ');
 @import url(   ./style4.css?foo=5   );
 
-/*@import url(data:text/css;charset=utf-8,a%20%7B%0D%0A%20%20color%3A%20red%3B%0D%0A%7D);*/
-
 /*@import url('   https://fonts.googleapis.com/css?family=Roboto   ');*/
 /*@import url('!!../../helpers/string-loader.js?esModule=false!');*/
 /*@import url('   !!../../helpers/string-loader.js?esModule=false!~package/tilde.css   ');*/
-/*@import url(data:text/css;charset=utf-8,a%20%7B%0D%0A%20%20color%3A%20red%3B%0D%0A%7D);*/
-
-/*!*!* Prefer relative *!*
-/*@import url(package/first.css);*/
-/*@import url(package/second.css);*/
+@import url(data:text/css;charset=utf-8,a%20%7B%0D%0A%20%20color%3A%20red%3B%0D%0A%7D);
+@import url(data:text/css;charset=utf-8,a%20%7B%0D%0A%20%20color%3A%20blue%3B%0D%0A%7D) screen and (orientation:landscape);
 
 @import url("./style5.css?foo=1") supports();
 @import url("./style5.css?foo=2") supports(    );
@@ -194,7 +189,7 @@ le3.css?=bar4');
 @import "style2.css" layer();
 @import "style2.css" layer;
 
-/* All unknown parser as media for compatibility */
+/* All unknown parse as media for compatibility */
 @import url("./style.css") unknown(default) unknown(display: flex) unknown;
 
 body {
