@@ -155,37 +155,32 @@ le3.css?=bar4');
 @import url("./style6.css?foo=6")     layer(     default     )     supports(     display     :     flex     )     screen     and     (     min-width     :     400px     );
 @import URL("./style6.css?foo=7") LAYER(DEFAULT) SUPPORTS(DISPLAY: FLEX) SCREEN AND (MIN-WIDTH: 400PX);
 @import url("./style6.css?foo=8") LAYER SUPPORTS(DISPLAY: FLEX) SCREEN AND (MIN-WIDTH: 400PX);
-/*@import url("./style6.css") !* Comment *! layer(!* Comment *!default!* Comment *!) !* Comment *! supports(!* Comment *!display!* Comment *!:!* Comment *! flex!* Comment *!)!* Comment *! screen!* Comment *! and!* Comment *! (!* Comment *!min-width!* Comment *!: !* Comment *!400px!* Comment *!);
-@import url(style6.css?foo=1) !* Comment *!;
+@import url("./style6.css") /* Comment */ layer(/* Comment */default/* Comment */) /* Comment */ supports(/* Comment */display/* Comment */:/* Comment */ flex/* Comment */)/* Comment */ screen/* Comment */ and/* Comment */ (/* Comment */min-width/* Comment */: /* Comment */400px/* Comment */);
+/*@import url(style6.css?foo=1) !* Comment *!;
 @import !* Comment *! url(style6.css?foo=2) !* Comment *!;
 @import url(style6.css?foo=3) !* Comment *! print and (orientation:landscape);
 @import !* Comment *! url(style6.css?foo=4) !* Comment *! print and (orientation:landscape);*/
 
-/*@import url("./import-with-media.css") screen and (min-width: 400px);*/
-/*@import url("./deep-import-with-media.css") (prefers-color-scheme: dark);*/
-/*@import url("./import-with-supports.css") supports(display: flex);*/
-/*@import url("./import-with-supports.css") supports(((display: flex)));*/
-/*@import url("./deep-import-with-supports.css") supports(display: flex);*/
-/*@import url('./test.css') supports(display: grid);*/
-/*@import url("./import-with-supports-and-media.css") supports(display: flex) screen and (min-width: 400px);*/
-/*@import url("./import-deep-with-supports-and-media.css") supports(display: flex) screen and (min-width: 400px);*/
-/*@import url("./test.css") layer(framework);*/
-/*@import url("./import-with-layer.css") layer(framework);*/
-/*@import url("./deep-import-with-layer.css") layer(framework);*/
-/*@import url("./import-multiple-with-layer.css") layer(default);*/
-/*@import url("./import-with-layer-unnamed.css") layer(default);*/
-/*@import url("./import-unnamed-layer.css") layer(base);*/
-/*@import url("./import-multiple-unnamed-layer.css") layer(base);*/
-/*@import url("./import-with-layer-and-supports.css") layer(default) supports(display: flex);*/
-/*@import url("./import-with-layer-and-supports-and-media.css") layer(default) supports(display: flex) screen and (min-width: 400px);*/
+@import url("./style8.css") screen and (min-width: 400px);
+@import url("./style8.css") (prefers-color-scheme: dark);
+@import url("./style8.css") supports(display: flex);
+/*@import url("./style8.css") supports(((display: flex)));*/
+@import url("./style8.css") supports(display: flex);
+@import url('./style8.css') supports(display: grid);
+@import url("./style8.css") supports(display: flex) screen and (min-width: 400px);
+@import url("./style8.css") layer(framework);
+@import url("./style8.css") layer(default);
+@import url("./style8.css") layer(base);
+@import url("./style8.css") layer(default) supports(display: flex);
+@import url("./style8.css") layer(default) supports(display: flex) screen and (min-width: 400px);
 
 /* anonymous */
 @import "style2.css" layer();
 @import "style2.css" layer;
 
 /* All unknown parse as media for compatibility */
-@import url("./style.css") unknown(default) unknown(display: flex) unknown;
-@import url("./style.css") unknown(default);
+@import url("./style9.css") unknown(default) unknown(display: flex) unknown;
+@import url("./style9.css") unknown(default);
 
 body {
 	background: red;
