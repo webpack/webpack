@@ -158,14 +158,16 @@ le3.css?=bar4');
 @import url("./style6.css") /* Comment */ layer(/* Comment */default/* Comment */) /* Comment */ supports(/* Comment */display/* Comment */:/* Comment */ flex/* Comment */)/* Comment */ screen/* Comment */ and/* Comment */ (/* Comment */min-width/* Comment */: /* Comment */400px/* Comment */);
 @import url(style6.css?foo=1) /* Comment */;
 @import url(style6.css?foo=2) /* Comment */   /* Comment */;
+@import url(style6.css?foo=3) /* Comment *//* Comment */;
+@import url(style6.css?foo=4)/* Comment *//* Comment */;
 @import
-url(style6.css?foo=3)
+url(style6.css?foo=5)
 /* Comment */
 /* Comment */;
-@import /* Comment */ url(style6.css?foo=4) /* Comment */;
-@import url(style6.css?foo=5) /* Comment */ print and (orientation:landscape);
-@import url(style6.css?foo=6)/* Comment */print and (orientation:landscape)/* Comment */;
-@import /* Comment */ url(style6.css?foo=7) /* Comment */ print and (orientation:landscape);
+@import /* Comment */ url(style6.css?foo=6) /* Comment */;
+@import url(style6.css?foo=7) /* Comment */ print and (orientation:landscape);
+@import url(style6.css?foo=8)/* Comment */print and (orientation:landscape)/* Comment */;
+@import /* Comment */ url(style6.css?foo=9) /* Comment */ print and (orientation:landscape);
 
 @import url("./style8.css") screen and (min-width: 400px);
 @import url("./style8.css") (prefers-color-scheme: dark);
