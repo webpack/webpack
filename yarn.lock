@@ -4331,7 +4331,7 @@ loader-utils@^1.1.0:
     emojis-list "^3.0.0"
     json5 "^1.0.1"
 
-loader-utils@^2.0.0, loader-utils@^2.0.3:
+loader-utils@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-2.0.4.tgz#8b5cb38b5c34a9a018ee1fc0e6a066d1dfcc528c"
   integrity sha512-xXqpXoINfFhgua9xiqD8fPFHgkoq1mmmpE92WlDbm9rNRd/EbRb+Gqf908T2DMfuHjjJlksiK2RbHVOdD/MqSw==

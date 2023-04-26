@@ -1,5 +1,3 @@
-const { getRemainingRequest, stringifyRequest } = require("loader-utils");
-
 const loaderPath = require.resolve("./loader");
 
 /** @type {import("../../../../").LoaderDefinition} */
@@ -12,12 +10,10 @@ export default answer;
 `;
 	}
 
-	const matchResource = `${this.resourcePath}.js`;
-	const loader = `${loaderPath}?load`;
-	const remaining = getRemainingRequest(this);
-	const request = JSON.parse(
-		stringifyRequest(this, `${matchResource}!=!${loader}!${remaining}`)
-	);
+	const matchResource = `${this.utils.contextify(this.context, this.resourcePath)}.js`;
+	const loader = `${this.utils.contextify(this.context, loaderPath)}?load`;
+	const remaining = this.utils.contextify(this.context, this.remainingRequest);
+	const request = `${matchResource}!=!${loader}!${remaining}`;
 
 	this.async();
 	this.loadModule(request, (err, source) => {
