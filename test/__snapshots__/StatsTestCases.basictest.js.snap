@@ -862,7 +862,7 @@ asset both.js 1.4 KiB [emitted] (name: main)
 ./index.js 24 bytes [built] [code generated]
 webpack x.x.x compiled successfully in X ms
 
-asset 123.js 1.4 KiB [emitted] (name: main)
+asset log.js 1.4 KiB [emitted] (name: main)
 ./index.js 24 bytes [built] [code generated]
 
 DEBUG LOG from webpack.DefinePlugin
