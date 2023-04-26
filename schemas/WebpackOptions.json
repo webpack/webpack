@@ -3162,6 +3162,10 @@
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
         },
+        "ignoreBrowserWarnings": {
+          "description": "Ignore warnings in the browser.",
+          "type": "boolean"
+        },
         "iife": {
           "$ref": "#/definitions/Iife"
         },
@@ -3363,6 +3367,10 @@
         },
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
+        },
+        "ignoreBrowserWarnings": {
+          "description": "Ignore warnings in the browser.",
+          "type": "boolean"
         },
         "iife": {
           "$ref": "#/definitions/Iife"
