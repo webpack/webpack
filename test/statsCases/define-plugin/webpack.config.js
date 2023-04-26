@@ -62,7 +62,7 @@ module.exports = [
 		mode: "production",
 		entry: "./index",
 		output: {
-			filename: "123.js"
+			filename: "log.js"
 		},
 		infrastructureLogging: {
 			debug: /DefinePlugin/,
