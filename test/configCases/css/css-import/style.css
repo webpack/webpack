@@ -172,7 +172,7 @@ url(style6.css?foo=5)
 @import url("./style8.css") screen and (min-width: 400px);
 @import url("./style8.css") (prefers-color-scheme: dark);
 @import url("./style8.css") supports(display: flex);
-/*@import url("./style8.css") supports(((display: flex)));*/
+@import url("./style8.css") supports(((display: flex)));
 @import url("./style8.css") supports(display: flex);
 @import url('./style8.css') supports(display: grid);
 @import url("./style8.css") supports(display: flex) screen and (min-width: 400px);
