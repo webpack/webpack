@@ -143,6 +143,30 @@ class FakeSheet {
 		this._basePath = basePath;
 	}
 
+	get css() {
+		let css = fs.readFileSync(
+			path.resolve(
+				this._basePath,
+				this._element.href
+					.replace(/^https:\/\/test\.cases\/path\//, "")
+					.replace(/^https:\/\/example\.com\//, "")
+			),
+			"utf-8"
+		);
+
+		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
+			return fs.readFileSync(
+				path.resolve(
+					this._basePath,
+					url.replace(/^https:\/\/test\.cases\/path\//, "")
+				),
+				"utf-8"
+			);
+		});
+
+		return css;
+	}
+
 	get cssRules() {
 		const walkCssTokens = require("../../lib/css/walkCssTokens");
 		const rules = [];
