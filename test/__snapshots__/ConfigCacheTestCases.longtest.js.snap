@@ -1,5 +1,613 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ConfigCacheTestCases css css-import exported tests should compile 1`] = `
+Array [
+  "body {
+	externally-imported: true;
+}
+
+body {
+	background: black;
+}
+
+body {
+	background: black;
+}
+
+@layer (default) {
+	body {
+		background: black;
+	}
+}
+@layer (default) {
+	body {
+		background: black;
+	}
+}
+@supports (display: flex) {
+	body {
+		background: black;
+	}
+}
+@supports (display: flex) {
+	body {
+		background: black;
+	}
+}
+@media screen and (min-width: 400px) {
+	body {
+		background: black;
+	}
+}
+@media screen and (min-width: 400px) {
+	body {
+		background: black;
+	}
+}
+@layer (default) {
+	@supports (display: flex) {
+		body {
+			background: black;
+		}
+	}}
+@layer (default) {
+	@media screen and (min-width: 400px) {
+		body {
+			background: black;
+		}
+	}}
+@supports (display: flex) {
+	@media screen and (min-width: 400px) {
+		body {
+			background: black;
+		}
+	}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (background: url(./img.png)) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@layer (default) {
+	@supports (background: url(\\"./img.png\\")) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}}}
+@media screen {
+	body {
+		background: black;
+	}
+}
+@media screen {
+	body {
+		background: black;
+	}
+}
+@media screen {
+	body {
+		background: black;
+	}
+}
+body {
+	background: black;
+}
+
+body {
+	background: green;
+}
+
+@layer (base) {
+	body {
+		background: green;
+	}
+}
+@supports (display: flex) {
+	body {
+		background: green;
+	}
+}
+@media screen, print {
+	body {
+		background: green;
+	}
+}
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+@media screen and (orientation:landscape) {
+	a {
+		color: red;
+	}
+}
+@media SCREEN AND (ORIENTATION: LANDSCAPE) {
+	a {
+		color: red;
+	}
+}
+@media (min-width: 100px) {
+	a {
+		color: red;
+	}
+}
+.class {
+	content: \\"style.css\\";
+	color: red;
+}
+
+.class {
+	content: \\"style.css\\";
+	color: red;
+}
+
+.class {
+	content: \\"style.css\\";
+	color: red;
+}
+
+.class {
+	content: \\"style.css\\";
+	color: red;
+}
+
+.class {
+	content: \\"style7.css\\";
+}
+
+.class {
+	content: \\"style7.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test.css\\";
+}
+
+.class {
+	content: \\"test.css\\";
+}
+
+.class {
+	content: \\"test.css\\";
+}
+
+.class {
+	content: \\"test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+.class {
+	content: \\"style4.css\\";
+}
+
+.class {
+	content: \\"style4.css\\";
+}
+
+.class {
+	content: \\"style4.css\\";
+}
+
+@supports (display: flex) {
+	.class {
+		content: \\"style4.css\\";
+	}
+}
+@supports (display: flex) {
+	@media screen and (orientation:landscape) {
+		.class {
+			content: \\"style4.css\\";
+		}
+	}}
+.class {
+	content: \\"style4.css\\";
+}
+
+.class {
+	content: \\"style4.css\\";
+}
+
+.class {
+	content: \\"style4.css\\";
+}
+
+a {
+  color: red;
+}
+@media screen and (orientation:landscape) {
+	a {
+	  color: blue;
+	}}
+.class {
+	content: \\"style5.css\\";
+}
+
+.class {
+	content: \\"style5.css\\";
+}
+
+@supports (unknown) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+@supports (display: flex) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+@supports (display: flex !important) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+@supports (display: flex) {
+	@media screen and (min-width: 400px) {
+		.class {
+			content: \\"style5.css\\";
+		}
+	}}
+@supports (selector(a b)) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+@supports (display: flex) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+@layer {
+	.class {
+		content: \\"layer.css\\";
+	}
+}
+@layer (default) {
+	.class {
+		content: \\"layer.css\\";
+	}
+}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			.class {
+				content: \\"layer.css\\";
+			}
+		}}}
+@layer {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			.class {
+				content: \\"layer.css\\";
+			}
+		}}}
+@layer {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			.class {
+				content: \\"layer.css\\";
+			}
+		}}}
+@layer {
+	.class {
+		content: \\"layer.css\\";
+	}
+}
+@layer (foo.bar.baz) {
+	.class {
+		content: \\"layer.css\\";
+	}
+}
+@layer {
+	.class {
+		content: \\"layer.css\\";
+	}
+}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width:400px) {
+			.class {
+				content: \\"style6.css\\";
+			}
+		}}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width:400px) {
+			.class {
+				content: \\"style6.css\\";
+			}
+		}}}
+@supports (display: flex) {
+	@media screen and (min-width:400px) {
+		.class {
+			content: \\"style6.css\\";
+		}
+	}}
+@media screen and (min-width:400px) {
+	.class {
+		content: \\"style6.css\\";
+	}
+}
+@media screen and (min-width:400px) {
+	.class {
+		content: \\"style6.css\\";
+	}
+}
+@media screen and (min-width:400px) {
+	.class {
+		content: \\"style6.css\\";
+	}
+}
+@layer (default) {
+	@supports (display     :     flex) {
+		@media screen     and     (     min-width     :     400px     ) {
+			.class {
+				content: \\"style6.css\\";
+			}
+		}}}
+@layer (DEFAULT) {
+	@supports (DISPLAY: FLEX) {
+		@media SCREEN AND (MIN-WIDTH: 400PX) {
+			.class {
+				content: \\"style6.css\\";
+			}
+		}}}
+@layer {
+	@supports (DISPLAY: FLEX) {
+		@media SCREEN AND (MIN-WIDTH: 400PX) {
+			.class {
+				content: \\"style6.css\\";
+			}
+		}}}
+@layer (/* Comment */default/* Comment */) {
+	@supports (/* Comment */display/* Comment */:/* Comment */ flex/* Comment */) {
+		@media /* Comment */ screen/* Comment */ and/* Comment */ (/* Comment */min-width/* Comment */: /* Comment */400px/* Comment */) {
+			.class {
+				content: \\"style6.css\\";
+			}
+		}}}
+.class {
+	content: \\"style6.css\\";
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+@media /* Comment */ print and (orientation:landscape) {
+	.class {
+		content: \\"style6.css\\";
+	}
+}
+@media /* Comment */print and (orientation:landscape)/* Comment */ {
+	.class {
+		content: \\"style6.css\\";
+	}
+}
+@media /* Comment */ print and (orientation:landscape) {
+	.class {
+		content: \\"style6.css\\";
+	}
+}
+@media screen and (min-width: 400px) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+@media (prefers-color-scheme: dark) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+@supports (display: flex) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+@supports (((display: flex))) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+@supports (((display: inline-grid))) {
+	@media screen and (((min-width: 400px))) {
+		.class {
+			content: \\"style8.css\\";
+		}
+	}}
+@supports (display: grid) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+@supports (display: flex) {
+	@media screen and (min-width: 400px) {
+		.class {
+			content: \\"style8.css\\";
+		}
+	}}
+@layer (framework) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+@layer (default) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+@layer (base) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+@layer (default) {
+	@supports (display: flex) {
+		.class {
+			content: \\"style8.css\\";
+		}
+	}}
+@layer (default) {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			.class {
+				content: \\"style8.css\\";
+			}
+		}}}
+@layer {
+	a {
+		color: red;
+	}
+}
+@media unknown(default) unknown(display: flex) unknown {
+	.class {
+		content: \\"style9.css\\";
+	}
+}
+@media unknown(default) {
+	.class {
+		content: \\"style9.css\\";
+	}
+}
+
+
+body {
+	background: red;
+}
+
+head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external\\\\.css,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,\\\\.\\\\/imported\\\\.css\\\\?2fc7,\\\\.\\\\/imported\\\\.css\\\\?8e23,\\\\.\\\\/imported\\\\.css\\\\?daf4,\\\\.\\\\/imported\\\\.css\\\\?7a8d,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style2\\\\.css\\\\?3989,\\\\.\\\\/style2\\\\.css\\\\?1933,\\\\.\\\\/style2\\\\.css\\\\?6611,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=1,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=2,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=3,\\\\.\\\\/style3\\\\.css\\\\?\\\\=bar4,\\\\.\\\\/styl\\\\'le7\\\\.css,\\\\.\\\\/styl\\\\'le7\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\ test\\\\.css,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/test\\\\.css,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/test\\\\ test\\\\.css\\\\?fpp\\\\=10,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=bazz,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar\\\\#hash,\\\\.\\\\/style4\\\\.css\\\\?\\\\#hash,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=5,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20red\\\\%3B\\\\%0D\\\\%0A\\\\%7D,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20blue\\\\%3B\\\\%0D\\\\%0A\\\\%7D,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?14ba,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?0e0d,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style6\\\\.css,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/style8\\\\.css\\\\?5018,\\\\.\\\\/style8\\\\.css\\\\?204b,\\\\.\\\\/style8\\\\.css\\\\?63b0,\\\\.\\\\/style8\\\\.css\\\\?edb8,\\\\.\\\\/style8\\\\.css\\\\?6154,\\\\.\\\\/style8\\\\.css\\\\?8c51,\\\\.\\\\/style8\\\\.css\\\\?ced0,\\\\.\\\\/style8\\\\.css\\\\?d3b8,\\\\.\\\\/style8\\\\.css\\\\?3557,\\\\.\\\\/style8\\\\.css\\\\?ae6e,\\\\.\\\\/style8\\\\.css\\\\?d078,\\\\.\\\\/style8\\\\.css\\\\?ae8b,\\\\.\\\\/style2\\\\.css\\\\?ee8c,\\\\.\\\\/style9\\\\.css\\\\?5f26,\\\\.\\\\/style9\\\\.css\\\\?6536,\\\\.\\\\/style\\\\.css;}",
+]
+`;
+
 exports[`ConfigCacheTestCases css urls exported tests should be able to handle styles in div.css 1`] = `
 Object {
   "--foo": " url(img.09a1a1112c577c279435.png)",
