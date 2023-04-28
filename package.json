@@ -168,6 +168,8 @@
     "cover:all": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --coverage",
     "cover:basic": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.basictest.js\" --coverage",
     "cover:integration": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\" --coverage",
+    "cover:integration:a": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.{basictest,test}.js\" --coverage",
+    "cover:integration:b": "node --expose-gc --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --logHeapUsage --testMatch \"<rootDir>/test/*.longtest.js\" --coverage",
     "cover:unit": "node --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:types": "node node_modules/tooling/type-coverage",
     "cover:merge": "yarn mkdirp .nyc_output && nyc merge .nyc_output coverage/coverage-nyc.json && rimraf .nyc_output",

@@ -144,7 +144,11 @@ jobs:
           path: .jest-cache
           key: jest-integration-${{ env.GITHUB_SHA }}
           restore-keys: jest-integration-
+      # Jest sharding for modern node versions
       - run: yarn cover:integration --ci --shard ${{ matrix.shards }}/8 --cacheDirectory .jest-cache
+      # Sharding using parts for legacy node versions
+      - run: yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache || yarn cover:integration:${{ matrix.part }} --ci --cacheDirectory .jest-cache -f
+        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x'
       - run: yarn cover:merge
       - uses: codecov/codecov-action@v3
         with:
