@@ -525,7 +525,15 @@ declare abstract class BasicEvaluatedExpression {
 	 * Can this expression have side effects?
 	 */
 	couldHaveSideEffects(): boolean;
-	asBool(): any;
+
+	/**
+	 * Creates a boolean representation of this evaluated expression.
+	 */
+	asBool(): undefined | boolean;
+
+	/**
+	 * Creates a nullish coalescing representation of this evaluated expression.
+	 */
 	asNullish(): undefined | boolean;
 	asString(): any;
 	setString(string?: any): BasicEvaluatedExpression;
@@ -10938,6 +10946,12 @@ declare interface RuntimeValueOptions {
 	buildDependencies?: string[];
 	version?: string | (() => string);
 }
+
+/**
+ * Helper function for joining two ranges into a single range. This is useful
+ * when working with AST nodes, as it allows you to combine the ranges of child nodes
+ * to create the range of the _parent node_.
+ */
 declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
 	topLevelScope: boolean | "arrow";
@@ -11975,6 +11989,12 @@ declare interface SyntheticDependencyLocation {
 declare const TOMBSTONE: unique symbol;
 declare const TRANSITIVE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
+
+/**
+ * Helper function for joining two ranges into a single range. This is useful
+ * when working with AST nodes, as it allows you to combine the ranges of child nodes
+ * to create the range of the _parent node_.
+ */
 declare interface TagInfo {
 	tag: any;
 	data: any;
