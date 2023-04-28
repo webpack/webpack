@@ -191,6 +191,8 @@ url(style6.css?foo=14)
 @import url("./style9.css") unknown(default) unknown(display: flex) unknown;
 @import url("./style9.css") unknown(default);
 
+@import url("./style10.css");
+
 body {
 	background: red;
 }
