@@ -482,9 +482,9 @@ declare abstract class BasicEvaluatedExpression {
 	options?: BasicEvaluatedExpression[];
 	prefix?: BasicEvaluatedExpression;
 	postfix?: BasicEvaluatedExpression;
-	wrappedInnerExpressions: any;
+	wrappedInnerExpressions: BasicEvaluatedExpression[];
 	identifier?: string | VariableInfoInterface;
-	rootInfo: VariableInfoInterface;
+	rootInfo: string | VariableInfoInterface;
 	getMembers: () => string[];
 	getMembersOptionals: () => boolean[];
 	expression: NodeEstreeIndex;
@@ -535,41 +535,106 @@ declare abstract class BasicEvaluatedExpression {
 	 * Creates a nullish coalescing representation of this evaluated expression.
 	 */
 	asNullish(): undefined | boolean;
-	asString(): any;
+
+	/**
+	 * Creates a string representation of this evaluated expression.
+	 */
+	asString(): undefined | string;
 	setString(string?: any): BasicEvaluatedExpression;
 	setUndefined(): BasicEvaluatedExpression;
 	setNull(): BasicEvaluatedExpression;
-	setNumber(number?: any): BasicEvaluatedExpression;
-	setBigInt(bigint?: any): BasicEvaluatedExpression;
-	setBoolean(bool?: any): BasicEvaluatedExpression;
-	setRegExp(regExp?: any): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to a number
+	 */
+	setNumber(number: number): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to a BigInt
+	 */
+	setBigInt(bigint: bigint): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to a boolean
+	 */
+	setBoolean(bool: boolean): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to a regular expression
+	 */
+	setRegExp(regExp: RegExp): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to a particular identifier and its members.
+	 */
 	setIdentifier(
-		identifier?: any,
-		rootInfo?: any,
-		getMembers?: any,
-		getMembersOptionals?: any
+		identifier: string | VariableInfoInterface,
+		rootInfo: string | VariableInfoInterface,
+		getMembers: () => string[],
+		getMembersOptionals?: () => boolean[]
 	): BasicEvaluatedExpression;
+
+	/**
+	 * Wraps an array of expressions with a prefix and postfix expression.
+	 */
 	setWrapped(
-		prefix?: any,
-		postfix?: any,
-		innerExpressions?: any
+		prefix: null | BasicEvaluatedExpression,
+		postfix: BasicEvaluatedExpression,
+		innerExpressions: BasicEvaluatedExpression[]
 	): BasicEvaluatedExpression;
-	setOptions(options?: any): BasicEvaluatedExpression;
-	addOptions(options?: any): BasicEvaluatedExpression;
-	setItems(items?: any): BasicEvaluatedExpression;
-	setArray(array?: any): BasicEvaluatedExpression;
+
+	/**
+	 * Stores the options of a conditional expression.
+	 */
+	setOptions(options: BasicEvaluatedExpression[]): BasicEvaluatedExpression;
+
+	/**
+	 * Adds options to a conditional expression.
+	 */
+	addOptions(options: BasicEvaluatedExpression[]): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to an array of expressions.
+	 */
+	setItems(items: BasicEvaluatedExpression[]): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to an array of strings.
+	 */
+	setArray(array: string[]): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to a processed/unprocessed template string. Used
+	 * for evaluating TemplateLiteral expressions in the JavaScript Parser.
+	 */
 	setTemplateString(
-		quasis?: any,
-		parts?: any,
-		kind?: any
+		quasis: BasicEvaluatedExpression[],
+		parts: BasicEvaluatedExpression[],
+		kind: "raw" | "cooked"
 	): BasicEvaluatedExpression;
-	templateStringKind: any;
+	templateStringKind?: "raw" | "cooked";
 	setTruthy(): BasicEvaluatedExpression;
 	setFalsy(): BasicEvaluatedExpression;
-	setNullish(value?: any): BasicEvaluatedExpression;
-	setRange(range?: any): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of the expression to nullish.
+	 */
+	setNullish(value: boolean): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the range for the expression.
+	 */
+	setRange(range: [number, number]): BasicEvaluatedExpression;
+
+	/**
+	 * Set whether or not the expression has side effects.
+	 */
 	setSideEffects(sideEffects?: boolean): BasicEvaluatedExpression;
-	setExpression(expression?: any): BasicEvaluatedExpression;
+
+	/**
+	 * Set the expression node for the expression.
+	 */
+	setExpression(expression: NodeEstreeIndex): BasicEvaluatedExpression;
 }
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
