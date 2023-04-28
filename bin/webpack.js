@@ -78,8 +78,19 @@ const runCli = cli => {
 	const pkgPath = require.resolve(`${cli.package}/package.json`);
 	// eslint-disable-next-line node/no-missing-require
 	const pkg = require(pkgPath);
-	// eslint-disable-next-line node/no-missing-require
-	require(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName]));
+
+	if (pkg.type === "module" || /\.mjs/i.test(pkg.bin[cli.binName])) {
+		// eslint-disable-next-line node/no-unsupported-features/es-syntax
+		import(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName])).catch(
+			error => {
+				console.error(error);
+				process.exitCode = 1;
+			}
+		);
+	} else {
+		// eslint-disable-next-line node/no-missing-require
+		require(path.resolve(path.dirname(pkgPath), pkg.bin[cli.binName]));
+	}
 };
 
 /**

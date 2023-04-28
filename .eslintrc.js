@@ -78,6 +78,13 @@ module.exports = {
 	},
 	overrides: [
 		{
+			// Allow to use `dynamic` import
+			files: ["bin/**/*.js"],
+			parserOptions: {
+				ecmaVersion: 2020
+			}
+		},
+		{
 			files: ["lib/**/*.runtime.js", "hot/*.js"],
 			env: {
 				es6: false,
