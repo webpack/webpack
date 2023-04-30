@@ -188,6 +188,7 @@
     "prewalking",
     "prioritise",
     "promisify",
+    "proxied",
     "quasis",
     "queryloader",
     "querystrings",
