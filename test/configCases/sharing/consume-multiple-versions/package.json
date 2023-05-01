@@ -22,7 +22,9 @@
     "shared21": "other:foo/bar",
     "shared22": "https://foo/bar",
     "shared23": "https://github.com//bar/tree/branch",
-    "shared24": "git+https://gitlab.com//bar"
+    "shared24": "git+https://gitlab.com//bar",
+    "shared25": "git+https://GITLAB.com//bar",
+    "shared26": "https://GITHUB.com//bar/tree/branch"
   },
   "peerDependencies": {
     "shared": "^1.0.0"

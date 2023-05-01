@@ -146,6 +146,16 @@ it("should be able to consume different shared module version depending on conte
 			"1.0.0": {
 				get: () => () => "shared24@1.0.0"
 			}
+		},
+		shared25: {
+			"1.0.0": {
+				get: () => () => "shared25@1.0.0"
+			}
+		},
+		shared25: {
+			"1.0.0": {
+				get: () => () => "shared26@1.0.0"
+			}
 		}
 	};
 	expect(require("shared")).toBe("shared@1.9.9");
