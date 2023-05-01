@@ -163,6 +163,14 @@ export type EntryUnnamed = EntryItem;
  */
 export type Experiments = ExperimentsCommon & ExperimentsExtra;
 /**
+ * Extend an existing configuration.
+ */
+export type Extends = ExtendsItem | ExtendsItem[];
+/**
+ * Path to the configuration to be extended.
+ */
+export type ExtendsItem = string
+/**
  * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
  */
 export type Externals = ExternalItem[] | ExternalItem;

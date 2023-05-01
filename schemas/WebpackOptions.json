@@ -944,6 +944,10 @@
         }
       }
     },
+    "ExtendsItem": {
+      "description": "Path to the configuration to be extended",
+      "type": "string"
+    },
     "ExternalItem": {
       "description": "Specify dependency that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",
       "anyOf": [
@@ -1037,6 +1041,20 @@
         },
         {
           "type": "object"
+        }
+      ]
+    },
+    "Extends": {
+      "description": "Extend configuration from another configuration.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtendsItem"
+          }
+        },
+        {
+          "$ref": "#/definitions/ExtendsItem"
         }
       ]
     },
@@ -5348,6 +5366,9 @@
     },
     "experiments": {
       "$ref": "#/definitions/Experiments"
+    },
+    "extends": {
+      "$ref": "#/definitions/Externals"
     },
     "externals": {
       "$ref": "#/definitions/Externals"
