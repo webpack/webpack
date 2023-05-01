@@ -5368,7 +5368,7 @@
       "$ref": "#/definitions/Experiments"
     },
     "extends": {
-      "$ref": "#/definitions/Externals"
+      "$ref": "#/definitions/Extends"
     },
     "externals": {
       "$ref": "#/definitions/Externals"
