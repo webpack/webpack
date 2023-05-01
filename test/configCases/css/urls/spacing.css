@@ -1,3 +1,5 @@
+@import "./nested.css";
+
 div {
   a: url('./img.png');
 }
