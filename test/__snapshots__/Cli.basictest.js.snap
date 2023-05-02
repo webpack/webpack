@@ -828,13 +828,13 @@ Object {
   "extends": Object {
     "configs": Array [
       Object {
-        "description": "Path to the configuration to be extended",
+        "description": "Path to the configuration to be extended.",
         "multiple": true,
         "path": "extends[]",
         "type": "string",
       },
     ],
-    "description": "Path to the configuration to be extended",
+    "description": "Path to the configuration to be extended.",
     "multiple": true,
     "simpleType": "string",
   },
