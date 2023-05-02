@@ -825,6 +825,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "extends": Object {
+    "configs": Array [
+      Object {
+        "description": "Path to the configuration to be extended (only works when using webpack-cli).",
+        "multiple": true,
+        "path": "extends[]",
+        "type": "string",
+      },
+    ],
+    "description": "Path to the configuration to be extended (only works when using webpack-cli).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "extends-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'extends' configuration. Extend configuration from another configuration (only works when using webpack-cli).",
+        "multiple": false,
+        "path": "extends",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'extends' configuration. Extend configuration from another configuration (only works when using webpack-cli).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "externals": Object {
     "configs": Array [
       Object {

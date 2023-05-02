@@ -163,6 +163,14 @@ export type EntryUnnamed = EntryItem;
  */
 export type Experiments = ExperimentsCommon & ExperimentsExtra;
 /**
+ * Extend configuration from another configuration (only works when using webpack-cli).
+ */
+export type Extends = ExtendsItem[] | ExtendsItem;
+/**
+ * Path to the configuration to be extended (only works when using webpack-cli).
+ */
+export type ExtendsItem = string;
+/**
  * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
  */
 export type Externals = ExternalItem[] | ExternalItem;
@@ -819,6 +827,10 @@ export interface WebpackOptions {
 	 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
 	 */
 	experiments?: Experiments;
+	/**
+	 * Extend configuration from another configuration (only works when using webpack-cli).
+	 */
+	extends?: Extends;
 	/**
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
