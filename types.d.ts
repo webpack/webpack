@@ -2197,6 +2197,11 @@ declare interface Configuration {
 	experiments?: Experiments;
 
 	/**
+	 * Extend configuration from another configuration (only works when using webpack-cli).
+	 */
+	extends?: string | string[];
+
+	/**
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
 	externals?:

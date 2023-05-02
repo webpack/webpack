@@ -944,8 +944,22 @@
         }
       }
     },
+    "Extends": {
+      "description": "Extend configuration from another configuration (only works when using webpack-cli).",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtendsItem"
+          }
+        },
+        {
+          "$ref": "#/definitions/ExtendsItem"
+        }
+      ]
+    },
     "ExtendsItem": {
-      "description": "Path to the configuration to be extended.",
+      "description": "Path to the configuration to be extended (only works when using webpack-cli).",
       "type": "string"
     },
     "ExternalItem": {
@@ -1041,20 +1055,6 @@
         },
         {
           "type": "object"
-        }
-      ]
-    },
-    "Extends": {
-      "description": "Extend configuration from another configuration.",
-      "anyOf": [
-        {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ExtendsItem"
-          }
-        },
-        {
-          "$ref": "#/definitions/ExtendsItem"
         }
       ]
     },
