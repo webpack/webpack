@@ -945,7 +945,7 @@
       }
     },
     "ExtendsItem": {
-      "description": "Path to the configuration to be extended",
+      "description": "Path to the configuration to be extended.",
       "type": "string"
     },
     "ExternalItem": {
