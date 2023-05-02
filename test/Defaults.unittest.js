@@ -1931,6 +1931,7 @@ describe("snapshots", () => {
 			-     "trustedTypes": undefined,
 			-     "uniqueName": "webpack",
 			+     "trustedTypes": Object {
+			+       "onPolicyCreationFailure": "stop",
 			+       "policyName": "@@@Hello_World_",
 			+     },
 			+     "uniqueName": "@@@Hello World!",
