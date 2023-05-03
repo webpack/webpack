@@ -1042,6 +1042,46 @@ head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\
 ]
 `;
 
+exports[`ConfigTestCases css pure-css exported tests should compile 1`] = `
+Array [
+  ".class {
+	color: red;
+	background: var(--color);
+}
+
+@keyframes test {
+	0% {
+		color: red;
+	}
+	100% {
+		color: blue;
+	}
+}
+
+:local(.class) {
+	color: red;
+}
+
+:local .class {
+	color: green;
+}
+
+:global(.class) {
+	color: blue;
+}
+
+:global .class {
+	color: white;
+}
+
+:export {
+	foo: bar;
+}
+
+head{--webpack-main:\\\\.\\\\/style\\\\.css;}",
+]
+`;
+
 exports[`ConfigTestCases css urls exported tests should be able to handle styles in div.css 1`] = `
 Object {
   "--foo": " url(img.09a1a1112c577c279435.png)",
