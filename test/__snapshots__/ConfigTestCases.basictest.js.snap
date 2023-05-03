@@ -765,7 +765,7 @@ Object {
   "a187": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
   "a188": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
   "a189": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
-  "a19": " url('#line-marker')",
+  "a19": " url(#line-marker)",
   "a190": " image-set(url(img.09a1a1112c577c279435.png)1x)",
   "a191": " image-set(url(img.09a1a1112c577c279435.png)1x/* test*/,/* test*/url(img.09a1a1112c577c279435.png)2x)",
   "a197": " \\\\u\\\\r\\\\l(img.09a1a1112c577c279435.png)",

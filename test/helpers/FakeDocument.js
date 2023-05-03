@@ -155,6 +155,10 @@ class FakeSheet {
 		);
 
 		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
+			if (url.startsWith("#")) {
+				return url;
+			}
+
 			return fs.readFileSync(
 				path.resolve(
 					this._basePath,
@@ -191,6 +195,10 @@ class FakeSheet {
 			"utf-8"
 		);
 		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
+			if (url.startsWith("#")) {
+				return url;
+			}
+
 			return fs.readFileSync(
 				path.resolve(
 					this._basePath,
