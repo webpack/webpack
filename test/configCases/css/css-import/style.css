@@ -193,6 +193,17 @@ url(style6.css?foo=14)
 
 @import url("./style10.css");
 
+@import "./media-nested.css" screen and (min-width: 400px);
+@import "./supports-nested.css" supports(display: flex);
+@import "./layer-nested.css" layer(foo);
+@import "./all-nested.css" layer(foo) supports(display: flex) screen and (min-width: 400px);
+@import "./mixed-nested.css" screen and (min-width: 400px);
+@import "./anonymous-nested.css" layer;
+@import "./media-deep-deep-nested.css" screen and (orientation: portrait);
+@import "./duplicate-nested.css" screen and (orientation: portrait);
+@import "./anonymous-nested.css" supports(display: flex) screen and (orientation: portrait);
+@import "./all-nested.css" layer(super.foo) supports(display: flex) screen and (min-width: 400px);
+
 body {
 	background: red;
 }
