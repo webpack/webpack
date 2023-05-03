@@ -6628,6 +6628,23 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-trusted-types-on-policy-creation-failure": Object {
+    "configs": Array [
+      Object {
+        "description": "If the call to \`trustedTypes.createPolicy(...)\` fails -- e.g., due to the policy name missing from the CSP \`trusted-types\` list, or it being a duplicate name, etc. -- controls whether to continue with loading in the hope that \`require-trusted-types-for 'script'\` isn't enforced yet, versus fail immediately. Default behavior is 'stop'.",
+        "multiple": false,
+        "path": "output.trustedTypes.onPolicyCreationFailure",
+        "type": "enum",
+        "values": Array [
+          "continue",
+          "stop",
+        ],
+      },
+    ],
+    "description": "If the call to \`trustedTypes.createPolicy(...)\` fails -- e.g., due to the policy name missing from the CSP \`trusted-types\` list, or it being a duplicate name, etc. -- controls whether to continue with loading in the hope that \`require-trusted-types-for 'script'\` isn't enforced yet, versus fail immediately. Default behavior is 'stop'.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-trusted-types-policy-name": Object {
     "configs": Array [
       Object {
