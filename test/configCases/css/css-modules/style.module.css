@@ -271,3 +271,44 @@
 		background: red;
 	}
 }
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: "\1F44D";
+	suffix: " ";
+}
+
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+/* At-rule for "nice-style" in Font Two */
+@font-feature-values Font Two {
+	@styleset {
+		nice-style: 4;
+	}
+}
+
+@property --property-name {
+	syntax: "<color>";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+@layer utilities {
+	.padding-sm {
+		padding: 0.5rem;
+	}
+
+	.padding-lg {
+		padding: 0.8rem;
+	}
+}
+
+.class {
+	.nested {
+		color: red;
+	}
+}
