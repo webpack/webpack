@@ -71,6 +71,15 @@
 	background-color: aquamarine;
 }
 
+.local9 :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
 :global(:global(:local(.nested1)).nested2).nested3 {
 	color: pink;
 }
@@ -396,6 +405,16 @@
 }
 
 @unknown .class {
+	color: red;
+
+	.class {
+		color: red;
+	}
+}
+
+:global .class :local .in-local-global-scope,
+:global .class :local .in-local-global-scope,
+:local .class-local-scope :global .in-local-global-scope {
 	color: red;
 }
 

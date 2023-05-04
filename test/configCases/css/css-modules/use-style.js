@@ -37,4 +37,6 @@ export default {
 	myColor: style['my-color'],
 	paddingSm: style['padding-sm'],
 	paddingLg: style['padding-lg'],
+	inLocalGlobalScope: style['in-local-global-scope'],
+	classLocalScope: style['class-local-scope'],
 };

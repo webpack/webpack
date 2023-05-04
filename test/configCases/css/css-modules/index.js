@@ -98,6 +98,12 @@ it("should allow to create css modules", done => {
 				paddingSm: prod
 					? "my-app-491-zE"
 					: "./style.module.css-padding-sm",
+				classLocalScope: prod
+					? "my-app-491-gz"
+					: "./style.module.css-class-local-scope",
+				inLocalGlobalScope: prod
+					? "my-app-491-Zv"
+					: "./style.module.css-in-local-global-scope",
 			});
 		} catch (e) {
 			return done(e);
