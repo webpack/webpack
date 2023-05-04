@@ -343,12 +343,56 @@
 	}
 }
 
-.not-selector {
+.not-selector-inside {
 	color: #fff;
 	opacity: 0.12;
 	padding: .5px;
 	unknown: :local(.test);
 	unknown1: .foo, .bar, #bar;
+}
+
+.nested-var {
+	.again {
+		color: var(--local-color);
+	}
+}
+
+.nested-with-local-pseudo {
+	color: red;
+
+	:local .local-nested {
+		color: red;
+	}
+
+	:global .global-nested {
+		color: red;
+	}
+
+	:local(.local-nested) {
+		color: red;
+	}
+
+	:global(.global-nested) {
+		color: red;
+	}
+}
+
+.nested-parens {
+	.local9 div:has(.vertical-tiny, .vertical-small) {
+		max-height: 0;
+		margin: 0;
+		overflow: hidden;
+	}
+}
+
+:global .global-foo {
+	.nested-global {
+		color: red;
+	}
+
+	:local .local-in-global {
+		color: blue;
+	}
 }
 
 :scope {
