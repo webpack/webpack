@@ -1078,6 +1078,10 @@ Array [
 	foo: bar;
 }
 
+.class {
+	animation: test 1s, test;
+}
+
 head{--webpack-main:\\\\.\\\\/style\\\\.css;}",
 ]
 `;

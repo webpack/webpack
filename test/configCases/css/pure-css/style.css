@@ -31,3 +31,7 @@
 :export {
 	foo: bar;
 }
+
+.class {
+	animation: test 1s, test;
+}
