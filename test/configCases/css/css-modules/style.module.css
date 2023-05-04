@@ -350,6 +350,14 @@
 			background: red;
 		}
 	}
+
+	@container foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
 }
 
 .not-selector-inside {
@@ -416,6 +424,20 @@
 :global .class :local .in-local-global-scope,
 :local .class-local-scope :global .in-local-global-scope {
 	color: red;
+}
+
+@container (width > 400px) {
+	.class-in-container {
+		font-size: 1.5em;
+	}
+}
+
+@container summary (min-width: 400px) {
+	@container (width > 400px) {
+		.deep-class-in-container {
+			font-size: 1.5em;
+		}
+	}
 }
 
 :scope {

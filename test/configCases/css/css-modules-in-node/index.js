@@ -89,6 +89,12 @@ it("should allow to create css modules", done => {
 				inLocalGlobalScope: prod
 					? "my-app-491-Zv"
 					: "./style.module.css-in-local-global-scope",
+				classInContainer: prod
+					? "my-app-491-Gp"
+					: "./style.module.css-class-in-container",
+				deepClassInContainer: prod
+					? "my-app-491-rn"
+					: "./style.module.css-deep-class-in-container",
 			});
 		} catch (e) {
 			return done(e);

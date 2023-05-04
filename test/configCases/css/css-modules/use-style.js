@@ -39,4 +39,6 @@ export default {
 	paddingLg: style['padding-lg'],
 	inLocalGlobalScope: style['in-local-global-scope'],
 	classLocalScope: style['class-local-scope'],
+	classInContainer: style['class-in-container'],
+	deepClassInContainer: style['deep-class-in-container'],
 };
