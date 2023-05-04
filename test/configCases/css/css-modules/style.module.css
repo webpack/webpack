@@ -528,3 +528,16 @@
 .class {
 	bar: env(foo, var(--baz));
 }
+
+:global      .global-foo, :local        .bar {
+	:local      .local-in-global       {
+		color: blue;
+	}
+
+	@media screen {
+		:global .my-global-class-again,
+		:local .my-global-class-again {
+			color: red;
+		}
+	}
+}
