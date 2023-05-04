@@ -291,10 +291,14 @@
 	}
 }
 
-@property --property-name {
+@property --my-color {
 	syntax: "<color>";
 	inherits: false;
 	initial-value: #c0ffee;
+}
+
+.class {
+	color: var(--my-color);
 }
 
 @layer utilities {
