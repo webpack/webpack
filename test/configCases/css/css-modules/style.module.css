@@ -469,3 +469,11 @@
 		color: white;
 	}
 }
+
+:root {
+	--baz: 10px;
+}
+
+.class {
+	bar: env(foo, var(--baz));
+}
