@@ -1,3 +1,5 @@
+@import url("../css-modules/style.module.css");
+
 .class {
 	color: red;
 	background: var(--color);
