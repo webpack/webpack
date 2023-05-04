@@ -496,7 +496,7 @@
 }
 
 @media screen and (prefers-color-scheme: var(--test)) {
-	.test {
+	.baz {
 		color: white;
 	}
 }
