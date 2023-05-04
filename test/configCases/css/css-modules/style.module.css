@@ -411,6 +411,18 @@
 	:local(.local-nested), :global(.global-nested-next) {
 		color: red;
 	}
+
+	:global .foo, .bar {
+		color: red;
+	}
+}
+
+#id-foo {
+	color: red;
+
+	#id-bar {
+		color: red;
+	}
 }
 
 .nested-parens {
