@@ -312,7 +312,38 @@
 }
 
 .class {
-	.nested {
+	color: red;
+
+	.nested-pure {
 		color: red;
 	}
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.nested-media {
+			color: blue;
+		}
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.nested-supports {
+			display: flex;
+		}
+	}
+
+	@layer foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+}
+
+
+:scope {
+	color: red;
 }
