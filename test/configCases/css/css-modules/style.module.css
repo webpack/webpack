@@ -470,6 +470,18 @@
 	}
 }
 
+@keyframes slidein {
+	from {
+		margin-left: 100%;
+		width: 300%;
+	}
+
+	to {
+		margin-left: 0%;
+		width: 100%;
+	}
+}
+
 .class {
 	animation:
 		foo var(--animation-name) 3s,
