@@ -343,6 +343,13 @@
 	}
 }
 
+.not-selector {
+	color: #fff;
+	opacity: 0.12;
+	padding: .5px;
+	unknown: :local(.test);
+	unknown1: .foo, .bar, #bar;
+}
 
 :scope {
 	color: red;
