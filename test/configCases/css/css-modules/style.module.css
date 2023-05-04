@@ -395,6 +395,10 @@
 	}
 }
 
+@unknown .class {
+	color: red;
+}
+
 :scope {
 	color: red;
 }
