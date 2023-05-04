@@ -470,6 +470,14 @@
 	}
 }
 
+.class {
+	animation:
+		foo var(--animation-name) 3s,
+		var(--animation-name) 3s,
+		3s linear 1s infinite running slidein,
+		3s linear env(foo, var(--baz)) infinite running slidein;
+}
+
 :root {
 	--baz: 10px;
 }
