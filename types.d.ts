@@ -7877,7 +7877,7 @@ declare interface NormalModuleCreateData {
 	layer?: string;
 
 	/**
-	 * module type
+	 * module type. When deserializing, this is set to an empty string "".
 	 */
 	type: "" | "javascript/auto" | "javascript/dynamic" | "javascript/esm";
 
