@@ -1034,6 +1034,45 @@ a {
 	}
 }
 
+/* Has the same URL */
+/*@import url();
+@import url('');
+@import url(\\"\\");
+@import '';
+@import \\"\\";
+@import \\"   \\";
+@import \\"\\\\
+\\";
+@import url();
+@import url('');
+@import url(\\"\\");*/
+/*@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css) screen and (orientation:landscape);
+@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css) screen and (orientation:landscape);*/
+/*@import \\"//example.com/style.css\\";*/
+/*@import url(~package/test.css);*/
+/*@import ;*/
+/*@import foo-bar;*/
+/*@import-normalize;*/
+/*@import url('http://') :root {}*/
+/*@import url('query.css?foo=1&bar=1');*/
+/*@import url('other-query.css?foo=1&bar=1#hash');*/
+/*@import url('other-query.css?foo=1&bar=1#hash') screen and (orientation:landscape);*/
+/*@import url('https://fonts.googleapis.com/css?family=Roboto');*/
+/*@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC');*/
+/*@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC|Roboto');*/
+
+/*@import nourl(test.css);
+@import '\\\\
+\\\\
+\\\\
+';
+@import url('!!../../helpers/string-loader.js?esModule=false!~package/tilde.css');*/
+/*@import url('   https://fonts.googleapis.com/css?family=Roboto   ');*/
+/*@import url('!!../../helpers/string-loader.js?esModule=false!');*/
+/*@import url('   !!../../helpers/string-loader.js?esModule=false!~package/tilde.css   ');*/
+/*@import \\"http://example.com/style.css\\" supports(display: flex) screen and (min-width: 400px);*/
+/* anonymous */
+/* All unknown parse as media for compatibility */
 body {
 	background: red;
 }
