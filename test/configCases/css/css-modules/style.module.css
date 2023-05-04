@@ -365,7 +365,18 @@
 	opacity: 0.12;
 	padding: .5px;
 	unknown: :local(.test);
-	unknown1: .foo, .bar, #bar;
+	unknown1: :local .test;
+	unknown2: :global .test;
+	unknown3: :global .test;
+	unknown4: .foo, .bar, #bar;
+}
+
+@unknown :local .local :global .global {
+	color: red;
+}
+
+@unknown :local(.local) :global(.global) {
+	color: red;
 }
 
 .nested-var {
@@ -390,6 +401,14 @@
 	}
 
 	:global(.global-nested) {
+		color: red;
+	}
+
+	:local .local-nested, :global .global-nested-next {
+		color: red;
+	}
+
+	:local(.local-nested), :global(.global-nested-next) {
 		color: red;
 	}
 }
