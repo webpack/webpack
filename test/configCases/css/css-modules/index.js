@@ -88,7 +88,16 @@ it("should allow to create css modules", done => {
 					: "./style.module.css-animationName",
 				mozAnimationName: prod
 					? "my-app-491-t6"
-					: "./style.module.css-mozAnimationName"
+					: "./style.module.css-mozAnimationName",
+				myColor: prod
+					? "--my-app-491-lC"
+					: "--./style.module.css-my-color",
+				paddingLg: prod
+					? "my-app-491-FP"
+					: "./style.module.css-padding-lg",
+				paddingSm: prod
+					? "my-app-491-zE"
+					: "./style.module.css-padding-sm",
 			});
 		} catch (e) {
 			return done(e);

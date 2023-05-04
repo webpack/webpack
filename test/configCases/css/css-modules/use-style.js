@@ -34,4 +34,7 @@ export default {
 	inSupportScope: style.inSupportScope,
 	animationName: style.animationName,
 	mozAnimationName: style.mozAnimationName,
+	myColor: style['my-color'],
+	paddingSm: style['padding-sm'],
+	paddingLg: style['padding-lg'],
 };
