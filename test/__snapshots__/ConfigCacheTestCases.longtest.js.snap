@@ -1641,6 +1641,45 @@ Array [
 	}
 }
 
+:global .again-global {
+	color:red;
+}
+
+:global .again-again-global {
+	:global .again-again-global {
+		color: red;
+	}
+}
+
+:root {
+	--foo: red;
+}
+
+:global .again-again-global {
+	color: var(--foo);
+
+	:global .again-again-global {
+		color: var(--foo);
+	}
+}
+
+:global .again-again-global {
+	animation: slidein 3s;
+
+	:global .again-again-global, .class, :global(:global(:local(.nested1)).nested2).nested3 {
+		animation: slidein 3s;
+	}
+
+  .local2 :global .global,
+	.local3 {
+		color: red;
+	}
+}
+
+@unknown var(--foo) {
+	color: red;
+}
+
 .class {
 	color: red;
 	background: var(--color);

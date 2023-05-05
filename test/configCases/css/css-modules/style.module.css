@@ -584,6 +584,11 @@
 	:global .again-again-global, .class, :global(:global(:local(.nested1)).nested2).nested3 {
 		animation: slidein 3s;
 	}
+
+  .local2 :global .global,
+	.local3 {
+		color: red;
+	}
 }
 
 @unknown var(--foo) {
