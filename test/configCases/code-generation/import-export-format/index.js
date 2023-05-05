@@ -25,7 +25,6 @@ it("should use the same accessor syntax for import and export", function() {
 
 	var fs = require("fs");
 	var source = fs.readFileSync(__filename, "utf-8").toString();
-	fs.writeFileSync("D:/output.js", source);
 
 	// Reference these imports to generate uses in the source.
 
