@@ -581,7 +581,7 @@
 :global .again-again-global {
 	animation: slidein 3s;
 
-	:global .again-again-global {
+	:global .again-again-global, .class, :global(:global(:local(.nested1)).nested2).nested3 {
 		animation: slidein 3s;
 	}
 }
