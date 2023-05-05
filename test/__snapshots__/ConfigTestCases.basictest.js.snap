@@ -1627,6 +1627,20 @@ Array [
 	}
 }
 
+.first-nested {
+	.first-nested-nested {
+		color: red;
+	}
+}
+
+.first-nested-at-rule {
+	@media screen {
+		.first-nested-nested-at-rule-deep {
+			color: red;
+		}
+	}
+}
+
 .class {
 	color: red;
 	background: var(--color);
