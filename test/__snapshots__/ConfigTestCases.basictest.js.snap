@@ -1681,6 +1681,37 @@ Array [
 }
 
 .class {
+	.class {
+		.class {
+			.class {}
+		}
+	}
+}
+
+.class {
+	.class {
+		.class {
+			.class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.class {
+	animation: slidein 3s;
+	.class {
+		animation: slidein 3s;
+		.class {
+			animation: slidein 3s;
+			.class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.class {
 	color: red;
 	background: var(--color);
 }
