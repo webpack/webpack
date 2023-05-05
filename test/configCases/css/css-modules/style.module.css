@@ -555,3 +555,37 @@
 		}
 	}
 }
+
+:global .again-global {
+	color:red;
+}
+
+:global .again-again-global {
+	:global .again-again-global {
+		color: red;
+	}
+}
+
+:root {
+	--foo: red;
+}
+
+:global .again-again-global {
+	color: var(--foo);
+
+	:global .again-again-global {
+		color: var(--foo);
+	}
+}
+
+:global .again-again-global {
+	animation: slidein 3s;
+
+	:global .again-again-global {
+		animation: slidein 3s;
+	}
+}
+
+@unknown var(--foo) {
+	color: red;
+}
