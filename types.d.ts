@@ -6871,8 +6871,54 @@ declare interface MinChunkSizePluginOptions {
 	minChunkSize: number;
 }
 declare class Module extends DependenciesBlock {
-	constructor(type: string, context?: string, layer?: string);
-	type: string;
+	constructor(
+		type:
+			| ""
+			| "runtime"
+			| "javascript/auto"
+			| "javascript/dynamic"
+			| "javascript/esm"
+			| "json"
+			| "webassembly/async"
+			| "webassembly/sync"
+			| "css"
+			| "css/global"
+			| "css/module"
+			| "asset"
+			| "asset/inline"
+			| "asset/resource"
+			| "asset/source"
+			| "asset/raw-data-url"
+			| "fallback-module"
+			| "remote-module"
+			| "provide-module"
+			| "consume-shared-module"
+			| "lazy-compilation-proxy",
+		context?: string,
+		layer?: string
+	);
+	type:
+		| ""
+		| "runtime"
+		| "javascript/auto"
+		| "javascript/dynamic"
+		| "javascript/esm"
+		| "json"
+		| "webassembly/async"
+		| "webassembly/sync"
+		| "css"
+		| "css/global"
+		| "css/module"
+		| "asset"
+		| "asset/inline"
+		| "asset/resource"
+		| "asset/source"
+		| "asset/raw-data-url"
+		| "fallback-module"
+		| "remote-module"
+		| "provide-module"
+		| "consume-shared-module"
+		| "lazy-compilation-proxy";
 	context: null | string;
 	layer: null | string;
 	needId: boolean;
@@ -7831,9 +7877,9 @@ declare interface NormalModuleCreateData {
 	layer?: string;
 
 	/**
-	 * module type
+	 * module type. When deserializing, this is set to an empty string "".
 	 */
-	type: string;
+	type: "" | "javascript/auto" | "javascript/dynamic" | "javascript/esm";
 
 	/**
 	 * request string
