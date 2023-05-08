@@ -71,6 +71,15 @@
 	background-color: aquamarine;
 }
 
+.local9 :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
 :global(:global(:local(.nested1)).nested2).nested3 {
 	color: pink;
 }
@@ -269,5 +278,350 @@
 	}
 	100% {
 		background: red;
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: "\1F44D";
+	suffix: " ";
+}
+
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+/* At-rule for "nice-style" in Font Two */
+@font-feature-values Font Two {
+	@styleset {
+		nice-style: 4;
+	}
+}
+
+@property --my-color {
+	syntax: "<color>";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+.class {
+	color: var(--my-color);
+}
+
+@layer utilities {
+	.padding-sm {
+		padding: 0.5rem;
+	}
+
+	.padding-lg {
+		padding: 0.8rem;
+	}
+}
+
+.class {
+	color: red;
+
+	.nested-pure {
+		color: red;
+	}
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.nested-media {
+			color: blue;
+		}
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.nested-supports {
+			display: flex;
+		}
+	}
+
+	@layer foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+
+	@container foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+}
+
+.not-selector-inside {
+	color: #fff;
+	opacity: 0.12;
+	padding: .5px;
+	unknown: :local(.test);
+	unknown1: :local .test;
+	unknown2: :global .test;
+	unknown3: :global .test;
+	unknown4: .foo, .bar, #bar;
+}
+
+@unknown :local .local :global .global {
+	color: red;
+}
+
+@unknown :local(.local) :global(.global) {
+	color: red;
+}
+
+.nested-var {
+	.again {
+		color: var(--local-color);
+	}
+}
+
+.nested-with-local-pseudo {
+	color: red;
+
+	:local .local-nested {
+		color: red;
+	}
+
+	:global .global-nested {
+		color: red;
+	}
+
+	:local(.local-nested) {
+		color: red;
+	}
+
+	:global(.global-nested) {
+		color: red;
+	}
+
+	:local .local-nested, :global .global-nested-next {
+		color: red;
+	}
+
+	:local(.local-nested), :global(.global-nested-next) {
+		color: red;
+	}
+
+	:global .foo, .bar {
+		color: red;
+	}
+}
+
+#id-foo {
+	color: red;
+
+	#id-bar {
+		color: red;
+	}
+}
+
+.nested-parens {
+	.local9 div:has(.vertical-tiny, .vertical-small) {
+		max-height: 0;
+		margin: 0;
+		overflow: hidden;
+	}
+}
+
+:global .global-foo {
+	.nested-global {
+		color: red;
+	}
+
+	:local .local-in-global {
+		color: blue;
+	}
+}
+
+@unknown .class {
+	color: red;
+
+	.class {
+		color: red;
+	}
+}
+
+:global .class :local .in-local-global-scope,
+:global .class :local .in-local-global-scope,
+:local .class-local-scope :global .in-local-global-scope {
+	color: red;
+}
+
+@container (width > 400px) {
+	.class-in-container {
+		font-size: 1.5em;
+	}
+}
+
+@container summary (min-width: 400px) {
+	@container (width > 400px) {
+		.deep-class-in-container {
+			font-size: 1.5em;
+		}
+	}
+}
+
+:scope {
+	color: red;
+}
+
+.placeholder-gray-700:-ms-input-placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+.placeholder-gray-700::-ms-input-placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+.placeholder-gray-700::placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+
+:root {
+	--test: dark;
+}
+
+@media screen and (prefers-color-scheme: var(--test)) {
+	.baz {
+		color: white;
+	}
+}
+
+@keyframes slidein {
+	from {
+		margin-left: 100%;
+		width: 300%;
+	}
+
+	to {
+		margin-left: 0%;
+		width: 100%;
+	}
+}
+
+.class {
+	animation:
+		foo var(--animation-name) 3s,
+		var(--animation-name) 3s,
+		3s linear 1s infinite running slidein,
+		3s linear env(foo, var(--baz)) infinite running slidein;
+}
+
+:root {
+	--baz: 10px;
+}
+
+.class {
+	bar: env(foo, var(--baz));
+}
+
+:global      .global-foo, :local        .bar {
+	:local      .local-in-global       {
+		color: blue;
+	}
+
+	@media screen {
+		:global .my-global-class-again,
+		:local .my-global-class-again {
+			color: red;
+		}
+	}
+}
+
+.first-nested {
+	.first-nested-nested {
+		color: red;
+	}
+}
+
+.first-nested-at-rule {
+	@media screen {
+		.first-nested-nested-at-rule-deep {
+			color: red;
+		}
+	}
+}
+
+:global .again-global {
+	color:red;
+}
+
+:global .again-again-global {
+	:global .again-again-global {
+		color: red;
+	}
+}
+
+:root {
+	--foo: red;
+}
+
+:global .again-again-global {
+	color: var(--foo);
+
+	:global .again-again-global {
+		color: var(--foo);
+	}
+}
+
+:global .again-again-global {
+	animation: slidein 3s;
+
+	:global .again-again-global, .class, :global(:global(:local(.nested1)).nested2).nested3 {
+		animation: slidein 3s;
+	}
+
+  .local2 :global .global,
+	.local3 {
+		color: red;
+	}
+}
+
+@unknown var(--foo) {
+	color: red;
+}
+
+.class {
+	.class {
+		.class {
+			.class {}
+		}
+	}
+}
+
+.class {
+	.class {
+		.class {
+			.class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.class {
+	animation: slidein 3s;
+	.class {
+		animation: slidein 3s;
+		.class {
+			animation: slidein 3s;
+			.class {
+				animation: slidein 3s;
+			}
+		}
 	}
 }

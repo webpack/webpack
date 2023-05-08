@@ -1,3 +1,5 @@
+@import url("../css-modules/style.module.css");
+
 .class {
 	color: red;
 	background: var(--color);
@@ -30,4 +32,8 @@
 
 :export {
 	foo: bar;
+}
+
+.class {
+	animation: test 1s, test;
 }
