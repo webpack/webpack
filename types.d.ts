@@ -13423,6 +13423,7 @@ declare namespace exports {
 		RuleSetUseItem,
 		StatsOptions,
 		Configuration,
+		Output,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance,
 		Asset,
