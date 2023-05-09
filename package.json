@@ -173,7 +173,7 @@
     "cover:unit": "node --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:types": "node node_modules/tooling/type-coverage",
     "cover:merge": "yarn mkdirp .nyc_output && nyc merge .nyc_output coverage/coverage-nyc.json && rimraf .nyc_output",
-    "cover:report": "nyc report -t coverage"
+    "cover:report": "nyc report --reporter=lcov  --reporter=text -t coverage"
   },
   "lint-staged": {
     "*.{js,cjs,mjs}": [
