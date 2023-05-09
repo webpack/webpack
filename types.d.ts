@@ -13415,6 +13415,7 @@ declare namespace exports {
 		LibraryOptions,
 		MemoryCacheOptions,
 		ModuleOptions,
+		Output,
 		ResolveOptionsWebpackOptions as ResolveOptions,
 		RuleSetCondition,
 		RuleSetConditionAbsolute,
