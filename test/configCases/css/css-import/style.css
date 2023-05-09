@@ -60,7 +60,7 @@ style2.css?foo=9
 @import url(https://test.cases/path/../../../../configCases/css/css-import/external.css);
 /*@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css) screen and (orientation:landscape);
 @import url(https://test.cases/path/../../../../configCases/css/css-import/external.css) screen and (orientation:landscape);*/
-/*@import url("//example.com/style.css");*/
+/*@import "//example.com/style.css";*/
 /*@import url(~package/test.css);*/
 /*@import ;*/
 /*@import foo-bar;*/
@@ -145,7 +145,7 @@ le3.css?=bar4');
 @import url("./layer.css?foo=5") layer();
 @import url("./layer.css?foo=6") layer(   foo.bar.baz   );
 @import url("./layer.css?foo=7") layer(      );
-/*@import url("http://example.com/style.css") supports(display: flex) screen and (min-width: 400px);*/
+/*@import "http://example.com/style.css" supports(display: flex) screen and (min-width: 400px);*/
 @import url("./style6.css")layer(default)supports(display: flex)screen and (min-width:400px);
 @import "./style6.css?foo=1"layer(default)supports(display: flex)screen and (min-width:400px);
 @import "./style6.css?foo=2"supports(display: flex)screen and (min-width:400px);
