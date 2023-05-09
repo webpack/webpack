@@ -4,7 +4,7 @@ var regexEscape = require("./regexEscape.js");
 // being tested for, so we have to use the "DO NOT MATCH BELOW..." technique to exclude the actual testing code from the test.
 // Place your jest 'expect' calls below a line containing the DO NOT MATCH BELOW... string constructed below.  See other tests for examples.
 
-// Break up the match string so we don't match it in these expect* funtions either.
+// Break up the match string so we don't match it in these expect* functions either.
 const doNotMatch = ["DO", "NOT", "MATCH", "BELOW", "THIS", "LINE"].join(" ");
 
 function expectSourceToContain(source, str) {
