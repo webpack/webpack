@@ -6,17 +6,8 @@ import { baz as harmonyexport_harmonyimport_2 } from "./harmony-module-2";
 import * as mod3 from "./harmony-module-3";
 export { mod3 };
 
-// This is necessary because 'source' contains the code for this test file, which will always contain the string
-// being tested for, so we have to use negative lookahead/lookbehind to exclude the actual testing code from the test.
-function expectSourceToContain(source, str) {
-	expect(source).toMatch(new RegExp(`^.*?(?<!${escape("expectSourceToContain(")}.*?)${escape(str)}(?!.*?${escape(");")}).*?$`, "gm"));
-}
-function expectSourceToMatch(source, regexStr) {
-	expect(source).toMatch(new RegExp(`^.*?(?<!${escape("expectSourceToMatch(")}.*?)${regexStr}(?!.*?${escape(");")}).*?$`, "gm"));
-}
-function escape(string) {
-	return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
-}
+const { expectSourceToContain, expectSourceToMatch } = require("../../../helpers/expectSource");
+const regexEscape = require("../../../helpers/regexEscape.js");
 
 // It's important to use propertyName when generating object members to ensure that the exported property name
 // uses the same accessor syntax (quotes vs. dot notatation) as the imported property name on the other end
@@ -34,6 +25,8 @@ it("should use the same accessor syntax for import and export", function() {
 	harmonyexport_harmonyimport_2;
 	theDefault;
 
+	/*********** DO NOT MATCH BELOW THIS LINE ***********/
+
 	// Note that there are no quotes around the "a" and "b" properties in the following lines.
 
 	// Checking harmonyexportinitfragment.js formation of standard export fragment
@@ -41,7 +34,7 @@ it("should use the same accessor syntax for import and export", function() {
 
 	// Checking formation of imports
 	expectSourceToContain(source, "harmony_module/* bar */.a;");
-	expectSourceToMatch(source, `${escape("const { harmonyexport_cjsimport } = (__webpack_require__(/*! ./harmony-module */ ")}\\d+${escape(")/* .bar */ .a);")}`);
+	expectSourceToMatch(source, `${regexEscape("const { harmonyexport_cjsimport } = (__webpack_require__(/*! ./harmony-module */ ")}\\d+${regexEscape(")/* .bar */ .a);")}`);
 
 	// Checking concatenatedmodule.js formation of exports
 	expectSourceToContain(source, "a: () => (/* reexport */ harmony_module_3_namespaceObject)");
