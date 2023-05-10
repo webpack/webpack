@@ -2330,6 +2330,11 @@ declare interface Configuration {
 	)[];
 
 	/**
+	 * Presets for the webpack configuration.
+	 */
+	presets?: (string | Preset)[];
+
+	/**
 	 * Capture timing information for each module.
 	 */
 	profile?: boolean;
@@ -9332,6 +9337,21 @@ declare class PrefixSource extends Source {
 }
 declare interface PreparsedAst {
 	[index: string]: any;
+}
+
+/**
+ * A preset is a pre-configured webpack configuration that can be re-used.
+ */
+declare interface Preset {
+	/**
+	 * Name of the preset.
+	 */
+	name?: string;
+
+	/**
+	 * Options for the preset.
+	 */
+	options?: Object;
 }
 declare interface PrintedElement {
 	element: string;
