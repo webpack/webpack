@@ -3506,6 +3506,7 @@ declare class EnvironmentPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type ErrorWithDetail = Error & { details?: string };
 declare interface Etag {
 	toString: () => string;
 }
@@ -8023,9 +8024,9 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 		context: string,
 		request: string,
 		callback: (
-			arg0: null | Error,
-			arg1?: string | false,
-			arg2?: ResolveRequest
+			err: null | ErrorWithDetail,
+			res?: string | false,
+			req?: ResolveRequest
 		) => void
 	): any;
 	getResolve(options?: ResolveOptionsWithDependencyType): {
@@ -8033,9 +8034,9 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 			context: string,
 			request: string,
 			callback: (
-				arg0: null | Error,
-				arg1?: string | false,
-				arg2?: ResolveRequest
+				err: null | ErrorWithDetail,
+				res?: string | false,
+				req?: ResolveRequest
 			) => void
 		): void;
 		(context: string, request: string): Promise<string>;
@@ -10134,9 +10135,9 @@ declare abstract class Resolver {
 		request: string,
 		resolveContext: ResolveContext,
 		callback: (
-			arg0: null | Error,
-			arg1?: string | false,
-			arg2?: ResolveRequest
+			err: null | ErrorWithDetail,
+			res?: string | false,
+			req?: ResolveRequest
 		) => void
 	): void;
 	doResolve(
