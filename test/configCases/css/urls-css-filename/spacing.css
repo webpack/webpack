@@ -1,0 +1,603 @@
+@import "./nested.css";
+
+div {
+  a: url('./img.png');
+}
+
+div {
+  b: url("./img.png");
+}
+
+div {
+  c: url(./img.png);
+}
+
+div {
+  d: url("./img.png#hash");
+}
+
+div {
+  e: url(
+    "./img.png"
+  );
+}
+
+div {
+  f: green url( './img.png' ) xyz;
+}
+
+div {
+  g: green url( "./img.png" ) xyz;
+}
+
+div {
+  h: green url( ./img.png ) xyz;
+}
+
+div {
+  i: green url(package/img.png) url(./img.png) xyz;
+}
+
+div {
+  j: green url( "./img img.png" ) xyz;
+}
+
+div {
+  k: green url( './img img.png' ) xyz;
+}
+
+div {
+  l: green url(/img.png) xyz;
+}
+
+div {
+	m: green URL(/img.png) xyz;
+}
+
+div {
+	n: green uRl(/img.png) xyz;
+}
+
+div {
+	--foo: url('./img.png');
+}
+
+div {
+	a1: url('./img.png');
+}
+
+div {
+	a2: url("./img.png");
+}
+
+div {
+	a3: url(./img.png);
+}
+
+div {
+	a4: url("./img.png#hash");
+}
+
+div {
+	a5: url(
+	"./img.png"
+	);
+}
+
+div {
+	a6: green url( './img.png' ) xyz;
+}
+
+div {
+	a7: green url( "./img.png" ) xyz;
+}
+
+div {
+	a8: green url( ./img.png ) xyz;
+}
+
+div {
+	a9: green url(package/img.png) url(./other-img.png) xyz;
+}
+
+div {
+	a10: green url( "./img img.png" ) xyz;
+}
+
+div {
+	a11: green url( './img img.png' ) xyz;
+}
+
+div {
+	a12: green url(/img.png) xyz;
+}
+
+div {
+	a13: green url(data:image/png;base64,AAA) url(http://example.com/image.jpg) url(//example.com/image.png) xyz;
+}
+
+div {
+	a14: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 42 26' fill='%23007aff'><rect width='4' height='4'/><rect x='8' y='1' width='34' height='2'/><rect y='11' width='4' height='4'/><rect x='8' y='12' width='34' height='2'/><rect y='22' width='4' height='4'/><rect x='8' y='23' width='34' height='2'/></svg>");
+}
+
+div {
+	a15: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2042%2026%27%20fill%3D%27%2523007aff%27%3E%3Crect%20width%3D%274%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%278%27%20y%3D%271%27%20width%3D%2734%27%20height%3D%272%27%2F%3E%3Crect%20y%3D%2711%27%20width%3D%274%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%278%27%20y%3D%2712%27%20width%3D%2734%27%20height%3D%272%27%2F%3E%3Crect%20y%3D%2722%27%20width%3D%274%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%278%27%20y%3D%2723%27%20width%3D%2734%27%20height%3D%272%27%2F%3E%3C%2Fsvg%3E");
+}
+
+div {
+	a16: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="filter"><feGaussianBlur in="SourceAlpha" stdDeviation="0" /><feOffset dx="1" dy="2" result="offsetblur" /><feFlood flood-color="rgba(255,255,255,1)" /><feComposite in2="offsetblur" operator="in" /><feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge></filter></svg>#filter');
+}
+
+div {
+	a17: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%5C%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%5C%22%3E%3Cfilter%20id%3D%5C%22filter%5C%22%3E%3CfeGaussianBlur%20in%3D%5C%22SourceAlpha%5C%22%20stdDeviation%3D%5C%220%5C%22%20%2F%3E%3CfeOffset%20dx%3D%5C%221%5C%22%20dy%3D%5C%222%5C%22%20result%3D%5C%22offsetblur%5C%22%20%2F%3E%3CfeFlood%20flood-color%3D%5C%22rgba(255%2C255%2C255%2C1)%5C%22%20%2F%3E%3CfeComposite%20in2%3D%5C%22offsetblur%5C%22%20operator%3D%5C%22in%5C%22%20%2F%3E%3CfeMerge%3E%3CfeMergeNode%20%2F%3E%3CfeMergeNode%20in%3D%5C%22SourceGraphic%5C%22%20%2F%3E%3C%2FfeMerge%3E%3C%2Ffilter%3E%3C%2Fsvg%3E%23filter');
+}
+
+div {
+	a18: url(#highlight);
+}
+
+div {
+	a19: url('#line-marker');
+}
+
+@font-face {
+	a20: url(./font.woff) format('woff'),
+		url('./font.woff2') format('woff2'),
+		url("./font.eot") format('eot'),
+		url(./font.ttf) format('truetype'),
+		url("./font with spaces.eot") format("embedded-opentype"),
+		url('./font.svg#svgFontName') format('svg'),
+		url('./font.woff2?foo=bar') format('woff2'),
+		url("./font.eot?#iefix") format('embedded-opentype'),
+		url("./font with spaces.eot?#iefix") format('embedded-opentype');
+}
+
+@media (min-width: 500px) {
+	div {
+		a21: url("./img.png");
+	}
+}
+
+div {
+	a22: "do not use url(path)";
+}
+
+div {
+	a23: 'do not "use" url(path)';
+}
+
+div {
+	a24: -webkit-image-set(url('./img1x.png') 1x, url('./img2x.png') 2x)
+}
+
+div {
+	a25: image-set(url('./img1x.png') 1x, url('./img2x.png') 2x)
+}
+
+div {
+	a26: green url() xyz;
+}
+
+div {
+	a27: green url('') xyz;
+}
+
+div {
+	a28: green url("") xyz;
+}
+
+div {
+	a29: green url('   ') xyz;
+}
+
+div {
+	a30: green url(
+	) xyz;
+}
+
+div {
+	a40: green url(https://raw.githubusercontent.com/webpack/media/master/logo/icon.png) xyz;
+}
+
+div {
+	a41: green url(//raw.githubusercontent.com/webpack/media/master/logo/icon.png) xyz;
+}
+
+div {
+	a42: url("./img.png?foo");
+}
+
+div {
+	a43: url("./img.png?foo=bar");
+}
+
+div {
+	a44: url("./img.png?foo=bar#hash");
+}
+
+div {
+	a45: url("./img.png?foo=bar#hash");
+}
+
+div {
+	a46: url("./img.png?");
+}
+
+div {
+	a47: url('./img.png') url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 42 26' fill='%23007aff'><rect width='4' height='4'/><rect x='8' y='1' width='34' height='2'/><rect y='11' width='4' height='4'/><rect x='8' y='12' width='34' height='2'/><rect y='22' width='4' height='4'/><rect x='8' y='23' width='34' height='2'/></svg>") url('./img.png');
+}
+
+div {
+	a48: __URL__();
+}
+
+div {
+	a49: url('./nested/../nested/img-simple.png');
+}
+
+div {
+	a50: url('/nested/img-simple.png');
+}
+
+div {
+	a51: url('../urls/nested/img-simple.png');
+}
+
+div {
+	a52: url(./nested/img.png);
+}
+
+div {
+	a53: url(nested/img.png);
+}
+
+@font-face {
+	a54: url("//at.alicdn.com/t/font_515771_emcns5054x3whfr.eot");
+}
+
+div {
+	a55: -webkit-image-set();
+	a56: -webkit-image-set('');
+	a56: image-set();
+	a58: image-set('');
+	a59: image-set("");
+	a60: image-set("" 1x);
+	a61: image-set(url());
+	a62: image-set(
+		url()
+	);
+	a63: image-set(URL());
+	a64: image-set(url(''));
+	a65: image-set(url(""));
+	a66: image-set(url('') 1x);
+	a67: image-set(1x);
+	a68: image-set(
+		1x
+	);
+	a69: image-set(calc(1rem + 1px) 1x);
+
+	a70: -webkit-image-set("./img1x.png" 1x, "./img2x.png" 2x);
+	a71: image-set("./img1x.png" 1x);
+	a72: image-set("./img1x.png" 1x, "./img2x.png" 2x);
+	a73: image-set("./img img.png" 1x, "./img img.png" 2x);
+	a74: image-set("./img1x.png" 1x, "./img2x.png" 2x),
+		image-set("./img1x.png" 1x, "./img2x.png" 2x);
+	a75: image-set(
+		"./img1x.png" 1x,
+		"./img2x.png" 2x,
+		"./img3x.png" 600dpi
+	);
+	a76: image-set("./img1x.png?foo=bar" 1x);
+	a77: image-set("./img1x.png#hash" 1x);
+	a78: image-set("./img1x.png?#iefix" 1x);
+
+	a79: -webkit-image-set(url("./img1x.png") 1x, url("./img2x.png") 2x);
+	a80: -webkit-image-set(url("./img1x.png") 1x);
+	a81: -webkit-image-set(
+		url("./img1x.png") 1x
+	);
+	a82: image-set(url(./img1x.png) 1x);
+	a83: image-set(
+		url(./img1x.png) 1x
+	);
+	a84: image-set(url("./img1x.png") 1x, url("./img2x.png") 2x);
+	a85: image-set(
+		url(./img1x.png) 1x,
+		url(./img2x.png) 2x,
+		url(./img3x.png) 600dpi
+	);
+	a86: image-set(url("./img img.png") 1x, url("./img img.png") 2x);
+
+	a87: image-set(url("./img1x.png") 1x, "./img2x.png" 2x);
+}
+
+div {
+	a88: url(./img\img.png);
+	a89: url(./img\'img.png);
+	a90: url(./img\'\'\'img.png);
+	a91: url(./img\(img.png);
+	a92: url(./img\)img.png);
+	a93: url(./img\ img.png);
+	a94: url(./img\'\(\)\ img.png);
+
+	a95: image-set(
+		url(./img\img.png) 1x,
+		url(./img\'\'\'img.png) 2x,
+		url(./img\'img.png) 3x,
+		url(./img\(img.png) 4x,
+		url(./img\)img.png) 5x,
+		url(./img\ img.png) 6x,
+		url(./img\'\(\)\ img.png) 7x
+	);
+}
+
+div {
+	a96: url("./img'''img.png");
+	a97: url("./img'() img.png");
+	a98: url("./img'img.png");
+	a99: url("./img(img.png");
+	a100: url("./img)img.png");
+	a101: url('./img img.png');
+	a102: url("./img img.png");
+}
+
+div {
+	a103: url('./img\
+(img.png');
+	a104: url('./img\
+(img.png');
+	a105: url('./img\
+(img.png');
+	a106: url('./img\
+\
+\
+\
+(img.png');
+}
+
+div {
+	a107: url("./img%27%27%27img.png");
+	a108: url("./img%27%28%29%20img.png");
+	a109: url("./img%27img.png");
+	a110: url("./img%28img.png");
+	a111: url("./img%29img.png");
+	a112: url("./img%20img.png");
+	a113: url(./img%27%27%27img.png);
+	a114: url(./img%27%28%29%20img.png);
+	a115: url(./img%27img.png);
+	a116: url(./img%28img.png);
+	a117: url(./img%29img.png);
+	a118: url(./img%20img.png);
+}
+
+div {
+	a119: url('img.png');
+}
+
+div {
+	a120: url("./img\'\'\'img.png");
+	a121: url("./img\'\(\)\ img.png");
+	a122: url("./img\'img.png");
+	a123: url("./img\(img.png");
+	a124: url("./img\)img.png");
+	a125: url("./img\ img.png");
+	a126: url("./\69\6D\67.png");
+	a127: url(./\69\6D\67.png);
+	a128: url("./img\27img.png");
+	a129: url("./img\'\28%29 img.png");
+	a130: url(./img\'\28%29\ img.png);
+}
+
+div {
+	a131: url('./img.png');
+	a132: url('./img.png');
+
+	a133: url('./img.png?foo=bar');
+	a134: url('./img.png?foo=bar');
+
+	a135: url('./img.png?foo=bar#hash');
+	a136: url('./img.png?foo=bar#hash');
+
+	a137: url('./img.png?foo=bar');
+	a138: url('./img.png?bar=foo');
+
+	a139: url('./img.png?foo=bar#foo');
+	a140: url('./img.png?bar=foo#bar');
+
+	a141: url('./img.png?foo=1&bar=2');
+	a142: url('./img.png?foo=2&bar=1');
+}
+
+div {
+	a143: url("data:image/svg+xml;charset=UTF-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%0A%3Csvg%20version%3D%221.1%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%0A%09%20width%3D%22191px%22%20height%3D%22191px%22%20viewBox%3D%220%200%20191%20191%22%20enable-background%3D%22new%200%200%20191%20191%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cpath%20fill%3D%22%23636363%22%20d%3D%22M95.5%2C0C42.8%2C0%2C0%2C42.8%2C0%2C95.5S42.8%2C191%2C95.5%2C191S191%2C148.2%2C191%2C95.5S148.2%2C0%2C95.5%2C0z%20M95.5%2C187.6%0A%09c-50.848%2C0-92.1-41.25-92.1-92.1c0-50.848%2C41.252-92.1%2C92.1-92.1c50.85%2C0%2C92.1%2C41.252%2C92.1%2C92.1%0A%09C187.6%2C146.35%2C146.35%2C187.6%2C95.5%2C187.6z%22%2F%3E%0A%3Cg%3E%0A%09%3Cpath%20fill%3D%22%23636363%22%20d%3D%22M92.9%2C10v8.6H91v-6.5c-0.1%2C0.1-0.2%2C0.2-0.4%2C0.3c-0.2%2C0.1-0.3%2C0.2-0.4%2C0.2c-0.1%2C0-0.3%2C0.1-0.5%2C0.2%0A%09%09c-0.2%2C0.1-0.3%2C0.1-0.5%2C0.1v-1.6c0.5-0.1%2C0.9-0.3%2C1.4-0.5c0.5-0.2%2C0.8-0.5%2C1.2-0.7h1.1V10z%22%2F%3E%0A%09%3Cpath%20fill%3D%22%23636363%22%20d%3D%22M97.1%2C17.1h3.602v1.5h-5.6V18c0-0.4%2C0.1-0.8%2C0.2-1.2c0.1-0.4%2C0.3-0.6%2C0.5-0.9c0.2-0.3%2C0.5-0.5%2C0.7-0.7%0A%09%09c0.2-0.2%2C0.5-0.4%2C0.7-0.6c0.199-0.2%2C0.5-0.3%2C0.6-0.5c0.102-0.2%2C0.301-0.3%2C0.5-0.5c0.2-0.2%2C0.2-0.3%2C0.301-0.5%0A%09%09c0.101-0.2%2C0.101-0.3%2C0.101-0.5c0-0.4-0.101-0.6-0.3-0.8c-0.2-0.2-0.4-0.3-0.801-0.3c-0.699%2C0-1.399%2C0.3-2.101%2C0.9v-1.6%0A%09%09c0.7-0.5%2C1.5-0.7%2C2.5-0.7c0.399%2C0%2C0.8%2C0.1%2C1.101%2C0.2c0.301%2C0.1%2C0.601%2C0.3%2C0.899%2C0.5c0.3%2C0.2%2C0.399%2C0.5%2C0.5%2C0.8%0A%09%09c0.101%2C0.3%2C0.2%2C0.6%2C0.2%2C1s-0.102%2C0.7-0.2%2C1c-0.099%2C0.3-0.3%2C0.6-0.5%2C0.8c-0.2%2C0.2-0.399%2C0.5-0.7%2C0.7c-0.3%2C0.2-0.5%2C0.4-0.8%2C0.6%0A%09%09c-0.2%2C0.1-0.399%2C0.3-0.5%2C0.4s-0.3%2C0.3-0.5%2C0.4s-0.2%2C0.3-0.3%2C0.4C97.1%2C17%2C97.1%2C17%2C97.1%2C17.1z%22%2F%3E%0A%3C%2Fg%3E%0A%3Cg%3E%0A%09%3Cpath%20fill%3D%22%23636363%22%20d%3D%22M15%2C95.4c0%2C0.7-0.1%2C1.4-0.2%2C2c-0.1%2C0.6-0.4%2C1.1-0.7%2C1.5C13.8%2C99.3%2C13.4%2C99.6%2C12.9%2C99.8s-1%2C0.3-1.5%2C0.3%0A%09%09c-0.7%2C0-1.3-0.1-1.8-0.3v-1.5c0.4%2C0.3%2C1%2C0.4%2C1.6%2C0.4c0.6%2C0%2C1.1-0.2%2C1.5-0.7c0.4-0.5%2C0.5-1.1%2C0.5-1.9l0%2C0%0A%09%09C12.8%2C96.7%2C12.3%2C96.9%2C11.5%2C96.9c-0.3%2C0-0.7-0.102-1-0.2c-0.3-0.101-0.5-0.3-0.8-0.5c-0.3-0.2-0.4-0.5-0.5-0.8%0A%09%09c-0.1-0.3-0.2-0.7-0.2-1c0-0.4%2C0.1-0.8%2C0.2-1.2c0.1-0.4%2C0.3-0.7%2C0.6-0.9c0.3-0.2%2C0.6-0.5%2C0.9-0.6c0.3-0.1%2C0.8-0.2%2C1.2-0.2%0A%09%09c0.5%2C0%2C0.9%2C0.1%2C1.2%2C0.3c0.3%2C0.2%2C0.7%2C0.4%2C0.9%2C0.8s0.5%2C0.7%2C0.6%2C1.2S15%2C94.8%2C15%2C95.4z%20M13.1%2C94.4c0-0.2%2C0-0.4-0.1-0.6%0A%09%09c-0.1-0.2-0.1-0.4-0.2-0.5c-0.1-0.1-0.2-0.2-0.4-0.3c-0.2-0.1-0.3-0.1-0.5-0.1c-0.2%2C0-0.3%2C0-0.4%2C0.1s-0.3%2C0.2-0.3%2C0.3%0A%09%09c0%2C0.1-0.2%2C0.3-0.2%2C0.4c0%2C0.1-0.1%2C0.4-0.1%2C0.6c0%2C0.2%2C0%2C0.4%2C0.1%2C0.6c0.1%2C0.2%2C0.1%2C0.3%2C0.2%2C0.4c0.1%2C0.1%2C0.2%2C0.2%2C0.4%2C0.3%0A%09%09c0.2%2C0.1%2C0.3%2C0.1%2C0.5%2C0.1c0.2%2C0%2C0.3%2C0%2C0.4-0.1s0.2-0.2%2C0.3-0.3c0.1-0.1%2C0.2-0.2%2C0.2-0.4C13%2C94.7%2C13.1%2C94.6%2C13.1%2C94.4z%22%2F%3E%0A%3C%2Fg%3E%0A%3Cg%3E%0A%09%3Cpath%20fill%3D%22%23636363%22%20d%3D%22M176%2C99.7V98.1c0.6%2C0.4%2C1.2%2C0.602%2C2%2C0.602c0.5%2C0%2C0.8-0.102%2C1.1-0.301c0.301-0.199%2C0.4-0.5%2C0.4-0.801%0A%09%09c0-0.398-0.2-0.699-0.5-0.898c-0.3-0.2-0.8-0.301-1.3-0.301h-0.802V95h0.701c1.101%2C0%2C1.601-0.4%2C1.601-1.1c0-0.7-0.4-1-1.302-1%0A%09%09c-0.6%2C0-1.1%2C0.2-1.6%2C0.5v-1.5c0.6-0.3%2C1.301-0.4%2C2.1-0.4c0.9%2C0%2C1.5%2C0.2%2C2%2C0.6s0.701%2C0.9%2C0.701%2C1.5c0%2C1.1-0.601%2C1.8-1.701%2C2.1l0%2C0%0A%09%09c0.602%2C0.1%2C1.102%2C0.3%2C1.4%2C0.6s0.5%2C0.8%2C0.5%2C1.3c0%2C0.801-0.3%2C1.4-0.9%2C1.9c-0.6%2C0.5-1.398%2C0.7-2.398%2C0.7%0A%09%09C177.2%2C100.1%2C176.5%2C100%2C176%2C99.7z%22%2F%3E%0A%3C%2Fg%3E%0A%3Cg%3E%0A%09%3Cpath%20fill%3D%22%23636363%22%20d%3D%22M98.5%2C179.102c0%2C0.398-0.1%2C0.799-0.2%2C1.199C98.2%2C180.7%2C98%2C181%2C97.7%2C181.2s-0.601%2C0.5-0.9%2C0.601%0A%09%09c-0.3%2C0.1-0.7%2C0.199-1.2%2C0.199c-0.5%2C0-0.9-0.1-1.3-0.3c-0.4-0.2-0.7-0.399-0.9-0.8c-0.2-0.4-0.5-0.7-0.6-1.2%0A%09%09c-0.1-0.5-0.2-1-0.2-1.601c0-0.699%2C0.1-1.399%2C0.3-2c0.2-0.601%2C0.4-1.101%2C0.8-1.5c0.4-0.399%2C0.7-0.699%2C1.2-1c0.5-0.3%2C1-0.3%2C1.6-0.3%0A%09%09c0.6%2C0%2C1.2%2C0.101%2C1.5%2C0.199v1.5c-0.4-0.199-0.9-0.399-1.4-0.399c-0.3%2C0-0.6%2C0.101-0.8%2C0.2c-0.2%2C0.101-0.5%2C0.3-0.7%2C0.5%0A%09%09c-0.2%2C0.199-0.3%2C0.5-0.4%2C0.8c-0.1%2C0.301-0.2%2C0.7-0.2%2C1.101l0%2C0c0.4-0.601%2C1-0.8%2C1.8-0.8c0.3%2C0%2C0.7%2C0.1%2C0.9%2C0.199%0A%09%09c0.2%2C0.101%2C0.5%2C0.301%2C0.7%2C0.5c0.199%2C0.2%2C0.398%2C0.5%2C0.5%2C0.801C98.5%2C178.2%2C98.5%2C178.7%2C98.5%2C179.102z%20M96.7%2C179.2%0A%09%09c0-0.899-0.4-1.399-1.1-1.399c-0.2%2C0-0.3%2C0-0.5%2C0.1c-0.2%2C0.101-0.3%2C0.201-0.4%2C0.301c-0.1%2C0.101-0.2%2C0.199-0.2%2C0.4%0A%09%09c0%2C0.199-0.1%2C0.299-0.1%2C0.5c0%2C0.199%2C0%2C0.398%2C0.1%2C0.6s0.1%2C0.3%2C0.2%2C0.5c0.1%2C0.199%2C0.2%2C0.199%2C0.4%2C0.3c0.2%2C0.101%2C0.3%2C0.101%2C0.5%2C0.101%0A%09%09c0.2%2C0%2C0.3%2C0%2C0.5-0.101c0.2-0.101%2C0.301-0.199%2C0.301-0.3c0-0.1%2C0.199-0.301%2C0.199-0.399C96.6%2C179.7%2C96.7%2C179.4%2C96.7%2C179.2z%22%2F%3E%0A%3C%2Fg%3E%0A%3Ccircle%20fill%3D%22%23636363%22%20cx%3D%2295%22%20cy%3D%2295%22%20r%3D%227%22%2F%3E%0A%3C%2Fsvg%3E%0A") 50% 50%/191px no-repeat;
+}
+
+div {
+	a144: url('%2E/img.png');
+}
+
+div {
+	a145: url("/img.png");
+}
+
+div {
+	/* TODO fix me */
+	/*a146: url('./img.png', 'foo', './img.png', url('./img.png'));*/
+	/*a147: image-set(url('./img.png', 'foo', './img.png', url('./img.png')) 1x, url("./img2x.png") 2x);*/
+}
+
+div {
+	a148: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="100%25" height="100%25" style="stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px" /%3E%3C/svg%3E');
+	a149: url('DATA:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="100%25" height="100%25" style="stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px" /%3E%3C/svg%3E');
+	a150: url('DATA:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg"%3E%3Crect width="100%25" height="100%25" style="stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px" /%3E%3C/svg%3E');
+	a151: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" style="stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px" /></svg>');
+	a152: url('DATA:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" style="stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px" /></svg>');
+}
+
+div {
+	a152: url("img.png");
+}
+
+div {
+	a153: url("nested/img.png");
+}
+
+div {
+	a154: url("nested/other.png");
+}
+
+div {
+	a155: url("package/img.png");
+}
+
+div {
+	a156: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+}
+
+div {
+	a157: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><rect fill="gray" width="5" height="5" y="0" x="0" /></svg>');
+}
+
+div {
+	a158: src("http://www.example.com/pinkish.gif");
+	--foo-bar: "http://www.example.com/pinkish.gif";
+	a159: src(var(--foo));
+}
+
+div {
+	a160: url("img.png" param(--color var(--primary-color)));
+	a161: src("img.png" param(--color var(--primary-color)));
+}
+
+div {
+	a162: url('img\
+ i\
+mg.png\
+  ');
+
+}
+
+div {
+	a163: url("  img.png  ");
+}
+
+
+div {
+	a164: url( img.png bug);
+}
+
+div {
+	a165: url(img\n.png);
+}
+
+div {
+	a166: url('      data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"\
+	                width="10" height="10"><rect fill="gray" width="5" height="5" y="0" x="0" /></svg>      ');
+}
+
+div {
+	a167: url(http://example.com/image.jpg);
+	a168: url(http://example.com/image.jpg);
+}
+
+div {
+	a169: url('data:,');
+	a170: url('data:,');
+}
+
+div {
+	a171: image(ltr 'img.png#xywh=0,0,16,16', red);
+	a172: cross-fade(20% url(img.png), url(img.png))
+}
+
+div {
+	a172: image-set(
+		linear-gradient(blue, white) 1x,
+		linear-gradient(blue, green) 2x
+	);
+	a173: image-set(
+		url("img.png") type("image/png"),
+		url("img.png") type("image/png")
+	);
+	a174: image-set(
+		"img.png" 1x,
+		"img.png" 2x
+	);
+	a175: image-set(
+		url("img.png") 1x,
+		url("img.png") 2x,
+		url("img.png") 3x
+	);
+	a176: image-set(
+		"img.png" type("image/png"),
+		"img.png" type("image/png")
+	) "img.png";
+	a177: image-set(
+		"img.png" 1x type("image/png"),
+		"img.png" 2x type("image/png")
+	);
+	a178: image-set(
+		"img.png" type("image/png") 1x,
+		"img.png" type("image/png") 2x
+	);
+	a179: -webkit-image-set(
+		"img.png" 1x
+	);
+	a180: -webkit-image-set(
+		url("img.png" var(--foo, "test.png")) 1x
+	);
+}
+
+div {
+	a181: src("img.png");
+	a181: src(   "img.png"   );
+	a182: src('img.png');
+	a183: src('img.png' var(--foo, "test.png"));
+	a184: src(var(--foo, "test.png"));
+	a185: src("   img.png   ");
+}
+
+div {
+	a186: image-set("img.png"1x,"img.png"2x,"img.png"3x);
+	a187: image-set("img.png"1x,url("img.png")2x,"img.png"3x);
+	a188: image-set("img.png"1x,"img.png"2x,url("img.png")3x);
+	a189: image-set(url("img.png")1x,"img.png"2x,"img.png"3x);
+	a190: image-set("img.png"1x);
+	a191: image-set("img.png"1x/* test*/,/* test*/"img.png"2x);
+}
+
+@supports (background-image: image-set("unknown.png"1x,"unknown.png"2x,"unknown.png"3x)) {
+	div {
+		a192: url("img.png");
+		a193: image-set("img.png"1x);
+	}
+}
+
+@supports (background-image: url("unknown.png" param(--test))) {
+	div {
+		a194: url("img.png");
+	}
+}
+
+@supports (background-image: url("unknown.png")) {
+	div {
+		a195: url("img.png");
+	}
+}
+
+@supports (display: grid) {
+	@media (min-width: 100px) {
+		@layer special {
+			div {
+				a196: url("img.png");
+			}
+		}
+	}
+}
+
+div {
+	a197: \u\r\l("img.png");
+	a198: \image-\set("img.png"1x,"img.png"2x,"img.png"3x);
+	a199: \-webk\it-image-set("img.png"1x);
+	a200:-webkit-image-set("img.png"1x);
+}
