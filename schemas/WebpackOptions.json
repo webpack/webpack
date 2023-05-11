@@ -5275,6 +5275,9 @@
         "plugins": {
           "$ref": "#/definitions/Plugins"
         },
+        "presets": {
+          "$ref": "#/definitions/Presets"
+        },
         "profile": {
           "$ref": "#/definitions/Profile"
         },

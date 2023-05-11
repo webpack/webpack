@@ -9338,6 +9338,15 @@ declare class PrefixSource extends Source {
 declare interface PreparsedAst {
 	[index: string]: any;
 }
+declare class PresetPlugin {
+	constructor(presets: Function[]);
+	presets: Function[];
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
+}
 declare interface PrintedElement {
 	element: string;
 	content: string;
@@ -12774,6 +12783,11 @@ declare interface WebpackOptionsNormalized {
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance
 	)[];
+
+	/**
+	 * Presets for the webpack configuration.
+	 */
+	presets?: Function[];
 
 	/**
 	 * Capture timing information for each module.

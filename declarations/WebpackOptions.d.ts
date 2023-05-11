@@ -3519,6 +3519,10 @@ export interface WebpackOptionsNormalized {
 	 */
 	plugins: Plugins;
 	/**
+	 * Presets for the webpack configuration.
+	 */
+	presets?: Presets;
+	/**
 	 * Capture timing information for each module.
 	 */
 	profile?: Profile;
