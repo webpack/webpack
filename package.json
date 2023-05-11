@@ -39,7 +39,7 @@
     "@babel/core": "^7.21.4",
     "@babel/preset-react": "^7.18.6",
     "@types/jest": "^29.5.0",
-    "@types/node": "^18.15.11",
+    "@types/node": "^20.1.2",
     "assemblyscript": "^0.27.2",
     "babel-loader": "^8.1.0",
     "benchmark": "^2.1.4",
