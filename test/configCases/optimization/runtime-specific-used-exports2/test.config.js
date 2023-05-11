@@ -1,9 +1,5 @@
 module.exports = {
-	findBundle: function() {
-		return [
-			"./a.js",
-			"./b.js",
-			"./c.js"
-		];
+	findBundle: function () {
+		return ["./a.js", "./b.js", "./c.js"];
 	}
 };

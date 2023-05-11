@@ -218,7 +218,7 @@ describe("ProgressPlugin", function () {
 			const logs = getLogs(stderr.toString());
 
 			expect(logs.length).toBeGreaterThan(20);
-			expect(_.maxBy(logs, "length").length).toBeGreaterThan(50);
+			expect(_.maxBy(logs, "length").length).not.toBeGreaterThan(40);
 		});
 	});
 
@@ -242,6 +242,7 @@ describe("ProgressPlugin", function () {
 			activeModules: true
 		});
 
+		process.stderr.columns = 70;
 		return RunCompilerAsync(compiler).then(() => {
 			const logs = stderr.toString();
 
@@ -255,6 +256,7 @@ describe("ProgressPlugin", function () {
 	it("should get the custom handler text from the log", () => {
 		const compiler = createSimpleCompilerWithCustomHandler();
 
+		process.stderr.columns = 70;
 		return RunCompilerAsync(compiler).then(() => {
 			const logs = stderr.toString();
 			expect(logs).toEqual(

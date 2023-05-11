@@ -1,18 +1,5 @@
-const STATE_SYM = Object.getOwnPropertySymbols(global).find(
-	Symbol("x").description
-		? s => s.description === "JEST_STATE_SYMBOL"
-		: s => s.toString() === "Symbol(JEST_STATE_SYMBOL)"
-);
-if (!STATE_SYM) {
-	throw new Error(
-		`Unable to find JEST_STATE_SYMBOL in ${Object.getOwnPropertySymbols(global)
-			.map(s => s.toString())
-			.join(", ")}`
-	);
-}
-
 module.exports = (globalTimeout = 2000, nameSuffix = "") => {
-	const state = global[STATE_SYM];
+	const state = global["JEST_STATE_SYMBOL"];
 	let currentDescribeBlock;
 	let currentlyRunningTest;
 	let runTests = -1;

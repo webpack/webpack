@@ -2,7 +2,7 @@
 <!-- Before creating an issue please make sure you are using the latest version of webpack. -->
 <!-- Also consider trying the webpack@beta version, maybe it's already fixed. -->
 
-**Do you want to request a *feature* or report a *bug*?**
+**Do you want to request a _feature_ or report a _bug_?**
 
 <!-- Please ask questions on StackOverflow or the webpack Gitter (https://gitter.im/webpack/webpack). -->
 <!-- Issues which contain questions or support requests will be closed. -->

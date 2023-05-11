@@ -343,6 +343,7 @@ describe("snapshots", () => {
 		    "hotUpdateChunkFilename": "[id].[fullhash].hot-update.js",
 		    "hotUpdateGlobal": "webpackHotUpdatewebpack",
 		    "hotUpdateMainFilename": "[runtime].[fullhash].hot-update.json",
+		    "ignoreBrowserWarnings": undefined,
 		    "iife": true,
 		    "importFunctionName": "import",
 		    "importMetaName": "import.meta",
@@ -360,6 +361,7 @@ describe("snapshots", () => {
 		    "wasmLoading": "fetch",
 		    "webassemblyModuleFilename": "[hash].module.wasm",
 		    "workerChunkLoading": "import-scripts",
+		    "workerPublicPath": "",
 		    "workerWasmLoading": "fetch",
 		  },
 		  "parallelism": 100,
@@ -1050,6 +1052,7 @@ describe("snapshots", () => {
 		@@ ... @@
 		-     "library": undefined,
 		+     "library": Object {
+		+       "amdContainer": undefined,
 		+       "auxiliaryComment": undefined,
 		+       "export": undefined,
 		+       "name": Array [
@@ -1093,6 +1096,7 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "library": undefined,
 			+     "library": Object {
+			+       "amdContainer": undefined,
 			+       "auxiliaryComment": undefined,
 			+       "export": undefined,
 			+       "name": Array [
@@ -1139,6 +1143,7 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "library": undefined,
 			+     "library": Object {
+			+       "amdContainer": undefined,
 			+       "auxiliaryComment": undefined,
 			+       "export": undefined,
 			+       "name": Array [
@@ -1188,6 +1193,7 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "library": undefined,
 			+     "library": Object {
+			+       "amdContainer": undefined,
 			+       "auxiliaryComment": undefined,
 			+       "export": undefined,
 			+       "name": Object {
@@ -1238,6 +1244,7 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "library": undefined,
 			+     "library": Object {
+			+       "amdContainer": undefined,
 			+       "auxiliaryComment": undefined,
 			+       "export": undefined,
 			+       "name": Object {
@@ -1303,8 +1310,9 @@ describe("snapshots", () => {
 		+     "wasmLoading": "async-node",
 		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
-		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
+		@@ ... @@
+		-     "workerWasmLoading": "fetch",
 		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -1447,8 +1455,9 @@ describe("snapshots", () => {
 		+     "wasmLoading": "async-node",
 		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
-		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
+		@@ ... @@
+		-     "workerWasmLoading": "fetch",
 		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -1573,8 +1582,9 @@ describe("snapshots", () => {
 		+     "wasmLoading": "async-node",
 		@@ ... @@
 		-     "workerChunkLoading": "import-scripts",
-		-     "workerWasmLoading": "fetch",
 		+     "workerChunkLoading": "require",
+		@@ ... @@
+		-     "workerWasmLoading": "fetch",
 		+     "workerWasmLoading": "async-node",
 		@@ ... @@
 		-         "aliasFields": Array [
@@ -1921,6 +1931,7 @@ describe("snapshots", () => {
 			-     "trustedTypes": undefined,
 			-     "uniqueName": "webpack",
 			+     "trustedTypes": Object {
+			+       "onPolicyCreationFailure": "stop",
 			+       "policyName": "@@@Hello_World_",
 			+     },
 			+     "uniqueName": "@@@Hello World!",

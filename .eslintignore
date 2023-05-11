@@ -1,25 +1,27 @@
-# Ignore node_modules
-node_modules
+# Ignore some test files
+test/**/*.*
+!test/*.js
+!test/**/webpack.config.js
+!test/**/test.config.js
+!test/**/test.filter.js
+test/cases/parsing/es2022/test.filter.js
+!test/**/errors.js
+!test/**/warnings.js
+!test/**/deprecations.js
+!test/helpers/*.*
 
 # Ignore some folders
 benchmark
 coverage
 
+# Ignore generated files
+*.check.js
+
 # Ignore not supported files
-!.*.js
-.eslintrc.js
 *.d.ts
 
 # Ignore precompiled schemas
 schemas/**/*.check.js
-
-# Ignore some test files
-test/*
-!test/*Cases
-!test/helpers
-!test/*.js
-test/*Cases/**/*.js
-!test/*Cases/**/webpack.config.js
 
 # Ignore some examples files
 examples/**/*.js

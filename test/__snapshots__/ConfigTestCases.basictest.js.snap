@@ -1,20 +1,2019 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ConfigTestCases css urls exported tests should be able to handle styles in spacing.css 1`] = `
+exports[`ConfigTestCases css css-import exported tests should compile 1`] = `
+Array [
+  "body {
+	externally-imported: true;
+}
+
+body {
+	externally-imported1: true;
+}
+
+body {
+	externally-imported2: true;
+}
+
+body {
+	background: black;
+}
+
+body {
+	background: black;
+}
+
+@layer default {
+	body {
+		background: black;
+	}
+}
+
+@layer default {
+	body {
+		background: black;
+	}
+}
+
+@supports (display: flex) {
+	body {
+		background: black;
+	}
+}
+
+@supports (display: flex) {
+	body {
+		background: black;
+	}
+}
+
+@media screen and (min-width: 400px) {
+	body {
+		background: black;
+	}
+}
+
+@media screen and (min-width: 400px) {
+	body {
+		background: black;
+	}
+}
+
+@layer default {
+	@supports (display: flex) {
+		body {
+			background: black;
+		}
+	}
+}
+
+@layer default {
+	@media screen and (min-width: 400px) {
+		body {
+			background: black;
+		}
+	}
+}
+
+@supports (display: flex) {
+	@media screen and (min-width: 400px) {
+		body {
+			background: black;
+		}
+	}
+}
+
+@layer default {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}
+	}
+}
+
+@layer default {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}
+	}
+}
+
+@layer default {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}
+	}
+}
+
+@layer default {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}
+	}
+}
+
+@layer default {
+	@supports (background: url(./img.png)) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}
+	}
+}
+
+@layer default {
+	@supports (background: url(\\"./img.png\\")) {
+		@media screen and (min-width: 400px) {
+			body {
+				background: black;
+			}
+		}
+	}
+}
+
+@media screen {
+	body {
+		background: black;
+	}
+}
+
+@media screen {
+	body {
+		background: black;
+	}
+}
+
+@media screen {
+	body {
+		background: black;
+	}
+}
+
+body {
+	background: black;
+}
+
+body {
+	background: green;
+}
+
+@layer base {
+	body {
+		background: green;
+	}
+}
+
+@supports (display: flex) {
+	body {
+		background: green;
+	}
+}
+
+@media screen, print {
+	body {
+		background: green;
+	}
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+a {
+	color: red;
+}
+
+@media screen and (orientation:landscape) {
+	a {
+		color: red;
+	}
+}
+
+@media SCREEN AND (ORIENTATION: LANDSCAPE) {
+	a {
+		color: red;
+	}
+}
+
+@media (min-width: 100px) {
+	a {
+		color: red;
+	}
+}
+
+.class {
+	content: \\"style.css\\";
+	color: red;
+}
+
+.class {
+	content: \\"style.css\\";
+	color: red;
+}
+
+.class {
+	content: \\"style.css\\";
+	color: red;
+}
+
+.class {
+	content: \\"style.css\\";
+	color: red;
+}
+
+.class {
+	content: \\"style7.css\\";
+}
+
+.class {
+	content: \\"style7.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test.css\\";
+}
+
+.class {
+	content: \\"test.css\\";
+}
+
+.class {
+	content: \\"test.css\\";
+}
+
+.class {
+	content: \\"test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"test test.css\\";
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+.class {
+	content: \\"style4.css\\";
+}
+
+.class {
+	content: \\"style4.css\\";
+}
+
+.class {
+	content: \\"style4.css\\";
+}
+
+@supports (display: flex) {
+	.class {
+		content: \\"style4.css\\";
+	}
+}
+
+@supports (display: flex) {
+	@media screen and (orientation:landscape) {
+		.class {
+			content: \\"style4.css\\";
+		}
+	}
+}
+
+.class {
+	content: \\"style4.css\\";
+}
+
+.class {
+	content: \\"style4.css\\";
+}
+
+.class {
+	content: \\"style4.css\\";
+}
+
+a {
+  color: red;
+}
+@media screen and (orientation:landscape) {
+	a {
+	  color: blue;
+	}}
+
+.class {
+	content: \\"style5.css\\";
+}
+
+.class {
+	content: \\"style5.css\\";
+}
+
+@supports (unknown) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+
+@supports (display: flex) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+
+@supports (display: flex !important) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+
+@supports (display: flex) {
+	@media screen and (min-width: 400px) {
+		.class {
+			content: \\"style5.css\\";
+		}
+	}
+}
+
+@supports (selector(a b)) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+
+@supports (display: flex) {
+	.class {
+		content: \\"style5.css\\";
+	}
+}
+
+@layer {
+	.class {
+		content: \\"layer.css\\";
+	}
+}
+
+@layer default {
+	.class {
+		content: \\"layer.css\\";
+	}
+}
+
+@layer default {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			.class {
+				content: \\"layer.css\\";
+			}
+		}
+	}
+}
+
+@layer {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			.class {
+				content: \\"layer.css\\";
+			}
+		}
+	}
+}
+
+@layer {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			.class {
+				content: \\"layer.css\\";
+			}
+		}
+	}
+}
+
+@layer {
+	.class {
+		content: \\"layer.css\\";
+	}
+}
+
+@layer foo.bar.baz {
+	.class {
+		content: \\"layer.css\\";
+	}
+}
+
+@layer {
+	.class {
+		content: \\"layer.css\\";
+	}
+}
+
+@layer default {
+	@supports (display: flex) {
+		@media screen and (min-width:400px) {
+			.class {
+				content: \\"style6.css\\";
+			}
+		}
+	}
+}
+
+@layer default {
+	@supports (display: flex) {
+		@media screen and (min-width:400px) {
+			.class {
+				content: \\"style6.css\\";
+			}
+		}
+	}
+}
+
+@supports (display: flex) {
+	@media screen and (min-width:400px) {
+		.class {
+			content: \\"style6.css\\";
+		}
+	}
+}
+
+@media screen and (min-width:400px) {
+	.class {
+		content: \\"style6.css\\";
+	}
+}
+
+@media screen and (min-width:400px) {
+	.class {
+		content: \\"style6.css\\";
+	}
+}
+
+@media screen and (min-width:400px) {
+	.class {
+		content: \\"style6.css\\";
+	}
+}
+
+@layer default {
+	@supports (display     :     flex) {
+		@media screen     and     (     min-width     :     400px     ) {
+			.class {
+				content: \\"style6.css\\";
+			}
+		}
+	}
+}
+
+@layer DEFAULT {
+	@supports (DISPLAY: FLEX) {
+		@media SCREEN AND (MIN-WIDTH: 400PX) {
+			.class {
+				content: \\"style6.css\\";
+			}
+		}
+	}
+}
+
+@layer {
+	@supports (DISPLAY: FLEX) {
+		@media SCREEN AND (MIN-WIDTH: 400PX) {
+			.class {
+				content: \\"style6.css\\";
+			}
+		}
+	}
+}
+
+@layer /* Comment */default/* Comment */ {
+	@supports (/* Comment */display/* Comment */:/* Comment */ flex/* Comment */) {
+		@media /* Comment */ screen/* Comment */ and/* Comment */ (/* Comment */min-width/* Comment */: /* Comment */400px/* Comment */) {
+			.class {
+				content: \\"style6.css\\";
+			}
+		}
+	}
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+.class {
+	content: \\"style6.css\\";
+}
+
+@media /* Comment */ print and (orientation:landscape) {
+	.class {
+		content: \\"style6.css\\";
+	}
+}
+
+@media /* Comment */print and (orientation:landscape)/* Comment */ {
+	.class {
+		content: \\"style6.css\\";
+	}
+}
+
+@media /* Comment */ print and (orientation:landscape) {
+	.class {
+		content: \\"style6.css\\";
+	}
+}
+
+@media screen and (min-width: 400px) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+
+@supports (display: flex) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+
+@supports (((display: flex))) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+
+@supports (((display: inline-grid))) {
+	@media screen and (((min-width: 400px))) {
+		.class {
+			content: \\"style8.css\\";
+		}
+	}
+}
+
+@supports (display: grid) {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+
+@supports (display: flex) {
+	@media screen and (min-width: 400px) {
+		.class {
+			content: \\"style8.css\\";
+		}
+	}
+}
+
+@layer framework {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+
+@layer default {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+
+@layer base {
+	.class {
+		content: \\"style8.css\\";
+	}
+}
+
+@layer default {
+	@supports (display: flex) {
+		.class {
+			content: \\"style8.css\\";
+		}
+	}
+}
+
+@layer default {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			.class {
+				content: \\"style8.css\\";
+			}
+		}
+	}
+}
+
+@layer {
+	a {
+		color: red;
+	}
+}
+
+@media unknown(default) unknown(display: flex) unknown {
+	.class {
+		content: \\"style9.css\\";
+	}
+}
+
+@media unknown(default) {
+	.class {
+		content: \\"style9.css\\";
+	}
+}
+
+.style11 {
+	color: red;
+}
+
+.style12 {
+	color: red;
+}
+
+.style10 {
+	color: red;
+}
+
+@media screen and (min-width: 400px) {
+	@media screen and (max-width: 500px) {
+		@media screen and (orientation: portrait) {
+			.class {
+				deep-deep-nested: 1;
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 400px) {
+	@media screen and (max-width: 500px) {
+		.class {
+			deep-nested: 1;
+		}
+	}
+}
+
+@media screen and (min-width: 400px) {
+	.class {
+		nested: 1;
+	}
+}
+
+@supports (display: flex) {
+	@supports (display: grid) {
+		@supports (display: table) {
+			.class {
+				deep-deep-nested: 1;
+			}
+		}
+	}
+}
+
+@supports (display: flex) {
+	@supports (display: grid) {
+		.class {
+			deep-nested: 1;
+		}
+	}
+}
+
+@supports (display: flex) {
+	.class {
+		nested: 1;
+	}
+}
+
+@layer foo {
+	@layer bar {
+		@layer baz {
+			.class {
+				deep-deep-nested: 1;
+			}
+		}
+	}
+}
+
+@layer foo {
+	@layer bar {
+		.class {
+			deep-nested: 1;
+		}
+	}
+}
+
+@layer foo {
+	.class {
+		nested: 1;
+	}
+}
+
+@layer foo {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			@layer bar {
+				@supports (display: grid) {
+					@media screen and (min-width: 500px) {
+						@layer baz {
+							@supports (display: table) {
+								@media screen and (min-width: 600px) {
+									.class {
+										deep-deep-nested: 1;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@layer foo {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			@layer bar {
+				@supports (display: grid) {
+					@media screen and (min-width: 500px) {
+						.class {
+							deep-nested: 1;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@layer foo {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			.class {
+				nested: 1;
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 400px) {
+	@supports (display: flex) {
+		@layer bar {
+			.class {
+				deep-deep-nested: 1;
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 400px) {
+	@supports (display: flex) {
+		.class {
+			deep-nested: 1;
+		}
+	}
+}
+
+@media screen and (min-width: 400px) {
+	.class {
+		nested: 1;
+	}
+}
+
+@layer {
+	@layer {
+		@layer {
+			.class {
+				deep-deep-nested: 1;
+			}
+		}
+	}
+}
+
+@layer {
+	@layer {
+		.class {
+			deep-nested: 1;
+		}
+	}
+}
+
+@layer {
+	@layer base {
+		@layer baz {
+			.class {
+				deep-deep-nested: 1;
+			}
+		}
+	}
+}
+
+@layer {
+	@layer base {
+		.class {
+			deep-nested: 1;
+		}
+	}
+}
+
+@layer {
+	.class {
+		deep-nested: 1;
+	}
+}
+
+@media screen and (orientation: portrait) {
+	.class {
+		deep-deep-nested: 1;
+	}
+}
+
+@media screen and (orientation: portrait) {
+	@supports (display: flex) {
+		.class {
+			content: \\"style8.css\\";
+		}
+	}
+}
+
+@media screen and (orientation: portrait) {
+	.class {
+		duplicate-nested: true;
+	}
+}
+
+@supports (display: flex) {
+	@media screen and (orientation: portrait) {
+		@layer {
+			@layer {
+				.class {
+					deep-deep-nested: 1;
+				}
+			}
+		}
+	}
+}
+
+@supports (display: flex) {
+	@media screen and (orientation: portrait) {
+		@layer {
+			.class {
+				deep-nested: 1;
+			}
+		}
+	}
+}
+
+@supports (display: flex) {
+	@media screen and (orientation: portrait) {
+		@layer base {
+			@layer baz {
+				.class {
+					deep-deep-nested: 1;
+				}
+			}
+		}
+	}
+}
+
+@supports (display: flex) {
+	@media screen and (orientation: portrait) {
+		@layer base {
+			.class {
+				deep-nested: 1;
+			}
+		}
+	}
+}
+
+@supports (display: flex) {
+	@media screen and (orientation: portrait) {
+		.class {
+			deep-nested: 1;
+		}
+	}
+}
+
+@layer super.foo {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			@layer bar {
+				@supports (display: grid) {
+					@media screen and (min-width: 500px) {
+						@layer baz {
+							@supports (display: table) {
+								@media screen and (min-width: 600px) {
+									.class {
+										deep-deep-nested: 1;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@layer super.foo {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			@layer bar {
+				@supports (display: grid) {
+					@media screen and (min-width: 500px) {
+						.class {
+							deep-nested: 1;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@layer super.foo {
+	@supports (display: flex) {
+		@media screen and (min-width: 400px) {
+			.class {
+				nested: 1;
+			}
+		}
+	}
+}
+
+/* Has the same URL */
+/*@import url();
+@import url('');
+@import url(\\"\\");
+@import '';
+@import \\"\\";
+@import \\"   \\";
+@import \\"\\\\
+\\";
+@import url();
+@import url('');
+@import url(\\"\\");*/
+/*@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css) screen and (orientation:landscape);
+@import url(https://test.cases/path/../../../../configCases/css/css-import/external.css) screen and (orientation:landscape);*/
+/*@import \\"//example.com/style.css\\";*/
+/*@import url(~package/test.css);*/
+/*@import ;*/
+/*@import foo-bar;*/
+/*@import-normalize;*/
+/*@import url('http://') :root {}*/
+/*@import url('query.css?foo=1&bar=1');*/
+/*@import url('other-query.css?foo=1&bar=1#hash');*/
+/*@import url('other-query.css?foo=1&bar=1#hash') screen and (orientation:landscape);*/
+/*@import url('https://fonts.googleapis.com/css?family=Roboto');*/
+/*@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC');*/
+/*@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC|Roboto');*/
+
+/*@import nourl(test.css);
+@import '\\\\
+\\\\
+\\\\
+';
+@import url('!!../../helpers/string-loader.js?esModule=false!~package/tilde.css');*/
+/*@import url('   https://fonts.googleapis.com/css?family=Roboto   ');*/
+/*@import url('!!../../helpers/string-loader.js?esModule=false!');*/
+/*@import url('   !!../../helpers/string-loader.js?esModule=false!~package/tilde.css   ');*/
+/*@import \\"http://example.com/style.css\\" supports(display: flex) screen and (min-width: 400px);*/
+/* anonymous */
+/* All unknown parse as media for compatibility */
+body {
+	background: red;
+}
+
+head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external\\\\.css,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external1\\\\.css,https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/\\\\.\\\\.\\\\/configCases\\\\/css\\\\/css-import\\\\/external2\\\\.css,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=19,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=20,\\\\.\\\\/print\\\\.css\\\\?foo\\\\=21,\\\\.\\\\/imported\\\\.css\\\\?2fc7,\\\\.\\\\/imported\\\\.css\\\\?8e23,\\\\.\\\\/imported\\\\.css\\\\?daf4,\\\\.\\\\/imported\\\\.css\\\\?7a8d,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style2\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style2\\\\.css\\\\?3989,\\\\.\\\\/style2\\\\.css\\\\?1933,\\\\.\\\\/style2\\\\.css\\\\?6611,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=1,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=2,\\\\.\\\\/style3\\\\.css\\\\?bar\\\\=3,\\\\.\\\\/style3\\\\.css\\\\?\\\\=bar4,\\\\.\\\\/styl\\\\'le7\\\\.css,\\\\.\\\\/styl\\\\'le7\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\ test\\\\.css,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/test\\\\.css,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/test\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/test\\\\ test\\\\.css\\\\?fpp\\\\=10,\\\\.\\\\/test\\\\ test\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=bazz,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=bar\\\\#hash,\\\\.\\\\/style4\\\\.css\\\\?\\\\#hash,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style4\\\\.css\\\\?foo\\\\=5,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20red\\\\%3B\\\\%0D\\\\%0A\\\\%7D,data\\\\:text\\\\/css\\\\;charset\\\\=utf-8\\\\,a\\\\%20\\\\%7B\\\\%0D\\\\%0A\\\\%20\\\\%20color\\\\%3A\\\\%20blue\\\\%3B\\\\%0D\\\\%0A\\\\%7D,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style5\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?14ba,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=3\\\\?0e0d,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/layer\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style6\\\\.css,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=1,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=2,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=3,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=4,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=5,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=6,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=7,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=8,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=9,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=10,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=11,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=12,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=13,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=14,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=15,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=16,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=17,\\\\.\\\\/style6\\\\.css\\\\?foo\\\\=18,\\\\.\\\\/style8\\\\.css\\\\?5018,\\\\.\\\\/style8\\\\.css\\\\?204b,\\\\.\\\\/style8\\\\.css\\\\?63b0,\\\\.\\\\/style8\\\\.css\\\\?edb8,\\\\.\\\\/style8\\\\.css\\\\?6154,\\\\.\\\\/style8\\\\.css\\\\?8c51,\\\\.\\\\/style8\\\\.css\\\\?ced0,\\\\.\\\\/style8\\\\.css\\\\?d3b8,\\\\.\\\\/style8\\\\.css\\\\?3557,\\\\.\\\\/style8\\\\.css\\\\?ae6e,\\\\.\\\\/style8\\\\.css\\\\?d078,\\\\.\\\\/style8\\\\.css\\\\?ae8b,\\\\.\\\\/style2\\\\.css\\\\?ee8c,\\\\.\\\\/style9\\\\.css\\\\?5f26,\\\\.\\\\/style9\\\\.css\\\\?6536,\\\\.\\\\/style11\\\\.css,\\\\.\\\\/style12\\\\.css,\\\\.\\\\/style10\\\\.css,\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?1b5b,\\\\.\\\\/media-deep-nested\\\\.css,\\\\.\\\\/media-nested\\\\.css,\\\\.\\\\/supports-deep-deep-nested\\\\.css,\\\\.\\\\/supports-deep-nested\\\\.css,\\\\.\\\\/supports-nested\\\\.css,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?2bf1,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?3469,\\\\.\\\\/layer-nested\\\\.css,\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?a7dd,\\\\.\\\\/all-deep-nested\\\\.css\\\\?5612,\\\\.\\\\/all-nested\\\\.css\\\\?a3fd,\\\\.\\\\/mixed-deep-deep-nested\\\\.css,\\\\.\\\\/mixed-deep-nested\\\\.css,\\\\.\\\\/mixed-nested\\\\.css,\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?8f95,\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?40b5,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?e681,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?dc2a,\\\\.\\\\/anonymous-nested\\\\.css\\\\?8aa8,\\\\.\\\\/media-deep-deep-nested\\\\.css\\\\?3aba,\\\\.\\\\/style8\\\\.css\\\\?83bd,\\\\.\\\\/duplicate-nested\\\\.css,\\\\.\\\\/anonymous-deep-deep-nested\\\\.css\\\\?384f,\\\\.\\\\/anonymous-deep-nested\\\\.css\\\\?8c49,\\\\.\\\\/layer-deep-deep-nested\\\\.css\\\\?17f5,\\\\.\\\\/layer-deep-nested\\\\.css\\\\?c345,\\\\.\\\\/anonymous-nested\\\\.css\\\\?d028,\\\\.\\\\/all-deep-deep-nested\\\\.css\\\\?220a,\\\\.\\\\/all-deep-nested\\\\.css\\\\?7c65,\\\\.\\\\/all-nested\\\\.css\\\\?5ae5,\\\\.\\\\/style\\\\.css;}",
+]
+`;
+
+exports[`ConfigTestCases css pure-css exported tests should compile 1`] = `
+Array [
+  ".class {
+	color: red;
+}
+
+.local1,
+.local2 :global .global,
+.local3 {
+	color: green;
+}
+
+:global .global :local .local4 {
+	color: yellow;
+}
+
+.local5:global(.global).local6 {
+	color: blue;
+}
+
+.local7 div:not(.disabled, .mButtonDisabled, .tipOnly) {
+    pointer-events: initial !important;
+}
+
+.local8 :is(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local9 :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local10 :where(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.local11 div:has(.disabled, .mButtonDisabled, .tipOnly) {
+    pointer-events: initial !important;
+}
+
+.local12 div:current(p, span) {
+	background-color: yellow;
+}
+
+.local13 div:past(p, span) {
+	display: none;
+}
+
+.local14 div:future(p, span) {
+	background-color: yellow;
+}
+
+.local15 div:-moz-any(ol, ul, menu, dir) {
+	list-style-type: square;
+}
+
+.local16 li:-webkit-any(:first-child, :last-child) {
+	background-color: aquamarine;
+}
+
+.local9 :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+:global(:global(:local(.nested1)).nested2).nested3 {
+	color: pink;
+}
+
+#ident {
+	color: purple;
+}
+
+@keyframes localkeyframes {
+	0% {
+		left: var(--pos1x);
+		top: var(--pos1y);
+		color: var(--theme-color1);
+	}
+	100% {
+		left: var(--pos2x);
+		top: var(--pos2y);
+		color: var(--theme-color2);
+	}
+}
+
+@keyframes localkeyframes2 {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.animation {
+	animation-name: localkeyframes;
+	animation: 3s ease-in 1s 2 reverse both paused localkeyframes, localkeyframes2;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
+}
+
+/* .composed {
+	composes: local1;
+	composes: local2;
+} */
+
+.vars {
+	color: var(--local-color);
+	--local-color: red;
+}
+
+.globalVars :global {
+	color: var(--global-color);
+	--global-color: red;
+}
+
+@media (min-width: 1600px) {
+	.wideScreenClass {
+		color: var(--local-color);
+		--local-color: green;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.narrowScreenClass {
+		color: var(--local-color);
+		--local-color: purple;
+	}
+}
+
+@supports (display: grid) {
+	.displayGridInSupports {
+		display: grid;
+	}
+}
+
+@supports not (display: grid) {
+  .floatRightInNegativeSupports {
+    float: right;
+  }
+}
+
+@supports (display: flex) {
+  @media screen and (min-width: 900px) {
+    .displayFlexInMediaInSupports {
+      display: flex;
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+    .displayFlexInSupportsInMedia {
+      display: flex;
+    }
+  }
+}
+
+@MEDIA screen and (min-width: 900px) {
+	@SUPPORTS (display: flex) {
+		.displayFlexInSupportsInMediaUpperCase {
+			display: flex;
+		}
+	}
+}
+
+.animationUpperCase {
+	ANIMATION-NAME: localkeyframesUPPERCASE;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused localkeyframesUPPERCASE, localkeyframes2UPPPERCASE;
+	--pos1x: 0px;
+	--pos1y: 0px;
+	--pos2x: 10px;
+	--pos2y: 20px;
+}
+
+@KEYFRAMES localkeyframesUPPERCASE {
+	0% {
+		left: VAR(--pos1x);
+		top: VAR(--pos1y);
+		color: VAR(--theme-color1);
+	}
+	100% {
+		left: VAR(--pos2x);
+		top: VAR(--pos2y);
+		color: VAR(--theme-color2);
+	}
+}
+
+@KEYframes localkeyframes2UPPPERCASE {
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+:GLOBAL .globalUpperCase :LOCAL .localUpperCase {
+	color: yellow;
+}
+
+.VARS {
+	color: VAR(--LOCAL-COLOR);
+	--LOCAL-COLOR: red;
+}
+
+.globalVarsUpperCase :GLOBAL {
+	COLOR: VAR(--GLOBAR-COLOR);
+	--GLOBAR-COLOR: red;
+}
+
+@supports (top: env(safe-area-inset-top, 0)) {
+	.inSupportScope {
+		color: red;
+	}
+}
+
+.a {
+	animation: 3s animationName;
+	-webkit-animation: 3s animationName;
+}
+
+.b {
+	animation: animationName 3s;
+	-webkit-animation: animationName 3s;
+}
+
+.c {
+	animation-name: animationName;
+	-webkit-animation-name: animationName;
+}
+
+.d {
+	--animation-name: animationName;
+}
+
+@keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-webkit-keyframes animationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-moz-keyframes mozAnimationName {
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+/* At-rule for \\"nice-style\\" in Font Two */
+@font-feature-values Font Two {
+	@styleset {
+		nice-style: 4;
+	}
+}
+
+@property --my-color {
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+.class {
+	color: var(--my-color);
+}
+
+@layer utilities {
+	.padding-sm {
+		padding: 0.5rem;
+	}
+
+	.padding-lg {
+		padding: 0.8rem;
+	}
+}
+
+.class {
+	color: red;
+
+	.nested-pure {
+		color: red;
+	}
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.nested-media {
+			color: blue;
+		}
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.nested-supports {
+			display: flex;
+		}
+	}
+
+	@layer foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+
+	@container foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+}
+
+.not-selector-inside {
+	color: #fff;
+	opacity: 0.12;
+	padding: .5px;
+	unknown: :local(.test);
+	unknown1: :local .test;
+	unknown2: :global .test;
+	unknown3: :global .test;
+	unknown4: .foo, .bar, #bar;
+}
+
+@unknown :local .local :global .global {
+	color: red;
+}
+
+@unknown :local(.local) :global(.global) {
+	color: red;
+}
+
+.nested-var {
+	.again {
+		color: var(--local-color);
+	}
+}
+
+.nested-with-local-pseudo {
+	color: red;
+
+	:local .local-nested {
+		color: red;
+	}
+
+	:global .global-nested {
+		color: red;
+	}
+
+	:local(.local-nested) {
+		color: red;
+	}
+
+	:global(.global-nested) {
+		color: red;
+	}
+
+	:local .local-nested, :global .global-nested-next {
+		color: red;
+	}
+
+	:local(.local-nested), :global(.global-nested-next) {
+		color: red;
+	}
+
+	:global .foo, .bar {
+		color: red;
+	}
+}
+
+#id-foo {
+	color: red;
+
+	#id-bar {
+		color: red;
+	}
+}
+
+.nested-parens {
+	.local9 div:has(.vertical-tiny, .vertical-small) {
+		max-height: 0;
+		margin: 0;
+		overflow: hidden;
+	}
+}
+
+:global .global-foo {
+	.nested-global {
+		color: red;
+	}
+
+	:local .local-in-global {
+		color: blue;
+	}
+}
+
+@unknown .class {
+	color: red;
+
+	.class {
+		color: red;
+	}
+}
+
+:global .class :local .in-local-global-scope,
+:global .class :local .in-local-global-scope,
+:local .class-local-scope :global .in-local-global-scope {
+	color: red;
+}
+
+@container (width > 400px) {
+	.class-in-container {
+		font-size: 1.5em;
+	}
+}
+
+@container summary (min-width: 400px) {
+	@container (width > 400px) {
+		.deep-class-in-container {
+			font-size: 1.5em;
+		}
+	}
+}
+
+:scope {
+	color: red;
+}
+
+.placeholder-gray-700:-ms-input-placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+.placeholder-gray-700::-ms-input-placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+.placeholder-gray-700::placeholder {
+	--placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--placeholder-opacity));
+}
+
+:root {
+	--test: dark;
+}
+
+@media screen and (prefers-color-scheme: var(--test)) {
+	.baz {
+		color: white;
+	}
+}
+
+@keyframes slidein {
+	from {
+		margin-left: 100%;
+		width: 300%;
+	}
+
+	to {
+		margin-left: 0%;
+		width: 100%;
+	}
+}
+
+.class {
+	animation:
+		foo var(--animation-name) 3s,
+		var(--animation-name) 3s,
+		3s linear 1s infinite running slidein,
+		3s linear env(foo, var(--baz)) infinite running slidein;
+}
+
+:root {
+	--baz: 10px;
+}
+
+.class {
+	bar: env(foo, var(--baz));
+}
+
+:global      .global-foo, :local        .bar {
+	:local      .local-in-global       {
+		color: blue;
+	}
+
+	@media screen {
+		:global .my-global-class-again,
+		:local .my-global-class-again {
+			color: red;
+		}
+	}
+}
+
+.first-nested {
+	.first-nested-nested {
+		color: red;
+	}
+}
+
+.first-nested-at-rule {
+	@media screen {
+		.first-nested-nested-at-rule-deep {
+			color: red;
+		}
+	}
+}
+
+:global .again-global {
+	color:red;
+}
+
+:global .again-again-global {
+	:global .again-again-global {
+		color: red;
+	}
+}
+
+:root {
+	--foo: red;
+}
+
+:global .again-again-global {
+	color: var(--foo);
+
+	:global .again-again-global {
+		color: var(--foo);
+	}
+}
+
+:global .again-again-global {
+	animation: slidein 3s;
+
+	:global .again-again-global, .class, :global(:global(:local(.nested1)).nested2).nested3 {
+		animation: slidein 3s;
+	}
+
+  .local2 :global .global,
+	.local3 {
+		color: red;
+	}
+}
+
+@unknown var(--foo) {
+	color: red;
+}
+
+.class {
+	.class {
+		.class {
+			.class {}
+		}
+	}
+}
+
+.class {
+	.class {
+		.class {
+			.class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.class {
+	animation: slidein 3s;
+	.class {
+		animation: slidein 3s;
+		.class {
+			animation: slidein 3s;
+			.class {
+				animation: slidein 3s;
+			}
+		}
+	}
+}
+
+.class {
+	color: red;
+	background: var(--color);
+}
+
+@keyframes test {
+	0% {
+		color: red;
+	}
+	100% {
+		color: blue;
+	}
+}
+
+:local(.class) {
+	color: red;
+}
+
+:local .class {
+	color: green;
+}
+
+:global(.class) {
+	color: blue;
+}
+
+:global .class {
+	color: white;
+}
+
+:export {
+	foo: bar;
+}
+
+.class {
+	animation: test 1s, test;
+}
+
+head{--webpack-main:\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,\\\\.\\\\/style\\\\.css;}",
+]
+`;
+
+exports[`ConfigTestCases css urls exported tests should be able to handle styles in div.css 1`] = `
 Object {
+  "--foo": " url(img.09a1a1112c577c279435.png)",
+  "--foo-bar": " \\"http://www.example.com/pinkish.gif\\"",
+  "/* TODO fix me */
+	/*a146": " url('./img.png', 'foo', './img.png', url('./img.png'));*/
+	/*a147: image-set(url('./img.png', 'foo', './img.png', url('./img.png')) 1x, url(\\"./img2x.png\\") 2x);*/
+",
   "a": " url(img.09a1a1112c577c279435.png)",
+  "a1": " url(img.09a1a1112c577c279435.png)",
+  "a10": " green url( img\\\\ img.09a1a1112c577c279435.png ) xyz",
+  "a100": " url(img\\\\)img.09a1a1112c577c279435.png)",
+  "a101": " url(img\\\\ img.09a1a1112c577c279435.png)",
+  "a102": " url(img\\\\ img.09a1a1112c577c279435.png)",
+  "a103": " url(img\\\\(img.09a1a1112c577c279435.png)",
+  "a104": " url(img\\\\(img.09a1a1112c577c279435.png)",
+  "a105": " url(img\\\\(img.09a1a1112c577c279435.png)",
+  "a106": " url(img\\\\(img.09a1a1112c577c279435.png)",
+  "a107": " url(img\\\\'\\\\'\\\\'img.09a1a1112c577c279435.png)",
+  "a108": " url(\\"img'() img.09a1a1112c577c279435.png\\")",
+  "a109": " url(img\\\\'img.09a1a1112c577c279435.png)",
+  "a11": " green url( img\\\\ img.09a1a1112c577c279435.png ) xyz",
+  "a110": " url(img\\\\(img.09a1a1112c577c279435.png)",
+  "a111": " url(img\\\\)img.09a1a1112c577c279435.png)",
+  "a112": " url(img\\\\ img.09a1a1112c577c279435.png)",
+  "a113": " url(img\\\\'\\\\'\\\\'img.09a1a1112c577c279435.png)",
+  "a114": " url(\\"img'() img.09a1a1112c577c279435.png\\")",
+  "a115": " url(img\\\\'img.09a1a1112c577c279435.png)",
+  "a116": " url(img\\\\(img.09a1a1112c577c279435.png)",
+  "a117": " url(img\\\\)img.09a1a1112c577c279435.png)",
+  "a118": " url(img\\\\ img.09a1a1112c577c279435.png)",
+  "a119": " url(img.09a1a1112c577c279435.png)",
+  "a12": " green url(img.09a1a1112c577c279435.png) xyz",
+  "a120": " url(img\\\\'\\\\'\\\\'img.09a1a1112c577c279435.png)",
+  "a121": " url(\\"img'() img.09a1a1112c577c279435.png\\")",
+  "a122": " url(img\\\\'img.09a1a1112c577c279435.png)",
+  "a123": " url(img\\\\(img.09a1a1112c577c279435.png)",
+  "a124": " url(img\\\\)img.09a1a1112c577c279435.png)",
+  "a125": " url(img\\\\ img.09a1a1112c577c279435.png)",
+  "a126": " url(img.09a1a1112c577c279435.png)",
+  "a127": " url(img.09a1a1112c577c279435.png)",
+  "a128": " url(img\\\\'img.09a1a1112c577c279435.png)",
+  "a129": " url(\\"img'() img.09a1a1112c577c279435.png\\")",
+  "a13": " green url(data:image/png;base64,AAA) url(http://example.com/image.jpg) url(//example.com/image.png) xyz",
+  "a130": " url(\\"img'() img.09a1a1112c577c279435.png\\")",
+  "a131": " url(img.09a1a1112c577c279435.png)",
+  "a132": " url(img.09a1a1112c577c279435.png)",
+  "a133": " url(img.09a1a1112c577c279435.png?foo=bar)",
+  "a134": " url(img.09a1a1112c577c279435.png?foo=bar)",
+  "a135": " url(img.09a1a1112c577c279435.png?foo=bar#hash)",
+  "a136": " url(img.09a1a1112c577c279435.png?foo=bar#hash)",
+  "a137": " url(img.09a1a1112c577c279435.png?foo=bar)",
+  "a138": " url(img.09a1a1112c577c279435.png?bar=foo)",
+  "a139": " url(img.09a1a1112c577c279435.png?foo=bar#foo)",
+  "a14": " url(\\"data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 42 26' fill='%23007aff'><rect width='4' height='4'/><rect x='8' y='1' width='34' height='2'/><rect y='11' width='4' height='4'/><rect x='8' y='12' width='34' height='2'/><rect y='22' width='4' height='4'/><rect x='8' y='23' width='34' height='2'/></svg>\\")",
+  "a140": " url(img.09a1a1112c577c279435.png?bar=foo#bar)",
+  "a141": " url(img.09a1a1112c577c279435.png?foo=1&bar=2)",
+  "a142": " url(img.09a1a1112c577c279435.png?foo=2&bar=1)",
+  "a143": " url(data:image/svg+xml;charset=UTF-8,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22utf-8%22%3F%3E%0A%3C!DOCTYPE%20svg%20PUBLIC%20%22-%2F%2FW3C%2F%2FDTD%20SVG%201.1%2F%2FEN%22%20%22http%3A%2F%2Fwww.w3.org%2FGraphics%2FSVG%2F1.1%2FDTD%2Fsvg11.dtd%22%3E%0A%3Csvg%20version%3D%221.1%22%20id%3D%22Layer_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20x%3D%220px%22%20y%3D%220px%22%0A%09%20width%3D%22191px%22%20height%3D%22191px%22%20viewBox%3D%220%200%20191%20191%22%20enable-background%3D%22new%200%200%20191%20191%22%20xml%3Aspace%3D%22preserve%22%3E%0A%3Cpath%20fill%3D%22%23636363%22%20d%3D%22M95.5%2C0C42.8%2C0%2C0%2C42.8%2C0%2C95.5S42.8%2C191%2C95.5%2C191S191%2C148.2%2C191%2C95.5S148.2%2C0%2C95.5%2C0z%20M95.5%2C187.6%0A%09c-50.848%2C0-92.1-41.25-92.1-92.1c0-50.848%2C41.252-92.1%2C92.1-92.1c50.85%2C0%2C92.1%2C41.252%2C92.1%2C92.1%0A%09C187.6%2C146.35%2C146.35%2C187.6%2C95.5%2C187.6z%22%2F%3E%0A%3Cg%3E%0A%09%3Cpath%20fill%3D%22%23636363%22%20d%3D%22M92.9%2C10v8.6H91v-6.5c-0.1%2C0.1-0.2%2C0.2-0.4%2C0.3c-0.2%2C0.1-0.3%2C0.2-0.4%2C0.2c-0.1%2C0-0.3%2C0.1-0.5%2C0.2%0A%09%09c-0.2%2C0.1-0.3%2C0.1-0.5%2C0.1v-1.6c0.5-0.1%2C0.9-0.3%2C1.4-0.5c0.5-0.2%2C0.8-0.5%2C1.2-0.7h1.1V10z%22%2F%3E%0A%09%3Cpath%20fill%3D%22%23636363%22%20d%3D%22M97.1%2C17.1h3.602v1.5h-5.6V18c0-0.4%2C0.1-0.8%2C0.2-1.2c0.1-0.4%2C0.3-0.6%2C0.5-0.9c0.2-0.3%2C0.5-0.5%2C0.7-0.7%0A%09%09c0.2-0.2%2C0.5-0.4%2C0.7-0.6c0.199-0.2%2C0.5-0.3%2C0.6-0.5c0.102-0.2%2C0.301-0.3%2C0.5-0.5c0.2-0.2%2C0.2-0.3%2C0.301-0.5%0A%09%09c0.101-0.2%2C0.101-0.3%2C0.101-0.5c0-0.4-0.101-0.6-0.3-0.8c-0.2-0.2-0.4-0.3-0.801-0.3c-0.699%2C0-1.399%2C0.3-2.101%2C0.9v-1.6%0A%09%09c0.7-0.5%2C1.5-0.7%2C2.5-0.7c0.399%2C0%2C0.8%2C0.1%2C1.101%2C0.2c0.301%2C0.1%2C0.601%2C0.3%2C0.899%2C0.5c0.3%2C0.2%2C0.399%2C0.5%2C0.5%2C0.8%0A%09%09c0.101%2C0.3%2C0.2%2C0.6%2C0.2%2C1s-0.102%2C0.7-0.2%2C1c-0.099%2C0.3-0.3%2C0.6-0.5%2C0.8c-0.2%2C0.2-0.399%2C0.5-0.7%2C0.7c-0.3%2C0.2-0.5%2C0.4-0.8%2C0.6%0A%09%09c-0.2%2C0.1-0.399%2C0.3-0.5%2C0.4s-0.3%2C0.3-0.5%2C0.4s-0.2%2C0.3-0.3%2C0.4C97.1%2C17%2C97.1%2C17%2C97.1%2C17.1z%22%2F%3E%0A%3C%2Fg%3E%0A%3Cg%3E%0A%09%3Cpath%20fill%3D%22%23636363%22%20d%3D%22M15%2C95.4c0%2C0.7-0.1%2C1.4-0.2%2C2c-0.1%2C0.6-0.4%2C1.1-0.7%2C1.5C13.8%2C99.3%2C13.4%2C99.6%2C12.9%2C99.8s-1%2C0.3-1.5%2C0.3%0A%09%09c-0.7%2C0-1.3-0.1-1.8-0.3v-1.5c0.4%2C0.3%2C1%2C0.4%2C1.6%2C0.4c0.6%2C0%2C1.1-0.2%2C1.5-0.7c0.4-0.5%2C0.5-1.1%2C0.5-1.9l0%2C0%0A%09%09C12.8%2C96.7%2C12.3%2C96.9%2C11.5%2C96.9c-0.3%2C0-0.7-0.102-1-0.2c-0.3-0.101-0.5-0.3-0.8-0.5c-0.3-0.2-0.4-0.5-0.5-0.8%0A%09%09c-0.1-0.3-0.2-0.7-0.2-1c0-0.4%2C0.1-0.8%2C0.2-1.2c0.1-0.4%2C0.3-0.7%2C0.6-0.9c0.3-0.2%2C0.6-0.5%2C0.9-0.6c0.3-0.1%2C0.8-0.2%2C1.2-0.2%0A%09%09c0.5%2C0%2C0.9%2C0.1%2C1.2%2C0.3c0.3%2C0.2%2C0.7%2C0.4%2C0.9%2C0.8s0.5%2C0.7%2C0.6%2C1.2S15%2C94.8%2C15%2C95.4z%20M13.1%2C94.4c0-0.2%2C0-0.4-0.1-0.6%0A%09%09c-0.1-0.2-0.1-0.4-0.2-0.5c-0.1-0.1-0.2-0.2-0.4-0.3c-0.2-0.1-0.3-0.1-0.5-0.1c-0.2%2C0-0.3%2C0-0.4%2C0.1s-0.3%2C0.2-0.3%2C0.3%0A%09%09c0%2C0.1-0.2%2C0.3-0.2%2C0.4c0%2C0.1-0.1%2C0.4-0.1%2C0.6c0%2C0.2%2C0%2C0.4%2C0.1%2C0.6c0.1%2C0.2%2C0.1%2C0.3%2C0.2%2C0.4c0.1%2C0.1%2C0.2%2C0.2%2C0.4%2C0.3%0A%09%09c0.2%2C0.1%2C0.3%2C0.1%2C0.5%2C0.1c0.2%2C0%2C0.3%2C0%2C0.4-0.1s0.2-0.2%2C0.3-0.3c0.1-0.1%2C0.2-0.2%2C0.2-0.4C13%2C94.7%2C13.1%2C94.6%2C13.1%2C94.4z%22%2F%3E%0A%3C%2Fg%3E%0A%3Cg%3E%0A%09%3Cpath%20fill%3D%22%23636363%22%20d%3D%22M176%2C99.7V98.1c0.6%2C0.4%2C1.2%2C0.602%2C2%2C0.602c0.5%2C0%2C0.8-0.102%2C1.1-0.301c0.301-0.199%2C0.4-0.5%2C0.4-0.801%0A%09%09c0-0.398-0.2-0.699-0.5-0.898c-0.3-0.2-0.8-0.301-1.3-0.301h-0.802V95h0.701c1.101%2C0%2C1.601-0.4%2C1.601-1.1c0-0.7-0.4-1-1.302-1%0A%09%09c-0.6%2C0-1.1%2C0.2-1.6%2C0.5v-1.5c0.6-0.3%2C1.301-0.4%2C2.1-0.4c0.9%2C0%2C1.5%2C0.2%2C2%2C0.6s0.701%2C0.9%2C0.701%2C1.5c0%2C1.1-0.601%2C1.8-1.701%2C2.1l0%2C0%0A%09%09c0.602%2C0.1%2C1.102%2C0.3%2C1.4%2C0.6s0.5%2C0.8%2C0.5%2C1.3c0%2C0.801-0.3%2C1.4-0.9%2C1.9c-0.6%2C0.5-1.398%2C0.7-2.398%2C0.7%0A%09%09C177.2%2C100.1%2C176.5%2C100%2C176%2C99.7z%22%2F%3E%0A%3C%2Fg%3E%0A%3Cg%3E%0A%09%3Cpath%20fill%3D%22%23636363%22%20d%3D%22M98.5%2C179.102c0%2C0.398-0.1%2C0.799-0.2%2C1.199C98.2%2C180.7%2C98%2C181%2C97.7%2C181.2s-0.601%2C0.5-0.9%2C0.601%0A%09%09c-0.3%2C0.1-0.7%2C0.199-1.2%2C0.199c-0.5%2C0-0.9-0.1-1.3-0.3c-0.4-0.2-0.7-0.399-0.9-0.8c-0.2-0.4-0.5-0.7-0.6-1.2%0A%09%09c-0.1-0.5-0.2-1-0.2-1.601c0-0.699%2C0.1-1.399%2C0.3-2c0.2-0.601%2C0.4-1.101%2C0.8-1.5c0.4-0.399%2C0.7-0.699%2C1.2-1c0.5-0.3%2C1-0.3%2C1.6-0.3%0A%09%09c0.6%2C0%2C1.2%2C0.101%2C1.5%2C0.199v1.5c-0.4-0.199-0.9-0.399-1.4-0.399c-0.3%2C0-0.6%2C0.101-0.8%2C0.2c-0.2%2C0.101-0.5%2C0.3-0.7%2C0.5%0A%09%09c-0.2%2C0.199-0.3%2C0.5-0.4%2C0.8c-0.1%2C0.301-0.2%2C0.7-0.2%2C1.101l0%2C0c0.4-0.601%2C1-0.8%2C1.8-0.8c0.3%2C0%2C0.7%2C0.1%2C0.9%2C0.199%0A%09%09c0.2%2C0.101%2C0.5%2C0.301%2C0.7%2C0.5c0.199%2C0.2%2C0.398%2C0.5%2C0.5%2C0.801C98.5%2C178.2%2C98.5%2C178.7%2C98.5%2C179.102z%20M96.7%2C179.2%0A%09%09c0-0.899-0.4-1.399-1.1-1.399c-0.2%2C0-0.3%2C0-0.5%2C0.1c-0.2%2C0.101-0.3%2C0.201-0.4%2C0.301c-0.1%2C0.101-0.2%2C0.199-0.2%2C0.4%0A%09%09c0%2C0.199-0.1%2C0.299-0.1%2C0.5c0%2C0.199%2C0%2C0.398%2C0.1%2C0.6s0.1%2C0.3%2C0.2%2C0.5c0.1%2C0.199%2C0.2%2C0.199%2C0.4%2C0.3c0.2%2C0.101%2C0.3%2C0.101%2C0.5%2C0.101%0A%09%09c0.2%2C0%2C0.3%2C0%2C0.5-0.101c0.2-0.101%2C0.301-0.199%2C0.301-0.3c0-0.1%2C0.199-0.301%2C0.199-0.399C96.6%2C179.7%2C96.7%2C179.4%2C96.7%2C179.2z%22%2F%3E%0A%3C%2Fg%3E%0A%3Ccircle%20fill%3D%22%23636363%22%20cx%3D%2295%22%20cy%3D%2295%22%20r%3D%227%22%2F%3E%0A%3C%2Fsvg%3E%0A) 50% 50%/191px no-repeat",
+  "a144": " url(img.09a1a1112c577c279435.png)",
+  "a145": " url(img.09a1a1112c577c279435.png)",
+  "a148": " url('data:image/svg+xml,%3Csvg xmlns=\\"http://www.w3.org/2000/svg\\"%3E%3Crect width=\\"100%25\\" height=\\"100%25\\" style=\\"stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px\\" /%3E%3C/svg%3E')",
+  "a149": " url('data:image/svg+xml,%3Csvg xmlns=\\"http://www.w3.org/2000/svg\\"%3E%3Crect width=\\"100%25\\" height=\\"100%25\\" style=\\"stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px\\" /%3E%3C/svg%3E')",
+  "a15": " url(data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2042%2026%27%20fill%3D%27%2523007aff%27%3E%3Crect%20width%3D%274%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%278%27%20y%3D%271%27%20width%3D%2734%27%20height%3D%272%27%2F%3E%3Crect%20y%3D%2711%27%20width%3D%274%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%278%27%20y%3D%2712%27%20width%3D%2734%27%20height%3D%272%27%2F%3E%3Crect%20y%3D%2722%27%20width%3D%274%27%20height%3D%274%27%2F%3E%3Crect%20x%3D%278%27%20y%3D%2723%27%20width%3D%2734%27%20height%3D%272%27%2F%3E%3C%2Fsvg%3E)",
+  "a150": " url('data:image/svg+xml,%3Csvg xmlns=\\"http://www.w3.org/2000/svg\\"%3E%3Crect width=\\"100%25\\" height=\\"100%25\\" style=\\"stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px\\" /%3E%3C/svg%3E')",
+  "a151": " url('data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><rect width=\\"100%\\" height=\\"100%\\" style=\\"stroke: rgb(223,224,225); stroke-width: 2px; fill: none; stroke-dasharray: 6px 3px\\" /></svg>')",
+  "a152": " url(img.09a1a1112c577c279435.png)",
+  "a153": " url(img.09a1a1112c577c279435.png)",
+  "a154": " url(other.09a1a1112c577c279435.png)",
+  "a155": " url(img.09a1a1112c577c279435.png)",
+  "a156": " url(\\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e\\")",
+  "a157": " url('data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"10\\" height=\\"10\\"><rect fill=\\"gray\\" width=\\"5\\" height=\\"5\\" y=\\"0\\" x=\\"0\\" /></svg>')",
+  "a158": " src(\\"http://www.example.com/pinkish.gif\\")",
+  "a159": " src(var(--foo))",
+  "a16": " url('data:image/svg+xml;charset=utf-8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"><filter id=\\"filter\\"><feGaussianBlur in=\\"SourceAlpha\\" stdDeviation=\\"0\\" /><feOffset dx=\\"1\\" dy=\\"2\\" result=\\"offsetblur\\" /><feFlood flood-color=\\"rgba(255,255,255,1)\\" /><feComposite in2=\\"offsetblur\\" operator=\\"in\\" /><feMerge><feMergeNode /><feMergeNode in=\\"SourceGraphic\\" /></feMerge></filter></svg>#filter')",
+  "a160": " url(img.09a1a1112c577c279435.png param(--color var(--primary-color)))",
+  "a161": " src(\\"img.png\\" param(--color var(--primary-color)))",
+  "a162": " url(img\\\\ img.09a1a1112c577c279435.png)",
+  "a163": " url(img.09a1a1112c577c279435.png)",
+  "a164": " url( img.png bug)",
+  "a165": " url(imgn.09a1a1112c577c279435.png)",
+  "a166": " url('data:image/svg+xml;utf8,<svg xmlns=\\"http://www.w3.org/2000/svg\\"	                width=\\"10\\" height=\\"10\\"><rect fill=\\"gray\\" width=\\"5\\" height=\\"5\\" y=\\"0\\" x=\\"0\\" /></svg>')",
+  "a167": " url(http://example.com/image.jpg)",
+  "a168": " url(http://example.com/image.jpg)",
+  "a169": " url(data:,)",
+  "a17": " url(\\"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%5C%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%5C%22%3E%3Cfilter%20id%3D%5C%22filter%5C%22%3E%3CfeGaussianBlur%20in%3D%5C%22SourceAlpha%5C%22%20stdDeviation%3D%5C%220%5C%22%20%2F%3E%3CfeOffset%20dx%3D%5C%221%5C%22%20dy%3D%5C%222%5C%22%20result%3D%5C%22offsetblur%5C%22%20%2F%3E%3CfeFlood%20flood-color%3D%5C%22rgba(255%2C255%2C255%2C1)%5C%22%20%2F%3E%3CfeComposite%20in2%3D%5C%22offsetblur%5C%22%20operator%3D%5C%22in%5C%22%20%2F%3E%3CfeMerge%3E%3CfeMergeNode%20%2F%3E%3CfeMergeNode%20in%3D%5C%22SourceGraphic%5C%22%20%2F%3E%3C%2FfeMerge%3E%3C%2Ffilter%3E%3C%2Fsvg%3E%23filter\\")",
+  "a170": " url(data:,)",
+  "a171": " image(ltr 'img.png#xywh=0,0,16,16', red)",
+  "a172": " image-set(
+		linear-gradient(blue, white) 1x,
+		linear-gradient(blue, green) 2x
+	)",
+  "a173": " image-set(
+		url(img.09a1a1112c577c279435.png) type(\\"image/png\\"),
+		url(img.09a1a1112c577c279435.png) type(\\"image/png\\")
+	)",
+  "a174": " image-set(
+		url(img.09a1a1112c577c279435.png) 1x,
+		url(img.09a1a1112c577c279435.png) 2x
+	)",
+  "a175": " image-set(
+		url(img.09a1a1112c577c279435.png) 1x,
+		url(img.09a1a1112c577c279435.png) 2x,
+		url(img.09a1a1112c577c279435.png) 3x
+	)",
+  "a176": " image-set(
+		url(img.09a1a1112c577c279435.png) type(\\"image/png\\"),
+		url(img.09a1a1112c577c279435.png) type(\\"image/png\\")
+	) \\"img.png\\"",
+  "a177": " image-set(
+		url(img.09a1a1112c577c279435.png) 1x type(\\"image/png\\"),
+		url(img.09a1a1112c577c279435.png) 2x type(\\"image/png\\")
+	)",
+  "a178": " image-set(
+		url(img.09a1a1112c577c279435.png) type(\\"image/png\\") 1x,
+		url(img.09a1a1112c577c279435.png) type(\\"image/png\\") 2x
+	)",
+  "a179": " -webkit-image-set(
+		url(img.09a1a1112c577c279435.png) 1x
+	)",
+  "a18": " url(#highlight)",
+  "a180": " -webkit-image-set(
+		url(img.09a1a1112c577c279435.png var(--foo, \\"test.png\\")) 1x
+	)",
+  "a181": " src(   \\"img.png\\"   )",
+  "a182": " src('img.png')",
+  "a183": " src('img.png' var(--foo, \\"test.png\\"))",
+  "a184": " src(var(--foo, \\"test.png\\"))",
+  "a185": " src(\\"   img.png   \\")",
+  "a186": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
+  "a187": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
+  "a188": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
+  "a189": " image-set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
+  "a19": " url(#line-marker)",
+  "a190": " image-set(url(img.09a1a1112c577c279435.png)1x)",
+  "a191": " image-set(url(img.09a1a1112c577c279435.png)1x/* test*/,/* test*/url(img.09a1a1112c577c279435.png)2x)",
+  "a197": " \\\\u\\\\r\\\\l(img.09a1a1112c577c279435.png)",
+  "a198": " \\\\image-\\\\set(url(img.09a1a1112c577c279435.png)1x,url(img.09a1a1112c577c279435.png)2x,url(img.09a1a1112c577c279435.png)3x)",
+  "a199": " \\\\-webk\\\\it-image-set(url(img.09a1a1112c577c279435.png)1x)",
+  "a2": " url(img.09a1a1112c577c279435.png)",
+  "a200": "-webkit-image-set(url(img.09a1a1112c577c279435.png)1x)",
+  "a22": " \\"do not use url(path)\\"",
+  "a23": " 'do not \\"use\\" url(path)'",
+  "a24": " -webkit-image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)
+",
+  "a25": " image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)
+",
+  "a26": " green url() xyz",
+  "a27": " green url('') xyz",
+  "a28": " green url(\\"\\") xyz",
+  "a29": " green url('   ') xyz",
+  "a3": " url(img.09a1a1112c577c279435.png)",
+  "a30": " green url(
+	) xyz",
+  "a4": " url(img.09a1a1112c577c279435.png#hash)",
+  "a40": " green url(https://raw.githubusercontent.com/webpack/media/master/logo/icon.png) xyz",
+  "a41": " green url(//raw.githubusercontent.com/webpack/media/master/logo/icon.png) xyz",
+  "a42": " url(img.09a1a1112c577c279435.png?foo)",
+  "a43": " url(img.09a1a1112c577c279435.png?foo=bar)",
+  "a44": " url(img.09a1a1112c577c279435.png?foo=bar#hash)",
+  "a45": " url(img.09a1a1112c577c279435.png?foo=bar#hash)",
+  "a46": " url(img.09a1a1112c577c279435.png?)",
+  "a47": " url(img.09a1a1112c577c279435.png) url(\\"data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 42 26' fill='%23007aff'><rect width='4' height='4'/><rect x='8' y='1' width='34' height='2'/><rect y='11' width='4' height='4'/><rect x='8' y='12' width='34' height='2'/><rect y='22' width='4' height='4'/><rect x='8' y='23' width='34' height='2'/></svg>\\") url(img.09a1a1112c577c279435.png)",
+  "a48": " __URL__()",
+  "a49": " url(img-simple.09a1a1112c577c279435.png)",
+  "a5": " url(
+	img.09a1a1112c577c279435.png
+	)",
+  "a50": " url(img-simple.09a1a1112c577c279435.png)",
+  "a51": " url(img-simple.09a1a1112c577c279435.png)",
+  "a52": " url(img.09a1a1112c577c279435.png)",
+  "a53": " url(img.09a1a1112c577c279435.png)",
+  "a55": " -webkit-image-set()",
+  "a56": " image-set()",
+  "a58": " image-set('')",
+  "a59": " image-set(\\"\\")",
+  "a6": " green url( img.09a1a1112c577c279435.png ) xyz",
+  "a60": " image-set(\\"\\" 1x)",
+  "a61": " image-set(url())",
+  "a62": " image-set(
+		url()
+	)",
+  "a63": " image-set(URL())",
+  "a64": " image-set(url(''))",
+  "a65": " image-set(url(\\"\\"))",
+  "a66": " image-set(url('') 1x)",
+  "a67": " image-set(1x)",
+  "a68": " image-set(
+		1x
+	)",
+  "a69": " image-set(calc(1rem + 1px) 1x)",
+  "a7": " green url( img.09a1a1112c577c279435.png ) xyz",
+  "a70": " -webkit-image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
+  "a71": " image-set(url(img1x.09a1a1112c577c279435.png) 1x)",
+  "a72": " image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
+  "a73": " image-set(url(img\\\\ img.09a1a1112c577c279435.png) 1x, url(img\\\\ img.09a1a1112c577c279435.png) 2x)",
+  "a74": " image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x),
+		image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
+  "a75": " image-set(
+		url(img1x.09a1a1112c577c279435.png) 1x,
+		url(img2x.09a1a1112c577c279435.png) 2x,
+		url(img3x.09a1a1112c577c279435.png) 600dpi
+	)",
+  "a76": " image-set(url(img1x.09a1a1112c577c279435.png?foo=bar) 1x)",
+  "a77": " image-set(url(img1x.09a1a1112c577c279435.png#hash) 1x)",
+  "a78": " image-set(url(img1x.09a1a1112c577c279435.png?#iefix) 1x)",
+  "a79": " -webkit-image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
+  "a8": " green url(img.09a1a1112c577c279435.png) xyz",
+  "a80": " -webkit-image-set(url(img1x.09a1a1112c577c279435.png) 1x)",
+  "a81": " -webkit-image-set(
+		url(img1x.09a1a1112c577c279435.png) 1x
+	)",
+  "a82": " image-set(url(img1x.09a1a1112c577c279435.png) 1x)",
+  "a83": " image-set(
+		url(img1x.09a1a1112c577c279435.png) 1x
+	)",
+  "a84": " image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
+  "a85": " image-set(
+		url(img1x.09a1a1112c577c279435.png) 1x,
+		url(img2x.09a1a1112c577c279435.png) 2x,
+		url(img3x.09a1a1112c577c279435.png) 600dpi
+	)",
+  "a86": " image-set(url(img\\\\ img.09a1a1112c577c279435.png) 1x, url(img\\\\ img.09a1a1112c577c279435.png) 2x)",
+  "a87": " image-set(url(img1x.09a1a1112c577c279435.png) 1x, url(img2x.09a1a1112c577c279435.png) 2x)",
+  "a88": " url(imgimg.09a1a1112c577c279435.png)",
+  "a89": " url(img\\\\'img.09a1a1112c577c279435.png)",
+  "a9": " green url(img.09a1a1112c577c279435.png) url(other-img.09a1a1112c577c279435.png) xyz",
+  "a90": " url(img\\\\'\\\\'\\\\'img.09a1a1112c577c279435.png)",
+  "a91": " url(img\\\\(img.09a1a1112c577c279435.png)",
+  "a92": " url(img\\\\)img.09a1a1112c577c279435.png)",
+  "a93": " url(img\\\\ img.09a1a1112c577c279435.png)",
+  "a94": " url(\\"img'() img.09a1a1112c577c279435.png\\")",
+  "a95": " image-set(
+		url(imgimg.09a1a1112c577c279435.png) 1x,
+		url(img\\\\'\\\\'\\\\'img.09a1a1112c577c279435.png) 2x,
+		url(img\\\\'img.09a1a1112c577c279435.png) 3x,
+		url(img\\\\(img.09a1a1112c577c279435.png) 4x,
+		url(img\\\\)img.09a1a1112c577c279435.png) 5x,
+		url(img\\\\ img.09a1a1112c577c279435.png) 6x,
+		url(\\"img'() img.09a1a1112c577c279435.png\\") 7x
+	)",
+  "a96": " url(img\\\\'\\\\'\\\\'img.09a1a1112c577c279435.png)",
+  "a97": " url(\\"img'() img.09a1a1112c577c279435.png\\")",
+  "a98": " url(img\\\\'img.09a1a1112c577c279435.png)",
+  "a99": " url(img\\\\(img.09a1a1112c577c279435.png)",
   "b": " url(img.09a1a1112c577c279435.png)",
   "c": " url(img.09a1a1112c577c279435.png)",
   "d": " url(img.09a1a1112c577c279435.png#hash)",
-  "e": " url(img.09a1a1112c577c279435.png)",
-  "f": " green url(img.09a1a1112c577c279435.png) xyz",
-  "g": " green url(img.09a1a1112c577c279435.png) xyz",
+  "e": " url(
+    img.09a1a1112c577c279435.png
+  )",
+  "f": " green url( img.09a1a1112c577c279435.png ) xyz",
+  "g": " green url( img.09a1a1112c577c279435.png ) xyz",
   "getPropertyValue": [Function],
   "h": " green url(img.09a1a1112c577c279435.png) xyz",
   "i": " green url(img.09a1a1112c577c279435.png) url(img.09a1a1112c577c279435.png) xyz",
-  "j": " green url(img\\\\ img.09a1a1112c577c279435.png) xyz",
-  "k": " green url(img\\\\ img.09a1a1112c577c279435.png) xyz",
+  "j": " green url( img\\\\ img.09a1a1112c577c279435.png ) xyz",
+  "k": " green url( img\\\\ img.09a1a1112c577c279435.png ) xyz",
   "l": " green url(img.09a1a1112c577c279435.png) xyz",
+  "m": " green url(img.09a1a1112c577c279435.png) xyz",
+  "n": " green url(img.09a1a1112c577c279435.png) xyz",
 }
 `;
 

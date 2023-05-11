@@ -82,7 +82,11 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import { ServerOptions as ServerOptionsImport } from "http";
+import {
+	IncomingMessage,
+	ServerOptions as ServerOptionsImport,
+	ServerResponse
+} from "http";
 import { ListenOptions, Server } from "net";
 import { validate as validateFunction } from "schema-utils";
 import { default as ValidationError } from "schema-utils/declarations/ValidationError";
@@ -478,9 +482,9 @@ declare abstract class BasicEvaluatedExpression {
 	options?: BasicEvaluatedExpression[];
 	prefix?: BasicEvaluatedExpression;
 	postfix?: BasicEvaluatedExpression;
-	wrappedInnerExpressions: any;
+	wrappedInnerExpressions: BasicEvaluatedExpression[];
 	identifier?: string | VariableInfoInterface;
-	rootInfo: VariableInfoInterface;
+	rootInfo: string | VariableInfoInterface;
 	getMembers: () => string[];
 	getMembersOptionals: () => boolean[];
 	expression: NodeEstreeIndex;
@@ -521,43 +525,116 @@ declare abstract class BasicEvaluatedExpression {
 	 * Can this expression have side effects?
 	 */
 	couldHaveSideEffects(): boolean;
-	asBool(): any;
+
+	/**
+	 * Creates a boolean representation of this evaluated expression.
+	 */
+	asBool(): undefined | boolean;
+
+	/**
+	 * Creates a nullish coalescing representation of this evaluated expression.
+	 */
 	asNullish(): undefined | boolean;
-	asString(): any;
+
+	/**
+	 * Creates a string representation of this evaluated expression.
+	 */
+	asString(): undefined | string;
 	setString(string?: any): BasicEvaluatedExpression;
 	setUndefined(): BasicEvaluatedExpression;
 	setNull(): BasicEvaluatedExpression;
-	setNumber(number?: any): BasicEvaluatedExpression;
-	setBigInt(bigint?: any): BasicEvaluatedExpression;
-	setBoolean(bool?: any): BasicEvaluatedExpression;
-	setRegExp(regExp?: any): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to a number
+	 */
+	setNumber(number: number): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to a BigInt
+	 */
+	setBigInt(bigint: bigint): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to a boolean
+	 */
+	setBoolean(bool: boolean): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to a regular expression
+	 */
+	setRegExp(regExp: RegExp): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to a particular identifier and its members.
+	 */
 	setIdentifier(
-		identifier?: any,
-		rootInfo?: any,
-		getMembers?: any,
-		getMembersOptionals?: any
+		identifier: string | VariableInfoInterface,
+		rootInfo: string | VariableInfoInterface,
+		getMembers: () => string[],
+		getMembersOptionals?: () => boolean[]
 	): BasicEvaluatedExpression;
+
+	/**
+	 * Wraps an array of expressions with a prefix and postfix expression.
+	 */
 	setWrapped(
-		prefix?: any,
-		postfix?: any,
-		innerExpressions?: any
+		prefix: null | BasicEvaluatedExpression,
+		postfix: BasicEvaluatedExpression,
+		innerExpressions: BasicEvaluatedExpression[]
 	): BasicEvaluatedExpression;
-	setOptions(options?: any): BasicEvaluatedExpression;
-	addOptions(options?: any): BasicEvaluatedExpression;
-	setItems(items?: any): BasicEvaluatedExpression;
-	setArray(array?: any): BasicEvaluatedExpression;
+
+	/**
+	 * Stores the options of a conditional expression.
+	 */
+	setOptions(options: BasicEvaluatedExpression[]): BasicEvaluatedExpression;
+
+	/**
+	 * Adds options to a conditional expression.
+	 */
+	addOptions(options: BasicEvaluatedExpression[]): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to an array of expressions.
+	 */
+	setItems(items: BasicEvaluatedExpression[]): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to an array of strings.
+	 */
+	setArray(array: string[]): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of this expression to a processed/unprocessed template string. Used
+	 * for evaluating TemplateLiteral expressions in the JavaScript Parser.
+	 */
 	setTemplateString(
-		quasis?: any,
-		parts?: any,
-		kind?: any
+		quasis: BasicEvaluatedExpression[],
+		parts: BasicEvaluatedExpression[],
+		kind: "raw" | "cooked"
 	): BasicEvaluatedExpression;
-	templateStringKind: any;
+	templateStringKind?: "raw" | "cooked";
 	setTruthy(): BasicEvaluatedExpression;
 	setFalsy(): BasicEvaluatedExpression;
-	setNullish(value?: any): BasicEvaluatedExpression;
-	setRange(range?: any): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the value of the expression to nullish.
+	 */
+	setNullish(value: boolean): BasicEvaluatedExpression;
+
+	/**
+	 * Set's the range for the expression.
+	 */
+	setRange(range: [number, number]): BasicEvaluatedExpression;
+
+	/**
+	 * Set whether or not the expression has side effects.
+	 */
 	setSideEffects(sideEffects?: boolean): BasicEvaluatedExpression;
-	setExpression(expression?: any): BasicEvaluatedExpression;
+
+	/**
+	 * Set the expression node for the expression.
+	 */
+	setExpression(expression: NodeEstreeIndex): BasicEvaluatedExpression;
 }
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
@@ -2120,6 +2197,11 @@ declare interface Configuration {
 	experiments?: Experiments;
 
 	/**
+	 * Extend configuration from another configuration (only works when using webpack-cli).
+	 */
+	extends?: string | string[];
+
+	/**
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
 	externals?:
@@ -2642,8 +2724,8 @@ declare abstract class DependenciesBlock {
 	 */
 	clearDependenciesAndBlocks(): void;
 	updateHash(hash: Hash, context: UpdateHashContextDependency): void;
-	serialize(__0: { write: any }): void;
-	deserialize(__0: { read: any }): void;
+	serialize(__0: ObjectSerializerContext): void;
+	deserialize(__0: ObjectDeserializerContext): void;
 }
 declare interface DependenciesBlockLike {
 	dependencies: Dependency[];
@@ -2713,8 +2795,8 @@ declare class Dependency {
 		moduleGraph: ModuleGraph
 	): ConnectionState;
 	createIgnoredModule(context: string): Module;
-	serialize(__0: { write: any }): void;
-	deserialize(__0: { read: any }): void;
+	serialize(__0: ObjectSerializerContext): void;
+	deserialize(__0: ObjectDeserializerContext): void;
 	module: any;
 	get disconnect(): any;
 	static NO_EXPORTS_REFERENCED: string[][];
@@ -3424,6 +3506,7 @@ declare class EnvironmentPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type ErrorWithDetail = Error & { details?: string };
 declare interface Etag {
 	toString: () => string;
 }
@@ -3825,32 +3908,32 @@ declare interface ExposesObject {
 }
 type Expression =
 	| UnaryExpression
-	| ThisExpression
 	| ArrayExpression
-	| ObjectExpression
-	| FunctionExpression
 	| ArrowFunctionExpression
-	| YieldExpression
+	| AssignmentExpression
+	| AwaitExpression
+	| BinaryExpression
+	| SimpleCallExpression
+	| NewExpression
+	| ChainExpression
+	| ClassExpression
+	| ConditionalExpression
+	| FunctionExpression
+	| Identifier
+	| ImportExpression
 	| SimpleLiteral
 	| RegExpLiteral
 	| BigIntLiteral
-	| UpdateExpression
-	| BinaryExpression
-	| AssignmentExpression
 	| LogicalExpression
 	| MemberExpression
-	| ConditionalExpression
-	| SimpleCallExpression
-	| NewExpression
-	| SequenceExpression
-	| TemplateLiteral
-	| TaggedTemplateExpression
-	| ClassExpression
 	| MetaProperty
-	| Identifier
-	| AwaitExpression
-	| ImportExpression
-	| ChainExpression;
+	| ObjectExpression
+	| SequenceExpression
+	| TaggedTemplateExpression
+	| TemplateLiteral
+	| ThisExpression
+	| UpdateExpression
+	| YieldExpression;
 declare interface ExpressionExpressionInfo {
 	type: "expression";
 	rootInfo: string | VariableInfo;
@@ -4187,17 +4270,31 @@ declare interface FileSystem {
 			arg2: FileSystemCallback<string | Buffer>
 		): void;
 	};
-	readdir: {
-		(
-			arg0: string,
-			arg1: FileSystemCallback<(string | Buffer)[] | FileSystemDirent[]>
-		): void;
-		(
-			arg0: string,
-			arg1: object,
-			arg2: FileSystemCallback<(string | Buffer)[] | FileSystemDirent[]>
-		): void;
-	};
+	readdir: (
+		arg0: string,
+		arg1?:
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| ((
+					arg0?: null | NodeJS.ErrnoException,
+					arg1?: any[] | (string | Buffer)[]
+			  ) => void)
+			| ReaddirOptions
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "hex"
+			| "buffer",
+		arg2?: (
+			arg0?: null | NodeJS.ErrnoException,
+			arg1?: any[] | (string | Buffer)[]
+		) => void
+	) => void;
 	readJson?: {
 		(arg0: string, arg1: FileSystemCallback<object>): void;
 		(arg0: string, arg1: object, arg2: FileSystemCallback<object>): void;
@@ -4229,11 +4326,6 @@ declare interface FileSystem {
 }
 declare interface FileSystemCallback<T> {
 	(err?: null | (PossibleFileSystemError & Error), result?: T): any;
-}
-declare interface FileSystemDirent {
-	name: string | Buffer;
-	isDirectory: () => boolean;
-	isFile: () => boolean;
 }
 declare abstract class FileSystemInfo {
 	fs: InputFileSystem;
@@ -4586,7 +4678,7 @@ declare interface HashedModuleIdsPluginOptions {
 	/**
 	 * The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.
 	 */
-	hashDigest?: "latin1" | "hex" | "base64";
+	hashDigest?: "latin1" | "base64" | "hex";
 
 	/**
 	 * The prefix length of the hash digest to use, defaults to 4.
@@ -4946,13 +5038,13 @@ declare class JavascriptParser extends Parser {
 		>;
 		evaluateIdentifier: HookMap<
 			SyncBailHook<
-				[ThisExpression | MemberExpression | MetaProperty | Identifier],
+				[Identifier | MemberExpression | MetaProperty | ThisExpression],
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
 		evaluateDefinedIdentifier: HookMap<
 			SyncBailHook<
-				[ThisExpression | MemberExpression | Identifier],
+				[Identifier | MemberExpression | ThisExpression],
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
@@ -4976,32 +5068,32 @@ declare class JavascriptParser extends Parser {
 				[
 					(
 						| UnaryExpression
-						| ThisExpression
 						| ArrayExpression
-						| ObjectExpression
-						| FunctionExpression
 						| ArrowFunctionExpression
-						| YieldExpression
+						| AssignmentExpression
+						| AwaitExpression
+						| BinaryExpression
+						| SimpleCallExpression
+						| NewExpression
+						| ChainExpression
+						| ClassExpression
+						| ConditionalExpression
+						| FunctionExpression
+						| Identifier
+						| ImportExpression
 						| SimpleLiteral
 						| RegExpLiteral
 						| BigIntLiteral
-						| UpdateExpression
-						| BinaryExpression
-						| AssignmentExpression
 						| LogicalExpression
 						| MemberExpression
-						| ConditionalExpression
-						| SimpleCallExpression
-						| NewExpression
-						| SequenceExpression
-						| TemplateLiteral
-						| TaggedTemplateExpression
-						| ClassExpression
 						| MetaProperty
-						| Identifier
-						| AwaitExpression
-						| ImportExpression
-						| ChainExpression
+						| ObjectExpression
+						| SequenceExpression
+						| TaggedTemplateExpression
+						| TemplateLiteral
+						| ThisExpression
+						| UpdateExpression
+						| YieldExpression
 						| FunctionDeclaration
 						| VariableDeclaration
 						| ClassDeclaration
@@ -5223,32 +5315,32 @@ declare class JavascriptParser extends Parser {
 	semicolons: any;
 	statementPath: (
 		| UnaryExpression
-		| ThisExpression
 		| ArrayExpression
-		| ObjectExpression
-		| FunctionExpression
 		| ArrowFunctionExpression
-		| YieldExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| ImportExpression
 		| SimpleLiteral
 		| RegExpLiteral
 		| BigIntLiteral
-		| UpdateExpression
-		| BinaryExpression
-		| AssignmentExpression
 		| LogicalExpression
 		| MemberExpression
-		| ConditionalExpression
-		| SimpleCallExpression
-		| NewExpression
-		| SequenceExpression
-		| TemplateLiteral
-		| TaggedTemplateExpression
-		| ClassExpression
 		| MetaProperty
-		| Identifier
-		| AwaitExpression
-		| ImportExpression
-		| ChainExpression
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
 		| FunctionDeclaration
 		| VariableDeclaration
 		| ClassDeclaration
@@ -5273,7 +5365,11 @@ declare class JavascriptParser extends Parser {
 		| ForOfStatement
 	)[];
 	prevStatement: any;
+	destructuringAssignmentProperties: WeakMap<Expression, Set<string>>;
 	currentTagData: any;
+	destructuringAssignmentPropertiesFor(
+		node: Expression
+	): undefined | Set<string>;
 	getRenameIdentifier(expr?: any): undefined | string | VariableInfoInterface;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
 	preWalkStatements(statements?: any): void;
@@ -5317,6 +5413,8 @@ declare class JavascriptParser extends Parser {
 	walkForOfStatement(statement?: any): void;
 	preWalkFunctionDeclaration(statement?: any): void;
 	walkFunctionDeclaration(statement?: any): void;
+	blockPreWalkExpressionStatement(statement?: any): void;
+	preWalkAssignmentExpression(expression?: any): void;
 	blockPreWalkImportDeclaration(statement?: any): void;
 	enterDeclaration(declaration?: any, onIdent?: any): void;
 	blockPreWalkExportNamedDeclaration(statement?: any): void;
@@ -5326,6 +5424,7 @@ declare class JavascriptParser extends Parser {
 	blockPreWalkExportAllDeclaration(statement?: any): void;
 	preWalkVariableDeclaration(statement?: any): void;
 	blockPreWalkVariableDeclaration(statement?: any): void;
+	preWalkVariableDeclarator(declarator?: any): void;
 	walkVariableDeclaration(statement?: any): void;
 	blockPreWalkClassDeclaration(statement?: any): void;
 	walkClassDeclaration(statement?: any): void;
@@ -5430,32 +5529,32 @@ declare class JavascriptParser extends Parser {
 			| undefined
 			| null
 			| UnaryExpression
-			| ThisExpression
 			| ArrayExpression
-			| ObjectExpression
-			| FunctionExpression
 			| ArrowFunctionExpression
-			| YieldExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| ImportExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
-			| UpdateExpression
-			| BinaryExpression
-			| AssignmentExpression
 			| LogicalExpression
 			| MemberExpression
-			| ConditionalExpression
-			| SimpleCallExpression
-			| NewExpression
-			| SequenceExpression
-			| TemplateLiteral
-			| TaggedTemplateExpression
-			| ClassExpression
 			| MetaProperty
-			| Identifier
-			| AwaitExpression
-			| ImportExpression
-			| ChainExpression
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -5481,32 +5580,32 @@ declare class JavascriptParser extends Parser {
 		members: string[];
 		object:
 			| UnaryExpression
-			| ThisExpression
 			| ArrayExpression
-			| ObjectExpression
-			| FunctionExpression
 			| ArrowFunctionExpression
-			| YieldExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| ImportExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
-			| UpdateExpression
-			| BinaryExpression
-			| AssignmentExpression
 			| LogicalExpression
 			| MemberExpression
-			| ConditionalExpression
-			| SimpleCallExpression
-			| NewExpression
-			| SequenceExpression
-			| TemplateLiteral
-			| TaggedTemplateExpression
-			| ClassExpression
 			| MetaProperty
-			| Identifier
-			| AwaitExpression
-			| ImportExpression
-			| ChainExpression
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
 			| Super;
 		membersOptionals: boolean[];
 	};
@@ -6133,7 +6232,10 @@ declare interface LazyCompilationDefaultBackendOptions {
 	/**
 	 * Specifies how to create the server handling the EventSource requests.
 	 */
-	server?: ServerOptionsImport | ServerOptionsHttps | (() => typeof Server);
+	server?:
+		| ServerOptionsImport<typeof IncomingMessage>
+		| ServerOptionsHttps<typeof IncomingMessage, typeof ServerResponse>
+		| (() => typeof Server);
 }
 
 /**
@@ -6181,9 +6283,9 @@ declare class LazySet<T> {
 	has(item: T): boolean;
 	keys(): IterableIterator<T>;
 	values(): IterableIterator<T>;
-	serialize(__0: { write: any }): void;
+	serialize(__0: ObjectSerializerContext): void;
 	[Symbol.iterator](): IterableIterator<T>;
-	static deserialize(__0: { read: any }): LazySet<any>;
+	static deserialize<T>(__0: ObjectDeserializerContext): LazySet<T>;
 }
 declare interface LibIdentOptions {
 	/**
@@ -6262,6 +6364,11 @@ type LibraryName = string | string[] | LibraryCustomUmdObject;
  * Options for library.
  */
 declare interface LibraryOptions {
+	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: string;
+
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */
@@ -6405,8 +6512,8 @@ declare interface LoaderModule<OptionsType = {}, ContextAdditions = {}> {
 	pitch?: PitchLoaderDefinitionFunction<OptionsType, ContextAdditions>;
 }
 declare class LoaderOptionsPlugin {
-	constructor(options?: LoaderOptionsPluginOptions);
-	options: LoaderOptionsPluginOptions;
+	constructor(options?: LoaderOptionsPluginOptions & MatchObject);
+	options: LoaderOptionsPluginOptions & MatchObject;
 
 	/**
 	 * Apply the plugin
@@ -6570,6 +6677,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 		data?: object;
 		pitchExecuted: boolean;
 		normalExecuted: boolean;
+		type?: "module" | "commonjs";
 	}[];
 
 	/**
@@ -6595,6 +6703,12 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	 * Example: "/abc/resource.js?query#frag"
 	 */
 	resource: string;
+
+	/**
+	 * Target of compilation.
+	 * Example: "web"
+	 */
+	target: string;
 }
 declare class LoaderTargetPlugin {
 	constructor(target: string);
@@ -6698,6 +6812,12 @@ declare interface MapOptions {
 	columns?: boolean;
 	module?: boolean;
 }
+declare interface MatchObject {
+	test?: string | RegExp | string[] | RegExp[];
+	include?: string | RegExp | string[] | RegExp[];
+	exclude?: string | RegExp | string[] | RegExp[];
+}
+type Matcher = string | RegExp | string[] | RegExp[];
 
 /**
  * Options object for in-memory caching.
@@ -6752,8 +6872,54 @@ declare interface MinChunkSizePluginOptions {
 	minChunkSize: number;
 }
 declare class Module extends DependenciesBlock {
-	constructor(type: string, context?: string, layer?: string);
-	type: string;
+	constructor(
+		type:
+			| ""
+			| "runtime"
+			| "javascript/auto"
+			| "javascript/dynamic"
+			| "javascript/esm"
+			| "json"
+			| "webassembly/async"
+			| "webassembly/sync"
+			| "css"
+			| "css/global"
+			| "css/module"
+			| "asset"
+			| "asset/inline"
+			| "asset/resource"
+			| "asset/source"
+			| "asset/raw-data-url"
+			| "fallback-module"
+			| "remote-module"
+			| "provide-module"
+			| "consume-shared-module"
+			| "lazy-compilation-proxy",
+		context?: string,
+		layer?: string
+	);
+	type:
+		| ""
+		| "runtime"
+		| "javascript/auto"
+		| "javascript/dynamic"
+		| "javascript/esm"
+		| "json"
+		| "webassembly/async"
+		| "webassembly/sync"
+		| "css"
+		| "css/global"
+		| "css/module"
+		| "asset"
+		| "asset/inline"
+		| "asset/resource"
+		| "asset/source"
+		| "asset/raw-data-url"
+		| "fallback-module"
+		| "remote-module"
+		| "provide-module"
+		| "consume-shared-module"
+		| "lazy-compilation-proxy";
 	context: null | string;
 	layer: null | string;
 	needId: boolean;
@@ -7535,32 +7701,32 @@ declare class NodeEnvironmentPlugin {
 }
 type NodeEstreeIndex =
 	| UnaryExpression
-	| ThisExpression
 	| ArrayExpression
-	| ObjectExpression
-	| FunctionExpression
 	| ArrowFunctionExpression
-	| YieldExpression
+	| AssignmentExpression
+	| AwaitExpression
+	| BinaryExpression
+	| SimpleCallExpression
+	| NewExpression
+	| ChainExpression
+	| ClassExpression
+	| ConditionalExpression
+	| FunctionExpression
+	| Identifier
+	| ImportExpression
 	| SimpleLiteral
 	| RegExpLiteral
 	| BigIntLiteral
-	| UpdateExpression
-	| BinaryExpression
-	| AssignmentExpression
 	| LogicalExpression
 	| MemberExpression
-	| ConditionalExpression
-	| SimpleCallExpression
-	| NewExpression
-	| SequenceExpression
-	| TemplateLiteral
-	| TaggedTemplateExpression
-	| ClassExpression
 	| MetaProperty
-	| Identifier
-	| AwaitExpression
-	| ImportExpression
-	| ChainExpression
+	| ObjectExpression
+	| SequenceExpression
+	| TaggedTemplateExpression
+	| TemplateLiteral
+	| ThisExpression
+	| UpdateExpression
+	| YieldExpression
 	| FunctionDeclaration
 	| VariableDeclaration
 	| ClassDeclaration
@@ -7592,22 +7758,22 @@ type NodeEstreeIndex =
 	| PropertyDefinition
 	| VariableDeclarator
 	| Program
-	| SwitchCase
-	| CatchClause
-	| Property
 	| AssignmentProperty
-	| Super
-	| TemplateElement
-	| SpreadElement
-	| ObjectPattern
-	| ArrayPattern
-	| RestElement
-	| AssignmentPattern
+	| Property
+	| CatchClause
 	| ClassBody
 	| ImportSpecifier
 	| ImportDefaultSpecifier
 	| ImportNamespaceSpecifier
-	| ExportSpecifier;
+	| ExportSpecifier
+	| ObjectPattern
+	| ArrayPattern
+	| RestElement
+	| AssignmentPattern
+	| SpreadElement
+	| Super
+	| SwitchCase
+	| TemplateElement;
 
 /**
  * Options object for node compatibility features.
@@ -7712,9 +7878,9 @@ declare interface NormalModuleCreateData {
 	layer?: string;
 
 	/**
-	 * module type
+	 * module type. When deserializing, this is set to an empty string "".
 	 */
-	type: string;
+	type: "" | "javascript/auto" | "javascript/dynamic" | "javascript/esm";
 
 	/**
 	 * request string
@@ -7812,6 +7978,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		parser: HookMap<SyncHook<any>>;
 		createGenerator: HookMap<SyncBailHook<any, any>>;
 		generator: HookMap<SyncHook<any>>;
+		createModuleClass: HookMap<SyncBailHook<any, any>>;
 	}>;
 	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
@@ -7857,9 +8024,9 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 		context: string,
 		request: string,
 		callback: (
-			arg0: null | Error,
-			arg1?: string | false,
-			arg2?: ResolveRequest
+			err: null | ErrorWithDetail,
+			res?: string | false,
+			req?: ResolveRequest
 		) => void
 	): any;
 	getResolve(options?: ResolveOptionsWithDependencyType): {
@@ -7867,9 +8034,9 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 			context: string,
 			request: string,
 			callback: (
-				arg0: null | Error,
-				arg1?: string | false,
-				arg2?: ResolveRequest
+				err: null | ErrorWithDetail,
+				res?: string | false,
+				req?: ResolveRequest
 			) => void
 		): void;
 		(context: string, request: string): Promise<string>;
@@ -7901,10 +8068,10 @@ declare class NormalModuleReplacementPlugin {
 	 */
 	constructor(
 		resourceRegExp: RegExp,
-		newResource: string | ((arg0?: any) => void)
+		newResource: string | ((arg0: ResolveData) => void)
 	);
 	resourceRegExp: RegExp;
-	newResource: string | ((arg0?: any) => void);
+	newResource: string | ((arg0: ResolveData) => void);
 
 	/**
 	 * Apply the plugin
@@ -7966,6 +8133,7 @@ declare class NullDependencyTemplate extends DependencyTemplate {
 }
 declare interface ObjectDeserializerContext {
 	read: () => any;
+	setCircularReference: (arg0?: any) => void;
 }
 declare interface ObjectSerializer {
 	serialize: (arg0: any, arg1: ObjectSerializerContext) => void;
@@ -7973,6 +8141,7 @@ declare interface ObjectSerializer {
 }
 declare interface ObjectSerializerContext {
 	write: (arg0?: any) => void;
+	setCircularReference: (arg0?: any) => void;
 }
 declare class OccurrenceChunkIdsPlugin {
 	constructor(options?: OccurrenceChunkIdsPluginOptions);
@@ -8412,6 +8581,11 @@ declare class OriginalSource extends Source {
  */
 declare interface Output {
 	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: string;
+
+	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?:
@@ -8570,6 +8744,11 @@ declare interface Output {
 	hotUpdateMainFilename?: string;
 
 	/**
+	 * Ignore warnings in the browser.
+	 */
+	ignoreBrowserWarnings?: boolean;
+
+	/**
 	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
 	 */
 	iife?: boolean;
@@ -8673,6 +8852,11 @@ declare interface Output {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: string | false;
+
+	/**
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPath?: string;
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
@@ -8879,6 +9063,11 @@ declare interface OutputNormalized {
 	hotUpdateMainFilename?: string;
 
 	/**
+	 * Ignore warnings in the browser.
+	 */
+	ignoreBrowserWarnings?: boolean;
+
+	/**
 	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
 	 */
 	iife?: boolean;
@@ -8967,6 +9156,11 @@ declare interface OutputNormalized {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: string | false;
+
+	/**
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPath?: string;
 
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
@@ -9193,7 +9387,7 @@ declare class ProgressPlugin {
 	showModules?: boolean;
 	showDependencies?: boolean;
 	showActiveModules?: boolean;
-	percentBy?: null | "modules" | "dependencies" | "entries";
+	percentBy?: null | "entries" | "modules" | "dependencies";
 	apply(compiler: Compiler | MultiCompiler): void;
 	static getReporter(
 		compiler: Compiler
@@ -9254,7 +9448,7 @@ declare interface ProgressPluginOptions {
 	/**
 	 * Collect percent algorithm. By default it calculates by a median from modules, entries and dependencies percent.
 	 */
-	percentBy?: null | "modules" | "dependencies" | "entries";
+	percentBy?: null | "entries" | "modules" | "dependencies";
 
 	/**
 	 * Collect profile data for progress steps. Default: false.
@@ -9352,6 +9546,15 @@ declare class RawSource extends Source {
 	constructor(source: string | Buffer, convertToString?: boolean);
 	isBuffer(): boolean;
 }
+declare interface RawSourceMap {
+	version: number;
+	sources: string[];
+	names: string[];
+	sourceRoot?: string;
+	sourcesContent?: string[];
+	mappings: string;
+	file: string;
+}
 declare class ReadFileCompileWasmPlugin {
 	constructor(options?: any);
 	options: any;
@@ -9361,8 +9564,33 @@ declare class ReadFileCompileWasmPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+declare interface ReaddirOptions {
+	encoding?:
+		| null
+		| "ascii"
+		| "utf8"
+		| "utf16le"
+		| "ucs2"
+		| "latin1"
+		| "binary"
+		| "utf-8"
+		| "ucs-2"
+		| "base64"
+		| "hex"
+		| "buffer";
+	withFileTypes?: boolean;
+}
 declare class RealContentHashPlugin {
-	constructor(__0: { hashFunction: any; hashDigest: any });
+	constructor(__0: {
+		/**
+		 * the hash function to use
+		 */
+		hashFunction: string | typeof Hash;
+		/**
+		 * the hash digest to use
+		 */
+		hashDigest: string;
+	});
 
 	/**
 	 * Apply the plugin
@@ -9907,9 +10135,9 @@ declare abstract class Resolver {
 		request: string,
 		resolveContext: ResolveContext,
 		callback: (
-			arg0: null | Error,
-			arg1?: string | false,
-			arg2?: ResolveRequest
+			err: null | ErrorWithDetail,
+			res?: string | false,
+			req?: ResolveRequest
 		) => void
 	): void;
 	doResolve(
@@ -10835,6 +11063,12 @@ declare interface RuntimeValueOptions {
 	buildDependencies?: string[];
 	version?: string | (() => string);
 }
+
+/**
+ * Helper function for joining two ranges into a single range. This is useful
+ * when working with AST nodes, as it allows you to combine the ranges of child nodes
+ * to create the range of the _parent node_.
+ */
 declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
 	topLevelScope: boolean | "arrow";
@@ -10853,9 +11087,10 @@ declare abstract class Serializer {
 	serialize(obj?: any, context?: any): any;
 	deserialize(value?: any, context?: any): any;
 }
-type ServerOptionsHttps = SecureContextOptions &
-	TlsOptions &
-	ServerOptionsImport;
+type ServerOptionsHttps<
+	Request extends typeof IncomingMessage = typeof IncomingMessage,
+	Response extends typeof ServerResponse = typeof ServerResponse
+> = SecureContextOptions & TlsOptions & ServerOptionsImport<Request, Response>;
 declare class SharePlugin {
 	constructor(options: SharePluginOptions);
 
@@ -10995,8 +11230,8 @@ declare abstract class Snapshot {
 	hasChildren(): boolean;
 	setChildren(value?: any): void;
 	addChild(child?: any): void;
-	serialize(__0: { write: any }): void;
-	deserialize(__0: { read: any }): void;
+	serialize(__0: ObjectSerializerContext): void;
+	deserialize(__0: ObjectDeserializerContext): void;
 	getFileIterable(): Iterable<string>;
 	getContextIterable(): Iterable<string>;
 	getMissingIterable(): Iterable<string>;
@@ -11098,7 +11333,7 @@ declare abstract class SortableSet<T> extends Set<T> {
 declare class Source {
 	constructor();
 	size(): number;
-	map(options?: MapOptions): Object;
+	map(options?: MapOptions): null | RawSourceMap;
 	sourceAndMap(options?: MapOptions): { source: string | Buffer; map: Object };
 	updateHash(hash: Hash): void;
 	source(): string | Buffer;
@@ -11542,6 +11777,11 @@ declare interface StatsOptions {
 	errorsCount?: boolean;
 
 	/**
+	 * Space to display errors (value is in number of lines).
+	 */
+	errorsSpace?: number;
+
+	/**
 	 * Please use excludeModules instead.
 	 */
 	exclude?:
@@ -11801,6 +12041,11 @@ declare interface StatsOptions {
 		| RegExp
 		| WarningFilterItemTypes[]
 		| ((warning: StatsError, value: string) => boolean);
+
+	/**
+	 * Space to display warnings (value is in number of lines).
+	 */
+	warningsSpace?: number;
 }
 declare abstract class StatsPrinter {
 	hooks: Readonly<{
@@ -11861,6 +12106,12 @@ declare interface SyntheticDependencyLocation {
 declare const TOMBSTONE: unique symbol;
 declare const TRANSITIVE: unique symbol;
 declare const TRANSITIVE_ONLY: unique symbol;
+
+/**
+ * Helper function for joining two ranges into a single range. This is useful
+ * when working with AST nodes, as it allows you to combine the ranges of child nodes
+ * to create the range of the _parent node_.
+ */
 declare interface TagInfo {
 	tag: any;
 	data: any;
@@ -11912,6 +12163,11 @@ declare class TopLevelSymbol {
  * Use a Trusted Types policy to create urls for chunks.
  */
 declare interface TrustedTypes {
+	/**
+	 * If the call to `trustedTypes.createPolicy(...)` fails -- e.g., due to the policy name missing from the CSP `trusted-types` list, or it being a duplicate name, etc. -- controls whether to continue with loading in the hope that `require-trusted-types-for 'script'` isn't enforced yet, versus fail immediately. Default behavior is 'stop'.
+	 */
+	onPolicyCreationFailure?: "continue" | "stop";
+
 	/**
 	 * The name of the Trusted Types policy created by webpack to serve bundle chunks.
 	 */
@@ -12314,8 +12570,8 @@ declare class WebpackError extends Error {
 	hideStack: boolean;
 	chunk: Chunk;
 	file: string;
-	serialize(__0: { write: any }): void;
-	deserialize(__0: { read: any }): void;
+	serialize(__0: ObjectSerializerContext): void;
+	deserialize(__0: ObjectDeserializerContext): void;
 
 	/**
 	 * Create .stack property on a target object
@@ -12688,13 +12944,17 @@ declare namespace exports {
 				hashFunction: string | typeof Hash;
 			}
 		) => string;
-		export let replaceDuplicates: (
-			array?: any,
-			fn?: any,
-			comparator?: any
-		) => any;
-		export let matchPart: (str?: any, test?: any) => any;
-		export let matchObject: (obj?: any, str?: any) => boolean;
+		export let replaceDuplicates: <T>(
+			array: T[],
+			fn: (
+				duplicateItem: T,
+				duplicateItemIndex: number,
+				numberOfTimesReplaced: number
+			) => T,
+			comparator?: (firstElement: T, nextElement: T) => 0 | 1 | -1
+		) => T[];
+		export let matchPart: (str: string, test: Matcher) => boolean;
+		export let matchObject: (obj: MatchObject, str: string) => boolean;
 	}
 	export namespace RuntimeGlobals {
 		export let require: "__webpack_require__";
@@ -13147,8 +13407,14 @@ declare namespace exports {
 		Entry,
 		EntryNormalized,
 		EntryObject,
+		ExternalItemFunctionData,
+		ExternalItemObjectKnown,
+		ExternalItemObjectUnknown,
+		ExternalItemValue,
+		Externals,
 		FileCacheOptions,
 		LibraryOptions,
+		MemoryCacheOptions,
 		ModuleOptions,
 		ResolveOptionsWebpackOptions as ResolveOptions,
 		RuleSetCondition,

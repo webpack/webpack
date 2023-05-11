@@ -187,6 +187,7 @@ export interface LoaderRunnerLoaderContext<OptionsType> {
 		data: object | undefined;
 		pitchExecuted: boolean;
 		normalExecuted: boolean;
+		type?: "commonjs" | "module" | undefined;
 	}[];
 
 	/**
@@ -212,6 +213,12 @@ export interface LoaderRunnerLoaderContext<OptionsType> {
 	 * Example: "/abc/resource.js?query#frag"
 	 */
 	resource: string;
+
+	/**
+	 * Target of compilation.
+	 * Example: "web"
+	 */
+	target: string;
 }
 
 type AdditionalData = {

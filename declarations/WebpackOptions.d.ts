@@ -83,6 +83,10 @@ export type FilenameTemplate =
  */
 export type Layer = null | string;
 /**
+ * Add a container for define/require functions in the AMD module.
+ */
+export type AmdContainer = string;
+/**
  * Add a comment in the UMD wrapper.
  */
 export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
@@ -158,6 +162,14 @@ export type EntryUnnamed = EntryItem;
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
  */
 export type Experiments = ExperimentsCommon & ExperimentsExtra;
+/**
+ * Extend configuration from another configuration (only works when using webpack-cli).
+ */
+export type Extends = ExtendsItem[] | ExtendsItem;
+/**
+ * Path to the configuration to be extended (only works when using webpack-cli).
+ */
+export type ExtendsItem = string;
 /**
  * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
  */
@@ -570,6 +582,10 @@ export type UniqueName = string;
  */
 export type WebassemblyModuleFilename = string;
 /**
+ * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+ */
+export type WorkerPublicPath = string;
+/**
  * The number of parallel processed modules in the compilation.
  */
 export type Parallelism = number;
@@ -811,6 +827,10 @@ export interface WebpackOptions {
 	 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
 	 */
 	experiments?: Experiments;
+	/**
+	 * Extend configuration from another configuration (only works when using webpack-cli).
+	 */
+	extends?: Extends;
 	/**
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
@@ -1087,6 +1107,10 @@ export interface EntryDescription {
  * Options for library.
  */
 export interface LibraryOptions {
+	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: AmdContainer;
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */
@@ -1961,6 +1985,10 @@ export interface OptimizationSplitChunksCacheGroup {
  */
 export interface Output {
 	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: AmdContainer;
+	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
 	assetModuleFilename?: AssetModuleFilename;
@@ -2081,6 +2109,10 @@ export interface Output {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
+	 * Ignore warnings in the browser.
+	 */
+	ignoreBrowserWarnings?: boolean;
+	/**
 	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
 	 */
 	iife?: Iife;
@@ -2165,6 +2197,10 @@ export interface Output {
 	 */
 	workerChunkLoading?: ChunkLoading;
 	/**
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPath?: WorkerPublicPath;
+	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	workerWasmLoading?: WasmLoading;
@@ -2227,6 +2263,10 @@ export interface Environment {
  * Use a Trusted Types policy to create urls for chunks.
  */
 export interface TrustedTypes {
+	/**
+	 * If the call to `trustedTypes.createPolicy(...)` fails -- e.g., due to the policy name missing from the CSP `trusted-types` list, or it being a duplicate name, etc. -- controls whether to continue with loading in the hope that `require-trusted-types-for 'script'` isn't enforced yet, versus fail immediately. Default behavior is 'stop'.
+	 */
+	onPolicyCreationFailure?: "continue" | "stop";
 	/**
 	 * The name of the Trusted Types policy created by webpack to serve bundle chunks.
 	 */
@@ -2466,6 +2506,10 @@ export interface StatsOptions {
 	 */
 	errorsCount?: boolean;
 	/**
+	 * Space to display errors (value is in number of lines).
+	 */
+	errorsSpace?: number;
+	/**
 	 * Please use excludeModules instead.
 	 */
 	exclude?: boolean | ModuleFilterTypes;
@@ -2649,6 +2693,10 @@ export interface StatsOptions {
 	 * Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.
 	 */
 	warningsFilter?: WarningFilterTypes;
+	/**
+	 * Space to display warnings (value is in number of lines).
+	 */
+	warningsSpace?: number;
 }
 /**
  * Options for the watcher.
@@ -3278,6 +3326,10 @@ export interface OutputNormalized {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
+	 * Ignore warnings in the browser.
+	 */
+	ignoreBrowserWarnings?: boolean;
+	/**
 	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
 	 */
 	iife?: Iife;
@@ -3349,6 +3401,10 @@ export interface OutputNormalized {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: ChunkLoading;
+	/**
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPath?: WorkerPublicPath;
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */

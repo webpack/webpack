@@ -26,7 +26,7 @@ Note: decreasing `maxInitial/AsyncRequest` will increase duplication further to 
 
 ```
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	entry: {
 		pageA: "./pages/a",
 		pageB: "./pages/b",
@@ -58,12 +58,12 @@ assets by chunk 772 bytes (id hint: vendors)
   asset 497.js 111 bytes [emitted] [minimized] (id hint: vendors)
   asset 730.js 111 bytes [emitted] [minimized] (id hint: vendors)
   asset 777.js 111 bytes [emitted] [minimized] (id hint: vendors)
-asset pageC.js 1.26 KiB [emitted] [minimized] (name: pageC)
-asset pageB.js 1.26 KiB [emitted] [minimized] (name: pageB)
+asset pageC.js 1.25 KiB [emitted] [minimized] (name: pageC)
+asset pageB.js 1.25 KiB [emitted] [minimized] (name: pageB)
 asset pageD.js 1.18 KiB [emitted] [minimized] (name: pageD)
 asset pageF.js 1.18 KiB [emitted] [minimized] (name: pageF)
 asset pageA.js 1.18 KiB [emitted] [minimized] (name: pageA)
-asset pageE.js 1.17 KiB [emitted] [minimized] (name: pageE)
+asset pageE.js 1.16 KiB [emitted] [minimized] (name: pageE)
 asset pageG.js 1.15 KiB [emitted] [minimized] (name: pageG)
 asset 505.js 140 bytes [emitted] [minimized]
 chunk (runtime: pageA, pageB, pageC) 115.js (id hint: vendors) 86 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
@@ -72,27 +72,27 @@ chunk (runtime: pageA, pageB, pageC) 115.js (id hint: vendors) 86 bytes [initial
   > ./pages/c pageC
   ./node_modules/m1.js 43 bytes [built] [code generated]
   ./node_modules/m2.js 43 bytes [built] [code generated]
-chunk (runtime: pageB) pageB.js (pageB) 199 bytes (javascript) 3.02 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 199 bytes (javascript) 3.01 KiB (runtime) [entry] [rendered]
   > ./pages/b pageB
-  runtime modules 3.02 KiB 5 modules
+  runtime modules 3.01 KiB 5 modules
   dependent modules 93 bytes [dependent] 3 modules
   ./pages/b.js 106 bytes [built] [code generated]
-chunk (runtime: pageC) pageC.js (pageC) 199 bytes (javascript) 3.02 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageC) pageC.js (pageC) 199 bytes (javascript) 3.01 KiB (runtime) [entry] [rendered]
   > ./pages/c pageC
-  runtime modules 3.02 KiB 5 modules
+  runtime modules 3.01 KiB 5 modules
   dependent modules 93 bytes [dependent] 3 modules
   ./pages/c.js 106 bytes [built] [code generated]
-chunk (runtime: pageE) pageE.js (pageE) 93 bytes (javascript) 3.02 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageE) pageE.js (pageE) 93 bytes (javascript) 3.01 KiB (runtime) [entry] [rendered]
   > ./pages/e pageE
-  runtime modules 3.02 KiB 5 modules
+  runtime modules 3.01 KiB 5 modules
   dependent modules 31 bytes [dependent] 1 module
   ./pages/e.js 62 bytes [built] [code generated]
 chunk (runtime: pageC) 402.js (id hint: vendors) 43 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
   > ./pages/c pageC
   ./node_modules/m5.js 43 bytes [built] [code generated]
-chunk (runtime: pageA) pageA.js (pageA) 137 bytes (javascript) 3.02 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 137 bytes (javascript) 3.01 KiB (runtime) [entry] [rendered]
   > ./pages/a pageA
-  runtime modules 3.02 KiB 5 modules
+  runtime modules 3.01 KiB 5 modules
   dependent modules 31 bytes [dependent] 1 module
   ./pages/a.js 106 bytes [built] [code generated]
 chunk (runtime: pageB) 497.js (id hint: vendors) 43 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
@@ -104,14 +104,14 @@ chunk (runtime: pageA, pageD, pageF) 505.js 62 bytes [initial] [rendered] split 
   > ./pages/f pageF
   ./stuff/s2.js 31 bytes [built] [code generated]
   ./stuff/s3.js 31 bytes [built] [code generated]
-chunk (runtime: pageG) pageG.js (pageG) 67 bytes (javascript) 3.02 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageG) pageG.js (pageG) 67 bytes (javascript) 3.01 KiB (runtime) [entry] [rendered]
   > ./pages/g pageG
-  runtime modules 3.02 KiB 5 modules
+  runtime modules 3.01 KiB 5 modules
   dependent modules 31 bytes [dependent] 1 module
   ./pages/g.js 36 bytes [built] [code generated]
-chunk (runtime: pageD) pageD.js (pageD) 137 bytes (javascript) 3.02 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageD) pageD.js (pageD) 137 bytes (javascript) 3.01 KiB (runtime) [entry] [rendered]
   > ./pages/d pageD
-  runtime modules 3.02 KiB 5 modules
+  runtime modules 3.01 KiB 5 modules
   dependent modules 31 bytes [dependent] 1 module
   ./pages/d.js 106 bytes [built] [code generated]
 chunk (runtime: pageA) 730.js (id hint: vendors) 43 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
@@ -123,9 +123,9 @@ chunk (runtime: pageD, pageE, pageF, pageG) 777.js (id hint: vendors) 43 bytes [
   > ./pages/f pageF
   > ./pages/g pageG
   ./node_modules/m6.js 43 bytes [built] [code generated]
-chunk (runtime: pageF) pageF.js (pageF) 137 bytes (javascript) 3.02 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageF) pageF.js (pageF) 137 bytes (javascript) 3.01 KiB (runtime) [entry] [rendered]
   > ./pages/f pageF
-  runtime modules 3.02 KiB 5 modules
+  runtime modules 3.01 KiB 5 modules
   dependent modules 31 bytes [dependent] 1 module
   ./pages/f.js 106 bytes [built] [code generated]
 chunk (runtime: pageD, pageE, pageF) 833.js (id hint: vendors) 86 bytes [initial] [rendered] split chunk (cache group: defaultVendors)
@@ -134,5 +134,5 @@ chunk (runtime: pageD, pageE, pageF) 833.js (id hint: vendors) 86 bytes [initial
   > ./pages/f pageF
   ./node_modules/m7.js 43 bytes [built] [code generated]
   ./node_modules/m8.js 43 bytes [built] [code generated]
-webpack 5.51.1 compiled successfully
+webpack 5.78.0 compiled successfully
 ```

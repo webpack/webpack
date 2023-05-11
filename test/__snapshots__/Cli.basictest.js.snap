@@ -825,6 +825,32 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "extends": Object {
+    "configs": Array [
+      Object {
+        "description": "Path to the configuration to be extended (only works when using webpack-cli).",
+        "multiple": true,
+        "path": "extends[]",
+        "type": "string",
+      },
+    ],
+    "description": "Path to the configuration to be extended (only works when using webpack-cli).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "extends-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'extends' configuration. Extend configuration from another configuration (only works when using webpack-cli).",
+        "multiple": false,
+        "path": "extends",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'extends' configuration. Extend configuration from another configuration (only works when using webpack-cli).",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "externals": Object {
     "configs": Array [
       Object {
@@ -6076,6 +6102,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-ignore-browser-warnings": Object {
+    "configs": Array [
+      Object {
+        "description": "Ignore warnings in the browser.",
+        "multiple": false,
+        "path": "output.ignoreBrowserWarnings",
+        "type": "boolean",
+      },
+    ],
+    "description": "Ignore warnings in the browser.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-iife": Object {
     "configs": Array [
       Object {
@@ -6138,6 +6177,19 @@ Object {
       },
     ],
     "description": "Name of the exposed AMD library in the UMD.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-library-amd-container": Object {
+    "configs": Array [
+      Object {
+        "description": "Add a container for define/require functions in the AMD module.",
+        "multiple": false,
+        "path": "output.library.amdContainer",
+        "type": "string",
+      },
+    ],
+    "description": "Add a container for define/require functions in the AMD module.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -6576,6 +6628,23 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-trusted-types-on-policy-creation-failure": Object {
+    "configs": Array [
+      Object {
+        "description": "If the call to \`trustedTypes.createPolicy(...)\` fails -- e.g., due to the policy name missing from the CSP \`trusted-types\` list, or it being a duplicate name, etc. -- controls whether to continue with loading in the hope that \`require-trusted-types-for 'script'\` isn't enforced yet, versus fail immediately. Default behavior is 'stop'.",
+        "multiple": false,
+        "path": "output.trustedTypes.onPolicyCreationFailure",
+        "type": "enum",
+        "values": Array [
+          "continue",
+          "stop",
+        ],
+      },
+    ],
+    "description": "If the call to \`trustedTypes.createPolicy(...)\` fails -- e.g., due to the policy name missing from the CSP \`trusted-types\` list, or it being a duplicate name, etc. -- controls whether to continue with loading in the hope that \`require-trusted-types-for 'script'\` isn't enforced yet, versus fail immediately. Default behavior is 'stop'.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-trusted-types-policy-name": Object {
     "configs": Array [
       Object {
@@ -6680,6 +6749,19 @@ Object {
       },
     ],
     "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-worker-public-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
+        "multiple": false,
+        "path": "output.workerPublicPath",
+        "type": "string",
+      },
+    ],
+    "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -8600,6 +8682,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "stats-errors-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display errors (value is in number of lines).",
+        "multiple": false,
+        "path": "stats.errorsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display errors (value is in number of lines).",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "stats-exclude-assets": Object {
     "configs": Array [
       Object {
@@ -9292,6 +9387,19 @@ Object {
     "description": "Clear all items provided in 'stats.warningsFilter' configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "stats-warnings-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display warnings (value is in number of lines).",
+        "multiple": false,
+        "path": "stats.warningsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display warnings (value is in number of lines).",
+    "multiple": false,
+    "simpleType": "number",
   },
   "target": Object {
     "configs": Array [

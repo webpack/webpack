@@ -5,6 +5,8 @@
     "absolutify",
     "acircular",
     "amdmodule",
+    "analyse",
+    "analysed",
     "asmjs",
     "assemblyscript",
     "asyncloader",
@@ -15,6 +17,7 @@
     "backported",
     "basictest",
     "bigint",
+    "bindgen",
     "Biró",
     "bitfield",
     "bomfile",
@@ -82,7 +85,6 @@
     "fileoverview",
     "filepath",
     "finalizer",
-    "finializer",
     "fsevents",
     "fullhash",
     "funcindex",
@@ -181,14 +183,17 @@
     "preloaded",
     "preloading",
     "preparsed",
+    "preprocess",
     "prettierrc",
     "prewalking",
     "prioritise",
     "promisify",
+    "proxied",
     "quasis",
     "queryloader",
     "querystrings",
     "RBDT",
+    "reconsume",
     "recurse",
     "redeclaration",
     "reexecuted",
@@ -277,7 +282,8 @@
     "Xmodule",
     "xxhash",
     "xxhashjs",
-    "Yann"
+    "Yann",
+    "commithash"
   ],
   "ignoreRegExpList": [
     "/Author.+/",
@@ -288,12 +294,15 @@
   "ignorePaths": [
     "**/dist/**",
     "examples/**/README.md",
+    "examples/wasm-bindgen*/pkg/*_bg.js",
+    "examples/wasm-bindgen*/pkg/*_bg*.d.ts",
     "**/webpack.lock.data/**",
     "package.json",
     "yarn.lock",
     "types.d.ts",
     "**/**/*.snap",
     "test/cases/json/weird-properties/globals.json",
+    "test/JavascriptParser.unittest.js",
     "**/*.svg",
     "*.log",
     "**/*.wasm",
@@ -303,6 +312,7 @@
     "test/cases/**",
     "test/configCases/**",
     "test/statsCases/**",
-    "test/fixtures/**"
+    "test/fixtures/**",
+    "test/memoryLimitCases/**"
   ]
 }
