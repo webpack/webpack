@@ -600,7 +600,7 @@ export type Plugins = (WebpackPluginInstance | WebpackPluginFunction)[];
 /**
  * Presets for the webpack configuration.
  */
-export type Presets = (string | Preset)[];
+export type Presets = Function[];
 /**
  * Capture timing information for each module.
  */
@@ -2302,19 +2302,6 @@ export interface PerformanceOptions {
 	maxEntrypointSize?: number;
 }
 /**
- * A preset is a pre-configured webpack configuration that can be re-used.
- */
-export interface Preset {
-	/**
-	 * Name of the preset.
-	 */
-	name?: string;
-	/**
-	 * Options for the preset.
-	 */
-	options?: Object;
-}
-/**
  * Options affecting how file system snapshots are created and validated.
  */
 export interface SnapshotOptions {
@@ -3531,10 +3518,6 @@ export interface WebpackOptionsNormalized {
 	 * Add additional plugins to the compiler.
 	 */
 	plugins: Plugins;
-	/**
-	 * Presets for the webpack configuration.
-	 */
-	presets?: Presets;
 	/**
 	 * Capture timing information for each module.
 	 */

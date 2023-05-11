@@ -3558,36 +3558,13 @@
         ]
       }
     },
-    "Preset": {
-      "description": "A preset is a pre-configured webpack configuration that can be re-used.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "name": {
-          "description": "Name of the preset.",
-          "instanceof": "string",
-          "tsType": "string"
-        },
-        "options": {
-          "description": "Options for the preset.",
-          "instanceof": "Object",
-          "tsType": "Object"
-        }
-      }
-    },
     "Presets": {
       "description": "Presets for the webpack configuration.",
       "type": "array",
       "items": {
         "description": "Preset of type string or object.",
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "$ref": "#/definitions/Preset"
-          }
-        ]
+        "instanceof": "Function",
+        "tsType": "Function"
       }
     },
     "Profile": {
