@@ -2332,7 +2332,7 @@ declare interface Configuration {
 	/**
 	 * Presets for the webpack configuration.
 	 */
-	presets?: Function[];
+	presets?: WebpackOptionsNormalized[];
 
 	/**
 	 * Capture timing information for each module.
@@ -9339,8 +9339,8 @@ declare interface PreparsedAst {
 	[index: string]: any;
 }
 declare class PresetPlugin {
-	constructor(presets: Function[]);
-	presets: Function[];
+	constructor(presets: WebpackOptionsNormalized[]);
+	presets: WebpackOptionsNormalized[];
 
 	/**
 	 * Apply the plugin
@@ -12787,7 +12787,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Presets for the webpack configuration.
 	 */
-	presets?: Function[];
+	presets?: WebpackOptionsNormalized[];
 
 	/**
 	 * Capture timing information for each module.

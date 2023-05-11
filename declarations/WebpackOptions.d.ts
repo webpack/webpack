@@ -598,9 +598,25 @@ export type Performance = false | PerformanceOptions;
  */
 export type Plugins = (WebpackPluginInstance | WebpackPluginFunction)[];
 /**
- * Presets for the webpack configuration.
+ * The entry point(s) of the compilation.
  */
-export type Presets = Function[];
+export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
+/**
+ * A Function returning a Promise resolving to a normalized entry.
+ */
+export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
+/**
+ * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+ */
+export type ExperimentsNormalized = ExperimentsCommon &
+	ExperimentsNormalizedExtra;
+/**
+ * Ignore specific warnings.
+ */
+export type IgnoreWarningsNormalized = ((
+	warning: import("../lib/WebpackError"),
+	compilation: import("../lib/Compilation")
+) => boolean)[];
 /**
  * Capture timing information for each module.
  */
@@ -613,10 +629,6 @@ export type RecordsInputPath = false | string;
  * Load compiler state from a json file.
  */
 export type RecordsOutputPath = false | string;
-/**
- * Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.
- */
-export type RecordsPath = false | string;
 /**
  * Options for the resolver.
  */
@@ -695,6 +707,14 @@ export type Target = string[] | false | string;
  */
 export type Watch = boolean;
 /**
+ * Presets for the webpack configuration.
+ */
+export type Presets = WebpackOptionsNormalized[];
+/**
+ * Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.
+ */
+export type RecordsPath = false | string;
+/**
  * The options for data url generator.
  */
 export type AssetGeneratorDataUrl =
@@ -729,19 +749,6 @@ export type AssetParserDataUrlFunction = (
 	context: {filename: string; module: import("../lib/Module")}
 ) => boolean;
 /**
- * A Function returning a Promise resolving to a normalized entry.
- */
-export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
-/**
- * The entry point(s) of the compilation.
- */
-export type EntryNormalized = EntryDynamicNormalized | EntryStaticNormalized;
-/**
- * Enables/Disables experiments (experimental features with relax SemVer compatibility).
- */
-export type ExperimentsNormalized = ExperimentsCommon &
-	ExperimentsNormalizedExtra;
-/**
  * The dependency used for the external.
  */
 export type ExternalItemValue =
@@ -763,13 +770,6 @@ export type HttpUriOptionsAllowedUris = (
 	| string
 	| ((uri: string) => boolean)
 )[];
-/**
- * Ignore specific warnings.
- */
-export type IgnoreWarningsNormalized = ((
-	warning: import("../lib/WebpackError"),
-	compilation: import("../lib/Compilation")
-) => boolean)[];
 /**
  * Create an additional chunk which contains only the webpack runtime and chunk hash maps.
  */
@@ -2302,6 +2302,443 @@ export interface PerformanceOptions {
 	maxEntrypointSize?: number;
 }
 /**
+ * Normalized webpack options object.
+ */
+export interface WebpackOptionsNormalized {
+	/**
+	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
+	 */
+	amd?: Amd;
+	/**
+	 * Report the first error as a hard error instead of tolerating it.
+	 */
+	bail?: Bail;
+	/**
+	 * Cache generated modules and chunks to improve performance for multiple incremental builds.
+	 */
+	cache: CacheOptionsNormalized;
+	/**
+	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
+	 */
+	context?: Context;
+	/**
+	 * References to other configurations to depend on.
+	 */
+	dependencies?: Dependencies;
+	/**
+	 * Options for the webpack-dev-server.
+	 */
+	devServer?: DevServer;
+	/**
+	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
+	 */
+	devtool?: DevTool;
+	/**
+	 * The entry point(s) of the compilation.
+	 */
+	entry: EntryNormalized;
+	/**
+	 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
+	 */
+	experiments: ExperimentsNormalized;
+	/**
+	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
+	 */
+	externals: Externals;
+	/**
+	 * Enable presets of externals for specific targets.
+	 */
+	externalsPresets: ExternalsPresets;
+	/**
+	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
+	 */
+	externalsType?: ExternalsType;
+	/**
+	 * Ignore specific warnings.
+	 */
+	ignoreWarnings?: IgnoreWarningsNormalized;
+	/**
+	 * Options for infrastructure level logging.
+	 */
+	infrastructureLogging: InfrastructureLogging;
+	/**
+	 * Custom values available in the loader context.
+	 */
+	loader?: Loader;
+	/**
+	 * Enable production optimizations or development hints.
+	 */
+	mode?: Mode;
+	/**
+	 * Options affecting the normal modules (`NormalModuleFactory`).
+	 */
+	module: ModuleOptionsNormalized;
+	/**
+	 * Name of the configuration. Used when loading multiple configurations.
+	 */
+	name?: Name;
+	/**
+	 * Include polyfills or mocks for various node stuff.
+	 */
+	node: Node;
+	/**
+	 * Enables/Disables integrated optimizations.
+	 */
+	optimization: Optimization;
+	/**
+	 * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
+	 */
+	output: OutputNormalized;
+	/**
+	 * The number of parallel processed modules in the compilation.
+	 */
+	parallelism?: Parallelism;
+	/**
+	 * Configuration for web performance recommendations.
+	 */
+	performance?: Performance;
+	/**
+	 * Add additional plugins to the compiler.
+	 */
+	plugins: Plugins;
+	/**
+	 * Presets for the webpack configuration.
+	 */
+	presets?: Presets;
+	/**
+	 * Capture timing information for each module.
+	 */
+	profile?: Profile;
+	/**
+	 * Store compiler state to a json file.
+	 */
+	recordsInputPath?: RecordsInputPath;
+	/**
+	 * Load compiler state from a json file.
+	 */
+	recordsOutputPath?: RecordsOutputPath;
+	/**
+	 * Options for the resolver.
+	 */
+	resolve: Resolve;
+	/**
+	 * Options for the resolver when resolving loaders.
+	 */
+	resolveLoader: ResolveLoader;
+	/**
+	 * Options affecting how file system snapshots are created and validated.
+	 */
+	snapshot: SnapshotOptions;
+	/**
+	 * Stats options object or preset name.
+	 */
+	stats: StatsValue;
+	/**
+	 * Environment to build for. An array of environments to build for all of them when possible.
+	 */
+	target?: Target;
+	/**
+	 * Enter watch mode, which rebuilds on file change.
+	 */
+	watch?: Watch;
+	/**
+	 * Options for the watcher.
+	 */
+	watchOptions: WatchOptions;
+}
+/**
+ * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
+ */
+export interface EntryStaticNormalized {
+	/**
+	 * An object with entry point description.
+	 */
+	[k: string]: EntryDescriptionNormalized;
+}
+/**
+ * An object with entry point description.
+ */
+export interface EntryDescriptionNormalized {
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+	/**
+	 * Base uri for this entry.
+	 */
+	baseUri?: string;
+	/**
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 */
+	chunkLoading?: ChunkLoading;
+	/**
+	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
+	 */
+	dependOn?: string[];
+	/**
+	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	filename?: Filename;
+	/**
+	 * Module(s) that are loaded upon startup. The last one is exported.
+	 */
+	import?: string[];
+	/**
+	 * Specifies the layer in which modules of this entrypoint are placed.
+	 */
+	layer?: Layer;
+	/**
+	 * Options for library.
+	 */
+	library?: LibraryOptions;
+	/**
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: PublicPath;
+	/**
+	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
+	 */
+	runtime?: EntryRuntime;
+	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	wasmLoading?: WasmLoading;
+}
+/**
+ * Options affecting the normal modules (`NormalModuleFactory`).
+ */
+export interface ModuleOptionsNormalized {
+	/**
+	 * An array of rules applied by default for modules.
+	 */
+	defaultRules: RuleSetRules;
+	/**
+	 * Specify options for each generator.
+	 */
+	generator: GeneratorOptionsByModuleType;
+	/**
+	 * Don't parse files matching. It's matched against the full resolved request.
+	 */
+	noParse?: NoParse;
+	/**
+	 * Specify options for each parser.
+	 */
+	parser: ParserOptionsByModuleType;
+	/**
+	 * An array of rules applied for modules.
+	 */
+	rules: RuleSetRules;
+	/**
+	 * Cache the resolving of module requests.
+	 */
+	unsafeCache?: boolean | Function;
+}
+/**
+ * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
+ */
+export interface OutputNormalized {
+	/**
+	 * The filename of asset modules as relative path inside the 'output.path' directory.
+	 */
+	assetModuleFilename?: AssetModuleFilename;
+	/**
+	 * Enable/disable creating async chunks that are loaded on demand.
+	 */
+	asyncChunks?: boolean;
+	/**
+	 * Add charset attribute for script tag.
+	 */
+	charset?: Charset;
+	/**
+	 * Specifies the filename template of output files of non-initial chunks on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	chunkFilename?: ChunkFilename;
+	/**
+	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).
+	 */
+	chunkFormat?: ChunkFormat;
+	/**
+	 * Number of milliseconds before chunk request expires.
+	 */
+	chunkLoadTimeout?: ChunkLoadTimeout;
+	/**
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 */
+	chunkLoading?: ChunkLoading;
+	/**
+	 * The global variable used by webpack for loading of chunks.
+	 */
+	chunkLoadingGlobal?: ChunkLoadingGlobal;
+	/**
+	 * Clean the output directory before emit.
+	 */
+	clean?: Clean;
+	/**
+	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
+	 */
+	compareBeforeEmit?: CompareBeforeEmit;
+	/**
+	 * This option enables cross-origin loading of chunks.
+	 */
+	crossOriginLoading?: CrossOriginLoading;
+	/**
+	 * Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	cssChunkFilename?: CssChunkFilename;
+	/**
+	 * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	cssFilename?: CssFilename;
+	/**
+	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
+	 */
+	devtoolFallbackModuleFilenameTemplate?: DevtoolFallbackModuleFilenameTemplate;
+	/**
+	 * Filename template string of function for the sources array in a generated SourceMap.
+	 */
+	devtoolModuleFilenameTemplate?: DevtoolModuleFilenameTemplate;
+	/**
+	 * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
+	 */
+	devtoolNamespace?: DevtoolNamespace;
+	/**
+	 * List of chunk loading types enabled for use by entry points.
+	 */
+	enabledChunkLoadingTypes?: EnabledChunkLoadingTypes;
+	/**
+	 * List of library types enabled for use by entry points.
+	 */
+	enabledLibraryTypes?: EnabledLibraryTypes;
+	/**
+	 * List of wasm loading types enabled for use by entry points.
+	 */
+	enabledWasmLoadingTypes?: EnabledWasmLoadingTypes;
+	/**
+	 * The abilities of the environment where the webpack generated code should run.
+	 */
+	environment?: Environment;
+	/**
+	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
+	 */
+	filename?: Filename;
+	/**
+	 * An expression which is used to address the global object/scope in runtime code.
+	 */
+	globalObject?: GlobalObject;
+	/**
+	 * Digest type used for the hash.
+	 */
+	hashDigest?: HashDigest;
+	/**
+	 * Number of chars which are used for the hash.
+	 */
+	hashDigestLength?: HashDigestLength;
+	/**
+	 * Algorithm used for generation the hash (see node.js crypto package).
+	 */
+	hashFunction?: HashFunction;
+	/**
+	 * Any string which is added to the hash to salt it.
+	 */
+	hashSalt?: HashSalt;
+	/**
+	 * The filename of the Hot Update Chunks. They are inside the output.path directory.
+	 */
+	hotUpdateChunkFilename?: HotUpdateChunkFilename;
+	/**
+	 * The global variable used by webpack for loading of hot update chunks.
+	 */
+	hotUpdateGlobal?: HotUpdateGlobal;
+	/**
+	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
+	 */
+	hotUpdateMainFilename?: HotUpdateMainFilename;
+	/**
+	 * Ignore warnings in the browser.
+	 */
+	ignoreBrowserWarnings?: boolean;
+	/**
+	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
+	 */
+	iife?: Iife;
+	/**
+	 * The name of the native import() function (can be exchanged for a polyfill).
+	 */
+	importFunctionName?: ImportFunctionName;
+	/**
+	 * The name of the native import.meta object (can be exchanged for a polyfill).
+	 */
+	importMetaName?: ImportMetaName;
+	/**
+	 * Options for library.
+	 */
+	library?: LibraryOptions;
+	/**
+	 * Output javascript files as module source type.
+	 */
+	module?: OutputModule;
+	/**
+	 * The output directory as **absolute path** (required).
+	 */
+	path?: Path;
+	/**
+	 * Include comments with information about the modules.
+	 */
+	pathinfo?: Pathinfo;
+	/**
+	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
+	 */
+	publicPath?: PublicPath;
+	/**
+	 * This option enables loading async chunks via a custom script type, such as script type="module".
+	 */
+	scriptType?: ScriptType;
+	/**
+	 * The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.
+	 */
+	sourceMapFilename?: SourceMapFilename;
+	/**
+	 * Prefixes every line of the source in the bundle with this string.
+	 */
+	sourcePrefix?: SourcePrefix;
+	/**
+	 * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
+	 */
+	strictModuleErrorHandling?: StrictModuleErrorHandling;
+	/**
+	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
+	 */
+	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
+	/**
+	 * Use a Trusted Types policy to create urls for chunks.
+	 */
+	trustedTypes?: TrustedTypes;
+	/**
+	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
+	 */
+	uniqueName?: UniqueName;
+	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	wasmLoading?: WasmLoading;
+	/**
+	 * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
+	 */
+	webassemblyModuleFilename?: WebassemblyModuleFilename;
+	/**
+	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
+	 */
+	workerChunkLoading?: ChunkLoading;
+	/**
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPath?: WorkerPublicPath;
+	/**
+	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
+	 */
+	workerWasmLoading?: WasmLoading;
+}
+/**
  * Options affecting how file system snapshots are created and validated.
  */
 export interface SnapshotOptions {
@@ -2818,64 +3255,6 @@ export interface EmptyGeneratorOptions {}
  */
 export interface EmptyParserOptions {}
 /**
- * An object with entry point description.
- */
-export interface EntryDescriptionNormalized {
-	/**
-	 * Enable/disable creating async chunks that are loaded on demand.
-	 */
-	asyncChunks?: boolean;
-	/**
-	 * Base uri for this entry.
-	 */
-	baseUri?: string;
-	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
-	 */
-	chunkLoading?: ChunkLoading;
-	/**
-	 * The entrypoints that the current entrypoint depend on. They must be loaded when this entrypoint is loaded.
-	 */
-	dependOn?: string[];
-	/**
-	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
-	 */
-	filename?: Filename;
-	/**
-	 * Module(s) that are loaded upon startup. The last one is exported.
-	 */
-	import?: string[];
-	/**
-	 * Specifies the layer in which modules of this entrypoint are placed.
-	 */
-	layer?: Layer;
-	/**
-	 * Options for library.
-	 */
-	library?: LibraryOptions;
-	/**
-	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
-	 */
-	publicPath?: PublicPath;
-	/**
-	 * The name of the runtime chunk. If set a runtime chunk with this name is created or an existing entrypoint is used as runtime.
-	 */
-	runtime?: EntryRuntime;
-	/**
-	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
-	 */
-	wasmLoading?: WasmLoading;
-}
-/**
- * Multiple entry bundles are created. The key is the entry name. The value is an entry description object.
- */
-export interface EntryStaticNormalized {
-	/**
-	 * An object with entry point description.
-	 */
-	[k: string]: EntryDescriptionNormalized;
-}
-/**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
  */
 export interface ExperimentsCommon {
@@ -3183,385 +3562,6 @@ export interface LazyCompilationOptions {
 	 * Specify which entrypoints or import()ed modules should be lazily compiled. This is matched with the imported module and not the entrypoint name.
 	 */
 	test?: RegExp | string | ((module: import("../lib/Module")) => boolean);
-}
-/**
- * Options affecting the normal modules (`NormalModuleFactory`).
- */
-export interface ModuleOptionsNormalized {
-	/**
-	 * An array of rules applied by default for modules.
-	 */
-	defaultRules: RuleSetRules;
-	/**
-	 * Specify options for each generator.
-	 */
-	generator: GeneratorOptionsByModuleType;
-	/**
-	 * Don't parse files matching. It's matched against the full resolved request.
-	 */
-	noParse?: NoParse;
-	/**
-	 * Specify options for each parser.
-	 */
-	parser: ParserOptionsByModuleType;
-	/**
-	 * An array of rules applied for modules.
-	 */
-	rules: RuleSetRules;
-	/**
-	 * Cache the resolving of module requests.
-	 */
-	unsafeCache?: boolean | Function;
-}
-/**
- * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
- */
-export interface OutputNormalized {
-	/**
-	 * The filename of asset modules as relative path inside the 'output.path' directory.
-	 */
-	assetModuleFilename?: AssetModuleFilename;
-	/**
-	 * Enable/disable creating async chunks that are loaded on demand.
-	 */
-	asyncChunks?: boolean;
-	/**
-	 * Add charset attribute for script tag.
-	 */
-	charset?: Charset;
-	/**
-	 * Specifies the filename template of output files of non-initial chunks on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
-	 */
-	chunkFilename?: ChunkFilename;
-	/**
-	 * The format of chunks (formats included by default are 'array-push' (web/WebWorker), 'commonjs' (node.js), 'module' (ESM), but others might be added by plugins).
-	 */
-	chunkFormat?: ChunkFormat;
-	/**
-	 * Number of milliseconds before chunk request expires.
-	 */
-	chunkLoadTimeout?: ChunkLoadTimeout;
-	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
-	 */
-	chunkLoading?: ChunkLoading;
-	/**
-	 * The global variable used by webpack for loading of chunks.
-	 */
-	chunkLoadingGlobal?: ChunkLoadingGlobal;
-	/**
-	 * Clean the output directory before emit.
-	 */
-	clean?: Clean;
-	/**
-	 * Check if to be emitted file already exists and have the same content before writing to output filesystem.
-	 */
-	compareBeforeEmit?: CompareBeforeEmit;
-	/**
-	 * This option enables cross-origin loading of chunks.
-	 */
-	crossOriginLoading?: CrossOriginLoading;
-	/**
-	 * Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
-	 */
-	cssChunkFilename?: CssChunkFilename;
-	/**
-	 * Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
-	 */
-	cssFilename?: CssFilename;
-	/**
-	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
-	 */
-	devtoolFallbackModuleFilenameTemplate?: DevtoolFallbackModuleFilenameTemplate;
-	/**
-	 * Filename template string of function for the sources array in a generated SourceMap.
-	 */
-	devtoolModuleFilenameTemplate?: DevtoolModuleFilenameTemplate;
-	/**
-	 * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
-	 */
-	devtoolNamespace?: DevtoolNamespace;
-	/**
-	 * List of chunk loading types enabled for use by entry points.
-	 */
-	enabledChunkLoadingTypes?: EnabledChunkLoadingTypes;
-	/**
-	 * List of library types enabled for use by entry points.
-	 */
-	enabledLibraryTypes?: EnabledLibraryTypes;
-	/**
-	 * List of wasm loading types enabled for use by entry points.
-	 */
-	enabledWasmLoadingTypes?: EnabledWasmLoadingTypes;
-	/**
-	 * The abilities of the environment where the webpack generated code should run.
-	 */
-	environment?: Environment;
-	/**
-	 * Specifies the filename of output files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.
-	 */
-	filename?: Filename;
-	/**
-	 * An expression which is used to address the global object/scope in runtime code.
-	 */
-	globalObject?: GlobalObject;
-	/**
-	 * Digest type used for the hash.
-	 */
-	hashDigest?: HashDigest;
-	/**
-	 * Number of chars which are used for the hash.
-	 */
-	hashDigestLength?: HashDigestLength;
-	/**
-	 * Algorithm used for generation the hash (see node.js crypto package).
-	 */
-	hashFunction?: HashFunction;
-	/**
-	 * Any string which is added to the hash to salt it.
-	 */
-	hashSalt?: HashSalt;
-	/**
-	 * The filename of the Hot Update Chunks. They are inside the output.path directory.
-	 */
-	hotUpdateChunkFilename?: HotUpdateChunkFilename;
-	/**
-	 * The global variable used by webpack for loading of hot update chunks.
-	 */
-	hotUpdateGlobal?: HotUpdateGlobal;
-	/**
-	 * The filename of the Hot Update Main File. It is inside the 'output.path' directory.
-	 */
-	hotUpdateMainFilename?: HotUpdateMainFilename;
-	/**
-	 * Ignore warnings in the browser.
-	 */
-	ignoreBrowserWarnings?: boolean;
-	/**
-	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
-	 */
-	iife?: Iife;
-	/**
-	 * The name of the native import() function (can be exchanged for a polyfill).
-	 */
-	importFunctionName?: ImportFunctionName;
-	/**
-	 * The name of the native import.meta object (can be exchanged for a polyfill).
-	 */
-	importMetaName?: ImportMetaName;
-	/**
-	 * Options for library.
-	 */
-	library?: LibraryOptions;
-	/**
-	 * Output javascript files as module source type.
-	 */
-	module?: OutputModule;
-	/**
-	 * The output directory as **absolute path** (required).
-	 */
-	path?: Path;
-	/**
-	 * Include comments with information about the modules.
-	 */
-	pathinfo?: Pathinfo;
-	/**
-	 * The 'publicPath' specifies the public URL address of the output files when referenced in a browser.
-	 */
-	publicPath?: PublicPath;
-	/**
-	 * This option enables loading async chunks via a custom script type, such as script type="module".
-	 */
-	scriptType?: ScriptType;
-	/**
-	 * The filename of the SourceMaps for the JavaScript files. They are inside the 'output.path' directory.
-	 */
-	sourceMapFilename?: SourceMapFilename;
-	/**
-	 * Prefixes every line of the source in the bundle with this string.
-	 */
-	sourcePrefix?: SourcePrefix;
-	/**
-	 * Handles error in module loading correctly at a performance cost. This will handle module error compatible with the EcmaScript Modules spec.
-	 */
-	strictModuleErrorHandling?: StrictModuleErrorHandling;
-	/**
-	 * Handles exceptions in module loading correctly at a performance cost (Deprecated). This will handle module error compatible with the Node.js CommonJS way.
-	 */
-	strictModuleExceptionHandling?: StrictModuleExceptionHandling;
-	/**
-	 * Use a Trusted Types policy to create urls for chunks.
-	 */
-	trustedTypes?: TrustedTypes;
-	/**
-	 * A unique name of the webpack build to avoid multiple webpack runtimes to conflict when using globals.
-	 */
-	uniqueName?: UniqueName;
-	/**
-	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
-	 */
-	wasmLoading?: WasmLoading;
-	/**
-	 * The filename of WebAssembly modules as relative path inside the 'output.path' directory.
-	 */
-	webassemblyModuleFilename?: WebassemblyModuleFilename;
-	/**
-	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
-	 */
-	workerChunkLoading?: ChunkLoading;
-	/**
-	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
-	 */
-	workerPublicPath?: WorkerPublicPath;
-	/**
-	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
-	 */
-	workerWasmLoading?: WasmLoading;
-}
-/**
- * Normalized webpack options object.
- */
-export interface WebpackOptionsNormalized {
-	/**
-	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
-	 */
-	amd?: Amd;
-	/**
-	 * Report the first error as a hard error instead of tolerating it.
-	 */
-	bail?: Bail;
-	/**
-	 * Cache generated modules and chunks to improve performance for multiple incremental builds.
-	 */
-	cache: CacheOptionsNormalized;
-	/**
-	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
-	 */
-	context?: Context;
-	/**
-	 * References to other configurations to depend on.
-	 */
-	dependencies?: Dependencies;
-	/**
-	 * Options for the webpack-dev-server.
-	 */
-	devServer?: DevServer;
-	/**
-	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
-	 */
-	devtool?: DevTool;
-	/**
-	 * The entry point(s) of the compilation.
-	 */
-	entry: EntryNormalized;
-	/**
-	 * Enables/Disables experiments (experimental features with relax SemVer compatibility).
-	 */
-	experiments: ExperimentsNormalized;
-	/**
-	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
-	 */
-	externals: Externals;
-	/**
-	 * Enable presets of externals for specific targets.
-	 */
-	externalsPresets: ExternalsPresets;
-	/**
-	 * Specifies the default type of externals ('amd*', 'umd*', 'system' and 'jsonp' depend on output.libraryTarget set to the same value).
-	 */
-	externalsType?: ExternalsType;
-	/**
-	 * Ignore specific warnings.
-	 */
-	ignoreWarnings?: IgnoreWarningsNormalized;
-	/**
-	 * Options for infrastructure level logging.
-	 */
-	infrastructureLogging: InfrastructureLogging;
-	/**
-	 * Custom values available in the loader context.
-	 */
-	loader?: Loader;
-	/**
-	 * Enable production optimizations or development hints.
-	 */
-	mode?: Mode;
-	/**
-	 * Options affecting the normal modules (`NormalModuleFactory`).
-	 */
-	module: ModuleOptionsNormalized;
-	/**
-	 * Name of the configuration. Used when loading multiple configurations.
-	 */
-	name?: Name;
-	/**
-	 * Include polyfills or mocks for various node stuff.
-	 */
-	node: Node;
-	/**
-	 * Enables/Disables integrated optimizations.
-	 */
-	optimization: Optimization;
-	/**
-	 * Normalized options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
-	 */
-	output: OutputNormalized;
-	/**
-	 * The number of parallel processed modules in the compilation.
-	 */
-	parallelism?: Parallelism;
-	/**
-	 * Configuration for web performance recommendations.
-	 */
-	performance?: Performance;
-	/**
-	 * Add additional plugins to the compiler.
-	 */
-	plugins: Plugins;
-	/**
-	 * Presets for the webpack configuration.
-	 */
-	presets?: Presets;
-	/**
-	 * Capture timing information for each module.
-	 */
-	profile?: Profile;
-	/**
-	 * Store compiler state to a json file.
-	 */
-	recordsInputPath?: RecordsInputPath;
-	/**
-	 * Load compiler state from a json file.
-	 */
-	recordsOutputPath?: RecordsOutputPath;
-	/**
-	 * Options for the resolver.
-	 */
-	resolve: Resolve;
-	/**
-	 * Options for the resolver when resolving loaders.
-	 */
-	resolveLoader: ResolveLoader;
-	/**
-	 * Options affecting how file system snapshots are created and validated.
-	 */
-	snapshot: SnapshotOptions;
-	/**
-	 * Stats options object or preset name.
-	 */
-	stats: StatsValue;
-	/**
-	 * Environment to build for. An array of environments to build for all of them when possible.
-	 */
-	target?: Target;
-	/**
-	 * Enter watch mode, which rebuilds on file change.
-	 */
-	watch?: Watch;
-	/**
-	 * Options for the watcher.
-	 */
-	watchOptions: WatchOptions;
 }
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).

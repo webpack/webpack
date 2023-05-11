@@ -3563,8 +3563,11 @@
       "type": "array",
       "items": {
         "description": "Preset of type string or object.",
-        "instanceof": "Function",
-        "tsType": "Function"
+        "oneOf": [
+          {
+            "$ref": "#/definitions/WebpackOptionsNormalized"
+          }
+        ]
       }
     },
     "Profile": {
