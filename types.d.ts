@@ -9338,15 +9338,6 @@ declare class PrefixSource extends Source {
 declare interface PreparsedAst {
 	[index: string]: any;
 }
-declare class PresetPlugin {
-	constructor(presets: Configuration[]);
-	presets: Configuration[];
-
-	/**
-	 * Apply the plugin
-	 */
-	apply(compiler: Compiler): void;
-}
 declare interface PrintedElement {
 	element: string;
 	content: string;
@@ -13409,7 +13400,6 @@ declare namespace exports {
 		MultiCompiler,
 		Parser,
 		PrefetchPlugin,
-		PresetPlugin,
 		ProgressPlugin,
 		ProvidePlugin,
 		RuntimeModule,
