@@ -3563,11 +3563,7 @@
       "type": "array",
       "items": {
         "description": "Preset of type string or object.",
-        "oneOf": [
-          {
-            "$ref": "#/definitions/WebpackOptionsNormalized"
-          }
-        ]
+        "tsType": "import(\"../declarations/WebpackOptions\").WebpackOptions"
       }
     },
     "Profile": {
