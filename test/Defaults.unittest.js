@@ -367,6 +367,7 @@ describe("snapshots", () => {
 		  "parallelism": 100,
 		  "performance": false,
 		  "plugins": Array [],
+		  "presets": undefined,
 		  "profile": false,
 		  "recordsInputPath": false,
 		  "recordsOutputPath": false,
