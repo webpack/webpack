@@ -4,7 +4,7 @@ module.exports = () => {
 	return {
 		plugins: [
 			new webpack.DefinePlugin({
-				"PRESET_VAR": "preset-var"
+				"PRESET_VAR": "\"preset-var\""
 			})
 		]
 	};

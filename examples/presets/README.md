@@ -18,7 +18,7 @@ console.log('Hello world!', PRESET_VAR);
 /*! runtime requirements:  */
 /***/ (() => {
 
-console.log('Hello world!', preset-var);
+console.log('Hello world!', "preset-var");
 
 /***/ })
 /******/ 	]);
