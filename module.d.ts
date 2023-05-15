@@ -8,11 +8,12 @@ declare namespace webpack {
 				chain: number[];
 				/** the module id of the declining parent */
 				parentId: number;
+				moduleId: number | string;
 		  }
 		| {
 				type: "self-declined";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the chain from where the update was propagated. */
 				chain: number[];
 		  };
@@ -49,9 +50,9 @@ declare namespace webpack {
 		| {
 				type: "accept-error-handler-errored";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the module id owning the accept handler. */
-				dependencyId: number;
+				dependencyId: number | string;
 				/** the thrown error */
 				error: Error;
 				/** the error thrown by the module before the error handler tried to handle it. */
@@ -60,7 +61,7 @@ declare namespace webpack {
 		| {
 				type: "self-accept-error-handler-errored";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the thrown error */
 				error: Error;
 				/** the error thrown by the module before the error handler tried to handle it. */
@@ -69,16 +70,16 @@ declare namespace webpack {
 		| {
 				type: "accept-errored";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the module id owning the accept handler. */
-				dependencyId: number;
+				dependencyId: number | string;
 				/** the thrown error */
 				error: Error;
 		  }
 		| {
 				type: "self-accept-errored";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the thrown error */
 				error: Error;
 		  };
