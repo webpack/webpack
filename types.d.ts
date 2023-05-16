@@ -13426,6 +13426,7 @@ declare namespace exports {
 		Configuration,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance,
+		ChunkGroup,
 		Asset,
 		AssetInfo,
 		EntryOptions,
