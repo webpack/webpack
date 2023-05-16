@@ -60,6 +60,7 @@ or [check out the issues on the documentation website's repository](https://gith
 webpack is statically typed using JSDoc annotation and TypeScript. If you would like to export a new type which doesn't belong to a public API, then you can do so by declaring it in `webpack/lib/index.js`.
 
 `webpack/lib/index.js`
+
 ```js
 /** @typedef {import("./NormalModuleFactory").ResolveData} ResolveData */
 ```
