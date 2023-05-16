@@ -13432,6 +13432,7 @@ declare namespace exports {
 		PathData,
 		AssetEmittedInfo,
 		MultiStats,
+		ResolveData,
 		ParserState,
 		ResolvePluginInstance,
 		Resolver,
