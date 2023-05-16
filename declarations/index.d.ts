@@ -1,5 +1,3 @@
-export type { ResolveData } from "../lib/NormalModuleFactory";
-
 export type {
 	LoaderModule,
 	RawLoaderDefinition,
