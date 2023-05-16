@@ -13452,6 +13452,7 @@ declare namespace exports {
 		StatsModuleTraceDependency,
 		StatsModuleTraceItem,
 		StatsProfile,
+		ResolveData,
 		LoaderModule,
 		RawLoaderDefinition,
 		LoaderDefinition,
