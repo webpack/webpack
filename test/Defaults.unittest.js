@@ -101,7 +101,7 @@ describe("snapshots", () => {
 		    "lazyCompilation": undefined,
 		    "outputModule": false,
 		    "syncWebAssembly": false,
-		    "topLevelAwait": false,
+		    "topLevelAwait": true,
 		  },
 		  "externals": undefined,
 		  "externalsPresets": Object {
@@ -2146,9 +2146,6 @@ describe("snapshots", () => {
 			+     },
 			+     "futureDefaults": true,
 			@@ ... @@
-			-     "topLevelAwait": false,
-			+     "topLevelAwait": true,
-			@@ ... @@
 			+       },
 			+       Object {
 			+         "rules": Array [
@@ -2203,14 +2200,15 @@ describe("snapshots", () => {
 			+           "fullySpecified": true,
 			+         },
 			+         "type": "css/module",
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "mimetype": "text/css",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
+			+       },
+			+       Object {
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2259,13 +2257,9 @@ describe("snapshots", () => {
 			+     "css": false,
 			+     "futureDefaults": true,
 			@@ ... @@
-			-     "topLevelAwait": false,
-			+     "topLevelAwait": true,
-			@@ ... @@
-			+       },
 			+       Object {
 			+         "rules": Array [
-			+           Object {
+			@@ ... @@
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -2276,7 +2270,8 @@ describe("snapshots", () => {
 			+         ],
 			+         "test": /\\.wasm$/i,
 			+         "type": "webassembly/async",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
 			+           Object {
