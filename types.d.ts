@@ -839,7 +839,7 @@ declare class Chunk {
 	removeGroup(chunkGroup: ChunkGroup): void;
 	isInGroup(chunkGroup: ChunkGroup): boolean;
 	getNumberOfGroups(): number;
-	get groupsIterable(): Iterable<ChunkGroup>;
+	get groupsIterable(): SortableSet<ChunkGroup>;
 	disconnectFromGroups(): void;
 	split(newChunk: Chunk): void;
 	updateHash(hash: Hash, chunkGraph: ChunkGraph): void;
