@@ -1452,6 +1452,11 @@ declare class Compilation {
 		unseal: SyncHook<[]>;
 		seal: SyncHook<[]>;
 		beforeChunks: SyncHook<[]>;
+		/**
+		 * The `afterChunks` hook is called directly after the chunks and module graph have
+		 * been created and before the chunks and modules have been optimized. This hook is useful to
+		 * inspect, analyze, and/or modify the chunk graph.
+		 */
 		afterChunks: SyncHook<[Iterable<Chunk>]>;
 		optimizeDependencies: SyncBailHook<[Iterable<Module>], any>;
 		afterOptimizeDependencies: SyncHook<[Iterable<Module>]>;
