@@ -9,3 +9,9 @@ _{{src/main.js}}_
 ```javascript
 _{{dist/output.js}}_
 ```
+
+# dist/output.css
+
+```javascript
+_{{dist/output.css}}_
+```

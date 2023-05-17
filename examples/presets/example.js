@@ -1,1 +1,3 @@
-require("./src/main.js")
+import Button from "./src/main";
+
+export default Button;
