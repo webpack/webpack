@@ -6818,11 +6818,11 @@ declare interface MapOptions {
 	module?: boolean;
 }
 declare interface MatchObject {
-	test?: string | RegExp | string[] | RegExp[];
-	include?: string | RegExp | string[] | RegExp[];
-	exclude?: string | RegExp | string[] | RegExp[];
+	test?: string | RegExp | (string | RegExp)[];
+	include?: string | RegExp | (string | RegExp)[];
+	exclude?: string | RegExp | (string | RegExp)[];
 }
-type Matcher = string | RegExp | string[] | RegExp[];
+type Matcher = string | RegExp | (string | RegExp)[];
 
 /**
  * Options object for in-memory caching.
