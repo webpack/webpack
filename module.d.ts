@@ -3,55 +3,53 @@ declare namespace webpack {
 		| {
 				type: "declined";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the chain from where the update was propagated. */
-				chain: number[];
+				chain: (number | string)[];
 				/** the module id of the declining parent */
-				parentId: number;
+				parentId: number | string;
 		  }
 		| {
 				type: "self-declined";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the chain from where the update was propagated. */
-				chain: number[];
+				chain: (number | string)[];
 		  };
 
 	type UnacceptedEvent = {
 		type: "unaccepted";
 		/** The module in question. */
-		moduleId: number;
+		moduleId: number | string;
 		/** the chain from where the update was propagated. */
-		chain: number[];
+		chain: (number | string)[];
 	};
 
 	type AcceptedEvent = {
 		type: "accepted";
 		/** The module in question. */
-		moduleId: number;
-		/** the chain from where the update was propagated. */
-		chain: number[];
+		moduleId: number | string;
 		/** the modules that are outdated and will be disposed */
-		outdatedModules: number[];
+		outdatedModules: (number | string)[];
 		/** the accepted dependencies that are outdated */
 		outdatedDependencies: {
-			[id: number]: number[];
+			[id: number]: (number | string)[];
 		};
 	};
 
 	type DisposedEvent = {
 		type: "disposed";
 		/** The module in question. */
-		moduleId: number;
+		moduleId: number | string;
 	};
 
 	type ErroredEvent =
 		| {
 				type: "accept-error-handler-errored";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the module id owning the accept handler. */
-				dependencyId: number;
+				dependencyId: number | string;
 				/** the thrown error */
 				error: Error;
 				/** the error thrown by the module before the error handler tried to handle it. */
@@ -60,7 +58,7 @@ declare namespace webpack {
 		| {
 				type: "self-accept-error-handler-errored";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the thrown error */
 				error: Error;
 				/** the error thrown by the module before the error handler tried to handle it. */
@@ -69,16 +67,16 @@ declare namespace webpack {
 		| {
 				type: "accept-errored";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the module id owning the accept handler. */
-				dependencyId: number;
+				dependencyId: number | string;
 				/** the thrown error */
 				error: Error;
 		  }
 		| {
 				type: "self-accept-errored";
 				/** The module in question. */
-				moduleId: number;
+				moduleId: number | string;
 				/** the thrown error */
 				error: Error;
 		  };
