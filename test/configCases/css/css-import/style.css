@@ -40,7 +40,7 @@
 @import url(
 style2.css?foo=9
 );
-/*@import url();
+@import url();
 @import url('');
 @import url("");
 @import '';
@@ -50,7 +50,9 @@ style2.css?foo=9
 ";
 @import url();
 @import url('');
-@import url("");*/
+@import url("");
+@import url("") /* test */;
+@import url("") screen and (orientation:landscape);
 @import url(style2.css) screen and (orientation:landscape);
 @import url(style2.css) SCREEN AND (ORIENTATION: LANDSCAPE);
 @import url(style2.css)screen and (orientation:landscape);
