@@ -199,13 +199,16 @@ url(style6.css?foo=14)
 @import "./anonymous-nested.css" supports(display: flex) screen and (orientation: portrait);
 @import "./all-nested.css" layer(super.foo) supports(display: flex) screen and (min-width: 400px);
 
+/** Possible syntax in future */
+
+@import url("/style2.css?foo=unknown") layer(super.foo) supports(display: flex) unknown("foo") screen and (min-width: 400px);
+
 /** Warnings */
 
 @import nourl(test.css);
 @import ;
 @import foo-bar;
 @import-normalize;
-/*@import url('http://') :root {}*/
 
 body {
 	background: red;

@@ -155,6 +155,10 @@ class FakeSheet {
 		);
 
 		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
+			if (!/^https:\/\/test\.cases\/path\//.test(url)) {
+				return `@import url("${url}");`;
+			}
+
 			if (url.startsWith("#")) {
 				return url;
 			}
@@ -195,6 +199,10 @@ class FakeSheet {
 			"utf-8"
 		);
 		css = css.replace(/@import url\("([^"]+)"\);/g, (match, url) => {
+			if (!/^https:\/\/test\.cases\/path\//.test(url)) {
+				return url;
+			}
+
 			if (url.startsWith("#")) {
 				return url;
 			}
