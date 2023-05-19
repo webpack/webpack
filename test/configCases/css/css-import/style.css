@@ -199,11 +199,18 @@ url(style6.css?foo=14)
 @import "./anonymous-nested.css" supports(display: flex) screen and (orientation: portrait);
 @import "./all-nested.css" layer(super.foo) supports(display: flex) screen and (min-width: 400px);
 
+/* Inside support */
+
+@import url("/style2.css?warning=6") supports(unknown: layer(super.foo)) screen and (min-width: 400px);
+@import url("/style2.css?warning=7") supports(url: url("./unknown.css")) screen and (min-width: 400px);
+@import url("/style2.css?warning=8") supports(url: url(./unknown.css)) screen and (min-width: 400px);
+
 /** Possible syntax in future */
 
 @import url("/style2.css?foo=unknown") layer(super.foo) supports(display: flex) unknown("foo") screen and (min-width: 400px);
 @import url("/style2.css?foo=unknown1") layer(super.foo) supports(display: url("./unknown.css")) unknown(foo) screen and (min-width: 400px);
-@import url("/style2.css?foo=unknown1") layer(super.foo) supports(display: url(./unknown.css)) "foo" screen and (min-width: 400px);
+@import url("/style2.css?foo=unknown2") layer(super.foo) supports(display: url(./unknown.css)) "foo" screen and (min-width: 400px);
+@import "./style2.css?unknown3" "string";
 
 /** Unknown */
 
@@ -221,6 +228,16 @@ url(style6.css?foo=14)
 @import layer(super.foo) supports(display: flex) url("./style2.css?warning=5") screen and (min-width: 400px);
 @import layer(super.foo) supports(display: flex) screen and (min-width: 400px) url("./style2.css?warning=6");
 @import url("/style2.css?warning=6") supports(display: flex) layer(super.foo) screen and (min-width: 400px);
+@namespace url(http://www.w3.org/1999/xhtml);
+@import url("./style2.css?after-namespace");
+@import supports(background: url("./img.png"));
+@import supports(background: url("./img.png")) screen and (min-width: 400px);
+@import layer(test) supports(background: url("./img.png")) screen and (min-width: 400px);
+@import screen and (min-width: 400px);
+
+@import url(./style2.css?multiple=1) url(./style2.css?multiple=2);
+@import url("./style2.css?multiple=3") url("./style2.css?multiple=4");
+@import "./style2.css?strange=3" url("./style2.css?multiple=4");
 
 body {
 	background: red;
