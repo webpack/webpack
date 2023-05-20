@@ -21,6 +21,7 @@ coverage/
 
 # Ignore not supported files
 *.d.ts
+!module.d.ts
 
 # Ignore precompiled schemas
 schemas/**/*.check.js

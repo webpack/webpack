@@ -839,7 +839,7 @@ declare class Chunk {
 	removeGroup(chunkGroup: ChunkGroup): void;
 	isInGroup(chunkGroup: ChunkGroup): boolean;
 	getNumberOfGroups(): number;
-	get groupsIterable(): Iterable<ChunkGroup>;
+	get groupsIterable(): SortableSet<ChunkGroup>;
 	disconnectFromGroups(): void;
 	split(newChunk: Chunk): void;
 	updateHash(hash: Hash, chunkGraph: ChunkGraph): void;
@@ -1452,6 +1452,11 @@ declare class Compilation {
 		unseal: SyncHook<[]>;
 		seal: SyncHook<[]>;
 		beforeChunks: SyncHook<[]>;
+		/**
+		 * The `afterChunks` hook is called directly after the chunks and module graph have
+		 * been created and before the chunks and modules have been optimized. This hook is useful to
+		 * inspect, analyze, and/or modify the chunk graph.
+		 */
 		afterChunks: SyncHook<[Iterable<Chunk>]>;
 		optimizeDependencies: SyncBailHook<[Iterable<Module>], any>;
 		afterOptimizeDependencies: SyncHook<[Iterable<Module>]>;
@@ -3511,6 +3516,7 @@ declare class EnvironmentPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type ErrorWithDetail = Error & { details?: string };
 declare interface Etag {
 	toString: () => string;
 }
@@ -6817,11 +6823,11 @@ declare interface MapOptions {
 	module?: boolean;
 }
 declare interface MatchObject {
-	test?: string | RegExp | string[] | RegExp[];
-	include?: string | RegExp | string[] | RegExp[];
-	exclude?: string | RegExp | string[] | RegExp[];
+	test?: string | RegExp | (string | RegExp)[];
+	include?: string | RegExp | (string | RegExp)[];
+	exclude?: string | RegExp | (string | RegExp)[];
 }
-type Matcher = string | RegExp | string[] | RegExp[];
+type Matcher = string | RegExp | (string | RegExp)[];
 
 /**
  * Options object for in-memory caching.
@@ -8028,9 +8034,9 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 		context: string,
 		request: string,
 		callback: (
-			arg0: null | Error,
-			arg1?: string | false,
-			arg2?: ResolveRequest
+			err: null | ErrorWithDetail,
+			res?: string | false,
+			req?: ResolveRequest
 		) => void
 	): any;
 	getResolve(options?: ResolveOptionsWithDependencyType): {
@@ -8038,9 +8044,9 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 			context: string,
 			request: string,
 			callback: (
-				arg0: null | Error,
-				arg1?: string | false,
-				arg2?: ResolveRequest
+				err: null | ErrorWithDetail,
+				res?: string | false,
+				req?: ResolveRequest
 			) => void
 		): void;
 		(context: string, request: string): Promise<string>;
@@ -10139,9 +10145,9 @@ declare abstract class Resolver {
 		request: string,
 		resolveContext: ResolveContext,
 		callback: (
-			arg0: null | Error,
-			arg1?: string | false,
-			arg2?: ResolveRequest
+			err: null | ErrorWithDetail,
+			res?: string | false,
+			req?: ResolveRequest
 		) => void
 	): void;
 	doResolve(
@@ -13435,12 +13441,14 @@ declare namespace exports {
 		Configuration,
 		WebpackOptionsNormalized,
 		WebpackPluginInstance,
+		ChunkGroup,
 		Asset,
 		AssetInfo,
 		EntryOptions,
 		PathData,
 		AssetEmittedInfo,
 		MultiStats,
+		ResolveData,
 		ParserState,
 		ResolvePluginInstance,
 		Resolver,

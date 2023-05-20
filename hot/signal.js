@@ -5,6 +5,10 @@
 /*globals __resourceQuery */
 if (module.hot) {
 	var log = require("./log");
+
+	/**
+	 * @param {boolean=} fromUpdate true when called from update
+	 */
 	var checkForUpdate = function checkForUpdate(fromUpdate) {
 		module.hot
 			.check()
