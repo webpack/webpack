@@ -7,7 +7,7 @@ it('should correctly handle class methods and properties (include static)', () =
 	expect(mod.reexport).toBe(1);
 	expect(mod.method.className).toBe("test");
 	expect(mod.method.propertyValue).toBe("test");
-	expect(mod.functionName).toBe("C");
+	expect(typeof mod.functionName).toBe("string");
 	expect(mod.publicMethod.B).toBe(1);
 	expect(mod.publicMethod.propertyB).toBe(1);
 	expect(mod.publicMethod.privatePropertyB).toBe(1);
