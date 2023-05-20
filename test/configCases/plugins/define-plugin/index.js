@@ -255,3 +255,8 @@ it("destructuring assignment", () => {
 	expect(used).toBe(used2);
 	expect(used).toBe(used3);
 });
+
+it('should allow shorthand property (issue #16764)', () => {
+	const obj = {ONE, TRUE };
+	expect(obj).toStrictEqual({ONE: 1, TRUE: true})
+})
