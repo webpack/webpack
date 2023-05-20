@@ -283,11 +283,15 @@ it('should allow shorthand property (issue #16764)', () => {
 	const nested = { OBJECT }
 	expect(nested.OBJECT.SUB.FUNCTION(7)).toBe(8);
 	expect(nested.OBJECT.SUB.CODE).toBe(3);
-	expect(nested.OBJECT.SUB.UNDEFINED).toBe(undefined);
+	expect(nested.OBJECT.SUB.UNDEFINED).toBeUndefined();
 	expect(nested.OBJECT.SUB.REGEXP.toString()).toBe("/abc/i");
 	expect(nested.OBJECT.SUB.STRING).toBe("string");
 
 
 	const array = { ARRAY }
 	expect(array).toStrictEqual({ ARRAY: [2, ['six']] })
+})
+
+it("fails for unknown property", () => {
+	expect(() => ({ UNKNOWN })).toThrowError("UNKNOWN is not defined")
 })
