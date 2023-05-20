@@ -8,4 +8,14 @@ it('should correctly handle class methods and properties (include static)', () =
 	expect(mod.method.className).toBe("test");
 	expect(mod.method.propertyValue).toBe("test");
 	expect(mod.functionName).toBe("C");
+	expect(mod.publicMethod.B).toBe(1);
+	expect(mod.publicMethod.propertyB).toBe(1);
+	expect(mod.publicMethod.privatePropertyB).toBe(1);
+	expect(mod.publicMethod.privateMethod.privateName).toBe("test");
+	expect(mod.publicMethod.privateMethod.B).toBe(1);
+	expect(mod.valueInStaticBlock).toBe(1);
+	expect(mod.staticB).toBe(1);
+	expect(mod.staticPrivateMethod.B).toBe(1);
+	expect(mod.staticPrivateMethod.staticB).toBe(1);
+	expect(mod.staticPrivateMethod.privateStaticB).toBe(1);
 });
