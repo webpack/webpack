@@ -18,4 +18,5 @@ it('should correctly handle class methods and properties (include static)', () =
 	expect(mod.staticPrivateMethod.B).toBe(1);
 	expect(mod.staticPrivateMethod.staticB).toBe(1);
 	expect(mod.staticPrivateMethod.privateStaticB).toBe(1);
+	expect(mod.staticThis.name).toBe("test");
 });

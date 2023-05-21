@@ -4,6 +4,7 @@ let staticBlockValue;
 let staticPrivateBlockValue;
 let valueInStaticBlock;
 let staticPrivateMethod;
+let staticThis;
 
 let A = class C {
 	static name = "test";
@@ -17,6 +18,8 @@ let A = class C {
 	static #staticPrivateName = C.name;
 	static staticB = B;
 	static #staticB = B;
+	static #this = this;
+	static #thisAndC = C.#this;
 
 	#privateMethod() {
 		return { privateName: this.#privateName, B }
@@ -47,6 +50,7 @@ let A = class C {
 		staticPrivateBlockValue = C.#staticPrivateName;
 		valueInStaticBlock = B;
 		staticPrivateMethod = C.#staticPrivateMethod();
+		staticThis = C.#thisAndC;
 	}
 };
 
@@ -73,5 +77,6 @@ export {
 	publicMethod,
 	valueInStaticBlock,
 	staticB,
-	staticPrivateMethod
+	staticPrivateMethod,
+	staticThis
 };
