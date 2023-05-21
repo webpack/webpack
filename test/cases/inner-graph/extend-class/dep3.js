@@ -12,7 +12,7 @@ export const C1 = class C1 extends mixin2(Y, /*#__PURE__*/ mixin3(C)) {
 	render() {return new D();}
 };
 
-export class Y1 extends mixin2(Y) {
+export class Y1 extends /*#__PURE__*/ mixin2(Y) {
 	constructor() {
 		super();
 
