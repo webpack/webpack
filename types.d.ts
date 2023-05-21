@@ -13,6 +13,7 @@ import {
 	AssignmentPattern,
 	AssignmentProperty,
 	AwaitExpression,
+	BaseCallExpression,
 	BigIntLiteral,
 	BinaryExpression,
 	BlockStatement,
@@ -5208,7 +5209,7 @@ declare class JavascriptParser extends Parser {
 		>;
 		classBodyElement: SyncBailHook<
 			[
-				MethodDefinition | PropertyDefinition,
+				StaticBlock | MethodDefinition | PropertyDefinition,
 				ClassExpression | ClassDeclaration
 			],
 			boolean | void
@@ -5279,9 +5280,9 @@ declare class JavascriptParser extends Parser {
 			SyncBailHook<[AssignmentExpression, string[]], boolean | void>
 		>;
 		typeof: HookMap<SyncBailHook<[Expression], boolean | void>>;
-		importCall: SyncBailHook<[Expression], boolean | void>;
+		importCall: SyncBailHook<[ImportExpression], boolean | void>;
 		topLevelAwait: SyncBailHook<[Expression], boolean | void>;
-		call: HookMap<SyncBailHook<[Expression], boolean | void>>;
+		call: HookMap<SyncBailHook<[BaseCallExpression], boolean | void>>;
 		callMemberChain: HookMap<
 			SyncBailHook<[CallExpression, string[], boolean[]], boolean | void>
 		>;
@@ -5464,7 +5465,7 @@ declare class JavascriptParser extends Parser {
 	walkTaggedTemplateExpression(expression?: any): void;
 	walkClassExpression(expression?: any): void;
 	walkChainExpression(expression: ChainExpression): void;
-	walkImportExpression(expression?: any): void;
+	walkImportExpression(expression: ImportExpression): void;
 	walkCallExpression(expression?: any): void;
 	walkMemberExpression(expression?: any): void;
 	walkMemberExpressionWithExpressionName(
