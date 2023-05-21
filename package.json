@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.82.1",
+  "version": "5.83.1",
   "author": "Tobias Koppers @sokra",
   "description": "Packs ECMAScript/CommonJs/AMD modules for the browser. Allows you to split your codebase into multiple bundles, which can be loaded on demand. Supports loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -39,7 +39,7 @@
     "@babel/core": "^7.21.4",
     "@babel/preset-react": "^7.18.6",
     "@types/jest": "^29.5.0",
-    "@types/node": "^18.15.11",
+    "@types/node": "^20.1.7",
     "assemblyscript": "^0.27.2",
     "babel-loader": "^8.1.0",
     "benchmark": "^2.1.4",
@@ -173,7 +173,7 @@
     "cover:unit": "node --max-old-space-size=4096 --experimental-vm-modules node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:types": "node node_modules/tooling/type-coverage",
     "cover:merge": "yarn mkdirp .nyc_output && nyc merge .nyc_output coverage/coverage-nyc.json && rimraf .nyc_output",
-    "cover:report": "nyc report -t coverage"
+    "cover:report": "nyc report --reporter=lcov  --reporter=text -t coverage"
   },
   "lint-staged": {
     "*.{js,cjs,mjs}": [
