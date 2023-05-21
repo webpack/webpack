@@ -9322,9 +9322,9 @@ declare interface PossibleFileSystemError {
 	syscall?: string;
 }
 declare class PrefetchPlugin {
-	constructor(context?: any, request?: any);
-	context: any;
-	request: any;
+	constructor(context: string, request?: string);
+	context: null | string;
+	request: string;
 
 	/**
 	 * Apply the plugin
@@ -9366,14 +9366,18 @@ declare class Profiler {
 	inspector: any;
 	hasSession(): boolean;
 	startProfiling(): Promise<void> | Promise<[any, any, any]>;
-	sendCommand(method?: any, params?: any): Promise<any>;
+	sendCommand(method: string, params?: object): Promise<any>;
 	destroy(): Promise<void>;
 	stopProfiling(): Promise<{ profile: any }>;
 }
 declare class ProfilingPlugin {
 	constructor(options?: ProfilingPluginOptions);
 	outputPath: string;
-	apply(compiler?: any): void;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
 	static Profiler: typeof Profiler;
 }
 declare interface ProfilingPluginOptions {
