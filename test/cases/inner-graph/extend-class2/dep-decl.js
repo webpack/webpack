@@ -58,6 +58,36 @@ class Bar extends Foo {
 	}
 }
 
+class BarA extends Foo {
+	static prop = 42;
+	static a = foo(this).prop;
+}
+
+class BarB extends Foo {
+	static prop = 42;
+	static b = foo(Bar).prop;
+}
+
+class BarC extends Foo {
+	static prop = 42;
+	static c = foo(super.Bar).prop;
+}
+
+class BarPA extends Foo {
+	static prop = 42;
+	static #a = foo(this).prop;
+}
+
+class BarPB extends Foo {
+	static prop = 42;
+	static #b = foo(Bar).prop;
+}
+
+class BarPC extends Foo {
+	static prop = 42;
+	static #c = foo(super.Bar).prop;
+}
+
 const ExpressionFoo = class Bar extends Foo {
 	static prop = 42;
 	static a = foo(this).prop;
