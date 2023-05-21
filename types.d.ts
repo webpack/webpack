@@ -227,6 +227,9 @@ declare interface ArgumentConfig {
 	type: "string" | "number" | "boolean" | "path" | "enum" | "RegExp" | "reset";
 	values?: any[];
 }
+declare interface Assertions {
+	[index: string]: any;
+}
 declare interface Asset {
 	/**
 	 * the filename of the asset
@@ -4618,11 +4621,7 @@ declare interface HandleModuleCreationOptions {
 	connectOrigin?: boolean;
 }
 declare class HarmonyImportDependency extends ModuleDependency {
-	constructor(
-		request: string,
-		sourceOrder: number,
-		assertions?: Record<string, any>
-	);
+	constructor(request: string, sourceOrder: number, assertions?: Assertions);
 	sourceOrder: number;
 	getImportVar(moduleGraph: ModuleGraph): string;
 	getImportStatement(
