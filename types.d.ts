@@ -5368,6 +5368,10 @@ declare class JavascriptParser extends Parser {
 		| ForStatement
 		| ForInStatement
 		| ForOfStatement
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportDefaultDeclaration
+		| ExportAllDeclaration
 	)[];
 	prevStatement: any;
 	destructuringAssignmentProperties: WeakMap<Expression, Set<string>>;
@@ -5379,12 +5383,199 @@ declare class JavascriptParser extends Parser {
 		expr: Expression
 	): undefined | string | VariableInfoInterface;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
-	preWalkStatements(statements?: any): void;
-	blockPreWalkStatements(statements?: any): void;
-	walkStatements(statements?: any): void;
-	preWalkStatement(statement?: any): void;
-	blockPreWalkStatement(statement?: any): void;
-	walkStatement(statement?: any): void;
+
+	/**
+	 * Pre walking iterates the scope for variable declarations
+	 */
+	preWalkStatements(
+		statements: (
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportDefaultDeclaration
+			| ExportAllDeclaration
+		)[]
+	): void;
+
+	/**
+	 * Block pre walking iterates the scope for block variable declarations
+	 */
+	blockPreWalkStatements(
+		statements: (
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportDefaultDeclaration
+			| ExportAllDeclaration
+		)[]
+	): void;
+
+	/**
+	 * Walking iterates the statements and expressions and processes them
+	 */
+	walkStatements(
+		statements: (
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportDefaultDeclaration
+			| ExportAllDeclaration
+		)[]
+	): void;
+
+	/**
+	 * Walking iterates the statements and expressions and processes them
+	 */
+	preWalkStatement(
+		statement:
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportDefaultDeclaration
+			| ExportAllDeclaration
+	): void;
+	blockPreWalkStatement(
+		statement:
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportDefaultDeclaration
+			| ExportAllDeclaration
+	): void;
+	walkStatement(
+		statement:
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportDefaultDeclaration
+			| ExportAllDeclaration
+	): void;
 
 	/**
 	 * Walks a statements that is nested within a parent statement
@@ -5439,31 +5630,65 @@ declare class JavascriptParser extends Parser {
 	walkSwitchCases(switchCases: SwitchCase[]): void;
 	preWalkCatchClause(catchClause: CatchClause): void;
 	walkCatchClause(catchClause: CatchClause): void;
-	walkPattern(pattern?: any): void;
+	walkPattern(pattern: Pattern): void;
 	walkAssignmentPattern(pattern: AssignmentPattern): void;
 	walkObjectPattern(pattern?: any): void;
 	walkArrayPattern(pattern: ArrayPattern): void;
 	walkRestElement(pattern: RestElement): void;
-	walkExpressions(expressions?: any): void;
+	walkExpressions(
+		expressions: (
+			| null
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| ImportExpression
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+			| SpreadElement
+		)[]
+	): void;
 	walkExpression(expression?: any): void;
 	walkAwaitExpression(expression: AwaitExpression): void;
 	walkArrayExpression(expression: ArrayExpression): void;
-	walkSpreadElement(expression?: any): void;
+	walkSpreadElement(expression: SpreadElement): void;
 	walkObjectExpression(expression: ObjectExpression): void;
-	walkProperty(prop: Property | SpreadElement): void;
+	walkProperty(prop: SpreadElement | Property): void;
 	walkFunctionExpression(expression?: any): void;
 	walkArrowFunctionExpression(expression?: any): void;
 	walkSequenceExpression(expression: SequenceExpression): void;
 	walkUpdateExpression(expression: UpdateExpression): void;
 	walkUnaryExpression(expression: UnaryExpression): void;
-	walkLeftRightExpression(expression?: any): void;
+	walkLeftRightExpression(
+		expression: BinaryExpression | LogicalExpression
+	): void;
 	walkBinaryExpression(expression: BinaryExpression): void;
 	walkLogicalExpression(expression: LogicalExpression): void;
 	walkAssignmentExpression(expression: AssignmentExpression): void;
 	walkConditionalExpression(expression: ConditionalExpression): void;
 	walkNewExpression(expression: NewExpression): void;
-	walkYieldExpression(expression?: any): void;
-	walkTemplateLiteral(expression?: any): void;
+	walkYieldExpression(expression: YieldExpression): void;
+	walkTemplateLiteral(expression: TemplateLiteral): void;
 	walkTaggedTemplateExpression(expression: TaggedTemplateExpression): void;
 	walkClassExpression(expression: ClassExpression): void;
 	walkChainExpression(expression: ChainExpression): void;
@@ -5522,11 +5747,11 @@ declare class JavascriptParser extends Parser {
 	detectMode(statements?: any): void;
 	enterPatterns(patterns?: any, onIdent?: any): void;
 	enterPattern(pattern?: any, onIdent?: any): void;
-	enterIdentifier(pattern?: any, onIdent?: any): void;
-	enterObjectPattern(pattern?: any, onIdent?: any): void;
-	enterArrayPattern(pattern?: any, onIdent?: any): void;
-	enterRestElement(pattern?: any, onIdent?: any): void;
-	enterAssignmentPattern(pattern?: any, onIdent?: any): void;
+	enterIdentifier(pattern: Identifier, onIdent?: any): void;
+	enterObjectPattern(pattern: ObjectPattern, onIdent?: any): void;
+	enterArrayPattern(pattern: ArrayPattern, onIdent?: any): void;
+	enterRestElement(pattern: RestElement, onIdent?: any): void;
+	enterAssignmentPattern(pattern: AssignmentPattern, onIdent?: any): void;
 	evaluateExpression(expression: Expression): BasicEvaluatedExpression;
 	parseString(expression: Expression): string;
 	parseCalculatedString(expression?: any): any;
@@ -7765,18 +7990,18 @@ type NodeEstreeIndex =
 	| Program
 	| SwitchCase
 	| CatchClause
-	| AssignmentPattern
+	| ObjectPattern
 	| ArrayPattern
 	| RestElement
-	| Property
+	| AssignmentPattern
 	| SpreadElement
+	| Property
 	| AssignmentProperty
 	| ClassBody
 	| ImportSpecifier
 	| ImportDefaultSpecifier
 	| ImportNamespaceSpecifier
 	| ExportSpecifier
-	| ObjectPattern
 	| Super
 	| TemplateElement;
 
@@ -9269,6 +9494,13 @@ declare interface PathData {
 	noChunkHash?: boolean;
 	url?: string;
 }
+type Pattern =
+	| Identifier
+	| MemberExpression
+	| ObjectPattern
+	| ArrayPattern
+	| RestElement
+	| AssignmentPattern;
 
 /**
  * Configuration object for web performance recommendations.
