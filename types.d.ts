@@ -5375,7 +5375,9 @@ declare class JavascriptParser extends Parser {
 	destructuringAssignmentPropertiesFor(
 		node: Expression
 	): undefined | Set<string>;
-	getRenameIdentifier(expr?: any): undefined | string | VariableInfoInterface;
+	getRenameIdentifier(
+		expr: Expression
+	): undefined | string | VariableInfoInterface;
 	walkClass(classy: ClassExpression | ClassDeclaration): void;
 	preWalkStatements(statements?: any): void;
 	blockPreWalkStatements(statements?: any): void;
@@ -5390,9 +5392,9 @@ declare class JavascriptParser extends Parser {
 	 * This enforces the nested statement to never be in ASI position.
 	 */
 	walkNestedStatement(statement: Statement): void;
-	preWalkBlockStatement(statement?: any): void;
-	walkBlockStatement(statement?: any): void;
-	walkExpressionStatement(statement?: any): void;
+	preWalkBlockStatement(statement: BlockStatement): void;
+	walkBlockStatement(statement: BlockStatement): void;
+	walkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkIfStatement(statement: IfStatement): void;
 	walkIfStatement(statement: IfStatement): void;
 	preWalkLabeledStatement(statement: LabeledStatement): void;
@@ -5430,44 +5432,44 @@ declare class JavascriptParser extends Parser {
 	preWalkVariableDeclaration(statement: VariableDeclaration): void;
 	blockPreWalkVariableDeclaration(statement: VariableDeclaration): void;
 	preWalkVariableDeclarator(declarator: VariableDeclarator): void;
-	walkVariableDeclaration(statement?: any): void;
-	blockPreWalkClassDeclaration(statement?: any): void;
-	walkClassDeclaration(statement?: any): void;
-	preWalkSwitchCases(switchCases?: any): void;
-	walkSwitchCases(switchCases?: any): void;
-	preWalkCatchClause(catchClause?: any): void;
-	walkCatchClause(catchClause?: any): void;
+	walkVariableDeclaration(statement: VariableDeclaration): void;
+	blockPreWalkClassDeclaration(statement: ClassDeclaration): void;
+	walkClassDeclaration(statement: ClassDeclaration): void;
+	preWalkSwitchCases(switchCases: SwitchCase[]): void;
+	walkSwitchCases(switchCases: SwitchCase[]): void;
+	preWalkCatchClause(catchClause: CatchClause): void;
+	walkCatchClause(catchClause: CatchClause): void;
 	walkPattern(pattern?: any): void;
-	walkAssignmentPattern(pattern?: any): void;
+	walkAssignmentPattern(pattern: AssignmentPattern): void;
 	walkObjectPattern(pattern?: any): void;
-	walkArrayPattern(pattern?: any): void;
-	walkRestElement(pattern?: any): void;
+	walkArrayPattern(pattern: ArrayPattern): void;
+	walkRestElement(pattern: RestElement): void;
 	walkExpressions(expressions?: any): void;
 	walkExpression(expression?: any): void;
-	walkAwaitExpression(expression?: any): void;
-	walkArrayExpression(expression?: any): void;
+	walkAwaitExpression(expression: AwaitExpression): void;
+	walkArrayExpression(expression: ArrayExpression): void;
 	walkSpreadElement(expression?: any): void;
-	walkObjectExpression(expression?: any): void;
-	walkProperty(prop?: any): void;
+	walkObjectExpression(expression: ObjectExpression): void;
+	walkProperty(prop: Property | SpreadElement): void;
 	walkFunctionExpression(expression?: any): void;
 	walkArrowFunctionExpression(expression?: any): void;
 	walkSequenceExpression(expression: SequenceExpression): void;
-	walkUpdateExpression(expression?: any): void;
-	walkUnaryExpression(expression?: any): void;
+	walkUpdateExpression(expression: UpdateExpression): void;
+	walkUnaryExpression(expression: UnaryExpression): void;
 	walkLeftRightExpression(expression?: any): void;
-	walkBinaryExpression(expression?: any): void;
-	walkLogicalExpression(expression?: any): void;
-	walkAssignmentExpression(expression?: any): void;
-	walkConditionalExpression(expression?: any): void;
-	walkNewExpression(expression?: any): void;
+	walkBinaryExpression(expression: BinaryExpression): void;
+	walkLogicalExpression(expression: LogicalExpression): void;
+	walkAssignmentExpression(expression: AssignmentExpression): void;
+	walkConditionalExpression(expression: ConditionalExpression): void;
+	walkNewExpression(expression: NewExpression): void;
 	walkYieldExpression(expression?: any): void;
 	walkTemplateLiteral(expression?: any): void;
-	walkTaggedTemplateExpression(expression?: any): void;
-	walkClassExpression(expression?: any): void;
+	walkTaggedTemplateExpression(expression: TaggedTemplateExpression): void;
+	walkClassExpression(expression: ClassExpression): void;
 	walkChainExpression(expression: ChainExpression): void;
 	walkImportExpression(expression: ImportExpression): void;
 	walkCallExpression(expression?: any): void;
-	walkMemberExpression(expression?: any): void;
+	walkMemberExpression(expression: MemberExpression): void;
 	walkMemberExpressionWithExpressionName(
 		expression?: any,
 		name?: any,
@@ -5475,8 +5477,8 @@ declare class JavascriptParser extends Parser {
 		members?: any,
 		onUnhandled?: any
 	): void;
-	walkThisExpression(expression?: any): void;
-	walkIdentifier(expression?: any): void;
+	walkThisExpression(expression: ThisExpression): void;
+	walkIdentifier(expression: Identifier): void;
 	walkMetaProperty(metaProperty: MetaProperty): void;
 	callHooksForExpression(hookMap: any, expr: any, ...args: any[]): any;
 	callHooksForExpressionWithFallback<T, R>(
@@ -5577,7 +5579,7 @@ declare class JavascriptParser extends Parser {
 	isVariableDefined(name: string): boolean;
 	getVariableInfo(name: string): ExportedVariableInfo;
 	setVariable(name: string, variableInfo: ExportedVariableInfo): void;
-	evaluatedVariable(tagInfo?: any): VariableInfo;
+	evaluatedVariable(tagInfo: TagInfo): VariableInfo;
 	parseCommentOptions(range: [number, number]): any;
 	extractMemberExpressionChain(expression: MemberExpression): {
 		members: string[];
@@ -7761,21 +7763,21 @@ type NodeEstreeIndex =
 	| PropertyDefinition
 	| VariableDeclarator
 	| Program
-	| AssignmentProperty
-	| Property
+	| SwitchCase
 	| CatchClause
+	| AssignmentPattern
+	| ArrayPattern
+	| RestElement
+	| Property
+	| SpreadElement
+	| AssignmentProperty
 	| ClassBody
 	| ImportSpecifier
 	| ImportDefaultSpecifier
 	| ImportNamespaceSpecifier
 	| ExportSpecifier
 	| ObjectPattern
-	| ArrayPattern
-	| RestElement
-	| AssignmentPattern
-	| SpreadElement
 	| Super
-	| SwitchCase
 	| TemplateElement;
 
 /**
@@ -11079,7 +11081,7 @@ declare interface RuntimeValueOptions {
 declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
 	topLevelScope: boolean | "arrow";
-	inShorthand: boolean;
+	inShorthand: string | boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
 	inTry: boolean;
