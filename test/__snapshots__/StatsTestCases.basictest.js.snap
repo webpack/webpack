@@ -4707,6 +4707,16 @@ global:
   global (webpack x.x.x) compiled successfully in X ms"
 `;
 
+exports[`StatsTestCases should print correct stats for track-returned 1`] = `
+"asset bundle.js 5.78 KiB [emitted] (name: main)
+./index.js 2.27 KiB [built] [code generated]
+./used3.js 21 bytes [built] [code generated]
+./used.js 21 bytes [built] [code generated]
+./used1.js 21 bytes [built] [code generated]
+./used2.js 21 bytes [built] [code generated]
+webpack x.x.x compiled successfully in X ms"
+`;
+
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
 "asset bundle.js 6.88 KiB [emitted] (name: main)
 runtime modules 663 bytes 3 modules
