@@ -13,6 +13,7 @@ import {
 it("should load modules correctly", () => {
 	require("./module1");
 	require("./module2");
+	require("./module3");
 });
 
 if (process.env.NODE_ENV === "production") {
