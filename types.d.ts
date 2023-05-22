@@ -5373,7 +5373,60 @@ declare class JavascriptParser extends Parser {
 		| ExportDefaultDeclaration
 		| ExportAllDeclaration
 	)[];
-	prevStatement: any;
+	prevStatement:
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| ImportExpression
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportDefaultDeclaration
+		| ExportAllDeclaration;
 	destructuringAssignmentProperties: WeakMap<Expression, Set<string>>;
 	currentTagData: any;
 	destructuringAssignmentPropertiesFor(
@@ -5674,8 +5727,8 @@ declare class JavascriptParser extends Parser {
 	walkSpreadElement(expression: SpreadElement): void;
 	walkObjectExpression(expression: ObjectExpression): void;
 	walkProperty(prop: SpreadElement | Property): void;
-	walkFunctionExpression(expression?: any): void;
-	walkArrowFunctionExpression(expression?: any): void;
+	walkFunctionExpression(expression: FunctionExpression): void;
+	walkArrowFunctionExpression(expression: ArrowFunctionExpression): void;
 	walkSequenceExpression(expression: SequenceExpression): void;
 	walkUpdateExpression(expression: UpdateExpression): void;
 	walkUnaryExpression(expression: UnaryExpression): void;
@@ -6044,7 +6097,7 @@ declare interface JavascriptParserOptions {
 	wrappedContextRegExp?: RegExp;
 }
 declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
-	constructor(runtimeRequirements?: any);
+	constructor(runtimeRequirements: Set<string>);
 	static getCompilationHooks(
 		compilation: Compilation
 	): JsonpCompilationPluginHooks;
