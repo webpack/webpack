@@ -13318,8 +13318,8 @@ declare namespace exports {
 			export const NOT_SERIALIZABLE: object;
 			export const buffersSerializer: Serializer;
 			export let createFileSerializer: (
-				fs?: any,
-				hashFunction?: any
+				fs: IntermediateFileSystem,
+				hashFunction: string | typeof Hash
 			) => Serializer;
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
