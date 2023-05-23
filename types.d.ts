@@ -566,7 +566,10 @@ declare abstract class BasicEvaluatedExpression {
 	setRegExp(regExp: RegExp): BasicEvaluatedExpression;
 
 	/**
-	 * Set's the value of this expression to a particular identifier and its members.
+	 * Sets the value of this expression to a particular identifier and its members.
+	 * The array returned from getMemberRangeStarts is right-aligned with the array returned from getMembers.
+	 * Meaning, the two arrays may not always have the same number of elements, but the last element of
+	 * getMemberRangeStarts corresponds to the starting range position of last element of getMembers.
 	 */
 	setIdentifier(
 		identifier: string | VariableInfoInterface,
