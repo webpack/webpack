@@ -487,6 +487,7 @@ declare abstract class BasicEvaluatedExpression {
 	rootInfo: string | VariableInfoInterface;
 	getMembers: () => string[];
 	getMembersOptionals: () => boolean[];
+	getMemberRangeStarts: () => number[];
 	expression: NodeEstreeIndex;
 	isUnknown(): boolean;
 	isNull(): boolean;
@@ -571,7 +572,8 @@ declare abstract class BasicEvaluatedExpression {
 		identifier: string | VariableInfoInterface,
 		rootInfo: string | VariableInfoInterface,
 		getMembers: () => string[],
-		getMembersOptionals?: () => boolean[]
+		getMembersOptionals?: () => boolean[],
+		getMemberRangeStarts?: () => number[]
 	): BasicEvaluatedExpression;
 
 	/**
@@ -766,6 +768,7 @@ declare interface CallExpressionInfo {
 	name: string;
 	getMembers: () => string[];
 	getMembersOptionals: () => boolean[];
+	getMemberRangeStarts: () => number[];
 }
 declare interface CallbackAsyncQueue<T> {
 	(err?: null | WebpackError, result?: T): any;
@@ -3945,6 +3948,7 @@ declare interface ExpressionExpressionInfo {
 	name: string;
 	getMembers: () => string[];
 	getMembersOptionals: () => boolean[];
+	getMemberRangeStarts: () => number[];
 }
 declare interface ExtensionAliasOption {
 	alias: string | string[];
@@ -5284,7 +5288,7 @@ declare class JavascriptParser extends Parser {
 		topLevelAwait: SyncBailHook<[Expression], boolean | void>;
 		call: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		callMemberChain: HookMap<
-			SyncBailHook<[CallExpression, string[], boolean[]], boolean | void>
+			SyncBailHook<[CallExpression, string[], boolean[], number[]], boolean | void>
 		>;
 		memberChainOfCallMemberChain: HookMap<
 			SyncBailHook<
@@ -5303,7 +5307,7 @@ declare class JavascriptParser extends Parser {
 		binaryExpression: SyncBailHook<[BinaryExpression], boolean | void>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
-			SyncBailHook<[Expression, string[], boolean[]], boolean | void>
+			SyncBailHook<[Expression, string[], boolean[], number[]], boolean | void>
 		>;
 		unhandledExpressionMemberChain: HookMap<
 			SyncBailHook<[Expression, string[]], boolean | void>
