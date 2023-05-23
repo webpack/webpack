@@ -5936,9 +5936,9 @@ terser-webpack-plugin@^5.3.7:
     terser "^5.16.5"
 
 terser@^5.16.5, terser@^5.17.0, terser@^5.6.1:
-  version "5.17.0"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.17.0.tgz#2b1bc90b5917e09ecffbcd2ff911f6922a4f5743"
-  integrity sha512-3die3+pYW4mta4xF6K8Wtf7id8+oYyfqtAhjwzqY01+CfDSDMx/VA1Sp8sXWs5AVNIoAKoUfmp/gnPqRjBxuDA==
+  version "5.17.5"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.17.5.tgz#557141b662b5978ac3d6a2f3d6455a26267ddcd4"
+  integrity sha512-NqFkzBX34WExkCbk3K5urmNCpEWqMPZnwGI1pMHwqvJ/zDlXC75u3NI7BrzoR8/pryy8Abx2e1i8ChrWkhH1Hg==
   dependencies:
     "@jridgewell/source-map" "^0.3.2"
     acorn "^8.5.0"
