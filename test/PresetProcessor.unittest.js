@@ -163,6 +163,7 @@ describe("PresetProcessor", function () {
 		expect(mergedConfig.module.rules[0].use[0].options).toBeDefined();
 		expect(mergedConfig.module.rules[0].use[0].options.presets).toBeDefined();
 		expect(mergedConfig.module.rules[0].use[0].options.presets).toStrictEqual([
+			"@babel/preset-env",
 			"@babel/preset-react"
 		]);
 	});
