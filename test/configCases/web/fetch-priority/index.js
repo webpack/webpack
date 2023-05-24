@@ -44,7 +44,7 @@ it("should set fetchPriority", () => {
 	const script8 = document.head._children[7];
 	expect(script8._attributes.fetchpriority).toBe("high");
 
-	import(/* webpackFetchPriority: true */ "./g");
+	import(/* webpackFetchPriority: "auto" */ "./g");
 	expect(document.head._children).toHaveLength(9);
 	const script9 = document.head._children[8];
 	expect(script9._attributes.fetchpriority).toBe("auto");

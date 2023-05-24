@@ -12,13 +12,10 @@ module.exports = {
 		}
 	},
 	module: {
-		rules: [
-			{
-				test: /a\.js$/,
-				parser: {
-					dynamicImportFetchPriority: "low"
-				}
+		parser: {
+			javascript: {
+				dynamicImportFetchPriority: "low"
 			}
-		]
+		}
 	}
 };
