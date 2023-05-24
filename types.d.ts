@@ -3518,7 +3518,6 @@ declare class EnvironmentPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type ErrorWithDetail = Error & { details?: string };
 declare interface Etag {
 	toString: () => string;
 }
@@ -5288,7 +5287,10 @@ declare class JavascriptParser extends Parser {
 		topLevelAwait: SyncBailHook<[Expression], boolean | void>;
 		call: HookMap<SyncBailHook<[BaseCallExpression], boolean | void>>;
 		callMemberChain: HookMap<
-			SyncBailHook<[CallExpression, string[], boolean[], number[]], boolean | void>
+			SyncBailHook<
+				[CallExpression, string[], boolean[], number[]],
+				boolean | void
+			>
 		>;
 		memberChainOfCallMemberChain: HookMap<
 			SyncBailHook<
@@ -5895,6 +5897,7 @@ declare class JavascriptParser extends Parser {
 			| YieldExpression
 			| Super;
 		membersOptionals: boolean[];
+		memberRangeStarts: number[];
 	};
 	getFreeInfoFromVariable(varName: string): {
 		name: string;
@@ -6937,6 +6940,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
+	 *
 	 * In the example:
 	 * [
 	 *   { request: "/abc/loader1.js?xyz",
@@ -8311,9 +8315,9 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 		context: string,
 		request: string,
 		callback: (
-			err: null | ErrorWithDetail,
-			res?: string | false,
-			req?: ResolveRequest
+			arg0: null | Error,
+			arg1?: string | false,
+			arg2?: ResolveRequest
 		) => void
 	): any;
 	getResolve(options?: ResolveOptionsWithDependencyType): {
@@ -8321,9 +8325,9 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 			context: string,
 			request: string,
 			callback: (
-				err: null | ErrorWithDetail,
-				res?: string | false,
-				req?: ResolveRequest
+				arg0: null | Error,
+				arg1?: string | false,
+				arg2?: ResolveRequest
 			) => void
 		): void;
 		(context: string, request: string): Promise<string>;
@@ -10433,9 +10437,9 @@ declare abstract class Resolver {
 		request: string,
 		resolveContext: ResolveContext,
 		callback: (
-			err: null | ErrorWithDetail,
-			res?: string | false,
-			req?: ResolveRequest
+			arg0: null | Error,
+			arg1?: string | false,
+			arg2?: ResolveRequest
 		) => void
 	): void;
 	doResolve(
