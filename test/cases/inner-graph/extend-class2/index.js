@@ -4,7 +4,8 @@ import {
 	exportsInfoForC as declC,
 	exportsInfoForD as declD,
 	exportsInfoForE as declE,
-	exportsInfoForF as declF
+	exportsInfoForF as declF,
+	exportsInfoForFoo as declFoo
 } from "./dep2?decl";
 import {
 	exportsInfoForA as exprA,
@@ -12,7 +13,7 @@ import {
 	exportsInfoForC as exprC,
 	exportsInfoForD as exprD,
 	exportsInfoForE as exprE,
-	exportsInfoForF as exprF
+	exportsInfoForF as exprF,
 } from "./dep2?expr";
 
 it("should load module correctly", () => {
@@ -52,5 +53,6 @@ it("E should be used", () => {
 it("F should be used", () => {
 	// Note: it has side-effects and is not affected by usage of the class
 	expect(declF).toBe(true);
+	expect(declFoo).toBe(true);
 	expect(exprF).toBe(true);
 });

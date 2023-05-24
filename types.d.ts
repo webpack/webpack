@@ -5795,6 +5795,7 @@ declare class JavascriptParser extends Parser {
 		...args: AsArray<T>
 	): R;
 	inScope(params: any, fn: () => void): void;
+	inClassScope(hasThis?: any, params?: any, fn?: any): void;
 	inFunctionScope(hasThis?: any, params?: any, fn?: any): void;
 	inBlockScope(fn?: any): void;
 	detectMode(statements?: any): void;
