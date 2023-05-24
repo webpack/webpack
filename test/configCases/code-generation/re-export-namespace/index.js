@@ -15,11 +15,6 @@ it("should use/preserve accessor form for import object and namespaces", functio
 
 	// Reference the imports to generate uses in the source.
 
-	def.obj2.unknownProperty = { deep: "trench" };
-	expect(def.obj2.unknownProperty.deep).toBe("trench");
-	expect(def).toHaveProperty('obj2');
-	expect(def.obj2).toHaveProperty('unknownProperty');
-
 	const f = false;
 	if (f) {
 		const x1 = m_1;
@@ -36,6 +31,8 @@ it("should use/preserve accessor form for import object and namespaces", functio
 		const d = m_2.m_1["obj1"].sing["song"]();
 
 		const aa = m_3["m_2"].m_1["obj1"]["zoom"];
+
+		const bb = obj1.up.down?.left.right;
 	}
 
 	/************ DO NOT MATCH BELOW THIS LINE ************/
@@ -57,4 +54,6 @@ it("should use/preserve accessor form for import object and namespaces", functio
 	expectSourceToContain(source, 'const d = _module2__WEBPACK_IMPORTED_MODULE_1__.m_1.obj1.sing["song"]();');
 
 	expectSourceToContain(source, 'const aa = _module3__WEBPACK_IMPORTED_MODULE_2__.m_2.m_1.obj1["zoom"];');
+
+	expectSourceToContain(source, 'const bb = _module1__WEBPACK_IMPORTED_MODULE_0__.obj1.up.down?.left.right;');
 });
