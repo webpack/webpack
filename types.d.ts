@@ -11649,7 +11649,10 @@ declare interface SourceMap {
 declare class SourceMapDevToolPlugin {
 	constructor(options?: SourceMapDevToolPluginOptions);
 	sourceMapFilename: string | false;
-	sourceMappingURLComment: string | false;
+	sourceMappingURLComment:
+		| string
+		| false
+		| ((arg0: PathData, arg1?: AssetInfo) => string);
 	moduleFilenameTemplate: string | Function;
 	fallbackModuleFilenameTemplate: string | Function;
 	namespace: string;
@@ -11664,7 +11667,11 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending.
 	 */
-	append?: null | string | false;
+	append?:
+		| null
+		| string
+		| false
+		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
 	 * Indicates whether column mappings should be used (defaults to true).
