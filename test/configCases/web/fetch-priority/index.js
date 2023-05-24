@@ -53,4 +53,23 @@ it("should set fetchPriority", () => {
 	expect(document.head._children).toHaveLength(10);
 	const script10 = document.head._children[9];
 	expect(script10._attributes.fetchpriority).toBeUndefined();
+
+	import(/* webpackFetchPriority: "high" */ "./i");
+	import(/* webpackFetchPriority: "low" */ "./i");
+	expect(document.head._children).toHaveLength(11);
+	const script11 = document.head._children[10];
+	expect(script11._attributes.fetchpriority).toBe("high");
+
+	import(/* webpackFetchPriority: "low" */ "./j");
+	import(/* webpackFetchPriority: "high" */ "./j");
+	expect(document.head._children).toHaveLength(12);
+	const script12 = document.head._children[11];
+
+	expect(script12._attributes.fetchpriority).toBe("low");
+	import(/* webpackFetchPriority: "low" */ "./k");
+	import("./e");
+	import(/* webpackFetchPriority: "high" */ "./k");
+	expect(document.head._children).toHaveLength(13);
+	const script13 = document.head._children[12];
+	expect(script13._attributes.fetchpriority).toBe("low");
 })
