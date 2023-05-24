@@ -83,7 +83,6 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import { Dirent } from "fs";
 import {
 	IncomingMessage,
 	ServerOptions as ServerOptionsImport,
@@ -206,9 +205,8 @@ declare interface AggressiveSplittingPluginOptions {
 	 */
 	minSize?: number;
 }
-type Alias = string | false | string[];
 declare interface AliasOption {
-	alias: Alias;
+	alias: string | false | string[];
 	name: string;
 	onlyModule?: boolean;
 }
@@ -462,16 +460,12 @@ declare interface BannerPluginOptions {
 }
 declare interface BaseResolveRequest {
 	path: string | false;
-	context?: object;
 	descriptionFilePath?: string;
 	descriptionFileRoot?: string;
-	descriptionFileData?: JsonObject;
+	descriptionFileData?: object;
 	relativePath?: string;
 	ignoreSymlinks?: boolean;
 	fullySpecified?: boolean;
-	__innerRequest?: string;
-	__innerRequest_request?: string;
-	__innerRequest_relativePath?: string;
 }
 declare abstract class BasicEvaluatedExpression {
 	type: number;
@@ -4300,18 +4294,17 @@ declare interface FileSystem {
 			| "binary"
 			| ((
 					arg0?: null | NodeJS.ErrnoException,
-					arg1?: (string | Buffer)[] | (typeof Dirent)[]
+					arg1?: any[] | (string | Buffer)[]
 			  ) => void)
 			| ReaddirOptions
 			| "utf-8"
 			| "ucs-2"
 			| "base64"
-			| "base64url"
 			| "hex"
 			| "buffer",
 		arg2?: (
 			arg0?: null | NodeJS.ErrnoException,
-			arg1?: (string | Buffer)[] | (typeof Dirent)[]
+			arg1?: any[] | (string | Buffer)[]
 		) => void
 	) => void;
 	readJson?: {
@@ -6111,17 +6104,6 @@ declare interface JavascriptParserOptions {
 	 */
 	wrappedContextRegExp?: RegExp;
 }
-type JsonObject = { [index: string]: JsonValue } & {
-	[index: string]:
-		| undefined
-		| null
-		| string
-		| number
-		| boolean
-		| JsonObject
-		| JsonValue[];
-};
-type JsonValue = null | string | number | boolean | JsonObject | JsonValue[];
 declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements: Set<string>);
 	static getCompilationHooks(
@@ -6237,23 +6219,6 @@ declare interface KnownBuildMeta {
 }
 declare interface KnownCreateStatsOptionsContext {
 	forToString?: boolean;
-}
-declare interface KnownHooks {
-	resolveStep: SyncHook<
-		[
-			AsyncSeriesBailHook<
-				[ResolveRequest, ResolveContext],
-				null | ResolveRequest
-			>,
-			ResolveRequest
-		]
-	>;
-	noResolve: SyncHook<[ResolveRequest, Error]>;
-	resolve: AsyncSeriesBailHook<
-		[ResolveRequest, ResolveContext],
-		null | ResolveRequest
-	>;
-	result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
 }
 declare interface KnownNormalizedStatsOptions {
 	context: string;
@@ -6976,7 +6941,6 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
-	 *
 	 * In the example:
 	 * [
 	 *   { request: "/abc/loader1.js?xyz",
@@ -9914,7 +9878,6 @@ declare interface ReaddirOptions {
 		| "utf-8"
 		| "ucs-2"
 		| "base64"
-		| "base64url"
 		| "hex"
 		| "buffer";
 	withFileTypes?: boolean;
@@ -10428,7 +10391,23 @@ declare interface ResolvedContextTimestampAndHash {
 declare abstract class Resolver {
 	fileSystem: FileSystem;
 	options: ResolveOptionsTypes;
-	hooks: KnownHooks;
+	hooks: {
+		resolveStep: SyncHook<
+			[
+				AsyncSeriesBailHook<
+					[ResolveRequest, ResolveContext],
+					null | ResolveRequest
+				>,
+				ResolveRequest
+			]
+		>;
+		noResolve: SyncHook<[ResolveRequest, Error]>;
+		resolve: AsyncSeriesBailHook<
+			[ResolveRequest, ResolveContext],
+			null | ResolveRequest
+		>;
+		result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
+	};
 	ensureHook(
 		name:
 			| string
@@ -10464,21 +10443,18 @@ declare abstract class Resolver {
 		) => void
 	): void;
 	doResolve(
-		hook: AsyncSeriesBailHook<
-			[ResolveRequest, ResolveContext],
-			null | ResolveRequest
-		>,
-		request: ResolveRequest,
-		message: null | string,
-		resolveContext: ResolveContext,
-		callback: (err?: null | Error, result?: ResolveRequest) => void
-	): void;
+		hook?: any,
+		request?: any,
+		message?: any,
+		resolveContext?: any,
+		callback?: any
+	): any;
 	parse(identifier: string): ParsedIdentifier;
-	isModule(path: string): boolean;
-	isPrivate(path: string): boolean;
+	isModule(path?: any): boolean;
+	isPrivate(path?: any): boolean;
 	isDirectory(path: string): boolean;
-	join(path: string, request: string): string;
-	normalize(path: string): string;
+	join(path?: any, request?: any): string;
+	normalize(path?: any): string;
 }
 declare interface ResolverCache {
 	direct: WeakMap<Object, ResolverWithOptions>;
@@ -13178,7 +13154,7 @@ declare interface WithOptions {
 	) => ResolverWithOptions;
 }
 declare interface WriteOnlySet<T> {
-	add: (item: T) => void;
+	add: (T?: any) => void;
 }
 type __TypeWebpackOptions = (data: object) =>
 	| string
