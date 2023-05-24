@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.83.1",
+  "version": "5.84.0",
   "author": "Tobias Koppers @sokra",
   "description": "Packs ECMAScript/CommonJs/AMD modules for the browser. Allows you to split your codebase into multiple bundles, which can be loaded on demand. Supports loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "acorn-import-assertions": "^1.9.0",
     "browserslist": "^4.14.5",
     "chrome-trace-event": "^1.0.2",
-    "enhanced-resolve": "^5.14.0",
+    "enhanced-resolve": "^5.14.1",
     "es-module-lexer": "^1.2.1",
     "eslint-scope": "5.1.1",
     "events": "^3.2.0",
