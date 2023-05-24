@@ -3008,7 +3008,7 @@ export interface JavascriptParserOptions {
 	/**
 	 * Specifies global fetchPriority for dynamic import.
 	 */
-	dynamicImportFetchPriority?: ("low" | "high" | "auto") | boolean;
+	dynamicImportFetchPriority?: "low" | "high" | "auto" | false;
 	/**
 	 * Specifies global mode for dynamic import.
 	 */

@@ -6,7 +6,7 @@ it("should set fetchPriority", () => {
 	const script1 = document.head._children[1];
 	expect(script1._attributes.fetchpriority).toBe("low");
 
-	import(/* webpackFetchPriority: "high" */ "./c");
+	import(/* webpackPrefetch: true */ "./c");
 	expect(document.head._children).toHaveLength(3);
 	const script2 = document.head._children[2];
 	expect(script2._attributes.fetchpriority).toBe("high");

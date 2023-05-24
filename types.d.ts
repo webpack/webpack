@@ -6016,7 +6016,7 @@ declare interface JavascriptParserOptions {
 	/**
 	 * Specifies global fetchPriority for dynamic import.
 	 */
-	dynamicImportFetchPriority?: boolean | "auto" | "low" | "high";
+	dynamicImportFetchPriority?: false | "auto" | "low" | "high";
 
 	/**
 	 * Specifies global mode for dynamic import.
