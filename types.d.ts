@@ -1106,9 +1106,9 @@ declare abstract class ChunkGroup {
 	removeParent(chunkGroup: ChunkGroup): boolean;
 	addAsyncEntrypoint(entrypoint: Entrypoint): boolean;
 	get asyncEntrypointsIterable(): SortableSet<ChunkGroup>;
-	getBlocks(): any[];
+	getBlocks(): AsyncDependenciesBlock[];
 	getNumberOfBlocks(): number;
-	hasBlock(block?: any): boolean;
+	hasBlock(block: AsyncDependenciesBlock): boolean;
 	get blocksIterable(): Iterable<AsyncDependenciesBlock>;
 	addBlock(block: AsyncDependenciesBlock): boolean;
 	addOrigin(module: Module, loc: DependencyLocation, request: string): void;
@@ -1482,7 +1482,7 @@ declare class Compilation {
 			any
 		>;
 		afterOptimizeChunkModules: SyncHook<[Iterable<Chunk>, Iterable<Module>]>;
-		shouldRecord: SyncBailHook<[], boolean>;
+		shouldRecord: SyncBailHook<[], undefined | boolean>;
 		additionalChunkRuntimeRequirements: SyncHook<
 			[Chunk, Set<string>, RuntimeRequirementsContext]
 		>;
@@ -2006,7 +2006,7 @@ declare class Compiler {
 	constructor(context: string, options?: WebpackOptionsNormalized);
 	hooks: Readonly<{
 		initialize: SyncHook<[]>;
-		shouldEmit: SyncBailHook<[Compilation], boolean>;
+		shouldEmit: SyncBailHook<[Compilation], undefined | boolean>;
 		done: AsyncSeriesHook<[Stats]>;
 		afterDone: SyncHook<[Stats]>;
 		additionalPass: AsyncSeriesHook<[]>;
@@ -12460,7 +12460,7 @@ declare class Template {
 		modules: Module[],
 		renderModule: (arg0: Module) => Source,
 		prefix?: string
-	): Source;
+	): null | Source;
 	static renderRuntimeModules(
 		runtimeModules: RuntimeModule[],
 		renderContext: RenderContext & {
