@@ -1,4 +1,4 @@
-var testObject = {
+const testObject = {
 	a: 1
 };
 
