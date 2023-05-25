@@ -6,6 +6,12 @@ export const getE = () => class E {};
 export const getF = () => class F {};
 export class Foo { static Bar = Foo; }
 export class Pure {}
+export class DateFormatter extends Date {
+	constructor() {
+		super();
+		this.date = this.getDate();
+	}
+}
 
 export const exportsInfoForA = __webpack_exports_info__.A.used;
 export const exportsInfoForB = __webpack_exports_info__.B.used;
@@ -15,3 +21,4 @@ export const exportsInfoForE = __webpack_exports_info__.getE.used;
 export const exportsInfoForF = __webpack_exports_info__.getF.used;
 export const exportsInfoForFoo = __webpack_exports_info__.Foo.used;
 export const exportsInfoForPure = __webpack_exports_info__.Pure.used;
+export const exportsInfoForDateFormatter = __webpack_exports_info__.DateFormatter.used;

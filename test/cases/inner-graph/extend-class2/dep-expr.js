@@ -1,4 +1,4 @@
-import { A, B, getC, getD, getE, getF, Pure } from "./dep2?expr";
+import {A, B, DateFormatter, getC, getD, getE, getF, Pure} from "./dep2?expr";
 import { A3, B3, C3, D3, E3, F3, Pure3} from "./dep3?expr";
 
 export const A1 = class extends A {
@@ -44,6 +44,13 @@ export const ExtendsPure = class extends Pure {
 		return new Pure3();
 	}
 };
+
+export class DateBar extends DateFormatter {
+	constructor() {
+		super();
+	}
+	render() {}
+}
 
 export const A2 = class extends A3 {};
 export const B2 = class extends B3 {};

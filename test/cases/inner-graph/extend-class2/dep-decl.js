@@ -1,4 +1,4 @@
-import { A, B, getC, getD, getE, getF, Foo, Pure } from "./dep2?decl";
+import { A, B, getC, getD, getE, getF, Foo, Pure, DateFormatter } from "./dep2?decl";
 import { A3, B3, C3, D3, E3, F3, Pure3 } from "./dep3?decl";
 
 export class A1 extends A {
@@ -137,6 +137,13 @@ export class ExtendsPure extends Pure {
 	render() {
 		return new Pure3();
 	}
+}
+
+export class DateBar extends DateFormatter {
+	constructor() {
+		super();
+	}
+	render() {}
 }
 
 export class A2 extends A3 {}

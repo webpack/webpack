@@ -6,7 +6,8 @@ import {
 	exportsInfoForE as declE,
 	exportsInfoForF as declF,
 	exportsInfoForFoo as declFoo,
-	exportsInfoForPure as declPure
+	exportsInfoForPure as declPure,
+	exportsInfoForDateFormatter as declDateFormatter
 } from "./dep2?decl";
 import {
 	exportsInfoForA as exprA,
@@ -16,6 +17,7 @@ import {
 	exportsInfoForE as exprE,
 	exportsInfoForF as exprF,
 	exportsInfoForPure as exprPure,
+	exportsInfoForDateFormatter as exprDateFormatter
 } from "./dep2?expr";
 
 it("should load module correctly", () => {
@@ -62,4 +64,6 @@ it("F should be used", () => {
 	expect(declF).toBe(true);
 	expect(declFoo).toBe(true);
 	expect(exprF).toBe(true);
+	expect(declDateFormatter).toBe(true);
+	expect(exprDateFormatter).toBe(true);
 });
