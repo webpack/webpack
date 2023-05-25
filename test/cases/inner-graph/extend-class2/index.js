@@ -7,7 +7,9 @@ import {
 	exportsInfoForF as declF,
 	exportsInfoForFoo as declFoo,
 	exportsInfoForPure as declPure,
-	exportsInfoForDateFormatter as declDateFormatter
+	exportsInfoForDateFormatter as declDateFormatter,
+	exportsInfoForConditionalExpression as declConditionalExpression,
+	exportsInfoForLogicalExpression as declLogicalExpression
 } from "./dep2?decl";
 import {
 	exportsInfoForA as exprA,
@@ -17,7 +19,9 @@ import {
 	exportsInfoForE as exprE,
 	exportsInfoForF as exprF,
 	exportsInfoForPure as exprPure,
-	exportsInfoForDateFormatter as exprDateFormatter
+	exportsInfoForDateFormatter as exprDateFormatter,
+	exportsInfoForConditionalExpression as exprConditionalExpression,
+	exportsInfoForLogicalExpression as exprLogicalExpression
 } from "./dep2?expr";
 
 it("should load module correctly", () => {
@@ -58,6 +62,10 @@ it("F should be used", () => {
 	if (process.env.NODE_ENV === "production") {
 		expect(declPure).toBe(false);
 		expect(exprPure).toBe(false);
+		expect(declConditionalExpression).toBe(false);
+		expect(exprConditionalExpression).toBe(false);
+		expect(declLogicalExpression).toBe(false);
+		expect(exprLogicalExpression).toBe(false);
 	}
 
 	// Note: it has side-effects and is not affected by usage of the class

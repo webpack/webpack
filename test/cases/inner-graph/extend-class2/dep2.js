@@ -12,6 +12,8 @@ export class DateFormatter extends Date {
 		this.date = this.getDate();
 	}
 }
+export class ConditionalExpression extends (true ? A : B) {}
+export class LogicalExpression extends (A || B) {}
 
 export const exportsInfoForA = __webpack_exports_info__.A.used;
 export const exportsInfoForB = __webpack_exports_info__.B.used;
@@ -22,3 +24,5 @@ export const exportsInfoForF = __webpack_exports_info__.getF.used;
 export const exportsInfoForFoo = __webpack_exports_info__.Foo.used;
 export const exportsInfoForPure = __webpack_exports_info__.Pure.used;
 export const exportsInfoForDateFormatter = __webpack_exports_info__.DateFormatter.used;
+export const exportsInfoForConditionalExpression = __webpack_exports_info__.ConditionalExpression.used;
+export const exportsInfoForLogicalExpression = __webpack_exports_info__.LogicalExpression.used;
