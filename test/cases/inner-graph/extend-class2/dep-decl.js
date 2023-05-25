@@ -1,5 +1,5 @@
-import { A, B, getC, getD, getE, getF, Foo } from "./dep2?decl";
-import { A3, B3, C3, D3, E3, F3 } from "./dep3?decl";
+import { A, B, getC, getD, getE, getF, Foo, Pure, DateFormatter, ConditionalExpression, LogicalExpression } from "./dep2?decl";
+import { A3, B3, C3, D3, E3, F3, Pure3, ConditionalExpression3, LogicalExpression3 } from "./dep3?decl";
 
 export class A1 extends A {
 	render() {
@@ -130,6 +130,31 @@ export default class DefaultBar extends Foo {
 		this.inStatic1 = new Bar().prop;
 		this.inStatic2 = new super.Bar().prop;
 		this.inStatic3 = (new this).prop;
+	}
+}
+
+export class ExtendsPure extends Pure {
+	render() {
+		return new Pure3();
+	}
+}
+
+export class DateBar extends DateFormatter {
+	constructor() {
+		super();
+	}
+	render() {}
+}
+
+export class ConditionalExpression1 extends ConditionalExpression {
+	render() {
+		return new ConditionalExpression3();
+	}
+}
+
+export class LogicalExpression1 extends LogicalExpression {
+	render() {
+		return new LogicalExpression3();
 	}
 }
 
