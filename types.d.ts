@@ -10883,9 +10883,9 @@ declare class RuntimeModule extends Module {
 	constructor(name: string, stage?: number);
 	name: string;
 	stage: number;
-	compilation: Compilation;
-	chunk: Chunk;
-	chunkGraph: ChunkGraph;
+	compilation?: Compilation;
+	chunk?: Chunk;
+	chunkGraph?: ChunkGraph;
 	fullHash: boolean;
 	dependentHash: boolean;
 	attach(compilation: Compilation, chunk: Chunk, chunkGraph?: ChunkGraph): void;
