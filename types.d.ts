@@ -4178,7 +4178,7 @@ declare class FetchCompileAsyncWasmPlugin {
 	apply(compiler: Compiler): void;
 }
 declare class FetchCompileWasmPlugin {
-	constructor(options: FetchCompileWasmPluginOptions);
+	constructor(options?: FetchCompileWasmPluginOptions);
 	options: FetchCompileWasmPluginOptions;
 
 	/**
@@ -8146,7 +8146,7 @@ declare class NodeTargetPlugin {
 	apply(compiler: Compiler): void;
 }
 declare class NodeTemplatePlugin {
-	constructor(options: NodeTemplatePluginOptions);
+	constructor(options?: NodeTemplatePluginOptions);
 
 	/**
 	 * Apply the plugin
@@ -9908,7 +9908,7 @@ declare interface RawSourceMap {
 	file: string;
 }
 declare class ReadFileCompileWasmPlugin {
-	constructor(options: ReadFileCompileWasmPluginOptions);
+	constructor(options?: ReadFileCompileWasmPluginOptions);
 	options: ReadFileCompileWasmPluginOptions;
 
 	/**
