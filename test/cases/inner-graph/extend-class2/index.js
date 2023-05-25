@@ -5,7 +5,8 @@ import {
 	exportsInfoForD as declD,
 	exportsInfoForE as declE,
 	exportsInfoForF as declF,
-	exportsInfoForFoo as declFoo
+	exportsInfoForFoo as declFoo,
+	exportsInfoForPure as declPure
 } from "./dep2?decl";
 import {
 	exportsInfoForA as exprA,
@@ -14,6 +15,7 @@ import {
 	exportsInfoForD as exprD,
 	exportsInfoForE as exprE,
 	exportsInfoForF as exprF,
+	exportsInfoForPure as exprPure,
 } from "./dep2?expr";
 
 it("should load module correctly", () => {
@@ -51,6 +53,11 @@ it("E should be used", () => {
 });
 
 it("F should be used", () => {
+	if (process.env.NODE_ENV === "production") {
+		expect(declPure).toBe(false);
+		expect(exprPure).toBe(false);
+	}
+
 	// Note: it has side-effects and is not affected by usage of the class
 	expect(declF).toBe(true);
 	expect(declFoo).toBe(true);

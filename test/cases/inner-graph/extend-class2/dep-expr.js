@@ -1,5 +1,5 @@
-import { A, B, getC, getD, getE, getF } from "./dep2?expr";
-import { A3, B3, C3, D3, E3, F3 } from "./dep3?expr";
+import { A, B, getC, getD, getE, getF, Pure } from "./dep2?expr";
+import { A3, B3, C3, D3, E3, F3, Pure3} from "./dep3?expr";
 
 export const A1 = class extends A {
 	render() {
@@ -36,6 +36,12 @@ export const E1 = class extends getE() {
 export const F1 = class extends getF() {
 	render() {
 		return new F2();
+	}
+};
+
+export const ExtendsPure = class extends Pure {
+	render() {
+		return new Pure3();
 	}
 };
 
