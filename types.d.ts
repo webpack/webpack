@@ -1187,13 +1187,34 @@ declare interface ChunkMaps {
 	name: Record<string | number, string>;
 }
 declare class ChunkModuleIdRangePlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options: ChunkModuleIdRangePluginOptions);
+	options: ChunkModuleIdRangePluginOptions;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface ChunkModuleIdRangePluginOptions {
+	/**
+	 * the chunk name
+	 */
+	name: string;
+
+	/**
+	 * order
+	 */
+	order?: "index" | "index2" | "preOrderIndex" | "postOrderIndex";
+
+	/**
+	 * start id
+	 */
+	start?: number;
+
+	/**
+	 * end id
+	 */
+	end?: number;
 }
 declare interface ChunkModuleMaps {
 	id: Record<string | number, (string | number)[]>;
@@ -2000,8 +2021,8 @@ declare interface CompilationHooksJavascriptModulesPlugin {
 		[Module, RenderBootstrapContext],
 		string
 	>;
-	embedInRuntimeBailout: SyncBailHook<[Module, RenderContext], string>;
-	strictRuntimeBailout: SyncBailHook<[RenderContext], string>;
+	embedInRuntimeBailout: SyncBailHook<[Module, RenderContext], string | void>;
+	strictRuntimeBailout: SyncBailHook<[RenderContext], string | void>;
 	chunkHash: SyncHook<[Chunk, Hash, ChunkHashContext]>;
 	useSourceMap: SyncBailHook<[Chunk, RenderContext], boolean>;
 }
@@ -2902,72 +2923,64 @@ declare abstract class DependencyTemplates {
 	clone(): DependencyTemplates;
 }
 declare class DeterministicChunkIdsPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options?: DeterministicChunkIdsPluginOptions);
+	options: DeterministicChunkIdsPluginOptions;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
 }
+declare interface DeterministicChunkIdsPluginOptions {
+	/**
+	 * context for ids
+	 */
+	context?: string;
+
+	/**
+	 * maximum length of ids
+	 */
+	maxLength?: number;
+}
 declare class DeterministicModuleIdsPlugin {
-	constructor(options?: {
-		/**
-		 * context relative to which module identifiers are computed
-		 */
-		context?: string;
-		/**
-		 * selector function for modules
-		 */
-		test?: (arg0: Module) => boolean;
-		/**
-		 * maximum id length in digits (used as starting point)
-		 */
-		maxLength?: number;
-		/**
-		 * hash salt for ids
-		 */
-		salt?: number;
-		/**
-		 * do not increase the maxLength to find an optimal id space size
-		 */
-		fixedLength?: boolean;
-		/**
-		 * throw an error when id conflicts occur (instead of rehashing)
-		 */
-		failOnConflict?: boolean;
-	});
-	options: {
-		/**
-		 * context relative to which module identifiers are computed
-		 */
-		context?: string;
-		/**
-		 * selector function for modules
-		 */
-		test?: (arg0: Module) => boolean;
-		/**
-		 * maximum id length in digits (used as starting point)
-		 */
-		maxLength?: number;
-		/**
-		 * hash salt for ids
-		 */
-		salt?: number;
-		/**
-		 * do not increase the maxLength to find an optimal id space size
-		 */
-		fixedLength?: boolean;
-		/**
-		 * throw an error when id conflicts occur (instead of rehashing)
-		 */
-		failOnConflict?: boolean;
-	};
+	constructor(options?: DeterministicModuleIdsPluginOptions);
+	options: DeterministicModuleIdsPluginOptions;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface DeterministicModuleIdsPluginOptions {
+	/**
+	 * context relative to which module identifiers are computed
+	 */
+	context?: string;
+
+	/**
+	 * selector function for modules
+	 */
+	test?: (arg0: Module) => boolean;
+
+	/**
+	 * maximum id length in digits (used as starting point)
+	 */
+	maxLength?: number;
+
+	/**
+	 * hash salt for ids
+	 */
+	salt?: number;
+
+	/**
+	 * do not increase the maxLength to find an optimal id space size
+	 */
+	fixedLength?: boolean;
+
+	/**
+	 * throw an error when id conflicts occur (instead of rehashing)
+	 */
+	failOnConflict?: boolean;
 }
 
 /**
@@ -4700,7 +4713,11 @@ declare interface HashableObject {
 declare class HashedModuleIdsPlugin {
 	constructor(options?: HashedModuleIdsPluginOptions);
 	options: HashedModuleIdsPluginOptions;
-	apply(compiler?: any): void;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
 }
 declare interface HashedModuleIdsPluginOptions {
 	/**
@@ -7218,12 +7235,12 @@ declare class Module extends DependenciesBlock {
 	layer: null | string;
 	needId: boolean;
 	debugId: number;
-	resolveOptions: ResolveOptionsWebpackOptions;
+	resolveOptions?: ResolveOptionsWebpackOptions;
 	factoryMeta?: object;
 	useSourceMap: boolean;
 	useSimpleSourceMap: boolean;
-	buildMeta: BuildMeta;
-	buildInfo: Record<string, any>;
+	buildMeta?: BuildMeta;
+	buildInfo?: Record<string, any>;
 	presentationalDependencies?: Dependency[];
 	codeGenerationDependencies?: Dependency[];
 	id: string | number;
@@ -7240,9 +7257,9 @@ declare class Module extends DependenciesBlock {
 		| ((requestShortener: RequestShortener) => string)
 	)[];
 	get optional(): boolean;
-	addChunk(chunk?: any): boolean;
-	removeChunk(chunk?: any): void;
-	isInChunk(chunk?: any): boolean;
+	addChunk(chunk: Chunk): boolean;
+	removeChunk(chunk: Chunk): void;
+	isInChunk(chunk: Chunk): boolean;
 	isEntryModule(): boolean;
 	getChunks(): Chunk[];
 	getNumberOfChunks(): number;
@@ -7372,7 +7389,7 @@ declare class ModuleDependency extends Dependency {
 declare abstract class ModuleFactory {
 	create(
 		data: ModuleFactoryCreateData,
-		callback: (arg0?: Error, arg1?: ModuleFactoryResult) => void
+		callback: (arg0?: null | Error, arg1?: ModuleFactoryResult) => void
 	): void;
 }
 declare interface ModuleFactoryCreateData {
@@ -7935,23 +7952,40 @@ declare abstract class MultiWatching {
 	close(callback: CallbackFunction<void>): void;
 }
 declare class NamedChunkIdsPlugin {
-	constructor(options?: any);
-	delimiter: any;
-	context: any;
+	constructor(options?: NamedChunkIdsPluginOptions);
+	delimiter: string;
+	context?: string;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
 }
+declare interface NamedChunkIdsPluginOptions {
+	/**
+	 * context
+	 */
+	context?: string;
+
+	/**
+	 * delimiter
+	 */
+	delimiter?: string;
+}
 declare class NamedModuleIdsPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options?: NamedModuleIdsPluginOptions);
+	options: NamedModuleIdsPluginOptions;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface NamedModuleIdsPluginOptions {
+	/**
+	 * context
+	 */
+	context?: string;
 }
 declare class NaturalModuleIdsPlugin {
 	constructor();
@@ -13501,7 +13535,7 @@ declare namespace exports {
 		export { ProfilingPlugin };
 	}
 	export namespace util {
-		export const createHash: (algorithm: string | typeof Hash) => Hash;
+		export const createHash: (algorithm?: string | typeof Hash) => Hash;
 		export namespace comparators {
 			export let compareChunksById: (a: Chunk, b: Chunk) => 0 | 1 | -1;
 			export let compareModulesByIdentifier: (
