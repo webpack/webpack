@@ -2227,10 +2227,6 @@ export interface CleanOptions {
  */
 export interface Environment {
 	/**
-	 * The environment supports `globalThis`.
-	 */
-	globalThis?: boolean;
-	/**
 	 * The environment supports arrow functions ('() => { ... }').
 	 */
 	arrowFunction?: boolean;
@@ -2254,6 +2250,10 @@ export interface Environment {
 	 * The environment supports 'for of' iteration ('for (const x of array) { ... }').
 	 */
 	forOf?: boolean;
+	/**
+	 * The environment supports 'globalThis'.
+	 */
+	globalThis?: boolean;
 	/**
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */

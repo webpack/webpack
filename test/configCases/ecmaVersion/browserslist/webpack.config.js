@@ -12,7 +12,10 @@ module.exports = {
 			  "destructuring": true,
 			  "dynamicImport": true,
 			  "forOf": true,
+			  "globalThis": true,
 			  "module": true,
+			  "optionalChaining": true,
+			  "templateLiteral": true,
 			}
 		`);
 				expect(compilation.options.externalsPresets).toMatchInlineSnapshot(`

@@ -3507,6 +3507,11 @@ declare interface Environment {
 	forOf?: boolean;
 
 	/**
+	 * The environment supports 'globalThis'.
+	 */
+	globalThis?: boolean;
+
+	/**
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
 	module?: boolean;
@@ -7049,6 +7054,12 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	 * Example: "web"
 	 */
 	target: string;
+
+	/**
+	 * Tell what kind of ES-features may be used in the generated runtime-code.
+	 * Example: { arrowFunction: true }
+	 */
+	environment: Environment;
 }
 declare class LoaderTargetPlugin {
 	constructor(target: string);
