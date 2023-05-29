@@ -2227,6 +2227,10 @@ export interface CleanOptions {
  */
 export interface Environment {
 	/**
+	 * The environment supports `globalThis`.
+	 */
+	globalThis?: boolean;
+	/**
 	 * The environment supports arrow functions ('() => { ... }').
 	 */
 	arrowFunction?: boolean;
