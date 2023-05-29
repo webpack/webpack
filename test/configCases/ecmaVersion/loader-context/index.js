@@ -5,4 +5,5 @@ it("should compile and export target and environment", function() {
 	expect(mod.environment.globalThis).toBe(false);
 	expect(mod.environment.optionalChaining).toBe(true);
 	expect(mod.environment.templateLiteral).toBe(true);
+	expect(mod.environment.dynamicImportInWorker).toBe(true);
 });

@@ -1,3 +1,4 @@
+/** @type {import("../../../../types").LoaderDefinition<{}>} */
 module.exports = function loader(content) {
 	const target = this.target;
 	const environment = this.environment;

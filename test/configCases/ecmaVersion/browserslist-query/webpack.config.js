@@ -11,6 +11,7 @@ module.exports = {
 			  "const": false,
 			  "destructuring": false,
 			  "dynamicImport": false,
+			  "dynamicImportInWorker": false,
 			  "forOf": false,
 			  "globalThis": false,
 			  "module": false,

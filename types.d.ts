@@ -3502,6 +3502,11 @@ declare interface Environment {
 	dynamicImport?: boolean;
 
 	/**
+	 * The environment supports an async import() is available when creating a worker.
+	 */
+	dynamicImportInWorker?: boolean;
+
+	/**
 	 * The environment supports 'for of' iteration ('for (const x of array) { ... }').
 	 */
 	forOf?: boolean;
