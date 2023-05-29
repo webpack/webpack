@@ -41,6 +41,51 @@ describe("Compiler (filesystem caching)", () => {
 			]
 		};
 
+		options.plugins = [
+			{
+				apply(compiler) {
+					const name = "TestCachePlugin";
+
+					compiler.hooks.thisCompilation.tap(name, compilation => {
+						compilation.hooks.processAssets.tapPromise(
+							{
+								name,
+								stage:
+									compiler.webpack.Compilation
+										.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
+							},
+							async () => {
+								const cache = compilation.getCache(name);
+								const ident = "test.ext";
+								const cacheItem = cache.getItemCache(ident, null);
+
+								const result = await cacheItem.getPromise(ident);
+
+								if (result) {
+									expect(result.number).toEqual(42);
+									expect(result.string).toEqual("string");
+									expect(result.error.cause.message).toEqual("cause");
+									expect(result.error1.cause.string).toBe("string");
+									expect(result.error1.cause.number).toBe(42);
+
+									return;
+								}
+
+								const number = 42;
+								const string = "string";
+								const error = new Error("error", { cause: new Error("cause") });
+								const error1 = new Error("error", {
+									cause: { string, number }
+								});
+
+								await cacheItem.storePromise({ number, string, error, error1 });
+							}
+						);
+					});
+				}
+			}
+		];
+
 		function runCompiler(onSuccess, onError) {
 			const c = webpack(options);
 			c.hooks.compilation.tap(
