@@ -5959,6 +5959,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-global-this": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'globalThis'.",
+        "multiple": false,
+        "path": "output.environment.globalThis",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'globalThis'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-module": Object {
     "configs": Array [
       Object {
