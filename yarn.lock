@@ -1757,9 +1757,9 @@ braces@^3.0.2, braces@~3.0.2:
     fill-range "^7.0.1"
 
 browserslist@^4.14.5, browserslist@^4.21.3:
-  version "4.21.6"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.21.6.tgz#18ab9830a5a61806a909a4717f85665792e7f267"
-  integrity sha512-PF07dKGXKR+/bljJzCB6rAYtHEu21TthLxmJagtQizx+rwiqdRDBO5971Xu1N7MgcMLi4+mr4Cnl76x7O3DHtA==
+  version "4.21.7"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.21.7.tgz#e2b420947e5fb0a58e8f4668ae6e23488127e551"
+  integrity sha512-BauCXrQ7I2ftSqd2mvKHGo85XR0u7Ru3C/Hxsy/0TkfCtjrmAbPdzLGasmoiBxplpDXlPvdjX9u7srIMfgasNA==
   dependencies:
     caniuse-lite "^1.0.30001489"
     electron-to-chromium "^1.4.411"
