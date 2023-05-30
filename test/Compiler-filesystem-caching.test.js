@@ -42,6 +42,9 @@ describe("Compiler (filesystem caching)", () => {
 		};
 
 		const isBigIntSupported = typeof BigInt !== "undefined";
+		const isErrorCaseSupported =
+			typeof new Error("test", { cause: new Error("cause") }).cause !==
+			"undefined";
 
 		options.plugins = [
 			{
@@ -68,15 +71,18 @@ describe("Compiler (filesystem caching)", () => {
 									expect(result.number1).toEqual(3.14);
 									expect(result.number2).toEqual(6.2);
 									expect(result.string).toEqual("string");
-									expect(result.error.cause.message).toEqual("cause");
-									expect(result.error1.cause.string).toBe("string");
-									expect(result.error1.cause.number).toBe(42);
+
+									if (isErrorCaseSupported) {
+										expect(result.error.cause.message).toEqual("cause");
+										expect(result.error1.cause.string).toBe("string");
+										expect(result.error1.cause.number).toBe(42);
+									}
 
 									if (isBigIntSupported) {
 										expect(result.bigint).toEqual(BigInt(123));
-										expect(result.bigint1).toEqual(
-											99999999999999999999999999999999999999999999999999991n
-										);
+										expect(result.bigint1).toEqual(12345678901234567890n);
+										expect(result.bigint2).toEqual(5n);
+										expect(result.bigint3).toEqual(1000000n);
 										expect(result.obj.foo).toBe(BigInt(-10));
 										expect(Array.from(result.set)).toEqual([
 											BigInt(1),
@@ -90,20 +96,24 @@ describe("Compiler (filesystem caching)", () => {
 								const storeValue = {};
 
 								storeValue.number = 42;
-								storeValue.string = "string";
-								storeValue.error = new Error("error", {
-									cause: new Error("cause")
-								});
-								storeValue.error1 = new Error("error", {
-									cause: { string: "string", number: 42 }
-								});
 								storeValue.number1 = 3.14;
 								storeValue.number2 = 6.2;
+								storeValue.string = "string";
+
+								if (isErrorCaseSupported) {
+									storeValue.error = new Error("error", {
+										cause: new Error("cause")
+									});
+									storeValue.error1 = new Error("error", {
+										cause: { string: "string", number: 42 }
+									});
+								}
 
 								if (isBigIntSupported) {
 									storeValue.bigint = BigInt(123);
-									storeValue.bigint1 =
-										99999999999999999999999999999999999999999999999999991n;
+									storeValue.bigint1 = 12345678901234567890n;
+									storeValue.bigint2 = 5n;
+									storeValue.bigint3 = 1000000n;
 									storeValue.obj = { foo: BigInt(-10) };
 									storeValue.set = new Set([BigInt(1), BigInt(2)]);
 								}
