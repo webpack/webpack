@@ -85,6 +85,8 @@ describe("Compiler (filesystem caching)", () => {
 										expect(result.bigint3).toEqual(12345678901234567890n);
 										expect(result.bigint4).toEqual(5n);
 										expect(result.bigint5).toEqual(1000000n);
+										expect(result.bigint6).toEqual(128n);
+										expect(result.bigint7).toEqual(2147483647n);
 										expect(result.obj.foo).toBe(BigInt(-10));
 										expect(Array.from(result.set)).toEqual([
 											BigInt(1),
@@ -119,6 +121,8 @@ describe("Compiler (filesystem caching)", () => {
 									storeValue.bigint3 = 12345678901234567890n;
 									storeValue.bigint4 = 5n;
 									storeValue.bigint5 = 1000000n;
+									storeValue.bigint6 = 128n;
+									storeValue.bigint7 = 2147483647n;
 									storeValue.obj = { foo: BigInt(-10) };
 									storeValue.set = new Set([BigInt(1), BigInt(2)]);
 									storeValue.arr = [256n, 257n, 258n];
