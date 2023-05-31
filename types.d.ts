@@ -4262,6 +4262,11 @@ declare interface FileCacheOptions {
 	profile?: boolean;
 
 	/**
+	 * Enable/disable readonly mode.
+	 */
+	readonly?: boolean;
+
+	/**
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
 	store?: "pack";
