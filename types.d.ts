@@ -356,7 +356,7 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 	};
 	loc?: SyntheticDependencyLocation | RealDependencyLocation;
 	request?: string;
-	chunkName: string;
+	chunkName?: string;
 	module: any;
 }
 declare abstract class AsyncQueue<T, K, R> {
@@ -383,17 +383,27 @@ declare abstract class AsyncQueue<T, K, R> {
 	clear(): void;
 }
 declare class AsyncWebAssemblyModulesPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options: AsyncWebAssemblyModulesPluginOptions);
+	options: AsyncWebAssemblyModulesPluginOptions;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
-	renderModule(module?: any, renderContext?: any, hooks?: any): any;
+	renderModule(
+		module: Module,
+		renderContext: WebAssemblyRenderContext,
+		hooks: CompilationHooksAsyncWebAssemblyModulesPlugin
+	): Source;
 	static getCompilationHooks(
 		compilation: Compilation
 	): CompilationHooksAsyncWebAssemblyModulesPlugin;
+}
+declare interface AsyncWebAssemblyModulesPluginOptions {
+	/**
+	 * mangle imports
+	 */
+	mangleImports?: boolean;
 }
 declare class AutomaticPrefetchPlugin {
 	constructor();
@@ -4168,13 +4178,19 @@ declare class FetchCompileAsyncWasmPlugin {
 	apply(compiler: Compiler): void;
 }
 declare class FetchCompileWasmPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options?: FetchCompileWasmPluginOptions);
+	options: FetchCompileWasmPluginOptions;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface FetchCompileWasmPluginOptions {
+	/**
+	 * mangle imports
+	 */
+	mangleImports?: boolean;
 }
 
 /**
@@ -8089,12 +8105,18 @@ declare class NodeTargetPlugin {
 	apply(compiler: Compiler): void;
 }
 declare class NodeTemplatePlugin {
-	constructor(options?: any);
+	constructor(options?: NodeTemplatePluginOptions);
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface NodeTemplatePluginOptions {
+	/**
+	 * enable async chunk loading
+	 */
+	asyncChunkLoading?: boolean;
 }
 type NodeWebpackOptions = false | NodeOptions;
 declare class NormalModule extends Module {
@@ -9845,13 +9867,19 @@ declare interface RawSourceMap {
 	file: string;
 }
 declare class ReadFileCompileWasmPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options?: ReadFileCompileWasmPluginOptions);
+	options: ReadFileCompileWasmPluginOptions;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface ReadFileCompileWasmPluginOptions {
+	/**
+	 * mangle imports
+	 */
+	mangleImports?: boolean;
 }
 declare interface ReaddirOptions {
 	encoding?:
@@ -11213,7 +11241,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * when false, call context will not be preserved
 		 */
-		callContext: boolean;
+		callContext: null | boolean;
 		/**
 		 * when true and accessing the default exports, interop code will be generated
 		 */
