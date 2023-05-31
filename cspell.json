@@ -283,6 +283,7 @@
     "xxhash",
     "xxhashjs",
     "Yann",
+    "readonly",
     "commithash"
   ],
   "ignoreRegExpList": [

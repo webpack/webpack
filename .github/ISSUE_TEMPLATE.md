@@ -4,7 +4,9 @@
 
 **Do you want to request a _feature_ or report a _bug_?**
 
-<!-- Please ask questions on StackOverflow or the webpack Gitter (https://gitter.im/webpack/webpack). -->
+<!-- Please ask questions on StackOverflow or the GitHub Discussions. -->
+<!-- https://github.com/webpack/webpack/discussions -->
+<!-- https://stackoverflow.com/questions/ask?tags=webpack -->
 <!-- Issues which contain questions or support requests will be closed. -->
 
 **What is the current behavior?**

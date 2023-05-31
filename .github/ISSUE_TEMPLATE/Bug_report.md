@@ -8,9 +8,9 @@ about: Create a report to help us improve
 
 # Bug report
 
-<!-- Please ask questions on StackOverflow or the webpack Gitter. -->
+<!-- Please ask questions on StackOverflow or the GitHub Discussions. -->
+<!-- https://github.com/webpack/webpack/discussions -->
 <!-- https://stackoverflow.com/questions/ask?tags=webpack -->
-<!-- https://gitter.im/webpack/webpack -->
 <!-- Issues which contain questions or support requests will be closed. -->
 
 **What is the current behavior?**
