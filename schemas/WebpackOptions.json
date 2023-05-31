@@ -744,8 +744,16 @@
           "description": "The environment supports an async import() function to import EcmaScript modules.",
           "type": "boolean"
         },
+        "dynamicImportInWorker": {
+          "description": "The environment supports an async import() is available when creating a worker.",
+          "type": "boolean"
+        },
         "forOf": {
           "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+          "type": "boolean"
+        },
+        "globalThis": {
+          "description": "The environment supports 'globalThis'.",
           "type": "boolean"
         },
         "module": {

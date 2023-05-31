@@ -5946,6 +5946,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-dynamic-import-in-worker": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports an async import() is available when creating a worker.",
+        "multiple": false,
+        "path": "output.environment.dynamicImportInWorker",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports an async import() is available when creating a worker.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-for-of": Object {
     "configs": Array [
       Object {
@@ -5956,6 +5969,19 @@ Object {
       },
     ],
     "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-global-this": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'globalThis'.",
+        "multiple": false,
+        "path": "output.environment.globalThis",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'globalThis'.",
     "multiple": false,
     "simpleType": "boolean",
   },
