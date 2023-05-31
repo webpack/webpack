@@ -117,6 +117,30 @@ it("should allow to create a audioWorklet worklet #2", async () => {
 	await pseudoWorklet.terminate();
 });
 
+it("should allow to create a audioWorklet worklet #3", async () => {
+	let context = {
+		foo: {
+			bar: new AudioContext()
+		}
+	};
+	let pseudoWorklet = await context.foo.bar.audioWorklet.addModule(new URL("./worklet.js", import.meta.url));
+
+	pseudoWorklet = new pseudoWorklet();
+
+	expect(pseudoWorklet.url).not.toContain("asset-");
+
+	pseudoWorklet.postMessage("ok");
+
+	const result = await new Promise(resolve => {
+		pseudoWorklet.onmessage = event => {
+			resolve(event.data);
+		};
+	});
+	expect(result).toBe("data: OK, thanks");
+
+	await pseudoWorklet.terminate();
+});
+
 it("should allow to create a audioWorklet worklet using '?.'", async () => {
 	let context = new AudioContext();
 	let pseudoWorklet = await context?.audioWorklet?.addModule(new URL("./worklet.js", import.meta.url));
