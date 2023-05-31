@@ -7229,7 +7229,7 @@ declare interface MinChunkSizePluginOptions {
 	minChunkSize: number;
 }
 declare class Module extends DependenciesBlock {
-	constructor(type: string, context?: string, layer?: string);
+	constructor(type: string, context?: null | string, layer?: null | string);
 	type: string;
 	context: null | string;
 	layer: null | string;
