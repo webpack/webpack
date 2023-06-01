@@ -658,6 +658,9 @@ declare abstract class BasicEvaluatedExpression {
 	 */
 	setExpression(expression: NodeEstreeIndex): BasicEvaluatedExpression;
 }
+declare interface BuildInfo {
+	[index: string]: any;
+}
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
 	map: any;
@@ -7264,7 +7267,7 @@ declare class Module extends DependenciesBlock {
 	useSourceMap: boolean;
 	useSimpleSourceMap: boolean;
 	buildMeta?: BuildMeta;
-	buildInfo?: Record<string, any>;
+	buildInfo?: BuildInfo;
 	presentationalDependencies?: Dependency[];
 	codeGenerationDependencies?: Dependency[];
 	id: string | number;
