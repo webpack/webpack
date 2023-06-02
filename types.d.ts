@@ -507,7 +507,7 @@ declare abstract class BasicEvaluatedExpression {
 	rootInfo: string | VariableInfoInterface;
 	getMembers: () => string[];
 	getMembersOptionals: () => boolean[];
-	getMemberRangeStarts: () => number[];
+	getMemberRanges: () => [number, number][];
 	expression: NodeEstreeIndex;
 	isUnknown(): boolean;
 	isNull(): boolean;
@@ -593,7 +593,7 @@ declare abstract class BasicEvaluatedExpression {
 		rootInfo: string | VariableInfoInterface,
 		getMembers: () => string[],
 		getMembersOptionals?: () => boolean[],
-		getMemberRangeStarts?: () => number[]
+		getMemberRanges?: () => [number, number][]
 	): BasicEvaluatedExpression;
 
 	/**
@@ -788,7 +788,7 @@ declare interface CallExpressionInfo {
 	name: string;
 	getMembers: () => string[];
 	getMembersOptionals: () => boolean[];
-	getMemberRangeStarts: () => number[];
+	getMemberRanges: () => [number, number][];
 }
 declare interface CallbackAsyncQueue<T> {
 	(err?: null | WebpackError, result?: T): any;
@@ -3991,7 +3991,7 @@ declare interface ExpressionExpressionInfo {
 	name: string;
 	getMembers: () => string[];
 	getMembersOptionals: () => boolean[];
-	getMemberRangeStarts: () => number[];
+	getMemberRanges: () => [number, number][];
 }
 declare interface ExtensionAliasOption {
 	alias: string | string[];
@@ -5344,7 +5344,7 @@ declare class JavascriptParser extends Parser {
 		call: HookMap<SyncBailHook<[BaseCallExpression], boolean | void>>;
 		callMemberChain: HookMap<
 			SyncBailHook<
-				[CallExpression, string[], boolean[], number[]],
+				[CallExpression, string[], boolean[], [number, number][]],
 				boolean | void
 			>
 		>;
@@ -5365,7 +5365,10 @@ declare class JavascriptParser extends Parser {
 		binaryExpression: SyncBailHook<[BinaryExpression], boolean | void>;
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
-			SyncBailHook<[Expression, string[], boolean[], number[]], boolean | void>
+			SyncBailHook<
+				[Expression, string[], boolean[], [number, number][]],
+				boolean | void
+			>
 		>;
 		unhandledExpressionMemberChain: HookMap<
 			SyncBailHook<[Expression, string[]], boolean | void>
@@ -5954,7 +5957,7 @@ declare class JavascriptParser extends Parser {
 			| YieldExpression
 			| Super;
 		membersOptionals: boolean[];
-		memberRangeStarts: number[];
+		memberRanges: [number, number][];
 	};
 	getFreeInfoFromVariable(varName: string): {
 		name: string;
