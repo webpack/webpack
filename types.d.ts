@@ -167,13 +167,19 @@ declare interface AdditionalData {
 	webpackAST: object;
 }
 declare class AggressiveMergingPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options?: AggressiveMergingPluginOptions);
+	options: AggressiveMergingPluginOptions;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface AggressiveMergingPluginOptions {
+	/**
+	 * minimal size reduction to trigger merging
+	 */
+	minSizeReduce?: number;
 }
 declare class AggressiveSplittingPlugin {
 	constructor(options?: AggressiveSplittingPluginOptions);
@@ -749,7 +755,7 @@ declare interface CacheGroupSource {
 		chunks?: Chunk[],
 		key?: string
 	) => undefined | string;
-	chunksFilter?: (chunk: Chunk) => boolean;
+	chunksFilter?: (chunk: Chunk) => undefined | boolean;
 	enforce?: boolean;
 	minSize: SplitChunksSizes;
 	minSizeReduction: SplitChunksSizes;
@@ -762,7 +768,7 @@ declare interface CacheGroupSource {
 	maxInitialRequests?: number;
 	filename?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
 	idHint?: string;
-	automaticNameDelimiter: string;
+	automaticNameDelimiter?: string;
 	reuseExistingChunk?: boolean;
 	usedExports?: boolean;
 }
@@ -809,19 +815,13 @@ type Cell<T> = undefined | T;
 declare class Chunk {
 	constructor(name?: string, backCompat?: boolean);
 	id: null | string | number;
-	ids: null | (string | number)[];
+	ids: null | ChunkId[];
 	debugId: number;
-	name: string;
+	name?: string;
 	idNameHints: SortableSet<string>;
 	preventIntegration: boolean;
-	filenameTemplate:
-		| null
-		| string
-		| ((arg0: PathData, arg1?: AssetInfo) => string);
-	cssFilenameTemplate:
-		| null
-		| string
-		| ((arg0: PathData, arg1?: AssetInfo) => string);
+	filenameTemplate?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
+	cssFilenameTemplate?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
 	runtime: RuntimeSpec;
 	files: Set<string>;
 	auxiliaryFiles: Set<string>;
@@ -878,7 +878,7 @@ declare class Chunk {
 	getChildrenOfTypeInOrder(
 		chunkGraph: ChunkGraph,
 		type: string
-	): { onChunks: Chunk[]; chunks: Set<Chunk> }[];
+	): undefined | { onChunks: Chunk[]; chunks: Set<Chunk> }[];
 	getChildIdsByOrdersMap(
 		chunkGraph: ChunkGraph,
 		includeDirectChildren?: boolean,
@@ -1066,7 +1066,7 @@ declare abstract class ChunkGroup {
 	options: ChunkGroupOptions;
 	chunks: Chunk[];
 	origins: OriginRecord[];
-	index: number;
+	index?: number;
 
 	/**
 	 * when a new chunk is added to a chunkGroup, addingOptions will occur.
@@ -1147,7 +1147,7 @@ declare abstract class ChunkGroup {
 	/**
 	 * Gets the top-down index of a module in this ChunkGroup
 	 */
-	getModulePreOrderIndex(module: Module): number;
+	getModulePreOrderIndex(module: Module): undefined | number;
 
 	/**
 	 * Sets the bottom-up index of a module in this ChunkGroup
@@ -1157,10 +1157,10 @@ declare abstract class ChunkGroup {
 	/**
 	 * Gets the bottom-up index of a module in this ChunkGroup
 	 */
-	getModulePostOrderIndex(module: Module): number;
+	getModulePostOrderIndex(module: Module): undefined | number;
 	checkConstraints(): void;
-	getModuleIndex: (module: Module) => number;
-	getModuleIndex2: (module: Module) => number;
+	getModuleIndex: (module: Module) => undefined | number;
+	getModuleIndex2: (module: Module) => undefined | number;
 }
 type ChunkGroupOptions = RawChunkGroupOptions & { name?: string };
 declare interface ChunkHashContext {
@@ -1184,6 +1184,7 @@ declare interface ChunkHashContext {
 	 */
 	chunkGraph: ChunkGraph;
 }
+type ChunkId = string | number;
 declare interface ChunkMaps {
 	hash: Record<string | number, string>;
 	contentHash: Record<string | number, Record<string, string>>;
@@ -2757,7 +2758,7 @@ declare interface DepConstructor {
 declare abstract class DependenciesBlock {
 	dependencies: Dependency[];
 	blocks: AsyncDependenciesBlock[];
-	parent: DependenciesBlock;
+	parent?: DependenciesBlock;
 	getRootBlock(): DependenciesBlock;
 
 	/**
@@ -4190,7 +4191,7 @@ declare interface FactorizeModuleOptions {
 type FakeHook<T> = T & FakeHookMarker;
 declare interface FakeHookMarker {}
 declare interface FallbackCacheGroup {
-	chunksFilter: (chunk: Chunk) => boolean;
+	chunksFilter: (chunk: Chunk) => undefined | boolean;
 	minSize: SplitChunksSizes;
 	maxAsyncSize: SplitChunksSizes;
 	maxInitialSize: SplitChunksSizes;
@@ -11546,10 +11547,10 @@ declare class SideEffectsFlagPlugin {
 	 */
 	apply(compiler: Compiler): void;
 	static moduleHasSideEffects(
-		moduleName?: any,
-		flagValue?: any,
-		cache?: any
-	): any;
+		moduleName: string,
+		flagValue: undefined | string | boolean | string[],
+		cache: Map<string, RegExp>
+	): undefined | boolean;
 }
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
@@ -11832,7 +11833,7 @@ declare interface SourcePosition {
 	column?: number;
 }
 declare interface SplitChunksOptions {
-	chunksFilter: (chunk: Chunk) => boolean;
+	chunksFilter: (chunk: Chunk) => undefined | boolean;
 	defaultSizeTypes: string[];
 	minSize: SplitChunksSizes;
 	minSizeReduction: SplitChunksSizes;
@@ -13468,7 +13469,7 @@ declare namespace exports {
 			) => void;
 			export let setTopLevelSymbol: (
 				state: ParserState,
-				symbol: TopLevelSymbol
+				symbol?: TopLevelSymbol
 			) => void;
 			export let getTopLevelSymbol: (
 				state: ParserState
@@ -13476,7 +13477,7 @@ declare namespace exports {
 			export let tagTopLevelSymbol: (
 				parser: JavascriptParser,
 				name: string
-			) => TopLevelSymbol;
+			) => undefined | TopLevelSymbol;
 			export let isDependencyUsedByExports: (
 				dependency: Dependency,
 				usedByExports: boolean | Set<string>,
