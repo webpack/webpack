@@ -7,9 +7,10 @@ module.exports = {
 	name: "esm",
 	target: "web",
 	output: {
+		globalObject: "globalThis",
 		publicPath: "",
 		module: true,
-		filename: "bundle0.js",
+		filename: "bundle0.mjs",
 		chunkFilename: "[name].js",
 		crossOriginLoading: "anonymous"
 	},
