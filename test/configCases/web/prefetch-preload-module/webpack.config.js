@@ -7,7 +7,6 @@ module.exports = {
 	name: "esm",
 	target: "web",
 	output: {
-		globalObject: "globalThis",
 		publicPath: "",
 		module: true,
 		filename: "bundle0.mjs",

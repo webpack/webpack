@@ -441,7 +441,6 @@ const describeCases = config => {
 										) {
 											baseModuleScope.window = globalContext;
 											baseModuleScope.self = globalContext;
-											baseModuleScope.globalThis = globalContext;
 											baseModuleScope.document = globalContext.document;
 											baseModuleScope.setTimeout = globalContext.setTimeout;
 											baseModuleScope.clearTimeout = globalContext.clearTimeout;
