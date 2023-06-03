@@ -1,8 +1,6 @@
 import foo from "./foo.js";
 import bar from "./bar.js";
 
-console.log(foo + bar);
-
 it("should not contain non javascript chunk in the main bundle", () => {
 	const fs = require("fs");
 	const source = fs.readFileSync(__STATS__.outputPath + "/main.mjs", "utf-8");
@@ -12,4 +10,5 @@ it("should not contain non javascript chunk in the main bundle", () => {
 	expect(source).not.toMatch(
 		/import\s\*\sas+\s__webpack_chunk_[0-9]+__\sfrom\s"\.\/style\.mjs"/g
 	);
+	expect(foo + bar).toBe(12);
 });
