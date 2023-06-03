@@ -35,6 +35,12 @@ it("should use/preserve accessor form for import object and namespaces", functio
 		const bb = obj1.up.down?.left.right;
 
 		data.nested.object3["unknownProperty"].depth = "deep";
+
+		(obj1)["aaa"].bbb;
+		(m_1.obj1)["ccc"].ddd;
+		(obj1["eee"]).fff;
+		(m_1.obj1["ggg"]).hhh;
+		(((m_1).obj1)["iii"]).jjj;
 	}
 
 	/************ DO NOT MATCH BELOW THIS LINE ************/
@@ -60,4 +66,10 @@ it("should use/preserve accessor form for import object and namespaces", functio
 	expectSourceToContain(source, 'const bb = obj1.up.down?.left.right;');
 
 	expectSourceToContain(source, 'data_namespaceObject.a.a["unknownProperty"].depth = "deep";');
+
+	expectSourceToContain(source, '(obj1)["aaa"].bbb;');
+	expectSourceToContain(source, '(obj1)["ccc"].ddd;');
+	expectSourceToContain(source, '(obj1["eee"]).fff;');
+	expectSourceToContain(source, '(obj1["ggg"]).hhh;');
+	expectSourceToContain(source, '((obj1)["iii"]).jjj;');
 });
