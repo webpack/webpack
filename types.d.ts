@@ -13396,7 +13396,6 @@ declare namespace exports {
 		export let baseURI: "__webpack_require__.b";
 		export let relativeUrl: "__webpack_require__.U";
 		export let asyncModule: "__webpack_require__.a";
-		export let createRequire: "create-require";
 	}
 	export const UsageState: Readonly<{
 		Unused: 0;
