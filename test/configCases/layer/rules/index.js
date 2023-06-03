@@ -14,6 +14,8 @@ import { direct as otherLayerDirect } from "./module-other-layer-change";
 import { reexported as otherLayerReexported } from "./module-other-layer-change";
 import { __loaderValue as otherLayerValue } from "./module-other-layer-change";
 
+import { object as dynamicModules } from "./dynamic-module-layer"
+
 it("should allow to duplicate modules with layers", () => {
 	expect(direct).toBe(reexported);
 	expect(layerDirect).toBe(layerReexported);
@@ -36,3 +38,10 @@ it("apply externals based on layer", () => {
 	expect(layerExternal1).toBe(43);
 	expect(layerExternal2).toBe(43);
 });
+
+it("apply layer for dynamic imports with dynamic resources", async () => {
+	const mods = await Promise.all(dynamicModules.modules)
+	expect(dynamicModules.layer).toBe('dynamic-layer')
+	expect(mods[0]).toMatchObject({ layer: 'dynamic-layer', name: 'module1' })
+	expect(mods[1]).toMatchObject({ layer: 'dynamic-layer', name: 'module2' })
+})
