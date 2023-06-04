@@ -44,6 +44,12 @@ export interface ConsumesConfig {
 	 */
 	eager?: boolean;
 	/**
+	 * Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test
+	 */
+	exclude?:
+		| (RegExp | string)[]
+		| ((context: string, request: string) => boolean);
+	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
 	 */
 	import?: false | ConsumesItem;

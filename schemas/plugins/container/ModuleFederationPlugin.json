@@ -388,6 +388,29 @@
           "description": "Include the provided and fallback module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.",
           "type": "boolean"
         },
+        "exclude": {
+          "description": "Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              }
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((context: string, request: string) => boolean)"
+            }
+          ]
+        },
         "import": {
           "description": "Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.",
           "anyOf": [

@@ -2502,6 +2502,13 @@ declare interface ConsumesConfig {
 	eager?: boolean;
 
 	/**
+	 * Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test
+	 */
+	exclude?:
+		| (string | RegExp)[]
+		| ((context: string, request: string) => boolean);
+
+	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
 	 */
 	import?: string | false;
@@ -3959,32 +3966,32 @@ declare interface ExposesObject {
 }
 type Expression =
 	| UnaryExpression
+	| ThisExpression
 	| ArrayExpression
-	| ArrowFunctionExpression
-	| AssignmentExpression
-	| AwaitExpression
-	| BinaryExpression
-	| SimpleCallExpression
-	| NewExpression
-	| ChainExpression
-	| ClassExpression
-	| ConditionalExpression
+	| ObjectExpression
 	| FunctionExpression
-	| Identifier
-	| ImportExpression
+	| ArrowFunctionExpression
+	| YieldExpression
 	| SimpleLiteral
 	| RegExpLiteral
 	| BigIntLiteral
+	| UpdateExpression
+	| BinaryExpression
+	| AssignmentExpression
 	| LogicalExpression
 	| MemberExpression
-	| MetaProperty
-	| ObjectExpression
+	| ConditionalExpression
+	| SimpleCallExpression
+	| NewExpression
 	| SequenceExpression
-	| TaggedTemplateExpression
 	| TemplateLiteral
-	| ThisExpression
-	| UpdateExpression
-	| YieldExpression;
+	| TaggedTemplateExpression
+	| ClassExpression
+	| MetaProperty
+	| Identifier
+	| AwaitExpression
+	| ImportExpression
+	| ChainExpression;
 declare interface ExpressionExpressionInfo {
 	type: "expression";
 	rootInfo: string | VariableInfo;
@@ -5102,13 +5109,13 @@ declare class JavascriptParser extends Parser {
 		>;
 		evaluateIdentifier: HookMap<
 			SyncBailHook<
-				[Identifier | MemberExpression | MetaProperty | ThisExpression],
+				[ThisExpression | MemberExpression | MetaProperty | Identifier],
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
 		evaluateDefinedIdentifier: HookMap<
 			SyncBailHook<
-				[Identifier | MemberExpression | ThisExpression],
+				[ThisExpression | MemberExpression | Identifier],
 				undefined | null | BasicEvaluatedExpression
 			>
 		>;
@@ -5132,32 +5139,32 @@ declare class JavascriptParser extends Parser {
 				[
 					(
 						| UnaryExpression
+						| ThisExpression
 						| ArrayExpression
-						| ArrowFunctionExpression
-						| AssignmentExpression
-						| AwaitExpression
-						| BinaryExpression
-						| SimpleCallExpression
-						| NewExpression
-						| ChainExpression
-						| ClassExpression
-						| ConditionalExpression
+						| ObjectExpression
 						| FunctionExpression
-						| Identifier
-						| ImportExpression
+						| ArrowFunctionExpression
+						| YieldExpression
 						| SimpleLiteral
 						| RegExpLiteral
 						| BigIntLiteral
+						| UpdateExpression
+						| BinaryExpression
+						| AssignmentExpression
 						| LogicalExpression
 						| MemberExpression
-						| MetaProperty
-						| ObjectExpression
+						| ConditionalExpression
+						| SimpleCallExpression
+						| NewExpression
 						| SequenceExpression
-						| TaggedTemplateExpression
 						| TemplateLiteral
-						| ThisExpression
-						| UpdateExpression
-						| YieldExpression
+						| TaggedTemplateExpression
+						| ClassExpression
+						| MetaProperty
+						| Identifier
+						| AwaitExpression
+						| ImportExpression
+						| ChainExpression
 						| FunctionDeclaration
 						| VariableDeclaration
 						| ClassDeclaration
@@ -5385,32 +5392,32 @@ declare class JavascriptParser extends Parser {
 	semicolons: any;
 	statementPath: (
 		| UnaryExpression
+		| ThisExpression
 		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
+		| ObjectExpression
 		| FunctionExpression
-		| Identifier
-		| ImportExpression
+		| ArrowFunctionExpression
+		| YieldExpression
 		| SimpleLiteral
 		| RegExpLiteral
 		| BigIntLiteral
+		| UpdateExpression
+		| BinaryExpression
+		| AssignmentExpression
 		| LogicalExpression
 		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
+		| ConditionalExpression
+		| SimpleCallExpression
+		| NewExpression
 		| SequenceExpression
-		| TaggedTemplateExpression
 		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression
+		| TaggedTemplateExpression
+		| ClassExpression
+		| MetaProperty
+		| Identifier
+		| AwaitExpression
+		| ImportExpression
+		| ChainExpression
 		| FunctionDeclaration
 		| VariableDeclaration
 		| ClassDeclaration
@@ -5440,32 +5447,32 @@ declare class JavascriptParser extends Parser {
 	)[];
 	prevStatement:
 		| UnaryExpression
+		| ThisExpression
 		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
+		| ObjectExpression
 		| FunctionExpression
-		| Identifier
-		| ImportExpression
+		| ArrowFunctionExpression
+		| YieldExpression
 		| SimpleLiteral
 		| RegExpLiteral
 		| BigIntLiteral
+		| UpdateExpression
+		| BinaryExpression
+		| AssignmentExpression
 		| LogicalExpression
 		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
+		| ConditionalExpression
+		| SimpleCallExpression
+		| NewExpression
 		| SequenceExpression
-		| TaggedTemplateExpression
 		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression
+		| TaggedTemplateExpression
+		| ClassExpression
+		| MetaProperty
+		| Identifier
+		| AwaitExpression
+		| ImportExpression
+		| ChainExpression
 		| FunctionDeclaration
 		| VariableDeclaration
 		| ClassDeclaration
@@ -5757,32 +5764,32 @@ declare class JavascriptParser extends Parser {
 		expressions: (
 			| null
 			| UnaryExpression
+			| ThisExpression
 			| ArrayExpression
-			| ArrowFunctionExpression
-			| AssignmentExpression
-			| AwaitExpression
-			| BinaryExpression
-			| SimpleCallExpression
-			| NewExpression
-			| ChainExpression
-			| ClassExpression
-			| ConditionalExpression
+			| ObjectExpression
 			| FunctionExpression
-			| Identifier
-			| ImportExpression
+			| ArrowFunctionExpression
+			| YieldExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
+			| UpdateExpression
+			| BinaryExpression
+			| AssignmentExpression
 			| LogicalExpression
 			| MemberExpression
-			| MetaProperty
-			| ObjectExpression
+			| ConditionalExpression
+			| SimpleCallExpression
+			| NewExpression
 			| SequenceExpression
-			| TaggedTemplateExpression
 			| TemplateLiteral
-			| ThisExpression
-			| UpdateExpression
-			| YieldExpression
+			| TaggedTemplateExpression
+			| ClassExpression
+			| MetaProperty
+			| Identifier
+			| AwaitExpression
+			| ImportExpression
+			| ChainExpression
 			| SpreadElement
 		)[]
 	): void;
@@ -5880,32 +5887,32 @@ declare class JavascriptParser extends Parser {
 			| undefined
 			| null
 			| UnaryExpression
+			| ThisExpression
 			| ArrayExpression
-			| ArrowFunctionExpression
-			| AssignmentExpression
-			| AwaitExpression
-			| BinaryExpression
-			| SimpleCallExpression
-			| NewExpression
-			| ChainExpression
-			| ClassExpression
-			| ConditionalExpression
+			| ObjectExpression
 			| FunctionExpression
-			| Identifier
-			| ImportExpression
+			| ArrowFunctionExpression
+			| YieldExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
+			| UpdateExpression
+			| BinaryExpression
+			| AssignmentExpression
 			| LogicalExpression
 			| MemberExpression
-			| MetaProperty
-			| ObjectExpression
+			| ConditionalExpression
+			| SimpleCallExpression
+			| NewExpression
 			| SequenceExpression
-			| TaggedTemplateExpression
 			| TemplateLiteral
-			| ThisExpression
-			| UpdateExpression
-			| YieldExpression
+			| TaggedTemplateExpression
+			| ClassExpression
+			| MetaProperty
+			| Identifier
+			| AwaitExpression
+			| ImportExpression
+			| ChainExpression
 			| FunctionDeclaration
 			| VariableDeclaration
 			| ClassDeclaration
@@ -5929,32 +5936,32 @@ declare class JavascriptParser extends Parser {
 		members: string[];
 		object:
 			| UnaryExpression
+			| ThisExpression
 			| ArrayExpression
-			| ArrowFunctionExpression
-			| AssignmentExpression
-			| AwaitExpression
-			| BinaryExpression
-			| SimpleCallExpression
-			| NewExpression
-			| ChainExpression
-			| ClassExpression
-			| ConditionalExpression
+			| ObjectExpression
 			| FunctionExpression
-			| Identifier
-			| ImportExpression
+			| ArrowFunctionExpression
+			| YieldExpression
 			| SimpleLiteral
 			| RegExpLiteral
 			| BigIntLiteral
+			| UpdateExpression
+			| BinaryExpression
+			| AssignmentExpression
 			| LogicalExpression
 			| MemberExpression
-			| MetaProperty
-			| ObjectExpression
+			| ConditionalExpression
+			| SimpleCallExpression
+			| NewExpression
 			| SequenceExpression
-			| TaggedTemplateExpression
 			| TemplateLiteral
-			| ThisExpression
-			| UpdateExpression
-			| YieldExpression
+			| TaggedTemplateExpression
+			| ClassExpression
+			| MetaProperty
+			| Identifier
+			| AwaitExpression
+			| ImportExpression
+			| ChainExpression
 			| Super;
 		membersOptionals: boolean[];
 		memberRanges: [number, number][];
@@ -8056,32 +8063,32 @@ declare class NodeEnvironmentPlugin {
 }
 type NodeEstreeIndex =
 	| UnaryExpression
+	| ThisExpression
 	| ArrayExpression
-	| ArrowFunctionExpression
-	| AssignmentExpression
-	| AwaitExpression
-	| BinaryExpression
-	| SimpleCallExpression
-	| NewExpression
-	| ChainExpression
-	| ClassExpression
-	| ConditionalExpression
+	| ObjectExpression
 	| FunctionExpression
-	| Identifier
-	| ImportExpression
+	| ArrowFunctionExpression
+	| YieldExpression
 	| SimpleLiteral
 	| RegExpLiteral
 	| BigIntLiteral
+	| UpdateExpression
+	| BinaryExpression
+	| AssignmentExpression
 	| LogicalExpression
 	| MemberExpression
-	| MetaProperty
-	| ObjectExpression
+	| ConditionalExpression
+	| SimpleCallExpression
+	| NewExpression
 	| SequenceExpression
-	| TaggedTemplateExpression
 	| TemplateLiteral
-	| ThisExpression
-	| UpdateExpression
-	| YieldExpression
+	| TaggedTemplateExpression
+	| ClassExpression
+	| MetaProperty
+	| Identifier
+	| AwaitExpression
+	| ImportExpression
+	| ChainExpression
 	| FunctionDeclaration
 	| VariableDeclaration
 	| ClassDeclaration
@@ -8122,13 +8129,13 @@ type NodeEstreeIndex =
 	| SpreadElement
 	| Property
 	| AssignmentProperty
+	| Super
+	| TemplateElement
 	| ClassBody
 	| ImportSpecifier
 	| ImportDefaultSpecifier
 	| ImportNamespaceSpecifier
-	| ExportSpecifier
-	| Super
-	| TemplateElement;
+	| ExportSpecifier;
 
 /**
  * Options object for node compatibility features.
@@ -9626,8 +9633,8 @@ declare interface PathData {
 	url?: string;
 }
 type Pattern =
-	| Identifier
 	| MemberExpression
+	| Identifier
 	| ObjectPattern
 	| ArrayPattern
 	| RestElement
@@ -11490,6 +11497,13 @@ declare interface SharedConfig {
 	 * Include the provided and fallback module directly instead behind an async request. This allows to use this shared module in initial load too. All possible shared modules need to be eager too.
 	 */
 	eager?: boolean;
+
+	/**
+	 * Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test
+	 */
+	exclude?:
+		| (string | RegExp)[]
+		| ((context: string, request: string) => boolean);
 
 	/**
 	 * Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.

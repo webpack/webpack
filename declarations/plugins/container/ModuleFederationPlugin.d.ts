@@ -278,6 +278,12 @@ export interface SharedConfig {
 	 */
 	eager?: boolean;
 	/**
+	 * Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test
+	 */
+	exclude?:
+		| (RegExp | string)[]
+		| ((context: string, request: string) => boolean);
+	/**
 	 * Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.
 	 */
 	import?: false | SharedItem;
