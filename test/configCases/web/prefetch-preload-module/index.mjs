@@ -37,7 +37,7 @@ it("should prefetch and preload child chunks on chunk load", () => {
 	expect(link.crossOrigin).toBe("anonymous");
 
 	// Run the script
-	__non_webpack_require__("./chunk1.js");
+	import(/* webpackIgnore: true */ "./chunk1.js");
 
 	script.onload();
 
@@ -77,7 +77,7 @@ it("should prefetch and preload child chunks on chunk load", () => {
 		expect(script.onload).toBeTypeOf("function");
 
 		// Run the script
-		__non_webpack_require__("./chunk2.js");
+		import(/* webpackIgnore: true */ "./chunk2.js");
 
 		script.onload();
 
