@@ -2685,6 +2685,7 @@ declare interface ContextModuleOptions {
 	 * exports referenced from modules (won't be mangled)
 	 */
 	referencedExports?: string[][];
+	layer?: string;
 	resource: string | false | string[];
 	resourceQuery?: string;
 	resourceFragment?: string;
