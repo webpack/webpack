@@ -41,6 +41,12 @@ export interface ProvidesConfig {
 	 */
 	eager?: boolean;
 	/**
+	 * Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test
+	 */
+	exclude?:
+		| (RegExp | string)[]
+		| ((context: string, request: string) => boolean);
+	/**
 	 * Key in the share scope under which the shared modules should be stored.
 	 */
 	shareKey?: string;
