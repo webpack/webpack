@@ -9763,7 +9763,7 @@ declare class ProgressPlugin {
 	apply(compiler: Compiler | MultiCompiler): void;
 	static getReporter(
 		compiler: Compiler
-	): (p: number, ...args: string[]) => void;
+	): undefined | ((p: number, ...args: string[]) => void);
 	static defaultOptions: {
 		profile: boolean;
 		modulesCount: number;
@@ -9773,6 +9773,10 @@ declare class ProgressPlugin {
 		activeModules: boolean;
 		entries: boolean;
 	};
+	static createDefaultHandler: (
+		profile: undefined | null | boolean,
+		logger: WebpackLogger
+	) => (percentage: number, msg: string, ...args: string[]) => void;
 }
 type ProgressPluginArgument =
 	| ProgressPluginOptions
