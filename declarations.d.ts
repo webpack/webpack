@@ -381,6 +381,11 @@ declare module "browserslist" {
 	export = browserslist;
 }
 
+declare module "json-parse-even-better-errors" {
+	function parseJson(text: string, reviver?: (this: any, key: string, value: any) => any, context?: number): any;
+	export = parseJson;
+}
+
 // TODO remove that when @types/estree is updated
 interface ImportAttributeNode {
 	type: "ImportAttribute";
