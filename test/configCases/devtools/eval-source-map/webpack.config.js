@@ -1,4 +1,4 @@
-const devtool = "eval-nosources-source-map";
+const devtool = "eval-source-map";
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [

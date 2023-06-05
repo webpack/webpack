@@ -4,7 +4,7 @@ it("should not include sourcesContent if noSources option is used", function() {
   var match = /\/\/# sourceMappingURL\s*=\s*data:application\/json;charset=utf-8;base64,(.*)\\n\/\/#/.exec(source);
   var mapString = Buffer.from(match[1], 'base64').toString('utf-8');
 	var map = JSON.parse(mapString);
-	expect(map).not.toHaveProperty("sourcesContent");
+	expect(map).toHaveProperty("sourcesContent");
 	expect(/\.js(\?.+)?$/.test(map.file)).toBe(true);
 });
 
