@@ -3562,6 +3562,9 @@
         "description": "Plugin of type object or instanceof Function.",
         "anyOf": [
           {
+            "type": "null"
+          },
+          {
             "$ref": "#/definitions/WebpackPluginInstance"
           },
           {

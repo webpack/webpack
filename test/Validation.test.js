@@ -315,9 +315,10 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] should be one of these:
-			   object { apply, … } | function
+			   null | object { apply, … } | function
 			   -> Plugin of type object or instanceof Function.
 			   Details:
+			    * configuration.plugins[0] should be a null.
 			    * configuration.plugins[0] should be an object:
 			      object { apply, … }
 			      -> Plugin instance.
@@ -336,9 +337,10 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] should be one of these:
-			   object { apply, … } | function
+			   null | object { apply, … } | function
 			   -> Plugin of type object or instanceof Function.
 			   Details:
+			    * configuration.plugins[0] should be a null.
 			    * configuration.plugins[0] should be an object:
 			      object { apply, … }
 			      -> Plugin instance.
@@ -357,9 +359,10 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] should be one of these:
-			   object { apply, … } | function
+			   null | object { apply, … } | function
 			   -> Plugin of type object or instanceof Function.
 			   Details:
+			    * configuration.plugins[0] should be a null.
 			    * configuration.plugins[0] should be an object:
 			      object { apply, … }
 			      -> Plugin instance.
@@ -378,9 +381,10 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] should be one of these:
-			   object { apply, … } | function
+			   null | object { apply, … } | function
 			   -> Plugin of type object or instanceof Function.
 			   Details:
+			    * configuration.plugins[0] should be a null.
 			    * configuration.plugins[0] should be an object:
 			      object { apply, … }
 			      -> Plugin instance.

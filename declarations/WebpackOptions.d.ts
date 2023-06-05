@@ -596,7 +596,7 @@ export type Performance = false | PerformanceOptions;
 /**
  * Add additional plugins to the compiler.
  */
-export type Plugins = (WebpackPluginInstance | WebpackPluginFunction)[];
+export type Plugins = (null | WebpackPluginInstance | WebpackPluginFunction)[];
 /**
  * Capture timing information for each module.
  */
