@@ -6,12 +6,14 @@ import {
 	exportsInfoForZ,
 	exportsInfoForMixin1,
 	exportsInfoForMixin2,
-	exportsInfoForMixin3
+	exportsInfoForMixin3,
+	exportsInfoForMixin4
 } from "./dep2";
 
 it("should load modules correctly", () => {
 	require("./module1");
 	require("./module2");
+	require("./module3");
 });
 
 if (process.env.NODE_ENV === "production") {
@@ -31,6 +33,7 @@ it("Z used, inner graph can not determine const usage", () => {
 it("Pure super expression should be unused, another used", () => {
 	if (process.env.NODE_ENV === "production") {
 		expect(exportsInfoForMixin1).toBe(false);
+		expect(exportsInfoForMixin4).toBe(false);
 	}
 
 	expect(exportsInfoForMixin2).toBe(true);

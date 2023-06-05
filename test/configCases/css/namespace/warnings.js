@@ -1,1 +1,1 @@
-module.exports = [/@namespace is not supported in bundled CSS/];
+module.exports = [/'@namespace' is not supported in bundled CSS/];

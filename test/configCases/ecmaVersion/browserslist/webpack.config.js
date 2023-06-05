@@ -11,8 +11,12 @@ module.exports = {
 			  "const": true,
 			  "destructuring": true,
 			  "dynamicImport": true,
+			  "dynamicImportInWorker": false,
 			  "forOf": true,
+			  "globalThis": true,
 			  "module": true,
+			  "optionalChaining": true,
+			  "templateLiteral": true,
 			}
 		`);
 				expect(compilation.options.externalsPresets).toMatchInlineSnapshot(`
