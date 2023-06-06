@@ -4,18 +4,14 @@ module.exports = {
 	entry: {
 		main: "./index"
 	},
-	node: {
-		__dirname: false,
-		__filename: false
-	},
 	output: {
-		filename: "[name].js",
-		chunkFilename: "[name].js",
-		chunkLoadingGlobal: "_load_chunk"
+		filename: "[name].js"
 	},
 	optimization: {
 		splitChunks: {
 			cacheGroups: {
+				default: false,
+				defaultVendors: false,
 				bar: {
 					chunks: /foo/,
 					test: /bar\.js/,
