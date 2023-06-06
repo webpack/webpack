@@ -2628,6 +2628,9 @@
             {
               "instanceof": "Function",
               "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+            },
+            {
+              "instanceof": "RegExp"
             }
           ]
         },
@@ -2875,6 +2878,9 @@
             {
               "instanceof": "Function",
               "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+            },
+            {
+              "instanceof": "RegExp"
             }
           ]
         },
@@ -2914,6 +2920,9 @@
                 {
                   "instanceof": "Function",
                   "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+                },
+                {
+                  "instanceof": "RegExp"
                 }
               ]
             },
