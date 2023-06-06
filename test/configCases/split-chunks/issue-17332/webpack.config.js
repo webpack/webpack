@@ -16,10 +16,10 @@ module.exports = {
 	optimization: {
 		splitChunks: {
 			cacheGroups: {
-				async: {
-					chunks: /bar/,
+				bar: {
+					chunks: /foo/,
 					test: /bar\.js/,
-					name: "bar",
+					name: "split-foo",
 					minSize: 1
 				}
 			}
