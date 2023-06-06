@@ -8691,7 +8691,7 @@ declare interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML).
 	 */
-	chunks?: "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
+	chunks?: "all" | "initial" | "async" | ((chunk: Chunk) => boolean) | RegExp;
 
 	/**
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
@@ -8818,7 +8818,7 @@ declare interface OptimizationSplitChunksOptions {
 	/**
 	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 	 */
-	chunks?: "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
+	chunks?: "all" | "initial" | "async" | ((chunk: Chunk) => boolean) | RegExp;
 
 	/**
 	 * Sets the size types which are used when a number is used for sizes.

@@ -1782,7 +1782,7 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	chunks?:
 		| ("initial" | "async" | "all")
-		| ((chunk: import("../lib/Chunk")) => boolean);
+		| ((chunk: import("../lib/Chunk")) => boolean) | RegExp;
 	/**
 	 * Sets the size types which are used when a number is used for sizes.
 	 */
@@ -1804,7 +1804,7 @@ export interface OptimizationSplitChunksOptions {
 		 */
 		chunks?:
 			| ("initial" | "async" | "all")
-			| ((chunk: import("../lib/Chunk")) => boolean);
+			| ((chunk: import("../lib/Chunk")) => boolean) | RegExp;
 		/**
 		 * Maximal size hint for the on-demand chunks.
 		 */
@@ -1897,7 +1897,7 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	chunks?:
 		| ("initial" | "async" | "all")
-		| ((chunk: import("../lib/Chunk")) => boolean);
+		| ((chunk: import("../lib/Chunk")) => boolean) | RegExp;
 	/**
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
 	 */
