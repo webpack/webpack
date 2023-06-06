@@ -2626,11 +2626,12 @@
               "enum": ["initial", "async", "all"]
             },
             {
-              "instanceof": "Function",
-              "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
             },
             {
-              "instanceof": "RegExp"
+              "instanceof": "Function",
+              "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
             }
           ]
         },
@@ -2876,11 +2877,12 @@
               "enum": ["initial", "async", "all"]
             },
             {
-              "instanceof": "Function",
-              "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
             },
             {
-              "instanceof": "RegExp"
+              "instanceof": "Function",
+              "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
             }
           ]
         },
@@ -2918,11 +2920,12 @@
                   "enum": ["initial", "async", "all"]
                 },
                 {
-                  "instanceof": "Function",
-                  "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
+                  "instanceof": "RegExp",
+                  "tsType": "RegExp"
                 },
                 {
-                  "instanceof": "RegExp"
+                  "instanceof": "Function",
+                  "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
                 }
               ]
             },
