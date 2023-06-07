@@ -1,3 +1,4 @@
+@import "./style-import.css";
 @import "print.css?foo=1";
 @import url("print.css?foo=2");
 @import "print.css?foo=3" layer(default);
