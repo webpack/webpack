@@ -2378,6 +2378,10 @@ declare interface Configuration {
 	 * Add additional plugins to the compiler.
 	 */
 	plugins?: (
+		| null
+		| false
+		| ""
+		| 0
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance
 	)[];
@@ -7691,7 +7695,7 @@ declare interface ModuleOptions {
 	/**
 	 * An array of rules applied by default for modules.
 	 */
-	defaultRules?: (RuleSetRule | "...")[];
+	defaultRules?: (null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
 	 * Enable warnings for full dynamic dependencies.
@@ -7731,7 +7735,7 @@ declare interface ModuleOptions {
 	/**
 	 * An array of rules applied for modules.
 	 */
-	rules?: (RuleSetRule | "...")[];
+	rules?: (null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
 	 * Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.
@@ -7791,7 +7795,7 @@ declare interface ModuleOptionsNormalized {
 	/**
 	 * An array of rules applied by default for modules.
 	 */
-	defaultRules: (RuleSetRule | "...")[];
+	defaultRules: (null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
 	 * Specify options for each generator.
@@ -7811,7 +7815,7 @@ declare interface ModuleOptionsNormalized {
 	/**
 	 * An array of rules applied for modules.
 	 */
-	rules: (RuleSetRule | "...")[];
+	rules: (null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
 	 * Cache the resolving of module requests.
@@ -8609,6 +8613,10 @@ declare interface Optimization {
 	 * Minimizer(s) to use for minimizing the output.
 	 */
 	minimizer?: (
+		| null
+		| false
+		| ""
+		| 0
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance
 		| "..."
@@ -10752,7 +10760,7 @@ declare interface RuleSetRule {
 	/**
 	 * Only execute the first matching rule in this array.
 	 */
-	oneOf?: RuleSetRule[];
+	oneOf?: (null | false | "" | 0 | RuleSetRule)[];
 
 	/**
 	 * Shortcut for use.options.
@@ -10849,30 +10857,11 @@ declare interface RuleSetRule {
 	 */
 	use?:
 		| string
-		| RuleSetUseItem[]
-		| ((data: {
-				resource: string;
-				realResource: string;
-				resourceQuery: string;
-				issuer: string;
-				compiler: string;
-		  }) => RuleSetUseItem[])
-		| {
-				/**
-				 * Unique loader options identifier.
-				 */
-				ident?: string;
-				/**
-				 * Loader name.
-				 */
-				loader?: string;
-				/**
-				 * Loader options.
-				 */
-				options?: string | { [index: string]: any };
-		  }
-		| ((data: object) =>
+		| (
+				| null
 				| string
+				| false
+				| 0
 				| {
 						/**
 						 * Unique loader options identifier.
@@ -10887,19 +10876,95 @@ declare interface RuleSetRule {
 						 */
 						options?: string | { [index: string]: any };
 				  }
-				| __TypeWebpackOptions
-				| RuleSetUseItem[]);
+				| ((data: object) =>
+						| string
+						| {
+								/**
+								 * Unique loader options identifier.
+								 */
+								ident?: string;
+								/**
+								 * Loader name.
+								 */
+								loader?: string;
+								/**
+								 * Loader options.
+								 */
+								options?: string | { [index: string]: any };
+						  }
+						| __TypeWebpackOptions
+						| __Type_2[])
+		  )[]
+		| ((data: {
+				resource: string;
+				realResource: string;
+				resourceQuery: string;
+				issuer: string;
+				compiler: string;
+		  }) => __Type_2[])
+		| {
+				/**
+				 * Unique loader options identifier.
+				 */
+				ident?: string;
+				/**
+				 * Loader name.
+				 */
+				loader?: string;
+				/**
+				 * Loader options.
+				 */
+				options?: string | { [index: string]: any };
+		  }
+		| __TypeWebpackOptions;
 }
 type RuleSetUse =
 	| string
-	| RuleSetUseItem[]
+	| (
+			| null
+			| string
+			| false
+			| 0
+			| {
+					/**
+					 * Unique loader options identifier.
+					 */
+					ident?: string;
+					/**
+					 * Loader name.
+					 */
+					loader?: string;
+					/**
+					 * Loader options.
+					 */
+					options?: string | { [index: string]: any };
+			  }
+			| ((data: object) =>
+					| string
+					| {
+							/**
+							 * Unique loader options identifier.
+							 */
+							ident?: string;
+							/**
+							 * Loader name.
+							 */
+							loader?: string;
+							/**
+							 * Loader options.
+							 */
+							options?: string | { [index: string]: any };
+					  }
+					| __TypeWebpackOptions
+					| __Type_2[])
+	  )[]
 	| ((data: {
 			resource: string;
 			realResource: string;
 			resourceQuery: string;
 			issuer: string;
 			compiler: string;
-	  }) => RuleSetUseItem[])
+	  }) => __Type_2[])
 	| {
 			/**
 			 * Unique loader options identifier.
@@ -13155,6 +13220,10 @@ declare interface WebpackOptionsNormalized {
 	 * Add additional plugins to the compiler.
 	 */
 	plugins: (
+		| null
+		| false
+		| ""
+		| 0
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance
 	)[];
@@ -13252,7 +13321,44 @@ type __TypeWebpackOptions = (data: object) =>
 			options?: string | { [index: string]: any };
 	  }
 	| __TypeWebpackOptions
-	| RuleSetUseItem[];
+	| __Type_2[];
+type __Type_2 =
+	| null
+	| string
+	| false
+	| 0
+	| {
+			/**
+			 * Unique loader options identifier.
+			 */
+			ident?: string;
+			/**
+			 * Loader name.
+			 */
+			loader?: string;
+			/**
+			 * Loader options.
+			 */
+			options?: string | { [index: string]: any };
+	  }
+	| ((data: object) =>
+			| string
+			| {
+					/**
+					 * Unique loader options identifier.
+					 */
+					ident?: string;
+					/**
+					 * Loader name.
+					 */
+					loader?: string;
+					/**
+					 * Loader options.
+					 */
+					options?: string | { [index: string]: any };
+			  }
+			| __TypeWebpackOptions
+			| __Type_2[]);
 declare function exports(
 	options: Configuration,
 	callback?: CallbackWebpack<Stats>

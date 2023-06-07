@@ -290,6 +290,10 @@ export type RuleSetConditionsAbsolute = RuleSetConditionAbsolute[];
  */
 export type RuleSetLoader = string;
 /**
+ * Falsy value.
+ */
+export type Falsy = false | 0 | "" | null;
+/**
  * Options passed to a loader.
  */
 export type RuleSetLoaderOptions =
@@ -325,14 +329,14 @@ export type ResolveAlias =
  * A list of descriptions of loaders applied.
  */
 export type RuleSetUse =
-	| RuleSetUseItem[]
+	| (Falsy | RuleSetUseItem)[]
 	| ((data: {
 			resource: string;
 			realResource: string;
 			resourceQuery: string;
 			issuer: string;
 			compiler: string;
-	  }) => RuleSetUseItem[])
+	  }) => (Falsy | RuleSetUseItem)[])
 	| RuleSetUseItem;
 /**
  * A description of an applied loader.
@@ -352,12 +356,12 @@ export type RuleSetUseItem =
 			 */
 			options?: RuleSetLoaderOptions;
 	  }
-	| ((data: object) => RuleSetUseItem | RuleSetUseItem[])
+	| ((data: object) => RuleSetUseItem | (Falsy | RuleSetUseItem)[])
 	| RuleSetLoader;
 /**
  * A list of rules.
  */
-export type RuleSetRules = ("..." | RuleSetRule)[];
+export type RuleSetRules = ("..." | (false | 0 | "" | null) | RuleSetRule)[];
 /**
  * Specify options for each generator.
  */
@@ -596,7 +600,7 @@ export type Performance = false | PerformanceOptions;
 /**
  * Add additional plugins to the compiler.
  */
-export type Plugins = (WebpackPluginInstance | WebpackPluginFunction)[];
+export type Plugins = (Falsy | WebpackPluginInstance | WebpackPluginFunction)[];
 /**
  * Capture timing information for each module.
  */
@@ -1392,7 +1396,7 @@ export interface RuleSetRule {
 	/**
 	 * Only execute the first matching rule in this array.
 	 */
-	oneOf?: RuleSetRule[];
+	oneOf?: (Falsy | RuleSetRule)[];
 	/**
 	 * Shortcut for use.options.
 	 */
@@ -1695,7 +1699,7 @@ export interface Optimization {
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
-	minimizer?: ("..." | WebpackPluginInstance | WebpackPluginFunction)[];
+	minimizer?: ("..." | Falsy | WebpackPluginInstance | WebpackPluginFunction)[];
 	/**
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
