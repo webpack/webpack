@@ -250,6 +250,10 @@ export type FilterItemTypes = RegExp | string | ((value: string) => boolean);
  */
 export type Mode = "development" | "production" | "none";
 /**
+ * Falsy value.
+ */
+export type Falsy = false | 0 | "" | null;
+/**
  * One or multiple rule conditions.
  */
 export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
@@ -289,10 +293,6 @@ export type RuleSetConditionsAbsolute = RuleSetConditionAbsolute[];
  * A loader request.
  */
 export type RuleSetLoader = string;
-/**
- * Falsy value.
- */
-export type Falsy = false | 0 | "" | null;
 /**
  * Options passed to a loader.
  */
@@ -361,7 +361,7 @@ export type RuleSetUseItem =
 /**
  * A list of rules.
  */
-export type RuleSetRules = ("..." | (false | 0 | "" | null) | RuleSetRule)[];
+export type RuleSetRules = ("..." | Falsy | RuleSetRule)[];
 /**
  * Specify options for each generator.
  */
@@ -1430,7 +1430,7 @@ export interface RuleSetRule {
 	/**
 	 * Match and execute these rules when this rule is matched.
 	 */
-	rules?: RuleSetRule[];
+	rules?: (Falsy | RuleSetRule)[];
 	/**
 	 * Match module scheme.
 	 */

@@ -81,6 +81,17 @@ module.exports = {
 						}
 					];
 				}
+			},
+			{
+				test: /other\.js$/,
+				rules: [
+					nullValue && {
+						loader: "unknown-loader"
+					},
+					{
+						loader: "./loader.js"
+					}
+				]
 			}
 		]
 	},

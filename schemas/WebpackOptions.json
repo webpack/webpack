@@ -4297,7 +4297,7 @@
           "type": "array",
           "items": {
             "description": "A rule.",
-            "oneOf": [
+            "anyOf": [
               {
                 "$ref": "#/definitions/Falsy"
               },
@@ -4369,7 +4369,10 @@
           "type": "array",
           "items": {
             "description": "A rule.",
-            "oneOf": [
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Falsy"
+              },
               {
                 "$ref": "#/definitions/RuleSetRule"
               }
@@ -4423,10 +4426,7 @@
             "enum": ["..."]
           },
           {
-            "$ref": "#/definitions/Falsy",
-            "cli": {
-              "exclude": true
-            }
+            "$ref": "#/definitions/Falsy"
           },
           {
             "$ref": "#/definitions/RuleSetRule"
@@ -4441,7 +4441,7 @@
           "type": "array",
           "items": {
             "description": "An use item.",
-            "oneOf": [
+            "anyOf": [
               {
                 "$ref": "#/definitions/Falsy"
               },

@@ -10820,7 +10820,7 @@ declare interface RuleSetRule {
 	/**
 	 * Match and execute these rules when this rule is matched.
 	 */
-	rules?: RuleSetRule[];
+	rules?: (null | false | "" | 0 | RuleSetRule)[];
 
 	/**
 	 * Match module scheme.
