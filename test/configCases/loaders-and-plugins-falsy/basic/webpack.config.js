@@ -1,8 +1,7 @@
 var DefinePlugin = require("../../../../").DefinePlugin;
 
 const nullValue = null;
-// TODO fix me
-const undefinedValue = null;
+const undefinedValue = undefined;
 const falseValue = false;
 const zeroValue = 0;
 const emptyStringValue = "";

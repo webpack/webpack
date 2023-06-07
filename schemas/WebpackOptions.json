@@ -1150,7 +1150,8 @@
       "cli": {
         "exclude": true
       },
-      "enum": [false, 0, "", null]
+      "enum": [false, 0, "", null],
+      "undefinedAsNull": true
     },
     "FileCacheOptions": {
       "description": "Options object for persistent file-based caching.",
