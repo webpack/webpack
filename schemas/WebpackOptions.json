@@ -3942,6 +3942,9 @@
                 "enum": ["..."]
               },
               {
+                "$ref": "#/definitions/Falsy"
+              },
+              {
                 "$ref": "#/definitions/ResolvePluginInstance"
               }
             ]
