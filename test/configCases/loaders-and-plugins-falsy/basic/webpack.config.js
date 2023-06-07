@@ -40,6 +40,7 @@ class TestChildCompilationPlugin {
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
+	// Will failed because we don't have unknown-loader
 	module: {
 		defaultRules: [
 			nullValue && {
@@ -49,7 +50,6 @@ module.exports = {
 			"..."
 		],
 		rules: [
-			// Will failed because we don't have unknown-loader
 			nullValue && {
 				test: /\.js$/,
 				loader: "unknown-loader"
