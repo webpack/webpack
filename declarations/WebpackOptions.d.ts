@@ -252,7 +252,7 @@ export type Mode = "development" | "production" | "none";
 /**
  * These values will be ignored by webpack and created to be used with '&&' or '||' to improve readability of configurations.
  */
-export type Falsy = false | 0 | "" | null;
+export type Falsy = false | 0 | "" | null | undefined;
 /**
  * One or multiple rule conditions.
  */
@@ -1581,7 +1581,7 @@ export interface ResolveOptions {
 	/**
 	 * Plugins for the resolver.
 	 */
-	plugins?: ("..." | ResolvePluginInstance)[];
+	plugins?: ("..." | Falsy | ResolvePluginInstance)[];
 	/**
 	 * Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.
 	 */

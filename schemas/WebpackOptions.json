@@ -1151,7 +1151,8 @@
         "exclude": true
       },
       "enum": [false, 0, "", null],
-      "undefinedAsNull": true
+      "undefinedAsNull": true,
+      "tsType": "false | 0 | '' | null | undefined"
     },
     "FileCacheOptions": {
       "description": "Options object for persistent file-based caching.",

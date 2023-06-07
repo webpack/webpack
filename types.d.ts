@@ -2378,6 +2378,7 @@ declare interface Configuration {
 	 * Add additional plugins to the compiler.
 	 */
 	plugins?: (
+		| undefined
 		| null
 		| false
 		| ""
@@ -7695,7 +7696,7 @@ declare interface ModuleOptions {
 	/**
 	 * An array of rules applied by default for modules.
 	 */
-	defaultRules?: (null | false | "" | 0 | RuleSetRule | "...")[];
+	defaultRules?: (undefined | null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
 	 * Enable warnings for full dynamic dependencies.
@@ -7735,7 +7736,7 @@ declare interface ModuleOptions {
 	/**
 	 * An array of rules applied for modules.
 	 */
-	rules?: (null | false | "" | 0 | RuleSetRule | "...")[];
+	rules?: (undefined | null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
 	 * Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.
@@ -7795,7 +7796,7 @@ declare interface ModuleOptionsNormalized {
 	/**
 	 * An array of rules applied by default for modules.
 	 */
-	defaultRules: (null | false | "" | 0 | RuleSetRule | "...")[];
+	defaultRules: (undefined | null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
 	 * Specify options for each generator.
@@ -7815,7 +7816,7 @@ declare interface ModuleOptionsNormalized {
 	/**
 	 * An array of rules applied for modules.
 	 */
-	rules: (null | false | "" | 0 | RuleSetRule | "...")[];
+	rules: (undefined | null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
 	 * Cache the resolving of module requests.
@@ -8613,6 +8614,7 @@ declare interface Optimization {
 	 * Minimizer(s) to use for minimizing the output.
 	 */
 	minimizer?: (
+		| undefined
 		| null
 		| false
 		| ""
@@ -10420,7 +10422,15 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Plugins for the resolver.
 	 */
-	plugins?: (ResolvePluginInstance | "...")[];
+	plugins?: (
+		| undefined
+		| null
+		| false
+		| ""
+		| 0
+		| ResolvePluginInstance
+		| "..."
+	)[];
 
 	/**
 	 * Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.
@@ -10760,7 +10770,7 @@ declare interface RuleSetRule {
 	/**
 	 * Only execute the first matching rule in this array.
 	 */
-	oneOf?: (null | false | "" | 0 | RuleSetRule)[];
+	oneOf?: (undefined | null | false | "" | 0 | RuleSetRule)[];
 
 	/**
 	 * Shortcut for use.options.
@@ -10820,7 +10830,7 @@ declare interface RuleSetRule {
 	/**
 	 * Match and execute these rules when this rule is matched.
 	 */
-	rules?: (null | false | "" | 0 | RuleSetRule)[];
+	rules?: (undefined | null | false | "" | 0 | RuleSetRule)[];
 
 	/**
 	 * Match module scheme.
@@ -10858,6 +10868,7 @@ declare interface RuleSetRule {
 	use?:
 		| string
 		| (
+				| undefined
 				| null
 				| string
 				| false
@@ -10921,6 +10932,7 @@ declare interface RuleSetRule {
 type RuleSetUse =
 	| string
 	| (
+			| undefined
 			| null
 			| string
 			| false
@@ -13220,6 +13232,7 @@ declare interface WebpackOptionsNormalized {
 	 * Add additional plugins to the compiler.
 	 */
 	plugins: (
+		| undefined
 		| null
 		| false
 		| ""
@@ -13323,6 +13336,7 @@ type __TypeWebpackOptions = (data: object) =>
 	| __TypeWebpackOptions
 	| __Type_2[];
 type __Type_2 =
+	| undefined
 	| null
 	| string
 	| false
