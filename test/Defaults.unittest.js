@@ -2249,7 +2249,6 @@ describe("snapshots", () => {
 			+               ],
 			+               "fullySpecified": true,
 			+               "mainFields": Array [
-			+                 "css",
 			+                 "style",
 			+                 "main",
 			+                 "...",
@@ -2273,7 +2272,6 @@ describe("snapshots", () => {
 			+               ],
 			+               "fullySpecified": true,
 			+               "mainFields": Array [
-			+                 "css",
 			+                 "style",
 			+                 "main",
 			+                 "...",
@@ -2301,7 +2299,6 @@ describe("snapshots", () => {
 			+           ],
 			+           "fullySpecified": true,
 			+           "mainFields": Array [
-			+             "css",
 			+             "style",
 			+             "main",
 			+             "...",
@@ -2324,7 +2321,6 @@ describe("snapshots", () => {
 			+           ],
 			+           "fullySpecified": true,
 			+           "mainFields": Array [
-			+             "css",
 			+             "style",
 			+             "main",
 			+             "...",
