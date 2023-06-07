@@ -309,15 +309,18 @@ describe("Validation", () => {
 		"Invalid plugin provided: bool",
 		{
 			entry: "foo.js",
-			plugins: [false]
+			plugins: [true]
 		},
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] should be one of these:
-			   object { apply, … } | function
+			   false | 0 | \\"\\" | null | object { apply, … } | function
 			   -> Plugin of type object or instanceof Function.
 			   Details:
+			    * configuration.plugins[0] should be one of these:
+			      false | 0 | \\"\\" | null
+			      -> These values will be ignored by webpack and created to be used with '&&' or '||' to improve readability of configurations.
 			    * configuration.plugins[0] should be an object:
 			      object { apply, … }
 			      -> Plugin instance.
@@ -336,9 +339,12 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] should be one of these:
-			   object { apply, … } | function
+			   false | 0 | \\"\\" | null | object { apply, … } | function
 			   -> Plugin of type object or instanceof Function.
 			   Details:
+			    * configuration.plugins[0] should be one of these:
+			      false | 0 | \\"\\" | null
+			      -> These values will be ignored by webpack and created to be used with '&&' or '||' to improve readability of configurations.
 			    * configuration.plugins[0] should be an object:
 			      object { apply, … }
 			      -> Plugin instance.
@@ -357,9 +363,12 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] should be one of these:
-			   object { apply, … } | function
+			   false | 0 | \\"\\" | null | object { apply, … } | function
 			   -> Plugin of type object or instanceof Function.
 			   Details:
+			    * configuration.plugins[0] should be one of these:
+			      false | 0 | \\"\\" | null
+			      -> These values will be ignored by webpack and created to be used with '&&' or '||' to improve readability of configurations.
 			    * configuration.plugins[0] should be an object:
 			      object { apply, … }
 			      -> Plugin instance.
@@ -378,9 +387,12 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialized using a configuration object that does not match the API schema.
 			 - configuration.plugins[0] should be one of these:
-			   object { apply, … } | function
+			   false | 0 | \\"\\" | null | object { apply, … } | function
 			   -> Plugin of type object or instanceof Function.
 			   Details:
+			    * configuration.plugins[0] should be one of these:
+			      false | 0 | \\"\\" | null
+			      -> These values will be ignored by webpack and created to be used with '&&' or '||' to improve readability of configurations.
 			    * configuration.plugins[0] should be an object:
 			      object { apply, … }
 			      -> Plugin instance.

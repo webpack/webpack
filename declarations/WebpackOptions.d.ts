@@ -250,7 +250,7 @@ export type FilterItemTypes = RegExp | string | ((value: string) => boolean);
  */
 export type Mode = "development" | "production" | "none";
 /**
- * Falsy value.
+ * These values will be ignored by webpack and created to be used with '&&' or '||' to improve readability of configurations.
  */
 export type Falsy = false | 0 | "" | null;
 /**

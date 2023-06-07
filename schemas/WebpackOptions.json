@@ -1146,7 +1146,7 @@
       ]
     },
     "Falsy": {
-      "description": "Falsy value.",
+      "description": "These values will be ignored by webpack and created to be used with '&&' or '||' to improve readability of configurations.",
       "enum": [false, 0, "", null]
     },
     "FileCacheOptions": {
