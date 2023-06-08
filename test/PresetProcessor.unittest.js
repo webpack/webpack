@@ -167,4 +167,78 @@ describe("PresetProcessor", function () {
 			"@babel/preset-react"
 		]);
 	});
+
+	it("should merge splitChunks correctly", function () {
+		const webpackConfig = {
+			presets: [
+				{
+					optimization: {
+						splitChunks: {
+							cacheGroups: {
+								vendor: {
+									test: /[\\/]node_modules[\\/]/,
+									name(module) {
+										const packageName = module.context.match(
+											/[\\/]node_modules[\\/](.*?)([\\/]|$)/
+										)[1];
+										return `module.${packageName.replace("@", "")}`; // Naming convention for module chunks
+									}
+								}
+							}
+						}
+					}
+				},
+				{
+					optimization: {
+						chunks: "all",
+						splitChunks: {
+							cacheGroups: {
+								styles: {
+									name: "styles",
+									test: /\.scss$/,
+									chunks: "async",
+									enforce: true
+								}
+							}
+						}
+					}
+				},
+				{
+					optimization: {
+						chunks: "all",
+						splitChunks: {
+							cacheGroups: {
+								styles: {
+									name: "styles2",
+									test: /\.scss$/,
+									chunks: "async",
+									enforce: false
+								}
+							}
+						}
+					}
+				}
+			]
+		};
+		const mergedConfig = PresetProcessor.recursivelyMergePresets(webpackConfig);
+		expect(mergedConfig.optimization).toMatchInlineSnapshot(`
+		Object {
+		  "chunks": "all",
+		  "splitChunks": Object {
+		    "cacheGroups": Object {
+		      "styles": Object {
+		        "chunks": "async",
+		        "enforce": false,
+		        "name": "styles2",
+		        "test": /\\\\\\.scss\\$/,
+		      },
+		      "vendor": Object {
+		        "name": [Function],
+		        "test": /\\[\\\\\\\\/\\]node_modules\\[\\\\\\\\/\\]/,
+		      },
+		    },
+		  },
+		}
+	`);
+	});
 });
