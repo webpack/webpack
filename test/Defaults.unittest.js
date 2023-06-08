@@ -430,6 +430,24 @@ describe("snapshots", () => {
 		          "...",
 		        ],
 		      },
+		      "css-import": Object {
+		        "conditionNames": Array [
+		          "style",
+		        ],
+		        "extensions": Array [
+		          ".css",
+		          "...",
+		        ],
+		        "mainFields": Array [
+		          "style",
+		          "main",
+		          "...",
+		        ],
+		        "mainFiles": Array [
+		          "index",
+		          "...",
+		        ],
+		      },
 		      "esm": Object {
 		        "aliasFields": Array [
 		          "browser",
@@ -2240,46 +2258,14 @@ describe("snapshots", () => {
 			+         "oneOf": Array [
 			+           Object {
 			+             "resolve": Object {
-			+               "conditionNames": Array [
-			+                 "style",
-			+               ],
-			+               "extensions": Array [
-			+                 ".css",
-			+                 "...",
-			+               ],
 			+               "fullySpecified": true,
-			+               "mainFields": Array [
-			+                 "style",
-			+                 "main",
-			+                 "...",
-			+               ],
-			+               "mainFiles": Array [
-			+                 "index",
-			+                 "...",
-			+               ],
 			+             },
 			+             "test": /\\.module\\.css$/i,
 			+             "type": "css/module",
 			+           },
 			+           Object {
 			+             "resolve": Object {
-			+               "conditionNames": Array [
-			+                 "style",
-			+               ],
-			+               "extensions": Array [
-			+                 ".css",
-			+                 "...",
-			+               ],
 			+               "fullySpecified": true,
-			+               "mainFields": Array [
-			+                 "style",
-			+                 "main",
-			+                 "...",
-			+               ],
-			+               "mainFiles": Array [
-			+                 "index",
-			+                 "...",
-			+               ],
 			+               "preferRelative": true,
 			+             },
 			+             "type": "css",
@@ -2290,45 +2276,13 @@ describe("snapshots", () => {
 			+       Object {
 			+         "mimetype": "text/css+module",
 			+         "resolve": Object {
-			+           "conditionNames": Array [
-			+             "style",
-			+           ],
-			+           "extensions": Array [
-			+             ".css",
-			+             "...",
-			+           ],
 			+           "fullySpecified": true,
-			+           "mainFields": Array [
-			+             "style",
-			+             "main",
-			+             "...",
-			+           ],
-			+           "mainFiles": Array [
-			+             "index",
-			+             "...",
-			+           ],
 			+         },
 			+         "type": "css/module",
 			@@ ... @@
 			+         "mimetype": "text/css",
 			+         "resolve": Object {
-			+           "conditionNames": Array [
-			+             "style",
-			+           ],
-			+           "extensions": Array [
-			+             ".css",
-			+             "...",
-			+           ],
 			+           "fullySpecified": true,
-			+           "mainFields": Array [
-			+             "style",
-			+             "main",
-			+             "...",
-			+           ],
-			+           "mainFiles": Array [
-			+             "index",
-			+             "...",
-			+           ],
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
