@@ -41,6 +41,101 @@ describe("Compiler (filesystem caching)", () => {
 			]
 		};
 
+		const isBigIntSupported = typeof BigInt !== "undefined";
+		const isErrorCaseSupported =
+			typeof new Error("test", { cause: new Error("cause") }).cause !==
+			"undefined";
+
+		options.plugins = [
+			{
+				apply(compiler) {
+					const name = "TestCachePlugin";
+
+					compiler.hooks.thisCompilation.tap(name, compilation => {
+						compilation.hooks.processAssets.tapPromise(
+							{
+								name,
+								stage:
+									compiler.webpack.Compilation
+										.PROCESS_ASSETS_STAGE_OPTIMIZE_SIZE
+							},
+							async () => {
+								const cache = compilation.getCache(name);
+								const ident = "test.ext";
+								const cacheItem = cache.getItemCache(ident, null);
+
+								const result = await cacheItem.getPromise(ident);
+
+								if (result) {
+									expect(result.number).toEqual(42);
+									expect(result.number1).toEqual(3.14);
+									expect(result.number2).toEqual(6.2);
+									expect(result.string).toEqual("string");
+
+									if (isErrorCaseSupported) {
+										expect(result.error.cause.message).toEqual("cause");
+										expect(result.error1.cause.string).toBe("string");
+										expect(result.error1.cause.number).toBe(42);
+									}
+
+									if (isBigIntSupported) {
+										expect(result.bigint).toEqual(5n);
+										expect(result.bigint1).toEqual(124n);
+										expect(result.bigint2).toEqual(125n);
+										expect(result.bigint3).toEqual(12345678901234567890n);
+										expect(result.bigint4).toEqual(5n);
+										expect(result.bigint5).toEqual(1000000n);
+										expect(result.bigint6).toEqual(128n);
+										expect(result.bigint7).toEqual(2147483647n);
+										expect(result.obj.foo).toBe(BigInt(-10));
+										expect(Array.from(result.set)).toEqual([
+											BigInt(1),
+											BigInt(2)
+										]);
+										expect(result.arr).toEqual([256n, 257n, 258n]);
+									}
+
+									return;
+								}
+
+								const storeValue = {};
+
+								storeValue.number = 42;
+								storeValue.number1 = 3.14;
+								storeValue.number2 = 6.2;
+								storeValue.string = "string";
+
+								if (isErrorCaseSupported) {
+									storeValue.error = new Error("error", {
+										cause: new Error("cause")
+									});
+									storeValue.error1 = new Error("error", {
+										cause: { string: "string", number: 42 }
+									});
+								}
+
+								if (isBigIntSupported) {
+									storeValue.bigint = BigInt(5);
+									storeValue.bigint1 = BigInt(124);
+									storeValue.bigint2 = BigInt(125);
+									storeValue.bigint3 = 12345678901234567890n;
+									storeValue.bigint4 = 5n;
+									storeValue.bigint5 = 1000000n;
+									storeValue.bigint6 = 128n;
+									storeValue.bigint7 = 2147483647n;
+									storeValue.obj = { foo: BigInt(-10) };
+									storeValue.set = new Set([BigInt(1), BigInt(2)]);
+									storeValue.arr = [256n, 257n, 258n];
+								}
+
+								await cacheItem.storePromise(storeValue);
+							}
+						);
+					});
+				}
+			}
+		];
+
 		function runCompiler(onSuccess, onError) {
 			const c = webpack(options);
 			c.hooks.compilation.tap(
