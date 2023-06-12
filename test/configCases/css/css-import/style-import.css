@@ -3,3 +3,5 @@
 @import "package-with-exports";
 @import url("some-file.js");
 @import "js-import";
+@import "non-exported-css";
+@import "./directory";
