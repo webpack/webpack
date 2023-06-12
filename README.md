@@ -714,5 +714,5 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 [builds2-url]: https://dev.azure.com/webpack/webpack/_build/latest?definitionId=3
 [licenses-url]: https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_shield
 [licenses]: https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack.svg?type=shield
-[cover]: https://img.shields.io/coveralls/webpack/webpack.svg
-[cover-url]: https://coveralls.io/r/webpack/webpack/
+[cover]: https://codecov.io/gh/webpack/webpack/branch/master/graph/badge.svg?token=mDP3mQJNnn
+[cover-url]: https://codecov.io/gh/webpack/webpack
