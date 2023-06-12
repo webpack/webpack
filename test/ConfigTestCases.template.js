@@ -96,7 +96,10 @@ const describeCases = config => {
 									options.optimization.minimizer = [
 										new (require("terser-webpack-plugin"))({
 											parallel: false
-										})
+										}),
+										...(options.experiments && options.experiments.css
+											? [new (require("css-minimizer-webpack-plugin"))()]
+											: [])
 									];
 								}
 								if (!options.entry) options.entry = "./index.js";
