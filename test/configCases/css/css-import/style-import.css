@@ -1,3 +1,5 @@
 @import "style-library";
 @import "main-field";
 @import "package-with-exports";
+@import url("some-file.js");
+@import "js-import";
