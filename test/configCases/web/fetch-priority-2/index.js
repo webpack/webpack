@@ -12,7 +12,7 @@ it("should set fetchPriority", () => {
 	import(/* webpackFetchPriority: "low" */ "./c");
 	expect(document.head._children).toHaveLength(6);
 	const script3 = document.head._children[5];
-	expect(script3._attributes.fetchpriority).toBe("auto");
+	expect(script3._attributes.fetchpriority).toBe("low");
 
 	import(/* webpackPrefetch: 20, webpackFetchPriority: "auto" */ "./c");
 
@@ -24,5 +24,19 @@ it("should set fetchPriority", () => {
 	import(/* webpackPrefetch: -20 */ "./d3");
 	expect(document.head._children).toHaveLength(8);
 	const script5 = document.head._children[7];
-	expect(script5._attributes.fetchpriority).toBe("high");
+	expect(script5._attributes.fetchpriority).toBeUndefined();
+
+	const condition = true;
+
+	if (!condition) {
+		import(/* webpackFetchPriority: "high", webpackChunkName: "one" */ "./e");
+		expect(document.head._children).toHaveLength(9);
+		const script6 = document.head._children[8];
+		expect(script6._attributes.fetchpriority).toBe("high");
+	} else {
+		import(/* webpackFetchPriority: "low", webpackChunkName: "two" */ "./e");
+		expect(document.head._children).toHaveLength(9);
+		const script6 = document.head._children[8];
+		expect(script6._attributes.fetchpriority).toBe("low");
+	}
 });
