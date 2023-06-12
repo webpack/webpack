@@ -11072,20 +11072,20 @@ declare interface RuntimeRequirementsContext {
 type RuntimeSpec = undefined | string | SortableSet<string>;
 declare class RuntimeSpecMap<T> {
 	constructor(clone?: RuntimeSpecMap<T>);
-	get(runtime: RuntimeSpec): T;
+	get(runtime: RuntimeSpec): undefined | T;
 	has(runtime: RuntimeSpec): boolean;
 	set(runtime?: any, value?: any): void;
 	provide(runtime?: any, computer?: any): any;
-	delete(runtime?: any): void;
+	delete(runtime: RuntimeSpec): void;
 	update(runtime?: any, fn?: any): void;
 	keys(): RuntimeSpec[];
 	values(): IterableIterator<T>;
 	get size(): number;
 }
 declare class RuntimeSpecSet {
-	constructor(iterable?: any);
-	add(runtime?: any): void;
-	has(runtime?: any): boolean;
+	constructor(iterable?: Iterable<RuntimeSpec>);
+	add(runtime: RuntimeSpec): void;
+	has(runtime: RuntimeSpec): boolean;
 	get size(): number;
 	[Symbol.iterator](): IterableIterator<RuntimeSpec>;
 }
@@ -13816,7 +13816,7 @@ declare namespace exports {
 			export const register: (
 				Constructor: Constructor,
 				request: string,
-				name: string,
+				name: null | string,
 				serializer: ObjectSerializer
 			) => void;
 			export const registerLoader: (
