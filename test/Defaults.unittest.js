@@ -436,17 +436,12 @@ describe("snapshots", () => {
 		        ],
 		        "extensions": Array [
 		          ".css",
-		          "...",
 		        ],
 		        "mainFields": Array [
 		          "style",
-		          "main",
 		          "...",
 		        ],
-		        "mainFiles": Array [
-		          "index",
-		          "...",
-		        ],
+		        "mainFiles": Array [],
 		      },
 		      "esm": Object {
 		        "aliasFields": Array [
