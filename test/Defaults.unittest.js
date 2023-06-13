@@ -2207,8 +2207,6 @@ describe("snapshots", () => {
 			+     },
 			+     "futureDefaults": true,
 			@@ ... @@
-			+       },
-			+       Object {
 			+         "rules": Array [
 			+           Object {
 			+             "descriptionData": Object {
@@ -2254,7 +2252,8 @@ describe("snapshots", () => {
 			+           },
 			+         ],
 			+         "test": /\\.css$/i,
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": "text/css+module",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -2301,7 +2300,6 @@ describe("snapshots", () => {
 			+           "...",
 			+         ],
 			+         "mainFiles": Array [],
-			+         "preferRelative": true,
 			+       },
 			@@ ... @@
 			-       "<cwd>/node_modules/",
