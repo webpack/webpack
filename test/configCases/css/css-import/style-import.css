@@ -1,21 +1,24 @@
 @import "style-library";
 @import "main-field";
 @import "package-with-exports";
-@import url("some-file.js");
-@import "js-import";
-@import "non-exported-css";
-@import "./directory";
 @import "./extensions-imported.mycss";
 @import "./with-less-import.css";
 @import "prefer-relative.css";
 @import "condition-names-style";
 @import "condition-names-style-mode";
 @import "condition-names-subpath/custom.css";
-/* Not valid */
-@import "condition-names-subpath/non-valid.css";
 @import "condition-names-subpath-extra/custom.css";
 @import "condition-names-style-less";
 @import "condition-names-custom-name";
 @import "style-and-main-library";
-/* Not valid */
 @import "condition-names-webpack";
+@import "condition-names-style-nested";
+
+/* Failed */
+
+@import "js-import";
+@import "condition-names-webpack-js";
+@import url("some-file.js");
+@import "non-exported-css";
+@import "./directory";
+@import "condition-names-subpath/non-valid.css";
