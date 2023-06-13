@@ -10,3 +10,9 @@
 @import "prefer-relative.css";
 @import "condition-names-style";
 @import "condition-names-style-development";
+@import "condition-names-subpath/custom.css";
+/* Not valid */
+@import "condition-names-subpath/non-valid.css";
+@import "condition-names-subpath-extra/custom.css";
+@import "condition-names-style-less";
+@import "condition-names-custom-name";

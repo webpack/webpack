@@ -8,6 +8,7 @@ module.exports = {
 	resolve: {
 		byDependency: {
 			"css-import": {
+				conditionNames: ["custom-name", "..."],
 				extensions: [".mycss", "..."]
 			}
 		}
