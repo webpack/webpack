@@ -430,19 +430,6 @@ describe("snapshots", () => {
 		          "...",
 		        ],
 		      },
-		      "css-import": Object {
-		        "conditionNames": Array [
-		          "style",
-		        ],
-		        "extensions": Array [
-		          ".css",
-		        ],
-		        "mainFields": Array [
-		          "style",
-		          "...",
-		        ],
-		        "mainFiles": Array [],
-		      },
 		      "esm": Object {
 		        "aliasFields": Array [
 		          "browser",
@@ -2267,14 +2254,14 @@ describe("snapshots", () => {
 			+           },
 			+         ],
 			+         "test": /\\.css$/i,
-			+       },
-			+       Object {
+			@@ ... @@
 			+         "mimetype": "text/css+module",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+         },
 			+         "type": "css/module",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": "text/css",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -2299,6 +2286,23 @@ describe("snapshots", () => {
 			-     "hashFunction": "md4",
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			+       "css-import": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			+           "...",
+			+         ],
+			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			+       },
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
