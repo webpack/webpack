@@ -14,11 +14,14 @@
 @import "condition-names-webpack";
 @import "condition-names-style-nested";
 
-/* Failed */
+/* Technically, this is not entirely true, but we allow it because the final file can be processed by the loader and return the CSS code */
 
 @import "js-import";
 @import "condition-names-webpack-js";
 @import url("some-file.js");
+
+/* Failed */
+
 @import "non-exported-css";
 @import "./directory";
 @import "condition-names-subpath/non-valid.css";
