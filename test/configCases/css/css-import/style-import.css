@@ -8,3 +8,5 @@
 @import "./extensions-imported.mycss";
 @import "./with-less-import.css";
 @import "prefer-relative.css";
+@import "condition-names-style";
+@import "condition-names-style-development";
