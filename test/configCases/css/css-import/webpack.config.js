@@ -18,6 +18,11 @@ module.exports = {
 				test: /\.mycss$/,
 				loader: "./string-loader",
 				type: "css/global"
+			},
+			{
+				test: /\.less$/,
+				loader: "less-loader",
+				type: "css/global"
 			}
 		]
 	}
