@@ -4,5 +4,21 @@ module.exports = {
 	mode: "development",
 	experiments: {
 		css: true
+	},
+	resolve: {
+		byDependency: {
+			"css-import": {
+				extensions: [".mycss", "..."]
+			}
+		}
+	},
+	module: {
+		rules: [
+			{
+				test: /\.mycss$/,
+				loader: "./string-loader",
+				type: "css/global"
+			}
+		]
 	}
 };

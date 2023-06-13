@@ -125,6 +125,7 @@ le3.css?=bar4');
 @import url('   ./string-loader.js?esModule=false!./test.css   ') screen and (orientation: landscape);
 @import url(data:text/css;charset=utf-8,a%20%7B%0D%0A%20%20color%3A%20red%3B%0D%0A%7D);
 @import url(data:text/css;charset=utf-8,a%20%7B%0D%0A%20%20color%3A%20blue%3B%0D%0A%7D) screen and (orientation:landscape);
+@import url("data:text/css;charset=utf-8;base64,YSB7DQogIGNvbG9yOiByZWQ7DQp9");
 
 @import url("./style5.css?foo=1") supports();
 @import url("./style5.css?foo=2") supports(    );

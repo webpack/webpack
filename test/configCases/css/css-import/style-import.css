@@ -5,3 +5,4 @@
 @import "js-import";
 @import "non-exported-css";
 @import "./directory";
+@import "./extensions-imported.mycss";
