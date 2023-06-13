@@ -7,3 +7,4 @@
 @import "./directory";
 @import "./extensions-imported.mycss";
 @import "./with-less-import.css";
+@import "prefer-relative.css";
