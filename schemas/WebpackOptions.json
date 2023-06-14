@@ -1145,6 +1145,15 @@
         "node-commonjs"
       ]
     },
+    "Falsy": {
+      "description": "These values will be ignored by webpack and created to be used with '&&' or '||' to improve readability of configurations.",
+      "cli": {
+        "exclude": true
+      },
+      "enum": [false, 0, "", null],
+      "undefinedAsNull": true,
+      "tsType": "false | 0 | '' | null | undefined"
+    },
     "FileCacheOptions": {
       "description": "Options object for persistent file-based caching.",
       "type": "object",
@@ -2477,6 +2486,9 @@
                 "enum": ["..."]
               },
               {
+                "$ref": "#/definitions/Falsy"
+              },
+              {
                 "$ref": "#/definitions/WebpackPluginInstance"
               },
               {
@@ -3578,6 +3590,9 @@
         "description": "Plugin of type object or instanceof Function.",
         "anyOf": [
           {
+            "$ref": "#/definitions/Falsy"
+          },
+          {
             "$ref": "#/definitions/WebpackPluginInstance"
           },
           {
@@ -3926,6 +3941,9 @@
             "anyOf": [
               {
                 "enum": ["..."]
+              },
+              {
+                "$ref": "#/definitions/Falsy"
               },
               {
                 "$ref": "#/definitions/ResolvePluginInstance"
@@ -4287,7 +4305,10 @@
           "type": "array",
           "items": {
             "description": "A rule.",
-            "oneOf": [
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Falsy"
+              },
               {
                 "$ref": "#/definitions/RuleSetRule"
               }
@@ -4356,7 +4377,10 @@
           "type": "array",
           "items": {
             "description": "A rule.",
-            "oneOf": [
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Falsy"
+              },
               {
                 "$ref": "#/definitions/RuleSetRule"
               }
@@ -4410,6 +4434,9 @@
             "enum": ["..."]
           },
           {
+            "$ref": "#/definitions/Falsy"
+          },
+          {
             "$ref": "#/definitions/RuleSetRule"
           }
         ]
@@ -4422,7 +4449,10 @@
           "type": "array",
           "items": {
             "description": "An use item.",
-            "oneOf": [
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Falsy"
+              },
               {
                 "$ref": "#/definitions/RuleSetUseItem"
               }
@@ -4431,7 +4461,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((data: { resource: string, realResource: string, resourceQuery: string, issuer: string, compiler: string }) => RuleSetUseItem[])"
+          "tsType": "((data: { resource: string, realResource: string, resourceQuery: string, issuer: string, compiler: string }) => (Falsy | RuleSetUseItem)[])"
         },
         {
           "$ref": "#/definitions/RuleSetUseItem"
@@ -4469,7 +4499,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((data: object) => RuleSetUseItem|RuleSetUseItem[])"
+          "tsType": "((data: object) => RuleSetUseItem | (Falsy | RuleSetUseItem)[])"
         },
         {
           "$ref": "#/definitions/RuleSetLoader"
