@@ -94,6 +94,9 @@ module.exports = {
 			}
 		]
 	},
+	resolve: {
+		plugins: [undefinedValue && new FailPlugin()]
+	},
 	plugins: [
 		new DefinePlugin({
 			ONE: JSON.stringify("ONE")
