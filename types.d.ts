@@ -6014,6 +6014,11 @@ declare interface JavascriptParserOptions {
 	createRequire?: string | boolean;
 
 	/**
+	 * Specifies global fetchPriority for dynamic import.
+	 */
+	dynamicImportFetchPriority?: false | "auto" | "low" | "high";
+
+	/**
 	 * Specifies global mode for dynamic import.
 	 */
 	dynamicImportMode?: "weak" | "eager" | "lazy" | "lazy-once";
@@ -6823,7 +6828,7 @@ declare interface LoadScriptCompilationHooks {
 	createScript: SyncWaterfallHook<[string, Chunk]>;
 }
 declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
-	constructor(withCreateScriptUrl?: boolean);
+	constructor(withCreateScriptUrl?: boolean, withFetchPriority?: boolean);
 	static getCompilationHooks(
 		compilation: Compilation
 	): LoadScriptCompilationHooks;
@@ -9900,6 +9905,7 @@ declare interface ProvidesObject {
 declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
+	fetchPriority?: "auto" | "low" | "high";
 }
 type RawLoaderDefinition<
 	OptionsType = {},
@@ -13374,6 +13380,7 @@ declare namespace exports {
 		export let createScript: "__webpack_require__.ts";
 		export let createScriptUrl: "__webpack_require__.tu";
 		export let getTrustedTypesPolicy: "__webpack_require__.tt";
+		export let hasFetchPriority: "has fetch priority";
 		export let chunkName: "__webpack_require__.cn";
 		export let runtimeId: "__webpack_require__.j";
 		export let getChunkScriptFilename: "__webpack_require__.u";

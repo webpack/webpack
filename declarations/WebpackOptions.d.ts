@@ -3006,6 +3006,10 @@ export interface JavascriptParserOptions {
 	 */
 	createRequire?: boolean | string;
 	/**
+	 * Specifies global fetchPriority for dynamic import.
+	 */
+	dynamicImportFetchPriority?: "low" | "high" | "auto" | false;
+	/**
 	 * Specifies global mode for dynamic import.
 	 */
 	dynamicImportMode?: "eager" | "weak" | "lazy" | "lazy-once";

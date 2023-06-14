@@ -1632,6 +1632,10 @@
             }
           ]
         },
+        "dynamicImportFetchPriority": {
+          "description": "Specifies global fetchPriority for dynamic import.",
+          "enum": ["low", "high", "auto", false]
+        },
         "dynamicImportMode": {
           "description": "Specifies global mode for dynamic import.",
           "enum": ["eager", "weak", "lazy", "lazy-once"]
