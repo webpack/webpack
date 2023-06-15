@@ -6,7 +6,7 @@ module.exports = {
 		scope.window.document.head.appendChild(link1);
 		const link2 = scope.window.document.createElement("link");
 		link2.rel = "stylesheet";
-		link2.href = "asyncChunk_js2.css";
+		link2.href = "asyncChunk2_js.css";
 		scope.window.document.head.appendChild(link2);
 	},
 	findBundle: function (i, options) {
