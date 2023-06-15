@@ -9,6 +9,9 @@ module.exports = {
 		layers: true,
 		css: true
 	},
+	optimization: {
+		runtimeChunk: "single"
+	},
 	output: {
 		filename: "[name].js"
 	},
@@ -24,7 +27,8 @@ module.exports = {
 							{
 								loader: "less-loader",
 								options: {
-									additionalData: "@color: white;"
+									additionalData:
+										"@color: white; @property-color: color-light; @property-background: background-light;"
 								}
 							}
 						]
@@ -35,7 +39,8 @@ module.exports = {
 							{
 								loader: "less-loader",
 								options: {
-									additionalData: "@color: black;"
+									additionalData:
+										"@color: black; @property-color: color-dark; @property-background: background-dark;"
 								}
 							}
 						]
