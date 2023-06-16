@@ -351,16 +351,18 @@ declare interface AssetResourceGeneratorOptions {
 }
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
-		groupOptions: RawChunkGroupOptions & { name?: string } & {
-			entryOptions?: EntryOptions;
-		},
-		loc?: SyntheticDependencyLocation | RealDependencyLocation,
+		groupOptions:
+			| null
+			| (RawChunkGroupOptions & { name?: string } & {
+					entryOptions?: EntryOptions;
+			  }),
+		loc?: null | SyntheticDependencyLocation | RealDependencyLocation,
 		request?: null | string
 	);
 	groupOptions: RawChunkGroupOptions & { name?: string } & {
 		entryOptions?: EntryOptions;
 	};
-	loc?: SyntheticDependencyLocation | RealDependencyLocation;
+	loc?: null | SyntheticDependencyLocation | RealDependencyLocation;
 	request?: null | string;
 	chunkName?: string;
 	module: any;
@@ -2849,18 +2851,22 @@ declare interface ContextModuleOptions {
 }
 declare class ContextReplacementPlugin {
 	constructor(
-		resourceRegExp?: any,
+		resourceRegExp: RegExp,
 		newContentResource?: any,
 		newContentRecursive?: any,
 		newContentRegExp?: any
 	);
-	resourceRegExp: any;
+	resourceRegExp: RegExp;
 	newContentCallback: any;
 	newContentResource: any;
 	newContentCreateContextMap: any;
 	newContentRecursive: any;
 	newContentRegExp: any;
-	apply(compiler?: any): void;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
 }
 declare interface ContextTimestampAndHash {
 	safeTime: number;
@@ -3217,7 +3223,11 @@ declare interface DllPluginOptions {
 declare class DllReferencePlugin {
 	constructor(options: DllReferencePluginOptions);
 	options: DllReferencePluginOptions;
-	apply(compiler?: any): void;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
 }
 type DllReferencePluginOptions =
 	| {
