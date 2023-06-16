@@ -355,13 +355,13 @@ declare class AsyncDependenciesBlock extends DependenciesBlock {
 			entryOptions?: EntryOptions;
 		},
 		loc?: SyntheticDependencyLocation | RealDependencyLocation,
-		request?: string
+		request?: null | string
 	);
 	groupOptions: RawChunkGroupOptions & { name?: string } & {
 		entryOptions?: EntryOptions;
 	};
 	loc?: SyntheticDependencyLocation | RealDependencyLocation;
-	request?: string;
+	request?: null | string;
 	chunkName?: string;
 	module: any;
 }
