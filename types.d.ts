@@ -2953,10 +2953,10 @@ declare class Dependency {
 	get category(): string;
 	loc: DependencyLocation;
 	setLoc(
-		startLine?: any,
-		startColumn?: any,
-		endLine?: any,
-		endColumn?: any
+		startLine: number,
+		startColumn: number,
+		endLine: number,
+		endColumn: number
 	): void;
 	getContext(): undefined | string;
 	getResourceIdentifier(): null | string;
@@ -2989,12 +2989,12 @@ declare class Dependency {
 	/**
 	 * Returns warnings
 	 */
-	getWarnings(moduleGraph: ModuleGraph): WebpackError[];
+	getWarnings(moduleGraph: ModuleGraph): undefined | null | WebpackError[];
 
 	/**
 	 * Returns errors
 	 */
-	getErrors(moduleGraph: ModuleGraph): WebpackError[];
+	getErrors(moduleGraph: ModuleGraph): undefined | null | WebpackError[];
 
 	/**
 	 * Update the hash
@@ -3008,7 +3008,7 @@ declare class Dependency {
 	getModuleEvaluationSideEffectsState(
 		moduleGraph: ModuleGraph
 	): ConnectionState;
-	createIgnoredModule(context: string): Module;
+	createIgnoredModule(context: string): null | Module;
 	serialize(__0: ObjectSerializerContext): void;
 	deserialize(__0: ObjectDeserializerContext): void;
 	module: any;
@@ -7545,7 +7545,7 @@ declare class Module extends DependenciesBlock {
 	get moduleArgument(): string;
 	getExportsType(
 		moduleGraph: ModuleGraph,
-		strict: boolean
+		strict?: boolean
 	): "namespace" | "default-only" | "default-with-named" | "dynamic";
 	addPresentationalDependency(presentationalDependency: Dependency): void;
 	addCodeGenerationDependency(codeGenerationDependency: Dependency): void;
@@ -11379,7 +11379,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the module
 		 */
-		module: Module;
+		module: null | Module;
 		/**
 		 * the chunk graph
 		 */
@@ -11401,7 +11401,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the module
 		 */
-		module: Module;
+		module: null | Module;
 		/**
 		 * the chunk graph
 		 */
@@ -13806,7 +13806,7 @@ declare namespace exports {
 			) => boolean;
 			export let getDependencyUsedByExportsCondition: (
 				dependency: Dependency,
-				usedByExports: boolean | Set<string>,
+				usedByExports: undefined | boolean | Set<string>,
 				moduleGraph: ModuleGraph
 			) =>
 				| null
