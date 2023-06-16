@@ -5533,12 +5533,12 @@ declare class JavascriptParser extends Parser {
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
 			SyncBailHook<
-				[Expression, string[], boolean[], [number, number][]],
+				[MemberExpression, string[], boolean[], [number, number][]],
 				boolean | void
 			>
 		>;
 		unhandledExpressionMemberChain: HookMap<
-			SyncBailHook<[Expression, string[]], boolean | void>
+			SyncBailHook<[MemberExpression, string[]], boolean | void>
 		>;
 		expressionConditionalOperator: SyncBailHook<
 			[ConditionalExpression],
