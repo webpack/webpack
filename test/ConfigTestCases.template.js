@@ -441,6 +441,9 @@ const describeCases = config => {
 										) {
 											baseModuleScope.window = globalContext;
 											baseModuleScope.self = globalContext;
+											baseModuleScope.document = globalContext.document;
+											baseModuleScope.setTimeout = globalContext.setTimeout;
+											baseModuleScope.clearTimeout = globalContext.clearTimeout;
 											baseModuleScope.URL = URL;
 											baseModuleScope.Worker =
 												require("./helpers/createFakeWorker")({

@@ -232,6 +232,7 @@ or are automatically applied via regex from your webpack configuration.
 |   <a href="https://github.com/webpack-contrib/polymer-webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg"></a>   | ![polymer-npm] | ![polymer-size] | Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules |
 | <a href="https://github.com/TheLarkInn/angular2-template-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/angular-icon-1.svg"></a> | ![angular-npm] | ![angular-size] | Loads and compiles Angular 2 Components                                                                |
 |              <a href="https://github.com/riot/webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/riot.svg"></a>              |  ![riot-npm]   |  ![riot-size]   | Riot official webpack loader                                                                           |
+|          <a href="https://github.com/sveltejs/svelte-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/svelte-1.svg"></a>           | ![svelte-npm]  | ![svelte-size]  | Official Svelte loader                                                                                 |
 
 [vue-npm]: https://img.shields.io/npm/v/vue-loader.svg
 [vue-size]: https://packagephobia.com/badge?p=vue-loader
@@ -241,6 +242,8 @@ or are automatically applied via regex from your webpack configuration.
 [angular-size]: https://packagephobia.com/badge?p=angular2-template-loader
 [riot-npm]: https://img.shields.io/npm/v/riot-tag-loader.svg
 [riot-size]: https://packagephobia.com/badge?p=riot-tag-loader
+[svelte-npm]: https://img.shields.io/npm/v/svelte-loader.svg
+[svelte-size]: https://packagephobia.com/badge?p=svelte-loader
 
 ### Performance
 
@@ -714,5 +717,5 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 [builds2-url]: https://dev.azure.com/webpack/webpack/_build/latest?definitionId=3
 [licenses-url]: https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_shield
 [licenses]: https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack.svg?type=shield
-[cover]: https://img.shields.io/coveralls/webpack/webpack.svg
-[cover-url]: https://coveralls.io/r/webpack/webpack/
+[cover]: https://codecov.io/gh/webpack/webpack/branch/master/graph/badge.svg?token=mDP3mQJNnn
+[cover-url]: https://codecov.io/gh/webpack/webpack

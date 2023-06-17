@@ -27,6 +27,7 @@ import {
 	ConditionalExpression,
 	ContinueStatement,
 	DebuggerStatement,
+	Directive,
 	DoWhileStatement,
 	EmptyStatement,
 	ExportAllDeclaration,
@@ -167,13 +168,19 @@ declare interface AdditionalData {
 	webpackAST: object;
 }
 declare class AggressiveMergingPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options?: AggressiveMergingPluginOptions);
+	options: AggressiveMergingPluginOptions;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface AggressiveMergingPluginOptions {
+	/**
+	 * minimal size reduction to trigger merging
+	 */
+	minSizeReduce?: number;
 }
 declare class AggressiveSplittingPlugin {
 	constructor(options?: AggressiveSplittingPluginOptions);
@@ -485,7 +492,7 @@ declare interface BaseResolveRequest {
 }
 declare abstract class BasicEvaluatedExpression {
 	type: number;
-	range: [number, number];
+	range?: [number, number];
 	falsy: boolean;
 	truthy: boolean;
 	nullish?: boolean;
@@ -500,15 +507,89 @@ declare abstract class BasicEvaluatedExpression {
 	array?: any[];
 	items?: BasicEvaluatedExpression[];
 	options?: BasicEvaluatedExpression[];
-	prefix?: BasicEvaluatedExpression;
-	postfix?: BasicEvaluatedExpression;
-	wrappedInnerExpressions: BasicEvaluatedExpression[];
+	prefix?: null | BasicEvaluatedExpression;
+	postfix?: null | BasicEvaluatedExpression;
+	wrappedInnerExpressions?: BasicEvaluatedExpression[];
 	identifier?: string | VariableInfoInterface;
-	rootInfo: string | VariableInfoInterface;
-	getMembers: () => string[];
-	getMembersOptionals: () => boolean[];
-	getMemberRanges: () => [number, number][];
-	expression: NodeEstreeIndex;
+	rootInfo?: string | VariableInfoInterface;
+	getMembers?: () => string[];
+	getMembersOptionals?: () => boolean[];
+	getMemberRanges?: () => [number, number][];
+	expression?:
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| ImportExpression
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| PrivateIdentifier
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportDefaultDeclaration
+		| ExportAllDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| SwitchCase
+		| CatchClause
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SpreadElement
+		| Property
+		| AssignmentProperty
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| Super
+		| TemplateElement;
 	isUnknown(): boolean;
 	isNull(): boolean;
 	isUndefined(): boolean;
@@ -561,7 +642,7 @@ declare abstract class BasicEvaluatedExpression {
 	 * Creates a string representation of this evaluated expression.
 	 */
 	asString(): undefined | string;
-	setString(string?: any): BasicEvaluatedExpression;
+	setString(string: string): BasicEvaluatedExpression;
 	setUndefined(): BasicEvaluatedExpression;
 	setNull(): BasicEvaluatedExpression;
 
@@ -600,8 +681,8 @@ declare abstract class BasicEvaluatedExpression {
 	 * Wraps an array of expressions with a prefix and postfix expression.
 	 */
 	setWrapped(
-		prefix: null | BasicEvaluatedExpression,
-		postfix: BasicEvaluatedExpression,
+		prefix: undefined | null | BasicEvaluatedExpression,
+		postfix: undefined | null | BasicEvaluatedExpression,
 		innerExpressions: BasicEvaluatedExpression[]
 	): BasicEvaluatedExpression;
 
@@ -656,7 +737,86 @@ declare abstract class BasicEvaluatedExpression {
 	/**
 	 * Set the expression node for the expression.
 	 */
-	setExpression(expression: NodeEstreeIndex): BasicEvaluatedExpression;
+	setExpression(
+		expression?:
+			| UnaryExpression
+			| ArrayExpression
+			| ArrowFunctionExpression
+			| AssignmentExpression
+			| AwaitExpression
+			| BinaryExpression
+			| SimpleCallExpression
+			| NewExpression
+			| ChainExpression
+			| ClassExpression
+			| ConditionalExpression
+			| FunctionExpression
+			| Identifier
+			| ImportExpression
+			| SimpleLiteral
+			| RegExpLiteral
+			| BigIntLiteral
+			| LogicalExpression
+			| MemberExpression
+			| MetaProperty
+			| ObjectExpression
+			| SequenceExpression
+			| TaggedTemplateExpression
+			| TemplateLiteral
+			| ThisExpression
+			| UpdateExpression
+			| YieldExpression
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| PrivateIdentifier
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportDefaultDeclaration
+			| ExportAllDeclaration
+			| MethodDefinition
+			| PropertyDefinition
+			| VariableDeclarator
+			| Program
+			| SwitchCase
+			| CatchClause
+			| ObjectPattern
+			| ArrayPattern
+			| RestElement
+			| AssignmentPattern
+			| SpreadElement
+			| Property
+			| AssignmentProperty
+			| ClassBody
+			| ImportSpecifier
+			| ImportDefaultSpecifier
+			| ImportNamespaceSpecifier
+			| ExportSpecifier
+			| Super
+			| TemplateElement
+	): BasicEvaluatedExpression;
+}
+declare interface BuildInfo {
+	[index: string]: any;
 }
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
@@ -749,7 +909,7 @@ declare interface CacheGroupSource {
 		chunks?: Chunk[],
 		key?: string
 	) => undefined | string;
-	chunksFilter?: (chunk: Chunk) => boolean;
+	chunksFilter?: (chunk: Chunk) => undefined | boolean;
 	enforce?: boolean;
 	minSize: SplitChunksSizes;
 	minSizeReduction: SplitChunksSizes;
@@ -762,7 +922,7 @@ declare interface CacheGroupSource {
 	maxInitialRequests?: number;
 	filename?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
 	idHint?: string;
-	automaticNameDelimiter: string;
+	automaticNameDelimiter?: string;
 	reuseExistingChunk?: boolean;
 	usedExports?: boolean;
 }
@@ -809,19 +969,13 @@ type Cell<T> = undefined | T;
 declare class Chunk {
 	constructor(name?: string, backCompat?: boolean);
 	id: null | string | number;
-	ids: null | (string | number)[];
+	ids: null | ChunkId[];
 	debugId: number;
-	name: string;
+	name?: string;
 	idNameHints: SortableSet<string>;
 	preventIntegration: boolean;
-	filenameTemplate:
-		| null
-		| string
-		| ((arg0: PathData, arg1?: AssetInfo) => string);
-	cssFilenameTemplate:
-		| null
-		| string
-		| ((arg0: PathData, arg1?: AssetInfo) => string);
+	filenameTemplate?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
+	cssFilenameTemplate?: string | ((arg0: PathData, arg1?: AssetInfo) => string);
 	runtime: RuntimeSpec;
 	files: Set<string>;
 	auxiliaryFiles: Set<string>;
@@ -878,7 +1032,7 @@ declare class Chunk {
 	getChildrenOfTypeInOrder(
 		chunkGraph: ChunkGraph,
 		type: string
-	): { onChunks: Chunk[]; chunks: Set<Chunk> }[];
+	): undefined | { onChunks: Chunk[]; chunks: Set<Chunk> }[];
 	getChildIdsByOrdersMap(
 		chunkGraph: ChunkGraph,
 		includeDirectChildren?: boolean,
@@ -1066,7 +1220,7 @@ declare abstract class ChunkGroup {
 	options: ChunkGroupOptions;
 	chunks: Chunk[];
 	origins: OriginRecord[];
-	index: number;
+	index?: number;
 
 	/**
 	 * when a new chunk is added to a chunkGroup, addingOptions will occur.
@@ -1147,7 +1301,7 @@ declare abstract class ChunkGroup {
 	/**
 	 * Gets the top-down index of a module in this ChunkGroup
 	 */
-	getModulePreOrderIndex(module: Module): number;
+	getModulePreOrderIndex(module: Module): undefined | number;
 
 	/**
 	 * Sets the bottom-up index of a module in this ChunkGroup
@@ -1157,10 +1311,10 @@ declare abstract class ChunkGroup {
 	/**
 	 * Gets the bottom-up index of a module in this ChunkGroup
 	 */
-	getModulePostOrderIndex(module: Module): number;
+	getModulePostOrderIndex(module: Module): undefined | number;
 	checkConstraints(): void;
-	getModuleIndex: (module: Module) => number;
-	getModuleIndex2: (module: Module) => number;
+	getModuleIndex: (module: Module) => undefined | number;
+	getModuleIndex2: (module: Module) => undefined | number;
 }
 type ChunkGroupOptions = RawChunkGroupOptions & { name?: string };
 declare interface ChunkHashContext {
@@ -1184,6 +1338,7 @@ declare interface ChunkHashContext {
 	 */
 	chunkGraph: ChunkGraph;
 }
+type ChunkId = string | number;
 declare interface ChunkMaps {
 	hash: Record<string | number, string>;
 	contentHash: Record<string | number, Record<string, string>>;
@@ -2192,7 +2347,7 @@ declare class ConcatenationScope {
 	static isModuleReference(name: string): boolean;
 	static matchModuleReference(
 		name: string
-	): ModuleReferenceOptions & { index: number };
+	): null | (ModuleReferenceOptions & { index: number });
 	static DEFAULT_EXPORT: string;
 	static NAMESPACE_OBJECT_EXPORT: string;
 }
@@ -2374,6 +2529,11 @@ declare interface Configuration {
 	 * Add additional plugins to the compiler.
 	 */
 	plugins?: (
+		| undefined
+		| null
+		| false
+		| ""
+		| 0
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance
 	)[];
@@ -2451,7 +2611,7 @@ declare class ConstDependency extends NullDependency {
 	constructor(
 		expression: string,
 		range: number | [number, number],
-		runtimeRequirements?: string[]
+		runtimeRequirements?: null | string[]
 	);
 	expression: string;
 	range: number | [number, number];
@@ -2691,6 +2851,7 @@ declare interface ContextModuleOptions {
 	 * exports referenced from modules (won't be mangled)
 	 */
 	referencedExports?: string[][];
+	layer?: string;
 	resource: string | false | string[];
 	resourceQuery?: string;
 	resourceFragment?: string;
@@ -2766,7 +2927,7 @@ declare interface DepConstructor {
 declare abstract class DependenciesBlock {
 	dependencies: Dependency[];
 	blocks: AsyncDependenciesBlock[];
-	parent: DependenciesBlock;
+	parent?: DependenciesBlock;
 	getRootBlock(): DependenciesBlock;
 
 	/**
@@ -4199,7 +4360,7 @@ declare interface FactorizeModuleOptions {
 type FakeHook<T> = T & FakeHookMarker;
 declare interface FakeHookMarker {}
 declare interface FallbackCacheGroup {
-	chunksFilter: (chunk: Chunk) => boolean;
+	chunksFilter: (chunk: Chunk) => undefined | boolean;
 	minSize: SplitChunksSizes;
 	maxAsyncSize: SplitChunksSizes;
 	maxInitialSize: SplitChunksSizes;
@@ -5382,8 +5543,14 @@ declare class JavascriptParser extends Parser {
 		unhandledExpressionMemberChain: HookMap<
 			SyncBailHook<[Expression, string[]], boolean | void>
 		>;
-		expressionConditionalOperator: SyncBailHook<[Expression], boolean | void>;
-		expressionLogicalOperator: SyncBailHook<[Expression], boolean | void>;
+		expressionConditionalOperator: SyncBailHook<
+			[ConditionalExpression],
+			boolean | void
+		>;
+		expressionLogicalOperator: SyncBailHook<
+			[LogicalExpression],
+			boolean | void
+		>;
 		program: SyncBailHook<[Program, Comment[]], boolean | void>;
 		finish: SyncBailHook<[Program, Comment[]], boolean | void>;
 	}>;
@@ -5447,7 +5614,7 @@ declare class JavascriptParser extends Parser {
 		| ExportDefaultDeclaration
 		| ExportAllDeclaration
 	)[];
-	prevStatement:
+	prevStatement?:
 		| UnaryExpression
 		| ThisExpression
 		| ArrayExpression
@@ -5836,43 +6003,75 @@ declare class JavascriptParser extends Parser {
 	callHooksForExpressionWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		expr: MemberExpression,
-		fallback: (
-			arg0: string,
-			arg1: string | ScopeInfo | VariableInfo,
-			arg2: () => string[]
-		) => any,
-		defined: (arg0: string) => any,
+		fallback:
+			| undefined
+			| ((
+					arg0: string,
+					arg1: string | ScopeInfo | VariableInfo,
+					arg2: () => string[]
+			  ) => any),
+		defined: undefined | ((arg0: string) => any),
 		...args: AsArray<T>
-	): R;
+	): undefined | R;
 	callHooksForName<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		name: string,
 		...args: AsArray<T>
-	): R;
+	): undefined | R;
 	callHooksForInfo<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		info: ExportedVariableInfo,
 		...args: AsArray<T>
-	): R;
+	): undefined | R;
 	callHooksForInfoWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		info: ExportedVariableInfo,
-		fallback: (arg0: string) => any,
-		defined: () => any,
+		fallback: undefined | ((arg0: string) => any),
+		defined: undefined | (() => any),
 		...args: AsArray<T>
-	): R;
+	): undefined | R;
 	callHooksForNameWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		name: string,
-		fallback: (arg0: string) => any,
-		defined: () => any,
+		fallback: undefined | ((arg0: string) => any),
+		defined: undefined | (() => any),
 		...args: AsArray<T>
-	): R;
+	): undefined | R;
 	inScope(params: any, fn: () => void): void;
-	inClassScope(hasThis?: any, params?: any, fn?: any): void;
-	inFunctionScope(hasThis?: any, params?: any, fn?: any): void;
-	inBlockScope(fn?: any): void;
-	detectMode(statements?: any): void;
+	inClassScope(hasThis: boolean, params: any, fn: () => void): void;
+	inFunctionScope(hasThis: boolean, params: any, fn: () => void): void;
+	inBlockScope(fn: () => void): void;
+	detectMode(
+		statements: (
+			| FunctionDeclaration
+			| VariableDeclaration
+			| ClassDeclaration
+			| ExpressionStatement
+			| BlockStatement
+			| StaticBlock
+			| EmptyStatement
+			| DebuggerStatement
+			| WithStatement
+			| ReturnStatement
+			| LabeledStatement
+			| BreakStatement
+			| ContinueStatement
+			| IfStatement
+			| SwitchStatement
+			| ThrowStatement
+			| TryStatement
+			| WhileStatement
+			| DoWhileStatement
+			| ForStatement
+			| ForInStatement
+			| ForOfStatement
+			| ImportDeclaration
+			| ExportNamedDeclaration
+			| ExportDefaultDeclaration
+			| ExportAllDeclaration
+			| Directive
+		)[]
+	): void;
 	enterPatterns(patterns?: any, onIdent?: any): void;
 	enterPattern(pattern?: any, onIdent?: any): void;
 	enterIdentifier(pattern: Identifier, onIdent?: any): void;
@@ -5880,7 +6079,7 @@ declare class JavascriptParser extends Parser {
 	enterArrayPattern(pattern: ArrayPattern, onIdent?: any): void;
 	enterRestElement(pattern: RestElement, onIdent?: any): void;
 	enterAssignmentPattern(pattern: AssignmentPattern, onIdent?: any): void;
-	evaluateExpression(expression: Expression): BasicEvaluatedExpression;
+	evaluateExpression(expression?: any): BasicEvaluatedExpression;
 	parseString(expression: Expression): string;
 	parseCalculatedString(expression?: any): any;
 	evaluate(source: string): BasicEvaluatedExpression;
@@ -5924,7 +6123,7 @@ declare class JavascriptParser extends Parser {
 	getComments(range: [number, number]): any[];
 	isAsiPosition(pos: number): boolean;
 	unsetAsiPosition(pos: number): void;
-	isStatementLevelExpression(expr?: any): boolean;
+	isStatementLevelExpression(expr: Expression): boolean;
 	getTagData(name?: any, tag?: any): any;
 	tagVariable(name?: any, tag?: any, data?: any): void;
 	defineVariable(name: string): void;
@@ -5968,19 +6167,22 @@ declare class JavascriptParser extends Parser {
 		membersOptionals: boolean[];
 		memberRanges: [number, number][];
 	};
-	getFreeInfoFromVariable(varName: string): {
-		name: string;
-		info: string | VariableInfo;
-	};
+	getFreeInfoFromVariable(
+		varName: string
+	): undefined | { name: string; info: string | VariableInfo };
 	getMemberExpressionInfo(
 		expression: MemberExpression,
 		allowedTypes: number
 	): undefined | CallExpressionInfo | ExpressionExpressionInfo;
-	getNameForExpression(expression: MemberExpression): {
-		name: string;
-		rootInfo: ExportedVariableInfo;
-		getMembers: () => string[];
-	};
+	getNameForExpression(
+		expression: MemberExpression
+	):
+		| undefined
+		| {
+				name: string;
+				rootInfo: ExportedVariableInfo;
+				getMembers: () => string[];
+		  };
 	static ALLOWED_MEMBER_TYPES_ALL: 3;
 	static ALLOWED_MEMBER_TYPES_EXPRESSION: 2;
 	static ALLOWED_MEMBER_TYPES_CALL_EXPRESSION: 1;
@@ -6016,6 +6218,11 @@ declare interface JavascriptParserOptions {
 	 * Enable/disable parsing "import { createRequire } from "module"" and evaluating createRequire().
 	 */
 	createRequire?: string | boolean;
+
+	/**
+	 * Specifies global fetchPriority for dynamic import.
+	 */
+	dynamicImportFetchPriority?: false | "auto" | "low" | "high";
 
 	/**
 	 * Specifies global mode for dynamic import.
@@ -6827,7 +7034,7 @@ declare interface LoadScriptCompilationHooks {
 	createScript: SyncWaterfallHook<[string, Chunk]>;
 }
 declare class LoadScriptRuntimeModule extends HelperRuntimeModule {
-	constructor(withCreateScriptUrl?: boolean);
+	constructor(withCreateScriptUrl?: boolean, withFetchPriority?: boolean);
 	static getCompilationHooks(
 		compilation: Compilation
 	): LoadScriptCompilationHooks;
@@ -7276,16 +7483,16 @@ declare class Module extends DependenciesBlock {
 	useSourceMap: boolean;
 	useSimpleSourceMap: boolean;
 	buildMeta?: BuildMeta;
-	buildInfo?: Record<string, any>;
+	buildInfo?: BuildInfo;
 	presentationalDependencies?: Dependency[];
 	codeGenerationDependencies?: Dependency[];
 	id: string | number;
 	get hash(): string;
 	get renderedHash(): string;
 	profile: null | ModuleProfile;
-	index: number;
-	index2: number;
-	depth: number;
+	index: null | number;
+	index2: null | number;
+	depth: null | number;
 	issuer: null | Module;
 	get usedExports(): null | boolean | SortableSet<string>;
 	get optimizationBailout(): (
@@ -7569,11 +7776,11 @@ declare class ModuleGraph {
 		filterConnection: (arg0: ModuleGraphConnection) => boolean
 	): void;
 	addExtraReason(module: Module, explanation: string): void;
-	getResolvedModule(dependency: Dependency): Module;
+	getResolvedModule(dependency: Dependency): null | Module;
 	getConnection(dependency: Dependency): undefined | ModuleGraphConnection;
-	getModule(dependency: Dependency): Module;
-	getOrigin(dependency: Dependency): Module;
-	getResolvedOrigin(dependency: Dependency): Module;
+	getModule(dependency: Dependency): null | Module;
+	getOrigin(dependency: Dependency): null | Module;
+	getResolvedOrigin(dependency: Dependency): null | Module;
 	getIncomingConnections(module: Module): Iterable<ModuleGraphConnection>;
 	getOutgoingConnections(module: Module): Iterable<ModuleGraphConnection>;
 	getIncomingConnectionsByOriginModule(
@@ -7602,19 +7809,19 @@ declare class ModuleGraph {
 		module: Module,
 		runtime: RuntimeSpec
 	): null | boolean | SortableSet<string>;
-	getPreOrderIndex(module: Module): number;
-	getPostOrderIndex(module: Module): number;
+	getPreOrderIndex(module: Module): null | number;
+	getPostOrderIndex(module: Module): null | number;
 	setPreOrderIndex(module: Module, index: number): void;
 	setPreOrderIndexIfUnset(module: Module, index: number): boolean;
 	setPostOrderIndex(module: Module, index: number): void;
 	setPostOrderIndexIfUnset(module: Module, index: number): boolean;
-	getDepth(module: Module): number;
+	getDepth(module: Module): null | number;
 	setDepth(module: Module, depth: number): void;
 	setDepthIfLower(module: Module, depth: number): boolean;
 	isAsync(module: Module): boolean;
 	setAsync(module: Module): void;
 	getMeta(thing?: any): Object;
-	getMetaIfExisting(thing?: any): Object;
+	getMetaIfExisting(thing?: any): undefined | Object;
 	freeze(cacheStage?: string): void;
 	unfreeze(): void;
 	cached<T extends any[], V>(
@@ -7655,11 +7862,11 @@ declare class ModuleGraphConnection {
 	module: Module;
 	weak: boolean;
 	conditional: boolean;
-	condition: (
+	condition?: (
 		arg0: ModuleGraphConnection,
 		arg1: RuntimeSpec
 	) => ConnectionState;
-	explanations: Set<string>;
+	explanations?: Set<string>;
 	clone(): ModuleGraphConnection;
 	addCondition(
 		condition: (
@@ -7690,7 +7897,7 @@ declare interface ModuleOptions {
 	/**
 	 * An array of rules applied by default for modules.
 	 */
-	defaultRules?: (RuleSetRule | "...")[];
+	defaultRules?: (undefined | null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
 	 * Enable warnings for full dynamic dependencies.
@@ -7730,7 +7937,7 @@ declare interface ModuleOptions {
 	/**
 	 * An array of rules applied for modules.
 	 */
-	rules?: (RuleSetRule | "...")[];
+	rules?: (undefined | null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
 	 * Emit errors instead of warnings when imported names don't exist in imported module. Deprecated: This option has moved to 'module.parser.javascript.strictExportPresence'.
@@ -7790,7 +7997,7 @@ declare interface ModuleOptionsNormalized {
 	/**
 	 * An array of rules applied by default for modules.
 	 */
-	defaultRules: (RuleSetRule | "...")[];
+	defaultRules: (undefined | null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
 	 * Specify options for each generator.
@@ -7810,7 +8017,7 @@ declare interface ModuleOptionsNormalized {
 	/**
 	 * An array of rules applied for modules.
 	 */
-	rules: (RuleSetRule | "...")[];
+	rules: (undefined | null | false | "" | 0 | RuleSetRule | "...")[];
 
 	/**
 	 * Cache the resolving of module requests.
@@ -7982,7 +8189,7 @@ declare abstract class MultiStats {
 declare abstract class MultiWatching {
 	watchings: Watching[];
 	compiler: MultiCompiler;
-	invalidate(callback?: any): void;
+	invalidate(callback?: CallbackFunction<void>): void;
 	suspend(): void;
 	resume(): void;
 	close(callback: CallbackFunction<void>): void;
@@ -8044,6 +8251,7 @@ declare class NoEmitOnErrorsPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type Node = false | NodeOptions;
 declare class NodeEnvironmentPlugin {
 	constructor(options: {
 		/**
@@ -8063,81 +8271,6 @@ declare class NodeEnvironmentPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type NodeEstreeIndex =
-	| UnaryExpression
-	| ThisExpression
-	| ArrayExpression
-	| ObjectExpression
-	| FunctionExpression
-	| ArrowFunctionExpression
-	| YieldExpression
-	| SimpleLiteral
-	| RegExpLiteral
-	| BigIntLiteral
-	| UpdateExpression
-	| BinaryExpression
-	| AssignmentExpression
-	| LogicalExpression
-	| MemberExpression
-	| ConditionalExpression
-	| SimpleCallExpression
-	| NewExpression
-	| SequenceExpression
-	| TemplateLiteral
-	| TaggedTemplateExpression
-	| ClassExpression
-	| MetaProperty
-	| Identifier
-	| AwaitExpression
-	| ImportExpression
-	| ChainExpression
-	| FunctionDeclaration
-	| VariableDeclaration
-	| ClassDeclaration
-	| PrivateIdentifier
-	| ExpressionStatement
-	| BlockStatement
-	| StaticBlock
-	| EmptyStatement
-	| DebuggerStatement
-	| WithStatement
-	| ReturnStatement
-	| LabeledStatement
-	| BreakStatement
-	| ContinueStatement
-	| IfStatement
-	| SwitchStatement
-	| ThrowStatement
-	| TryStatement
-	| WhileStatement
-	| DoWhileStatement
-	| ForStatement
-	| ForInStatement
-	| ForOfStatement
-	| ImportDeclaration
-	| ExportNamedDeclaration
-	| ExportDefaultDeclaration
-	| ExportAllDeclaration
-	| MethodDefinition
-	| PropertyDefinition
-	| VariableDeclarator
-	| Program
-	| SwitchCase
-	| CatchClause
-	| ObjectPattern
-	| ArrayPattern
-	| RestElement
-	| AssignmentPattern
-	| SpreadElement
-	| Property
-	| AssignmentProperty
-	| Super
-	| TemplateElement
-	| ClassBody
-	| ImportSpecifier
-	| ImportDefaultSpecifier
-	| ImportNamespaceSpecifier
-	| ExportSpecifier;
 
 /**
  * Options object for node compatibility features.
@@ -8188,7 +8321,6 @@ declare interface NodeTemplatePluginOptions {
 	 */
 	asyncChunkLoading?: boolean;
 }
-type NodeWebpackOptions = false | NodeOptions;
 declare class NormalModule extends Module {
 	constructor(__0: NormalModuleCreateData);
 	request: string;
@@ -8608,6 +8740,11 @@ declare interface Optimization {
 	 * Minimizer(s) to use for minimizing the output.
 	 */
 	minimizer?: (
+		| undefined
+		| null
+		| false
+		| ""
+		| 0
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance
 		| "..."
@@ -8695,7 +8832,7 @@ declare interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML).
 	 */
-	chunks?: "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
+	chunks?: RegExp | "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
 
 	/**
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
@@ -8822,7 +8959,7 @@ declare interface OptimizationSplitChunksOptions {
 	/**
 	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 	 */
-	chunks?: "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
+	chunks?: RegExp | "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
 
 	/**
 	 * Sets the size types which are used when a number is used for sizes.
@@ -8845,7 +8982,7 @@ declare interface OptimizationSplitChunksOptions {
 		/**
 		 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML).
 		 */
-		chunks?: "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
+		chunks?: RegExp | "all" | "initial" | "async" | ((chunk: Chunk) => boolean);
 		/**
 		 * Maximal size hint for the on-demand chunks.
 		 */
@@ -9682,6 +9819,11 @@ declare interface PitchLoaderDefinitionFunction<
 	): string | void | Buffer | Promise<string | Buffer>;
 }
 type Plugin =
+	| undefined
+	| null
+	| false
+	| ""
+	| 0
 	| { apply: (arg0: Resolver) => void }
 	| ((this: Resolver, arg1: Resolver) => void);
 declare interface PnpApiImpl {
@@ -9772,7 +9914,7 @@ declare class ProgressPlugin {
 	apply(compiler: Compiler | MultiCompiler): void;
 	static getReporter(
 		compiler: Compiler
-	): (p: number, ...args: string[]) => void;
+	): undefined | ((p: number, ...args: string[]) => void);
 	static defaultOptions: {
 		profile: boolean;
 		modulesCount: number;
@@ -9782,6 +9924,10 @@ declare class ProgressPlugin {
 		activeModules: boolean;
 		entries: boolean;
 	};
+	static createDefaultHandler: (
+		profile: undefined | null | boolean,
+		logger: WebpackLogger
+	) => (percentage: number, msg: string, ...args: string[]) => void;
 }
 type ProgressPluginArgument =
 	| ProgressPluginOptions
@@ -9914,6 +10060,7 @@ declare interface ProvidesObject {
 declare interface RawChunkGroupOptions {
 	preloadOrder?: number;
 	prefetchOrder?: number;
+	fetchPriority?: "auto" | "low" | "high";
 }
 type RawLoaderDefinition<
 	OptionsType = {},
@@ -10420,7 +10567,15 @@ declare interface ResolveOptionsWebpackOptions {
 	/**
 	 * Plugins for the resolver.
 	 */
-	plugins?: (ResolvePluginInstance | "...")[];
+	plugins?: (
+		| undefined
+		| null
+		| false
+		| ""
+		| 0
+		| ResolvePluginInstance
+		| "..."
+	)[];
 
 	/**
 	 * Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.
@@ -10760,7 +10915,7 @@ declare interface RuleSetRule {
 	/**
 	 * Only execute the first matching rule in this array.
 	 */
-	oneOf?: RuleSetRule[];
+	oneOf?: (undefined | null | false | "" | 0 | RuleSetRule)[];
 
 	/**
 	 * Shortcut for use.options.
@@ -10820,7 +10975,7 @@ declare interface RuleSetRule {
 	/**
 	 * Match and execute these rules when this rule is matched.
 	 */
-	rules?: RuleSetRule[];
+	rules?: (undefined | null | false | "" | 0 | RuleSetRule)[];
 
 	/**
 	 * Match module scheme.
@@ -10857,30 +11012,12 @@ declare interface RuleSetRule {
 	 */
 	use?:
 		| string
-		| RuleSetUseItem[]
-		| ((data: {
-				resource: string;
-				realResource: string;
-				resourceQuery: string;
-				issuer: string;
-				compiler: string;
-		  }) => RuleSetUseItem[])
-		| {
-				/**
-				 * Unique loader options identifier.
-				 */
-				ident?: string;
-				/**
-				 * Loader name.
-				 */
-				loader?: string;
-				/**
-				 * Loader options.
-				 */
-				options?: string | { [index: string]: any };
-		  }
-		| ((data: object) =>
+		| (
+				| undefined
+				| null
 				| string
+				| false
+				| 0
 				| {
 						/**
 						 * Unique loader options identifier.
@@ -10895,19 +11032,96 @@ declare interface RuleSetRule {
 						 */
 						options?: string | { [index: string]: any };
 				  }
-				| __TypeWebpackOptions
-				| RuleSetUseItem[]);
+				| ((data: object) =>
+						| string
+						| {
+								/**
+								 * Unique loader options identifier.
+								 */
+								ident?: string;
+								/**
+								 * Loader name.
+								 */
+								loader?: string;
+								/**
+								 * Loader options.
+								 */
+								options?: string | { [index: string]: any };
+						  }
+						| __TypeWebpackOptions
+						| __Type_2[])
+		  )[]
+		| ((data: {
+				resource: string;
+				realResource: string;
+				resourceQuery: string;
+				issuer: string;
+				compiler: string;
+		  }) => __Type_2[])
+		| {
+				/**
+				 * Unique loader options identifier.
+				 */
+				ident?: string;
+				/**
+				 * Loader name.
+				 */
+				loader?: string;
+				/**
+				 * Loader options.
+				 */
+				options?: string | { [index: string]: any };
+		  }
+		| __TypeWebpackOptions;
 }
 type RuleSetUse =
 	| string
-	| RuleSetUseItem[]
+	| (
+			| undefined
+			| null
+			| string
+			| false
+			| 0
+			| {
+					/**
+					 * Unique loader options identifier.
+					 */
+					ident?: string;
+					/**
+					 * Loader name.
+					 */
+					loader?: string;
+					/**
+					 * Loader options.
+					 */
+					options?: string | { [index: string]: any };
+			  }
+			| ((data: object) =>
+					| string
+					| {
+							/**
+							 * Unique loader options identifier.
+							 */
+							ident?: string;
+							/**
+							 * Loader name.
+							 */
+							loader?: string;
+							/**
+							 * Loader options.
+							 */
+							options?: string | { [index: string]: any };
+					  }
+					| __TypeWebpackOptions
+					| __Type_2[])
+	  )[]
 	| ((data: {
 			resource: string;
 			realResource: string;
 			resourceQuery: string;
 			issuer: string;
 			compiler: string;
-	  }) => RuleSetUseItem[])
+	  }) => __Type_2[])
 	| {
 			/**
 			 * Unique loader options identifier.
@@ -10998,20 +11212,20 @@ declare interface RuntimeRequirementsContext {
 type RuntimeSpec = undefined | string | SortableSet<string>;
 declare class RuntimeSpecMap<T> {
 	constructor(clone?: RuntimeSpecMap<T>);
-	get(runtime: RuntimeSpec): T;
+	get(runtime: RuntimeSpec): undefined | T;
 	has(runtime: RuntimeSpec): boolean;
 	set(runtime?: any, value?: any): void;
 	provide(runtime?: any, computer?: any): any;
-	delete(runtime?: any): void;
+	delete(runtime: RuntimeSpec): void;
 	update(runtime?: any, fn?: any): void;
 	keys(): RuntimeSpec[];
 	values(): IterableIterator<T>;
 	get size(): number;
 }
 declare class RuntimeSpecSet {
-	constructor(iterable?: any);
-	add(runtime?: any): void;
-	has(runtime?: any): boolean;
+	constructor(iterable?: Iterable<RuntimeSpec>);
+	add(runtime: RuntimeSpec): void;
+	has(runtime: RuntimeSpec): boolean;
 	get size(): number;
 	[Symbol.iterator](): IterableIterator<RuntimeSpec>;
 }
@@ -11583,10 +11797,10 @@ declare class SideEffectsFlagPlugin {
 	 */
 	apply(compiler: Compiler): void;
 	static moduleHasSideEffects(
-		moduleName?: any,
-		flagValue?: any,
-		cache?: any
-	): any;
+		moduleName: string,
+		flagValue: undefined | string | boolean | string[],
+		cache: Map<string, RegExp>
+	): undefined | boolean;
 }
 declare class SizeOnlySource extends Source {
 	constructor(size: number);
@@ -11869,7 +12083,7 @@ declare interface SourcePosition {
 	column?: number;
 }
 declare interface SplitChunksOptions {
-	chunksFilter: (chunk: Chunk) => boolean;
+	chunksFilter: (chunk: Chunk) => undefined | boolean;
 	defaultSizeTypes: string[];
 	minSize: SplitChunksSizes;
 	minSizeReduction: SplitChunksSizes;
@@ -12746,7 +12960,7 @@ declare interface UserResolveOptions {
 }
 declare abstract class VariableInfo {
 	declaredScope: ScopeInfo;
-	freeName: string | true;
+	freeName?: string | true;
 	tagInfo?: TagInfo;
 }
 declare interface VariableInfoInterface {
@@ -12974,12 +13188,12 @@ declare class WebpackError extends Error {
 	 * Creates an instance of WebpackError.
 	 */
 	constructor(message?: string);
-	details: any;
-	module: Module;
-	loc: DependencyLocation;
-	hideStack: boolean;
-	chunk: Chunk;
-	file: string;
+	details?: string;
+	module?: null | Module;
+	loc?: SyntheticDependencyLocation | RealDependencyLocation;
+	hideStack?: boolean;
+	chunk?: Chunk;
+	file?: string;
 	serialize(__0: ObjectSerializerContext): void;
 	deserialize(__0: ObjectDeserializerContext): void;
 
@@ -13027,7 +13241,7 @@ declare class WebpackOptionsApply extends OptionsApply {
 }
 declare class WebpackOptionsDefaulter {
 	constructor();
-	process(options?: any): any;
+	process(options: Configuration): WebpackOptionsNormalized;
 }
 
 /**
@@ -13151,7 +13365,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
-	node: NodeWebpackOptions;
+	node: Node;
 
 	/**
 	 * Enables/Disables integrated optimizations.
@@ -13177,6 +13391,11 @@ declare interface WebpackOptionsNormalized {
 	 * Add additional plugins to the compiler.
 	 */
 	plugins: (
+		| undefined
+		| null
+		| false
+		| ""
+		| 0
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance
 	)[];
@@ -13274,7 +13493,45 @@ type __TypeWebpackOptions = (data: object) =>
 			options?: string | { [index: string]: any };
 	  }
 	| __TypeWebpackOptions
-	| RuleSetUseItem[];
+	| __Type_2[];
+type __Type_2 =
+	| undefined
+	| null
+	| string
+	| false
+	| 0
+	| {
+			/**
+			 * Unique loader options identifier.
+			 */
+			ident?: string;
+			/**
+			 * Loader name.
+			 */
+			loader?: string;
+			/**
+			 * Loader options.
+			 */
+			options?: string | { [index: string]: any };
+	  }
+	| ((data: object) =>
+			| string
+			| {
+					/**
+					 * Unique loader options identifier.
+					 */
+					ident?: string;
+					/**
+					 * Loader name.
+					 */
+					loader?: string;
+					/**
+					 * Loader options.
+					 */
+					options?: string | { [index: string]: any };
+			  }
+			| __TypeWebpackOptions
+			| __Type_2[]);
 declare function exports(
 	options: Configuration,
 	callback?: CallbackWebpack<Stats>
@@ -13402,6 +13659,7 @@ declare namespace exports {
 		export let createScript: "__webpack_require__.ts";
 		export let createScriptUrl: "__webpack_require__.tu";
 		export let getTrustedTypesPolicy: "__webpack_require__.tt";
+		export let hasFetchPriority: "has fetch priority";
 		export let chunkName: "__webpack_require__.cn";
 		export let runtimeId: "__webpack_require__.j";
 		export let getChunkScriptFilename: "__webpack_require__.u";
@@ -13505,7 +13763,7 @@ declare namespace exports {
 			) => void;
 			export let setTopLevelSymbol: (
 				state: ParserState,
-				symbol: TopLevelSymbol
+				symbol?: TopLevelSymbol
 			) => void;
 			export let getTopLevelSymbol: (
 				state: ParserState
@@ -13513,7 +13771,7 @@ declare namespace exports {
 			export let tagTopLevelSymbol: (
 				parser: JavascriptParser,
 				name: string
-			) => TopLevelSymbol;
+			) => undefined | TopLevelSymbol;
 			export let isDependencyUsedByExports: (
 				dependency: Dependency,
 				usedByExports: boolean | Set<string>,
@@ -13712,7 +13970,7 @@ declare namespace exports {
 			export const register: (
 				Constructor: Constructor,
 				request: string,
-				name: string,
+				name: null | string,
 				serializer: ObjectSerializer
 			) => void;
 			export const registerLoader: (

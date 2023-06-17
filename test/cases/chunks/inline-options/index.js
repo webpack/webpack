@@ -180,6 +180,13 @@ if (process.env.NODE_ENV === "production") {
 			}
 		);
 	});
+	it("should be able to load with webpackFetchPriorty high, low and auto", function () {
+		return Promise.all([
+			import(/* webpackFetchPriority: "high"*/ "./dir14/a"),
+			import(/* webpackFetchPriority: "low"*/ "./dir14/b"),
+			import(/* webpackFetchPriority: "auto"*/ "./dir14/c"),
+		])
+	})
 }
 
 function testChunkLoading(load, expectedSyncInitial, expectedSyncRequested) {
