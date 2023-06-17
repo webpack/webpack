@@ -406,6 +406,13 @@
               }
             },
             {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "string"
+            },
+            {
               "instanceof": "Function",
               "tsType": "((context: string, request: string) => boolean)"
             }
@@ -427,6 +434,32 @@
           "description": "Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.",
           "type": "string",
           "minLength": 1
+        },
+        "prefer": {
+          "description": "A source or array of sources or a regular expression that gives preference to certain containers over others as sources if versions match",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              }
+            },
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "requiredVersion": {
           "description": "Version requirement from module in share scope.",

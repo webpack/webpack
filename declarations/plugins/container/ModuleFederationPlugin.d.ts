@@ -282,6 +282,8 @@ export interface SharedConfig {
 	 */
 	exclude?:
 		| (RegExp | string)[]
+		| RegExp
+		| string
 		| ((context: string, request: string) => boolean);
 	/**
 	 * Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.
@@ -291,6 +293,10 @@ export interface SharedConfig {
 	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
 	 */
 	packageName?: string;
+	/**
+	 * A source or array of sources or a regular expression that gives preference to certain containers over others as sources if versions match
+	 */
+	prefer?: (RegExp | string)[] | RegExp | string;
 	/**
 	 * Version requirement from module in share scope.
 	 */

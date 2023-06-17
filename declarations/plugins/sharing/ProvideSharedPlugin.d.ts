@@ -45,7 +45,13 @@ export interface ProvidesConfig {
 	 */
 	exclude?:
 		| (RegExp | string)[]
+		| RegExp
+		| string
 		| ((context: string, request: string) => boolean);
+	/**
+	 * A source or array of sources or a regular expression that gives preference to certain containers over others as sources if versions match
+	 */
+	prefer?: (RegExp | string)[] | RegExp | string;
 	/**
 	 * Key in the share scope under which the shared modules should be stored.
 	 */

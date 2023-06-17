@@ -49,8 +49,41 @@
               }
             },
             {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "string"
+            },
+            {
               "instanceof": "Function",
               "tsType": "((context: string, request: string) => boolean)"
+            }
+          ]
+        },
+        "prefer": {
+          "description": "A source or array of sources or a regular expression that gives preference to certain containers over others as sources if versions match",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              }
+            },
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "string"
             }
           ]
         },

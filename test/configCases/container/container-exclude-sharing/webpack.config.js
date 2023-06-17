@@ -17,7 +17,7 @@ module.exports = {
 				},
 				// Effectively, not shared
 				"react-dom": {
-					exclude: [/container-exclude-sharing/]
+					exclude: /container-exclude-sharing/
 				}
 			}
 		})

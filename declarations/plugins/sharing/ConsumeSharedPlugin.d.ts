@@ -48,6 +48,8 @@ export interface ConsumesConfig {
 	 */
 	exclude?:
 		| (RegExp | string)[]
+		| RegExp
+		| string
 		| ((context: string, request: string) => boolean);
 	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.

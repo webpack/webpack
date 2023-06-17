@@ -2505,6 +2505,8 @@ declare interface ConsumesConfig {
 	 * Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test
 	 */
 	exclude?:
+		| string
+		| RegExp
 		| (string | RegExp)[]
 		| ((context: string, request: string) => boolean);
 
@@ -9877,8 +9879,15 @@ declare interface ProvidesConfig {
 	 * Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test
 	 */
 	exclude?:
+		| string
+		| RegExp
 		| (string | RegExp)[]
 		| ((context: string, request: string) => boolean);
+
+	/**
+	 * A source or array of sources or a regular expression that gives preference to certain containers over others as sources if versions match
+	 */
+	prefer?: string | RegExp | (string | RegExp)[];
 
 	/**
 	 * Key in the share scope under which the shared modules should be stored.
@@ -11509,6 +11518,8 @@ declare interface SharedConfig {
 	 * Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test
 	 */
 	exclude?:
+		| string
+		| RegExp
 		| (string | RegExp)[]
 		| ((context: string, request: string) => boolean);
 
@@ -11521,6 +11532,11 @@ declare interface SharedConfig {
 	 * Package name to determine required version from description file. This is only needed when package name can't be automatically determined from request.
 	 */
 	packageName?: string;
+
+	/**
+	 * A source or array of sources or a regular expression that gives preference to certain containers over others as sources if versions match
+	 */
+	prefer?: string | RegExp | (string | RegExp)[];
 
 	/**
 	 * Version requirement from module in share scope.

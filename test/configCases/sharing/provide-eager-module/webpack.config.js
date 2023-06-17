@@ -10,7 +10,8 @@ module.exports = {
 			provides: {
 				common: {
 					shareKey: "common",
-					eager: true
+					eager: true,
+					prefer: "rain"
 				}
 			}
 		}),
@@ -26,7 +27,8 @@ module.exports = {
 			shareScope: "newerNonEager",
 			provides: {
 				uncommon: {
-					shareKey: "uncommon"
+					shareKey: "uncommon",
+					prefer: ["appshell-3.0", /@foo.*/]
 				}
 			}
 		}),
@@ -35,7 +37,8 @@ module.exports = {
 			provides: {
 				common: {
 					shareKey: "common",
-					eager: true
+					eager: true,
+					prefer: "trusty"
 				}
 			}
 		})

@@ -49,6 +49,13 @@
               }
             },
             {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
+              "type": "string"
+            },
+            {
               "instanceof": "Function",
               "tsType": "((context: string, request: string) => boolean)"
             }
