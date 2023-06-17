@@ -11663,9 +11663,10 @@ declare interface ScopeInfo {
 	definitions: StackedMap<string, ScopeInfo | VariableInfo>;
 	topLevelScope: boolean | "arrow";
 	inShorthand: string | boolean;
+	inTaggedTemplateTag: boolean;
+	inTry: boolean;
 	isStrict: boolean;
 	isAsmJs: boolean;
-	inTry: boolean;
 }
 declare interface Selector<A, B> {
 	(input: A): B;
