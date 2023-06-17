@@ -32,30 +32,36 @@
           "type": "boolean"
         },
         "exclude": {
-          "description": "Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test",
+          "description": "Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test.",
           "anyOf": [
             {
               "type": "array",
               "items": {
+                "description": "Patterns or paths to exclude from sharing.",
                 "anyOf": [
                   {
+                    "description": "Regular expression pattern to exclude from sharing.",
                     "instanceof": "RegExp",
                     "tsType": "RegExp"
                   },
                   {
+                    "description": "Exact string match to exclude from sharing.",
                     "type": "string"
                   }
                 ]
               }
             },
             {
+              "description": "Regular expression pattern to exclude from sharing.",
               "instanceof": "RegExp",
               "tsType": "RegExp"
             },
             {
+              "description": "Exact string match to exclude from sharing.",
               "type": "string"
             },
             {
+              "description": "Contextual function to decide if module must be excluded from sharing.",
               "instanceof": "Function",
               "tsType": "((context: string, request: string) => boolean)"
             }
@@ -79,27 +85,32 @@
           "minLength": 1
         },
         "prefer": {
-          "description": "A source or array of sources or a regular expression that gives preference to certain containers over others as sources if versions match",
+          "description": "A source or array of sources or a regular expression that gives preference to certain containers over others as sources if versions match.",
           "anyOf": [
             {
               "type": "array",
               "items": {
+                "description": "Container name patterns or names that are preferred.",
                 "anyOf": [
                   {
+                    "description": "Regular expression pattern to match preferred container.",
                     "instanceof": "RegExp",
                     "tsType": "RegExp"
                   },
                   {
+                    "description": "Exact string match for preferred container.",
                     "type": "string"
                   }
                 ]
               }
             },
             {
+              "description": "Regular expression pattern to match preferred container.",
               "instanceof": "RegExp",
               "tsType": "RegExp"
             },
             {
+              "description": "Exact string match for preferred container.",
               "type": "string"
             }
           ]

@@ -44,7 +44,7 @@ export interface SharedConfig {
 	 */
 	eager?: boolean;
 	/**
-	 * Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test
+	 * Exclude the module from sharing in specific contexts, identified by a string or a regular expression, or a function test.
 	 */
 	exclude?:
 		| (RegExp | string)[]
@@ -60,7 +60,7 @@ export interface SharedConfig {
 	 */
 	packageName?: string;
 	/**
-	 * A source or array of sources or a regular expression that gives preference to certain containers over others as sources if versions match
+	 * A source or array of sources or a regular expression that gives preference to certain containers over others as sources if versions match.
 	 */
 	prefer?: (RegExp | string)[] | RegExp | string;
 	/**
