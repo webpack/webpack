@@ -528,7 +528,7 @@ Object {
   "bigIntLiteral": false,
   "browser": true,
   "const": true,
-  "destructuring": false,
+  "destructuring": true,
   "document": true,
   "dynamicImport": false,
   "dynamicImportInWorker": false,
