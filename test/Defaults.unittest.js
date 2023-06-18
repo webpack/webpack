@@ -2242,14 +2242,14 @@ describe("snapshots", () => {
 			+               "fullySpecified": true,
 			+             },
 			+             "test": /\\.module\\.css$/i,
-			+             "type": "css/module",
+			+             "type": "css/auto",
 			+           },
 			+           Object {
 			+             "resolve": Object {
 			+               "fullySpecified": true,
 			+               "preferRelative": true,
 			+             },
-			+             "type": "css",
+			+             "type": "css/auto",
 			+           },
 			+         ],
 			+         "test": /\\.css$/i,
@@ -2259,7 +2259,7 @@ describe("snapshots", () => {
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+         },
-			+         "type": "css/module",
+			+         "type": "css/auto",
 			+       },
 			+       Object {
 			+         "mimetype": "text/css",
@@ -2267,7 +2267,7 @@ describe("snapshots", () => {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
 			+         },
-			+         "type": "css",
+			+         "type": "css/auto",
 			+       },
 			+       Object {
 			@@ ... @@
