@@ -7,7 +7,7 @@ it("should allow to create css modules", done => {
 	import("./use-style.js").then(({ default: x }) => {
 		try {
 			expect(x).toEqual({
-				class: prod ? "my-app-491-S" : "./style.module.css-class",
+				class: prod ? "my-app-274-S" : "./style.module.css-class",
 			});
 		} catch (e) {
 			return done(e);
