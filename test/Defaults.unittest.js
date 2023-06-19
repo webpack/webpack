@@ -2208,6 +2208,8 @@ describe("snapshots", () => {
 			+     },
 			+     "futureDefaults": true,
 			@@ ... @@
+			+       },
+			+       Object {
 			+         "rules": Array [
 			+           Object {
 			+             "descriptionData": Object {
@@ -2236,40 +2238,28 @@ describe("snapshots", () => {
 			+         "type": "webassembly/async",
 			+       },
 			+       Object {
-			+         "oneOf": Array [
-			+           Object {
-			+             "resolve": Object {
-			+               "fullySpecified": true,
-			+             },
-			+             "test": /\\.module\\.css$/i,
-			+             "type": "css/auto",
-			+           },
-			+           Object {
-			+             "resolve": Object {
-			+               "fullySpecified": true,
-			+               "preferRelative": true,
-			+             },
-			+             "type": "css/auto",
-			+           },
-			+         ],
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
 			+         "test": /\\.css$/i,
+			+         "type": "css/auto",
 			+       },
 			+       Object {
 			+         "mimetype": "text/css+module",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+         },
-			+         "type": "css/auto",
+			+         "type": "css/module",
 			+       },
 			+       Object {
 			+         "mimetype": "text/css",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
 			+           "preferRelative": true,
-			+         },
-			+         "type": "css/auto",
+			@@ ... @@
+			+         "type": "css",
 			+       },
-			+       Object {
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2287,6 +2277,9 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2298,10 +2291,8 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			+           "...",
-			+         ],
+			@@ ... @@
 			+         "mainFiles": Array [],
-			+       },
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
