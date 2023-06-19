@@ -8,7 +8,7 @@ it("should allow to create css modules", done => {
 		try {
 			expect(x).toEqual({
 				placeholder: prod
-					? "26-uhHx"
+					? "252-uhHx"
 					: "my-app-./tailwind.module.css-placeholder-gray-700"
 			});
 		} catch (e) {
