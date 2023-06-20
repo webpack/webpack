@@ -16,7 +16,8 @@ const targetArgs = global.NO_TARGET_ARGS ? "" : "--entry ./example.js --output-f
 const displayReasons = global.NO_REASONS ? "" : "--stats-reasons --stats-used-exports --stats-provided-exports";
 const statsArgs = global.NO_STATS_OPTIONS ? "" : "--stats-chunks  --stats-modules-space 99999 --stats-chunk-origins";
 const publicPathArgs = global.NO_PUBLIC_PATH ? "" : '--output-public-path "dist/"';
-const commonArgs = `--no-stats-colors ${statsArgs} ${publicPathArgs} ${extraArgs} ${targetArgs}`;
+const statsColorsArg = global.STATS_COLORS ? "" : "--no-stats-colors";
+const commonArgs = `${statsColorsArg} ${statsArgs} ${publicPathArgs} ${extraArgs} ${targetArgs}`;
 
 let readme = fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8");
 
