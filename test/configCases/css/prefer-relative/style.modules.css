@@ -1,1 +1,5 @@
-@import 'bar.css';
+@import 'bar.modules.css';
+
+.style-module {
+	color: red;
+}
