@@ -3,7 +3,9 @@ import * as styles2 from "./style.modules.css";
 
 it("should prefer relative", () => {
 	expect(styles1).toEqual(nsObj({}));
-	expect(styles2).toEqual(nsObj({}));
+	expect(styles2).toEqual(nsObj({
+		"style-module": "./style.modules.css-style-module",
+	}));
 
 	const style = getComputedStyle(document.body);
 
