@@ -95,6 +95,12 @@ it("should allow to create css modules", done => {
 				deepClassInContainer: prod
 					? "my-app-274-rn"
 					: "./style.module.css-deep-class-in-container",
+				cssModuleWithCustomFileExtension: prod
+					? "my-app-444-s"
+					: "./style.module.my-css-myCssClass",
+				notAValidCssModuleExtension: prod
+					? "my-app-438-W"
+					: "./style.module.css.invalid-notACssModule"
 			});
 		} catch (e) {
 			return done(e);
