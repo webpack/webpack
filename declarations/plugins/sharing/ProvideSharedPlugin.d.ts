@@ -41,6 +41,10 @@ export interface ProvidesConfig {
 	 */
 	eager?: boolean;
 	/**
+	 * A set of exclusion criterias to use to decide if a module must participate in sharing.
+	 */
+	exclusionCriteria?: SharedExclusionCriteria;
+	/**
 	 * Key in the share scope under which the shared modules should be stored.
 	 */
 	shareKey?: string;
@@ -52,4 +56,13 @@ export interface ProvidesConfig {
 	 * Version of the provided module. Will replace lower matching versions, but not higher.
 	 */
 	version?: false | string;
+}
+/**
+ * A set of exclusion criterias to use to decide if a module must participate in sharing.
+ */
+export interface SharedExclusionCriteria {
+	/**
+	 * A version or semver range of the dependency to exclude from sharing.
+	 */
+	version?: string;
 }

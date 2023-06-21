@@ -278,6 +278,10 @@ export interface SharedConfig {
 	 */
 	eager?: boolean;
 	/**
+	 * A set of exclusion criterias to use to decide if a module must participate in sharing.
+	 */
+	exclusionCriteria?: SharedExclusionCriteria;
+	/**
 	 * Provided module that should be provided to share scope. Also acts as fallback module if no shared module is found in share scope or version isn't valid. Defaults to the property name.
 	 */
 	import?: false | SharedItem;
@@ -309,4 +313,13 @@ export interface SharedConfig {
 	 * Version of the provided module. Will replace lower matching versions, but not higher.
 	 */
 	version?: false | string;
+}
+/**
+ * A set of exclusion criterias to use to decide if a module must participate in sharing.
+ */
+export interface SharedExclusionCriteria {
+	/**
+	 * A version or semver range of the dependency to exclude from sharing.
+	 */
+	version?: string;
 }
