@@ -1561,6 +1561,25 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-auto-dynamic-import-fetch-priority": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global fetchPriority for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicImportFetchPriority",
+        "type": "enum",
+        "values": Array [
+          "low",
+          "high",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies global fetchPriority for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-dynamic-import-mode": Object {
     "configs": Array [
       Object {
@@ -2233,6 +2252,25 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-dynamic-import-fetch-priority": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global fetchPriority for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicImportFetchPriority",
+        "type": "enum",
+        "values": Array [
+          "low",
+          "high",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies global fetchPriority for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-dynamic-import-mode": Object {
     "configs": Array [
       Object {
@@ -2409,6 +2447,25 @@ Object {
       },
     ],
     "description": "Specifies the behavior of invalid export names in \\"import ... from ...\\".",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-import-fetch-priority": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global fetchPriority for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicImportFetchPriority",
+        "type": "enum",
+        "values": Array [
+          "low",
+          "high",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies global fetchPriority for dynamic import.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -2901,6 +2958,25 @@ Object {
       },
     ],
     "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-dynamic-import-fetch-priority": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global fetchPriority for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicImportFetchPriority",
+        "type": "enum",
+        "values": Array [
+          "low",
+          "high",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies global fetchPriority for dynamic import.",
     "multiple": false,
     "simpleType": "string",
   },

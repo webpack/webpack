@@ -89,7 +89,11 @@ class FakeElement {
 	}
 
 	setAttribute(name, value) {
-		this._attributes[name] = value;
+		if (this._type === "link" && name === "href") {
+			this.href(value);
+		} else {
+			this._attributes[name] = value;
+		}
 	}
 
 	removeAttribute(name) {
@@ -97,7 +101,11 @@ class FakeElement {
 	}
 
 	getAttribute(name) {
-		return this._attributes[name];
+		if (this._type === "link" && name === "href") {
+			return this.href;
+		} else {
+			return this._attributes[name];
+		}
 	}
 
 	_toRealUrl(value) {

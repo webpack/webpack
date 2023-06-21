@@ -228,6 +228,7 @@ describe("snapshots", () => {
 		      },
 		      "javascript": Object {
 		        "createRequire": false,
+		        "dynamicImportFetchPriority": false,
 		        "dynamicImportMode": "lazy",
 		        "dynamicImportPrefetch": false,
 		        "dynamicImportPreload": false,
@@ -2208,8 +2209,6 @@ describe("snapshots", () => {
 			+     },
 			+     "futureDefaults": true,
 			@@ ... @@
-			+       },
-			+       Object {
 			+         "rules": Array [
 			+           Object {
 			+             "descriptionData": Object {
@@ -2262,7 +2261,8 @@ describe("snapshots", () => {
 			+           "fullySpecified": true,
 			+         },
 			+         "type": "css/module",
-			@@ ... @@
+			+       },
+			+       Object {
 			+         "mimetype": "text/css",
 			+         "resolve": Object {
 			+           "fullySpecified": true,
@@ -2287,6 +2287,22 @@ describe("snapshots", () => {
 			-     "hashFunction": "md4",
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			+       "css-import": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			+           "...",
+			+         ],
+			+         "mainFiles": Array [],
+			+       },
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,

@@ -174,6 +174,7 @@ interface ImportMeta {
 			exclude?: RegExp;
 			preload?: boolean | number;
 			prefetch?: boolean | number;
+			fetchPriority?: "low" | "high" | "auto";
 			chunkName?: string;
 			exports?: string | string[][];
 			mode?: "sync" | "eager" | "weak" | "lazy" | "lazy-once";
