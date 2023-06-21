@@ -9,7 +9,7 @@ it("should exclude react@4 and react-dom from sharing", async () => {
 	expect(defaultScope['react-dom']).toBeFalsy();
 });
 
-it("excludes react@4 from consumption", async () => {
+it("excludes react@4 from consumption and modules still work", async () => {
 	__webpack_require__.S = {
 		default: {
 			react: {
@@ -23,6 +23,8 @@ it("excludes react@4 from consumption", async () => {
 		}
 	};
 	await __webpack_init_sharing__("default");
-	const barFn = (await import("./module")).ok.barFoo;
-	expect(barFn()).toEqual("fakenested react from bar");
+	const mod = (await import("./module")).ok;
+	expect(mod.reactModule()).toEqual("react");
+	expect(mod.reactDOMModule()).toEqual("react-dom");
+	expect(mod.barFoo()).toEqual("fakenested react from bar");
 });
