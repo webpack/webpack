@@ -13,7 +13,6 @@ import {
 	AssignmentPattern,
 	AssignmentProperty,
 	AwaitExpression,
-	BaseCallExpression,
 	BigIntLiteral,
 	BinaryExpression,
 	BlockStatement,
@@ -352,17 +351,19 @@ declare interface AssetResourceGeneratorOptions {
 }
 declare class AsyncDependenciesBlock extends DependenciesBlock {
 	constructor(
-		groupOptions: RawChunkGroupOptions & { name?: string } & {
-			entryOptions?: EntryOptions;
-		},
-		loc?: SyntheticDependencyLocation | RealDependencyLocation,
-		request?: string
+		groupOptions:
+			| null
+			| (RawChunkGroupOptions & { name?: string } & {
+					entryOptions?: EntryOptions;
+			  }),
+		loc?: null | SyntheticDependencyLocation | RealDependencyLocation,
+		request?: null | string
 	);
 	groupOptions: RawChunkGroupOptions & { name?: string } & {
 		entryOptions?: EntryOptions;
 	};
-	loc?: SyntheticDependencyLocation | RealDependencyLocation;
-	request?: string;
+	loc?: null | SyntheticDependencyLocation | RealDependencyLocation;
+	request?: null | string;
 	chunkName?: string;
 	module: any;
 }
@@ -2841,7 +2842,7 @@ declare interface ContextModuleOptions {
 	/**
 	 * exports referenced from modules (won't be mangled)
 	 */
-	referencedExports?: string[][];
+	referencedExports?: null | string[][];
 	layer?: string;
 	resource: string | false | string[];
 	resourceQuery?: string;
@@ -2850,18 +2851,22 @@ declare interface ContextModuleOptions {
 }
 declare class ContextReplacementPlugin {
 	constructor(
-		resourceRegExp?: any,
+		resourceRegExp: RegExp,
 		newContentResource?: any,
 		newContentRecursive?: any,
 		newContentRegExp?: any
 	);
-	resourceRegExp: any;
+	resourceRegExp: RegExp;
 	newContentCallback: any;
 	newContentResource: any;
 	newContentCreateContextMap: any;
 	newContentRecursive: any;
 	newContentRegExp: any;
-	apply(compiler?: any): void;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
 }
 declare interface ContextTimestampAndHash {
 	safeTime: number;
@@ -2949,10 +2954,10 @@ declare class Dependency {
 	get category(): string;
 	loc: DependencyLocation;
 	setLoc(
-		startLine?: any,
-		startColumn?: any,
-		endLine?: any,
-		endColumn?: any
+		startLine: number,
+		startColumn: number,
+		endLine: number,
+		endColumn: number
 	): void;
 	getContext(): undefined | string;
 	getResourceIdentifier(): null | string;
@@ -2985,12 +2990,12 @@ declare class Dependency {
 	/**
 	 * Returns warnings
 	 */
-	getWarnings(moduleGraph: ModuleGraph): WebpackError[];
+	getWarnings(moduleGraph: ModuleGraph): undefined | null | WebpackError[];
 
 	/**
 	 * Returns errors
 	 */
-	getErrors(moduleGraph: ModuleGraph): WebpackError[];
+	getErrors(moduleGraph: ModuleGraph): undefined | null | WebpackError[];
 
 	/**
 	 * Update the hash
@@ -3004,7 +3009,7 @@ declare class Dependency {
 	getModuleEvaluationSideEffectsState(
 		moduleGraph: ModuleGraph
 	): ConnectionState;
-	createIgnoredModule(context: string): Module;
+	createIgnoredModule(context: string): null | Module;
 	serialize(__0: ObjectSerializerContext): void;
 	deserialize(__0: ObjectDeserializerContext): void;
 	module: any;
@@ -3218,7 +3223,11 @@ declare interface DllPluginOptions {
 declare class DllReferencePlugin {
 	constructor(options: DllReferencePluginOptions);
 	options: DllReferencePluginOptions;
-	apply(compiler?: any): void;
+
+	/**
+	 * Apply the plugin
+	 */
+	apply(compiler: Compiler): void;
 }
 type DllReferencePluginOptions =
 	| {
@@ -4232,7 +4241,11 @@ declare interface ExternalItemObjectUnknown {
 }
 type ExternalItemValue = string | boolean | string[] | { [index: string]: any };
 declare class ExternalModule extends Module {
-	constructor(request?: any, type?: any, userRequest?: any);
+	constructor(
+		request: string | string[] | Record<string, string | string[]>,
+		type: any,
+		userRequest: string
+	);
 	request: string | string[] | Record<string, string | string[]>;
 	externalType: string;
 	userRequest: string;
@@ -4347,6 +4360,9 @@ declare interface FactorizeModuleOptions {
 	originModule: null | Module;
 	contextInfo?: Partial<ModuleFactoryCreateDataContextInfo>;
 	context?: string;
+}
+declare interface FactoryMeta {
+	sideEffectFree?: boolean;
 }
 type FakeHook<T> = T & FakeHookMarker;
 declare interface FakeHookMarker {}
@@ -5119,8 +5135,8 @@ declare abstract class InitFragment<Context> {
 	endContent?: string | Source;
 	getContent(context: Context): string | Source;
 	getEndContent(context: Context): undefined | string | Source;
-	serialize(context?: any): void;
-	deserialize(context?: any): void;
+	serialize(context: ObjectSerializerContext): void;
+	deserialize(context: ObjectDeserializerContext): void;
 	merge: any;
 }
 declare interface InputFileSystem {
@@ -5502,7 +5518,7 @@ declare class JavascriptParser extends Parser {
 		typeof: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		importCall: SyncBailHook<[ImportExpression], boolean | void>;
 		topLevelAwait: SyncBailHook<[Expression], boolean | void>;
-		call: HookMap<SyncBailHook<[BaseCallExpression], boolean | void>>;
+		call: HookMap<SyncBailHook<[CallExpression], boolean | void>>;
 		callMemberChain: HookMap<
 			SyncBailHook<
 				[CallExpression, string[], boolean[], [number, number][]],
@@ -5517,7 +5533,7 @@ declare class JavascriptParser extends Parser {
 		>;
 		callMemberChainOfCallMemberChain: HookMap<
 			SyncBailHook<
-				[Expression, string[], CallExpression, string[]],
+				[CallExpression, string[], CallExpression, string[]],
 				boolean | void
 			>
 		>;
@@ -5527,12 +5543,12 @@ declare class JavascriptParser extends Parser {
 		expression: HookMap<SyncBailHook<[Expression], boolean | void>>;
 		expressionMemberChain: HookMap<
 			SyncBailHook<
-				[Expression, string[], boolean[], [number, number][]],
+				[MemberExpression, string[], boolean[], [number, number][]],
 				boolean | void
 			>
 		>;
 		unhandledExpressionMemberChain: HookMap<
-			SyncBailHook<[Expression, string[]], boolean | void>
+			SyncBailHook<[MemberExpression, string[]], boolean | void>
 		>;
 		expressionConditionalOperator: SyncBailHook<
 			[ConditionalExpression],
@@ -6884,13 +6900,44 @@ declare interface LibIdentOptions {
 	associatedObjectForCache?: Object;
 }
 declare class LibManifestPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options: LibManifestPluginOptions);
+	options: LibManifestPluginOptions;
 
 	/**
 	 * Apply the plugin
 	 */
 	apply(compiler: Compiler): void;
+}
+declare interface LibManifestPluginOptions {
+	/**
+	 * Context of requests in the manifest file (defaults to the webpack context).
+	 */
+	context?: string;
+
+	/**
+	 * If true, only entry points will be exposed (default: true).
+	 */
+	entryOnly?: boolean;
+
+	/**
+	 * If true, manifest json file (output) will be formatted.
+	 */
+	format?: boolean;
+
+	/**
+	 * Name of the exposed dll function (external name, use value of 'output.library').
+	 */
+	name?: string;
+
+	/**
+	 * Absolute path to the manifest json file (output).
+	 */
+	path: string;
+
+	/**
+	 * Type of the dll bundle (external type, use value of 'output.libraryTarget').
+	 */
+	type?: string;
 }
 declare interface LibraryContext<T> {
 	compilation: Compilation;
@@ -7470,7 +7517,7 @@ declare class Module extends DependenciesBlock {
 	needId: boolean;
 	debugId: number;
 	resolveOptions?: ResolveOptionsWebpackOptions;
-	factoryMeta?: object;
+	factoryMeta?: FactoryMeta;
 	useSourceMap: boolean;
 	useSimpleSourceMap: boolean;
 	buildMeta?: BuildMeta;
@@ -7503,7 +7550,7 @@ declare class Module extends DependenciesBlock {
 	get moduleArgument(): string;
 	getExportsType(
 		moduleGraph: ModuleGraph,
-		strict: boolean
+		strict?: boolean
 	): "namespace" | "default-only" | "default-with-named" | "dynamic";
 	addPresentationalDependency(presentationalDependency: Dependency): void;
 	addCodeGenerationDependency(codeGenerationDependency: Dependency): void;
@@ -8042,7 +8089,7 @@ declare abstract class ModuleProfile {
 	storingEndTime: number;
 	storing: number;
 	storingParallelismFactor: number;
-	additionalFactoryTimes: any;
+	additionalFactoryTimes?: { start: number; end: number }[];
 	additionalFactories: number;
 	additionalFactoriesParallelismFactor: number;
 	additionalIntegration: number;
@@ -11151,8 +11198,8 @@ declare class RuntimeModule extends Module {
 	fullHash: boolean;
 	dependentHash: boolean;
 	attach(compilation: Compilation, chunk: Chunk, chunkGraph?: ChunkGraph): void;
-	generate(): string;
-	getGeneratedCode(): string;
+	generate(): null | string;
+	getGeneratedCode(): null | string;
 	shouldIsolate(): boolean;
 
 	/**
@@ -11332,7 +11379,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the module
 		 */
-		module: Module;
+		module: null | Module;
 		/**
 		 * the chunk graph
 		 */
@@ -11354,7 +11401,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the module
 		 */
-		module: Module;
+		module: null | Module;
 		/**
 		 * the chunk graph
 		 */
@@ -13744,7 +13791,7 @@ declare namespace exports {
 			) => boolean;
 			export let getDependencyUsedByExportsCondition: (
 				dependency: Dependency,
-				usedByExports: boolean | Set<string>,
+				usedByExports: undefined | boolean | Set<string>,
 				moduleGraph: ModuleGraph
 			) =>
 				| null
