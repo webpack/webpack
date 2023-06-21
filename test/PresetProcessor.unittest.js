@@ -168,6 +168,213 @@ describe("PresetProcessor", function () {
 		]);
 	});
 
+	it("should merge loaders with different syntax correctly", function () {
+		const webpackConfig = {
+			presets: [
+				{
+					module: {
+						rules: [
+							{
+								test: /\.js$/,
+								use: [
+									{
+										loader: "babel-loader",
+										options: {
+											presets: ["@babel/preset-env"]
+										}
+									}
+								]
+							}
+						]
+					}
+				},
+				{
+					module: {
+						rules: [
+							{
+								test: /\.js$/,
+								use: ["babel-loader"]
+							}
+						]
+					}
+				}
+			]
+		};
+		const mergedConfig = PresetProcessor.recursivelyMergePresets(webpackConfig);
+		expect(mergedConfig.module.rules).toBeDefined();
+		expect(mergedConfig.module.rules.length).toBe(1);
+		expect(mergedConfig.module.rules[0].use[0].options.presets).toStrictEqual([
+			"@babel/preset-env"
+		]);
+		expect(mergedConfig.module.rules[0].use[1]).toBe("babel-loader");
+	});
+
+	/**
+	 * This test is to ensure that the mergeWithRules function is working correctly with loaders.
+	 * @see https://github.com/survivejs/webpack-merge/issues/191
+	 */
+	it("should not merge loaders with different include array", function () {
+		const webpackConfig = {
+			presets: [
+				{
+					module: {
+						rules: [
+							{
+								test: /\.(j|t)sx?$/,
+								use: [
+									{
+										loader: "null-loader"
+									}
+								],
+								include: ["package1", "package2"]
+							}
+						]
+					}
+				},
+				{
+					module: {
+						rules: [
+							{
+								test: /\.(j|t)sx?$/,
+								use: [
+									{
+										loader: "babel-loader",
+										options: {
+											envName: "native"
+										}
+									}
+								],
+								include: ["package3", "package4"]
+							}
+						]
+					}
+				}
+			]
+		};
+
+		const mergedConfig = PresetProcessor.recursivelyMergePresets(webpackConfig);
+		expect(mergedConfig.module.rules.length).toBe(2);
+		expect(mergedConfig.module.rules[0].use[0].loader).toBe("null-loader");
+		expect(mergedConfig.module.rules[0].test).toEqual(/\.(j|t)sx?$/);
+		expect(mergedConfig.module.rules[0].include).toStrictEqual([
+			"package1",
+			"package2"
+		]);
+		expect(mergedConfig.module.rules[1].use[0].loader).toBe("babel-loader");
+		expect(mergedConfig.module.rules[1].test).toEqual(/\.(j|t)sx?$/);
+		expect(mergedConfig.module.rules[1].include).toStrictEqual([
+			"package3",
+			"package4"
+		]);
+	});
+
+	it("should merge loaders with different exclude array", function () {
+		const webpackConfig = {
+			presets: [
+				{
+					module: {
+						rules: [
+							{
+								test: /\.(j|t)sx?$/,
+								use: [
+									{
+										loader: "null-loader"
+									}
+								],
+								exclude: ["package1", "package2"]
+							}
+						]
+					}
+				},
+				{
+					module: {
+						rules: [
+							{
+								test: /\.(j|t)sx?$/,
+								use: [
+									{
+										loader: "babel-loader",
+										options: {
+											envName: "native"
+										}
+									}
+								],
+								exclude: ["package3", "package4"]
+							}
+						]
+					}
+				}
+			]
+		};
+
+		const mergedConfig = PresetProcessor.recursivelyMergePresets(webpackConfig);
+		expect(mergedConfig.module.rules.length).toBe(2);
+		expect(mergedConfig.module.rules[0].use[0].loader).toBe("null-loader");
+		expect(mergedConfig.module.rules[0].test).toEqual(/\.(j|t)sx?$/);
+		expect(mergedConfig.module.rules[0].exclude).toStrictEqual([
+			"package1",
+			"package2"
+		]);
+		expect(mergedConfig.module.rules[1].use[0].loader).toBe("babel-loader");
+		expect(mergedConfig.module.rules[1].test).toEqual(/\.(j|t)sx?$/);
+		expect(mergedConfig.module.rules[1].exclude).toStrictEqual([
+			"package3",
+			"package4"
+		]);
+	});
+
+	it("should not merge rules with one include array and one with exclude array", function () {
+		const webpackConfig = {
+			presets: [
+				{
+					module: {
+						rules: [
+							{
+								test: /\.(j|t)sx?$/,
+								use: [
+									{
+										loader: "babel-loader"
+									}
+								],
+								include: ["package1", "package2"]
+							}
+						]
+					}
+				},
+				{
+					module: {
+						rules: [
+							{
+								test: /\.(j|t)sx?$/,
+								use: [
+									{
+										loader: "babel-loader"
+									}
+								],
+								exclude: ["package3", "package4"]
+							}
+						]
+					}
+				}
+			]
+		};
+
+		const mergedConfig = PresetProcessor.recursivelyMergePresets(webpackConfig);
+		expect(mergedConfig.module.rules.length).toBe(2);
+		expect(mergedConfig.module.rules[0].use[0].loader).toBe("babel-loader");
+		expect(mergedConfig.module.rules[0].test).toEqual(/\.(j|t)sx?$/);
+		expect(mergedConfig.module.rules[0].include).toStrictEqual([
+			"package1",
+			"package2"
+		]);
+		expect(mergedConfig.module.rules[1].use[0].loader).toBe("babel-loader");
+		expect(mergedConfig.module.rules[1].test).toEqual(/\.(j|t)sx?$/);
+		expect(mergedConfig.module.rules[1].exclude).toStrictEqual([
+			"package3",
+			"package4"
+		]);
+	});
+
 	it("should merge splitChunks correctly", function () {
 		const webpackConfig = {
 			presets: [
