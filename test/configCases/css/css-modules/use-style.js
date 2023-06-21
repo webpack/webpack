@@ -1,5 +1,10 @@
 import * as style from "./style.module.css";
 import { local1, local2, local3, local4, ident } from "./style.module.css";
+import { myCssClass } from "./style.module.my-css";
+import * as notACssModule from "./style.module.css.invalid";
+
+// To prevent analysis export
+const isNotACSSModule = typeof notACssModule["c" + "lass"] === "undefined";
 
 export default {
 	global: style.global,
@@ -41,4 +46,6 @@ export default {
 	classLocalScope: style['class-local-scope'],
 	classInContainer: style['class-in-container'],
 	deepClassInContainer: style['deep-class-in-container'],
+	cssModuleWithCustomFileExtension: myCssClass,
+	notAValidCssModuleExtension: isNotACSSModule
 };
