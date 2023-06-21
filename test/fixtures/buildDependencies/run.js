@@ -1,6 +1,6 @@
 const path = require("path");
 const webpack = require("../../..");
-// eslint-disable-next-line node/no-missing-require
+// eslint-disable-next-line n/no-missing-require
 const value = require("../../js/buildDepsInput/config-dependency");
 
 require("dep#with#hash/#.js");

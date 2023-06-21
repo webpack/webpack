@@ -1,9 +1,9 @@
 module.exports = {
 	root: true,
-	plugins: ["prettier", "node", "jest", "jsdoc"],
+	plugins: ["prettier", "n", "jest", "jsdoc"],
 	extends: [
 		"eslint:recommended",
-		"plugin:node/recommended",
+		"plugin:n/recommended",
 		"plugin:prettier/recommended"
 	],
 	env: {
@@ -26,7 +26,7 @@ module.exports = {
 		"no-use-before-define": "off",
 		"no-unused-vars": ["error", { args: "none", ignoreRestSiblings: true }],
 		"no-loop-func": "off",
-		"node/no-missing-require": ["error", { allowModules: ["webpack"] }],
+		"n/no-missing-require": ["error", { allowModules: ["webpack"] }],
 		"jsdoc/check-indentation": "error",
 		"jsdoc/check-param-names": "error",
 		"jsdoc/check-property-names": "error",
