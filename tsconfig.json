@@ -6,7 +6,7 @@
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
-    "strict": false,
+    "strict": true,
     "noImplicitThis": true,
     "alwaysStrict": true,
     "types": ["node"],
