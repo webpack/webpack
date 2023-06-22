@@ -4617,7 +4617,7 @@ declare abstract class FileSystemInfo {
 	): void;
 	getFileHash(
 		path: string,
-		callback: (arg0?: null | WebpackError, arg1?: string) => void
+		callback: (arg0?: null | WebpackError, arg1?: null | string) => void
 	): void;
 	getContextHash(
 		path: string,
