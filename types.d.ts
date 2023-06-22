@@ -11233,7 +11233,7 @@ declare class RuntimeSpecMap<T> {
 	get(runtime: RuntimeSpec): undefined | T;
 	has(runtime: RuntimeSpec): boolean;
 	set(runtime: RuntimeSpec, value: T): void;
-	provide(runtime: RuntimeSpec, computer: () => T): T;
+	provide(runtime: RuntimeSpec, computer: () => any): any;
 	delete(runtime: RuntimeSpec): void;
 	update(runtime: RuntimeSpec, fn: (arg0?: T) => T): void;
 	keys(): RuntimeSpec[];
