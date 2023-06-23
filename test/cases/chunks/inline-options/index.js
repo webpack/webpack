@@ -199,9 +199,9 @@ if (process.env.NODE_ENV === "production") {
 		expect(jsonArray[0]).toBe("a");
 		expect(jsonPrimitive.default).toBe("a");
 		const a = await import(/* webpackExports: ["default"] */"./dir15/a");
-		expect(a.default).toEqual({ a: 1, b: 2 })
-		expect(a.a).toBe(1)
-		expect(a.b).toBe(2)
+		expect(a.default).toEqual({ a: 1, b: 2 });
+		expect(a.a).toBe(1);
+		expect(a.b).toBe(2);
 	})
 }
 

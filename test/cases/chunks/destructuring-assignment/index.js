@@ -19,5 +19,5 @@ it("should not tree-shake default export for exportsType=default module", async 
 	expect(array).toEqual(["a"]);
 	expect(primitive).toBe("a");
 	const { default: a } = await import("./dir2/a");
-	expect(a).toEqual({ a: 1, b: 2 })
+	expect(a).toEqual({ a: 1, b: 2 });
 });
