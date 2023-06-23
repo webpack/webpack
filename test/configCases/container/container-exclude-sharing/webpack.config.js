@@ -19,7 +19,7 @@ module.exports = {
 				// Effectively, not shared
 				"react-dom": {
 					exclusionCriteria: {
-						version: "2"
+						version: ">= 2"
 					}
 				}
 			}

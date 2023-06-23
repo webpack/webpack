@@ -2,8 +2,8 @@
     "name": "container-exclude-sharing",
     "private": true,
     "dependencies": {
-        "react": "1.0.0",
-        "react-dom": "2.0.0",
+        "react": "^1.0.0",
+        "react-dom": "^2.0.0",
         "bar": "3.0.0"
     }
 }
