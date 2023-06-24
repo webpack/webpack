@@ -8,6 +8,10 @@ module.exports = (env, { testPath }) => [
 		mode: "development",
 		experiments: {
 			css: true
+		},
+		node: {
+			__dirname: false,
+			__filename: false
 		}
 	},
 	{
@@ -31,6 +35,10 @@ module.exports = (env, { testPath }) => [
 				path: path.resolve(testPath, "module-ids.json"),
 				mode: "create"
 			})
-		]
+		],
+		node: {
+			__dirname: false,
+			__filename: false
+		}
 	}
 ];
