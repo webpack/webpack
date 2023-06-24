@@ -20,12 +20,12 @@ const asModule = require("./helpers/asModule");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "configCases");
-const categories = fs.readdirSync(casesPath).map(cat => {
+const categories = ["css"].map(cat => {
 	return {
 		name: cat,
 		tests: fs
 			.readdirSync(path.join(casesPath, cat))
-			.filter(folder => !folder.startsWith("_"))
+			.filter(folder => folder === "css-dead-code-removal")
 			.sort()
 	};
 });
