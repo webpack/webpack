@@ -117,6 +117,7 @@
     },
     "SharedExclusionCriteriaWithFallbackVersion": {
       "type": "object",
+      "description": "Extended exclusion criteria with fallback version added.",
       "additionalProperties": false,
       "properties": {
         "fallbackVersion": {
