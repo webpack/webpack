@@ -43,6 +43,9 @@ export interface ConsumesConfig {
 	 * Include the fallback module directly instead behind an async request. This allows to use fallback module in initial load too. All possible shared modules need to be eager too.
 	 */
 	eager?: boolean;
+	/**
+	 * Extended exclusion criteria with fallback version added.
+	 */
 	exclusionCriteria?: SharedExclusionCriteriaWithFallbackVersion;
 	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
@@ -74,8 +77,7 @@ export interface ConsumesConfig {
 	strictVersion?: boolean;
 }
 /**
- * This interface was referenced by `ConsumeSharedPluginOptions`'s JSON-Schema
- * via the `definition` "SharedExclusionCriteriaWithFallbackVersion".
+ * Extended exclusion criteria with fallback version added.
  */
 export interface SharedExclusionCriteriaWithFallbackVersion {
 	/**
