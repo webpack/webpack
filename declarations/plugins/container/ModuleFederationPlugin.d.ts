@@ -278,7 +278,7 @@ export interface SharedConfig {
 	 */
 	eager?: boolean;
 	/**
-	 * A set of exclusion criterias to use to decide if a module must participate in sharing.
+	 * A set of exclusion criteria to use to decide if a module must participate in sharing.
 	 */
 	exclusionCriteria?: SharedExclusionCriteria;
 	/**
@@ -315,7 +315,7 @@ export interface SharedConfig {
 	version?: false | string;
 }
 /**
- * A set of exclusion criterias to use to decide if a module must participate in sharing.
+ * A set of exclusion criteria to use to decide if a module must participate in sharing.
  */
 export interface SharedExclusionCriteria {
 	/**

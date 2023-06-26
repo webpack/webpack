@@ -2661,11 +2661,7 @@ declare interface ConsumesConfig {
 	 * Include the fallback module directly instead behind an async request. This allows to use fallback module in initial load too. All possible shared modules need to be eager too.
 	 */
 	eager?: boolean;
-
-	/**
-	 * A set of exclusion criterias to use to decide if a module must participate in sharing.
-	 */
-	exclusionCriteria?: SharedExclusionCriteria;
+	exclusionCriteria?: SharedExclusionCriteriaWithFallbackVersion;
 
 	/**
 	 * Fallback module if no shared module is found in share scope. Defaults to the property name.
@@ -10065,7 +10061,7 @@ declare interface ProvidesConfig {
 	eager?: boolean;
 
 	/**
-	 * A set of exclusion criterias to use to decide if a module must participate in sharing.
+	 * A set of exclusion criteria to use to decide if a module must participate in sharing.
 	 */
 	exclusionCriteria?: SharedExclusionCriteria;
 
@@ -11764,7 +11760,7 @@ declare interface SharedConfig {
 	eager?: boolean;
 
 	/**
-	 * A set of exclusion criterias to use to decide if a module must participate in sharing.
+	 * A set of exclusion criteria to use to decide if a module must participate in sharing.
 	 */
 	exclusionCriteria?: SharedExclusionCriteria;
 
@@ -11810,9 +11806,25 @@ declare interface SharedConfig {
 }
 
 /**
- * A set of exclusion criterias to use to decide if a module must participate in sharing.
+ * A set of exclusion criteria to use to decide if a module must participate in sharing.
  */
 declare interface SharedExclusionCriteria {
+	/**
+	 * A version or semver range of the dependency to exclude from sharing.
+	 */
+	version?: string;
+}
+
+/**
+ * This interface was referenced by `ConsumeSharedPluginOptions`'s JSON-Schema
+ * via the `definition` "SharedExclusionCriteriaWithFallbackVersion".
+ */
+declare interface SharedExclusionCriteriaWithFallbackVersion {
+	/**
+	 * Version of the package provided by the fallback if there is one.
+	 */
+	fallbackVersion?: string;
+
 	/**
 	 * A version or semver range of the dependency to exclude from sharing.
 	 */

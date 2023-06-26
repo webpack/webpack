@@ -32,7 +32,7 @@
           "type": "boolean"
         },
         "exclusionCriteria": {
-          "$ref": "#/definitions/SharedExclusionCriteria"
+          "$ref": "#/definitions/SharedExclusionCriteriaWithFallbackVersion"
         },
         "import": {
           "description": "Fallback module if no shared module is found in share scope. Defaults to the property name.",
@@ -109,6 +109,20 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "version": {
+          "description": "A version or semver range of the dependency to exclude from sharing.",
+          "type": "string"
+        }
+      }
+    },
+    "SharedExclusionCriteriaWithFallbackVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fallbackVersion": {
+          "description": "Version of the package provided by the fallback if there is one.",
+          "type": "string"
+        },
         "version": {
           "description": "A version or semver range of the dependency to exclude from sharing.",
           "type": "string"
