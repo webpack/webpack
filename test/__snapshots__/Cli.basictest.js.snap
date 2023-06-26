@@ -5097,6 +5097,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-remove-empty-assets": Object {
+    "configs": Array [
+      Object {
+        "description": "Remove assets which are empty.",
+        "multiple": false,
+        "path": "optimization.removeEmptyAssets",
+        "type": "boolean",
+      },
+    ],
+    "description": "Remove assets which are empty.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-remove-empty-chunks": Object {
     "configs": Array [
       Object {

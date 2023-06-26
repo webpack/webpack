@@ -8777,6 +8777,11 @@ declare interface Optimization {
 	removeAvailableModules?: boolean;
 
 	/**
+	 * Remove assets which are empty.
+	 */
+	removeEmptyAssets?: boolean;
+
+	/**
 	 * Remove chunks which are empty.
 	 */
 	removeEmptyChunks?: boolean;
