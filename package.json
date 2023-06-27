@@ -79,7 +79,7 @@
     "lint-staged": "^13.2.1",
     "lodash": "^4.17.19",
     "lodash-es": "^4.17.15",
-    "memfs": "^3.5.0",
+    "memfs": "^4.1.0",
     "mini-css-extract-plugin": "^1.6.1",
     "mini-svg-data-uri": "^1.2.3",
     "nyc": "^15.1.0",
