@@ -821,7 +821,7 @@ declare interface BuildInfo {
 }
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
-	map: any;
+	map: Record<string, Generator>;
 }
 declare const CIRCULAR_CONNECTION: unique symbol;
 declare class Cache {
@@ -2233,7 +2233,7 @@ declare class Compiler {
 	parentCompilation?: Compilation;
 	root: Compiler;
 	outputPath: string;
-	watching: Watching;
+	watching?: Watching;
 	outputFileSystem: OutputFileSystem;
 	intermediateFileSystem: IntermediateFileSystem;
 	inputFileSystem: InputFileSystem;
@@ -2243,11 +2243,14 @@ declare class Compiler {
 	records: object;
 	managedPaths: Set<string | RegExp>;
 	immutablePaths: Set<string | RegExp>;
-	modifiedFiles: ReadonlySet<string>;
-	removedFiles: ReadonlySet<string>;
-	fileTimestamps: ReadonlyMap<string, null | FileSystemInfoEntry | "ignore">;
-	contextTimestamps: ReadonlyMap<string, null | FileSystemInfoEntry | "ignore">;
-	fsStartTime: number;
+	modifiedFiles?: ReadonlySet<string>;
+	removedFiles?: ReadonlySet<string>;
+	fileTimestamps?: ReadonlyMap<string, null | FileSystemInfoEntry | "ignore">;
+	contextTimestamps?: ReadonlyMap<
+		string,
+		null | FileSystemInfoEntry | "ignore"
+	>;
+	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
 	infrastructureLogger: any;
 	options: WebpackOptionsNormalized;
@@ -2417,7 +2420,7 @@ declare interface Configuration {
 		| ((
 				data: ExternalItemFunctionData,
 				callback: (
-					err?: Error,
+					err?: null | Error,
 					result?: string | boolean | string[] | { [index: string]: any }
 				) => void
 		  ) => void)
@@ -2572,7 +2575,7 @@ declare interface Configuration {
 	/**
 	 * Options affecting how file system snapshots are created and validated.
 	 */
-	snapshot?: SnapshotOptions;
+	snapshot?: SnapshotOptionsWebpackOptions;
 
 	/**
 	 * Stats options object or preset name.
@@ -3082,7 +3085,7 @@ declare interface DependencyTemplateContext {
 	codeGenerationResults: CodeGenerationResults;
 }
 declare abstract class DependencyTemplates {
-	get(dependency: DependencyConstructor): DependencyTemplate;
+	get(dependency: DependencyConstructor): undefined | DependencyTemplate;
 	set(
 		dependency: DependencyConstructor,
 		dependencyTemplate: DependencyTemplate
@@ -4177,7 +4180,7 @@ type ExternalItem =
 	| ((
 			data: ExternalItemFunctionData,
 			callback: (
-				err?: Error,
+				err?: null | Error,
 				result?: string | boolean | string[] | { [index: string]: any }
 			) => void
 	  ) => void)
@@ -4266,7 +4269,7 @@ type Externals =
 	| ((
 			data: ExternalItemFunctionData,
 			callback: (
-				err?: Error,
+				err?: null | Error,
 				result?: string | boolean | string[] | { [index: string]: any }
 			) => void
 	  ) => void)
@@ -4614,7 +4617,7 @@ declare abstract class FileSystemInfo {
 	): void;
 	getFileHash(
 		path: string,
-		callback: (arg0?: null | WebpackError, arg1?: string) => void
+		callback: (arg0?: null | WebpackError, arg1?: null | string) => void
 	): void;
 	getContextHash(
 		path: string,
@@ -4640,20 +4643,11 @@ declare abstract class FileSystemInfo {
 		callback: (arg0?: null | Error, arg1?: boolean) => void
 	): void;
 	createSnapshot(
-		startTime: number,
+		startTime: undefined | null | number,
 		files: Iterable<string>,
 		directories: Iterable<string>,
 		missing: Iterable<string>,
-		options: {
-			/**
-			 * Use hashes of the content of the files/directories to determine invalidation.
-			 */
-			hash?: boolean;
-			/**
-			 * Use timestamps of the files/directories to determine invalidation.
-			 */
-			timestamp?: boolean;
-		},
+		options: undefined | null | SnapshotOptionsFileSystemInfo,
 		callback: (arg0?: null | WebpackError, arg1?: null | Snapshot) => void
 	): void;
 	mergeSnapshots(snapshot1: Snapshot, snapshot2: Snapshot): Snapshot;
@@ -4734,7 +4728,7 @@ declare class Generator {
 		context: ConcatenationBailoutReasonContext
 	): undefined | string;
 	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
-	static byType(map?: any): ByTypeGenerator;
+	static byType(map: Record<string, Generator>): ByTypeGenerator;
 }
 type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
 	GeneratorOptionsByModuleTypeUnknown;
@@ -11238,10 +11232,10 @@ declare class RuntimeSpecMap<T> {
 	constructor(clone?: RuntimeSpecMap<T>);
 	get(runtime: RuntimeSpec): undefined | T;
 	has(runtime: RuntimeSpec): boolean;
-	set(runtime?: any, value?: any): void;
-	provide(runtime?: any, computer?: any): any;
+	set(runtime: RuntimeSpec, value: T): void;
+	provide(runtime: RuntimeSpec, computer: () => any): any;
 	delete(runtime: RuntimeSpec): void;
-	update(runtime?: any, fn?: any): void;
+	update(runtime: RuntimeSpec, fn: (arg0?: T) => T): void;
 	keys(): RuntimeSpec[];
 	values(): IterableIterator<T>;
 	get size(): number;
@@ -11864,11 +11858,22 @@ declare abstract class Snapshot {
 	getContextIterable(): Iterable<string>;
 	getMissingIterable(): Iterable<string>;
 }
+declare interface SnapshotOptionsFileSystemInfo {
+	/**
+	 * should use hash to snapshot
+	 */
+	hash?: boolean;
+
+	/**
+	 * should use timestamp to snapshot
+	 */
+	timestamp?: boolean;
+}
 
 /**
  * Options affecting how file system snapshots are created and validated.
  */
-declare interface SnapshotOptions {
+declare interface SnapshotOptionsWebpackOptions {
 	/**
 	 * Options for snapshotting build dependencies to determine if the whole cache need to be invalidated.
 	 */
@@ -13439,7 +13444,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Options affecting how file system snapshots are created and validated.
 	 */
-	snapshot: SnapshotOptions;
+	snapshot: SnapshotOptionsWebpackOptions;
 
 	/**
 	 * Stats options object or preset name.
@@ -13932,7 +13937,7 @@ declare namespace exports {
 			) => RuntimeSpec;
 			export let forEachRuntime: (
 				runtime: RuntimeSpec,
-				fn: (arg0: string) => void,
+				fn: (arg0?: string) => void,
 				deterministicOrder?: boolean
 			) => void;
 			export let getRuntimeKey: (runtime: RuntimeSpec) => string;

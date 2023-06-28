@@ -184,7 +184,7 @@ export type ExternalItem =
 	| (
 			| ((
 					data: ExternalItemFunctionData,
-					callback: (err?: Error, result?: ExternalItemValue) => void
+					callback: (err?: Error | null, result?: ExternalItemValue) => void
 			  ) => void)
 			| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
 	  );
