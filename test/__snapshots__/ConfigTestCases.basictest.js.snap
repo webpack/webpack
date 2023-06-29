@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConfigTestCases css css-dead-code-removal exported tests should tree shake CSS modules 1`] = `
+".my-app-274-zx {
+    color: red;
+    padding: 11px;
+}
+
+
+
+
+head{--webpack-my-app-649:zx/_274;}"
+`;
