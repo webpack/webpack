@@ -20,7 +20,7 @@ const asModule = require("./helpers/asModule");
 const filterInfraStructureErrors = require("./helpers/infrastructureLogErrors");
 
 const casesPath = path.join(__dirname, "configCases");
-const categories = casesPath.map(cat => {
+const categories = fs.readdirSync(casesPath).map(cat => {
 	return {
 		name: cat,
 		tests: fs
