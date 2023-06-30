@@ -18,7 +18,6 @@ it("should tree shake CSS modules", done => {
 		try {
 			expect(x).toEqual({
 				Button: prod ? "my-app-274-zx" : "./style.module.css-Button",
-				Nested: prod ? "my-app-274-d_" : "./style.module.css-Nested",
 				Used: prod ? "my-app-274-eX" : "./style.module.css-Used",
 				Used1: prod ? "my-app-274-P3" : "./style.module.css-Used1",
 				Used2: prod ? "my-app-274-W0" : "./style.module.css-Used2",
