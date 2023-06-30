@@ -234,3 +234,30 @@
 		}
 	}
 }
+
+.Used div:not(.disabled, .mButtonDisabled, .tipOnly) {
+	pointer-events: initial !important;
+}
+
+.Unused :is(div.parent1.child1.Unused,
+    div.Used.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.Used div.Used) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.Used,
+.local2 :global .global,
+.local3 {
+	color: green;
+}
+
+:global .global :local .local4 {
+	color: yellow;
+}
+
+.local5:global(.Used).local6 {
+	color: blue;
+}
