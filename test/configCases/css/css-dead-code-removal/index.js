@@ -17,7 +17,8 @@ it("should tree shake CSS modules", done => {
 	import("./import-style.js").then(({ default: x }) => {
 		try {
 			expect(x).toEqual({
-				Button: prod ? "my-app-274-zx" : "./style.module.css-Button"
+				Button: prod ? "my-app-274-zx" : "./style.module.css-Button",
+				Used: prod ? "my-app-274-eX" : "./style.module.css-Used"
 			});
 			expect(cssContent).not.toContain(
 				prod ? ".my-app--" : "./style.module.css-Unused"

@@ -1,5 +1,6 @@
-import { Button } from "./style.module.css";
+import { Button, Used } from "./style.module.css";
 
 export default { 
-    Button: Button
+    Button: Button,
+    Used: Used
 }

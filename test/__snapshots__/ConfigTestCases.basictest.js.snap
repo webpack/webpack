@@ -2,14 +2,25 @@
 
 exports[`ConfigTestCases css css-dead-code-removal exported tests should tree shake CSS modules 1`] = `
 ".my-app-274-zx {
-    color: red;
-    padding: 11px;
+	color: red;
+	padding: 11px;
 }
 
 
 
 
-head{--webpack-my-app-649:zx/_274;}"
+
+.my-app-274-eX {
+	color: blue;
+	padding: 13px;
+
+	.Nested {
+		color: #ffc;
+		padding: 3px;
+	}
+}
+
+head{--webpack-my-app-649:zx/eX/_274;}"
 `;
 
 exports[`ConfigTestCases css css-import exported tests should compile 1`] = `

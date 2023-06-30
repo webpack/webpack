@@ -1,14 +1,29 @@
 .Button {
-    color: red;
-    padding: 11px;
+	color: red;
+	padding: 11px;
 }
 
 .Unused {
-    color: green;
-    padding: 10px;
+	color: green;
+	padding: 10px;
 }
 
 .Unused2 {
-    color: yellow;
-    padding: 12px;
+	color: yellow;
+	padding: 12px;
+
+	.Nested {
+		color: #ffa;
+		padding: 1px;
+	}
+}
+
+.Used {
+	color: blue;
+	padding: 13px;
+
+	.Nested {
+		color: #ffc;
+		padding: 3px;
+	}
 }
