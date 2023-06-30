@@ -23,7 +23,8 @@ it("should tree shake CSS modules", done => {
 				Used2: prod ? "my-app-274-W0" : "./style.module.css-Used2",
 				UsedParentNestedTest: prod
 					? "my-app-274-Y0"
-					: "./style.module.css-UsedParentNestedTest"
+					: "./style.module.css-UsedParentNestedTest",
+				Input: prod ? "my-app-464-I" : "./style2.module.css-Input"
 			});
 			expect(cssContent).not.toContain(
 				prod ? ".my-app--" : "./style.module.css-Unused"
