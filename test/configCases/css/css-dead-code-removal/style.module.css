@@ -16,24 +16,108 @@
 		color: #ffa;
 		padding: 1px;
 	}
+
+	.NestedUnused {
+		color: #ffa;
+		padding: 2px;
+	}
+}
+
+.UsedParentNestedTest {
+	color: blue;
+	padding: 13px;
+
+	.NestedUnused {
+		color: #ffa;
+		padding: 2px;
+
+		.NestedUnused2 {
+			color: #ffa;
+			padding: 2px;
+		}
+	}
+
+	.Used {
+		color: blue;
+		padding: 13px;
+
+		.Used2 {
+			color: #ffa;
+			padding: 2px;
+		}
+	}
+}
+
+.UnusedParentNestedTest {
+	.NestedUnused {
+		color: #ffa;
+		padding: 2px;
+
+		.NestedUnused2 {
+			color: #ffa;
+			padding: 2px;
+		}
+	}
+
+	.Used {
+		color: blue;
+		padding: 13px;
+
+		.Used2 {
+			color: #ffa;
+			padding: 2px;
+		}
+	}
 }
 
 .Used {
 	color: blue;
 	padding: 13px;
 
-	.Nested {
-		color: #ffc;
-		padding: 3px;
+	.NestedUnused {
+		color: #ffa;
+		padding: 2px;
 	}
 }
 
 .Used1 .Used2 {
 	color: #fff;
 	padding: 14px;
+
+	.NestedUnused {
+		color: #ffa;
+		padding: 2px;
+	}
 }
 
-.Used1 .Used2 .Used3 {
+.Used1 .Used2 .Unused {
 	color: #fff;
 	padding: 15px;
+}
+
+@media screen and (min-width: 500px) {
+	.Used1 .Used2 .Unused {
+		color: #fff;
+		padding: 16px;
+	}
+
+	.Used {
+		color: blue;
+		padding: 17px;
+
+		.Nested {
+			color: #ffc;
+			padding: 18px;
+		}
+
+		.NestedUnused {
+			color: #ffa;
+			padding: 2px;
+		}
+	}
+
+	.NestedUnused {
+		color: #ffa;
+		padding: 2px;
+	}
 }
