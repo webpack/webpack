@@ -158,3 +158,79 @@
 		}
 	}
 }
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+		.Flex {
+			display: flex;
+
+			.Used {
+				display: grid;
+			}
+		}
+	}
+}
+
+:global .GlobalUpperCase :local .LocalUpperCase {
+	color: yellow;
+}
+
+.Used {
+	color: red;
+
+	.Used2 {
+		color: red;
+	}
+
+	.NestedUnused {
+		display: none;
+	}
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.Used {
+			color: blue;
+		}
+
+		.NestedUnused {
+			display: none;
+		}
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.Used {
+			display: flex;
+		}
+
+		.NestedUnused {
+			display: none;
+		}
+	}
+
+	@layer foo {
+		background: red;
+
+		.Used {
+			background: red;
+		}
+
+		.NestedUnused {
+			display: none;
+		}
+	}
+
+	@container foo {
+		background: red;
+
+		.Used {
+			background: red;
+		}
+
+		.NestedUnused {
+			display: none;
+		}
+	}
+}

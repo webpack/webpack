@@ -24,7 +24,9 @@ it("should tree shake CSS modules", done => {
 				UsedParentNestedTest: prod
 					? "my-app-274-Y0"
 					: "./style.module.css-UsedParentNestedTest",
-				Input: prod ? "my-app-464-I" : "./style2.module.css-Input"
+				Input: prod ? "my-app-464-I" : "./style2.module.css-Input",
+				Flex: prod ? "my-app-274-kC" : "./style.module.css-Flex",
+				LocalUpperCase: prod ? "my-app-274-Cz" : "./style.module.css-LocalUpperCase"
 			});
 			expect(cssContent).not.toContain(
 				prod ? ".my-app--" : "./style.module.css-Unused"
@@ -34,8 +36,6 @@ it("should tree shake CSS modules", done => {
 			);
 			// dead code removal only happens in production? why?
 			if (prod) {
-				expect(cssContent).not.toContain("color: green");
-				expect(cssContent).not.toContain("color: yellow");
 				expect(cssContent).toMatchSnapshot();
 			}
 		} catch (e) {
