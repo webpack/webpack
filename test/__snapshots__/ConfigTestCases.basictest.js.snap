@@ -10,21 +10,66 @@ exports[`ConfigTestCases css css-dead-code-removal exported tests should tree sh
 
 
 
+.my-app-274-Y0 {
+	color: blue;
+	padding: 13px;
+
+	
+
+	.my-app-274-eX {
+		color: blue;
+		padding: 13px;
+
+		.my-app-274-W0 {
+			color: #ffa;
+			padding: 2px;
+		}
+	}
+}
+
+
+
 .my-app-274-eX {
 	color: blue;
 	padding: 13px;
 
-	.Nested {
-		color: #ffc;
-		padding: 3px;
-	}
+	
 }
 
 .my-app-274-P3 .my-app-274-W0 {
 	color: #fff;
 	padding: 14px;
+
+	
 }
-head{--webpack-my-app-649:zx/eX/P3/W0/_274;}"
+
+.my-app-274-P3 .my-app-274-W0  {
+	color: #fff;
+	padding: 15px;
+}
+
+@media screen and (min-width: 500px) {
+	.my-app-274-P3 .my-app-274-W0  {
+		color: #fff;
+		padding: 16px;
+	}
+
+	.my-app-274-eX {
+		color: blue;
+		padding: 17px;
+
+		.my-app-274-d_ {
+			color: #ffc;
+			padding: 18px;
+		}
+
+		
+	}
+
+	
+}
+
+head{--webpack-my-app-649:zx/Y0/eX/W0/P3/d_/_274;}"
 `;
 
 exports[`ConfigTestCases css css-import exported tests should compile 1`] = `
