@@ -43,13 +43,13 @@ exports[`ConfigTestCases css css-dead-code-removal exported tests should tree sh
 	
 }
 
-.my-app-274-P3 .my-app-274-W0  {
+.my-app-274-P3 .my-app-274-W0 .Unused {
 	color: #fff;
 	padding: 15px;
 }
 
 @media screen and (min-width: 500px) {
-	.my-app-274-P3 .my-app-274-W0  {
+	.my-app-274-P3 .my-app-274-W0 .Unused {
 		color: #fff;
 		padding: 16px;
 	}
@@ -147,12 +147,84 @@ exports[`ConfigTestCases css css-dead-code-removal exported tests should tree sh
 	}
 }
 
+.my-app-274-eX div:not(.disabled, .mButtonDisabled, .tipOnly) {
+	pointer-events: initial !important;
+}
+
+.Unused
+	:is(
+		div.parent1.child1.Unused,
+		div.my-app-274-eX.child1.vertical-small,
+		div.otherDiv.horizontal-tiny,
+		div.otherDiv.my-app-274-eX div.my-app-274-eX
+	) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.my-app-274-eX,
+.local2 .global,
+.local3 {
+	color: green;
+}
+
+.globalsome .localsome {
+	color: yellow;
+}
+
+.local5.Used.local6 {
+	color: blue;
+}
+
+/**
+ * all used classnames should be changed. unused should not be changed
+ */
+.my-app-274-eX.nested2.nested3 {
+	color: 1;
+}
+.Unused.Used.nested3 {
+	color: 2;
+}
+.Unused.nested2.my-app-274-eX {
+	color: 3;
+}
+.nested1.nested2.nested3 {
+	color: 4;
+}
+
+/**
+ * possible bug? ident name is not preserved in local mode
+ */
+#my-app-- {
+	color: purple;
+}
+
+.my-app-274-eX {
+	color: var(--my-app-274-aM);
+	--my-app-274-aM: red;
+}
+
+/**
+ * This should be there in the output as global without name change since it is global
+ */
+.Used {
+	padding: 15px;
+}
+
+/**
+ * This should be there in the output as global even though it is not used
+ */
+.Unused {
+	padding: 16px;
+}
+
 .my-app-464-I {
     color: red;
 }
 
 
-head{--webpack-my-app-649:zx/Y0/eX/W0/P3/kC/Cz/_274,I/_464;}"
+head{--webpack-my-app-649:zx/Y0/eX/W0/P3/kC/Cz/aM%_274,I/_464;}"
 `;
 
 exports[`ConfigTestCases css css-import exported tests should compile 1`] = `

@@ -239,13 +239,16 @@
 	pointer-events: initial !important;
 }
 
-.Unused :is(div.parent1.child1.Unused,
-    div.Used.child1.vertical-small,
-    div.otherDiv.horizontal-tiny,
-    div.otherDiv.Used div.Used) {
-  max-height: 0;
-  margin: 0;
-  overflow: hidden;
+.Unused
+	:is(
+		div.parent1.child1.Unused,
+		div.Used.child1.vertical-small,
+		div.otherDiv.horizontal-tiny,
+		div.otherDiv.Used div.Used
+	) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
 }
 
 .Used,
@@ -254,10 +257,52 @@
 	color: green;
 }
 
-:global .global :local .local4 {
+:global .globalsome :local .localsome {
 	color: yellow;
 }
 
 .local5:global(.Used).local6 {
 	color: blue;
+}
+
+/**
+ * all used classnames should be changed. unused should not be changed
+ */
+:global(:global(:local(.Used)).nested2).nested3 {
+	color: 1;
+}
+:global(:global(:local(.Unused)).Used).nested3 {
+	color: 2;
+}
+:global(:global(:local(.Unused)).nested2).Used {
+	color: 3;
+}
+:global(:global(:local(.nested1)).nested2).nested3 {
+	color: 4;
+}
+
+/**
+ * possible bug? ident name is not preserved in local mode
+ */
+#ident {
+	color: purple;
+}
+
+.Used {
+	color: var(--some-var-i-am);
+	--some-var-i-am: red;
+}
+
+/**
+ * This should be there in the output as global without name change since it is global
+ */
+:global .Used {
+	padding: 15px;
+}
+
+/**
+ * This should be there in the output as global even though it is not used
+ */
+:global .Unused {
+	padding: 16px;
 }
