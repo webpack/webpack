@@ -113,8 +113,20 @@ it("should allow to create css modules", done => {
 				cssModuleWithCustomFileExtension: prod
 					? "my-app-444-s"
 					: "./style.module.my-css-myCssClass",
-				notAValidCssModuleExtension: true
+				notAValidCssModuleExtension: true,
+				UsedClassName: prod ? "my-app-627-Q3" : "./identifiers.module.css-UsedClassName",
 			});
+
+			const fs = __non_webpack_require__("fs");
+			const path = __non_webpack_require__("path");
+			const cssOutputFilename = prod ? "249.bundle1.css" : "use-style_js.bundle0.css";
+
+			const cssContent = fs.readFileSync(
+				path.join(__dirname, cssOutputFilename),
+				"utf-8"
+			);
+			expect(cssContent).not.toContain(".my-app--");
+			expect(cssContent).toMatchSnapshot();
 		} catch (e) {
 			return done(e);
 		}

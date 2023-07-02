@@ -20,6 +20,10 @@ module.exports = (env, { testPath }) => [
 					type: "css/auto"
 				}
 			]
+		},
+		node: {
+			__dirname: false,
+			__filename: false
 		}
 	},
 	{
@@ -42,6 +46,10 @@ module.exports = (env, { testPath }) => [
 					type: "css/auto"
 				}
 			]
+		},
+		node: {
+			__dirname: false,
+			__filename: false
 		},
 		plugins: [
 			new webpack.ids.DeterministicModuleIdsPlugin({

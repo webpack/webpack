@@ -98,7 +98,8 @@ it("should allow to create css modules", done => {
 				cssModuleWithCustomFileExtension: prod
 					? "my-app-444-s"
 					: "./style.module.my-css-myCssClass",
-				notAValidCssModuleExtension: true
+				notAValidCssModuleExtension: true,
+				UsedClassName: prod ? "my-app-627-Q3" : "./identifiers.module.css-UsedClassName",
 			});
 		} catch (e) {
 			return done(e);

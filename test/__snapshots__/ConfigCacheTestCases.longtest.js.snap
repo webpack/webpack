@@ -1248,6 +1248,1310 @@ head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\
 ]
 `;
 
+exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules 1`] = `
+".\\\\.\\\\/style\\\\.module\\\\.css-class {
+	color: red;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local1,
+.\\\\.\\\\/style\\\\.module\\\\.css-local2 .global,
+.\\\\.\\\\/style\\\\.module\\\\.css-local3 {
+	color: green;
+}
+
+.global .\\\\.\\\\/style\\\\.module\\\\.css-local4 {
+	color: yellow;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local5.global.\\\\.\\\\/style\\\\.module\\\\.css-local6 {
+	color: blue;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local7 div:not(.\\\\.\\\\/style\\\\.module\\\\.css-disabled, .\\\\.\\\\/style\\\\.module\\\\.css-mButtonDisabled, .\\\\.\\\\/style\\\\.module\\\\.css-tipOnly) {
+    pointer-events: initial !important;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local8 :is(div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny,
+    div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-small,
+    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny,
+    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\/style\\\\.module\\\\.css-description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local9 :matches(div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny,
+    div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-small,
+    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny,
+    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\/style\\\\.module\\\\.css-description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local10 :where(div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny,
+    div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-small,
+    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny,
+    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\/style\\\\.module\\\\.css-description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local11 div:has(.\\\\.\\\\/style\\\\.module\\\\.css-disabled, .\\\\.\\\\/style\\\\.module\\\\.css-mButtonDisabled, .\\\\.\\\\/style\\\\.module\\\\.css-tipOnly) {
+    pointer-events: initial !important;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local12 div:current(p, span) {
+	background-color: yellow;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local13 div:past(p, span) {
+	display: none;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local14 div:future(p, span) {
+	background-color: yellow;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local15 div:-moz-any(ol, ul, menu, dir) {
+	list-style-type: square;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local16 li:-webkit-any(:first-child, :last-child) {
+	background-color: aquamarine;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-local9 :matches(div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny,
+    div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-small,
+    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny,
+    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\/style\\\\.module\\\\.css-description) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-nested1.nested2.\\\\.\\\\/style\\\\.module\\\\.css-nested3 {
+	color: pink;
+}
+
+#\\\\.\\\\/style\\\\.module\\\\.css-ident {
+	color: purple;
+}
+
+@keyframes \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes{
+	0% {
+		left: var(--\\\\.\\\\/style\\\\.module\\\\.css-pos1x);
+		top: var(--\\\\.\\\\/style\\\\.module\\\\.css-pos1y);
+		color: var(--theme-color1);
+	}
+	100% {
+		left: var(--\\\\.\\\\/style\\\\.module\\\\.css-pos2x);
+		top: var(--\\\\.\\\\/style\\\\.module\\\\.css-pos2y);
+		color: var(--theme-color2);
+	}
+}
+
+@keyframes \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2{
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-animation {
+	animation-name: \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes;
+	animation: 3s ease-in 1s 2 reverse both paused \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes, \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2;
+	--\\\\.\\\\/style\\\\.module\\\\.css-pos1x: 0px;
+	--\\\\.\\\\/style\\\\.module\\\\.css-pos1y: 0px;
+	--\\\\.\\\\/style\\\\.module\\\\.css-pos2x: 10px;
+	--\\\\.\\\\/style\\\\.module\\\\.css-pos2y: 20px;
+}
+
+/* .composed {
+	composes: local1;
+	composes: local2;
+} */
+
+.\\\\.\\\\/style\\\\.module\\\\.css-vars {
+	color: var(--\\\\.\\\\/style\\\\.module\\\\.css-local-color);
+	--\\\\.\\\\/style\\\\.module\\\\.css-local-color: red;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-globalVars {
+	color: var(--global-color);
+	--global-color: red;
+}
+
+@media (min-width: 1600px) {
+	.\\\\.\\\\/style\\\\.module\\\\.css-wideScreenClass {
+		color: var(--\\\\.\\\\/style\\\\.module\\\\.css-local-color);
+		--\\\\.\\\\/style\\\\.module\\\\.css-local-color: green;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.\\\\.\\\\/style\\\\.module\\\\.css-narrowScreenClass {
+		color: var(--\\\\.\\\\/style\\\\.module\\\\.css-local-color);
+		--\\\\.\\\\/style\\\\.module\\\\.css-local-color: purple;
+	}
+}
+
+@supports (display: grid) {
+	.\\\\.\\\\/style\\\\.module\\\\.css-displayGridInSupports {
+		display: grid;
+	}
+}
+
+@supports not (display: grid) {
+  .\\\\.\\\\/style\\\\.module\\\\.css-floatRightInNegativeSupports {
+    float: right;
+  }
+}
+
+@supports (display: flex) {
+  @media screen and (min-width: 900px) {
+    .\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInMediaInSupports {
+      display: flex;
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+    .\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInSupportsInMedia {
+      display: flex;
+    }
+  }
+}
+
+@MEDIA screen and (min-width: 900px) {
+	@SUPPORTS (display: flex) {
+		.\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInSupportsInMediaUpperCase {
+			display: flex;
+		}
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-animationUpperCase {
+	ANIMATION-NAME: \\\\.\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused \\\\.\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE, \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2UPPPERCASE;
+	--\\\\.\\\\/style\\\\.module\\\\.css-pos1x: 0px;
+	--\\\\.\\\\/style\\\\.module\\\\.css-pos1y: 0px;
+	--\\\\.\\\\/style\\\\.module\\\\.css-pos2x: 10px;
+	--\\\\.\\\\/style\\\\.module\\\\.css-pos2y: 20px;
+}
+
+@KEYFRAMES \\\\.\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE{
+	0% {
+		left: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-pos1x);
+		top: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-pos1y);
+		color: VAR(--theme-color1);
+	}
+	100% {
+		left: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-pos2x);
+		top: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-pos2y);
+		color: VAR(--theme-color2);
+	}
+}
+
+@KEYframes \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2UPPPERCASE{
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.globalUpperCase .\\\\.\\\\/style\\\\.module\\\\.css-localUpperCase {
+	color: yellow;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-VARS {
+	color: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-LOCAL-COLOR);
+	--\\\\.\\\\/style\\\\.module\\\\.css-LOCAL-COLOR: red;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-globalVarsUpperCase {
+	COLOR: VAR(--GLOBAR-COLOR);
+	--GLOBAR-COLOR: red;
+}
+
+@supports (top: env(safe-area-inset-top, 0)) {
+	.\\\\.\\\\/style\\\\.module\\\\.css-inSupportScope {
+		color: red;
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-a {
+	animation: 3s \\\\.\\\\/style\\\\.module\\\\.css-animationName;
+	-webkit-animation: 3s \\\\.\\\\/style\\\\.module\\\\.css-animationName;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-b {
+	animation: \\\\.\\\\/style\\\\.module\\\\.css-animationName 3s;
+	-webkit-animation: \\\\.\\\\/style\\\\.module\\\\.css-animationName 3s;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-c {
+	animation-name: \\\\.\\\\/style\\\\.module\\\\.css-animationName;
+	-webkit-animation-name: \\\\.\\\\/style\\\\.module\\\\.css-animationName;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-d {
+	--\\\\.\\\\/style\\\\.module\\\\.css-animation-name: animationName;
+}
+
+@keyframes \\\\.\\\\/style\\\\.module\\\\.css-animationName{
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-webkit-keyframes \\\\.\\\\/style\\\\.module\\\\.css-animationName{
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-moz-keyframes \\\\.\\\\/style\\\\.module\\\\.css-mozAnimationName{
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+/* At-rule for \\"nice-style\\" in Font Two */
+@font-feature-values Font Two {
+	@styleset {
+		nice-style: 4;
+	}
+}
+
+@property --\\\\.\\\\/style\\\\.module\\\\.css-my-color{
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #\\\\.\\\\/style\\\\.module\\\\.css-c0ffee;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-class {
+	color: var(--\\\\.\\\\/style\\\\.module\\\\.css-my-color);
+}
+
+@layer utilities {
+	.\\\\.\\\\/style\\\\.module\\\\.css-padding-sm {
+		padding: 0.5rem;
+	}
+
+	.\\\\.\\\\/style\\\\.module\\\\.css-padding-lg {
+		padding: 0.8rem;
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-class {
+	color: red;
+
+	.\\\\.\\\\/style\\\\.module\\\\.css-nested-pure {
+		color: red;
+	}
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.\\\\.\\\\/style\\\\.module\\\\.css-nested-media {
+			color: blue;
+		}
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.\\\\.\\\\/style\\\\.module\\\\.css-nested-supports {
+			display: flex;
+		}
+	}
+
+	@layer foo {
+		background: red;
+
+		.\\\\.\\\\/style\\\\.module\\\\.css-nested-layer {
+			background: red;
+		}
+	}
+
+	@container foo {
+		background: red;
+
+		.\\\\.\\\\/style\\\\.module\\\\.css-nested-layer {
+			background: red;
+		}
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-not-selector-inside {
+	color: #fff;
+	opacity: 0.12;
+	padding: .5px;
+	unknown: :local(.test);
+	unknown1: :local .test;
+	unknown2: :global .test;
+	unknown3: :global .test;
+	unknown4: .foo, .bar, #bar;
+}
+
+@unknown :local .local :global .global {
+	color: red;
+}
+
+@unknown :local(.local) :global(.global) {
+	color: red;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-nested-var {
+	.\\\\.\\\\/style\\\\.module\\\\.css-again {
+		color: var(--\\\\.\\\\/style\\\\.module\\\\.css-local-color);
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-nested-with-local-pseudo {
+	color: red;
+
+	.\\\\.\\\\/style\\\\.module\\\\.css-local-nested {
+		color: red;
+	}
+
+	.global-nested {
+		color: red;
+	}
+
+	.\\\\.\\\\/style\\\\.module\\\\.css-local-nested {
+		color: red;
+	}
+
+	.global-nested {
+		color: red;
+	}
+
+	.\\\\.\\\\/style\\\\.module\\\\.css-local-nested, .global-nested-next {
+		color: red;
+	}
+
+	.\\\\.\\\\/style\\\\.module\\\\.css-local-nested, .global-nested-next {
+		color: red;
+	}
+
+	.foo, .\\\\.\\\\/style\\\\.module\\\\.css-bar {
+		color: red;
+	}
+}
+
+#\\\\.\\\\/style\\\\.module\\\\.css-id-foo {
+	color: red;
+
+	#\\\\.\\\\/style\\\\.module\\\\.css-id-bar {
+		color: red;
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-nested-parens {
+	.\\\\.\\\\/style\\\\.module\\\\.css-local9 div:has(.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny, .\\\\.\\\\/style\\\\.module\\\\.css-vertical-small) {
+		max-height: 0;
+		margin: 0;
+		overflow: hidden;
+	}
+}
+
+.global-foo {
+	.nested-global {
+		color: red;
+	}
+
+	.\\\\.\\\\/style\\\\.module\\\\.css-local-in-global {
+		color: blue;
+	}
+}
+
+@unknown .class {
+	color: red;
+
+	.class {
+		color: red;
+	}
+}
+
+.class .\\\\.\\\\/style\\\\.module\\\\.css-in-local-global-scope,
+.class .\\\\.\\\\/style\\\\.module\\\\.css-in-local-global-scope,
+.\\\\.\\\\/style\\\\.module\\\\.css-class-local-scope .in-local-global-scope {
+	color: red;
+}
+
+@container (width > 400px) {
+	.\\\\.\\\\/style\\\\.module\\\\.css-class-in-container {
+		font-size: 1.5em;
+	}
+}
+
+@container summary (min-width: 400px) {
+	@container (width > 400px) {
+		.\\\\.\\\\/style\\\\.module\\\\.css-deep-class-in-container {
+			font-size: 1.5em;
+		}
+	}
+}
+
+:scope {
+	color: red;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-placeholder-gray-700:-ms-input-placeholder {
+	--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity));
+}
+.\\\\.\\\\/style\\\\.module\\\\.css-placeholder-gray-700::-ms-input-placeholder {
+	--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity));
+}
+.\\\\.\\\\/style\\\\.module\\\\.css-placeholder-gray-700::placeholder {
+	--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity));
+}
+
+:root {
+	--\\\\.\\\\/style\\\\.module\\\\.css-test: dark;
+}
+
+@media screen and (prefers-color-scheme: var(--\\\\.\\\\/style\\\\.module\\\\.css-test)) {
+	.\\\\.\\\\/style\\\\.module\\\\.css-baz {
+		color: white;
+	}
+}
+
+@keyframes \\\\.\\\\/style\\\\.module\\\\.css-slidein{
+	from {
+		margin-left: 100%;
+		width: 300%;
+	}
+
+	to {
+		margin-left: 0%;
+		width: 100%;
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-class {
+	animation:
+		foo var(--\\\\.\\\\/style\\\\.module\\\\.css-animation-name) 3s,
+		var(--\\\\.\\\\/style\\\\.module\\\\.css-animation-name) 3s,
+		3s linear 1s infinite running \\\\.\\\\/style\\\\.module\\\\.css-slidein,
+		3s linear env(foo, var(--\\\\.\\\\/style\\\\.module\\\\.css-baz)) infinite running \\\\.\\\\/style\\\\.module\\\\.css-slidein;
+}
+
+:root {
+	--\\\\.\\\\/style\\\\.module\\\\.css-baz: 10px;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-class {
+	bar: env(foo, var(--\\\\.\\\\/style\\\\.module\\\\.css-baz));
+}
+
+.global-foo, .\\\\.\\\\/style\\\\.module\\\\.css-bar {
+	.\\\\.\\\\/style\\\\.module\\\\.css-local-in-global       {
+		color: blue;
+	}
+
+	@media screen {
+		.my-global-class-again,
+		.\\\\.\\\\/style\\\\.module\\\\.css-my-global-class-again {
+			color: red;
+		}
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-first-nested {
+	.\\\\.\\\\/style\\\\.module\\\\.css-first-nested-nested {
+		color: red;
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-first-nested-at-rule {
+	@media screen {
+		.\\\\.\\\\/style\\\\.module\\\\.css-first-nested-nested-at-rule-deep {
+			color: red;
+		}
+	}
+}
+
+.again-global {
+	color:red;
+}
+
+.again-again-global {
+	.again-again-global {
+		color: red;
+	}
+}
+
+:root {
+	--\\\\.\\\\/style\\\\.module\\\\.css-foo: red;
+}
+
+.again-again-global {
+	color: var(--foo);
+
+	.again-again-global {
+		color: var(--foo);
+	}
+}
+
+.again-again-global {
+	animation: slidein 3s;
+
+	.again-again-global, .\\\\.\\\\/style\\\\.module\\\\.css-class, .\\\\.\\\\/style\\\\.module\\\\.css-nested1.nested2.\\\\.\\\\/style\\\\.module\\\\.css-nested3 {
+		animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
+	}
+
+  .\\\\.\\\\/style\\\\.module\\\\.css-local2 .global,
+	.\\\\.\\\\/style\\\\.module\\\\.css-local3 {
+		color: red;
+	}
+}
+
+@unknown var(--foo) {
+	color: red;
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-class {
+	.\\\\.\\\\/style\\\\.module\\\\.css-class {
+		.\\\\.\\\\/style\\\\.module\\\\.css-class {
+			.\\\\.\\\\/style\\\\.module\\\\.css-class {}
+		}
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-class {
+	.\\\\.\\\\/style\\\\.module\\\\.css-class {
+		.\\\\.\\\\/style\\\\.module\\\\.css-class {
+			.\\\\.\\\\/style\\\\.module\\\\.css-class {
+				animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
+			}
+		}
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.css-class {
+	animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
+	.\\\\.\\\\/style\\\\.module\\\\.css-class {
+		animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
+		.\\\\.\\\\/style\\\\.module\\\\.css-class {
+			animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
+			.\\\\.\\\\/style\\\\.module\\\\.css-class {
+				animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
+			}
+		}
+	}
+}
+
+.\\\\.\\\\/style\\\\.module\\\\.my-css-myCssClass {
+    color: red;
+}
+
+.class {
+    color: teal;
+}
+
+.\\\\.\\\\/identifiers\\\\.module\\\\.css-UnusedClassName{
+    color: red;
+    padding: var(--\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-unused-class);
+    --\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-unused-class: 10px;
+}
+
+.\\\\.\\\\/identifiers\\\\.module\\\\.css-UsedClassName {
+    color: green;
+    padding: var(--\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-used-class);
+    --\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-used-class: 10px;
+}
+
+head{--webpack-use-style_js:class/local1/local2/local3/local4/local5/local6/local7/disabled/mButtonDisabled/tipOnly/local8/parent1/child1/vertical-tiny/vertical-small/otherDiv/horizontal-tiny/horizontal-small/description/local9/local10/local11/local12/local13/local14/local15/local16/nested1/nested3/ident/localkeyframes/pos1x%pos1y%pos2x%pos2y%localkeyframes2/animation/vars/local-color%globalVars/wideScreenClass/narrowScreenClass/displayGridInSupports/floatRightInNegativeSupports/displayFlexInMediaInSupports/displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase/animationUpperCase/localkeyframesUPPERCASE/localkeyframes2UPPPERCASE/localUpperCase/VARS/LOCAL-COLOR%globalVarsUpperCase/inSupportScope/a/animationName/b/c/d/animation-name%mozAnimationName/my-color%c0ffee/padding-sm/padding-lg/nested-pure/nested-media/nested-supports/nested-layer/not-selector-inside/nested-var/again/nested-with-local-pseudo/local-nested/bar/id-foo/id-bar/nested-parens/local-in-global/in-local-global-scope/class-local-scope/class-in-container/deep-class-in-container/placeholder-gray-700/placeholder-opacity%test%baz%slidein/my-global-class-again/first-nested/first-nested-nested/first-nested-at-rule/first-nested-nested-at-rule-deep/foo%\\\\.\\\\/style\\\\.module\\\\.css,myCssClass/\\\\.\\\\/style\\\\.module\\\\.my-css,\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName/variable-unused-class%UsedClassName/variable-used-class%\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
+`;
+
+exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules 2`] = `
+".my-app-274-S {
+	color: red;
+}
+
+.my-app-274-Zw,
+.my-app-274-yl .global,
+.my-app-274-J_ {
+	color: green;
+}
+
+.global .my-app-274-gc {
+	color: yellow;
+}
+
+.my-app-274-Xg.global.my-app-274-AY {
+	color: blue;
+}
+
+.my-app-274-Kw div:not(.disabled, .mButtonDisabled, .tipOnly) {
+    pointer-events: initial !important;
+}
+
+.my-app-274-rw :is(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.my-app-274-\\\\$Y :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.my-app-274-ie :where(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.my-app-274-PK div:has(.disabled, .mButtonDisabled, .tipOnly) {
+    pointer-events: initial !important;
+}
+
+.my-app-274-yK div:current(p, span) {
+	background-color: yellow;
+}
+
+.my-app-274-P_ div:past(p, span) {
+	display: none;
+}
+
+.my-app-274-Y4 div:future(p, span) {
+	background-color: yellow;
+}
+
+.my-app-274-TT div:-moz-any(ol, ul, menu, dir) {
+	list-style-type: square;
+}
+
+.my-app-274-rT li:-webkit-any(:first-child, :last-child) {
+	background-color: aquamarine;
+}
+
+.my-app-274-\\\\$Y :matches(div.parent1.child1.vertical-tiny,
+    div.parent1.child1.vertical-small,
+    div.otherDiv.horizontal-tiny,
+    div.otherDiv.horizontal-small div.description) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.my-app-274-RX.nested2.my-app-274-X2 {
+	color: pink;
+}
+
+#my-app-274-yR {
+	color: purple;
+}
+
+@keyframes my-app-274-y3{
+	0% {
+		left: var(--my-app-274-Gx);
+		top: var(--my-app-274-\\\\$s);
+		color: var(--theme-color1);
+	}
+	100% {
+		left: var(--my-app-274-MX);
+		top: var(--my-app-274-nj);
+		color: var(--theme-color2);
+	}
+}
+
+@keyframes my-app-274-JJ{
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.my-app-274-oQ {
+	animation-name: my-app-274-y3;
+	animation: 3s ease-in 1s 2 reverse both paused my-app-274-y3, my-app-274-JJ;
+	--my-app-274-Gx: 0px;
+	--my-app-274-\\\\$s: 0px;
+	--my-app-274-MX: 10px;
+	--my-app-274-nj: 20px;
+}
+
+/* .composed {
+	composes: local1;
+	composes: local2;
+} */
+
+.my-app-274-gR {
+	color: var(--my-app-274-y4);
+	--my-app-274-y4: red;
+}
+
+.my-app-274-xk {
+	color: var(--global-color);
+	--global-color: red;
+}
+
+@media (min-width: 1600px) {
+	.my-app-274-w7 {
+		color: var(--my-app-274-y4);
+		--my-app-274-y4: green;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.my-app-274-J {
+		color: var(--my-app-274-y4);
+		--my-app-274-y4: purple;
+	}
+}
+
+@supports (display: grid) {
+	.my-app-274-T\\\\$ {
+		display: grid;
+	}
+}
+
+@supports not (display: grid) {
+  .my-app-274-zz {
+    float: right;
+  }
+}
+
+@supports (display: flex) {
+  @media screen and (min-width: 900px) {
+    .my-app-274-Kr {
+      display: flex;
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+    .my-app-274-SQ {
+      display: flex;
+    }
+  }
+}
+
+@MEDIA screen and (min-width: 900px) {
+	@SUPPORTS (display: flex) {
+		.my-app-274-XM {
+			display: flex;
+		}
+	}
+}
+
+.animationUpperCase {
+	ANIMATION-NAME: my-app-274-T4;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused my-app-274-T4, my-app-274-Xi;
+	--my-app-274-Gx: 0px;
+	--my-app-274-\\\\$s: 0px;
+	--my-app-274-MX: 10px;
+	--my-app-274-nj: 20px;
+}
+
+@KEYFRAMES my-app-274-T4{
+	0% {
+		left: VAR(--my-app-274-Gx);
+		top: VAR(--my-app-274-\\\\$s);
+		color: VAR(--theme-color1);
+	}
+	100% {
+		left: VAR(--my-app-274-MX);
+		top: VAR(--my-app-274-nj);
+		color: VAR(--theme-color2);
+	}
+}
+
+@KEYframes my-app-274-Xi{
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.globalUpperCase .localUpperCase {
+	color: yellow;
+}
+
+.my-app-274-ms {
+	color: VAR(--my-app-274-DJ);
+	--my-app-274-DJ: red;
+}
+
+.my-app-274-cU {
+	COLOR: VAR(--GLOBAR-COLOR);
+	--GLOBAR-COLOR: red;
+}
+
+@supports (top: env(safe-area-inset-top, 0)) {
+	.my-app-274-FO {
+		color: red;
+	}
+}
+
+.a {
+	animation: 3s my-app-274-w3;
+	-webkit-animation: 3s my-app-274-w3;
+}
+
+.b {
+	animation: my-app-274-w3 3s;
+	-webkit-animation: my-app-274-w3 3s;
+}
+
+.c {
+	animation-name: my-app-274-w3;
+	-webkit-animation-name: my-app-274-w3;
+}
+
+.d {
+	--my-app-274-VQ: animationName;
+}
+
+@keyframes my-app-274-w3{
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-webkit-keyframes my-app-274-w3{
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-moz-keyframes my-app-274-t6{
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+/* At-rule for \\"nice-style\\" in Font Two */
+@font-feature-values Font Two {
+	@styleset {
+		nice-style: 4;
+	}
+}
+
+@property --my-app-274-lC{
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #c0ffee;
+}
+
+.my-app-274-S {
+	color: var(--my-app-274-lC);
+}
+
+@layer utilities {
+	.my-app-274-zE {
+		padding: 0.5rem;
+	}
+
+	.my-app-274-FP {
+		padding: 0.8rem;
+	}
+}
+
+.my-app-274-S {
+	color: red;
+
+	.nested-pure {
+		color: red;
+	}
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.nested-media {
+			color: blue;
+		}
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.nested-supports {
+			display: flex;
+		}
+	}
+
+	@layer foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+
+	@container foo {
+		background: red;
+
+		.nested-layer {
+			background: red;
+		}
+	}
+}
+
+.not-selector-inside {
+	color: #fff;
+	opacity: 0.12;
+	padding: .5px;
+	unknown: :local(.test);
+	unknown1: :local .test;
+	unknown2: :global .test;
+	unknown3: :global .test;
+	unknown4: .foo, .bar, #bar;
+}
+
+@unknown :local .local :global .global {
+	color: red;
+}
+
+@unknown :local(.local) :global(.global) {
+	color: red;
+}
+
+.nested-var {
+	.again {
+		color: var(--my-app-274-y4);
+	}
+}
+
+.nested-with-local-pseudo {
+	color: red;
+
+	.local-nested {
+		color: red;
+	}
+
+	.global-nested {
+		color: red;
+	}
+
+	.local-nested {
+		color: red;
+	}
+
+	.global-nested {
+		color: red;
+	}
+
+	.local-nested, .global-nested-next {
+		color: red;
+	}
+
+	.local-nested, .global-nested-next {
+		color: red;
+	}
+
+	.foo, .bar {
+		color: red;
+	}
+}
+
+#id-foo {
+	color: red;
+
+	#id-bar {
+		color: red;
+	}
+}
+
+.nested-parens {
+	.my-app-274-\\\\$Y div:has(.vertical-tiny, .vertical-small) {
+		max-height: 0;
+		margin: 0;
+		overflow: hidden;
+	}
+}
+
+.global-foo {
+	.nested-global {
+		color: red;
+	}
+
+	.local-in-global {
+		color: blue;
+	}
+}
+
+@unknown .class {
+	color: red;
+
+	.class {
+		color: red;
+	}
+}
+
+.class .my-app-274-Zv,
+.class .my-app-274-Zv,
+.my-app-274-gz .in-local-global-scope {
+	color: red;
+}
+
+@container (width > 400px) {
+	.my-app-274-Gp {
+		font-size: 1.5em;
+	}
+}
+
+@container summary (min-width: 400px) {
+	@container (width > 400px) {
+		.my-app-274-rn {
+			font-size: 1.5em;
+		}
+	}
+}
+
+:scope {
+	color: red;
+}
+
+.placeholder-gray-700:-ms-input-placeholder {
+	--my-app-274-xs: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--my-app-274-xs));
+}
+.placeholder-gray-700::-ms-input-placeholder {
+	--my-app-274-xs: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--my-app-274-xs));
+}
+.placeholder-gray-700::placeholder {
+	--my-app-274-xs: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--my-app-274-xs));
+}
+
+:root {
+	--my-app-274-Bu: dark;
+}
+
+@media screen and (prefers-color-scheme: var(--my-app-274-Bu)) {
+	.my-app-274-Wx {
+		color: white;
+	}
+}
+
+@keyframes my-app-274-Y8{
+	from {
+		margin-left: 100%;
+		width: 300%;
+	}
+
+	to {
+		margin-left: 0%;
+		width: 100%;
+	}
+}
+
+.my-app-274-S {
+	animation:
+		foo var(--my-app-274-VQ) 3s,
+		var(--my-app-274-VQ) 3s,
+		3s linear 1s infinite running my-app-274-Y8,
+		3s linear env(foo, var(--my-app-274-Wx)) infinite running my-app-274-Y8;
+}
+
+:root {
+	--my-app-274-Wx: 10px;
+}
+
+.my-app-274-S {
+	bar: env(foo, var(--my-app-274-Wx));
+}
+
+.global-foo, .bar {
+	.local-in-global       {
+		color: blue;
+	}
+
+	@media screen {
+		.my-global-class-again,
+		.my-global-class-again {
+			color: red;
+		}
+	}
+}
+
+.first-nested {
+	.first-nested-nested {
+		color: red;
+	}
+}
+
+.first-nested-at-rule {
+	@media screen {
+		.first-nested-nested-at-rule-deep {
+			color: red;
+		}
+	}
+}
+
+.again-global {
+	color:red;
+}
+
+.again-again-global {
+	.again-again-global {
+		color: red;
+	}
+}
+
+:root {
+	--foo: red;
+}
+
+.again-again-global {
+	color: var(--foo);
+
+	.again-again-global {
+		color: var(--foo);
+	}
+}
+
+.again-again-global {
+	animation: slidein 3s;
+
+	.again-again-global, .my-app-274-S, .my-app-274-RX.nested2.my-app-274-X2 {
+		animation: my-app-274-Y8 3s;
+	}
+
+  .my-app-274-yl .global,
+	.my-app-274-J_ {
+		color: red;
+	}
+}
+
+@unknown var(--foo) {
+	color: red;
+}
+
+.my-app-274-S {
+	.my-app-274-S {
+		.my-app-274-S {
+			.my-app-274-S {}
+		}
+	}
+}
+
+.my-app-274-S {
+	.my-app-274-S {
+		.my-app-274-S {
+			.my-app-274-S {
+				animation: my-app-274-Y8 3s;
+			}
+		}
+	}
+}
+
+.my-app-274-S {
+	animation: my-app-274-Y8 3s;
+	.my-app-274-S {
+		animation: my-app-274-Y8 3s;
+		.my-app-274-S {
+			animation: my-app-274-Y8 3s;
+			.my-app-274-S {
+				animation: my-app-274-Y8 3s;
+			}
+		}
+	}
+}
+
+.my-app-444-s {
+    color: red;
+}
+
+.class {
+    color: teal;
+}
+
+.UnusedClassName{
+    color: red;
+    padding: var(--my-app-627-Wc);
+    --my-app-627-Wc: 10px;
+}
+
+.my-app-627-Q3 {
+    color: green;
+    padding: var(--my-app-627-PB);
+    --my-app-627-PB: 10px;
+}
+
+head{--webpack-my-app-249:S/Zw/yl/J_/gc/Xg/AY/Kw/rw/\\\\$Y/ie/PK/yK/P_/Y4/TT/rT/RX/X2/yR/y3/Gx%\\\\$s%MX%nj%JJ/oQ/gR/y4%xk/w7/J/T\\\\$/zz/Kr/SQ/XM/T4/Xi/ms/DJ%cU/FO/w3/VQ%t6/lC%zE/FP/Zv/gz/Gp/rn/xs%Bu%Wx%Y8/_274,s/_444,_438,Wc%Q3/PB%_627;}"
+`;
+
 exports[`ConfigCacheTestCases css pure-css exported tests should compile 1`] = `
 Array [
   ".class {
