@@ -276,7 +276,9 @@ const describeCases = config => {
 												expect: expect,
 												setTimeout,
 												clearTimeout,
-												document: new FakeDocument()
+												document: new FakeDocument(),
+												addEventListener: function () {},
+												removeEventListener: function () {}
 											};
 
 											function _require(currentDirectory, module) {
