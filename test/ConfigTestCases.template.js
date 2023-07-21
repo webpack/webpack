@@ -30,6 +30,16 @@ const categories = fs.readdirSync(casesPath).map(cat => {
 	};
 });
 
+// const categories = ["css"].map(cat => {
+// 	return {
+// 		name: cat,
+// 		tests: fs
+// 			.readdirSync(path.join(casesPath, cat))
+// 			.filter(folder => folder === "css-modules")
+// 			.sort()
+// 	};
+// });
+
 const createLogger = appendTarget => {
 	return {
 		log: l => appendTarget.push(l),
