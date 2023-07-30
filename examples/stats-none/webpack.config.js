@@ -5,5 +5,5 @@ module.exports = {
 		path: path.join(__dirname, "dist"),
 		filename: "output.js"
 	},
-	stats: "minimal"
+	stats: "none"
 };

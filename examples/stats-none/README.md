@@ -18,7 +18,7 @@ module.exports = {
 		path: path.join(__dirname, "dist"),
 		filename: "output.js"
 	},
-	stats: "minimal"
+	stats: "none"
 };
 ```
 
@@ -43,7 +43,5 @@ console.log("Hello World!");
 ## Production mode
 
 ```
-1 asset
-1 module
-webpack 5.88.1 compiled successfully
+
 ```
