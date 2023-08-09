@@ -8,7 +8,8 @@ var Unused = class { constructor() { } },
         }
 
         *[Symbol.iterator]() {
-            yield "";
+            yield 0;
+            yield 1;
         }
     }
 

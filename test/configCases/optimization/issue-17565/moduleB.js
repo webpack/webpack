@@ -8,7 +8,8 @@ var Unused = class { constructor() { } },
         }
 
         async *[Symbol.asyncIterator]() {
-            yield "";
+            yield 0;
+            yield 1;
         }
     }
 
