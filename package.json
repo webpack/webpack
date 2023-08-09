@@ -36,8 +36,8 @@
     }
   },
   "devDependencies": {
-    "@babel/core": "^7.21.4",
-    "@babel/preset-react": "^7.18.6",
+    "@babel/core": "^7.22.10",
+    "@babel/preset-react": "^7.22.5",
     "@types/jest": "^29.5.3",
     "@types/mime-types": "^2.1.1",
     "@types/node": "^20.1.7",
