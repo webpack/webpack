@@ -7,7 +7,7 @@ var Unused = class { constructor() { } },
             }
         }
 
-        async*[Symbol.iterator]() {
+        *[Symbol.iterator]() {
             yield "";
         }
     }
