@@ -12,7 +12,7 @@
     "@webassemblyjs/wasm-parser": "^1.11.5",
     "acorn": "^8.7.1",
     "acorn-import-assertions": "^1.9.0",
-    "browserslist": "^4.14.5",
+    "browserslist": "^4.21.10",
     "chrome-trace-event": "^1.0.2",
     "enhanced-resolve": "^5.15.0",
     "es-module-lexer": "^1.2.1",
