@@ -206,6 +206,7 @@ declare const __webpack_share_scopes__: Record<
 >;
 declare var __webpack_init_sharing__: (scope: string) => Promise<void>;
 declare var __non_webpack_require__: (id: any) => unknown;
+declare var __non_webpack_import__: (id: any) => Promise<unknown>;
 declare const __system_context__: object;
 
 declare namespace NodeJS {
