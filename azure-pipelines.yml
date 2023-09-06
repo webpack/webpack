@@ -92,6 +92,8 @@ jobs:
     strategy:
       maxParallel: 4
       matrix:
+        node-18:
+          node_version: ^18.17.1
         node-12:
           node_version: ^12.2.0
         node-10:
@@ -142,6 +144,8 @@ jobs:
     strategy:
       maxParallel: 4
       matrix:
+        node-18:
+          node_version: ^18.17.1
         node-12:
           node_version: ^12.2.0
         node-10:
@@ -192,6 +196,8 @@ jobs:
     strategy:
       maxParallel: 4
       matrix:
+        node-18:
+          node_version: ^18.17.1
         node-12:
           node_version: ^12.2.0
         node-10:
