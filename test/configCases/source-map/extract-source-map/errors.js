@@ -1,3 +1,1 @@
-module.exports = [
-	/Failed to parse source map/
-];
+module.exports = [/Failed to parse source map/];
