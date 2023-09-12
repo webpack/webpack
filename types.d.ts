@@ -14116,6 +14116,7 @@ declare namespace exports {
 		EntryOptions,
 		PathData,
 		AssetEmittedInfo,
+		MultiCompilerOptions,
 		MultiStats,
 		ResolveData,
 		ParserState,
