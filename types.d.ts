@@ -13639,6 +13639,11 @@ declare namespace exports {
 		export let matchPart: (str: string, test: Matcher) => boolean;
 		export let matchObject: (obj: MatchObject, str: string) => boolean;
 	}
+	export namespace OptimizationStages {
+		export let STAGE_BASIC: -10;
+		export let STAGE_DEFAULT: 0;
+		export let STAGE_ADVANCED: 10;
+	}
 	export namespace RuntimeGlobals {
 		export let require: "__webpack_require__";
 		export let requireScope: "__webpack_require__.*";
