@@ -96,6 +96,7 @@ describe("snapshots", () => {
 		    "buildHttp": undefined,
 		    "cacheUnaffected": false,
 		    "css": undefined,
+		    "deferImport": false,
 		    "futureDefaults": false,
 		    "layers": false,
 		    "lazyCompilation": undefined,
@@ -2216,9 +2217,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "cacheUnaffected": false,
 			-     "css": undefined,
-			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
 			+     "css": true,
+			@@ ... @@
+			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
 			+       Object {
@@ -2355,9 +2357,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "cacheUnaffected": false,
 			-     "css": undefined,
-			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
 			+     "css": false,
+			@@ ... @@
+			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
 			+       Object {
