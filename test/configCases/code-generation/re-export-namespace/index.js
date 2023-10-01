@@ -34,6 +34,10 @@ it("should use/preserve accessor form for import object and namespaces", functio
 
 		const bb = obj1.up.down?.left.right;
 
+		const ww = require('./module1').obj1["bing"]?.bang;
+		const xx = require('./module1').obj1["pip"].pop();
+		const yy = require('./module3')["m_2"]["m_1"]["obj1"]["tip"].top();
+
 		data.nested.object3["unknownProperty"].depth = "deep";
 
 		(obj1)["aaa"].bbb;
@@ -64,6 +68,10 @@ it("should use/preserve accessor form for import object and namespaces", functio
 	expectSourceToContain(source, 'const aa = _module3__WEBPACK_IMPORTED_MODULE_2__.m_2.m_1.obj1["zoom"];');
 
 	expectSourceToContain(source, 'const bb = _module1__WEBPACK_IMPORTED_MODULE_0__.obj1.up.down?.left.right;');
+
+	expectSourceToContain(source, 'const ww = (__webpack_require__(/*! ./module1 */ 960).obj1)["bing"]?.bang;');
+	expectSourceToContain(source, 'const xx = (__webpack_require__(/*! ./module1 */ 960).obj1)["pip"].pop();');
+	expectSourceToContain(source, 'const yy = (__webpack_require__(/*! ./module3 */ 834).m_2.m_1.obj1)["tip"].top();');
 
 	expectSourceToContain(source, '_data__WEBPACK_IMPORTED_MODULE_3__.nested.object3["unknownProperty"].depth = "deep";');
 
