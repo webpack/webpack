@@ -5527,7 +5527,13 @@ declare class JavascriptParser extends Parser {
 		>;
 		callMemberChainOfCallMemberChain: HookMap<
 			SyncBailHook<
-				[CallExpression, string[], CallExpression, string[], [number, number][]],
+				[
+					CallExpression,
+					string[],
+					CallExpression,
+					string[],
+					[number, number][]
+				],
 				boolean | void
 			>
 		>;
@@ -7276,6 +7282,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
+	 *
 	 * In the example:
 	 * [
 	 *   { request: "/abc/loader1.js?xyz",
