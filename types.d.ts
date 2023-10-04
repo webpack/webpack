@@ -2242,6 +2242,7 @@ declare class Compiler {
 	recordsOutputPath: null | string;
 	records: object;
 	managedPaths: Set<string | RegExp>;
+	unmanagedPaths: Set<string | RegExp>;
 	immutablePaths: Set<string | RegExp>;
 	modifiedFiles?: ReadonlySet<string>;
 	removedFiles?: ReadonlySet<string>;
@@ -11941,6 +11942,11 @@ declare interface SnapshotOptionsWebpackOptions {
 		 */
 		timestamp?: boolean;
 	};
+
+	/**
+	 * List of paths that are not managed by a package manager and the contents are subject to change.
+	 */
+	unmanagedPaths?: (string | RegExp)[];
 }
 declare abstract class SortableSet<T> extends Set<T> {
 	/**

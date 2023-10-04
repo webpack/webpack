@@ -2376,6 +2376,10 @@ export interface SnapshotOptions {
 		 */
 		timestamp?: boolean;
 	};
+	/**
+	 * List of paths that are not managed by a package manager and the contents are subject to change.
+	 */
+	unmanagedPaths?: (RegExp | string)[];
 }
 /**
  * Stats options object.
