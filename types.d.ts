@@ -4585,6 +4585,8 @@ declare abstract class FileSystemInfo {
 	contextTshQueue: AsyncQueue<string, string, null | ContextTimestampAndHash>;
 	managedItemQueue: AsyncQueue<string, string, null | string>;
 	managedItemDirectoryQueue: AsyncQueue<string, string, Set<string>>;
+	unmanagedPathsWithSlash: string[];
+	unmanagedPathsRegExps: RegExp[];
 	managedPaths: (string | RegExp)[];
 	managedPathsWithSlash: string[];
 	managedPathsRegExps: RegExp[];
@@ -7276,6 +7278,7 @@ declare interface LoaderRunnerLoaderContext<OptionsType> {
 	/**
 	 * An array of all the loaders. It is writeable in the pitch phase.
 	 * loaders = [{request: string, path: string, query: string, module: function}]
+	 *
 	 * In the example:
 	 * [
 	 *   { request: "/abc/loader1.js?xyz",
