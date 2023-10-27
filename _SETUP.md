@@ -65,11 +65,11 @@ yarn pretty-lint-fix
 
 ### To run all linters use
 
-This performs linting on:
-
 ```bash
 yarn lint
 ```
+
+This performs linting on:
 
 - eslint (code-lint script)
 - schema + dependencies (jest-lint script)
