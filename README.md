@@ -77,9 +77,7 @@ yarn add webpack --dev
 
 <h2 align="center">Introduction</h2>
 
-Webpack is a bundler for modules. The main purpose is to bundle JavaScript
-files for usage in a browser, yet it is also capable of transforming, bundling,
-or packaging just about any resource or asset.
+Webpack is a bundler for modules. The main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
 
 **TL;DR**
 
@@ -102,10 +100,7 @@ Webpack also needs `Promise` for `import()` and `require.ensure()`. If you want 
 
 ### [Plugins](https://webpack.js.org/plugins/)
 
-Webpack has a [rich plugin
-interface](https://webpack.js.org/plugins/). Most of the features
-within webpack itself use this plugin interface. This makes webpack very
-**flexible**.
+Webpack has a [rich plugin interface](https://webpack.js.org/plugins/). Most of the features within webpack itself use this plugin interface. This makes webpack very **flexible**.
 
 |                   Name                    |       Status       |    Install Size     | Description                                                                             |
 | :---------------------------------------: | :----------------: | :-----------------: | :-------------------------------------------------------------------------------------- |
@@ -133,12 +128,9 @@ within webpack itself use this plugin interface. This makes webpack very
 
 ### [Loaders](https://webpack.js.org/loaders/)
 
-Webpack enables the use of loaders to preprocess files. This allows you to bundle
-**any static resource** way beyond JavaScript. You can easily [write your own
-loaders](https://webpack.js.org/api/loaders/) using Node.js.
+Webpack enables the use of loaders to preprocess files. This allows you to bundle **any static resource** way beyond JavaScript. You can easily [write your own loaders](https://webpack.js.org/api/loaders/) using Node.js.
 
-Loaders are activated by using `loadername!` prefixes in `require()` statements,
-or are automatically applied via regex from your webpack configuration.
+Loaders are activated by using `loadername!` prefixes in `require()` statements, or are automatically applied via regex from your webpack configuration.
 
 #### Files
 
@@ -247,27 +239,19 @@ or are automatically applied via regex from your webpack configuration.
 
 ### Performance
 
-Webpack uses async I/O and has multiple caching levels. This makes webpack fast
-and incredibly **fast** on incremental compilations.
+Webpack uses async I/O and has multiple caching levels. This makes webpack fast and incredibly **fast** on incremental compilations.
 
 ### Module Formats
 
-Webpack supports ES2015+, CommonJS and AMD modules **out of the box**. It performs clever static
-analysis on the AST of your code. It even has an evaluation engine to evaluate
-simple expressions. This allows you to **support most existing libraries** out of the box.
+Webpack supports ES2015+, CommonJS and AMD modules **out of the box**. It performs clever static analysis on the AST of your code. It even has an evaluation engine to evaluate simple expressions. This allows you to **support most existing libraries** out of the box.
 
 ### [Code Splitting](https://webpack.js.org/guides/code-splitting/)
 
-Webpack allows you to split your codebase into multiple chunks. Chunks are
-loaded asynchronously at runtime. This reduces the initial loading time.
+Webpack allows you to split your codebase into multiple chunks. Chunks are loaded asynchronously at runtime. This reduces the initial loading time.
 
 ### [Optimizations](https://webpack.js.org/guides/production-build/)
 
-Webpack can do many optimizations to **reduce the output size of your
-JavaScript** by deduplicating frequently used modules, minifying, and giving
-you full control of what is loaded initially and what is loaded at runtime
-through code splitting. It can also make your code chunks **cache
-friendly** by using hashes.
+Webpack can do many optimizations to **reduce the output size of your JavaScript** by deduplicating frequently used modules, minifying, and giving you full control of what is loaded initially and what is loaded at runtime through code splitting. It can also make your code chunks **cache friendly** by using hashes.
 
 <h2 align="center">Contributing</h2>
 
@@ -301,7 +285,7 @@ If you create a loader or plugin, we would <3 for you to open source it, and put
 
 We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of its flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways to improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
 
-If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high level overview that is great for beginners!!
+If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org concepts/). This has a high level overview that is great for beginners!!
 
 Looking for webpack 1 docs? Please check out the old [wiki](https://github.com/webpack/docs/wiki/contents), but note that this deprecated version is no longer supported.
 
