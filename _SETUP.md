@@ -67,14 +67,14 @@ yarn pretty-lint-fix
 
 This performs linting on:
 
+```bash
+yarn lint
+```
+
 - eslint (code-lint script)
 - schema + dependencies (jest-lint script)
 - types (type-lint script)
 - format + generated files (special-lint script)
-
-```bash
-yarn lint
-```
 
 ### To run only the typechecker use
 
