@@ -38,6 +38,9 @@
   <a href="https://twitter.com/Webpack">
 		<img src="https://img.shields.io/twitter/follow/Webpack?style=social">
 	</a>
+  <a href="https://discord.gg/Tt5cKVwx">
+		<img src="https://img.shields.io/discord/1180618526436888586?label=discord&logo=discord&logoColor=white&style=flat">
+	</a>
   <h1>webpack</h1>
   <p>
     Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
