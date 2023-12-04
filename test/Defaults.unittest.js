@@ -373,6 +373,7 @@ describe("snapshots", () => {
 		    "scriptType": false,
 		    "sourceMapFilename": "[file].map[query]",
 		    "sourcePrefix": undefined,
+		    "strictModuleErrorHandling": false,
 		    "strictModuleExceptionHandling": false,
 		    "trustedTypes": undefined,
 		    "uniqueName": "webpack",
