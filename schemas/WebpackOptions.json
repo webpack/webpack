@@ -208,6 +208,10 @@
         },
         "publicPath": {
           "$ref": "#/definitions/RawPublicPath"
+        },
+        "allowNumericOnlyHash": {
+          "description": "Hash may not contain any non-numeric characters when true. Hash may prefixed with character 'a' when false.",
+          "type": "boolean"
         }
       }
     },
