@@ -26,7 +26,7 @@
     "neo-async": "^2.6.2",
     "schema-utils": "^3.2.0",
     "tapable": "^2.1.1",
-    "terser-webpack-plugin": "^5.3.9",
+    "terser-webpack-plugin": "^5.3.10",
     "watchpack": "^2.4.0",
     "webpack-sources": "^3.2.3"
   },
@@ -96,7 +96,7 @@
     "simple-git": "^3.17.0",
     "strip-ansi": "^6.0.0",
     "style-loader": "^2.0.0",
-    "terser": "^5.19.4",
+    "terser": "^5.26.0",
     "toml": "^3.0.0",
     "tooling": "webpack/tooling#v1.23.0",
     "ts-loader": "^9.4.2",
