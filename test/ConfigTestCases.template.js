@@ -404,6 +404,8 @@ const describeCases = config => {
 											setTimeout: setTimeout,
 											clearTimeout: clearTimeout,
 											document,
+											addEventListener: function () {},
+											removeEventListener: function () {},
 											getComputedStyle:
 												document.getComputedStyle.bind(document),
 											location: {
