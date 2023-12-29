@@ -180,12 +180,28 @@ if (process.env.NODE_ENV === "production") {
 			}
 		);
 	});
+
 	it("should be able to load with webpackFetchPriorty high, low and auto", function () {
 		return Promise.all([
 			import(/* webpackFetchPriority: "high"*/ "./dir14/a"),
 			import(/* webpackFetchPriority: "low"*/ "./dir14/b"),
 			import(/* webpackFetchPriority: "auto"*/ "./dir14/c"),
 		])
+	})
+
+	it("should not tree-shake default export for exportsType=default module", async function () {
+		const jsonObject = await import(/* webpackExports: ["default"] */ "./dir15/json/object.json");
+		const jsonArray = await import(/* webpackExports: ["default"] */ "./dir15/json/array.json");
+		const jsonPrimitive = await import(/* webpackExports: ["default"] */ "./dir15/json/primitive.json");
+		expect(jsonObject.default).toEqual({ a: 1 });
+		expect(jsonObject.a).toEqual(1);
+		expect(jsonArray.default).toEqual(["a"]);
+		expect(jsonArray[0]).toBe("a");
+		expect(jsonPrimitive.default).toBe("a");
+		const a = await import(/* webpackExports: ["default"] */"./dir15/a");
+		expect(a.default).toEqual({ a: 1, b: 2 });
+		expect(a.a).toBe(1);
+		expect(a.b).toBe(2);
 	})
 }
 

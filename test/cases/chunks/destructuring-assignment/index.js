@@ -10,3 +10,14 @@ it("should get warning on using 'webpackExports' with destructuring assignment",
 	expect(def).toBe(3);
 	done();
 });
+
+it("should not tree-shake default export for exportsType=default module", async () => {
+	const { default: object } = await import("./dir2/json/object.json");
+	const { default: array } = await import("./dir2/json/array.json");
+	const { default: primitive } = await import("./dir2/json/primitive.json");
+	expect(object).toEqual({ a: 1 });
+	expect(array).toEqual(["a"]);
+	expect(primitive).toBe("a");
+	const { default: a } = await import("./dir2/a");
+	expect(a).toEqual({ a: 1, b: 2 });
+});
