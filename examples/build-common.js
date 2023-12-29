@@ -51,7 +51,30 @@ const doCompileAndReplace = (args, prefix, callback) => {
 		throw new Error("Please install webpack-cli at root.");
 	}
 
-	cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${args} ${displayReasons} ${commonArgs}`, (error, stdout, stderr) => {
+	const connectIO = (subprocess) => {
+		const { stdin, stdout, stderr } = process;
+		const { stdin: _stdin, stdout: _stdout, stderr: _stderr } = subprocess;
+		const inputPair = [[stdin, _stdin]];
+		const outputPair = [[stdout, _stdout], [stderr, _stderr]];
+		inputPair.forEach(pair => {
+			pair[0].pipe(pair[1])
+		})
+		outputPair.forEach(pair => {
+			pair[1].pipe(pair[0])
+		})
+		disconnectIO = () => {
+			inputPair.forEach(pair => {
+				pair[0].unpipe(pair[1])
+			})
+			outputPair.forEach(pair => {
+				pair[1].unpipe(pair[0])
+			})
+		}
+	}
+	let disconnectIO = null;
+
+	const subprocess = cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${args} ${displayReasons} ${commonArgs}`, (error, stdout, stderr) => {
+		disconnectIO && disconnectIO();
 		if (stderr)
 			console.log(stderr);
 		if (error !== null)
@@ -64,6 +87,7 @@ const doCompileAndReplace = (args, prefix, callback) => {
 		}
 		callback();
 	});
+	connectIO(subprocess);
 };
 
 async.series([
