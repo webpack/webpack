@@ -96,10 +96,12 @@ describe("snapshots", () => {
 		    "buildHttp": undefined,
 		    "cacheUnaffected": false,
 		    "css": undefined,
+		    "deferImport": false,
 		    "futureDefaults": false,
 		    "layers": false,
 		    "lazyCompilation": undefined,
 		    "outputModule": false,
+		    "syncImportAssertion": false,
 		    "syncWebAssembly": false,
 		    "topLevelAwait": true,
 		  },
@@ -2202,11 +2204,12 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "cacheUnaffected": false,
 			-     "css": undefined,
-			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
 			+     "css": Object {
 			+       "exportsOnly": false,
 			+     },
+			@@ ... @@
+			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
 			+       },
@@ -2323,9 +2326,10 @@ describe("snapshots", () => {
 			@@ ... @@
 			-     "cacheUnaffected": false,
 			-     "css": undefined,
-			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
 			+     "css": false,
+			@@ ... @@
+			-     "futureDefaults": false,
 			+     "futureDefaults": true,
 			@@ ... @@
 			+       Object {

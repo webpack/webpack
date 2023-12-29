@@ -2821,6 +2821,15 @@ export interface CssGeneratorOptions {}
  */
 export interface CssParserOptions {}
 /**
+ * Options for defer import.
+ */
+export interface DeferImportExperimentOptions {
+	/**
+	 * Defer import is not compatible with async modules (module that uses top-level-await or AsyncWebAssembly). This options controls how to handle async modules.
+	 */
+	asyncModule: "ignore" | "proposal" | "error";
+}
+/**
  * No generator options are supported for this module type.
  */
 export interface EmptyGeneratorOptions {}
@@ -3587,9 +3596,17 @@ export interface ExperimentsExtra {
 	 */
 	css?: boolean | CssExperimentOptions;
 	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 */
+	deferImport?: false | DeferImportExperimentOptions;
+	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: boolean | LazyCompilationOptions;
+	/**
+	 * Assert the graph of the imported module is not async (contains top-level-await or Async WebAssembly).
+	 */
+	syncImportAssertion?: boolean;
 }
 /**
  * Enables/Disables experiments (experimental features with relax SemVer compatibility).
@@ -3604,9 +3621,17 @@ export interface ExperimentsNormalizedExtra {
 	 */
 	css?: false | CssExperimentOptions;
 	/**
+	 * Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.
+	 */
+	deferImport?: false | DeferImportExperimentOptions;
+	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
 	lazyCompilation?: false | LazyCompilationOptions;
+	/**
+	 * Assert the graph of the imported module is not async (contains top-level-await or Async WebAssembly).
+	 */
+	syncImportAssertion?: boolean;
 }
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.

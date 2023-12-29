@@ -398,6 +398,19 @@
       "additionalProperties": false,
       "properties": {}
     },
+    "DeferImportExperimentOptions": {
+      "description": "Options for defer import.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "asyncModule": {
+          "description": "Defer import is not compatible with async modules (module that uses top-level-await or AsyncWebAssembly). This options controls how to handle async modules.",
+          "type": "string",
+          "enum": ["ignore", "proposal", "error"]
+        }
+      },
+      "required": ["asyncModule"]
+    },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
       "type": "array",
@@ -810,6 +823,17 @@
             }
           ]
         },
+        "deferImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "$ref": "#/definitions/DeferImportExperimentOptions"
+            }
+          ]
+        },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
           "type": "boolean"
@@ -831,6 +855,10 @@
         },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
+          "type": "boolean"
+        },
+        "syncImportAssertion": {
+          "description": "Assert the graph of the imported module is not async (contains top-level-await or Async WebAssembly).",
           "type": "boolean"
         },
         "syncWebAssembly": {
@@ -919,6 +947,17 @@
             }
           ]
         },
+        "deferImport": {
+          "description": "Enable experimental tc39 proposal https://github.com/tc39/proposal-defer-import-eval. This allows to defer execution of a module until it's first use.",
+          "anyOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "$ref": "#/definitions/DeferImportExperimentOptions"
+            }
+          ]
+        },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
           "type": "boolean"
@@ -940,6 +979,10 @@
         },
         "outputModule": {
           "description": "Allow output javascript files as module source type.",
+          "type": "boolean"
+        },
+        "syncImportAssertion": {
+          "description": "Assert the graph of the imported module is not async (contains top-level-await or Async WebAssembly).",
           "type": "boolean"
         },
         "syncWebAssembly": {
