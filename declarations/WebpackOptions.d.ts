@@ -602,6 +602,10 @@ export type Performance = false | PerformanceOptions;
  */
 export type Plugins = (Falsy | WebpackPluginInstance | WebpackPluginFunction)[];
 /**
+ * Presets for the webpack configuration.
+ */
+export type Presets = import("../declarations/WebpackOptions").WebpackOptions[];
+/**
  * Capture timing information for each module.
  */
 export type Profile = boolean;
@@ -895,6 +899,10 @@ export interface WebpackOptions {
 	 * Add additional plugins to the compiler.
 	 */
 	plugins?: Plugins;
+	/**
+	 * Presets for the webpack configuration.
+	 */
+	presets?: Presets;
 	/**
 	 * Capture timing information for each module.
 	 */
@@ -3533,6 +3541,10 @@ export interface WebpackOptionsNormalized {
 	 * Add additional plugins to the compiler.
 	 */
 	plugins: Plugins;
+	/**
+	 * Presets for the webpack configuration.
+	 */
+	presets?: Presets;
 	/**
 	 * Capture timing information for each module.
 	 */

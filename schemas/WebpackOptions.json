@@ -3601,6 +3601,14 @@
         ]
       }
     },
+    "Presets": {
+      "description": "Presets for the webpack configuration.",
+      "type": "array",
+      "items": {
+        "description": "Preset of type string or object.",
+        "tsType": "import(\"../declarations/WebpackOptions\").WebpackOptions"
+      }
+    },
     "Profile": {
       "description": "Capture timing information for each module.",
       "type": "boolean"
@@ -5324,6 +5332,9 @@
         "plugins": {
           "$ref": "#/definitions/Plugins"
         },
+        "presets": {
+          "$ref": "#/definitions/Presets"
+        },
         "profile": {
           "$ref": "#/definitions/Profile"
         },
@@ -5476,6 +5487,9 @@
     },
     "plugins": {
       "$ref": "#/definitions/Plugins"
+    },
+    "presets": {
+      "$ref": "#/definitions/Presets"
     },
     "profile": {
       "$ref": "#/definitions/Profile"

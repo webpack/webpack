@@ -2543,6 +2543,11 @@ declare interface Configuration {
 	)[];
 
 	/**
+	 * Presets for the webpack configuration.
+	 */
+	presets?: Configuration[];
+
+	/**
 	 * Capture timing information for each module.
 	 */
 	profile?: boolean;
@@ -13421,6 +13426,11 @@ declare interface WebpackOptionsNormalized {
 		| ((this: Compiler, compiler: Compiler) => void)
 		| WebpackPluginInstance
 	)[];
+
+	/**
+	 * Presets for the webpack configuration.
+	 */
+	presets?: Configuration[];
 
 	/**
 	 * Capture timing information for each module.
