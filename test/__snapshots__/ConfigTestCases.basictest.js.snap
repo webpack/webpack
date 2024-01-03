@@ -3224,6 +3224,675 @@ head{--webpack-main:\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,\\\\
 ]
 `;
 
+exports[`ConfigTestCases css pure-css-auto exported tests should compile 1`] = `
+Array [
+  ".\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+	color: red;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local1,
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local2 .global,
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local3 {
+	color: green;
+}
+
+.global .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local4 {
+	color: yellow;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local5.global.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local6 {
+	color: blue;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local7 div:not(.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-disabled, .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-mButtonDisabled, .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-tipOnly) {
+    pointer-events: initial !important;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local8 :is(div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-vertical-tiny,
+    div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-vertical-small,
+    div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-horizontal-tiny,
+    div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local9 :matches(div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-vertical-tiny,
+    div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-vertical-small,
+    div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-horizontal-tiny,
+    div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local10 :where(div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-vertical-tiny,
+    div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-vertical-small,
+    div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-horizontal-tiny,
+    div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-description) {
+  max-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local11 div:has(.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-disabled, .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-mButtonDisabled, .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-tipOnly) {
+    pointer-events: initial !important;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local12 div:current(p, span) {
+	background-color: yellow;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local13 div:past(p, span) {
+	display: none;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local14 div:future(p, span) {
+	background-color: yellow;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local15 div:-moz-any(ol, ul, menu, dir) {
+	list-style-type: square;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local16 li:-webkit-any(:first-child, :last-child) {
+	background-color: aquamarine;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local9 :matches(div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-vertical-tiny,
+    div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-vertical-small,
+    div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-horizontal-tiny,
+    div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-description) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-nested1.nested2.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-nested3 {
+	color: pink;
+}
+
+#\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-ident {
+	color: purple;
+}
+
+@keyframes \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-localkeyframes{
+	0% {
+		left: var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos1x);
+		top: var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos1y);
+		color: var(--theme-color1);
+	}
+	100% {
+		left: var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos2x);
+		top: var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos2y);
+		color: var(--theme-color2);
+	}
+}
+
+@keyframes \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-localkeyframes2{
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animation {
+	animation-name: \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-localkeyframes;
+	animation: 3s ease-in 1s 2 reverse both paused \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-localkeyframes, \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-localkeyframes2;
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos1x: 0px;
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos1y: 0px;
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos2x: 10px;
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos2y: 20px;
+}
+
+/* .composed {
+	composes: local1;
+	composes: local2;
+} */
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-vars {
+	color: var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-color);
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-color: red;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-globalVars {
+	color: var(--global-color);
+	--global-color: red;
+}
+
+@media (min-width: 1600px) {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-wideScreenClass {
+		color: var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-color);
+		--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-color: green;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-narrowScreenClass {
+		color: var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-color);
+		--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-color: purple;
+	}
+}
+
+@supports (display: grid) {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-displayGridInSupports {
+		display: grid;
+	}
+}
+
+@supports not (display: grid) {
+  .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-floatRightInNegativeSupports {
+    float: right;
+  }
+}
+
+@supports (display: flex) {
+  @media screen and (min-width: 900px) {
+    .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-displayFlexInMediaInSupports {
+      display: flex;
+    }
+  }
+}
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+    .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-displayFlexInSupportsInMedia {
+      display: flex;
+    }
+  }
+}
+
+@MEDIA screen and (min-width: 900px) {
+	@SUPPORTS (display: flex) {
+		.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-displayFlexInSupportsInMediaUpperCase {
+			display: flex;
+		}
+	}
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animationUpperCase {
+	ANIMATION-NAME: \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE, \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-localkeyframes2UPPPERCASE;
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos1x: 0px;
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos1y: 0px;
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos2x: 10px;
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos2y: 20px;
+}
+
+@KEYFRAMES \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE{
+	0% {
+		left: VAR(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos1x);
+		top: VAR(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos1y);
+		color: VAR(--theme-color1);
+	}
+	100% {
+		left: VAR(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos2x);
+		top: VAR(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-pos2y);
+		color: VAR(--theme-color2);
+	}
+}
+
+@KEYframes \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-localkeyframes2UPPPERCASE{
+	0% {
+		left: 0;
+	}
+	100% {
+		left: 100px;
+	}
+}
+
+.globalUpperCase .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-localUpperCase {
+	color: yellow;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-VARS {
+	color: VAR(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-LOCAL-COLOR);
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-LOCAL-COLOR: red;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-globalVarsUpperCase {
+	COLOR: VAR(--GLOBAR-COLOR);
+	--GLOBAR-COLOR: red;
+}
+
+@supports (top: env(safe-area-inset-top, 0)) {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-inSupportScope {
+		color: red;
+	}
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-a {
+	animation: 3s \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animationName;
+	-webkit-animation: 3s \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animationName;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-b {
+	animation: \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animationName 3s;
+	-webkit-animation: \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animationName 3s;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-c {
+	animation-name: \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animationName;
+	-webkit-animation-name: \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animationName;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-d {
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animation-name: animationName;
+}
+
+@keyframes \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animationName{
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-webkit-keyframes \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animationName{
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@-moz-keyframes \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-mozAnimationName{
+	0% {
+		background: white;
+	}
+	100% {
+		background: red;
+	}
+}
+
+@counter-style thumbs {
+	system: cyclic;
+	symbols: \\"\\\\1F44D\\";
+	suffix: \\" \\";
+}
+
+@font-feature-values Font One {
+	@styleset {
+		nice-style: 12;
+	}
+}
+
+/* At-rule for \\"nice-style\\" in Font Two */
+@font-feature-values Font Two {
+	@styleset {
+		nice-style: 4;
+	}
+}
+
+@property --\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-my-color{
+	syntax: \\"<color>\\";
+	inherits: false;
+	initial-value: #\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-c0ffee;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+	color: var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-my-color);
+}
+
+@layer utilities {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-padding-sm {
+		padding: 0.5rem;
+	}
+
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-padding-lg {
+		padding: 0.8rem;
+	}
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+	color: red;
+
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-nested-pure {
+		color: red;
+	}
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-nested-media {
+			color: blue;
+		}
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-nested-supports {
+			display: flex;
+		}
+	}
+
+	@layer foo {
+		background: red;
+
+		.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-nested-layer {
+			background: red;
+		}
+	}
+
+	@container foo {
+		background: red;
+
+		.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-nested-layer {
+			background: red;
+		}
+	}
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-not-selector-inside {
+	color: #fff;
+	opacity: 0.12;
+	padding: .5px;
+	unknown: :local(.test);
+	unknown1: :local .test;
+	unknown2: :global .test;
+	unknown3: :global .test;
+	unknown4: .foo, .bar, #bar;
+}
+
+@unknown :local .local :global .global {
+	color: red;
+}
+
+@unknown :local(.local) :global(.global) {
+	color: red;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-nested-var {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-again {
+		color: var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-color);
+	}
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-nested-with-local-pseudo {
+	color: red;
+
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-nested {
+		color: red;
+	}
+
+	.global-nested {
+		color: red;
+	}
+
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-nested {
+		color: red;
+	}
+
+	.global-nested {
+		color: red;
+	}
+
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-nested, .global-nested-next {
+		color: red;
+	}
+
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-nested, .global-nested-next {
+		color: red;
+	}
+
+	.foo, .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-bar {
+		color: red;
+	}
+}
+
+#\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-id-foo {
+	color: red;
+
+	#\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-id-bar {
+		color: red;
+	}
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-nested-parens {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local9 div:has(.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-vertical-tiny, .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-vertical-small) {
+		max-height: 0;
+		margin: 0;
+		overflow: hidden;
+	}
+}
+
+.global-foo {
+	.nested-global {
+		color: red;
+	}
+
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-in-global {
+		color: blue;
+	}
+}
+
+@unknown .class {
+	color: red;
+
+	.class {
+		color: red;
+	}
+}
+
+.class .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-in-local-global-scope,
+.class .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-in-local-global-scope,
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class-local-scope .in-local-global-scope {
+	color: red;
+}
+
+@container (width > 400px) {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class-in-container {
+		font-size: 1.5em;
+	}
+}
+
+@container summary (min-width: 400px) {
+	@container (width > 400px) {
+		.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-deep-class-in-container {
+			font-size: 1.5em;
+		}
+	}
+}
+
+:scope {
+	color: red;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-placeholder-gray-700:-ms-input-placeholder {
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-placeholder-opacity));
+}
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-placeholder-gray-700::-ms-input-placeholder {
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-placeholder-opacity));
+}
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-placeholder-gray-700::placeholder {
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-placeholder-opacity: 1;
+	color: #4a5568;
+	color: rgba(74, 85, 104, var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-placeholder-opacity));
+}
+
+:root {
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-test: dark;
+}
+
+@media screen and (prefers-color-scheme: var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-test)) {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-baz {
+		color: white;
+	}
+}
+
+@keyframes \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-slidein{
+	from {
+		margin-left: 100%;
+		width: 300%;
+	}
+
+	to {
+		margin-left: 0%;
+		width: 100%;
+	}
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+	animation:
+		foo var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animation-name) 3s,
+		var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-animation-name) 3s,
+		3s linear 1s infinite running \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-slidein,
+		3s linear env(foo, var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-baz)) infinite running \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-slidein;
+}
+
+:root {
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-baz: 10px;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+	bar: env(foo, var(--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-baz));
+}
+
+.global-foo, .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-bar {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local-in-global       {
+		color: blue;
+	}
+
+	@media screen {
+		.my-global-class-again,
+		.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-my-global-class-again {
+			color: red;
+		}
+	}
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-first-nested {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-first-nested-nested {
+		color: red;
+	}
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-first-nested-at-rule {
+	@media screen {
+		.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-first-nested-nested-at-rule-deep {
+			color: red;
+		}
+	}
+}
+
+.again-global {
+	color:red;
+}
+
+.again-again-global {
+	.again-again-global {
+		color: red;
+	}
+}
+
+:root {
+	--\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-foo: red;
+}
+
+.again-again-global {
+	color: var(--foo);
+
+	.again-again-global {
+		color: var(--foo);
+	}
+}
+
+.again-again-global {
+	animation: slidein 3s;
+
+	.again-again-global, .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class, .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-nested1.nested2.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-nested3 {
+		animation: \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-slidein 3s;
+	}
+
+  .\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local2 .global,
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-local3 {
+		color: red;
+	}
+}
+
+@unknown var(--foo) {
+	color: red;
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+		.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+			.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {}
+		}
+	}
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+		.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+			.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+				animation: \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-slidein 3s;
+			}
+		}
+	}
+}
+
+.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+	animation: \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-slidein 3s;
+	.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+		animation: \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-slidein 3s;
+		.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+			animation: \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-slidein 3s;
+			.\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-class {
+				animation: \\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css-slidein 3s;
+			}
+		}
+	}
+}
+
+.class {
+	color: red;
+	background: var(--color);
+}
+
+@keyframes \\\\.\\\\/style\\\\.css-test{
+	0% {
+		color: red;
+	}
+	100% {
+		color: blue;
+	}
+}
+
+.\\\\.\\\\/style\\\\.css-class {
+	color: red;
+}
+
+.\\\\.\\\\/style\\\\.css-class {
+	color: green;
+}
+
+.class {
+	color: blue;
+}
+
+.class {
+	color: white;
+}
+
+
+.class {
+	animation: test 1s, test;
+}
+
+head{--webpack-main:class/local1/local2/local3/local4/local5/local6/local7/disabled/mButtonDisabled/tipOnly/local8/parent1/child1/vertical-tiny/vertical-small/otherDiv/horizontal-tiny/horizontal-small/description/local9/local10/local11/local12/local13/local14/local15/local16/nested1/nested3/ident/localkeyframes/pos1x%pos1y%pos2x%pos2y%localkeyframes2/animation/vars/local-color%globalVars/wideScreenClass/narrowScreenClass/displayGridInSupports/floatRightInNegativeSupports/displayFlexInMediaInSupports/displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase/animationUpperCase/localkeyframesUPPERCASE/localkeyframes2UPPPERCASE/localUpperCase/VARS/LOCAL-COLOR%globalVarsUpperCase/inSupportScope/a/animationName/b/c/d/animation-name%mozAnimationName/my-color%c0ffee/padding-sm/padding-lg/nested-pure/nested-media/nested-supports/nested-layer/not-selector-inside/nested-var/again/nested-with-local-pseudo/local-nested/bar/id-foo/id-bar/nested-parens/local-in-global/in-local-global-scope/class-local-scope/class-in-container/deep-class-in-container/placeholder-gray-700/placeholder-opacity%test%baz%slidein/my-global-class-again/first-nested/first-nested-nested/first-nested-at-rule/first-nested-nested-at-rule-deep/foo%\\\\.\\\\.\\\\/css-modules\\\\/style\\\\.module\\\\.css,test/class/foo(bar)\\\\.\\\\/style\\\\.css;}",
+]
+`;
+
 exports[`ConfigTestCases css urls exported tests should be able to handle styles in div.css 1`] = `
 Object {
   "--foo": " url(img.09a1a1112c577c279435.png)",
