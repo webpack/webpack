@@ -8307,6 +8307,38 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "snapshot-unmanaged-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "A RegExp matching an unmanaged directory.",
+        "multiple": true,
+        "path": "snapshot.unmanagedPaths[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A path to an unmanaged directory.",
+        "multiple": true,
+        "path": "snapshot.unmanagedPaths[]",
+        "type": "path",
+      },
+    ],
+    "description": "A RegExp matching an unmanaged directory. A path to an unmanaged directory.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "snapshot-unmanaged-paths-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'snapshot.unmanagedPaths' configuration. List of paths that are not managed by a package manager and the contents are subject to change.",
+        "multiple": false,
+        "path": "snapshot.unmanagedPaths",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'snapshot.unmanagedPaths' configuration. List of paths that are not managed by a package manager and the contents are subject to change.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats": Object {
     "configs": Array [
       Object {

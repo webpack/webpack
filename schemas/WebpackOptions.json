@@ -4614,6 +4614,26 @@
               "type": "boolean"
             }
           }
+        },
+        "unmanagedPaths": {
+          "description": "List of paths that are not managed by a package manager and the contents are subject to change.",
+          "type": "array",
+          "items": {
+            "description": "List of paths that are not managed by a package manager and the contents are subject to change.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching an unmanaged directory.",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to an unmanaged directory.",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
+          }
         }
       }
     },
