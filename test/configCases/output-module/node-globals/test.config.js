@@ -1,5 +1,5 @@
 module.exports = {
 	findBundle() {
-		return "./main.mjs"
+		return "./main.mjs";
 	}
 };

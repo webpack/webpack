@@ -320,6 +320,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "cache-readonly": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable readonly mode.",
+        "multiple": false,
+        "path": "cache.readonly",
+        "type": "boolean",
+      },
+    ],
+    "description": "Enable/disable readonly mode.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "cache-store": Object {
     "configs": Array [
       Object {
@@ -822,6 +835,32 @@ Object {
       },
     ],
     "description": "Allow using top-level-await in EcmaScript Modules.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "extends": Object {
+    "configs": Array [
+      Object {
+        "description": "Path to the configuration to be extended (only works when using webpack-cli).",
+        "multiple": true,
+        "path": "extends[]",
+        "type": "string",
+      },
+    ],
+    "description": "Path to the configuration to be extended (only works when using webpack-cli).",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "extends-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'extends' configuration. Extend configuration from another configuration (only works when using webpack-cli).",
+        "multiple": false,
+        "path": "extends",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'extends' configuration. Extend configuration from another configuration (only works when using webpack-cli).",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -1503,6 +1542,101 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-create-require": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.createRequire",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.createRequire",
+        "type": "string",
+      },
+    ],
+    "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-dynamic-import-fetch-priority": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global fetchPriority for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicImportFetchPriority",
+        "type": "enum",
+        "values": Array [
+          "low",
+          "high",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies global fetchPriority for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-dynamic-import-mode": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global mode for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicImportMode",
+        "type": "enum",
+        "values": Array [
+          "eager",
+          "weak",
+          "lazy",
+          "lazy-once",
+        ],
+      },
+    ],
+    "description": "Specifies global mode for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-dynamic-import-prefetch": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global prefetch for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicImportPrefetch",
+        "type": "number",
+      },
+      Object {
+        "description": "Specifies global prefetch for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicImportPrefetch",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specifies global prefetch for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-dynamic-import-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global preload for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicImportPreload",
+        "type": "number",
+      },
+      Object {
+        "description": "Specifies global preload for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.dynamicImportPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specifies global preload for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-auto-exports-presence": Object {
     "configs": Array [
       Object {
@@ -2027,6 +2161,25 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-create-require": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript.createRequire",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript.createRequire",
+        "type": "string",
+      },
+    ],
+    "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-amd": Object {
     "configs": Array [
       Object {
@@ -2081,6 +2234,101 @@ Object {
     "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-create-require": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.createRequire",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.createRequire",
+        "type": "string",
+      },
+    ],
+    "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-dynamic-import-fetch-priority": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global fetchPriority for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicImportFetchPriority",
+        "type": "enum",
+        "values": Array [
+          "low",
+          "high",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies global fetchPriority for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-dynamic-import-mode": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global mode for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicImportMode",
+        "type": "enum",
+        "values": Array [
+          "eager",
+          "weak",
+          "lazy",
+          "lazy-once",
+        ],
+      },
+    ],
+    "description": "Specifies global mode for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-dynamic-import-prefetch": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global prefetch for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicImportPrefetch",
+        "type": "number",
+      },
+      Object {
+        "description": "Specifies global prefetch for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicImportPrefetch",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specifies global prefetch for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-dynamic-import-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global preload for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicImportPreload",
+        "type": "number",
+      },
+      Object {
+        "description": "Specifies global preload for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.dynamicImportPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specifies global preload for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-exports-presence": Object {
     "configs": Array [
@@ -2204,6 +2452,25 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-parser-javascript-dynamic-import-fetch-priority": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global fetchPriority for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicImportFetchPriority",
+        "type": "enum",
+        "values": Array [
+          "low",
+          "high",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies global fetchPriority for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-parser-javascript-dynamic-import-meta": Object {
     "configs": Array [
       Object {
@@ -2229,6 +2496,63 @@ Object {
     "description": "Enable/disable evaluating import.meta.webpackContext.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-dynamic-import-mode": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global mode for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicImportMode",
+        "type": "enum",
+        "values": Array [
+          "eager",
+          "weak",
+          "lazy",
+          "lazy-once",
+        ],
+      },
+    ],
+    "description": "Specifies global mode for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-import-prefetch": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global prefetch for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicImportPrefetch",
+        "type": "number",
+      },
+      Object {
+        "description": "Specifies global prefetch for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicImportPrefetch",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specifies global prefetch for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-import-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global preload for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicImportPreload",
+        "type": "number",
+      },
+      Object {
+        "description": "Specifies global preload for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript.dynamicImportPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specifies global preload for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-dynamic-node": Object {
     "configs": Array [
@@ -2621,6 +2945,101 @@ Object {
     "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-parser-javascript-esm-create-require": Object {
+    "configs": Array [
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.createRequire",
+        "type": "boolean",
+      },
+      Object {
+        "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.createRequire",
+        "type": "string",
+      },
+    ],
+    "description": "Enable/disable parsing \\"import { createRequire } from \\"module\\"\\" and evaluating createRequire().",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-dynamic-import-fetch-priority": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global fetchPriority for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicImportFetchPriority",
+        "type": "enum",
+        "values": Array [
+          "low",
+          "high",
+          "auto",
+          false,
+        ],
+      },
+    ],
+    "description": "Specifies global fetchPriority for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-dynamic-import-mode": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global mode for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicImportMode",
+        "type": "enum",
+        "values": Array [
+          "eager",
+          "weak",
+          "lazy",
+          "lazy-once",
+        ],
+      },
+    ],
+    "description": "Specifies global mode for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-dynamic-import-prefetch": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global prefetch for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicImportPrefetch",
+        "type": "number",
+      },
+      Object {
+        "description": "Specifies global prefetch for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicImportPrefetch",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specifies global prefetch for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-dynamic-import-preload": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies global preload for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicImportPreload",
+        "type": "number",
+      },
+      Object {
+        "description": "Specifies global preload for dynamic import.",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.dynamicImportPreload",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specifies global preload for dynamic import.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-parser-javascript-esm-exports-presence": Object {
     "configs": Array [
@@ -4801,6 +5220,12 @@ Object {
           "all",
         ],
       },
+      Object {
+        "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
+        "multiple": false,
+        "path": "optimization.splitChunks.chunks",
+        "type": "RegExp",
+      },
     ],
     "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
     "multiple": false,
@@ -4870,6 +5295,12 @@ Object {
           "async",
           "all",
         ],
+      },
+      Object {
+        "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
+        "multiple": false,
+        "path": "optimization.splitChunks.fallbackCacheGroup.chunks",
+        "type": "RegExp",
       },
     ],
     "description": "Select chunks for determining shared modules (defaults to \\"async\\", \\"initial\\" and \\"all\\" requires adding these chunks to the HTML).",
@@ -5613,6 +6044,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "output-environment-dynamic-import-in-worker": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports an async import() is available when creating a worker.",
+        "multiple": false,
+        "path": "output.environment.dynamicImportInWorker",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports an async import() is available when creating a worker.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-environment-for-of": Object {
     "configs": Array [
       Object {
@@ -5623,6 +6067,19 @@ Object {
       },
     ],
     "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "output-environment-global-this": Object {
+    "configs": Array [
+      Object {
+        "description": "The environment supports 'globalThis'.",
+        "multiple": false,
+        "path": "output.environment.globalThis",
+        "type": "boolean",
+      },
+    ],
+    "description": "The environment supports 'globalThis'.",
     "multiple": false,
     "simpleType": "boolean",
   },
@@ -5782,6 +6239,19 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-ignore-browser-warnings": Object {
+    "configs": Array [
+      Object {
+        "description": "Ignore warnings in the browser.",
+        "multiple": false,
+        "path": "output.ignoreBrowserWarnings",
+        "type": "boolean",
+      },
+    ],
+    "description": "Ignore warnings in the browser.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "output-iife": Object {
     "configs": Array [
       Object {
@@ -5844,6 +6314,19 @@ Object {
       },
     ],
     "description": "Name of the exposed AMD library in the UMD.",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-library-amd-container": Object {
+    "configs": Array [
+      Object {
+        "description": "Add a container for define/require functions in the AMD module.",
+        "multiple": false,
+        "path": "output.library.amdContainer",
+        "type": "string",
+      },
+    ],
+    "description": "Add a container for define/require functions in the AMD module.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -6282,6 +6765,23 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "output-trusted-types-on-policy-creation-failure": Object {
+    "configs": Array [
+      Object {
+        "description": "If the call to \`trustedTypes.createPolicy(...)\` fails -- e.g., due to the policy name missing from the CSP \`trusted-types\` list, or it being a duplicate name, etc. -- controls whether to continue with loading in the hope that \`require-trusted-types-for 'script'\` isn't enforced yet, versus fail immediately. Default behavior is 'stop'.",
+        "multiple": false,
+        "path": "output.trustedTypes.onPolicyCreationFailure",
+        "type": "enum",
+        "values": Array [
+          "continue",
+          "stop",
+        ],
+      },
+    ],
+    "description": "If the call to \`trustedTypes.createPolicy(...)\` fails -- e.g., due to the policy name missing from the CSP \`trusted-types\` list, or it being a duplicate name, etc. -- controls whether to continue with loading in the hope that \`require-trusted-types-for 'script'\` isn't enforced yet, versus fail immediately. Default behavior is 'stop'.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "output-trusted-types-policy-name": Object {
     "configs": Array [
       Object {
@@ -6386,6 +6886,19 @@ Object {
       },
     ],
     "description": "The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).",
+    "multiple": false,
+    "simpleType": "string",
+  },
+  "output-worker-public-path": Object {
+    "configs": Array [
+      Object {
+        "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
+        "multiple": false,
+        "path": "output.workerPublicPath",
+        "type": "string",
+      },
+    ],
+    "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
     "multiple": false,
     "simpleType": "string",
   },
@@ -7804,6 +8317,38 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "snapshot-unmanaged-paths": Object {
+    "configs": Array [
+      Object {
+        "description": "A RegExp matching an unmanaged directory.",
+        "multiple": true,
+        "path": "snapshot.unmanagedPaths[]",
+        "type": "RegExp",
+      },
+      Object {
+        "description": "A path to an unmanaged directory.",
+        "multiple": true,
+        "path": "snapshot.unmanagedPaths[]",
+        "type": "path",
+      },
+    ],
+    "description": "A RegExp matching an unmanaged directory. A path to an unmanaged directory.",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "snapshot-unmanaged-paths-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'snapshot.unmanagedPaths' configuration. List of paths that are not managed by a package manager and the contents are subject to change.",
+        "multiple": false,
+        "path": "snapshot.unmanagedPaths",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'snapshot.unmanagedPaths' configuration. List of paths that are not managed by a package manager and the contents are subject to change.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "stats": Object {
     "configs": Array [
       Object {
@@ -8305,6 +8850,19 @@ Object {
     "description": "Add errors count.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "stats-errors-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display errors (value is in number of lines).",
+        "multiple": false,
+        "path": "stats.errorsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display errors (value is in number of lines).",
+    "multiple": false,
+    "simpleType": "number",
   },
   "stats-exclude-assets": Object {
     "configs": Array [
@@ -8998,6 +9556,19 @@ Object {
     "description": "Clear all items provided in 'stats.warningsFilter' configuration. Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "stats-warnings-space": Object {
+    "configs": Array [
+      Object {
+        "description": "Space to display warnings (value is in number of lines).",
+        "multiple": false,
+        "path": "stats.warningsSpace",
+        "type": "number",
+      },
+    ],
+    "description": "Space to display warnings (value is in number of lines).",
+    "multiple": false,
+    "simpleType": "number",
   },
   "target": Object {
     "configs": Array [

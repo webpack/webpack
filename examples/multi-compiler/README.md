@@ -15,7 +15,7 @@ var webpack = require("../../");
 module.exports = [
 	{
 		name: "mobile",
-		// mode: "development || "production",
+		// mode: "development" || "production",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "dist"),
@@ -30,7 +30,7 @@ module.exports = [
 
 	{
 		name: "desktop",
-		// mode: "development || "production",
+		// mode: "development" || "production",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "dist"),
@@ -146,7 +146,7 @@ mobile:
     ./example.js 94 bytes [built] [code generated]
       [used exports unknown]
       entry ./example main
-  mobile (webpack 5.51.1) compiled successfully
+  mobile (webpack 5.78.0) compiled successfully
 
 desktop:
   asset desktop.js 292 bytes [emitted] (name: main)
@@ -155,7 +155,7 @@ desktop:
     ./example.js 94 bytes [built] [code generated]
       [used exports unknown]
       entry ./example main
-  desktop (webpack 5.51.1) compiled successfully
+  desktop (webpack 5.78.0) compiled successfully
 ```
 
 ## Production mode
@@ -169,7 +169,7 @@ mobile:
     ./example.js 94 bytes [built] [code generated]
       [no exports used]
       entry ./example main
-  mobile (webpack 5.51.1) compiled successfully
+  mobile (webpack 5.78.0) compiled successfully
 
 desktop:
   asset desktop.js 37 bytes [emitted] [minimized] (name: main)
@@ -178,5 +178,5 @@ desktop:
     ./example.js 94 bytes [built] [code generated]
       [no exports used]
       entry ./example main
-  desktop (webpack 5.51.1) compiled successfully
+  desktop (webpack 5.78.0) compiled successfully
 ```

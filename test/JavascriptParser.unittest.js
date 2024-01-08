@@ -541,6 +541,14 @@ describe("JavascriptParser", () => {
 			"`start${'str'}mid${obj2}end`":
 				// eslint-disable-next-line no-template-curly-in-string
 				"template=[start${'str'}mid string=startstrmid],[end string=end]",
+			// eslint-disable-next-line no-template-curly-in-string
+			"`a${x}` === `b${x}`": "bool=false",
+			// eslint-disable-next-line no-template-curly-in-string
+			"`${x}a` === `${x}b`": "bool=false",
+			// eslint-disable-next-line no-template-curly-in-string
+			"`${a}${b}` === `a${b}`": "",
+			// eslint-disable-next-line no-template-curly-in-string
+			"`${a}${b}` === `${a}b`": "",
 			"'abc'.slice(1)": "string=bc",
 			"'abcdef'.slice(2, 5)": "string=cde",
 			"'abcdef'.substring(2, 3)": "string=c",

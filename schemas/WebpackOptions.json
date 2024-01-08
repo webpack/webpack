@@ -13,6 +13,11 @@
         }
       ]
     },
+    "AmdContainer": {
+      "description": "Add a container for define/require functions in the AMD module.",
+      "type": "string",
+      "minLength": 1
+    },
     "AssetFilterItemTypes": {
       "description": "Filtering value, regexp or function.",
       "cli": {
@@ -739,8 +744,16 @@
           "description": "The environment supports an async import() function to import EcmaScript modules.",
           "type": "boolean"
         },
+        "dynamicImportInWorker": {
+          "description": "The environment supports an async import() is available when creating a worker.",
+          "type": "boolean"
+        },
         "forOf": {
           "description": "The environment supports 'for of' iteration ('for (const x of array) { ... }').",
+          "type": "boolean"
+        },
+        "globalThis": {
+          "description": "The environment supports 'globalThis'.",
           "type": "boolean"
         },
         "module": {
@@ -897,7 +910,10 @@
         },
         "css": {
           "description": "Enable css support.",
-          "oneOf": [
+          "anyOf": [
+            {
+              "enum": [false]
+            },
             {
               "$ref": "#/definitions/CssExperimentOptions"
             }
@@ -913,7 +929,10 @@
         },
         "lazyCompilation": {
           "description": "Compile entrypoints and import()s only when they are accessed.",
-          "oneOf": [
+          "anyOf": [
+            {
+              "enum": [false]
+            },
             {
               "$ref": "#/definitions/LazyCompilationOptions"
             }
@@ -932,6 +951,24 @@
           "type": "boolean"
         }
       }
+    },
+    "Extends": {
+      "description": "Extend configuration from another configuration (only works when using webpack-cli).",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtendsItem"
+          }
+        },
+        {
+          "$ref": "#/definitions/ExtendsItem"
+        }
+      ]
+    },
+    "ExtendsItem": {
+      "description": "Path to the configuration to be extended (only works when using webpack-cli).",
+      "type": "string"
     },
     "ExternalItem": {
       "description": "Specify dependency that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",
@@ -972,7 +1009,7 @@
         {
           "description": "The function is called on each dependency (`function(context, request, callback(err, result))`).",
           "instanceof": "Function",
-          "tsType": "(((data: ExternalItemFunctionData, callback: (err?: Error, result?: ExternalItemValue) => void) => void) | ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>))"
+          "tsType": "(((data: ExternalItemFunctionData, callback: (err?: (Error | null), result?: ExternalItemValue) => void) => void) | ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>))"
         }
       ]
     },
@@ -1108,6 +1145,15 @@
         "node-commonjs"
       ]
     },
+    "Falsy": {
+      "description": "These values will be ignored by webpack and created to be used with '&&' or '||' to improve readability of configurations.",
+      "cli": {
+        "exclude": true
+      },
+      "enum": [false, 0, "", null],
+      "undefinedAsNull": true,
+      "tsType": "false | 0 | '' | null | undefined"
+    },
     "FileCacheOptions": {
       "description": "Options object for persistent file-based caching.",
       "type": "object",
@@ -1223,6 +1269,10 @@
         },
         "profile": {
           "description": "Track and log detailed timing information for individual cache items.",
+          "type": "boolean"
+        },
+        "readonly": {
+          "description": "Enable/disable readonly mode.",
           "type": "boolean"
         },
         "store": {
@@ -1579,6 +1629,47 @@
         "commonjsMagicComments": {
           "description": "Enable/disable parsing of magic comments in CommonJs syntax.",
           "type": "boolean"
+        },
+        "createRequire": {
+          "description": "Enable/disable parsing \"import { createRequire } from \"module\"\" and evaluating createRequire().",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "dynamicImportFetchPriority": {
+          "description": "Specifies global fetchPriority for dynamic import.",
+          "enum": ["low", "high", "auto", false]
+        },
+        "dynamicImportMode": {
+          "description": "Specifies global mode for dynamic import.",
+          "enum": ["eager", "weak", "lazy", "lazy-once"]
+        },
+        "dynamicImportPrefetch": {
+          "description": "Specifies global prefetch for dynamic import.",
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "dynamicImportPreload": {
+          "description": "Specifies global preload for dynamic import.",
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
         },
         "exportsPresence": {
           "description": "Specifies the behavior of invalid export names in \"import ... from ...\" and \"export ... from ...\".",
@@ -1958,6 +2049,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "amdContainer": {
+          "$ref": "#/definitions/AmdContainer"
+        },
         "auxiliaryComment": {
           "$ref": "#/definitions/AuxiliaryComment"
         },
@@ -2392,6 +2486,9 @@
                 "enum": ["..."]
               },
               {
+                "$ref": "#/definitions/Falsy"
+              },
+              {
                 "$ref": "#/definitions/WebpackPluginInstance"
               },
               {
@@ -2543,6 +2640,10 @@
           "anyOf": [
             {
               "enum": ["initial", "async", "all"]
+            },
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
             },
             {
               "instanceof": "Function",
@@ -2792,6 +2893,10 @@
               "enum": ["initial", "async", "all"]
             },
             {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            },
+            {
               "instanceof": "Function",
               "tsType": "((chunk: import('../lib/Chunk')) => boolean)"
             }
@@ -2829,6 +2934,10 @@
               "anyOf": [
                 {
                   "enum": ["initial", "async", "all"]
+                },
+                {
+                  "instanceof": "RegExp",
+                  "tsType": "RegExp"
                 },
                 {
                   "instanceof": "Function",
@@ -3003,6 +3112,16 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "amdContainer": {
+          "cli": {
+            "exclude": true
+          },
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AmdContainer"
+            }
+          ]
+        },
         "assetModuleFilename": {
           "$ref": "#/definitions/AssetModuleFilename"
         },
@@ -3101,6 +3220,10 @@
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
         },
+        "ignoreBrowserWarnings": {
+          "description": "Ignore warnings in the browser.",
+          "type": "boolean"
+        },
         "iife": {
           "$ref": "#/definitions/Iife"
         },
@@ -3197,6 +3320,9 @@
         },
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
+        },
+        "workerPublicPath": {
+          "$ref": "#/definitions/WorkerPublicPath"
         },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
@@ -3300,6 +3426,10 @@
         "hotUpdateMainFilename": {
           "$ref": "#/definitions/HotUpdateMainFilename"
         },
+        "ignoreBrowserWarnings": {
+          "description": "Ignore warnings in the browser.",
+          "type": "boolean"
+        },
         "iife": {
           "$ref": "#/definitions/Iife"
         },
@@ -3353,6 +3483,9 @@
         },
         "workerChunkLoading": {
           "$ref": "#/definitions/ChunkLoading"
+        },
+        "workerPublicPath": {
+          "$ref": "#/definitions/WorkerPublicPath"
         },
         "workerWasmLoading": {
           "$ref": "#/definitions/WasmLoading"
@@ -3456,6 +3589,9 @@
       "items": {
         "description": "Plugin of type object or instanceof Function.",
         "anyOf": [
+          {
+            "$ref": "#/definitions/Falsy"
+          },
           {
             "$ref": "#/definitions/WebpackPluginInstance"
           },
@@ -3700,6 +3836,29 @@
             "type": "string"
           }
         },
+        "extensionAlias": {
+          "description": "An object which maps extension to extension aliases.",
+          "type": "object",
+          "additionalProperties": {
+            "description": "Extension alias.",
+            "anyOf": [
+              {
+                "description": "Multiple extensions.",
+                "type": "array",
+                "items": {
+                  "description": "Aliased extension.",
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              {
+                "description": "Aliased extension.",
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          }
+        },
         "extensions": {
           "description": "Extensions added to the request when trying to find the file.",
           "type": "array",
@@ -3782,6 +3941,9 @@
             "anyOf": [
               {
                 "enum": ["..."]
+              },
+              {
+                "$ref": "#/definitions/Falsy"
               },
               {
                 "$ref": "#/definitions/ResolvePluginInstance"
@@ -4143,7 +4305,10 @@
           "type": "array",
           "items": {
             "description": "A rule.",
-            "oneOf": [
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Falsy"
+              },
               {
                 "$ref": "#/definitions/RuleSetRule"
               }
@@ -4212,7 +4377,10 @@
           "type": "array",
           "items": {
             "description": "A rule.",
-            "oneOf": [
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Falsy"
+              },
               {
                 "$ref": "#/definitions/RuleSetRule"
               }
@@ -4266,6 +4434,9 @@
             "enum": ["..."]
           },
           {
+            "$ref": "#/definitions/Falsy"
+          },
+          {
             "$ref": "#/definitions/RuleSetRule"
           }
         ]
@@ -4278,7 +4449,10 @@
           "type": "array",
           "items": {
             "description": "An use item.",
-            "oneOf": [
+            "anyOf": [
+              {
+                "$ref": "#/definitions/Falsy"
+              },
               {
                 "$ref": "#/definitions/RuleSetUseItem"
               }
@@ -4287,7 +4461,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((data: { resource: string, realResource: string, resourceQuery: string, issuer: string, compiler: string }) => RuleSetUseItem[])"
+          "tsType": "((data: { resource: string, realResource: string, resourceQuery: string, issuer: string, compiler: string }) => (Falsy | RuleSetUseItem)[])"
         },
         {
           "$ref": "#/definitions/RuleSetUseItem"
@@ -4325,7 +4499,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "((data: object) => RuleSetUseItem|RuleSetUseItem[])"
+          "tsType": "((data: object) => RuleSetUseItem | (Falsy | RuleSetUseItem)[])"
         },
         {
           "$ref": "#/definitions/RuleSetLoader"
@@ -4439,6 +4613,26 @@
               "description": "Use timestamps of the files/directories to determine invalidation.",
               "type": "boolean"
             }
+          }
+        },
+        "unmanagedPaths": {
+          "description": "List of paths that are not managed by a package manager and the contents are subject to change.",
+          "type": "array",
+          "items": {
+            "description": "List of paths that are not managed by a package manager and the contents are subject to change.",
+            "anyOf": [
+              {
+                "description": "A RegExp matching an unmanaged directory.",
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
+              },
+              {
+                "description": "A path to an unmanaged directory.",
+                "type": "string",
+                "absolutePath": true,
+                "minLength": 1
+              }
+            ]
           }
         }
       }
@@ -4622,6 +4816,10 @@
         "errorsCount": {
           "description": "Add errors count.",
           "type": "boolean"
+        },
+        "errorsSpace": {
+          "description": "Space to display errors (value is in number of lines).",
+          "type": "number"
         },
         "exclude": {
           "description": "Please use excludeModules instead.",
@@ -4855,6 +5053,10 @@
               "$ref": "#/definitions/WarningFilterTypes"
             }
           ]
+        },
+        "warningsSpace": {
+          "description": "Space to display warnings (value is in number of lines).",
+          "type": "number"
         }
       }
     },
@@ -4915,6 +5117,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "onPolicyCreationFailure": {
+          "description": "If the call to `trustedTypes.createPolicy(...)` fails -- e.g., due to the policy name missing from the CSP `trusted-types` list, or it being a duplicate name, etc. -- controls whether to continue with loading in the hope that `require-trusted-types-for 'script'` isn't enforced yet, versus fail immediately. Default behavior is 'stop'.",
+          "enum": ["continue", "stop"]
+        },
         "policyName": {
           "description": "The name of the Trusted Types policy created by webpack to serve bundle chunks.",
           "type": "string",
@@ -5205,6 +5411,10 @@
         }
       },
       "required": ["apply"]
+    },
+    "WorkerPublicPath": {
+      "description": "Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.",
+      "type": "string"
     }
   },
   "title": "WebpackOptions",
@@ -5238,6 +5448,9 @@
     },
     "experiments": {
       "$ref": "#/definitions/Experiments"
+    },
+    "extends": {
+      "$ref": "#/definitions/Extends"
     },
     "externals": {
       "$ref": "#/definitions/Externals"

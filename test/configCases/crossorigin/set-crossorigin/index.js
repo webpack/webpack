@@ -65,3 +65,17 @@ it("should load script with crossorigin attribute anonymous (different origin)",
 
 	return promise;
 });
+
+it("should load style with crossorigin attribute anonymous (different origin)", function() {
+	var originalValue = __webpack_public_path__;
+	__webpack_public_path__ = "https://example.com/";
+	const promise = import("./style.css?e" /* webpackChunkName: "crossorigin-different-origin" */);
+	__webpack_public_path__ = originalValue;
+
+	var link = document.head._children[0];
+
+	expect(link.href).toBe("https://example.com/crossorigin-different-origin.web.css");
+	expect(link.crossOrigin).toBe("anonymous");
+
+	return promise;
+});

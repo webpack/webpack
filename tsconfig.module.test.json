@@ -10,5 +10,5 @@
     "types": ["node", "./module"],
     "esModuleInterop": true
   },
-  "include": ["test/typesCases/**/*"]
+  "include": ["hot/**/*", "test/typesCases/**/*"]
 }

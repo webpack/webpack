@@ -56,7 +56,7 @@ module.exports = {
 				...["implements", "const", "memberof", "readonly", "yields"].reduce(
 					(acc, tag) => {
 						acc[tag] = {
-							message: `@${tag} currently not supported in Typescript`
+							message: `@${tag} currently not supported in TypeScript`
 						};
 						return acc;
 					},
@@ -78,6 +78,13 @@ module.exports = {
 	},
 	overrides: [
 		{
+			// Allow to use `dynamic` import
+			files: ["bin/**/*.js"],
+			parserOptions: {
+				ecmaVersion: 2020
+			}
+		},
+		{
 			files: ["lib/**/*.runtime.js", "hot/*.js"],
 			env: {
 				es6: false,
@@ -91,9 +98,19 @@ module.exports = {
 			}
 		},
 		{
+			files: ["tooling/**/*.js"],
+			env: { es6: true },
+			parserOptions: {
+				ecmaVersion: 2020
+			}
+		},
+		{
 			files: ["test/**/*.js"],
 			env: {
 				"jest/globals": true
+			},
+			parserOptions: {
+				ecmaVersion: 2020
 			},
 			globals: {
 				nsObj: false,

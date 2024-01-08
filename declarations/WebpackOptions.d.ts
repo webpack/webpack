@@ -83,6 +83,10 @@ export type FilenameTemplate =
  */
 export type Layer = null | string;
 /**
+ * Add a container for define/require functions in the AMD module.
+ */
+export type AmdContainer = string;
+/**
  * Add a comment in the UMD wrapper.
  */
 export type AuxiliaryComment = string | LibraryCustomUmdCommentObject;
@@ -159,6 +163,14 @@ export type EntryUnnamed = EntryItem;
  */
 export type Experiments = ExperimentsCommon & ExperimentsExtra;
 /**
+ * Extend configuration from another configuration (only works when using webpack-cli).
+ */
+export type Extends = ExtendsItem[] | ExtendsItem;
+/**
+ * Path to the configuration to be extended (only works when using webpack-cli).
+ */
+export type ExtendsItem = string;
+/**
  * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
  */
 export type Externals = ExternalItem[] | ExternalItem;
@@ -172,7 +184,7 @@ export type ExternalItem =
 	| (
 			| ((
 					data: ExternalItemFunctionData,
-					callback: (err?: Error, result?: ExternalItemValue) => void
+					callback: (err?: Error | null, result?: ExternalItemValue) => void
 			  ) => void)
 			| ((data: ExternalItemFunctionData) => Promise<ExternalItemValue>)
 	  );
@@ -237,6 +249,10 @@ export type FilterItemTypes = RegExp | string | ((value: string) => boolean);
  * Enable production optimizations or development hints.
  */
 export type Mode = "development" | "production" | "none";
+/**
+ * These values will be ignored by webpack and created to be used with '&&' or '||' to improve readability of configurations.
+ */
+export type Falsy = false | 0 | "" | null | undefined;
 /**
  * One or multiple rule conditions.
  */
@@ -313,14 +329,14 @@ export type ResolveAlias =
  * A list of descriptions of loaders applied.
  */
 export type RuleSetUse =
-	| RuleSetUseItem[]
+	| (Falsy | RuleSetUseItem)[]
 	| ((data: {
 			resource: string;
 			realResource: string;
 			resourceQuery: string;
 			issuer: string;
 			compiler: string;
-	  }) => RuleSetUseItem[])
+	  }) => (Falsy | RuleSetUseItem)[])
 	| RuleSetUseItem;
 /**
  * A description of an applied loader.
@@ -340,12 +356,12 @@ export type RuleSetUseItem =
 			 */
 			options?: RuleSetLoaderOptions;
 	  }
-	| ((data: object) => RuleSetUseItem | RuleSetUseItem[])
+	| ((data: object) => RuleSetUseItem | (Falsy | RuleSetUseItem)[])
 	| RuleSetLoader;
 /**
  * A list of rules.
  */
-export type RuleSetRules = ("..." | RuleSetRule)[];
+export type RuleSetRules = ("..." | Falsy | RuleSetRule)[];
 /**
  * Specify options for each generator.
  */
@@ -570,6 +586,10 @@ export type UniqueName = string;
  */
 export type WebassemblyModuleFilename = string;
 /**
+ * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+ */
+export type WorkerPublicPath = string;
+/**
  * The number of parallel processed modules in the compilation.
  */
 export type Parallelism = number;
@@ -580,7 +600,7 @@ export type Performance = false | PerformanceOptions;
 /**
  * Add additional plugins to the compiler.
  */
-export type Plugins = (WebpackPluginInstance | WebpackPluginFunction)[];
+export type Plugins = (Falsy | WebpackPluginInstance | WebpackPluginFunction)[];
 /**
  * Capture timing information for each module.
  */
@@ -812,6 +832,10 @@ export interface WebpackOptions {
 	 */
 	experiments?: Experiments;
 	/**
+	 * Extend configuration from another configuration (only works when using webpack-cli).
+	 */
+	extends?: Extends;
+	/**
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
 	externals?: Externals;
@@ -1007,6 +1031,10 @@ export interface FileCacheOptions {
 	 */
 	profile?: boolean;
 	/**
+	 * Enable/disable readonly mode.
+	 */
+	readonly?: boolean;
+	/**
 	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file).
 	 */
 	store?: "pack";
@@ -1087,6 +1115,10 @@ export interface EntryDescription {
  * Options for library.
  */
 export interface LibraryOptions {
+	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: AmdContainer;
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */
@@ -1364,7 +1396,7 @@ export interface RuleSetRule {
 	/**
 	 * Only execute the first matching rule in this array.
 	 */
-	oneOf?: RuleSetRule[];
+	oneOf?: (Falsy | RuleSetRule)[];
 	/**
 	 * Shortcut for use.options.
 	 */
@@ -1398,7 +1430,7 @@ export interface RuleSetRule {
 	/**
 	 * Match and execute these rules when this rule is matched.
 	 */
-	rules?: RuleSetRule[];
+	rules?: (Falsy | RuleSetRule)[];
 	/**
 	 * Match module scheme.
 	 */
@@ -1506,6 +1538,15 @@ export interface ResolveOptions {
 	 */
 	exportsFields?: string[];
 	/**
+	 * An object which maps extension to extension aliases.
+	 */
+	extensionAlias?: {
+		/**
+		 * Extension alias.
+		 */
+		[k: string]: string[] | string;
+	};
+	/**
 	 * Extensions added to the request when trying to find the file.
 	 */
 	extensions?: string[];
@@ -1540,7 +1581,7 @@ export interface ResolveOptions {
 	/**
 	 * Plugins for the resolver.
 	 */
-	plugins?: ("..." | ResolvePluginInstance)[];
+	plugins?: ("..." | Falsy | ResolvePluginInstance)[];
 	/**
 	 * Prefer to resolve server-relative URLs (starting with '/') as absolute paths before falling back to resolve in 'resolve.roots'.
 	 */
@@ -1664,7 +1705,7 @@ export interface Optimization {
 	/**
 	 * Minimizer(s) to use for minimizing the output.
 	 */
-	minimizer?: ("..." | WebpackPluginInstance | WebpackPluginFunction)[];
+	minimizer?: ("..." | Falsy | WebpackPluginInstance | WebpackPluginFunction)[];
 	/**
 	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: (deprecated) short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, false: no algorithm used, as custom one can be provided via plugin).
 	 */
@@ -1751,6 +1792,7 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	chunks?:
 		| ("initial" | "async" | "all")
+		| RegExp
 		| ((chunk: import("../lib/Chunk")) => boolean);
 	/**
 	 * Sets the size types which are used when a number is used for sizes.
@@ -1773,6 +1815,7 @@ export interface OptimizationSplitChunksOptions {
 		 */
 		chunks?:
 			| ("initial" | "async" | "all")
+			| RegExp
 			| ((chunk: import("../lib/Chunk")) => boolean);
 		/**
 		 * Maximal size hint for the on-demand chunks.
@@ -1866,6 +1909,7 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	chunks?:
 		| ("initial" | "async" | "all")
+		| RegExp
 		| ((chunk: import("../lib/Chunk")) => boolean);
 	/**
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group.
@@ -1957,6 +2001,10 @@ export interface OptimizationSplitChunksCacheGroup {
  * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
  */
 export interface Output {
+	/**
+	 * Add a container for define/require functions in the AMD module.
+	 */
+	amdContainer?: AmdContainer;
 	/**
 	 * The filename of asset modules as relative path inside the 'output.path' directory.
 	 */
@@ -2078,6 +2126,10 @@ export interface Output {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
+	 * Ignore warnings in the browser.
+	 */
+	ignoreBrowserWarnings?: boolean;
+	/**
 	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
 	 */
 	iife?: Iife;
@@ -2162,6 +2214,10 @@ export interface Output {
 	 */
 	workerChunkLoading?: ChunkLoading;
 	/**
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPath?: WorkerPublicPath;
+	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
 	workerWasmLoading?: WasmLoading;
@@ -2204,9 +2260,17 @@ export interface Environment {
 	 */
 	dynamicImport?: boolean;
 	/**
+	 * The environment supports an async import() is available when creating a worker.
+	 */
+	dynamicImportInWorker?: boolean;
+	/**
 	 * The environment supports 'for of' iteration ('for (const x of array) { ... }').
 	 */
 	forOf?: boolean;
+	/**
+	 * The environment supports 'globalThis'.
+	 */
+	globalThis?: boolean;
 	/**
 	 * The environment supports EcmaScript Module syntax to import EcmaScript modules (import ... from '...').
 	 */
@@ -2224,6 +2288,10 @@ export interface Environment {
  * Use a Trusted Types policy to create urls for chunks.
  */
 export interface TrustedTypes {
+	/**
+	 * If the call to `trustedTypes.createPolicy(...)` fails -- e.g., due to the policy name missing from the CSP `trusted-types` list, or it being a duplicate name, etc. -- controls whether to continue with loading in the hope that `require-trusted-types-for 'script'` isn't enforced yet, versus fail immediately. Default behavior is 'stop'.
+	 */
+	onPolicyCreationFailure?: "continue" | "stop";
 	/**
 	 * The name of the Trusted Types policy created by webpack to serve bundle chunks.
 	 */
@@ -2314,6 +2382,10 @@ export interface SnapshotOptions {
 		 */
 		timestamp?: boolean;
 	};
+	/**
+	 * List of paths that are not managed by a package manager and the contents are subject to change.
+	 */
+	unmanagedPaths?: (RegExp | string)[];
 }
 /**
  * Stats options object.
@@ -2462,6 +2534,10 @@ export interface StatsOptions {
 	 * Add errors count.
 	 */
 	errorsCount?: boolean;
+	/**
+	 * Space to display errors (value is in number of lines).
+	 */
+	errorsSpace?: number;
 	/**
 	 * Please use excludeModules instead.
 	 */
@@ -2646,6 +2722,10 @@ export interface StatsOptions {
 	 * Suppress listing warnings that match the specified filters (they will still be counted). Filters can be Strings, RegExps or Functions.
 	 */
 	warningsFilter?: WarningFilterTypes;
+	/**
+	 * Space to display warnings (value is in number of lines).
+	 */
+	warningsSpace?: number;
 }
 /**
  * Options for the watcher.
@@ -2935,6 +3015,26 @@ export interface JavascriptParserOptions {
 	 * Enable/disable parsing of magic comments in CommonJs syntax.
 	 */
 	commonjsMagicComments?: boolean;
+	/**
+	 * Enable/disable parsing "import { createRequire } from "module"" and evaluating createRequire().
+	 */
+	createRequire?: boolean | string;
+	/**
+	 * Specifies global fetchPriority for dynamic import.
+	 */
+	dynamicImportFetchPriority?: "low" | "high" | "auto" | false;
+	/**
+	 * Specifies global mode for dynamic import.
+	 */
+	dynamicImportMode?: "eager" | "weak" | "lazy" | "lazy-once";
+	/**
+	 * Specifies global prefetch for dynamic import.
+	 */
+	dynamicImportPrefetch?: number | boolean;
+	/**
+	 * Specifies global preload for dynamic import.
+	 */
+	dynamicImportPreload?: number | boolean;
 	/**
 	 * Specifies the behavior of invalid export names in "import ... from ..." and "export ... from ...".
 	 */
@@ -3259,6 +3359,10 @@ export interface OutputNormalized {
 	 */
 	hotUpdateMainFilename?: HotUpdateMainFilename;
 	/**
+	 * Ignore warnings in the browser.
+	 */
+	ignoreBrowserWarnings?: boolean;
+	/**
 	 * Wrap javascript code into IIFE's to avoid leaking into global scope.
 	 */
 	iife?: Iife;
@@ -3330,6 +3434,10 @@ export interface OutputNormalized {
 	 * The method of loading chunks (methods included by default are 'jsonp' (web), 'import' (ESM), 'importScripts' (WebWorker), 'require' (sync node.js), 'async-node' (async node.js), but others might be added by plugins).
 	 */
 	workerChunkLoading?: ChunkLoading;
+	/**
+	 * Worker public path. Much like the public path, this sets the location where the worker script file is intended to be found. If not set, webpack will use the publicPath. Don't set this option unless your worker scripts are located at a different path from your other script files.
+	 */
+	workerPublicPath?: WorkerPublicPath;
 	/**
 	 * The method of loading WebAssembly Modules (methods included by default are 'fetch' (web/WebWorker), 'async-node' (node.js), but others might be added by plugins).
 	 */
@@ -3504,11 +3612,11 @@ export interface ExperimentsNormalizedExtra {
 	/**
 	 * Enable css support.
 	 */
-	css?: CssExperimentOptions;
+	css?: false | CssExperimentOptions;
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
-	lazyCompilation?: LazyCompilationOptions;
+	lazyCompilation?: false | LazyCompilationOptions;
 }
 /**
  * If an dependency matches exactly a property of the object, the property value is used as dependency.

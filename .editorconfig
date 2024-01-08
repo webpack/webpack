@@ -17,3 +17,6 @@ charset = utf-8-bom
 
 [*.md]
 trim_trailing_whitespace = false
+
+[*.snap]
+trim_trailing_whitespace = false

@@ -6,6 +6,7 @@ module.exports = ({ outputDirectory }) =>
 			expect(url).toBeInstanceOf(URL);
 			expect(url.origin).toBe("https://test.cases");
 			expect(url.pathname.startsWith("/path/")).toBe(true);
+			this.url = url;
 			const file = url.pathname.slice(6);
 			const workerBootstrap = `
 const { parentPort } = require("worker_threads");

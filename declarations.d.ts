@@ -246,10 +246,20 @@ declare module "@webassemblyjs/ast" {
 declare module "webpack-sources" {
 	export type MapOptions = { columns?: boolean; module?: boolean };
 
+	export type RawSourceMap = {
+		version: number;
+		sources: string[];
+		names: string[];
+		sourceRoot?: string;
+		sourcesContent?: string[];
+		mappings: string;
+		file: string;
+	};
+
 	export abstract class Source {
 		size(): number;
 
-		map(options?: MapOptions): Object;
+		map(options?: MapOptions): RawSourceMap | null;
 
 		sourceAndMap(options?: MapOptions): {
 			source: string | Buffer;
@@ -369,6 +379,11 @@ declare module "browserslist" {
 		export function findConfig(path: string): Record<string, string[]>;
 	}
 	export = browserslist;
+}
+
+declare module "json-parse-even-better-errors" {
+	function parseJson(text: string, reviver?: (this: any, key: string, value: any) => any, context?: number): any;
+	export = parseJson;
 }
 
 // TODO remove that when @types/estree is updated

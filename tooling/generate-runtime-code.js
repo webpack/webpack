@@ -24,7 +24,9 @@ const files = ["lib/util/semver.js"];
 		while (match) {
 			const [fullMatch, name] = match;
 			const originalCode = exports[name].toString();
-			const header = /^\(?([^=)]+)\)?\s=> \{/.exec(originalCode);
+			const header =
+				/** @type {RegExpExecArray} */
+				(/^\(?([^=)]+)\)?\s=> \{/.exec(originalCode));
 			const body = originalCode.slice(header[0].length, -1);
 			const result = await terser.minify(
 				{
@@ -40,6 +42,10 @@ const files = ["lib/util/semver.js"];
 					}
 				}
 			);
+
+			if (!result.code) {
+				throw new Error(`No code generated for ${name} in ${file}`);
+			}
 
 			const args = header[1];
 			if (/`|const|let|=>|\.\.\./.test(result.code)) {
