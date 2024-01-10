@@ -1636,11 +1636,17 @@ export interface NodeOptions {
 	/**
 	 * Include a polyfill for the '__dirname' variable.
 	 */
-	__dirname?: false | true | "warn-mock" | "mock" | "eval-only";
+	__dirname?: false | true | "warn-mock" | "mock" | "node-module" | "eval-only";
 	/**
 	 * Include a polyfill for the '__filename' variable.
 	 */
-	__filename?: false | true | "warn-mock" | "mock" | "eval-only";
+	__filename?:
+		| false
+		| true
+		| "warn-mock"
+		| "mock"
+		| "node-module"
+		| "eval-only";
 	/**
 	 * Include a polyfill for the 'global' variable.
 	 */

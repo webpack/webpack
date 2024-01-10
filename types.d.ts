@@ -3094,6 +3094,11 @@ declare interface DependencyTemplateContext {
 	 * the code generation results
 	 */
 	codeGenerationResults: CodeGenerationResults;
+
+	/**
+	 * chunkInitFragments
+	 */
+	chunkInitFragments: InitFragment<GenerateContext>[];
 }
 declare abstract class DependencyTemplates {
 	get(dependency: DependencyConstructor): undefined | DependencyTemplate;
@@ -8335,12 +8340,12 @@ declare interface NodeOptions {
 	/**
 	 * Include a polyfill for the '__dirname' variable.
 	 */
-	__dirname?: boolean | "warn-mock" | "mock" | "eval-only";
+	__dirname?: boolean | "warn-mock" | "mock" | "node-module" | "eval-only";
 
 	/**
 	 * Include a polyfill for the '__filename' variable.
 	 */
-	__filename?: boolean | "warn-mock" | "mock" | "eval-only";
+	__filename?: boolean | "warn-mock" | "mock" | "node-module" | "eval-only";
 
 	/**
 	 * Include a polyfill for the 'global' variable.
