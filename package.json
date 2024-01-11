@@ -84,7 +84,7 @@
     "mini-svg-data-uri": "^1.2.3",
     "nyc": "^15.1.0",
     "open-cli": "^7.2.0",
-    "prettier": "^2.7.1",
+    "prettier": "^3.1.1",
     "pretty-format": "^29.5.0",
     "pug": "^3.0.0",
     "pug-loader": "^2.4.0",
