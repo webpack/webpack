@@ -1,4 +1,4 @@
-import {A, B, Z} from "./dep2";
+import { A, B, Z, W } from "./dep2";
 
 export const A1 = class A1 extends A {
 	render() {return new E();}
@@ -20,3 +20,4 @@ class D {
 }
 
 export const isZ = (new Z1()) instanceof Z;
+export { W };
