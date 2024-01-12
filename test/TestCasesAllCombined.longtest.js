@@ -5,7 +5,6 @@ describe("TestCases", () => {
 		name: "all-combined",
 		mode: "production",
 		devtool: "source-map",
-		minimize: true,
 		optimization: {
 			moduleIds: "named",
 			chunkIds: "named"
