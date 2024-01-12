@@ -2888,9 +2888,39 @@ type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
 	Record<string, any>;
 
 /**
- * Options for css handling.
+ * Generator options for css/auto modules.
  */
-declare interface CssExperimentOptions {
+declare interface CssAutoGeneratorOptions {
+	/**
+	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+	 */
+	exportsOnly?: boolean;
+}
+
+/**
+ * Generator options for css modules.
+ */
+declare interface CssGeneratorOptions {
+	/**
+	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+	 */
+	exportsOnly?: boolean;
+}
+
+/**
+ * Generator options for css/global modules.
+ */
+declare interface CssGlobalGeneratorOptions {
+	/**
+	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+	 */
+	exportsOnly?: boolean;
+}
+
+/**
+ * Generator options for css/module modules.
+ */
+declare interface CssModuleGeneratorOptions {
 	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
@@ -3856,7 +3886,7 @@ declare interface ExperimentsExtra {
 	/**
 	 * Enable css support.
 	 */
-	css?: boolean | CssExperimentOptions;
+	css?: boolean;
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
@@ -3877,7 +3907,7 @@ declare interface ExperimentsNormalizedExtra {
 	/**
 	 * Enable css support.
 	 */
-	css?: false | CssExperimentOptions;
+	css?: boolean;
 
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
@@ -4774,6 +4804,26 @@ declare interface GeneratorOptionsByModuleTypeKnown {
 	 * Generator options for asset/resource modules.
 	 */
 	"asset/resource"?: AssetResourceGeneratorOptions;
+
+	/**
+	 * Generator options for css modules.
+	 */
+	css?: CssGeneratorOptions;
+
+	/**
+	 * Generator options for css/auto modules.
+	 */
+	"css/auto"?: CssAutoGeneratorOptions;
+
+	/**
+	 * Generator options for css/global modules.
+	 */
+	"css/global"?: CssGlobalGeneratorOptions;
+
+	/**
+	 * Generator options for css/module modules.
+	 */
+	"css/module"?: CssModuleGeneratorOptions;
 
 	/**
 	 * No generator options are supported for this module type.

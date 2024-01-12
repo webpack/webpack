@@ -633,19 +633,6 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
-  "experiments-css-exports-only": Object {
-    "configs": Array [
-      Object {
-        "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
-        "multiple": false,
-        "path": "experiments.css.exportsOnly",
-        "type": "boolean",
-      },
-    ],
-    "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
-    "multiple": false,
-    "simpleType": "boolean",
-  },
   "experiments-future-defaults": Object {
     "configs": Array [
       Object {
@@ -1425,6 +1412,58 @@ Object {
     "description": "The 'publicPath' specifies the public URL address of the output files when referenced in a browser.",
     "multiple": false,
     "simpleType": "string",
+  },
+  "module-generator-css-auto-exports-only": Object {
+    "configs": Array [
+      Object {
+        "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+        "multiple": false,
+        "path": "module.generator.css/auto.exportsOnly",
+        "type": "boolean",
+      },
+    ],
+    "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-generator-css-exports-only": Object {
+    "configs": Array [
+      Object {
+        "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+        "multiple": false,
+        "path": "module.generator.css.exportsOnly",
+        "type": "boolean",
+      },
+    ],
+    "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-generator-css-global-exports-only": Object {
+    "configs": Array [
+      Object {
+        "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+        "multiple": false,
+        "path": "module.generator.css/global.exportsOnly",
+        "type": "boolean",
+      },
+    ],
+    "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-generator-css-module-exports-only": Object {
+    "configs": Array [
+      Object {
+        "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+        "multiple": false,
+        "path": "module.generator.css/module.exportsOnly",
+        "type": "boolean",
+      },
+    ],
+    "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+    "multiple": false,
+    "simpleType": "boolean",
   },
   "module-no-parse": Object {
     "configs": Array [

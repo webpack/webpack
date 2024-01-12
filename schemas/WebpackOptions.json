@@ -359,6 +359,16 @@
       "description": "This option enables cross-origin loading of chunks.",
       "enum": [false, "anonymous", "use-credentials"]
     },
+    "CssAutoGeneratorOptions": {
+      "description": "Generator options for css/auto modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsOnly": {
+          "$ref": "#/definitions/CssGeneratorExportsOnly"
+        }
+      }
+    },
     "CssChunkFilename": {
       "description": "Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
       "oneOf": [
@@ -366,17 +376,6 @@
           "$ref": "#/definitions/FilenameTemplate"
         }
       ]
-    },
-    "CssExperimentOptions": {
-      "description": "Options for css handling.",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "exportsOnly": {
-          "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
-          "type": "boolean"
-        }
-      }
     },
     "CssFilename": {
       "description": "Specifies the filename template of output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
@@ -386,11 +385,39 @@
         }
       ]
     },
+    "CssGeneratorExportsOnly": {
+      "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
+      "type": "boolean"
+    },
     "CssGeneratorOptions": {
       "description": "Generator options for css modules.",
       "type": "object",
       "additionalProperties": false,
-      "properties": {}
+      "properties": {
+        "exportsOnly": {
+          "$ref": "#/definitions/CssGeneratorExportsOnly"
+        }
+      }
+    },
+    "CssGlobalGeneratorOptions": {
+      "description": "Generator options for css/global modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsOnly": {
+          "$ref": "#/definitions/CssGeneratorExportsOnly"
+        }
+      }
+    },
+    "CssModuleGeneratorOptions": {
+      "description": "Generator options for css/module modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exportsOnly": {
+          "$ref": "#/definitions/CssGeneratorExportsOnly"
+        }
+      }
     },
     "CssParserOptions": {
       "description": "Parser options for css modules.",
@@ -801,14 +828,7 @@
         },
         "css": {
           "description": "Enable css support.",
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "$ref": "#/definitions/CssExperimentOptions"
-            }
-          ]
+          "type": "boolean"
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
@@ -910,14 +930,7 @@
         },
         "css": {
           "description": "Enable css support.",
-          "anyOf": [
-            {
-              "enum": [false]
-            },
-            {
-              "$ref": "#/definitions/CssExperimentOptions"
-            }
-          ]
+          "type": "boolean"
         },
         "futureDefaults": {
           "description": "Apply defaults of next major version.",
@@ -1374,6 +1387,18 @@
         },
         "asset/resource": {
           "$ref": "#/definitions/AssetResourceGeneratorOptions"
+        },
+        "css": {
+          "$ref": "#/definitions/CssGeneratorOptions"
+        },
+        "css/auto": {
+          "$ref": "#/definitions/CssAutoGeneratorOptions"
+        },
+        "css/global": {
+          "$ref": "#/definitions/CssGlobalGeneratorOptions"
+        },
+        "css/module": {
+          "$ref": "#/definitions/CssModuleGeneratorOptions"
         },
         "javascript": {
           "$ref": "#/definitions/EmptyGeneratorOptions"

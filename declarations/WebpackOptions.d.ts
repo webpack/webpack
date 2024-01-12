@@ -729,6 +729,10 @@ export type AssetParserDataUrlFunction = (
 	context: {filename: string; module: import("../lib/Module")}
 ) => boolean;
 /**
+ * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+ */
+export type CssGeneratorExportsOnly = boolean;
+/**
  * A Function returning a Promise resolving to a normalized entry.
  */
 export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
@@ -2814,18 +2818,41 @@ export interface AssetResourceGeneratorOptions {
 	publicPath?: RawPublicPath;
 }
 /**
- * Options for css handling.
+ * Generator options for css/auto modules.
  */
-export interface CssExperimentOptions {
+export interface CssAutoGeneratorOptions {
 	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
-	exportsOnly?: boolean;
+	exportsOnly?: CssGeneratorExportsOnly;
 }
 /**
  * Generator options for css modules.
  */
-export interface CssGeneratorOptions {}
+export interface CssGeneratorOptions {
+	/**
+	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+	 */
+	exportsOnly?: CssGeneratorExportsOnly;
+}
+/**
+ * Generator options for css/global modules.
+ */
+export interface CssGlobalGeneratorOptions {
+	/**
+	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+	 */
+	exportsOnly?: CssGeneratorExportsOnly;
+}
+/**
+ * Generator options for css/module modules.
+ */
+export interface CssModuleGeneratorOptions {
+	/**
+	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
+	 */
+	exportsOnly?: CssGeneratorExportsOnly;
+}
 /**
  * Parser options for css modules.
  */
@@ -3595,7 +3622,7 @@ export interface ExperimentsExtra {
 	/**
 	 * Enable css support.
 	 */
-	css?: boolean | CssExperimentOptions;
+	css?: boolean;
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
@@ -3612,7 +3639,7 @@ export interface ExperimentsNormalizedExtra {
 	/**
 	 * Enable css support.
 	 */
-	css?: false | CssExperimentOptions;
+	css?: boolean;
 	/**
 	 * Compile entrypoints and import()s only when they are accessed.
 	 */
@@ -3653,6 +3680,22 @@ export interface GeneratorOptionsByModuleTypeKnown {
 	 * Generator options for asset/resource modules.
 	 */
 	"asset/resource"?: AssetResourceGeneratorOptions;
+	/**
+	 * Generator options for css modules.
+	 */
+	css?: CssGeneratorOptions;
+	/**
+	 * Generator options for css/auto modules.
+	 */
+	"css/auto"?: CssAutoGeneratorOptions;
+	/**
+	 * Generator options for css/global modules.
+	 */
+	"css/global"?: CssGlobalGeneratorOptions;
+	/**
+	 * Generator options for css/module modules.
+	 */
+	"css/module"?: CssModuleGeneratorOptions;
 	/**
 	 * No generator options are supported for this module type.
 	 */
