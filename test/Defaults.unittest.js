@@ -2204,9 +2204,7 @@ describe("snapshots", () => {
 			-     "css": undefined,
 			-     "futureDefaults": false,
 			+     "cacheUnaffected": true,
-			+     "css": Object {
-			+       "exportsOnly": false,
-			+     },
+			+     "css": true,
 			+     "futureDefaults": true,
 			@@ ... @@
 			+       },
@@ -2230,10 +2228,10 @@ describe("snapshots", () => {
 			+           Object {
 			+             "descriptionData": Object {
 			+               "type": "module",
-			+             },
+			@@ ... @@
 			+             "resolve": Object {
 			+               "fullySpecified": true,
-			@@ ... @@
+			+             },
 			+           },
 			+         ],
 			+         "type": "webassembly/async",
@@ -2264,6 +2262,13 @@ describe("snapshots", () => {
 			+       },
 			+       Object {
 			@@ ... @@
+			-     "generator": Object {},
+			+     "generator": Object {
+			+       "css": Object {
+			+         "exportsOnly": false,
+			+       },
+			+     },
+			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
 			-     "__dirname": "mock",
@@ -2280,9 +2285,6 @@ describe("snapshots", () => {
 			+     "hashDigestLength": 16,
 			+     "hashFunction": "xxhash64",
 			@@ ... @@
-			+           "...",
-			+         ],
-			+       },
 			+       "css-import": Object {
 			+         "conditionNames": Array [
 			+           "webpack",
@@ -2294,8 +2296,10 @@ describe("snapshots", () => {
 			+         ],
 			+         "mainFields": Array [
 			+           "style",
-			@@ ... @@
+			+           "...",
+			+         ],
 			+         "mainFiles": Array [],
+			+       },
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
