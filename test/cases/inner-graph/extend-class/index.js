@@ -11,6 +11,7 @@ import {
 	exportsInfoForMixin2,
 	exportsInfoForMixin3,
 	exportsInfoForMixin4,
+	exportsInfoForMixin5,
 	exportsInfoForBaseError,
 	exportsInfoForBaseError1,
 	exportsInfoForBaseError2,
@@ -25,6 +26,7 @@ it("should load modules correctly", () => {
 	require("./module5");
 	require("./module6");
 	require("./module7");
+	require("./module8");
 });
 
 if (process.env.NODE_ENV === "production") {
@@ -60,6 +62,7 @@ it("Z used, inner graph can not determine const usage", () => {
 it("Pure super expression should be unused, another used", () => {
 	if (process.env.NODE_ENV === "production") {
 		expect(exportsInfoForMixin4).toBe(false);
+		expect(exportsInfoForMixin5).toBe(false);
 	}
 
 	expect(exportsInfoForMixin1).toBe(true);
