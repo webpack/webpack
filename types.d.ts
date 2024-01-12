@@ -4571,7 +4571,7 @@ declare interface FileSystem {
 			| "binary"
 			| ((
 					arg0?: null | NodeJS.ErrnoException,
-					arg1?: (string | Buffer)[] | (typeof Dirent)[]
+					arg1?: (string | Buffer)[] | Dirent[]
 			  ) => void)
 			| ReaddirOptions
 			| "utf-8"
@@ -4582,7 +4582,7 @@ declare interface FileSystem {
 			| "buffer",
 		arg2?: (
 			arg0?: null | NodeJS.ErrnoException,
-			arg1?: (string | Buffer)[] | (typeof Dirent)[]
+			arg1?: (string | Buffer)[] | Dirent[]
 		) => void
 	) => void;
 	readJson?: {
@@ -6896,7 +6896,7 @@ declare interface LazyCompilationDefaultBackendOptions {
 	/**
 	 * Specifies where to listen to from the server.
 	 */
-	listen?: number | ListenOptions | ((server: typeof Server) => void);
+	listen?: number | ListenOptions | ((server: Server) => void);
 
 	/**
 	 * Specifies the protocol the client should use to connect to the server.
@@ -6909,7 +6909,7 @@ declare interface LazyCompilationDefaultBackendOptions {
 	server?:
 		| ServerOptionsImport<typeof IncomingMessage>
 		| ServerOptionsHttps<typeof IncomingMessage, typeof ServerResponse>
-		| (() => typeof Server);
+		| (() => Server);
 }
 
 /**
