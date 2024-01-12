@@ -15,7 +15,8 @@ import {
 	exportsInfoForBaseError,
 	exportsInfoForBaseError1,
 	exportsInfoForBaseError2,
-	exportsInfoForBaseError3
+	exportsInfoForBaseError3,
+	exportsInfoForSuperClass
 } from "./dep2";
 
 it("should load modules correctly", () => {
@@ -27,6 +28,7 @@ it("should load modules correctly", () => {
 	require("./module6");
 	require("./module7");
 	require("./module8");
+	require("./module9");
 });
 
 if (process.env.NODE_ENV === "production") {
@@ -57,6 +59,10 @@ it("K should be used", () => {
 
 it("Z used, inner graph can not determine const usage", () => {
 	expect(exportsInfoForZ).toBe(true);
+});
+
+it("SuperClass should be used", () => {
+	expect(exportsInfoForSuperClass).toBe(true);
 });
 
 it("Pure super expression should be unused, another used", () => {

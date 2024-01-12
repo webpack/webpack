@@ -16,6 +16,8 @@ export class BaseError3 extends Error {}
 export class W {}
 export class J {}
 export class K {}
+var SuperClass = class {};
+export { SuperClass };
 
 export const exportsInfoForA = __webpack_exports_info__.A.used;
 export const exportsInfoForB = __webpack_exports_info__.B.used;
@@ -35,3 +37,4 @@ export const exportsInfoForBaseError = __webpack_exports_info__.BaseError.used;
 export const exportsInfoForBaseError1 = __webpack_exports_info__.BaseError1.used;
 export const exportsInfoForBaseError2 = __webpack_exports_info__.BaseError2.used;
 export const exportsInfoForBaseError3 = __webpack_exports_info__.BaseError3.used;
+export const exportsInfoForSuperClass = __webpack_exports_info__.SuperClass.used;
