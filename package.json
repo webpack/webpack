@@ -51,7 +51,7 @@
     "coveralls": "^3.1.0",
     "cspell": "^6.31.1",
     "css-loader": "^5.0.1",
-    "date-fns": "^2.15.0",
+    "date-fns": "^3.2.0",
     "es5-ext": "^0.10.53",
     "es6-promise-polyfill": "^1.2.0",
     "eslint": "^8.48.0",
