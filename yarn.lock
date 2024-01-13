@@ -3489,7 +3489,7 @@ is-ci@^3.0.0:
   dependencies:
     ci-info "^3.2.0"
 
-is-core-module@^2.12.0, is-core-module@^2.12.1, is-core-module@^2.13.0, is-core-module@^2.5.0, is-core-module@^2.8.1:
+is-core-module@^2.12.1, is-core-module@^2.13.0, is-core-module@^2.5.0, is-core-module@^2.8.1:
   version "2.13.1"
   resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.13.1.tgz#ad0d7532c6fea9da1ebdc82742d74525c6273384"
   integrity sha512-hHrIjvZsftOsvKSn2TRYl63zvxsgE0K+0mYMoH6gD4omR5IWB2KynivBQczo3+wF1cCkjzvptnI9Q0sPU66ilw==
@@ -5132,10 +5132,15 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
-prettier@^2.0.5, prettier@^2.7.1:
+prettier@^2.0.5:
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
   integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
+
+prettier@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.2.1.tgz#babf33580e16c796a9740b9fae551624f7bfeaab"
+  integrity sha512-qSUWshj1IobVbKc226Gw2pync27t0Kf0EdufZa9j7uBSJay1CC+B3K5lAAZoqgX3ASiKuWsk6OmzKRetXNObWg==
 
 pretty-format@^29.0.0, pretty-format@^29.5.0, pretty-format@^29.7.0:
   version "29.7.0"
