@@ -124,6 +124,7 @@ module.exports = {
 		{
 			files: ["examples/**/*.js"],
 			rules: {
+				"n/no-missing-require": "off",
 				"n/no-unpublished-require": "off",
 				"n/no-extraneous-require": "off"
 			}
