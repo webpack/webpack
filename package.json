@@ -40,7 +40,7 @@
     "@babel/preset-react": "^7.23.3",
     "@types/jest": "^29.5.11",
     "@types/mime-types": "^2.1.4",
-    "@types/node": "^20.11.0",
+    "@types/node": "^20.1.7",
     "assemblyscript": "^0.27.22",
     "babel-loader": "^8.1.0",
     "benchmark": "^2.1.4",
