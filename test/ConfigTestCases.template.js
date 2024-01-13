@@ -61,10 +61,8 @@ const describeCases = config => {
 		jest.setTimeout(20000);
 
 		for (const category of categories) {
-			// eslint-disable-next-line no-loop-func
 			describe(category.name, () => {
 				for (const testName of category.tests) {
-					// eslint-disable-next-line no-loop-func
 					describe(testName, function () {
 						const testDirectory = path.join(casesPath, category.name, testName);
 						const filterPath = path.join(testDirectory, "test.filter.js");
@@ -458,7 +456,6 @@ const describeCases = config => {
 											name: "context for esm"
 										});
 
-										// eslint-disable-next-line no-loop-func
 										const _require = (
 											currentDirectory,
 											options,

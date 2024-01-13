@@ -102,7 +102,6 @@ describe("WatchSuspend", () => {
 
 		for (const changeBefore of [false, true])
 			for (const delay of [200, 1500]) {
-				// eslint-disable-next-line no-loop-func
 				it(`should not ignore changes during resumed compilation (changeBefore: ${changeBefore}, delay: ${delay}ms)`, async () => {
 					// aggregateTimeout must be long enough for this test
 					//  So set-up new watcher and wait when initial compilation is done

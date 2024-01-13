@@ -31,7 +31,6 @@ const captureSize = async data => {
 			lazySizes.push(undefined);
 			const r = await captureSize(await b());
 			lazySize += r.size + r.lazySize;
-			// eslint-disable-next-line require-atomic-updates
 			lazySizes[i] = r;
 		}
 	}
