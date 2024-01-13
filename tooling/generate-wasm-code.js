@@ -11,7 +11,7 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 	// TODO: fix me after update typescript to v5
 	// eslint-disable-next-line no-warning-comments
 	// @ts-ignore
-	// eslint-disable-next-line node/no-missing-import, node/no-unsupported-features/es-syntax
+	// eslint-disable-next-line n/no-unsupported-features/es-syntax
 	const asc = (await import("assemblyscript/asc")).default;
 
 	for (const file of files) {
