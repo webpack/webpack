@@ -2898,6 +2898,16 @@ declare interface CssAutoGeneratorOptions {
 }
 
 /**
+ * Parser options for css/auto modules.
+ */
+declare interface CssAutoParserOptions {
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: boolean;
+}
+
+/**
  * Generator options for css modules.
  */
 declare interface CssGeneratorOptions {
@@ -2918,6 +2928,16 @@ declare interface CssGlobalGeneratorOptions {
 }
 
 /**
+ * Parser options for css/global modules.
+ */
+declare interface CssGlobalParserOptions {
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: boolean;
+}
+
+/**
  * Generator options for css/module modules.
  */
 declare interface CssModuleGeneratorOptions {
@@ -2925,6 +2945,26 @@ declare interface CssModuleGeneratorOptions {
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: boolean;
+}
+
+/**
+ * Parser options for css/module modules.
+ */
+declare interface CssModuleParserOptions {
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: boolean;
+}
+
+/**
+ * Parser options for css modules.
+ */
+declare interface CssParserOptions {
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: boolean;
 }
 type Declaration = FunctionDeclaration | VariableDeclaration | ClassDeclaration;
 declare class DefinePlugin {
@@ -9835,6 +9875,26 @@ declare interface ParserOptionsByModuleTypeKnown {
 	 * No parser options are supported for this module type.
 	 */
 	"asset/source"?: EmptyParserOptions;
+
+	/**
+	 * Parser options for css modules.
+	 */
+	css?: CssParserOptions;
+
+	/**
+	 * Parser options for css/auto modules.
+	 */
+	"css/auto"?: CssAutoParserOptions;
+
+	/**
+	 * Parser options for css/global modules.
+	 */
+	"css/global"?: CssGlobalParserOptions;
+
+	/**
+	 * Parser options for css/module modules.
+	 */
+	"css/module"?: CssModuleParserOptions;
 
 	/**
 	 * Parser options for javascript modules.
