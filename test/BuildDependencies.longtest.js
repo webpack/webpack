@@ -25,7 +25,7 @@ const exec = (n, options = {}) => {
 							"--cache-dir",
 							".jest-cache/nyc",
 							process.execPath
-					  ]
+						]
 					: []),
 				path.resolve(__dirname, "fixtures/buildDependencies/run.js"),
 				n,
