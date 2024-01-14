@@ -755,6 +755,10 @@
           "description": "The environment supports arrow functions ('() => { ... }').",
           "type": "boolean"
         },
+        "asyncFunction": {
+          "description": "The environment supports async function and await ('async function () { await ... }').",
+          "type": "boolean"
+        },
         "bigIntLiteral": {
           "description": "The environment supports BigInt as literal (123n).",
           "type": "boolean"

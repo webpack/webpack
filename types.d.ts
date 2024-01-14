@@ -3717,6 +3717,11 @@ declare interface Environment {
 	arrowFunction?: boolean;
 
 	/**
+	 * The environment supports async function and await ('async function () { await ... }').
+	 */
+	asyncFunction?: boolean;
+
+	/**
 	 * The environment supports BigInt as literal (123n).
 	 */
 	bigIntLiteral?: boolean;
@@ -11336,6 +11341,7 @@ declare abstract class RuntimeTemplate {
 	isModule(): undefined | boolean;
 	supportsConst(): undefined | boolean;
 	supportsArrowFunction(): undefined | boolean;
+	supportsAsyncFunction(): undefined | boolean;
 	supportsOptionalChaining(): undefined | boolean;
 	supportsForOf(): undefined | boolean;
 	supportsDestructuring(): undefined | boolean;
