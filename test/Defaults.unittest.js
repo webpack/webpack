@@ -119,6 +119,7 @@ describe("snapshots", () => {
 		  "loader": Object {
 		    "environment": Object {
 		      "arrowFunction": true,
+		      "asyncFunction": true,
 		      "bigIntLiteral": undefined,
 		      "const": true,
 		      "destructuring": true,
@@ -341,6 +342,7 @@ describe("snapshots", () => {
 		    ],
 		    "environment": Object {
 		      "arrowFunction": true,
+		      "asyncFunction": true,
 		      "bigIntLiteral": undefined,
 		      "const": true,
 		      "destructuring": true,
@@ -2021,6 +2023,7 @@ describe("snapshots", () => {
 			+   "context": "<cwd>/test/fixtures/browserslist",
 			@@ ... @@
 			-       "arrowFunction": true,
+			-       "asyncFunction": true,
 			-       "bigIntLiteral": undefined,
 			-       "const": true,
 			-       "destructuring": true,
@@ -2032,6 +2035,7 @@ describe("snapshots", () => {
 			-       "optionalChaining": true,
 			-       "templateLiteral": true,
 			+       "arrowFunction": false,
+			+       "asyncFunction": false,
 			+       "bigIntLiteral": false,
 			+       "const": false,
 			+       "destructuring": false,
@@ -2050,6 +2054,7 @@ describe("snapshots", () => {
 			+     "devtoolNamespace": "browserslist-test",
 			@@ ... @@
 			-       "arrowFunction": true,
+			-       "asyncFunction": true,
 			-       "bigIntLiteral": undefined,
 			-       "const": true,
 			-       "destructuring": true,
@@ -2061,6 +2066,7 @@ describe("snapshots", () => {
 			-       "optionalChaining": true,
 			-       "templateLiteral": true,
 			+       "arrowFunction": false,
+			+       "asyncFunction": false,
 			+       "bigIntLiteral": false,
 			+       "const": false,
 			+       "destructuring": false,

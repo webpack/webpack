@@ -2248,6 +2248,10 @@ export interface Environment {
 	 */
 	arrowFunction?: boolean;
 	/**
+	 * The environment supports async function and await ('async function () { await ... }').
+	 */
+	asyncFunction?: boolean;
+	/**
 	 * The environment supports BigInt as literal (123n).
 	 */
 	bigIntLiteral?: boolean;
