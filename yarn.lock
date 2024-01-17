@@ -1576,11 +1576,11 @@ asn1@~0.2.3:
     safer-buffer "~2.1.0"
 
 assemblyscript@^0.27.22:
-  version "0.27.22"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.27.22.tgz#5825828602119c90173e974a4b55ac88769598d3"
-  integrity sha512-6ClobsR4Hxn6K0daYp/+n9qWTqVbpdVeSGSVDqRvUEz66vvFb8atS6nLm+fnQ54JXuXmzLQy0uWYYgB8G59btQ==
+  version "0.27.23"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.27.23.tgz#61c3d795f4d47cc3189235f784d434ae43fc4da8"
+  integrity sha512-+oLTB2IapORXof+bel+HliNUuEScUW4jpBIwV3Y4fDGiT0cu1qI+AJ1SG2RbJqvMo7fbUBGXv2ESq3iE9hK2rQ==
   dependencies:
-    binaryen "116.0.0-nightly.20231102"
+    binaryen "116.0.0-nightly.20240114"
     long "^5.2.1"
 
 assert-never@^1.2.1:
@@ -1730,10 +1730,10 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
 
-binaryen@116.0.0-nightly.20231102:
-  version "116.0.0-nightly.20231102"
-  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-116.0.0-nightly.20231102.tgz#0bbf0181ef8a4d963859b1bf68c9bd2d24911dc7"
-  integrity sha512-aPU9tlKdw/gcXx6u4PxtDgOtGjg/ZKnYdk23ctYb70GxZgPhWnGWmnBt01aV5dt5yFFo2V4rbB7SzpSFhViFQA==
+binaryen@116.0.0-nightly.20240114:
+  version "116.0.0-nightly.20240114"
+  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-116.0.0-nightly.20240114.tgz#ad8bfbde77d4cb4715b93997114eefc30f45155b"
+  integrity sha512-0GZrojJnuhoe+hiwji7QFaL3tBlJoA+KFUN7ouYSDGZLSo9CKM8swQX8n/UcbR0d1VuZKU+nhogNzv423JEu5A==
 
 bplist-parser@^0.2.0:
   version "0.2.0"
