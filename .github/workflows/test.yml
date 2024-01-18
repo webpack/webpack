@@ -26,7 +26,7 @@ jobs:
           node-version: 16.x
           cache: "yarn"
       - run: yarn --frozen-lockfile
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: .eslintcache
           key: lint-${{ env.GITHUB_SHA }}
@@ -73,7 +73,7 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: .jest-cache
           key: jest-unit-${{ env.GITHUB_SHA }}
@@ -134,7 +134,7 @@ jobs:
         if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x'
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: .jest-cache
           key: jest-integration-${{ env.GITHUB_SHA }}
