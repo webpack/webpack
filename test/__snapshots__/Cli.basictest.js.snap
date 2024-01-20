@@ -426,6 +426,22 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "dev-server": Object {
+    "configs": Array [
+      Object {
+        "description": "Disable dev server.",
+        "multiple": false,
+        "path": "devServer",
+        "type": "enum",
+        "values": Array [
+          false,
+        ],
+      },
+    ],
+    "description": "Disable dev server.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "devtool": Object {
     "configs": Array [
       Object {
