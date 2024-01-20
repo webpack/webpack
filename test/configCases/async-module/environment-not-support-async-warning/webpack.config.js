@@ -9,7 +9,18 @@ module.exports = {
 			}
 		]
 	},
-	target: ["node", "es5"],
+	output: {
+		environment: {
+			dynamicImport: true,
+			asyncFunction: false
+		},
+		importFunctionName: "((name) => Promise.resolve({ request: name }))"
+	},
+	externals: {
+		"external-module": ["module module.js", "request"],
+		"external-import": ["import import.js", "request"],
+		"external-promise": "promise Promise.resolve('promise.js')"
+	},
 	experiments: {
 		asyncWebAssembly: true
 	}
