@@ -473,7 +473,16 @@
     },
     "DevServer": {
       "description": "Options for the webpack-dev-server.",
-      "type": "object"
+      "anyOf": [
+        {
+          "description": "Disable dev server.",
+          "enum": [false]
+        },
+        {
+          "description": "Options for the webpack-dev-server.",
+          "type": "object"
+        }
+      ]
     },
     "DevTool": {
       "description": "A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).",

@@ -3240,13 +3240,6 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
-
-/**
- * Options for the webpack-dev-server.
- */
-declare interface DevServer {
-	[index: string]: any;
-}
 declare class DllPlugin {
 	constructor(options: DllPluginOptions);
 	options: {
@@ -13442,7 +13435,7 @@ declare interface WebpackOptionsNormalized {
 	/**
 	 * Options for the webpack-dev-server.
 	 */
-	devServer?: DevServer;
+	devServer?: false | { [index: string]: any };
 
 	/**
 	 * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
