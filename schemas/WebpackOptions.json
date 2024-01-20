@@ -369,6 +369,16 @@
         }
       }
     },
+    "CssAutoParserOptions": {
+      "description": "Parser options for css/auto modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        }
+      }
+    },
     "CssChunkFilename": {
       "description": "Specifies the filename template of non-initial output css files on disk. You must **not** specify an absolute path here, but the path may contain folders separated by '/'! The specified path is joined with the value of the 'output.path' option to determine the location on disk.",
       "oneOf": [
@@ -409,6 +419,16 @@
         }
       }
     },
+    "CssGlobalParserOptions": {
+      "description": "Parser options for css/global modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        }
+      }
+    },
     "CssModuleGeneratorOptions": {
       "description": "Generator options for css/module modules.",
       "type": "object",
@@ -419,11 +439,29 @@
         }
       }
     },
+    "CssModuleParserOptions": {
+      "description": "Parser options for css/module modules.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        }
+      }
+    },
+    "CssParserNamedExports": {
+      "description": "Use ES modules named export for css exports.",
+      "type": "boolean"
+    },
     "CssParserOptions": {
       "description": "Parser options for css modules.",
       "type": "object",
       "additionalProperties": false,
-      "properties": {}
+      "properties": {
+        "namedExports": {
+          "$ref": "#/definitions/CssParserNamedExports"
+        }
+      }
     },
     "Dependencies": {
       "description": "References to other configurations to depend on.",
@@ -3546,6 +3584,18 @@
         },
         "asset/source": {
           "$ref": "#/definitions/EmptyParserOptions"
+        },
+        "css": {
+          "$ref": "#/definitions/CssParserOptions"
+        },
+        "css/auto": {
+          "$ref": "#/definitions/CssAutoParserOptions"
+        },
+        "css/global": {
+          "$ref": "#/definitions/CssGlobalParserOptions"
+        },
+        "css/module": {
+          "$ref": "#/definitions/CssModuleParserOptions"
         },
         "javascript": {
           "$ref": "#/definitions/JavascriptParserOptions"

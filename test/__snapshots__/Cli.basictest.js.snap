@@ -1510,6 +1510,58 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "module-parser-css-auto-named-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Use ES modules named export for css exports.",
+        "multiple": false,
+        "path": "module.parser.css/auto.namedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use ES modules named export for css exports.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-global-named-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Use ES modules named export for css exports.",
+        "multiple": false,
+        "path": "module.parser.css/global.namedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use ES modules named export for css exports.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-module-named-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Use ES modules named export for css exports.",
+        "multiple": false,
+        "path": "module.parser.css/module.namedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use ES modules named export for css exports.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-css-named-exports": Object {
+    "configs": Array [
+      Object {
+        "description": "Use ES modules named export for css exports.",
+        "multiple": false,
+        "path": "module.parser.css.namedExports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Use ES modules named export for css exports.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-amd": Object {
     "configs": Array [
       Object {

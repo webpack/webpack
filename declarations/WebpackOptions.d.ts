@@ -733,6 +733,10 @@ export type AssetParserDataUrlFunction = (
  */
 export type CssGeneratorExportsOnly = boolean;
 /**
+ * Use ES modules named export for css exports.
+ */
+export type CssParserNamedExports = boolean;
+/**
  * A Function returning a Promise resolving to a normalized entry.
  */
 export type EntryDynamicNormalized = () => Promise<EntryStaticNormalized>;
@@ -2831,6 +2835,15 @@ export interface CssAutoGeneratorOptions {
 	exportsOnly?: CssGeneratorExportsOnly;
 }
 /**
+ * Parser options for css/auto modules.
+ */
+export interface CssAutoParserOptions {
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: CssParserNamedExports;
+}
+/**
  * Generator options for css modules.
  */
 export interface CssGeneratorOptions {
@@ -2849,6 +2862,15 @@ export interface CssGlobalGeneratorOptions {
 	exportsOnly?: CssGeneratorExportsOnly;
 }
 /**
+ * Parser options for css/global modules.
+ */
+export interface CssGlobalParserOptions {
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: CssParserNamedExports;
+}
+/**
  * Generator options for css/module modules.
  */
 export interface CssModuleGeneratorOptions {
@@ -2858,9 +2880,23 @@ export interface CssModuleGeneratorOptions {
 	exportsOnly?: CssGeneratorExportsOnly;
 }
 /**
+ * Parser options for css/module modules.
+ */
+export interface CssModuleParserOptions {
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: CssParserNamedExports;
+}
+/**
  * Parser options for css modules.
  */
-export interface CssParserOptions {}
+export interface CssParserOptions {
+	/**
+	 * Use ES modules named export for css exports.
+	 */
+	namedExports?: CssParserNamedExports;
+}
 /**
  * No generator options are supported for this module type.
  */
@@ -3748,6 +3784,22 @@ export interface ParserOptionsByModuleTypeKnown {
 	 * No parser options are supported for this module type.
 	 */
 	"asset/source"?: EmptyParserOptions;
+	/**
+	 * Parser options for css modules.
+	 */
+	css?: CssParserOptions;
+	/**
+	 * Parser options for css/auto modules.
+	 */
+	"css/auto"?: CssAutoParserOptions;
+	/**
+	 * Parser options for css/global modules.
+	 */
+	"css/global"?: CssGlobalParserOptions;
+	/**
+	 * Parser options for css/module modules.
+	 */
+	"css/module"?: CssModuleParserOptions;
 	/**
 	 * Parser options for javascript modules.
 	 */
