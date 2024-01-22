@@ -8490,6 +8490,7 @@ declare class NormalModule extends Module {
 	resource: string;
 	resourceResolveData?: Record<string, any>;
 	matchResource?: string;
+	virtualResource: string;
 	loaders: LoaderItem[];
 	error?: null | WebpackError;
 	restoreFromUnsafeCache(
@@ -8716,6 +8717,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	sourceMap?: boolean;
 	mode: "none" | "development" | "production";
 	webpack?: boolean;
+	virtualResource: string;
 	_module?: NormalModule;
 	_compilation?: Compilation;
 	_compiler?: Compiler;
