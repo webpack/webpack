@@ -4964,6 +4964,11 @@ declare interface HandleModuleCreationOptions {
 	 * connect the resolved module with the origin module
 	 */
 	connectOrigin?: boolean;
+
+	/**
+	 * check the cycle dependencies of the created module
+	 */
+	checkCycle?: boolean;
 }
 declare class HarmonyImportDependency extends ModuleDependency {
 	constructor(request: string, sourceOrder: number, assertions?: Assertions);
