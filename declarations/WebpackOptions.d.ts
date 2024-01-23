@@ -36,6 +36,14 @@ export type Context = string;
  */
 export type Dependencies = string[];
 /**
+ * Options for the webpack-dev-server.
+ */
+export type DevServer =
+	| false
+	| {
+			[k: string]: any;
+	  };
+/**
  * A developer tool to enhance debugging (false | eval | [inline-|hidden-|eval-][nosources-][cheap-[module-]]source-map).
  */
 export type DevTool = (false | "eval") | string;
@@ -1054,12 +1062,6 @@ export interface FileCacheOptions {
 	 * Version of the cache data. Different versions won't allow to reuse the cache and override existing content. Update the version when config changed in a way which doesn't allow to reuse cache. This will invalidate the cache.
 	 */
 	version?: string;
-}
-/**
- * Options for the webpack-dev-server.
- */
-export interface DevServer {
-	[k: string]: any;
 }
 /**
  * Multiple entry bundles are created. The key is the entry name. The value can be a string, an array or an entry description object.
