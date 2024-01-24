@@ -642,6 +642,7 @@ describe("snapshots", () => {
 		      "hash": true,
 		      "timestamp": true,
 		    },
+		    "unmanagedPaths": Array [],
 		  },
 		  "stats": Object {},
 		  "target": "web",
@@ -2197,125 +2198,127 @@ describe("snapshots", () => {
 		},
 		e =>
 			e.toMatchInlineSnapshot(`
-- Expected
-+ Received
+			- Expected
+			+ Received
 
-@@ ... @@
--     "asyncWebAssembly": false,
--     "backCompat": true,
-+     "asyncWebAssembly": true,
-+     "backCompat": false,
-@@ ... @@
--     "cacheUnaffected": false,
--     "css": undefined,
--     "futureDefaults": false,
-+     "cacheUnaffected": true,
-+     "css": true,
-+     "futureDefaults": true,
-@@ ... @@
-+       },
-+       Object {
-+         "rules": Array [
-+           Object {
-+             "descriptionData": Object {
-+               "type": "module",
-+             },
-+             "resolve": Object {
-+               "fullySpecified": true,
-+             },
-+           },
-+         ],
-+         "test": /\\.wasm$/i,
-+         "type": "webassembly/async",
-+       },
-+       Object {
-+         "mimetype": "application/wasm",
-+         "rules": Array [
-+           Object {
-+             "descriptionData": Object {
-+               "type": "module",
-+             },
-+             "resolve": Object {
-+               "fullySpecified": true,
-+             },
-+           },
-+         ],
-+         "type": "webassembly/async",
-+       },
-+       Object {
-+         "resolve": Object {
-+           "fullySpecified": true,
-+           "preferRelative": true,
-@@ ... @@
-+         "test": /\\.css$/i,
-+         "type": "css/auto",
-+       },
-@@ ... @@
-+         "mimetype": "text/css+module",
-+         "resolve": Object {
-+           "fullySpecified": true,
-+           "preferRelative": true,
-+         },
-+         "type": "css/module",
-+       },
-+       Object {
-+         "mimetype": "text/css",
-+         "resolve": Object {
-+           "fullySpecified": true,
-+           "preferRelative": true,
-+         },
-+         "type": "css",
-+       },
-+       Object {
-@@ ... @@
--     "generator": Object {},
-+     "generator": Object {
-+       "css": Object {
-+         "exportsOnly": false,
-+       },
-+     },
-@@ ... @@
-+       },
-+       "css": Object {
-+         "namedExports": true,
-@@ ... @@
-+         "exportsPresence": "error",
-@@ ... @@
--     "__dirname": "mock",
--     "__filename": "mock",
--     "global": true,
-+     "__dirname": "warn-mock",
-+     "__filename": "warn-mock",
-+     "global": "warn",
-@@ ... @@
-+         "css",
-@@ ... @@
--     "hashDigestLength": 20,
--     "hashFunction": "md4",
-+     "hashDigestLength": 16,
-+     "hashFunction": "xxhash64",
-@@ ... @@
-+           "...",
-+         ],
-+       },
-+       "css-import": Object {
-+         "conditionNames": Array [
-+           "webpack",
-+           "production",
-+           "style",
-+         ],
-+         "extensions": Array [
-+           ".css",
-+         ],
-+         "mainFields": Array [
-+           "style",
-@@ ... @@
-+         "mainFiles": Array [],
-+         "preferRelative": true,
-@@ ... @@
--       "<cwd>/node_modules/",
-+       /^(.+?[\\\\/]node_modules[\\\\/])/,
-`)
+			@@ ... @@
+			-     "asyncWebAssembly": false,
+			-     "backCompat": true,
+			+     "asyncWebAssembly": true,
+			+     "backCompat": false,
+			@@ ... @@
+			-     "cacheUnaffected": false,
+			-     "css": undefined,
+			-     "futureDefaults": false,
+			+     "cacheUnaffected": true,
+			+     "css": true,
+			+     "futureDefaults": true,
+			@@ ... @@
+			+       },
+			+       Object {
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
+			+         "test": /\\.wasm$/i,
+			+         "type": "webassembly/async",
+			+       },
+			+       Object {
+			+         "mimetype": "application/wasm",
+			+         "rules": Array [
+			+           Object {
+			+             "descriptionData": Object {
+			+               "type": "module",
+			+             },
+			+             "resolve": Object {
+			+               "fullySpecified": true,
+			+             },
+			+           },
+			+         ],
+			+         "type": "webassembly/async",
+			+       },
+			+       Object {
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "test": /\\.css$/i,
+			+         "type": "css/auto",
+			+       },
+			+       Object {
+			+         "mimetype": "text/css+module",
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			@@ ... @@
+			+         "type": "css/module",
+			+       },
+			+       Object {
+			+         "mimetype": "text/css",
+			+         "resolve": Object {
+			+           "fullySpecified": true,
+			+           "preferRelative": true,
+			+         },
+			+         "type": "css",
+			+       },
+			@@ ... @@
+			-     "generator": Object {},
+			+     "generator": Object {
+			+       "css": Object {
+			+         "exportsOnly": false,
+			+       },
+			+     },
+			@@ ... @@
+			+         },
+			@@ ... @@
+			+       "css": Object {
+			+         "namedExports": true,
+			@@ ... @@
+			+         "exportsPresence": "error",
+			@@ ... @@
+			-     "__dirname": "mock",
+			-     "__filename": "mock",
+			-     "global": true,
+			+     "__dirname": "warn-mock",
+			+     "__filename": "warn-mock",
+			+     "global": "warn",
+			@@ ... @@
+			+         "css",
+			@@ ... @@
+			-     "hashDigestLength": 20,
+			-     "hashFunction": "md4",
+			+     "hashDigestLength": 16,
+			+     "hashFunction": "xxhash64",
+			@@ ... @@
+			+           "...",
+			+         ],
+			+       },
+			+       "css-import": Object {
+			+         "conditionNames": Array [
+			+           "webpack",
+			+           "production",
+			+           "style",
+			+         ],
+			+         "extensions": Array [
+			+           ".css",
+			+         ],
+			+         "mainFields": Array [
+			+           "style",
+			@@ ... @@
+			+         "mainFiles": Array [],
+			+         "preferRelative": true,
+			@@ ... @@
+			-       "<cwd>/node_modules/",
+			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
+			@@ ... @@
+			-     "unmanagedPaths": Array [],
+		`)
 	);
 
 	test(
@@ -2344,9 +2347,10 @@ describe("snapshots", () => {
 			+     "css": false,
 			+     "futureDefaults": true,
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "rules": Array [
-			@@ ... @@
+			+           Object {
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -2367,12 +2371,11 @@ describe("snapshots", () => {
 			+             },
 			+             "resolve": Object {
 			+               "fullySpecified": true,
-			+             },
+			@@ ... @@
 			+           },
 			+         ],
 			+         "type": "webassembly/async",
 			+       },
-			+       Object {
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2390,6 +2393,8 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
+			@@ ... @@
+			-     "unmanagedPaths": Array [],
 		`)
 	);
 });
