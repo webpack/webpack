@@ -83,7 +83,7 @@
     "mini-css-extract-plugin": "^1.6.1",
     "mini-svg-data-uri": "^1.2.3",
     "nyc": "^15.1.0",
-    "open-cli": "^7.2.0",
+    "open-cli": "^8.0.0",
     "prettier-2": "npm:prettier@^2",
     "prettier": "^3.2.1",
     "pretty-format": "^29.5.0",
