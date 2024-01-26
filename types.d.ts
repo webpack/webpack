@@ -1857,7 +1857,7 @@ declare class Compilation {
 	compilationDependencies: { add: (item?: any) => LazySet<string> };
 	getStats(): Stats;
 	createStatsOptions(
-		optionsOrPreset: string | StatsOptions,
+		optionsOrPreset?: string | StatsOptions,
 		context?: CreateStatsOptionsContext
 	): NormalizedStatsOptions;
 	createStatsFactory(options?: any): StatsFactory;
@@ -5237,14 +5237,14 @@ declare interface InfrastructureLogging {
 	 */
 	stream?: NodeJS.WritableStream;
 }
-declare abstract class InitFragment<Context> {
+declare abstract class InitFragment<GenerateContext> {
 	content: string | Source;
 	stage: number;
 	position: number;
 	key?: string;
 	endContent?: string | Source;
-	getContent(context: Context): string | Source;
-	getEndContent(context: Context): undefined | string | Source;
+	getContent(context: GenerateContext): string | Source;
+	getEndContent(context: GenerateContext): undefined | string | Source;
 	serialize(context: ObjectSerializerContext): void;
 	deserialize(context: ObjectDeserializerContext): void;
 	merge: any;
@@ -5680,63 +5680,9 @@ declare class JavascriptParser extends Parser {
 	sourceType: "module" | "auto" | "script";
 	scope: ScopeInfo;
 	state: ParserState;
-	comments: any;
-	semicolons: any;
-	statementPath: (
-		| UnaryExpression
-		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
-		| FunctionExpression
-		| Identifier
-		| ImportExpression
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| LogicalExpression
-		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
-		| SequenceExpression
-		| TaggedTemplateExpression
-		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression
-		| FunctionDeclaration
-		| VariableDeclaration
-		| ClassDeclaration
-		| ExpressionStatement
-		| BlockStatement
-		| StaticBlock
-		| EmptyStatement
-		| DebuggerStatement
-		| WithStatement
-		| ReturnStatement
-		| LabeledStatement
-		| BreakStatement
-		| ContinueStatement
-		| IfStatement
-		| SwitchStatement
-		| ThrowStatement
-		| TryStatement
-		| WhileStatement
-		| DoWhileStatement
-		| ForStatement
-		| ForInStatement
-		| ForOfStatement
-		| ImportDeclaration
-		| ExportNamedDeclaration
-		| ExportDefaultDeclaration
-		| ExportAllDeclaration
-	)[];
+	comments?: Comment[];
+	semicolons?: Set<number>;
+	statementPath: StatementPathItem[];
 	prevStatement?:
 		| UnaryExpression
 		| ArrayExpression
@@ -5791,7 +5737,7 @@ declare class JavascriptParser extends Parser {
 		| ExportNamedDeclaration
 		| ExportDefaultDeclaration
 		| ExportAllDeclaration;
-	destructuringAssignmentProperties: WeakMap<Expression, Set<string>>;
+	destructuringAssignmentProperties?: WeakMap<Expression, Set<string>>;
 	currentTagData: any;
 	destructuringAssignmentPropertiesFor(
 		node: Expression
@@ -6031,7 +5977,7 @@ declare class JavascriptParser extends Parser {
 	blockPreWalkExpressionStatement(statement: ExpressionStatement): void;
 	preWalkAssignmentExpression(expression: AssignmentExpression): void;
 	blockPreWalkImportDeclaration(statement?: any): void;
-	enterDeclaration(declaration?: any, onIdent?: any): void;
+	enterDeclaration(declaration: Declaration, onIdent?: any): void;
 	blockPreWalkExportNamedDeclaration(statement?: any): void;
 	walkExportNamedDeclaration(statement: ExportNamedDeclaration): void;
 	blockPreWalkExportDefaultDeclaration(statement?: any): void;
@@ -6113,16 +6059,20 @@ declare class JavascriptParser extends Parser {
 	walkCallExpression(expression?: any): void;
 	walkMemberExpression(expression: MemberExpression): void;
 	walkMemberExpressionWithExpressionName(
-		expression?: any,
-		name?: any,
-		rootInfo?: any,
-		members?: any,
+		expression: any,
+		name: string,
+		rootInfo: string | VariableInfo,
+		members: string[],
 		onUnhandled?: any
 	): void;
 	walkThisExpression(expression: ThisExpression): void;
 	walkIdentifier(expression: Identifier): void;
 	walkMetaProperty(metaProperty: MetaProperty): void;
-	callHooksForExpression(hookMap: any, expr: any, ...args: any[]): any;
+	callHooksForExpression<T, R>(
+		hookMap: HookMap<SyncBailHook<T, R>>,
+		expr: any,
+		...args: AsArray<T>
+	): undefined | R;
 	callHooksForExpressionWithFallback<T, R>(
 		hookMap: HookMap<SyncBailHook<T, R>>,
 		expr: MemberExpression,
@@ -6195,8 +6145,29 @@ declare class JavascriptParser extends Parser {
 			| Directive
 		)[]
 	): void;
-	enterPatterns(patterns?: any, onIdent?: any): void;
-	enterPattern(pattern?: any, onIdent?: any): void;
+	enterPatterns(
+		patterns: (
+			| Identifier
+			| MemberExpression
+			| ObjectPattern
+			| ArrayPattern
+			| RestElement
+			| AssignmentPattern
+			| Property
+		)[],
+		onIdent?: any
+	): void;
+	enterPattern(
+		pattern:
+			| Identifier
+			| MemberExpression
+			| ObjectPattern
+			| ArrayPattern
+			| RestElement
+			| AssignmentPattern
+			| Property,
+		onIdent?: any
+	): void;
 	enterIdentifier(pattern: Identifier, onIdent?: any): void;
 	enterObjectPattern(pattern: ObjectPattern, onIdent?: any): void;
 	enterArrayPattern(pattern: ArrayPattern, onIdent?: any): void;
@@ -6243,12 +6214,12 @@ declare class JavascriptParser extends Parser {
 			| PrivateIdentifier,
 		commentsStartPos: number
 	): boolean;
-	getComments(range: [number, number]): any[];
+	getComments(range: [number, number]): Comment[];
 	isAsiPosition(pos: number): boolean;
 	unsetAsiPosition(pos: number): void;
 	isStatementLevelExpression(expr: Expression): boolean;
-	getTagData(name?: any, tag?: any): any;
-	tagVariable(name?: any, tag?: any, data?: any): void;
+	getTagData(name: string, tag?: any): any;
+	tagVariable(name: string, tag?: any, data?: any): void;
 	defineVariable(name: string): void;
 	undefineVariable(name: string): void;
 	isVariableDefined(name: string): boolean;
@@ -12323,6 +12294,60 @@ type Statement =
 	| ForStatement
 	| ForInStatement
 	| ForOfStatement;
+type StatementPathItem =
+	| UnaryExpression
+	| ArrayExpression
+	| ArrowFunctionExpression
+	| AssignmentExpression
+	| AwaitExpression
+	| BinaryExpression
+	| SimpleCallExpression
+	| NewExpression
+	| ChainExpression
+	| ClassExpression
+	| ConditionalExpression
+	| FunctionExpression
+	| Identifier
+	| ImportExpression
+	| SimpleLiteral
+	| RegExpLiteral
+	| BigIntLiteral
+	| LogicalExpression
+	| MemberExpression
+	| MetaProperty
+	| ObjectExpression
+	| SequenceExpression
+	| TaggedTemplateExpression
+	| TemplateLiteral
+	| ThisExpression
+	| UpdateExpression
+	| YieldExpression
+	| FunctionDeclaration
+	| VariableDeclaration
+	| ClassDeclaration
+	| ExpressionStatement
+	| BlockStatement
+	| StaticBlock
+	| EmptyStatement
+	| DebuggerStatement
+	| WithStatement
+	| ReturnStatement
+	| LabeledStatement
+	| BreakStatement
+	| ContinueStatement
+	| IfStatement
+	| SwitchStatement
+	| ThrowStatement
+	| TryStatement
+	| WhileStatement
+	| DoWhileStatement
+	| ForStatement
+	| ForInStatement
+	| ForOfStatement
+	| ImportDeclaration
+	| ExportNamedDeclaration
+	| ExportDefaultDeclaration
+	| ExportAllDeclaration;
 declare class Stats {
 	constructor(compilation: Compilation);
 	compilation: Compilation;
@@ -12332,7 +12357,7 @@ declare class Stats {
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
 	toJson(options?: string | StatsOptions): StatsCompilation;
-	toString(options?: any): string;
+	toString(options?: string | StatsOptions): string;
 }
 type StatsAsset = KnownStatsAsset & Record<string, any>;
 type StatsChunk = KnownStatsChunk & Record<string, any>;
