@@ -84,6 +84,7 @@
     "mini-svg-data-uri": "^1.2.3",
     "nyc": "^15.1.0",
     "open-cli": "^7.2.0",
+    "prettier-2": "npm:prettier@^2",
     "prettier": "^3.2.1",
     "pretty-format": "^29.5.0",
     "pug": "^3.0.0",
@@ -158,7 +159,7 @@
     "special-lint-fix": "node node_modules/tooling/inherit-types --write && node node_modules/tooling/format-schemas --write && node tooling/generate-runtime-code.js --write && node tooling/generate-wasm-code.js --write && node node_modules/tooling/format-file-header --write && node node_modules/tooling/compile-to-definitions --write && node node_modules/tooling/precompile-schemas --write && node node_modules/tooling/generate-types --no-template-literals --write",
     "fix": "yarn code-lint --fix && yarn special-lint-fix && yarn pretty-lint-fix",
     "prepare": "husky install",
-    "pretty-lint-base": "prettier --cache .",
+    "pretty-lint-base": "node node_modules/prettier/bin/prettier.cjs --cache .",
     "pretty-lint-fix": "yarn pretty-lint-base --loglevel warn --write",
     "pretty-lint": "yarn pretty-lint-base --check",
     "yarn-lint": "yarn-deduplicate --fail --list -s highest yarn.lock",
@@ -186,61 +187,5 @@
     "*.md|{.github,benchmark,bin,examples,hot,lib,schemas,setup,tooling}/**/*.{md,yml,yaml,js,json}": [
       "cspell"
     ]
-  },
-  "jest": {
-    "forceExit": true,
-    "setupFilesAfterEnv": [
-      "<rootDir>/test/setupTestFramework.js"
-    ],
-    "testMatch": [
-      "<rootDir>/test/*.test.js",
-      "<rootDir>/test/*.basictest.js",
-      "<rootDir>/test/*.longtest.js",
-      "<rootDir>/test/*.unittest.js"
-    ],
-    "watchPathIgnorePatterns": [
-      "<rootDir>/.git",
-      "<rootDir>/node_modules",
-      "<rootDir>/test/js",
-      "<rootDir>/test/browsertest/js",
-      "<rootDir>/test/fixtures/temp-cache-fixture",
-      "<rootDir>/test/fixtures/temp-",
-      "<rootDir>/benchmark",
-      "<rootDir>/assembly",
-      "<rootDir>/tooling",
-      "<rootDir>/examples/*/dist",
-      "<rootDir>/coverage",
-      "<rootDir>/.eslintcache"
-    ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/.git",
-      "<rootDir>/node_modules/webpack/node_modules",
-      "<rootDir>/test/js",
-      "<rootDir>/test/browsertest/js",
-      "<rootDir>/test/fixtures/temp-cache-fixture",
-      "<rootDir>/test/fixtures/temp-",
-      "<rootDir>/benchmark",
-      "<rootDir>/examples/*/dist",
-      "<rootDir>/coverage",
-      "<rootDir>/.eslintcache"
-    ],
-    "transformIgnorePatterns": [
-      "<rootDir>"
-    ],
-    "coverageDirectory": "<rootDir>/coverage",
-    "coveragePathIgnorePatterns": [
-      "\\.runtime\\.js$",
-      "<rootDir>/test",
-      "<rootDir>/schemas",
-      "<rootDir>/node_modules"
-    ],
-    "testEnvironment": "./test/patch-node-env.js",
-    "coverageReporters": [
-      "json"
-    ],
-    "snapshotFormat": {
-      "escapeString": true,
-      "printBasicPrototype": true
-    }
   }
 }
