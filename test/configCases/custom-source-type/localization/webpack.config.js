@@ -171,8 +171,7 @@ module.exports = definitions.map((defs, i) => ({
 
 					compilation.hooks.runtimeRequirementInTree
 						.for(RuntimeGlobals.ensureChunkHandlers)
-						.tap("LocalizationPlugin", (chunk, set) => {
-							const chunkGraph = compilation.chunkGraph;
+						.tap("LocalizationPlugin", (chunk, set, { chunkGraph }) => {
 							if (
 								!chunkGraph.hasModuleInGraph(chunk, m =>
 									m.type.startsWith("localization")
@@ -183,7 +182,8 @@ module.exports = definitions.map((defs, i) => ({
 							set.add(RuntimeGlobals.moduleCache);
 							compilation.addRuntimeModule(
 								chunk,
-								new LocalizationLoadingRuntimeModule()
+								new LocalizationLoadingRuntimeModule(),
+								chunkGraph
 							);
 						});
 				}
