@@ -331,13 +331,16 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 /******/ 			return req.then((res) => {
 /******/ 				if (typeof WebAssembly.instantiateStreaming === "function") {
 /******/ 					return WebAssembly.instantiateStreaming(res, importsObj)
-/******/ 						.catch((e) => {
-/******/ 							if(res.headers.get("Content-Type") !== "application/wasm") {
-/******/ 								console.warn("`WebAssembly.instantiateStreaming` failed because your server does not serve wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n", e);
-/******/ 								return fallback();
+/******/ 						.then(
+/******/ 							(res) => (Object.assign(exports, res.instance.exports)),
+/******/ 							(e) => {
+/******/ 								if(res.headers.get("Content-Type") !== "application/wasm") {
+/******/ 									console.warn("`WebAssembly.instantiateStreaming` failed because your server does not serve wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n", e);
+/******/ 									return fallback();
+/******/ 								}
+/******/ 								throw e;
 /******/ 							}
-/******/ 							throw e;
-/******/ 						});
+/******/ 						);
 /******/ 				}
 /******/ 				return fallback();
 /******/ 			});
@@ -370,13 +373,13 @@ module.exports = __webpack_require__.v(exports, module.id, "5a6637e8d63cdf9c72da
 ## Unoptimized
 
 ```
-asset output.js 13.1 KiB [emitted] (name: main)
+asset output.js 13.2 KiB [emitted] (name: main)
 asset 5a6637e8d63cdf9c72da.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 35a58b7c95860d720a3c.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 0eaeab8b9fa3cef100d1.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.61 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.68 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.61 KiB 6 modules
+  runtime modules 3.68 KiB 6 modules
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 753 bytes [built] [code generated]
     [no exports]
@@ -388,13 +391,13 @@ webpack 5.90.0 compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.85 KiB [emitted] [minimized] (name: main)
+asset output.js 2.89 KiB [emitted] [minimized] (name: main)
 asset 67aca7a09456080b5120.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset 36825f9224dde8d88de0.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 10cff76bc58b7aa8f9cb.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.34 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.27 KiB (javascript) 170 bytes (webassembly) 3.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.34 KiB 5 modules
+  runtime modules 3.42 KiB 5 modules
   dependent modules 552 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 753 bytes [built] [code generated]
     [no exports]

@@ -368,13 +368,16 @@ function getRandomNumber() {
 /******/ 			return req.then((res) => {
 /******/ 				if (typeof WebAssembly.instantiateStreaming === "function") {
 /******/ 					return WebAssembly.instantiateStreaming(res, importsObj)
-/******/ 						.catch((e) => {
-/******/ 							if(res.headers.get("Content-Type") !== "application/wasm") {
-/******/ 								console.warn("`WebAssembly.instantiateStreaming` failed because your server does not serve wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n", e);
-/******/ 								return fallback();
+/******/ 						.then(
+/******/ 							(res) => (Object.assign(exports, res.instance.exports)),
+/******/ 							(e) => {
+/******/ 								if(res.headers.get("Content-Type") !== "application/wasm") {
+/******/ 									console.warn("`WebAssembly.instantiateStreaming` failed because your server does not serve wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n", e);
+/******/ 									return fallback();
+/******/ 								}
+/******/ 								throw e;
 /******/ 							}
-/******/ 							throw e;
-/******/ 						});
+/******/ 						);
 /******/ 				}
 /******/ 				return fallback();
 /******/ 			});
@@ -407,11 +410,11 @@ function getRandomNumber() {
 ## Unoptimized
 
 ```
-asset output.js 13.7 KiB [emitted] (name: main)
+asset output.js 13.8 KiB [emitted] (name: main)
 asset daa529a2a650ee3943a9.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 3.61 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 3.69 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.61 KiB 6 modules
+  runtime modules 3.69 KiB 6 modules
   dependent modules 449 bytes (javascript) 139 bytes (webassembly) [dependent] 4 modules
   ./example.js 247 bytes [built] [code generated]
     [no exports]
@@ -423,11 +426,11 @@ webpack 5.90.0 compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.77 KiB [emitted] [minimized] (name: main)
+asset output.js 2.81 KiB [emitted] [minimized] (name: main)
 asset 05aa07f6a3836ded50d1.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 3.35 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 3.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.35 KiB 5 modules
+  runtime modules 3.42 KiB 5 modules
   dependent modules 449 bytes (javascript) 139 bytes (webassembly) [dependent] 4 modules
   ./example.js 247 bytes [built] [code generated]
     [no exports]
