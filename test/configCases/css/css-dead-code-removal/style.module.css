@@ -1,0 +1,308 @@
+.Button {
+	color: red;
+	padding: 11px;
+}
+
+.Unused {
+	color: green;
+	padding: 10px;
+}
+
+.Unused2 {
+	color: yellow;
+	padding: 12px;
+
+	.Nested {
+		color: #ffa;
+		padding: 1px;
+	}
+
+	.NestedUnused {
+		color: #ffa;
+		padding: 2px;
+	}
+}
+
+.UsedParentNestedTest {
+	color: blue;
+	padding: 13px;
+
+	.NestedUnused {
+		color: #ffa;
+		padding: 2px;
+
+		.NestedUnused2 {
+			color: #ffa;
+			padding: 2px;
+		}
+	}
+
+	.Used {
+		color: blue;
+		padding: 13px;
+
+		.Used2 {
+			color: #ffa;
+			padding: 2px;
+		}
+	}
+}
+
+.UnusedParentNestedTest {
+	.NestedUnused {
+		color: #ffa;
+		padding: 2px;
+
+		.NestedUnused2 {
+			color: #ffa;
+			padding: 2px;
+		}
+	}
+
+	.Used {
+		color: blue;
+		padding: 13px;
+
+		.Used2 {
+			color: #ffa;
+			padding: 2px;
+		}
+	}
+}
+
+.Used {
+	color: blue;
+	padding: 13px;
+
+	.NestedUnused {
+		color: #ffa;
+		padding: 2px;
+	}
+}
+
+.Used1 .Used2 {
+	color: #fff;
+	padding: 14px;
+
+	.NestedUnused {
+		color: #ffa;
+		padding: 2px;
+	}
+}
+
+.Used1 .Used2 .Unused {
+	color: #fff;
+	padding: 15px;
+}
+
+@media screen and (min-width: 500px) {
+	.Used1 .Used2 .Unused {
+		color: #fff;
+		padding: 16px;
+	}
+
+	.Used {
+		color: blue;
+		padding: 17px;
+	}
+
+	.NestedUnused {
+		color: #ffa;
+		padding: 2px;
+	}
+
+	.UsedParentNestedTest {
+		color: blue;
+		padding: 13px;
+
+		.NestedUnused {
+			color: #ffa;
+			padding: 2px;
+
+			.NestedUnused2 {
+				color: #ffa;
+				padding: 2px;
+			}
+		}
+
+		.Used {
+			color: blue;
+			padding: 13px;
+
+			.Used2 {
+				color: #ffa;
+				padding: 2px;
+			}
+		}
+	}
+
+	.UnusedParentNestedTest {
+		.NestedUnused {
+			color: #ffa;
+			padding: 2px;
+
+			.NestedUnused2 {
+				color: #ffa;
+				padding: 2px;
+			}
+		}
+
+		.Used {
+			color: blue;
+			padding: 13px;
+
+			.Used2 {
+				color: #ffa;
+				padding: 2px;
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+		.Flex {
+			display: flex;
+
+			.Used {
+				display: grid;
+			}
+		}
+	}
+}
+
+:global .GlobalUpperCase :local .LocalUpperCase {
+	color: yellow;
+}
+
+.Used {
+	color: red;
+
+	.Used2 {
+		color: red;
+	}
+
+	.NestedUnused {
+		display: none;
+	}
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.Used {
+			color: blue;
+		}
+
+		.NestedUnused {
+			display: none;
+		}
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.Used {
+			display: flex;
+		}
+
+		.NestedUnused {
+			display: none;
+		}
+	}
+
+	@layer foo {
+		background: red;
+
+		.Used {
+			background: red;
+		}
+
+		.NestedUnused {
+			display: none;
+		}
+	}
+
+	@container foo {
+		background: red;
+
+		.Used {
+			background: red;
+		}
+
+		.NestedUnused {
+			display: none;
+		}
+	}
+}
+
+.Used div:not(.disabled, .mButtonDisabled, .tipOnly) {
+	pointer-events: initial !important;
+}
+
+.Unused
+	:is(
+		div.parent1.child1.Unused,
+		div.Used.child1.vertical-small,
+		div.otherDiv.horizontal-tiny,
+		div.otherDiv.Used div.Used
+	) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.Used,
+.local2 :global .global,
+.local3 {
+	color: green;
+}
+
+:global .globalsome :local .localsome {
+	color: yellow;
+}
+
+.local5:global(.Used).local6 {
+	color: blue;
+}
+
+/**
+ * all used classnames should be changed. unused should not be changed
+ */
+:global(:global(:local(.Used)).nested2).nested3 {
+	color: 1;
+}
+:global(:global(:local(.Unused)).Used).nested3 {
+	color: 2;
+}
+:global(:global(:local(.Unused)).nested2).Used {
+	color: 3;
+}
+:global(:global(:local(.nested1)).nested2).nested3 {
+	color: 4;
+}
+
+/**
+ * possible bug? ident name is not preserved in local mode
+ */
+#ident {
+	color: purple;
+}
+
+.Used {
+	color: var(--some-var-i-am);
+	--some-var-i-am: red;
+}
+
+/**
+ * This should be there in the output as global without name change since it is global
+ */
+:global .Used {
+	padding: 15px;
+}
+
+/**
+ * This should be there in the output as global even though it is not used
+ */
+:global .Unused {
+	padding: 16px;
+}

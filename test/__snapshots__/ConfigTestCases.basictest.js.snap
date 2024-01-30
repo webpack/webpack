@@ -1,5 +1,232 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ConfigTestCases css css-dead-code-removal exported tests should tree shake CSS modules 1`] = `
+".my-app-274-zx {
+	color: red;
+	padding: 11px;
+}
+
+
+
+
+
+.my-app-274-Y0 {
+	color: blue;
+	padding: 13px;
+
+	
+
+	.my-app-274-eX {
+		color: blue;
+		padding: 13px;
+
+		.my-app-274-W0 {
+			color: #ffa;
+			padding: 2px;
+		}
+	}
+}
+
+
+
+.my-app-274-eX {
+	color: blue;
+	padding: 13px;
+
+	
+}
+
+.my-app-274-P3 .my-app-274-W0 {
+	color: #fff;
+	padding: 14px;
+
+	
+}
+
+.my-app-274-P3 .my-app-274-W0 .Unused {
+	color: #fff;
+	padding: 15px;
+}
+
+@media screen and (min-width: 500px) {
+	.my-app-274-P3 .my-app-274-W0 .Unused {
+		color: #fff;
+		padding: 16px;
+	}
+
+	.my-app-274-eX {
+		color: blue;
+		padding: 17px;
+	}
+
+	
+
+	.my-app-274-Y0 {
+		color: blue;
+		padding: 13px;
+
+		
+
+		.my-app-274-eX {
+			color: blue;
+			padding: 13px;
+
+			.my-app-274-W0 {
+				color: #ffa;
+				padding: 2px;
+			}
+		}
+	}
+
+	
+}
+
+@media screen and (min-width: 900px) {
+	@supports (display: flex) {
+		.my-app-274-kC {
+			display: flex;
+
+			.my-app-274-eX {
+				display: grid;
+			}
+		}
+	}
+}
+
+.GlobalUpperCase .my-app-274-Cz {
+	color: yellow;
+}
+
+.my-app-274-eX {
+	color: red;
+
+	.my-app-274-W0 {
+		color: red;
+	}
+
+	
+
+	@media screen and (min-width: 200px) {
+		color: blue;
+
+		.my-app-274-eX {
+			color: blue;
+		}
+
+		
+	}
+
+	@supports (display: flex) {
+		display: flex;
+
+		.my-app-274-eX {
+			display: flex;
+		}
+
+		
+	}
+
+	@layer foo {
+		background: red;
+
+		.my-app-274-eX {
+			background: red;
+		}
+
+		
+	}
+
+	@container foo {
+		background: red;
+
+		.my-app-274-eX {
+			background: red;
+		}
+
+		
+	}
+}
+
+.my-app-274-eX div:not(.disabled, .mButtonDisabled, .tipOnly) {
+	pointer-events: initial !important;
+}
+
+.Unused
+	:is(
+		div.parent1.child1.Unused,
+		div.my-app-274-eX.child1.vertical-small,
+		div.otherDiv.horizontal-tiny,
+		div.otherDiv.my-app-274-eX div.my-app-274-eX
+	) {
+	max-height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.my-app-274-eX,
+.local2 .global,
+.local3 {
+	color: green;
+}
+
+.globalsome .localsome {
+	color: yellow;
+}
+
+.local5.Used.local6 {
+	color: blue;
+}
+
+/**
+ * all used classnames should be changed. unused should not be changed
+ */
+.my-app-274-eX.nested2.nested3 {
+	color: 1;
+}
+.Unused.Used.nested3 {
+	color: 2;
+}
+.Unused.nested2.my-app-274-eX {
+	color: 3;
+}
+.nested1.nested2.nested3 {
+	color: 4;
+}
+
+/**
+ * possible bug? ident name is not preserved in local mode
+ */
+#ident {
+	color: purple;
+}
+
+.my-app-274-eX {
+	color: var(--my-app-274-aM);
+	--my-app-274-aM: red;
+}
+
+/**
+ * This should be there in the output as global without name change since it is global
+ */
+.Used {
+	padding: 15px;
+}
+
+/**
+ * This should be there in the output as global even though it is not used
+ */
+.Unused {
+	padding: 16px;
+}
+
+.my-app-464-I {
+    color: red;
+}
+
+
+head{--webpack-my-app-649:zx/Y0/eX/W0/P3/kC/Cz/aM%_274,I/_464;}"
+`;
+
 exports[`ConfigTestCases css css-import exported tests should compile 1`] = `
 Array [
   "body {
@@ -2087,14 +2314,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-.animationUpperCase {
-	ANIMATION-NAME: my-app-274-T4;
-	ANIMATION: 3s ease-in 1s 2 reverse both paused my-app-274-T4, my-app-274-Xi;
-	--my-app-274-Gx: 0px;
-	--my-app-274-\\\\$s: 0px;
-	--my-app-274-MX: 10px;
-	--my-app-274-nj: 20px;
-}
+
 
 @KEYFRAMES my-app-274-T4{
 	0% {
@@ -2138,24 +2358,13 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-.a {
-	animation: 3s my-app-274-w3;
-	-webkit-animation: 3s my-app-274-w3;
-}
 
-.b {
-	animation: my-app-274-w3 3s;
-	-webkit-animation: my-app-274-w3 3s;
-}
 
-.c {
-	animation-name: my-app-274-w3;
-	-webkit-animation-name: my-app-274-w3;
-}
 
-.d {
-	--my-app-274-VQ: animationName;
-}
+
+
+
+
 
 @keyframes my-app-274-w3{
 	0% {
@@ -2226,53 +2435,34 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 .my-app-274-S {
 	color: red;
 
-	.nested-pure {
-		color: red;
-	}
+	
 
 	@media screen and (min-width: 200px) {
 		color: blue;
 
-		.nested-media {
-			color: blue;
-		}
+		
 	}
 
 	@supports (display: flex) {
 		display: flex;
 
-		.nested-supports {
-			display: flex;
-		}
+		
 	}
 
 	@layer foo {
 		background: red;
 
-		.nested-layer {
-			background: red;
-		}
+		
 	}
 
 	@container foo {
 		background: red;
 
-		.nested-layer {
-			background: red;
-		}
+		
 	}
 }
 
-.not-selector-inside {
-	color: #fff;
-	opacity: 0.12;
-	padding: .5px;
-	unknown: :local(.test);
-	unknown1: :local .test;
-	unknown2: :global .test;
-	unknown3: :global .test;
-	unknown4: .foo, .bar, #bar;
-}
+
 
 @unknown :local .local :global .global {
 	color: red;
@@ -2282,43 +2472,9 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	color: red;
 }
 
-.nested-var {
-	.again {
-		color: var(--my-app-274-y4);
-	}
-}
 
-.nested-with-local-pseudo {
-	color: red;
 
-	.local-nested {
-		color: red;
-	}
 
-	.global-nested {
-		color: red;
-	}
-
-	.local-nested {
-		color: red;
-	}
-
-	.global-nested {
-		color: red;
-	}
-
-	.local-nested, .global-nested-next {
-		color: red;
-	}
-
-	.local-nested, .global-nested-next {
-		color: red;
-	}
-
-	.foo, .bar {
-		color: red;
-	}
-}
 
 #id-foo {
 	color: red;
@@ -2328,22 +2484,14 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-.nested-parens {
-	.my-app-274-\\\\$Y div:has(.vertical-tiny, .vertical-small) {
-		max-height: 0;
-		margin: 0;
-		overflow: hidden;
-	}
-}
+
 
 .global-foo {
 	.nested-global {
 		color: red;
 	}
 
-	.local-in-global {
-		color: blue;
-	}
+	
 }
 
 @unknown .class {
@@ -2378,21 +2526,9 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	color: red;
 }
 
-.placeholder-gray-700:-ms-input-placeholder {
-	--my-app-274-xs: 1;
-	color: #4a5568;
-	color: rgba(74, 85, 104, var(--my-app-274-xs));
-}
-.placeholder-gray-700::-ms-input-placeholder {
-	--my-app-274-xs: 1;
-	color: #4a5568;
-	color: rgba(74, 85, 104, var(--my-app-274-xs));
-}
-.placeholder-gray-700::placeholder {
-	--my-app-274-xs: 1;
-	color: #4a5568;
-	color: rgba(74, 85, 104, var(--my-app-274-xs));
-}
+
+
+
 
 :root {
 	--my-app-274-Bu: dark;
@@ -2433,9 +2569,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 }
 
 .global-foo, .bar {
-	.local-in-global       {
-		color: blue;
-	}
+	
 
 	@media screen {
 		.my-global-class-again,
@@ -2445,19 +2579,9 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
 	}
 }
 
-.first-nested {
-	.first-nested-nested {
-		color: red;
-	}
-}
 
-.first-nested-at-rule {
-	@media screen {
-		.first-nested-nested-at-rule-deep {
-			color: red;
-		}
-	}
-}
+
+
 
 .again-global {
 	color:red;
@@ -2537,11 +2661,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
     color: teal;
 }
 
-.UnusedClassName{
-    color: red;
-    padding: var(--my-app-627-Wc);
-    --my-app-627-Wc: 10px;
-}
+
 
 .my-app-627-Q3 {
     color: green;
@@ -2549,7 +2669,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
     --my-app-627-PB: 10px;
 }
 
-head{--webpack-my-app-249:S/Zw/yl/J_/gc/Xg/AY/Kw/rw/\\\\$Y/ie/PK/yK/P_/Y4/TT/rT/RX/X2/yR/y3/Gx%\\\\$s%MX%nj%JJ/oQ/gR/y4%xk/w7/J/T\\\\$/zz/Kr/SQ/XM/T4/Xi/ms/DJ%cU/FO/w3/VQ%t6/lC%zE/FP/Zv/gz/Gp/rn/xs%Bu%Wx%Y8/_274,s/_444,_438,Wc%Q3/PB%_627;}"
+head{--webpack-my-app-249:S/Zw/yl/J_/gc/Xg/AY/Kw/rw/\\\\$Y/ie/PK/yK/P_/Y4/TT/rT/RX/X2/yR/y3/Gx%\\\\$s%MX%nj%JJ/oQ/gR/y4%xk/w7/J/T\\\\$/zz/Kr/SQ/XM/T4/Xi/ms/DJ%cU/FO/w3/t6/lC%zE/FP/Zv/gz/Gp/rn/Bu%Wx%Y8/VQ%_274,s/_444,_438,Q3/PB%_627;}"
 `;
 
 exports[`ConfigTestCases css pure-css exported tests should compile 1`] = `
