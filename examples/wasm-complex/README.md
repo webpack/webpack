@@ -120,9 +120,9 @@ __webpack_async_result__();
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "get": () => (/* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.get),
-/* harmony export */   "getNumber": () => (/* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.getNumber),
-/* harmony export */   "set": () => (/* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.set)
+/* harmony export */   get: () => (/* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.get),
+/* harmony export */   getNumber: () => (/* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.getNumber),
+/* harmony export */   set: () => (/* reexport safe */ _magic_wat__WEBPACK_IMPORTED_MODULE_0__.set)
 /* harmony export */ });
 /* harmony import */ var _magic_wat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./magic.wat */ 2);
 var __webpack_async_dependencies__ = __webpack_handle_async_dependencies__([_magic_wat__WEBPACK_IMPORTED_MODULE_0__]);
@@ -188,7 +188,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __webpack_async_result__) => { try {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "memory": () => (/* binding */ memory)
+/* harmony export */   memory: () => (/* binding */ memory)
 /* harmony export */ });
 async function getMemoryFromParentInWorker() {
 	await new Promise(r => setTimeout(r, 200));
@@ -215,8 +215,8 @@ __webpack_async_result__();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getNumber": () => (/* binding */ getNumber),
-/* harmony export */   "getRandomNumber": () => (/* binding */ getRandomNumber)
+/* harmony export */   getNumber: () => (/* binding */ getNumber),
+/* harmony export */   getRandomNumber: () => (/* binding */ getRandomNumber)
 /* harmony export */ });
 function getNumber() {
 	return 42;
@@ -266,7 +266,7 @@ function getRandomNumber() {
 /******/ 		var webpackExports = typeof Symbol === "function" ? Symbol("webpack exports") : "__webpack_exports__";
 /******/ 		var webpackError = typeof Symbol === "function" ? Symbol("webpack error") : "__webpack_error__";
 /******/ 		var resolveQueue = (queue) => {
-/******/ 			if(queue && !queue.d) {
+/******/ 			if(queue && queue.d < 1) {
 /******/ 				queue.d = 1;
 /******/ 				queue.forEach((fn) => (fn.r--));
 /******/ 				queue.forEach((fn) => (fn.r-- ? fn.r++ : fn()));
@@ -297,7 +297,7 @@ function getRandomNumber() {
 /******/ 		}));
 /******/ 		__webpack_require__.a = (module, body, hasAwait) => {
 /******/ 			var queue;
-/******/ 			hasAwait && ((queue = []).d = 1);
+/******/ 			hasAwait && ((queue = []).d = -1);
 /******/ 			var depQueues = new Set();
 /******/ 			var exports = module.exports;
 /******/ 			var currentDeps;
@@ -325,7 +325,7 @@ function getRandomNumber() {
 /******/ 				});
 /******/ 				return fn.r ? promise : getResult();
 /******/ 			}, (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue)));
-/******/ 			queue && (queue.d = 0);
+/******/ 			queue && queue.d < 0 && (queue.d = 0);
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -361,14 +361,26 @@ function getRandomNumber() {
 /******/ 	(() => {
 /******/ 		__webpack_require__.v = (exports, wasmModuleId, wasmModuleHash, importsObj) => {
 /******/ 			var req = fetch(__webpack_require__.p + "" + wasmModuleHash + ".module.wasm");
-/******/ 			if (typeof WebAssembly.instantiateStreaming === 'function') {
-/******/ 				return WebAssembly.instantiateStreaming(req, importsObj)
-/******/ 					.then((res) => (Object.assign(exports, res.instance.exports)));
-/******/ 			}
-/******/ 			return req
+/******/ 			var fallback = () => (req
 /******/ 				.then((x) => (x.arrayBuffer()))
 /******/ 				.then((bytes) => (WebAssembly.instantiate(bytes, importsObj)))
-/******/ 				.then((res) => (Object.assign(exports, res.instance.exports)));
+/******/ 				.then((res) => (Object.assign(exports, res.instance.exports))));
+/******/ 			return req.then((res) => {
+/******/ 				if (typeof WebAssembly.instantiateStreaming === "function") {
+/******/ 					return WebAssembly.instantiateStreaming(res, importsObj)
+/******/ 						.then(
+/******/ 							(res) => (Object.assign(exports, res.instance.exports)),
+/******/ 							(e) => {
+/******/ 								if(res.headers.get("Content-Type") !== "application/wasm") {
+/******/ 									console.warn("`WebAssembly.instantiateStreaming` failed because your server does not serve wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n", e);
+/******/ 									return fallback();
+/******/ 								}
+/******/ 								throw e;
+/******/ 							}
+/******/ 						);
+/******/ 				}
+/******/ 				return fallback();
+/******/ 			});
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -398,31 +410,31 @@ function getRandomNumber() {
 ## Unoptimized
 
 ```
-asset output.js 13.2 KiB [emitted] (name: main)
+asset output.js 13.8 KiB [emitted] (name: main)
 asset daa529a2a650ee3943a9.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 3.24 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 3.69 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.24 KiB 6 modules
+  runtime modules 3.69 KiB 6 modules
   dependent modules 449 bytes (javascript) 139 bytes (webassembly) [dependent] 4 modules
   ./example.js 247 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.90.0 compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset output.js 2.49 KiB [emitted] [minimized] (name: main)
+asset output.js 2.81 KiB [emitted] [minimized] (name: main)
 asset 05aa07f6a3836ded50d1.module.wasm 139 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 2.97 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 696 bytes (javascript) 139 bytes (webassembly) 3.42 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.97 KiB 5 modules
+  runtime modules 3.42 KiB 5 modules
   dependent modules 449 bytes (javascript) 139 bytes (webassembly) [dependent] 4 modules
   ./example.js 247 bytes [built] [code generated]
     [no exports]
     [no exports used]
     entry ./example.js main
-webpack 5.78.0 compiled successfully
+webpack 5.90.0 compiled successfully
 ```
