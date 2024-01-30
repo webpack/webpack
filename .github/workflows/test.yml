@@ -33,6 +33,10 @@ jobs:
           restore-keys: lint-
       - run: yarn lint
   basic:
+    strategy:
+      fail-fast: false
+      matrix:
+        shards: [1, 2, 3, 4]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,7 +48,7 @@ jobs:
       - run: yarn --frozen-lockfile
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
-      - run: yarn test:basic --ci
+      - run: yarn test:basic --ci --shard ${{ matrix.shards }}/4
       - uses: codecov/codecov-action@v3
         with:
           flags: basic
