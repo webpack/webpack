@@ -1576,11 +1576,11 @@ asn1@~0.2.3:
     safer-buffer "~2.1.0"
 
 assemblyscript@^0.27.22:
-  version "0.27.22"
-  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.27.22.tgz#5825828602119c90173e974a4b55ac88769598d3"
-  integrity sha512-6ClobsR4Hxn6K0daYp/+n9qWTqVbpdVeSGSVDqRvUEz66vvFb8atS6nLm+fnQ54JXuXmzLQy0uWYYgB8G59btQ==
+  version "0.27.24"
+  resolved "https://registry.yarnpkg.com/assemblyscript/-/assemblyscript-0.27.24.tgz#0afa631da7dd12db05c0fa1a3fd3ebd7188b8af7"
+  integrity sha512-TWQVwAqBJ3akkeDhUnknQbQietiEKSw5kAIiGTqoJFGiHTDeB9LdMDhZLnashxrJuG4jR/p57DhzN8biyC1/gg==
   dependencies:
-    binaryen "116.0.0-nightly.20231102"
+    binaryen "116.0.0-nightly.20240114"
     long "^5.2.1"
 
 assert-never@^1.2.1:
@@ -1730,10 +1730,10 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
 
-binaryen@116.0.0-nightly.20231102:
-  version "116.0.0-nightly.20231102"
-  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-116.0.0-nightly.20231102.tgz#0bbf0181ef8a4d963859b1bf68c9bd2d24911dc7"
-  integrity sha512-aPU9tlKdw/gcXx6u4PxtDgOtGjg/ZKnYdk23ctYb70GxZgPhWnGWmnBt01aV5dt5yFFo2V4rbB7SzpSFhViFQA==
+binaryen@116.0.0-nightly.20240114:
+  version "116.0.0-nightly.20240114"
+  resolved "https://registry.yarnpkg.com/binaryen/-/binaryen-116.0.0-nightly.20240114.tgz#ad8bfbde77d4cb4715b93997114eefc30f45155b"
+  integrity sha512-0GZrojJnuhoe+hiwji7QFaL3tBlJoA+KFUN7ouYSDGZLSo9CKM8swQX8n/UcbR0d1VuZKU+nhogNzv423JEu5A==
 
 bplist-parser@^0.2.0:
   version "0.2.0"
@@ -5132,6 +5132,7 @@ prelude-ls@~1.1.2:
   integrity sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==
 
 "prettier-2@npm:prettier@^2", prettier@^2.0.5:
+  name prettier-2
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
   integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
