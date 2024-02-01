@@ -106,6 +106,7 @@ import {
 	SyncWaterfallHook
 } from "tapable";
 import { SecureContextOptions, TlsOptions } from "tls";
+import { Context } from "vm";
 
 declare class AbstractLibraryPlugin<T> {
 	constructor(__0: {
@@ -5739,6 +5740,7 @@ declare class JavascriptParser extends Parser {
 		| ExportAllDeclaration;
 	destructuringAssignmentProperties?: WeakMap<Expression, Set<string>>;
 	currentTagData: any;
+	magicCommentContext: Context;
 	destructuringAssignmentPropertiesFor(
 		node: Expression
 	): undefined | Set<string>;
