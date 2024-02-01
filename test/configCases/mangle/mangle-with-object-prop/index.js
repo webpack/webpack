@@ -22,7 +22,7 @@ it("should mangle names and remove exports even with toString named export (ESM)
 			.sort()
 	).toEqual(
 		OPTIMIZATION === "deterministic"
-			? [1, 2, 2, 2, 2, 2, 2]
+			? [1, 1, 2, 2, 2, 2, 2]
 			: [1, 1, 1, 1, 1, 1, 1]
 	);
 });
@@ -43,7 +43,7 @@ it("should mangle names and remove exports even with toString named export (CJS)
 			.sort()
 	).toEqual(
 		OPTIMIZATION === "deterministic"
-			? [1, 2, 2, 2, 2, 2, 2, 8]
+			? [1, 1, 2, 2, 2, 2, 2, 8]
 			: [1, 1, 1, 1, 1, 1, 1, 8]
 	);
 });
