@@ -1901,29 +1901,29 @@ head{--webpack-use-style_js:class/local1/local2/local3/local4/local5/local6/loca
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules 2`] = `
-".my-app-539-SM {
+".my-app-235-zg {
 	color: red;
 }
 
-.my-app-539-ry,
-.my-app-539-kW .global,
-.my-app-539-rZ {
+.my-app-235-Hi,
+.my-app-235-OB .global,
+.my-app-235-VE {
 	color: green;
 }
 
-.global .my-app-539-yg {
+.global .my-app-235-O2 {
 	color: yellow;
 }
 
-.my-app-539-rE.global.my-app-539-k2 {
+.my-app-235-Vj.global.my-app-235-OH {
 	color: blue;
 }
 
-.my-app-539-do div:not(.disabled, .mButtonDisabled, .tipOnly) {
+.my-app-235-H5 div:not(.disabled, .mButtonDisabled, .tipOnly) {
     pointer-events: initial !important;
 }
 
-.my-app-539-yK :is(div.parent1.child1.vertical-tiny,
+.my-app-235-aq :is(div.parent1.child1.vertical-tiny,
     div.parent1.child1.vertical-small,
     div.otherDiv.horizontal-tiny,
     div.otherDiv.horizontal-small div.description) {
@@ -1932,7 +1932,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
   overflow: hidden;
 }
 
-.my-app-539-r8 :matches(div.parent1.child1.vertical-tiny,
+.my-app-235-VN :matches(div.parent1.child1.vertical-tiny,
     div.parent1.child1.vertical-small,
     div.otherDiv.horizontal-tiny,
     div.otherDiv.horizontal-small div.description) {
@@ -1941,7 +1941,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
   overflow: hidden;
 }
 
-.my-app-539-ui :where(div.parent1.child1.vertical-tiny,
+.my-app-235-VM :where(div.parent1.child1.vertical-tiny,
     div.parent1.child1.vertical-small,
     div.otherDiv.horizontal-tiny,
     div.otherDiv.horizontal-small div.description) {
@@ -1950,31 +1950,31 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
   overflow: hidden;
 }
 
-.my-app-539-kf div:has(.disabled, .mButtonDisabled, .tipOnly) {
+.my-app-235-AO div:has(.disabled, .mButtonDisabled, .tipOnly) {
     pointer-events: initial !important;
 }
 
-.my-app-539-eY div:current(p, span) {
+.my-app-235-Hq div:current(p, span) {
 	background-color: yellow;
 }
 
-.my-app-539-mA div:past(p, span) {
+.my-app-235-O4 div:past(p, span) {
 	display: none;
 }
 
-.my-app-539-gJ div:future(p, span) {
+.my-app-235-Hb div:future(p, span) {
 	background-color: yellow;
 }
 
-.my-app-539-ol div:-moz-any(ol, ul, menu, dir) {
+.my-app-235-OP div:-moz-any(ol, ul, menu, dir) {
 	list-style-type: square;
 }
 
-.my-app-539-sZ li:-webkit-any(:first-child, :last-child) {
+.my-app-235-Hw li:-webkit-any(:first-child, :last-child) {
 	background-color: aquamarine;
 }
 
-.my-app-539-r8 :matches(div.parent1.child1.vertical-tiny,
+.my-app-235-VN :matches(div.parent1.child1.vertical-tiny,
     div.parent1.child1.vertical-small,
     div.otherDiv.horizontal-tiny,
     div.otherDiv.horizontal-small div.description) {
@@ -1983,28 +1983,28 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	overflow: hidden;
 }
 
-.my-app-539-KY.nested2.my-app-539-c7 {
+.my-app-235-nb.nested2.my-app-235-\\\\$Q {
 	color: pink;
 }
 
-#my-app-539-AB {
+#my-app-235-bD {
 	color: purple;
 }
 
-@keyframes my-app-539-Yf{
+@keyframes my-app-235-\\\\$t{
 	0% {
-		left: var(--my-app-539-Gw);
-		top: var(--my-app-539-uc);
+		left: var(--my-app-235-qi);
+		top: var(--my-app-235-xB);
 		color: var(--theme-color1);
 	}
 	100% {
-		left: var(--my-app-539-cP);
-		top: var(--my-app-539-EP);
+		left: var(--my-app-235-\\\\$6);
+		top: var(--my-app-235-gJ);
 		color: var(--theme-color2);
 	}
 }
 
-@keyframes my-app-539-kB{
+@keyframes my-app-235-x{
 	0% {
 		left: 0;
 	}
@@ -2013,13 +2013,13 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.my-app-539-OH {
-	animation-name: my-app-539-Yf;
-	animation: 3s ease-in 1s 2 reverse both paused my-app-539-Yf, my-app-539-kB;
-	--my-app-539-Gw: 0px;
-	--my-app-539-uc: 0px;
-	--my-app-539-cP: 10px;
-	--my-app-539-EP: 20px;
+.my-app-235-lY {
+	animation-name: my-app-235-\\\\$t;
+	animation: 3s ease-in 1s 2 reverse both paused my-app-235-\\\\$t, my-app-235-x;
+	--my-app-235-qi: 0px;
+	--my-app-235-xB: 0px;
+	--my-app-235-\\\\$6: 10px;
+	--my-app-235-gJ: 20px;
 }
 
 /* .composed {
@@ -2027,45 +2027,45 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	composes: local2;
 } */
 
-.my-app-539-ag {
-	color: var(--my-app-539-S4);
-	--my-app-539-S4: red;
+.my-app-235-f {
+	color: var(--my-app-235-uz);
+	--my-app-235-uz: red;
 }
 
-.my-app-539-WW {
+.my-app-235-aK {
 	color: var(--global-color);
 	--global-color: red;
 }
 
 @media (min-width: 1600px) {
-	.my-app-539-qi {
-		color: var(--my-app-539-S4);
-		--my-app-539-S4: green;
+	.my-app-235-a7 {
+		color: var(--my-app-235-uz);
+		--my-app-235-uz: green;
 	}
 }
 
 @media screen and (max-width: 600px) {
-	.my-app-539-mI {
-		color: var(--my-app-539-S4);
-		--my-app-539-S4: purple;
+	.my-app-235-uf {
+		color: var(--my-app-235-uz);
+		--my-app-235-uz: purple;
 	}
 }
 
 @supports (display: grid) {
-	.my-app-539-OQ {
+	.my-app-235-sW {
 		display: grid;
 	}
 }
 
 @supports not (display: grid) {
-  .my-app-539-AZ {
+  .my-app-235-TZ {
     float: right;
   }
 }
 
 @supports (display: flex) {
   @media screen and (min-width: 900px) {
-    .my-app-539-s9 {
+    .my-app-235-aY {
       display: flex;
     }
   }
@@ -2073,7 +2073,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 @media screen and (min-width: 900px) {
 	@supports (display: flex) {
-    .my-app-539-I\\\\$ {
+    .my-app-235-II {
       display: flex;
     }
   }
@@ -2081,35 +2081,35 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 @MEDIA screen and (min-width: 900px) {
 	@SUPPORTS (display: flex) {
-		.my-app-539-Wu {
+		.my-app-235-ij {
 			display: flex;
 		}
 	}
 }
 
 .animationUpperCase {
-	ANIMATION-NAME: my-app-539-ec;
-	ANIMATION: 3s ease-in 1s 2 reverse both paused my-app-539-ec, my-app-539-mQ;
-	--my-app-539-Gw: 0px;
-	--my-app-539-uc: 0px;
-	--my-app-539-cP: 10px;
-	--my-app-539-EP: 20px;
+	ANIMATION-NAME: my-app-235-zG;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused my-app-235-zG, my-app-235-Dk;
+	--my-app-235-qi: 0px;
+	--my-app-235-xB: 0px;
+	--my-app-235-\\\\$6: 10px;
+	--my-app-235-gJ: 20px;
 }
 
-@KEYFRAMES my-app-539-ec{
+@KEYFRAMES my-app-235-zG{
 	0% {
-		left: VAR(--my-app-539-Gw);
-		top: VAR(--my-app-539-uc);
+		left: VAR(--my-app-235-qi);
+		top: VAR(--my-app-235-xB);
 		color: VAR(--theme-color1);
 	}
 	100% {
-		left: VAR(--my-app-539-cP);
-		top: VAR(--my-app-539-EP);
+		left: VAR(--my-app-235-\\\\$6);
+		top: VAR(--my-app-235-gJ);
 		color: VAR(--theme-color2);
 	}
 }
 
-@KEYframes my-app-539-mQ{
+@KEYframes my-app-235-Dk{
 	0% {
 		left: 0;
 	}
@@ -2122,42 +2122,42 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: yellow;
 }
 
-.my-app-539-YL {
-	color: VAR(--my-app-539-KA);
-	--my-app-539-KA: red;
+.my-app-235-XE {
+	color: VAR(--my-app-235-I0);
+	--my-app-235-I0: red;
 }
 
-.my-app-539-ak {
+.my-app-235-wt {
 	COLOR: VAR(--GLOBAR-COLOR);
 	--GLOBAR-COLOR: red;
 }
 
 @supports (top: env(safe-area-inset-top, 0)) {
-	.my-app-539-y_ {
+	.my-app-235-nc {
 		color: red;
 	}
 }
 
 .a {
-	animation: 3s my-app-539-es;
-	-webkit-animation: 3s my-app-539-es;
+	animation: 3s my-app-235-iZ;
+	-webkit-animation: 3s my-app-235-iZ;
 }
 
 .b {
-	animation: my-app-539-es 3s;
-	-webkit-animation: my-app-539-es 3s;
+	animation: my-app-235-iZ 3s;
+	-webkit-animation: my-app-235-iZ 3s;
 }
 
 .c {
-	animation-name: my-app-539-es;
-	-webkit-animation-name: my-app-539-es;
+	animation-name: my-app-235-iZ;
+	-webkit-animation-name: my-app-235-iZ;
 }
 
 .d {
-	--my-app-539-mW: animationName;
+	--my-app-235-ZP: animationName;
 }
 
-@keyframes my-app-539-es{
+@keyframes my-app-235-iZ{
 	0% {
 		background: white;
 	}
@@ -2166,7 +2166,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@-webkit-keyframes my-app-539-es{
+@-webkit-keyframes my-app-235-iZ{
 	0% {
 		background: white;
 	}
@@ -2175,7 +2175,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@-moz-keyframes my-app-539-kl{
+@-moz-keyframes my-app-235-M6{
 	0% {
 		background: white;
 	}
@@ -2203,27 +2203,27 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@property --my-app-539-iI{
+@property --my-app-235-rX{
 	syntax: \\"<color>\\";
 	inherits: false;
 	initial-value: #c0ffee;
 }
 
-.my-app-539-SM {
-	color: var(--my-app-539-iI);
+.my-app-235-zg {
+	color: var(--my-app-235-rX);
 }
 
 @layer utilities {
-	.my-app-539-Cg {
+	.my-app-235-dW {
 		padding: 0.5rem;
 	}
 
-	.my-app-539-sr {
+	.my-app-235-cD {
 		padding: 0.8rem;
 	}
 }
 
-.my-app-539-SM {
+.my-app-235-zg {
 	color: red;
 
 	.nested-pure {
@@ -2284,7 +2284,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 .nested-var {
 	.again {
-		color: var(--my-app-539-S4);
+		color: var(--my-app-235-uz);
 	}
 }
 
@@ -2329,7 +2329,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 }
 
 .nested-parens {
-	.my-app-539-r8 div:has(.vertical-tiny, .vertical-small) {
+	.my-app-235-VN div:has(.vertical-tiny, .vertical-small) {
 		max-height: 0;
 		margin: 0;
 		overflow: hidden;
@@ -2354,21 +2354,21 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.class .my-app-539-_y,
-.class .my-app-539-_y,
-.my-app-539-sX .in-local-global-scope {
+.class .my-app-235-V0,
+.class .my-app-235-V0,
+.my-app-235-Ci .in-local-global-scope {
 	color: red;
 }
 
 @container (width > 400px) {
-	.my-app-539-SU {
+	.my-app-235-bK {
 		font-size: 1.5em;
 	}
 }
 
 @container summary (min-width: 400px) {
 	@container (width > 400px) {
-		.my-app-539-ay {
+		.my-app-235-Y1 {
 			font-size: 1.5em;
 		}
 	}
@@ -2379,32 +2379,32 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 }
 
 .placeholder-gray-700:-ms-input-placeholder {
-	--my-app-539-qe: 1;
+	--my-app-235-Y: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--my-app-539-qe));
+	color: rgba(74, 85, 104, var(--my-app-235-Y));
 }
 .placeholder-gray-700::-ms-input-placeholder {
-	--my-app-539-qe: 1;
+	--my-app-235-Y: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--my-app-539-qe));
+	color: rgba(74, 85, 104, var(--my-app-235-Y));
 }
 .placeholder-gray-700::placeholder {
-	--my-app-539-qe: 1;
+	--my-app-235-Y: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--my-app-539-qe));
+	color: rgba(74, 85, 104, var(--my-app-235-Y));
 }
 
 :root {
-	--my-app-539-GM: dark;
+	--my-app-235-t6: dark;
 }
 
-@media screen and (prefers-color-scheme: var(--my-app-539-GM)) {
-	.my-app-539-qE {
+@media screen and (prefers-color-scheme: var(--my-app-235-t6)) {
+	.my-app-235-KR {
 		color: white;
 	}
 }
 
-@keyframes my-app-539-S0{
+@keyframes my-app-235-Fk{
 	from {
 		margin-left: 100%;
 		width: 300%;
@@ -2416,20 +2416,20 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.my-app-539-SM {
+.my-app-235-zg {
 	animation:
-		foo var(--my-app-539-mW) 3s,
-		var(--my-app-539-mW) 3s,
-		3s linear 1s infinite running my-app-539-S0,
-		3s linear env(foo, var(--my-app-539-qE)) infinite running my-app-539-S0;
+		foo var(--my-app-235-ZP) 3s,
+		var(--my-app-235-ZP) 3s,
+		3s linear 1s infinite running my-app-235-Fk,
+		3s linear env(foo, var(--my-app-235-KR)) infinite running my-app-235-Fk;
 }
 
 :root {
-	--my-app-539-qE: 10px;
+	--my-app-235-KR: 10px;
 }
 
-.my-app-539-SM {
-	bar: env(foo, var(--my-app-539-qE));
+.my-app-235-zg {
+	bar: env(foo, var(--my-app-235-KR));
 }
 
 .global-foo, .bar {
@@ -2484,12 +2484,12 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 .again-again-global {
 	animation: slidein 3s;
 
-	.again-again-global, .my-app-539-SM, .my-app-539-KY.nested2.my-app-539-c7 {
-		animation: my-app-539-S0 3s;
+	.again-again-global, .my-app-235-zg, .my-app-235-nb.nested2.my-app-235-\\\\$Q {
+		animation: my-app-235-Fk 3s;
 	}
 
-  .my-app-539-kW .global,
-	.my-app-539-rZ {
+  .my-app-235-OB .global,
+	.my-app-235-VE {
 		color: red;
 	}
 }
@@ -2498,38 +2498,38 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: red;
 }
 
-.my-app-539-SM {
-	.my-app-539-SM {
-		.my-app-539-SM {
-			.my-app-539-SM {}
+.my-app-235-zg {
+	.my-app-235-zg {
+		.my-app-235-zg {
+			.my-app-235-zg {}
 		}
 	}
 }
 
-.my-app-539-SM {
-	.my-app-539-SM {
-		.my-app-539-SM {
-			.my-app-539-SM {
-				animation: my-app-539-S0 3s;
+.my-app-235-zg {
+	.my-app-235-zg {
+		.my-app-235-zg {
+			.my-app-235-zg {
+				animation: my-app-235-Fk 3s;
 			}
 		}
 	}
 }
 
-.my-app-539-SM {
-	animation: my-app-539-S0 3s;
-	.my-app-539-SM {
-		animation: my-app-539-S0 3s;
-		.my-app-539-SM {
-			animation: my-app-539-S0 3s;
-			.my-app-539-SM {
-				animation: my-app-539-S0 3s;
+.my-app-235-zg {
+	animation: my-app-235-Fk 3s;
+	.my-app-235-zg {
+		animation: my-app-235-Fk 3s;
+		.my-app-235-zg {
+			animation: my-app-235-Fk 3s;
+			.my-app-235-zg {
+				animation: my-app-235-Fk 3s;
 			}
 		}
 	}
 }
 
-.my-app-248-u {
+.my-app-666-k {
     color: red;
 }
 
@@ -2539,17 +2539,17 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 .UnusedClassName{
     color: red;
-    padding: var(--my-app-816-or);
-    --my-app-816-or: 10px;
+    padding: var(--my-app-194-RJ);
+    --my-app-194-RJ: 10px;
 }
 
-.my-app-816-sZ {
+.my-app-194-ZL {
     color: green;
-    padding: var(--my-app-816-cP);
-    --my-app-816-cP: 10px;
+    padding: var(--my-app-194-c5);
+    --my-app-194-c5: 10px;
 }
 
-head{--webpack-my-app-848:SM/ry/kW/rZ/yg/rE/k2/do/yK/r8/ui/kf/eY/mA/gJ/ol/sZ/KY/c7/AB/Yf/Gw%uc%cP%EP%kB/OH/ag/S4%WW/qi/mI/OQ/AZ/s9/I\\\\$/Wu/ec/mQ/YL/KA%ak/y_/es/mW%kl/iI%Cg/sr/__y/sX/SU/ay/qe%GM%qE%S0/_539,u/_248,_535,or%sZ/cP%_816;}"
+head{--webpack-my-app-226:zg/Hi/OB/VE/O2/Vj/OH/H5/aq/VN/VM/AO/Hq/O4/Hb/OP/Hw/nb/\\\\$Q/bD/\\\\$t/qi%xB%\\\\$6%gJ%x/lY/f/uz%aK/a7/uf/sW/TZ/aY/II/ij/zG/Dk/XE/I0%wt/nc/iZ/ZP%M6/rX%dW/cD/V0/Ci/bK/Y1/Y%t6%KR%Fk/_235,k/_666,_816,RJ%ZL/c5%_194;}"
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: dev 1`] = `
@@ -2601,54 +2601,54 @@ Object {
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "UsedClassName": "my-app-816-sZ",
-  "VARS": "--my-app-539-KA my-app-539-YL undefined my-app-539-ak",
-  "animation": "my-app-539-OH",
-  "animationName": "my-app-539-es",
-  "class": "my-app-539-SM",
-  "classInContainer": "my-app-539-SU",
-  "classLocalScope": "my-app-539-sX",
-  "cssModuleWithCustomFileExtension": "my-app-248-u",
-  "currentWmultiParams": "my-app-539-eY",
-  "deepClassInContainer": "my-app-539-ay",
-  "displayFlexInSupportsInMediaUpperCase": "my-app-539-Wu",
-  "futureWmultiParams": "my-app-539-gJ",
+  "UsedClassName": "my-app-194-ZL",
+  "VARS": "--my-app-235-I0 my-app-235-XE undefined my-app-235-wt",
+  "animation": "my-app-235-lY",
+  "animationName": "my-app-235-iZ",
+  "class": "my-app-235-zg",
+  "classInContainer": "my-app-235-bK",
+  "classLocalScope": "my-app-235-Ci",
+  "cssModuleWithCustomFileExtension": "my-app-666-k",
+  "currentWmultiParams": "my-app-235-Hq",
+  "deepClassInContainer": "my-app-235-Y1",
+  "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
+  "futureWmultiParams": "my-app-235-Hb",
   "global": undefined,
-  "hasWmultiParams": "my-app-539-kf",
-  "ident": "my-app-539-AB",
-  "inLocalGlobalScope": "my-app-539-_y",
-  "inSupportScope": "my-app-539-y_",
-  "isWmultiParams": "my-app-539-yK",
-  "keyframes": "my-app-539-Yf",
-  "keyframesUPPERCASE": "my-app-539-ec",
-  "local": "my-app-539-ry my-app-539-kW my-app-539-rZ my-app-539-yg",
-  "local2": "my-app-539-rE my-app-539-k2",
-  "localkeyframes2UPPPERCASE": "my-app-539-mQ",
-  "matchesWmultiParams": "my-app-539-r8",
-  "media": "my-app-539-qi",
-  "mediaInSupports": "my-app-539-s9",
-  "mediaWithOperator": "my-app-539-mI",
-  "mozAnimationName": "my-app-539-kl",
-  "mozAnyWmultiParams": "my-app-539-ol",
-  "myColor": "--my-app-539-iI",
-  "nested": "my-app-539-KY undefined my-app-539-c7",
+  "hasWmultiParams": "my-app-235-AO",
+  "ident": "my-app-235-bD",
+  "inLocalGlobalScope": "my-app-235-V0",
+  "inSupportScope": "my-app-235-nc",
+  "isWmultiParams": "my-app-235-aq",
+  "keyframes": "my-app-235-$t",
+  "keyframesUPPERCASE": "my-app-235-zG",
+  "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
+  "local2": "my-app-235-Vj my-app-235-OH",
+  "localkeyframes2UPPPERCASE": "my-app-235-Dk",
+  "matchesWmultiParams": "my-app-235-VN",
+  "media": "my-app-235-a7",
+  "mediaInSupports": "my-app-235-aY",
+  "mediaWithOperator": "my-app-235-uf",
+  "mozAnimationName": "my-app-235-M6",
+  "mozAnyWmultiParams": "my-app-235-OP",
+  "myColor": "--my-app-235-rX",
+  "nested": "my-app-235-nb undefined my-app-235-$Q",
   "notAValidCssModuleExtension": true,
-  "notWmultiParams": "my-app-539-do",
-  "paddingLg": "my-app-539-sr",
-  "paddingSm": "my-app-539-Cg",
-  "pastWmultiParams": "my-app-539-mA",
-  "supports": "my-app-539-OQ",
-  "supportsInMedia": "my-app-539-I$",
-  "supportsWithOperator": "my-app-539-AZ",
-  "vars": "--my-app-539-S4 my-app-539-ag undefined my-app-539-WW",
-  "webkitAnyWmultiParams": "my-app-539-sZ",
-  "whereWmultiParams": "my-app-539-ui",
+  "notWmultiParams": "my-app-235-H5",
+  "paddingLg": "my-app-235-cD",
+  "paddingSm": "my-app-235-dW",
+  "pastWmultiParams": "my-app-235-O4",
+  "supports": "my-app-235-sW",
+  "supportsInMedia": "my-app-235-II",
+  "supportsWithOperator": "my-app-235-TZ",
+  "vars": "--my-app-235-uz my-app-235-f undefined my-app-235-aK",
+  "webkitAnyWmultiParams": "my-app-235-Hw",
+  "whereWmultiParams": "my-app-235-VM",
 }
 `;
 
 exports[`ConfigCacheTestCases css css-modules-broken-keyframes exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "class": "my-app-539-S",
+  "class": "my-app-235-z",
 }
 `;
 
@@ -2701,127 +2701,127 @@ Object {
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "UsedClassName": "my-app-816-sZ",
-  "VARS": "--my-app-539-KA my-app-539-YL undefined my-app-539-ak",
-  "animation": "my-app-539-OH",
-  "animationName": "my-app-539-es",
-  "class": "my-app-539-SM",
-  "classInContainer": "my-app-539-SU",
-  "classLocalScope": "my-app-539-sX",
-  "cssModuleWithCustomFileExtension": "my-app-248-u",
-  "currentWmultiParams": "my-app-539-eY",
-  "deepClassInContainer": "my-app-539-ay",
-  "displayFlexInSupportsInMediaUpperCase": "my-app-539-Wu",
-  "futureWmultiParams": "my-app-539-gJ",
+  "UsedClassName": "my-app-194-ZL",
+  "VARS": "--my-app-235-I0 my-app-235-XE undefined my-app-235-wt",
+  "animation": "my-app-235-lY",
+  "animationName": "my-app-235-iZ",
+  "class": "my-app-235-zg",
+  "classInContainer": "my-app-235-bK",
+  "classLocalScope": "my-app-235-Ci",
+  "cssModuleWithCustomFileExtension": "my-app-666-k",
+  "currentWmultiParams": "my-app-235-Hq",
+  "deepClassInContainer": "my-app-235-Y1",
+  "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
+  "futureWmultiParams": "my-app-235-Hb",
   "global": undefined,
-  "hasWmultiParams": "my-app-539-kf",
-  "ident": "my-app-539-AB",
-  "inLocalGlobalScope": "my-app-539-_y",
-  "inSupportScope": "my-app-539-y_",
-  "isWmultiParams": "my-app-539-yK",
-  "keyframes": "my-app-539-Yf",
-  "keyframesUPPERCASE": "my-app-539-ec",
-  "local": "my-app-539-ry my-app-539-kW my-app-539-rZ my-app-539-yg",
-  "local2": "my-app-539-rE my-app-539-k2",
-  "localkeyframes2UPPPERCASE": "my-app-539-mQ",
-  "matchesWmultiParams": "my-app-539-r8",
-  "media": "my-app-539-qi",
-  "mediaInSupports": "my-app-539-s9",
-  "mediaWithOperator": "my-app-539-mI",
-  "mozAnimationName": "my-app-539-kl",
-  "mozAnyWmultiParams": "my-app-539-ol",
-  "myColor": "--my-app-539-iI",
-  "nested": "my-app-539-KY undefined my-app-539-c7",
+  "hasWmultiParams": "my-app-235-AO",
+  "ident": "my-app-235-bD",
+  "inLocalGlobalScope": "my-app-235-V0",
+  "inSupportScope": "my-app-235-nc",
+  "isWmultiParams": "my-app-235-aq",
+  "keyframes": "my-app-235-$t",
+  "keyframesUPPERCASE": "my-app-235-zG",
+  "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
+  "local2": "my-app-235-Vj my-app-235-OH",
+  "localkeyframes2UPPPERCASE": "my-app-235-Dk",
+  "matchesWmultiParams": "my-app-235-VN",
+  "media": "my-app-235-a7",
+  "mediaInSupports": "my-app-235-aY",
+  "mediaWithOperator": "my-app-235-uf",
+  "mozAnimationName": "my-app-235-M6",
+  "mozAnyWmultiParams": "my-app-235-OP",
+  "myColor": "--my-app-235-rX",
+  "nested": "my-app-235-nb undefined my-app-235-$Q",
   "notAValidCssModuleExtension": true,
-  "notWmultiParams": "my-app-539-do",
-  "paddingLg": "my-app-539-sr",
-  "paddingSm": "my-app-539-Cg",
-  "pastWmultiParams": "my-app-539-mA",
-  "supports": "my-app-539-OQ",
-  "supportsInMedia": "my-app-539-I$",
-  "supportsWithOperator": "my-app-539-AZ",
-  "vars": "--my-app-539-S4 my-app-539-ag undefined my-app-539-WW",
-  "webkitAnyWmultiParams": "my-app-539-sZ",
-  "whereWmultiParams": "my-app-539-ui",
+  "notWmultiParams": "my-app-235-H5",
+  "paddingLg": "my-app-235-cD",
+  "paddingSm": "my-app-235-dW",
+  "pastWmultiParams": "my-app-235-O4",
+  "supports": "my-app-235-sW",
+  "supportsInMedia": "my-app-235-II",
+  "supportsWithOperator": "my-app-235-TZ",
+  "vars": "--my-app-235-uz my-app-235-f undefined my-app-235-aK",
+  "webkitAnyWmultiParams": "my-app-235-Hw",
+  "whereWmultiParams": "my-app-235-VM",
 }
 `;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to create css modules: prod 2`] = `
 Object {
-  "UsedClassName": "my-app-816-sZ",
-  "VARS": "--my-app-539-KA my-app-539-YL undefined my-app-539-ak",
-  "animation": "my-app-539-OH",
-  "animationName": "my-app-539-es",
-  "class": "my-app-539-SM",
-  "classInContainer": "my-app-539-SU",
-  "classLocalScope": "my-app-539-sX",
-  "cssModuleWithCustomFileExtension": "my-app-248-u",
-  "currentWmultiParams": "my-app-539-eY",
-  "deepClassInContainer": "my-app-539-ay",
-  "displayFlexInSupportsInMediaUpperCase": "my-app-539-Wu",
-  "futureWmultiParams": "my-app-539-gJ",
+  "UsedClassName": "my-app-194-ZL",
+  "VARS": "--my-app-235-I0 my-app-235-XE undefined my-app-235-wt",
+  "animation": "my-app-235-lY",
+  "animationName": "my-app-235-iZ",
+  "class": "my-app-235-zg",
+  "classInContainer": "my-app-235-bK",
+  "classLocalScope": "my-app-235-Ci",
+  "cssModuleWithCustomFileExtension": "my-app-666-k",
+  "currentWmultiParams": "my-app-235-Hq",
+  "deepClassInContainer": "my-app-235-Y1",
+  "displayFlexInSupportsInMediaUpperCase": "my-app-235-ij",
+  "futureWmultiParams": "my-app-235-Hb",
   "global": undefined,
-  "hasWmultiParams": "my-app-539-kf",
-  "ident": "my-app-539-AB",
-  "inLocalGlobalScope": "my-app-539-_y",
-  "inSupportScope": "my-app-539-y_",
-  "isWmultiParams": "my-app-539-yK",
-  "keyframes": "my-app-539-Yf",
-  "keyframesUPPERCASE": "my-app-539-ec",
-  "local": "my-app-539-ry my-app-539-kW my-app-539-rZ my-app-539-yg",
-  "local2": "my-app-539-rE my-app-539-k2",
-  "localkeyframes2UPPPERCASE": "my-app-539-mQ",
-  "matchesWmultiParams": "my-app-539-r8",
-  "media": "my-app-539-qi",
-  "mediaInSupports": "my-app-539-s9",
-  "mediaWithOperator": "my-app-539-mI",
-  "mozAnimationName": "my-app-539-kl",
-  "mozAnyWmultiParams": "my-app-539-ol",
-  "myColor": "--my-app-539-iI",
-  "nested": "my-app-539-KY undefined my-app-539-c7",
+  "hasWmultiParams": "my-app-235-AO",
+  "ident": "my-app-235-bD",
+  "inLocalGlobalScope": "my-app-235-V0",
+  "inSupportScope": "my-app-235-nc",
+  "isWmultiParams": "my-app-235-aq",
+  "keyframes": "my-app-235-$t",
+  "keyframesUPPERCASE": "my-app-235-zG",
+  "local": "my-app-235-Hi my-app-235-OB my-app-235-VE my-app-235-O2",
+  "local2": "my-app-235-Vj my-app-235-OH",
+  "localkeyframes2UPPPERCASE": "my-app-235-Dk",
+  "matchesWmultiParams": "my-app-235-VN",
+  "media": "my-app-235-a7",
+  "mediaInSupports": "my-app-235-aY",
+  "mediaWithOperator": "my-app-235-uf",
+  "mozAnimationName": "my-app-235-M6",
+  "mozAnyWmultiParams": "my-app-235-OP",
+  "myColor": "--my-app-235-rX",
+  "nested": "my-app-235-nb undefined my-app-235-$Q",
   "notAValidCssModuleExtension": true,
-  "notWmultiParams": "my-app-539-do",
-  "paddingLg": "my-app-539-sr",
-  "paddingSm": "my-app-539-Cg",
-  "pastWmultiParams": "my-app-539-mA",
-  "supports": "my-app-539-OQ",
-  "supportsInMedia": "my-app-539-I$",
-  "supportsWithOperator": "my-app-539-AZ",
-  "vars": "--my-app-539-S4 my-app-539-ag undefined my-app-539-WW",
-  "webkitAnyWmultiParams": "my-app-539-sZ",
-  "whereWmultiParams": "my-app-539-ui",
+  "notWmultiParams": "my-app-235-H5",
+  "paddingLg": "my-app-235-cD",
+  "paddingSm": "my-app-235-dW",
+  "pastWmultiParams": "my-app-235-O4",
+  "supports": "my-app-235-sW",
+  "supportsInMedia": "my-app-235-II",
+  "supportsWithOperator": "my-app-235-TZ",
+  "vars": "--my-app-235-uz my-app-235-f undefined my-app-235-aK",
+  "webkitAnyWmultiParams": "my-app-235-Hw",
+  "whereWmultiParams": "my-app-235-VM",
 }
 `;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-dev 1`] = `"./style.module.css-class"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 1`] = `"my-app-539-SM"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 1`] = `"my-app-235-zg"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 2`] = `"my-app-539-SM"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 2`] = `"my-app-235-zg"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-dev 1`] = `"./style.module.css-local1"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 1`] = `"my-app-539-ry"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 1`] = `"my-app-235-Hi"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 2`] = `"my-app-539-ry"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 2`] = `"my-app-235-Hi"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-dev 1`] = `"./style.module.css-local2"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 1`] = `"my-app-539-kW"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 1`] = `"my-app-235-OB"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 2`] = `"my-app-539-kW"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 2`] = `"my-app-235-OB"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-dev 1`] = `"./style.module.css-local3"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 1`] = `"my-app-539-rZ"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 1`] = `"my-app-235-VE"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 2`] = `"my-app-539-rZ"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 2`] = `"my-app-235-VE"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-dev 1`] = `"./style.module.css-local4"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 1`] = `"my-app-539-yg"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 1`] = `"my-app-235-O2"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 2`] = `"my-app-539-yg"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 2`] = `"my-app-235-O2"`;
 
 exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: dev 1`] = `
 Object {
@@ -2831,7 +2831,7 @@ Object {
 
 exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "placeholder": "512-UB7V",
+  "placeholder": "144-Oh6j",
 }
 `;
 
@@ -3788,27 +3788,27 @@ exports[`ConfigCacheTestCases records issue-2991 exported tests should write rel
 "{
   \\"chunks\\": {
     \\"byName\\": {
-      \\"main\\": 590
+      \\"main\\": 792
     },
     \\"bySource\\": {
-      \\"0 main\\": 590
+      \\"0 main\\": 792
     },
     \\"usedIds\\": [
-      590
+      792
     ]
   },
   \\"modules\\": {
     \\"byIdentifier\\": {
-      \\"./test.js\\": 844,
-      \\"external node-commonjs \\\\\\"fs\\\\\\"\\": 58,
-      \\"external node-commonjs \\\\\\"path\\\\\\"\\": 72,
-      \\"ignored|./.|pkgs/somepackage/foo\\": 128
+      \\"./test.js\\": 329,
+      \\"external node-commonjs \\\\\\"fs\\\\\\"\\": 896,
+      \\"external node-commonjs \\\\\\"path\\\\\\"\\": 928,
+      \\"ignored|./.|pkgs/somepackage/foo\\": 835
     },
     \\"usedIds\\": [
-      58,
-      72,
-      128,
-      844
+      329,
+      835,
+      896,
+      928
     ]
   }
 }"
@@ -3818,31 +3818,31 @@ exports[`ConfigCacheTestCases records issue-7339 exported tests should write rel
 "{
   \\"chunks\\": {
     \\"byName\\": {
-      \\"main\\": 590
+      \\"main\\": 792
     },
     \\"bySource\\": {
-      \\"0 main\\": 590
+      \\"0 main\\": 792
     },
     \\"usedIds\\": [
-      590
+      792
     ]
   },
   \\"modules\\": {
     \\"byIdentifier\\": {
-      \\"./dependencies/bar.js\\": 664,
-      \\"./dependencies/foo.js\\": 396,
-      \\"./dependencies|sync|/^\\\\\\\\.\\\\\\\\/.*$/\\": 660,
-      \\"./test.js\\": 844,
-      \\"external node-commonjs \\\\\\"fs\\\\\\"\\": 58,
-      \\"external node-commonjs \\\\\\"path\\\\\\"\\": 72
+      \\"./dependencies/bar.js\\": 666,
+      \\"./dependencies/foo.js\\": 147,
+      \\"./dependencies|sync|/^\\\\\\\\.\\\\\\\\/.*$/\\": 239,
+      \\"./test.js\\": 329,
+      \\"external node-commonjs \\\\\\"fs\\\\\\"\\": 896,
+      \\"external node-commonjs \\\\\\"path\\\\\\"\\": 928
     },
     \\"usedIds\\": [
-      58,
-      72,
-      396,
-      660,
-      664,
-      844
+      147,
+      239,
+      329,
+      666,
+      896,
+      928
     ]
   }
 }"
