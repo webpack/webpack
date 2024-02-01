@@ -69,9 +69,9 @@ it("should use/preserve accessor form for import object and namespaces", functio
 
 	expectSourceToContain(source, 'const bb = module1.obj1.up.down?.left.right;');
 
-	expectSourceToContain(source, 'const ww = (__webpack_require__(/*! ./module1 */ 960).obj1)["bing"]?.bang;');
-	expectSourceToContain(source, 'const xx = (__webpack_require__(/*! ./module1 */ 960).obj1)["pip"].pop();');
-	expectSourceToContain(source, 'const yy = (__webpack_require__(/*! ./module3 */ 834)/* .m_2.m_1.obj1 */ .a.a.obj1)["tip"].top();');
+	expectSourceToContain(source, 'const ww = (__webpack_require__(/*! ./module1 */ 688).obj1)["bing"]?.bang;');
+	expectSourceToContain(source, 'const xx = (__webpack_require__(/*! ./module1 */ 688).obj1)["pip"].pop();');
+	expectSourceToContain(source, 'const yy = (__webpack_require__(/*! ./module3 */ 989)/* .m_2.m_1.obj1 */ .a.a.obj1)["tip"].top();');
 
 	expectSourceToContain(source, 'data_namespaceObject.a.a["unknownProperty"].depth = "deep";');
 
