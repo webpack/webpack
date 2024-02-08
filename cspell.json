@@ -287,7 +287,8 @@
     "xxhashjs",
     "Yann",
     "readonly",
-    "commithash"
+    "commithash",
+    "nodenext"
   ],
   "ignoreRegExpList": [
     "/Author.+/",
@@ -317,6 +318,7 @@
     "test/configCases/**",
     "test/statsCases/**",
     "test/fixtures/**",
-    "test/memoryLimitCases/**"
+    "test/memoryLimitCases/**",
+    "**/node_modules/**"
   ]
 }

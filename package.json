@@ -49,7 +49,7 @@
     "coffeescript": "^2.5.1",
     "core-js": "^3.6.5",
     "coveralls": "^3.1.0",
-    "cspell": "^6.31.1",
+    "cspell": "^8.3.2",
     "css-loader": "^5.0.1",
     "date-fns": "^3.2.0",
     "es5-ext": "^0.10.53",
@@ -154,7 +154,7 @@
     "type-lint": "tsc",
     "typings-test": "tsc -p tsconfig.types.test.json",
     "module-typings-test": "tsc -p tsconfig.module.test.json",
-    "spellcheck": "cspell --no-progress \"**\"",
+    "spellcheck": "cspell --cache --no-must-find-files --quiet \"**/*.*\"",
     "special-lint": "node node_modules/tooling/lockfile-lint && node node_modules/tooling/schemas-lint && node node_modules/tooling/inherit-types && node node_modules/tooling/format-schemas && node tooling/generate-runtime-code.js && node tooling/generate-wasm-code.js && node node_modules/tooling/format-file-header && node node_modules/tooling/compile-to-definitions && node node_modules/tooling/precompile-schemas && node node_modules/tooling/generate-types --no-template-literals",
     "special-lint-fix": "node node_modules/tooling/inherit-types --write && node node_modules/tooling/format-schemas --write && node tooling/generate-runtime-code.js --write && node tooling/generate-wasm-code.js --write && node node_modules/tooling/format-file-header --write && node node_modules/tooling/compile-to-definitions --write && node node_modules/tooling/precompile-schemas --write && node node_modules/tooling/generate-types --no-template-literals --write",
     "fix": "yarn code-lint --fix && yarn special-lint-fix && yarn pretty-lint-fix",
@@ -182,10 +182,8 @@
       "eslint --cache --fix"
     ],
     "*": [
-      "prettier --cache --ignore-unknown"
-    ],
-    "*.md|{.github,benchmark,bin,examples,hot,lib,schemas,setup,tooling}/**/*.{md,yml,yaml,js,json}": [
-      "cspell"
+      "prettier --cache --ignore-unknown",
+      "cspell --cache --no-must-find-files --quiet"
     ]
   }
 }
