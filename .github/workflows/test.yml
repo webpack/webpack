@@ -112,11 +112,11 @@ jobs:
             part: a
           # Test with main branches of webpack dependencies
           - os: ubuntu-latest
-            node-version: 16.x
+            node-version: lts/*
             part: a
             use_main_branches: 1
           - os: ubuntu-latest
-            node-version: 16.x
+            node-version: lts/*
             part: b
             use_main_branches: 1
     runs-on: ${{ matrix.os }}
