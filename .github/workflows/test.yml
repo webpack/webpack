@@ -92,24 +92,6 @@ jobs:
         node-version: [10.x, 20.x]
         part: [a, b]
         include:
-          - os: ubuntu-latest
-            node-version: 21.x
-            part: a
-          - os: ubuntu-latest
-            node-version: 21.x
-            part: b
-          - os: ubuntu-latest
-            node-version: 18.x
-            part: a
-          - os: ubuntu-latest
-            node-version: 16.x
-            part: a
-          - os: ubuntu-latest
-            node-version: 14.x
-            part: a
-          - os: ubuntu-latest
-            node-version: 12.x
-            part: a
           # Test with main branches of webpack dependencies
           - os: ubuntu-latest
             node-version: lts/*
@@ -119,6 +101,30 @@ jobs:
             node-version: lts/*
             part: b
             use_main_branches: 1
+          # Test on the latest version of Node.js
+          - os: ubuntu-latest
+            node-version: 21.x
+            part: a
+          - os: ubuntu-latest
+            node-version: 21.x
+            part: b
+          # Test on the old LTS version of Node.js
+          - os: ubuntu-latest
+            node-version: 18.x
+            part: a
+          - os: ubuntu-latest
+            node-version: 18.x
+            part: b
+          # Test on old Node.js versions
+          - os: ubuntu-latest
+            node-version: 16.x
+            part: a
+          - os: ubuntu-latest
+            node-version: 14.x
+            part: a
+          - os: ubuntu-latest
+            node-version: 12.x
+            part: a
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -132,12 +138,16 @@ jobs:
           yarn upgrade jest@^27.5.0 jest-circus@^27.5.0 jest-cli@^27.5.0 jest-diff@^27.5.0 jest-environment-node@^27.5.0 jest-junit@^13.0.0 @types/jest@^27.4.0 pretty-format@^27.0.2 --ignore-engines
           yarn --frozen-lockfile --ignore-engines
         if: matrix.node-version == '10.x' || matrix.node-version == '12.x' || matrix.node-version == '14.x'
+      - run: |
+          yarn upgrade eslint-plugin-jsdoc@^47.0.0
+          yarn --frozen-lockfile
+        if: matrix.node-version == '16.x'
       # Install main version of our deps
       - run: yarn upgrade enhanced-resolve@webpack/enhanced-resolve#main loader-runner@webpack/loader-runner#main webpack-sources@webpack/webpack-sources#main watchpack@webpack/watchpack#main tapable@webpack/tapable#master
         if: matrix.use_main_branches == '1'
       # Install dependencies for LTS node versions
       - run: yarn --frozen-lockfile
-        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x'
+        if: matrix.node-version != '10.x' && matrix.node-version != '12.x' && matrix.node-version != '14.x' && matrix.node-version != '16.x'
       - run: yarn link --frozen-lockfile || true
       - run: yarn link webpack --frozen-lockfile
       - uses: actions/cache@v4
