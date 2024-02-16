@@ -817,9 +817,7 @@ declare abstract class BasicEvaluatedExpression {
 			| TemplateElement
 	): BasicEvaluatedExpression;
 }
-declare interface BuildInfo {
-	[index: string]: any;
-}
+type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
 	map: Record<string, Generator>;
@@ -958,14 +956,14 @@ declare interface CallbackAsyncQueue<T> {
 declare interface CallbackCache<T> {
 	(err?: null | WebpackError, result?: T): void;
 }
-declare interface CallbackFunction<T> {
+declare interface CallbackFunction_1<T> {
 	(err?: null | Error, result?: T): any;
+}
+declare interface CallbackFunction_2<T> {
+	(err?: null | Error, stats?: T): void;
 }
 declare interface CallbackNormalErrorCache<T> {
 	(err?: null | Error, result?: T): void;
-}
-declare interface CallbackWebpack<T> {
-	(err?: Error, stats?: T): void;
 }
 type Cell<T> = undefined | T;
 declare class Chunk {
@@ -2278,8 +2276,11 @@ declare class Compiler {
 	watchMode: boolean;
 	getCache(name: string): CacheFacade;
 	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
-	watch(watchOptions: WatchOptions, handler: CallbackFunction<Stats>): Watching;
-	run(callback: CallbackFunction<Stats>): void;
+	watch(
+		watchOptions: WatchOptions,
+		handler: CallbackFunction_1<Stats>
+	): Watching;
+	run(callback: CallbackFunction_1<Stats>): void;
 	runAsChild(
 		callback: (
 			err?: null | Error,
@@ -2288,9 +2289,12 @@ declare class Compiler {
 		) => any
 	): void;
 	purgeInputFileSystem(): void;
-	emitAssets(compilation: Compilation, callback: CallbackFunction<void>): void;
-	emitRecords(callback: CallbackFunction<void>): void;
-	readRecords(callback: CallbackFunction<void>): void;
+	emitAssets(
+		compilation: Compilation,
+		callback: CallbackFunction_1<void>
+	): void;
+	emitRecords(callback: CallbackFunction_1<void>): void;
+	readRecords(callback: CallbackFunction_1<void>): void;
 	createChildCompiler(
 		compilation: Compilation,
 		compilerName: string,
@@ -2307,8 +2311,8 @@ declare class Compiler {
 		normalModuleFactory: NormalModuleFactory;
 		contextModuleFactory: ContextModuleFactory;
 	};
-	compile(callback: CallbackFunction<Compilation>): void;
-	close(callback: CallbackFunction<void>): void;
+	compile(callback: CallbackFunction_1<Compilation>): void;
+	close(callback: CallbackFunction_1<void>): void;
 }
 declare class ConcatSource extends Source {
 	constructor(...args: (string | Source)[]);
@@ -4822,6 +4826,9 @@ declare class Generator {
 	updateHash(hash: Hash, __1: UpdateHashContextGenerator): void;
 	static byType(map: Record<string, Generator>): ByTypeGenerator;
 }
+declare interface GeneratorOptions {
+	[index: string]: any;
+}
 type GeneratorOptionsByModuleType = GeneratorOptionsByModuleTypeKnown &
 	GeneratorOptionsByModuleTypeUnknown;
 
@@ -6588,6 +6595,19 @@ declare interface KnownAssetInfo {
 	 */
 	related?: Record<string, string | string[]>;
 }
+declare interface KnownBuildInfo {
+	cacheable?: boolean;
+	parsed?: boolean;
+	fileDependencies?: LazySet<string>;
+	contextDependencies?: LazySet<string>;
+	missingDependencies?: LazySet<string>;
+	buildDependencies?: LazySet<string>;
+	valueDependencies?: Map<string, string | Set<string>>;
+	hash?: any;
+	assets?: Record<string, Source>;
+	assetsInfo?: Map<string, undefined | AssetInfo>;
+	snapshot?: null | Snapshot;
+}
 declare interface KnownBuildMeta {
 	moduleArgument?: string;
 	exportsArgument?: string;
@@ -7717,7 +7737,7 @@ declare class Module extends DependenciesBlock {
 	 * Module should be unsafe cached. Get data that's needed for that.
 	 * This data will be passed to restoreFromUnsafeCache later.
 	 */
-	getUnsafeCacheData(): object;
+	getUnsafeCacheData(): UnsafeCacheData;
 
 	/**
 	 * Assuming this module is in the cache. Remove internal references to allow freeing some memory.
@@ -8283,21 +8303,21 @@ declare class MultiCompiler {
 	outputFileSystem: OutputFileSystem;
 	watchFileSystem: WatchFileSystem;
 	intermediateFileSystem: IntermediateFileSystem;
-	getInfrastructureLogger(name?: any): WebpackLogger;
+	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
 	setDependencies(compiler: Compiler, dependencies: string[]): void;
-	validateDependencies(callback: CallbackFunction<MultiStats>): boolean;
+	validateDependencies(callback: CallbackFunction_1<MultiStats>): boolean;
 	runWithDependencies(
 		compilers: Compiler[],
-		fn: (compiler: Compiler, callback: CallbackFunction<MultiStats>) => any,
-		callback: CallbackFunction<MultiStats>
+		fn: (compiler: Compiler, callback: CallbackFunction_1<MultiStats>) => any,
+		callback: CallbackFunction_1<MultiStats>
 	): void;
 	watch(
 		watchOptions: WatchOptions | WatchOptions[],
-		handler: CallbackFunction<MultiStats>
+		handler: CallbackFunction_1<MultiStats>
 	): MultiWatching;
-	run(callback: CallbackFunction<MultiStats>): void;
+	run(callback: CallbackFunction_1<MultiStats>): void;
 	purgeInputFileSystem(): void;
-	close(callback: CallbackFunction<void>): void;
+	close(callback: CallbackFunction_1<void>): void;
 }
 declare interface MultiCompilerOptions {
 	/**
@@ -8316,10 +8336,10 @@ declare abstract class MultiStats {
 declare abstract class MultiWatching {
 	watchings: Watching[];
 	compiler: MultiCompiler;
-	invalidate(callback?: CallbackFunction<void>): void;
+	invalidate(callback?: CallbackFunction_1<void>): void;
 	suspend(): void;
 	resume(): void;
-	close(callback: CallbackFunction<void>): void;
+	close(callback: CallbackFunction_1<void>): void;
 }
 declare class NamedChunkIdsPlugin {
 	constructor(options?: NamedChunkIdsPluginOptions);
@@ -8454,40 +8474,44 @@ declare class NormalModule extends Module {
 	userRequest: string;
 	rawRequest: string;
 	binary: boolean;
-	parser: Parser;
-	parserOptions?: Record<string, any>;
-	generator: Generator;
-	generatorOptions?: Record<string, any>;
+	parser?: Parser;
+	parserOptions?: ParserOptions;
+	generator?: Generator;
+	generatorOptions?: GeneratorOptions;
 	resource: string;
 	resourceResolveData?: Record<string, any>;
 	matchResource?: string;
 	loaders: LoaderItem[];
-	error?: null | WebpackError;
+	error: null | WebpackError;
+
+	/**
+	 * restore unsafe cache data
+	 */
 	restoreFromUnsafeCache(
-		unsafeCacheData?: any,
-		normalModuleFactory?: any
+		unsafeCacheData: NormalModuleUnsafeCacheData,
+		normalModuleFactory: NormalModuleFactory
 	): void;
 	createSourceForAsset(
 		context: string,
 		name: string,
-		content: string,
-		sourceMap?: any,
+		content: string | Buffer,
+		sourceMap?: string | SourceMap,
 		associatedObjectForCache?: Object
 	): Source;
-	getCurrentLoader(loaderContext?: any, index?: any): null | LoaderItem;
+	getCurrentLoader(loaderContext?: any, index?: number): null | LoaderItem;
 	createSource(
 		context: string,
 		content: string | Buffer,
-		sourceMap?: any,
+		sourceMap?: string | SourceMapSource,
 		associatedObjectForCache?: Object
 	): Source;
 	markModuleAsErrored(error: WebpackError): void;
-	applyNoParseRule(rule?: any, content?: any): any;
-	shouldPreventParsing(noParseRule?: any, request?: any): any;
+	applyNoParseRule(rule: any, content: string): boolean;
+	shouldPreventParsing(noParseRule: any, request: string): boolean;
 	static getCompilationHooks(
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
-	static deserialize(context?: any): NormalModule;
+	static deserialize(context: ObjectDeserializerContext): NormalModule;
 }
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[object, NormalModule]>;
@@ -8559,7 +8583,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * the options of the parser used
 	 */
-	parserOptions?: Record<string, any>;
+	parserOptions?: ParserOptions;
 
 	/**
 	 * the generator used
@@ -8569,7 +8593,7 @@ declare interface NormalModuleCreateData {
 	/**
 	 * the options of the generator used
 	 */
-	generatorOptions?: Record<string, any>;
+	generatorOptions?: GeneratorOptions;
 
 	/**
 	 * options used for resolving requests from this module
@@ -8603,40 +8627,47 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 			],
 			Module
 		>;
-		createParser: HookMap<SyncBailHook<any, any>>;
-		parser: HookMap<SyncHook<any>>;
-		createGenerator: HookMap<SyncBailHook<any, any>>;
-		generator: HookMap<SyncHook<any>>;
-		createModuleClass: HookMap<SyncBailHook<any, any>>;
+		createParser: HookMap<SyncBailHook<[ParserOptions], Parser>>;
+		parser: HookMap<SyncBailHook<[any, ParserOptions], void>>;
+		createGenerator: HookMap<SyncBailHook<[GeneratorOptions], Generator>>;
+		generator: HookMap<SyncBailHook<[any, GeneratorOptions], void>>;
+		createModuleClass: HookMap<SyncBailHook<[any, ResolveData], Module>>;
 	}>;
 	resolverFactory: ResolverFactory;
 	ruleSet: RuleSet;
 	context: string;
 	fs: InputFileSystem;
-	parserCache: Map<string, WeakMap<Object, any>>;
+	parserCache: Map<string, WeakMap<Object, Parser>>;
 	generatorCache: Map<string, WeakMap<Object, Generator>>;
 	cleanupForCache(): void;
 	resolveResource(
-		contextInfo?: any,
-		context?: any,
-		unresolvedResource?: any,
-		resolver?: any,
-		resolveContext?: any,
-		callback?: any
+		contextInfo: ModuleFactoryCreateDataContextInfo,
+		context: string,
+		unresolvedResource: string,
+		resolver: ResolverWithOptions,
+		resolveContext: ResolveContext,
+		callback: (
+			err: null | Error,
+			res?: string | false,
+			req?: ResolveRequest
+		) => void
 	): void;
 	resolveRequestArray(
-		contextInfo?: any,
-		context?: any,
-		array?: any,
-		resolver?: any,
-		resolveContext?: any,
-		callback?: any
-	): any;
-	getParser(type?: any, parserOptions?: object): any;
-	createParser(type: string, parserOptions?: { [index: string]: any }): Parser;
-	getGenerator(type?: any, generatorOptions?: object): undefined | Generator;
-	createGenerator(type?: any, generatorOptions?: object): any;
-	getResolver(type?: any, resolveOptions?: any): ResolverWithOptions;
+		contextInfo: ModuleFactoryCreateDataContextInfo,
+		context: string,
+		array: LoaderItem[],
+		resolver: ResolverWithOptions,
+		resolveContext: ResolveContext,
+		callback: CallbackFunction_2<LoaderItem[]>
+	): void;
+	getParser(type: string, parserOptions?: ParserOptions): Parser;
+	createParser(type: string, parserOptions?: ParserOptions): Parser;
+	getGenerator(type: string, generatorOptions?: GeneratorOptions): Generator;
+	createGenerator(type: string, generatorOptions?: GeneratorOptions): Generator;
+	getResolver(
+		type: string,
+		resolveOptions?: ResolveOptionsWithDependencyType
+	): ResolverWithOptions;
 }
 
 /**
@@ -8680,7 +8711,7 @@ declare interface NormalModuleLoaderContext<OptionsType> {
 	utils: {
 		absolutify: (context: string, request: string) => string;
 		contextify: (context: string, request: string) => string;
-		createHash: (algorithm?: string) => Hash;
+		createHash: (algorithm?: string | typeof Hash) => Hash;
 	};
 	rootContext: string;
 	fs: InputFileSystem;
@@ -8707,6 +8738,12 @@ declare class NormalModuleReplacementPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type NormalModuleUnsafeCacheData = UnsafeCacheData & {
+	parser?: Parser;
+	parserOptions?: ParserOptions;
+	generator?: Generator;
+	generatorOptions?: GeneratorOptions;
+};
 type NormalizedStatsOptions = KnownNormalizedStatsOptions &
 	Omit<
 		StatsOptions,
@@ -9820,6 +9857,9 @@ declare class Parser {
 		state: ParserState
 	): ParserState;
 }
+declare interface ParserOptions {
+	[index: string]: any;
+}
 type ParserOptionsByModuleType = ParserOptionsByModuleTypeKnown &
 	ParserOptionsByModuleTypeUnknown;
 
@@ -10854,9 +10894,9 @@ type ResolverWithOptions = Resolver & WithOptions;
 
 declare interface ResourceDataWithData {
 	resource: string;
-	path: string;
-	query: string;
-	fragment: string;
+	path?: string;
+	query?: string;
+	fragment?: string;
 	context?: string;
 	data: Record<string, any>;
 }
@@ -12989,6 +13029,10 @@ declare interface TrustedTypes {
 	policyName?: string;
 }
 declare const UNDEFINED_MARKER: unique symbol;
+declare interface UnsafeCacheData {
+	factoryMeta?: FactoryMeta;
+	resolveOptions?: ResolveOptionsWebpackOptions;
+}
 declare interface UpdateHashContextDependency {
 	chunkGraph: ChunkGraph;
 	runtime: RuntimeSpec;
@@ -13285,8 +13329,8 @@ declare interface WatcherInfo {
 declare abstract class Watching {
 	startTime: null | number;
 	invalid: boolean;
-	handler: CallbackFunction<Stats>;
-	callbacks: CallbackFunction<void>[];
+	handler: CallbackFunction_1<Stats>;
+	callbacks: CallbackFunction_1<void>[];
 	closed: boolean;
 	suspended: boolean;
 	blocked: boolean;
@@ -13322,10 +13366,10 @@ declare abstract class Watching {
 		dirs: Iterable<string>,
 		missing: Iterable<string>
 	): void;
-	invalidate(callback?: CallbackFunction<void>): void;
+	invalidate(callback?: CallbackFunction_1<void>): void;
 	suspend(): void;
 	resume(): void;
-	close(callback: CallbackFunction<void>): void;
+	close(callback: CallbackFunction_1<void>): void;
 }
 declare abstract class WeakTupleMap<T extends any[], V> {
 	set(...args: [T, ...V[]]): void;
@@ -13725,18 +13769,18 @@ type __Type_2 =
 			| __Type_2[]);
 declare function exports(
 	options: Configuration,
-	callback?: CallbackWebpack<Stats>
+	callback?: CallbackFunction_2<Stats>
 ): Compiler;
 declare function exports(
 	options: ReadonlyArray<Configuration> & MultiCompilerOptions,
-	callback?: CallbackWebpack<MultiStats>
+	callback?: CallbackFunction_2<MultiStats>
 ): MultiCompiler;
 declare namespace exports {
 	export const webpack: {
-		(options: Configuration, callback?: CallbackWebpack<Stats>): Compiler;
+		(options: Configuration, callback?: CallbackFunction_2<Stats>): Compiler;
 		(
 			options: ReadonlyArray<Configuration> & MultiCompilerOptions,
-			callback?: CallbackWebpack<MultiStats>
+			callback?: CallbackFunction_2<MultiStats>
 		): MultiCompiler;
 	};
 	export const validate: (options?: any) => void;
