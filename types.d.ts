@@ -1858,7 +1858,7 @@ declare class Compilation {
 	compilationDependencies: { add: (item?: any) => LazySet<string> };
 	getStats(): Stats;
 	createStatsOptions(
-		optionsOrPreset?: string | StatsOptions,
+		optionsOrPreset?: string | boolean | StatsOptions,
 		context?: CreateStatsOptionsContext
 	): NormalizedStatsOptions;
 	createStatsFactory(options?: any): StatsFactory;
@@ -12358,8 +12358,8 @@ declare class Stats {
 	get endTime(): any;
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
-	toJson(options?: string | StatsOptions): StatsCompilation;
-	toString(options?: string | StatsOptions): string;
+	toJson(options?: string | boolean | StatsOptions): StatsCompilation;
+	toString(options?: string | boolean | StatsOptions): string;
 }
 type StatsAsset = KnownStatsAsset & Record<string, any>;
 type StatsChunk = KnownStatsChunk & Record<string, any>;
