@@ -6,6 +6,7 @@ import { UsedClassName } from "./identifiers.module.css";
 
 // To prevent analysis export
 const isNotACSSModule = typeof notACssModule["c" + "lass"] === "undefined";
+const hasOwnProperty = (obj, p) => Object.hasOwnProperty.call(obj, p)
 
 export default {
 	global: style.global,
@@ -49,5 +50,6 @@ export default {
 	deepClassInContainer: style['deep-class-in-container'],
 	cssModuleWithCustomFileExtension: myCssClass,
 	notAValidCssModuleExtension: isNotACSSModule,
-	UsedClassName
+	UsedClassName,
+	exportLocalVarsShouldCleanup: `${hasOwnProperty(notACssModule, 'local-color')} ${hasOwnProperty(notACssModule, "LOCAL-COLOR")}`
 };
