@@ -8511,7 +8511,7 @@ declare class NormalModule extends Module {
 	static getCompilationHooks(
 		compilation: Compilation
 	): NormalModuleCompilationHooks;
-	static deserialize(context: ObjectDeserializerContext): NormalModule;
+	static deserialize(context?: any): NormalModule;
 }
 declare interface NormalModuleCompilationHooks {
 	loader: SyncHook<[object, NormalModule]>;
