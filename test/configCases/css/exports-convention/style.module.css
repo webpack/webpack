@@ -1,0 +1,24 @@
+.btn-info_is-disabled {
+  color: blue;
+}
+
+.btn--info_is-disabled_1 {
+  color: blue;
+}
+
+.simple {
+  color: red;
+}
+
+a {
+  color: yellow;
+}
+
+:export {
+  foo: bar;
+  my-btn-info_is-disabled: value;
+}
+
+.foo_bar {
+  color: red;
+}
