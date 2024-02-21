@@ -2271,7 +2271,7 @@ describe("snapshots", () => {
 			-     "generator": Object {},
 			+     "generator": Object {
 			+       "css": Object {
-			+         "exportsConvention": "asIs",
+			+         "exportsConvention": "as-is",
 			+         "exportsOnly": false,
 			+       },
 			+     },

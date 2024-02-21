@@ -7,21 +7,21 @@ const common = {
 				type: "css/module",
 				oneOf: [
 					{
-						resourceQuery: /\?asIs$/,
+						resourceQuery: /\?as-is$/,
 						generator: {
-							exportsConvention: "asIs"
+							exportsConvention: "as-is"
 						}
 					},
 					{
-						resourceQuery: /\?camelCase$/,
+						resourceQuery: /\?camel-case$/,
 						generator: {
-							exportsConvention: "camelCase"
+							exportsConvention: "camel-case"
 						}
 					},
 					{
-						resourceQuery: /\?camelCaseOnly$/,
+						resourceQuery: /\?camel-case-only$/,
 						generator: {
-							exportsConvention: "camelCaseOnly"
+							exportsConvention: "camel-case-only"
 						}
 					},
 					{
@@ -31,9 +31,9 @@ const common = {
 						}
 					},
 					{
-						resourceQuery: /\?dashesOnly$/,
+						resourceQuery: /\?dashes-only$/,
 						generator: {
-							exportsConvention: "dashesOnly"
+							exportsConvention: "dashes-only"
 						}
 					},
 					{

@@ -2830,38 +2830,38 @@ exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allo
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 1`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?asIs-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?asIs-btn-info_is-disabled",
+  "btn--info_is-disabled_1": "./style.module.css?as-is-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?as-is-btn-info_is-disabled",
   "foo": "bar",
-  "foo_bar": "./style.module.css?asIs-foo_bar",
+  "foo_bar": "./style.module.css?as-is-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?asIs-simple",
+  "simple": "./style.module.css?as-is-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 2`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?camelCase-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?camelCase-btn-info_is-disabled",
-  "btnInfoIsDisabled": "./style.module.css?camelCase-btn-info_is-disabled",
-  "btnInfoIsDisabled1": "./style.module.css?camelCase-btn--info_is-disabled_1",
+  "btn--info_is-disabled_1": "./style.module.css?camel-case-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled": "./style.module.css?camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "./style.module.css?camel-case-btn--info_is-disabled_1",
   "foo": "bar",
-  "fooBar": "./style.module.css?camelCase-foo_bar",
-  "foo_bar": "./style.module.css?camelCase-foo_bar",
+  "fooBar": "./style.module.css?camel-case-foo_bar",
+  "foo_bar": "./style.module.css?camel-case-foo_bar",
   "my-btn-info_is-disabled": "value",
   "myBtnInfoIsDisabled": "value",
-  "simple": "./style.module.css?camelCase-simple",
+  "simple": "./style.module.css?camel-case-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 3`] = `
 Object {
-  "btnInfoIsDisabled": "./style.module.css?camelCaseOnly-btn-info_is-disabled",
-  "btnInfoIsDisabled1": "./style.module.css?camelCaseOnly-btn--info_is-disabled_1",
+  "btnInfoIsDisabled": "./style.module.css?camel-case-only-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "./style.module.css?camel-case-only-btn--info_is-disabled_1",
   "foo": "bar",
-  "fooBar": "./style.module.css?camelCaseOnly-foo_bar",
+  "fooBar": "./style.module.css?camel-case-only-foo_bar",
   "myBtnInfoIsDisabled": "value",
-  "simple": "./style.module.css?camelCaseOnly-simple",
+  "simple": "./style.module.css?camel-case-only-simple",
 }
 `;
 
@@ -2881,12 +2881,12 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 5`] = `
 Object {
-  "btnInfo_isDisabled": "./style.module.css?dashesOnly-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "./style.module.css?dashesOnly-btn--info_is-disabled_1",
+  "btnInfo_isDisabled": "./style.module.css?dashes-only-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "./style.module.css?dashes-only-btn--info_is-disabled_1",
   "foo": "bar",
-  "foo_bar": "./style.module.css?dashesOnly-foo_bar",
+  "foo_bar": "./style.module.css?dashes-only-foo_bar",
   "myBtnInfo_isDisabled": "value",
-  "simple": "./style.module.css?dashesOnly-simple",
+  "simple": "./style.module.css?dashes-only-simple",
 }
 `;
 
@@ -2903,34 +2903,34 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 7`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?asIs-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?asIs-btn-info_is-disabled",
+  "btn--info_is-disabled_1": "./style.module.css?as-is-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?as-is-btn-info_is-disabled",
   "foo": "bar",
-  "foo_bar": "./style.module.css?asIs-foo_bar",
+  "foo_bar": "./style.module.css?as-is-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?asIs-simple",
+  "simple": "./style.module.css?as-is-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 8`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?camelCase-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?camelCase-btn-info_is-disabled",
+  "btn--info_is-disabled_1": "./style.module.css?camel-case-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?camel-case-btn-info_is-disabled",
   "foo": "bar",
-  "foo_bar": "./style.module.css?camelCase-foo_bar",
+  "foo_bar": "./style.module.css?camel-case-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?camelCase-simple",
+  "simple": "./style.module.css?camel-case-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 9`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?camelCaseOnly-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?camelCaseOnly-btn-info_is-disabled",
+  "btn--info_is-disabled_1": "./style.module.css?camel-case-only-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?camel-case-only-btn-info_is-disabled",
   "foo": "bar",
-  "foo_bar": "./style.module.css?camelCaseOnly-foo_bar",
+  "foo_bar": "./style.module.css?camel-case-only-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?camelCaseOnly-simple",
+  "simple": "./style.module.css?camel-case-only-simple",
 }
 `;
 
@@ -2947,12 +2947,12 @@ Object {
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 11`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?dashesOnly-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?dashesOnly-btn-info_is-disabled",
+  "btn--info_is-disabled_1": "./style.module.css?dashes-only-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?dashes-only-btn-info_is-disabled",
   "foo": "bar",
-  "foo_bar": "./style.module.css?dashesOnly-foo_bar",
+  "foo_bar": "./style.module.css?dashes-only-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?dashesOnly-simple",
+  "simple": "./style.module.css?dashes-only-simple",
 }
 `;
 

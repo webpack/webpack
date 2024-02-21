@@ -2900,11 +2900,11 @@ declare interface CssAutoGeneratorOptions {
 	 * Specifies the convention of exported names.
 	 */
 	exportsConvention?:
-		| "asIs"
-		| "camelCase"
-		| "camelCaseOnly"
+		| "as-is"
+		| "camel-case"
+		| "camel-case-only"
 		| "dashes"
-		| "dashesOnly"
+		| "dashes-only"
 		| ((name: string) => string);
 
 	/**
@@ -2931,11 +2931,11 @@ declare interface CssGeneratorOptions {
 	 * Specifies the convention of exported names.
 	 */
 	exportsConvention?:
-		| "asIs"
-		| "camelCase"
-		| "camelCaseOnly"
+		| "as-is"
+		| "camel-case"
+		| "camel-case-only"
 		| "dashes"
-		| "dashesOnly"
+		| "dashes-only"
 		| ((name: string) => string);
 
 	/**
@@ -2952,11 +2952,11 @@ declare interface CssGlobalGeneratorOptions {
 	 * Specifies the convention of exported names.
 	 */
 	exportsConvention?:
-		| "asIs"
-		| "camelCase"
-		| "camelCaseOnly"
+		| "as-is"
+		| "camel-case"
+		| "camel-case-only"
 		| "dashes"
-		| "dashesOnly"
+		| "dashes-only"
 		| ((name: string) => string);
 
 	/**
@@ -2983,11 +2983,11 @@ declare interface CssModuleGeneratorOptions {
 	 * Specifies the convention of exported names.
 	 */
 	exportsConvention?:
-		| "asIs"
-		| "camelCase"
-		| "camelCaseOnly"
+		| "as-is"
+		| "camel-case"
+		| "camel-case-only"
 		| "dashes"
-		| "dashesOnly"
+		| "dashes-only"
 		| ((name: string) => string);
 
 	/**

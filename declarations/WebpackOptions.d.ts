@@ -740,7 +740,7 @@ export type AssetParserDataUrlFunction = (
  * Specifies the convention of exported names.
  */
 export type CssGeneratorExportsConvention =
-	| ("asIs" | "camelCase" | "camelCaseOnly" | "dashes" | "dashesOnly")
+	| ("as-is" | "camel-case" | "camel-case-only" | "dashes" | "dashes-only")
 	| ((name: string) => string);
 /**
  * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.

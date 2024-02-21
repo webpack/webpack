@@ -402,7 +402,13 @@
       "description": "Specifies the convention of exported names.",
       "anyOf": [
         {
-          "enum": ["asIs", "camelCase", "camelCaseOnly", "dashes", "dashesOnly"]
+          "enum": [
+            "as-is",
+            "camel-case",
+            "camel-case-only",
+            "dashes",
+            "dashes-only"
+          ]
         },
         {
           "instanceof": "Function",
