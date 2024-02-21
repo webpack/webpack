@@ -2897,6 +2897,17 @@ type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
  */
 declare interface CssAutoGeneratorOptions {
 	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?:
+		| "asIs"
+		| "camelCase"
+		| "camelCaseOnly"
+		| "dashes"
+		| "dashesOnly"
+		| ((name: string) => string);
+
+	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: boolean;
@@ -2917,6 +2928,17 @@ declare interface CssAutoParserOptions {
  */
 declare interface CssGeneratorOptions {
 	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?:
+		| "asIs"
+		| "camelCase"
+		| "camelCaseOnly"
+		| "dashes"
+		| "dashesOnly"
+		| ((name: string) => string);
+
+	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: boolean;
@@ -2926,6 +2948,17 @@ declare interface CssGeneratorOptions {
  * Generator options for css/global modules.
  */
 declare interface CssGlobalGeneratorOptions {
+	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?:
+		| "asIs"
+		| "camelCase"
+		| "camelCaseOnly"
+		| "dashes"
+		| "dashesOnly"
+		| ((name: string) => string);
+
 	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
@@ -2946,6 +2979,17 @@ declare interface CssGlobalParserOptions {
  * Generator options for css/module modules.
  */
 declare interface CssModuleGeneratorOptions {
+	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?:
+		| "asIs"
+		| "camelCase"
+		| "camelCaseOnly"
+		| "dashes"
+		| "dashesOnly"
+		| ((name: string) => string);
+
 	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
