@@ -1266,7 +1266,7 @@ declare abstract class ChunkGroup {
 	 * add a chunk into ChunkGroup. Is pushed on or prepended
 	 */
 	pushChunk(chunk: Chunk): boolean;
-	replaceChunk(oldChunk: Chunk, newChunk: Chunk): boolean;
+	replaceChunk(oldChunk: Chunk, newChunk: Chunk): undefined | boolean;
 	removeChunk(chunk: Chunk): boolean;
 	isInitial(): boolean;
 	addChild(group: ChunkGroup): boolean;
@@ -2266,7 +2266,7 @@ declare class Compiler {
 	>;
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
-	infrastructureLogger?: WebpackLogger;
+	infrastructureLogger?: (arg0: string, arg1: LogTypeEnum, arg2: any[]) => void;
 	options: WebpackOptionsNormalized;
 	context: string;
 	requestShortener: RequestShortener;
@@ -7478,6 +7478,21 @@ declare interface LogEntry {
 	time: number;
 	trace?: string[];
 }
+type LogTypeEnum =
+	| "error"
+	| "warn"
+	| "info"
+	| "log"
+	| "debug"
+	| "profile"
+	| "trace"
+	| "group"
+	| "groupCollapsed"
+	| "groupEnd"
+	| "profileEnd"
+	| "time"
+	| "clear"
+	| "status";
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
 declare interface MainRenderContext {
