@@ -1429,6 +1429,26 @@ Object {
     "multiple": false,
     "simpleType": "string",
   },
+  "module-generator-css-auto-exports-convention": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the convention of exported names.",
+        "multiple": false,
+        "path": "module.generator.css/auto.exportsConvention",
+        "type": "enum",
+        "values": Array [
+          "as-is",
+          "camel-case",
+          "camel-case-only",
+          "dashes",
+          "dashes-only",
+        ],
+      },
+    ],
+    "description": "Specifies the convention of exported names.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-auto-exports-only": Object {
     "configs": Array [
       Object {
@@ -1441,6 +1461,26 @@ Object {
     "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-generator-css-exports-convention": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the convention of exported names.",
+        "multiple": false,
+        "path": "module.generator.css.exportsConvention",
+        "type": "enum",
+        "values": Array [
+          "as-is",
+          "camel-case",
+          "camel-case-only",
+          "dashes",
+          "dashes-only",
+        ],
+      },
+    ],
+    "description": "Specifies the convention of exported names.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-generator-css-exports-only": Object {
     "configs": Array [
@@ -1455,6 +1495,26 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-generator-css-global-exports-convention": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the convention of exported names.",
+        "multiple": false,
+        "path": "module.generator.css/global.exportsConvention",
+        "type": "enum",
+        "values": Array [
+          "as-is",
+          "camel-case",
+          "camel-case-only",
+          "dashes",
+          "dashes-only",
+        ],
+      },
+    ],
+    "description": "Specifies the convention of exported names.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-global-exports-only": Object {
     "configs": Array [
       Object {
@@ -1467,6 +1527,26 @@ Object {
     "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-generator-css-module-exports-convention": Object {
+    "configs": Array [
+      Object {
+        "description": "Specifies the convention of exported names.",
+        "multiple": false,
+        "path": "module.generator.css/module.exportsConvention",
+        "type": "enum",
+        "values": Array [
+          "as-is",
+          "camel-case",
+          "camel-case-only",
+          "dashes",
+          "dashes-only",
+        ],
+      },
+    ],
+    "description": "Specifies the convention of exported names.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-generator-css-module-exports-only": Object {
     "configs": Array [

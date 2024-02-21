@@ -737,6 +737,12 @@ export type AssetParserDataUrlFunction = (
 	context: {filename: string; module: import("../lib/Module")}
 ) => boolean;
 /**
+ * Specifies the convention of exported names.
+ */
+export type CssGeneratorExportsConvention =
+	| ("as-is" | "camel-case" | "camel-case-only" | "dashes" | "dashes-only")
+	| ((name: string) => string);
+/**
  * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
  */
 export type CssGeneratorExportsOnly = boolean;
@@ -2832,6 +2838,10 @@ export interface AssetResourceGeneratorOptions {
  */
 export interface CssAutoGeneratorOptions {
 	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?: CssGeneratorExportsConvention;
+	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: CssGeneratorExportsOnly;
@@ -2850,6 +2860,10 @@ export interface CssAutoParserOptions {
  */
 export interface CssGeneratorOptions {
 	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?: CssGeneratorExportsConvention;
+	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: CssGeneratorExportsOnly;
@@ -2858,6 +2872,10 @@ export interface CssGeneratorOptions {
  * Generator options for css/global modules.
  */
 export interface CssGlobalGeneratorOptions {
+	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?: CssGeneratorExportsConvention;
 	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
@@ -2876,6 +2894,10 @@ export interface CssGlobalParserOptions {
  * Generator options for css/module modules.
  */
 export interface CssModuleGeneratorOptions {
+	/**
+	 * Specifies the convention of exported names.
+	 */
+	exportsConvention?: CssGeneratorExportsConvention;
 	/**
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */

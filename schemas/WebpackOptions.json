@@ -364,6 +364,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "exportsConvention": {
+          "$ref": "#/definitions/CssGeneratorExportsConvention"
+        },
         "exportsOnly": {
           "$ref": "#/definitions/CssGeneratorExportsOnly"
         }
@@ -395,6 +398,24 @@
         }
       ]
     },
+    "CssGeneratorExportsConvention": {
+      "description": "Specifies the convention of exported names.",
+      "anyOf": [
+        {
+          "enum": [
+            "as-is",
+            "camel-case",
+            "camel-case-only",
+            "dashes",
+            "dashes-only"
+          ]
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((name: string) => string)"
+        }
+      ]
+    },
     "CssGeneratorExportsOnly": {
       "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
       "type": "boolean"
@@ -404,6 +425,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "exportsConvention": {
+          "$ref": "#/definitions/CssGeneratorExportsConvention"
+        },
         "exportsOnly": {
           "$ref": "#/definitions/CssGeneratorExportsOnly"
         }
@@ -414,6 +438,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "exportsConvention": {
+          "$ref": "#/definitions/CssGeneratorExportsConvention"
+        },
         "exportsOnly": {
           "$ref": "#/definitions/CssGeneratorExportsOnly"
         }
@@ -434,6 +461,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "exportsConvention": {
+          "$ref": "#/definitions/CssGeneratorExportsConvention"
+        },
         "exportsOnly": {
           "$ref": "#/definitions/CssGeneratorExportsOnly"
         }

@@ -1897,7 +1897,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
     --\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-used-class: 10px;
 }
 
-head{--webpack-use-style_js:class/local1/local2/local3/local4/local5/local6/local7/disabled/mButtonDisabled/tipOnly/local8/parent1/child1/vertical-tiny/vertical-small/otherDiv/horizontal-tiny/horizontal-small/description/local9/local10/local11/local12/local13/local14/local15/local16/nested1/nested3/ident/localkeyframes/pos1x%pos1y%pos2x%pos2y%localkeyframes2/animation/vars/local-color%globalVars/wideScreenClass/narrowScreenClass/displayGridInSupports/floatRightInNegativeSupports/displayFlexInMediaInSupports/displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase/animationUpperCase/localkeyframesUPPERCASE/localkeyframes2UPPPERCASE/localUpperCase/VARS/LOCAL-COLOR%globalVarsUpperCase/inSupportScope/a/animationName/b/c/d/animation-name%mozAnimationName/my-color%c0ffee/padding-sm/padding-lg/nested-pure/nested-media/nested-supports/nested-layer/not-selector-inside/nested-var/again/nested-with-local-pseudo/local-nested/bar/id-foo/id-bar/nested-parens/local-in-global/in-local-global-scope/class-local-scope/class-in-container/deep-class-in-container/placeholder-gray-700/placeholder-opacity%test%baz%slidein/my-global-class-again/first-nested/first-nested-nested/first-nested-at-rule/first-nested-nested-at-rule-deep/foo%\\\\.\\\\/style\\\\.module\\\\.css,myCssClass/\\\\.\\\\/style\\\\.module\\\\.my-css,\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName/variable-unused-class%UsedClassName/variable-used-class%\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
+head{--webpack-use-style_js:class:\\\\.\\\\/style\\\\.module\\\\.css-class/local1:\\\\.\\\\/style\\\\.module\\\\.css-local1/local2:\\\\.\\\\/style\\\\.module\\\\.css-local2/local3:\\\\.\\\\/style\\\\.module\\\\.css-local3/local4:\\\\.\\\\/style\\\\.module\\\\.css-local4/local5:\\\\.\\\\/style\\\\.module\\\\.css-local5/local6:\\\\.\\\\/style\\\\.module\\\\.css-local6/local7:\\\\.\\\\/style\\\\.module\\\\.css-local7/disabled:\\\\.\\\\/style\\\\.module\\\\.css-disabled/mButtonDisabled:\\\\.\\\\/style\\\\.module\\\\.css-mButtonDisabled/tipOnly:\\\\.\\\\/style\\\\.module\\\\.css-tipOnly/local8:\\\\.\\\\/style\\\\.module\\\\.css-local8/parent1:\\\\.\\\\/style\\\\.module\\\\.css-parent1/child1:\\\\.\\\\/style\\\\.module\\\\.css-child1/vertical-tiny:\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny/vertical-small:\\\\.\\\\/style\\\\.module\\\\.css-vertical-small/otherDiv:\\\\.\\\\/style\\\\.module\\\\.css-otherDiv/horizontal-tiny:\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny/horizontal-small:\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small/description:\\\\.\\\\/style\\\\.module\\\\.css-description/local9:\\\\.\\\\/style\\\\.module\\\\.css-local9/local10:\\\\.\\\\/style\\\\.module\\\\.css-local10/local11:\\\\.\\\\/style\\\\.module\\\\.css-local11/local12:\\\\.\\\\/style\\\\.module\\\\.css-local12/local13:\\\\.\\\\/style\\\\.module\\\\.css-local13/local14:\\\\.\\\\/style\\\\.module\\\\.css-local14/local15:\\\\.\\\\/style\\\\.module\\\\.css-local15/local16:\\\\.\\\\/style\\\\.module\\\\.css-local16/nested1:\\\\.\\\\/style\\\\.module\\\\.css-nested1/nested3:\\\\.\\\\/style\\\\.module\\\\.css-nested3/ident:\\\\.\\\\/style\\\\.module\\\\.css-ident/localkeyframes:\\\\.\\\\/style\\\\.module\\\\.css-localkeyframes/pos1x:--\\\\.\\\\/style\\\\.module\\\\.css-pos1x/pos1y:--\\\\.\\\\/style\\\\.module\\\\.css-pos1y/pos2x:--\\\\.\\\\/style\\\\.module\\\\.css-pos2x/pos2y:--\\\\.\\\\/style\\\\.module\\\\.css-pos2y/localkeyframes2:\\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2/animation:\\\\.\\\\/style\\\\.module\\\\.css-animation/vars:\\\\.\\\\/style\\\\.module\\\\.css-vars/local-color:--\\\\.\\\\/style\\\\.module\\\\.css-local-color/globalVars:\\\\.\\\\/style\\\\.module\\\\.css-globalVars/wideScreenClass:\\\\.\\\\/style\\\\.module\\\\.css-wideScreenClass/narrowScreenClass:\\\\.\\\\/style\\\\.module\\\\.css-narrowScreenClass/displayGridInSupports:\\\\.\\\\/style\\\\.module\\\\.css-displayGridInSupports/floatRightInNegativeSupports:\\\\.\\\\/style\\\\.module\\\\.css-floatRightInNegativeSupports/displayFlexInMediaInSupports:\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:\\\\.\\\\/style\\\\.module\\\\.css-animationUpperCase/localkeyframesUPPERCASE:\\\\.\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:\\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2UPPPERCASE/localUpperCase:\\\\.\\\\/style\\\\.module\\\\.css-localUpperCase/VARS:\\\\.\\\\/style\\\\.module\\\\.css-VARS/LOCAL-COLOR:--\\\\.\\\\/style\\\\.module\\\\.css-LOCAL-COLOR/globalVarsUpperCase:\\\\.\\\\/style\\\\.module\\\\.css-globalVarsUpperCase/inSupportScope:\\\\.\\\\/style\\\\.module\\\\.css-inSupportScope/a:\\\\.\\\\/style\\\\.module\\\\.css-a/animationName:\\\\.\\\\/style\\\\.module\\\\.css-animationName/b:\\\\.\\\\/style\\\\.module\\\\.css-b/c:\\\\.\\\\/style\\\\.module\\\\.css-c/d:\\\\.\\\\/style\\\\.module\\\\.css-d/animation-name:--\\\\.\\\\/style\\\\.module\\\\.css-animation-name/mozAnimationName:\\\\.\\\\/style\\\\.module\\\\.css-mozAnimationName/my-color:--\\\\.\\\\/style\\\\.module\\\\.css-my-color/c0ffee:\\\\.\\\\/style\\\\.module\\\\.css-c0ffee/padding-sm:\\\\.\\\\/style\\\\.module\\\\.css-padding-sm/padding-lg:\\\\.\\\\/style\\\\.module\\\\.css-padding-lg/nested-pure:\\\\.\\\\/style\\\\.module\\\\.css-nested-pure/nested-media:\\\\.\\\\/style\\\\.module\\\\.css-nested-media/nested-supports:\\\\.\\\\/style\\\\.module\\\\.css-nested-supports/nested-layer:\\\\.\\\\/style\\\\.module\\\\.css-nested-layer/not-selector-inside:\\\\.\\\\/style\\\\.module\\\\.css-not-selector-inside/nested-var:\\\\.\\\\/style\\\\.module\\\\.css-nested-var/again:\\\\.\\\\/style\\\\.module\\\\.css-again/nested-with-local-pseudo:\\\\.\\\\/style\\\\.module\\\\.css-nested-with-local-pseudo/local-nested:\\\\.\\\\/style\\\\.module\\\\.css-local-nested/bar:\\\\.\\\\/style\\\\.module\\\\.css-bar/id-foo:\\\\.\\\\/style\\\\.module\\\\.css-id-foo/id-bar:\\\\.\\\\/style\\\\.module\\\\.css-id-bar/nested-parens:\\\\.\\\\/style\\\\.module\\\\.css-nested-parens/local-in-global:\\\\.\\\\/style\\\\.module\\\\.css-local-in-global/in-local-global-scope:\\\\.\\\\/style\\\\.module\\\\.css-in-local-global-scope/class-local-scope:\\\\.\\\\/style\\\\.module\\\\.css-class-local-scope/class-in-container:\\\\.\\\\/style\\\\.module\\\\.css-class-in-container/deep-class-in-container:\\\\.\\\\/style\\\\.module\\\\.css-deep-class-in-container/placeholder-gray-700:\\\\.\\\\/style\\\\.module\\\\.css-placeholder-gray-700/placeholder-opacity:--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity/test:--\\\\.\\\\/style\\\\.module\\\\.css-test/baz:--\\\\.\\\\/style\\\\.module\\\\.css-baz/slidein:\\\\.\\\\/style\\\\.module\\\\.css-slidein/my-global-class-again:\\\\.\\\\/style\\\\.module\\\\.css-my-global-class-again/first-nested:\\\\.\\\\/style\\\\.module\\\\.css-first-nested/first-nested-nested:\\\\.\\\\/style\\\\.module\\\\.css-first-nested-nested/first-nested-at-rule:\\\\.\\\\/style\\\\.module\\\\.css-first-nested-at-rule/first-nested-nested-at-rule-deep:\\\\.\\\\/style\\\\.module\\\\.css-first-nested-nested-at-rule-deep/foo:--\\\\.\\\\/style\\\\.module\\\\.css-foo/\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:\\\\.\\\\/style\\\\.module\\\\.my-css-myCssClass/\\\\.\\\\/style\\\\.module\\\\.my-css,\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:\\\\.\\\\/identifiers\\\\.module\\\\.css-UnusedClassName/variable-unused-class:--\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-unused-class/UsedClassName:\\\\.\\\\/identifiers\\\\.module\\\\.css-UsedClassName/variable-used-class:--\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-used-class/\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules 2`] = `
@@ -2549,7 +2549,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
     --my-app-194-c5: 10px;
 }
 
-head{--webpack-my-app-226:zg/Hi/OB/VE/O2/Vj/OH/H5/aq/VN/VM/AO/Hq/O4/Hb/OP/Hw/nb/\\\\$Q/bD/\\\\$t/qi%xB%\\\\$6%gJ%x/lY/f/uz%aK/a7/uf/sW/TZ/aY/II/ij/zG/Dk/XE/I0%wt/nc/iZ/ZP%M6/rX%dW/cD/V0/Ci/bK/Y1/Y%t6%KR%Fk/_235,k/_666,_816,RJ%ZL/c5%_194;}"
+head{--webpack-my-app-226:zg:my-app-235-zg/Hi:my-app-235-Hi/OB:my-app-235-OB/VE:my-app-235-VE/O2:my-app-235-O2/Vj:my-app-235-Vj/OH:my-app-235-OH/H5:my-app-235-H5/aq:my-app-235-aq/VN:my-app-235-VN/VM:my-app-235-VM/AO:my-app-235-AO/Hq:my-app-235-Hq/O4:my-app-235-O4/Hb:my-app-235-Hb/OP:my-app-235-OP/Hw:my-app-235-Hw/nb:my-app-235-nb/\\\\$Q:my-app-235-\\\\$Q/bD:my-app-235-bD/\\\\$t:my-app-235-\\\\$t/qi:--my-app-235-qi/xB:--my-app-235-xB/\\\\$6:--my-app-235-\\\\$6/gJ:--my-app-235-gJ/x:my-app-235-x/lY:my-app-235-lY/f:my-app-235-f/uz:--my-app-235-uz/aK:my-app-235-aK/a7:my-app-235-a7/uf:my-app-235-uf/sW:my-app-235-sW/TZ:my-app-235-TZ/aY:my-app-235-aY/II:my-app-235-II/ij:my-app-235-ij/zG:my-app-235-zG/Dk:my-app-235-Dk/XE:my-app-235-XE/I0:--my-app-235-I0/wt:my-app-235-wt/nc:my-app-235-nc/iZ:my-app-235-iZ/ZP:--my-app-235-ZP/M6:my-app-235-M6/rX:--my-app-235-rX/dW:my-app-235-dW/cD:my-app-235-cD/V0:my-app-235-V0/Ci:my-app-235-Ci/bK:my-app-235-bK/Y1:my-app-235-Y1/Y:--my-app-235-Y/t6:--my-app-235-t6/KR:--my-app-235-KR/Fk:my-app-235-Fk/_235,k:my-app-666-k/_666,_816,RJ:--my-app-194-RJ/ZL:my-app-194-ZL/c5:--my-app-194-c5/_194;}"
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: dev 1`] = `
@@ -2827,6 +2827,145 @@ exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allo
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 1`] = `"my-app-235-O2"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 2`] = `"my-app-235-O2"`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 1`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css?as-is-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?as-is-btn-info_is-disabled",
+  "foo": "bar",
+  "foo_bar": "./style.module.css?as-is-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css?as-is-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 2`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css?camel-case-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled": "./style.module.css?camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "./style.module.css?camel-case-btn--info_is-disabled_1",
+  "foo": "bar",
+  "fooBar": "./style.module.css?camel-case-foo_bar",
+  "foo_bar": "./style.module.css?camel-case-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "./style.module.css?camel-case-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 3`] = `
+Object {
+  "btnInfoIsDisabled": "./style.module.css?camel-case-only-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "./style.module.css?camel-case-only-btn--info_is-disabled_1",
+  "foo": "bar",
+  "fooBar": "./style.module.css?camel-case-only-foo_bar",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "./style.module.css?camel-case-only-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 4`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css?dashes-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled": "./style.module.css?dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "./style.module.css?dashes-btn--info_is-disabled_1",
+  "foo": "bar",
+  "foo_bar": "./style.module.css?dashes-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "./style.module.css?dashes-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 5`] = `
+Object {
+  "btnInfo_isDisabled": "./style.module.css?dashes-only-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "./style.module.css?dashes-only-btn--info_is-disabled_1",
+  "foo": "bar",
+  "foo_bar": "./style.module.css?dashes-only-foo_bar",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "./style.module.css?dashes-only-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 6`] = `
+Object {
+  "BTN--INFO_IS-DISABLED_1": "./style.module.css?upper-btn--info_is-disabled_1",
+  "BTN-INFO_IS-DISABLED": "./style.module.css?upper-btn-info_is-disabled",
+  "FOO": "bar",
+  "FOO_BAR": "./style.module.css?upper-foo_bar",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "./style.module.css?upper-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 7`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css?as-is-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?as-is-btn-info_is-disabled",
+  "foo": "bar",
+  "foo_bar": "./style.module.css?as-is-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css?as-is-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 8`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css?camel-case-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?camel-case-btn-info_is-disabled",
+  "foo": "bar",
+  "foo_bar": "./style.module.css?camel-case-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css?camel-case-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 9`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css?camel-case-only-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?camel-case-only-btn-info_is-disabled",
+  "foo": "bar",
+  "foo_bar": "./style.module.css?camel-case-only-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css?camel-case-only-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 10`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css?dashes-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?dashes-btn-info_is-disabled",
+  "foo": "bar",
+  "foo_bar": "./style.module.css?dashes-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css?dashes-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 11`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css?dashes-only-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?dashes-only-btn-info_is-disabled",
+  "foo": "bar",
+  "foo_bar": "./style.module.css?dashes-only-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css?dashes-only-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 12`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css?upper-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css?upper-btn-info_is-disabled",
+  "foo": "bar",
+  "foo_bar": "./style.module.css?upper-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css?upper-simple",
+}
+`;
 
 exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: dev 1`] = `
 Object {
