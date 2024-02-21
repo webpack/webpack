@@ -843,13 +843,13 @@ declare class Cache {
 	get<T>(
 		identifier: string,
 		etag: null | Etag,
-		callback: CallbackCache<T>
+		callback: CallbackCacheCache<T>
 	): void;
 	store<T>(
 		identifier: string,
 		etag: null | Etag,
 		data: T,
-		callback: CallbackCache<void>
+		callback: CallbackCacheCache<void>
 	): void;
 
 	/**
@@ -857,11 +857,11 @@ declare class Cache {
 	 */
 	storeBuildDependencies(
 		dependencies: Iterable<string>,
-		callback: CallbackCache<void>
+		callback: CallbackCacheCache<void>
 	): void;
 	beginIdle(): void;
-	endIdle(callback: CallbackCache<void>): void;
-	shutdown(callback: CallbackCache<void>): void;
+	endIdle(callback: CallbackCacheCache<void>): void;
+	shutdown(callback: CallbackCacheCache<void>): void;
 	static STAGE_MEMORY: number;
 	static STAGE_DEFAULT: number;
 	static STAGE_DISK: number;
@@ -875,14 +875,14 @@ declare abstract class CacheFacade {
 	get<T>(
 		identifier: string,
 		etag: null | Etag,
-		callback: CallbackCache<T>
+		callback: CallbackCacheCacheFacade<T>
 	): void;
 	getPromise<T>(identifier: string, etag: null | Etag): Promise<T>;
 	store<T>(
 		identifier: string,
 		etag: null | Etag,
 		data: T,
-		callback: CallbackCache<void>
+		callback: CallbackCacheCacheFacade<void>
 	): void;
 	storePromise<T>(
 		identifier: string,
@@ -953,17 +953,26 @@ declare interface CallExpressionInfo {
 declare interface CallbackAsyncQueue<T> {
 	(err?: null | WebpackError, result?: T): any;
 }
-declare interface CallbackCache<T> {
+declare interface CallbackCacheCache<T> {
+	(err: null | WebpackError, result?: T): void;
+}
+declare interface CallbackCacheCacheFacade<T> {
 	(err?: null | WebpackError, result?: T): void;
 }
 declare interface CallbackFunction_1<T> {
-	(err?: null | Error, result?: T): any;
+	(err: null | Error, result?: T): any;
 }
 declare interface CallbackFunction_2<T> {
-	(err?: null | Error, stats?: T): void;
+	(err?: null | Error, result?: T): any;
 }
 declare interface CallbackNormalErrorCache<T> {
 	(err?: null | Error, result?: T): void;
+}
+declare interface CallbackNormalModuleFactory<T> {
+	(err?: null | Error, stats?: T): void;
+}
+declare interface CallbackWebpack<T> {
+	(err: null | Error, stats?: T): void;
 }
 type Cell<T> = undefined | T;
 declare class Chunk {
@@ -1932,7 +1941,7 @@ declare class Compilation {
 		module: Module,
 		callback: (err?: null | WebpackError, result?: Module) => void
 	): void;
-	finish(callback?: any): void;
+	finish(callback: (err?: null | WebpackError) => void): void;
 	unseal(): void;
 	seal(callback: (err?: null | WebpackError) => void): void;
 	reportDependencyErrorsAndWarnings(
@@ -2257,7 +2266,7 @@ declare class Compiler {
 	>;
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
-	infrastructureLogger: any;
+	infrastructureLogger?: WebpackLogger;
 	options: WebpackOptionsNormalized;
 	context: string;
 	requestShortener: RequestShortener;
@@ -2276,14 +2285,11 @@ declare class Compiler {
 	watchMode: boolean;
 	getCache(name: string): CacheFacade;
 	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
-	watch(
-		watchOptions: WatchOptions,
-		handler: CallbackFunction_1<Stats>
-	): Watching;
-	run(callback: CallbackFunction_1<Stats>): void;
+	watch(watchOptions: WatchOptions, handler: RunCallback<Stats>): Watching;
+	run(callback: RunCallback<Stats>): void;
 	runAsChild(
 		callback: (
-			err?: null | Error,
+			err: null | Error,
 			entries?: Chunk[],
 			compilation?: Compilation
 		) => any
@@ -2291,10 +2297,10 @@ declare class Compiler {
 	purgeInputFileSystem(): void;
 	emitAssets(
 		compilation: Compilation,
-		callback: CallbackFunction_1<void>
+		callback: CallbackFunction_2<void>
 	): void;
-	emitRecords(callback: CallbackFunction_1<void>): void;
-	readRecords(callback: CallbackFunction_1<void>): void;
+	emitRecords(callback: CallbackFunction_2<void>): void;
+	readRecords(callback: CallbackFunction_2<void>): void;
 	createChildCompiler(
 		compilation: Compilation,
 		compilerName: string,
@@ -2303,7 +2309,7 @@ declare class Compiler {
 		plugins?: WebpackPluginInstance[]
 	): Compiler;
 	isChild(): boolean;
-	createCompilation(params?: any): Compilation;
+	createCompilation(params: CompilationParams): Compilation;
 	newCompilation(params: CompilationParams): Compilation;
 	createNormalModuleFactory(): NormalModuleFactory;
 	createContextModuleFactory(): ContextModuleFactory;
@@ -2311,8 +2317,8 @@ declare class Compiler {
 		normalModuleFactory: NormalModuleFactory;
 		contextModuleFactory: ContextModuleFactory;
 	};
-	compile(callback: CallbackFunction_1<Compilation>): void;
-	close(callback: CallbackFunction_1<void>): void;
+	compile(callback: RunCallback<Compilation>): void;
+	close(callback: RunCallback<void>): void;
 }
 declare class ConcatSource extends Source {
 	constructor(...args: (string | Source)[]);
@@ -5325,9 +5331,9 @@ declare interface IntermediateFileSystemExtras {
 }
 type InternalCell<T> = T | typeof TOMBSTONE | typeof UNDEFINED_MARKER;
 declare abstract class ItemCacheFacade {
-	get<T>(callback: CallbackCache<T>): void;
+	get<T>(callback: CallbackCacheCacheFacade<T>): void;
 	getPromise<T>(): Promise<T>;
-	store<T>(data: T, callback: CallbackCache<void>): void;
+	store<T>(data: T, callback: CallbackCacheCacheFacade<void>): void;
 	storePromise<T>(data: T): Promise<void>;
 	provide<T>(
 		computer: (arg0: CallbackNormalErrorCache<T>) => void,
@@ -8336,10 +8342,10 @@ declare abstract class MultiStats {
 declare abstract class MultiWatching {
 	watchings: Watching[];
 	compiler: MultiCompiler;
-	invalidate(callback?: CallbackFunction_1<void>): void;
+	invalidate(callback?: CallbackFunction_2<void>): void;
 	suspend(): void;
 	resume(): void;
-	close(callback: CallbackFunction_1<void>): void;
+	close(callback: CallbackFunction_2<void>): void;
 }
 declare class NamedChunkIdsPlugin {
 	constructor(options?: NamedChunkIdsPluginOptions);
@@ -8658,7 +8664,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		array: LoaderItem[],
 		resolver: ResolverWithOptions,
 		resolveContext: ResolveContext,
-		callback: CallbackFunction_2<LoaderItem[]>
+		callback: CallbackNormalModuleFactory<LoaderItem[]>
 	): void;
 	getParser(type: string, parserOptions?: ParserOptions): Parser;
 	createParser(type: string, parserOptions?: ParserOptions): Parser;
@@ -11327,6 +11333,9 @@ type RuleSetUseItem =
 			options?: string | { [index: string]: any };
 	  }
 	| __TypeWebpackOptions;
+declare interface RunCallback<T> {
+	(err: null | Error, result?: T): any;
+}
 declare class RuntimeChunkPlugin {
 	constructor(options?: any);
 	options: any;
@@ -13769,18 +13778,18 @@ type __Type_2 =
 			| __Type_2[]);
 declare function exports(
 	options: Configuration,
-	callback?: CallbackFunction_2<Stats>
+	callback?: CallbackWebpack<Stats>
 ): Compiler;
 declare function exports(
 	options: ReadonlyArray<Configuration> & MultiCompilerOptions,
-	callback?: CallbackFunction_2<MultiStats>
+	callback?: CallbackWebpack<MultiStats>
 ): MultiCompiler;
 declare namespace exports {
 	export const webpack: {
-		(options: Configuration, callback?: CallbackFunction_2<Stats>): Compiler;
+		(options: Configuration, callback?: CallbackWebpack<Stats>): Compiler;
 		(
 			options: ReadonlyArray<Configuration> & MultiCompilerOptions,
-			callback?: CallbackFunction_2<MultiStats>
+			callback?: CallbackWebpack<MultiStats>
 		): MultiCompiler;
 	};
 	export const validate: (options?: any) => void;
