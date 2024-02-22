@@ -135,6 +135,7 @@ declare module "@webassemblyjs/ast" {
 	): void;
 	export class NodePath<T> {
 		node: T;
+		remove(): void;
 	}
 	export class Node {}
 	export class Identifier extends Node {
@@ -148,6 +149,7 @@ declare module "@webassemblyjs/ast" {
 		valtype?: string;
 		id?: Identifier;
 		signature?: Signature;
+		mutability: string;
 	}
 	export class ModuleImport extends Node {
 		module: string;
@@ -171,6 +173,7 @@ declare module "@webassemblyjs/ast" {
 	export class FloatLiteral extends Node {}
 	export class GlobalType extends Node {
 		valtype: string;
+		mutability: string;
 	}
 	export class Global extends Node {
 		init: Instruction[];
@@ -214,9 +217,9 @@ declare module "@webassemblyjs/ast" {
 		init: Node[]
 	): ObjectInstruction;
 	export function signature(params: FuncParam[], results: string[]): Signature;
-	export function func(initFuncId, signature: Signature, funcBody): Func;
+	export function func(initFuncId: Identifier, signature: Signature, funcBody: Instruction[]): Func;
 	export function typeInstruction(
-		id: Identifier,
+		id: Identifier | undefined,
 		functype: Signature
 	): TypeInstruction;
 	export function indexInFuncSection(index: Index): IndexInFuncSection;
@@ -229,7 +232,7 @@ declare module "@webassemblyjs/ast" {
 		index: Index
 	): ModuleExportDescr;
 
-	export function getSectionMetadata(ast: any, section: string);
+	export function getSectionMetadata(ast: any, section: string): { vectorOfSize: { value: number } };
 	export class FuncSignature {
 		args: string[];
 		result: string[];

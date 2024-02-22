@@ -843,13 +843,13 @@ declare class Cache {
 	get<T>(
 		identifier: string,
 		etag: null | Etag,
-		callback: CallbackCache<T>
+		callback: CallbackCacheCache<T>
 	): void;
 	store<T>(
 		identifier: string,
 		etag: null | Etag,
 		data: T,
-		callback: CallbackCache<void>
+		callback: CallbackCacheCache<void>
 	): void;
 
 	/**
@@ -857,11 +857,11 @@ declare class Cache {
 	 */
 	storeBuildDependencies(
 		dependencies: Iterable<string>,
-		callback: CallbackCache<void>
+		callback: CallbackCacheCache<void>
 	): void;
 	beginIdle(): void;
-	endIdle(callback: CallbackCache<void>): void;
-	shutdown(callback: CallbackCache<void>): void;
+	endIdle(callback: CallbackCacheCache<void>): void;
+	shutdown(callback: CallbackCacheCache<void>): void;
 	static STAGE_MEMORY: number;
 	static STAGE_DEFAULT: number;
 	static STAGE_DISK: number;
@@ -875,14 +875,14 @@ declare abstract class CacheFacade {
 	get<T>(
 		identifier: string,
 		etag: null | Etag,
-		callback: CallbackCache<T>
+		callback: CallbackCacheCacheFacade<T>
 	): void;
 	getPromise<T>(identifier: string, etag: null | Etag): Promise<T>;
 	store<T>(
 		identifier: string,
 		etag: null | Etag,
 		data: T,
-		callback: CallbackCache<void>
+		callback: CallbackCacheCacheFacade<void>
 	): void;
 	storePromise<T>(
 		identifier: string,
@@ -953,17 +953,26 @@ declare interface CallExpressionInfo {
 declare interface CallbackAsyncQueue<T> {
 	(err?: null | WebpackError, result?: T): any;
 }
-declare interface CallbackCache<T> {
+declare interface CallbackCacheCache<T> {
+	(err: null | WebpackError, result?: T): void;
+}
+declare interface CallbackCacheCacheFacade<T> {
 	(err?: null | WebpackError, result?: T): void;
 }
 declare interface CallbackFunction_1<T> {
-	(err?: null | Error, result?: T): any;
+	(err: null | Error, result?: T): any;
 }
 declare interface CallbackFunction_2<T> {
-	(err?: null | Error, stats?: T): void;
+	(err?: null | Error, result?: T): any;
 }
 declare interface CallbackNormalErrorCache<T> {
 	(err?: null | Error, result?: T): void;
+}
+declare interface CallbackNormalModuleFactory<T> {
+	(err?: null | Error, stats?: T): void;
+}
+declare interface CallbackWebpack<T> {
+	(err: null | Error, stats?: T): void;
 }
 type Cell<T> = undefined | T;
 declare class Chunk {
@@ -1257,7 +1266,7 @@ declare abstract class ChunkGroup {
 	 * add a chunk into ChunkGroup. Is pushed on or prepended
 	 */
 	pushChunk(chunk: Chunk): boolean;
-	replaceChunk(oldChunk: Chunk, newChunk: Chunk): boolean;
+	replaceChunk(oldChunk: Chunk, newChunk: Chunk): undefined | boolean;
 	removeChunk(chunk: Chunk): boolean;
 	isInitial(): boolean;
 	addChild(group: ChunkGroup): boolean;
@@ -1755,7 +1764,7 @@ declare class Compilation {
 		>;
 		afterProcessAssets: SyncHook<[CompilationAssets]>;
 		processAdditionalAssets: AsyncSeriesHook<[CompilationAssets]>;
-		needAdditionalSeal: SyncBailHook<[], boolean>;
+		needAdditionalSeal: SyncBailHook<[], undefined | boolean>;
 		afterSeal: AsyncSeriesHook<[]>;
 		renderManifest: SyncWaterfallHook<
 			[RenderManifestEntry[], RenderManifestOptions]
@@ -1781,11 +1790,11 @@ declare class Compilation {
 		get normalModuleLoader(): SyncHook<[object, NormalModule]>;
 	}>;
 	name?: string;
-	startTime: any;
-	endTime: any;
+	startTime?: number;
+	endTime?: number;
 	compiler: Compiler;
 	resolverFactory: ResolverFactory;
-	inputFileSystem: InputFileSystem;
+	inputFileSystem: null | InputFileSystem;
 	fileSystemInfo: FileSystemInfo;
 	valueCacheVersions: Map<string, string | Set<string>>;
 	requestShortener: RequestShortener;
@@ -1932,7 +1941,7 @@ declare class Compilation {
 		module: Module,
 		callback: (err?: null | WebpackError, result?: Module) => void
 	): void;
-	finish(callback?: any): void;
+	finish(callback: (err?: null | WebpackError) => void): void;
 	unseal(): void;
 	seal(callback: (err?: null | WebpackError) => void): void;
 	reportDependencyErrorsAndWarnings(
@@ -2238,13 +2247,13 @@ declare class Compiler {
 	root: Compiler;
 	outputPath: string;
 	watching?: Watching;
-	outputFileSystem: OutputFileSystem;
-	intermediateFileSystem: IntermediateFileSystem;
-	inputFileSystem: InputFileSystem;
-	watchFileSystem: WatchFileSystem;
+	outputFileSystem: null | OutputFileSystem;
+	intermediateFileSystem: null | IntermediateFileSystem;
+	inputFileSystem: null | InputFileSystem;
+	watchFileSystem: null | WatchFileSystem;
 	recordsInputPath: null | string;
 	recordsOutputPath: null | string;
-	records: object;
+	records: Record<string, any>;
 	managedPaths: Set<string | RegExp>;
 	unmanagedPaths: Set<string | RegExp>;
 	immutablePaths: Set<string | RegExp>;
@@ -2257,7 +2266,7 @@ declare class Compiler {
 	>;
 	fsStartTime?: number;
 	resolverFactory: ResolverFactory;
-	infrastructureLogger: any;
+	infrastructureLogger?: (arg0: string, arg1: LogTypeEnum, arg2: any[]) => void;
 	options: WebpackOptionsNormalized;
 	context: string;
 	requestShortener: RequestShortener;
@@ -2266,7 +2275,7 @@ declare class Compiler {
 		Module,
 		{
 			buildInfo: object;
-			references: WeakMap<Dependency, Module>;
+			references?: WeakMap<Dependency, Module>;
 			memCache: WeakTupleMap<any, any>;
 		}
 	>;
@@ -2276,14 +2285,11 @@ declare class Compiler {
 	watchMode: boolean;
 	getCache(name: string): CacheFacade;
 	getInfrastructureLogger(name: string | (() => string)): WebpackLogger;
-	watch(
-		watchOptions: WatchOptions,
-		handler: CallbackFunction_1<Stats>
-	): Watching;
-	run(callback: CallbackFunction_1<Stats>): void;
+	watch(watchOptions: WatchOptions, handler: RunCallback<Stats>): Watching;
+	run(callback: RunCallback<Stats>): void;
 	runAsChild(
 		callback: (
-			err?: null | Error,
+			err: null | Error,
 			entries?: Chunk[],
 			compilation?: Compilation
 		) => any
@@ -2291,10 +2297,10 @@ declare class Compiler {
 	purgeInputFileSystem(): void;
 	emitAssets(
 		compilation: Compilation,
-		callback: CallbackFunction_1<void>
+		callback: CallbackFunction_2<void>
 	): void;
-	emitRecords(callback: CallbackFunction_1<void>): void;
-	readRecords(callback: CallbackFunction_1<void>): void;
+	emitRecords(callback: CallbackFunction_2<void>): void;
+	readRecords(callback: CallbackFunction_2<void>): void;
 	createChildCompiler(
 		compilation: Compilation,
 		compilerName: string,
@@ -2303,7 +2309,7 @@ declare class Compiler {
 		plugins?: WebpackPluginInstance[]
 	): Compiler;
 	isChild(): boolean;
-	createCompilation(params?: any): Compilation;
+	createCompilation(params: CompilationParams): Compilation;
 	newCompilation(params: CompilationParams): Compilation;
 	createNormalModuleFactory(): NormalModuleFactory;
 	createContextModuleFactory(): ContextModuleFactory;
@@ -2311,8 +2317,8 @@ declare class Compiler {
 		normalModuleFactory: NormalModuleFactory;
 		contextModuleFactory: ContextModuleFactory;
 	};
-	compile(callback: CallbackFunction_1<Compilation>): void;
-	close(callback: CallbackFunction_1<void>): void;
+	compile(callback: RunCallback<Compilation>): void;
+	close(callback: RunCallback<void>): void;
 }
 declare class ConcatSource extends Source {
 	constructor(...args: (string | Source)[]);
@@ -5369,9 +5375,9 @@ declare interface IntermediateFileSystemExtras {
 }
 type InternalCell<T> = T | typeof TOMBSTONE | typeof UNDEFINED_MARKER;
 declare abstract class ItemCacheFacade {
-	get<T>(callback: CallbackCache<T>): void;
+	get<T>(callback: CallbackCacheCacheFacade<T>): void;
 	getPromise<T>(): Promise<T>;
-	store<T>(data: T, callback: CallbackCache<void>): void;
+	store<T>(data: T, callback: CallbackCacheCacheFacade<void>): void;
 	storePromise<T>(data: T): Promise<void>;
 	provide<T>(
 		computer: (arg0: CallbackNormalErrorCache<T>) => void,
@@ -7516,6 +7522,21 @@ declare interface LogEntry {
 	time: number;
 	trace?: string[];
 }
+type LogTypeEnum =
+	| "error"
+	| "warn"
+	| "info"
+	| "log"
+	| "debug"
+	| "profile"
+	| "trace"
+	| "group"
+	| "groupCollapsed"
+	| "groupEnd"
+	| "profileEnd"
+	| "time"
+	| "clear"
+	| "status";
 declare const MEASURE_END_OPERATION: unique symbol;
 declare const MEASURE_START_OPERATION: unique symbol;
 declare interface MainRenderContext {
@@ -7684,7 +7705,7 @@ declare class Module extends DependenciesBlock {
 	index: null | number;
 	index2: null | number;
 	depth: null | number;
-	issuer: null | Module;
+	issuer?: null | Module;
 	get usedExports(): null | boolean | SortableSet<string>;
 	get optimizationBailout(): (
 		| string
@@ -7942,8 +7963,8 @@ declare class ModuleGraph {
 		module: Module,
 		indexInBlock?: number
 	): void;
-	getParentModule(dependency: Dependency): Module;
-	getParentBlock(dependency: Dependency): DependenciesBlock;
+	getParentModule(dependency: Dependency): undefined | Module;
+	getParentBlock(dependency: Dependency): undefined | DependenciesBlock;
 	getParentBlockIndex(dependency: Dependency): number;
 	setResolvedModule(
 		originModule: Module,
@@ -7976,13 +7997,13 @@ declare class ModuleGraph {
 	getOutgoingConnections(module: Module): Iterable<ModuleGraphConnection>;
 	getIncomingConnectionsByOriginModule(
 		module: Module
-	): Map<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
+	): Map<undefined | null | Module, ReadonlyArray<ModuleGraphConnection>>;
 	getOutgoingConnectionsByModule(
 		module: Module
 	): undefined | Map<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
 	getProfile(module: Module): null | ModuleProfile;
 	setProfile(module: Module, profile: null | ModuleProfile): void;
-	getIssuer(module: Module): null | Module;
+	getIssuer(module: Module): undefined | null | Module;
 	setIssuer(module: Module, issuer: null | Module): void;
 	setIssuerIfUnset(module: Module, issuer: null | Module): void;
 	getOptimizationBailout(
@@ -8043,6 +8064,7 @@ declare class ModuleGraphConnection {
 		explanation?: string,
 		weak?: boolean,
 		condition?:
+			| null
 			| false
 			| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState)
 	);
@@ -8380,10 +8402,10 @@ declare abstract class MultiStats {
 declare abstract class MultiWatching {
 	watchings: Watching[];
 	compiler: MultiCompiler;
-	invalidate(callback?: CallbackFunction_1<void>): void;
+	invalidate(callback?: CallbackFunction_2<void>): void;
 	suspend(): void;
 	resume(): void;
-	close(callback: CallbackFunction_1<void>): void;
+	close(callback: CallbackFunction_2<void>): void;
 }
 declare class NamedChunkIdsPlugin {
 	constructor(options?: NamedChunkIdsPluginOptions);
@@ -8702,7 +8724,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		array: LoaderItem[],
 		resolver: ResolverWithOptions,
 		resolveContext: ResolveContext,
-		callback: CallbackFunction_2<LoaderItem[]>
+		callback: CallbackNormalModuleFactory<LoaderItem[]>
 	): void;
 	getParser(type: string, parserOptions?: ParserOptions): Parser;
 	createParser(type: string, parserOptions?: ParserOptions): Parser;
@@ -11371,9 +11393,16 @@ type RuleSetUseItem =
 			options?: string | { [index: string]: any };
 	  }
 	| __TypeWebpackOptions;
+declare interface RunCallback<T> {
+	(err: null | Error, result?: T): any;
+}
 declare class RuntimeChunkPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options: { name?: (entrypoint: { name: string }) => string });
+	options: {
+		name:
+			| ((entrypoint: { name: string }) => string)
+			| ((entrypoint: Entrypoint) => string);
+	};
 
 	/**
 	 * Apply the plugin
@@ -11450,7 +11479,7 @@ declare abstract class RuntimeTemplate {
 	compilation: Compilation;
 	outputOptions: OutputNormalized;
 	requestShortener: RequestShortener;
-	globalObject: string;
+	globalObject?: string;
 	contentHashReplacement: string;
 	isIIFE(): undefined | boolean;
 	isModule(): undefined | boolean;
@@ -11464,15 +11493,15 @@ declare abstract class RuntimeTemplate {
 	supportsDynamicImport(): undefined | boolean;
 	supportsEcmaScriptModuleSyntax(): undefined | boolean;
 	supportTemplateLiteral(): undefined | boolean;
-	returningFunction(returnValue?: any, args?: string): string;
-	basicFunction(args?: any, body?: any): string;
+	returningFunction(returnValue: string, args?: string): string;
+	basicFunction(args: string, body: string | string[]): string;
 	concatenation(...args: (string | { expr: string })[]): string;
-	expressionFunction(expression?: any, args?: string): string;
-	emptyFunction(): "x => {}" | "function() {}";
-	destructureArray(items?: any, value?: any): string;
-	destructureObject(items?: any, value?: any): string;
-	iife(args?: any, body?: any): string;
-	forEach(variable?: any, array?: any, body?: any): string;
+	expressionFunction(expression: string, args?: string): string;
+	emptyFunction(): string;
+	destructureArray(items: string[], value: string): string;
+	destructureObject(items: string[], value: string): string;
+	iife(args: string, body: string): string;
+	forEach(variable: string, array: string, body: string | string[]): string;
 
 	/**
 	 * Add a comment
@@ -11541,7 +11570,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the request that should be printed as comment
 		 */
-		request: string;
+		request?: string;
 		/**
 		 * expression to use as id expression
 		 */
@@ -11563,7 +11592,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the request that should be printed as comment
 		 */
-		request: string;
+		request?: string;
 		/**
 		 * if the dependency is weak (will create a nice error message)
 		 */
@@ -11581,7 +11610,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the request that should be printed as comment
 		 */
-		request: string;
+		request?: string;
 		/**
 		 * if the dependency is weak (will create a nice error message)
 		 */
@@ -11783,7 +11812,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the async block
 		 */
-		block: AsyncDependenciesBlock;
+		block?: AsyncDependenciesBlock;
 		/**
 		 * the message
 		 */
@@ -12438,8 +12467,8 @@ declare class Stats {
 	constructor(compilation: Compilation);
 	compilation: Compilation;
 	get hash(): string;
-	get startTime(): any;
-	get endTime(): any;
+	get startTime(): number;
+	get endTime(): number;
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
 	toJson(options?: string | boolean | StatsOptions): StatsCompilation;
@@ -13418,7 +13447,7 @@ declare abstract class Watching {
 declare abstract class WeakTupleMap<T extends any[], V> {
 	set(...args: [T, ...V[]]): void;
 	has(...args: T): boolean;
-	get(...args: T): V;
+	get(...args: T): undefined | V;
 	provide(...args: [T, ...(() => V)[]]): V;
 	delete(...args: T): void;
 	clear(): void;
@@ -13813,18 +13842,18 @@ type __Type_2 =
 			| __Type_2[]);
 declare function exports(
 	options: Configuration,
-	callback?: CallbackFunction_2<Stats>
+	callback?: CallbackWebpack<Stats>
 ): Compiler;
 declare function exports(
 	options: ReadonlyArray<Configuration> & MultiCompilerOptions,
-	callback?: CallbackFunction_2<MultiStats>
+	callback?: CallbackWebpack<MultiStats>
 ): MultiCompiler;
 declare namespace exports {
 	export const webpack: {
-		(options: Configuration, callback?: CallbackFunction_2<Stats>): Compiler;
+		(options: Configuration, callback?: CallbackWebpack<Stats>): Compiler;
 		(
 			options: ReadonlyArray<Configuration> & MultiCompilerOptions,
-			callback?: CallbackFunction_2<MultiStats>
+			callback?: CallbackWebpack<MultiStats>
 		): MultiCompiler;
 	};
 	export const validate: (options?: any) => void;
