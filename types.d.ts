@@ -1764,7 +1764,7 @@ declare class Compilation {
 		>;
 		afterProcessAssets: SyncHook<[CompilationAssets]>;
 		processAdditionalAssets: AsyncSeriesHook<[CompilationAssets]>;
-		needAdditionalSeal: SyncBailHook<[], boolean>;
+		needAdditionalSeal: SyncBailHook<[], undefined | boolean>;
 		afterSeal: AsyncSeriesHook<[]>;
 		renderManifest: SyncWaterfallHook<
 			[RenderManifestEntry[], RenderManifestOptions]
@@ -1790,11 +1790,11 @@ declare class Compilation {
 		get normalModuleLoader(): SyncHook<[object, NormalModule]>;
 	}>;
 	name?: string;
-	startTime: any;
-	endTime: any;
+	startTime?: number;
+	endTime?: number;
 	compiler: Compiler;
 	resolverFactory: ResolverFactory;
-	inputFileSystem: InputFileSystem;
+	inputFileSystem: null | InputFileSystem;
 	fileSystemInfo: FileSystemInfo;
 	valueCacheVersions: Map<string, string | Set<string>>;
 	requestShortener: RequestShortener;
@@ -2247,13 +2247,13 @@ declare class Compiler {
 	root: Compiler;
 	outputPath: string;
 	watching?: Watching;
-	outputFileSystem: OutputFileSystem;
-	intermediateFileSystem: IntermediateFileSystem;
-	inputFileSystem: InputFileSystem;
-	watchFileSystem: WatchFileSystem;
+	outputFileSystem: null | OutputFileSystem;
+	intermediateFileSystem: null | IntermediateFileSystem;
+	inputFileSystem: null | InputFileSystem;
+	watchFileSystem: null | WatchFileSystem;
 	recordsInputPath: null | string;
 	recordsOutputPath: null | string;
-	records: object;
+	records: Record<string, Record<number, any>>;
 	managedPaths: Set<string | RegExp>;
 	unmanagedPaths: Set<string | RegExp>;
 	immutablePaths: Set<string | RegExp>;
@@ -2275,7 +2275,7 @@ declare class Compiler {
 		Module,
 		{
 			buildInfo: object;
-			references: WeakMap<Dependency, Module>;
+			references?: WeakMap<Dependency, Module>;
 			memCache: WeakTupleMap<any, any>;
 		}
 	>;
@@ -7661,7 +7661,7 @@ declare class Module extends DependenciesBlock {
 	index: null | number;
 	index2: null | number;
 	depth: null | number;
-	issuer: null | Module;
+	issuer?: null | Module;
 	get usedExports(): null | boolean | SortableSet<string>;
 	get optimizationBailout(): (
 		| string
@@ -7919,8 +7919,8 @@ declare class ModuleGraph {
 		module: Module,
 		indexInBlock?: number
 	): void;
-	getParentModule(dependency: Dependency): Module;
-	getParentBlock(dependency: Dependency): DependenciesBlock;
+	getParentModule(dependency: Dependency): undefined | Module;
+	getParentBlock(dependency: Dependency): undefined | DependenciesBlock;
 	getParentBlockIndex(dependency: Dependency): number;
 	setResolvedModule(
 		originModule: Module,
@@ -7953,13 +7953,13 @@ declare class ModuleGraph {
 	getOutgoingConnections(module: Module): Iterable<ModuleGraphConnection>;
 	getIncomingConnectionsByOriginModule(
 		module: Module
-	): Map<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
+	): Map<undefined | null | Module, ReadonlyArray<ModuleGraphConnection>>;
 	getOutgoingConnectionsByModule(
 		module: Module
 	): undefined | Map<undefined | Module, ReadonlyArray<ModuleGraphConnection>>;
 	getProfile(module: Module): null | ModuleProfile;
 	setProfile(module: Module, profile: null | ModuleProfile): void;
-	getIssuer(module: Module): null | Module;
+	getIssuer(module: Module): undefined | null | Module;
 	setIssuer(module: Module, issuer: null | Module): void;
 	setIssuerIfUnset(module: Module, issuer: null | Module): void;
 	getOptimizationBailout(
@@ -8020,6 +8020,7 @@ declare class ModuleGraphConnection {
 		explanation?: string,
 		weak?: boolean,
 		condition?:
+			| null
 			| false
 			| ((arg0: ModuleGraphConnection, arg1: RuntimeSpec) => ConnectionState)
 	);
@@ -11352,8 +11353,12 @@ declare interface RunCallback<T> {
 	(err: null | Error, result?: T): any;
 }
 declare class RuntimeChunkPlugin {
-	constructor(options?: any);
-	options: any;
+	constructor(options: { name?: (entrypoint: { name: string }) => string });
+	options: {
+		name:
+			| ((entrypoint: { name: string }) => string)
+			| ((entrypoint: Entrypoint) => string);
+	};
 
 	/**
 	 * Apply the plugin
@@ -11430,7 +11435,7 @@ declare abstract class RuntimeTemplate {
 	compilation: Compilation;
 	outputOptions: OutputNormalized;
 	requestShortener: RequestShortener;
-	globalObject: string;
+	globalObject?: string;
 	contentHashReplacement: string;
 	isIIFE(): undefined | boolean;
 	isModule(): undefined | boolean;
@@ -11444,15 +11449,15 @@ declare abstract class RuntimeTemplate {
 	supportsDynamicImport(): undefined | boolean;
 	supportsEcmaScriptModuleSyntax(): undefined | boolean;
 	supportTemplateLiteral(): undefined | boolean;
-	returningFunction(returnValue?: any, args?: string): string;
-	basicFunction(args?: any, body?: any): string;
+	returningFunction(returnValue: string, args?: string): string;
+	basicFunction(args: string, body: string | string[]): string;
 	concatenation(...args: (string | { expr: string })[]): string;
-	expressionFunction(expression?: any, args?: string): string;
-	emptyFunction(): "x => {}" | "function() {}";
-	destructureArray(items?: any, value?: any): string;
-	destructureObject(items?: any, value?: any): string;
-	iife(args?: any, body?: any): string;
-	forEach(variable?: any, array?: any, body?: any): string;
+	expressionFunction(expression: string, args?: string): string;
+	emptyFunction(): string;
+	destructureArray(items: string[], value: string): string;
+	destructureObject(items: string[], value: string): string;
+	iife(args: string, body: string): string;
+	forEach(variable: string, array: string, body: string | string[]): string;
 
 	/**
 	 * Add a comment
@@ -11521,7 +11526,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the request that should be printed as comment
 		 */
-		request: string;
+		request?: string;
 		/**
 		 * expression to use as id expression
 		 */
@@ -11543,7 +11548,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the request that should be printed as comment
 		 */
-		request: string;
+		request?: string;
 		/**
 		 * if the dependency is weak (will create a nice error message)
 		 */
@@ -11561,7 +11566,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the request that should be printed as comment
 		 */
-		request: string;
+		request?: string;
 		/**
 		 * if the dependency is weak (will create a nice error message)
 		 */
@@ -11763,7 +11768,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * the async block
 		 */
-		block: AsyncDependenciesBlock;
+		block?: AsyncDependenciesBlock;
 		/**
 		 * the message
 		 */
@@ -12418,8 +12423,8 @@ declare class Stats {
 	constructor(compilation: Compilation);
 	compilation: Compilation;
 	get hash(): string;
-	get startTime(): any;
-	get endTime(): any;
+	get startTime(): number;
+	get endTime(): number;
 	hasWarnings(): boolean;
 	hasErrors(): boolean;
 	toJson(options?: string | boolean | StatsOptions): StatsCompilation;
@@ -13398,7 +13403,7 @@ declare abstract class Watching {
 declare abstract class WeakTupleMap<T extends any[], V> {
 	set(...args: [T, ...V[]]): void;
 	has(...args: T): boolean;
-	get(...args: T): V;
+	get(...args: T): undefined | V;
 	provide(...args: [T, ...(() => V)[]]): V;
 	delete(...args: T): void;
 	clear(): void;
