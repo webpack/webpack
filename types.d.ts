@@ -2253,7 +2253,7 @@ declare class Compiler {
 	watchFileSystem: null | WatchFileSystem;
 	recordsInputPath: null | string;
 	recordsOutputPath: null | string;
-	records: Record<string, Record<number, any>>;
+	records: Record<string, any>;
 	managedPaths: Set<string | RegExp>;
 	unmanagedPaths: Set<string | RegExp>;
 	immutablePaths: Set<string | RegExp>;
