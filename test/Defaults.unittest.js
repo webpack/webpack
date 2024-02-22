@@ -2214,9 +2214,10 @@ describe("snapshots", () => {
 			+     "css": true,
 			+     "futureDefaults": true,
 			@@ ... @@
+			+       },
 			+       Object {
 			+         "rules": Array [
-			@@ ... @@
+			+           Object {
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -2265,8 +2266,6 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
-			+       },
-			+       Object {
 			@@ ... @@
 			-     "generator": Object {},
 			+     "generator": Object {
@@ -2274,11 +2273,20 @@ describe("snapshots", () => {
 			+         "exportsConvention": "as-is",
 			+         "exportsOnly": false,
 			+       },
+			+       "css/auto": Object {
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+       },
+			+       "css/global": Object {
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+       },
+			+       "css/module": Object {
+			+         "localIdentName": "[uniqueName]-[id]-[local]",
+			+       },
 			+     },
 			@@ ... @@
-			+       },
 			+       "css": Object {
 			+         "namedExports": true,
+			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@

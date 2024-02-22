@@ -747,6 +747,10 @@ export type CssGeneratorExportsConvention =
  */
 export type CssGeneratorExportsOnly = boolean;
 /**
+ * Configure the generated local ident name.
+ */
+export type CssGeneratorLocalIdentName = string;
+/**
  * Use ES modules named export for css exports.
  */
 export type CssParserNamedExports = boolean;
@@ -2845,6 +2849,10 @@ export interface CssAutoGeneratorOptions {
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: CssGeneratorExportsOnly;
+	/**
+	 * Configure the generated local ident name.
+	 */
+	localIdentName?: CssGeneratorLocalIdentName;
 }
 /**
  * Parser options for css/auto modules.
@@ -2880,6 +2888,10 @@ export interface CssGlobalGeneratorOptions {
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: CssGeneratorExportsOnly;
+	/**
+	 * Configure the generated local ident name.
+	 */
+	localIdentName?: CssGeneratorLocalIdentName;
 }
 /**
  * Parser options for css/global modules.
@@ -2902,6 +2914,10 @@ export interface CssModuleGeneratorOptions {
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: CssGeneratorExportsOnly;
+	/**
+	 * Configure the generated local ident name.
+	 */
+	localIdentName?: CssGeneratorLocalIdentName;
 }
 /**
  * Parser options for css/module modules.

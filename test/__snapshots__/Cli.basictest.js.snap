@@ -1462,6 +1462,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-generator-css-auto-local-ident-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure the generated local ident name.",
+        "multiple": false,
+        "path": "module.generator.css/auto.localIdentName",
+        "type": "string",
+      },
+    ],
+    "description": "Configure the generated local ident name.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-exports-convention": Object {
     "configs": Array [
       Object {
@@ -1528,6 +1541,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-generator-css-global-local-ident-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure the generated local ident name.",
+        "multiple": false,
+        "path": "module.generator.css/global.localIdentName",
+        "type": "string",
+      },
+    ],
+    "description": "Configure the generated local ident name.",
+    "multiple": false,
+    "simpleType": "string",
+  },
   "module-generator-css-module-exports-convention": Object {
     "configs": Array [
       Object {
@@ -1560,6 +1586,19 @@ Object {
     "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
     "multiple": false,
     "simpleType": "boolean",
+  },
+  "module-generator-css-module-local-ident-name": Object {
+    "configs": Array [
+      Object {
+        "description": "Configure the generated local ident name.",
+        "multiple": false,
+        "path": "module.generator.css/module.localIdentName",
+        "type": "string",
+      },
+    ],
+    "description": "Configure the generated local ident name.",
+    "multiple": false,
+    "simpleType": "string",
   },
   "module-no-parse": Object {
     "configs": Array [
