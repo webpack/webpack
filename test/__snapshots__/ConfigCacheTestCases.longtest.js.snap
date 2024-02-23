@@ -3048,6 +3048,42 @@ Object {
 
 exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 6`] = `
 Object {
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 7`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-de84261a9640bc9390f3",
+  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-ecdfa12ee9c667c55af7",
+  "color-red": "---_style_module_css_uniqueName-id-contenthash-b7dc4acdff896aeffb60",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-d46074bbd7d5ee641466",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-_style_module_css_uniqueName-id-contenthash-d55fd643016d378ac454",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 8`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.less__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.less__btn-info_is-disabled",
+  "color-red": "--./style.module.less__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.less__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.less__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 9`] = `
+Object {
   "btn--info_is-disabled_1": "-_style_module_css-btn--info_is-disabled_1",
   "btn-info_is-disabled": "-_style_module_css-btn-info_is-disabled",
   "color-red": "---_style_module_css-color-red",
@@ -3058,7 +3094,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 7`] = `
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 10`] = `
 Object {
   "btn--info_is-disabled_1": "de84261a9640bc9390f3",
   "btn-info_is-disabled": "ecdfa12ee9c667c55af7",
@@ -3070,7 +3106,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 8`] = `
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 11`] = `
 Object {
   "btn--info_is-disabled_1": "ea850e6088d2566f677d-btn--info_is-disabled_1",
   "btn-info_is-disabled": "ea850e6088d2566f677d-btn-info_is-disabled",
@@ -3082,7 +3118,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 9`] = `
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 12`] = `
 Object {
   "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
   "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
@@ -3094,7 +3130,7 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 10`] = `
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 13`] = `
 Object {
   "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
   "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
@@ -3103,6 +3139,42 @@ Object {
   "foo_bar": "./style.module.css__foo_bar",
   "my-btn-info_is-disabled": "value",
   "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 14`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-de84261a9640bc9390f3",
+  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-ecdfa12ee9c667c55af7",
+  "color-red": "---_style_module_css_uniqueName-id-contenthash-b7dc4acdff896aeffb60",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-d46074bbd7d5ee641466",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-_style_module_css_uniqueName-id-contenthash-d55fd643016d378ac454",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.less__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.less__btn-info_is-disabled",
+  "color-red": "--./style.module.less__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.less__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.less__simple",
 }
 `;
 

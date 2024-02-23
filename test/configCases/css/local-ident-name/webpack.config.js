@@ -3,6 +3,14 @@ const common = {
 	module: {
 		rules: [
 			{
+				test: /\.less$/,
+				type: "css/auto",
+				use: ["less-loader"],
+				generator: {
+					localIdentName: "[path][name][ext]__[local]"
+				}
+			},
+			{
 				test: /\.css$/,
 				type: "css/auto",
 				oneOf: [
@@ -28,6 +36,19 @@ const common = {
 						resourceQuery: /\?file-local$/,
 						generator: {
 							localIdentName: "[file]__[local]"
+						}
+					},
+					{
+						resourceQuery: /\?q$/,
+						resourceFragment: /#f$/,
+						generator: {
+							localIdentName: "[file][query][fragment]__[local]"
+						}
+					},
+					{
+						resourceQuery: /\?uniqueName-id-contenthash$/,
+						generator: {
+							localIdentName: "[uniqueName]-[id]-[contenthash]"
 						}
 					}
 				]
