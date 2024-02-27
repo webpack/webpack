@@ -1249,110 +1249,110 @@ head{--webpack-main:https\\\\:\\\\/\\\\/test\\\\.cases\\\\/path\\\\/\\\\.\\\\.\\
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules 1`] = `
-".\\\\.\\\\/style\\\\.module\\\\.css-class {
+"._-_style_module_css-class {
 	color: red;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local1,
-.\\\\.\\\\/style\\\\.module\\\\.css-local2 .global,
-.\\\\.\\\\/style\\\\.module\\\\.css-local3 {
+._-_style_module_css-local1,
+._-_style_module_css-local2 .global,
+._-_style_module_css-local3 {
 	color: green;
 }
 
-.global .\\\\.\\\\/style\\\\.module\\\\.css-local4 {
+.global ._-_style_module_css-local4 {
 	color: yellow;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local5.global.\\\\.\\\\/style\\\\.module\\\\.css-local6 {
+._-_style_module_css-local5.global._-_style_module_css-local6 {
 	color: blue;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local7 div:not(.\\\\.\\\\/style\\\\.module\\\\.css-disabled, .\\\\.\\\\/style\\\\.module\\\\.css-mButtonDisabled, .\\\\.\\\\/style\\\\.module\\\\.css-tipOnly) {
+._-_style_module_css-local7 div:not(._-_style_module_css-disabled, ._-_style_module_css-mButtonDisabled, ._-_style_module_css-tipOnly) {
     pointer-events: initial !important;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local8 :is(div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-small,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\/style\\\\.module\\\\.css-description) {
+._-_style_module_css-local8 :is(div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-tiny,
+    div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-small,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-tiny,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-small div._-_style_module_css-description) {
   max-height: 0;
   margin: 0;
   overflow: hidden;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local9 :matches(div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-small,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\/style\\\\.module\\\\.css-description) {
+._-_style_module_css-local9 :matches(div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-tiny,
+    div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-small,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-tiny,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-small div._-_style_module_css-description) {
   max-height: 0;
   margin: 0;
   overflow: hidden;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local10 :where(div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-small,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\/style\\\\.module\\\\.css-description) {
+._-_style_module_css-local10 :where(div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-tiny,
+    div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-small,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-tiny,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-small div._-_style_module_css-description) {
   max-height: 0;
   margin: 0;
   overflow: hidden;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local11 div:has(.\\\\.\\\\/style\\\\.module\\\\.css-disabled, .\\\\.\\\\/style\\\\.module\\\\.css-mButtonDisabled, .\\\\.\\\\/style\\\\.module\\\\.css-tipOnly) {
+._-_style_module_css-local11 div:has(._-_style_module_css-disabled, ._-_style_module_css-mButtonDisabled, ._-_style_module_css-tipOnly) {
     pointer-events: initial !important;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local12 div:current(p, span) {
+._-_style_module_css-local12 div:current(p, span) {
 	background-color: yellow;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local13 div:past(p, span) {
+._-_style_module_css-local13 div:past(p, span) {
 	display: none;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local14 div:future(p, span) {
+._-_style_module_css-local14 div:future(p, span) {
 	background-color: yellow;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local15 div:-moz-any(ol, ul, menu, dir) {
+._-_style_module_css-local15 div:-moz-any(ol, ul, menu, dir) {
 	list-style-type: square;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local16 li:-webkit-any(:first-child, :last-child) {
+._-_style_module_css-local16 li:-webkit-any(:first-child, :last-child) {
 	background-color: aquamarine;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-local9 :matches(div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-parent1.\\\\.\\\\/style\\\\.module\\\\.css-child1.\\\\.\\\\/style\\\\.module\\\\.css-vertical-small,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny,
-    div.\\\\.\\\\/style\\\\.module\\\\.css-otherDiv.\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small div.\\\\.\\\\/style\\\\.module\\\\.css-description) {
+._-_style_module_css-local9 :matches(div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-tiny,
+    div._-_style_module_css-parent1._-_style_module_css-child1._-_style_module_css-vertical-small,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-tiny,
+    div._-_style_module_css-otherDiv._-_style_module_css-horizontal-small div._-_style_module_css-description) {
 	max-height: 0;
 	margin: 0;
 	overflow: hidden;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-nested1.nested2.\\\\.\\\\/style\\\\.module\\\\.css-nested3 {
+._-_style_module_css-nested1.nested2._-_style_module_css-nested3 {
 	color: pink;
 }
 
-#\\\\.\\\\/style\\\\.module\\\\.css-ident {
+#_-_style_module_css-ident {
 	color: purple;
 }
 
-@keyframes \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes{
+@keyframes _-_style_module_css-localkeyframes{
 	0% {
-		left: var(--\\\\.\\\\/style\\\\.module\\\\.css-pos1x);
-		top: var(--\\\\.\\\\/style\\\\.module\\\\.css-pos1y);
+		left: var(---_style_module_css-pos1x);
+		top: var(---_style_module_css-pos1y);
 		color: var(--theme-color1);
 	}
 	100% {
-		left: var(--\\\\.\\\\/style\\\\.module\\\\.css-pos2x);
-		top: var(--\\\\.\\\\/style\\\\.module\\\\.css-pos2y);
+		left: var(---_style_module_css-pos2x);
+		top: var(---_style_module_css-pos2y);
 		color: var(--theme-color2);
 	}
 }
 
-@keyframes \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2{
+@keyframes _-_style_module_css-localkeyframes2{
 	0% {
 		left: 0;
 	}
@@ -1361,13 +1361,13 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-animation {
-	animation-name: \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes;
-	animation: 3s ease-in 1s 2 reverse both paused \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes, \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos1x: 0px;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos1y: 0px;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos2x: 10px;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos2y: 20px;
+._-_style_module_css-animation {
+	animation-name: _-_style_module_css-localkeyframes;
+	animation: 3s ease-in 1s 2 reverse both paused _-_style_module_css-localkeyframes, _-_style_module_css-localkeyframes2;
+	---_style_module_css-pos1x: 0px;
+	---_style_module_css-pos1y: 0px;
+	---_style_module_css-pos2x: 10px;
+	---_style_module_css-pos2y: 20px;
 }
 
 /* .composed {
@@ -1375,45 +1375,45 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	composes: local2;
 } */
 
-.\\\\.\\\\/style\\\\.module\\\\.css-vars {
-	color: var(--\\\\.\\\\/style\\\\.module\\\\.css-local-color);
-	--\\\\.\\\\/style\\\\.module\\\\.css-local-color: red;
+._-_style_module_css-vars {
+	color: var(---_style_module_css-local-color);
+	---_style_module_css-local-color: red;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-globalVars {
+._-_style_module_css-globalVars {
 	color: var(--global-color);
 	--global-color: red;
 }
 
 @media (min-width: 1600px) {
-	.\\\\.\\\\/style\\\\.module\\\\.css-wideScreenClass {
-		color: var(--\\\\.\\\\/style\\\\.module\\\\.css-local-color);
-		--\\\\.\\\\/style\\\\.module\\\\.css-local-color: green;
+	._-_style_module_css-wideScreenClass {
+		color: var(---_style_module_css-local-color);
+		---_style_module_css-local-color: green;
 	}
 }
 
 @media screen and (max-width: 600px) {
-	.\\\\.\\\\/style\\\\.module\\\\.css-narrowScreenClass {
-		color: var(--\\\\.\\\\/style\\\\.module\\\\.css-local-color);
-		--\\\\.\\\\/style\\\\.module\\\\.css-local-color: purple;
+	._-_style_module_css-narrowScreenClass {
+		color: var(---_style_module_css-local-color);
+		---_style_module_css-local-color: purple;
 	}
 }
 
 @supports (display: grid) {
-	.\\\\.\\\\/style\\\\.module\\\\.css-displayGridInSupports {
+	._-_style_module_css-displayGridInSupports {
 		display: grid;
 	}
 }
 
 @supports not (display: grid) {
-  .\\\\.\\\\/style\\\\.module\\\\.css-floatRightInNegativeSupports {
+  ._-_style_module_css-floatRightInNegativeSupports {
     float: right;
   }
 }
 
 @supports (display: flex) {
   @media screen and (min-width: 900px) {
-    .\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInMediaInSupports {
+    ._-_style_module_css-displayFlexInMediaInSupports {
       display: flex;
     }
   }
@@ -1421,7 +1421,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 @media screen and (min-width: 900px) {
 	@supports (display: flex) {
-    .\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInSupportsInMedia {
+    ._-_style_module_css-displayFlexInSupportsInMedia {
       display: flex;
     }
   }
@@ -1429,35 +1429,35 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 
 @MEDIA screen and (min-width: 900px) {
 	@SUPPORTS (display: flex) {
-		.\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInSupportsInMediaUpperCase {
+		._-_style_module_css-displayFlexInSupportsInMediaUpperCase {
 			display: flex;
 		}
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-animationUpperCase {
-	ANIMATION-NAME: \\\\.\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE;
-	ANIMATION: 3s ease-in 1s 2 reverse both paused \\\\.\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE, \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2UPPPERCASE;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos1x: 0px;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos1y: 0px;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos2x: 10px;
-	--\\\\.\\\\/style\\\\.module\\\\.css-pos2y: 20px;
+._-_style_module_css-animationUpperCase {
+	ANIMATION-NAME: _-_style_module_css-localkeyframesUPPERCASE;
+	ANIMATION: 3s ease-in 1s 2 reverse both paused _-_style_module_css-localkeyframesUPPERCASE, _-_style_module_css-localkeyframes2UPPPERCASE;
+	---_style_module_css-pos1x: 0px;
+	---_style_module_css-pos1y: 0px;
+	---_style_module_css-pos2x: 10px;
+	---_style_module_css-pos2y: 20px;
 }
 
-@KEYFRAMES \\\\.\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE{
+@KEYFRAMES _-_style_module_css-localkeyframesUPPERCASE{
 	0% {
-		left: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-pos1x);
-		top: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-pos1y);
+		left: VAR(---_style_module_css-pos1x);
+		top: VAR(---_style_module_css-pos1y);
 		color: VAR(--theme-color1);
 	}
 	100% {
-		left: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-pos2x);
-		top: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-pos2y);
+		left: VAR(---_style_module_css-pos2x);
+		top: VAR(---_style_module_css-pos2y);
 		color: VAR(--theme-color2);
 	}
 }
 
-@KEYframes \\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2UPPPERCASE{
+@KEYframes _-_style_module_css-localkeyframes2UPPPERCASE{
 	0% {
 		left: 0;
 	}
@@ -1466,46 +1466,46 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.globalUpperCase .\\\\.\\\\/style\\\\.module\\\\.css-localUpperCase {
+.globalUpperCase ._-_style_module_css-localUpperCase {
 	color: yellow;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-VARS {
-	color: VAR(--\\\\.\\\\/style\\\\.module\\\\.css-LOCAL-COLOR);
-	--\\\\.\\\\/style\\\\.module\\\\.css-LOCAL-COLOR: red;
+._-_style_module_css-VARS {
+	color: VAR(---_style_module_css-LOCAL-COLOR);
+	---_style_module_css-LOCAL-COLOR: red;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-globalVarsUpperCase {
+._-_style_module_css-globalVarsUpperCase {
 	COLOR: VAR(--GLOBAR-COLOR);
 	--GLOBAR-COLOR: red;
 }
 
 @supports (top: env(safe-area-inset-top, 0)) {
-	.\\\\.\\\\/style\\\\.module\\\\.css-inSupportScope {
+	._-_style_module_css-inSupportScope {
 		color: red;
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-a {
-	animation: 3s \\\\.\\\\/style\\\\.module\\\\.css-animationName;
-	-webkit-animation: 3s \\\\.\\\\/style\\\\.module\\\\.css-animationName;
+._-_style_module_css-a {
+	animation: 3s _-_style_module_css-animationName;
+	-webkit-animation: 3s _-_style_module_css-animationName;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-b {
-	animation: \\\\.\\\\/style\\\\.module\\\\.css-animationName 3s;
-	-webkit-animation: \\\\.\\\\/style\\\\.module\\\\.css-animationName 3s;
+._-_style_module_css-b {
+	animation: _-_style_module_css-animationName 3s;
+	-webkit-animation: _-_style_module_css-animationName 3s;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-c {
-	animation-name: \\\\.\\\\/style\\\\.module\\\\.css-animationName;
-	-webkit-animation-name: \\\\.\\\\/style\\\\.module\\\\.css-animationName;
+._-_style_module_css-c {
+	animation-name: _-_style_module_css-animationName;
+	-webkit-animation-name: _-_style_module_css-animationName;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-d {
-	--\\\\.\\\\/style\\\\.module\\\\.css-animation-name: animationName;
+._-_style_module_css-d {
+	---_style_module_css-animation-name: animationName;
 }
 
-@keyframes \\\\.\\\\/style\\\\.module\\\\.css-animationName{
+@keyframes _-_style_module_css-animationName{
 	0% {
 		background: white;
 	}
@@ -1514,7 +1514,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@-webkit-keyframes \\\\.\\\\/style\\\\.module\\\\.css-animationName{
+@-webkit-keyframes _-_style_module_css-animationName{
 	0% {
 		background: white;
 	}
@@ -1523,7 +1523,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@-moz-keyframes \\\\.\\\\/style\\\\.module\\\\.css-mozAnimationName{
+@-moz-keyframes _-_style_module_css-mozAnimationName{
 	0% {
 		background: white;
 	}
@@ -1551,37 +1551,37 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-@property --\\\\.\\\\/style\\\\.module\\\\.css-my-color{
+@property ---_style_module_css-my-color{
 	syntax: \\"<color>\\";
 	inherits: false;
-	initial-value: #\\\\.\\\\/style\\\\.module\\\\.css-c0ffee;
+	initial-value: #_-_style_module_css-c0ffee;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
-	color: var(--\\\\.\\\\/style\\\\.module\\\\.css-my-color);
+._-_style_module_css-class {
+	color: var(---_style_module_css-my-color);
 }
 
 @layer utilities {
-	.\\\\.\\\\/style\\\\.module\\\\.css-padding-sm {
+	._-_style_module_css-padding-sm {
 		padding: 0.5rem;
 	}
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-padding-lg {
+	._-_style_module_css-padding-lg {
 		padding: 0.8rem;
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
+._-_style_module_css-class {
 	color: red;
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-nested-pure {
+	._-_style_module_css-nested-pure {
 		color: red;
 	}
 
 	@media screen and (min-width: 200px) {
 		color: blue;
 
-		.\\\\.\\\\/style\\\\.module\\\\.css-nested-media {
+		._-_style_module_css-nested-media {
 			color: blue;
 		}
 	}
@@ -1589,7 +1589,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	@supports (display: flex) {
 		display: flex;
 
-		.\\\\.\\\\/style\\\\.module\\\\.css-nested-supports {
+		._-_style_module_css-nested-supports {
 			display: flex;
 		}
 	}
@@ -1597,7 +1597,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	@layer foo {
 		background: red;
 
-		.\\\\.\\\\/style\\\\.module\\\\.css-nested-layer {
+		._-_style_module_css-nested-layer {
 			background: red;
 		}
 	}
@@ -1605,13 +1605,13 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	@container foo {
 		background: red;
 
-		.\\\\.\\\\/style\\\\.module\\\\.css-nested-layer {
+		._-_style_module_css-nested-layer {
 			background: red;
 		}
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-not-selector-inside {
+._-_style_module_css-not-selector-inside {
 	color: #fff;
 	opacity: 0.12;
 	padding: .5px;
@@ -1630,16 +1630,16 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: red;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-nested-var {
-	.\\\\.\\\\/style\\\\.module\\\\.css-again {
-		color: var(--\\\\.\\\\/style\\\\.module\\\\.css-local-color);
+._-_style_module_css-nested-var {
+	._-_style_module_css-again {
+		color: var(---_style_module_css-local-color);
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-nested-with-local-pseudo {
+._-_style_module_css-nested-with-local-pseudo {
 	color: red;
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-local-nested {
+	._-_style_module_css-local-nested {
 		color: red;
 	}
 
@@ -1647,7 +1647,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 		color: red;
 	}
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-local-nested {
+	._-_style_module_css-local-nested {
 		color: red;
 	}
 
@@ -1655,29 +1655,29 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 		color: red;
 	}
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-local-nested, .global-nested-next {
+	._-_style_module_css-local-nested, .global-nested-next {
 		color: red;
 	}
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-local-nested, .global-nested-next {
+	._-_style_module_css-local-nested, .global-nested-next {
 		color: red;
 	}
 
-	.foo, .\\\\.\\\\/style\\\\.module\\\\.css-bar {
+	.foo, ._-_style_module_css-bar {
 		color: red;
 	}
 }
 
-#\\\\.\\\\/style\\\\.module\\\\.css-id-foo {
+#_-_style_module_css-id-foo {
 	color: red;
 
-	#\\\\.\\\\/style\\\\.module\\\\.css-id-bar {
+	#_-_style_module_css-id-bar {
 		color: red;
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-nested-parens {
-	.\\\\.\\\\/style\\\\.module\\\\.css-local9 div:has(.\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny, .\\\\.\\\\/style\\\\.module\\\\.css-vertical-small) {
+._-_style_module_css-nested-parens {
+	._-_style_module_css-local9 div:has(._-_style_module_css-vertical-tiny, ._-_style_module_css-vertical-small) {
 		max-height: 0;
 		margin: 0;
 		overflow: hidden;
@@ -1689,7 +1689,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 		color: red;
 	}
 
-	.\\\\.\\\\/style\\\\.module\\\\.css-local-in-global {
+	._-_style_module_css-local-in-global {
 		color: blue;
 	}
 }
@@ -1702,21 +1702,21 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.class .\\\\.\\\\/style\\\\.module\\\\.css-in-local-global-scope,
-.class .\\\\.\\\\/style\\\\.module\\\\.css-in-local-global-scope,
-.\\\\.\\\\/style\\\\.module\\\\.css-class-local-scope .in-local-global-scope {
+.class ._-_style_module_css-in-local-global-scope,
+.class ._-_style_module_css-in-local-global-scope,
+._-_style_module_css-class-local-scope .in-local-global-scope {
 	color: red;
 }
 
 @container (width > 400px) {
-	.\\\\.\\\\/style\\\\.module\\\\.css-class-in-container {
+	._-_style_module_css-class-in-container {
 		font-size: 1.5em;
 	}
 }
 
 @container summary (min-width: 400px) {
 	@container (width > 400px) {
-		.\\\\.\\\\/style\\\\.module\\\\.css-deep-class-in-container {
+		._-_style_module_css-deep-class-in-container {
 			font-size: 1.5em;
 		}
 	}
@@ -1726,33 +1726,33 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: red;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-placeholder-gray-700:-ms-input-placeholder {
-	--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity: 1;
+._-_style_module_css-placeholder-gray-700:-ms-input-placeholder {
+	---_style_module_css-placeholder-opacity: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity));
+	color: rgba(74, 85, 104, var(---_style_module_css-placeholder-opacity));
 }
-.\\\\.\\\\/style\\\\.module\\\\.css-placeholder-gray-700::-ms-input-placeholder {
-	--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity: 1;
+._-_style_module_css-placeholder-gray-700::-ms-input-placeholder {
+	---_style_module_css-placeholder-opacity: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity));
+	color: rgba(74, 85, 104, var(---_style_module_css-placeholder-opacity));
 }
-.\\\\.\\\\/style\\\\.module\\\\.css-placeholder-gray-700::placeholder {
-	--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity: 1;
+._-_style_module_css-placeholder-gray-700::placeholder {
+	---_style_module_css-placeholder-opacity: 1;
 	color: #4a5568;
-	color: rgba(74, 85, 104, var(--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity));
+	color: rgba(74, 85, 104, var(---_style_module_css-placeholder-opacity));
 }
 
 :root {
-	--\\\\.\\\\/style\\\\.module\\\\.css-test: dark;
+	---_style_module_css-test: dark;
 }
 
-@media screen and (prefers-color-scheme: var(--\\\\.\\\\/style\\\\.module\\\\.css-test)) {
-	.\\\\.\\\\/style\\\\.module\\\\.css-baz {
+@media screen and (prefers-color-scheme: var(---_style_module_css-test)) {
+	._-_style_module_css-baz {
 		color: white;
 	}
 }
 
-@keyframes \\\\.\\\\/style\\\\.module\\\\.css-slidein{
+@keyframes _-_style_module_css-slidein{
 	from {
 		margin-left: 100%;
 		width: 300%;
@@ -1764,44 +1764,44 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
+._-_style_module_css-class {
 	animation:
-		foo var(--\\\\.\\\\/style\\\\.module\\\\.css-animation-name) 3s,
-		var(--\\\\.\\\\/style\\\\.module\\\\.css-animation-name) 3s,
-		3s linear 1s infinite running \\\\.\\\\/style\\\\.module\\\\.css-slidein,
-		3s linear env(foo, var(--\\\\.\\\\/style\\\\.module\\\\.css-baz)) infinite running \\\\.\\\\/style\\\\.module\\\\.css-slidein;
+		foo var(---_style_module_css-animation-name) 3s,
+		var(---_style_module_css-animation-name) 3s,
+		3s linear 1s infinite running _-_style_module_css-slidein,
+		3s linear env(foo, var(---_style_module_css-baz)) infinite running _-_style_module_css-slidein;
 }
 
 :root {
-	--\\\\.\\\\/style\\\\.module\\\\.css-baz: 10px;
+	---_style_module_css-baz: 10px;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
-	bar: env(foo, var(--\\\\.\\\\/style\\\\.module\\\\.css-baz));
+._-_style_module_css-class {
+	bar: env(foo, var(---_style_module_css-baz));
 }
 
-.global-foo, .\\\\.\\\\/style\\\\.module\\\\.css-bar {
-	.\\\\.\\\\/style\\\\.module\\\\.css-local-in-global       {
+.global-foo, ._-_style_module_css-bar {
+	._-_style_module_css-local-in-global       {
 		color: blue;
 	}
 
 	@media screen {
 		.my-global-class-again,
-		.\\\\.\\\\/style\\\\.module\\\\.css-my-global-class-again {
+		._-_style_module_css-my-global-class-again {
 			color: red;
 		}
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-first-nested {
-	.\\\\.\\\\/style\\\\.module\\\\.css-first-nested-nested {
+._-_style_module_css-first-nested {
+	._-_style_module_css-first-nested-nested {
 		color: red;
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-first-nested-at-rule {
+._-_style_module_css-first-nested-at-rule {
 	@media screen {
-		.\\\\.\\\\/style\\\\.module\\\\.css-first-nested-nested-at-rule-deep {
+		._-_style_module_css-first-nested-nested-at-rule-deep {
 			color: red;
 		}
 	}
@@ -1818,7 +1818,7 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 }
 
 :root {
-	--\\\\.\\\\/style\\\\.module\\\\.css-foo: red;
+	---_style_module_css-foo: red;
 }
 
 .again-again-global {
@@ -1832,12 +1832,12 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 .again-again-global {
 	animation: slidein 3s;
 
-	.again-again-global, .\\\\.\\\\/style\\\\.module\\\\.css-class, .\\\\.\\\\/style\\\\.module\\\\.css-nested1.nested2.\\\\.\\\\/style\\\\.module\\\\.css-nested3 {
-		animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
+	.again-again-global, ._-_style_module_css-class, ._-_style_module_css-nested1.nested2._-_style_module_css-nested3 {
+		animation: _-_style_module_css-slidein 3s;
 	}
 
-  .\\\\.\\\\/style\\\\.module\\\\.css-local2 .global,
-	.\\\\.\\\\/style\\\\.module\\\\.css-local3 {
+  ._-_style_module_css-local2 .global,
+	._-_style_module_css-local3 {
 		color: red;
 	}
 }
@@ -1846,38 +1846,38 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
 	color: red;
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
-	.\\\\.\\\\/style\\\\.module\\\\.css-class {
-		.\\\\.\\\\/style\\\\.module\\\\.css-class {
-			.\\\\.\\\\/style\\\\.module\\\\.css-class {}
+._-_style_module_css-class {
+	._-_style_module_css-class {
+		._-_style_module_css-class {
+			._-_style_module_css-class {}
 		}
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
-	.\\\\.\\\\/style\\\\.module\\\\.css-class {
-		.\\\\.\\\\/style\\\\.module\\\\.css-class {
-			.\\\\.\\\\/style\\\\.module\\\\.css-class {
-				animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
+._-_style_module_css-class {
+	._-_style_module_css-class {
+		._-_style_module_css-class {
+			._-_style_module_css-class {
+				animation: _-_style_module_css-slidein 3s;
 			}
 		}
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.css-class {
-	animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
-	.\\\\.\\\\/style\\\\.module\\\\.css-class {
-		animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
-		.\\\\.\\\\/style\\\\.module\\\\.css-class {
-			animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
-			.\\\\.\\\\/style\\\\.module\\\\.css-class {
-				animation: \\\\.\\\\/style\\\\.module\\\\.css-slidein 3s;
+._-_style_module_css-class {
+	animation: _-_style_module_css-slidein 3s;
+	._-_style_module_css-class {
+		animation: _-_style_module_css-slidein 3s;
+		._-_style_module_css-class {
+			animation: _-_style_module_css-slidein 3s;
+			._-_style_module_css-class {
+				animation: _-_style_module_css-slidein 3s;
 			}
 		}
 	}
 }
 
-.\\\\.\\\\/style\\\\.module\\\\.my-css-myCssClass {
+._-_style_module_my-css-myCssClass {
     color: red;
 }
 
@@ -1885,19 +1885,19 @@ exports[`ConfigCacheTestCases css css-modules exported tests should allow to cre
     color: teal;
 }
 
-.\\\\.\\\\/identifiers\\\\.module\\\\.css-UnusedClassName{
+._-_identifiers_module_css-UnusedClassName{
     color: red;
-    padding: var(--\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-unused-class);
-    --\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-unused-class: 10px;
+    padding: var(---_identifiers_module_css-variable-unused-class);
+    ---_identifiers_module_css-variable-unused-class: 10px;
 }
 
-.\\\\.\\\\/identifiers\\\\.module\\\\.css-UsedClassName {
+._-_identifiers_module_css-UsedClassName {
     color: green;
-    padding: var(--\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-used-class);
-    --\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-used-class: 10px;
+    padding: var(---_identifiers_module_css-variable-used-class);
+    ---_identifiers_module_css-variable-used-class: 10px;
 }
 
-head{--webpack-use-style_js:class:\\\\.\\\\/style\\\\.module\\\\.css-class/local1:\\\\.\\\\/style\\\\.module\\\\.css-local1/local2:\\\\.\\\\/style\\\\.module\\\\.css-local2/local3:\\\\.\\\\/style\\\\.module\\\\.css-local3/local4:\\\\.\\\\/style\\\\.module\\\\.css-local4/local5:\\\\.\\\\/style\\\\.module\\\\.css-local5/local6:\\\\.\\\\/style\\\\.module\\\\.css-local6/local7:\\\\.\\\\/style\\\\.module\\\\.css-local7/disabled:\\\\.\\\\/style\\\\.module\\\\.css-disabled/mButtonDisabled:\\\\.\\\\/style\\\\.module\\\\.css-mButtonDisabled/tipOnly:\\\\.\\\\/style\\\\.module\\\\.css-tipOnly/local8:\\\\.\\\\/style\\\\.module\\\\.css-local8/parent1:\\\\.\\\\/style\\\\.module\\\\.css-parent1/child1:\\\\.\\\\/style\\\\.module\\\\.css-child1/vertical-tiny:\\\\.\\\\/style\\\\.module\\\\.css-vertical-tiny/vertical-small:\\\\.\\\\/style\\\\.module\\\\.css-vertical-small/otherDiv:\\\\.\\\\/style\\\\.module\\\\.css-otherDiv/horizontal-tiny:\\\\.\\\\/style\\\\.module\\\\.css-horizontal-tiny/horizontal-small:\\\\.\\\\/style\\\\.module\\\\.css-horizontal-small/description:\\\\.\\\\/style\\\\.module\\\\.css-description/local9:\\\\.\\\\/style\\\\.module\\\\.css-local9/local10:\\\\.\\\\/style\\\\.module\\\\.css-local10/local11:\\\\.\\\\/style\\\\.module\\\\.css-local11/local12:\\\\.\\\\/style\\\\.module\\\\.css-local12/local13:\\\\.\\\\/style\\\\.module\\\\.css-local13/local14:\\\\.\\\\/style\\\\.module\\\\.css-local14/local15:\\\\.\\\\/style\\\\.module\\\\.css-local15/local16:\\\\.\\\\/style\\\\.module\\\\.css-local16/nested1:\\\\.\\\\/style\\\\.module\\\\.css-nested1/nested3:\\\\.\\\\/style\\\\.module\\\\.css-nested3/ident:\\\\.\\\\/style\\\\.module\\\\.css-ident/localkeyframes:\\\\.\\\\/style\\\\.module\\\\.css-localkeyframes/pos1x:--\\\\.\\\\/style\\\\.module\\\\.css-pos1x/pos1y:--\\\\.\\\\/style\\\\.module\\\\.css-pos1y/pos2x:--\\\\.\\\\/style\\\\.module\\\\.css-pos2x/pos2y:--\\\\.\\\\/style\\\\.module\\\\.css-pos2y/localkeyframes2:\\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2/animation:\\\\.\\\\/style\\\\.module\\\\.css-animation/vars:\\\\.\\\\/style\\\\.module\\\\.css-vars/local-color:--\\\\.\\\\/style\\\\.module\\\\.css-local-color/globalVars:\\\\.\\\\/style\\\\.module\\\\.css-globalVars/wideScreenClass:\\\\.\\\\/style\\\\.module\\\\.css-wideScreenClass/narrowScreenClass:\\\\.\\\\/style\\\\.module\\\\.css-narrowScreenClass/displayGridInSupports:\\\\.\\\\/style\\\\.module\\\\.css-displayGridInSupports/floatRightInNegativeSupports:\\\\.\\\\/style\\\\.module\\\\.css-floatRightInNegativeSupports/displayFlexInMediaInSupports:\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:\\\\.\\\\/style\\\\.module\\\\.css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:\\\\.\\\\/style\\\\.module\\\\.css-animationUpperCase/localkeyframesUPPERCASE:\\\\.\\\\/style\\\\.module\\\\.css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:\\\\.\\\\/style\\\\.module\\\\.css-localkeyframes2UPPPERCASE/localUpperCase:\\\\.\\\\/style\\\\.module\\\\.css-localUpperCase/VARS:\\\\.\\\\/style\\\\.module\\\\.css-VARS/LOCAL-COLOR:--\\\\.\\\\/style\\\\.module\\\\.css-LOCAL-COLOR/globalVarsUpperCase:\\\\.\\\\/style\\\\.module\\\\.css-globalVarsUpperCase/inSupportScope:\\\\.\\\\/style\\\\.module\\\\.css-inSupportScope/a:\\\\.\\\\/style\\\\.module\\\\.css-a/animationName:\\\\.\\\\/style\\\\.module\\\\.css-animationName/b:\\\\.\\\\/style\\\\.module\\\\.css-b/c:\\\\.\\\\/style\\\\.module\\\\.css-c/d:\\\\.\\\\/style\\\\.module\\\\.css-d/animation-name:--\\\\.\\\\/style\\\\.module\\\\.css-animation-name/mozAnimationName:\\\\.\\\\/style\\\\.module\\\\.css-mozAnimationName/my-color:--\\\\.\\\\/style\\\\.module\\\\.css-my-color/c0ffee:\\\\.\\\\/style\\\\.module\\\\.css-c0ffee/padding-sm:\\\\.\\\\/style\\\\.module\\\\.css-padding-sm/padding-lg:\\\\.\\\\/style\\\\.module\\\\.css-padding-lg/nested-pure:\\\\.\\\\/style\\\\.module\\\\.css-nested-pure/nested-media:\\\\.\\\\/style\\\\.module\\\\.css-nested-media/nested-supports:\\\\.\\\\/style\\\\.module\\\\.css-nested-supports/nested-layer:\\\\.\\\\/style\\\\.module\\\\.css-nested-layer/not-selector-inside:\\\\.\\\\/style\\\\.module\\\\.css-not-selector-inside/nested-var:\\\\.\\\\/style\\\\.module\\\\.css-nested-var/again:\\\\.\\\\/style\\\\.module\\\\.css-again/nested-with-local-pseudo:\\\\.\\\\/style\\\\.module\\\\.css-nested-with-local-pseudo/local-nested:\\\\.\\\\/style\\\\.module\\\\.css-local-nested/bar:\\\\.\\\\/style\\\\.module\\\\.css-bar/id-foo:\\\\.\\\\/style\\\\.module\\\\.css-id-foo/id-bar:\\\\.\\\\/style\\\\.module\\\\.css-id-bar/nested-parens:\\\\.\\\\/style\\\\.module\\\\.css-nested-parens/local-in-global:\\\\.\\\\/style\\\\.module\\\\.css-local-in-global/in-local-global-scope:\\\\.\\\\/style\\\\.module\\\\.css-in-local-global-scope/class-local-scope:\\\\.\\\\/style\\\\.module\\\\.css-class-local-scope/class-in-container:\\\\.\\\\/style\\\\.module\\\\.css-class-in-container/deep-class-in-container:\\\\.\\\\/style\\\\.module\\\\.css-deep-class-in-container/placeholder-gray-700:\\\\.\\\\/style\\\\.module\\\\.css-placeholder-gray-700/placeholder-opacity:--\\\\.\\\\/style\\\\.module\\\\.css-placeholder-opacity/test:--\\\\.\\\\/style\\\\.module\\\\.css-test/baz:--\\\\.\\\\/style\\\\.module\\\\.css-baz/slidein:\\\\.\\\\/style\\\\.module\\\\.css-slidein/my-global-class-again:\\\\.\\\\/style\\\\.module\\\\.css-my-global-class-again/first-nested:\\\\.\\\\/style\\\\.module\\\\.css-first-nested/first-nested-nested:\\\\.\\\\/style\\\\.module\\\\.css-first-nested-nested/first-nested-at-rule:\\\\.\\\\/style\\\\.module\\\\.css-first-nested-at-rule/first-nested-nested-at-rule-deep:\\\\.\\\\/style\\\\.module\\\\.css-first-nested-nested-at-rule-deep/foo:--\\\\.\\\\/style\\\\.module\\\\.css-foo/\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:\\\\.\\\\/style\\\\.module\\\\.my-css-myCssClass/\\\\.\\\\/style\\\\.module\\\\.my-css,\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:\\\\.\\\\/identifiers\\\\.module\\\\.css-UnusedClassName/variable-unused-class:--\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-unused-class/UsedClassName:\\\\.\\\\/identifiers\\\\.module\\\\.css-UsedClassName/variable-used-class:--\\\\.\\\\/identifiers\\\\.module\\\\.css-variable-used-class/\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
+head{--webpack-use-style_js:class:_-_style_module_css-class/local1:_-_style_module_css-local1/local2:_-_style_module_css-local2/local3:_-_style_module_css-local3/local4:_-_style_module_css-local4/local5:_-_style_module_css-local5/local6:_-_style_module_css-local6/local7:_-_style_module_css-local7/disabled:_-_style_module_css-disabled/mButtonDisabled:_-_style_module_css-mButtonDisabled/tipOnly:_-_style_module_css-tipOnly/local8:_-_style_module_css-local8/parent1:_-_style_module_css-parent1/child1:_-_style_module_css-child1/vertical-tiny:_-_style_module_css-vertical-tiny/vertical-small:_-_style_module_css-vertical-small/otherDiv:_-_style_module_css-otherDiv/horizontal-tiny:_-_style_module_css-horizontal-tiny/horizontal-small:_-_style_module_css-horizontal-small/description:_-_style_module_css-description/local9:_-_style_module_css-local9/local10:_-_style_module_css-local10/local11:_-_style_module_css-local11/local12:_-_style_module_css-local12/local13:_-_style_module_css-local13/local14:_-_style_module_css-local14/local15:_-_style_module_css-local15/local16:_-_style_module_css-local16/nested1:_-_style_module_css-nested1/nested3:_-_style_module_css-nested3/ident:_-_style_module_css-ident/localkeyframes:_-_style_module_css-localkeyframes/pos1x:---_style_module_css-pos1x/pos1y:---_style_module_css-pos1y/pos2x:---_style_module_css-pos2x/pos2y:---_style_module_css-pos2y/localkeyframes2:_-_style_module_css-localkeyframes2/animation:_-_style_module_css-animation/vars:_-_style_module_css-vars/local-color:---_style_module_css-local-color/globalVars:_-_style_module_css-globalVars/wideScreenClass:_-_style_module_css-wideScreenClass/narrowScreenClass:_-_style_module_css-narrowScreenClass/displayGridInSupports:_-_style_module_css-displayGridInSupports/floatRightInNegativeSupports:_-_style_module_css-floatRightInNegativeSupports/displayFlexInMediaInSupports:_-_style_module_css-displayFlexInMediaInSupports/displayFlexInSupportsInMedia:_-_style_module_css-displayFlexInSupportsInMedia/displayFlexInSupportsInMediaUpperCase:_-_style_module_css-displayFlexInSupportsInMediaUpperCase/animationUpperCase:_-_style_module_css-animationUpperCase/localkeyframesUPPERCASE:_-_style_module_css-localkeyframesUPPERCASE/localkeyframes2UPPPERCASE:_-_style_module_css-localkeyframes2UPPPERCASE/localUpperCase:_-_style_module_css-localUpperCase/VARS:_-_style_module_css-VARS/LOCAL-COLOR:---_style_module_css-LOCAL-COLOR/globalVarsUpperCase:_-_style_module_css-globalVarsUpperCase/inSupportScope:_-_style_module_css-inSupportScope/a:_-_style_module_css-a/animationName:_-_style_module_css-animationName/b:_-_style_module_css-b/c:_-_style_module_css-c/d:_-_style_module_css-d/animation-name:---_style_module_css-animation-name/mozAnimationName:_-_style_module_css-mozAnimationName/my-color:---_style_module_css-my-color/c0ffee:_-_style_module_css-c0ffee/padding-sm:_-_style_module_css-padding-sm/padding-lg:_-_style_module_css-padding-lg/nested-pure:_-_style_module_css-nested-pure/nested-media:_-_style_module_css-nested-media/nested-supports:_-_style_module_css-nested-supports/nested-layer:_-_style_module_css-nested-layer/not-selector-inside:_-_style_module_css-not-selector-inside/nested-var:_-_style_module_css-nested-var/again:_-_style_module_css-again/nested-with-local-pseudo:_-_style_module_css-nested-with-local-pseudo/local-nested:_-_style_module_css-local-nested/bar:_-_style_module_css-bar/id-foo:_-_style_module_css-id-foo/id-bar:_-_style_module_css-id-bar/nested-parens:_-_style_module_css-nested-parens/local-in-global:_-_style_module_css-local-in-global/in-local-global-scope:_-_style_module_css-in-local-global-scope/class-local-scope:_-_style_module_css-class-local-scope/class-in-container:_-_style_module_css-class-in-container/deep-class-in-container:_-_style_module_css-deep-class-in-container/placeholder-gray-700:_-_style_module_css-placeholder-gray-700/placeholder-opacity:---_style_module_css-placeholder-opacity/test:---_style_module_css-test/baz:---_style_module_css-baz/slidein:_-_style_module_css-slidein/my-global-class-again:_-_style_module_css-my-global-class-again/first-nested:_-_style_module_css-first-nested/first-nested-nested:_-_style_module_css-first-nested-nested/first-nested-at-rule:_-_style_module_css-first-nested-at-rule/first-nested-nested-at-rule-deep:_-_style_module_css-first-nested-nested-at-rule-deep/foo:---_style_module_css-foo/\\\\.\\\\/style\\\\.module\\\\.css,myCssClass:_-_style_module_my-css-myCssClass/\\\\.\\\\/style\\\\.module\\\\.my-css,\\\\.\\\\/style\\\\.module\\\\.css\\\\.invalid,UnusedClassName:_-_identifiers_module_css-UnusedClassName/variable-unused-class:---_identifiers_module_css-variable-unused-class/UsedClassName:_-_identifiers_module_css-UsedClassName/variable-used-class:---_identifiers_module_css-variable-used-class/\\\\.\\\\/identifiers\\\\.module\\\\.css;}"
 `;
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules 2`] = `
@@ -2554,49 +2554,49 @@ head{--webpack-my-app-226:zg:my-app-235-zg/Hi:my-app-235-Hi/OB:my-app-235-OB/VE:
 
 exports[`ConfigCacheTestCases css css-modules exported tests should allow to create css modules: dev 1`] = `
 Object {
-  "UsedClassName": "./identifiers.module.css-UsedClassName",
-  "VARS": "--./style.module.css-LOCAL-COLOR ./style.module.css-VARS undefined ./style.module.css-globalVarsUpperCase",
-  "animation": "./style.module.css-animation",
-  "animationName": "./style.module.css-animationName",
-  "class": "./style.module.css-class",
-  "classInContainer": "./style.module.css-class-in-container",
-  "classLocalScope": "./style.module.css-class-local-scope",
-  "cssModuleWithCustomFileExtension": "./style.module.my-css-myCssClass",
-  "currentWmultiParams": "./style.module.css-local12",
-  "deepClassInContainer": "./style.module.css-deep-class-in-container",
-  "displayFlexInSupportsInMediaUpperCase": "./style.module.css-displayFlexInSupportsInMediaUpperCase",
+  "UsedClassName": "-_identifiers_module_css-UsedClassName",
+  "VARS": "---_style_module_css-LOCAL-COLOR -_style_module_css-VARS undefined -_style_module_css-globalVarsUpperCase",
+  "animation": "-_style_module_css-animation",
+  "animationName": "-_style_module_css-animationName",
+  "class": "-_style_module_css-class",
+  "classInContainer": "-_style_module_css-class-in-container",
+  "classLocalScope": "-_style_module_css-class-local-scope",
+  "cssModuleWithCustomFileExtension": "-_style_module_my-css-myCssClass",
+  "currentWmultiParams": "-_style_module_css-local12",
+  "deepClassInContainer": "-_style_module_css-deep-class-in-container",
+  "displayFlexInSupportsInMediaUpperCase": "-_style_module_css-displayFlexInSupportsInMediaUpperCase",
   "exportLocalVarsShouldCleanup": "false false",
-  "futureWmultiParams": "./style.module.css-local14",
+  "futureWmultiParams": "-_style_module_css-local14",
   "global": undefined,
-  "hasWmultiParams": "./style.module.css-local11",
-  "ident": "./style.module.css-ident",
-  "inLocalGlobalScope": "./style.module.css-in-local-global-scope",
-  "inSupportScope": "./style.module.css-inSupportScope",
-  "isWmultiParams": "./style.module.css-local8",
-  "keyframes": "./style.module.css-localkeyframes",
-  "keyframesUPPERCASE": "./style.module.css-localkeyframesUPPERCASE",
-  "local": "./style.module.css-local1 ./style.module.css-local2 ./style.module.css-local3 ./style.module.css-local4",
-  "local2": "./style.module.css-local5 ./style.module.css-local6",
-  "localkeyframes2UPPPERCASE": "./style.module.css-localkeyframes2UPPPERCASE",
-  "matchesWmultiParams": "./style.module.css-local9",
-  "media": "./style.module.css-wideScreenClass",
-  "mediaInSupports": "./style.module.css-displayFlexInMediaInSupports",
-  "mediaWithOperator": "./style.module.css-narrowScreenClass",
-  "mozAnimationName": "./style.module.css-mozAnimationName",
-  "mozAnyWmultiParams": "./style.module.css-local15",
-  "myColor": "--./style.module.css-my-color",
-  "nested": "./style.module.css-nested1 undefined ./style.module.css-nested3",
+  "hasWmultiParams": "-_style_module_css-local11",
+  "ident": "-_style_module_css-ident",
+  "inLocalGlobalScope": "-_style_module_css-in-local-global-scope",
+  "inSupportScope": "-_style_module_css-inSupportScope",
+  "isWmultiParams": "-_style_module_css-local8",
+  "keyframes": "-_style_module_css-localkeyframes",
+  "keyframesUPPERCASE": "-_style_module_css-localkeyframesUPPERCASE",
+  "local": "-_style_module_css-local1 -_style_module_css-local2 -_style_module_css-local3 -_style_module_css-local4",
+  "local2": "-_style_module_css-local5 -_style_module_css-local6",
+  "localkeyframes2UPPPERCASE": "-_style_module_css-localkeyframes2UPPPERCASE",
+  "matchesWmultiParams": "-_style_module_css-local9",
+  "media": "-_style_module_css-wideScreenClass",
+  "mediaInSupports": "-_style_module_css-displayFlexInMediaInSupports",
+  "mediaWithOperator": "-_style_module_css-narrowScreenClass",
+  "mozAnimationName": "-_style_module_css-mozAnimationName",
+  "mozAnyWmultiParams": "-_style_module_css-local15",
+  "myColor": "---_style_module_css-my-color",
+  "nested": "-_style_module_css-nested1 undefined -_style_module_css-nested3",
   "notAValidCssModuleExtension": true,
-  "notWmultiParams": "./style.module.css-local7",
-  "paddingLg": "./style.module.css-padding-lg",
-  "paddingSm": "./style.module.css-padding-sm",
-  "pastWmultiParams": "./style.module.css-local13",
-  "supports": "./style.module.css-displayGridInSupports",
-  "supportsInMedia": "./style.module.css-displayFlexInSupportsInMedia",
-  "supportsWithOperator": "./style.module.css-floatRightInNegativeSupports",
-  "vars": "--./style.module.css-local-color ./style.module.css-vars undefined ./style.module.css-globalVars",
-  "webkitAnyWmultiParams": "./style.module.css-local16",
-  "whereWmultiParams": "./style.module.css-local10",
+  "notWmultiParams": "-_style_module_css-local7",
+  "paddingLg": "-_style_module_css-padding-lg",
+  "paddingSm": "-_style_module_css-padding-sm",
+  "pastWmultiParams": "-_style_module_css-local13",
+  "supports": "-_style_module_css-displayGridInSupports",
+  "supportsInMedia": "-_style_module_css-displayFlexInSupportsInMedia",
+  "supportsWithOperator": "-_style_module_css-floatRightInNegativeSupports",
+  "vars": "---_style_module_css-local-color -_style_module_css-vars undefined -_style_module_css-globalVars",
+  "webkitAnyWmultiParams": "-_style_module_css-local16",
+  "whereWmultiParams": "-_style_module_css-local10",
 }
 `;
 
@@ -2656,49 +2656,49 @@ Object {
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to create css modules: dev 1`] = `
 Object {
-  "UsedClassName": "./identifiers.module.css-UsedClassName",
-  "VARS": "--./style.module.css-LOCAL-COLOR ./style.module.css-VARS undefined ./style.module.css-globalVarsUpperCase",
-  "animation": "./style.module.css-animation",
-  "animationName": "./style.module.css-animationName",
-  "class": "./style.module.css-class",
-  "classInContainer": "./style.module.css-class-in-container",
-  "classLocalScope": "./style.module.css-class-local-scope",
-  "cssModuleWithCustomFileExtension": "./style.module.my-css-myCssClass",
-  "currentWmultiParams": "./style.module.css-local12",
-  "deepClassInContainer": "./style.module.css-deep-class-in-container",
-  "displayFlexInSupportsInMediaUpperCase": "./style.module.css-displayFlexInSupportsInMediaUpperCase",
+  "UsedClassName": "-_identifiers_module_css-UsedClassName",
+  "VARS": "---_style_module_css-LOCAL-COLOR -_style_module_css-VARS undefined -_style_module_css-globalVarsUpperCase",
+  "animation": "-_style_module_css-animation",
+  "animationName": "-_style_module_css-animationName",
+  "class": "-_style_module_css-class",
+  "classInContainer": "-_style_module_css-class-in-container",
+  "classLocalScope": "-_style_module_css-class-local-scope",
+  "cssModuleWithCustomFileExtension": "-_style_module_my-css-myCssClass",
+  "currentWmultiParams": "-_style_module_css-local12",
+  "deepClassInContainer": "-_style_module_css-deep-class-in-container",
+  "displayFlexInSupportsInMediaUpperCase": "-_style_module_css-displayFlexInSupportsInMediaUpperCase",
   "exportLocalVarsShouldCleanup": "false false",
-  "futureWmultiParams": "./style.module.css-local14",
+  "futureWmultiParams": "-_style_module_css-local14",
   "global": undefined,
-  "hasWmultiParams": "./style.module.css-local11",
-  "ident": "./style.module.css-ident",
-  "inLocalGlobalScope": "./style.module.css-in-local-global-scope",
-  "inSupportScope": "./style.module.css-inSupportScope",
-  "isWmultiParams": "./style.module.css-local8",
-  "keyframes": "./style.module.css-localkeyframes",
-  "keyframesUPPERCASE": "./style.module.css-localkeyframesUPPERCASE",
-  "local": "./style.module.css-local1 ./style.module.css-local2 ./style.module.css-local3 ./style.module.css-local4",
-  "local2": "./style.module.css-local5 ./style.module.css-local6",
-  "localkeyframes2UPPPERCASE": "./style.module.css-localkeyframes2UPPPERCASE",
-  "matchesWmultiParams": "./style.module.css-local9",
-  "media": "./style.module.css-wideScreenClass",
-  "mediaInSupports": "./style.module.css-displayFlexInMediaInSupports",
-  "mediaWithOperator": "./style.module.css-narrowScreenClass",
-  "mozAnimationName": "./style.module.css-mozAnimationName",
-  "mozAnyWmultiParams": "./style.module.css-local15",
-  "myColor": "--./style.module.css-my-color",
-  "nested": "./style.module.css-nested1 undefined ./style.module.css-nested3",
+  "hasWmultiParams": "-_style_module_css-local11",
+  "ident": "-_style_module_css-ident",
+  "inLocalGlobalScope": "-_style_module_css-in-local-global-scope",
+  "inSupportScope": "-_style_module_css-inSupportScope",
+  "isWmultiParams": "-_style_module_css-local8",
+  "keyframes": "-_style_module_css-localkeyframes",
+  "keyframesUPPERCASE": "-_style_module_css-localkeyframesUPPERCASE",
+  "local": "-_style_module_css-local1 -_style_module_css-local2 -_style_module_css-local3 -_style_module_css-local4",
+  "local2": "-_style_module_css-local5 -_style_module_css-local6",
+  "localkeyframes2UPPPERCASE": "-_style_module_css-localkeyframes2UPPPERCASE",
+  "matchesWmultiParams": "-_style_module_css-local9",
+  "media": "-_style_module_css-wideScreenClass",
+  "mediaInSupports": "-_style_module_css-displayFlexInMediaInSupports",
+  "mediaWithOperator": "-_style_module_css-narrowScreenClass",
+  "mozAnimationName": "-_style_module_css-mozAnimationName",
+  "mozAnyWmultiParams": "-_style_module_css-local15",
+  "myColor": "---_style_module_css-my-color",
+  "nested": "-_style_module_css-nested1 undefined -_style_module_css-nested3",
   "notAValidCssModuleExtension": true,
-  "notWmultiParams": "./style.module.css-local7",
-  "paddingLg": "./style.module.css-padding-lg",
-  "paddingSm": "./style.module.css-padding-sm",
-  "pastWmultiParams": "./style.module.css-local13",
-  "supports": "./style.module.css-displayGridInSupports",
-  "supportsInMedia": "./style.module.css-displayFlexInSupportsInMedia",
-  "supportsWithOperator": "./style.module.css-floatRightInNegativeSupports",
-  "vars": "--./style.module.css-local-color ./style.module.css-vars undefined ./style.module.css-globalVars",
-  "webkitAnyWmultiParams": "./style.module.css-local16",
-  "whereWmultiParams": "./style.module.css-local10",
+  "notWmultiParams": "-_style_module_css-local7",
+  "paddingLg": "-_style_module_css-padding-lg",
+  "paddingSm": "-_style_module_css-padding-sm",
+  "pastWmultiParams": "-_style_module_css-local13",
+  "supports": "-_style_module_css-displayGridInSupports",
+  "supportsInMedia": "-_style_module_css-displayFlexInSupportsInMedia",
+  "supportsWithOperator": "-_style_module_css-floatRightInNegativeSupports",
+  "vars": "---_style_module_css-local-color -_style_module_css-vars undefined -_style_module_css-globalVars",
+  "webkitAnyWmultiParams": "-_style_module_css-local16",
+  "whereWmultiParams": "-_style_module_css-local10",
 }
 `;
 
@@ -2798,31 +2798,31 @@ Object {
 }
 `;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-dev 1`] = `"./style.module.css-class"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-dev 1`] = `"-_style_module_css-class"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 1`] = `"my-app-235-zg"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: class-prod 2`] = `"my-app-235-zg"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-dev 1`] = `"./style.module.css-local1"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-dev 1`] = `"-_style_module_css-local1"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 1`] = `"my-app-235-Hi"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local1-prod 2`] = `"my-app-235-Hi"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-dev 1`] = `"./style.module.css-local2"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-dev 1`] = `"-_style_module_css-local2"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 1`] = `"my-app-235-OB"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local2-prod 2`] = `"my-app-235-OB"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-dev 1`] = `"./style.module.css-local3"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-dev 1`] = `"-_style_module_css-local3"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 1`] = `"my-app-235-VE"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local3-prod 2`] = `"my-app-235-VE"`;
 
-exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-dev 1`] = `"./style.module.css-local4"`;
+exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-dev 1`] = `"-_style_module_css-local4"`;
 
 exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allow to import css modules: local4-prod 1`] = `"my-app-235-O2"`;
 
@@ -2830,152 +2830,351 @@ exports[`ConfigCacheTestCases css css-modules-in-node exported tests should allo
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 1`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?as-is-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?as-is-btn-info_is-disabled",
+  "btn--info_is-disabled_1": "-_style_module_css_as-is-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css_as-is-btn-info_is-disabled",
   "foo": "bar",
-  "foo_bar": "./style.module.css?as-is-foo_bar",
+  "foo_bar": "-_style_module_css_as-is-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?as-is-simple",
+  "simple": "-_style_module_css_as-is-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 2`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?camel-case-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?camel-case-btn-info_is-disabled",
-  "btnInfoIsDisabled": "./style.module.css?camel-case-btn-info_is-disabled",
-  "btnInfoIsDisabled1": "./style.module.css?camel-case-btn--info_is-disabled_1",
+  "btn--info_is-disabled_1": "-_style_module_css_camel-case-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css_camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled": "-_style_module_css_camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "-_style_module_css_camel-case-btn--info_is-disabled_1",
   "foo": "bar",
-  "fooBar": "./style.module.css?camel-case-foo_bar",
-  "foo_bar": "./style.module.css?camel-case-foo_bar",
+  "fooBar": "-_style_module_css_camel-case-foo_bar",
+  "foo_bar": "-_style_module_css_camel-case-foo_bar",
   "my-btn-info_is-disabled": "value",
   "myBtnInfoIsDisabled": "value",
-  "simple": "./style.module.css?camel-case-simple",
+  "simple": "-_style_module_css_camel-case-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 3`] = `
 Object {
-  "btnInfoIsDisabled": "./style.module.css?camel-case-only-btn-info_is-disabled",
-  "btnInfoIsDisabled1": "./style.module.css?camel-case-only-btn--info_is-disabled_1",
+  "btnInfoIsDisabled": "-_style_module_css_camel-case-only-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "-_style_module_css_camel-case-only-btn--info_is-disabled_1",
   "foo": "bar",
-  "fooBar": "./style.module.css?camel-case-only-foo_bar",
+  "fooBar": "-_style_module_css_camel-case-only-foo_bar",
   "myBtnInfoIsDisabled": "value",
-  "simple": "./style.module.css?camel-case-only-simple",
+  "simple": "-_style_module_css_camel-case-only-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 4`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?dashes-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled": "./style.module.css?dashes-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "./style.module.css?dashes-btn--info_is-disabled_1",
+  "btn--info_is-disabled_1": "-_style_module_css_dashes-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled": "-_style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "-_style_module_css_dashes-btn--info_is-disabled_1",
   "foo": "bar",
-  "foo_bar": "./style.module.css?dashes-foo_bar",
+  "foo_bar": "-_style_module_css_dashes-foo_bar",
   "my-btn-info_is-disabled": "value",
   "myBtnInfo_isDisabled": "value",
-  "simple": "./style.module.css?dashes-simple",
+  "simple": "-_style_module_css_dashes-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 5`] = `
 Object {
-  "btnInfo_isDisabled": "./style.module.css?dashes-only-btn-info_is-disabled",
-  "btnInfo_isDisabled_1": "./style.module.css?dashes-only-btn--info_is-disabled_1",
+  "btnInfo_isDisabled": "-_style_module_css_dashes-only-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "-_style_module_css_dashes-only-btn--info_is-disabled_1",
   "foo": "bar",
-  "foo_bar": "./style.module.css?dashes-only-foo_bar",
+  "foo_bar": "-_style_module_css_dashes-only-foo_bar",
   "myBtnInfo_isDisabled": "value",
-  "simple": "./style.module.css?dashes-only-simple",
+  "simple": "-_style_module_css_dashes-only-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 6`] = `
 Object {
-  "BTN--INFO_IS-DISABLED_1": "./style.module.css?upper-btn--info_is-disabled_1",
-  "BTN-INFO_IS-DISABLED": "./style.module.css?upper-btn-info_is-disabled",
+  "BTN--INFO_IS-DISABLED_1": "-_style_module_css_upper-btn--info_is-disabled_1",
+  "BTN-INFO_IS-DISABLED": "-_style_module_css_upper-btn-info_is-disabled",
   "FOO": "bar",
-  "FOO_BAR": "./style.module.css?upper-foo_bar",
+  "FOO_BAR": "-_style_module_css_upper-foo_bar",
   "MY-BTN-INFO_IS-DISABLED": "value",
-  "SIMPLE": "./style.module.css?upper-simple",
+  "SIMPLE": "-_style_module_css_upper-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 7`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?as-is-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?as-is-btn-info_is-disabled",
+  "btn--info_is-disabled_1": "-_style_module_css_as-is-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css_as-is-btn-info_is-disabled",
   "foo": "bar",
-  "foo_bar": "./style.module.css?as-is-foo_bar",
+  "foo_bar": "-_style_module_css_as-is-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?as-is-simple",
+  "simple": "-_style_module_css_as-is-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 8`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?camel-case-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?camel-case-btn-info_is-disabled",
+  "btn--info_is-disabled_1": "-_style_module_css_camel-case-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css_camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled": "-_style_module_css_camel-case-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "-_style_module_css_camel-case-btn--info_is-disabled_1",
   "foo": "bar",
-  "foo_bar": "./style.module.css?camel-case-foo_bar",
+  "fooBar": "-_style_module_css_camel-case-foo_bar",
+  "foo_bar": "-_style_module_css_camel-case-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?camel-case-simple",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "-_style_module_css_camel-case-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 9`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?camel-case-only-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?camel-case-only-btn-info_is-disabled",
+  "btnInfoIsDisabled": "-_style_module_css_camel-case-only-btn-info_is-disabled",
+  "btnInfoIsDisabled1": "-_style_module_css_camel-case-only-btn--info_is-disabled_1",
   "foo": "bar",
-  "foo_bar": "./style.module.css?camel-case-only-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?camel-case-only-simple",
+  "fooBar": "-_style_module_css_camel-case-only-foo_bar",
+  "myBtnInfoIsDisabled": "value",
+  "simple": "-_style_module_css_camel-case-only-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 10`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?dashes-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?dashes-btn-info_is-disabled",
+  "btn--info_is-disabled_1": "-_style_module_css_dashes-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled": "-_style_module_css_dashes-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "-_style_module_css_dashes-btn--info_is-disabled_1",
   "foo": "bar",
-  "foo_bar": "./style.module.css?dashes-foo_bar",
+  "foo_bar": "-_style_module_css_dashes-foo_bar",
   "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?dashes-simple",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "-_style_module_css_dashes-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 11`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?dashes-only-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?dashes-only-btn-info_is-disabled",
+  "btnInfo_isDisabled": "-_style_module_css_dashes-only-btn-info_is-disabled",
+  "btnInfo_isDisabled_1": "-_style_module_css_dashes-only-btn--info_is-disabled_1",
   "foo": "bar",
-  "foo_bar": "./style.module.css?dashes-only-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?dashes-only-simple",
+  "foo_bar": "-_style_module_css_dashes-only-foo_bar",
+  "myBtnInfo_isDisabled": "value",
+  "simple": "-_style_module_css_dashes-only-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css exports-convention exported tests should have correct convention for css exports name 12`] = `
 Object {
-  "btn--info_is-disabled_1": "./style.module.css?upper-btn--info_is-disabled_1",
-  "btn-info_is-disabled": "./style.module.css?upper-btn-info_is-disabled",
-  "foo": "bar",
-  "foo_bar": "./style.module.css?upper-foo_bar",
-  "my-btn-info_is-disabled": "value",
-  "simple": "./style.module.css?upper-simple",
+  "BTN--INFO_IS-DISABLED_1": "-_style_module_css_upper-btn--info_is-disabled_1",
+  "BTN-INFO_IS-DISABLED": "-_style_module_css_upper-btn-info_is-disabled",
+  "FOO": "bar",
+  "FOO_BAR": "-_style_module_css_upper-foo_bar",
+  "MY-BTN-INFO_IS-DISABLED": "value",
+  "SIMPLE": "-_style_module_css_upper-simple",
 }
 `;
 
 exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: dev 1`] = `
 Object {
-  "placeholder": "my-app-./tailwind.module.css-placeholder-gray-700",
+  "placeholder": "my-app-_tailwind_module_css-placeholder-gray-700",
 }
 `;
 
 exports[`ConfigCacheTestCases css large exported tests should allow to create css modules: prod 1`] = `
 Object {
-  "placeholder": "144-Oh6j",
+  "placeholder": "-144-Oh6j",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 1`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css-btn-info_is-disabled",
+  "color-red": "---_style_module_css-color-red",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-_style_module_css-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 2`] = `
+Object {
+  "btn--info_is-disabled_1": "de84261a9640bc9390f3",
+  "btn-info_is-disabled": "ecdfa12ee9c667c55af7",
+  "color-red": "--b7dc4acdff896aeffb60",
+  "foo": "bar",
+  "foo_bar": "d46074bbd7d5ee641466",
+  "my-btn-info_is-disabled": "value",
+  "simple": "d55fd643016d378ac454",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 3`] = `
+Object {
+  "btn--info_is-disabled_1": "ea850e6088d2566f677d-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "ea850e6088d2566f677d-btn-info_is-disabled",
+  "color-red": "--ea850e6088d2566f677d-color-red",
+  "foo": "bar",
+  "foo_bar": "ea850e6088d2566f677d-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "ea850e6088d2566f677d-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 4`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
+  "color-red": "--./style.module__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 5`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 6`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 7`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-de84261a9640bc9390f3",
+  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-ecdfa12ee9c667c55af7",
+  "color-red": "---_style_module_css_uniqueName-id-contenthash-b7dc4acdff896aeffb60",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-d46074bbd7d5ee641466",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-_style_module_css_uniqueName-id-contenthash-d55fd643016d378ac454",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 8`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.less__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.less__btn-info_is-disabled",
+  "color-red": "--./style.module.less__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.less__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.less__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 9`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "-_style_module_css-btn-info_is-disabled",
+  "color-red": "---_style_module_css-color-red",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-_style_module_css-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 10`] = `
+Object {
+  "btn--info_is-disabled_1": "de84261a9640bc9390f3",
+  "btn-info_is-disabled": "ecdfa12ee9c667c55af7",
+  "color-red": "--b7dc4acdff896aeffb60",
+  "foo": "bar",
+  "foo_bar": "d46074bbd7d5ee641466",
+  "my-btn-info_is-disabled": "value",
+  "simple": "d55fd643016d378ac454",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 11`] = `
+Object {
+  "btn--info_is-disabled_1": "ea850e6088d2566f677d-btn--info_is-disabled_1",
+  "btn-info_is-disabled": "ea850e6088d2566f677d-btn-info_is-disabled",
+  "color-red": "--ea850e6088d2566f677d-color-red",
+  "foo": "bar",
+  "foo_bar": "ea850e6088d2566f677d-foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "ea850e6088d2566f677d-simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 12`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module__btn-info_is-disabled",
+  "color-red": "--./style.module__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 13`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 14`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.css__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.css__btn-info_is-disabled",
+  "color-red": "--./style.module.css__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.css__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.css__simple",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 15`] = `
+Object {
+  "btn--info_is-disabled_1": "-_style_module_css_uniqueName-id-contenthash-de84261a9640bc9390f3",
+  "btn-info_is-disabled": "-_style_module_css_uniqueName-id-contenthash-ecdfa12ee9c667c55af7",
+  "color-red": "---_style_module_css_uniqueName-id-contenthash-b7dc4acdff896aeffb60",
+  "foo": "bar",
+  "foo_bar": "-_style_module_css_uniqueName-id-contenthash-d46074bbd7d5ee641466",
+  "my-btn-info_is-disabled": "value",
+  "simple": "-_style_module_css_uniqueName-id-contenthash-d55fd643016d378ac454",
+}
+`;
+
+exports[`ConfigCacheTestCases css local-ident-name exported tests should have correct local ident for css export locals 16`] = `
+Object {
+  "btn--info_is-disabled_1": "./style.module.less__btn--info_is-disabled_1",
+  "btn-info_is-disabled": "./style.module.less__btn-info_is-disabled",
+  "color-red": "--./style.module.less__color-red",
+  "foo": "bar",
+  "foo_bar": "./style.module.less__foo_bar",
+  "my-btn-info_is-disabled": "value",
+  "simple": "./style.module.less__simple",
 }
 `;
 

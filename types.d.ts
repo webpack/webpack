@@ -2917,6 +2917,11 @@ declare interface CssAutoGeneratorOptions {
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: boolean;
+
+	/**
+	 * Configure the generated local ident name.
+	 */
+	localIdentName?: string;
 }
 
 /**
@@ -2969,6 +2974,11 @@ declare interface CssGlobalGeneratorOptions {
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: boolean;
+
+	/**
+	 * Configure the generated local ident name.
+	 */
+	localIdentName?: string;
 }
 
 /**
@@ -3000,6 +3010,11 @@ declare interface CssModuleGeneratorOptions {
 	 * Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.
 	 */
 	exportsOnly?: boolean;
+
+	/**
+	 * Configure the generated local ident name.
+	 */
+	localIdentName?: string;
 }
 
 /**

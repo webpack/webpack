@@ -369,6 +369,9 @@
         },
         "exportsOnly": {
           "$ref": "#/definitions/CssGeneratorExportsOnly"
+        },
+        "localIdentName": {
+          "$ref": "#/definitions/CssGeneratorLocalIdentName"
         }
       }
     },
@@ -420,6 +423,10 @@
       "description": "Avoid generating and loading a stylesheet and only embed exports from css into output javascript files.",
       "type": "boolean"
     },
+    "CssGeneratorLocalIdentName": {
+      "description": "Configure the generated local ident name.",
+      "type": "string"
+    },
     "CssGeneratorOptions": {
       "description": "Generator options for css modules.",
       "type": "object",
@@ -443,6 +450,9 @@
         },
         "exportsOnly": {
           "$ref": "#/definitions/CssGeneratorExportsOnly"
+        },
+        "localIdentName": {
+          "$ref": "#/definitions/CssGeneratorLocalIdentName"
         }
       }
     },
@@ -466,6 +476,9 @@
         },
         "exportsOnly": {
           "$ref": "#/definitions/CssGeneratorExportsOnly"
+        },
+        "localIdentName": {
+          "$ref": "#/definitions/CssGeneratorLocalIdentName"
         }
       }
     },
