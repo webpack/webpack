@@ -5,6 +5,9 @@ module.exports = {
 		chunkFilename: "[name].js",
 		crossOriginLoading: "anonymous"
 	},
+	experiments: {
+		css: true
+	},
 	optimization: {
 		minimize: false,
 		splitChunks: {
