@@ -30,6 +30,15 @@ describe("Persistent Caching", () => {
 			},
 			cacheLocation: cachePath
 		},
+		experiments: {
+			css: true
+		},
+		resolve: {
+			alias: {
+				"image.png": false,
+				"image1.png": false
+			}
+		},
 		target: "node",
 		output: {
 			library: { type: "commonjs-module", export: "default" },
@@ -109,11 +118,17 @@ export default 40 + file;
 		const files = Array.from({ length: 30 }).map((_, i) => `file${i}.js`);
 		const data = {
 			"index.js": `
+import * as style from "./style.modules.css";
 
 ${files.map((f, i) => `import f${i} from "./${f}";`).join("\n")}
 
 export default ${files.map((_, i) => `f${i}`).join(" + ")};
-`
+export { style };
+`,
+			"style.modules.css": `.class {
+	color: red;
+	background: url('image.png');
+}`
 		};
 		for (const file of files) {
 			data[file] = `export default 1;`;
@@ -123,7 +138,8 @@ export default ${files.map((_, i) => `f${i}`).join(" + ")};
 		expect(execute()).toBe(30);
 		for (let i = 0; i < 30; i++) {
 			updateSrc({
-				[files[i]]: `export default 2;`
+				[files[i]]: `export default 2;`,
+				"style.modules.css": `.class-${i} { color: red; background: url('image1.png'); }`
 			});
 			await compile({ cache: { compression: false } });
 			expect(execute()).toBe(31 + i);
