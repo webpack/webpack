@@ -2309,6 +2309,38 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-auto-worklet": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify a syntax that should be parsed as Worklet reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', '*context.abc.func()' handles 'context.abc.func()', and combinations are also possible.",
+        "multiple": true,
+        "path": "module.parser.javascript/auto.worklet[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.worklet",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify a syntax that should be parsed as Worklet reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', '*context.abc.func()' handles 'context.abc.func()', and combinations are also possible. Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-auto-worklet-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'module.parser.javascript/auto.worklet' configuration. Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+        "multiple": false,
+        "path": "module.parser.javascript/auto.worklet",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'module.parser.javascript/auto.worklet' configuration. Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-auto-wrapped-context-critical": Object {
     "configs": Array [
       Object {
@@ -3078,6 +3110,38 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-dynamic-worklet": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify a syntax that should be parsed as Worklet reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', '*context.abc.func()' handles 'context.abc.func()', and combinations are also possible.",
+        "multiple": true,
+        "path": "module.parser.javascript/dynamic.worklet[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.worklet",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify a syntax that should be parsed as Worklet reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', '*context.abc.func()' handles 'context.abc.func()', and combinations are also possible. Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-dynamic-worklet-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'module.parser.javascript/dynamic.worklet' configuration. Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+        "multiple": false,
+        "path": "module.parser.javascript/dynamic.worklet",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'module.parser.javascript/dynamic.worklet' configuration. Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-dynamic-wrapped-context-critical": Object {
     "configs": Array [
       Object {
@@ -3713,6 +3777,38 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "module-parser-javascript-esm-worklet": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify a syntax that should be parsed as Worklet reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', '*context.abc.func()' handles 'context.abc.func()', and combinations are also possible.",
+        "multiple": true,
+        "path": "module.parser.javascript/esm.worklet[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.worklet",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify a syntax that should be parsed as Worklet reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', '*context.abc.func()' handles 'context.abc.func()', and combinations are also possible. Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-esm-worklet-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'module.parser.javascript/esm.worklet' configuration. Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+        "multiple": false,
+        "path": "module.parser.javascript/esm.worklet",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'module.parser.javascript/esm.worklet' configuration. Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "module-parser-javascript-esm-wrapped-context-critical": Object {
     "configs": Array [
       Object {
@@ -4195,6 +4291,38 @@ Object {
       },
     ],
     "description": "Clear all items provided in 'module.parser.javascript.worker' configuration. Disable or configure parsing of WebWorker syntax like new Worker() or navigator.serviceWorker.register().",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
+  "module-parser-javascript-worklet": Object {
+    "configs": Array [
+      Object {
+        "description": "Specify a syntax that should be parsed as Worklet reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', '*context.abc.func()' handles 'context.abc.func()', and combinations are also possible.",
+        "multiple": true,
+        "path": "module.parser.javascript.worklet[]",
+        "type": "string",
+      },
+      Object {
+        "description": "Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+        "multiple": false,
+        "path": "module.parser.javascript.worklet",
+        "type": "boolean",
+      },
+    ],
+    "description": "Specify a syntax that should be parsed as Worklet reference. 'Abc' handles 'new Abc()', 'Abc from xyz' handles 'import { Abc } from \\"xyz\\"; new Abc()', '*context.abc.func()' handles 'context.abc.func()', and combinations are also possible. Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+    "multiple": true,
+    "simpleType": "string",
+  },
+  "module-parser-javascript-worklet-reset": Object {
+    "configs": Array [
+      Object {
+        "description": "Clear all items provided in 'module.parser.javascript.worklet' configuration. Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
+        "multiple": false,
+        "path": "module.parser.javascript.worklet",
+        "type": "reset",
+      },
+    ],
+    "description": "Clear all items provided in 'module.parser.javascript.worklet' configuration. Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().",
     "multiple": false,
     "simpleType": "boolean",
   },

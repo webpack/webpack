@@ -4,6 +4,7 @@
   "words": [
     "absolutify",
     "acircular",
+    "addmodule",
     "amdmodule",
     "analyse",
     "analysed",
@@ -280,6 +281,9 @@
     "webmake",
     "webpack",
     "webpack's",
+    "Worklet",
+    "worklet",
+    "worklets",
     "Xarray",
     "Xexports",
     "Xfactory",

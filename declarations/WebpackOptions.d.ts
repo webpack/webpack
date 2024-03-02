@@ -3243,6 +3243,10 @@ export interface JavascriptParserOptions {
 	 */
 	worker?: string[] | boolean;
 	/**
+	 * Disable or configure parsing of Worklet syntax like context.audioWorklet.addModule() or CSS.paintWorklet.addModule().
+	 */
+	worklet?: string[] | boolean;
+	/**
 	 * Enable warnings for partial dynamic dependencies.
 	 */
 	wrappedContextCritical?: boolean;
