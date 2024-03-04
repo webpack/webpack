@@ -9,13 +9,12 @@ const unsafeCache = new Proxy(
 		get(target, key, receiver) {
 			getCounter += 1;
 
-			return Reflect.get(...arguments);
+			return Reflect.get(target, key, receiver);
 		},
-
 		set(target, key, value, receiver) {
 			setConter += 1;
 
-			return Reflect.set(...arguments);
+			return Reflect.set(target, key, value, receiver);
 		}
 	}
 );
