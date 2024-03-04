@@ -4154,16 +4154,24 @@
     },
     "ResolvePluginInstance": {
       "description": "Plugin instance.",
-      "type": "object",
-      "additionalProperties": true,
-      "properties": {
-        "apply": {
-          "description": "The run point of the plugin, required method.",
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "apply": {
+              "description": "The run point of the plugin, required method.",
+              "instanceof": "Function",
+              "tsType": "(arg0: import('enhanced-resolve').Resolver) => void"
+            }
+          },
+          "required": ["apply"]
+        },
+        {
           "instanceof": "Function",
-          "tsType": "(resolver: import('enhanced-resolve').Resolver) => void"
+          "tsType": "((this: import('enhanced-resolve').Resolver, arg1: import('enhanced-resolve').Resolver) => void)"
         }
-      },
-      "required": ["apply"]
+      ]
     },
     "RuleSetCondition": {
       "description": "A condition matcher.",

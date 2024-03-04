@@ -334,6 +334,21 @@ export type ResolveAlias =
 			[k: string]: string[] | false | string;
 	  };
 /**
+ * Plugin instance.
+ */
+export type ResolvePluginInstance =
+	| {
+			/**
+			 * The run point of the plugin, required method.
+			 */
+			apply: (arg0: import("enhanced-resolve").Resolver) => void;
+			[k: string]: any;
+	  }
+	| ((
+			this: import("enhanced-resolve").Resolver,
+			arg1: import("enhanced-resolve").Resolver
+	  ) => void);
+/**
  * A list of descriptions of loaders applied.
  */
 export type RuleSetUse =
@@ -1642,16 +1657,6 @@ export interface ResolveOptions {
 	 * Use synchronous filesystem calls for the resolver.
 	 */
 	useSyncFileSystemCalls?: boolean;
-}
-/**
- * Plugin instance.
- */
-export interface ResolvePluginInstance {
-	/**
-	 * The run point of the plugin, required method.
-	 */
-	apply: (resolver: import("enhanced-resolve").Resolver) => void;
-	[k: string]: any;
 }
 /**
  * Options object for node compatibility features.
