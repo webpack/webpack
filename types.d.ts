@@ -10617,7 +10617,10 @@ declare interface ReadFile {
 			arg1: string | Buffer
 		) => void
 	): void;
-	(path: PathOrFileDescriptor, BufferCallback?: any): void;
+	(
+		path: PathOrFileDescriptor,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: Buffer) => void
+	): void;
 }
 declare class ReadFileCompileWasmPlugin {
 	constructor(options?: ReadFileCompileWasmPluginOptions);
@@ -10855,7 +10858,10 @@ declare interface Readlink {
 			arg1: string | Buffer
 		) => void
 	): void;
-	(path: PathLike, StringCallback?: any): void;
+	(
+		path: PathLike,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: string) => void
+	): void;
 }
 declare interface ReadlinkSync {
 	(path: PathLike, options?: EncodingOption): string;
