@@ -83,7 +83,7 @@ import {
 	WithStatement,
 	YieldExpression
 } from "estree";
-import { Dirent } from "fs";
+import { Dirent as DirentImport } from "fs";
 import {
 	IncomingMessage,
 	ServerOptions as ServerOptionsImport,
@@ -108,6 +108,12 @@ import {
 import { SecureContextOptions, TlsOptions } from "tls";
 import { Context } from "vm";
 
+declare interface Abortable {
+	/**
+	 * When provided the corresponding `AbortController` can be used to cancel an asynchronous action.
+	 */
+	signal?: AbortSignal;
+}
 declare class AbstractLibraryPlugin<T> {
 	constructor(__0: {
 		/**
@@ -237,6 +243,19 @@ declare interface ArgumentConfig {
 	type: "string" | "number" | "boolean" | "path" | "enum" | "RegExp" | "reset";
 	values?: any[];
 }
+type ArrayBufferView =
+	| Uint8Array
+	| Uint8ClampedArray
+	| Uint16Array
+	| Uint32Array
+	| Int8Array
+	| Int16Array
+	| Int32Array
+	| BigUint64Array
+	| BigInt64Array
+	| Float32Array
+	| Float64Array
+	| DataView;
 declare interface Assertions {
 	[index: string]: any;
 }
@@ -817,6 +836,19 @@ declare abstract class BasicEvaluatedExpression {
 			| TemplateElement
 	): BasicEvaluatedExpression;
 }
+type BufferEncoding =
+	| "ascii"
+	| "utf8"
+	| "utf16le"
+	| "ucs2"
+	| "latin1"
+	| "binary"
+	| "utf-8"
+	| "ucs-2"
+	| "base64"
+	| "base64url"
+	| "hex";
+type BufferEncodingOption = "buffer" | { encoding: "buffer" };
 type BuildInfo = KnownBuildInfo & Record<string, any>;
 type BuildMeta = KnownBuildMeta & Record<string, any>;
 declare abstract class ByTypeGenerator extends Generator {
@@ -2897,6 +2929,10 @@ declare interface ContextTimestampAndHash {
 }
 type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
 	Record<string, any>;
+type CreateWriteStreamFSImplementation = FSImplementation & {
+	write: (...args: any[]) => any;
+	close?: (...args: any[]) => any;
+};
 
 /**
  * Generator options for css/auto modules.
@@ -3310,6 +3346,17 @@ declare interface DeterministicModuleIdsPluginOptions {
 	 */
 	failOnConflict?: boolean;
 }
+declare interface DirentFs {
+	isFile: () => boolean;
+	isDirectory: () => boolean;
+	isBlockDevice: () => boolean;
+	isCharacterDevice: () => boolean;
+	isSymbolicLink: () => boolean;
+	isFIFO: () => boolean;
+	isSocket: () => boolean;
+	name: string;
+	path: string;
+}
 declare class DllPlugin {
 	constructor(options: DllPluginOptions);
 	options: {
@@ -3589,6 +3636,21 @@ declare class EnableWasmLoadingPlugin {
 	static setEnabled(compiler: Compiler, type: string): void;
 	static checkEnabled(compiler: Compiler, type: string): void;
 }
+type EncodingOption =
+	| undefined
+	| null
+	| "ascii"
+	| "utf8"
+	| "utf16le"
+	| "ucs2"
+	| "latin1"
+	| "binary"
+	| "utf-8"
+	| "ucs-2"
+	| "base64"
+	| "base64url"
+	| "hex"
+	| ObjectEncodingOptions;
 type Entry =
 	| string
 	| (() => string | EntryObject | string[] | Promise<EntryStatic>)
@@ -4505,6 +4567,10 @@ type ExternalsType =
 	| "promise"
 	| "script"
 	| "node-commonjs";
+declare interface FSImplementation {
+	open?: (...args: any[]) => any;
+	close?: (...args: any[]) => any;
+}
 declare interface FactorizeModuleOptions {
 	currentProfile: ModuleProfile;
 	factory: ModuleFactory;
@@ -4679,7 +4745,7 @@ declare interface FileSystem {
 			| "binary"
 			| ((
 					arg0?: null | NodeJS.ErrnoException,
-					arg1?: (string | Buffer)[] | Dirent[]
+					arg1?: (string | Buffer)[] | DirentImport[]
 			  ) => void)
 			| ReaddirOptions
 			| "utf-8"
@@ -4690,7 +4756,7 @@ declare interface FileSystem {
 			| "buffer",
 		arg2?: (
 			arg0?: null | NodeJS.ErrnoException,
-			arg1?: (string | Buffer)[] | Dirent[]
+			arg1?: (string | Buffer)[] | DirentImport[]
 		) => void
 	) => void;
 	readJson?: {
@@ -5178,16 +5244,12 @@ declare class HttpUriPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-declare interface IDirent {
-	isFile: () => boolean;
-	isDirectory: () => boolean;
-	isBlockDevice: () => boolean;
-	isCharacterDevice: () => boolean;
-	isSymbolicLink: () => boolean;
-	isFIFO: () => boolean;
-	isSocket: () => boolean;
-	name: string | Buffer;
-}
+type IBigIntStats = IStatsBase<bigint> & {
+	atimeNs: bigint;
+	mtimeNs: bigint;
+	ctimeNs: bigint;
+	birthtimeNs: bigint;
+};
 declare interface IStats {
 	isFile: () => boolean;
 	isDirectory: () => boolean;
@@ -5196,20 +5258,47 @@ declare interface IStats {
 	isSymbolicLink: () => boolean;
 	isFIFO: () => boolean;
 	isSocket: () => boolean;
-	dev: number | bigint;
-	ino: number | bigint;
-	mode: number | bigint;
-	nlink: number | bigint;
-	uid: number | bigint;
-	gid: number | bigint;
-	rdev: number | bigint;
-	size: number | bigint;
-	blksize: number | bigint;
-	blocks: number | bigint;
-	atimeMs: number | bigint;
-	mtimeMs: number | bigint;
-	ctimeMs: number | bigint;
-	birthtimeMs: number | bigint;
+	dev: number;
+	ino: number;
+	mode: number;
+	nlink: number;
+	uid: number;
+	gid: number;
+	rdev: number;
+	size: number;
+	blksize: number;
+	blocks: number;
+	atimeMs: number;
+	mtimeMs: number;
+	ctimeMs: number;
+	birthtimeMs: number;
+	atime: Date;
+	mtime: Date;
+	ctime: Date;
+	birthtime: Date;
+}
+declare interface IStatsBase<T> {
+	isFile: () => boolean;
+	isDirectory: () => boolean;
+	isBlockDevice: () => boolean;
+	isCharacterDevice: () => boolean;
+	isSymbolicLink: () => boolean;
+	isFIFO: () => boolean;
+	isSocket: () => boolean;
+	dev: T;
+	ino: T;
+	mode: T;
+	nlink: T;
+	uid: T;
+	gid: T;
+	rdev: T;
+	size: T;
+	blksize: T;
+	blocks: T;
+	atimeMs: T;
+	mtimeMs: T;
+	ctimeMs: T;
+	birthtimeMs: T;
 	atime: Date;
 	mtime: Date;
 	ctime: Date;
@@ -5323,38 +5412,24 @@ declare abstract class InitFragment<GenerateContext> {
 	merge: any;
 }
 declare interface InputFileSystem {
-	readFile: (
-		arg0: string,
-		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
-	) => void;
+	readFile: ReadFile;
+	readFileSync?: ReadFileSync;
+	readlink: Readlink;
+	readlinkSync?: ReadlinkSync;
+	readdir: Readdir;
+	readdirSync?: ReaddirSync;
+	stat: Stat;
+	statSync?: StatSync;
+	lstat?: LStat;
+	lstatSync?: LStatSync;
+	realpath?: RealPath;
+	realpathSync?: RealPathSync;
 	readJson?: (
-		arg0: string,
-		arg1: (arg0?: null | Error | NodeJS.ErrnoException, arg1?: any) => void
+		arg0: PathOrFileDescriptor,
+		arg1: (arg0: null | Error | NodeJS.ErrnoException, arg1?: any) => void
 	) => void;
-	readlink: (
-		arg0: string,
-		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
-	) => void;
-	readdir: (
-		arg0: string,
-		arg1: (
-			arg0?: null | NodeJS.ErrnoException,
-			arg1?: (string | Buffer)[] | IDirent[]
-		) => void
-	) => void;
-	stat: (
-		arg0: string,
-		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
-	) => void;
-	lstat?: (
-		arg0: string,
-		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
-	) => void;
-	realpath?: (
-		arg0: string,
-		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
-	) => void;
-	purge?: (arg0?: string) => void;
+	readJsonSync?: (arg0: PathOrFileDescriptor) => void;
+	purge?: (arg0?: string | string[] | Set<string>) => void;
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
 	dirname?: (arg0: string) => string;
@@ -5363,29 +5438,33 @@ type IntermediateFileSystem = InputFileSystem &
 	OutputFileSystem &
 	IntermediateFileSystemExtras;
 declare interface IntermediateFileSystemExtras {
-	mkdirSync: (arg0: string) => void;
-	createWriteStream: (arg0: string) => NodeJS.WritableStream;
-	open: (
-		arg0: string,
-		arg1: string,
-		arg2: (arg0?: null | NodeJS.ErrnoException, arg1?: number) => void
-	) => void;
-	read: (
-		arg0: number,
-		arg1: Buffer,
-		arg2: number,
-		arg3: number,
-		arg4: number,
-		arg5: (arg0?: null | NodeJS.ErrnoException, arg1?: number) => void
-	) => void;
+	mkdirSync: MkdirSync;
+	createWriteStream: (
+		arg0: PathLike,
+		arg1?:
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| WriteStreamOptions
+	) => NodeJS.WritableStream;
+	open: Open;
+	read: Read<Buffer>;
 	close: (
 		arg0: number,
-		arg1: (arg0?: null | NodeJS.ErrnoException) => void
+		arg1: (arg0: null | NodeJS.ErrnoException) => void
 	) => void;
 	rename: (
-		arg0: string,
-		arg1: string,
-		arg2: (arg0?: null | NodeJS.ErrnoException) => void
+		arg0: PathLike,
+		arg1: PathLike,
+		arg2: (arg0: null | NodeJS.ErrnoException) => void
 	) => void;
 }
 type InternalCell<T> = T | typeof TOMBSTONE | typeof UNDEFINED_MARKER;
@@ -6984,6 +7063,51 @@ declare interface KnownStatsProfile {
 	factory: number;
 	dependencies: number;
 }
+declare interface LStat {
+	(
+		path: PathLike,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: IStats) => void
+	): void;
+	(
+		path: PathLike,
+		options: undefined | (StatOptions & { bigint?: false }),
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: IStats) => void
+	): void;
+	(
+		path: PathLike,
+		options: StatOptions & { bigint: true },
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: IBigIntStats) => void
+	): void;
+	(
+		path: PathLike,
+		options: undefined | StatOptions,
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1: IStats | IBigIntStats
+		) => void
+	): void;
+}
+declare interface LStatSync {
+	(path: PathLike, options?: undefined): IStats;
+	(
+		path: PathLike,
+		options?: StatSyncOptions & { bigint?: false; throwIfNoEntry: false }
+	): undefined | IStats;
+	(
+		path: PathLike,
+		options: StatSyncOptions & { bigint: true; throwIfNoEntry: false }
+	): undefined | IBigIntStats;
+	(path: PathLike, options?: StatSyncOptions & { bigint?: false }): IStats;
+	(path: PathLike, options: StatSyncOptions & { bigint: true }): IBigIntStats;
+	(
+		path: PathLike,
+		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: false }
+	): IStats | IBigIntStats;
+	(
+		path: PathLike,
+		options?: StatSyncOptions
+	): undefined | IStats | IBigIntStats;
+}
 
 /**
  * Options for the default backend.
@@ -7635,6 +7759,10 @@ declare abstract class MainTemplate {
 	get requireFn(): "__webpack_require__";
 	get outputOptions(): Output;
 }
+declare interface MakeDirectoryOptions {
+	recursive?: boolean;
+	mode?: string | number;
+}
 declare interface MapOptions {
 	columns?: boolean;
 	module?: boolean;
@@ -7697,6 +7825,50 @@ declare interface MinChunkSizePluginOptions {
 	 * Minimum number of characters.
 	 */
 	minChunkSize: number;
+}
+declare interface Mkdir {
+	(
+		file: PathLike,
+		options: MakeDirectoryOptions & { recursive: true },
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+	): void;
+	(
+		file: PathLike,
+		options:
+			| undefined
+			| null
+			| string
+			| number
+			| (MakeDirectoryOptions & { recursive?: false }),
+		callback: (arg0: null | NodeJS.ErrnoException) => void
+	): void;
+	(
+		file: PathLike,
+		options: undefined | null | string | number | MakeDirectoryOptions,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1?: string) => void
+	): void;
+	(
+		file: PathLike,
+		callback: (arg0: null | NodeJS.ErrnoException) => void
+	): void;
+}
+declare interface MkdirSync {
+	(
+		path: PathLike,
+		options: MakeDirectoryOptions & { recursive: true }
+	): undefined | string;
+	(
+		path: PathLike,
+		options?:
+			| null
+			| string
+			| number
+			| (MakeDirectoryOptions & { recursive?: false })
+	): void;
+	(
+		path: PathLike,
+		options?: null | string | number | MakeDirectoryOptions
+	): undefined | string;
 }
 declare class Module extends DependenciesBlock {
 	constructor(type: string, context?: null | string, layer?: null | string);
@@ -8882,6 +9054,21 @@ declare interface ObjectDeserializerContext {
 	read: () => any;
 	setCircularReference: (arg0?: any) => void;
 }
+declare interface ObjectEncodingOptions {
+	encoding?:
+		| null
+		| "ascii"
+		| "utf8"
+		| "utf16le"
+		| "ucs2"
+		| "latin1"
+		| "binary"
+		| "utf-8"
+		| "ucs-2"
+		| "base64"
+		| "base64url"
+		| "hex";
+}
 declare interface ObjectSerializer {
 	serialize: (arg0: any, arg1: ObjectSerializerContext) => void;
 	deserialize: (arg0: ObjectDeserializerContext) => any;
@@ -8919,6 +9106,23 @@ declare interface OccurrenceModuleIdsPluginOptions {
 	 * Prioritise initial size over total size.
 	 */
 	prioritiseInitial?: boolean;
+}
+declare interface Open {
+	(
+		file: PathLike,
+		flags: undefined | string | number,
+		mode: undefined | null | string | number,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: number) => void
+	): void;
+	(
+		file: PathLike,
+		flags: undefined | string | number,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: number) => void
+	): void;
+	(
+		file: PathLike,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: number) => void
+	): void;
 }
 
 /**
@@ -9616,42 +9820,17 @@ declare interface Output {
 	workerWasmLoading?: string | false;
 }
 declare interface OutputFileSystem {
-	writeFile: (
-		arg0: string,
-		arg1: string | Buffer,
-		arg2: (arg0?: null | NodeJS.ErrnoException) => void
-	) => void;
-	mkdir: (
-		arg0: string,
-		arg1: (arg0?: null | NodeJS.ErrnoException) => void
-	) => void;
-	readdir?: (
-		arg0: string,
-		arg1: (
-			arg0?: null | NodeJS.ErrnoException,
-			arg1?: (string | Buffer)[] | IDirent[]
-		) => void
-	) => void;
-	rmdir?: (
-		arg0: string,
-		arg1: (arg0?: null | NodeJS.ErrnoException) => void
-	) => void;
+	writeFile: WriteFile;
+	mkdir: Mkdir;
+	readdir?: Readdir;
+	rmdir?: Rmdir;
 	unlink?: (
-		arg0: string,
-		arg1: (arg0?: null | NodeJS.ErrnoException) => void
+		arg0: PathLike,
+		arg1: (arg0: null | NodeJS.ErrnoException) => void
 	) => void;
-	stat: (
-		arg0: string,
-		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
-	) => void;
-	lstat?: (
-		arg0: string,
-		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: IStats) => void
-	) => void;
-	readFile: (
-		arg0: string,
-		arg1: (arg0?: null | NodeJS.ErrnoException, arg1?: string | Buffer) => void
-	) => void;
+	stat: Stat;
+	lstat?: LStat;
+	readFile: ReadFile;
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
 	dirname?: (arg0: string) => string;
@@ -10039,6 +10218,8 @@ declare interface PathData {
 	noChunkHash?: boolean;
 	url?: string;
 }
+type PathLike = string | Buffer | URL;
+type PathOrFileDescriptor = string | number | Buffer | URL;
 type Pattern =
 	| Identifier
 	| MemberExpression
@@ -10351,6 +10532,93 @@ declare interface RawSourceMap {
 	mappings: string;
 	file: string;
 }
+declare interface Read<TBuffer extends ArrayBufferView = Buffer> {
+	(
+		fd: number,
+		buffer: TBuffer,
+		offset: number,
+		length: number,
+		position: null | number | bigint,
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			bytesRead: number,
+			buffer: TBuffer
+		) => void
+	): void;
+	(
+		fd: number,
+		options: ReadAsyncOptions<TBuffer>,
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			bytesRead: number,
+			buffer: TBuffer
+		) => void
+	): void;
+	(
+		fd: number,
+		callback: (
+			err: null | NodeJS.ErrnoException,
+			bytesRead: number,
+			buffer: ArrayBufferView
+		) => void
+	): void;
+}
+declare interface ReadAsyncOptions<TBuffer extends ArrayBufferView> {
+	offset?: number;
+	length?: number;
+	position?: null | number | bigint;
+	buffer?: TBuffer;
+}
+declare interface ReadFile {
+	(
+		path: PathOrFileDescriptor,
+		options:
+			| undefined
+			| null
+			| ({ encoding?: null; flag?: string } & Abortable),
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: Buffer) => void
+	): void;
+	(
+		path: PathOrFileDescriptor,
+		options:
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| ({ encoding: BufferEncoding; flag?: string } & Abortable),
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: string) => void
+	): void;
+	(
+		path: PathOrFileDescriptor,
+		options:
+			| undefined
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| (ObjectEncodingOptions & { flag?: string } & Abortable),
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1: string | Buffer
+		) => void
+	): void;
+	(path: PathOrFileDescriptor, BufferCallback?: any): void;
+}
 declare class ReadFileCompileWasmPlugin {
 	constructor(options?: ReadFileCompileWasmPluginOptions);
 	options: ReadFileCompileWasmPluginOptions;
@@ -10365,6 +10633,126 @@ declare interface ReadFileCompileWasmPluginOptions {
 	 * mangle imports
 	 */
 	mangleImports?: boolean;
+}
+declare interface ReadFileSync {
+	(
+		path: PathOrFileDescriptor,
+		options?: null | { encoding?: null; flag?: string }
+	): Buffer;
+	(
+		path: PathOrFileDescriptor,
+		options:
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| { encoding: BufferEncoding; flag?: string }
+	): string;
+	(
+		path: PathOrFileDescriptor,
+		options?:
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| (ObjectEncodingOptions & { flag?: string })
+	): string | Buffer;
+}
+declare interface Readdir {
+	(
+		path: PathLike,
+		options:
+			| undefined
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| {
+					encoding:
+						| null
+						| "ascii"
+						| "utf8"
+						| "utf16le"
+						| "ucs2"
+						| "latin1"
+						| "binary"
+						| "utf-8"
+						| "ucs-2"
+						| "base64"
+						| "base64url"
+						| "hex";
+					withFileTypes?: false;
+					recursive?: boolean;
+			  },
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: string[]) => void
+	): void;
+	(
+		path: PathLike,
+		options:
+			| "buffer"
+			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean },
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: Buffer[]) => void
+	): void;
+	(
+		path: PathLike,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: string[]) => void
+	): void;
+	(
+		path: PathLike,
+		options:
+			| undefined
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| (ObjectEncodingOptions & {
+					withFileTypes?: false;
+					recursive?: boolean;
+			  }),
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1: string[] | Buffer[]
+		) => void
+	): void;
+	(
+		path: PathLike,
+		options: ObjectEncodingOptions & {
+			withFileTypes: true;
+			recursive?: boolean;
+		},
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: DirentFs[]) => void
+	): void;
 }
 declare interface ReaddirOptions {
 	encoding?:
@@ -10382,6 +10770,97 @@ declare interface ReaddirOptions {
 		| "hex"
 		| "buffer";
 	withFileTypes?: boolean;
+}
+declare interface ReaddirSync {
+	(
+		path: PathLike,
+		options?:
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| {
+					encoding:
+						| null
+						| "ascii"
+						| "utf8"
+						| "utf16le"
+						| "ucs2"
+						| "latin1"
+						| "binary"
+						| "utf-8"
+						| "ucs-2"
+						| "base64"
+						| "base64url"
+						| "hex";
+					withFileTypes?: false;
+					recursive?: boolean;
+			  }
+	): string[];
+	(
+		path: PathLike,
+		options:
+			| "buffer"
+			| { encoding: "buffer"; withFileTypes?: false; recursive?: boolean }
+	): Buffer[];
+	(
+		path: PathLike,
+		options?:
+			| null
+			| "ascii"
+			| "utf8"
+			| "utf16le"
+			| "ucs2"
+			| "latin1"
+			| "binary"
+			| "utf-8"
+			| "ucs-2"
+			| "base64"
+			| "base64url"
+			| "hex"
+			| (ObjectEncodingOptions & { withFileTypes?: false; recursive?: boolean })
+	): string[] | Buffer[];
+	(
+		path: PathLike,
+		options: ObjectEncodingOptions & {
+			withFileTypes: true;
+			recursive?: boolean;
+		}
+	): DirentFs[];
+}
+declare interface Readlink {
+	(
+		path: PathLike,
+		options: EncodingOption,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: string) => void
+	): void;
+	(
+		path: PathLike,
+		options: BufferEncodingOption,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: Buffer) => void
+	): void;
+	(
+		path: PathLike,
+		options: EncodingOption,
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1: string | Buffer
+		) => void
+	): void;
+	(path: PathLike, StringCallback?: any): void;
+}
+declare interface ReadlinkSync {
+	(path: PathLike, options?: EncodingOption): string;
+	(path: PathLike, options: BufferEncodingOption): Buffer;
+	(path: PathLike, options?: EncodingOption): string | Buffer;
 }
 declare class RealContentHashPlugin {
 	constructor(__0: {
@@ -10407,6 +10886,35 @@ declare interface RealDependencyLocation {
 	start: SourcePosition;
 	end?: SourcePosition;
 	index?: number;
+}
+declare interface RealPath {
+	(
+		path: PathLike,
+		options: EncodingOption,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: string) => void
+	): void;
+	(
+		path: PathLike,
+		options: BufferEncodingOption,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: Buffer) => void
+	): void;
+	(
+		path: PathLike,
+		options: EncodingOption,
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1: string | Buffer
+		) => void
+	): void;
+	(
+		path: PathLike,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: string) => void
+	): void;
+}
+declare interface RealPathSync {
+	(path: PathLike, options?: EncodingOption): string;
+	(path: PathLike, options: BufferEncodingOption): Buffer;
+	(path: PathLike, options?: EncodingOption): string | Buffer;
 }
 type RecursiveArrayOrRecord<T> =
 	| { [index: string]: RecursiveArrayOrRecord<T> }
@@ -10980,6 +11488,22 @@ declare interface ResourceDataWithData {
 	fragment?: string;
 	context?: string;
 	data: Record<string, any>;
+}
+declare interface RmDirOptions {
+	maxRetries?: number;
+	recursive?: boolean;
+	retryDelay?: number;
+}
+declare interface Rmdir {
+	(
+		file: PathLike,
+		callback: (arg0: null | NodeJS.ErrnoException) => void
+	): void;
+	(
+		file: PathLike,
+		options: RmDirOptions,
+		callback: (arg0: null | NodeJS.ErrnoException) => void
+	): void;
 }
 type Rule = string | RegExp;
 declare interface RuleSet {
@@ -12401,6 +12925,58 @@ declare abstract class StackedMap<K, V> {
 	createChild(): StackedMap<K, V>;
 }
 type StartupRenderContext = RenderContext & { inlined: boolean };
+declare interface Stat {
+	(
+		path: PathLike,
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: IStats) => void
+	): void;
+	(
+		path: PathLike,
+		options: undefined | (StatOptions & { bigint?: false }),
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: IStats) => void
+	): void;
+	(
+		path: PathLike,
+		options: StatOptions & { bigint: true },
+		callback: (arg0: null | NodeJS.ErrnoException, arg1: IBigIntStats) => void
+	): void;
+	(
+		path: PathLike,
+		options: undefined | StatOptions,
+		callback: (
+			arg0: null | NodeJS.ErrnoException,
+			arg1: IStats | IBigIntStats
+		) => void
+	): void;
+}
+declare interface StatOptions {
+	bigint?: boolean;
+}
+declare interface StatSync {
+	(path: PathLike, options?: undefined): IStats;
+	(
+		path: PathLike,
+		options?: StatSyncOptions & { bigint?: false; throwIfNoEntry: false }
+	): undefined | IStats;
+	(
+		path: PathLike,
+		options: StatSyncOptions & { bigint: true; throwIfNoEntry: false }
+	): undefined | IBigIntStats;
+	(path: PathLike, options?: StatSyncOptions & { bigint?: false }): IStats;
+	(path: PathLike, options: StatSyncOptions & { bigint: true }): IBigIntStats;
+	(
+		path: PathLike,
+		options: StatSyncOptions & { bigint: boolean; throwIfNoEntry?: false }
+	): IStats | IBigIntStats;
+	(
+		path: PathLike,
+		options?: StatSyncOptions
+	): undefined | IStats | IBigIntStats;
+}
+declare interface StatSyncOptions {
+	bigint?: boolean;
+	throwIfNoEntry?: boolean;
+}
 type Statement =
 	| FunctionDeclaration
 	| VariableDeclaration
@@ -13796,8 +14372,85 @@ declare interface WithOptions {
 		arg0: Partial<ResolveOptionsWithDependencyType>
 	) => ResolverWithOptions;
 }
+declare interface WriteFile {
+	(
+		file: PathOrFileDescriptor,
+		data:
+			| string
+			| Uint8Array
+			| Uint8ClampedArray
+			| Uint16Array
+			| Uint32Array
+			| Int8Array
+			| Int16Array
+			| Int32Array
+			| BigUint64Array
+			| BigInt64Array
+			| Float32Array
+			| Float64Array
+			| DataView,
+		options: WriteFileOptions,
+		callback: (arg0: null | NodeJS.ErrnoException) => void
+	): void;
+	(
+		file: PathOrFileDescriptor,
+		data:
+			| string
+			| Uint8Array
+			| Uint8ClampedArray
+			| Uint16Array
+			| Uint32Array
+			| Int8Array
+			| Int16Array
+			| Int32Array
+			| BigUint64Array
+			| BigInt64Array
+			| Float32Array
+			| Float64Array
+			| DataView,
+		callback: (arg0: null | NodeJS.ErrnoException) => void
+	): void;
+}
+type WriteFileOptions =
+	| null
+	| "ascii"
+	| "utf8"
+	| "utf16le"
+	| "ucs2"
+	| "latin1"
+	| "binary"
+	| "utf-8"
+	| "ucs-2"
+	| "base64"
+	| "base64url"
+	| "hex"
+	| (ObjectEncodingOptions &
+			Abortable & { mode?: string | number; flag?: string; flush?: boolean });
 declare interface WriteOnlySet<T> {
 	add: (item: T) => void;
+}
+
+declare interface WriteStreamOptions {
+	flags?: string;
+	encoding?:
+		| "ascii"
+		| "utf8"
+		| "utf16le"
+		| "ucs2"
+		| "latin1"
+		| "binary"
+		| "utf-8"
+		| "ucs-2"
+		| "base64"
+		| "base64url"
+		| "hex";
+	fd?: any;
+	mode?: number;
+	autoClose?: boolean;
+	emitClose?: boolean;
+	start?: number;
+	signal?: null | AbortSignal;
+	fs?: null | CreateWriteStreamFSImplementation;
 }
 type __TypeWebpackOptions = (data: object) =>
 	| string
