@@ -9416,6 +9416,11 @@ declare interface Output {
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
 
 	/**
+	 * Compress the data in the head tag of CSS files.
+	 */
+	cssHeadDataCompression?: boolean;
+
+	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
 	devtoolFallbackModuleFilenameTemplate?: string | Function;
@@ -9733,6 +9738,11 @@ declare interface OutputNormalized {
 	cssFilename?:
 		| string
 		| ((pathData: PathData, assetInfo?: AssetInfo) => string);
+
+	/**
+	 * Compress the data in the head tag of CSS files.
+	 */
+	cssHeadDataCompression?: boolean;
 
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.

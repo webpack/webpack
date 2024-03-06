@@ -329,6 +329,7 @@ describe("snapshots", () => {
 		    "crossOriginLoading": false,
 		    "cssChunkFilename": "[name].css",
 		    "cssFilename": "[name].css",
+		    "cssHeadDataCompression": true,
 		    "devtoolFallbackModuleFilenameTemplate": undefined,
 		    "devtoolModuleFilenameTemplate": undefined,
 		    "devtoolNamespace": "webpack",
@@ -842,6 +843,9 @@ describe("snapshots", () => {
 		@@ ... @@
 		-       "minRemainingSize": undefined,
 		+       "minRemainingSize": 0,
+		@@ ... @@
+		-     "cssHeadDataCompression": true,
+		+     "cssHeadDataCompression": false,
 		@@ ... @@
 		-     "pathinfo": false,
 		+     "pathinfo": true,
@@ -1866,6 +1870,9 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "minRemainingSize": undefined,
 			+       "minRemainingSize": 0,
+			@@ ... @@
+			-     "cssHeadDataCompression": true,
+			+     "cssHeadDataCompression": false,
 			@@ ... @@
 			-     "pathinfo": false,
 			+     "pathinfo": true,
