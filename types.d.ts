@@ -503,7 +503,7 @@ declare interface BaseResolveRequest {
 	context?: object;
 	descriptionFilePath?: string;
 	descriptionFileRoot?: string;
-	descriptionFileData?: JsonObject;
+	descriptionFileData?: JsonObjectTypes;
 	relativePath?: string;
 	ignoreSymlinks?: boolean;
 	fullySpecified?: boolean;
@@ -5426,9 +5426,12 @@ declare interface InputFileSystem {
 	realpathSync?: RealPathSync;
 	readJson?: (
 		arg0: PathOrFileDescriptor,
-		arg1: (arg0: null | Error | NodeJS.ErrnoException, arg1?: any) => void
+		arg1: (
+			arg0: null | Error | NodeJS.ErrnoException,
+			arg1?: JsonObjectFs
+		) => void
 	) => void;
-	readJsonSync?: (arg0: PathOrFileDescriptor) => void;
+	readJsonSync?: (arg0: PathOrFileDescriptor) => JsonObjectFs;
 	purge?: (arg0?: string | string[] | Set<string>) => void;
 	join?: (arg0: string, arg1: string) => string;
 	relative?: (arg0: string, arg1: string) => string;
@@ -6626,17 +6629,40 @@ declare interface JavascriptParserOptions {
 	 */
 	wrappedContextRegExp?: RegExp;
 }
-type JsonObject = { [index: string]: JsonValue } & {
+type JsonObjectFs = { [index: string]: JsonValueFs } & {
 	[index: string]:
 		| undefined
 		| null
 		| string
 		| number
 		| boolean
-		| JsonObject
-		| JsonValue[];
+		| JsonObjectFs
+		| JsonValueFs[];
 };
-type JsonValue = null | string | number | boolean | JsonObject | JsonValue[];
+type JsonObjectTypes = { [index: string]: JsonValueTypes } & {
+	[index: string]:
+		| undefined
+		| null
+		| string
+		| number
+		| boolean
+		| JsonObjectTypes
+		| JsonValueTypes[];
+};
+type JsonValueFs =
+	| null
+	| string
+	| number
+	| boolean
+	| JsonObjectFs
+	| JsonValueFs[];
+type JsonValueTypes =
+	| null
+	| string
+	| number
+	| boolean
+	| JsonObjectTypes
+	| JsonValueTypes[];
 declare class JsonpChunkLoadingRuntimeModule extends RuntimeModule {
 	constructor(runtimeRequirements: Set<string>);
 	static getCompilationHooks(
