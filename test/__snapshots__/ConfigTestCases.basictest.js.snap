@@ -2549,7 +2549,7 @@ exports[`ConfigTestCases css css-modules exported tests should allow to create c
     --my-app-194-c5: 10px;
 }
 
-head{--webpack-my-app-226:zg:my-app-235-zg/Hi:my-app-235-Hi/OB:my-app-235-OB/VE:my-app-235-VE/O2:my-app-235-O2/Vj:my-app-235-Vj/OH:my-app-235-OH/H5:my-app-235-H5/aq:my-app-235-aq/VN:my-app-235-VN/VM:my-app-235-VM/AO:my-app-235-AO/Hq:my-app-235-Hq/O4:my-app-235-O4/Hb:my-app-235-Hb/OP:my-app-235-OP/Hw:my-app-235-Hw/nb:my-app-235-nb/\\\\$Q:my-app-235-\\\\$Q/bD:my-app-235-bD/\\\\$t:my-app-235-\\\\$t/qi:--my-app-235-qi/xB:--my-app-235-xB/\\\\$6:--my-app-235-\\\\$6/gJ:--my-app-235-gJ/x:my-app-235-x/lY:my-app-235-lY/f:my-app-235-f/uz:--my-app-235-uz/aK:my-app-235-aK/a7:my-app-235-a7/uf:my-app-235-uf/sW:my-app-235-sW/TZ:my-app-235-TZ/aY:my-app-235-aY/II:my-app-235-II/ij:my-app-235-ij/zG:my-app-235-zG/Dk:my-app-235-Dk/XE:my-app-235-XE/I0:--my-app-235-I0/wt:my-app-235-wt/nc:my-app-235-nc/iZ:my-app-235-iZ/ZP:--my-app-235-ZP/M6:my-app-235-M6/rX:--my-app-235-rX/dW:my-app-235-dW/cD:my-app-235-cD/V0:my-app-235-V0/Ci:my-app-235-Ci/bK:my-app-235-bK/Y1:my-app-235-Y1/Y:--my-app-235-Y/t6:--my-app-235-t6/KR:--my-app-235-KR/Fk:my-app-235-Fk/_235,k:my-app-666-k/_666,_816,RJ:--my-app-194-RJ/ZL:my-app-194-ZL/c5:--my-app-194-c5/_194;}"
+head{--webpack-my-app-226:zg:my-app-235-Ā/HiĂĄĆĈĊČĐ/OBĒąćĉċ-Ě/VEĜĔğČĤę2ĦĞĖġ2ģjĭĕĠVjęHĴĨġHď5ĻįH5/aqŁĠņģNňĩNģMō-VM/AOŒŗďŇăĝĵėqę4ŒO4ďbŒHbęPŤPďwũw/nŨŝħįŵ/\\\\$QŒżQ/bDŒƃŻ$tſƈ/qđ--ŷĮĠƍ/xěƏƑş-ƖƇ6:ƘēƒČż6/gJƟƐơƚƧƕŒx/lYŒƲ/fŒf/uzƩƙļƻŅKŒaKŅ7ǃ7ƺƷƾįuƹsWŒǐ/TZŒǕŅƳǌŉY/IIŒǟ/iĳǛČǤ/zGŒǪ/DkŒǯ/XĥǦ-ǴǞ0ƽƫļI0/wƉǶȁŴcŒncǣǖǶiZ/ZŭƠŞļȐ/MƞǶȗ/rXǻȓįȜ/dǑǶȣ/cƄǶȨģǺǶVǿCđǶȱƂǂǶbǅY1ŒȺ/ƳȒŸĠǝtƞɀƢ-Ʉ/KRȞɁČɋ/FǰǶɒ/_Ė,ɓǼ6ɜ-kɖɜ6,_81ɢRƨɆĈ194-ɨȏLĻɬɮZLȧŀɪ-ɴ-cń_ɴ;}"
 `;
 
 exports[`ConfigTestCases css css-modules exported tests should allow to create css modules: dev 1`] = `
@@ -2983,6 +2983,18 @@ Object {
 exports[`ConfigTestCases css large exported tests should allow to create css modules: prod 1`] = `
 Object {
   "placeholder": "-144-Oh6j",
+}
+`;
+
+exports[`ConfigTestCases css large-css-head-data-compression exported tests should allow to create css modules: dev 1`] = `
+Object {
+  "placeholder": "my-app-_large_tailwind_module_css-placeholder-gray-700",
+}
+`;
+
+exports[`ConfigTestCases css large-css-head-data-compression exported tests should allow to create css modules: prod 1`] = `
+Object {
+  "placeholder": "-658-Oh6j",
 }
 `;
 
