@@ -2221,7 +2221,6 @@ describe("snapshots", () => {
 			+     "css": true,
 			+     "futureDefaults": true,
 			@@ ... @@
-			+       },
 			+       Object {
 			+         "rules": Array [
 			+           Object {
@@ -2239,7 +2238,7 @@ describe("snapshots", () => {
 			+       Object {
 			+         "mimetype": "application/wasm",
 			+         "rules": Array [
-			+           Object {
+			@@ ... @@
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -2273,6 +2272,8 @@ describe("snapshots", () => {
 			+           "preferRelative": true,
 			+         },
 			+         "type": "css",
+			+       },
+			+       Object {
 			@@ ... @@
 			-     "generator": Object {},
 			+     "generator": Object {
@@ -2291,9 +2292,9 @@ describe("snapshots", () => {
 			+       },
 			+     },
 			@@ ... @@
+			+       },
 			+       "css": Object {
 			+         "namedExports": true,
-			+       },
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2330,8 +2331,6 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
-			@@ ... @@
-			-     "unmanagedPaths": Array [],
 		`)
 	);
 
@@ -2361,10 +2360,9 @@ describe("snapshots", () => {
 			+     "css": false,
 			+     "futureDefaults": true,
 			@@ ... @@
-			+       },
 			+       Object {
 			+         "rules": Array [
-			+           Object {
+			@@ ... @@
 			+             "descriptionData": Object {
 			+               "type": "module",
 			+             },
@@ -2385,11 +2383,12 @@ describe("snapshots", () => {
 			+             },
 			+             "resolve": Object {
 			+               "fullySpecified": true,
-			@@ ... @@
+			+             },
 			+           },
 			+         ],
 			+         "type": "webassembly/async",
 			+       },
+			+       Object {
 			@@ ... @@
 			+         "exportsPresence": "error",
 			@@ ... @@
@@ -2407,8 +2406,6 @@ describe("snapshots", () => {
 			@@ ... @@
 			-       "<cwd>/node_modules/",
 			+       /^(.+?[\\\\/]node_modules[\\\\/])/,
-			@@ ... @@
-			-     "unmanagedPaths": Array [],
 		`)
 	);
 });
