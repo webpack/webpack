@@ -10837,7 +10837,14 @@ declare interface ResolveOptionsWebpackOptions {
 		| false
 		| ""
 		| 0
-		| ResolvePluginInstance
+		| {
+				[index: string]: any;
+				/**
+				 * The run point of the plugin, required method.
+				 */
+				apply: (arg0: Resolver) => void;
+		  }
+		| ((this: Resolver, arg1: Resolver) => void)
 		| "..."
 	)[];
 
@@ -10885,18 +10892,15 @@ type ResolveOptionsWithDependencyType = ResolveOptionsWebpackOptions & {
 	dependencyType?: string;
 	resolveToContext?: boolean;
 };
-
-/**
- * Plugin instance.
- */
-declare interface ResolvePluginInstance {
-	[index: string]: any;
-
-	/**
-	 * The run point of the plugin, required method.
-	 */
-	apply: (resolver: Resolver) => void;
-}
+type ResolvePluginInstance =
+	| {
+			[index: string]: any;
+			/**
+			 * The run point of the plugin, required method.
+			 */
+			apply: (arg0: Resolver) => void;
+	  }
+	| ((this: Resolver, arg1: Resolver) => void);
 type ResolveRequest = BaseResolveRequest & Partial<ParsedIdentifier>;
 declare interface ResolvedContextFileSystemInfoEntry {
 	safeTime: number;
